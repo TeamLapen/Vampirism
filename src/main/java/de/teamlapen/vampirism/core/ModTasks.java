@@ -82,11 +82,7 @@ public class ModTasks {
 
         registry.register(TaskBuilder.builder().withFaction(VReference.HUNTER_FACTION).addRequirement("vampire", ModTags.Entities.VAMPIRE, 20).setReward(new ItemStack(Items.DIAMOND, 2)).build("h_kill1"));
         registry.register(TaskBuilder.builder().withFaction(VReference.HUNTER_FACTION).addRequirement("vampire", ModTags.Entities.VAMPIRE, 15).setReward(new ItemStack(Items.DIAMOND, 2)).build("h_kill2"));
-        registry.register(TaskBuilder.builder().withFaction(VReference.HUNTER_FACTION).addRequirement("vampire", ModTags.Entities.ADVANCED_VAMPIRE, 5).setReward(new ItemStack(ModItems.obsidian_armor_legs_ultimate)).build("h_kill3"));
         registry.register(TaskBuilder.builder().withFaction(VReference.HUNTER_FACTION).addRequirement("village", ModStats.capture_village, 2).setReward(new ItemStack(ModItems.vampire_blood_bottle, 10)).build("h_capture1"));
-        registry.register(TaskBuilder.builder().withFaction(VReference.HUNTER_FACTION).addRequirement("village", ModStats.capture_village, 1).setReward(new ItemStack(ModItems.obsidian_armor_chest_ultimate)).build("h_capture2"));
-        registry.register(TaskBuilder.builder().withFaction(VReference.HUNTER_FACTION).addRequirement("souls", new ItemStack(ModItems.soul_orb_vampire, 10)).setReward(new ItemStack(ModItems.obsidian_armor_feet_ultimate)).build("h_souls"));
-        registry.register(TaskBuilder.builder().withFaction(VReference.HUNTER_FACTION).addRequirement("item", new ItemStack(ModItems.basic_crossbow, 1)).addRequirement("arrow", new ItemStack(ModItems.crossbow_arrow_normal, 20)).setReward(new ItemStack(ModItems.obsidian_armor_head_ultimate)).build("h_crossbow"));
         registry.register(TaskBuilder.builder().addRequirement("skeleton", EntityType.SKELETON, 20).setReward(new ItemStack(Items.CHAINMAIL_CHESTPLATE)).build("break_bones1"));
         registry.register(TaskBuilder.builder().addRequirement("skeleton", EntityType.SKELETON, 14).setReward(new ItemStack(Items.CHAINMAIL_LEGGINGS)).build("break_bones2"));
         registry.register(TaskBuilder.builder().addRequirement("skeleton", EntityType.SKELETON, 10).setReward(new ItemStack(Items.CHAINMAIL_BOOTS)).build("break_bones3"));

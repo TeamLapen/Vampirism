@@ -20,7 +20,7 @@ public interface IPlayerEventListener {
     void onDeath(DamageSource src);
 
     /**
-     * Called when the corrosponding player is attacked.
+     * Called when the corresponding player is attacked.
      *
      * @return If true the damage will be canceled
      */

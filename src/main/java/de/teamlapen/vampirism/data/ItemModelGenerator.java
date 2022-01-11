@@ -156,18 +156,6 @@ public class ItemModelGenerator extends ItemModelProvider {
             add(ModItems.injection_garlic);
             add(ModItems.injection_sanguinare);
             add(ModItems.injection_zombie_blood);
-            add(ModItems.obsidian_armor_chest_normal);
-            add(ModItems.obsidian_armor_chest_enhanced);
-            add(ModItems.obsidian_armor_chest_ultimate);
-            add(ModItems.obsidian_armor_feet_normal);
-            add(ModItems.obsidian_armor_feet_enhanced);
-            add(ModItems.obsidian_armor_feet_ultimate);
-            add(ModItems.obsidian_armor_head_normal);
-            add(ModItems.obsidian_armor_head_enhanced);
-            add(ModItems.obsidian_armor_head_ultimate);
-            add(ModItems.obsidian_armor_legs_normal);
-            add(ModItems.obsidian_armor_legs_enhanced);
-            add(ModItems.obsidian_armor_legs_ultimate);
             add(ModItems.purified_garlic);
             add(ModItems.soul_orb_vampire);
             add(ModItems.tech_crossbow_ammo_package);

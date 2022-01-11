@@ -7,14 +7,13 @@ import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.items.*;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.item.BoatEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -26,6 +25,7 @@ import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
+import org.apache.logging.log4j.LogManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -139,19 +139,6 @@ public class ModItems {
 
     public static final TentItem item_tent = getNull();
     public static final TentItem item_tent_spawner = getNull();
-
-    public static final ObsidianArmorItem obsidian_armor_chest_enhanced = getNull();
-    public static final ObsidianArmorItem obsidian_armor_chest_normal = getNull();
-    public static final ObsidianArmorItem obsidian_armor_chest_ultimate = getNull();
-    public static final ObsidianArmorItem obsidian_armor_feet_enhanced = getNull();
-    public static final ObsidianArmorItem obsidian_armor_feet_normal = getNull();
-    public static final ObsidianArmorItem obsidian_armor_feet_ultimate = getNull();
-    public static final ObsidianArmorItem obsidian_armor_head_enhanced = getNull();
-    public static final ObsidianArmorItem obsidian_armor_head_normal = getNull();
-    public static final ObsidianArmorItem obsidian_armor_head_ultimate = getNull();
-    public static final ObsidianArmorItem obsidian_armor_legs_enhanced = getNull();
-    public static final ObsidianArmorItem obsidian_armor_legs_normal = getNull();
-    public static final ObsidianArmorItem obsidian_armor_legs_ultimate = getNull();
 
     public static final PitchforkItem pitchfork = getNull();
 
@@ -371,19 +358,6 @@ public class ModItems {
         registry.register(new HunterCoatItem(EquipmentSlotType.LEGS, IItemWithTier.TIER.ULTIMATE));
         registry.register(new HunterCoatItem(EquipmentSlotType.FEET, IItemWithTier.TIER.ULTIMATE));
 
-        registry.register(new ObsidianArmorItem(EquipmentSlotType.HEAD, IItemWithTier.TIER.NORMAL));
-        registry.register(new ObsidianArmorItem(EquipmentSlotType.CHEST, IItemWithTier.TIER.NORMAL));
-        registry.register(new ObsidianArmorItem(EquipmentSlotType.LEGS, IItemWithTier.TIER.NORMAL));
-        registry.register(new ObsidianArmorItem(EquipmentSlotType.FEET, IItemWithTier.TIER.NORMAL));
-        registry.register(new ObsidianArmorItem(EquipmentSlotType.HEAD, IItemWithTier.TIER.ENHANCED));
-        registry.register(new ObsidianArmorItem(EquipmentSlotType.CHEST, IItemWithTier.TIER.ENHANCED));
-        registry.register(new ObsidianArmorItem(EquipmentSlotType.LEGS, IItemWithTier.TIER.ENHANCED));
-        registry.register(new ObsidianArmorItem(EquipmentSlotType.FEET, IItemWithTier.TIER.ENHANCED));
-        registry.register(new ObsidianArmorItem(EquipmentSlotType.HEAD, IItemWithTier.TIER.ULTIMATE));
-        registry.register(new ObsidianArmorItem(EquipmentSlotType.CHEST, IItemWithTier.TIER.ULTIMATE));
-        registry.register(new ObsidianArmorItem(EquipmentSlotType.LEGS, IItemWithTier.TIER.ULTIMATE));
-        registry.register(new ObsidianArmorItem(EquipmentSlotType.FEET, IItemWithTier.TIER.ULTIMATE));
-
         registry.register(new HeartSeekerItem(IItemWithTier.TIER.NORMAL));
         registry.register(new HeartStrikerItem(IItemWithTier.TIER.NORMAL));
         registry.register(new HeartSeekerItem(IItemWithTier.TIER.ENHANCED));
@@ -475,6 +449,16 @@ public class ModItems {
                 case "vampirism:bloody_spruce_leaves":
                     missingMapping.remap(dark_spruce_leaves);
                     break;
+            }
+            if(missingMapping.key.toString().startsWith("vampirism:obsidian_armor")){
+                Item hunterArmorReplacement = event.getRegistry().getValue(new ResourceLocation(missingMapping.key.toString().replace("obsidian_armor","hunter_coat")));
+                if(hunterArmorReplacement != null){
+                    missingMapping.remap(hunterArmorReplacement);
+                }
+                else{
+                    LogManager.getLogger().warn("Could not find hunter armor replacement for {}", missingMapping.key.toString());
+                    missingMapping.ignore();
+                }
             }
         });
     }
