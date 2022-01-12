@@ -10,7 +10,6 @@ import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 import javax.annotation.Nonnull;
@@ -38,7 +37,7 @@ public class TagGenerator {
 
         @Override
         protected void addTags() {
-            tag(Tags.Blocks.DIRT).add(ModBlocks.cursed_earth, ModBlocks.cursed_grass_block);
+            tag(BlockTags.DIRT).add(ModBlocks.cursed_earth, ModBlocks.cursed_grass_block);
             tag(ModTags.Blocks.CURSEDEARTH).add(ModBlocks.cursed_earth, ModBlocks.cursed_grass_block);
             tag(ModTags.Blocks.CASTLE_BLOCK).add(ModBlocks.castle_block_dark_brick, ModBlocks.castle_block_dark_brick_bloody, ModBlocks.castle_block_dark_stone, ModBlocks.castle_block_normal_brick, ModBlocks.castle_block_purple_brick);
             tag(ModTags.Blocks.CASTLE_SLAPS).add(ModBlocks.castle_slab_dark_brick, ModBlocks.castle_slab_dark_stone, ModBlocks.castle_slab_purple_brick);
