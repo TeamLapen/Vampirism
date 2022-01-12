@@ -94,4 +94,7 @@ public interface IProxy extends IInitListener {
     default void showDBNOScreen(Player player, @Nullable Component deathMessage) {
     }
 
+    default void setupAPIClient() {
+    }
+
 }
