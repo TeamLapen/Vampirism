@@ -236,7 +236,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
     private void generateTaskToolTip(ITaskInstance taskInfo, List<Component> toolTips) {
         Task task = taskInfo.getTask();
         toolTips.clear();
-        toolTips.add(task.getTranslation().plainCopy().withStyle(this.screen.getTaskContainer().getFactionColor()));
+        toolTips.add(task.getTranslation().plainCopy().withStyle(style -> style.withColor(this.screen.getTaskContainer().getFactionColor())));
         if (task.useDescription()) {
             toolTips.add(task.getDescription());
             toolTips.add(new TextComponent(" "));

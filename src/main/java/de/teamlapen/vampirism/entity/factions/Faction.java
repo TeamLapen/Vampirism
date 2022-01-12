@@ -3,8 +3,8 @@ package de.teamlapen.vampirism.entity.factions;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFactionVillage;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.PathfinderMob;
 
@@ -30,9 +30,9 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     @Nonnull
     private final Component namePlural;
     @Nonnull
-    private final ChatFormatting chatColor;
+    private final TextColor chatColor;
 
-    Faction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral, @Nonnull IFactionVillage villageFactionData, @Nonnull ChatFormatting chatColor, @Nonnull Component name, @Nonnull Component namePlural) {
+    Faction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral, @Nonnull IFactionVillage villageFactionData, @Nonnull TextColor chatColor, @Nonnull Component name, @Nonnull Component namePlural) {
         this.id = id;
         this.entityInterface = entityInterface;
         this.color = color;
@@ -55,7 +55,7 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
 
     @Nonnull
     @Override
-    public ChatFormatting getChatColor() {
+    public TextColor getChatColor() {
         return this.chatColor;
     }
 

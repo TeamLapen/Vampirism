@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.inventory.container;
 
 import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
-import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextColor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,7 +27,7 @@ public interface TaskContainer {
     /**
      * @return chat color of the faction
      */
-    ChatFormatting getFactionColor();
+    TextColor getFactionColor();
 
     /**
      * @return the progress of the requirement for the {@link ITaskInstance#getTask()} at the task giver {@link ITaskInstance#getTaskBoard()}

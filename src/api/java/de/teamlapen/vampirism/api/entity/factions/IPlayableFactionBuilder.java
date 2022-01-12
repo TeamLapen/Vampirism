@@ -4,9 +4,9 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -56,6 +56,9 @@ public interface IPlayableFactionBuilder<T extends IFactionPlayer<T>> extends IF
      * @return the builder
      */
     IPlayableFactionBuilder<T> refinementItems(@Nonnull Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot);
+
+    @Override
+    IPlayableFactionBuilder<T> chatColor(TextColor color);
 
     @Override
     IPlayableFactionBuilder<T> chatColor(ChatFormatting color);

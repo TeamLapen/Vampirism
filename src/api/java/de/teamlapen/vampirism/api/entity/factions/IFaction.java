@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.PathfinderMob;
 
@@ -15,7 +15,7 @@ public interface IFaction<T extends IFactionEntity> {
     /**
      * If not set returns white
      */
-    ChatFormatting getChatColor();
+    TextColor getChatColor();
 
     /**
      * Used for some rendering, e.g. for displaying the level

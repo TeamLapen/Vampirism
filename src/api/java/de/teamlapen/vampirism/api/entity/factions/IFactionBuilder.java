@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextColor;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
 public interface IFactionBuilder<T extends IFactionEntity> {
@@ -21,6 +21,15 @@ public interface IFactionBuilder<T extends IFactionEntity> {
      *
      * @param color chat color
      * @return the builder
+     */
+    IFactionBuilder<T> chatColor(TextColor color);
+
+    /**
+     * Sets the faction chat color
+     *
+     * @param color chat color
+     * @return the builder
+     * @implNote calls {@link #chatColor(TextColor)} with {@link TextColor#fromLegacyFormat(ChatFormatting)}}
      */
     IFactionBuilder<T> chatColor(ChatFormatting color);
 

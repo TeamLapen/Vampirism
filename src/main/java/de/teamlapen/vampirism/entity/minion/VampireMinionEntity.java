@@ -299,7 +299,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
 
         @Override
         public MutableComponent getFormattedName() {
-            return super.getFormattedName().withStyle(VReference.VAMPIRE_FACTION.getChatColor());
+            return super.getFormattedName().withStyle(style -> style.withColor(VReference.VAMPIRE_FACTION.getChatColor()));
         }
 
         public int getHealthLevel() {

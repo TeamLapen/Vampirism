@@ -12,8 +12,8 @@ import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.TaskActionPacket;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -36,7 +36,7 @@ public class TaskBoardContainer extends AbstractContainerMenu implements TaskCon
     @Nonnull
     private final List<ITaskInstance> taskInstances = new ArrayList<>();
     @Nonnull
-    private final ChatFormatting factionColor;
+    private final TextColor factionColor;
     @Nonnull
     private final IFactionPlayer<?> factionPlayer;
     /**
@@ -115,7 +115,7 @@ public class TaskBoardContainer extends AbstractContainerMenu implements TaskCon
     }
 
     @Nonnull
-    public ChatFormatting getFactionColor() {
+    public TextColor getFactionColor() {
         return this.factionColor;
     }
 

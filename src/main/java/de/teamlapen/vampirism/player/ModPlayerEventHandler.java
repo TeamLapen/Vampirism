@@ -436,7 +436,7 @@ public class ModPlayerEventHandler {
                         } else {
                             displayName = event.getDisplayname().copy();
                         }
-                        event.setDisplayname(displayName.withStyle(f.getChatColor()));
+                        event.setDisplayname(displayName.withStyle(style -> style.withColor((f.getChatColor()))));
                     }
                 });
             });

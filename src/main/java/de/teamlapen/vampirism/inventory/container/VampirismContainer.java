@@ -11,8 +11,8 @@ import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.TaskActionPacket;
 import de.teamlapen.vampirism.player.TaskManager;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -40,7 +40,7 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
                 new SelectorInfo(stack -> stack.getItem() instanceof IRefinementItem && ((IRefinementItem) stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.OBI_BELT && ((IRefinementItem) stack.getItem()).getExclusiveFaction(stack).equals(faction), 58, 44)};
     };
     private final IFactionPlayer<?> factionPlayer;
-    private final ChatFormatting factionColor;
+    private final TextColor factionColor;
     private final NonNullList<ItemStack> refinementStacks = NonNullList.withSize(3, ItemStack.EMPTY);
     public Map<UUID, TaskManager.TaskWrapper> taskWrapper = new HashMap<>();
     public Map<UUID, Set<UUID>> completableTasks = new HashMap<>();
@@ -89,7 +89,7 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
     }
 
     @Override
-    public ChatFormatting getFactionColor() {
+    public TextColor getFactionColor() {
         return this.factionColor;
     }
 

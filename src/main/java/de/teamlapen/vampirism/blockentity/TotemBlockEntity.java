@@ -978,7 +978,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         this.progressColor = faction != null ? new Color(faction.getColor()).getRGBColorComponents() : DyeColor.WHITE.getTextureDiffuseColors();
         if (faction != null) {
             this.captureInfo.setColors(new Color(faction.getColor()), Color.WHITE, this.controllingFaction == null ? Color.WHITE : new Color(this.controllingFaction.getColor()));
-            this.captureInfo.setName(new TranslatableComponent("text.vampirism.village.bossinfo.raid", faction.getName().plainCopy().withStyle(faction.getChatColor())));
+            this.captureInfo.setName(new TranslatableComponent("text.vampirism.village.bossinfo.raid", faction.getName().plainCopy().withStyle(style -> style.withColor((faction.getChatColor())))));
         }
     }
 

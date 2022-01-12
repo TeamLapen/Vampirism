@@ -297,7 +297,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
 
         @Override
         public MutableComponent getFormattedName() {
-            return super.getFormattedName().withStyle(VReference.HUNTER_FACTION.getChatColor());
+            return super.getFormattedName().withStyle(style -> style.withColor((VReference.HUNTER_FACTION.getChatColor())));
         }
 
         public int getHealthLevel() {

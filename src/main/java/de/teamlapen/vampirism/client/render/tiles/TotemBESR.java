@@ -56,7 +56,7 @@ public class TotemBESR extends VampirismBESR<TotemBlockEntity> {
     }
 
     private void renderFactionName(IFaction<?> faction, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int packedLight) {
-        Component displayNameIn = faction.getNamePlural().plainCopy().withStyle(faction.getChatColor());
+        Component displayNameIn = faction.getNamePlural().plainCopy().withStyle(style -> style.withColor((faction.getChatColor())));
         matrixStack.pushPose();
         matrixStack.translate(0.5, 1, 0.5);
         matrixStack.mulPose(Minecraft.getInstance().gameRenderer.getMainCamera().rotation());
