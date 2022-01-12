@@ -164,7 +164,7 @@ public class FactionRegistry implements IFactionRegistry {
 
         protected final ResourceLocation id;
         protected final Class<T> entityInterface;
-        protected int color= Color.WHITE.getRGB();
+        protected int color = Color.WHITE.getRGB();
         protected boolean hostileTowardsNeutral;
         protected FactionVillageBuilder villageFactionData = new FactionVillageBuilder();
         protected TextColor chatColor;
@@ -223,14 +223,13 @@ public class FactionRegistry implements IFactionRegistry {
 
         @Override
         public IFaction<T> register() {
-            //noinspection ConstantConditions
             Faction<T> faction = new Faction<>(
                     this.id,
                     this.entityInterface,
                     this.color,
                     this.hostileTowardsNeutral,
                     this.villageFactionData,
-                    this.chatColor != null ? this.chatColor : TextColor.fromLegacyFormat(ChatFormatting.WHITE),
+                    this.chatColor != null ? this.chatColor : TextColor.fromRgb(this.color),
                     this.name == null ? new TextComponent(id.toString()) : new TranslatableComponent(this.name),
                     this.namePlural == null ? this.name == null ? new TextComponent(id.toString()) : new TranslatableComponent(this.name) : new TranslatableComponent(this.namePlural));
             addFaction(faction);
@@ -326,7 +325,7 @@ public class FactionRegistry implements IFactionRegistry {
                     this.lordTitleFunction,
                     this.villageFactionData,
                     this.refinementItemBySlot,
-                    this.chatColor != null ? this.chatColor : TextColor.fromLegacyFormat(ChatFormatting.WHITE),
+                    this.chatColor != null ? this.chatColor : TextColor.fromRgb(this.color),
                     this.name == null ? new TextComponent(id.toString()) : new TranslatableComponent(this.name),
                     this.namePlural == null ? this.name == null ? new TextComponent(id.toString()) : new TranslatableComponent(this.name) : new TranslatableComponent(this.namePlural));
             addFaction(faction);

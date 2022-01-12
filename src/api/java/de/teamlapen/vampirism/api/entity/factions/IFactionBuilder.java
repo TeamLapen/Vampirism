@@ -18,6 +18,8 @@ public interface IFactionBuilder<T extends IFactionEntity> {
 
     /**
      * Sets the faction chat color
+     * <br>
+     * if not set the faction color will be used
      *
      * @param color chat color
      * @return the builder
@@ -26,6 +28,8 @@ public interface IFactionBuilder<T extends IFactionEntity> {
 
     /**
      * Sets the faction chat color
+     * <br>
+     * if not set the faction color will be used
      *
      * @param color chat color
      * @return the builder
