@@ -248,20 +248,6 @@ public abstract class HunterCampPieces extends StructurePiece {
                 }
             }
 
-            //generate floor //TODO 1.18 check if needed
-//            BlockPos pos1 = new BlockPos(xCenter, y - 1, z - 1);
-//            if (worldIn.getBlockState(pos1).getMaterial().isReplaceable())
-//                this.placeBlock(worldIn, baseBlock.defaultBlockState(), xDiff, -1, 0, structureBoundingBoxIn);
-//            BlockPos pos2 = new BlockPos(x, y - 1, z - 1);
-//            if (worldIn.getBlockState(pos2).getMaterial().isReplaceable())
-//                this.placeBlock(worldIn, baseBlock.defaultBlockState(), 1, -1, 0, structureBoundingBoxIn);
-//            BlockPos pos3 = new BlockPos(x, y - 1, z);
-//            if (worldIn.getBlockState(pos3).getMaterial().isReplaceable())
-//                this.placeBlock(worldIn, baseBlock.defaultBlockState(), 1, -1, 1, structureBoundingBoxIn);
-//            BlockPos pos4 = new BlockPos(xCenter, y - 1, z);
-//            if (worldIn.getBlockState(pos4).getMaterial().isReplaceable())
-//                this.placeBlock(worldIn, baseBlock.defaultBlockState(), xDiff, -1, 1, structureBoundingBoxIn);
-
             //generate air
             BlockState air = Blocks.AIR.defaultBlockState();
             //generate air towards fireplace
