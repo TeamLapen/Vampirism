@@ -135,6 +135,4 @@ public class SkillNodeGenerator implements IDataProvider {
         }
     }
 
-Organ Ambience, Calm, A by InspectorJ https://freesound.org/people/InspectorJ/sounds/411991/ -- License CC Attribution
-
 }

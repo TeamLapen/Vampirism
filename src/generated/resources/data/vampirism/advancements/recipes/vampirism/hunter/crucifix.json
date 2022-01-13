@@ -6,12 +6,12 @@
     ]
   },
   "criteria": {
-    "salt": {
+    "holy_water": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "vampirism:holy_salt"
+            "item": "vampirism:holy_water_bottle_normal"
           }
         ]
       }
@@ -45,7 +45,7 @@
   },
   "requirements": [
     [
-      "salt",
+      "holy_water",
       "stick",
       "planks",
       "has_the_recipe"
