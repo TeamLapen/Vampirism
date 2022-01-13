@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.client.gui.SelectMinionTaskScreen;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.CSimpleInputEvent;
 import de.teamlapen.vampirism.network.CStartFeedingPacket;
-import de.teamlapen.vampirism.network.InputEventPacket;
+import de.teamlapen.vampirism.network.CToggleActionPacket;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
@@ -225,7 +225,7 @@ public class ModKeys { //TODO 1.17 revamp to skip using the KEY enum for getting
             if (!action.getFaction().equals(player.getFaction())) {
                 player.getRepresentingPlayer().displayClientMessage(new TranslationTextComponent("text.vampirism.action.only_faction", action.getFaction().getName()), true);
             } else {
-                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + action.getRegistryName()));
+                VampirismMod.dispatcher.sendToServer(new CToggleActionPacket(action.getRegistryName()));
             }
         }
 

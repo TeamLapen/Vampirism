@@ -18,7 +18,6 @@ public class ModPacketDispatcher extends AbstractPacketDispatcher {
 
     @Override
     public void registerPackets() {
-        dispatcher.registerMessage(nextID(), InputEventPacket.class, InputEventPacket::encode, InputEventPacket::decode, InputEventPacket::handle);
         dispatcher.registerMessage(nextID(), SSkillTreePacket.class, SSkillTreePacket::encode, SSkillTreePacket::decode, SSkillTreePacket::handle);
         dispatcher.registerMessage(nextID(), SOpenVampireBookPacket.class, SOpenVampireBookPacket::encode, SOpenVampireBookPacket::decode, SOpenVampireBookPacket::handle);
         dispatcher.registerMessage(nextID(), SBloodValuePacket.class, SBloodValuePacket::encode, SBloodValuePacket::decode, SBloodValuePacket::handle);
@@ -34,5 +33,10 @@ public class ModPacketDispatcher extends AbstractPacketDispatcher {
         dispatcher.registerMessage(nextID(), SUpdateMultiBossInfoPacket.class, SUpdateMultiBossInfoPacket::encode, SUpdateMultiBossInfoPacket::decode, SUpdateMultiBossInfoPacket::handle);
         dispatcher.registerMessage(nextID(), CSimpleInputEvent.class, CSimpleInputEvent::encode, CSimpleInputEvent::decode, CSimpleInputEvent::handle);
         dispatcher.registerMessage(nextID(), CStartFeedingPacket.class, CStartFeedingPacket::encode, CStartFeedingPacket::decode, CStartFeedingPacket::handle);
+        dispatcher.registerMessage(nextID(), CToggleActionPacket.class, CToggleActionPacket::encode, CToggleActionPacket::decode, CToggleActionPacket::handle);
+        dispatcher.registerMessage(nextID(), CUnlockSkillPacket.class, CUnlockSkillPacket::encode, CUnlockSkillPacket::decode, CUnlockSkillPacket::handle);
+        dispatcher.registerMessage(nextID(), CNameItemPacket.class, CNameItemPacket::encode, CNameItemPacket::decode, CNameItemPacket::handle);
+        dispatcher.registerMessage(nextID(), CToggleMinionTaskLock.class, CToggleMinionTaskLock::encode, CToggleMinionTaskLock::decode, CToggleMinionTaskLock::handle);
+        dispatcher.registerMessage(nextID(), CDeleteRefinementPacket.class, CDeleteRefinementPacket::encode, CDeleteRefinementPacket::decode, CDeleteRefinementPacket::handle);
     }
 }

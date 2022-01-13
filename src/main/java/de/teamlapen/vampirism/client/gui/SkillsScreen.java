@@ -15,7 +15,7 @@ import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.CSimpleInputEvent;
-import de.teamlapen.vampirism.network.InputEventPacket;
+import de.teamlapen.vampirism.network.CUnlockSkillPacket;
 import de.teamlapen.vampirism.player.skills.ActionSkill;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.skills.SkillNode;
@@ -606,7 +606,7 @@ public class SkillsScreen extends Screen { //TODO BREAKING remove
 
     private void unlockSkill() {
         if (canUnlockSkill()) {
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.UNLOCKSKILL, selected.getRegistryName().toString()));
+            VampirismMod.dispatcher.sendToServer(new CUnlockSkillPacket(selected.getRegistryName()));
             playSoundEffect(SoundEvents.PLAYER_LEVELUP, 0.7F);
         } else {
             playSoundEffect(SoundEvents.NOTE_BLOCK_BASS, 0.5F);

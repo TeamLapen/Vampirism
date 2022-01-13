@@ -10,7 +10,7 @@ import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.network.CSelectMinionTaskPacket;
-import de.teamlapen.vampirism.network.InputEventPacket;
+import de.teamlapen.vampirism.network.CToggleMinionTaskLock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -144,7 +144,7 @@ public class MinionContainer extends InventoryContainer {
             );
         }
         if (previousTaskLocked != taskLocked) {
-            minionEntity.getMinionId().ifPresent(id -> VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLE_LOCK_MINION_TASK, "" + id)));
+            minionEntity.getMinionId().ifPresent(id -> VampirismMod.dispatcher.sendToServer(new CToggleMinionTaskLock(id)));
         }
     }
 
