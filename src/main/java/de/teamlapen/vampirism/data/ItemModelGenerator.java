@@ -75,6 +75,8 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             add(ModBlocks.CURSED_SPRUCE_SLAB.get());
             add(ModBlocks.DARK_SPRUCE_FENCE_GATE.get());
             add(ModBlocks.CURSED_SPRUCE_FENCE_GATE.get());
+            add(ModBlocks.VAMPIRE_RACK.get());
+            add(ModBlocks.THRONE.get());
         }};
         Set<Item> items = new HashSet<>() {{
             add(ModItems.HUNTER_COAT_CHEST_NORMAL.get());

@@ -50,6 +50,7 @@ import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.proxy.ClientProxy;
 import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.proxy.ServerProxy;
+import de.teamlapen.vampirism.sit.SitHandler;
 import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.biome.OverworldModifications;
@@ -182,6 +183,7 @@ public class VampirismMod {
         addModCompats();
         registryManager = new RegistryManager();
         MinecraftForge.EVENT_BUS.register(Permissions.class);
+        MinecraftForge.EVENT_BUS.register(SitHandler.class);
 
         prepareAPI();
         RegistryManager.setupRegistries(modbus);

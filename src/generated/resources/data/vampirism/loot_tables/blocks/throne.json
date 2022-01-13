@@ -13,14 +13,14 @@
           "type": "minecraft:item",
           "conditions": [
             {
-              "block": "vampirism:cross",
+              "block": "vampirism:throne",
               "condition": "minecraft:block_state_property",
               "properties": {
                 "part": "main"
               }
             }
           ],
-          "name": "vampirism:cross"
+          "name": "vampirism:throne"
         }
       ],
       "rolls": 1.0

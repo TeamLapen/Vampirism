@@ -11,16 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "conditions": [
-            {
-              "block": "vampirism:cross",
-              "condition": "minecraft:block_state_property",
-              "properties": {
-                "part": "main"
-              }
-            }
-          ],
-          "name": "vampirism:cross"
+          "name": "vampirism:vampire_rack"
         }
       ],
       "rolls": 1.0

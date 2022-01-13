@@ -4,10 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.blocks.AltarPillarBlock;
-import de.teamlapen.vampirism.blocks.CoffinBlock;
-import de.teamlapen.vampirism.blocks.GarlicBlock;
-import de.teamlapen.vampirism.blocks.MedChairBlock;
+import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
@@ -287,7 +284,7 @@ public class LootTablesGenerator extends LootTableProvider {
             this.dropSelf(ModBlocks.CHANDELIER.get());
             this.add(ModBlocks.CANDELABRA_WALL.get(), createSingleItemTable(ModItems.ITEM_CANDELABRA.get()));
             this.add(ModBlocks.CANDELABRA.get(), createSingleItemTable(ModItems.ITEM_CANDELABRA.get()));
-            this.dropSelf(ModBlocks.CROSS.get());
+            this.add(ModBlocks.CROSS.get(), (p_218567_0_) -> createSinglePropConditionTable(p_218567_0_, VampirismSplitBlock.PART, VampirismSplitBlock.Part.MAIN));
             this.dropSelf(ModBlocks.TOMBSTONE1.get());
             this.dropSelf(ModBlocks.TOMBSTONE2.get());
             this.dropSelf(ModBlocks.TOMBSTONE3.get());
@@ -318,6 +315,8 @@ public class LootTablesGenerator extends LootTableProvider {
             this.dropSelf(ModBlocks.DARK_SPRUCE_FENCE.get());
             this.dropSelf(ModBlocks.CURSED_SPRUCE_FENCE.get());
             this.add(ModBlocks.CURSED_ROOTS.get(), (block) -> createShearsDispatchTable(block, applyExplosionDecay(block, LootItem.lootTableItem(Items.STICK).apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F))))));
+            this.dropSelf(ModBlocks.VAMPIRE_RACK.get());
+            this.add(ModBlocks.THRONE.get(), (p_218567_0_) -> createSinglePropConditionTable(p_218567_0_, VampirismSplitBlock.PART, VampirismSplitBlock.Part.MAIN));
         }
 
         @Nonnull

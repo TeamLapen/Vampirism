@@ -246,6 +246,9 @@ public class BlockStateGenerator extends BlockStateProvider {
 
         createWoodStates();
         createCursedBark();
+
+        horizontalBlock(ModBlocks.VAMPIRE_RACK.get(), models().getExistingFile(modLoc("block/vampire_rack")));
+        horizontalBlock(ModBlocks.THRONE.get(), models().getExistingFile(modLoc("block/throne")));
     }
 
     private void createWoodStates() {

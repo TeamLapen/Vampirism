@@ -639,6 +639,8 @@
   "block.vampirism.cursed_spruce_fence_gate": "Cursed Fence Gate",
   "block.vampirism.dark_spruce_fence": "Dark Spruce Fence",
   "block.vampirism.cursed_spruce_fence": "Cursed Fence",
+  "block.vampirism.throne": "Throne",
+  "block.vampirism.vampire_rack": "Vampire Rack",
   "__comment": "items",
   "item.vampirism.hunter_intel": "Hunter Intel",
   "item.vampirism.pure_blood": "Pure Blood",
