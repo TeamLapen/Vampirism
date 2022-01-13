@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XY ",
+    "ZYZ",
+    " Y "
+  ],
+  "key": {
+    "X": {
+      "item": "vampirism:holy_salt"
+    },
+    "Y": {
+      "tag": "minecraft:planks"
+    },
+    "Z": {
+      "tag": "forge:rods/wooden"
+    }
+  },
+  "result": {
+    "item": "vampirism:crucifix_normal"
+  }
+}

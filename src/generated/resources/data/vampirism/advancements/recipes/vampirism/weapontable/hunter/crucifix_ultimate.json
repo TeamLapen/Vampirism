@@ -1,0 +1,72 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "vampirism:weapontable/hunter/crucifix_ultimate"
+    ]
+  },
+  "criteria": {
+    "fire": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "vampirism:item_alchemical_fire"
+          }
+        ]
+      }
+    },
+    "gold": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:storage_blocks/gold"
+          }
+        ]
+      }
+    },
+    "holy_water": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "vampirism:holy_water_bottle_enhanced"
+          }
+        ]
+      }
+    },
+    "stake": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "vampirism:stake"
+          }
+        ]
+      }
+    },
+    "has_skill": {
+      "trigger": "vampirism:skill_unlocked",
+      "conditions": {
+        "skill": "vampirism:ultimate_crucifix"
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "vampirism:weapontable/hunter/crucifix_ultimate"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "fire",
+      "gold",
+      "holy_water",
+      "stake",
+      "has_skill",
+      "has_the_recipe"
+    ]
+  ]
+}

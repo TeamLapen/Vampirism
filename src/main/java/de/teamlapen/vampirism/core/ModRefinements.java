@@ -62,6 +62,7 @@ public class ModRefinements {
     public static final Refinement freeze_duration = getNull();
     public static final Refinement blood_charge_speed = getNull();
     public static final Refinement sword_trained_amount = getNull();
+    public static final Refinement crucifix_resistant = getNull();
 
 
     public static void registerRefinements(@Nonnull IForgeRegistry<IRefinement> registry) {
@@ -124,6 +125,7 @@ public class ModRefinements {
             registry.register(newRefinement("freeze_duration"));
             registry.register(newRefinement("blood_charge_speed"));
             registry.register(newRefinement("sword_trained_amount"));
+            registry.register(newRefinement("crucifix_resistant"));
         }
     }
 
