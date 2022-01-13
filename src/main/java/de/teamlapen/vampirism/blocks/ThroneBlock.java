@@ -30,6 +30,7 @@ public class ThroneBlock extends VampirismSplitBlock {
         }
         else if(part == Part.SUB && traceResult.getDirection() == oppFacing && world.getBlockState(pos.below()).is(this)){
             SitHandler.startSitting(player, world, pos.below(), 0.5);
+            return ActionResultType.SUCCESS;
         }
         return super.use(state, world, pos, player, p_225533_5_, traceResult);
     }
