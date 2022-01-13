@@ -10,8 +10,8 @@ import de.teamlapen.vampirism.core.ModFeatures;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.modcompat.IntegrationsNotifier;
-import de.teamlapen.vampirism.network.BloodValuePacket;
-import de.teamlapen.vampirism.network.SkillTreePacket;
+import de.teamlapen.vampirism.network.SBloodValuePacket;
+import de.teamlapen.vampirism.network.SSkillTreePacket;
 import de.teamlapen.vampirism.util.Permissions;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import de.teamlapen.vampirism.world.VampirismWorld;
@@ -94,7 +94,7 @@ public class GeneralEventHandler {
 //            event.getPlayer().sendStatusMessage(new StringTextComponent("You are playing an alpha version of Vampirism for 1.16, some things might not work yet. Please report any issues except for:").mergeStyle(TextFormatting.RED), false);
 //        }
 
-        VampirismMod.dispatcher.sendTo(new SkillTreePacket(VampirismMod.proxy.getSkillTree(false).getCopy()), (ServerPlayerEntity) event.getPlayer());
+        VampirismMod.dispatcher.sendTo(new SSkillTreePacket(VampirismMod.proxy.getSkillTree(false).getCopy()), (ServerPlayerEntity) event.getPlayer());
 
         @SuppressWarnings("unchecked")
         Pair<Map<ResourceLocation, Integer>, Integer>[] bloodValues = (Pair<Map<ResourceLocation, Integer>, Integer>[]) Array.newInstance(Pair.class, 3);
@@ -102,7 +102,7 @@ public class GeneralEventHandler {
         bloodValues[1] = new Pair<>(BloodConversionRegistry.getItemValues(), BloodConversionRegistry.getItemMultiplier());
         bloodValues[2] = new Pair<>(BloodConversionRegistry.getFluidValues(), BloodConversionRegistry.getFluidDivider());
 
-        VampirismMod.dispatcher.sendTo(new BloodValuePacket(bloodValues), (ServerPlayerEntity) event.getPlayer());
+        VampirismMod.dispatcher.sendTo(new SBloodValuePacket(bloodValues), (ServerPlayerEntity) event.getPlayer());
         FactionPlayerHandler.getOpt(event.getPlayer()).ifPresent(FactionPlayerHandler::onPlayerLoggedIn);
 
         if (!PermissionAPI.hasPermission(event.getPlayer(), Permissions.VAMPIRISM)) {

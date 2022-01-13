@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.network.CSimpleInputEvent;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.player.skills.ActionSkill;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
@@ -131,7 +132,7 @@ public class SkillsScreen extends Screen { //TODO BREAKING remove
                 boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
 
                 resetSkills = this.addButton(new Button(guiLeft + 88, guiTop + 175, 80, 20, new TranslationTextComponent("text.vampirism.skill.resetall"), (context) -> {
-                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.RESETSKILL, ""));
+                    VampirismMod.dispatcher.sendToServer(new CSimpleInputEvent(CSimpleInputEvent.Type.RESET_SKILLS));
                     InventoryHelper.removeItemFromInventory(factionPlayer.getRepresentingPlayer().inventory, new ItemStack(ModItems.oblivion_potion)); //server syncs after the screen is closed
                     if ((factionPlayer.getLevel() < 2 || minecraft.player.inventory.countItem(ModItems.oblivion_potion) <= 1) && !test) {
                         context.active = false;

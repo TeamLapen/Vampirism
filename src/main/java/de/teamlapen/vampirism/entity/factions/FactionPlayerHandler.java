@@ -6,6 +6,7 @@ import de.teamlapen.lib.lib.util.LogUtil;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -432,6 +433,17 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         nbt.putInt("lord_level", currentLordLevel);
         nbt.putBoolean("title_gender", titleGender != null && titleGender);
         this.writeBoundActions(nbt);
+    }
+
+    @Override
+    public void leaveFaction(boolean die) {
+        IFaction<?> oldFaction = currentFaction;
+        if(oldFaction==null)return;
+        setFactionAndLevel(null, 0);
+        player.displayClientMessage(new TranslationTextComponent("command.vampirism.base.level.successful", player.getName(), oldFaction.getName(), 0), true);
+        if (die) {
+            player.hurt(DamageSource.MAGIC, 1000);
+        }
     }
 
     private IPlayableFaction<? extends IFactionPlayer<?>> getFactionFromKey(ResourceLocation key) {

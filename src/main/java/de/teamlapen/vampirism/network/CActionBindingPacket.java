@@ -10,18 +10,18 @@ import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class ActionBindingPacket implements IMessage {
+public class CActionBindingPacket implements IMessage {
 
-    static void encode(final ActionBindingPacket msg, PacketBuffer buf) {
+    static void encode(final CActionBindingPacket msg, PacketBuffer buf) {
         buf.writeVarInt(msg.actionBindingId);
         buf.writeUtf(msg.action.getRegistryName().toString());
     }
 
-    static ActionBindingPacket decode(PacketBuffer buf) {
-        return new ActionBindingPacket(buf.readVarInt(), ModRegistries.ACTIONS.getValue(new ResourceLocation(buf.readUtf(32767))));
+    static CActionBindingPacket decode(PacketBuffer buf) {
+        return new CActionBindingPacket(buf.readVarInt(), ModRegistries.ACTIONS.getValue(new ResourceLocation(buf.readUtf(32767))));
     }
 
-    public static void handle(final ActionBindingPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final CActionBindingPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> VampirismMod.proxy.handleActionBindingPacket(msg, ctx.getSender()));
         ctx.setPacketHandled(true);
@@ -30,7 +30,7 @@ public class ActionBindingPacket implements IMessage {
     public final int actionBindingId;
     public final IAction action;
 
-    public ActionBindingPacket(int actionBindingId, IAction action) {
+    public CActionBindingPacket(int actionBindingId, IAction action) {
         this.actionBindingId = actionBindingId;
         this.action = action;
     }

@@ -58,7 +58,7 @@ public interface ITaskManager {
     void openTaskMasterScreen(UUID taskBoardId);
 
     /**
-     * sends task information to the vampirism container
+     * Open menu container and send task information to the vampirism container
      */
     void openVampirismMenu();
 

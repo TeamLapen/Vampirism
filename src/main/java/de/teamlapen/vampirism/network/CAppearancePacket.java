@@ -8,9 +8,9 @@ import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class AppearancePacket implements IMessage {
+public class CAppearancePacket implements IMessage {
 
-    static void encode(AppearancePacket msg, PacketBuffer buf) {
+    static void encode(CAppearancePacket msg, PacketBuffer buf) {
         buf.writeVarInt(msg.entityId);
         buf.writeUtf(msg.name);
         buf.writeVarInt(msg.data.length);
@@ -19,17 +19,17 @@ public class AppearancePacket implements IMessage {
         }
     }
 
-    static AppearancePacket decode(PacketBuffer buf) {
+    static CAppearancePacket decode(PacketBuffer buf) {
         int entityId = buf.readVarInt();
         String newName = buf.readUtf(MinionData.MAX_NAME_LENGTH);
         int[] data = new int[buf.readVarInt()];
         for (int i = 0; i < data.length; i++) {
             data[i] = buf.readVarInt();
         }
-        return new AppearancePacket(entityId, newName, data);
+        return new CAppearancePacket(entityId, newName, data);
     }
 
-    public static void handle(final AppearancePacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final CAppearancePacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> VampirismMod.proxy.handleAppearancePacket(ctx.getSender(), msg));
         ctx.setPacketHandled(true);
@@ -39,7 +39,7 @@ public class AppearancePacket implements IMessage {
     public final String name;
     public final int[] data;
 
-    public AppearancePacket(int entityId, String newName, int... data) {
+    public CAppearancePacket(int entityId, String newName, int... data) {
         this.entityId = entityId;
         this.name = newName;
         this.data = data;

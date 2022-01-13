@@ -6,17 +6,14 @@ import de.teamlapen.vampirism.player.skills.SkillNode;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class SkillTreePacket implements IMessage {
-    private final static Logger LOGGER = LogManager.getLogger();
+public class SSkillTreePacket implements IMessage {
 
-    static void encode(SkillTreePacket msg, PacketBuffer buf) {
+    static void encode(SSkillTreePacket msg, PacketBuffer buf) {
         buf.writeVarInt(msg.nodes.size());
         for (Map.Entry<ResourceLocation, SkillNode.Builder> e : msg.nodes.entrySet()) {
             buf.writeResourceLocation(e.getKey());
@@ -25,8 +22,8 @@ public class SkillTreePacket implements IMessage {
     }
 
 
-    static SkillTreePacket decode(PacketBuffer buf) {
-        SkillTreePacket pkt = new SkillTreePacket();
+    static SSkillTreePacket decode(PacketBuffer buf) {
+        SSkillTreePacket pkt = new SSkillTreePacket();
         int count = buf.readVarInt();
         for (int i = 0; i < count; i++) {
             ResourceLocation id = buf.readResourceLocation();
@@ -37,7 +34,7 @@ public class SkillTreePacket implements IMessage {
     }
 
 
-    public static void handle(final SkillTreePacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final SSkillTreePacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> VampirismMod.proxy.handleSkillTreePacket(msg));
         ctx.setPacketHandled(true);
@@ -45,11 +42,11 @@ public class SkillTreePacket implements IMessage {
 
     private final Map<ResourceLocation, SkillNode.Builder> nodes;
 
-    public SkillTreePacket(Map<ResourceLocation, SkillNode.Builder> nodes) {
+    public SSkillTreePacket(Map<ResourceLocation, SkillNode.Builder> nodes) {
         this.nodes = nodes;
     }
 
-    private SkillTreePacket() {
+    private SSkillTreePacket() {
         nodes = new HashMap<>();
     }
 

@@ -16,9 +16,9 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public class TaskStatusPacket implements IMessage {
+public class STaskStatusPacket implements IMessage {
 
-    static void encode(@Nonnull TaskStatusPacket msg, @Nonnull PacketBuffer buf) {
+    static void encode(@Nonnull STaskStatusPacket msg, @Nonnull PacketBuffer buf) {
         buf.writeUtf(msg.taskBoardId.toString());
         buf.writeVarInt(msg.containerId);
         buf.writeVarInt(msg.completableTasks.size());
@@ -36,7 +36,7 @@ public class TaskStatusPacket implements IMessage {
         }));
     }
 
-    static TaskStatusPacket decode(@Nonnull PacketBuffer buf) {
+    static STaskStatusPacket decode(@Nonnull PacketBuffer buf) {
         UUID taskBoardId = UUID.fromString(buf.readUtf());
         int containerId = buf.readVarInt();
         int completableTaskSize = buf.readVarInt();
@@ -60,10 +60,10 @@ public class TaskStatusPacket implements IMessage {
             }
             completedRequirements.put(id, req);
         }
-        return new TaskStatusPacket(taskInstances, completableTasks, completedRequirements, containerId, taskBoardId);
+        return new STaskStatusPacket(taskInstances, completableTasks, completedRequirements, containerId, taskBoardId);
     }
 
-    public static void handle(final TaskStatusPacket msg, @Nonnull Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final STaskStatusPacket msg, @Nonnull Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> VampirismMod.proxy.handleTaskStatusPacket(msg));
         ctx.setPacketHandled(true);
@@ -79,7 +79,7 @@ public class TaskStatusPacket implements IMessage {
      * @param containerId           the id of the {@link de.teamlapen.vampirism.inventory.container.TaskBoardContainer}
      * @param taskBoardId           the task board id
      */
-    public TaskStatusPacket(@Nonnull Set<ITaskInstance> available, Set<UUID> completableTasks, @Nonnull Map<UUID, Map<ResourceLocation, Integer>> completedRequirements, int containerId, UUID taskBoardId) {
+    public STaskStatusPacket(@Nonnull Set<ITaskInstance> available, Set<UUID> completableTasks, @Nonnull Map<UUID, Map<ResourceLocation, Integer>> completedRequirements, int containerId, UUID taskBoardId) {
         this.available = available;
         this.completableTasks = completableTasks;
         this.completedRequirements = completedRequirements;

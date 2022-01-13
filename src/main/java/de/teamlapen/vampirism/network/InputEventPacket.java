@@ -1,56 +1,34 @@
 package de.teamlapen.vampirism.network;
 
 import de.teamlapen.lib.HelperLib;
-import de.teamlapen.lib.lib.inventory.InventoryHelper;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.lib.network.IMessage;
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
-import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
-import de.teamlapen.vampirism.inventory.container.HunterBasicContainer;
-import de.teamlapen.vampirism.inventory.container.HunterTrainerContainer;
-import de.teamlapen.vampirism.inventory.container.VampirismContainer;
-import de.teamlapen.vampirism.items.OblivionItem;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
-import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.world.MinionWorldData;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.network.NetworkEvent;
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.apache.commons.lang3.Validate;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -59,22 +37,10 @@ import java.util.function.Supplier;
  */
 public class InputEventPacket implements IMessage {
 
-    public static final String SUCKBLOOD = "sb";
-    public static final String ENDSUCKBLOOD = "esb";
     public static final String TOGGLEACTION = "ta";
     public static final String UNLOCKSKILL = "us";
-    public static final String RESETSKILL = "rs";
-    public static final String TRAINERLEVELUP = "tl";
-    public static final String REVERTBACK = "rb";
-    public static final String VAMPIRE_VISION_TOGGLE = "vvt";
-    public static final String BASICHUNTERLEVELUP = "bl";
-    public static final String DRINK_BLOOD_BLOCK = "db";
     public static final String NAME_ITEM = "ni";
-    public static final String SELECT_CALL_MINION = "sm";
     public static final String TOGGLE_LOCK_MINION_TASK = "lt";
-    public static final String RESURRECT = "rst";
-    public static final String DIE = "die";
-    public static final String OPEN_VAMPIRISM_MENU = "ovm";
     public static final String DELETE_REFINEMENT = "dr";
 
 
@@ -105,21 +71,7 @@ public class InputEventPacket implements IMessage {
         ctx.enqueueWork(() -> {
             Optional<? extends IFactionPlayer<?>> factionPlayerOpt = FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentFactionPlayer).orElseGet(Optional::empty);
             switch (msg.action) {
-                case SUCKBLOOD: {
-                    try {
-                        int id = Integer.parseInt(msg.param);
-                        if (id != 0) {
-                            VampirePlayer.getOpt(player).ifPresent(vampire -> vampire.biteEntity(id));
-                        }
-                    } catch (NumberFormatException e) {
-                        LOGGER.error("Receiving invalid param {} for {}", msg.param, msg.action);
-                    }
 
-                    break;
-                }
-                case ENDSUCKBLOOD:
-                    VampirePlayer.getOpt(player).ifPresent(vampire -> vampire.endFeeding(true));
-                    break;
                 case TOGGLEACTION: {
                     ResourceLocation id = new ResourceLocation(msg.param);
                     factionPlayerOpt.ifPresent(factionPlayer -> {
@@ -149,15 +101,6 @@ public class InputEventPacket implements IMessage {
 
                     break;
                 }
-                case DRINK_BLOOD_BLOCK:
-                    String[] coords = msg.param.split(":");
-                    if (coords.length == 3) {
-                        BlockPos pos = new BlockPos(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]), Integer.parseInt(coords[2]));
-                        VampirePlayer.getOpt(player).ifPresent(v -> v.biteBlock(pos));
-                    } else {
-                        LOGGER.warn("Received invalid {} parameter", DRINK_BLOOD_BLOCK);
-                    }
-                    break;
                 case UNLOCKSKILL:
                     factionPlayerOpt.ifPresent(factionPlayer -> {
                         ISkill skill = ModRegistries.SKILLS.getValue(new ResourceLocation(msg.param));
@@ -183,34 +126,6 @@ public class InputEventPacket implements IMessage {
 
 
                     break;
-                case RESETSKILL:
-                    InventoryHelper.removeItemFromInventory(player.inventory, new ItemStack(ModItems.oblivion_potion));
-                    factionPlayerOpt.ifPresent(OblivionItem::applyEffect);
-                    break;
-                case TRAINERLEVELUP:
-                    if (player.containerMenu instanceof HunterTrainerContainer) {
-                        ((HunterTrainerContainer) player.containerMenu).onLevelupClicked();
-                    }
-                    break;
-                case REVERTBACK:
-                    FactionPlayerHandler.getOpt(player).ifPresent(handler -> {
-                        handler.setFactionAndLevel(null, 0);
-                        player.displayClientMessage(new TranslationTextComponent("command.vampirism.base.level.successful", player.getName(), VReference.VAMPIRE_FACTION.getName(), 0), true);
-                        LOGGER.debug("Player {} left faction", player);
-                        if (!ServerLifecycleHooks.getCurrentServer().isHardcore()) {
-                            player.hurt(DamageSource.MAGIC, 1000);
-
-                        }
-                    });
-                    break;
-                case VAMPIRE_VISION_TOGGLE:
-                    VampirePlayer.getOpt(player).ifPresent(VampirePlayer::switchVision);
-                    break;
-                case BASICHUNTERLEVELUP:
-                    if (player.containerMenu instanceof HunterBasicContainer) {
-                        ((HunterBasicContainer) player.containerMenu).onLevelUpClicked();
-                    }
-                    break;
                 case NAME_ITEM:
                     String name = msg.param;
                     if (VampirismVampireSword.DO_NOT_NAME_STRING.equals(name)) {
@@ -222,20 +137,6 @@ public class InputEventPacket implements IMessage {
                         ItemStack stack = player.getMainHandItem();
                         stack.setHoverName(new StringTextComponent(name).withStyle(TextFormatting.AQUA));
                     }
-                    break;
-                case SELECT_CALL_MINION:
-                    FactionPlayerHandler.getOpt(ctx.getSender()).ifPresent(fp -> {
-                        PlayerMinionController controller = MinionWorldData.getData(ctx.getSender().server).getOrCreateController(fp);
-                        Collection<Integer> ids = controller.getCallableMinions();
-                        if (ids.size() > 0) {
-                            List<Pair<Integer, ITextComponent>> minions = new ArrayList<>(ids.size());
-                            ids.forEach(id -> controller.contactMinionData(id, data -> data.getFormattedName().copy()).ifPresent(n -> minions.add(Pair.of(id, n))));
-                            VampirismMod.dispatcher.sendTo(new RequestMinionSelectPacket(RequestMinionSelectPacket.Action.CALL, minions), ctx.getSender());
-                        } else {
-                            SelectMinionTaskPacket.printRecoveringMinions(ctx.getSender(), controller.getRecoveringMinionNames());
-                        }
-
-                    });
                     break;
                 case TOGGLE_LOCK_MINION_TASK:
                     try {
@@ -249,32 +150,6 @@ public class InputEventPacket implements IMessage {
                     } catch (NumberFormatException e) {
                         LOGGER.error("Receiving invalid param {} for {}", msg.param, msg.action);
                     }
-                    break;
-                case OPEN_VAMPIRISM_MENU:
-                    factionPlayerOpt.ifPresent(fPlayer -> {
-                        if (player.isAlive()) {
-                            player.openMenu(new INamedContainerProvider() {
-                                @Nonnull
-                                @Override
-                                public Container createMenu(int i, @Nonnull PlayerInventory playerInventory, @Nonnull PlayerEntity playerEntity) {
-                                    return new VampirismContainer(i, playerInventory);
-                                }
-
-                                @Nonnull
-                                @Override
-                                public ITextComponent getDisplayName() {
-                                    return new TranslationTextComponent("");
-                                }
-                            });
-                            fPlayer.getTaskManager().openVampirismMenu();
-                        }
-                    });
-                    break;
-                case RESURRECT:
-                    VampirePlayer.getOpt(player).ifPresent(VampirePlayer::tryResurrect);
-                    break;
-                case DIE:
-                    VampirePlayer.getOpt(player).ifPresent(VampirePlayer::giveUpDBNO);
                     break;
                 case DELETE_REFINEMENT:
                     FactionPlayerHandler.getOpt(player).ifPresent(fph -> fph.getCurrentFactionPlayer().ifPresent(fp -> fp.getSkillHandler().removeRefinementItem(IRefinementItem.AccessorySlotType.valueOf(msg.param))));

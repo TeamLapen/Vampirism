@@ -5,9 +5,9 @@ import de.teamlapen.lib.HelperLib;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.inventory.container.TaskContainer;
-import de.teamlapen.vampirism.network.ActionBindingPacket;
-import de.teamlapen.vampirism.network.AppearancePacket;
-import de.teamlapen.vampirism.network.TaskActionPacket;
+import de.teamlapen.vampirism.network.CActionBindingPacket;
+import de.teamlapen.vampirism.network.CAppearancePacket;
+import de.teamlapen.vampirism.network.CTaskActionPacket;
 import de.teamlapen.vampirism.player.skills.SkillTree;
 import de.teamlapen.vampirism.player.skills.SkillTreeManager;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
@@ -29,12 +29,12 @@ public abstract class CommonProxy implements IProxy {
     }
 
     @Override
-    public void handleActionBindingPacket(ActionBindingPacket msg, PlayerEntity playerEntity) {
+    public void handleActionBindingPacket(CActionBindingPacket msg, PlayerEntity playerEntity) {
         FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.setBoundAction(msg.actionBindingId, msg.action, false, false));
     }
 
     @Override
-    public void handleAppearancePacket(PlayerEntity player, AppearancePacket msg) {
+    public void handleAppearancePacket(PlayerEntity player, CAppearancePacket msg) {
         Entity entity = player.level.getEntity(msg.entityId);
         if (entity instanceof PlayerEntity) {
             VampirePlayer.getOpt(player).ifPresent(vampire -> {
@@ -47,7 +47,7 @@ public abstract class CommonProxy implements IProxy {
     }
 
     @Override
-    public void handleTaskActionPacket(TaskActionPacket msg, PlayerEntity playerEntity) {
+    public void handleTaskActionPacket(CTaskActionPacket msg, PlayerEntity playerEntity) {
         FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> {
             switch (msg.action) {
                 case COMPLETE:

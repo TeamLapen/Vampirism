@@ -9,19 +9,19 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public class TaskActionPacket implements IMessage {
+public class CTaskActionPacket implements IMessage {
 
-    static void encode(TaskActionPacket msg, PacketBuffer buf) {
+    static void encode(CTaskActionPacket msg, PacketBuffer buf) {
         buf.writeUUID(msg.task);
         buf.writeUUID(msg.entityId);
         buf.writeVarInt(msg.action.ordinal());
     }
 
-    static TaskActionPacket decode(PacketBuffer buf) {
-        return new TaskActionPacket(buf.readUUID(), buf.readUUID(), TaskContainer.TaskAction.values()[buf.readVarInt()]);
+    static CTaskActionPacket decode(PacketBuffer buf) {
+        return new CTaskActionPacket(buf.readUUID(), buf.readUUID(), TaskContainer.TaskAction.values()[buf.readVarInt()]);
     }
 
-    public static void handle(final TaskActionPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final CTaskActionPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> VampirismMod.proxy.handleTaskActionPacket(msg, ctx.getSender()));
         ctx.setPacketHandled(true);
@@ -30,7 +30,7 @@ public class TaskActionPacket implements IMessage {
     public final UUID entityId;
     public final TaskContainer.TaskAction action;
 
-    public TaskActionPacket(UUID task, UUID entityId, TaskContainer.TaskAction action) {
+    public CTaskActionPacket(UUID task, UUID entityId, TaskContainer.TaskAction action) {
         this.task = task;
         this.entityId = entityId;
         this.action = action;

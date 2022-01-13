@@ -45,22 +45,22 @@ public interface IProxy extends IInitListener {
      */
     SkillTree getSkillTree(boolean client);
 
-    default void handleActionBindingPacket(ActionBindingPacket msg, PlayerEntity playerEntity) {
+    default void handleActionBindingPacket(CActionBindingPacket msg, PlayerEntity playerEntity) {
     }
 
-    default void handleAppearancePacket(PlayerEntity player, AppearancePacket msg) {
+    default void handleAppearancePacket(PlayerEntity player, CAppearancePacket msg) {
     }
 
-    default void handleBloodValuePacket(BloodValuePacket msg) {
+    default void handleBloodValuePacket(SBloodValuePacket msg) {
     }
 
-    default void handlePlayEventPacket(PlayEventPacket msg) {
+    default void handlePlayEventPacket(SPlayEventPacket msg) {
     }
 
-    default void handleRequestMinionSelect(RequestMinionSelectPacket.Action action, List<Pair<Integer, ITextComponent>> minions) {
+    default void handleRequestMinionSelect(SRequestMinionSelectPacket.Action action, List<Pair<Integer, ITextComponent>> minions) {
     }
 
-    default void handleSkillTreePacket(SkillTreePacket msg) {
+    default void handleSkillTreePacket(SSkillTreePacket msg) {
     }
 
     /**
@@ -68,19 +68,19 @@ public interface IProxy extends IInitListener {
      */
     void handleSleepClient(PlayerEntity player);
 
-    default void handleTaskActionPacket(TaskActionPacket msg, PlayerEntity playerEntity) {
+    default void handleTaskActionPacket(CTaskActionPacket msg, PlayerEntity playerEntity) {
     }
 
-    default void handleTaskPacket(TaskPacket msg) {
+    default void handleTaskPacket(STaskPacket msg) {
     }
 
-    default void handleTaskStatusPacket(TaskStatusPacket msg) {
+    default void handleTaskStatusPacket(STaskStatusPacket msg) {
     }
 
-    default void handleUpdateMultiBossInfoPacket(UpdateMultiBossInfoPacket msg) {
+    default void handleUpdateMultiBossInfoPacket(SUpdateMultiBossInfoPacket msg) {
     }
 
-    default void handleVampireBookPacket(OpenVampireBookPacket msg) {
+    default void handleVampireBookPacket(SOpenVampireBookPacket msg) {
     }
 
     void renderScreenFullColor(int ticksOn, int ticksOff, int color);
