@@ -74,6 +74,8 @@ public class HunterSkills {
     public static final RegistryObject<ISkill<IHunterPlayer>> SWIFT_BREWING = SKILLS.register("swift_brewing", () -> new VampirismSkill.SimpleHunterSkill(true));
     public static final RegistryObject<ISkill<IHunterPlayer>> CONCENTRATED_DURABLE_BREWING = SKILLS.register("concentrated_durable_brewing", () -> new VampirismSkill.SimpleHunterSkill(true));
     public static final RegistryObject<ISkill<IHunterPlayer>> POTION_RESISTANCE = SKILLS.register("potion_resistance", () -> new ActionSkill<>(HunterActions.POTION_RESISTANCE_HUNTER.get(), true));
+    public static final RegistryObject<ISkill<IHunterPlayer>> crucifix_wielder = SKILLS.register("crucifix_wielder",() ->new VampirismSkill.SimpleHunterSkill(true));
+    public static final RegistryObject<ISkill<IHunterPlayer>> ultimate_crucifix = SKILLS.register("ultimate_crucifix", () -> new VampirismSkill.SimpleHunterSkill(true));
 
     public static void registerHunterSkills(IEventBus bus) {
         SKILLS.register(bus);

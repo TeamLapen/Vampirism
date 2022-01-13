@@ -68,6 +68,7 @@ public class ModRefinements {
     public static final RegistryObject<Refinement> FREEZE_DURATION = REFINEMENTS.register("freeze_duration", Refinement::new);
     public static final RegistryObject<Refinement> BLOOD_CHARGE_SPEED = REFINEMENTS.register("blood_charge_speed", Refinement::new);
     public static final RegistryObject<Refinement> SWORD_TRAINED_AMOUNT = REFINEMENTS.register("sword_trained_amount", Refinement::new);
+    public static final RegistryObject<Refinement> CRUCIFIX_RESISTANT = REFINEMENTS.register("crucifix_resistant", Refinement::new);
 
 
     public static void registerRefinements(IEventBus bus) {

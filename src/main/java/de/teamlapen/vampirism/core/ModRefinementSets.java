@@ -17,7 +17,7 @@ public class ModRefinementSets {
     public static void registerRefinementSets(IEventBus bus) {
         REFINEMENT_SETS.register(bus);
     }
-    
+
     static {
         // Common refinement set
         {
@@ -111,6 +111,10 @@ public class ModRefinementSets {
             REFINEMENT_SETS.register("half_invulnerable_debuffed", () -> new RefinementSet.VampireRefinementSet(Rarity.RARE, 0xa96db7, ModRefinements.HALF_INVULNERABLE, ModRefinements.N_ARMOR1));
             REFINEMENT_SETS.register("summon_bats_debuffed", () -> new RefinementSet.VampireRefinementSet(Rarity.RARE, 0x8b8a91, ModRefinements.SUMMON_BATS, ModRefinements.N_HEALTH1));
             REFINEMENT_SETS.register("sun_screen_debuffed", () -> new RefinementSet.VampireRefinementSet(Rarity.RARE, 0xedc20b, ModRefinements.SUN_SCREEN, ModRefinements.N_ARMOR1));
+
+            //other
+            REFINEMENT_SETS.register("crucifix_resistant", () -> new RefinementSet.VampireRefinementSet(Rarity.UNCOMMON, 0x7DC2D1, ModRefinements.CRUCIFIX_RESISTANT));
+
         }
 
         // Epic refinement sets
@@ -131,6 +135,10 @@ public class ModRefinementSets {
             // de-buffed skill upgrades
             REFINEMENT_SETS.register("dark_blood_projectile_aoe_debuffed", () -> new RefinementSet.VampireRefinementSet(Rarity.EPIC, 0xe303ff, ModRefinements.DARK_BLOOD_PROJECTILE_AOE, ModRefinements.N_HEALTH1).onlyFor(IRefinementItem.AccessorySlotType.RING));
             REFINEMENT_SETS.register("rage_fury_debuffed", () -> new RefinementSet.VampireRefinementSet(Rarity.EPIC, 0xc10202, ModRefinements.RAGE_FURY, ModRefinements.N_ARMOR1));
+
+            //other
+            REFINEMENT_SETS.register("crucifix_resistant_speed", () -> new RefinementSet.VampireRefinementSet(Rarity.EPIC, 0x7D55D1, ModRefinements.CRUCIFIX_RESISTANT, ModRefinements.ATTACK_SPEED1));
+            REFINEMENT_SETS.register("crucifix_resistant_health", () -> new RefinementSet.VampireRefinementSet(Rarity.EPIC, 0x7D55D1, ModRefinements.CRUCIFIX_RESISTANT, ModRefinements.HEALTH2));
         }
         // Legendary refinement sets
         {

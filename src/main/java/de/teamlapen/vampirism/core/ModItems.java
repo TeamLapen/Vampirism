@@ -217,6 +217,9 @@ public class ModItems {
     public static final RegistryObject<SignItem> dark_spruce_sign = ITEMS.register("dark_spruce_sign", () -> new SignItem((new Item.Properties()).stacksTo(16).tab(VampirismMod.creativeTab), ModBlocks.DARK_SPRUCE_SIGN.get(), ModBlocks.DARK_SPRUCE_WALL_SIGN.get()));
     public static final RegistryObject<SignItem> cursed_spruce_sign = ITEMS.register("cursed_spruce_sign", () -> new SignItem((new Item.Properties()).stacksTo(16).tab(VampirismMod.creativeTab), ModBlocks.CURSED_SPRUCE_SIGN.get(), ModBlocks.CURSED_SPRUCE_WALL_SIGN.get()));
 
+    public static final RegistryObject<CrucifixItem> CRUCIFIX_NORMAL = ITEMS.register("crucifix_normal", () -> new CrucifixItem(IItemWithTier.TIER.NORMAL));
+    public static final RegistryObject<CrucifixItem> CRUCIFIX_ENHANCED = ITEMS.register("crucifix_enhanced", () -> new CrucifixItem(IItemWithTier.TIER.ENHANCED));
+    public static final RegistryObject<CrucifixItem> CRUCIFIX_ULTIMATE = ITEMS.register("crucifix_ultimate", () -> new CrucifixItem(IItemWithTier.TIER.ULTIMATE));
 
     static void registerCraftingRecipes() {
         // Brewing

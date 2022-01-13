@@ -1,0 +1,78 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "blessed_salt": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "vampirism:holy_salt"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_skill": {
+      "conditions": {
+        "skill": "vampirism:crucifix_wielder"
+      },
+      "trigger": "vampirism:skill_unlocked"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "vampirism:weapontable/hunter/crucifix_enhanced"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "holy_water": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "vampirism:holy_water_bottle_normal"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "iron": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:ingots/iron"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "stake": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "vampirism:stake"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "iron",
+      "blessed_salt",
+      "holy_water",
+      "stake",
+      "has_skill",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "vampirism:weapontable/hunter/crucifix_enhanced"
+    ]
+  }
+}
