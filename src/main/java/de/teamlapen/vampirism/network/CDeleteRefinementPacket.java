@@ -15,15 +15,15 @@ import java.util.function.Supplier;
 
 public class CDeleteRefinementPacket implements IMessage {
 
-    static void encode(CDeleteRefinementPacket msg, PacketBuffer buf){
+    static void encode(CDeleteRefinementPacket msg, PacketBuffer buf) {
         buf.writeEnum(msg.slot);
     }
 
-    static CDeleteRefinementPacket decode(PacketBuffer buf){
+    static CDeleteRefinementPacket decode(PacketBuffer buf) {
         return new CDeleteRefinementPacket(buf.readEnum(IRefinementItem.AccessorySlotType.class));
     }
 
-    static void handle(CDeleteRefinementPacket msg, Supplier<NetworkEvent.Context> contextSupplier){
+    static void handle(CDeleteRefinementPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ServerPlayerEntity player = ctx.getSender();
         Validate.notNull(player);

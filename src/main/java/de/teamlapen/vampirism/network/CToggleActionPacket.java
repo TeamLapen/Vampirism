@@ -21,15 +21,15 @@ import java.util.function.Supplier;
 public class CToggleActionPacket implements IMessage {
     private static final Logger LOGGER = LogManager.getLogger();
 
-    static void encode(CToggleActionPacket msg, PacketBuffer buf){
+    static void encode(CToggleActionPacket msg, PacketBuffer buf) {
         buf.writeResourceLocation(msg.actionId);
     }
 
-    static CToggleActionPacket decode(PacketBuffer buf){
+    static CToggleActionPacket decode(PacketBuffer buf) {
         return new CToggleActionPacket(buf.readResourceLocation());
     }
 
-    static void handle(CToggleActionPacket msg, Supplier<NetworkEvent.Context> contextSupplier){
+    static void handle(CToggleActionPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ServerPlayerEntity player = ctx.getSender();
         Validate.notNull(player);

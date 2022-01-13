@@ -16,7 +16,7 @@ import java.util.function.Supplier;
  * Player has initiate feeding on an entity
  */
 public class CStartFeedingPacket implements IMessage {
-    static void encode(CStartFeedingPacket msg, PacketBuffer buffer){
+    static void encode(CStartFeedingPacket msg, PacketBuffer buffer) {
         msg.target.ifLeft(entityID -> {
             buffer.writeBoolean(false);
             buffer.writeVarInt(entityID);
@@ -27,16 +27,15 @@ public class CStartFeedingPacket implements IMessage {
         });
     }
 
-    static CStartFeedingPacket decode(PacketBuffer buffer){
-        if(buffer.readBoolean()){
+    static CStartFeedingPacket decode(PacketBuffer buffer) {
+        if (buffer.readBoolean()) {
             return new CStartFeedingPacket(buffer.readBlockPos());
-        }
-        else{
+        } else {
             return new CStartFeedingPacket(buffer.readVarInt());
         }
     }
 
-    static void handle(final CStartFeedingPacket msg, Supplier<NetworkEvent.Context> contextSupplier){
+    static void handle(final CStartFeedingPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ServerPlayerEntity player = ctx.getSender();
         Validate.notNull(player);
@@ -44,7 +43,7 @@ public class CStartFeedingPacket implements IMessage {
             VampirePlayer.getOpt(player).ifPresent(vampire -> {
                 msg.target.ifLeft(vampire::biteEntity);
                 msg.target.ifRight(vampire::biteBlock);
-                    });
+            });
         });
     }
 
@@ -54,7 +53,7 @@ public class CStartFeedingPacket implements IMessage {
         this.target = Either.left(entityID);
     }
 
-    public CStartFeedingPacket(BlockPos targetPosition){
+    public CStartFeedingPacket(BlockPos targetPosition) {
         this.target = Either.right(targetPosition);
     }
 }

@@ -24,20 +24,16 @@ import java.util.function.Supplier;
  */
 public class CSimpleInputEvent implements IMessage {
 
-    static void encode(CSimpleInputEvent msg, PacketBuffer buf){
+    static void encode(CSimpleInputEvent msg, PacketBuffer buf) {
         buf.writeEnum(msg.type);
     }
 
-    static CSimpleInputEvent decode(PacketBuffer buf){
+    static CSimpleInputEvent decode(PacketBuffer buf) {
         Type t = buf.readEnum(Type.class);
         return new CSimpleInputEvent(t);
     }
 
-    public enum Type{
-        FINISH_SUCK_BLOOD, RESET_SKILLS, REVERT_BACK, TOGGLE_VAMPIRE_VISION, TRAINER_LEVELUP, BASIC_HUNTER_LEVELUP, SHOW_MINION_CALL_SELECTION, VAMPIRISM_MENU, RESURRECT, GIVE_UP
-    }
-
-    static void handle(final CSimpleInputEvent msg, Supplier<NetworkEvent.Context> contextSupplier){
+    static void handle(final CSimpleInputEvent msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ServerPlayerEntity player = ctx.getSender();
         Validate.notNull(player);
@@ -54,7 +50,7 @@ public class CSimpleInputEvent implements IMessage {
                     break;
                 case REVERT_BACK:
                     FactionPlayerHandler.getOpt(player).ifPresent(handler -> {
-                       handler.leaveFaction(!player.server.isHardcore());
+                        handler.leaveFaction(!player.server.isHardcore());
                     });
                     break;
                 case TOGGLE_VAMPIRE_VISION:
@@ -85,10 +81,13 @@ public class CSimpleInputEvent implements IMessage {
             }
         });
     }
+    private final Type type;
 
     public CSimpleInputEvent(Type type) {
         this.type = type;
     }
 
-    private final Type type;
+    public enum Type {
+        FINISH_SUCK_BLOOD, RESET_SKILLS, REVERT_BACK, TOGGLE_VAMPIRE_VISION, TRAINER_LEVELUP, BASIC_HUNTER_LEVELUP, SHOW_MINION_CALL_SELECTION, VAMPIRISM_MENU, RESURRECT, GIVE_UP
+    }
 }

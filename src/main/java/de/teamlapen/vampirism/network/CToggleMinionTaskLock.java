@@ -14,15 +14,15 @@ import java.util.function.Supplier;
 
 
 public class CToggleMinionTaskLock implements IMessage {
-    static void encode(CToggleMinionTaskLock msg, PacketBuffer buf){
+    static void encode(CToggleMinionTaskLock msg, PacketBuffer buf) {
         buf.writeVarInt(msg.minionID);
     }
 
-    static CToggleMinionTaskLock decode(PacketBuffer buf){
+    static CToggleMinionTaskLock decode(PacketBuffer buf) {
         return new CToggleMinionTaskLock(buf.readVarInt());
     }
 
-    static void handle(CToggleMinionTaskLock msg, Supplier<NetworkEvent.Context> contextSupplier){
+    static void handle(CToggleMinionTaskLock msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ServerPlayerEntity player = ctx.getSender();
         Validate.notNull(player);

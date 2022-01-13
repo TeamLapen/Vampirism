@@ -25,15 +25,15 @@ import java.util.function.Supplier;
 public class CUnlockSkillPacket implements IMessage {
     private static final Logger LOGGER = LogManager.getLogger();
 
-    static void encode(CUnlockSkillPacket msg, PacketBuffer buf){
+    static void encode(CUnlockSkillPacket msg, PacketBuffer buf) {
         buf.writeResourceLocation(msg.skillId);
     }
 
-    static CUnlockSkillPacket decode(PacketBuffer buf){
+    static CUnlockSkillPacket decode(PacketBuffer buf) {
         return new CUnlockSkillPacket(buf.readResourceLocation());
     }
 
-    static void handle(CUnlockSkillPacket msg, Supplier<NetworkEvent.Context> contextSupplier){
+    static void handle(CUnlockSkillPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ServerPlayerEntity player = ctx.getSender();
         Validate.notNull(player);
