@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.entity.hunter.*;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.entity.vampire.*;
+import de.teamlapen.vampirism.sit.SitEntity;
 import net.minecraft.entity.*;
 import net.minecraft.entity.passive.BatEntity;
 import net.minecraft.util.ResourceLocation;
@@ -64,6 +65,7 @@ public class ModEntities {
     public static final EntityType<HunterMinionEntity> hunter_minion = getNull();
     public static final EntityType<VampireTaskMasterEntity> task_master_vampire = getNull();
     public static final EntityType<HunterTaskMasterEntity> task_master_hunter = getNull();
+    public static final EntityType<SitEntity> dummy_sit_entity = getNull();
     /**
      * empty unless in datagen
      */
@@ -145,6 +147,7 @@ public class ModEntities {
         registry.register(prepareEntityType("hunter_minion", EntityType.Builder.of(HunterMinionEntity::new, EntityClassification.CREATURE).sized(0.6f, 1.95f), false));
         registry.register(prepareEntityType("task_master_vampire", EntityType.Builder.of(VampireTaskMasterEntity::new, VReference.VAMPIRE_CREATURE_TYPE).sized(0.6f, 1.95f), true));
         registry.register(prepareEntityType("task_master_hunter", EntityType.Builder.of(HunterTaskMasterEntity::new, VReference.HUNTER_CREATURE_TYPE).sized(0.6f, 1.95f), true));
+        registry.register(prepareEntityType("dummy_sit_entity", EntityType.Builder.of(SitEntity::new, EntityClassification.MISC).sized(0.0001f, 0.0001f).setTrackingRange(256).setUpdateInterval(20), false));
     }
 
     static void registerSpawns() {

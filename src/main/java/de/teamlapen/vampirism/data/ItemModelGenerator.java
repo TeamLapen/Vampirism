@@ -131,6 +131,8 @@ public class ItemModelGenerator extends ItemModelProvider {
             add(ModBlocks.cursed_spruce_slab);
             add(ModBlocks.dark_spruce_fence_gate);
             add(ModBlocks.cursed_spruce_fence_gate);
+            add(ModBlocks.vampire_rack);
+            add(ModBlocks.throne);
         }};
         Set<Item> items = new HashSet<Item>() {{
             add(ModItems.hunter_coat_chest_normal);

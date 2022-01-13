@@ -9,13 +9,13 @@
           "conditions": [
             {
               "condition": "minecraft:block_state_property",
-              "block": "vampirism:cross",
+              "block": "vampirism:throne",
               "properties": {
                 "part": "main"
               }
             }
           ],
-          "name": "vampirism:cross"
+          "name": "vampirism:throne"
         }
       ],
       "conditions": [

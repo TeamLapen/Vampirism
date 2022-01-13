@@ -4,8 +4,8 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.blocks.BushBlock;
+import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.client.core.ModBlocksRender;
 import de.teamlapen.vampirism.client.render.VampirismItemStackTESR;
 import de.teamlapen.vampirism.data.BlockStateGenerator;
@@ -129,6 +129,8 @@ public class ModBlocks {
     public static final FenceGateBlock cursed_spruce_fence_gate = getNull();
     public static final FenceBlock dark_spruce_fence = getNull();
     public static final FenceBlock cursed_spruce_fence = getNull();
+    public static final VampirismBlock vampire_rack = getNull();
+    public static final VampirismBlock throne = getNull();
 
     /**
      * empty unless in datagen
@@ -201,7 +203,7 @@ public class ModBlocks {
         registry.register(prepareItemRegistry(new ChandelierBlock()));
         registry.register(prepareRegister(new CandelabraWallBlock()));
         registry.register(prepareRegister(new CandelabraBlock()));
-        registry.register(prepareItemRegistry(new CrossBlock()));
+        registry.register(prepareItemRegistry(new VampirismSplitBlock("cross", AbstractBlock.Properties.of(Material.WOOD).strength(2, 3), BlockVoxelshapes.crossBottom, BlockVoxelshapes.crossTop, true).markDecorativeBlock()));
         registry.register(prepareItemRegistry(new VampirismHorizontalBlock("tombstone1", AbstractBlock.Properties.of(Material.STONE).strength(2, 6), BlockVoxelshapes.tomb1).markDecorativeBlock()));
         registry.register(prepareItemRegistry(new VampirismHorizontalBlock("tombstone2", AbstractBlock.Properties.of(Material.STONE).strength(2, 6), BlockVoxelshapes.tomb2).markDecorativeBlock()));
         registry.register(prepareItemRegistry(new VampirismHorizontalBlock("tombstone3", AbstractBlock.Properties.of(Material.STONE).strength(2, 6), BlockVoxelshapes.tomb3).markDecorativeBlock()));
@@ -249,6 +251,8 @@ public class ModBlocks {
         registry.register(prepareItemRegistry(new FenceGateBlock(AbstractBlock.Properties.of(Material.WOOD, cursed_spruce_planks.defaultMaterialColor()).strength(2.0F, 3.0F).sound(SoundType.WOOD)).setRegistryName(REFERENCE.MODID, "cursed_spruce_fence_gate")));
         registry.register(prepareItemRegistry(new FenceBlock(AbstractBlock.Properties.of(Material.WOOD, dark_spruce_planks.defaultMaterialColor()).strength(2.0F, 3.0F).sound(SoundType.WOOD)).setRegistryName(REFERENCE.MODID, "dark_spruce_fence")));
         registry.register(prepareItemRegistry(new FenceBlock(AbstractBlock.Properties.of(Material.WOOD, cursed_spruce_planks.defaultMaterialColor()).strength(2.0F, 3.0F).sound(SoundType.WOOD)).setRegistryName(REFERENCE.MODID, "cursed_spruce_fence")));
+        registry.register(prepareItemRegistry(new VampirismHorizontalBlock("vampire_rack", AbstractBlock.Properties.of(Material.WOOD).strength(2, 3), BlockVoxelshapes.vampire_rack).markDecorativeBlock()));
+        registry.register(prepareItemRegistry(new ThroneBlock()));
 
         /**
          * TUTORIAL:

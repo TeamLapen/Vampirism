@@ -58,6 +58,7 @@ The following labeling scheme is used:
 - cournualllama2 _Lore_
 - Random _Textures/Models_
 - Shumnik _Textures/Models_
+- BugraaK _Textures/Models_
 
 ## API
 Vampirism has an API you can use to add blood values to your mod's creatures or make them convertible and more.
@@ -183,11 +184,20 @@ If you want to use them in a resource/texture pack, you must credit the Vampiris
 ```
 
 ##### Sounds
+
 This mod uses these sounds from freesound:  
-DST-VampireMonk.mp3 by Striderjapan -- http://www.freesound.org/people/Striderjapan/sounds/141368/ -- License: CC Attribution  
+DST-VampireMonk.mp3 by Striderjapan -- http://www.freesound.org/people/Striderjapan/sounds/141368/ -- License: CC
+Attribution  
 vampire bites by Bernuy -- http://www.freesound.org/people/Bernuy/sounds/268501/ -- License: CC Attribution  
 bow02.ogg by Erdie https://www.freesound.org/people/Erdie/sounds/65734/ -- Licence: CC Attribution  
 the swarm v31m3 by Setuniman https://www.freesound.org/people/Setuniman/sounds/130695/ -- Licence: CC Attribution  
 Boiling Towel by unfa https://www.freesound.org/people/unfa/sounds/174499/ -- Licence: CC Attribution  
-Pepper mill grinds pepper by Black_River_Phonogram https://freesound.org/people/Black_River_Phonogram/sounds/424605/ -- Licence: CC0  
-Slimey by Nebulasnails https://freesound.org/people/nebulasnails/sounds/495116/ -- Licence: CC0  
+Pepper mill grinds pepper by Black_River_Phonogram https://freesound.org/people/Black_River_Phonogram/sounds/424605/ --
+Licence: CC0  
+Slimey by Nebulasnails https://freesound.org/people/nebulasnails/sounds/495116/ -- Licence: CC0
+
+##### Sit functionality - `sit` package
+
+The code under `de.teamlapen.vampirism.sit` is adapted from bl4ckscor4's Sit mod and licensed under GNU GPLv3 (see
+LICENSE.txt in that directory)
+

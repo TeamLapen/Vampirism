@@ -4,10 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.blocks.AltarPillarBlock;
-import de.teamlapen.vampirism.blocks.CoffinBlock;
-import de.teamlapen.vampirism.blocks.GarlicBlock;
-import de.teamlapen.vampirism.blocks.MedChairBlock;
+import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
@@ -281,7 +278,7 @@ public class LootTablesGenerator extends LootTableProvider {
             this.dropSelf(ModBlocks.chandelier);
             this.add(ModBlocks.candelabra_wall, createSingleItemTable(ModItems.item_candelabra));
             this.add(ModBlocks.candelabra, createSingleItemTable(ModItems.item_candelabra));
-            this.dropSelf(ModBlocks.cross);
+            this.add(ModBlocks.cross, (p_218567_0_) -> createSinglePropConditionTable(p_218567_0_, VampirismSplitBlock.PART, VampirismSplitBlock.Part.MAIN));
             this.dropSelf(ModBlocks.tombstone1);
             this.dropSelf(ModBlocks.tombstone2);
             this.dropSelf(ModBlocks.tombstone3);
@@ -314,6 +311,8 @@ public class LootTablesGenerator extends LootTableProvider {
             this.dropSelf(ModBlocks.cursed_spruce_fence_gate);
             this.dropSelf(ModBlocks.dark_spruce_fence);
             this.dropSelf(ModBlocks.cursed_spruce_fence);
+            this.dropSelf(ModBlocks.vampire_rack);
+            this.add(ModBlocks.throne, (p_218567_0_) -> createSinglePropConditionTable(p_218567_0_, VampirismSplitBlock.PART, VampirismSplitBlock.Part.MAIN));
         }
 
         @Nonnull
