@@ -277,7 +277,9 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
      */
     private boolean getCanSpawnHereRestricted(LevelAccessor iWorld) {
         boolean vampireBiome = ModBiomes.vampire_forest.getRegistryName().equals(Helper.getBiomeId(iWorld, this.blockPosition()));
-        if (!vampireBiome) return isLowLightLevel(iWorld);
+        boolean lowLightLevel = isLowLightLevel(iWorld);
+        if(lowLightLevel) return true;
+        if(!vampireBiome) return false;
         BlockState iblockstate = iWorld.getBlockState((this.blockPosition()).below());
         return iblockstate.is(ModTags.Blocks.CURSEDEARTH);
     }
