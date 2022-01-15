@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.core;
 
-import com.google.common.collect.ImmutableList;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -42,20 +41,20 @@ public class ModBiomes {
         BiomeDictionary.addTypes(VAMPIRE_FOREST_KEY, BiomeDictionary.Type.OVERWORLD, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.DENSE, BiomeDictionary.Type.MAGICAL, BiomeDictionary.Type.SPOOKY);
     }
 
-    public static void registerOverworldSurfaceRules(ImmutableList.Builder<SurfaceRules.RuleSource> builder) {
+    public static SurfaceRules.RuleSource buildOverworldSurfaceRules(){
         //Any blocks here must be available before block registration, so they must be initialized statically
         SurfaceRules.RuleSource cursed_earth = SurfaceRules.state(ModBlocks.cursed_earth.defaultBlockState());
         SurfaceRules.RuleSource grass = SurfaceRules.state(ModBlocks.cursed_grass_block.defaultBlockState());
         SurfaceRules.ConditionSource inVampireBiome = SurfaceRules.isBiome(ModBiomes.VAMPIRE_FOREST_KEY);
         SurfaceRules.RuleSource vampireForestTopLayer = SurfaceRules.ifTrue(inVampireBiome, grass);
         SurfaceRules.RuleSource vampireForestBaseLayer = SurfaceRules.ifTrue(inVampireBiome, cursed_earth);
-        builder.add(SurfaceRules.sequence(
+        return SurfaceRules.sequence(
                 SurfaceRules.ifTrue(SurfaceRules.abovePreliminarySurface(),
                         SurfaceRules.sequence(
                                 SurfaceRules.ifTrue(SurfaceRules.ON_FLOOR, SurfaceRules.ifTrue(SurfaceRules.waterBlockCheck(-1, 0), SurfaceRules.sequence(vampireForestTopLayer))),
                                 SurfaceRules.ifTrue(SurfaceRules.UNDER_FLOOR, SurfaceRules.ifTrue(SurfaceRules.waterBlockCheck(-1, 0), SurfaceRules.sequence(vampireForestBaseLayer)))
                         ))
-        ));
+        );
     }
 
     /**

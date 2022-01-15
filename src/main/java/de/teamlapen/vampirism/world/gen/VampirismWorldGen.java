@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFeatures;
 import de.teamlapen.vampirism.mixin.LevelStructureSettingsAccessor;
 import de.teamlapen.vampirism.mixin.MultiNoiseBiomeSourcePresetAccessor;
+import de.teamlapen.vampirism.modcompat.terrablender.TerraBlenderCompat;
 import de.teamlapen.vampirism.util.ConfigurableStructureSeparationSettings;
 import de.teamlapen.vampirism.util.MixinHooks;
 import de.teamlapen.vampirism.world.biome.VampirismBiomeFeatures;
@@ -90,9 +91,15 @@ public class VampirismWorldGen {
 
 
     /**
-     * Call on main thread
+     * Call on main thread.
+     *
+     * Add our biomes to the overworld biome source preset
      */
     public static void addBiomesToOverworldUnsafe() {
+        if(TerraBlenderCompat.areBiomesAddedViaTerraBlender()){ //If we are already adding the biome to the overworld using TerraBlender, we shouldn't hack it into the overworld preset
+            LOGGER.info("Vampirism Biomes are added via TerraBlender. Not adding them to overworld preset.");
+            return;
+        }
         if(!VampirismConfig.COMMON.addVampireForestToOverworld.get()){
             return;
         }
