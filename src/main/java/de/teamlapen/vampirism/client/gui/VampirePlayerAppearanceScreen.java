@@ -155,6 +155,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
         this.eyeList.visible = show;
         this.fangButton.visible = !show;
         this.glowingEyesButton.visible = !show;
+        this.lordGenderButton.visible = !show;
         if (show) this.fangList.visible = false;
     }
 
@@ -162,6 +163,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
         fangButton.setMessage(fangList.getMessage().copy().append(" " + (fangType + 1)));
         this.fangList.visible = show;
         this.glowingEyesButton.visible = !show;
+        this.lordGenderButton.visible = !show;
         if (show) this.eyeList.visible = false;
     }
 }
