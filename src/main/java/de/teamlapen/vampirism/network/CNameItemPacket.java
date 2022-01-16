@@ -37,6 +37,7 @@ public class CNameItemPacket implements IMessage {
                 stack.setHoverName(new StringTextComponent(msg.name).withStyle(TextFormatting.AQUA));
             }
         });
+        ctx.setPacketHandled(true);
     }
 
     private final String name;

@@ -45,6 +45,7 @@ public class CStartFeedingPacket implements IMessage {
                 msg.target.ifRight(vampire::biteBlock);
             });
         });
+        ctx.setPacketHandled(true);
     }
 
     private final Either<Integer, BlockPos> target;

@@ -31,6 +31,7 @@ public class CDeleteRefinementPacket implements IMessage {
             Optional<? extends IFactionPlayer<?>> factionPlayerOpt = FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentFactionPlayer).orElseGet(Optional::empty);
             factionPlayerOpt.ifPresent(fp -> fp.getSkillHandler().removeRefinementItem(msg.slot));
         });
+        ctx.setPacketHandled(true);
     }
 
     private final IRefinementItem.AccessorySlotType slot;

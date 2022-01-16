@@ -1,12 +1,14 @@
 package de.teamlapen.vampirism.network;
 
 import de.teamlapen.lib.network.IMessage;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.core.ModRegistries;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
+import org.apache.commons.lang3.Validate;
 
 import java.util.function.Supplier;
 
@@ -23,7 +25,11 @@ public class CActionBindingPacket implements IMessage {
 
     public static void handle(final CActionBindingPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
-        ctx.enqueueWork(() -> VampirismMod.proxy.handleActionBindingPacket(msg, ctx.getSender()));
+        ServerPlayerEntity player = ctx.getSender();
+        Validate.notNull(player);
+        ctx.enqueueWork(() -> {
+            FactionPlayerHandler.getOpt(player).ifPresent(factionPlayerHandler -> factionPlayerHandler.setBoundAction(msg.actionBindingId, msg.action, false, false));
+        });
         ctx.setPacketHandled(true);
     }
 

@@ -1,10 +1,16 @@
 package de.teamlapen.vampirism.network;
 
+import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.network.IMessage;
-import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
+import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
+import org.apache.commons.lang3.Validate;
 
 import java.util.function.Supplier;
 
@@ -31,7 +37,17 @@ public class CAppearancePacket implements IMessage {
 
     public static void handle(final CAppearancePacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
-        ctx.enqueueWork(() -> VampirismMod.proxy.handleAppearancePacket(ctx.getSender(), msg));
+        ServerPlayerEntity player = ctx.getSender();
+        Validate.notNull(player);
+        ctx.enqueueWork(() -> {
+            Entity entity = player.level.getEntity(msg.entityId);
+            if (entity instanceof PlayerEntity) {
+                VampirePlayer.getOpt(player).ifPresent(vampire -> vampire.setSkinData(msg.data));
+            } else if (entity instanceof MinionEntity<?>) {
+                ((MinionEntity<?>) entity).getMinionData().ifPresent(minionData -> minionData.handleMinionAppearanceConfig(msg.name, msg.data));
+                HelperLib.sync((MinionEntity<?>) entity);
+            }
+        });
         ctx.setPacketHandled(true);
     }
 

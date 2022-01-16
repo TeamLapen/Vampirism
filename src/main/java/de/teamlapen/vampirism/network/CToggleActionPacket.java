@@ -59,6 +59,7 @@ public class CToggleActionPacket implements IMessage {
                 }
             });
         });
+        ctx.setPacketHandled(true);
     }
 
     private final ResourceLocation actionId;

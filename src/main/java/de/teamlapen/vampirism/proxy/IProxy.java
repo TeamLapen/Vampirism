@@ -45,12 +45,6 @@ public interface IProxy extends IInitListener {
      */
     SkillTree getSkillTree(boolean client);
 
-    default void handleActionBindingPacket(CActionBindingPacket msg, PlayerEntity playerEntity) {
-    }
-
-    default void handleAppearancePacket(PlayerEntity player, CAppearancePacket msg) {
-    }
-
     default void handleBloodValuePacket(SBloodValuePacket msg) {
     }
 
@@ -67,9 +61,6 @@ public interface IProxy extends IInitListener {
      * Handle client side only sleep things
      */
     void handleSleepClient(PlayerEntity player);
-
-    default void handleTaskActionPacket(CTaskActionPacket msg, PlayerEntity playerEntity) {
-    }
 
     default void handleTaskPacket(STaskPacket msg) {
     }

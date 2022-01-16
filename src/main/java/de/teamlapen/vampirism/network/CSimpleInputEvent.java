@@ -80,6 +80,7 @@ public class CSimpleInputEvent implements IMessage {
                     break;
             }
         });
+        ctx.setPacketHandled(true);
     }
     private final Type type;
 

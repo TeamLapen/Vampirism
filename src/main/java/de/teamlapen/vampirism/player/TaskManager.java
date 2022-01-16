@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.inventory.container.TaskBoardContainer;
 import de.teamlapen.vampirism.inventory.container.TaskContainer;
 import de.teamlapen.vampirism.inventory.container.VampirismContainer;
+import de.teamlapen.vampirism.network.CTaskActionPacket;
 import de.teamlapen.vampirism.network.STaskPacket;
 import de.teamlapen.vampirism.network.STaskStatusPacket;
 import de.teamlapen.vampirism.player.tasks.TaskInstance;
@@ -104,6 +105,23 @@ public class TaskManager implements ITaskManager {
     public void acceptTask(UUID taskBoardId, @Nonnull UUID taskInstance) {
         ITaskInstance ins = this.taskWrapperMap.get(taskBoardId).acceptTask(taskInstance, this.player.level.getGameTime() + getTaskTimeConfig() * 1200L);
         this.updateStats(ins);
+    }
+
+    /**
+     * Handle a task action message that was sent from client to server
+     */
+    public void handleTaskActionMessage(CTaskActionPacket msg){
+        switch (msg.action) {
+            case COMPLETE:
+                completeTask(msg.entityId, msg.task);
+                break;
+            case ACCEPT:
+                acceptTask(msg.entityId, msg.task);
+                break;
+            default:
+               abortTask(msg.entityId, msg.task, msg.action == TaskContainer.TaskAction.REMOVE);
+                break;
+        }
     }
 
     /**

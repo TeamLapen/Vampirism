@@ -61,6 +61,8 @@ public class CUnlockSkillPacket implements IMessage {
                 }
             });
         });
+        ctx.setPacketHandled(true);
+
     }
 
     private final ResourceLocation skillId;

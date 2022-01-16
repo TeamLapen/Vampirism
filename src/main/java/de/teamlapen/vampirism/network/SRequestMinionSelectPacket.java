@@ -18,8 +18,18 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 
+/**
+ * Request the client (player) to select a minion from the attached list of minions
+ */
 public class SRequestMinionSelectPacket implements IMessage {
 
+    /**
+     * Create a minion selection request that can be send to the client (player).
+     * It offers all available/callable minions up for selection.
+     * If no minions are available, it prints a status message to the player and returns empty
+     * @param action The action that should be executed for the selected minion
+     * @return Empty if no minions are available
+     */
     public static Optional<SRequestMinionSelectPacket> createRequestForPlayer(ServerPlayerEntity player, Action action){
         return FactionPlayerHandler.getOpt(player).resolve().flatMap(fp -> {
             PlayerMinionController controller = MinionWorldData.getData(player.server).getOrCreateController(fp);

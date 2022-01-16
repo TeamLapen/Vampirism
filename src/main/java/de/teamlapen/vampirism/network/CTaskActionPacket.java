@@ -1,10 +1,14 @@
 package de.teamlapen.vampirism.network;
 
 import de.teamlapen.lib.network.IMessage;
-import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.inventory.container.TaskContainer;
+import de.teamlapen.vampirism.player.TaskManager;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
+import org.apache.commons.lang3.Validate;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -23,7 +27,9 @@ public class CTaskActionPacket implements IMessage {
 
     public static void handle(final CTaskActionPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
-        ctx.enqueueWork(() -> VampirismMod.proxy.handleTaskActionPacket(msg, ctx.getSender()));
+        ServerPlayerEntity player = ctx.getSender();
+        Validate.notNull(player);
+        ctx.enqueueWork(() -> FactionPlayerHandler.getCurrentFactionPlayer(player).map(IFactionPlayer::getTaskManager).ifPresent(m -> ((TaskManager)m).handleTaskActionMessage(msg)));
         ctx.setPacketHandled(true);
     }
     public final UUID task;

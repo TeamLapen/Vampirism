@@ -34,6 +34,7 @@ public class CToggleMinionTaskLock implements IMessage {
 
             });
         });
+        ctx.setPacketHandled(true);
     }
 
     private final int minionID;
