@@ -64,11 +64,6 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
         this.inventoryLabelY = this.imageHeight - 93;
         this.menu.setReloadListener(() -> this.list.refresh());
         this.factionPlayer = FactionPlayerHandler.getCurrentFactionPlayer(playerInventory.player).orElseThrow(() -> new IllegalStateException("Cannot open Vampirism container without faction player"));
-        if (factionPlayer.getLevel() > 0) {
-            this.level = FactionPlayerHandler.getOpt(playerInventory.player).filter(f -> f.getLordLevel() > 0).map(f -> f.getLordTitle().copy().append(" (" + f.getLordLevel() + ")")).orElseGet(() -> Component.translatable("text.vampirism.level").append(" " + factionPlayer.getLevel())).withStyle(style -> style.withColor(factionPlayer.getFaction().getChatColor()));
-        } else {
-            this.level = Component.empty();
-        }
     }
 
     @Override
@@ -145,6 +140,11 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
     @Override
     protected void init() {
         super.init();
+        if (factionPlayer.getLevel() > 0) {
+            this.level = FactionPlayerHandler.getOpt(factionPlayer.getRepresentingPlayer()).filter(f -> f.getLordLevel() > 0).map(f -> f.getLordTitle().copy().append(" (" + f.getLordLevel() + ")")).orElseGet(() -> Component.translatable("text.vampirism.level").append(" " + factionPlayer.getLevel())).withStyle(style -> style.withColor(factionPlayer.getFaction().getChatColor()));
+        } else {
+            this.level = Component.empty();
+        }
         this.addRenderableWidget(list = new ScrollableListWithDummyWidget<>(this.leftPos + 83, this.topPos + 7, 145, 104, 21, this::refreshTasks, (item, list1, isDummy) -> new TaskItem(item, list1, isDummy, this, this.factionPlayer)));
 
         this.addRenderableWidget(new ImageButton(this.leftPos + 5, this.topPos + 90, 20, 20, 40, 205, 20, BACKGROUND, 256, 256, context -> {
