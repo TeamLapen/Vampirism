@@ -51,15 +51,14 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
     @Override
     public void initializeClient(Consumer<IItemRenderProperties> consumer) {
         consumer.accept(new IItemRenderProperties() {
-            @SuppressWarnings("unchecked")
             @Override
-            public <A extends HumanoidModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, A _default) {
+            public HumanoidModel<?> getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel<?> _default) {
                 return switch (regName) {
-                    case "vampire_clothing_crown" -> (A) ClothingCrownModel.getInstance();
-                    case "vampire_clothing_legs" -> (A) ClothingPantsModel.getInstance();
-                    case "vampire_clothing_boots" -> (A) ClothingBootsModel.getInstance();
-                    case "vampire_clothing_hat" -> (A) VampireHatModel.getInstance();
-                    default -> (A) DummyClothingModel.getArmorModel();
+                    case "vampire_clothing_crown" -> ClothingCrownModel.getInstance();
+                    case "vampire_clothing_legs" ->  ClothingPantsModel.getInstance();
+                    case "vampire_clothing_boots" -> ClothingBootsModel.getInstance();
+                    case "vampire_clothing_hat" -> VampireHatModel.getInstance();
+                    default -> DummyClothingModel.getArmorModel();
                 };
             }
 

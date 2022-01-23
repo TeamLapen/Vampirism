@@ -11,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.IItemRenderProperties;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
@@ -31,10 +32,10 @@ public class HunterHatItem extends VampirismHunterArmor {
     @Override
     public void initializeClient(Consumer<IItemRenderProperties> consumer) {
         consumer.accept(new IItemRenderProperties() {
-                            @SuppressWarnings("unchecked")
+                            @Nullable
                             @Override
-                            public <A extends HumanoidModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, A _default) {
-                                return (A) (type == 0 ? HunterHatModel.getInstance0() : HunterHatModel.getInstance1());
+                            public HumanoidModel<?> getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel<?> _default) {
+                                return (type == 0 ? HunterHatModel.getInstance0() : HunterHatModel.getInstance1());
                             }
                         }
         );
