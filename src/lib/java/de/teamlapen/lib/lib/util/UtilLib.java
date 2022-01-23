@@ -641,7 +641,7 @@ public class UtilLib {
 
     @Nullable
     public static StructureStart<?> getStructureStartAt(Level w, BlockPos pos, StructureFeature<?> s) {
-        if (w instanceof ServerLevel) {
+        if (w instanceof ServerLevel && w.isLoaded(pos)) {
             return getStructureStartAt((ServerLevel) w, pos, s);
         }
         return null;
@@ -649,7 +649,7 @@ public class UtilLib {
 
     @Nonnull
     public static StructureStart<?> getStructureStartAt(ServerLevel w, BlockPos pos, StructureFeature<?> s) {
-        return (w).structureFeatureManager()/*getStructureManager*/.getStructureAt(pos, s);
+        return (w).structureFeatureManager().getStructureAt(pos, s);
     }
 
     /**

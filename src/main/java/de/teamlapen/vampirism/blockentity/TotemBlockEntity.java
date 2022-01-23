@@ -487,17 +487,39 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         this.setChanged();
     }
 
+    private boolean unloaded;
+
     @Override
-    public void setRemoved() {
-        //noinspection ConstantConditions
-        VampirismWorld.getOpt(this.level).ifPresent(vw -> vw.updateArtificialFogBoundingBox(this.worldPosition, null));
-        TotemHelper.removeTotem(this.level.dimension(), this.village, this.worldPosition, true);
+    public void onChunkUnloaded() {
+        super.onChunkUnloaded();
+        unloaded = true;
+    }
+
+    public void onRemovedNotDueTuChunkUnload(){
+        //Probably destroyed
         if (this.capturingFaction != null) {
             this.breakCapture();
         } else {
             this.updateBossinfoPlayers(null);
         }
+    }
+
+    @Override
+    public void setRemoved() {
+        //noinspection ConstantConditions
+        VampirismWorld.getOpt(this.level).ifPresent(vw -> vw.updateArtificialFogBoundingBox(this.worldPosition, null));
+        TotemHelper.removeTotem(this.level.dimension(), this.village, this.worldPosition, true);
+        if(!unloaded){
+            // @Volatile: MC calls setRemoved when a chunk unloads now as well (see ServerLevel#unload -> LevelChunk#clearAllBlockEntities).
+            // Since we don't want to remove network node data in that case, we need to know if it was removed due to unloading.
+            // We can use "unloaded" for that, it's set in #onChunkUnloaded.
+            // Since MC first calls #onChunkUnloaded and then #setRemoved, this check keeps working.
+            // @Credit raoulvdberge
+            // https://github.com/MinecraftForge/MinecraftForge/issues/8302
+            onRemovedNotDueTuChunkUnload();
+        }
         super.setRemoved();
+
     }
 
     @OnlyIn(Dist.CLIENT)
