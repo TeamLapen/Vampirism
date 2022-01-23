@@ -298,12 +298,12 @@ a04aeb3660a12d81cae582d41237c925ecdbce8e assets/vampirism/models/item/vampire_mi
 4d1d879cf2218844e9d22a2c5242aa923c03b886 assets/vampirism/models/item/vampire_spruce_leaves.json
 f2c7ee15295e029a7b262c31d3dbae4427749245 assets/vampirism/models/item/vampire_spruce_sapling.json
 474b46e1886ee6c292bb2855dae09ff368bd512b assets/vampirism/models/item/weak_human_heart.json
-5625dde3138c247839e5b79cc5026b625ac48eef data/forge/tags/blocks/dirt.json
 bf46eb142592f200ca159330b151e3c442febcff data/forge/tags/items/crops/garlic.json
+5625dde3138c247839e5b79cc5026b625ac48eef data/minecraft/tags/blocks/dirt.json
 6ee366cb59807bef850de97c2fe994ba11b60b92 data/minecraft/tags/blocks/flower_pots.json
 2ce94369c03a86f70955c1d1661c4f839b8232f2 data/minecraft/tags/blocks/leaves.json
 0673a600bfd7c8c4f84a14ee9697f53810a5f2b1 data/minecraft/tags/blocks/mineable/pickaxe.json
-091cc021ec4a6bfda24a53c6f5755ee701566c55 data/minecraft/tags/blocks/mineable/shovel.json
+5625dde3138c247839e5b79cc5026b625ac48eef data/minecraft/tags/blocks/mineable/shovel.json
 dc98e19f948b0a5eed9b9279397f7d603aa64540 data/minecraft/tags/blocks/needs_iron_tool.json
 8b304a60a8de57bf30921991da518f3d863f4806 data/minecraft/tags/blocks/needs_stone_tool.json
 fe48a84f8e0f83732b8a7390b39193b403ff6f1f data/minecraft/tags/blocks/saplings.json
