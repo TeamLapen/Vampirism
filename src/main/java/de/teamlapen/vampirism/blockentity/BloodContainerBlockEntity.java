@@ -112,12 +112,6 @@ public class BloodContainerBlockEntity extends net.minecraftforge.fluids.capabil
 
     }
 
-    @Override
-    protected void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
-        tank.writeToNBT(pTag);
-    }
-
     public void setFluidStack(FluidStack stack) {
         tank.setFluid(stack);
     }
