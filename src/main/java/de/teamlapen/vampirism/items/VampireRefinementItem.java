@@ -2,18 +2,30 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.core.ModItems;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
-
-import de.teamlapen.vampirism.api.items.IRefinementItem.AccessorySlotType;
-import net.minecraft.world.item.Item.Properties;
 
 public class VampireRefinementItem extends RefinementItem {
 
     public VampireRefinementItem(Properties properties, AccessorySlotType type) {
         super(properties, type);
+    }
+
+    @Override
+    public void fillItemCategory(@Nonnull CreativeModeTab itemGroup, @Nonnull NonNullList<ItemStack> items) {
+        if (this.allowedIn(itemGroup)) {
+            ItemStack stack = new ItemStack(this);
+            IRefinementSet set = getRandomRefinementForItem(this.getExclusiveFaction(stack), this);
+            if (set != null) {
+                this.applyRefinementSet(stack, set);
+            }
+            items.add(stack);
+        }
     }
 
     @Nonnull
