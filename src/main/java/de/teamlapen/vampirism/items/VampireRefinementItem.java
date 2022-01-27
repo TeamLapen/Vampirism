@@ -15,12 +15,10 @@ import de.teamlapen.vampirism.player.refinements.RefinementSet;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.WeightedRandom;
+import net.minecraft.util.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -80,6 +78,18 @@ public class VampireRefinementItem extends Item implements IRefinementItem { //T
     public VampireRefinementItem(Properties properties, AccessorySlotType type) {
         super(properties.defaultDurability(MAX_DAMAGE).setNoRepair());
         this.type = type;
+    }
+
+    @Override
+    public void fillItemCategory(@Nonnull ItemGroup itemGroup, @Nonnull NonNullList<ItemStack> items) {
+        if (this.allowdedIn(itemGroup)) {
+            ItemStack stack = new ItemStack(this);
+            IRefinementSet set = getRandomRefinementForItem(this.getExclusiveFaction(), this);
+            if (set != null) {
+                this.applyRefinementSet(stack, set);
+            }
+            items.add(stack);
+        }
     }
 
     @Nonnull
