@@ -225,7 +225,7 @@ public class ModKeys { //TODO 1.17 revamp to skip using the KEY enum for getting
             if (!action.getFaction().equals(player.getFaction())) {
                 player.getRepresentingPlayer().displayClientMessage(new TranslationTextComponent("text.vampirism.action.only_faction", action.getFaction().getName()), true);
             } else {
-                VampirismMod.dispatcher.sendToServer(new CToggleActionPacket(action.getRegistryName()));
+                VampirismMod.dispatcher.sendToServer(CToggleActionPacket.createFromRaytrace(action.getRegistryName(), Minecraft.getInstance().hitResult));
             }
         }
 
