@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.*;
 import java.util.function.Supplier;
 
-public class UpdateMultiBossInfoPacket implements IMessage {
-    static void encode(UpdateMultiBossInfoPacket msg, PacketBuffer buf) {
+public class SUpdateMultiBossInfoPacket implements IMessage {
+    static void encode(SUpdateMultiBossInfoPacket msg, PacketBuffer buf) {
         buf.writeUUID(msg.uniqueId);
         buf.writeEnum(msg.operation);
         switch (msg.operation) {
@@ -40,10 +40,10 @@ public class UpdateMultiBossInfoPacket implements IMessage {
         }
     }
 
-    static UpdateMultiBossInfoPacket decode(PacketBuffer buf) {
+    static SUpdateMultiBossInfoPacket decode(PacketBuffer buf) {
         UUID uuid = buf.readUUID();
         SUpdateBossInfoPacket.Operation operation = buf.readEnum(SUpdateBossInfoPacket.Operation.class);
-        UpdateMultiBossInfoPacket packet = new UpdateMultiBossInfoPacket(operation, uuid);
+        SUpdateMultiBossInfoPacket packet = new SUpdateMultiBossInfoPacket(operation, uuid);
         switch (operation) {
             case ADD:
                 packet.name = buf.readComponent();
@@ -74,7 +74,7 @@ public class UpdateMultiBossInfoPacket implements IMessage {
         return packet;
     }
 
-    public static void handle(final UpdateMultiBossInfoPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final SUpdateMultiBossInfoPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> VampirismMod.proxy.handleUpdateMultiBossInfoPacket(msg));
         ctx.setPacketHandled(true);
@@ -86,7 +86,7 @@ public class UpdateMultiBossInfoPacket implements IMessage {
     private ITextComponent name;
     private BossInfo.Overlay overlay;
 
-    public UpdateMultiBossInfoPacket(SUpdateBossInfoPacket.Operation operation, MultiBossInfo data) {
+    public SUpdateMultiBossInfoPacket(SUpdateBossInfoPacket.Operation operation, MultiBossInfo data) {
         this.uniqueId = data.getUniqueId();
         this.operation = operation;
         this.name = data.getName();
@@ -95,7 +95,7 @@ public class UpdateMultiBossInfoPacket implements IMessage {
         this.overlay = data.getOverlay();
     }
 
-    private UpdateMultiBossInfoPacket(SUpdateBossInfoPacket.Operation operation, UUID uuid) {
+    private SUpdateMultiBossInfoPacket(SUpdateBossInfoPacket.Operation operation, UUID uuid) {
         this.uniqueId = uuid;
         this.operation = operation;
         this.entries = new LinkedHashMap<>();

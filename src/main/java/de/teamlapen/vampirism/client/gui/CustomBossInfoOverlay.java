@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.client.gui;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.vampirism.mixin.client.BossOverlayGuiAccessor;
-import de.teamlapen.vampirism.network.UpdateMultiBossInfoPacket;
+import de.teamlapen.vampirism.network.SUpdateMultiBossInfoPacket;
 import de.teamlapen.vampirism.world.DummyBossInfo;
 import de.teamlapen.vampirism.world.MultiBossInfo;
 import net.minecraft.client.Minecraft;
@@ -44,7 +44,7 @@ public class CustomBossInfoOverlay extends AbstractGui {
         }
     }
 
-    public void read(UpdateMultiBossInfoPacket packet) {
+    public void read(SUpdateMultiBossInfoPacket packet) {
         if (packet.getOperation() == SUpdateBossInfoPacket.Operation.ADD) {
             this.bossInfoMap.put(packet.getUniqueId(), new MultiBossInfo(packet));
         } else if (packet.getOperation() == SUpdateBossInfoPacket.Operation.REMOVE) {

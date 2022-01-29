@@ -15,6 +15,7 @@ import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.network.NetworkEvent;
+import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,36 +24,41 @@ import java.util.List;
 import java.util.function.Supplier;
 
 
-public class SelectMinionTaskPacket implements IMessage {
+/**
+ * Send an order (for a minion by its lord) from client to server
+ */
+public class CSelectMinionTaskPacket implements IMessage {
     public final static ResourceLocation RECALL = new ResourceLocation(REFERENCE.MODID, "recall");
     public final static ResourceLocation RESPAWN = new ResourceLocation(REFERENCE.MODID, "respawn");
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public static void handle(final SelectMinionTaskPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final CSelectMinionTaskPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
-        ctx.enqueueWork(() -> FactionPlayerHandler.getOpt(ctx.getSender()).ifPresent(fp -> {
-            PlayerMinionController controller = MinionWorldData.getData(ctx.getSender().server).getOrCreateController(fp);
+        ServerPlayerEntity player = ctx.getSender();
+        Validate.notNull(player);
+        ctx.enqueueWork(() -> FactionPlayerHandler.getOpt(player).ifPresent(fp -> {
+            PlayerMinionController controller = MinionWorldData.getData(player.server).getOrCreateController(fp);
             if (RECALL.equals(msg.taskID)) {
                 if (msg.minionID < 0) {
                     Collection<Integer> ids = controller.recallMinions(false);
                     for (Integer id : ids) {
-                        controller.createMinionEntityAtPlayer(id, ctx.getSender());
+                        controller.createMinionEntityAtPlayer(id, player);
                     }
-                    printRecoveringMinions(ctx.getSender(), controller.getRecoveringMinionNames());
+                    printRecoveringMinions(player, controller.getRecoveringMinionNames());
 
                 } else {
                     if (controller.recallMinion(msg.minionID)) {
-                        controller.createMinionEntityAtPlayer(msg.minionID, ctx.getSender());
+                        controller.createMinionEntityAtPlayer(msg.minionID, player);
                     } else {
-                        ctx.getSender().displayClientMessage(new TranslationTextComponent("text.vampirism.minion_is_still_recovering", controller.contactMinionData(msg.minionID, MinionData::getFormattedName).orElse(new StringTextComponent("1"))), true);
+                        player.displayClientMessage(new TranslationTextComponent("text.vampirism.minion_is_still_recovering", controller.contactMinionData(msg.minionID, MinionData::getFormattedName).orElse(new StringTextComponent("1"))), true);
                     }
                 }
             } else if (RESPAWN.equals(msg.taskID)) {
                 Collection<Integer> ids = controller.getUnclaimedMinions();
                 for (Integer id : ids) {
-                    controller.createMinionEntityAtPlayer(id, ctx.getSender());
+                    controller.createMinionEntityAtPlayer(id, player);
                 }
-                printRecoveringMinions(ctx.getSender(), controller.getRecoveringMinionNames());
+                printRecoveringMinions(player, controller.getRecoveringMinionNames());
 
             } else {
                 IMinionTask<?, MinionData> task = (IMinionTask<?, MinionData>) ModRegistries.MINION_TASKS.getValue(msg.taskID);
@@ -78,19 +84,19 @@ public class SelectMinionTaskPacket implements IMessage {
         }
     }
 
-    static void encode(SelectMinionTaskPacket msg, PacketBuffer buf) {
+    static void encode(CSelectMinionTaskPacket msg, PacketBuffer buf) {
         buf.writeVarInt(msg.minionID);
         buf.writeResourceLocation(msg.taskID);
     }
 
-    static SelectMinionTaskPacket decode(PacketBuffer buf) {
-        return new SelectMinionTaskPacket(buf.readVarInt(), buf.readResourceLocation());
+    static CSelectMinionTaskPacket decode(PacketBuffer buf) {
+        return new CSelectMinionTaskPacket(buf.readVarInt(), buf.readResourceLocation());
     }
 
     public final int minionID;
     public final ResourceLocation taskID;
 
-    public SelectMinionTaskPacket(int minionID, ResourceLocation taskID) {
+    public CSelectMinionTaskPacket(int minionID, ResourceLocation taskID) {
         assert minionID >= -1;
         this.minionID = minionID;
         this.taskID = taskID;
