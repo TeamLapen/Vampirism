@@ -54,7 +54,7 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
     private int oldMouseY;
     private ScrollableListWidget<ITaskInstance> list;
     private final Map<Integer, Button> refinementRemoveButtons = new Int2ObjectOpenHashMap<>(3);
-    private final ITextComponent level;
+    private ITextComponent level;
 
     public VampirismScreen(VampirismContainer container, PlayerInventory playerInventory, ITextComponent titleIn) {
         super(container, playerInventory, titleIn);
