@@ -701,7 +701,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 if (useBlood(VampirismConfig.BALANCE.vaHalfInvulnerableBloodCost.get(), false)) {
                     return true;
                 } else {
-                    this.actionHandler.toggleAction(VampireActions.half_invulnerable);
+                    this.actionHandler.deactivateAction(VampireActions.half_invulnerable);
                 }
             }
         }
