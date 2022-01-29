@@ -14,7 +14,6 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.CSimpleInputEvent;
 import de.teamlapen.vampirism.network.CUnlockSkillPacket;
 import de.teamlapen.vampirism.player.skills.SkillNode;
-import de.teamlapen.vampirism.player.skills.SkillTreeManager;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.chat.NarratorChatListener;
 import net.minecraft.client.gui.screen.Screen;
@@ -88,7 +87,7 @@ public class SkillsScreen extends Screen {
         this.guiTop = (this.height - SCREEN_HEIGHT) / 2;
 
         if (this.factionPlayer != null) {
-            SkillNode rootNode = SkillTreeManager.getInstance().getSkillTree().getRootNodeForFaction(this.factionPlayer.getFaction().getID());
+            SkillNode rootNode = VampirismMod.proxy.getSkillTree(true).getRootNodeForFaction(this.factionPlayer.getFaction().getID());
             this.tabs.add(new SkillsTabScreen(this.minecraft, this, 0, new ItemStack(ModItems.vampire_book), rootNode, this.factionPlayer.getSkillHandler()));
         }
 
