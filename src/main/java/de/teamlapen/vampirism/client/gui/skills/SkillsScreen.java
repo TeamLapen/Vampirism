@@ -23,6 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -64,12 +65,19 @@ public class SkillsScreen extends Screen {
     private int guiLeft;
     private int guiTop;
     private boolean scrolling;
+    @Nullable
+    private Vector3d mousePos;
     private boolean clicked;
 
     public SkillsScreen(@Nullable IFactionPlayer<?> factionPlayer, @Nullable Screen backScreen) {
         super(NarratorChatListener.NO_TITLE);
         this.factionPlayer = factionPlayer;
         this.backScreen = backScreen;
+    }
+
+    @Override
+    public boolean isPauseScreen() {
+        return false;
     }
 
     @Override
@@ -206,7 +214,8 @@ public class SkillsScreen extends Screen {
             scrolling = false;
         }
         if (button == 0) {
-            clicked = true;
+            this.clicked = true;
+            this.mousePos = new Vector3d( mouseX, mouseY, 0);
             for (SkillsTabScreen tab : this.tabs) {
                 if (tab != this.selectedTab && tab.isMouseOver(this.guiLeft, this.guiTop, mouseX, mouseY)) {
                     this.selectedTab = tab;
@@ -229,10 +238,12 @@ public class SkillsScreen extends Screen {
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         if (button == 0) {
-            if (!scrolling && clicked) {
-                unlockSkill(mouseX, mouseY);
+            if (this.clicked) {
+                if (!this.scrolling || (this.mousePos != null && this.mousePos.distanceTo(new Vector3d(mouseX, mouseY, 0)) < 5)) {
+                    unlockSkill(mouseX, mouseY);
+                }
             }
-            clicked = false;
+            this.clicked = false;
         }
         return super.mouseReleased(mouseX, mouseY, button);
     }
