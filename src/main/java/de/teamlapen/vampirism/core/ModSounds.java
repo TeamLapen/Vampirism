@@ -13,7 +13,7 @@ import net.minecraftforge.registries.RegistryObject;
  */
 public class ModSounds {
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, REFERENCE.MODID);
-    
+
     public static final RegistryObject<SoundEvent> ENTITY_VAMPIRE_SCREAM = create("entity_vampire_scream");
     public static final RegistryObject<SoundEvent> PLAYER_BITE = create("player_bite");
     public static final RegistryObject<SoundEvent> AMBIENT_CASTLE = create("ambient_castle");
@@ -23,6 +23,7 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> BOILING = create("boiling");
     public static final RegistryObject<SoundEvent> GRINDER = create("grinder");
     public static final RegistryObject<SoundEvent> TASK_COMPLETE = create("task_complete");
+    public static final RegistryObject<SoundEvent> PLAYER_FEEDING = create("player.feeding");
 
 
     static void registerSounds(IEventBus bus) {

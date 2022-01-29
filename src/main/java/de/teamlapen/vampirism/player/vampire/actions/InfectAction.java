@@ -1,12 +1,16 @@
 package de.teamlapen.vampirism.player.vampire.actions;
 
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
@@ -33,20 +37,36 @@ public class InfectAction extends DefaultVampireAction {
             if (!UtilLib.canReallySee((LivingEntity) target, player, false)) {
                 return false;
             }
-            Optional<? extends IBiteableEntity> b = Optional.empty();
-            if (target instanceof IBiteableEntity) {
-                b = Optional.of((IBiteableEntity) target);
-            } else if (target instanceof PathfinderMob) {
-                b = ExtendedCreature.getSafe(target).resolve();
-            } else if (target instanceof Player) {
-                b = VampirePlayer.getOpt((Player) target).resolve();
-            }
-            if (b.map(e -> e.tryInfect(vampire)).orElse(false)) {
-                vampire.getRepresentingPlayer().awardStat(ModStats.infected_creatures);
+            if (deriveBiteableEntry(target).map(e -> e.tryInfect(vampire)).orElse(false)) {
+                player.awardStat(ModStats.infected_creatures);
+                player.level.playSound(null, target.getX(), target.getY() + 1.5d, target.getZ(), ModSounds.PLAYER_BITE.get(), SoundSource.PLAYERS, 1, 1 );
                 return true;
             }
             return false;
         }).orElse(false);
     }
 
+
+    @Override
+    public boolean canBeUsedBy(IVampirePlayer player) {
+        if(player.isRemote()){
+            Entity target = VampirismMod.proxy.getMouseOverEntity();
+            if(target != null){
+                return deriveBiteableEntry(target).map(b->b.canBeInfected(player)).orElse(false);
+            }
+            return false;
+        }
+        return true;
+    }
+
+    private Optional<? extends IBiteableEntity> deriveBiteableEntry(Entity target){
+        if (target instanceof IBiteableEntity) {
+            return Optional.of((IBiteableEntity) target);
+        } else if (target instanceof PathfinderMob) {
+            return ExtendedCreature.getSafe(target).resolve();
+        } else if (target instanceof Player) {
+            return VampirePlayer.getOpt((Player) target).resolve();
+        }
+        return Optional.empty();
+    }
 }
