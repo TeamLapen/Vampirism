@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.client.gui;
+package de.teamlapen.vampirism.client.gui.overlay;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -10,7 +10,6 @@ import de.teamlapen.lib.util.OptifineHandler;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
@@ -216,78 +215,11 @@ public class VampirismHUDOverlay extends ExtendedGui {
         }
     }
 
-    public void renderFactionLevel(ForgeIngameGui gui, PoseStack mStack, float partialTicks, int screenWidth, int screenHeight) {
-        if (mc.player != null && mc.player.isAlive() && !mc.player.isRidingJumpable() && !mc.options.hideGui) {
-            gui.setupOverlayRenderState(true, false);
-
-            FactionPlayerHandler.getOpt(mc.player).ifPresent(handler -> {
-                IPlayableFaction<?> faction = handler.getCurrentFaction();
-                if (mc.gameMode.hasExperience() && faction != null && faction.renderLevel()) {
-                    // boolean flag1 = false;
-                    int color = faction.getColor();
-                    int lord = handler.getLordLevel();
-                    String text;
-                    if (lord > 0) {
-                        String title = handler.getLordTitle().getString();
-                        text = title.substring(0, Math.min(3, title.length()));
-                    } else {
-                        text = "" + handler.getCurrentLevel();
-                    }
-                    int x = (this.mc.getWindow().getGuiScaledWidth() - mc.font.width(text)) / 2 + VampirismConfig.CLIENT.guiLevelOffsetX.get();
-                    int y = this.mc.getWindow().getGuiScaledHeight() - VampirismConfig.CLIENT.guiLevelOffsetY.get();
-                    mc.font.draw(mStack, text, x + 1, y, 0);
-                    mc.font.draw(mStack, text, x - 1, y, 0);
-                    mc.font.draw(mStack, text, x, y + 1, 0);
-                    mc.font.draw(mStack, text, x, y - 1, 0);
-                    mc.font.draw(mStack, text, x, y, color);
-                }
-            });
-        }
-    }
-
-
     @SubscribeEvent
     public void onRenderFoodBar(RenderGameOverlayEvent.PreLayer event) {
-        //TODO 1.17 consider replacing this with a custom layer and disabling food layer
-        if (event.getOverlay() != ForgeIngameGui.FOOD_LEVEL_ELEMENT) {
-            return;
-        }
-        if (mc.player != null && Helper.isVampire(mc.player) && !IMCHandler.requestedToDisableBloodbar) {
+        //disable foodbar if bloodbar is rendered
+        if (event.getOverlay() == ForgeIngameGui.FOOD_LEVEL_ELEMENT && mc.player != null && Helper.isVampire(mc.player) && !IMCHandler.requestedToDisableBloodbar && mc.gameMode.hasExperience() && mc.player.isAlive()) {
             event.setCanceled(true);
-
-            if (mc.gameMode.hasExperience() && mc.player.isAlive()) {
-                VampirePlayer.getOpt(mc.player).map(VampirePlayer::getBloodStats).ifPresent(stats -> {
-                            GlStateManager._enableBlend();
-
-                            RenderSystem.setShaderTexture(0, icons);
-                            int left = this.mc.getWindow().getGuiScaledWidth() / 2 + 91;
-                            int top = this.mc.getWindow().getGuiScaledHeight() - ((ForgeIngameGui) mc.gui).right_height;
-                            ((ForgeIngameGui) mc.gui).right_height += 10;
-                            int blood = stats.getBloodLevel();
-                            int maxBlood = stats.getMaxBlood();
-                            int blood2 = blood - 20;
-                            int maxBlood2 = maxBlood - 20;
-                            for (int i = 0; i < 10; ++i) {
-                                int idx = i * 2 + 1;
-                                int x = left - i * 8 - 9;
-
-                                // Draw Background
-                                blit(event.getMatrixStack(), x, top, 0, idx <= maxBlood2 ? 9 : 0, 9, 9);
-
-                                if (idx < blood) {
-                                    blit(event.getMatrixStack(), x, top, 9, idx < blood2 ? 9 : 0, 9, 9);
-                                    if (idx == blood2) {
-                                        blit(event.getMatrixStack(), x, top, 18, 9, 9, 9);
-                                    }
-                                } else if (idx == blood) {
-                                    blit(event.getMatrixStack(), x, top, 18, 0, 9, 9);
-                                }
-                            }
-                            RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
-                            GlStateManager._disableBlend();
-                        }
-                );
-            }
         }
     }
 

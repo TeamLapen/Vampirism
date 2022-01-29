@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.client.gui;
+package de.teamlapen.vampirism.client.gui.overlay;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -14,13 +14,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.BossEvent;
 import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.gui.IIngameOverlay;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class CustomBossEventOverlay extends GuiComponent {
+public class CustomBossEventOverlay extends GuiComponent implements IIngameOverlay {
     private static final ResourceLocation GUI_BARS_TEXTURES = new ResourceLocation("textures/gui/bars.png");
     private final Minecraft client;
     private final Map<UUID, MultiBossEvent> bossInfoMap = new LinkedHashMap<>();
@@ -33,13 +34,6 @@ public class CustomBossEventOverlay extends GuiComponent {
         this.bossInfoMap.clear();
     }
 
-    public void onRenderOverlayBoss(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.enableBlend();
-        render(poseStack);
-        RenderSystem.disableBlend();
-    }
-
     public void read(MultiBossEventPacket packet) {
         if (packet.getOperation() == MultiBossEventPacket.OperationType.ADD) {
             this.bossInfoMap.put(packet.getUniqueId(), new MultiBossEvent(packet));
@@ -50,7 +44,11 @@ public class CustomBossEventOverlay extends GuiComponent {
         }
     }
 
-    public void render(PoseStack stack) {
+    @Override
+    public void render(ForgeIngameGui gui, PoseStack stack, float partialTicks, int width, int height) {
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.enableBlend();
+
         int i = Minecraft.getInstance().getWindow().getGuiScaledWidth();
         int j = 12 + ((BossOverlayGuiAccessor) this.client.gui.getBossOverlay()).getMapBossInfos().size() * (10 + this.client.font.lineHeight);
         for (MultiBossEvent value : bossInfoMap.values()) {
@@ -75,6 +73,7 @@ public class CustomBossEventOverlay extends GuiComponent {
                 break;
             }
         }
+        RenderSystem.disableBlend();
     }
 
     private void render(PoseStack stack, int k, int j, MultiBossEvent value) {

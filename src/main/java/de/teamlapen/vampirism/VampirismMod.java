@@ -312,6 +312,7 @@ public class VampirismMod {
 
         biteableRegistry.setDefaultConvertingHandlerCreator(DefaultConvertingHandler::new);
         VampirismAPI.setUpRegistries(factionRegistry, sundamageRegistry, biteableRegistry, actionManager, skillManager, generalRegistry, entityActionManager, worldGenRegistry, extendedBrewingRecipeRegistry);
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> proxy::setupAPIClient);
 
 
         VReference.VAMPIRE_FACTION = VampirismAPI.factionRegistry()

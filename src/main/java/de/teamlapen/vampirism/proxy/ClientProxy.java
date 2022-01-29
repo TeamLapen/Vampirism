@@ -1,12 +1,17 @@
 package de.teamlapen.vampirism.proxy;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.client.VIngameOverlays;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.blockentity.GarlicDiffuserBlockEntity;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.blocks.TentBlock;
 import de.teamlapen.vampirism.client.core.*;
 import de.teamlapen.vampirism.client.gui.*;
+import de.teamlapen.vampirism.client.gui.overlay.BloodBarOverlay;
+import de.teamlapen.vampirism.client.gui.overlay.CustomBossEventOverlay;
+import de.teamlapen.vampirism.client.gui.overlay.FactionLevelOverlay;
+import de.teamlapen.vampirism.client.gui.overlay.VampirismHUDOverlay;
 import de.teamlapen.vampirism.client.render.RenderHandler;
 import de.teamlapen.vampirism.client.render.VampirismBlockEntityWitoutLevelRenderer;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
@@ -192,13 +197,13 @@ public class ClientProxy extends CommonProxy {
         switch (step) {
             case CLIENT_SETUP:
                 this.overlay = new VampirismHUDOverlay(Minecraft.getInstance());
-                this.bossInfoOverlay = new CustomBossEventOverlay();
                 ModKeys.register();
                 registerSubscriptions();
                 ActionSelectScreen.loadActionOrder();
                 ModBlocksRender.register();
-                OverlayRegistry.registerOverlayAbove(ForgeIngameGui.EXPERIENCE_BAR_ELEMENT, "faction_level", overlay::renderFactionLevel);
-                OverlayRegistry.registerOverlayAbove(ForgeIngameGui.BOSS_HEALTH_ELEMENT,"vampirism_raid", bossInfoOverlay::onRenderOverlayBoss);
+                OverlayRegistry.registerOverlayAbove(ForgeIngameGui.EXPERIENCE_BAR_ELEMENT, "vampirism_faction_level", VIngameOverlays.FACTION_LEVEL_ELEMENT);
+                OverlayRegistry.registerOverlayAbove(ForgeIngameGui.BOSS_HEALTH_ELEMENT, "vampirism_raid_bar", VIngameOverlays.FACTION_RAID_BAR_ELEMENT);
+                OverlayRegistry.registerOverlayAbove(ForgeIngameGui.FOOD_LEVEL_ELEMENT, "vampirism_blood_bar", VIngameOverlays.BLOOD_BAR_ELEMENT);
                 break;
             case LOAD_COMPLETE:
                 event.enqueueWork(ModBlocksRender::registerColorsUnsafe);
@@ -239,6 +244,12 @@ public class ClientProxy extends CommonProxy {
         MinecraftForge.EVENT_BUS.register(new ScreenEventHandler());
     }
 
+    @Override
+    public void setupAPIClient() {
+        VIngameOverlays.FACTION_RAID_BAR_ELEMENT = this.bossInfoOverlay = new CustomBossEventOverlay();
+        VIngameOverlays.BLOOD_BAR_ELEMENT = new BloodBarOverlay();
+        VIngameOverlays.FACTION_LEVEL_ELEMENT = new FactionLevelOverlay();
+    }
 
     /**
      * copied but which much lesser particles
