@@ -26,6 +26,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import org.lwjgl.system.NonnullDefault;
 
 import javax.annotation.Nonnull;
@@ -64,12 +65,19 @@ public class SkillsScreen extends Screen {
     private int guiLeft;
     private int guiTop;
     private boolean scrolling;
+    @Nullable
+    private Vec3 mousePos;
     private boolean clicked;
 
     public SkillsScreen(@Nullable IFactionPlayer<?> factionPlayer, @Nullable Screen backScreen) {
         super(GameNarrator.NO_TITLE);
         this.factionPlayer = factionPlayer;
         this.backScreen = backScreen;
+    }
+
+    @Override
+    public boolean isPauseScreen() {
+        return false;
     }
 
     @Override
@@ -207,7 +215,8 @@ public class SkillsScreen extends Screen {
             scrolling = false;
         }
         if (button == 0) {
-            clicked = true;
+            this.clicked = true;
+            this.mousePos = new Vec3( mouseX, mouseY, 0);
             for (SkillsTabScreen tab : this.tabs) {
                 if (tab != this.selectedTab && tab.isMouseOver(this.guiLeft, this.guiTop, mouseX, mouseY)) {
                     this.selectedTab = tab;
@@ -230,10 +239,12 @@ public class SkillsScreen extends Screen {
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         if (button == 0) {
-            if (!scrolling && clicked) {
-                unlockSkill(mouseX, mouseY);
+            if (this.clicked) {
+                if (!this.scrolling || (this.mousePos != null && this.mousePos.distanceTo(new Vec3(mouseX, mouseY, 0)) < 5)) {
+                    unlockSkill(mouseX, mouseY);
+                }
             }
-            clicked = false;
+            this.clicked = false;
         }
         return super.mouseReleased(mouseX, mouseY, button);
     }
