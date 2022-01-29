@@ -4,7 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.mixin.client.BossOverlayGuiAccessor;
-import de.teamlapen.vampirism.network.MultiBossEventPacket;
+import de.teamlapen.vampirism.network.SUpdateMultiBossEventPacket;
 import de.teamlapen.vampirism.world.MultiBossEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
@@ -33,10 +33,10 @@ public class CustomBossEventOverlay extends GuiComponent implements IGuiOverlay 
         this.bossInfoMap.clear();
     }
 
-    public void read(MultiBossEventPacket packet) {
-        if (packet.getOperation() == MultiBossEventPacket.OperationType.ADD) {
+    public void read(SUpdateMultiBossEventPacket packet) {
+        if (packet.getOperation() == SUpdateMultiBossEventPacket.OperationType.ADD) {
             this.bossInfoMap.put(packet.getUniqueId(), new MultiBossEvent(packet));
-        } else if (packet.getOperation() == MultiBossEventPacket.OperationType.REMOVE) {
+        } else if (packet.getOperation() == SUpdateMultiBossEventPacket.OperationType.REMOVE) {
             this.bossInfoMap.remove(packet.getUniqueId());
         } else {
             this.bossInfoMap.get(packet.getUniqueId()).updateFromPackage(packet);

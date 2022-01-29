@@ -12,8 +12,8 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.*;
 import java.util.function.Supplier;
 
-public class MultiBossEventPacket implements IMessage {
-    static void encode(MultiBossEventPacket msg, FriendlyByteBuf buf) {
+public class SUpdateMultiBossEventPacket implements IMessage {
+    static void encode(SUpdateMultiBossEventPacket msg, FriendlyByteBuf buf) {
         buf.writeUUID(msg.uniqueId);
         buf.writeEnum(msg.operation);
         switch (msg.operation) {
@@ -38,10 +38,10 @@ public class MultiBossEventPacket implements IMessage {
         }
     }
 
-    static MultiBossEventPacket decode(FriendlyByteBuf buf) {
+    static SUpdateMultiBossEventPacket decode(FriendlyByteBuf buf) {
         UUID uuid = buf.readUUID();
         OperationType operation = buf.readEnum(OperationType.class);
-        MultiBossEventPacket packet = new MultiBossEventPacket(operation, uuid);
+        SUpdateMultiBossEventPacket packet = new SUpdateMultiBossEventPacket(operation, uuid);
         switch (operation) {
             case ADD:
                 packet.name = buf.readComponent();
@@ -72,7 +72,7 @@ public class MultiBossEventPacket implements IMessage {
         return packet;
     }
 
-    public static void handle(final MultiBossEventPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final SUpdateMultiBossEventPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> VampirismMod.proxy.handleUpdateMultiBossInfoPacket(msg));
         ctx.setPacketHandled(true);
@@ -85,7 +85,7 @@ public class MultiBossEventPacket implements IMessage {
     private Component name;
     private BossEvent.BossBarOverlay overlay;
 
-    public MultiBossEventPacket(OperationType operation, MultiBossEvent data) {
+    public SUpdateMultiBossEventPacket(OperationType operation, MultiBossEvent data) {
         this.uniqueId = data.getUniqueId();
         this.operation = operation;
         this.name = data.getName();
@@ -94,7 +94,7 @@ public class MultiBossEventPacket implements IMessage {
         this.overlay = data.getOverlay();
     }
 
-    private MultiBossEventPacket(OperationType operation, UUID uuid) {
+    private SUpdateMultiBossEventPacket(OperationType operation, UUID uuid) {
         this.uniqueId = uuid;
         this.operation = operation;
         this.entries = new LinkedHashMap<>();

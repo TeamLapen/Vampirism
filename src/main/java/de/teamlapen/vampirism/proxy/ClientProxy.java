@@ -119,26 +119,26 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void handleBloodValuePacket(BloodValuePacket msg) {
+    public void handleBloodValuePacket(SBloodValuePacket msg) {
         ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).applyNewResources(msg.getValues()[0].getFirst(), msg.getValues()[0].getSecond());
         BloodConversionRegistry.applyNewItemResources(msg.getValues()[1].getFirst(), msg.getValues()[1].getSecond());
         BloodConversionRegistry.applyNewFluidResources(msg.getValues()[2].getFirst(), msg.getValues()[2].getSecond());
     }
 
     @Override
-    public void handlePlayEventPacket(PlayEventPacket msg) {
+    public void handlePlayEventPacket(SPlayEventPacket msg) {
         if (msg.type() == 1) {
             spawnParticles(Minecraft.getInstance().level, msg.pos(), Block.stateById(msg.stateId()));
         }
     }
 
     @Override
-    public void handleRequestMinionSelect(RequestMinionSelectPacket.Action action, List<Pair<Integer, Component>> minions) {
+    public void handleRequestMinionSelect(SRequestMinionSelectPacket.Action action, List<Pair<Integer, Component>> minions) {
         Minecraft.getInstance().setScreen(new SelectMinionScreen(action, minions));
     }
 
     @Override
-    public void handleSkillTreePacket(SkillTreePacket msg) {
+    public void handleSkillTreePacket(SSkillTreePacket msg) {
         skillTreeManager.loadUpdate(msg);
     }
 
@@ -162,7 +162,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void handleTaskPacket(TaskPacket msg) {
+    public void handleTaskPacket(STaskPacket msg) {
         AbstractContainerMenu container = Minecraft.getInstance().player.containerMenu;
         if (msg.containerId() == container.containerId && container instanceof VampirismContainer) {
             ((VampirismContainer) container).init(msg.taskWrappers(), msg.completableTasks(), msg.completedRequirements());
@@ -170,7 +170,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void handleTaskStatusPacket(TaskStatusPacket msg) {
+    public void handleTaskStatusPacket(STaskStatusPacket msg) {
         AbstractContainerMenu container = Objects.requireNonNull(Minecraft.getInstance().player).containerMenu;
         if (msg.containerId() == container.containerId && container instanceof TaskBoardContainer) {
             ((TaskBoardContainer) container).init(msg.available(), msg.completableTasks(), msg.completedRequirements(), msg.taskBoardId());
@@ -178,12 +178,12 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void handleUpdateMultiBossInfoPacket(MultiBossEventPacket msg) {
+    public void handleUpdateMultiBossInfoPacket(SUpdateMultiBossEventPacket msg) {
         this.bossInfoOverlay.read(msg);
     }
 
     @Override
-    public void handleVampireBookPacket(OpenVampireBookPacket msg) {
+    public void handleVampireBookPacket(SOpenVampireBookPacket msg) {
         Minecraft.getInstance().setScreen(new BookViewScreen(new BookViewScreen.WrittenBookAccess(msg.itemStack())));
     }
 

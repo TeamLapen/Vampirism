@@ -27,7 +27,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.fluids.BloodHelper;
 import de.teamlapen.vampirism.items.VampirismHunterArmor;
 import de.teamlapen.vampirism.mixin.ArmorItemAccessor;
-import de.teamlapen.vampirism.network.InputEventPacket;
+import de.teamlapen.vampirism.network.CSimpleInputEvent;
 import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleData;
 import de.teamlapen.vampirism.player.FactionBasePlayer;
 import de.teamlapen.vampirism.player.IVampirismPlayer;
@@ -926,7 +926,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             if (feed_victim != -1 && feedBiteTickCounter++ % 5 == 0) {
                 Entity e = VampirismMod.proxy.getMouseOverEntity();
                 if (e == null || e.getId() != feed_victim) {
-                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.ENDSUCKBLOOD, ""));
+                    VampirismMod.dispatcher.sendToServer(new CSimpleInputEvent(CSimpleInputEvent.Type.FINISH_SUCK_BLOOD));
                     feedBiteTickCounter = 0;
                     feed_victim = -1;
                     return;

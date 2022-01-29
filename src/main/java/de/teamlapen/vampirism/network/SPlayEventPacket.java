@@ -8,19 +8,19 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public record PlayEventPacket(int type, BlockPos pos, int stateId) implements IMessage {
+public record SPlayEventPacket(int type, BlockPos pos, int stateId) implements IMessage {
 
-    static void encode(PlayEventPacket msg, FriendlyByteBuf buf) {
+    static void encode(SPlayEventPacket msg, FriendlyByteBuf buf) {
         buf.writeVarInt(msg.type);
         buf.writeBlockPos(msg.pos);
         buf.writeVarInt(msg.stateId);
     }
 
-    static PlayEventPacket decode(FriendlyByteBuf buf) {
-        return new PlayEventPacket(buf.readVarInt(), buf.readBlockPos(), buf.readVarInt());
+    static SPlayEventPacket decode(FriendlyByteBuf buf) {
+        return new SPlayEventPacket(buf.readVarInt(), buf.readBlockPos(), buf.readVarInt());
     }
 
-    public static void handle(final PlayEventPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final SPlayEventPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> VampirismMod.proxy.handlePlayEventPacket(msg));
         ctx.setPacketHandled(true);

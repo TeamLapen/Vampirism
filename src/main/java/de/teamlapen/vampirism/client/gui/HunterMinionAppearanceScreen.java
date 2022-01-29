@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.render.entities.HunterMinionRenderer;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
-import de.teamlapen.vampirism.network.AppearancePacket;
+import de.teamlapen.vampirism.network.CAppearancePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.EditBox;
@@ -54,7 +54,7 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
         if (name.isEmpty()) {
             name = Component.translatable("text.vampirism.minion").toString() + entity.getMinionId().orElse(0);
         }
-        VampirismMod.dispatcher.sendToServer(new AppearancePacket(this.entity.getId(), name, this.skinType, this.hatType, (this.isMinionSpecificSkin ? 0b10 : 0b0) | (this.useLordSkin ? 0b1 : 0b0)));
+        VampirismMod.dispatcher.sendToServer(new CAppearancePacket(this.entity.getId(), name, this.skinType, this.hatType, (this.isMinionSpecificSkin ? 0b10 : 0b0) | (this.useLordSkin ? 0b1 : 0b0)));
         super.removed();
     }
 

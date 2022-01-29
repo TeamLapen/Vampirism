@@ -11,8 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class SkillTreePacket implements IMessage {
-    static void encode(SkillTreePacket msg, FriendlyByteBuf buf) {
+public class SSkillTreePacket implements IMessage {
+    static void encode(SSkillTreePacket msg, FriendlyByteBuf buf) {
         buf.writeVarInt(msg.nodes.size());
         for (Map.Entry<ResourceLocation, SkillNode.Builder> e : msg.nodes.entrySet()) {
             buf.writeResourceLocation(e.getKey());
@@ -21,8 +21,8 @@ public class SkillTreePacket implements IMessage {
     }
 
 
-    static SkillTreePacket decode(FriendlyByteBuf buf) {
-        SkillTreePacket pkt = new SkillTreePacket();
+    static SSkillTreePacket decode(FriendlyByteBuf buf) {
+        SSkillTreePacket pkt = new SSkillTreePacket();
         int count = buf.readVarInt();
         for (int i = 0; i < count; i++) {
             ResourceLocation id = buf.readResourceLocation();
@@ -33,7 +33,7 @@ public class SkillTreePacket implements IMessage {
     }
 
 
-    public static void handle(final SkillTreePacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final SSkillTreePacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> VampirismMod.proxy.handleSkillTreePacket(msg));
         ctx.setPacketHandled(true);
@@ -41,11 +41,11 @@ public class SkillTreePacket implements IMessage {
 
     private final Map<ResourceLocation, SkillNode.Builder> nodes;
 
-    public SkillTreePacket(Map<ResourceLocation, SkillNode.Builder> nodes) {
+    public SSkillTreePacket(Map<ResourceLocation, SkillNode.Builder> nodes) {
         this.nodes = nodes;
     }
 
-    private SkillTreePacket() {
+    private SSkillTreePacket() {
         nodes = new HashMap<>();
     }
 

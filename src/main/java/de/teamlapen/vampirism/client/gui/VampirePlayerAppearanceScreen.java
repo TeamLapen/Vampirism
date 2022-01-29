@@ -8,7 +8,7 @@ import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.network.AppearancePacket;
+import de.teamlapen.vampirism.network.CAppearancePacket;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayerSpecialAttributes;
@@ -57,7 +57,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
 
     @Override
     public void removed() {
-        VampirismMod.dispatcher.sendToServer(new AppearancePacket(this.entity.getId(), "", fangType, eyeType, glowingEyes ? 1 : 0));
+        VampirismMod.dispatcher.sendToServer(new CAppearancePacket(this.entity.getId(), "", fangType, eyeType, glowingEyes ? 1 : 0));
         super.removed();
     }
 

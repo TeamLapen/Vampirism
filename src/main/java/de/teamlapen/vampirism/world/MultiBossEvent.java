@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.world;
 
 import com.google.common.collect.Lists;
 import de.teamlapen.lib.util.Color;
-import de.teamlapen.vampirism.network.MultiBossEventPacket;
+import de.teamlapen.vampirism.network.SUpdateMultiBossEventPacket;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.BossEvent;
 
@@ -26,7 +26,7 @@ public class MultiBossEvent {
         this.entries = new HashMap<>();
     }
 
-    public MultiBossEvent(MultiBossEventPacket packet) {
+    public MultiBossEvent(SUpdateMultiBossEventPacket packet) {
         this.uniqueId = packet.getUniqueId();
         this.name = packet.getName();
         this.colors = packet.getColors();
@@ -85,7 +85,7 @@ public class MultiBossEvent {
         }
     }
 
-    public void updateFromPackage(MultiBossEventPacket packet) {
+    public void updateFromPackage(SUpdateMultiBossEventPacket packet) {
         switch (packet.getOperation()) {
             case UPDATE_NAME -> this.name = packet.getName();
             case UPDATE_PROGRESS -> this.entries = packet.getEntries();

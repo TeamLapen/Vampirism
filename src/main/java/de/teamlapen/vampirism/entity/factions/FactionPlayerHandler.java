@@ -403,6 +403,17 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         this.writeBoundActions(nbt);
     }
 
+    @Override
+    public void leaveFaction(boolean die) {
+        IFaction<?> oldFaction = currentFaction;
+        if(oldFaction==null)return;
+        setFactionAndLevel(null, 0);
+        player.displayClientMessage(Component.translatable("command.vampirism.base.level.successful", player.getName(), oldFaction.getName(), 0), true);
+        if (die) {
+            player.hurt(DamageSource.MAGIC, 1000);
+        }
+    }
+
     private IPlayableFaction<?> getFactionFromKey(ResourceLocation key) {
         for (IPlayableFaction<?> p : VampirismAPI.factionRegistry().getPlayableFactions()) {
             if (p.getID().equals(key)) {

@@ -16,12 +16,12 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public record TaskStatusPacket(Set<ITaskInstance> available,
+public record STaskStatusPacket(Set<ITaskInstance> available,
                                Set<UUID> completableTasks,
                                Map<UUID, Map<ResourceLocation, Integer>> completedRequirements,
                                int containerId, UUID taskBoardId) implements IMessage {
 
-    static void encode(@Nonnull TaskStatusPacket msg, @Nonnull FriendlyByteBuf buf) {
+    static void encode(@Nonnull STaskStatusPacket msg, @Nonnull FriendlyByteBuf buf) {
         buf.writeUtf(msg.taskBoardId.toString());
         buf.writeVarInt(msg.containerId);
         buf.writeVarInt(msg.completableTasks.size());
@@ -39,7 +39,7 @@ public record TaskStatusPacket(Set<ITaskInstance> available,
         }));
     }
 
-    static TaskStatusPacket decode(@Nonnull FriendlyByteBuf buf) {
+    static STaskStatusPacket decode(@Nonnull FriendlyByteBuf buf) {
         UUID taskBoardId = UUID.fromString(buf.readUtf());
         int containerId = buf.readVarInt();
         int completableTaskSize = buf.readVarInt();
@@ -63,10 +63,10 @@ public record TaskStatusPacket(Set<ITaskInstance> available,
             }
             completedRequirements.put(id, req);
         }
-        return new TaskStatusPacket(taskInstances, completableTasks, completedRequirements, containerId, taskBoardId);
+        return new STaskStatusPacket(taskInstances, completableTasks, completedRequirements, containerId, taskBoardId);
     }
 
-    public static void handle(final TaskStatusPacket msg, @Nonnull Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final STaskStatusPacket msg, @Nonnull Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> VampirismMod.proxy.handleTaskStatusPacket(msg));
         ctx.setPacketHandled(true);
@@ -77,7 +77,7 @@ public record TaskStatusPacket(Set<ITaskInstance> available,
      * @param containerId           the id of the {@link de.teamlapen.vampirism.inventory.container.TaskBoardContainer}
      * @param taskBoardId           the task board id
      */
-    public TaskStatusPacket(@Nonnull Set<ITaskInstance> available, Set<UUID> completableTasks, @Nonnull Map<UUID, Map<ResourceLocation, Integer>> completedRequirements, int containerId, UUID taskBoardId) {
+    public STaskStatusPacket(@Nonnull Set<ITaskInstance> available, Set<UUID> completableTasks, @Nonnull Map<UUID, Map<ResourceLocation, Integer>> completedRequirements, int containerId, UUID taskBoardId) {
         this.available = available;
         this.completableTasks = completableTasks;
         this.completedRequirements = completedRequirements;

@@ -45,22 +45,16 @@ public interface IProxy extends IInitListener {
      */
     SkillTree getSkillTree(boolean client);
 
-    default void handleActionBindingPacket(ActionBindingPacket msg, Player playerEntity) {
+    default void handleBloodValuePacket(SBloodValuePacket msg) {
     }
 
-    default void handleAppearancePacket(Player player, AppearancePacket msg) {
+    default void handlePlayEventPacket(SPlayEventPacket msg) {
     }
 
-    default void handleBloodValuePacket(BloodValuePacket msg) {
+    default void handleRequestMinionSelect(SRequestMinionSelectPacket.Action action, List<Pair<Integer, Component>> minions) {
     }
 
-    default void handlePlayEventPacket(PlayEventPacket msg) {
-    }
-
-    default void handleRequestMinionSelect(RequestMinionSelectPacket.Action action, List<Pair<Integer, Component>> minions) {
-    }
-
-    default void handleSkillTreePacket(SkillTreePacket msg) {
+    default void handleSkillTreePacket(SSkillTreePacket msg) {
     }
 
     /**
@@ -68,19 +62,16 @@ public interface IProxy extends IInitListener {
      */
     void handleSleepClient(Player player);
 
-    default void handleTaskActionPacket(TaskActionPacket msg, Player playerEntity) {
+    default void handleTaskPacket(STaskPacket msg) {
     }
 
-    default void handleTaskPacket(TaskPacket msg) {
+    default void handleTaskStatusPacket(STaskStatusPacket msg) {
     }
 
-    default void handleTaskStatusPacket(TaskStatusPacket msg) {
+    default void handleUpdateMultiBossInfoPacket(SUpdateMultiBossEventPacket msg) {
     }
 
-    default void handleUpdateMultiBossInfoPacket(MultiBossEventPacket msg) {
-    }
-
-    default void handleVampireBookPacket(OpenVampireBookPacket msg) {
+    default void handleVampireBookPacket(SOpenVampireBookPacket msg) {
     }
 
     void renderScreenFullColor(int ticksOn, int ticksOff, int color);

@@ -11,19 +11,19 @@ import java.util.function.Supplier;
 /**
  * open a vampire book on client
  */
-public record OpenVampireBookPacket(ItemStack itemStack) implements IMessage {
-    public static void handle(final OpenVampireBookPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+public record SOpenVampireBookPacket(ItemStack itemStack) implements IMessage {
+    public static void handle(final SOpenVampireBookPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> VampirismMod.proxy.handleVampireBookPacket(msg));
         ctx.setPacketHandled(true);
     }
 
-    static void encode(OpenVampireBookPacket msg, FriendlyByteBuf buf) {
+    static void encode(SOpenVampireBookPacket msg, FriendlyByteBuf buf) {
         buf.writeItem(msg.itemStack);
     }
 
-    static OpenVampireBookPacket decode(FriendlyByteBuf buf) {
-        return new OpenVampireBookPacket(buf.readItem());
+    static SOpenVampireBookPacket decode(FriendlyByteBuf buf) {
+        return new SOpenVampireBookPacket(buf.readItem());
     }
 
 }

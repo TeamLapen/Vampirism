@@ -10,8 +10,10 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.inventory.container.TaskBoardContainer;
 import de.teamlapen.vampirism.inventory.container.TaskContainer;
-import de.teamlapen.vampirism.network.TaskPacket;
-import de.teamlapen.vampirism.network.TaskStatusPacket;
+import de.teamlapen.vampirism.inventory.container.VampirismContainer;
+import de.teamlapen.vampirism.network.CTaskActionPacket;
+import de.teamlapen.vampirism.network.STaskPacket;
+import de.teamlapen.vampirism.network.STaskStatusPacket;
 import de.teamlapen.vampirism.player.tasks.TaskInstance;
 import de.teamlapen.vampirism.player.tasks.req.ItemRequirement;
 import de.teamlapen.vampirism.player.tasks.reward.ItemRewardInstance;
@@ -22,10 +24,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -88,6 +92,23 @@ public class TaskManager implements ITaskManager {
     public void acceptTask(UUID taskBoardId, @Nonnull UUID taskInstance) {
         ITaskInstance ins = this.taskWrapperMap.get(taskBoardId).acceptTask(taskInstance, this.player.level.getGameTime() + getTaskTimeConfig() * 1200L);
         this.updateStats(ins);
+    }
+
+    /**
+     * Handle a task action message that was sent from client to server
+     */
+    public void handleTaskActionMessage(CTaskActionPacket msg){
+        switch (msg.action()) {
+            case COMPLETE:
+                completeTask(msg.entityId(), msg.task());
+                break;
+            case ACCEPT:
+                acceptTask(msg.entityId(), msg.task());
+                break;
+            default:
+               abortTask(msg.entityId(), msg.task(), msg.action() == TaskContainer.TaskAction.REMOVE);
+                break;
+        }
     }
 
     /**
@@ -178,15 +199,17 @@ public class TaskManager implements ITaskManager {
             TaskWrapper wrapper = this.taskWrapperMap.computeIfAbsent(taskBoardId, TaskWrapper::new);
             Set<ITaskInstance> selectedTasks = new HashSet<>(getTasks(taskBoardId));
             selectedTasks.addAll(getUniqueTasks());
-            VampirismMod.dispatcher.sendTo(new TaskStatusPacket(selectedTasks, this.getCompletableTasks(selectedTasks), getCompletedRequirements(selectedTasks), player.containerMenu.containerId, taskBoardId), player);
+            VampirismMod.dispatcher.sendTo(new STaskStatusPacket(selectedTasks, this.getCompletableTasks(selectedTasks), getCompletedRequirements(selectedTasks), player.containerMenu.containerId, taskBoardId), player);
             wrapper.lastSeenPos = this.player.blockPosition();
         }
     }
 
     @Override
     public void openVampirismMenu() {
+        if(!player.isAlive())return;
+        player.openMenu(new SimpleMenuProvider((i, inventory, player) -> new VampirismContainer(i, inventory), Component.empty()));
         if (player.containerMenu instanceof TaskContainer) {
-            VampirismMod.dispatcher.sendTo(new TaskPacket(player.containerMenu.containerId, this.taskWrapperMap, this.taskWrapperMap.entrySet().stream().map(entry -> Pair.of(entry.getKey(), getCompletableTasks(entry.getValue().getAcceptedTasks()))).collect(Collectors.toMap(Pair::getKey, Pair::getValue)), this.taskWrapperMap.values().stream().map(wrapper -> Pair.of(wrapper.id, getCompletedRequirements(wrapper.tasks.values()))).collect(Collectors.toMap(Pair::getKey, Pair::getValue))), player);
+            VampirismMod.dispatcher.sendTo(new STaskPacket(player.containerMenu.containerId, this.taskWrapperMap, this.taskWrapperMap.entrySet().stream().map(entry -> Pair.of(entry.getKey(), getCompletableTasks(entry.getValue().getAcceptedTasks()))).collect(Collectors.toMap(Pair::getKey, Pair::getValue)), this.taskWrapperMap.values().stream().map(wrapper -> Pair.of(wrapper.id, getCompletedRequirements(wrapper.tasks.values()))).collect(Collectors.toMap(Pair::getKey, Pair::getValue))), player);
         }
     }
 

@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.network.OpenVampireBookPacket;
+import de.teamlapen.vampirism.network.SOpenVampireBookPacket;
 import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
@@ -25,8 +25,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
-
-import net.minecraft.world.item.Item.Properties;
 
 public class VampireBookItem extends Item {
 
@@ -91,7 +89,7 @@ public class VampireBookItem extends Item {
         ItemStack stack = playerIn.getItemInHand(handIn);
         if (!worldIn.isClientSide && playerIn instanceof ServerPlayer) {
             this.resolveContents(stack, playerIn);
-            VampirismMod.dispatcher.sendTo(new OpenVampireBookPacket(stack), (ServerPlayer) playerIn);
+            VampirismMod.dispatcher.sendTo(new SOpenVampireBookPacket(stack), (ServerPlayer) playerIn);
         }
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
     }

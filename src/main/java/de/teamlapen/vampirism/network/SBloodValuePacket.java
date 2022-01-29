@@ -12,10 +12,10 @@ import java.lang.reflect.Array;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public record BloodValuePacket(
+public record SBloodValuePacket(
         Pair<Map<ResourceLocation, Integer>, Integer>[] values) implements IMessage {
 
-    static void encode(BloodValuePacket msg, FriendlyByteBuf buf) {
+    static void encode(SBloodValuePacket msg, FriendlyByteBuf buf) {
         for (Pair<Map<ResourceLocation, Integer>, Integer> e : msg.values) {
             buf.writeVarInt(e.getFirst().size());
             for (Map.Entry<ResourceLocation, Integer> f : e.getFirst().entrySet()) {
@@ -26,7 +26,7 @@ public record BloodValuePacket(
         }
     }
 
-    static BloodValuePacket decode(FriendlyByteBuf buf) {
+    static SBloodValuePacket decode(FriendlyByteBuf buf) {
         @SuppressWarnings("unchecked")
         Pair<Map<ResourceLocation, Integer>, Integer>[] values = (Pair<Map<ResourceLocation, Integer>, Integer>[]) Array.newInstance(Pair.class, 3);
         for (int i = 0; i < 3; i++) {
@@ -37,10 +37,10 @@ public record BloodValuePacket(
             }
             values[i] = new Pair<>(map, buf.readVarInt());
         }
-        return new BloodValuePacket(values);
+        return new SBloodValuePacket(values);
     }
 
-    public static void handle(final BloodValuePacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final SBloodValuePacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> VampirismMod.proxy.handleBloodValuePacket(msg));
         ctx.setPacketHandled(true);

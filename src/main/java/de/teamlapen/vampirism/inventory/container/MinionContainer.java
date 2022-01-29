@@ -8,8 +8,8 @@ import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
-import de.teamlapen.vampirism.network.InputEventPacket;
-import de.teamlapen.vampirism.network.SelectMinionTaskPacket;
+import de.teamlapen.vampirism.network.CSelectMinionTaskPacket;
+import de.teamlapen.vampirism.network.CToggleMinionTaskLock;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
@@ -140,11 +140,11 @@ public class MinionContainer extends InventoryContainer {
     private void sendChanges() {
         if (taskToActivate != null && taskToActivate != previousTask) {
             minionEntity.getMinionId().ifPresent(id ->
-                    VampirismMod.dispatcher.sendToServer(new SelectMinionTaskPacket(id, RegUtil.id(this.taskToActivate)))
+                    VampirismMod.dispatcher.sendToServer(new CSelectMinionTaskPacket(id, RegUtil.id(this.taskToActivate)))
             );
         }
         if (previousTaskLocked != taskLocked) {
-            minionEntity.getMinionId().ifPresent(id -> VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLE_LOCK_MINION_TASK, "" + id)));
+            minionEntity.getMinionId().ifPresent(id -> VampirismMod.dispatcher.sendToServer(new CToggleMinionTaskLock(id)));
         }
     }
 

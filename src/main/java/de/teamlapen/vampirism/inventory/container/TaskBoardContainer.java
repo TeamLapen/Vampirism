@@ -10,7 +10,7 @@ import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.network.TaskActionPacket;
+import de.teamlapen.vampirism.network.CTaskActionPacket;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.TextColor;
@@ -105,7 +105,7 @@ public class TaskBoardContainer extends AbstractContainerMenu implements TaskCon
             case ACCEPT -> taskInfo.startTask(Minecraft.getInstance().level.getGameTime() + taskInfo.getTaskDuration());
             default -> taskInfo.aboardTask();
         }
-        VampirismMod.dispatcher.sendToServer(new TaskActionPacket(taskInfo.getId(), taskInfo.getTaskBoard(), action));
+        VampirismMod.dispatcher.sendToServer(new CTaskActionPacket(taskInfo.getId(), taskInfo.getTaskBoard(), action));
         if (this.listener != null) {
             this.listener.run();
         }

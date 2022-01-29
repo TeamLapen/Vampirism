@@ -22,13 +22,13 @@ import java.util.List;
 import java.util.function.Supplier;
 
 
-public record SelectMinionTaskPacket(int minionID,
+public record CSelectMinionTaskPacket(int minionID,
                                      ResourceLocation taskID) implements IMessage {
     public final static ResourceLocation RECALL = new ResourceLocation(REFERENCE.MODID, "recall");
     public final static ResourceLocation RESPAWN = new ResourceLocation(REFERENCE.MODID, "respawn");
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public static void handle(final SelectMinionTaskPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final CSelectMinionTaskPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         if (ctx.getSender() != null) {
             ctx.enqueueWork(() -> FactionPlayerHandler.getOpt(ctx.getSender()).ifPresent(fp -> {
@@ -81,16 +81,16 @@ public record SelectMinionTaskPacket(int minionID,
         }
     }
 
-    static void encode(SelectMinionTaskPacket msg, FriendlyByteBuf buf) {
+    static void encode(CSelectMinionTaskPacket msg, FriendlyByteBuf buf) {
         buf.writeVarInt(msg.minionID);
         buf.writeResourceLocation(msg.taskID);
     }
 
-    static SelectMinionTaskPacket decode(FriendlyByteBuf buf) {
-        return new SelectMinionTaskPacket(buf.readVarInt(), buf.readResourceLocation());
+    static CSelectMinionTaskPacket decode(FriendlyByteBuf buf) {
+        return new CSelectMinionTaskPacket(buf.readVarInt(), buf.readResourceLocation());
     }
 
-    public SelectMinionTaskPacket {
+    public CSelectMinionTaskPacket {
         assert minionID >= -1;
     }
 }

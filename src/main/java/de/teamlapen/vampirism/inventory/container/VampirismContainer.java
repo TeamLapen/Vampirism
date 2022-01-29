@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.network.TaskActionPacket;
+import de.teamlapen.vampirism.network.CTaskActionPacket;
 import de.teamlapen.vampirism.player.TaskManager;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.TextColor;
@@ -29,9 +29,6 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import de.teamlapen.lib.lib.inventory.InventoryContainer.SelectorInfo;
-import de.teamlapen.lib.lib.inventory.InventoryContainer.SelectorSlot;
 
 public class VampirismContainer extends InventoryContainer implements TaskContainer {
 
@@ -156,7 +153,7 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
 
     @Override
     public void pressButton(@Nonnull ITaskInstance taskInfo) {
-        VampirismMod.dispatcher.sendToServer(new TaskActionPacket(taskInfo.getId(), taskInfo.getTaskBoard(), buttonAction(taskInfo)));
+        VampirismMod.dispatcher.sendToServer(new CTaskActionPacket(taskInfo.getId(), taskInfo.getTaskBoard(), buttonAction(taskInfo)));
         this.taskWrapper.get(taskInfo.getTaskBoard()).removeTask(taskInfo, true);
         if (this.listener != null) {
             this.listener.run();
