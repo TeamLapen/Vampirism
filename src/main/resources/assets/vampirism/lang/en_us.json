@@ -353,6 +353,7 @@
   "action.vampirism.potion_resistance_hunter.desc": "Remove certain negative potion effects applied to you",
   "action.vampirism.hissing": "Hissing",
   "action.vampirism.hissing.desc": "Disorients nearby entities",
+  "action.vampirism.infect": "Infect",
   "__comment": "skills",
   "skill.vampirism.vampire": "Becoming a Vampire",
   "skill.vampirism.creeper_avoided": "Avoided by Creepers",

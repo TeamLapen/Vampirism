@@ -7,12 +7,9 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
 
 import java.util.Optional;
 
@@ -32,9 +29,7 @@ public class InfectAction extends DefaultVampireAction {
     @Override
     protected boolean activate(IVampirePlayer vampire, ActivationContext context) {
         Player player = vampire.getRepresentingPlayer();
-        HitResult hit = UtilLib.getPlayerLookingSpot(player, player.getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue() + 1);
-        if (hit.getType() == EntityHitResult.Type.ENTITY && hit instanceof EntityHitResult && ((EntityHitResult) hit).getEntity() instanceof LivingEntity) {
-            Entity target = ((EntityHitResult) hit).getEntity();
+        return context.targetEntity().filter(LivingEntity.class::isInstance).map(target -> {
             if (!UtilLib.canReallySee((LivingEntity) target, player, false)) {
                 return false;
             }
@@ -50,8 +45,8 @@ public class InfectAction extends DefaultVampireAction {
                 vampire.getRepresentingPlayer().awardStat(ModStats.infected_creatures);
                 return true;
             }
-        }
-        return false;
+            return false;
+        }).orElse(false);
     }
 
 }
