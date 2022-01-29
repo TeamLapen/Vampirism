@@ -21,6 +21,7 @@ import de.teamlapen.vampirism.network.CToggleActionPacket;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -45,11 +46,11 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
      * Fake skill which represents the cancel button
      */
     private static final IAction<?> fakeAction = new DefaultVampireAction() {
+
         @Override
-        public boolean activate(IVampirePlayer vampire) {
+        protected boolean activate(IVampirePlayer player, ActivationContext context) {
             return true;
         }
-
 
         @Override
         public int getCooldown(IVampirePlayer player) {
@@ -248,7 +249,7 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
     protected void onElementSelected(IAction<T> action) {
         //noinspection unchecked
         if (action != fakeAction && action.canUse((T)FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer().orElse(null)) == IAction.PERM.ALLOWED) {
-            VampirismMod.dispatcher.sendToServer(new CToggleActionPacket(RegUtil.id(action)));
+            VampirismMod.dispatcher.sendToServer(CToggleActionPacket.createFromRaytrace(RegUtil.id(action), Minecraft.getInstance().hitResult));
         }
     }
 

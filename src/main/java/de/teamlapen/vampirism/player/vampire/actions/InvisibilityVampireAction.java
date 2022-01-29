@@ -14,9 +14,13 @@ public class InvisibilityVampireAction extends DefaultVampireAction implements I
     }
 
     @Override
-    public boolean activate(IVampirePlayer vampire) {
-        vampire.getRepresentingPlayer().setInvisible(true);
+    public boolean activate(IVampirePlayer vampire, ActivationContext context) {
+        activate(vampire);
         return true;
+    }
+
+    protected void activate(IVampirePlayer player) {
+        player.getRepresentingPlayer().setInvisible(true);
     }
 
     @Override

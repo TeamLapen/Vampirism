@@ -179,7 +179,7 @@ public class ModKeys {
             if (action.getFaction().map(faction -> !faction.equals(player.getFaction())).orElse(false)) {
                 player.getRepresentingPlayer().displayClientMessage(Component.translatable("text.vampirism.action.only_faction", action.getFaction().get().getName()), true);
             } else {
-                VampirismMod.dispatcher.sendToServer(new CToggleActionPacket(RegUtil.id(action)));
+                VampirismMod.dispatcher.sendToServer(CToggleActionPacket.createFromRaytrace(RegUtil.id(action), Minecraft.getInstance().hitResult));
             }
         }
 

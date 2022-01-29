@@ -41,7 +41,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     }
 
     @Override
-    public boolean activate(IVampirePlayer vampire) {
+    public boolean activate(IVampirePlayer vampire, ActivationContext context) {
         Player player = vampire.getRepresentingPlayer();
         setModifier(player, true);
         updatePlayer((VampirePlayer) vampire, true);

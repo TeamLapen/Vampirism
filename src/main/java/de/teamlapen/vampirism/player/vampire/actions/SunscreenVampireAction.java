@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Player;
 public class SunscreenVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
     @Override
-    public boolean activate(IVampirePlayer vampire) {
+    public boolean activate(IVampirePlayer vampire, ActivationContext context) {
         addEffectInstance(vampire, new MobEffectInstance(ModEffects.SUNSCREEN.get(), getDuration(vampire), 3, false, false));
         return true;
     }

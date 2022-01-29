@@ -12,18 +12,17 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Handles actions for vampire players
@@ -226,8 +225,8 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     public void relockActions(Collection<IAction<T>> actions) {
         unlockedActions.removeAll(actions);
         for (IAction<T> action : actions) {
-            if (action instanceof ILastingAction && isActionActive((ILastingAction<T>) action)) {
-                toggleAction(action);
+            if (action instanceof ILastingAction<T> lastingAction) {
+                deactivateAction(lastingAction);
             }
         }
     }
@@ -266,18 +265,10 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     }
 
     @Override
-    public IAction.PERM toggleAction(IAction<T> action) {
-
+    public IAction.PERM toggleAction(IAction<T> action, IAction.ActivationContext context) {
         ResourceLocation id = RegUtil.id(action);
         if (activeTimers.containsKey(id)) {
-            int cooldown = action.getCooldown(player);
-            int leftTime = activeTimers.getInt(id);
-            int duration = ((ILastingAction<T>) action).getDuration(player);
-            cooldown -= cooldown * (leftTime / (float) duration / 2f);
-            ((ILastingAction<T>) action).onDeactivated(player);
-            activeTimers.removeInt(id);
-            cooldownTimers.put(id, Math.max(cooldown, 1));//Entries should to be at least 1
-
+            deactivateAction((ILastingAction<T>) action);
             dirty = true;
             return IAction.PERM.ALLOWED;
         } else if (cooldownTimers.containsKey(id)) {
@@ -287,7 +278,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             if (!isActionAllowedPermission(action)) return IAction.PERM.DISALLOWED;
             IAction.PERM r = action.canUse(player);
             if (r == IAction.PERM.ALLOWED) {
-                if (action.onActivated(player)) {
+                if (action.onActivated(player, context)) {
                     if (action instanceof ILastingAction) {
                         activeTimers.put(id, ((ILastingAction<T>) action).getDuration(player));
                     } else {
@@ -301,7 +292,21 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
                 return r;
             }
         }
+    }
 
+    @Override
+    public void deactivateAction(ILastingAction<T> action) {
+        ResourceLocation id = RegUtil.id(action);
+        if (activeTimers.containsKey(id)) {
+            int cooldown = action.getCooldown(player);
+            int leftTime = activeTimers.getInt(id);
+            int duration = action.getDuration(player);
+            cooldown -= cooldown * (leftTime / (float) duration / 2f);
+            action.onDeactivated(player);
+            activeTimers.removeInt(id);
+            cooldownTimers.put(id, Math.max(cooldown, 1));//Entries should to be at least 1
+            dirty = true;
+        }
     }
 
     @Override
@@ -403,6 +408,37 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
 
         public ActionNotRegisteredException(IAction<?> action) {
             this(action.toString());
+        }
+    }
+
+    public static class ActivationContext implements IAction.ActivationContext{
+
+        private final Entity entity;
+        private final BlockPos blockPos;
+
+        public ActivationContext(Entity entity){
+            this.entity = entity;
+            this.blockPos = null;
+        }
+
+        public ActivationContext(BlockPos pos){
+            this.entity=null;
+            this.blockPos = pos;
+        }
+
+        public ActivationContext(){
+            this.entity=null;
+            this.blockPos=null;
+        }
+
+        @Override
+        public Optional<BlockPos> targetBlock() {
+            return Optional.ofNullable(blockPos);
+        }
+
+        @Override
+        public Optional<Entity> targetEntity() {
+            return Optional.ofNullable(entity);
         }
     }
 }

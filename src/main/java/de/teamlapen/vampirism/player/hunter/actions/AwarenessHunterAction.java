@@ -69,9 +69,8 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
     }
 
     @Override
-    protected boolean activate(IHunterPlayer player) {
-        onUpdate(player);
-        return true;
+    protected boolean activate(IHunterPlayer player, ActivationContext context) {
+        return false;
     }
 
     private double nearbyVampire(IHunterPlayer player) {

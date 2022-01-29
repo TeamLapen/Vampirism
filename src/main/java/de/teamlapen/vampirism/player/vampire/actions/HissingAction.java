@@ -24,7 +24,7 @@ public class HissingAction extends DefaultVampireAction {
     }
 
     @Override
-    protected boolean activate(IVampirePlayer vampire) {
+    protected boolean activate(IVampirePlayer vampire, ActivationContext context) {
         Player entity = vampire.getRepresentingPlayer();
         entity.level.playSound(null, entity.getX(), entity.getY(), entity.getZ(), ModSounds.ENTITY_VAMPIRE_SCREAM.get(), SoundSource.PLAYERS,1,1);
         vampire.getRepresentingPlayer().getCommandSenderWorld().getEntitiesOfClass(Mob.class, new AABB(vampire.getRepresentingPlayer().blockPosition()).inflate(10, 10, 10)).forEach(e -> {

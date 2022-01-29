@@ -26,7 +26,7 @@ public class FreezeVampireAction extends DefaultVampireAction {
     }
 
     @Override
-    public boolean activate(final IVampirePlayer vampire) {
+    public boolean activate(final IVampirePlayer vampire, ActivationContext context) {
         Player player = vampire.getRepresentingPlayer();
         List<LivingEntity> l = player.getCommandSenderWorld().getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(10, 5, 10), vampire.getNonFriendlySelector(true, false));
         for (LivingEntity e : l) {

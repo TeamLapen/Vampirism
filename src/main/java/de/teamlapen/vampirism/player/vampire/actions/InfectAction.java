@@ -30,7 +30,7 @@ public class InfectAction extends DefaultVampireAction {
     }
 
     @Override
-    protected boolean activate(IVampirePlayer vampire) {
+    protected boolean activate(IVampirePlayer vampire, ActivationContext context) {
         Player player = vampire.getRepresentingPlayer();
         HitResult hit = UtilLib.getPlayerLookingSpot(player, player.getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue() + 1);
         if (hit.getType() == EntityHitResult.Type.ENTITY && hit instanceof EntityHitResult && ((EntityHitResult) hit).getEntity() instanceof LivingEntity) {

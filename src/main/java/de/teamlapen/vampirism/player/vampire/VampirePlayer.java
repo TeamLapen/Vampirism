@@ -708,7 +708,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                 if (useBlood(VampirismConfig.BALANCE.vaHalfInvulnerableBloodCost.get(), false)) {
                     return true;
                 } else {
-                    this.actionHandler.toggleAction(VampireActions.HALF_INVULNERABLE.get());
+                    this.actionHandler.deactivateAction(VampireActions.HALF_INVULNERABLE.get());
                 }
             }
         }

@@ -74,9 +74,18 @@ public interface IActionHandler<T extends IFactionPlayer<T>> {
     void resetTimer(@Nonnull IAction action);
 
     /**
-     * toggle the action (server side)
+     * Toggle the action (server side).
+     * If you just want to make sure it is deactivated, call {@link #deactivateAction(ILastingAction)}
+     * @param action Action
+     * @param context Context holding Block/Entity the player was looking at when activating if any
+     * @return result
      */
-    IAction.PERM toggleAction(IAction<T> action);
+    IAction.PERM toggleAction(IAction<T> action, IAction.ActivationContext context);
+
+    /**
+     * Deactivate a lasting action, if it was active.
+     */
+    void deactivateAction(ILastingAction<T> action);
 
     /**
      * Unlock the given actions. The given action have to belong to the players faction and have to be registered

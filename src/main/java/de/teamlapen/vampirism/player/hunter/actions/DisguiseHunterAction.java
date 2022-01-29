@@ -18,7 +18,7 @@ public class DisguiseHunterAction extends DefaultHunterAction implements ILastin
     }
 
     @Override
-    public boolean activate(IHunterPlayer player) {
+    public boolean activate(IHunterPlayer player, ActivationContext context) {
         ((HunterPlayer) player).getSpecialAttributes().activateDisguise();
         return true;
     }

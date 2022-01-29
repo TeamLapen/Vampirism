@@ -17,10 +17,14 @@ public class DisguiseVampireAction extends DefaultVampireAction implements ILast
     }
 
     @Override
-    public boolean activate(IVampirePlayer player) {
+    public boolean activate(IVampirePlayer player, ActivationContext context) {
+        activate(player);
+        return true;
+    }
+
+    protected void activate(IVampirePlayer player) {
         ((VampirePlayer) player).getSpecialAttributes().disguised = true;
         ((VampirePlayer) player).getSpecialAttributes().disguisedAs = null;
-        return true;
     }
 
     @Override

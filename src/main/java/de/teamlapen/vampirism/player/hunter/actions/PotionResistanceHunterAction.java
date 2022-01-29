@@ -58,7 +58,7 @@ public class PotionResistanceHunterAction extends DefaultHunterAction implements
     }
 
     @Override
-    protected boolean activate(IHunterPlayer player) {
+    protected boolean activate(IHunterPlayer player, ActivationContext context) {
         onUpdate(player);
         return true;
     }

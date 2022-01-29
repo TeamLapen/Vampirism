@@ -17,7 +17,7 @@ public class RegenVampireAction extends DefaultVampireAction {
     }
 
     @Override
-    public boolean activate(IVampirePlayer vampire) {
+    public boolean activate(IVampirePlayer vampire, ActivationContext context) {
         Player player = vampire.getRepresentingPlayer();
         int dur = VampirismConfig.BALANCE.vaRegenerationDuration.get() * 20;
         player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, dur, vampire.getSkillHandler().isRefinementEquipped(ModRefinements.REGENERATION.get()) ? 1 : 0));

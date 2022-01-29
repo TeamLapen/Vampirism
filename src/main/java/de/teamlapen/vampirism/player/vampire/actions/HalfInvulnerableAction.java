@@ -52,7 +52,7 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
     }
 
     @Override
-    protected boolean activate(IVampirePlayer vampire) {
+    protected boolean activate(IVampirePlayer vampire, ActivationContext context) {
         ((VampirePlayer) vampire).getSpecialAttributes().half_invulnerable = true;
         addEffectInstance(vampire, new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, getDuration(vampire) - 1, 1, false, false));
         return true;

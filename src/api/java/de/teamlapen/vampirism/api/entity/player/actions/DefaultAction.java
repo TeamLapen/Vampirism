@@ -55,9 +55,9 @@ public abstract class DefaultAction<T extends IFactionPlayer<T>> implements IAct
     public abstract boolean isEnabled();
 
     @Override
-    public boolean onActivated(T player) {
-        if (this.getFaction().map(f -> f.getFactionPlayerInterface().isInstance(player)).orElse(true)) {
-            return activate(player);
+    public boolean onActivated(T player, ActivationContext context) {
+        if (this.getFaction().map(f -> f.getFactionPlayerInterface().isInstance(player)).orElse(false)) {
+            return activate(player, context);
         } else {
             throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + this.getFaction().get().getFactionPlayerInterface());
         }
@@ -87,7 +87,7 @@ public abstract class DefaultAction<T extends IFactionPlayer<T>> implements IAct
      *
      * @return Whether the action was successfully activated. !Does not give any feedback to the user!
      */
-    protected abstract boolean activate(T player);
+    protected abstract boolean activate(T player, ActivationContext context);
 
     private ResourceLocation getRegistryName() {
         return VampirismRegistries.ACTIONS.get().getKey(this);

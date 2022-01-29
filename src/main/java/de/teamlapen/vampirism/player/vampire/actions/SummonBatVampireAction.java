@@ -20,7 +20,7 @@ public class SummonBatVampireAction extends DefaultVampireAction {
     }
 
     @Override
-    public boolean activate(IVampirePlayer player) {
+    public boolean activate(IVampirePlayer player, ActivationContext context) {
         Player entityPlayer = player.getRepresentingPlayer();
         boolean refined = player.getSkillHandler().isRefinementEquipped(ModRefinements.SUMMON_BATS.get());
         int amount = VampirismConfig.BALANCE.vaSummonBatsCount.get();
