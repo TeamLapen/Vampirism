@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.player.vampire;
 
 import de.teamlapen.lib.HelperLib;
+import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.lib.util.ISoundReference;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.VampireActionTrigger;
@@ -182,6 +184,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private IVampireVision activatedVision = null;
     private int wing_counter = 0;
     private int feed_victim = -1;
+    /**
+     * Holds a sound reference (client side only) for the feeding sound while feed_victim!=-1
+     */
+    @Nullable
+    private ISoundReference feedingSoundReference;
     private BITE_TYPE feed_victim_bite_type;
     private int feedBiteTickCounter = 0;
     private boolean forceNaturalArmorUpdate;
@@ -1192,6 +1199,18 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
         if (nbt.contains(KEY_FEED_VICTIM_ID)) {
             feed_victim = nbt.getInt(KEY_FEED_VICTIM_ID);
+            if(feed_victim != -1){
+                if(feedingSoundReference == null || !feedingSoundReference.isPlaying()){
+                    feedingSoundReference = VampLib.proxy.createSoundReference(ModSounds.player_feeding, SoundCategory.PLAYERS, player.getX(), player.getY(), player.getZ(),1,1);
+                    feedingSoundReference.startPlaying();
+                }
+            }
+            else{
+                if(feedingSoundReference != null){
+                    feedingSoundReference.stopPlaying();
+                    feedingSoundReference = null;
+                }
+            }
         }
         if (nbt.contains(KEY_WING_COUNTER)) {
             wing_counter = nbt.getInt(KEY_WING_COUNTER);
@@ -1437,8 +1456,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
             player.level.addParticle(new ItemParticleData(ParticleTypes.ITEM, new ItemStack(Items.APPLE)), vec31.x, vec31.y, vec31.z, vec3.x, vec3.y + 0.05D, vec3.z);
         }
-        //Play bite sounds. Using this method since it is the only client side method. And this is called on every relevant client anyway
-        player.level.playLocalSound(player.getX(), player.getY(), player.getZ(), ModSounds.player_bite, SoundCategory.PLAYERS, 1.0F, 1.0F, false);
     }
 
     /**
