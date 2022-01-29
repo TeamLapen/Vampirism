@@ -88,7 +88,7 @@ public class SkillsScreen extends Screen {
         this.guiTop = (this.height - SCREEN_HEIGHT) / 2;
 
         if (this.factionPlayer != null) {
-            SkillNode rootNode = SkillTreeManager.getInstance().getSkillTree().getRootNodeForFaction(this.factionPlayer.getFaction().getID());
+            SkillNode rootNode = VampirismMod.proxy.getSkillTree(true).getRootNodeForFaction(this.factionPlayer.getFaction().getID());
             this.tabs.add(new SkillsTabScreen(this.minecraft, this, 0, new ItemStack(ModItems.VAMPIRE_BOOK.get()), rootNode, this.factionPlayer.getSkillHandler(), Component.empty()));
         }
 
