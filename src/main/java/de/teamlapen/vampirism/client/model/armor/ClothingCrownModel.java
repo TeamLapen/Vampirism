@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.model.armor;
 import com.google.common.collect.ImmutableList;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
@@ -19,7 +20,7 @@ public class ClothingCrownModel extends VampirismArmorModel {
 
 
     public static LayerDefinition createLayer() {
-        MeshDefinition mesh = VampirismArmorModel.createMesh();
+        MeshDefinition mesh = new MeshDefinition();
         PartDefinition part = mesh.getRoot();
         CubeDeformation def1 = new CubeDeformation(-0.2F, 0.1F, -0.1F);
         part.addOrReplaceChild(LEFT, CubeListBuilder.create().texOffs(0, 6).addBox(-5.0F, -7.7F, -4.0F, 1.0F, 1.0F, 8.0F, new CubeDeformation(-0.2F, 0.1F, 0.1F)).texOffs(12, 17).addBox(-5.0F, -8.8F, -3.7F, 1.0F, 1.0F, 2.0F, def1).texOffs(0, 17).addBox(-5.0F, -8.8F, 1.7F, 1.0F, 1.0F, 2.0F, def1).texOffs(6, 17).addBox(-5.0F, -8.8F, -1.0F, 1.0F, 1.0F, 2.0F, new CubeDeformation(-0.2F, 0.0F, 0.1F)).texOffs(13, 15).addBox(-5.0F, -9.8F, -3.25F, 1.0F, 1.0F, 1.0F, def1).texOffs(1, 15).addBox(-5.0F, -9.8F, 2.2F, 1.0F, 1.0F, 1.0F, def1).texOffs(7, 15).addBox(-5.0F, -9.8F, -0.5F, 1.0F, 1.0F, 1.0F, new CubeDeformation(-0.2F, 0.0F, -0.05F)), PartPose.ZERO);
@@ -50,10 +51,11 @@ public class ClothingCrownModel extends VampirismArmorModel {
 
     private static ClothingCrownModel instance;
 
-    public static ClothingCrownModel getInstance() {
+    public static ClothingCrownModel getAdjustedInstance(HumanoidModel<?> wearerModel) {
         if (instance == null) {
             instance = new ClothingCrownModel(Minecraft.getInstance().getEntityModels().bakeLayer(ModEntitiesRender.CLOTHING_CROWN));
         }
+        instance.copyFromHumanoid(wearerModel);
         return instance;
     }
 
@@ -63,7 +65,7 @@ public class ClothingCrownModel extends VampirismArmorModel {
     public ModelPart right;
 
     public ClothingCrownModel(ModelPart part) {
-        super(part);
+        super();
         front = part.getChild(FRONT);
         back = part.getChild(BACK);
         left = part.getChild(LEFT);

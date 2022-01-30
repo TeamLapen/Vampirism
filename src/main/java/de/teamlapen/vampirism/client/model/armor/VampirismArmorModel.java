@@ -1,53 +1,58 @@
 package de.teamlapen.vampirism.client.model.armor;
 
-import com.google.common.collect.Iterables;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.client.renderer.RenderType;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 
-@OnlyIn(Dist.CLIENT)
-public class VampirismArmorModel extends HumanoidModel<LivingEntity> {
-    protected VampirismArmorModel(ModelPart part) {
-        super(part);
+
+public class VampirismArmorModel extends Model {
+
+    public VampirismArmorModel() {
+        super(RenderType::entityCutoutNoCull);
     }
 
-    public static MeshDefinition createMesh() {
-        return HumanoidModel.createMesh(CubeDeformation.NONE, 0);
+    public void copyFromHumanoid(HumanoidModel<?> wearerModel) {
+        getBodyModels().forEach(p -> p.copyFrom(wearerModel.body));
+        getHeadModels().forEach(p -> p.copyFrom(wearerModel.head));
+        getRightLegModels().forEach(p -> p.copyFrom(wearerModel.rightLeg));
+        getLeftLegModels().forEach(p -> p.copyFrom(wearerModel.leftLeg));
+        getRightArmModels().forEach(p -> p.copyFrom(wearerModel.rightArm));
+        getRightLegModels().forEach(p -> p.copyFrom(wearerModel.leftLeg));
+    }
+
+    @Override
+    public void renderToBuffer(PoseStack pPoseStack, VertexConsumer pBuffer, int pPackedLight, int pPackedOverlay, float pRed, float pGreen, float pBlue, float pAlpha) {
+        this.getBodyModels().forEach((p_102061_) -> {
+            p_102061_.render(pPoseStack, pBuffer, pPackedLight, pPackedOverlay, pRed, pGreen, pBlue, pAlpha);
+        });
+        this.getHeadModels().forEach((p_102051_) -> {
+            p_102051_.render(pPoseStack, pBuffer, pPackedLight, pPackedOverlay, pRed, pGreen, pBlue, pAlpha);
+        });
+        this.getLeftLegModels().forEach((p_102051_) -> {
+            p_102051_.render(pPoseStack, pBuffer, pPackedLight, pPackedOverlay, pRed, pGreen, pBlue, pAlpha);
+        });
+        this.getRightLegModels().forEach((p_102051_) -> {
+            p_102051_.render(pPoseStack, pBuffer, pPackedLight, pPackedOverlay, pRed, pGreen, pBlue, pAlpha);
+        });
+        this.getRightArmModels().forEach((p_102051_) -> {
+            p_102051_.render(pPoseStack, pBuffer, pPackedLight, pPackedOverlay, pRed, pGreen, pBlue, pAlpha);
+        });
+        this.getLeftArmModels().forEach((p_102051_) -> {
+            p_102051_.render(pPoseStack, pBuffer, pPackedLight, pPackedOverlay, pRed, pGreen, pBlue, pAlpha);
+        });
     }
 
     protected Iterable<ModelPart> getBodyModels() {
         return Collections.emptyList();
     }
 
-    @Nonnull
-    @Override
-    protected final Iterable<ModelPart> bodyParts() {
-        Iterable<ModelPart> b = getBodyModels();
-        b.forEach(p -> p.copyFrom(this.body));
-        Iterable<ModelPart> ll = getLeftLegModels();
-        ll.forEach(p -> p.copyFrom(this.leftLeg));
-        Iterable<ModelPart> rl = getRightLegModels();
-        rl.forEach(p -> p.copyFrom(this.rightLeg));
-        return Iterables.concat(b, ll, rl);
-    }
-
     protected Iterable<ModelPart> getHeadModels() {
         return Collections.emptyList();
-    }
-
-    @Nonnull
-    @Override
-    protected final Iterable<ModelPart> headParts() {
-        Iterable<ModelPart> l = getHeadModels();
-        l.forEach(p -> p.copyFrom(this.head));
-        return l;
     }
 
     protected Iterable<ModelPart> getLeftLegModels() {
@@ -58,5 +63,11 @@ public class VampirismArmorModel extends HumanoidModel<LivingEntity> {
         return Collections.emptyList();
     }
 
+    protected Iterable<ModelPart> getRightArmModels() {
+        return Collections.emptyList();
+    }
 
+    protected Iterable<ModelPart> getLeftArmModels() {
+        return Collections.emptyList();
+    }
 }

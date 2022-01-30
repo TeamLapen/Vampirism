@@ -3,18 +3,15 @@ package de.teamlapen.vampirism.client.model.armor;
 import com.google.common.collect.ImmutableList;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import javax.annotation.Nonnull;
 
 @OnlyIn(Dist.CLIENT)
 public class CloakModel extends VampirismArmorModel {
@@ -31,15 +28,16 @@ public class CloakModel extends VampirismArmorModel {
 
     private static CloakModel cloakItemModel;
 
-    public static CloakModel getRotatedCloak() {
+    public static CloakModel getAdjustedCloak(HumanoidModel<?> wearerModel) {
         if (cloakItemModel == null) {
             cloakItemModel = new CloakModel(Minecraft.getInstance().getEntityModels().bakeLayer(ModEntitiesRender.CLOAK));
         }
+        cloakItemModel.copyFromHumanoid(wearerModel);
         return cloakItemModel;
     }
 
     public static LayerDefinition createLayer() {
-        MeshDefinition mesh = VampirismArmorModel.createMesh();
+        MeshDefinition mesh = new MeshDefinition();
         PartDefinition part = mesh.getRoot();
         part.addOrReplaceChild(CLOAK_BACK, CubeListBuilder.create().texOffs(0, 48).mirror().addBox(-4, 0, 2, 8, 15, 1), PartPose.offsetAndRotation(0, 0.2f, 2, 0.0872665F, 0F, 0F));
         part.addOrReplaceChild(LEFT_LONG, CubeListBuilder.create().texOffs(18, 48).mirror().addBox(4, 0, 2, 1, 15, 1), PartPose.offsetAndRotation(0, 0.2f, 2, 0.0872665F, 0F, 0F));
@@ -64,7 +62,6 @@ public class CloakModel extends VampirismArmorModel {
     private final ModelPart shoulderleft;
 
     public CloakModel(ModelPart part) {
-        super(part);
         cloakback = part.getChild(CLOAK_BACK);
         leftlong = part.getChild(LEFT_LONG);
         rightmedium = part.getChild(RIGHT_MEDIUM);
@@ -76,47 +73,47 @@ public class CloakModel extends VampirismArmorModel {
         shoulderright = part.getChild(SHOULDER_RIGHT);
     }
 
-    @Override
-    public void setupAnim(@Nonnull LivingEntity entity, float f, float f1, float ageInTicks, float netHeadYaw, float headPitch) {
-        super.setupAnim(entity, f, f1, ageInTicks, netHeadYaw, headPitch);
-        //Isn't use afaik
-
-
-        boolean flag = entity != null && entity.getFallFlyingTicks() > 4;
-
-        float f6 = 1.0F;
-        if (flag) {
-            f6 = (float) (entity.getDeltaMovement().x * entity.getDeltaMovement().x + entity.getDeltaMovement().y * entity.getDeltaMovement().y
-                    + entity.getDeltaMovement().z * entity.getDeltaMovement().z);
-            f6 = f6 / 0.2F;
-            f6 = f6 * f6 * f6;
-        }
-
-        if (f6 < 1.0F) {
-            f6 = 1.0F;
-        }
-
-        float rotation = Mth.cos(f * 0.6662F) * 1.4F * f1 / f6;
-        if (rotation < 0.0F)
-            rotation *= -1;
-        this.cloakback.xRot = 0.0872665F + (rotation / 3);
-        this.leftlong.xRot = 0.0872665F + (rotation / 3);
-        this.rightlong.xRot = 0.0872665F + (rotation / 3);
-        this.leftmedium.xRot = 0.0872665F + (rotation / 3);
-        this.rightmedium.xRot = 0.0872665F + (rotation / 3);
-        this.rightshort.xRot = 0.0872665F + (rotation / 3);
-        this.leftshort.xRot = 0.0872665F + (rotation / 3);
-
-        if (this.crouching) {
-            this.cloakback.xRot += 0.5F;
-            this.leftlong.xRot += 0.5F;
-            this.rightlong.xRot += 0.5F;
-            this.leftmedium.xRot += 0.5F;
-            this.rightmedium.xRot += 0.5F;
-            this.leftshort.xRot += 0.5F;
-            this.rightshort.xRot += 0.5F;
-        }
-    }
+//    @Override
+//    public void setupAnim(@Nonnull LivingEntity entity, float f, float f1, float ageInTicks, float netHeadYaw, float headPitch) {
+//        super.setupAnim(entity, f, f1, ageInTicks, netHeadYaw, headPitch);
+//        //Isn't use afaik
+//
+//
+//        boolean flag = entity != null && entity.getFallFlyingTicks() > 4;
+//
+//        float f6 = 1.0F;
+//        if (flag) {
+//            f6 = (float) (entity.getDeltaMovement().x * entity.getDeltaMovement().x + entity.getDeltaMovement().y * entity.getDeltaMovement().y
+//                    + entity.getDeltaMovement().z * entity.getDeltaMovement().z);
+//            f6 = f6 / 0.2F;
+//            f6 = f6 * f6 * f6;
+//        }
+//
+//        if (f6 < 1.0F) {
+//            f6 = 1.0F;
+//        }
+//
+//        float rotation = Mth.cos(f * 0.6662F) * 1.4F * f1 / f6;
+//        if (rotation < 0.0F)
+//            rotation *= -1;
+//        this.cloakback.xRot = 0.0872665F + (rotation / 3);
+//        this.leftlong.xRot = 0.0872665F + (rotation / 3);
+//        this.rightlong.xRot = 0.0872665F + (rotation / 3);
+//        this.leftmedium.xRot = 0.0872665F + (rotation / 3);
+//        this.rightmedium.xRot = 0.0872665F + (rotation / 3);
+//        this.rightshort.xRot = 0.0872665F + (rotation / 3);
+//        this.leftshort.xRot = 0.0872665F + (rotation / 3);
+//
+//        if (this.crouching) {
+//            this.cloakback.xRot += 0.5F;
+//            this.leftlong.xRot += 0.5F;
+//            this.rightlong.xRot += 0.5F;
+//            this.leftmedium.xRot += 0.5F;
+//            this.rightmedium.xRot += 0.5F;
+//            this.leftshort.xRot += 0.5F;
+//            this.rightshort.xRot += 0.5F;
+//        }
+//    }
 
     @Override
     protected Iterable<ModelPart> getBodyModels() {
