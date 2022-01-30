@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.client.model.armor;
 import com.google.common.collect.ImmutableList;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
@@ -19,7 +18,7 @@ public class ClothingBootsModel extends VampirismArmorModel {
     private static final String LEFT_TOES = "left_toes";
 
     public static LayerDefinition createLayer() {
-        MeshDefinition mesh = new MeshDefinition();
+        MeshDefinition mesh = VampirismArmorModel.createMesh();
         PartDefinition part = mesh.getRoot();
         CubeDeformation scale = new CubeDeformation(0.4f);
         part.addOrReplaceChild(RIGHT_BOOT, CubeListBuilder.create().addBox(-2, 7, -2, 4, 5, 4, scale), PartPose.offset(1.9f, 12, 0));
@@ -31,11 +30,10 @@ public class ClothingBootsModel extends VampirismArmorModel {
 
     private static ClothingBootsModel instance;
 
-    public static ClothingBootsModel getAdjustedInstance(HumanoidModel<?> wearerModel) {
+    public static ClothingBootsModel getInstance() {
         if (instance == null) {
             instance = new ClothingBootsModel(Minecraft.getInstance().getEntityModels().bakeLayer(ModEntitiesRender.CLOTHING_BOOTS));
         }
-        instance.copyFromHumanoid(wearerModel);
         return instance;
     }
 
@@ -46,7 +44,7 @@ public class ClothingBootsModel extends VampirismArmorModel {
 
 
     public ClothingBootsModel(ModelPart part) {
-        super();
+        super(part);
         this.rightBoot = part.getChild(RIGHT_BOOT);
         this.rightToes = part.getChild(RIGHT_TOES);
         this.leftBoot = part.getChild(LEFT_BOOT);

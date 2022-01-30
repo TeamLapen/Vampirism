@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.client.model.armor;
 import com.google.common.collect.ImmutableList;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
@@ -18,11 +17,10 @@ public class VampireHatModel extends VampirismArmorModel {
 
     private static VampireHatModel instance;
 
-    public static VampireHatModel getAdjustedInstance(HumanoidModel<?> wearerModel) {
+    public static VampireHatModel getInstance() {
         if (instance == null) {
             instance = new VampireHatModel(Minecraft.getInstance().getEntityModels().bakeLayer(ModEntitiesRender.CLOTHING_HAT));
         }
-        instance.copyFromHumanoid(wearerModel);
         return instance;
     }
 
@@ -30,7 +28,7 @@ public class VampireHatModel extends VampirismArmorModel {
     public ModelPart top;
 
     public static LayerDefinition createLayer() {
-        MeshDefinition mesh = new MeshDefinition();
+        MeshDefinition mesh = VampirismArmorModel.createMesh();
         PartDefinition part = mesh.getRoot();
         CubeDeformation def = new CubeDeformation(0.25f);
         PartDefinition base = part.addOrReplaceChild(BASE, CubeListBuilder.create().texOffs(16, 0).addBox(-4.5f, -8.4f, -3.5f, 7, 0.4f, 7f, def), PartPose.ZERO);
@@ -39,7 +37,7 @@ public class VampireHatModel extends VampirismArmorModel {
     }
 
     public VampireHatModel(ModelPart part) {
-        super();
+        super(part);
         base = part.getChild(BASE);
         top = base.getChild(TOP);
     }
