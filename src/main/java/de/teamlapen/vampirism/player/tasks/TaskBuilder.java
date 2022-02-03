@@ -2,13 +2,13 @@ package de.teamlapen.vampirism.player.tasks;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import de.teamlapen.vampirism.api.util.NonnullSupplier;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.api.entity.player.task.TaskReward;
 import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
+import de.teamlapen.vampirism.api.util.NonnullSupplier;
 import de.teamlapen.vampirism.player.tasks.req.*;
 import de.teamlapen.vampirism.player.tasks.reward.ItemReward;
 import de.teamlapen.vampirism.player.tasks.unlock.ParentUnlocker;
@@ -35,8 +35,8 @@ public class TaskBuilder {
     private final List<TaskUnlocker> unlocker = Lists.newArrayList();
     @Nullable
     private TaskReward reward;
-    @Nullable
-    private IPlayableFaction<?> faction;
+    @Nonnull
+    private Supplier<IPlayableFaction<?>> faction = () -> null;
     @Nonnull
     private Task.Variant variant = Task.Variant.REPEATABLE;
     private boolean useDescription = false;
@@ -123,8 +123,18 @@ public class TaskBuilder {
         return this;
     }
 
+    /**
+     * @deprecated use {@link #withFaction(Supplier)}
+     */
+    @Deprecated
     @Nonnull
     public TaskBuilder withFaction(@Nullable IPlayableFaction<?> faction) {
+        this.faction = () -> faction;
+        return this;
+    }
+
+    @Nonnull
+    public TaskBuilder withFaction(@Nullable Supplier<IPlayableFaction<?>> faction) {
         this.faction = faction;
         return this;
     }
