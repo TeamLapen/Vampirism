@@ -77,6 +77,14 @@ public interface IActionHandler<T extends IActionPlayer> {
     void resetTimers();
 
     /**
+     * Set cooldown to 0
+     * <br>
+     * Set active timer to 0 if {@link ILastingAction}
+     * @param action the action that should be effected
+     */
+    void resetTimer(@Nonnull IAction action);
+
+    /**
      * toggle the action (server side)
      *
      * @param action

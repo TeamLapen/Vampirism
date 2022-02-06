@@ -239,6 +239,16 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
         dirty = true;
     }
 
+    @Override
+    public void resetTimer(@Nonnull IAction action) {
+        if (activeTimers.containsKey(action.getRegistryName())) {
+            ((ILastingAction<T>) action).onDeactivated(player);
+            activeTimers.removeInt(action.getRegistryName());
+        }
+        cooldownTimers.removeInt(action.getRegistryName());
+        dirty = true;
+    }
+
     /**
      * Saves action timings to nbt
      * Should only be called by the corresponding Capability instance
