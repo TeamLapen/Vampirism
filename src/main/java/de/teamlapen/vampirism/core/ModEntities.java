@@ -137,11 +137,11 @@ public class ModEntities {
         registry.register(hunter);
         registry.register(prepareEntityType("hunter_imob", EntityType.Builder.of(BasicHunterEntity.IMob::new, VReference.HUNTER_CREATURE_TYPE).sized(0.6f, 1.95f), false));
         registry.register(prepareEntityType("villager_angry", EntityType.Builder.of(AggressiveVillagerEntity::new, EntityClassification.CREATURE).sized(0.6F, 1.95F), false));
-        registry.register(prepareEntityType("villager_converted", EntityType.Builder.of(ConvertedVillagerEntity::new, VReference.VAMPIRE_CREATURE_TYPE).sized(0.6F, 1.95F), false));
-        registry.register(prepareEntityType("converted_horse", EntityType.Builder.of(ConvertedHorseEntity::new, EntityClassification.CREATURE).sized(1.3964844F, 1.6F), false));
+        registry.register(prepareEntityType("villager_converted", EntityType.Builder.of(ConvertedVillagerEntity::new, VReference.VAMPIRE_CREATURE_TYPE).sized(0.6F, 1.95F), true));
+        registry.register(prepareEntityType("converted_horse", EntityType.Builder.of(ConvertedHorseEntity::new, EntityClassification.CREATURE).sized(1.3964844F, 1.6F), true));
         registry.register(prepareEntityType("vampire_minion", EntityType.Builder.of(VampireMinionEntity::new, EntityClassification.CREATURE).sized(0.6f, 1.95f), false));
-        registry.register(prepareEntityType("converted_donkey", EntityType.Builder.of(ConvertedDonkeyEntity::new, EntityClassification.CREATURE).sized(1.3964844F, 1.5F), false));
-        registry.register(prepareEntityType("converted_mule", EntityType.Builder.of(ConvertedMuleEntity::new, EntityClassification.CREATURE).sized(1.3964844F, 1.5F), false));
+        registry.register(prepareEntityType("converted_donkey", EntityType.Builder.of(ConvertedDonkeyEntity::new, EntityClassification.CREATURE).sized(1.3964844F, 1.5F), true));
+        registry.register(prepareEntityType("converted_mule", EntityType.Builder.of(ConvertedMuleEntity::new, EntityClassification.CREATURE).sized(1.3964844F, 1.5F), true));
         VampireMinionEntity.init();
         HunterMinionEntity.init();
         registry.register(prepareEntityType("hunter_minion", EntityType.Builder.of(HunterMinionEntity::new, EntityClassification.CREATURE).sized(0.6f, 1.95f), false));
