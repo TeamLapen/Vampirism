@@ -92,7 +92,7 @@ public class ConvertedHorseEntity extends Horse implements CurableConvertedCreat
     @Nonnull
     @Override
     protected Component getTypeName() {
-        return this.getNameC(() -> Component.translatable("entity.horse"));
+        return this.getNameC(EntityType.HORSE::getDescription);
     }
 
     @Override

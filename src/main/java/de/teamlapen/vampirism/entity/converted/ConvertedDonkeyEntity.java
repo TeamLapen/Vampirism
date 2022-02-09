@@ -90,7 +90,7 @@ public class ConvertedDonkeyEntity extends Donkey implements CurableConvertedCre
 
     @Override
     protected Component getTypeName() {
-        return this.getNameC(() -> Component.translatable("entity.donkey"));
+        return this.getNameC(EntityType.DONKEY::getDescription);
     }
 
     @Override

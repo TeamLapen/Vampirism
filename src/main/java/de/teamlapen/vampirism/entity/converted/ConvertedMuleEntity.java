@@ -91,7 +91,7 @@ public class ConvertedMuleEntity extends Mule implements CurableConvertedCreatur
     @Nonnull
     @Override
     protected Component getTypeName() {
-        return this.getNameC(() -> Component.translatable("entity.mule"));
+        return this.getNameC(EntityType.MULE::getDescription);
     }
 
     @Override
