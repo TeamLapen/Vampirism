@@ -18,7 +18,6 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -91,7 +90,7 @@ public class ConvertedMuleEntity extends MuleEntity implements CurableConvertedC
     @Nonnull
     @Override
     protected ITextComponent getTypeName() {
-        return this.getNameC(() -> new TranslationTextComponent("entity.mule"));
+        return this.getNameC(EntityType.MULE::getDescription);
     }
 
     @Override
