@@ -14,7 +14,6 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.CSimpleInputEvent;
 import de.teamlapen.vampirism.network.CUnlockSkillPacket;
 import de.teamlapen.vampirism.player.skills.SkillNode;
-import de.teamlapen.vampirism.player.skills.SkillTreeManager;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.gui.components.Button;
@@ -260,11 +259,13 @@ public class SkillsScreen extends Screen {
 
     private void unlockSkill(double mouseX, double mouseY) {
         ISkill selected = selectedTab != null ? selectedTab.getSelected(mouseX, mouseY, guiLeft, guiTop) : null;
-        if (selected != null && canUnlockSkill(selected)) {
-            VampirismMod.dispatcher.sendToServer(new CUnlockSkillPacket(RegUtil.id(selected)));
-            playSoundEffect(SoundEvents.PLAYER_LEVELUP, 0.7F);
-        } else {
-            playSoundEffect(SoundEvents.NOTE_BLOCK_BASS, 0.5F);
+        if (selected != null) {
+            if (canUnlockSkill(selected)) {
+                VampirismMod.dispatcher.sendToServer(new CUnlockSkillPacket(RegUtil.id(selected)));
+                playSoundEffect(SoundEvents.PLAYER_LEVELUP, 0.7F);
+            } else {
+                playSoundEffect(SoundEvents.NOTE_BLOCK_BASS, 0.5F);
+            }
         }
     }
 
