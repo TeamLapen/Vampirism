@@ -214,9 +214,9 @@ public class ModEntityEventHandler {
             }
 
             if (VampirismConfig.BALANCE.skeletonIgnoreVampire.get()) {
-                if (event.getEntity() instanceof Skeleton) {
+                if (event.getEntity() instanceof Skeleton || event.getEntity() instanceof Stray) {
                     //noinspection unchecked
-                    makeVampireFriendly("skeleton", (Skeleton) event.getEntity(), NearestAttackableTargetGoal.class, Player.class, 2, (entity, predicate) -> new NearestAttackableTargetGoal<>(entity, Player.class, 10, true, false, predicate), type -> type == EntityType.SKELETON);
+                    makeVampireFriendly("skeleton", (AbstractSkeleton) event.getEntity(), NearestAttackableTargetGoal.class, Player.class, 2, (entity, predicate) -> new NearestAttackableTargetGoal<>(entity, Player.class, 10, true, false, predicate), type -> type == EntityType.SKELETON);
                 }
             }
 
