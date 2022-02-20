@@ -1,0 +1,7 @@
+{
+  "parent": "vampirism:item/crossbow_unloaded",
+  "textures": {
+    "texture": "vampirism:item/crossbow_enhanced",
+    "string": "vampirism:item/crossbow_part_string_unloaded"
+  }
+}

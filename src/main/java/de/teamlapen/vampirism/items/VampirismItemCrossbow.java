@@ -19,6 +19,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTier;
 import net.minecraft.util.*;
@@ -103,7 +104,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
     public ActionResult<ItemStack> use(@Nonnull World worldIn, PlayerEntity playerIn, @Nonnull Hand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         shoot(playerIn, 0, 0, worldIn, stack, handIn);
-        return new ActionResult<>(ActionResultType.SUCCESS, stack);
+        return new ActionResult<>(ActionResultType.CONSUME, stack);
     }
 
     /**
@@ -131,6 +132,15 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
 
             return ItemStack.EMPTY;
         }
+    }
+
+    public static boolean hasAmmo(PlayerEntity player, ItemStack crossbowStack) {
+        if (player.isCreative()) return true;
+        Item i = crossbowStack.getItem();
+        if (i instanceof VampirismItemCrossbow) {
+            return !((VampirismItemCrossbow) i).findAmmo(player, crossbowStack).isEmpty();
+        }
+        return false;
     }
 
     /**

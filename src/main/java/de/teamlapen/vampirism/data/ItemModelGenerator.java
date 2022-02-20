@@ -252,17 +252,13 @@ public class ItemModelGenerator extends ItemModelProvider {
         withExistingParent(ModItems.vampire_spawn_egg, mcLoc("item/template_spawn_egg"));
         withExistingParent(ModItems.vampire_hunter_spawn_egg, mcLoc("item/template_spawn_egg"));
 
-        withExistingParent(ModItems.basic_crossbow, modLoc("item/crossbow")).texture("texture", "item/crossbow");
-        withExistingParent(ModItems.basic_double_crossbow, modLoc("item/double_crossbow")).texture("texture", "item/crossbow");
-        withExistingParent(ModItems.basic_tech_crossbow, modLoc("item/tech_crossbow")).texture("extra", "item/tech_crossbow_extra");
+        withExistingParent(ModItems.basic_crossbow, modLoc("item/crossbow")).texture("texture", "item/crossbow").texture("string", "item/crossbow_part_string").texture("arrow", "item/crossbow_part_arrow").override().predicate(modLoc("charged"), 0.01f).model(withExistingParent("basic_crossbow_unloaded", modLoc("item/crossbow_unloaded")).texture("texture", "item/crossbow").texture("string", "item/crossbow_part_string_unloaded"));
+        withExistingParent(ModItems.basic_double_crossbow, modLoc("item/double_crossbow")).texture("texture", "item/crossbow_double").texture("string", "item/crossbow_part_double_string").texture("arrows", "item/crossbow_part_arrows").override().predicate(modLoc("charged"), 0.01f).model(withExistingParent("basic_double_crossbow_unloaded", modLoc("item/double_crossbow")).texture("texture", "item/crossbow_double").texture("string", "item/crossbow_part_double_string_unloaded"));
+        withExistingParent(ModItems.basic_tech_crossbow, modLoc("item/tech_crossbow")).texture("texture", "item/tech_crossbow").texture("string", "item/crossbow_part_tech_string").override().predicate(modLoc("charged"), 0.01f).model(withExistingParent("basic_tech_crossbow_unloaded", modLoc("item/tech_crossbow_unloaded")).texture("texture", "item/tech_crossbow").texture("string", "item/crossbow_part_tech_string_unloaded"));
 
-        withExistingParent(ModItems.basic_crossbow, modLoc("item/crossbow")).texture("texture", "item/crossbow");
-        withExistingParent(ModItems.basic_double_crossbow, modLoc("item/double_crossbow")).texture("texture", "item/crossbow");
-        withExistingParent(ModItems.basic_tech_crossbow, modLoc("item/tech_crossbow")).texture("extra", "item/tech_crossbow_extra");
-
-        withExistingParent(ModItems.enhanced_crossbow, modLoc("item/crossbow")).texture("texture", "item/enhanced_crossbow");
-        withExistingParent(ModItems.enhanced_double_crossbow, modLoc("item/double_crossbow")).texture("texture", "item/enhanced_crossbow");
-        withExistingParent(ModItems.enhanced_tech_crossbow, modLoc("item/tech_crossbow")).texture("extra", "item/tech_crossbow_extra_enhanced");
+        withExistingParent(ModItems.enhanced_crossbow, modLoc("item/crossbow")).texture("texture", "item/crossbow_enhanced").texture("string", "item/crossbow_part_string").texture("arrow", "item/crossbow_part_arrow").override().predicate(modLoc("charged"), 0.01f).model(withExistingParent("enhanced_crossbow_unloaded", modLoc("item/crossbow_unloaded")).texture("texture", "item/crossbow_enhanced").texture("string", "item/crossbow_part_string_unloaded"));
+        withExistingParent(ModItems.enhanced_double_crossbow, modLoc("item/double_crossbow")).texture("texture", "item/crossbow_double_enhanced").texture("string", "item/crossbow_part_double_string").texture("arrows", "item/crossbow_part_arrows").override().predicate(modLoc("charged"), 0.01f).model(withExistingParent("enhanced_double_crossbow_unloaded", modLoc("item/double_crossbow_unloaded")).texture("texture", "item/crossbow_double_enhanced").texture("string", "item/crossbow_part_double_string_unloaded"));
+        withExistingParent(ModItems.enhanced_tech_crossbow, modLoc("item/tech_crossbow")).texture("texture", "item/tech_crossbow_enhanced").texture("string", "item/crossbow_part_tech_string").override().predicate(modLoc("charged"), 0.01f).model(withExistingParent("enhanced_tech_crossbow_unloaded", modLoc("item/tech_crossbow_unloaded")).texture("texture", "item/tech_crossbow_enhanced").texture("string", "item/crossbow_part_tech_string_unloaded"));
 
         withExistingParent(ModItems.garlic_beacon_core_improved, ModItems.garlic_beacon_core).texture("texture", "block/garlic_beacon_inside_improved");
 
