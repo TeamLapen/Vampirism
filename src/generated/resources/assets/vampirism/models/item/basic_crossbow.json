@@ -1,6 +1,16 @@
 {
   "parent": "vampirism:item/crossbow",
+  "overrides": [
+    {
+      "model": "vampirism:item/basic_crossbow_unloaded",
+      "predicate": {
+        "vampirism:charged": 0.01
+      }
+    }
+  ],
   "textures": {
+    "arrow": "vampirism:item/crossbow_part_arrow",
+    "string": "vampirism:item/crossbow_part_string",
     "texture": "vampirism:item/crossbow"
   }
 }

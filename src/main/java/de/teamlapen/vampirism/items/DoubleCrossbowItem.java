@@ -38,7 +38,7 @@ public class DoubleCrossbowItem extends SimpleCrossbowItem {
         ItemStack stack = playerIn.getItemInHand(handIn);
         shoot(playerIn, 0, 0, worldIn, stack, handIn);
         shoot(playerIn, -0.2F, 0, worldIn, stack, handIn);
-        return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
+        return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
     }
 
     @Override

@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.CrossbowArrowItem;
+import de.teamlapen.vampirism.items.VampirismItemCrossbow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
@@ -26,10 +27,14 @@ public class ModItemsRender {
     public static void registerItemModelPropertyUnsafe() {
         Stream.of(ModItems.BASIC_CROSSBOW.get(), ModItems.BASIC_DOUBLE_CROSSBOW.get(), ModItems.ENHANCED_CROSSBOW.get(), ModItems.ENHANCED_DOUBLE_CROSSBOW.get(), ModItems.BASIC_TECH_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get()).forEach(item -> {
             ItemProperties.register(item, new ResourceLocation(REFERENCE.MODID, "charged"), (stack, world, entity, value) -> {
-                if (entity == null) {
-                    return 0.0F;
+                if (entity instanceof Player player && entity.getUseItem() != stack) {
+                    float cooldown = player.getCooldowns().getCooldownPercent(stack.getItem(), Minecraft.getInstance().getFrameTime());
+                    if (cooldown > 0) {
+                        return cooldown;
+                    }
+                    return VampirismItemCrossbow.hasAmmo(player, stack) ? 0.0f : 1.0f;
                 } else {
-                    return entity.getUseItem() != stack && entity instanceof Player ? ((Player) entity).getCooldowns().getCooldownPercent(stack.getItem(), Minecraft.getInstance().getFrameTime()) : 0.0F;
+                    return 0.0f;
                 }
             });
         });

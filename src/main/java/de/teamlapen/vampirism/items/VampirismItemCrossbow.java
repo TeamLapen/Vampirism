@@ -109,7 +109,7 @@ public abstract class VampirismItemCrossbow extends Item implements IFactionLeve
     public InteractionResultHolder<ItemStack> use(@Nonnull Level worldIn, Player playerIn, @Nonnull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         shoot(playerIn, 0, 0, worldIn, stack, handIn);
-        return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
+        return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
     }
 
     /**
@@ -137,6 +137,15 @@ public abstract class VampirismItemCrossbow extends Item implements IFactionLeve
 
             return ItemStack.EMPTY;
         }
+    }
+
+    public static boolean hasAmmo(Player player, ItemStack crossbowStack) {
+        if (player.isCreative()) return true;
+        Item i = crossbowStack.getItem();
+        if (i instanceof VampirismItemCrossbow) {
+            return !((VampirismItemCrossbow) i).findAmmo(player, crossbowStack).isEmpty();
+        }
+        return false;
     }
 
     /**
