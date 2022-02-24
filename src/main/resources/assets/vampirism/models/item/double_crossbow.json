@@ -1,5 +1,5 @@
 {
-  "__comment": "Designed by Random",
+  "credit": "Created by Random",
   "elements": [
     {
       "from": [
@@ -1164,7 +1164,7 @@
       ],
       "to": [
         7.6,
-        3.65,
+        3.75,
         3.55
       ],
       "rotation": {
@@ -1241,7 +1241,7 @@
       ],
       "to": [
         9.4,
-        3.65,
+        3.75,
         3.55
       ],
       "rotation": {
