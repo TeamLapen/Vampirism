@@ -155,12 +155,6 @@ minecraft {
 
 }
 
-configurations.all {
-    resolutionStrategy {
-        force 'cpw.mods:securejarhandler:0.9.50'
-    }
-}
-
 task downloadCrowdin() {
     ext {
         output = file('build/crowdin_raw.zip')
