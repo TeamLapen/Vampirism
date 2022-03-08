@@ -4,6 +4,7 @@ import de.teamlapen.lib.lib.util.FluidTankWithListener;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.blocks.SieveBlock;
+import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModTiles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -88,7 +89,7 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
 
     @Override
     public void onTankContentChanged() {
-        this.setActive(true);
+        this.setActive(true, getBlockState());
     }
 
     @Override
@@ -110,11 +111,11 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
                     blockEntity.tank.setDrainable(false);
                     if (!transferred.isEmpty()) {
                         blockEntity.cooldownProcess = 30;
-                        blockEntity.setActive(true);
+                        blockEntity.setActive(true, state);
                     }
                 });
             } else if (blockEntity.active) {
-                blockEntity.setActive(false);
+                blockEntity.setActive(false, state);
             }
         }
         //Pull new content. Cooldown is increased when liquid is filled into the tank (regardless of way)
@@ -127,11 +128,11 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
 
     }
 
-    private void setActive(boolean active) {
+    private void setActive(boolean active, BlockState blockState) {
         if (this.active != active) {
             this.active = active;
-            if (this.level != null)
-                this.level.setBlockAndUpdate(getBlockPos(), level.getBlockState(worldPosition).setValue(SieveBlock.PROPERTY_ACTIVE, active));
+            if (this.level != null && blockState.getBlock() == ModBlocks.blood_sieve)
+                this.level.setBlockAndUpdate(getBlockPos(), blockState.setValue(SieveBlock.PROPERTY_ACTIVE, active));
         }
     }
 

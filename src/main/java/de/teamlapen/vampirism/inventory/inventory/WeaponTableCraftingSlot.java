@@ -15,6 +15,7 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -54,8 +55,9 @@ public class WeaponTableCraftingSlot extends Slot {
         if (recipe != null && recipe.getRequiredLavaUnits() > 0) {
             worldPos.execute(((world, pos) -> {
                 int remainingLava = Math.max(0, lava - recipe.getRequiredLavaUnits());
-                if (world.getBlockState(pos).getBlock() instanceof WeaponTableBlock) {
-                    world.setBlockAndUpdate(pos, world.getBlockState(pos).setValue(WeaponTableBlock.LAVA, remainingLava));
+                BlockState state = world.getBlockState(pos);
+                if (state.getBlock() instanceof WeaponTableBlock) {
+                    world.setBlockAndUpdate(pos, state.setValue(WeaponTableBlock.LAVA, remainingLava));
                 }
             }));
         }
