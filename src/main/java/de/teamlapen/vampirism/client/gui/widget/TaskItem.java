@@ -26,7 +26,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
@@ -263,7 +263,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
                         case ENTITY -> (((EntityType<?>) requirement.getStat(this.factionPlayer)).getDescription().plainCopy().append(" " + completedAmount + "/" + requirement.getAmount(this.factionPlayer)));
                         case ENTITY_TAG ->
                                 //noinspection unchecked
-                                new TranslatableComponent("tasks.vampirism." + ((Tag.Named<EntityType<?>>) requirement.getStat(this.factionPlayer)).getName()).append(" " + completedAmount + "/" + requirement.getAmount(this.factionPlayer));
+                                new TranslatableComponent("tasks.vampirism." + ((TagKey<EntityType<?>>) requirement.getStat(this.factionPlayer)).location()).append(" " + completedAmount + "/" + requirement.getAmount(this.factionPlayer));
                         default -> new TranslatableComponent(task.getTranslationKey() + ".req." + requirement.getId().toString().replace(':', '.'));
                     };
                     if (completed || this.screen.getTaskContainer().isRequirementCompleted(taskInfo, requirement)) {
@@ -321,7 +321,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
             case ENTITY -> this.renderGenericRequirementTooltip(mStack, TaskRequirement.Type.ENTITY, x, y, ((EntityType<?>) requirement.getStat(this.factionPlayer)).getDescription().plainCopy().append((notAccepted ? " " : (" " + (completedAmount + "/"))) + requirement.getAmount(this.factionPlayer)), completed);
             case ENTITY_TAG ->
                     //noinspection unchecked
-                    this.renderGenericRequirementTooltip(mStack, TaskRequirement.Type.ENTITY_TAG, x, y, new TranslatableComponent("tasks.vampirism." + ((Tag.Named<EntityType<?>>) requirement.getStat(this.factionPlayer)).getName()).append((notAccepted ? " " : (" " + (completedAmount + "/"))) + requirement.getAmount(this.factionPlayer)), completed);
+                    this.renderGenericRequirementTooltip(mStack, TaskRequirement.Type.ENTITY_TAG, x, y, new TranslatableComponent("tasks.vampirism." + ((TagKey<EntityType<?>>) requirement.getStat(this.factionPlayer)).location()).append((notAccepted ? " " : (" " + (completedAmount + "/"))) + requirement.getAmount(this.factionPlayer)), completed);
             case STATS -> this.renderGenericRequirementTooltip(mStack, TaskRequirement.Type.STATS, x, y, new TranslatableComponent("stat." + requirement.getStat(this.factionPlayer).toString().replace(':', '.')).append((notAccepted ? " " : (" " + (completedAmount + "/"))) + requirement.getAmount(this.factionPlayer)), completed);
             default -> this.renderDefaultRequirementToolTip(mStack, task, requirement, x, y, completed);
         }

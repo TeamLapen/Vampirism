@@ -116,7 +116,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
 
     @Override
     public boolean isValidRepairItem(@Nonnull ItemStack toRepair, ItemStack repair) {
-        return Tags.Items.INGOTS_IRON.contains(repair.getItem());
+        return repair.is(Tags.Items.INGOTS_IRON);
     }
 
     @Nullable

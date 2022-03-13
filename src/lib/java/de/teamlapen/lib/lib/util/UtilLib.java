@@ -2,16 +2,17 @@ package de.teamlapen.lib.lib.util;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.*;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Matrix4f;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.core.*;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -30,6 +31,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
@@ -494,9 +496,9 @@ public class UtilLib {
     }
 
     private static ChunkPos isBiomeAt(ServerLevel world, int x, int z, List<Biome> biomes) {
-        BlockPos pos = (world.getChunkSource()).getGenerator().getBiomeSource().findBiomeHorizontal(x, world.getSeaLevel(), z, 32, biomes::contains, new Random(), world.getChunkSource().getGenerator().climateSampler());//findBiomePosition
+        Pair<BlockPos, Holder<Biome>> pos = (world.getChunkSource()).getGenerator().getBiomeSource().findBiomeHorizontal(x, world.getSeaLevel(), z, 32, h -> biomes.contains(h.value()), new Random(), world.getChunkSource().getGenerator().climateSampler());
         if (pos != null) {
-            return new ChunkPos(pos.getX() >> 4, pos.getZ() >> 4);
+            return new ChunkPos(pos.getFirst().getX() >> 4, pos.getFirst().getZ() >> 4);
         }
         return null;
     }
@@ -624,33 +626,68 @@ public class UtilLib {
         return Block.box(Math.min(pX1, pX2), Math.min(pY1, pY2), Math.min(pZ1, pZ2), Math.max(pX1, pX2), Math.max(pY1, pY2), Math.max(pZ1, pZ2));
     }
 
-    public static boolean isInsideStructure(Entity entity, StructureFeature<?> s) {
-        StructureStart<?> start = getStructureStartAt(entity, s);
+    public static boolean isInsideStructure(Entity entity, ResourceKey<ConfiguredStructureFeature<?, ?>> s) {
+        StructureStart start = getStructureStartAt(entity, s);
         return start != null && start.isValid();
     }
 
-    public static boolean isInsideStructure(Level w, BlockPos p, StructureFeature<?> s) {
-        StructureStart<?> start = getStructureStartAt(w, p, s);
+    public static boolean isInsideStructure(Level w, BlockPos p, ResourceKey<ConfiguredStructureFeature<?, ?>> s) {
+        StructureStart start = getStructureStartAt(w, p, s);
         return start != null && start.isValid();
     }
 
     @Nullable
-    public static StructureStart<?> getStructureStartAt(Entity entity, StructureFeature<?> s) {
+    public static StructureStart getStructureStartAt(Entity entity, ResourceKey<ConfiguredStructureFeature<?, ?>> s) {
         return getStructureStartAt(entity.getCommandSenderWorld(), entity.blockPosition(), s);
     }
 
     @Nullable
-    public static StructureStart<?> getStructureStartAt(Level w, BlockPos pos, StructureFeature<?> s) {
+    public static StructureStart getStructureStartAt(Entity entity,StructureFeature<?> s) {
+        return getStructureStartAt(entity.getCommandSenderWorld(), entity.blockPosition(), s);
+    }
+
+    public static boolean isInsideStructure(Level w, BlockPos p, StructureFeature<?> s) {
+        StructureStart start = getStructureStartAt(w, p, s);
+        return start != null && start.isValid();
+    }
+
+    @Nullable
+    public static StructureStart getStructureStartAt(Level w, BlockPos pos, ResourceKey<ConfiguredStructureFeature<?, ?>> s) {
         if (w instanceof ServerLevel && w.isLoaded(pos)) {
             return getStructureStartAt((ServerLevel) w, pos, s);
         }
         return null;
     }
 
-    @Nonnull
-    public static StructureStart<?> getStructureStartAt(ServerLevel w, BlockPos pos, StructureFeature<?> s) {
-        return (w).structureFeatureManager().getStructureAt(pos, s);
+    public static boolean isInsideStructure(Entity entity,  StructureFeature<?> s) {
+        StructureStart start = getStructureStartAt(entity, s);
+        return start != null && start.isValid();
     }
+
+    @Nonnull
+    public static StructureStart getStructureStartAt(ServerLevel w, BlockPos pos, ResourceKey<ConfiguredStructureFeature<?, ?>> s) {
+        ConfiguredStructureFeature<?, ?> configuredstructurefeature = w.registryAccess().registryOrThrow(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY).get(s);
+        return configuredstructurefeature == null ? StructureStart.INVALID_START : w.structureFeatureManager().getStructureAt(pos, configuredstructurefeature);
+    }
+
+    @Nullable
+    public static StructureStart getStructureStartAt(Level w, BlockPos pos, StructureFeature<?> s) {
+        if (w instanceof ServerLevel && w.isLoaded(pos)) {
+            return getStructureStartAt((ServerLevel) w, pos, s);
+        }
+        return null;
+    }
+
+    public static StructureStart getStructureStartAt(ServerLevel w, BlockPos pos, StructureFeature<?> feature){
+        for(StructureStart structurestart : w.structureFeatureManager().startsForFeature(SectionPos.of(pos), t -> t.feature.equals(feature))) {
+            if(structurestart.getBoundingBox().isInside(pos)){
+                return structurestart;
+            }
+        }
+
+        return StructureStart.INVALID_START;
+    }
+
 
     /**
      * Makes sure the given stack has a NBT Tag Compound
@@ -717,8 +754,8 @@ public class UtilLib {
 
     @Nullable
     public static DyeColor getColorForItem(Item item) {
-        if (!Tags.Items.DYES.contains(item)) return null;
-        Optional<DyeColor> color = Arrays.stream(DyeColor.values()).filter(dye -> dye.getTag().contains(item)).findFirst();
+        if (!item.builtInRegistryHolder().is(Tags.Items.DYES) ) return null;
+        Optional<DyeColor> color = Arrays.stream(DyeColor.values()).filter(dye -> item.builtInRegistryHolder().is(dye.getTag())).findFirst();
         if (color.isPresent()) return color.get();
         LOGGER.warn("Could not determine color of {}", item.getRegistryName());
         return null;

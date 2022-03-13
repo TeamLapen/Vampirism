@@ -13,7 +13,7 @@ import net.minecraft.advancements.RequirementsStrategy;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -86,7 +86,7 @@ public class AlchemicalCauldronRecipeBuilder {
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder withFluid(Tag<Item> tag) {
+    public AlchemicalCauldronRecipeBuilder withFluid(TagKey<Item> tag) {
         this.fluid = Either.left(Ingredient.of(tag));
         return this;
     }
@@ -116,7 +116,7 @@ public class AlchemicalCauldronRecipeBuilder {
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder withIngredient(Tag<Item> tag) {
+    public AlchemicalCauldronRecipeBuilder withIngredient(TagKey<Item> tag) {
         this.ingredient = Ingredient.of(tag);
         return this;
     }

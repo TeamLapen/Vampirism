@@ -1243,7 +1243,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         if (totem == null) {
             totem = new AABB(this.worldPosition);
         }
-        StructureStart<?> start = UtilLib.getStructureStartAt(this.level, this.worldPosition, StructureFeature.VILLAGE);
+        StructureStart start = UtilLib.getStructureStartAt(this.level, this.worldPosition, StructureFeature.VILLAGE);
         if (start != null && start != StructureStart.INVALID_START && start.isValid()) {
             totem = totem.minmax(UtilLib.MBtoAABB(start.getBoundingBox()));
         }

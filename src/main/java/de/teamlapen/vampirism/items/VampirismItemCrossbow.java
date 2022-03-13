@@ -74,7 +74,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
 
     @Override
     public boolean isValidRepairItem(@Nonnull ItemStack toRepair, ItemStack repair) {
-        return Tags.Items.STRING.contains(repair.getItem()) || super.isValidRepairItem(toRepair, repair);
+        return repair.is(Tags.Items.STRING) || super.isValidRepairItem(toRepair, repair);
     }
 
     @Override

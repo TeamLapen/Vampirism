@@ -24,6 +24,7 @@ import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.world.VampirismWorld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.DoubleTag;
 import net.minecraft.nbt.ListTag;
@@ -192,7 +193,7 @@ public class Helper {
     public static boolean isEntityInVampireBiome(Entity e) {
         if (e == null) return false;
         Level w = e.getCommandSenderWorld();
-        Biome b = w.getBiome(e.blockPosition());
+        Holder<Biome> b = w.getBiome(e.blockPosition());
         ResourceLocation biomeId = getBiomeId(w, b);
         Objects.requireNonNull(biomeId, "Cannot determine id of local biome");
         return ModBiomes.vampire_forest.getRegistryName().equals(biomeId);
@@ -215,8 +216,8 @@ public class Helper {
         return getBiomeId(world, world.getBiome(pos));
     }
 
-    public static ResourceLocation getBiomeId(CommonLevelAccessor world, Biome biome) {
-        return world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getKey(biome);
+    public static ResourceLocation getBiomeId(CommonLevelAccessor world, Holder<Biome> biome) {
+        return biome.unwrap().map(ResourceKey::location, b-> world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getKey(b));
     }
 
     /**

@@ -116,8 +116,8 @@ public class TotemHelper {
             ignoreOtherTotem = false;
         }
 
-        StructureStart<?> structure1 = UtilLib.getStructureStartAt(world, totem, StructureFeature.VILLAGE);
-        StructureStart<?> structure2 = UtilLib.getStructureStartAt(world, conflicting, StructureFeature.VILLAGE);
+        StructureStart structure1 = UtilLib.getStructureStartAt(world, totem, StructureFeature.VILLAGE);
+        StructureStart structure2 = UtilLib.getStructureStartAt(world, conflicting, StructureFeature.VILLAGE);
 
         if ((structure1 == StructureStart.INVALID_START || !structure1.isValid()) && (structure2 != StructureStart.INVALID_START && structure2.isValid())) { //the first totem wins the POIs if located in natural village, other looses then
             ignoreOtherTotem = false;
