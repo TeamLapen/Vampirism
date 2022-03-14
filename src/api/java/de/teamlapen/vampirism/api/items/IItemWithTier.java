@@ -4,6 +4,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -13,7 +14,7 @@ import java.util.List;
 /**
  * Simple interface for tileInventory that exist in different tiers.
  */
-public interface IItemWithTier {
+public interface IItemWithTier extends ItemLike {
 
     @OnlyIn(Dist.CLIENT)
     default void addTierInformation(List<Component> tooltip) {
