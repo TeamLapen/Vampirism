@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.core;
 
+import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -12,7 +13,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 import net.minecraftforge.common.BiomeDictionary;
@@ -42,10 +42,27 @@ public class ModBiomes {
         BiomeDictionary.addTypes(VAMPIRE_FOREST_KEY, BiomeDictionary.Type.OVERWORLD, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.DENSE, BiomeDictionary.Type.MAGICAL, BiomeDictionary.Type.SPOOKY);
     }
 
+     record BlockRuleSource(ResourceLocation block_id) implements SurfaceRules.RuleSource {
+         static final Codec<BlockRuleSource> CODEC = ResourceLocation.CODEC.xmap(BlockRuleSource::new, BlockRuleSource::block_id).fieldOf("block_id").codec();
+
+         static  {
+             Registry.register(Registry.RULE, "block2", CODEC);
+         }
+
+        public Codec<? extends SurfaceRules.RuleSource> codec() {
+            return CODEC;
+        }
+
+        public SurfaceRules.SurfaceRule apply(SurfaceRules.Context p_189523_) {
+            return (p_189774_, p_189775_, p_189776_) -> Registry.BLOCK.get(block_id).defaultBlockState();
+        }
+    }
+
+
     public static SurfaceRules.RuleSource buildOverworldSurfaceRules(){
         //Any blocks here must be available before block registration, so they must be initialized statically
-        SurfaceRules.RuleSource cursed_earth = SurfaceRules.state(Blocks.COBBLESTONE.defaultBlockState());
-        SurfaceRules.RuleSource grass = SurfaceRules.state(Blocks.BONE_BLOCK.defaultBlockState());
+        SurfaceRules.RuleSource cursed_earth = new BlockRuleSource(new ResourceLocation(REFERENCE.MODID, "cursed_earth"));
+        SurfaceRules.RuleSource grass = new BlockRuleSource(new ResourceLocation(REFERENCE.MODID, "cursed_grass_block"));
         SurfaceRules.ConditionSource inVampireBiome = SurfaceRules.isBiome(ModBiomes.VAMPIRE_FOREST_KEY);
         SurfaceRules.RuleSource vampireForestTopLayer = SurfaceRules.ifTrue(inVampireBiome, grass);
         SurfaceRules.RuleSource vampireForestBaseLayer = SurfaceRules.ifTrue(inVampireBiome, cursed_earth);
