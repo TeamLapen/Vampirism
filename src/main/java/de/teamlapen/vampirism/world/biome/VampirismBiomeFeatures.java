@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.world.biome;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFeatures;
 import de.teamlapen.vampirism.world.gen.features.VampireDungeonFeature;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.data.worldgen.Carvers;
 import net.minecraft.data.worldgen.features.FeatureUtils;
@@ -14,10 +14,10 @@ import net.minecraft.data.worldgen.placement.MiscOverworldPlacements;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.random.SimpleWeightedRandomList;
 import net.minecraft.util.valueproviders.ConstantInt;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -31,12 +31,11 @@ import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvi
 import net.minecraft.world.level.levelgen.feature.stateproviders.WeightedStateProvider;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.StraightTrunkPlacer;
 import net.minecraft.world.level.levelgen.placement.*;
+import net.minecraft.world.level.levelgen.structure.StructureSet;
+import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement;
+import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
 
 public class VampirismBiomeFeatures {
 
@@ -48,7 +47,9 @@ public class VampirismBiomeFeatures {
 
     public static final Holder<ConfiguredFeature<NoneFeatureConfiguration, VampireDungeonFeature>> vampire_dungeon = registerConfiguredFeature("vampire_dungeon", ModFeatures.vampire_dungeon, FeatureConfiguration.NONE);
     public static final Holder<ConfiguredFeature<LakeFeature.Configuration, Feature<LakeFeature.Configuration>>> water_lake = registerConfiguredFeature("vampirism:mod_lake", Feature.LAKE, new LakeFeature.Configuration(BlockStateProvider.simple(Blocks.WATER.defaultBlockState()), BlockStateProvider.simple(ModBlocks.castle_block_dark_stone.defaultBlockState())));
-    public static final Holder<? extends ConfiguredStructureFeature<NoneFeatureConfiguration, ? extends StructureFeature<NoneFeatureConfiguration>>> hunter_camp = registerConfiguredStructure("hunter_camp", ModFeatures.hunter_camp.configured(FeatureConfiguration.NONE, BiomeTags.IS_HILL ));
+    public static final Holder<ConfiguredStructureFeature<?,?>> hunter_camp = registerConfiguredStructure("hunter_camp", ModFeatures.hunter_camp.configured(FeatureConfiguration.NONE, BiomeTags.IS_HILL ));
+    public static final Holder<StructureSet> hunter_camp_set = registerStructureSet(createStructureSetKey("hunter_camp"), new StructureSet(hunter_camp, new RandomSpreadStructurePlacement(1, 0, RandomSpreadType.LINEAR, 0)));
+
 
     public static final Holder<PlacedFeature> vampire_tree_placed = PlacementUtils.register("vampire_tree_placed", vampire_tree, PlacementUtils.filteredByBlockSurvival((ModBlocks.vampire_spruce_sapling)));
     public static final Holder<PlacedFeature> vampire_tree_red_placed = PlacementUtils.register("vampire_tree_red_placed", vampire_tree_red, PlacementUtils.filteredByBlockSurvival((ModBlocks.bloody_spruce_sapling)));
@@ -60,11 +61,19 @@ public class VampirismBiomeFeatures {
     public static final Holder<PlacedFeature> vampire_flower_placed = PlacementUtils.register("vampirism:vampire_flower", vampire_flower, RarityFilter.onAverageOnceEvery(5), PlacementUtils.HEIGHTMAP, InSquarePlacement.spread(), BiomeFilter.biome());
     public static final Holder<PlacedFeature> forest_grass_placed = PlacementUtils.register("vampirism:forest_grass", VegetationFeatures.PATCH_GRASS, VegetationPlacements.worldSurfaceSquaredWithCount(2));
 
+    private static ResourceKey<StructureSet> createStructureSetKey(String p_209839_) {
+        return ResourceKey.create(Registry.STRUCTURE_SET_REGISTRY, new ResourceLocation(REFERENCE.MODID, p_209839_));
+    }
+
+    private static Holder<StructureSet> registerStructureSet(ResourceKey<StructureSet> p_211129_, StructureSet p_211130_) {
+        return BuiltinRegistries.register(BuiltinRegistries.STRUCTURE_SETS, p_211129_, p_211130_);
+    }
+
     private static <FC extends FeatureConfiguration, F extends Feature<FC>> Holder<ConfiguredFeature<FC, F>> registerConfiguredFeature(String name, F feature, FC config) {
         return BuiltinRegistries.registerExact(BuiltinRegistries.CONFIGURED_FEATURE, REFERENCE.MODID +":"+name,  new ConfiguredFeature<>(feature, config));
     }
 
-    private static <FC extends FeatureConfiguration, F extends StructureFeature<FC>> Holder<ConfiguredStructureFeature<FC, F>> registerConfiguredStructure(String name, ConfiguredStructureFeature<FC, F> structure) {
+    private static <FC extends FeatureConfiguration, F extends StructureFeature<FC>> Holder<ConfiguredStructureFeature<?, ?>> registerConfiguredStructure(String name, ConfiguredStructureFeature<FC, F> structure) {
         return BuiltinRegistries.registerExact(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, REFERENCE.MODID+":"+ name, structure);
     }
 
@@ -88,10 +97,5 @@ public class VampirismBiomeFeatures {
         builder.addCarver(GenerationStep.Carving.AIR, Carvers.CAVE);
         builder.addCarver(GenerationStep.Carving.AIR, Carvers.CAVE_EXTRA_UNDERGROUND);
         builder.addCarver(GenerationStep.Carving.AIR, Carvers.CANYON);
-    }
-
-    public static void addStructuresToBiomes(Set<Map.Entry<ResourceKey<Biome>, Biome>> allBiomes, BiConsumer<ConfiguredStructureFeature<?, ?>, ResourceKey<Biome>> consumer) {
-        Set<ResourceKey<Biome>> set = allBiomes.stream().filter(biomeEntry -> VampirismAPI.worldGenRegistry().canStructureBeGeneratedInBiome(ModFeatures.hunter_camp.getRegistryName(), biomeEntry.getValue().getRegistryName(), biomeEntry.getValue().getBiomeCategory())).map(Map.Entry::getKey).collect(Collectors.toUnmodifiableSet());
-        set.forEach(biome -> consumer.accept(hunter_camp, biome));
     }
 }

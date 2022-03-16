@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.world.gen.structures.huntercamp;
 
 import com.google.common.collect.Lists;
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.blockentity.TentBlockEntity;
 import de.teamlapen.vampirism.blocks.TentBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -19,7 +20,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
-import net.minecraft.world.level.levelgen.feature.StructurePieceType;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
@@ -27,6 +27,7 @@ import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.pieces.PieceGenerator;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
 
 import javax.annotation.Nonnull;
@@ -77,13 +78,11 @@ public abstract class HunterCampPieces extends StructurePiece {
     protected boolean testPreconditions(WorldGenLevel worldIn, StructureFeatureManager manager, ChunkPos chunkPos) {
         if (!VampirismConfig.COMMON.enableHunterTentGeneration.get()) return false;
         for (StructureStart value : worldIn.getChunk(chunkPos.x, chunkPos.z).getAllStarts().values()) {
-            if (value != StructureStart.INVALID_START && value.getFeature() != ModFeatures.hunter_camp) {
+            if (value != StructureStart.INVALID_START && value.getFeature().feature != ModFeatures.hunter_camp) {
                 return false;
             }
         }
-        return this.y >= 63
-                && !worldIn.getBlockState(new BlockPos(x, y - 1, z)).getMaterial().isLiquid()
-                && !manager.getStructureAt(new BlockPos(x, y, z), StructureFeature.VILLAGE).isValid();
+        return this.y >= 63 && !worldIn.getBlockState(new BlockPos(x, y - 1, z)).getMaterial().isLiquid() && !UtilLib.getStructureStartAt(worldIn.getLevel(), new BlockPos(x,y,z), StructureFeature.VILLAGE).isValid();
     }
 
     public static class Fireplace extends HunterCampPieces {
@@ -262,10 +261,10 @@ public abstract class HunterCampPieces extends StructurePiece {
             this.placeBlock(worldIn, air, xDiff, 1, 1, structureBoundingBoxIn);
 
             //replace top level dirt with grass
-            if (BlockTags.DIRT.contains(worldIn.getBlockState(new BlockPos(x, y - 1, z - 2)).getBlock())) {
+            if (worldIn.getBlockState(new BlockPos(x, y - 1, z - 2)).is(BlockTags.DIRT)) {
                 this.placeBlock(worldIn, Blocks.GRASS_BLOCK.defaultBlockState(), 1, -1, -1, structureBoundingBoxIn);
             }
-            if (BlockTags.DIRT.contains(worldIn.getBlockState(new BlockPos(xCenter, y - 1, z - 2)).getBlock())) {
+            if (worldIn.getBlockState(new BlockPos(xCenter, y - 1, z - 2)).is(BlockTags.DIRT)) {
                 this.placeBlock(worldIn, Blocks.GRASS_BLOCK.defaultBlockState(), xDiff, -1, -1, structureBoundingBoxIn);
             }
         }

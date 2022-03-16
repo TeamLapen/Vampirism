@@ -36,7 +36,6 @@ import de.teamlapen.vampirism.entity.factions.FactionRegistry;
 import de.teamlapen.vampirism.inventory.recipes.ExtendedBrewingRecipeRegistry;
 import de.teamlapen.vampirism.items.VampireRefinementItem;
 import de.teamlapen.vampirism.modcompat.IMCHandler;
-import de.teamlapen.vampirism.modcompat.terrablender.TerraBlenderCompat;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.player.ModPlayerEventHandler;
 import de.teamlapen.vampirism.player.actions.ActionManager;
@@ -52,7 +51,6 @@ import de.teamlapen.vampirism.proxy.ServerProxy;
 import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.WorldGenConfiguration;
-import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
 import net.minecraft.ChatFormatting;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.entity.MobCategory;
@@ -67,7 +65,6 @@ import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
@@ -203,11 +200,6 @@ public class VampirismMod {
     }
 
     @SubscribeEvent
-    public void onServerAboutToStart(ServerAboutToStartEvent event) {
-        VampirismWorldGen.addVillageStructures(event.getServer().registryAccess());
-    }
-
-    @SubscribeEvent
     public void onServerStart(ServerStartingEvent event) {
         for (BloodValueLoaderDynamic loader : BloodValues.getDynamicLoader()) {
             loader.onServerStarting(event.getServer());
@@ -292,7 +284,6 @@ public class VampirismMod {
 
     private void loadComplete(final FMLLoadCompleteEvent event) {
         onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
-        event.enqueueWork(VampirismWorldGen::addBiomesToOverworldUnsafe);
     }
 
 
@@ -355,7 +346,6 @@ public class VampirismMod {
         if (inDev) {
             Tests.runBackgroundTests();
         }
-        VampirismWorldGen.createJigsawPool();
     }
 
     private void setup(final FMLCommonSetupEvent event) {
@@ -380,7 +370,6 @@ public class VampirismMod {
         SupporterManager.getInstance().initAsync();
         VampireBookManager.getInstance().init();
         VampirismEntitySelectors.registerSelectors();
-        event.enqueueWork(TerraBlenderCompat::registerBiomeProviderIfPresentUnsafe);
 
     }
 
