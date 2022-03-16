@@ -54,7 +54,7 @@ public class ModBlocks {
     public static final CastleStairsBlock castle_stairs_purple_brick = getNull();
     public static final AltarCleansingBlock altar_cleansing = getNull();
     public static final CoffinBlock coffin = getNull();
-    public static final CursedEarthBlock cursed_earth;
+    public static final CursedEarthBlock cursed_earth = getNull();
     public static final FirePlaceBlock fire_place = getNull();
     public static final GarlicBlock garlic = getNull();
     public static final GarlicDiffuserBlock garlic_diffuser_improved = getNull();
@@ -89,7 +89,7 @@ public class ModBlocks {
     public static final VampirismBlock tombstone2 = getNull();
     public static final VampirismBlock tombstone3 = getNull();
     public static final VampirismBlock grave_cage = getNull();
-    public static final CursedGrassBlock cursed_grass_block;
+    public static final CursedGrassBlock cursed_grass_block = getNull();
 
     /**
      * empty unless in datagen
@@ -97,9 +97,7 @@ public class ModBlocks {
     private static final Set<Block> ALL_BLOCKS = Sets.newHashSet();
 
     static {
-        cursed_earth = new CursedEarthBlock();
-        cursed_grass_block = new CursedGrassBlock();
-        cursed_grass_block.setRegistryName(REFERENCE.MODID, "cursed_grass_block");
+
     }
 
     static void registerItemBlocks(IForgeRegistry<Item> registry) {
@@ -222,7 +220,7 @@ public class ModBlocks {
         registry.register(prepareRegister(new CastleStairsBlock(castle_block_purple_brick.defaultBlockState(), CastleBricksBlock.EnumVariant.PURPLE_BRICK)));
         registry.register(prepareRegister(new AltarCleansingBlock()));
         registry.register(prepareRegister(new CoffinBlock()));
-        registry.register(prepareRegister(cursed_earth));
+        registry.register(prepareRegister(new CursedEarthBlock()));
         registry.register(prepareRegister(new FirePlaceBlock()));
         registry.register(prepareRegister(new GarlicBlock()));
         registry.register(prepareRegister(new GarlicDiffuserBlock(GarlicDiffuserBlock.Type.IMPROVED)));
@@ -259,7 +257,7 @@ public class ModBlocks {
         registry.register(prepareRegister(new VampirismHorizontalBlock("tombstone2", BlockBehaviour.Properties.of(Material.STONE).strength(2, 6), BlockVoxelshapes.tomb2).markDecorativeBlock()));
         registry.register(prepareRegister(new VampirismHorizontalBlock("tombstone3", BlockBehaviour.Properties.of(Material.STONE).strength(2, 6), BlockVoxelshapes.tomb3).markDecorativeBlock()));
         registry.register(prepareRegister(new VampirismHorizontalBlock("grave_cage", BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL).strength(6, 8).requiresCorrectToolForDrops().sound(SoundType.METAL), BlockVoxelshapes.grave_cage).markDecorativeBlock()));
-        registry.register(prepareRegister(cursed_grass_block));
+        registry.register(prepareRegister(new CursedGrassBlock().setRegistryName(REFERENCE.MODID, "cursed_grass_block")));
 
         /**
          * TUTORIAL:
