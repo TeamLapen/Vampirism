@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
@@ -9,13 +10,11 @@ import net.minecraft.client.gui.widget.button.ChangePageButton;
 import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
 import org.lwjgl.glfw.GLFW;
 
-import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,19 +24,19 @@ import java.util.stream.Collectors;
 
 public class VampireBookScreen extends Screen {
 
-    private final static ResourceLocation pageTexture = new ResourceLocation(REFERENCE.MODID, "textures/gui/vampire_book");
+    private final static ResourceLocation pageTexture = new ResourceLocation(REFERENCE.MODID, "textures/gui/vampire_book.png");
     private final int xSize = 245;
     private final int ySize = 192;
     private int guiLeft, guiTop;
     private ChangePageButton buttonNext;
     private ChangePageButton buttonPrev;
     private int pageNumber;
-    private final BookInfo info;
+    private final VampireBookManager.BookInfo info;
     private List<ITextProperties> content;
 
 
-    public VampireBookScreen(BookInfo info) {
-        super(info.getTitle());
+    public VampireBookScreen(VampireBookManager.BookInfo info) {
+        super(new StringTextComponent(info.getTitle()));
         this.info = info;
     }
 
@@ -61,7 +60,7 @@ public class VampireBookScreen extends Screen {
             }
         }
 
-        drawCenteredString(stack, font, String.format("%d/%d", pageNumber + 1, content.size()), guiLeft + xSize / 2, guiTop + 5 * ySize / 6, 0);
+        drawCenteredStringWithoutShadow(stack, font, String.format("%d/%d", pageNumber + 1, content.size()), guiLeft + xSize / 2, guiTop + 5 * ySize / 6, 0);
         drawCenteredString(stack, font, title, guiLeft + xSize / 2, guiTop - 10, Color.WHITE.getRGB());
 
         buttonPrev.visible = pageNumber != 0;
@@ -88,9 +87,12 @@ public class VampireBookScreen extends Screen {
             }
         }, true));
 
-        String text="";
-        content = Arrays.stream(text.split("\break")).map(StringTextComponent::new).flatMap(v -> prepareForLongText(v, 164, 81, 120).stream()).collect(Collectors.toList());
+        content = Arrays.stream(info.getContent()).map(StringTextComponent::new).flatMap(v -> prepareForLongText(v, 164, 120, 120).stream()).collect(Collectors.toList());
 
+    }
+
+    public static void drawCenteredStringWithoutShadow(MatrixStack p_238471_0_, FontRenderer p_238471_1_, String p_238471_2_, int p_238471_3_, int p_238471_4_, int p_238471_5_) {
+        p_238471_1_.draw(p_238471_0_, p_238471_2_, (float) (p_238471_3_ - p_238471_1_.width(p_238471_2_) / 2), (float) p_238471_4_, p_238471_5_);
     }
 
     @Override
@@ -178,11 +180,4 @@ public class VampireBookScreen extends Screen {
         return ITextProperties.composite(copy);
     }
 
-    public static class BookInfo{
-
-        @Nonnull
-        public ITextComponent getTitle(){
-            return null;
-        }
-    }
 }

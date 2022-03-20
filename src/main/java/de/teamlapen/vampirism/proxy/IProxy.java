@@ -4,6 +4,7 @@ import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.network.*;
 import de.teamlapen.vampirism.player.skills.SkillTree;
 import de.teamlapen.vampirism.tileentity.GarlicBeaconTileEntity;
+import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -71,7 +72,7 @@ public interface IProxy extends IInitListener {
     default void handleUpdateMultiBossInfoPacket(SUpdateMultiBossInfoPacket msg) {
     }
 
-    default void handleVampireBookPacket(SOpenVampireBookPacket msg) {
+    default void handleVampireBookPacket(VampireBookManager.BookInfo msg) {
     }
 
     void renderScreenFullColor(int ticksOn, int ticksOff, int color);
