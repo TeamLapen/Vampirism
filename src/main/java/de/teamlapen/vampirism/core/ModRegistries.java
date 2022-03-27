@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.api.entity.player.task.Task;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
+import net.minecraftforge.registries.NewRegistryEvent;
 import net.minecraftforge.registries.RegistryBuilder;
 
 public class ModRegistries {
@@ -21,32 +22,29 @@ public class ModRegistries {
     public static final ResourceLocation REFINEMENT_ID = new ResourceLocation("vampirism:refinement");
     public static final ResourceLocation REFINEMENT_SET_ID = new ResourceLocation("vampirism:refinement_set");
 
-    public static final IForgeRegistry<ISkill<?>> SKILLS;
-    public static final IForgeRegistry<IAction<?>> ACTIONS;
-    public static final IForgeRegistry<IEntityAction> ENTITYACTIONS;
-    public static final IForgeRegistry<IMinionTask<?, ?>> MINION_TASKS;
-    public static final IForgeRegistry<Task> TASKS;
-    public static final IForgeRegistry<IRefinement> REFINEMENTS;
-    public static final IForgeRegistry<IRefinementSet> REFINEMENT_SETS;
+    public static IForgeRegistry<ISkill<?>> SKILLS;
+    public static IForgeRegistry<IAction<?>> ACTIONS;
+    public static IForgeRegistry<IEntityAction> ENTITYACTIONS;
+    public static IForgeRegistry<IMinionTask<?, ?>> MINION_TASKS;
+    public static IForgeRegistry<Task> TASKS;
+    public static IForgeRegistry<IRefinement> REFINEMENTS;
+    public static IForgeRegistry<IRefinementSet> REFINEMENT_SETS;
 
-    static {
+
+    static void init(NewRegistryEvent event) {
         //noinspection unchecked
-        SKILLS = makeRegistry(SKILLS_ID, (Class<ISkill<?>>) (Object)ISkill.class, Integer.MAX_VALUE >> 5);
+        event.create(makeRegistry(SKILLS_ID, (Class<ISkill<?>>) (Object)ISkill.class, Integer.MAX_VALUE >> 5), r -> SKILLS = r);
         //noinspection unchecked
-        ACTIONS = makeRegistry(ACTIONS_ID, (Class<IAction<?>>) (Object)IAction.class, Integer.MAX_VALUE >> 5);
-        ENTITYACTIONS = makeRegistry(ENTITYACTIONS_ID, IEntityAction.class, Integer.MAX_VALUE >> 5);
+        event.create(makeRegistry(ACTIONS_ID, (Class<IAction<?>>) (Object)IAction.class, Integer.MAX_VALUE >> 5), r -> ACTIONS = r);
+        event.create(makeRegistry(ENTITYACTIONS_ID, IEntityAction.class, Integer.MAX_VALUE >> 5), r -> ENTITYACTIONS = r);
         //noinspection unchecked
-        MINION_TASKS = ModRegistries.makeRegistry(MINION_TASKS_ID, (Class<IMinionTask<?, ?>>) (Object) IMinionTask.class, Integer.MAX_VALUE >> 5);
-        TASKS = makeRegistry(TASK_ID, Task.class, Integer.MAX_VALUE >> 5);
-        REFINEMENTS = makeRegistry(REFINEMENT_ID, IRefinement.class, Integer.MAX_VALUE >> 5);
-        REFINEMENT_SETS = makeRegistry(REFINEMENT_SET_ID, IRefinementSet.class, Integer.MAX_VALUE >> 5);
+        event.create(ModRegistries.makeRegistry(MINION_TASKS_ID, (Class<IMinionTask<?, ?>>) (Object) IMinionTask.class, Integer.MAX_VALUE >> 5), r -> MINION_TASKS =r);
+        event.create(makeRegistry(TASK_ID, Task.class, Integer.MAX_VALUE >> 5), r -> TASKS =r );
+        event.create(makeRegistry(REFINEMENT_ID, IRefinement.class, Integer.MAX_VALUE >> 5), r -> REFINEMENTS = r);
+        event.create( makeRegistry(REFINEMENT_SET_ID, IRefinementSet.class, Integer.MAX_VALUE >> 5), r -> REFINEMENT_SETS = r);
     }
 
-    static void init() {
-
-    }
-
-    private static <T extends IForgeRegistryEntry<T>> IForgeRegistry<T> makeRegistry(ResourceLocation name, Class<T> type, int max) {
-        return new RegistryBuilder<T>().setName(name).setType(type).setMaxID(max).create();
+    private static <T extends IForgeRegistryEntry<T>> RegistryBuilder<T> makeRegistry(ResourceLocation name, Class<T> type, int max) {
+        return new RegistryBuilder<T>().setName(name).setType(type).setMaxID(max);
     }
 }

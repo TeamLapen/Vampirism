@@ -40,6 +40,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
+import net.minecraftforge.registries.NewRegistryEvent;
 import net.minecraftforge.registries.ObjectHolderRegistry;
 
 /**
@@ -50,8 +51,8 @@ public class RegistryManager implements IInitListener {
 
 
     @SubscribeEvent
-    public void onBuildRegistries(RegistryEvent.NewRegistry event) {
-        ModRegistries.init();
+    public void onBuildRegistries(NewRegistryEvent event) {
+        ModRegistries.init(event);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ModEntities::onModifyEntityTypeAttributes);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ModEntities::onRegisterEntityTypeAttributes);
     }
