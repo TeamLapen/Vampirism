@@ -50,8 +50,10 @@ import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.proxy.ServerProxy;
 import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.util.*;
+import de.teamlapen.vampirism.world.VampirismWorldGen;
 import de.teamlapen.vampirism.world.WorldGenConfiguration;
 import net.minecraft.ChatFormatting;
+import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.MobType;
@@ -65,6 +67,7 @@ import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
@@ -177,6 +180,8 @@ public class VampirismMod {
         if (OptifineHandler.isOptifineLoaded()) {
             LOGGER.warn("Using Optifine. Expect visual glitches and reduces blood vision functionality if using shaders.");
         }
+        VampirismWorldGen.createJigsawPool();
+
     }
 
     public VersionChecker.VersionInfo getVersionInfo() {
@@ -197,6 +202,10 @@ public class VampirismMod {
     @SubscribeEvent
     public void onCommandsRegister(RegisterCommandsEvent event) {
         ModCommands.registerCommands(event.getDispatcher());
+    }
+
+    @SubscribeEvent
+    public void onServerAboutToStart(ServerAboutToStartEvent event) {
     }
 
     @SubscribeEvent
@@ -370,6 +379,8 @@ public class VampirismMod {
         SupporterManager.getInstance().initAsync();
         VampireBookManager.getInstance().init();
         VampirismEntitySelectors.registerSelectors();
+
+        VampirismWorldGen.addVillageStructures(BuiltinRegistries.ACCESS);
 
     }
 

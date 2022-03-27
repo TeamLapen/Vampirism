@@ -11,6 +11,7 @@
     "MixinEffectInstance",
     "MixinEntity",
     "MixinEntityPredicate",
+    "MixinJigsawPlacer",
     "MixinLivingEntity",
     "MixinPlayerEntity",
     "MixinPotionBrewing",
