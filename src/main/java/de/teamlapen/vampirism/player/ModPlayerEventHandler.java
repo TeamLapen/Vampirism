@@ -408,8 +408,8 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void onPlayerLeftLickedBlock(PlayerInteractEvent.LeftClickBlock event) {
-        assert event.getFace() != null;
+    public void onPlayerLeftClickedBlock(PlayerInteractEvent.LeftClickBlock event) {
+        if (event.getFace() == null) return;
         BlockPos pos = event.getPos().relative(event.getFace());
         Level world = event.getWorld();
         BlockState state = world.getBlockState(pos);
