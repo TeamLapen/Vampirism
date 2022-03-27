@@ -58,16 +58,19 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
 
     public void damageArmor(DamageSource source, float damage, MinionEntity<?> entity) {
         if (damage > 0) {
-            damage = damage / 4.0F;
-            if (damage < 1.0F) {
+            damage = damage / 6.0F;
+            if (damage < 1.0F && damage >= 0.5f) {
                 damage = 1.0F;
             }
-
-            for (int i = 0; i < this.inventoryArmor.size(); ++i) {
-                ItemStack itemstack = this.inventoryArmor.get(i);
-                if (itemstack.getItem() instanceof ArmorItem) {
-                    final int i_final = i;
-                    itemstack.hurtAndBreak((int) damage, entity, (e) -> e.broadcastBreakEvent(EquipmentSlot.byTypeAndIndex(EquipmentSlot.Type.ARMOR, i_final)));
+            if (damage >= 1) {
+                for (int i = 0; i < this.inventoryArmor.size(); ++i) {
+                    ItemStack itemstack = this.inventoryArmor.get(i);
+                    if ((!source.isFire() || !itemstack.getItem().isFireResistant()) && itemstack.getItem() instanceof ArmorItem) {
+                        final int i_final = i;
+                        itemstack.hurtAndBreak((int) damage, entity, (e) -> {
+                            e.broadcastBreakEvent(EquipmentSlot.byTypeAndIndex(EquipmentSlot.Type.ARMOR, i_final));
+                        });
+                    }
                 }
             }
 
