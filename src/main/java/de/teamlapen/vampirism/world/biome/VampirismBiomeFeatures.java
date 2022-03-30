@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.world.biome;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFeatures;
+import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.world.gen.features.VampireDungeonFeature;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -15,7 +16,6 @@ import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.random.SimpleWeightedRandomList;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.world.level.biome.BiomeGenerationSettings;
@@ -47,8 +47,8 @@ public class VampirismBiomeFeatures {
 
     public static final Holder<ConfiguredFeature<NoneFeatureConfiguration, VampireDungeonFeature>> vampire_dungeon = registerConfiguredFeature("vampire_dungeon", ModFeatures.vampire_dungeon, FeatureConfiguration.NONE);
     public static final Holder<ConfiguredFeature<LakeFeature.Configuration, Feature<LakeFeature.Configuration>>> water_lake = registerConfiguredFeature("mod_lake", Feature.LAKE, new LakeFeature.Configuration(BlockStateProvider.simple(Blocks.WATER.defaultBlockState()), BlockStateProvider.simple(ModBlocks.castle_block_dark_stone.defaultBlockState())));
-    public static final Holder<ConfiguredStructureFeature<?,?>> hunter_camp = registerConfiguredStructure("hunter_camp", ModFeatures.hunter_camp.configured(FeatureConfiguration.NONE, BiomeTags.IS_HILL ));
-    public static final Holder<StructureSet> hunter_camp_set = registerStructureSet(createStructureSetKey("hunter_camp"), new StructureSet(hunter_camp, new RandomSpreadStructurePlacement(1, 0, RandomSpreadType.LINEAR, 0)));
+    public static final Holder<ConfiguredStructureFeature<?,?>> hunter_camp = registerConfiguredStructure("hunter_camp", ModFeatures.hunter_camp.configured(FeatureConfiguration.NONE, ModTags.Biomes.HAS_HUNTER_TENT));
+    public static final Holder<StructureSet> hunter_camp_set = registerStructureSet(createStructureSetKey("hunter_camp"), new StructureSet(hunter_camp, new RandomSpreadStructurePlacement(10, 4, RandomSpreadType.LINEAR, 14387363)));
 
 
     public static final Holder<PlacedFeature> vampire_tree_placed = PlacementUtils.register("vampire_tree_placed", vampire_tree, PlacementUtils.filteredByBlockSurvival((ModBlocks.vampire_spruce_sapling)));

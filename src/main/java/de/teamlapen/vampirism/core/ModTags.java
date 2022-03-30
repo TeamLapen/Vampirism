@@ -9,6 +9,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 
@@ -101,6 +102,14 @@ public class ModTags {
 
         private static TagKey<Fluid> tag(String name) {
             return tag(new ResourceLocation(REFERENCE.MODID, name));
+        }
+    }
+
+    public static class Biomes {
+        public static final TagKey<Biome> HAS_HUNTER_TENT = tag("has_structure/hunter_tent");
+
+        private static TagKey<Biome> tag(String name){
+            return TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(REFERENCE.MODID, name));
         }
     }
 }
