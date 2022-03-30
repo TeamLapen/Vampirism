@@ -99,7 +99,11 @@ public class VampirismWorldGen {
                                 return false;
                             });
                             // add original and modified places back with less quantity
-                            for (int i = 0; i < oldPieces.size() * 0.6; i++) {
+                            int targetCountHalf = oldPieces.size();
+                            if(targetCountHalf>1){
+                                targetCountHalf = (int) (((double)targetCountHalf)*0.6d);
+                            }
+                            for (int i = 0; i < targetCountHalf; i++) {
                                 pattern.templates.add(modified);
                                 pattern.templates.add(oldPieces.get(i));
                             }
@@ -113,8 +117,12 @@ public class VampirismWorldGen {
                                 weightedElementList.remove(originalPiece.get());
 
                                 // Readd original at reduced weight and new piece as well.
-                                weightedElementList.add(new Pair<>(originalEntry.getFirst(), (int) (originalEntry.getSecond() * 0.6)));
-                                weightedElementList.add(new Pair<>(modified, (int) (originalEntry.getSecond() * 0.6)));
+                                int targetCountHalf2 = oldPieces.size();
+                                if(targetCountHalf2>1){
+                                    targetCountHalf2 = (int) (((double)targetCountHalf2)*0.6d);
+                                }
+                                weightedElementList.add(new Pair<>(originalEntry.getFirst(), targetCountHalf2));
+                                weightedElementList.add(new Pair<>(modified, targetCountHalf2));
                             });
                             pattern.rawTemplates = weightedElementList;
                         });
