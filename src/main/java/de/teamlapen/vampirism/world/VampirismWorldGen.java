@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.mixin.MultiNoiseBiomeSourcePresetAccessor;
+import de.teamlapen.vampirism.modcompat.terrablender.TerraBlenderCompat;
 import de.teamlapen.vampirism.util.MixinHooks;
 import de.teamlapen.vampirism.world.gen.util.BiomeTopBlockProcessor;
 import de.teamlapen.vampirism.world.gen.util.RandomBlockState;
@@ -39,7 +40,6 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class VampirismWorldGen {
@@ -69,10 +69,10 @@ public class VampirismWorldGen {
      * Add our biomes to the overworld biome source preset
      */
     public static void addBiomesToOverworldUnsafe() {
-//        if(TerraBlenderCompat.areBiomesAddedViaTerraBlender()){ //If we are already adding the biome to the overworld using TerraBlender, we shouldn't hack it into the overworld preset
-//            LOGGER.info("Vampirism Biomes are added via TerraBlender. Not adding them to overworld preset.");
-//            return;
-//        }
+        if(TerraBlenderCompat.areBiomesAddedViaTerraBlender()){ //If we are already adding the biome to the overworld using TerraBlender, we shouldn't hack it into the overworld preset
+            LOGGER.info("Vampirism Biomes are added via TerraBlender. Not adding them to overworld preset.");
+            return;
+        }
         if(!VampirismConfig.COMMON.addVampireForestToOverworld.get()){
             return;
         }

@@ -36,6 +36,7 @@ import de.teamlapen.vampirism.entity.factions.FactionRegistry;
 import de.teamlapen.vampirism.inventory.recipes.ExtendedBrewingRecipeRegistry;
 import de.teamlapen.vampirism.items.VampireRefinementItem;
 import de.teamlapen.vampirism.modcompat.IMCHandler;
+import de.teamlapen.vampirism.modcompat.terrablender.TerraBlenderCompat;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.player.ModPlayerEventHandler;
 import de.teamlapen.vampirism.player.actions.ActionManager;
@@ -231,7 +232,6 @@ public class VampirismMod {
     }
 
     private void addModCompats() {
-
     }
 
     private void checkEnv() {
@@ -380,7 +380,7 @@ public class VampirismMod {
         SupporterManager.getInstance().initAsync();
         VampireBookManager.getInstance().init();
         VampirismEntitySelectors.registerSelectors();
-
+        event.enqueueWork(TerraBlenderCompat::registerBiomeProviderIfPresentUnsafe);
         VampirismWorldGen.addVillageStructures(BuiltinRegistries.ACCESS);
 
     }
