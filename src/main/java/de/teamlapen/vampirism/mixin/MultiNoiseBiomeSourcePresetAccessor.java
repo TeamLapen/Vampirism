@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.mixin;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Climate;
@@ -17,10 +18,10 @@ public interface MultiNoiseBiomeSourcePresetAccessor {
 
     @Final
     @Accessor("parameterSource")
-    Function<Registry<Biome>, Climate.ParameterList<Supplier<Biome>>> getPresetSupplier_vampirism();
+    Function<Registry<Biome>, Climate.ParameterList<Holder<Biome>>> getPresetSupplier_vampirism();
 
     @Mutable
     @Final
     @Accessor("parameterSource")
-    void setPresetSupplier_vampirism(Function<Registry<Biome>, Climate.ParameterList<Supplier<Biome>>> supplier);
+    void setPresetSupplier_vampirism(Function<Registry<Biome>, Climate.ParameterList<Holder<Biome>>> supplier);
 }
