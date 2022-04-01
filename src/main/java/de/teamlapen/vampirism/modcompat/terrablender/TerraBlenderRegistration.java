@@ -4,6 +4,7 @@ package de.teamlapen.vampirism.modcompat.terrablender;
 import com.mojang.datafixers.util.Pair;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModBiomes;
+import de.teamlapen.vampirism.world.biome.OverworldModifications;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -18,12 +19,13 @@ import terrablender.api.SurfaceRuleManager;
 import java.util.function.Consumer;
 
 public class TerraBlenderRegistration {
+
     public static void registerRegions(){
         Regions.register(new ForestRegion());
     }
 
     public static void registerSurfaceRules(){
-        SurfaceRuleManager.addSurfaceRules(SurfaceRuleManager.RuleCategory.OVERWORLD, REFERENCE.MODID, ModBiomes.buildOverworldSurfaceRules());
+        SurfaceRuleManager.addSurfaceRules(SurfaceRuleManager.RuleCategory.OVERWORLD, REFERENCE.MODID, OverworldModifications.buildOverworldSurfaceRules());
     }
 
     static class ForestRegion extends Region{

@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.world.gen;
 
-import de.teamlapen.vampirism.world.biome.VampirismBiomeFeatures;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.block.grower.AbstractTreeGrower;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -16,6 +15,6 @@ public class VampireSpruceTree extends AbstractTreeGrower {
     @Nullable
     @Override
     protected Holder<ConfiguredFeature<TreeConfiguration, Feature<TreeConfiguration>>> getConfiguredFeature(@Nonnull Random randomIn, boolean largeHive) {
-        return VampirismBiomeFeatures.vampire_tree;
+        return VampirismFeatures.vampire_tree;
     }
 }

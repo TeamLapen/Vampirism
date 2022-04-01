@@ -22,7 +22,10 @@ import de.teamlapen.vampirism.client.core.ModBlocksRender;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.config.BloodValues;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.*;
+import de.teamlapen.vampirism.core.ModCommands;
+import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.ModLootTables;
+import de.teamlapen.vampirism.core.RegistryManager;
 import de.teamlapen.vampirism.data.*;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.ModEntityEventHandler;
@@ -51,8 +54,9 @@ import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.proxy.ServerProxy;
 import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.util.*;
-import de.teamlapen.vampirism.world.VampirismWorldGen;
-import de.teamlapen.vampirism.world.WorldGenConfiguration;
+import de.teamlapen.vampirism.world.biome.OverworldModifications;
+import de.teamlapen.vampirism.world.biome.VampirismBiomes;
+import de.teamlapen.vampirism.world.gen.VanillaStructureModifications;
 import net.minecraft.ChatFormatting;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.data.DataGenerator;
@@ -174,14 +178,14 @@ public class VampirismMod {
         FMLJavaModLoadingContext.get().getModEventBus().register(registryManager);
         MinecraftForge.EVENT_BUS.register(registryManager);
         MinecraftForge.EVENT_BUS.register(Permissions.class);
-        MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, ModBiomes::onBiomeLoadingEventAdditions);
+        MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, VampirismBiomes::onBiomeLoadingEventAdditions);
 
         prepareAPI();
 
         if (OptifineHandler.isOptifineLoaded()) {
             LOGGER.warn("Using Optifine. Expect visual glitches and reduces blood vision functionality if using shaders.");
         }
-        VampirismWorldGen.createJigsawPool();
+        VanillaStructureModifications.createJigsawPool();
 
     }
 
@@ -293,7 +297,7 @@ public class VampirismMod {
 
     private void loadComplete(final FMLLoadCompleteEvent event) {
         onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
-        event.enqueueWork(VampirismWorldGen::addBiomesToOverworldUnsafe);
+        event.enqueueWork(OverworldModifications::addBiomesToOverworldUnsafe);
     }
 
 
@@ -308,11 +312,10 @@ public class VampirismMod {
         SkillManager skillManager = new SkillManager();
         GeneralRegistryImpl generalRegistry = new GeneralRegistryImpl();
         ActionManagerEntity entityActionManager = new ActionManagerEntity();
-        WorldGenConfiguration worldGenRegistry = new WorldGenConfiguration();
         ExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistry = new ExtendedBrewingRecipeRegistry();
 
         biteableRegistry.setDefaultConvertingHandlerCreator(DefaultConvertingHandler::new);
-        VampirismAPI.setUpRegistries(factionRegistry, sundamageRegistry, biteableRegistry, actionManager, skillManager, generalRegistry, entityActionManager, worldGenRegistry, extendedBrewingRecipeRegistry);
+        VampirismAPI.setUpRegistries(factionRegistry, sundamageRegistry, biteableRegistry, actionManager, skillManager, generalRegistry, entityActionManager, extendedBrewingRecipeRegistry);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> proxy::setupAPIClient);
 
 
@@ -381,7 +384,7 @@ public class VampirismMod {
         VampireBookManager.getInstance().init();
         VampirismEntitySelectors.registerSelectors();
         event.enqueueWork(TerraBlenderCompat::registerBiomeProviderIfPresentUnsafe);
-        VampirismWorldGen.addVillageStructures(BuiltinRegistries.ACCESS);
+        VanillaStructureModifications.addVillageStructures(BuiltinRegistries.ACCESS);
 
     }
 

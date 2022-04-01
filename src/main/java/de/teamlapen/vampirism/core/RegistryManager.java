@@ -67,8 +67,6 @@ public class RegistryManager implements IInitListener {
     public void onInitStep(Step step, ParallelDispatchEvent event) {
         switch (step) {
             case COMMON_SETUP:
-                event.enqueueWork(ModBiomes::addBiomesToGeneratorUnsafe);
-                ModFeatures.registerIgnoredBiomesForStructure();
                 ModEntities.registerConvertibles();
                 ModEntities.registerSpawns();
                 ModEntities.registerCustomExtendedCreatures();
