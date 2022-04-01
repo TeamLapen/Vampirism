@@ -127,15 +127,19 @@ public class TagGenerator {
         }
     }
 
-    public static class ModBiomeTagsProvider extends BiomeTagsProvider{
+    public static class ModBiomeTagsProvider extends BiomeTagsProvider {
 
-        public ModBiomeTagsProvider(DataGenerator p_211094_, @Nullable ExistingFileHelper existingFileHelper) {
-            super(p_211094_, REFERENCE.MODID, existingFileHelper);
+        public ModBiomeTagsProvider(DataGenerator generator, @Nullable ExistingFileHelper existingFileHelper) {
+            super(generator, REFERENCE.MODID, existingFileHelper);
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         protected void addTags() {
             tag(ModTags.Biomes.HAS_HUNTER_TENT).addTags(BiomeTags.IS_BADLANDS, BiomeTags.IS_FOREST, BiomeTags.IS_TAIGA).add(Biomes.PLAINS, Biomes.DESERT, Biomes.MEADOW, Biomes.SNOWY_PLAINS);
+            tag(ModTags.Biomes.IS_FACTION_BIOME).addTags(ModTags.Biomes.IS_VAMPIRE_BIOME);
+            tag(ModTags.Biomes.IS_VAMPIRE_BIOME).add(ModBiomes.VAMPIRE_FOREST);
+            tag(BiomeTags.IS_FOREST).add(ModBiomes.VAMPIRE_FOREST);
         }
     }
 }

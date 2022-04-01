@@ -107,8 +107,10 @@ public class ModTags {
 
     public static class Biomes {
         public static final TagKey<Biome> HAS_HUNTER_TENT = tag("has_structure/hunter_tent");
+        public static final TagKey<Biome> IS_FACTION_BIOME = tag("is_faction_biome");
+        public static final TagKey<Biome> IS_VAMPIRE_BIOME = tag("is_vampire_biome");
 
-        private static TagKey<Biome> tag(String name){
+        private static TagKey<Biome> tag(String name) {
             return TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(REFERENCE.MODID, name));
         }
     }

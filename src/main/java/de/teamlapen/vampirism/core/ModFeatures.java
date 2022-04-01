@@ -48,7 +48,7 @@ public class ModFeatures {
 
     static void registerIgnoredBiomesForStructure() {
         VampirismAPI.worldGenRegistry().removeStructureFromBiomeCategories(hunter_camp.getRegistryName(), Lists.newArrayList(Biome.BiomeCategory.OCEAN, Biome.BiomeCategory.THEEND, Biome.BiomeCategory.NETHER, Biome.BiomeCategory.BEACH, Biome.BiomeCategory.ICY, Biome.BiomeCategory.RIVER, Biome.BiomeCategory.JUNGLE));
-        VampirismAPI.worldGenRegistry().removeStructureFromBiomes(hunter_camp.getRegistryName(), Lists.newArrayList(ModBiomes.VAMPIRE_FOREST_KEY.location()));
+        VampirismAPI.worldGenRegistry().removeStructureFromBiomes(hunter_camp.getRegistryName(), Lists.newArrayList(ModBiomes.VAMPIRE_FOREST.location()));
     }
 
 

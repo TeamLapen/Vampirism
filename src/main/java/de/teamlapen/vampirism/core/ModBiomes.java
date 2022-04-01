@@ -19,27 +19,21 @@ import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.List;
-
-import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
 /**
  * Handles all biome registrations and reference.
  */
 public class ModBiomes {
-    @ObjectHolder("vampirism:vampire_forest")
-    public static final Biome vampire_forest = getNull();
-
-    public static final ResourceKey<Biome> VAMPIRE_FOREST_KEY = ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(REFERENCE.MODID, "vampire_forest"));
+    public static final ResourceKey<Biome> VAMPIRE_FOREST = ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(REFERENCE.MODID, "vampire_forest"));
 
     static void registerBiomes(IForgeRegistry<Biome> registry) {
-        registry.register(VampireForestBiome.createVampireForest().setRegistryName(VAMPIRE_FOREST_KEY.location()));
+        registry.register(VampireForestBiome.createVampireForest().setRegistryName(VAMPIRE_FOREST.location()));
 
-        VampirismAPI.sundamageRegistry().addNoSundamageBiomes(VAMPIRE_FOREST_KEY.location());
+        VampirismAPI.sundamageRegistry().addNoSundamageBiomes(VAMPIRE_FOREST.location());
 
-        BiomeDictionary.addTypes(VAMPIRE_FOREST_KEY, BiomeDictionary.Type.OVERWORLD, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.DENSE, BiomeDictionary.Type.MAGICAL, BiomeDictionary.Type.SPOOKY);
+        BiomeDictionary.addTypes(VAMPIRE_FOREST, BiomeDictionary.Type.OVERWORLD, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.DENSE, BiomeDictionary.Type.MAGICAL, BiomeDictionary.Type.SPOOKY);
     }
 
      record BlockRuleSource(ResourceLocation block_id) implements SurfaceRules.RuleSource {
@@ -63,7 +57,7 @@ public class ModBiomes {
         //Any blocks here must be available before block registration, so they must be initialized statically
         SurfaceRules.RuleSource cursed_earth = new BlockRuleSource(new ResourceLocation(REFERENCE.MODID, "cursed_earth"));
         SurfaceRules.RuleSource grass = new BlockRuleSource(new ResourceLocation(REFERENCE.MODID, "cursed_grass_block"));
-        SurfaceRules.ConditionSource inVampireBiome = SurfaceRules.isBiome(ModBiomes.VAMPIRE_FOREST_KEY);
+        SurfaceRules.ConditionSource inVampireBiome = SurfaceRules.isBiome(ModBiomes.VAMPIRE_FOREST);
         SurfaceRules.RuleSource vampireForestTopLayer = SurfaceRules.ifTrue(inVampireBiome, grass);
         SurfaceRules.RuleSource vampireForestBaseLayer = SurfaceRules.ifTrue(inVampireBiome, cursed_earth);
         return SurfaceRules.sequence(
@@ -79,8 +73,8 @@ public class ModBiomes {
      * Only call from main thread / non-parallel event
      */
     static void addBiomesToGeneratorUnsafe() {
-        BiomeManager.addAdditionalOverworldBiomes(VAMPIRE_FOREST_KEY);
-        BiomeManager.addBiome(net.minecraftforge.common.BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(ModBiomes.VAMPIRE_FOREST_KEY, VampirismConfig.COMMON.vampireForestWeight.get()));
+        BiomeManager.addAdditionalOverworldBiomes(VAMPIRE_FOREST);
+        BiomeManager.addBiome(net.minecraftforge.common.BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(ModBiomes.VAMPIRE_FOREST, VampirismConfig.COMMON.vampireForestWeight.get()));
     }
 
     /**

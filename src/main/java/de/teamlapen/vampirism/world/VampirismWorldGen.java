@@ -120,9 +120,9 @@ public class VampirismWorldGen {
             LOGGER.debug("Removed a total of {} points from {}", removed, oldCount);
 
 
-            LOGGER.info("Adding biome {} to ParameterPoints {} in Preset.OVERWORLD", ModBiomes.VAMPIRE_FOREST_KEY.location(), Arrays.toString(forestPoints));
+            LOGGER.info("Adding biome {} to ParameterPoints {} in Preset.OVERWORLD", ModBiomes.VAMPIRE_FOREST.location(), Arrays.toString(forestPoints));
             for (Climate.ParameterPoint forestPoint : forestPoints) {
-                biomes.add(Pair.of(forestPoint, registry.getHolderOrThrow(ModBiomes.VAMPIRE_FOREST_KEY)));
+                biomes.add(Pair.of(forestPoint, registry.getHolderOrThrow(ModBiomes.VAMPIRE_FOREST)));
             }
 
             return new Climate.ParameterList<>(biomes);

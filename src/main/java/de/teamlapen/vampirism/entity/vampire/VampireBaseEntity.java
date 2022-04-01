@@ -9,7 +9,10 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.config.BalanceMobProps;
-import de.teamlapen.vampirism.core.*;
+import de.teamlapen.vampirism.core.ModAttributes;
+import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.SoulOrbEntity;
@@ -275,7 +278,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
      * Only exception is the vampire biome in which it returns true if ontop of {@link ModBlocks#cursed_earth}
      */
     private boolean getCanSpawnHereRestricted(LevelAccessor iWorld) {
-        boolean vampireBiome = ModBiomes.vampire_forest.getRegistryName().equals(Helper.getBiomeId(iWorld, this.blockPosition()));
+        boolean vampireBiome = iWorld.getBiome(this.blockPosition()).is(ModTags.Biomes.IS_VAMPIRE_BIOME);
         boolean lowLightLevel = isLowLightLevel(iWorld);
         if(lowLightLevel) return true;
         if(!vampireBiome) return false;

@@ -34,7 +34,7 @@ public class TerraBlenderRegistration {
 
         @Override
         public void addBiomes(Registry<Biome> registry, Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> mapper) {
-            this.addBiomeSimilar(mapper, Biomes.TAIGA, ModBiomes.VAMPIRE_FOREST_KEY);
+            this.addBiomeSimilar(mapper, Biomes.TAIGA, ModBiomes.VAMPIRE_FOREST);
         }
     }
 }

@@ -4,14 +4,12 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireBaron;
 import de.teamlapen.vampirism.config.BalanceMobProps;
-import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.goals.AttackRangedDarkBloodGoal;
 import de.teamlapen.vampirism.entity.goals.FleeGarlicVampireGoal;
 import de.teamlapen.vampirism.entity.goals.LookAtClosestVisibleGoal;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
-import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -58,7 +56,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     private final static int ENRAGED_TRANSITION_TIME = 15;
 
     public static boolean spawnPredicateBaron(EntityType<? extends VampireBaronEntity> entityType, LevelAccessor world, MobSpawnType spawnReason, BlockPos blockPos, Random random) {
-        return ModBiomes.vampire_forest.getRegistryName().equals(Helper.getBiomeId(world, blockPos)) && world.getDifficulty() != net.minecraft.world.Difficulty.PEACEFUL && spawnPredicateCanSpawn(entityType, world, spawnReason, blockPos, random);
+        return world.getBiome(blockPos).is(ModTags.Biomes.IS_VAMPIRE_BIOME) && world.getDifficulty() != net.minecraft.world.Difficulty.PEACEFUL && spawnPredicateCanSpawn(entityType, world, spawnReason, blockPos, random);
     }
 
     public static AttributeSupplier.Builder getAttributeBuilder() {
