@@ -83,7 +83,6 @@ public class ModVillage {
         registry.register(new ScheduleBuilder(new Schedule()).changeActivityAt(12000, Activity.IDLE).changeActivityAt(10, Activity.REST).changeActivityAt(14000, Activity.WORK).changeActivityAt(21000, Activity.MEET).changeActivityAt(23000, Activity.IDLE).build().setRegistryName(REFERENCE.MODID, "converted_default"));
     }
 
-    @SuppressWarnings("UnstableApiUsage")
     private static Set<BlockState> getAllStates(Block... blocks) {
         return Arrays.stream(blocks).map(block -> block.getStateDefinition().any()).collect(ImmutableSet.toImmutableSet());
     }
