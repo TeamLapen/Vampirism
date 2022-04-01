@@ -32,8 +32,6 @@ import net.minecraft.world.level.levelgen.feature.trunkplacers.StraightTrunkPlac
 import net.minecraft.world.level.levelgen.placement.*;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
-import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement;
-import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 
 import java.util.List;
@@ -70,7 +68,8 @@ public class VampirismFeatures {
 
     //Structure features
     public static final Holder<ConfiguredStructureFeature<?,?>> hunter_camp = registerConfiguredStructure("hunter_camp", ModFeatures.hunter_camp.configured(FeatureConfiguration.NONE, ModTags.Biomes.HAS_HUNTER_TENT));
-    public static final Holder<StructureSet> hunter_camp_set = registerStructureSet(createStructureSetKey("hunter_camp"), new StructureSet(hunter_camp, new RandomSpreadStructurePlacement(10, 4, RandomSpreadType.LINEAR, 14387363)));
+    //Hunter camp structure set is added in data pack
+    //public static final Holder<StructureSet> hunter_camp_set = registerStructureSet(createStructureSetKey("hunter_camp"), new StructureSet(hunter_camp, new RandomSpreadStructurePlacement(10, 4, RandomSpreadType.LINEAR, 14387363)));
 
 
     //structure pieces
