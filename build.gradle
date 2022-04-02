@@ -36,8 +36,10 @@ configurations {
 group = "de.teamlapen.vampirism"
 archivesBaseName = "Vampirism"
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+//These will be overridden in gradle/versioning.gradle, but have to be defined here
 ext.mod_version="Test"
 ext.type="test"
+ext.classification="test"
 
 
 sourceSets {
