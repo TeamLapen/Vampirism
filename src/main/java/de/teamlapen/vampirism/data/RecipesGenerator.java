@@ -21,7 +21,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -101,23 +101,23 @@ public class RecipesGenerator extends RecipeProvider {
         ItemLike blood_infused_iron_ingot = ModItems.blood_infused_iron_ingot;
         ItemLike rotten_flesh = Items.ROTTEN_FLESH;
         ItemLike alchemical_fire = ModItems.item_alchemical_fire;
-        Tag<Item> planks = ItemTags.PLANKS;
-        Tag<Item> glass = Tags.Items.GLASS;
-        Tag<Item> glass_pane = Tags.Items.GLASS_PANES;
-        Tag<Item> logs = ItemTags.LOGS;
-        Tag<Item> diamond = Tags.Items.GEMS_DIAMOND;
-        Tag<Item> diamondBlock = Tags.Items.STORAGE_BLOCKS_DIAMOND;
-        Tag<Item> iron_ingot = Tags.Items.INGOTS_IRON;
-        Tag<Item> quartz_block = Tags.Items.STORAGE_BLOCKS_QUARTZ;
-        Tag<Item> coal_block = Tags.Items.STORAGE_BLOCKS_COAL;
-        Tag<Item> garlic = ModTags.Items.GARLIC;
-        Tag<Item> obsidian = Tags.Items.OBSIDIAN;
-        Tag<Item> wool = ItemTags.WOOL;
-        Tag<Item> stick = Tags.Items.RODS_WOODEN;
-        Tag<Item> iron_block = Tags.Items.STORAGE_BLOCKS_IRON;
-        Tag<Item> gold_ingot = Tags.Items.INGOTS_GOLD;
-        Tag<Item> pure_blood = ModTags.Items.PURE_BLOOD;
-        Tag<Item> holy_water = ModTags.Items.HOLY_WATER;
+        TagKey<Item> planks = ItemTags.PLANKS;
+        TagKey<Item> glass = Tags.Items.GLASS;
+        TagKey<Item> glass_pane = Tags.Items.GLASS_PANES;
+        TagKey<Item> logs = ItemTags.LOGS;
+        TagKey<Item> diamond = Tags.Items.GEMS_DIAMOND;
+        TagKey<Item> diamondBlock = Tags.Items.STORAGE_BLOCKS_DIAMOND;
+        TagKey<Item> iron_ingot = Tags.Items.INGOTS_IRON;
+        TagKey<Item> quartz_block = Tags.Items.STORAGE_BLOCKS_QUARTZ;
+        TagKey<Item> coal_block = Tags.Items.STORAGE_BLOCKS_COAL;
+        TagKey<Item> garlic = ModTags.Items.GARLIC;
+        TagKey<Item> obsidian = Tags.Items.OBSIDIAN;
+        TagKey<Item> wool = ItemTags.WOOL;
+        TagKey<Item> stick = Tags.Items.RODS_WOODEN;
+        TagKey<Item> iron_block = Tags.Items.STORAGE_BLOCKS_IRON;
+        TagKey<Item> gold_ingot = Tags.Items.INGOTS_GOLD;
+        TagKey<Item> pure_blood = ModTags.Items.PURE_BLOOD;
+        TagKey<Item> holy_water = ModTags.Items.HOLY_WATER;
 
         ShapedRecipeBuilder.shaped(ModBlocks.blood_grinder).define('Z', hopper).define('Y', planks).define('D', diamond).define('X', iron_ingot).pattern(" Z ").pattern("YDY").pattern("YXY").unlockedBy("has_hopper", has(hopper)).save(consumer, general("blood_grinder"));
         ShapedRecipeBuilder.shaped(ModBlocks.blood_sieve).define('X', iron_ingot).define('Q', quartz_block).define('Y', planks).define('Z', cauldron).pattern("XQX").pattern("YZY").pattern("YXY").unlockedBy("has_cauldron", has(cauldron)).save(consumer, general("blood_sieve"));
@@ -316,7 +316,7 @@ public class RecipesGenerator extends RecipeProvider {
             super(itemProvider, amount);
         }
 
-        public ShapelessRecipeBuilder addIngredient(Tag<Item> tag, int amount) {
+        public ShapelessRecipeBuilder addIngredient(TagKey<Item> tag, int amount) {
             return this.requires(Ingredient.of(tag), amount);
         }
     }

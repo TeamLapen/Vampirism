@@ -57,7 +57,6 @@ public class ModCommands {
                             .then(ResetActionsCommand.register())
                             .then(TentCommand.register())
                             .then(VampireBookCommand.register())
-                            .then(DebugGenCommand.register())
                             .then(RunTestsCommand.register())
                             .then(GarlicCheckCommand.register())
                             .then(SetSwordChargedCommand.register())

@@ -9,6 +9,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -20,7 +21,7 @@ import java.util.List;
 /**
  * Should be implemented by all items that are supposed to be used by only a specific faction.
  */
-public interface IFactionExclusiveItem {
+public interface IFactionExclusiveItem extends ItemLike {
 
     @OnlyIn(Dist.CLIENT)
     default void addFactionPoisonousToolTip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn, @Nullable Player player) {

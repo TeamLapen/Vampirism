@@ -316,6 +316,7 @@ d5c3ae67803074d803f72814d933de31bdafb91d data/minecraft/tags/items/slabs.json
 8e2c2a78cbfa24a6a487080b4051b2eb8e514bf8 data/minecraft/tags/items/small_flowers.json
 1e8e84ad980155282c66a3f5718272ecc32b6cc3 data/minecraft/tags/items/spruce_logs.json
 3a168bbfb876205c64db287aa3f127543ea776d9 data/minecraft/tags/items/stairs.json
+b5498db4233ac19359748cbac000ee34fed852fa data/minecraft/tags/worldgen/biome/is_forest.json
 246f1bfbace7c20f307198f770093629aa9247d4 data/vampirism/advancements/hunter/become_hunter.json
 bc113e35439560794ba3dfa89f1ea9e5f652257c data/vampirism/advancements/hunter/betrayal.json
 090c3f141c0eba45d9143371afec89e7ec4528a1 data/vampirism/advancements/hunter/cure_vampire_villager.json
@@ -716,6 +717,9 @@ eec0607ec57ff92feb16988f12898e94d99cc63e data/vampirism/tags/items/castle_stairs
 2e7c31f01b7409c520b5c899ed3413319250d628 data/vampirism/tags/items/hunter_intel.json
 51c2f81bea8458229590ead60308b02b7f25c925 data/vampirism/tags/items/pure_blood.json
 4168a4834c52a603a350b0e3eb4d0794f304fc4f data/vampirism/tags/items/vampire_cloak.json
+e211f592ad200ffadfdf76063b58259f827fadbc data/vampirism/tags/worldgen/biome/has_structure/hunter_tent.json
+9372b522af9c0a8b6ff2d701141f5ec43783e9b5 data/vampirism/tags/worldgen/biome/is_faction_biome.json
+b5498db4233ac19359748cbac000ee34fed852fa data/vampirism/tags/worldgen/biome/is_vampire_biome.json
 bffedbd75a60a1eb9de12a6747f442c46864697f data/vampirism/vampirismskillnodes/hunter/alchemy1.json
 99df36f37a650b8db7e5da07487e395dd365a745 data/vampirism/vampirismskillnodes/hunter/alchemy2.json
 57d6b1e1e738e09551cd8d915992d844ed12761a data/vampirism/vampirismskillnodes/hunter/alchemy3.json

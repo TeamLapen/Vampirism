@@ -17,13 +17,15 @@ import de.teamlapen.vampirism.player.tasks.reward.ItemRewardInstance;
 import de.teamlapen.vampirism.player.tasks.reward.LordLevelReward;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.server.ServerLifecycleHooks;
@@ -338,8 +340,8 @@ public class TaskManager implements ITaskManager {
             }
             case ENTITY_TAG -> {
                 //noinspection unchecked
-                for (EntityType<?> type : ((Tag.Named<EntityType<?>>) requirement.getStat(this.factionPlayer)).getValues()) {
-                    actualStat += this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type));
+                for (Holder<EntityType<?>> type : Registry.ENTITY_TYPE.getTagOrEmpty((TagKey<EntityType<?>>) requirement.getStat(this.factionPlayer))) {
+                    actualStat += this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type.value()));
                 }
                 neededStat = stats.get(requirement.getId()) + requirement.getAmount(this.factionPlayer);
             }
@@ -461,8 +463,8 @@ public class TaskManager implements ITaskManager {
                 case ENTITY_TAG:
                     int amount = 0;
                     //noinspection unchecked
-                    for (EntityType<?> type : ((Tag.Named<EntityType<?>>) requirement.getStat(this.factionPlayer)).getValues()) {
-                        amount += this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type));
+                    for (Holder<EntityType<?>> type : Registry.ENTITY_TYPE.getTagOrEmpty((TagKey<EntityType<?>>) requirement.getStat(this.factionPlayer))) {
+                        amount += this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type.value()));
                     }
                     reqStats.putIfAbsent(requirement.getId(), amount);
                     break;

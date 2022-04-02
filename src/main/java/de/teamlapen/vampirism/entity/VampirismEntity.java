@@ -8,8 +8,8 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModParticles;
+import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.particle.GenericParticleData;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.util.Helper;
@@ -57,7 +57,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
     }
 
     public static boolean spawnPredicateVampireFog(LevelAccessor world, BlockPos blockPos) {
-        return ModBiomes.vampire_forest.getRegistryName().equals(Helper.getBiomeId(world, blockPos)) || (world instanceof Level && VampirismWorld.getOpt((Level) world).map(vh -> vh.isInsideArtificialVampireFogArea(blockPos)).orElse(false));
+        return world.getBiome(blockPos).is(ModTags.Biomes.IS_VAMPIRE_BIOME) || (world instanceof Level && VampirismWorld.getOpt((Level) world).map(vh -> vh.isInsideArtificialVampireFogArea(blockPos)).orElse(false));
     }
 
     public static boolean spawnPredicateCanSpawn(EntityType<? extends Mob> entityType, LevelAccessor world, MobSpawnType spawnReason, BlockPos blockPos, Random random) {

@@ -9,7 +9,10 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.config.BalanceMobProps;
-import de.teamlapen.vampirism.core.*;
+import de.teamlapen.vampirism.core.ModAttributes;
+import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.SoulOrbEntity;
@@ -18,7 +21,6 @@ import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.SectionPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
@@ -116,7 +118,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
                     return false;
                 }
                 if (this.level.isLoaded(blockPosition()) && worldIn instanceof ServerLevel) { //TODO check performance
-                    if (!((ServerLevel) level).startsForFeature(SectionPos.of(blockPosition()), StructureFeature.VILLAGE).isEmpty()) {
+                    if (UtilLib.getStructureStartAt((ServerLevel) level, blockPosition(), StructureFeature.VILLAGE).isValid()) {
                         if (getRandom().nextInt(60) != 0) {
                             return false;
                         }
@@ -276,7 +278,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
      * Only exception is the vampire biome in which it returns true if ontop of {@link ModBlocks#cursed_earth}
      */
     private boolean getCanSpawnHereRestricted(LevelAccessor iWorld) {
-        boolean vampireBiome = ModBiomes.vampire_forest.getRegistryName().equals(Helper.getBiomeId(iWorld, this.blockPosition()));
+        boolean vampireBiome = iWorld.getBiome(this.blockPosition()).is(ModTags.Biomes.IS_VAMPIRE_BIOME);
         boolean lowLightLevel = isLowLightLevel(iWorld);
         if(lowLightLevel) return true;
         if(!vampireBiome) return false;

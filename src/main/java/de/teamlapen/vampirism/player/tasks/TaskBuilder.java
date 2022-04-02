@@ -12,7 +12,7 @@ import de.teamlapen.vampirism.player.tasks.req.*;
 import de.teamlapen.vampirism.player.tasks.reward.ItemReward;
 import de.teamlapen.vampirism.player.tasks.unlock.ParentUnlocker;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 
@@ -49,7 +49,7 @@ public class TaskBuilder {
     }
 
     @Nonnull
-    public TaskBuilder addRequirement(String name, @Nonnull Tag<EntityType<?>> entityType, int amount) {
+    public TaskBuilder addRequirement(String name, @Nonnull TagKey<EntityType<?>> entityType, int amount) {
         return this.addRequirement(new EntityTypeRequirement(new ResourceLocation(modId(), name), entityType, amount));
     }
 

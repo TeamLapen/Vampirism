@@ -73,7 +73,9 @@ dependencies {
     //Blame for debugging
 //    runtimeOnly fg.deobf("com.telepathicgrunt:Blame:${project.blame_version}")
 
-
+    // Repurposed structures
+//    runtimeOnly fg.deobf("com.telepathicgrunt:RepurposedStructures:5.0.4+1.18.2")
+//    runtimeOnly fg.deobf("com.telepathicgrunt:FeatureNBTDeadlockBeGone-Forge:2.0.0+1.18.2")
 }
 
 minecraft {

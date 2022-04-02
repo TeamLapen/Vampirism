@@ -1,8 +1,10 @@
 package de.teamlapen.vampirism.entity.villager;
 
+import com.mojang.datafixers.util.Pair;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.BloodBottleItem;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceKey;
@@ -193,11 +195,11 @@ public class Trades {
                     LogManager.getLogger().warn("Cannot find destination biome in registry{}",destination);
                     return null;
                 }
-                BlockPos blockpos = serverlevel.findNearestBiome(biome, pTrader.blockPosition(), 2400, 8);
+                Pair<BlockPos, Holder<Biome>> blockpos = serverlevel.findNearestBiome(b -> b.is(destination), pTrader.blockPosition(), 2400, 8);
                 if (blockpos != null) {
-                    ItemStack itemstack = MapItem.create(serverlevel, blockpos.getX(), blockpos.getZ(), (byte)3, true, true);
+                    ItemStack itemstack = MapItem.create(serverlevel, blockpos.getFirst().getX(), blockpos.getFirst().getZ(), (byte)3, true, true);
                     MapItem.renderBiomePreviewMap(serverlevel, itemstack);
-                    MapItemSavedData.addTargetDecoration(itemstack, blockpos, "+", MapDecoration.Type.TARGET_POINT);
+                    MapItemSavedData.addTargetDecoration(itemstack, blockpos.getFirst(), "+", MapDecoration.Type.TARGET_POINT);
                     itemstack.setHoverName(new TranslatableComponent("biome."+destination.location().getNamespace()+ "."+destination.location().getPath()));
                     return new MerchantOffer(new ItemStack(Items.EMERALD, this.emeraldCost), new ItemStack(Items.COMPASS), itemstack, this.maxUses, this.villagerXp, 0.2F);
                 } else {

@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.world.gen.util;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
-import de.teamlapen.vampirism.core.ModFeatures;
+import de.teamlapen.vampirism.world.gen.VampirismFeatures;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
@@ -48,7 +48,7 @@ public class RandomStructureProcessor extends RuleProcessor {
     @Nonnull
     @Override
     protected StructureProcessorType<?> getType() {
-        return ModFeatures.random_selector;
+        return VampirismFeatures.random_selector;
     }
 
 }

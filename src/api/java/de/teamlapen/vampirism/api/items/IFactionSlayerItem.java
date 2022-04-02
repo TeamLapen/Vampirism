@@ -2,13 +2,14 @@ package de.teamlapen.vampirism.api.items;
 
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
 
 import javax.annotation.Nonnull;
 
 /**
  * Item deals extra damage to a specific faction
  */
-public interface IFactionSlayerItem {
+public interface IFactionSlayerItem extends ItemLike {
 
     /**
      * @param stack The used item stack

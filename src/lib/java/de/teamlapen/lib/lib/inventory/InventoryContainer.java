@@ -2,7 +2,7 @@ package de.teamlapen.lib.lib.inventory;
 
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -226,13 +226,13 @@ public abstract class InventoryContainer extends AbstractContainerMenu {
             this(itemStack -> lazyItemCollection.map(list -> list.contains(itemStack.getItem())).orElse(false), x, y, inverted, stackLimit, background);
         }
 
-        public SelectorInfo(Tag<Item> tag, int x, int y) {
+        public SelectorInfo(TagKey<Item> tag, int x, int y) {
             this(tag, x, y, false, 64, null);
         }
 
 
-        public SelectorInfo(Tag<Item> tag, int x, int y, boolean inverted, int stackLimit, @Nullable Pair<ResourceLocation, ResourceLocation> background) {
-            this(itemStack -> tag.contains(itemStack.getItem()) || tag.getValues().isEmpty(), x, y, inverted, stackLimit, background);
+        public SelectorInfo(TagKey<Item> tag, int x, int y, boolean inverted, int stackLimit, @Nullable Pair<ResourceLocation, ResourceLocation> background) {
+            this(itemStack -> itemStack.is(tag) , x, y, inverted, stackLimit, background);
         }
 
 

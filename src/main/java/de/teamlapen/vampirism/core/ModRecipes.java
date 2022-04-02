@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.inventory.recipes.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -39,7 +39,7 @@ public class ModRecipes {
     public static final IConditionSerializer<?> CONFIG_CONDITION = CraftingHelper.register(new ConfigCondition.Serializer());
 
     private static final Map<Item, Integer> liquidColors = Maps.newHashMap();
-    private static final Map<Tag<Item>, Integer> liquidColorsTags = Maps.newHashMap();
+    private static final Map<TagKey<Item>, Integer> liquidColorsTags = Maps.newHashMap();
 
     static void registerDefaultLiquidColors() {
         registerLiquidColor(ModItems.holy_water_bottle_normal, 0x6666FF);
@@ -61,7 +61,7 @@ public class ModRecipes {
         liquidColors.put(item, color);
     }
 
-    public static void registerLiquidColor(Tag<Item> items, int color) {
+    public static void registerLiquidColor(TagKey<Item> items, int color) {
         liquidColorsTags.put(items, color);
     }
 
@@ -72,8 +72,8 @@ public class ModRecipes {
     public static int getLiquidColor(Item stack) {
         Integer c = liquidColors.get(stack);
         if (c != null) return c;
-        for (Map.Entry<Tag<Item>, Integer> entry : liquidColorsTags.entrySet()) {
-            if (entry.getKey().contains(stack)) {
+        for (Map.Entry<TagKey<Item>, Integer> entry : liquidColorsTags.entrySet()) {
+            if (stack.builtInRegistryHolder().is(entry.getKey())) {
                 return entry.getValue();
             }
         }

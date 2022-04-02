@@ -3,14 +3,14 @@ package de.teamlapen.vampirism.data;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.*;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.tags.BlockTagsProvider;
-import net.minecraft.data.tags.EntityTypeTagsProvider;
-import net.minecraft.data.tags.FluidTagsProvider;
-import net.minecraft.data.tags.ItemTagsProvider;
+import net.minecraft.data.tags.*;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 
@@ -22,6 +22,7 @@ public class TagGenerator {
         generator.addProvider(new ModItemTagsProvider(generator, blockTagsProvider, helper));
         generator.addProvider(new ModEntityTypeTagsProvider(generator, helper));
         generator.addProvider(new ModFluidTagsProvider(generator, helper));
+        generator.addProvider(new ModBiomeTagsProvider(generator, helper));
     }
 
     public static class ModBlockTagsProvider extends BlockTagsProvider {
@@ -123,6 +124,22 @@ public class TagGenerator {
         protected void addTags() {
             tag(ModTags.Fluids.BLOOD).add(ModFluids.blood);
             tag(ModTags.Fluids.IMPURE_BLOOD).add(ModFluids.impure_blood);
+        }
+    }
+
+    public static class ModBiomeTagsProvider extends BiomeTagsProvider {
+
+        public ModBiomeTagsProvider(DataGenerator generator, @Nullable ExistingFileHelper existingFileHelper) {
+            super(generator, REFERENCE.MODID, existingFileHelper);
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void addTags() {
+            tag(ModTags.Biomes.HAS_HUNTER_TENT).addTags(BiomeTags.IS_BADLANDS, BiomeTags.IS_FOREST, BiomeTags.IS_TAIGA).add(Biomes.PLAINS, Biomes.DESERT, Biomes.MEADOW, Biomes.SNOWY_PLAINS, Biomes.SPARSE_JUNGLE);
+            tag(ModTags.Biomes.IS_FACTION_BIOME).addTags(ModTags.Biomes.IS_VAMPIRE_BIOME);
+            tag(ModTags.Biomes.IS_VAMPIRE_BIOME).add(ModBiomes.VAMPIRE_FOREST);
+            tag(BiomeTags.IS_FOREST).add(ModBiomes.VAMPIRE_FOREST);
         }
     }
 }

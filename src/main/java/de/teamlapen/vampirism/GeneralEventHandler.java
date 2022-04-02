@@ -13,7 +13,6 @@ import de.teamlapen.vampirism.network.SkillTreePacket;
 import de.teamlapen.vampirism.util.Permissions;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import de.teamlapen.vampirism.world.VampirismWorld;
-import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.network.chat.ClickEvent;
@@ -21,8 +20,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerChunkCache;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -117,13 +114,6 @@ public class GeneralEventHandler {
 
     }
 
-    @SubscribeEvent
-    public void onWorldLoad(WorldEvent.Load event) {
-        if (event.getWorld() instanceof ServerLevel w) {
-            ServerChunkCache p = w.getChunkSource();
-            VampirismWorldGen.addBiomeStructuresTemporary(w);
-        }
-    }
 
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event) {

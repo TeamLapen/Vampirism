@@ -12,6 +12,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.DimensionArgument;
 import net.minecraft.commands.arguments.EntitySummonArgument;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,6 +23,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import java.util.List;
 
@@ -100,7 +102,7 @@ public class ConfigCommand extends BasicCommand {
     }
 
     private static int blacklistBiome(ServerPlayer player) {
-        return blacklistBiome(player, player.getCommandSenderWorld().getBiome(player.blockPosition()).getRegistryName());
+        return blacklistBiome(player, player.getCommandSenderWorld().getBiome(player.blockPosition()).unwrap().map(ResourceKey::location, ForgeRegistryEntry::getRegistryName));
     }
 
     private static int blacklistBiome(ServerPlayer player, ResourceLocation biome) {

@@ -52,6 +52,8 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.server.ServerLifecycleHooks;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -66,6 +68,8 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     private static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(BasicVampireEntity.class, EntityDataSerializers.INT);
     private static final int MAX_LEVEL = 2;
     private static final int ANGRY_TICKS_PER_ATTACK = 120;
+
+    private static final Logger LOGGER = LogManager.getLogger();
 
     public static AttributeSupplier.Builder getAttributeBuilder() {
         return VampireBaseEntity.getAttributeBuilder()

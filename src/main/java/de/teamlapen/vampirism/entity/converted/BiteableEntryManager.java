@@ -165,7 +165,7 @@ public class BiteableEntryManager {
         EntityType<?> type = creature.getType();
         if (type.getCategory() == MobCategory.MONSTER || type.getCategory() == MobCategory.WATER_CREATURE)
             return true;
-        if (ModTags.Entities.VAMPIRE.contains(type)) return true;
+        if (type.is(ModTags.Entities.VAMPIRE)) return true;
         //noinspection ConstantConditions
         return isConfigBlackListed(type.getRegistryName());
     }

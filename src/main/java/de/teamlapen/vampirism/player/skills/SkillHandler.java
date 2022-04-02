@@ -20,6 +20,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -102,7 +103,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         ItemStack[] items = new ItemStack[this.appliedRefinementSets.length];
         for (int i = 0; i < this.appliedRefinementSets.length; i++) {
             if (this.appliedRefinementSets[i] != null) {
-                items[i] = new ItemStack(this.faction.getRefinementItem(IRefinementItem.AccessorySlotType.values()[i]));
+                items[i] = new ItemStack((ItemLike) this.faction.getRefinementItem(IRefinementItem.AccessorySlotType.values()[i]));
                 this.faction.getRefinementItem(IRefinementItem.AccessorySlotType.values()[i]).applyRefinementSet(items[i], this.appliedRefinementSets[i]);
                 items[i].setDamageValue(this.refinementSetDamage[i]);
             }

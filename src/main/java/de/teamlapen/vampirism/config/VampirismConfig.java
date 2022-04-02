@@ -281,21 +281,15 @@ public class VampirismConfig {
         public final ForgeConfigSpec.IntValue baronSpawnChance;
 
         //World
-        public final ForgeConfigSpec.IntValue vampireForestWeight;
         public final ForgeConfigSpec.BooleanValue addVampireForestToOverworld;
-        public final ForgeConfigSpec.IntValue hunterTentDistance;
-        public final ForgeConfigSpec.IntValue hunterTentSeparation;
         public final ForgeConfigSpec.BooleanValue enableHunterTentGeneration;
         public final ForgeConfigSpec.BooleanValue useVanillaCampfire;
 
         //World village
-        public final ForgeConfigSpec.BooleanValue villageModify;
         public final ForgeConfigSpec.IntValue villageTotemWeight;
         public final ForgeConfigSpec.BooleanValue villageReplaceTemples;
         public final ForgeConfigSpec.DoubleValue villageTotemFactionChance;
         public final ForgeConfigSpec.IntValue villageHunterTrainerWeight;
-        public final ForgeConfigSpec.IntValue villageDistance;
-        public final ForgeConfigSpec.IntValue villageSeparation;
 
 
 
@@ -323,18 +317,12 @@ public class VampirismConfig {
             baronSpawnChance = builder.comment("Vampire baron spawn chance in vampire forest (reference vampire in forest: 35)").defineInRange("baronSpawnChance", 10, 0, 10000);
             builder.pop();
             builder.comment("Settings here require a game restart").push("world");
-            vampireForestWeight = builder.comment("Does not have an effect at the moment").defineInRange("vampireForestWeight", 3, 0, Integer.MAX_VALUE);
             addVampireForestToOverworld = builder.comment("Whether to inject the vampire forest into the default overworld generation and to replace some Taiga areas").define("addVampireForestToOverworld", true);
-            hunterTentDistance = builder.comment("Desired maximum distance in chunks between tents. Dont set hunterTentDistance <= hunterTentSeparation").defineInRange("hunterTentDistance", 10, 2, 4096);
-            hunterTentSeparation = builder.comment("Desired minimum distance in chunks between tents. Dont set hunterTentDistance <= hunterTentSeparation").defineInRange("hunterTentSeparation", 4, 1, 4096);
             enableHunterTentGeneration = builder.comment("Control hunter camp generation. If disabled you should set hunterSpawnChance to 75.").define("enableHunterTentGeneration", true);
             useVanillaCampfire = builder.comment("Use the vanilla campfire block instead of Vampirism's much cooler one").define("useVanillaCampfire", false);
 
 
             builder.push("village");
-            villageModify = builder.comment("Whether to modify the village world gen (size and frequency), based on world config").define("villageModify", true);
-            villageDistance = builder.comment("Desired maximum distance between villages in chunks").defineInRange("villageDistance", 26, 1, 100);
-            villageSeparation = builder.comment("Minimum distance between villages in chunks. Must be smaller than distance").defineInRange("villageSeparation", 6, 1, 100);
             villageTotemWeight = builder.comment("Weight of the Totem Building inside the Village").defineInRange("totemWeight", 20, 0, Integer.MAX_VALUE);
             villageTotemFactionChance = builder.comment("Chance for a totem to have a faction after generation").defineInRange("villageTotemFactionChance", 0.6, 0, 1);
             villageHunterTrainerWeight = builder.comment("Weight of the Hunter Trainer Building inside the Village").defineInRange("villageHunterTrainerWeight", 150, 0, Integer.MAX_VALUE);

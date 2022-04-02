@@ -1,10 +1,15 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.*;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 
@@ -18,39 +23,39 @@ public class ModTags {
     }
 
     public static class Blocks {
-        public static final Tag.Named<Block> CASTLE_BLOCK = tag("castle_block");
-        public static final Tag.Named<Block> CURSEDEARTH = tag("cursed_earth");
-        public static final Tag.Named<Block> CASTLE_STAIRS = tag("castle_stairs");
-        public static final Tag.Named<Block> CASTLE_SLAPS = tag("castle_slaps");
+        public static final TagKey<Block> CASTLE_BLOCK = tag("castle_block");
+        public static final TagKey<Block> CURSEDEARTH = tag("cursed_earth");
+        public static final TagKey<Block> CASTLE_STAIRS = tag("castle_stairs");
+        public static final TagKey<Block> CASTLE_SLAPS = tag("castle_slaps");
 
-        private static Tag.Named<Block> tag(ResourceLocation resourceLocation) {
-            return BlockTags.bind(resourceLocation.toString());
+        private static TagKey<Block> tag(ResourceLocation resourceLocation) {
+            return BlockTags.create(resourceLocation);
         }
 
-        private static Tag.Named<Block> tag(String name) {
+        private static TagKey<Block> tag(String name) {
             return tag(new ResourceLocation(REFERENCE.MODID, name));
         }
     }
 
     public static class Items {
-        public static final Tag.Named<Item> CROSSBOW_ARROW = tag("crossbow_arrow");
-        public static final Tag.Named<Item> HUNTER_INTEL = tag("hunter_intel");
-        public static final Tag.Named<Item> PURE_BLOOD = tag("pure_blood");
-        public static final Tag.Named<Item> VAMPIRE_CLOAK = tag("vampire_cloak");
-        public static final Tag.Named<Item> CASTLE_BLOCK = tag("castle_block");
-        public static final Tag.Named<Item> GARLIC = tag(forge("crops/garlic"));
-        public static final Tag.Named<Item> HOLY_WATER = tag("holy_water");
-        public static final Tag.Named<Item> HOLY_WATER_SPLASH = tag("holy_water_splash");
-        public static final Tag.Named<Item> CASTLE_STAIRS = tag("castle_stairs");
-        public static final Tag.Named<Item> CASTLE_SLAPS = tag("castle_slaps");
-        public static final Tag.Named<Item> CURSEDEARTH = tag("cursed_earth");
+        public static final TagKey<Item> CROSSBOW_ARROW = tag("crossbow_arrow");
+        public static final TagKey<Item> HUNTER_INTEL = tag("hunter_intel");
+        public static final TagKey<Item> PURE_BLOOD = tag("pure_blood");
+        public static final TagKey<Item> VAMPIRE_CLOAK = tag("vampire_cloak");
+        public static final TagKey<Item> CASTLE_BLOCK = tag("castle_block");
+        public static final TagKey<Item> GARLIC = tag(forge("crops/garlic"));
+        public static final TagKey<Item> HOLY_WATER = tag("holy_water");
+        public static final TagKey<Item> HOLY_WATER_SPLASH = tag("holy_water_splash");
+        public static final TagKey<Item> CASTLE_STAIRS = tag("castle_stairs");
+        public static final TagKey<Item> CASTLE_SLAPS = tag("castle_slaps");
+        public static final TagKey<Item> CURSEDEARTH = tag("cursed_earth");
 
 
-        private static Tag.Named<Item> tag(ResourceLocation resourceLocation) {
-            return ItemTags.bind(resourceLocation.toString());
+        private static TagKey<Item> tag(ResourceLocation resourceLocation) {
+            return ItemTags.create(resourceLocation);
         }
 
-        private static Tag.Named<Item> tag(String name) {
+        private static TagKey<Item> tag(String name) {
             return tag(new ResourceLocation(REFERENCE.MODID, name));
         }
     }
@@ -59,44 +64,54 @@ public class ModTags {
         /**
          * All hunter mobs (including _imob)
          */
-        public static final Tag.Named<EntityType<?>> HUNTER = tag("hunter");
+        public static final TagKey<EntityType<?>> HUNTER = tag("hunter");
         /**
          * All vampire mobs (including _imob)
          */
-        public static final Tag.Named<EntityType<?>> VAMPIRE = tag("vampire");
+        public static final TagKey<EntityType<?>> VAMPIRE = tag("vampire");
         /**
          * Both advanced hunter mobs (normal + _imob)
          */
-        public static final Tag.Named<EntityType<?>> ADVANCED_HUNTER = tag("advanced_hunter");
+        public static final TagKey<EntityType<?>> ADVANCED_HUNTER = tag("advanced_hunter");
         /**
          * Both advanced vampire mobs (normal + _imob)
          */
-        public static final Tag.Named<EntityType<?>> ADVANCED_VAMPIRE = tag("advanced_vampire");
+        public static final TagKey<EntityType<?>> ADVANCED_VAMPIRE = tag("advanced_vampire");
 
         /**
          * Vanilla zombies
          */
-        public static final Tag.Named<EntityType<?>> ZOMBIES = tag("zombies");
+        public static final TagKey<EntityType<?>> ZOMBIES = tag("zombies");
 
-        private static Tag.Named<EntityType<?>> tag(ResourceLocation resourceLocation) {
-            return EntityTypeTags.bind(resourceLocation.toString());
+        private static TagKey<EntityType<?>> tag(ResourceLocation resourceLocation) {
+            return TagKey.create(Registry.ENTITY_TYPE_REGISTRY, resourceLocation);
         }
 
-        private static Tag.Named<EntityType<?>> tag(String name) {
+        private static TagKey<EntityType<?>> tag(String name) {
             return tag(new ResourceLocation(REFERENCE.MODID, name));
         }
     }
 
     public static class Fluids {
-        public static final Tag.Named<Fluid> BLOOD = tag("vampirism_blood");
-        public static final Tag.Named<Fluid> IMPURE_BLOOD = tag("vampirism_impure_blood");
+        public static final TagKey<Fluid> BLOOD = tag("vampirism_blood");
+        public static final TagKey<Fluid> IMPURE_BLOOD = tag("vampirism_impure_blood");
 
-        private static Tag.Named<Fluid> tag(ResourceLocation resourceLocation) {
-            return FluidTags.bind(resourceLocation.toString());
+        private static TagKey<Fluid> tag(ResourceLocation resourceLocation) {
+            return FluidTags.create(resourceLocation);
         }
 
-        private static Tag.Named<Fluid> tag(String name) {
+        private static TagKey<Fluid> tag(String name) {
             return tag(new ResourceLocation(REFERENCE.MODID, name));
+        }
+    }
+
+    public static class Biomes {
+        public static final TagKey<Biome> HAS_HUNTER_TENT = tag("has_structure/hunter_tent");
+        public static final TagKey<Biome> IS_FACTION_BIOME = tag("is_faction_biome");
+        public static final TagKey<Biome> IS_VAMPIRE_BIOME = tag("is_vampire_biome");
+
+        private static TagKey<Biome> tag(String name) {
+            return TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(REFERENCE.MODID, name));
         }
     }
 }

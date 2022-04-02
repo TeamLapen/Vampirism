@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
  * #registerBiomeProviderIfPresentUnsafe() is called during common setup.
  * The hack code in VampirismWorldGen is called during LoadComplete and can therefore check #arreBiomesAddedViaTerraBlender
  */
-public class TerraBlenderCompat {
+public class TerraBlenderCompat{
 
     private static final String MOD_ID = "terrablender";
 
@@ -23,7 +23,8 @@ public class TerraBlenderCompat {
             return;
         }
         if(ModList.get().isLoaded(MOD_ID)){
-            TerraBlenderBiomeProvider.register();
+            TerraBlenderRegistration.registerRegions();
+            TerraBlenderRegistration.registerSurfaceRules();
             LOGGER.info("TerraBlender is installed. Using it to add vampire Forest to overworld.");
             isUsingTerraBlender = true;
         }

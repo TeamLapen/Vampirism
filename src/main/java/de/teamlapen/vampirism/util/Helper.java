@@ -14,7 +14,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModBiomes;
+import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.items.CrossbowArrowItem;
@@ -24,6 +24,7 @@ import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.world.VampirismWorld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.DoubleTag;
 import net.minecraft.nbt.ListTag;
@@ -50,7 +51,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 
@@ -192,10 +192,7 @@ public class Helper {
     public static boolean isEntityInVampireBiome(Entity e) {
         if (e == null) return false;
         Level w = e.getCommandSenderWorld();
-        Biome b = w.getBiome(e.blockPosition());
-        ResourceLocation biomeId = getBiomeId(w, b);
-        Objects.requireNonNull(biomeId, "Cannot determine id of local biome");
-        return ModBiomes.vampire_forest.getRegistryName().equals(biomeId);
+        return w.getBiome(e.blockPosition()).is(ModTags.Biomes.IS_VAMPIRE_BIOME);
     }
 
     /**
@@ -215,8 +212,8 @@ public class Helper {
         return getBiomeId(world, world.getBiome(pos));
     }
 
-    public static ResourceLocation getBiomeId(CommonLevelAccessor world, Biome biome) {
-        return world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getKey(biome);
+    public static ResourceLocation getBiomeId(CommonLevelAccessor world, Holder<Biome> biome) {
+        return biome.unwrap().map(ResourceKey::location, b-> world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getKey(b));
     }
 
     /**

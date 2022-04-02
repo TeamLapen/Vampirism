@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.mixin;
 
 import de.teamlapen.vampirism.util.MixinHooks;
-import net.minecraft.world.level.levelgen.feature.structures.EmptyPoolElement;
-import net.minecraft.world.level.levelgen.feature.structures.JigsawPlacement;
-import net.minecraft.world.level.levelgen.feature.structures.StructurePoolElement;
 import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece;
+import net.minecraft.world.level.levelgen.structure.pools.EmptyPoolElement;
+import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
+import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -15,12 +15,12 @@ import java.util.Iterator;
 import java.util.List;
 
 @Mixin(JigsawPlacement.Placer.class)
-public abstract class AssemblerMixin {
+public abstract class MixinJigsawPlacer {
     @Shadow
     @Final
     private List<? super PoolElementStructurePiece> pieces;
 
-    private AssemblerMixin() {
+    private MixinJigsawPlacer() {
     }
 
     @Redirect(method = "tryPlacingChildren(Lnet/minecraft/world/level/levelgen/structure/PoolElementStructurePiece;Lorg/apache/commons/lang3/mutable/MutableObject;IZLnet/minecraft/world/level/LevelHeightAccessor;)V", at = @At(value = "INVOKE", target = "Ljava/util/Iterator;next()Ljava/lang/Object;", ordinal = 1))
