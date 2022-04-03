@@ -717,7 +717,7 @@ eec0607ec57ff92feb16988f12898e94d99cc63e data/vampirism/tags/items/castle_stairs
 2e7c31f01b7409c520b5c899ed3413319250d628 data/vampirism/tags/items/hunter_intel.json
 51c2f81bea8458229590ead60308b02b7f25c925 data/vampirism/tags/items/pure_blood.json
 4168a4834c52a603a350b0e3eb4d0794f304fc4f data/vampirism/tags/items/vampire_cloak.json
-e211f592ad200ffadfdf76063b58259f827fadbc data/vampirism/tags/worldgen/biome/has_structure/hunter_tent.json
+88375df73e05175ce1a98eb14e9a6cbe45f49ecd data/vampirism/tags/worldgen/biome/has_structure/hunter_tent.json
 9372b522af9c0a8b6ff2d701141f5ec43783e9b5 data/vampirism/tags/worldgen/biome/is_faction_biome.json
 b5498db4233ac19359748cbac000ee34fed852fa data/vampirism/tags/worldgen/biome/is_vampire_biome.json
 bffedbd75a60a1eb9de12a6747f442c46864697f data/vampirism/vampirismskillnodes/hunter/alchemy1.json
