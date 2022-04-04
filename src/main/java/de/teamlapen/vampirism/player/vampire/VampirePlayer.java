@@ -1217,7 +1217,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     private void applyEntityAttributes() {
         player.getAttribute(ModAttributes.sundamage).setBaseValue(VampirismConfig.BALANCE.vpSundamage.get());
-        player.getAttribute(ModAttributes.blood_exhaustion).setBaseValue(VampirismConfig.BALANCE.vpExhaustionMaxMod.get());
+        player.getAttribute(ModAttributes.blood_exhaustion).setBaseValue(VampirismConfig.BALANCE.vpBasicBloodExhaustionMod.get());
         player.getAttribute(ModAttributes.bite_damage).setBaseValue(0);
     }
 
