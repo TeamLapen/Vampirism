@@ -1215,7 +1215,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
     private void applyEntityAttributes() {
         player.getAttribute(ModAttributes.sundamage).setBaseValue(VampirismConfig.BALANCE.vpSundamage.get());
-        player.getAttribute(ModAttributes.blood_exhaustion).setBaseValue(VampirismConfig.BALANCE.vpExhaustionMaxMod.get());
+        player.getAttribute(ModAttributes.blood_exhaustion).setBaseValue(VampirismConfig.BALANCE.vpBasicBloodExhaustionMod.get());
     }
 
     /**
