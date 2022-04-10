@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.client.model.armor.*;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.Model;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -23,6 +24,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.IItemRenderProperties;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -51,17 +53,17 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
     @Override
     public void initializeClient(Consumer<IItemRenderProperties> consumer) {
         consumer.accept(new IItemRenderProperties() {
+            @NotNull
             @Override
-            public HumanoidModel<?> getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel<?> _default) {
+            public Model getBaseArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel<?> _default) {
                 return switch (regName) {
-                    case "vampire_clothing_crown" -> ClothingCrownModel.getInstance();
-                    case "vampire_clothing_legs" ->  ClothingPantsModel.getInstance();
-                    case "vampire_clothing_boots" -> ClothingBootsModel.getInstance();
-                    case "vampire_clothing_hat" -> VampireHatModel.getInstance();
-                    default -> DummyClothingModel.getArmorModel();
+                    case "vampire_clothing_crown" -> ClothingCrownModel.getAdjustedInstance(_default);
+                    case "vampire_clothing_legs" ->  ClothingPantsModel.getAdjustedInstance(_default);
+                    case "vampire_clothing_boots" -> ClothingBootsModel.getAdjustedInstance(_default);
+                    case "vampire_clothing_hat" -> VampireHatModel.getAdjustedInstance(_default);
+                    default -> DummyClothingModel.getAdjustedInstance(_default);
                 };
             }
-
         });
     }
 
