@@ -1,7 +1,100 @@
 {
   "variants": {
-    "": {
-      "model": "vampirism:block/coffin"
+    "closed=false,facing=north,occupied=false,part=head": {
+      "model": "vampirism:block/empty"
+    },
+    "closed=true,facing=north,occupied=false,part=head": {
+      "model": "vampirism:block/empty"
+    },
+    "closed=false,facing=south,occupied=false,part=head": {
+      "model": "vampirism:block/empty"
+    },
+    "closed=true,facing=south,occupied=false,part=head": {
+      "model": "vampirism:block/empty"
+    },
+    "closed=false,facing=west,occupied=false,part=head": {
+      "model": "vampirism:block/empty"
+    },
+    "closed=true,facing=west,occupied=false,part=head": {
+      "model": "vampirism:block/empty"
+    },
+    "closed=false,facing=east,occupied=false,part=head": {
+      "model": "vampirism:block/empty"
+    },
+    "closed=true,facing=east,occupied=false,part=head": {
+      "model": "vampirism:block/empty"
+    },
+    "closed=false,facing=north,occupied=true,part=head": {
+      "model": "vampirism:block/empty"
+    },
+    "closed=true,facing=north,occupied=true,part=head": {
+      "model": "vampirism:block/empty"
+    },
+    "closed=false,facing=south,occupied=true,part=head": {
+      "model": "vampirism:block/empty"
+    },
+    "closed=true,facing=south,occupied=true,part=head": {
+      "model": "vampirism:block/empty"
+    },
+    "closed=false,facing=west,occupied=true,part=head": {
+      "model": "vampirism:block/empty"
+    },
+    "closed=true,facing=west,occupied=true,part=head": {
+      "model": "vampirism:block/empty"
+    },
+    "closed=false,facing=east,occupied=true,part=head": {
+      "model": "vampirism:block/empty"
+    },
+    "closed=true,facing=east,occupied=true,part=head": {
+      "model": "vampirism:block/empty"
+    },
+    "closed=false,facing=north,occupied=false,part=foot": {
+      "model": "vampirism:block/empty"
+    },
+    "closed=true,facing=north,occupied=false,part=foot": {
+      "model": "vampirism:block/empty"
+    },
+    "closed=false,facing=south,occupied=false,part=foot": {
+      "model": "vampirism:block/empty"
+    },
+    "closed=true,facing=south,occupied=false,part=foot": {
+      "model": "vampirism:block/empty"
+    },
+    "closed=false,facing=west,occupied=false,part=foot": {
+      "model": "vampirism:block/empty"
+    },
+    "closed=true,facing=west,occupied=false,part=foot": {
+      "model": "vampirism:block/empty"
+    },
+    "closed=false,facing=east,occupied=false,part=foot": {
+      "model": "vampirism:block/empty"
+    },
+    "closed=true,facing=east,occupied=false,part=foot": {
+      "model": "vampirism:block/empty"
+    },
+    "closed=false,facing=north,occupied=true,part=foot": {
+      "model": "vampirism:block/empty"
+    },
+    "closed=true,facing=north,occupied=true,part=foot": {
+      "model": "vampirism:block/empty"
+    },
+    "closed=false,facing=south,occupied=true,part=foot": {
+      "model": "vampirism:block/empty"
+    },
+    "closed=true,facing=south,occupied=true,part=foot": {
+      "model": "vampirism:block/empty"
+    },
+    "closed=false,facing=west,occupied=true,part=foot": {
+      "model": "vampirism:block/empty"
+    },
+    "closed=true,facing=west,occupied=true,part=foot": {
+      "model": "vampirism:block/empty"
+    },
+    "closed=false,facing=east,occupied=true,part=foot": {
+      "model": "vampirism:block/empty"
+    },
+    "closed=true,facing=east,occupied=true,part=foot": {
+      "model": "vampirism:block/empty"
     }
   }
 }

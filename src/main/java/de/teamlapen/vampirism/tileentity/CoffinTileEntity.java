@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
  */
 public class CoffinTileEntity extends TileEntity implements ITickableTileEntity {
     public final boolean renderAsItem;
-    public int lidPos;
+    public float lidPos;
     public DyeColor color = DyeColor.BLACK;
     private boolean lastTickOccupied;
 
