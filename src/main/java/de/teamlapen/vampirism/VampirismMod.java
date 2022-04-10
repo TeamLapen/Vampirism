@@ -56,6 +56,7 @@ import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.biome.OverworldModifications;
 import de.teamlapen.vampirism.world.biome.VampirismBiomes;
+import de.teamlapen.vampirism.world.gen.VampirismFeatures;
 import de.teamlapen.vampirism.world.gen.VanillaStructureModifications;
 import net.minecraft.ChatFormatting;
 import net.minecraft.data.BuiltinRegistries;
@@ -163,6 +164,8 @@ public class VampirismMod {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::gatherData);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerCapabilities);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, this::finalizeConfiguration);
+        VampirismFeatures.register(FMLJavaModLoadingContext.get().getModEventBus());
+
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
             FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientEventHandler::onModelBakeEvent);
             FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);

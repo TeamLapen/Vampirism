@@ -35,7 +35,7 @@ public class VampirismBiomes {
         addModdedWaterLake(builder);
 
         addVampireFlower(builder);
-        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.forest_grass_placed);
+        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.forest_grass_placed.getHolder().orElseThrow());
 
         BiomeDefaultFeatures.addDefaultUndergroundVariety(builder);
         BiomeDefaultFeatures.addDefaultOres(builder);
@@ -49,7 +49,7 @@ public class VampirismBiomes {
 
 
     public static void addVampireFlower(BiomeGenerationSettings.Builder builder) {
-        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.vampire_flower_placed);
+        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.vampire_flower_placed.getHolder().orElseThrow());
     }
 
     public static void addWaterSprings(BiomeGenerationSettings.Builder builder) {
@@ -57,11 +57,11 @@ public class VampirismBiomes {
     }
 
     public static void addModdedWaterLake(BiomeGenerationSettings.Builder builder) {
-         builder.addFeature(GenerationStep.Decoration.LAKES, VampirismFeatures.water_lake_placed);
+         builder.addFeature(GenerationStep.Decoration.LAKES, VampirismFeatures.water_lake_placed.getHolder().orElseThrow());
     }
 
     public static void addVampireTrees(BiomeGenerationSettings.Builder builder) {
-        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.vampire_trees_placed);
+        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.vampire_trees_placed.getHolder().orElseThrow());
     }
 
     public static void addDefaultCarversWithoutLakes(BiomeGenerationSettings.Builder builder) {
@@ -91,7 +91,7 @@ public class VampirismBiomes {
         }
         Biome.BiomeCategory cat = event.getCategory();
         if (cat != Biome.BiomeCategory.NETHER && cat != Biome.BiomeCategory.THEEND && cat != Biome.BiomeCategory.OCEAN && cat != Biome.BiomeCategory.NONE) {
-            event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_STRUCTURES, VampirismFeatures.vampire_dungeon_placed);
+            event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_STRUCTURES, VampirismFeatures.vampire_dungeon_placed.getHolder().orElseThrow());
         }
     }
 }
