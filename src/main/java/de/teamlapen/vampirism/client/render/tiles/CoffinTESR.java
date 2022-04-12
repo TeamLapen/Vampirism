@@ -57,8 +57,8 @@ public class CoffinTESR extends VampirismTESR<CoffinTileEntity> {
         if (!isHeadSafe(tile.getLevel(), tile.getBlockPos())) return;
 
         // Calculate lid position
-        boolean occupied = tile.hasLevel() && CoffinBlock.isClosed(tile.getLevel(), tile.getBlockPos());
-        if (!occupied) {
+        boolean isClosed = tile.hasLevel() && CoffinBlock.isClosed(tile.getLevel(), tile.getBlockPos());
+        if (!isClosed) {
             tile.lidPos += 0.01;
         } else {
             tile.lidPos -= 0.01;

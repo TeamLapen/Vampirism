@@ -255,22 +255,24 @@ public class CoffinBlock extends VampirismBlockContainer {
                 pos = pos.relative(state.getValue(HORIZONTAL_FACING));
                 state = worldIn.getBlockState(pos);
                 if (!state.is(this)) {
-                    return ActionResultType.SUCCESS;
+                    return ActionResultType.CONSUME;
                 }
             }
 
             if (player.isShiftKeyDown() && !state.getValue(BedBlock.OCCUPIED)) {
                 worldIn.setBlock(pos, state.setValue(CLOSED, !state.getValue(CLOSED)), 3);
-                return ActionResultType.SUCCESS;
+                BlockPos otherPos = pos.relative(state.getValue(HorizontalBlock.FACING).getOpposite());
+                worldIn.setBlock(otherPos, worldIn.getBlockState(otherPos).setValue(CLOSED, !state.getValue(CLOSED)),3);
+                return ActionResultType.CONSUME;
             } else if (VampirismPlayerAttributes.get(player).vampireLevel == 0) {
                 player.displayClientMessage(new TranslationTextComponent("text.vampirism.coffin.cant_use"), true);
-                return ActionResultType.SUCCESS;
+                return ActionResultType.CONSUME;
             } else if (state.getValue(BedBlock.OCCUPIED)) {
                 player.displayClientMessage(new TranslationTextComponent("text.vampirism.coffin.occupied"), true);
-                return ActionResultType.SUCCESS;
+                return ActionResultType.CONSUME;
             } else if (state.getValue(CLOSED)) {
                 player.displayClientMessage(new TranslationTextComponent("text.vampirism.coffin.closed"), true);
-                return ActionResultType.SUCCESS;
+                return ActionResultType.CONSUME;
             }
 
             if (!BedBlock.canSetSpawn(worldIn)) {
@@ -281,10 +283,10 @@ public class CoffinBlock extends VampirismBlockContainer {
                 }
 
                 worldIn.explode(null, DamageSource.badRespawnPointExplosion(), null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, Explosion.Mode.DESTROY);
-                return ActionResultType.SUCCESS;
+                return ActionResultType.CONSUME;
             } else if (state.getValue(BedBlock.OCCUPIED)) {
                 player.displayClientMessage(new TranslationTextComponent("text.vampirism.coffin.occupied"), true);
-                return ActionResultType.SUCCESS;
+                return ActionResultType.CONSUME;
             } else {
                 final BlockPos finalPos = pos;
                 player.startSleepInBed(pos).ifLeft(sleepResult1 -> {
@@ -294,7 +296,7 @@ public class CoffinBlock extends VampirismBlockContainer {
                 }).ifRight(u -> {
                     setCoffinSleepPosition(player, finalPos);
                 });
-                return ActionResultType.SUCCESS;
+                return ActionResultType.CONSUME;
             }
         }
     }
