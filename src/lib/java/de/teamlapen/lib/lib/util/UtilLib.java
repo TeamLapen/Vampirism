@@ -806,4 +806,8 @@ public class UtilLib {
         HUNDRED_EIGHTY,
         TWO_HUNDRED_SEVENTY
     }
+
+    public static ResourceLocation amend(ResourceLocation original, String amendment) {
+        return new ResourceLocation(original.getNamespace(), original.getPath() + amendment);
+    }
 }

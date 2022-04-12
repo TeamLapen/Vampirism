@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.DyeColor;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -36,14 +35,10 @@ import javax.annotation.Nonnull;
 @OnlyIn(Dist.CLIENT)
 public class CoffinTESR extends VampirismTESR<CoffinTileEntity> {
     private static final Marker COFFIN = new MarkerManager.Log4jMarker("COFFIN");
-    private final ResourceLocation[] textures = new ResourceLocation[DyeColor.values().length];
     private final Logger LOGGER = LogManager.getLogger();
 
     public CoffinTESR(TileEntityRendererDispatcher dispatcher) {
         super(dispatcher);
-        for (DyeColor e : DyeColor.values()) {
-            textures[e.getId()] = new ResourceLocation(REFERENCE.MODID, "textures/block/coffin/coffin_" + e.getSerializedName() + ".png");
-        }
     }
 
     @Override
@@ -89,7 +84,7 @@ public class CoffinTESR extends VampirismTESR<CoffinTileEntity> {
                 matrixStack.translate(-1,0,-2);
                 break;
         }
-        IBakedModel baseModel = Minecraft.getInstance().getModelManager().getModel( new ResourceLocation(REFERENCE.MODID, "block/coffin_bottom"));
+        IBakedModel baseModel = Minecraft.getInstance().getModelManager().getModel(new ResourceLocation(REFERENCE.MODID, "block/coffin_bottom/red"));
         Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(matrixStack.last(), iRenderTypeBuffer.getBuffer(RenderTypeLookup.getRenderType(state,false)), state, baseModel, 1,1,1,i, i1, EmptyModelData.INSTANCE);
 
         matrixStack.pushPose();

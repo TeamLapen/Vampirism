@@ -21,7 +21,8 @@
   ],
   "client": [
     "client.AgeableModelAccessor",
-    "client.BossOverlayGuiAccessor"
+    "client.BossOverlayGuiAccessor",
+    "client.ModelBakeryMixin"
   ],
   "injectors": {
     "defaultRequire": 1

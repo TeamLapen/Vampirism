@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.core;
 
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Either;
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.AltarInspirationBlock;
@@ -16,13 +17,12 @@ import de.teamlapen.vampirism.effects.VampirismPotion;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.proxy.ClientProxy;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.client.renderer.model.BlockModel;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.IUnbakedModel;
-import net.minecraft.client.renderer.model.ModelRotation;
+import net.minecraft.client.renderer.model.*;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
+import net.minecraft.item.DyeColor;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Potion;
@@ -36,6 +36,7 @@ import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.SimpleModelTransform;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -44,13 +45,16 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Handle general client side events
  */
 @OnlyIn(Dist.CLIENT)
 public class ClientEventHandler {
+    public static final ResourceLocation COFFIN_SHEET = new ResourceLocation(REFERENCE.MODID, "textures/atlas/coffins.png");
     private final static Logger LOGGER = LogManager.getLogger();
+
 
     @SubscribeEvent
     public static void onModelBakeEvent(ModelBakeEvent event) {
@@ -152,6 +156,26 @@ public class ClientEventHandler {
         } catch (Exception e) {
             LOGGER.error("Failed to load fluid models for weapon crafting table", e);
 
+        }
+
+        try {
+            ResourceLocation coffinLoc = new ResourceLocation(REFERENCE.MODID, "block/coffin_bottom");
+            IUnbakedModel coffinModel = event.getModelLoader().getModel(coffinLoc);
+
+            for (DyeColor dye : DyeColor.values()) {
+                ResourceLocation loc = UtilLib.amend(coffinLoc, "/" + dye.getName());
+                Function<RenderMaterial, TextureAtlasSprite> textureGetter = ModelLoader.defaultTextureGetter();
+                IBakedModel baked = coffinModel.bake(event.getModelLoader(), material -> {
+                    if (material.texture().equals(new ResourceLocation(REFERENCE.MODID, "block/coffin"))) {
+                        material = new RenderMaterial(material.atlasLocation(), new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_" + dye.getName()));
+                    }
+                    return textureGetter.apply(material);
+                } ,SimpleModelTransform.IDENTITY, loc);
+                event.getModelRegistry().put(loc, baked);
+            }
+
+        } catch (Exception e){
+            LOGGER.error("Failed to create Coffin Models", e);
         }
     }
 
