@@ -84,7 +84,7 @@ public class CoffinTESR extends VampirismTESR<CoffinTileEntity> {
                 matrixStack.translate(-1,0,-2);
                 break;
         }
-        IBakedModel baseModel = Minecraft.getInstance().getModelManager().getModel(new ResourceLocation(REFERENCE.MODID, "block/coffin_bottom/red"));
+        IBakedModel baseModel = Minecraft.getInstance().getModelManager().getModel(new ResourceLocation(REFERENCE.MODID, "block/coffin_bottom/" + tile.color.getName()));
         Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(matrixStack.last(), iRenderTypeBuffer.getBuffer(RenderTypeLookup.getRenderType(state,false)), state, baseModel, 1,1,1,i, i1, EmptyModelData.INSTANCE);
 
         matrixStack.pushPose();
