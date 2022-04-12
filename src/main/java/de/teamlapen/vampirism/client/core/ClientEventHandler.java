@@ -159,18 +159,33 @@ public class ClientEventHandler {
         }
 
         try {
-            ResourceLocation coffinLoc = new ResourceLocation(REFERENCE.MODID, "block/coffin_bottom");
-            IUnbakedModel coffinModel = event.getModelLoader().getModel(coffinLoc);
+            ResourceLocation coffinBottomLoc = new ResourceLocation(REFERENCE.MODID, "block/coffin_bottom");
+            IUnbakedModel coffinBottomModel = event.getModelLoader().getModel(coffinBottomLoc);
 
             for (DyeColor dye : DyeColor.values()) {
-                ResourceLocation loc = UtilLib.amend(coffinLoc, "/" + dye.getName());
+                ResourceLocation loc = UtilLib.amend(coffinBottomLoc, "/" + dye.getName());
                 Function<RenderMaterial, TextureAtlasSprite> textureGetter = ModelLoader.defaultTextureGetter();
-                IBakedModel baked = coffinModel.bake(event.getModelLoader(), material -> {
+                IBakedModel baked = coffinBottomModel.bake(event.getModelLoader(), material -> {
                     if (material.texture().equals(new ResourceLocation(REFERENCE.MODID, "block/coffin"))) {
                         material = new RenderMaterial(material.atlasLocation(), new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_" + dye.getName()));
                     }
                     return textureGetter.apply(material);
-                } ,SimpleModelTransform.IDENTITY, loc);
+                }, SimpleModelTransform.IDENTITY, loc);
+                event.getModelRegistry().put(loc, baked);
+            }
+
+            ResourceLocation coffinTopLoc = new ResourceLocation(REFERENCE.MODID, "block/coffin_top");
+            IUnbakedModel coffinTopModel = event.getModelLoader().getModel(coffinTopLoc);
+
+            for (DyeColor dye : DyeColor.values()) {
+                ResourceLocation loc = UtilLib.amend(coffinTopLoc, "/" + dye.getName());
+                Function<RenderMaterial, TextureAtlasSprite> textureGetter = ModelLoader.defaultTextureGetter();
+                IBakedModel baked = coffinTopModel.bake(event.getModelLoader(), material -> {
+                    if (material.texture().equals(new ResourceLocation(REFERENCE.MODID, "block/coffin"))) {
+                        material = new RenderMaterial(material.atlasLocation(), new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_" + dye.getName()));
+                    }
+                    return textureGetter.apply(material);
+                }, SimpleModelTransform.IDENTITY, loc);
                 event.getModelRegistry().put(loc, baked);
             }
 
