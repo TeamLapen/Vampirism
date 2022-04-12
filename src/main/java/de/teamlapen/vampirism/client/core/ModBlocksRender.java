@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.blocks.TotemTopBlock;
 import de.teamlapen.vampirism.client.render.tiles.*;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -96,7 +97,7 @@ public class ModBlocksRender {
         RenderTypeLookup.setRenderLayer(ModBlocks.totem_top_vampirism_hunter, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.totem_top_vampirism_vampire, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.blood_grinder, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.coffin, cutout);
+        CoffinBlock.COFFIN_BLOCKS.values().forEach(coffin -> RenderTypeLookup.setRenderLayer(coffin, cutout));
         RenderTypeLookup.setRenderLayer(ModBlocks.hunter_table, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.med_chair, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.weapon_table, cutout);

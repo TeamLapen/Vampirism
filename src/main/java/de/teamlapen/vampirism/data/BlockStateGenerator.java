@@ -51,7 +51,7 @@ public class BlockStateGenerator extends BlockStateProvider {
         simpleBlock(ModBlocks.cursed_earth);
         simpleBlock(ModBlocks.sunscreen_beacon, models().withExistingParent("vampirism:block/sunscreen_beacon", "minecraft:block/beacon").texture("beacon", "vampirism:block/cursed_earth"));
         BlockModelBuilder builder1 = models().getBuilder("vampirism:block/empty").texture("particle", "minecraft:block/spruce_planks");
-        getVariantBuilder(ModBlocks.coffin).forAllStates(state -> ConfiguredModel.builder().modelFile(builder1).build());
+        CoffinBlock.COFFIN_BLOCKS.values().forEach(coffin -> getVariantBuilder(coffin).forAllStates(state -> ConfiguredModel.builder().modelFile(builder1).build()));
         simpleBlock(ModBlocks.vampire_orchid, models().cross("vampire_orchid", modLoc("block/vampire_orchid")));
         simpleBlock(ModBlocks.totem_top, models().getExistingFile(modLoc("block/totem_top")));
         simpleBlock(ModBlocks.totem_top_crafted, models().getExistingFile(modLoc("block/totem_top_crafted")));

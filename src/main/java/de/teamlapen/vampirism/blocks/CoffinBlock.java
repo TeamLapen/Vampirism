@@ -14,7 +14,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.DyeColor;
-import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
@@ -35,6 +34,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.Map;
 
 import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
@@ -44,6 +44,7 @@ import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FAC
  */
 public class CoffinBlock extends VampirismBlockContainer {
 
+    public static final Map<DyeColor, CoffinBlock> COFFIN_BLOCKS = new HashMap<>();
     public static final String name = "coffin";
     public static final EnumProperty<CoffinPart> PART = EnumProperty.create("part", CoffinPart.class);
     public static final BooleanProperty CLOSED = BooleanProperty.create("closed");
@@ -146,10 +147,13 @@ public class CoffinBlock extends VampirismBlockContainer {
         shapes = shapeBuilder.build();
     }
 
-    public CoffinBlock() {
-        super(name, Properties.of(Material.WOOD).strength(0.2f).noOcclusion());
-        this.registerDefaultState(this.getStateDefinition().any().setValue(BedBlock.OCCUPIED, Boolean.FALSE).setValue(PART, CoffinPart.FOOT).setValue(HORIZONTAL_FACING, Direction.NORTH).setValue(CLOSED, false));
+    private final DyeColor color;
 
+    public CoffinBlock(DyeColor color) {
+        super(name + "_" + color.getName(), Properties.of(Material.WOOD).strength(0.2f).noOcclusion());
+        this.registerDefaultState(this.getStateDefinition().any().setValue(BedBlock.OCCUPIED, Boolean.FALSE).setValue(PART, CoffinPart.FOOT).setValue(HORIZONTAL_FACING, Direction.NORTH).setValue(CLOSED, false));
+        this.color = color;
+        COFFIN_BLOCKS.put(color, this);
     }
 
     @Override
@@ -199,7 +203,7 @@ public class CoffinBlock extends VampirismBlockContainer {
 
     @Override
     public TileEntity newBlockEntity(@Nonnull IBlockReader worldIn) {
-        return new CoffinTileEntity();
+        return new CoffinTileEntity(false, color);
     }
 
     @Override
@@ -247,23 +251,6 @@ public class CoffinBlock extends VampirismBlockContainer {
         if (worldIn.isClientSide) {
             return ActionResultType.SUCCESS;
         } else {
-            ItemStack heldItem = player.getItemInHand(hand);
-            if (!heldItem.isEmpty()) {
-                DyeColor color = heldItem.getItem() instanceof DyeItem ? ((DyeItem) heldItem.getItem()).getDyeColor() : UtilLib.getColorForItem(heldItem.getItem());
-                if (color != null) {
-                    TileEntity tile = worldIn.getBlockEntity(pos);
-                    TileEntity other = state.getValue(PART) == CoffinPart.HEAD ? worldIn.getBlockEntity(pos.relative(state.getValue(HORIZONTAL_FACING).getOpposite())) : worldIn.getBlockEntity(pos.relative(state.getValue(HORIZONTAL_FACING)));
-                    if (!(tile instanceof CoffinTileEntity) || !(other instanceof CoffinTileEntity)) {
-                        return ActionResultType.SUCCESS;
-                    }
-                    ((CoffinTileEntity) tile).changeColor(color);
-                    ((CoffinTileEntity) other).changeColor(color);
-                    if (!player.abilities.instabuild) {
-                        heldItem.shrink(1);
-                    }
-                    return ActionResultType.SUCCESS;
-                }
-            }
             if (state.getValue(PART) != CoffinPart.HEAD) {
                 pos = pos.relative(state.getValue(HORIZONTAL_FACING));
                 state = worldIn.getBlockState(pos);
@@ -328,6 +315,9 @@ public class CoffinBlock extends VampirismBlockContainer {
         builder.add(HORIZONTAL_FACING, BedBlock.OCCUPIED, PART, CLOSED);
     }
 
+    public DyeColor getColor() {
+        return color;
+    }
 
     public enum CoffinPart implements IStringSerializable {
         HEAD("head"),

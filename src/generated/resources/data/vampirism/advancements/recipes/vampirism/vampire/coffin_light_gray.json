@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "vampirism:vampire/coffin"
+      "vampirism:vampire/coffin_light_gray"
     ]
   },
   "criteria": {
@@ -11,7 +11,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "minecraft:wool"
+            "item": "minecraft:light_gray_wool"
           }
         ]
       }
@@ -19,7 +19,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "vampirism:vampire/coffin"
+        "recipe": "vampirism:vampire/coffin_light_gray"
       }
     }
   },

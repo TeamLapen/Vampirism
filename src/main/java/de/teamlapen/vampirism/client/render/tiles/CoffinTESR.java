@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.client.render.tiles;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
-import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.tileentity.CoffinTileEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
@@ -98,10 +97,11 @@ public class CoffinTESR extends VampirismTESR<CoffinTileEntity> {
     }
 
     public void renderItem(CoffinTileEntity tile, float partialTicks, @Nonnull MatrixStack matrixStack, @Nonnull IRenderTypeBuffer iRenderTypeBuffer, int i, int i1) {
-        BlockState state = ModBlocks.coffin.defaultBlockState();
+        BlockState state = CoffinBlock.COFFIN_BLOCKS.get(tile.color).defaultBlockState();
+
 
         matrixStack.pushPose();
-        IBakedModel model = Minecraft.getInstance().getModelManager().getModel(new ResourceLocation(REFERENCE.MODID, "block/coffin"));
+        IBakedModel model = Minecraft.getInstance().getModelManager().getModel(new ResourceLocation(REFERENCE.MODID, "block/coffin_bottom/" + tile.color.getName()));
         Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(matrixStack.last(), iRenderTypeBuffer.getBuffer(RenderTypeLookup.getRenderType(state,false)), state, model, 1,1,1,i, i1, EmptyModelData.INSTANCE);
         matrixStack.popPose();
     }

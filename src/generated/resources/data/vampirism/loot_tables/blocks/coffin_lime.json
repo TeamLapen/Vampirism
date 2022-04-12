@@ -9,13 +9,13 @@
           "conditions": [
             {
               "condition": "minecraft:block_state_property",
-              "block": "vampirism:coffin",
+              "block": "vampirism:coffin_lime",
               "properties": {
                 "part": "head"
               }
             }
           ],
-          "name": "vampirism:coffin"
+          "name": "vampirism:coffin_lime"
         }
       ],
       "conditions": [

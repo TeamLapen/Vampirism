@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 public class CoffinTileEntity extends TileEntity implements ITickableTileEntity {
     public final boolean renderAsItem;
     public float lidPos;
-    public DyeColor color = DyeColor.BLACK;
+    public DyeColor color = DyeColor.RED;
     private boolean lastTickOccupied;
 
     public CoffinTileEntity() {
@@ -32,19 +32,10 @@ public class CoffinTileEntity extends TileEntity implements ITickableTileEntity 
         this.renderAsItem = false;
     }
 
-    public CoffinTileEntity(boolean renderAsItem) {
+    public CoffinTileEntity(boolean renderAsItem, DyeColor color) {
         super(ModTiles.coffin);
         this.renderAsItem = renderAsItem;
-    }
-
-    public CoffinTileEntity(DyeColor color) {
-        this();
-        this.changeColor(color);
-    }
-
-    public void changeColor(DyeColor color) {
         this.color = color;
-        setChanged();
     }
 
     @Override
@@ -87,8 +78,9 @@ public class CoffinTileEntity extends TileEntity implements ITickableTileEntity 
     @Override
     public void setChanged() {
         super.setChanged();
-        if (level != null)
+        if (level != null) {
             level.sendBlockUpdated(getBlockPos(), level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
+        }
     }
 
     @Override

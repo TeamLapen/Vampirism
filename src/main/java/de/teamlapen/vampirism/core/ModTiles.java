@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.blocks.TotemTopBlock;
 import de.teamlapen.vampirism.mixin.TileEntityTypeAccessor;
 import de.teamlapen.vampirism.tileentity.*;
@@ -22,7 +23,7 @@ public class ModTiles {
 
     public static final TileEntityType<AlchemicalCauldronTileEntity> alchemical_cauldron = getNull();
     public static final TileEntityType<TentTileEntity> tent = getNull();
-    public static final TileEntityType<CoffinTileEntity> coffin = getNull();
+    public static final TileEntityType<CoffinTileEntity> coffin = (TileEntityType<CoffinTileEntity>) create("coffin", CoffinTileEntity::new, CoffinBlock.COFFIN_BLOCKS.values().toArray(new Block[0]));
     public static final TileEntityType<AltarInfusionTileEntity> altar_infusion = getNull();
     public static final TileEntityType<BloodContainerTileEntity> blood_container = getNull();
     public static final TileEntityType<AltarInspirationTileEntity> altar_inspiration = getNull();
@@ -36,7 +37,7 @@ public class ModTiles {
 
     static void registerTiles(IForgeRegistry<TileEntityType<?>> registry) {
         registry.register(create("tent", TentTileEntity::new, ModBlocks.tent_main));
-        registry.register(create("coffin", CoffinTileEntity::new, ModBlocks.coffin));
+        registry.register(coffin);
         registry.register(create("altar_infusion", AltarInfusionTileEntity::new, ModBlocks.altar_infusion));
         registry.register(create("blood_container", BloodContainerTileEntity::new, ModBlocks.blood_container));
         registry.register(create("altar_inspiration", AltarInspirationTileEntity::new, ModBlocks.altar_inspiration));

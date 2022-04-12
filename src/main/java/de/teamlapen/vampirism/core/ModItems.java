@@ -456,6 +456,8 @@ public class ModItems {
                 case "vampirism:bloody_spruce_leaves":
                     missingMapping.remap(dark_spruce_leaves);
                     break;
+                case "vampirism:coffin":
+                    missingMapping.remap(Item.byBlock(ModBlocks.coffin_red));
             }
             if(missingMapping.key.toString().startsWith("vampirism:obsidian_armor")){
                 Item hunterArmorReplacement = event.getRegistry().getValue(new ResourceLocation(missingMapping.key.toString().replace("obsidian_armor","hunter_coat")));
