@@ -90,6 +90,8 @@
   "text.vampirism.actions.bind_action": "Bound action %s to action key %s",
   "text.vampirism.warning_optifine_bloodvision": "You appear to be running Optifine with shaders. Blood vision won't work with that. Therefore a substitute glowing effect is used. Not all shaders actually render the glowing effect though.",
   "text.vampirism.decorative_only": "Decorative block",
+  "text.vampirism.oil.applied_to": "Can be Applied to:",
+  "text.vampirism.oil.when_applied": "When Applied:",
   "__comment": "block interaction texts",
   "text.vampirism.med_chair_other_faction": "You cannot become a Hunter since you already are a %s",
   "__comment": "faction item texts",
@@ -750,6 +752,7 @@
   "item.vampirism.crucifix_normal": "Wooden crucifix",
   "item.vampirism.crucifix_enhanced": "Iron crucifix",
   "item.vampirism.crucifix_ultimate": "Golden crucifix",
+  "item.vampirism.oil_bottle": "Oil",
   "__comment": "Potion items",
   "item.minecraft.potion.effect.thirst": "Potion of Thirst",
   "item.minecraft.potion.effect.blindness": "Potion of Blindness",
@@ -1182,5 +1185,8 @@
   "text.vampirism.hunter_villager.decline_trade_normal": "Sorry, but my trades are only interesting for vampire hunters",
   "text.vampirism.vampire_villager.trade_successful": "Thank you for saving us from vampire hunters",
   "text.vampirism.vampire_villager.decline_trade_vampire": "I do not trade with wicked vampire hunters",
-  "text.vampirism.vampire_villager.decline_trade_normal": "Sorry, but my trades are only interesting for vampires"
+  "text.vampirism.vampire_villager.decline_trade_normal": "Sorry, but my trades are only interesting for vampires",
+  "__comment": "Oils",
+  "oil.vampirism.plant_oil": "Plant",
+  "oil.vampirism.empty": "Uncraftable"
 }

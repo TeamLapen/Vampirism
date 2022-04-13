@@ -319,6 +319,7 @@ public class ItemModelGenerator extends ItemModelProvider {
         withExistingParent(ModBlocks.dark_spruce_fence.asItem(), modLoc("block/dark_spruce_fence_inventory"));
         withExistingParent(ModBlocks.cursed_spruce_fence.asItem(), modLoc("block/cursed_spruce_fence_inventory"));
 
+        this.item(ModItems.oil_bottle, modLoc("item/oil_bottle"), modLoc("item/oil_bottle_overlay"));
     }
 
 }

@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
+import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.entity.action.EntityActions;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
@@ -275,5 +276,10 @@ public class RegistryManager implements IInitListener {
     @SubscribeEvent
     public void onTreeDecoratorType(RegistryEvent.Register<TreeDecoratorType<?>> event){
         ModFeatures.registerTreeDecoratorTypes(event.getRegistry());
+    }
+
+    @SubscribeEvent
+    public void onRegisterOil(RegistryEvent.Register<IOil> event) {
+        ModOils.register(event.getRegistry());
     }
 }

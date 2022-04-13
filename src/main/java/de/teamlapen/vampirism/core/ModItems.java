@@ -209,6 +209,8 @@ public class ModItems {
     public static final CrucifixItem crucifix_enhanced = getNull();
     public static final CrucifixItem crucifix_ultimate = getNull();
 
+    public static final OilItem oil_bottle = getNull();
+
     static void registerCraftingRecipes() {
         // Brewing
         BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER)), Ingredient.of(new ItemStack(holy_salt)), new ItemStack(holy_salt_water));
@@ -424,6 +426,8 @@ public class ModItems {
         registry.register(new CrucifixItem(IItemWithTier.TIER.NORMAL));
         registry.register(new CrucifixItem(IItemWithTier.TIER.ENHANCED));
         registry.register(new CrucifixItem(IItemWithTier.TIER.ULTIMATE));
+
+        registry.register(new OilItem(creativeTabProps().stacksTo(1)).setRegistryName(REFERENCE.MODID, "oil_bottle"));
 
         if (VampirismMod.inDataGen) {
             registry.register(new DummyItem().setRegistryName("guideapi-vp", "vampirism-guidebook"));
