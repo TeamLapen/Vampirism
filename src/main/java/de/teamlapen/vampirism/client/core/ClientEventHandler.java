@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.client.core;
 
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Either;
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.AltarInspirationBlock;
@@ -17,8 +16,10 @@ import de.teamlapen.vampirism.effects.VampirismPotion;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.proxy.ClientProxy;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.client.renderer.model.*;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.model.BlockModel;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.IUnbakedModel;
+import net.minecraft.client.renderer.model.ModelRotation;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
@@ -36,7 +37,6 @@ import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.client.model.SimpleModelTransform;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -45,7 +45,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.function.Function;
 
 /**
  * Handle general client side events
@@ -157,41 +156,6 @@ public class ClientEventHandler {
             LOGGER.error("Failed to load fluid models for weapon crafting table", e);
 
         }
-
-        try {
-            ResourceLocation coffinBottomLoc = new ResourceLocation(REFERENCE.MODID, "block/coffin_bottom");
-            IUnbakedModel coffinBottomModel = event.getModelLoader().getModel(coffinBottomLoc);
-
-            for (DyeColor dye : DyeColor.values()) {
-                ResourceLocation loc = UtilLib.amend(coffinBottomLoc, "/" + dye.getName());
-                Function<RenderMaterial, TextureAtlasSprite> textureGetter = ModelLoader.defaultTextureGetter();
-                IBakedModel baked = coffinBottomModel.bake(event.getModelLoader(), material -> {
-                    if (material.texture().equals(new ResourceLocation(REFERENCE.MODID, "block/coffin"))) {
-                        material = new RenderMaterial(material.atlasLocation(), new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_" + dye.getName()));
-                    }
-                    return textureGetter.apply(material);
-                }, SimpleModelTransform.IDENTITY, loc);
-                event.getModelRegistry().put(loc, baked);
-            }
-
-            ResourceLocation coffinTopLoc = new ResourceLocation(REFERENCE.MODID, "block/coffin_top");
-            IUnbakedModel coffinTopModel = event.getModelLoader().getModel(coffinTopLoc);
-
-            for (DyeColor dye : DyeColor.values()) {
-                ResourceLocation loc = UtilLib.amend(coffinTopLoc, "/" + dye.getName());
-                Function<RenderMaterial, TextureAtlasSprite> textureGetter = ModelLoader.defaultTextureGetter();
-                IBakedModel baked = coffinTopModel.bake(event.getModelLoader(), material -> {
-                    if (material.texture().equals(new ResourceLocation(REFERENCE.MODID, "block/coffin"))) {
-                        material = new RenderMaterial(material.atlasLocation(), new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_" + dye.getName()));
-                    }
-                    return textureGetter.apply(material);
-                }, SimpleModelTransform.IDENTITY, loc);
-                event.getModelRegistry().put(loc, baked);
-            }
-
-        } catch (Exception e){
-            LOGGER.error("Failed to create Coffin Models", e);
-        }
     }
 
     @SubscribeEvent
@@ -220,9 +184,11 @@ public class ClientEventHandler {
     }
 
     @SubscribeEvent
-    public static void onModelRegistry(ModelRegistryEvent event){
-        ModelLoader.addSpecialModel(new ResourceLocation(REFERENCE.MODID, "block/coffin_bottom"));
-        ModelLoader.addSpecialModel(new ResourceLocation(REFERENCE.MODID, "block/coffin_top"));
-        ModelLoader.addSpecialModel(new ResourceLocation(REFERENCE.MODID, "block/coffin"));
+    public static void onModelRegistry(ModelRegistryEvent event) {
+        for (DyeColor dye : DyeColor.values()) {
+            ModelLoader.addSpecialModel(new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_bottom_" + dye.getName()));
+            ModelLoader.addSpecialModel(new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_top_" + dye.getName()));
+            ModelLoader.addSpecialModel(new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_" + dye.getName()));
+        }
     }
 }

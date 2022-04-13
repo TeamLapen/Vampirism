@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.PressurePlateBlock;
 import net.minecraft.block.WoodButtonBlock;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.item.DyeColor;
 import net.minecraft.state.properties.AttachFace;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
@@ -242,6 +243,12 @@ public class BlockStateGenerator extends BlockStateProvider {
 
         horizontalBlock(ModBlocks.vampire_rack, models().getExistingFile(modLoc("block/vampire_rack")));
         horizontalBlock(ModBlocks.throne, models().getExistingFile(modLoc("block/throne")));
+
+        for (DyeColor dye : DyeColor.values()) {
+            models().withExistingParent(REFERENCE.MODID + ":block/coffin/coffin_" + dye.getName(),"vampirism:block/coffin").texture("0", "vampirism:block/coffin/coffin_" + dye.getName());
+            models().withExistingParent(REFERENCE.MODID + ":block/coffin/coffin_bottom_" + dye.getName(),"vampirism:block/coffin_bottom").texture("0", "vampirism:block/coffin/coffin_" + dye.getName());
+            models().withExistingParent(REFERENCE.MODID + ":block/coffin/coffin_top_" + dye.getName(),"vampirism:block/coffin_top").texture("0", "vampirism:block/coffin/coffin_" + dye.getName());
+        }
     }
 
     private void createWoodStates() {
