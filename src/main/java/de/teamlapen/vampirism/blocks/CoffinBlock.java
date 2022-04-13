@@ -1,8 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableTable;
-import com.google.common.collect.Table;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.tileentity.CoffinTileEntity;
@@ -30,7 +28,6 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.*;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -48,7 +45,8 @@ public class CoffinBlock extends VampirismBlockContainer {
     public static final String name = "coffin";
     public static final EnumProperty<CoffinPart> PART = EnumProperty.create("part", CoffinPart.class);
     public static final BooleanProperty CLOSED = BooleanProperty.create("closed");
-    private static final Table<Direction, Boolean, Pair<VoxelShape,VoxelShape>> shapes;
+    public static final BooleanProperty VERTICAL = BooleanProperty.create("vertical");
+    private static ShapeTable shapes = new ShapeTable();
     private static final Map<PlayerEntity.SleepResult, ITextComponent> sleepResults = ImmutableMap.of(PlayerEntity.SleepResult.NOT_POSSIBLE_NOW, new TranslationTextComponent("text.vampirism.coffin.no_sleep"), PlayerEntity.SleepResult.TOO_FAR_AWAY, new TranslationTextComponent("text.vampirism.coffin.too_far_away"), PlayerEntity.SleepResult.OBSTRUCTED, new TranslationTextComponent("text.vampirism.coffin.obstructed"));
 
     public static boolean isOccupied(IBlockReader world, BlockPos pos) {
@@ -70,88 +68,130 @@ public class CoffinBlock extends VampirismBlockContainer {
         return type == CoffinPart.FOOT ? facing : facing.getOpposite();
     }
 
-    static {
-        VoxelShape shape = VoxelShapes.empty();
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0, 0, 1, 0.0625, 2), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.90625, 0.0625, 0.046875, 0.96875, 0.1875, 1.96875), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.875, 0.1875, 1.375, 0.9375, 0.375, 1.875), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.875, 0.1875, 0.75, 0.9375, 0.375, 1.25), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.875, 0.1875, 0.125, 0.9375, 0.375, 0.625), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.25, 0.1875, 1.875, 0.75, 0.375, 1.9375), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.0625, 0.1875, 0.125, 0.125, 0.375, 0.625), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.0625, 0.1875, 0.75, 0.125, 0.375, 1.25), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.0625, 0.1875, 1.375, 0.125, 0.375, 1.875), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.25, 0.1875, 0.0625, 0.75, 0.375, 0.125), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.03125, 0.0625, 0.046875, 0.09375, 0.1875, 1.96875), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.09375, 0.0625, 1.921875, 0.90625, 0.1875, 1.96875), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.09375, 0.0625, 0.046875, 0.90625, 0.1875, 0.09375), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.90625, 0.1875, 1.875, 0.96875, 0.375, 1.96875), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.90625, 0.1875, 1.25, 0.96875, 0.375, 1.375), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.90625, 0.1875, 0.625, 0.96875, 0.375, 0.75), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.90625, 0.1875, 0.046875, 0.96875, 0.375, 0.125), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.03125, 0.1875, 0.046875, 0.09375, 0.375, 0.125), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.03125, 0.1875, 0.625, 0.09375, 0.375, 0.75), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.03125, 0.1875, 1.25, 0.09375, 0.375, 1.375), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.03125, 0.1875, 1.875, 0.09375, 0.375, 1.96875), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.09375, 0.1875, 1.921875, 0.25, 0.375, 1.96875), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.75, 0.1875, 1.921875, 0.90625, 0.375, 1.96875), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.75, 0.1875, 0.046875, 0.90625, 0.375, 0.09375), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.09375, 0.1875, 0.046875, 0.25, 0.375, 0.09375), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.09375, 0.375, 0.046875, 0.90625, 0.5, 0.09375), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.03125, 0.375, 0.046875, 0.09375, 0.5, 1.96875), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.09375, 0.375, 1.921875, 0.90625, 0.5, 1.96875), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.90625, 0.375, 0.046875, 0.96875, 0.5, 1.96875), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.90625, 0.5, 0, 1, 0.5625, 2), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0.5, 0, 0.09375, 0.5625, 2), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.09375, 0.5, 1.921875, 0.90625, 0.5625, 2), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.09375, 0.5, 0, 0.90625, 0.5625, 0.09375), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.09375, 0.0625, 0.09375, 0.140625, 0.546875, 1.921875), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.859375, 0.0625, 0.09375, 0.90625, 0.546875, 1.921875), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.140625, 0.0625, 1.859375, 0.859375, 0.546875, 1.921875), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.140625, 0.0625, 0.09375, 0.859375, 0.546875, 0.15625), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.1875, 0.125, 0.1875, 0.8125, 0.3125, 0.5), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.203125, 0.203125, 0.4375, 0.796875, 0.34375, 0.5625), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.203125, 0.203125, 0.171875, 0.796875, 0.328125, 0.296875), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.9375, 0.09375, 0.25, 1, 0.15625, 0.5), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.9375, 0.09375, 0.875, 1, 0.15625, 1.125), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.9375, 0.09375, 1.5, 1, 0.15625, 1.75), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0.09375, 1.5, 0.0625, 0.15625, 1.75), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0.09375, 0.875, 0.0625, 0.15625, 1.125), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0.09375, 0.25, 0.0625, 0.15625, 0.5), IBooleanFunction.OR);
+    public static class ShapeTable  {
 
-        VoxelShape lidShape = VoxelShapes.empty();
-        lidShape = VoxelShapes.join(lidShape, VoxelShapes.box(0, 0.5625, 0, 0.09375, 0.625, 2), IBooleanFunction.OR);
-        lidShape = VoxelShapes.join(lidShape, VoxelShapes.box(0.09375, 0.5625, 0, 0.90625, 0.625, 0.078125), IBooleanFunction.OR);
-        lidShape = VoxelShapes.join(lidShape, VoxelShapes.box(0.90625, 0.5625, 0, 1, 0.625, 2), IBooleanFunction.OR);
-        lidShape = VoxelShapes.join(lidShape, VoxelShapes.box(0.09375, 0.5625, 1.90625, 0.90625, 0.625, 2), IBooleanFunction.OR);
-        lidShape = VoxelShapes.join(lidShape, VoxelShapes.box(0.09375, 0.625, 0.078125, 0.90625, 0.6875, 1.9375), IBooleanFunction.OR);
+        private final VoxelShape[][][][] shapes;
+        public ShapeTable() {
+            this.shapes = buildShapes();
+        }
 
-        VoxelShape top = VoxelShapes.join(shape, VoxelShapes.box(0,0,0,1,1,1), IBooleanFunction.AND);
-        VoxelShape bottom = VoxelShapes.join(shape, VoxelShapes.box(0,0,1,1,1,2), IBooleanFunction.AND);
-        VoxelShape lidTop = VoxelShapes.join(lidShape, VoxelShapes.box(0,0,0,1,1,1), IBooleanFunction.AND);
-        VoxelShape lidBottom = VoxelShapes.join(lidShape, VoxelShapes.box(0,0,1,1,1,2), IBooleanFunction.AND);
+        public VoxelShape getShape(CoffinBlock.CoffinPart part, boolean closed, boolean vertical, Direction facing) {
+            return shapes[part.ordinal()][closed?1:0][vertical?1:0][facing.get2DDataValue()];
+        }
 
-        bottom = bottom.move(0,0,-1);
-        lidBottom = lidBottom.move(0,0,-1);
+        private VoxelShape[][][][] buildShapes() {
+            VoxelShape shape = VoxelShapes.empty();
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0, 0, 1, 0.0625, 2), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.90625, 0.0625, 0.046875, 0.96875, 0.1875, 1.96875), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.875, 0.1875, 1.375, 0.9375, 0.375, 1.875), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.875, 0.1875, 0.75, 0.9375, 0.375, 1.25), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.875, 0.1875, 0.125, 0.9375, 0.375, 0.625), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.25, 0.1875, 1.875, 0.75, 0.375, 1.9375), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.0625, 0.1875, 0.125, 0.125, 0.375, 0.625), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.0625, 0.1875, 0.75, 0.125, 0.375, 1.25), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.0625, 0.1875, 1.375, 0.125, 0.375, 1.875), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.25, 0.1875, 0.0625, 0.75, 0.375, 0.125), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.03125, 0.0625, 0.046875, 0.09375, 0.1875, 1.96875), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.09375, 0.0625, 1.921875, 0.90625, 0.1875, 1.96875), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.09375, 0.0625, 0.046875, 0.90625, 0.1875, 0.09375), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.90625, 0.1875, 1.875, 0.96875, 0.375, 1.96875), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.90625, 0.1875, 1.25, 0.96875, 0.375, 1.375), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.90625, 0.1875, 0.625, 0.96875, 0.375, 0.75), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.90625, 0.1875, 0.046875, 0.96875, 0.375, 0.125), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.03125, 0.1875, 0.046875, 0.09375, 0.375, 0.125), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.03125, 0.1875, 0.625, 0.09375, 0.375, 0.75), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.03125, 0.1875, 1.25, 0.09375, 0.375, 1.375), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.03125, 0.1875, 1.875, 0.09375, 0.375, 1.96875), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.09375, 0.1875, 1.921875, 0.25, 0.375, 1.96875), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.75, 0.1875, 1.921875, 0.90625, 0.375, 1.96875), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.75, 0.1875, 0.046875, 0.90625, 0.375, 0.09375), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.09375, 0.1875, 0.046875, 0.25, 0.375, 0.09375), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.09375, 0.375, 0.046875, 0.90625, 0.5, 0.09375), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.03125, 0.375, 0.046875, 0.09375, 0.5, 1.96875), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.09375, 0.375, 1.921875, 0.90625, 0.5, 1.96875), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.90625, 0.375, 0.046875, 0.96875, 0.5, 1.96875), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.90625, 0.5, 0, 1, 0.5625, 2), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0.5, 0, 0.09375, 0.5625, 2), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.09375, 0.5, 1.921875, 0.90625, 0.5625, 2), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.09375, 0.5, 0, 0.90625, 0.5625, 0.09375), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.09375, 0.0625, 0.09375, 0.140625, 0.546875, 1.921875), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.859375, 0.0625, 0.09375, 0.90625, 0.546875, 1.921875), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.140625, 0.0625, 1.859375, 0.859375, 0.546875, 1.921875), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.140625, 0.0625, 0.09375, 0.859375, 0.546875, 0.15625), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.1875, 0.125, 0.1875, 0.8125, 0.3125, 0.5), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.203125, 0.203125, 0.4375, 0.796875, 0.34375, 0.5625), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.203125, 0.203125, 0.171875, 0.796875, 0.328125, 0.296875), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.9375, 0.09375, 0.25, 1, 0.15625, 0.5), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.9375, 0.09375, 0.875, 1, 0.15625, 1.125), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.9375, 0.09375, 1.5, 1, 0.15625, 1.75), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0.09375, 1.5, 0.0625, 0.15625, 1.75), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0.09375, 0.875, 0.0625, 0.15625, 1.125), IBooleanFunction.OR);
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0.09375, 0.25, 0.0625, 0.15625, 0.5), IBooleanFunction.OR);
 
-        ImmutableTable.Builder<Direction, Boolean, Pair<VoxelShape,VoxelShape>> shapeBuilder = ImmutableTable.builder();
-        shapeBuilder.put(Direction.WEST, false, Pair.of(UtilLib.rotateShape(top, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY), UtilLib.rotateShape(bottom, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY)));
-        shapeBuilder.put(Direction.SOUTH, false, Pair.of(UtilLib.rotateShape(top, UtilLib.RotationAmount.HUNDRED_EIGHTY),UtilLib.rotateShape(bottom, UtilLib.RotationAmount.HUNDRED_EIGHTY)));
-        //noinspection SuspiciousNameCombination
-        shapeBuilder.put(Direction.NORTH, false, Pair.of(top, bottom));
-        shapeBuilder.put(Direction.EAST, false, Pair.of(UtilLib.rotateShape(top, UtilLib.RotationAmount.NINETY),UtilLib.rotateShape(bottom, UtilLib.RotationAmount.NINETY)));
-        shapeBuilder.put(Direction.WEST, true, Pair.of(UtilLib.rotateShape(VoxelShapes.or(top, lidTop), UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY),UtilLib.rotateShape(VoxelShapes.or(top, lidBottom), UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY)));
-        shapeBuilder.put(Direction.SOUTH, true, Pair.of(UtilLib.rotateShape(VoxelShapes.or(top, lidTop), UtilLib.RotationAmount.HUNDRED_EIGHTY),UtilLib.rotateShape(VoxelShapes.or(top, lidBottom), UtilLib.RotationAmount.HUNDRED_EIGHTY)));
-        shapeBuilder.put(Direction.NORTH, true, Pair.of(VoxelShapes.or(top, lidTop),VoxelShapes.or(bottom, lidBottom)));
-        shapeBuilder.put(Direction.EAST, true, Pair.of(UtilLib.rotateShape(VoxelShapes.or(top, lidTop), UtilLib.RotationAmount.NINETY),UtilLib.rotateShape(VoxelShapes.or(top, lidBottom), UtilLib.RotationAmount.NINETY)));
-        shapes = shapeBuilder.build();
+            VoxelShape lidShape = VoxelShapes.empty();
+            lidShape = VoxelShapes.join(lidShape, VoxelShapes.box(0, 0.5625, 0, 0.09375, 0.625, 2), IBooleanFunction.OR);
+            lidShape = VoxelShapes.join(lidShape, VoxelShapes.box(0.09375, 0.5625, 0, 0.90625, 0.625, 0.078125), IBooleanFunction.OR);
+            lidShape = VoxelShapes.join(lidShape, VoxelShapes.box(0.90625, 0.5625, 0, 1, 0.625, 2), IBooleanFunction.OR);
+            lidShape = VoxelShapes.join(lidShape, VoxelShapes.box(0.09375, 0.5625, 1.90625, 0.90625, 0.625, 2), IBooleanFunction.OR);
+            lidShape = VoxelShapes.join(lidShape, VoxelShapes.box(0.09375, 0.625, 0.078125, 0.90625, 0.6875, 1.9375), IBooleanFunction.OR);
+
+            VoxelShape head = VoxelShapes.join(shape, VoxelShapes.box(0,0,0,1,1,1), IBooleanFunction.AND);
+            VoxelShape foot = VoxelShapes.join(shape, VoxelShapes.box(0,0,1,1,1,2), IBooleanFunction.AND).move(0,0,-1);
+            VoxelShape lidHead = VoxelShapes.join(lidShape, VoxelShapes.box(0,0,0,1,1,1), IBooleanFunction.AND);
+            VoxelShape lidFoot = VoxelShapes.join(lidShape, VoxelShapes.box(0,0,1,1,1,2), IBooleanFunction.AND).move(0,0,-1);
+
+            VoxelShape[][][][] shapes = new VoxelShape[2][][][];
+            shapes[CoffinPart.HEAD.ordinal()] = buildShapePart(head, lidHead);
+            shapes[CoffinPart.FOOT.ordinal()] = buildShapePart(foot, lidFoot);
+            return shapes;
+        }
+        private VoxelShape[][][] buildShapePart(VoxelShape shape, VoxelShape shapeLid) {
+            VoxelShape[][][] shapes = new VoxelShape[2][][];
+            shapes[0] = buildShapeClosed(shape, shapeLid, false);
+            shapes[1] = buildShapeClosed(shape, shapeLid, true);
+            return shapes;
+        }
+        private VoxelShape[][] buildShapeClosed(VoxelShape shape, VoxelShape shapeLid, boolean closed) {
+            if (closed) {
+                shape = VoxelShapes.or(shape, shapeLid);
+            }
+            VoxelShape[][] shapes = new VoxelShape[2][];
+            shapes[0] = buildShapeVertical(shape,false);
+            shapes[1] = buildShapeVertical(shape, true);
+            return shapes;
+        }
+        private VoxelShape[] buildShapeVertical(VoxelShape shape, boolean vertical) {
+            if (vertical) {
+                shape = UtilLib.rollShape(shape, Direction.NORTH);
+            }
+            VoxelShape[] shapes = new VoxelShape[4];
+            VoxelShape finalShape = shape;
+            Direction.Plane.HORIZONTAL.stream().forEach(dir -> {
+                shapes[dir.get2DDataValue()] = buildShapeDirectional(finalShape, dir);
+            });
+            return shapes;
+        }
+        private VoxelShape buildShapeDirectional(VoxelShape shape, Direction direction){
+            switch (direction){
+                case NORTH:
+                    return shape;
+                case EAST:
+                    return UtilLib.rotateShape(shape, UtilLib.RotationAmount.NINETY);
+                case SOUTH:
+                    return UtilLib.rotateShape(shape, UtilLib.RotationAmount.HUNDRED_EIGHTY);
+                case WEST:
+                    return UtilLib.rotateShape(shape, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY);
+                default:
+                    throw new IllegalArgumentException("Wrong direction argument");
+            }
+        }
     }
 
     private final DyeColor color;
 
     public CoffinBlock(DyeColor color) {
         super(name + "_" + color.getName(), Properties.of(Material.WOOD).strength(0.2f).noOcclusion());
-        this.registerDefaultState(this.getStateDefinition().any().setValue(BedBlock.OCCUPIED, Boolean.FALSE).setValue(PART, CoffinPart.FOOT).setValue(HORIZONTAL_FACING, Direction.NORTH).setValue(CLOSED, false));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(BedBlock.OCCUPIED, Boolean.FALSE).setValue(PART, CoffinPart.FOOT).setValue(HORIZONTAL_FACING, Direction.NORTH).setValue(CLOSED, false).setValue(VERTICAL, false));
         this.color = color;
         COFFIN_BLOCKS.put(color, this);
     }
@@ -177,9 +217,10 @@ public class CoffinBlock extends VampirismBlockContainer {
     @Nullable
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         Direction enumfacing = context.getHorizontalDirection();
+        boolean vertical = context.getClickedFace().getAxis() != Direction.Axis.Y;
         BlockPos blockpos = context.getClickedPos();
-        BlockPos blockpos1 = blockpos.relative(enumfacing);
-        return context.getLevel().getBlockState(blockpos1).canBeReplaced(context) ? this.defaultBlockState().setValue(HORIZONTAL_FACING, enumfacing) : null;
+        BlockPos blockpos1 = blockpos.relative(vertical ? Direction.UP : enumfacing);
+        return context.getLevel().getBlockState(blockpos1).canBeReplaced(context) ? this.defaultBlockState().setValue(HORIZONTAL_FACING, enumfacing).setValue(VERTICAL, vertical) : null;
     }
 
     @Override
@@ -190,9 +231,7 @@ public class CoffinBlock extends VampirismBlockContainer {
     @Nonnull
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        Direction facing = state.getValue(HORIZONTAL_FACING);
-        Pair<VoxelShape,VoxelShape> shape = shapes.get(facing, state.getValue(CLOSED));
-        return state.getValue(PART) == CoffinPart.FOOT ? shape.getRight() : shape.getLeft();
+        return shapes.getShape(state.getValue(PART), state.getValue(CLOSED), state.getValue(VERTICAL), state.getValue(HORIZONTAL_FACING));
     }
 
 
@@ -228,7 +267,7 @@ public class CoffinBlock extends VampirismBlockContainer {
     public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack itemStack) {
         super.setPlacedBy(worldIn, pos, state, entity, itemStack);
         if (!worldIn.isClientSide) {
-            BlockPos blockpos = pos.relative(state.getValue(HORIZONTAL_FACING));
+            BlockPos blockpos = pos.relative(state.getValue(VERTICAL) ? Direction.UP : state.getValue(HORIZONTAL_FACING));
             worldIn.setBlock(blockpos, state.setValue(PART, CoffinPart.HEAD), 3);
             worldIn.blockUpdated(pos, Blocks.AIR);
             state.updateNeighbourShapes(worldIn, pos, 3);
@@ -314,7 +353,7 @@ public class CoffinBlock extends VampirismBlockContainer {
 
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(HORIZONTAL_FACING, BedBlock.OCCUPIED, PART, CLOSED);
+        builder.add(HORIZONTAL_FACING, BedBlock.OCCUPIED, PART, CLOSED, VERTICAL);
     }
 
     public DyeColor getColor() {

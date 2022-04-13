@@ -66,23 +66,41 @@ public class CoffinTESR extends VampirismTESR<CoffinTileEntity> {
         tile.lidPos = MathHelper.clamp(tile.lidPos, 0, 1);
 
         matrixStack.pushPose();
+        boolean vertical = state.getValue(CoffinBlock.VERTICAL);
         switch (direction){
             case EAST:
+                if (vertical) {
+                    matrixStack.mulPose(new Quaternion(new Vector3f(0, 0, 1), 90, true));
+                    matrixStack.translate(0, -1, 0);
+                }
                 matrixStack.mulPose(new Quaternion(new Vector3f(0,1,0), 90, true));
                 matrixStack.translate(-1,0,-1);
                 break;
             case WEST:
+                if (vertical) {
+                    matrixStack.mulPose(new Quaternion(new Vector3f(0, 0, 1), -90, true));
+                    matrixStack.translate(-1, 0, 0);
+                }
                 matrixStack.mulPose(new Quaternion(new Vector3f(0,1,0), -90, true));
                 matrixStack.translate(0,0,-2);
                 break;
             case SOUTH:
+                if (vertical) {
+                    matrixStack.mulPose(new Quaternion(new Vector3f(1, 0, 0), -90, true));
+                    matrixStack.translate(0, -1, 0);
+                }
                 matrixStack.translate(0,0,-1);
                 break;
             case NORTH:
+                if (vertical) {
+                    matrixStack.mulPose(new Quaternion(new Vector3f(1, 0, 0), 90, true));
+                    matrixStack.translate(0, 0, -1);
+                }
                 matrixStack.mulPose(new Quaternion(new Vector3f(0,1,0), 180, true));
                 matrixStack.translate(-1,0,-2);
                 break;
         }
+
         IBakedModel baseModel = Minecraft.getInstance().getModelManager().getModel(new ResourceLocation(REFERENCE.MODID, "block/coffin_bottom/" + tile.color.getName()));
         Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(matrixStack.last(), iRenderTypeBuffer.getBuffer(RenderTypeLookup.getRenderType(state,false)), state, baseModel, 1,1,1,i, i1, EmptyModelData.INSTANCE);
 
