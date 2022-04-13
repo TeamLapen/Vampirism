@@ -9,6 +9,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.DyeColor;
@@ -66,6 +67,222 @@ public class CoffinBlock extends VampirismBlockContainer {
 
     private static Direction getDirectionToOther(CoffinPart type, Direction facing) {
         return type == CoffinPart.FOOT ? facing : facing.getOpposite();
+    }
+
+    private final DyeColor color;
+
+    public CoffinBlock(DyeColor color) {
+        super(name + "_" + color.getName(), Properties.of(Material.WOOD).strength(0.2f).noOcclusion());
+        this.registerDefaultState(this.getStateDefinition().any().setValue(BedBlock.OCCUPIED, Boolean.FALSE).setValue(PART, CoffinPart.FOOT).setValue(HORIZONTAL_FACING, Direction.NORTH).setValue(CLOSED, false).setValue(VERTICAL, false));
+        this.color = color;
+        COFFIN_BLOCKS.put(color, this);
+    }
+
+    @Override
+    public Direction getBedDirection(BlockState state, IWorldReader world, BlockPos pos) {
+        return state.getValue(HORIZONTAL_FACING);
+    }
+
+    @Nonnull
+    @Override
+    public PushReaction getPistonPushReaction(BlockState state) {
+        return PushReaction.DESTROY;
+    }
+
+    @Nonnull
+    @Override
+    public BlockRenderType getRenderShape(BlockState state) {
+        return BlockRenderType.ENTITYBLOCK_ANIMATED;
+    }
+
+    @Override
+    @Nullable
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        Direction enumfacing = context.getHorizontalDirection();
+        boolean vertical = context.getClickedFace().getAxis() != Direction.Axis.Y;
+        BlockPos blockpos = context.getClickedPos();
+        BlockPos blockpos1 = blockpos.relative(vertical ? Direction.UP : enumfacing);
+        return context.getLevel().getBlockState(blockpos1).canBeReplaced(context) ? this.defaultBlockState().setValue(HORIZONTAL_FACING, enumfacing).setValue(VERTICAL, vertical) : null;
+    }
+
+    @Override
+    public boolean isPathfindable(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, PathType type) {
+        return false;
+    }
+
+    @Nonnull
+    @Override
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return shapes.getShape(state.getValue(PART), state.getValue(CLOSED), state.getValue(VERTICAL), state.getValue(HORIZONTAL_FACING));
+    }
+
+
+    @Override
+    public boolean isBed(BlockState state, IBlockReader world, BlockPos pos, Entity player) {
+        return !state.getValue(CLOSED) || state.getValue(BedBlock.OCCUPIED);
+    }
+
+    @Override
+    public TileEntity newBlockEntity(@Nonnull IBlockReader worldIn) {
+        return new CoffinTileEntity(false, color);
+    }
+
+    @Override
+    public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, @Nonnull PlayerEntity player) {
+        //If in creative mode, also destroy the head block. Otherwise, it will be destroyed due to updateShape and an item will drop
+        if (!worldIn.isClientSide && player.isCreative()) {
+            CoffinPart part = state.getValue(PART);
+            if(part == CoffinPart.FOOT) {
+                BlockPos blockpos = getOtherPos(pos, state);
+                BlockState blockstate = worldIn.getBlockState(blockpos);
+                if (blockstate.getBlock() == this && blockstate.getValue(PART) == CoffinPart.HEAD) {
+                    worldIn.setBlock(blockpos, Blocks.AIR.defaultBlockState(), 35);
+                    worldIn.levelEvent(player, 2001, blockpos, Block.getId(blockstate));
+                }
+            }
+        }
+
+        super.playerWillDestroy(worldIn, pos, state, player);
+    }
+
+    @Override
+    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack itemStack) {
+        super.setPlacedBy(worldIn, pos, state, entity, itemStack);
+        if (!worldIn.isClientSide) {
+            BlockPos blockpos = getOtherPos(pos, state);
+            worldIn.setBlock(blockpos, state.setValue(PART, CoffinPart.HEAD), 3);
+            worldIn.blockUpdated(pos, Blocks.AIR);
+            state.updateNeighbourShapes(worldIn, pos, 3);
+        }
+    }
+
+    @Nonnull
+    @Override
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+        if (facing == getDirectionToOther(stateIn.getValue(PART), stateIn.getValue(VERTICAL) ? Direction.UP:stateIn.getValue(HORIZONTAL_FACING))) {
+            return facingState.getBlock() == this && facingState.getValue(PART) != stateIn.getValue(PART) ? stateIn.setValue(BedBlock.OCCUPIED, facingState.getValue(BedBlock.OCCUPIED)) : Blocks.AIR.defaultBlockState();
+        } else {
+            return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+        }
+    }
+
+    @Override
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+
+        if (worldIn.isClientSide) {
+            return ActionResultType.SUCCESS;
+        } else {
+            if (state.getValue(PART) != CoffinPart.HEAD) {
+                pos = getOtherPos(pos, state);
+                state = worldIn.getBlockState(pos);
+                if (!state.is(this)) {
+                    return ActionResultType.CONSUME;
+                }
+            }
+
+            if (player.isShiftKeyDown() && !state.getValue(BedBlock.OCCUPIED)) {
+                worldIn.setBlock(pos, state.setValue(CLOSED, !state.getValue(CLOSED)), 3);
+                BlockPos otherPos = getOtherPos(pos, state);
+                worldIn.setBlock(otherPos, worldIn.getBlockState(otherPos).setValue(CLOSED, !state.getValue(CLOSED)),3);
+                return ActionResultType.CONSUME;
+            } else if (VampirismPlayerAttributes.get(player).vampireLevel == 0) {
+                player.displayClientMessage(new TranslationTextComponent("text.vampirism.coffin.cant_use"), true);
+                return ActionResultType.CONSUME;
+            } else if (state.getValue(BedBlock.OCCUPIED)) {
+                player.displayClientMessage(new TranslationTextComponent("text.vampirism.coffin.occupied"), true);
+                return ActionResultType.CONSUME;
+            } else if (state.getValue(CLOSED)) {
+                player.displayClientMessage(new TranslationTextComponent("text.vampirism.coffin.closed"), true);
+                return ActionResultType.CONSUME;
+            }
+
+            if (!BedBlock.canSetSpawn(worldIn)) {
+                worldIn.removeBlock(pos, false);
+                BlockPos blockpos = pos.relative(state.getValue(VERTICAL)?Direction.DOWN:state.getValue(HORIZONTAL_FACING).getOpposite());
+                if (worldIn.getBlockState(blockpos).is(this)) {
+                    worldIn.removeBlock(blockpos, false);
+                }
+
+                worldIn.explode(null, DamageSource.badRespawnPointExplosion(), null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, Explosion.Mode.DESTROY);
+                return ActionResultType.CONSUME;
+            } else if (state.getValue(BedBlock.OCCUPIED)) {
+                player.displayClientMessage(new TranslationTextComponent("text.vampirism.coffin.occupied"), true);
+                return ActionResultType.CONSUME;
+            } else {
+                final BlockPos finalPos = pos;
+                BlockState finalState = state;
+                player.startSleepInBed(pos).ifLeft(sleepResult1 -> {
+                    if (sleepResult1 != null) {
+                        player.displayClientMessage(sleepResults.getOrDefault(sleepResult1, sleepResult1.getMessage()), true);
+                    }
+                }).ifRight(u -> {
+                    setCoffinSleepPosition(player, finalPos, finalState.getValue(VERTICAL));
+                });
+                return ActionResultType.CONSUME;
+            }
+        }
+    }
+
+    public static void setCoffinSleepPosition(PlayerEntity player, BlockPos blockPos, boolean vertical) {
+        if (vertical) {
+            player.setPose(Pose.STANDING);
+            player.setPos(blockPos.getX() + 0.5D, blockPos.getY()-1.1, blockPos.getZ()+0.3D);
+            player.setBoundingBox(player.dimensions.makeBoundingBox(blockPos.getX() + 0.5D, blockPos.getY() + 0.2D, blockPos.getZ() + 0.5D).deflate(0.3));
+        } else {
+            player.setPos(blockPos.getX() + 0.5D, blockPos.getY() + 0.2D, blockPos.getZ() + 0.5D);
+            player.setBoundingBox(player.dimensions.makeBoundingBox(blockPos.getX() + 0.5D, blockPos.getY() + 0.2D, blockPos.getZ() + 0.5D).deflate(0.3));
+        }
+    }
+
+    public BlockPos getOtherPos(BlockPos pos, BlockState state) {
+        if (state.getValue(VERTICAL)) {
+            if (state.getValue(PART) == CoffinPart.FOOT) {
+                return pos.above();
+            } else {
+                return pos.below();
+            }
+        } else {
+            if (state.getValue(PART) == CoffinPart.FOOT) {
+                return pos.relative(state.getValue(HorizontalBlock.FACING));
+            } else {
+                return pos.relative(state.getValue(HorizontalBlock.FACING).getOpposite());
+            }
+        }
+    }
+
+    @Override
+    public void setBedOccupied(BlockState state, World world, BlockPos pos, LivingEntity sleeper, boolean occupied) {
+        super.setBedOccupied(state, world, pos, sleeper, occupied);
+        world.setBlock(pos, world.getBlockState(pos).setValue(CLOSED, occupied), 3);
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+        builder.add(HORIZONTAL_FACING, BedBlock.OCCUPIED, PART, CLOSED, VERTICAL);
+    }
+
+    public DyeColor getColor() {
+        return color;
+    }
+
+    public enum CoffinPart implements IStringSerializable {
+        HEAD("head"),
+        FOOT("foot");
+
+        private final String name;
+
+        CoffinPart(String name) {
+            this.name = name;
+        }
+
+        @Nonnull
+        public String getSerializedName() {
+            return this.name;
+        }
+
+        public String toString() {
+            return this.name;
+        }
     }
 
     public static class ShapeTable  {
@@ -184,204 +401,6 @@ public class CoffinBlock extends VampirismBlockContainer {
                 default:
                     throw new IllegalArgumentException("Wrong direction argument");
             }
-        }
-    }
-
-    private final DyeColor color;
-
-    public CoffinBlock(DyeColor color) {
-        super(name + "_" + color.getName(), Properties.of(Material.WOOD).strength(0.2f).noOcclusion());
-        this.registerDefaultState(this.getStateDefinition().any().setValue(BedBlock.OCCUPIED, Boolean.FALSE).setValue(PART, CoffinPart.FOOT).setValue(HORIZONTAL_FACING, Direction.NORTH).setValue(CLOSED, false).setValue(VERTICAL, false));
-        this.color = color;
-        COFFIN_BLOCKS.put(color, this);
-    }
-
-    @Override
-    public Direction getBedDirection(BlockState state, IWorldReader world, BlockPos pos) {
-        return state.getValue(HORIZONTAL_FACING);
-    }
-
-    @Nonnull
-    @Override
-    public PushReaction getPistonPushReaction(BlockState state) {
-        return PushReaction.DESTROY;
-    }
-
-    @Nonnull
-    @Override
-    public BlockRenderType getRenderShape(BlockState state) {
-        return BlockRenderType.ENTITYBLOCK_ANIMATED;
-    }
-
-    @Override
-    @Nullable
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        Direction enumfacing = context.getHorizontalDirection();
-        boolean vertical = context.getClickedFace().getAxis() != Direction.Axis.Y;
-        BlockPos blockpos = context.getClickedPos();
-        BlockPos blockpos1 = blockpos.relative(vertical ? Direction.UP : enumfacing);
-        return context.getLevel().getBlockState(blockpos1).canBeReplaced(context) ? this.defaultBlockState().setValue(HORIZONTAL_FACING, enumfacing).setValue(VERTICAL, vertical) : null;
-    }
-
-    @Override
-    public boolean isPathfindable(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, PathType type) {
-        return false;
-    }
-
-    @Nonnull
-    @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return shapes.getShape(state.getValue(PART), state.getValue(CLOSED), state.getValue(VERTICAL), state.getValue(HORIZONTAL_FACING));
-    }
-
-
-    @Override
-    public boolean isBed(BlockState state, IBlockReader world, BlockPos pos, Entity player) {
-        return !state.getValue(CLOSED) || state.getValue(BedBlock.OCCUPIED);
-    }
-
-    @Override
-    public TileEntity newBlockEntity(@Nonnull IBlockReader worldIn) {
-        return new CoffinTileEntity(false, color);
-    }
-
-    @Override
-    public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, @Nonnull PlayerEntity player) {
-        //If in creative mode, also destroy the head block. Otherwise, it will be destroyed due to updateShape and an item will drop
-        if (!worldIn.isClientSide && player.isCreative()) {
-            CoffinPart part = state.getValue(PART);
-            if(part == CoffinPart.FOOT) {
-                BlockPos blockpos;
-                if (state.getValue(VERTICAL)){
-                    blockpos = pos.relative(Direction.UP);
-                } else {
-                    blockpos = pos.relative(getDirectionToOther(part, state.getValue(HORIZONTAL_FACING)));
-                }
-                BlockState blockstate = worldIn.getBlockState(blockpos);
-                if (blockstate.getBlock() == this && blockstate.getValue(PART) == CoffinPart.HEAD) {
-                    worldIn.setBlock(blockpos, Blocks.AIR.defaultBlockState(), 35);
-                    worldIn.levelEvent(player, 2001, blockpos, Block.getId(blockstate));
-                }
-            }
-        }
-
-        super.playerWillDestroy(worldIn, pos, state, player);
-    }
-
-    @Override
-    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack itemStack) {
-        super.setPlacedBy(worldIn, pos, state, entity, itemStack);
-        if (!worldIn.isClientSide) {
-            BlockPos blockpos = pos.relative(state.getValue(VERTICAL) ? Direction.UP : state.getValue(HORIZONTAL_FACING));
-            worldIn.setBlock(blockpos, state.setValue(PART, CoffinPart.HEAD), 3);
-            worldIn.blockUpdated(pos, Blocks.AIR);
-            state.updateNeighbourShapes(worldIn, pos, 3);
-        }
-    }
-
-    @Nonnull
-    @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if (facing == getDirectionToOther(stateIn.getValue(PART), stateIn.getValue(VERTICAL) ? Direction.UP:stateIn.getValue(HORIZONTAL_FACING))) {
-            return facingState.getBlock() == this && facingState.getValue(PART) != stateIn.getValue(PART) ? stateIn.setValue(BedBlock.OCCUPIED, facingState.getValue(BedBlock.OCCUPIED)) : Blocks.AIR.defaultBlockState();
-        } else {
-            return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
-        }
-    }
-
-    @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-
-        if (worldIn.isClientSide) {
-            return ActionResultType.SUCCESS;
-        } else {
-            if (state.getValue(PART) != CoffinPart.HEAD) {
-                pos = pos.relative(state.getValue(VERTICAL) ? Direction.DOWN:state.getValue(HORIZONTAL_FACING));
-                state = worldIn.getBlockState(pos);
-                if (!state.is(this)) {
-                    return ActionResultType.CONSUME;
-                }
-            }
-
-            if (player.isShiftKeyDown() && !state.getValue(BedBlock.OCCUPIED)) {
-                worldIn.setBlock(pos, state.setValue(CLOSED, !state.getValue(CLOSED)), 3);
-                BlockPos otherPos = pos.relative(state.getValue(HorizontalBlock.FACING).getOpposite());
-                worldIn.setBlock(otherPos, worldIn.getBlockState(otherPos).setValue(CLOSED, !state.getValue(CLOSED)),3);
-                return ActionResultType.CONSUME;
-            } else if (VampirismPlayerAttributes.get(player).vampireLevel == 0) {
-                player.displayClientMessage(new TranslationTextComponent("text.vampirism.coffin.cant_use"), true);
-                return ActionResultType.CONSUME;
-            } else if (state.getValue(BedBlock.OCCUPIED)) {
-                player.displayClientMessage(new TranslationTextComponent("text.vampirism.coffin.occupied"), true);
-                return ActionResultType.CONSUME;
-            } else if (state.getValue(CLOSED)) {
-                player.displayClientMessage(new TranslationTextComponent("text.vampirism.coffin.closed"), true);
-                return ActionResultType.CONSUME;
-            }
-
-            if (!BedBlock.canSetSpawn(worldIn)) {
-                worldIn.removeBlock(pos, false);
-                BlockPos blockpos = pos.relative(state.getValue(VERTICAL)?Direction.DOWN:state.getValue(HORIZONTAL_FACING).getOpposite());
-                if (worldIn.getBlockState(blockpos).is(this)) {
-                    worldIn.removeBlock(blockpos, false);
-                }
-
-                worldIn.explode(null, DamageSource.badRespawnPointExplosion(), null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, Explosion.Mode.DESTROY);
-                return ActionResultType.CONSUME;
-            } else if (state.getValue(BedBlock.OCCUPIED)) {
-                player.displayClientMessage(new TranslationTextComponent("text.vampirism.coffin.occupied"), true);
-                return ActionResultType.CONSUME;
-            } else {
-                final BlockPos finalPos = pos;
-                player.startSleepInBed(pos).ifLeft(sleepResult1 -> {
-                    if (sleepResult1 != null) {
-                        player.displayClientMessage(sleepResults.getOrDefault(sleepResult1, sleepResult1.getMessage()), true);
-                    }
-                }).ifRight(u -> {
-                    setCoffinSleepPosition(player, finalPos);
-                });
-                return ActionResultType.CONSUME;
-            }
-        }
-    }
-
-    public static void setCoffinSleepPosition(PlayerEntity player, BlockPos blockPos) {
-        player.setPos(blockPos.getX() + 0.5D, blockPos.getY() + 0.2D, blockPos.getZ() + 0.5D);
-        player.setBoundingBox(player.dimensions.makeBoundingBox(blockPos.getX() + 0.5D, blockPos.getY() + 0.2D, blockPos.getZ() + 0.5D).deflate(0.3));
-    }
-
-    @Override
-    public void setBedOccupied(BlockState state, World world, BlockPos pos, LivingEntity sleeper, boolean occupied) {
-        super.setBedOccupied(state, world, pos, sleeper, occupied);
-        world.setBlock(pos, world.getBlockState(pos).setValue(CLOSED, occupied), 3);
-    }
-
-    @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(HORIZONTAL_FACING, BedBlock.OCCUPIED, PART, CLOSED, VERTICAL);
-    }
-
-    public DyeColor getColor() {
-        return color;
-    }
-
-    public enum CoffinPart implements IStringSerializable {
-        HEAD("head"),
-        FOOT("foot");
-
-        private final String name;
-
-        CoffinPart(String name) {
-            this.name = name;
-        }
-
-        @Nonnull
-        public String getSerializedName() {
-            return this.name;
-        }
-
-        public String toString() {
-            return this.name;
         }
     }
 }

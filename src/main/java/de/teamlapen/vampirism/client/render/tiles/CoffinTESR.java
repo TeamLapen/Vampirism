@@ -14,7 +14,6 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.World;
@@ -55,15 +54,6 @@ public class CoffinTESR extends VampirismTESR<CoffinTileEntity> {
         Direction direction = state.getValue(HorizontalBlock.FACING);
 
         if (!isHeadSafe(tile.getLevel(), tile.getBlockPos())) return;
-
-        // Calculate lid position
-        boolean isClosed = tile.hasLevel() && CoffinBlock.isClosed(tile.getLevel(), tile.getBlockPos());
-        if (!isClosed) {
-            tile.lidPos += 0.01;
-        } else {
-            tile.lidPos -= 0.01;
-        }
-        tile.lidPos = MathHelper.clamp(tile.lidPos, 0, 1);
 
         matrixStack.pushPose();
         boolean vertical = state.getValue(CoffinBlock.VERTICAL);

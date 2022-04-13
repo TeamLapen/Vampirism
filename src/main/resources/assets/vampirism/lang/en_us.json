@@ -122,6 +122,7 @@
   "text.vampirism.village.bossinfo.raid": "%s Village raid",
   "text.vampirism.village.bossinfo.remaining": "Remaining participants",
   "text.vampirism.village.defended": "Village was successfully defended",
+  "text.vampirism.coffin.closed": "Coffin is closed",
   "__comment": "action response texts",
   "text.vampirism.action.not_unlocked": "This action is not unlocked",
   "text.vampirism.action.deactivated_by_serveradmin": "This action is deactivated by your serveradmin",

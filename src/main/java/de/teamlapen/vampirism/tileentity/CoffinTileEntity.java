@@ -12,6 +12,7 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -59,6 +60,7 @@ public class CoffinTileEntity extends TileEntity implements ITickableTileEntity 
     public void load(BlockState state, CompoundNBT compound) {
         super.load(state, compound);
         this.color = compound.contains("color") ? DyeColor.byId(compound.getInt("color")) : DyeColor.BLACK;
+        this.lidPos = compound.getFloat("lidPos");
 
     }
 
@@ -72,6 +74,7 @@ public class CoffinTileEntity extends TileEntity implements ITickableTileEntity 
     public CompoundNBT save(CompoundNBT compound) {
         CompoundNBT nbt = super.save(compound);
         nbt.putInt("color", color.getId());
+        nbt.putFloat("lidPos", this.lidPos);
         return nbt;
     }
 
@@ -95,6 +98,14 @@ public class CoffinTileEntity extends TileEntity implements ITickableTileEntity 
             lastTickOccupied = occupied;
         }
 
+        // Calculate lid position
+        boolean isClosed = hasLevel() && CoffinBlock.isClosed(getLevel(), getBlockPos());
+        if (!isClosed) {
+            lidPos += 0.02;
+        } else {
+            lidPos -= 0.02;
+        }
+        lidPos = MathHelper.clamp(lidPos, 0, 1);
 
     }
 }
