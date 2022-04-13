@@ -250,8 +250,13 @@ public class CoffinBlock extends VampirismBlockContainer {
         //If in creative mode, also destroy the head block. Otherwise, it will be destroyed due to updateShape and an item will drop
         if (!worldIn.isClientSide && player.isCreative()) {
             CoffinPart part = state.getValue(PART);
-            if(part == CoffinPart.FOOT){
-                BlockPos blockpos = pos.relative(getDirectionToOther(part, state.getValue(HORIZONTAL_FACING)));
+            if(part == CoffinPart.FOOT) {
+                BlockPos blockpos;
+                if (state.getValue(VERTICAL)){
+                    blockpos = pos.relative(Direction.UP);
+                } else {
+                    blockpos = pos.relative(getDirectionToOther(part, state.getValue(HORIZONTAL_FACING)));
+                }
                 BlockState blockstate = worldIn.getBlockState(blockpos);
                 if (blockstate.getBlock() == this && blockstate.getValue(PART) == CoffinPart.HEAD) {
                     worldIn.setBlock(blockpos, Blocks.AIR.defaultBlockState(), 35);
@@ -277,7 +282,7 @@ public class CoffinBlock extends VampirismBlockContainer {
     @Nonnull
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if (facing == getDirectionToOther(stateIn.getValue(PART), stateIn.getValue(HORIZONTAL_FACING))) {
+        if (facing == getDirectionToOther(stateIn.getValue(PART), stateIn.getValue(VERTICAL) ? Direction.UP:stateIn.getValue(HORIZONTAL_FACING))) {
             return facingState.getBlock() == this && facingState.getValue(PART) != stateIn.getValue(PART) ? stateIn.setValue(BedBlock.OCCUPIED, facingState.getValue(BedBlock.OCCUPIED)) : Blocks.AIR.defaultBlockState();
         } else {
             return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
@@ -291,7 +296,7 @@ public class CoffinBlock extends VampirismBlockContainer {
             return ActionResultType.SUCCESS;
         } else {
             if (state.getValue(PART) != CoffinPart.HEAD) {
-                pos = pos.relative(state.getValue(HORIZONTAL_FACING));
+                pos = pos.relative(state.getValue(VERTICAL) ? Direction.DOWN:state.getValue(HORIZONTAL_FACING));
                 state = worldIn.getBlockState(pos);
                 if (!state.is(this)) {
                     return ActionResultType.CONSUME;
@@ -316,7 +321,7 @@ public class CoffinBlock extends VampirismBlockContainer {
 
             if (!BedBlock.canSetSpawn(worldIn)) {
                 worldIn.removeBlock(pos, false);
-                BlockPos blockpos = pos.relative(state.getValue(HORIZONTAL_FACING).getOpposite());
+                BlockPos blockpos = pos.relative(state.getValue(VERTICAL)?Direction.DOWN:state.getValue(HORIZONTAL_FACING).getOpposite());
                 if (worldIn.getBlockState(blockpos).is(this)) {
                     worldIn.removeBlock(blockpos, false);
                 }
