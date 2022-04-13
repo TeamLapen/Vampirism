@@ -32,7 +32,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LightLayer;
-import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.server.ServerLifecycleHooks;
@@ -40,29 +39,14 @@ import net.minecraftforge.server.ServerLifecycleHooks;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
-import java.util.Random;
 
 /**
  * Base class for most vampirism mobs
  */
 public abstract class VampirismEntity extends PathfinderMob implements IEntityWithHome, IVampirismEntity {
 
-    public static boolean spawnPredicateLight(ServerLevelAccessor world, BlockPos blockPos, Random random) {
-        if (world.getBrightness(LightLayer.SKY, blockPos) > random.nextInt(32)) {
-            return false;
-        } else {
-            int lvt_3_1_ = world.getLevel().isThundering() ? world.getMaxLocalRawBrightness(blockPos, 10) : world.getMaxLocalRawBrightness(blockPos);
-            return lvt_3_1_ <= random.nextInt(8);
-        }
-    }
-
     public static boolean spawnPredicateVampireFog(LevelAccessor world, BlockPos blockPos) {
         return world.getBiome(blockPos).is(ModTags.Biomes.IS_VAMPIRE_BIOME) || (world instanceof Level && VampirismWorld.getOpt((Level) world).map(vh -> vh.isInsideArtificialVampireFogArea(blockPos)).orElse(false));
-    }
-
-    public static boolean spawnPredicateCanSpawn(EntityType<? extends Mob> entityType, LevelAccessor world, MobSpawnType spawnReason, BlockPos blockPos, Random random) {
-        BlockPos blockpos = blockPos.below();
-        return spawnReason == MobSpawnType.SPAWNER || world.getBlockState(blockpos).isValidSpawn(world, blockpos, entityType);
     }
 
     public static AttributeSupplier.Builder getAttributeBuilder() {
@@ -259,9 +243,12 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
     }
 
     protected boolean isLowLightLevel(LevelAccessor iWorld) {
+        //copy of Monster#isDarkEnoughToSSpawn, but not requiring server level
         BlockPos blockpos = new BlockPos(this.getX(), this.getBoundingBox().minY, this.getZ());
-
         if (iWorld.getBrightness(LightLayer.SKY, blockpos) > this.random.nextInt(32)) {
+            return false;
+        }
+        else if(iWorld.getBrightness(LightLayer.BLOCK, blockpos) > 0){
             return false;
         } else {
             int i = iWorld.getMaxLocalRawBrightness(blockpos);
