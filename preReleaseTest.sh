@@ -32,17 +32,17 @@ cp "build/libs/Vampirism-$mc_version-$version.jar" "$dir/vampirism/"
 #Werewolves
 git clone https://github.com/TeamLapen/Werewolves.git "$dir/werewolves"
 cd "$dir/werewolves" || exit
-git checkout "origin/$branch_name"
+git checkout "origin/1.16"
 echo -e "\nrepositories{ maven{ url='$dir/.m2' }}" >> build.gradle
 ./gradlew build -Pvampirism_version="$version"
 werewolves_success=$?
 
 #Integrations
-#git clone https://github.com/TeamLapen/VampirismIntegrations.git "$dir/integrations"
-#cd "$dir/integrations" || exit
-#git checkout "origin/$branch_name"
-#echo -e "\nrepositories{ maven{ url='$dir/.m2' }}" >> build.gradle
-#./gradlew build -Pvampirism_version="$version" -Pvampirism_mcversion="$mc_version"
+git clone https://github.com/TeamLapen/VampirismIntegrations.git "$dir/integrations"
+cd "$dir/integrations" || exit
+git checkout "origin/1.16"
+echo -e "\nrepositories{ maven{ url='$dir/.m2' }}" >> build.gradle
+./gradlew build -Pvampirism_version="$version" -Pvampirism_mcversion="$mc_version"
 integrations_success=0
 
 if [ $werewolves_success -eq 0 ] && [ $integrations_success -eq 0 ];
@@ -54,6 +54,6 @@ else
 fi
 
 
-sudo docker run -v "$dir/vampirism:/data/mods" -e TYPE=FORGE -e VERSION="$mc_version" -e FORGE_VERSION="$forge_version" -e EULA=true --name vampirism_test_runner --rm -it docker.io/itzg/minecraft-server
+sudo docker run -v "$dir/vampirism:/data/mods" -e TYPE=FORGE -e VERSION="$mc_version" -e FORGE_VERSION="$forge_version" -e EULA=true --name vampirism_test_runner --rm -it docker.io/itzg/minecraft-server:java8-multiarch
 
 rm -rf $dir
