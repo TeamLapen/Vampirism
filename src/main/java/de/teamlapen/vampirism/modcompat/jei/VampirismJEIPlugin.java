@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.inventory.container.AlchemicalCauldronContainer;
 import de.teamlapen.vampirism.inventory.container.WeaponTableContainer;
+import de.teamlapen.vampirism.inventory.recipes.OilBrewingRecipeCategory;
 import de.teamlapen.vampirism.player.tasks.TaskUtil;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -53,7 +54,7 @@ public class VampirismJEIPlugin implements IModPlugin {
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
         IGuiHelper helper = registration.getJeiHelpers().getGuiHelper();
-        registration.addRecipeCategories(new AlchemicalCauldronRecipeCategory(helper), new WeaponTableRecipeCategory(helper), new TaskRecipeCategory(helper), new PotionTableRecipeCategory(helper));
+        registration.addRecipeCategories(new AlchemicalCauldronRecipeCategory(helper), new WeaponTableRecipeCategory(helper), new TaskRecipeCategory(helper), new PotionTableRecipeCategory(helper), new OilBrewingRecipeCategory(helper));
     }
 
     @Override
@@ -78,6 +79,7 @@ public class VampirismJEIPlugin implements IModPlugin {
         registration.addRecipes(TaskUtil.getItemRewardTasks(), TASK_RECIPE_UID);
         registration.addRecipes(VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().map(JEIPotionMix::createFromMix).flatMap(Collection::stream).collect(Collectors.toList()), POTION_RECIPE_UID);
         registration.addRecipes(getRepairRecipes(registration.getVanillaRecipeFactory()), VanillaRecipeCategoryUid.ANVIL);
+        registration.addRecipes(OilBrewingRecipeCategory.getOilBrewingRecipes(), OilBrewingRecipeCategory.OIL_BREWING);
     }
 
     @Override

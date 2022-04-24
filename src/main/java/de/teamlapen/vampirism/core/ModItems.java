@@ -5,8 +5,10 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
+import de.teamlapen.vampirism.inventory.recipes.TagNBTBrewingRecipe;
 import de.teamlapen.vampirism.items.*;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
+import de.teamlapen.vampirism.util.OilUtils;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
@@ -235,6 +237,8 @@ public class ModItems {
                 return holy_water_bottle_ultimate.equals(stack.getItem());
             }
         });
+
+        BrewingRecipeRegistry.addRecipe(new TagNBTBrewingRecipe(Ingredient.of(new ItemStack(Items.GLASS_BOTTLE)), Ingredient.of(Items.WHEAT_SEEDS), OilUtils.createOilItem(ModOils.plant_oil)));
 
     }
 

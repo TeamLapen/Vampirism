@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.api.items.oil.IOil;
+import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModOils;
 import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraft.item.ItemStack;
@@ -31,5 +32,9 @@ public class OilUtils {
 
     public static void addOilTooltip(ItemStack stack, List<ITextComponent> tooltips) {
         getOil(stack).getDescription(stack, tooltips);
+    }
+
+    public static ItemStack createOilItem(IOil oil) {
+        return setOil(new ItemStack(ModItems.oil_bottle), oil);
     }
 }

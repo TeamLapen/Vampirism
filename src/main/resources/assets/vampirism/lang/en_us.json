@@ -92,6 +92,7 @@
   "text.vampirism.decorative_only": "Decorative block",
   "text.vampirism.oil.applied_to": "Can be Applied to:",
   "text.vampirism.oil.when_applied": "When Applied:",
+  "gui.vampirism.jei.category.oil_brewing": "Process Oil",
   "__comment": "block interaction texts",
   "text.vampirism.med_chair_other_faction": "You cannot become a Hunter since you already are a %s",
   "__comment": "faction item texts",

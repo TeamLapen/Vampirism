@@ -18,6 +18,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
@@ -799,6 +800,10 @@ public class UtilLib {
         Set<T> s = new LinkedHashSet<>();
         Collections.addAll(s, elements);
         return s;
+    }
+
+    public static boolean matchesItem(Ingredient ingredient, ItemStack searchStack) {
+        return Arrays.stream(ingredient.getItems()).anyMatch(stack -> stack.sameItem(searchStack) && stack.areShareTagsEqual(searchStack));
     }
 
     public enum RotationAmount {
