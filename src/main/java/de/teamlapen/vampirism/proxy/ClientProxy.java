@@ -161,7 +161,7 @@ public class ClientProxy extends CommonProxy {
                     if (Minecraft.getInstance().screen instanceof SleepInMultiplayerScreen && !(Minecraft.getInstance().screen instanceof SleepInMultiplayerModScreen)) {
                         Minecraft.getInstance().setScreen(new SleepInMultiplayerModScreen("text.vampirism.coffin.stop_sleeping"));
                     }
-                    CoffinBlock.setCoffinSleepPosition(player,pos, state.getValue(CoffinBlock.VERTICAL));
+                    CoffinBlock.setCoffinSleepPosition(player,pos, state);
                 }
             });
         }

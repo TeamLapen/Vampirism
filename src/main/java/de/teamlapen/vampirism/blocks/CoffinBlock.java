@@ -8,6 +8,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,6 +21,7 @@ import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.IBooleanFunction;
@@ -29,6 +31,7 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.*;
+import net.minecraftforge.event.entity.EntityEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -216,18 +219,55 @@ public class CoffinBlock extends VampirismBlockContainer {
                         player.displayClientMessage(sleepResults.getOrDefault(sleepResult1, sleepResult1.getMessage()), true);
                     }
                 }).ifRight(u -> {
-                    setCoffinSleepPosition(player, finalPos, finalState.getValue(VERTICAL));
+                    setCoffinSleepPosition(player, finalPos, finalState);
                 });
                 return ActionResultType.CONSUME;
             }
         }
     }
 
-    public static void setCoffinSleepPosition(PlayerEntity player, BlockPos blockPos, boolean vertical) {
-        if (vertical) {
+    public static void setSleepSize(EntityEvent.Size event, LivingEntity entity) {
+        if (entity.isSleeping()){
+            entity.getSleepingPos().ifPresent(pos -> {
+                BlockState state = entity.level.getBlockState(pos);
+                if (state.getBlock() instanceof CoffinBlock && state.getValue(VERTICAL)) {
+                    event.setNewSize(new EntitySize(0.2f, 0.6f,true), true);
+                }
+            });
+        }
+    }
+
+    public static void setCoffinSleepPosition(PlayerEntity player, BlockPos blockPos, BlockState state) {
+        if (state.getValue(VERTICAL)) {
             player.setPose(Pose.STANDING);
-            player.setPos(blockPos.getX() + 0.5D, blockPos.getY()-1.1, blockPos.getZ()+0.3D);
-            player.setBoundingBox(player.dimensions.makeBoundingBox(blockPos.getX() + 0.5D, blockPos.getY() + 0.2D, blockPos.getZ() + 0.5D).deflate(0.3));
+            double x;
+            double z;
+            switch (state.getValue(HORIZONTAL_FACING)){
+                case NORTH:
+                    x = 0.5;
+                    z = 0.3;
+                    player.yBodyRot = player.yHeadRot = 0;
+                    break;
+                case EAST:
+                    x = 0.7;
+                    z = 0.5;
+                    player.yBodyRot = player.yHeadRot = 90;
+                    break;
+                case SOUTH:
+                    x= 0.5;
+                    z=0.7;
+                    player.yBodyRot = player.yHeadRot = 180;
+                    break;
+                case WEST:
+                    x=0.3;
+                    z=0.5;
+                    player.yBodyRot = player.yHeadRot = 270;
+                    break;
+                default:
+                    return;
+            }
+            player.setPos(blockPos.getX() + x, blockPos.getY()-1, blockPos.getZ()+z);
+            player.setBoundingBox(new AxisAlignedBB(blockPos.getX()+x-0.2, blockPos.getY()-0.8, blockPos.getZ()+z-0.2, blockPos.getX()+x+0.2, blockPos.getY()+0.4 , blockPos.getZ()+z+0.2));
         } else {
             player.setPos(blockPos.getX() + 0.5D, blockPos.getY() + 0.2D, blockPos.getZ() + 0.5D);
             player.setBoundingBox(player.dimensions.makeBoundingBox(blockPos.getX() + 0.5D, blockPos.getY() + 0.2D, blockPos.getZ() + 0.5D).deflate(0.3));
