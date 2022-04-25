@@ -40,12 +40,8 @@ public class CoffinTESR extends VampirismTESR<CoffinTileEntity> {
     }
 
     @Override
-    public void render(CoffinTileEntity tile, float partialTicks, @Nonnull MatrixStack matrixStack, @Nonnull IRenderTypeBuffer iRenderTypeBuffer, int i, int i1) {
-        if (tile.renderAsItem) {
-            this.renderItem(tile, partialTicks, matrixStack, iRenderTypeBuffer, i, i1);
-        } else {
-            this.renderBlock(tile, partialTicks, matrixStack, iRenderTypeBuffer, i, i1);
-        }
+    public void render(@Nonnull CoffinTileEntity tile, float partialTicks, @Nonnull MatrixStack matrixStack, @Nonnull IRenderTypeBuffer iRenderTypeBuffer, int i, int i1) {
+        this.renderBlock(tile, partialTicks, matrixStack, iRenderTypeBuffer, i, i1);
     }
 
     public void renderBlock(CoffinTileEntity tile, float partialTicks, @Nonnull MatrixStack matrixStack, @Nonnull IRenderTypeBuffer iRenderTypeBuffer, int i, int i1) {
@@ -106,16 +102,6 @@ public class CoffinTESR extends VampirismTESR<CoffinTileEntity> {
         IBakedModel lidModel = Minecraft.getInstance().getModelManager().getModel( new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_top_" + tile.color.getName()));
 //        Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(matrixStack.last(), iRenderTypeBuffer.getBuffer(RenderTypeLookup.getRenderType(state,false)), state, lidModel, 1,1,1,i, i1, EmptyModelData.INSTANCE);
         matrixStack.popPose();
-        matrixStack.popPose();
-    }
-
-    public void renderItem(CoffinTileEntity tile, float partialTicks, @Nonnull MatrixStack matrixStack, @Nonnull IRenderTypeBuffer iRenderTypeBuffer, int i, int i1) {
-        BlockState state = CoffinBlock.COFFIN_BLOCKS.get(tile.color).defaultBlockState();
-
-
-        matrixStack.pushPose();
-        IBakedModel model = Minecraft.getInstance().getModelManager().getModel(new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_bottom_" + tile.color.getName()));
-        Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(matrixStack.last(), iRenderTypeBuffer.getBuffer(RenderTypeLookup.getRenderType(state,false)), state, model, 1,1,1,i, i1, EmptyModelData.INSTANCE);
         matrixStack.popPose();
     }
 

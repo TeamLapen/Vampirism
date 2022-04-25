@@ -127,7 +127,7 @@ public class CoffinBlock extends VampirismBlockContainer {
 
     @Override
     public TileEntity newBlockEntity(@Nonnull IBlockReader worldIn) {
-        return new CoffinTileEntity(false, color);
+        return new CoffinTileEntity(color);
     }
 
     @Override

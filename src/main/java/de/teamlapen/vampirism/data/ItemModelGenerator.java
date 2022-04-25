@@ -5,10 +5,12 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
+import net.minecraftforge.client.model.generators.ModelBuilder;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
@@ -318,6 +320,18 @@ public class ItemModelGenerator extends ItemModelProvider {
         withExistingParent(ModBlocks.cursed_spruce_button.asItem(), modLoc("block/cursed_spruce_button_inventory"));
         withExistingParent(ModBlocks.dark_spruce_fence.asItem(), modLoc("block/dark_spruce_fence_inventory"));
         withExistingParent(ModBlocks.cursed_spruce_fence.asItem(), modLoc("block/cursed_spruce_fence_inventory"));
+
+        for (DyeColor dye : DyeColor.values()) {
+            getBuilder("coffin_" + dye.getName()).parent(new ModelFile.UncheckedModelFile(REFERENCE.MODID + ":block/coffin/coffin_bottom_" + dye.getName()))
+                    .transforms()
+                    .transform(ModelBuilder.Perspective.THIRDPERSON_RIGHT).rotation(30,160,0).translation(-1,0,1).scale(0.23f,0.23f,0.23f).end()
+                    .transform(ModelBuilder.Perspective.FIRSTPERSON_RIGHT).rotation(30,160,0).translation(0,0,3).scale(0.375f,0.375f,0.375f).end()
+                    .transform(ModelBuilder.Perspective.GUI).rotation(30,160,0).translation(-1,-1,-4).scale(0.5325f,0.5325f,0.5325f).end()
+                    .transform(ModelBuilder.Perspective.GROUND).rotation(0,0,0).translation(0,2,-2).scale(0.25f,0.25f,0.25f).end()
+                    .transform(ModelBuilder.Perspective.HEAD).rotation(0,180,0).translation(0,2,-8).scale(1,1,1).end()
+                    .transform(ModelBuilder.Perspective.FIXED).rotation(270,0,0).translation(0,-4,-4).scale(0.5f,0.5f,0.5f).end()
+                    .end();
+        }
     }
 
 }

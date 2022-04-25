@@ -1,5 +1,5 @@
 {
-  "parent": "builtin/entity",
+  "parent": "vampirism:block/coffin/coffin_bottom_magenta",
   "display": {
     "thirdperson_righthand": {
       "rotation": [
@@ -53,11 +53,6 @@
       ]
     },
     "ground": {
-      "rotation": [
-        0,
-        0,
-        0
-      ],
       "translation": [
         0,
         2,
@@ -79,11 +74,6 @@
         0,
         2,
         -8
-      ],
-      "scale": [
-        1,
-        1,
-        1
       ]
     },
     "fixed": {

@@ -23,19 +23,16 @@ import javax.annotation.Nullable;
  * TileEntity for coffins. Handles coffin lid position and color
  */
 public class CoffinTileEntity extends TileEntity implements ITickableTileEntity {
-    public final boolean renderAsItem;
     public float lidPos;
     public DyeColor color = DyeColor.RED;
     private boolean lastTickOccupied;
 
     public CoffinTileEntity() {
         super(ModTiles.coffin);
-        this.renderAsItem = false;
     }
 
-    public CoffinTileEntity(boolean renderAsItem, DyeColor color) {
+    public CoffinTileEntity(DyeColor color) {
         super(ModTiles.coffin);
-        this.renderAsItem = renderAsItem;
         this.color = color;
     }
 
