@@ -962,15 +962,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     public void onUpdatePlayer(TickEvent.Phase phase) {
         if (phase == TickEvent.Phase.END) {
             //update sleeping pose
-//            if (getLevel() > 0 && player.isSleeping()) {
-//                player.getSleepingPos().ifPresent(pos -> {
-//                    BlockState state = player.level.getBlockState(pos);
-//                    if (state.getBlock() instanceof CoffinBlock && state.getValue(CoffinBlock.VERTICAL)) {
-//                        CoffinBlock.setCoffinSleepPosition(player,pos, state);
-//                    }
-//                });
-//            }
-            VampirismMod.proxy.handleSleepClient(player);
+            if (getLevel() > 0) {
+                VampirismMod.proxy.handleSleepClient(player);
+            }
 
             //Update blood stats
             if (getLevel() > 0 && !isDBNO()) {
