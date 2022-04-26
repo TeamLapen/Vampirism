@@ -8,6 +8,7 @@
     "AssemblerMixin",
     "DimensionStructureSettingsAccessor",
     "FlatGenerationSettingsAccessor",
+    "IngredientAccessor",
     "LivingEntityAccessor",
     "MixinBellBlock",
     "MixinEffectInstance",

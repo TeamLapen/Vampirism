@@ -131,6 +131,7 @@ public class ModBlocks {
     public static final FenceBlock cursed_spruce_fence = getNull();
     public static final VampirismBlock vampire_rack = getNull();
     public static final VampirismBlock throne = getNull();
+    public static final AlchemicalTableBlock alchemical_table = getNull();
 
     /**
      * empty unless in datagen
@@ -253,6 +254,7 @@ public class ModBlocks {
         registry.register(prepareItemRegistry(new FenceBlock(AbstractBlock.Properties.of(Material.WOOD, cursed_spruce_planks.defaultMaterialColor()).strength(2.0F, 3.0F).sound(SoundType.WOOD)).setRegistryName(REFERENCE.MODID, "cursed_spruce_fence")));
         registry.register(prepareItemRegistry(new VampirismHorizontalBlock("vampire_rack", AbstractBlock.Properties.of(Material.WOOD).strength(2, 3), BlockVoxelshapes.vampire_rack).markDecorativeBlock()));
         registry.register(prepareItemRegistry(new ThroneBlock()));
+        registry.register(prepareItemRegistry(new AlchemicalTableBlock().setRegistryName(REFERENCE.MODID, "alchemical_table")));
 
         /**
          * TUTORIAL:

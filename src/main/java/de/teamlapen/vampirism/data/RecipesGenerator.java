@@ -5,14 +5,13 @@ import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.ModOils;
 import de.teamlapen.vampirism.core.ModTags;
-import de.teamlapen.vampirism.data.recipebuilder.AlchemicalCauldronRecipeBuilder;
-import de.teamlapen.vampirism.data.recipebuilder.IItemWIthTierRecipeBuilder;
-import de.teamlapen.vampirism.data.recipebuilder.ShapedWeaponTableRecipeBuilder;
-import de.teamlapen.vampirism.data.recipebuilder.ShapelessWeaponTableRecipeBuilder;
+import de.teamlapen.vampirism.data.recipebuilder.*;
 import de.teamlapen.vampirism.inventory.recipes.ConfigCondition;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.OilUtils;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.IRequirementsStrategy;
@@ -288,6 +287,9 @@ public class RecipesGenerator extends RecipeProvider {
         ShapedRecipeBuilder.shaped(ModItems.crucifix_normal).pattern("XY ").pattern("ZYZ").pattern(" Y ").define('X', ModItems.holy_salt).define('Y', planks).define('Z', stick).unlockedBy("salt", has(ModItems.holy_salt)).unlockedBy("stick", has(stick)).unlockedBy("planks", has(planks)).save(consumer, hunter("crucifix"));
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.crucifix_enhanced).pattern("XYYX").pattern("YZAY").pattern("XYYX").pattern("XYYX").define('X', ModItems.holy_salt).define('Y', iron_ingot).define('Z', ModItems.holy_water_bottle_normal).define('A', ModItems.stake).unlockedBy("iron", has(iron_ingot)).unlockedBy("blessed_salt", has(ModItems.holy_salt)).unlockedBy("holy_water", has(ModItems.holy_water_bottle_normal)).unlockedBy("stake", has(ModItems.stake)).skills(HunterSkills.crucifix_wielder).save(consumer, hunter("crucifix_enhanced"));
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.crucifix_ultimate).pattern("XYYX").pattern("YZAY").pattern("XYYX").pattern("XYYX").define('X', ModItems.item_alchemical_fire).define('Y', Tags.Items.STORAGE_BLOCKS_GOLD).define('Z', ModItems.holy_water_bottle_enhanced).define('A', ModItems.stake).unlockedBy("fire", has(ModItems.item_alchemical_fire)).unlockedBy("gold", has(Tags.Items.STORAGE_BLOCKS_GOLD)).unlockedBy("holy_water", has(ModItems.holy_water_bottle_enhanced)).unlockedBy("stake", has(ModItems.stake)).skills(HunterSkills.ultimate_crucifix).save(consumer, hunter("crucifix_ultimate"));
+
+
+        AlchemicalTableRecipeBuilder.builder(OilUtils.createOilItem(ModOils.plant_oil)).ingredient(Ingredient.of(new ItemStack(Items.GLASS_BOTTLE))).input(Ingredient.of(new ItemStack(Items.WHEAT_SEEDS))).withCriterion("has_bottles", has(Items.GLASS_BOTTLE)).withCriterion("has_wheat_seeds", has(Items.WHEAT_SEEDS)).build(consumer, new ResourceLocation(REFERENCE.MODID, "plant_oil"));
     }
 
     private JsonObject enchantment(int level, Enchantment enchantment) {

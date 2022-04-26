@@ -122,6 +122,7 @@ public class ModBlocksRender {
         RenderTypeLookup.setRenderLayer(ModBlocks.cursed_spruce_trapdoor, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.vampire_rack, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.throne, cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.alchemical_table, cutout);
     }
 
 

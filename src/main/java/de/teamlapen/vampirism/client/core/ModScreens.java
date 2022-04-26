@@ -25,5 +25,6 @@ public class ModScreens {
         ScreenManager.register(ModContainer.task_master, TaskBoardScreen::new);
         ScreenManager.register(ModContainer.extended_potion_table, PotionTableScreen::new);
         ScreenManager.register(ModContainer.vampirism, VampirismScreen::new);
+        ScreenManager.register(ModContainer.alchemical_table, AlchemicalTableScreen::new);
     }
 }

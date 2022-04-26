@@ -33,6 +33,7 @@ public class ModTiles {
     public static final TileEntityType<SieveTileEntity> sieve = getNull();
     public static final TileEntityType<TotemTileEntity> totem = getNull();
     public static final TileEntityType<PotionTableTileEntity> potion_table = getNull();
+    public static final TileEntityType<AlchemicalTableTileEntity> alchemical_table = getNull();
 
     static void registerTiles(IForgeRegistry<TileEntityType<?>> registry) {
         registry.register(create("tent", TentTileEntity::new, ModBlocks.tent_main));
@@ -48,6 +49,7 @@ public class ModTiles {
         registry.register(create("sieve", SieveTileEntity::new, ModBlocks.blood_sieve));
         registry.register(create("totem", TotemTileEntity::new, TotemTopBlock.getBlocks().toArray(new TotemTopBlock[0])));
         registry.register(create("potion_table", PotionTableTileEntity::new, ModBlocks.potion_table));
+        registry.register(create("alchemical_table", AlchemicalTableTileEntity::new, ModBlocks.alchemical_table));
     }
 
     public static void registerTileExtensionsUnsafe() {
