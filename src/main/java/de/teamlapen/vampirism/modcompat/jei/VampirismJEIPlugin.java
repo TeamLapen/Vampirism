@@ -41,6 +41,7 @@ public class VampirismJEIPlugin implements IModPlugin {
     static final ResourceLocation ALCHEMICAL_CAULDRON_RECIPE_UID = new ResourceLocation("vampirism", "alchemical_cauldron");
     static final ResourceLocation TASK_RECIPE_UID = new ResourceLocation("vampirism", "task");
     static final ResourceLocation POTION_RECIPE_UID = new ResourceLocation("vampirism", "potion");
+    static final ResourceLocation ALCHEMY_TABLE_UID = new ResourceLocation("vampirism", "alchemy_table");
     private static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "plugin");
 
     @Nonnull
@@ -53,7 +54,7 @@ public class VampirismJEIPlugin implements IModPlugin {
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
         IGuiHelper helper = registration.getJeiHelpers().getGuiHelper();
-        registration.addRecipeCategories(new AlchemicalCauldronRecipeCategory(helper), new WeaponTableRecipeCategory(helper), new TaskRecipeCategory(helper), new PotionTableRecipeCategory(helper));
+        registration.addRecipeCategories(new AlchemicalCauldronRecipeCategory(helper), new WeaponTableRecipeCategory(helper), new TaskRecipeCategory(helper), new PotionTableRecipeCategory(helper), new AlchemyTableRecipeCategory(helper));
     }
 
     @Override
@@ -78,6 +79,7 @@ public class VampirismJEIPlugin implements IModPlugin {
         registration.addRecipes(TaskUtil.getItemRewardTasks(), TASK_RECIPE_UID);
         registration.addRecipes(VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().map(JEIPotionMix::createFromMix).flatMap(Collection::stream).collect(Collectors.toList()), POTION_RECIPE_UID);
         registration.addRecipes(getRepairRecipes(registration.getVanillaRecipeFactory()), VanillaRecipeCategoryUid.ANVIL);
+        registration.addRecipes(recipeManager.byType(ModRecipes.ALCHEMICAL_TABLE_TYPE).values(), ALCHEMY_TABLE_UID);
     }
 
     @Override

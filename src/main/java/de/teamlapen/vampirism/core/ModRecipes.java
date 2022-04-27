@@ -26,7 +26,7 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 public class ModRecipes {
     public static final IRecipeType<IWeaponTableRecipe> WEAPONTABLE_CRAFTING_TYPE = IRecipeType.register(new ResourceLocation(REFERENCE.MODID, "weapontable_crafting").toString());
     public static final IRecipeType<AlchemicalCauldronRecipe> ALCHEMICAL_CAULDRON_TYPE = IRecipeType.register(new ResourceLocation(REFERENCE.MODID, "alchemical_cauldron").toString());
-    public static final IRecipeType<AlchemicalTableRecipe> ALCHEMICAL_TABLE_TYPE = IRecipeType.register(new ResourceLocation(REFERENCE.MODID, "alchemical_table").toString());
+    public static final IRecipeType<AlchemyTableRecipe> ALCHEMICAL_TABLE_TYPE = IRecipeType.register(new ResourceLocation(REFERENCE.MODID, "alchemical_table").toString());
 
     @ObjectHolder(REFERENCE.MODID + ":shaped_crafting_weapontable")
     public static final IRecipeSerializer<ShapedWeaponTableRecipe> shaped_crafting_weapontable = getNull();
@@ -37,7 +37,7 @@ public class ModRecipes {
     @ObjectHolder(REFERENCE.MODID + ":alchemical_cauldron")
     public static final IRecipeSerializer<AlchemicalCauldronRecipe> alchemical_cauldron = getNull();
     @ObjectHolder(REFERENCE.MODID + ":alchemical_table")
-    public static final IRecipeSerializer<AlchemicalTableRecipe> alchemical_table = getNull();
+    public static final IRecipeSerializer<AlchemyTableRecipe> alchemical_table = getNull();
 
     public static final IConditionSerializer<?> CONFIG_CONDITION = CraftingHelper.register(new ConfigCondition.Serializer());
 
@@ -58,7 +58,7 @@ public class ModRecipes {
         registry.register(new ShapelessWeaponTableRecipe.Serializer().setRegistryName(REFERENCE.MODID, "shapeless_crafting_weapontable"));
         registry.register(new ShapedItemWithTierRepair.Serializer().setRegistryName(REFERENCE.MODID, "repair_iitemwithtier"));
         registry.register(new AlchemicalCauldronRecipe.Serializer().setRegistryName(REFERENCE.MODID, "alchemical_cauldron"));
-        registry.register(new AlchemicalTableRecipe.Serializer().setRegistryName(REFERENCE.MODID, "alchemical_table"));
+        registry.register(new AlchemyTableRecipe.Serializer().setRegistryName(REFERENCE.MODID, "alchemical_table"));
 
     }
 

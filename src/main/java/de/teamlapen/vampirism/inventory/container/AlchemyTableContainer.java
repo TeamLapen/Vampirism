@@ -17,22 +17,22 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class AlchemicalTableContainer extends Container {
+public class AlchemyTableContainer extends Container {
 
-    private final IInventory alchemicalTable;
-    private final IIntArray alchemicalTableData;
+    private final IInventory alchemyTable;
+    private final IIntArray alchemyTableData;
     private final Slot ingredientSlot;
 
-    public AlchemicalTableContainer(int containerId, PlayerInventory playerInventory) {
-        this(containerId, IWorldPosCallable.NULL, playerInventory, new Inventory(6), new IntArray(2));
+    public AlchemyTableContainer(int containerId, PlayerInventory playerInventory) {
+        this(containerId, IWorldPosCallable.NULL, playerInventory, new Inventory(6), new IntArray(3));
     }
 
-    public AlchemicalTableContainer(int containerId, IWorldPosCallable worldPos, PlayerInventory playerInventory, IInventory inventory, IIntArray data) {
+    public AlchemyTableContainer(int containerId, IWorldPosCallable worldPos, PlayerInventory playerInventory, IInventory inventory, IIntArray data) {
         super(ModContainer.alchemical_table, containerId);
         checkContainerSize(inventory, 5);
-        checkContainerDataCount(data, 2);
-        this.alchemicalTable = inventory;
-        this.alchemicalTableData = data;
+        checkContainerDataCount(data, 3);
+        this.alchemyTable = inventory;
+        this.alchemyTableData = data;
         this.addSlot(new OilSlot(worldPos, inventory, 0, 55, 16));
         this.addSlot(new OilSlot(worldPos, inventory, 1, 79, 16));
         this.addSlot(new ResultSlot(inventory, 2, 112,72));
@@ -55,15 +55,19 @@ public class AlchemicalTableContainer extends Container {
 
     @Override
     public boolean stillValid(@Nonnull PlayerEntity player) {
-        return this.alchemicalTable.stillValid(player);
+        return this.alchemyTable.stillValid(player);
     }
 
     public int getFuel() {
-        return this.alchemicalTableData.get(1);
+        return this.alchemyTableData.get(1);
     }
 
     public int getBrewingTicks() {
-        return this.alchemicalTableData.get(0);
+        return this.alchemyTableData.get(0);
+    }
+
+    public int getColor() {
+        return this.alchemyTableData.get(2);
     }
 
 

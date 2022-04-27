@@ -25,10 +25,10 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 @ParametersAreNonnullByDefault
-public class AlchemicalTableRecipeBuilder {
+public class AlchemyTableRecipeBuilder {
 
-    public static AlchemicalTableRecipeBuilder builder(ItemStack stack) {
-        return new AlchemicalTableRecipeBuilder(stack);
+    public static AlchemyTableRecipeBuilder builder(ItemStack stack) {
+        return new AlchemyTableRecipeBuilder(stack);
     }
 
     private final ItemStack result;
@@ -40,44 +40,44 @@ public class AlchemicalTableRecipeBuilder {
     private Ingredient input;
     private ISkill[] skills;
 
-    public AlchemicalTableRecipeBuilder(ItemStack result) {
+    public AlchemyTableRecipeBuilder(ItemStack result) {
         this(result, OilUtils.getOil(result));
     }
 
-    public AlchemicalTableRecipeBuilder(ItemStack result, IOil resultOil) {
+    public AlchemyTableRecipeBuilder(ItemStack result, IOil resultOil) {
         Objects.requireNonNull(result);
         Objects.requireNonNull(resultOil);
         this.result = result;
         this.resultOil = resultOil;
     }
 
-    public AlchemicalTableRecipeBuilder group(String group){
+    public AlchemyTableRecipeBuilder group(String group){
         this.group = group;
         return this;
     }
 
-    public AlchemicalTableRecipeBuilder ingredient(Ingredient ingredient){
+    public AlchemyTableRecipeBuilder ingredient(Ingredient ingredient){
         this.ingredient = ingredient;
         return this;
     }
 
-    public AlchemicalTableRecipeBuilder ingredient(Ingredient ingredient, IOil ingredientOil){
+    public AlchemyTableRecipeBuilder ingredient(Ingredient ingredient, IOil ingredientOil){
         this.ingredient = ingredient;
         this.ingredientOil = ingredientOil;
         return this;
     }
 
-    public AlchemicalTableRecipeBuilder input(Ingredient input){
+    public AlchemyTableRecipeBuilder input(Ingredient input){
         this.input = input;
         return this;
     }
 
-    public AlchemicalTableRecipeBuilder withCriterion(String name, ICriterionInstance criterion) {
+    public AlchemyTableRecipeBuilder withCriterion(String name, ICriterionInstance criterion) {
         this.advancementBuilder.addCriterion(name, criterion);
         return this;
     }
 
-    public AlchemicalTableRecipeBuilder withSkills(ISkill... skills) {
+    public AlchemyTableRecipeBuilder withSkills(ISkill... skills) {
         this.skills = skills;
         return this;
     }

@@ -289,7 +289,7 @@ public class RecipesGenerator extends RecipeProvider {
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.crucifix_ultimate).pattern("XYYX").pattern("YZAY").pattern("XYYX").pattern("XYYX").define('X', ModItems.item_alchemical_fire).define('Y', Tags.Items.STORAGE_BLOCKS_GOLD).define('Z', ModItems.holy_water_bottle_enhanced).define('A', ModItems.stake).unlockedBy("fire", has(ModItems.item_alchemical_fire)).unlockedBy("gold", has(Tags.Items.STORAGE_BLOCKS_GOLD)).unlockedBy("holy_water", has(ModItems.holy_water_bottle_enhanced)).unlockedBy("stake", has(ModItems.stake)).skills(HunterSkills.ultimate_crucifix).save(consumer, hunter("crucifix_ultimate"));
 
 
-        AlchemicalTableRecipeBuilder.builder(OilUtils.createOilItem(ModOils.plant_oil)).ingredient(Ingredient.of(new ItemStack(Items.GLASS_BOTTLE))).input(Ingredient.of(new ItemStack(Items.WHEAT_SEEDS))).withCriterion("has_bottles", has(Items.GLASS_BOTTLE)).withCriterion("has_wheat_seeds", has(Items.WHEAT_SEEDS)).build(consumer, new ResourceLocation(REFERENCE.MODID, "plant_oil"));
+        AlchemyTableRecipeBuilder.builder(OilUtils.createOilItem(ModOils.plant_oil)).ingredient(Ingredient.of(new ItemStack(Items.GLASS_BOTTLE))).input(Ingredient.of(new ItemStack(Items.WHEAT_SEEDS))).withCriterion("has_bottles", has(Items.GLASS_BOTTLE)).withCriterion("has_wheat_seeds", has(Items.WHEAT_SEEDS)).build(consumer, new ResourceLocation(REFERENCE.MODID, "plant_oil"));
     }
 
     private JsonObject enchantment(int level, Enchantment enchantment) {

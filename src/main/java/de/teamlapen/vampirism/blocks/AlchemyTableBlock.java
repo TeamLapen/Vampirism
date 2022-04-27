@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.tileentity.AlchemicalTableTileEntity;
+import de.teamlapen.vampirism.tileentity.AlchemyTableTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
@@ -21,12 +21,13 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class AlchemicalTableBlock extends ContainerBlock {
-    public static final BooleanProperty HAS_BOTTLE = BlockStateProperties.HAS_BOTTLE_0;
+public class AlchemyTableBlock extends ContainerBlock {
+    public static final BooleanProperty HAS_BOTTLE_0 = BlockStateProperties.HAS_BOTTLE_0;
+    public static final BooleanProperty HAS_BOTTLE_1 = BlockStateProperties.HAS_BOTTLE_1;
 
-    public AlchemicalTableBlock() {
+    public AlchemyTableBlock() {
         super(AbstractBlock.Properties.of(Material.METAL).requiresCorrectToolForDrops().strength(0.5F).lightLevel((p_235461_0_) -> 1).noOcclusion());
-        this.registerDefaultState(this.getStateDefinition().any().setValue(HAS_BOTTLE, false));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(HAS_BOTTLE_0, false).setValue(HAS_BOTTLE_1, false));
     }
 
     @Nonnull
@@ -38,7 +39,7 @@ public class AlchemicalTableBlock extends ContainerBlock {
     @Nullable
     @Override
     public TileEntity newBlockEntity(@Nonnull IBlockReader level) {
-        return new AlchemicalTableTileEntity();
+        return new AlchemyTableTileEntity();
     }
 
     @Override
@@ -47,8 +48,8 @@ public class AlchemicalTableBlock extends ContainerBlock {
             return ActionResultType.SUCCESS;
         } else {
             TileEntity tileentity = p_225533_2_.getBlockEntity(p_225533_3_);
-            if (tileentity instanceof AlchemicalTableTileEntity) {
-                p_225533_4_.openMenu((AlchemicalTableTileEntity)tileentity);
+            if (tileentity instanceof AlchemyTableTileEntity) {
+                p_225533_4_.openMenu((AlchemyTableTileEntity)tileentity);
 //                p_225533_4_.awardStat(Stats.INTERACT_WITH_BREWINGSTAND);
             }
 
@@ -60,8 +61,8 @@ public class AlchemicalTableBlock extends ContainerBlock {
     public void setPlacedBy(World p_180633_1_, BlockPos p_180633_2_, BlockState p_180633_3_, @Nullable LivingEntity p_180633_4_, ItemStack p_180633_5_) {
         if (p_180633_5_.hasCustomHoverName()) {
             TileEntity tileentity = p_180633_1_.getBlockEntity(p_180633_2_);
-            if (tileentity instanceof AlchemicalTableTileEntity) {
-                ((AlchemicalTableTileEntity)tileentity).setCustomName(p_180633_5_.getHoverName());
+            if (tileentity instanceof AlchemyTableTileEntity) {
+                ((AlchemyTableTileEntity)tileentity).setCustomName(p_180633_5_.getHoverName());
             }
         }
     }
@@ -70,8 +71,8 @@ public class AlchemicalTableBlock extends ContainerBlock {
     public void onRemove(BlockState state, World level, BlockPos pos, BlockState state1, boolean p_196243_5_) {
         if (!state.is(state1.getBlock())) {
             TileEntity tileEntity = level.getBlockEntity(pos);
-            if (tileEntity instanceof AlchemicalTableTileEntity){
-                InventoryHelper.dropContents(level, pos, ((AlchemicalTableTileEntity) tileEntity));
+            if (tileEntity instanceof AlchemyTableTileEntity){
+                InventoryHelper.dropContents(level, pos, ((AlchemyTableTileEntity) tileEntity));
             }
             super.onRemove(state, level, pos, state1, p_196243_5_);
         }
@@ -79,6 +80,6 @@ public class AlchemicalTableBlock extends ContainerBlock {
 
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(HAS_BOTTLE);
+        builder.add(HAS_BOTTLE_0).add(HAS_BOTTLE_1);
     }
 }

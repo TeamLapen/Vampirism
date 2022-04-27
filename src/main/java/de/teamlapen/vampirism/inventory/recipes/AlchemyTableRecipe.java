@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.inventory.recipes;
 
 import com.google.gson.JsonObject;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IOilItem;
 import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.core.ModOils;
@@ -20,13 +21,15 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class AlchemicalTableRecipe extends AbstractBrewingRecipe {
+public class AlchemyTableRecipe extends AbstractBrewingRecipe {
 
     private final IOil ingredientOil;
+    private final ISkill[] requiredSkills;
 
-    public AlchemicalTableRecipe(ResourceLocation id, String group, Ingredient ingredient, IOil ingredientOil, Ingredient input, ItemStack result) {
+    public AlchemyTableRecipe(ResourceLocation id, String group, Ingredient ingredient, IOil ingredientOil, Ingredient input, ItemStack result, ISkill[] skills) {
         super(ModRecipes.ALCHEMICAL_TABLE_TYPE,id, group, ingredient, input, result);
         this.ingredientOil = ingredientOil;
+        this.requiredSkills = skills;
     }
 
     public boolean isInput(@Nonnull ItemStack input) {
@@ -42,17 +45,21 @@ public class AlchemicalTableRecipe extends AbstractBrewingRecipe {
         return isInput(input) && isIngredient(ingredient) ? this.result.copy() : ItemStack.EMPTY;
     }
 
+    public ISkill[] getRequiredSkills() {
+        return requiredSkills;
+    }
+
     @Nonnull
     @Override
     public IRecipeSerializer<?> getSerializer() {
         return ModRecipes.alchemical_table;
     }
 
-    public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<AlchemicalTableRecipe> {
+    public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<AlchemyTableRecipe> {
 
         @Nonnull
         @Override
-        public AlchemicalTableRecipe fromJson(@Nonnull ResourceLocation recipeId, @Nonnull JsonObject json) {
+        public AlchemyTableRecipe fromJson(@Nonnull ResourceLocation recipeId, @Nonnull JsonObject json) {
             String group = JSONUtils.getAsString(json, "group", "");
             Ingredient ingredient = Ingredient.fromJson(JSONUtils.isArrayNode(json, "ingredient") ? JSONUtils.getAsJsonArray(json, "ingredient") : JSONUtils.getAsJsonObject(json, "ingredient"));
             Ingredient input = Ingredient.fromJson(JSONUtils.isArrayNode(json, "input") ? JSONUtils.getAsJsonArray(json, "input") : JSONUtils.getAsJsonObject(json, "input"));
@@ -68,28 +75,41 @@ public class AlchemicalTableRecipe extends AbstractBrewingRecipe {
                 ResourceLocation oil = new ResourceLocation(json.get("oil").getAsString());
                 ingredientOil = ModRegistries.OILS.getValue(oil);
             }
-            return new AlchemicalTableRecipe(recipeId, group, ingredient, ingredientOil, input, result);
+            ISkill[] skills = VampirismRecipeHelper.deserializeSkills(JSONUtils.getAsJsonArray(json, "skill", null));
+            return new AlchemyTableRecipe(recipeId, group, ingredient, ingredientOil, input, result, skills);
         }
 
         @Nullable
         @Override
-        public AlchemicalTableRecipe fromNetwork(@Nonnull ResourceLocation recipeId, @Nonnull PacketBuffer buffer) {
+        public AlchemyTableRecipe fromNetwork(@Nonnull ResourceLocation recipeId, @Nonnull PacketBuffer buffer) {
             String group = buffer.readUtf();
             ItemStack result = buffer.readItem();
             Ingredient ingredient = Ingredient.fromNetwork(buffer);
             ResourceLocation ingredientOil = buffer.readResourceLocation();
             Ingredient input = Ingredient.fromNetwork(buffer);
-            return new AlchemicalTableRecipe(recipeId, group, ingredient,ModRegistries.OILS.getValue(ingredientOil), input, result);
+            ISkill[] skills = new ISkill[buffer.readVarInt()];
+            if (skills.length != 0) {
+                for (int i = 0; i < skills.length; i++) {
+                    skills[i] = ModRegistries.SKILLS.getValue(new ResourceLocation(buffer.readUtf(32767)));
+                }
+            }
+            return new AlchemyTableRecipe(recipeId, group, ingredient,ModRegistries.OILS.getValue(ingredientOil), input, result, skills);
         }
 
         @Override
-        public void toNetwork(@Nonnull PacketBuffer buffer, @Nonnull AlchemicalTableRecipe recipe) {
+        public void toNetwork(@Nonnull PacketBuffer buffer, @Nonnull AlchemyTableRecipe recipe) {
             buffer.writeUtf(recipe.group);
             buffer.writeItem(recipe.getResultItem());
             recipe.ingredient.toNetwork(buffer);
             //noinspection ConstantConditions
             buffer.writeResourceLocation(recipe.ingredientOil.getRegistryName());
             recipe.input.toNetwork(buffer);
+            buffer.writeVarInt(recipe.requiredSkills.length);
+            if (recipe.requiredSkills.length != 0) {
+                for (ISkill skill : recipe.requiredSkills) {
+                    buffer.writeUtf(skill.getRegistryName().toString());
+                }
+            }
         }
     }
 }

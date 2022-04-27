@@ -2,7 +2,9 @@ package de.teamlapen.vampirism.tileentity;
 
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.core.ModTiles;
-import de.teamlapen.vampirism.inventory.container.AlchemicalTableContainer;
+import de.teamlapen.vampirism.inventory.container.AlchemyTableContainer;
+import de.teamlapen.vampirism.inventory.recipes.AbstractBrewingRecipe;
+import de.teamlapen.vampirism.util.OilUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BrewingStandBlock;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,6 +15,7 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.LockableTileEntity;
 import net.minecraft.util.IIntArray;
@@ -25,54 +28,62 @@ import net.minecraft.util.text.TranslationTextComponent;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 
-public class AlchemicalTableTileEntity extends LockableTileEntity implements ITickableTileEntity {
+public class AlchemyTableTileEntity extends LockableTileEntity implements ITickableTileEntity {
 
     private NonNullList<ItemStack> items = NonNullList.withSize(6, ItemStack.EMPTY);
     private int brewTime;
     private boolean[] lastPotionCount;
     private Item ingredient;
     private int fuel;
+    private int productColor;
     protected final IIntArray dataAccess = new IIntArray() {
-        public int get(int p_221476_1_) {
-            switch(p_221476_1_) {
+        public int get(int slotId) {
+            switch(slotId) {
                 case 0:
-                    return AlchemicalTableTileEntity.this.brewTime;
+                    return AlchemyTableTileEntity.this.brewTime;
                 case 1:
-                    return AlchemicalTableTileEntity.this.fuel;
+                    return AlchemyTableTileEntity.this.fuel;
+                case 2:
+                    return AlchemyTableTileEntity.this.productColor;
                 default:
                     return 0;
             }
         }
 
-        public void set(int p_221477_1_, int p_221477_2_) {
-            switch(p_221477_1_) {
+        public void set(int slotId, int value) {
+            switch(slotId) {
                 case 0:
-                    AlchemicalTableTileEntity.this.brewTime = p_221477_2_;
+                    AlchemyTableTileEntity.this.brewTime = value;
                     break;
                 case 1:
-                    AlchemicalTableTileEntity.this.fuel = p_221477_2_;
+                    AlchemyTableTileEntity.this.fuel = value;
+                    break;
+                case 2:
+                    AlchemyTableTileEntity.this.productColor = value;
+                    break;
             }
 
         }
 
         public int getCount() {
-            return 2;
+            return 3;
         }
     };
 
-    public AlchemicalTableTileEntity() {
+    public AlchemyTableTileEntity() {
         super(ModTiles.alchemical_table);
     }
 
     @Override
     @Nonnull
     protected ITextComponent getDefaultName() {
-        return new TranslationTextComponent("container.vampirism.alchemical_table");
+        return new TranslationTextComponent("container.vampirism.alchemy_table");
     }
 
+    @Nonnull
     @Override
-    protected Container createMenu(int p_213906_1_, PlayerInventory p_213906_2_) {
-        return new AlchemicalTableContainer(p_213906_1_, IWorldPosCallable.create(this.level, this.worldPosition), p_213906_2_, this,dataAccess);
+    protected Container createMenu(int menuId, @Nonnull PlayerInventory playerInventory) {
+        return new AlchemyTableContainer(menuId, IWorldPosCallable.create(this.level, this.worldPosition), playerInventory, this, this.dataAccess);
     }
 
     @Override
@@ -102,17 +113,20 @@ public class AlchemicalTableTileEntity extends LockableTileEntity implements ITi
         return aboolean;
     }
 
+    @Nonnull
     @Override
     public ItemStack getItem(int p_70301_1_) {
         return p_70301_1_ >= 0 && p_70301_1_ < this.items.size() ? this.items.get(p_70301_1_) : ItemStack.EMPTY;
     }
 
+    @Nonnull
     @Override
     public ItemStack removeItem(int p_70298_1_, int p_70298_2_) {
         return ItemStackHelper.removeItem(this.items, p_70298_1_, p_70298_2_);
 
     }
 
+    @Nonnull
     @Override
     public ItemStack removeItemNoUpdate(int p_70304_1_) {
         return ItemStackHelper.takeItem(this.items, p_70304_1_);
@@ -120,18 +134,18 @@ public class AlchemicalTableTileEntity extends LockableTileEntity implements ITi
     }
 
     @Override
-    public void setItem(int p_70299_1_, ItemStack p_70299_2_) {
+    public void setItem(int p_70299_1_, @Nonnull ItemStack stack) {
         if (p_70299_1_ >= 0 && p_70299_1_ < this.items.size()) {
-            this.items.set(p_70299_1_, p_70299_2_);
+            this.items.set(p_70299_1_, stack);
         }
     }
 
     @Override
-    public boolean stillValid(PlayerEntity p_70300_1_) {
+    public boolean stillValid(@Nonnull PlayerEntity player) {
         if (this.level.getBlockEntity(this.worldPosition) != this) {
             return false;
         } else {
-            return !(p_70300_1_.distanceToSqr((double)this.worldPosition.getX() + 0.5D, (double)this.worldPosition.getY() + 0.5D, (double)this.worldPosition.getZ() + 0.5D) > 64.0D);
+            return !(player.distanceToSqr((double)this.worldPosition.getX() + 0.5D, (double)this.worldPosition.getY() + 0.5D, (double)this.worldPosition.getZ() + 0.5D) > 64.0D);
         }
     }
 
@@ -169,6 +183,7 @@ public class AlchemicalTableTileEntity extends LockableTileEntity implements ITi
             --this.fuel;
             this.brewTime = 600;
             this.ingredient = itemstack1.getItem();
+            this.productColor = this.level.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE).stream().filter(recipe -> recipe.isInput(this.items.get(4)) && (recipe.isIngredient(items.get(0)) || recipe.isIngredient(items.get(1)))).map(AbstractBrewingRecipe::getResultItem).map(s -> OilUtils.getOil(s).getColor()).findAny().orElse(0xffffff);
             this.setChanged();
         }
 
@@ -181,8 +196,8 @@ public class AlchemicalTableTileEntity extends LockableTileEntity implements ITi
                     return;
                 }
 
-                for(int i = 0; i < BrewingStandBlock.HAS_BOTTLE.length; ++i) {
-                    blockstate = blockstate.setValue(BrewingStandBlock.HAS_BOTTLE[i], Boolean.valueOf(aboolean[i]));
+                for(int i = 0; i < 2; ++i) {
+                    blockstate = blockstate.setValue(BrewingStandBlock.HAS_BOTTLE[i], aboolean[i]);
                 }
 
                 this.level.setBlock(this.worldPosition, blockstate, 2);
@@ -240,7 +255,7 @@ public class AlchemicalTableTileEntity extends LockableTileEntity implements ITi
             if (itemstack.isEmpty()) {
                 itemstack = itemstack1;
             } else if (!this.level.isClientSide) {
-                InventoryHelper.dropItemStack(this.level, (double)blockpos.getX(), (double)blockpos.getY(), (double)blockpos.getZ(), itemstack1);
+                InventoryHelper.dropItemStack(this.level, blockpos.getX(), blockpos.getY(), blockpos.getZ(), itemstack1);
             }
         }
         else itemstack.shrink(1);
@@ -272,6 +287,25 @@ public class AlchemicalTableTileEntity extends LockableTileEntity implements ITi
 
     public ItemStack getOutput(ItemStack input, ItemStack ingredient) {
         return this.level.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE).stream().map(recipe -> recipe.getResult(input, ingredient)).findFirst().orElse(ItemStack.EMPTY);
+    }
+
+    @Override
+    public void load(@Nonnull BlockState state, @Nonnull CompoundNBT compound) {
+        super.load(state, compound);
+        this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+        ItemStackHelper.loadAllItems(compound, this.items);
+        this.brewTime = compound.getShort("BrewTime");
+        this.fuel = compound.getByte("Fuel");
+    }
+
+    @Nonnull
+    @Override
+    public CompoundNBT save(@Nonnull CompoundNBT compound) {
+        super.save(compound);
+        compound.putShort("BrewTime", (short)this.brewTime);
+        ItemStackHelper.saveAllItems(compound, this.items);
+        compound.putByte("Fuel", (byte)this.fuel);
+        return compound;
     }
 
 }
