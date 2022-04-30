@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "vampirism:alchemical_table"
+          "name": "vampirism:alchemy_table"
         }
       ],
       "conditions": [

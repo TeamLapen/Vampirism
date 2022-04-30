@@ -6,13 +6,15 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.PressurePlateBlock;
 import net.minecraft.block.WoodButtonBlock;
-import net.minecraft.data.*;
+import net.minecraft.data.DataGenerator;
 import net.minecraft.state.properties.AttachFace;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.generators.*;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
+import net.minecraftforge.client.model.generators.ConfiguredModel;
+import net.minecraftforge.client.model.generators.ModelFile;
+import net.minecraftforge.client.model.generators.VariantBlockStateBuilder;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 import java.util.Arrays;
@@ -243,6 +245,8 @@ public class BlockStateGenerator extends BlockStateProvider {
 
         horizontalBlock(ModBlocks.vampire_rack, models().getExistingFile(modLoc("block/vampire_rack")));
         horizontalBlock(ModBlocks.throne, models().getExistingFile(modLoc("block/throne")));
+
+        horizontalBlock(ModBlocks.alchemy_table, models().getExistingFile(modLoc("block/alchemy_table/alchemy_table")));
     }
 
     private void createWoodStates() {
