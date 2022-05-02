@@ -95,12 +95,12 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<AlchemyTableR
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, @Nonnull AlchemyTableRecipe recipe, IIngredients ingredients) {
         IGuiItemStackGroup group = recipeLayout.getItemStacks();
-        group.init(0, true, 5,14);
-        group.init(1, true, 45,5);
-        group.init(2, true, 69,5);
-        group.init(3, false, 102,61);
-        group.init(4, false, 130,33);
-        group.init(5, true, 24,58);
+        group.init(0, true, 3,12);
+        group.init(1, true, 43,3);
+        group.init(2, true, 67,3);
+        group.init(3, false, 100,59);
+        group.init(4, false, 128,31);
+        group.init(5, true, 22,56);
 
         List<List<ItemStack>> inputs = ingredients.getInputs(VanillaTypes.ITEM);
         List<List<ItemStack>> outputs = ingredients.getOutputs(VanillaTypes.ITEM);
@@ -129,12 +129,12 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<AlchemyTableR
 
     @Override
     public void draw(@Nonnull AlchemyTableRecipe recipe, @Nonnull MatrixStack matrixStack, double mouseX, double mouseY) {
-        this.blazeHeat.draw(matrixStack,33-9,60-10);
-        this.arrow.draw(matrixStack,73-9,57-10);
+        this.blazeHeat.draw(matrixStack,33-9-2,60-10-2);
+        this.arrow.draw(matrixStack,73-9-2,57-10-2);
 
         int color = OilUtils.getOil(recipe.getResultItem()).getColor();
         RenderSystem.color4f((color>> 16) & 0xFF,(color >> 8) & 0xFF,(color) & 0xFF,1F);
-        this.pool.draw(matrixStack,104-9,36-10);
+        this.pool.draw(matrixStack,104-9-2,36-10-2);
         RenderSystem.color4f(1,1,1,1);
 
         int x = 2;

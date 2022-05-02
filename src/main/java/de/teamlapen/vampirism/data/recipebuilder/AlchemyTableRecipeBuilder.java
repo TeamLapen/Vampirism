@@ -83,10 +83,10 @@ public class AlchemyTableRecipeBuilder {
     }
 
     public void build(Consumer<IFinishedRecipe> consumer, ResourceLocation id){
-        id = new ResourceLocation(id.getNamespace(), "alchemical_table/" + id.getPath());
+        id = new ResourceLocation(id.getNamespace(), "alchemy_table/" + id.getPath());
         this.validate(id);
         this.advancementBuilder.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id)).rewards(AdvancementRewards.Builder.recipe(id)).requirements(IRequirementsStrategy.OR);
-        consumer.accept(new Result(id, this.group != null ? this.group : "", this.ingredient, this.ingredientOil, this.input, this.result, this.resultOil, this.skills != null ? this.skills : new ISkill[0], new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getItem().getItemCategory().getRecipeFolderName() + "/" + id.getPath())));
+        consumer.accept(new Result(id, this.group != null ? this.group : "", this.ingredient, this.ingredientOil, this.input, this.result, this.resultOil, this.skills != null ? this.skills : new ISkill[0], new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getItem().getItemCategory().getRecipeFolderName() + "/" + id.getPath()), this.advancementBuilder));
     }
 
     private void validate(ResourceLocation id) {
@@ -101,7 +101,7 @@ public class AlchemyTableRecipeBuilder {
         private final ResourceLocation id;
         private final ItemStack result;
         private final IOil resultOil;
-        private final Advancement.Builder advancementBuilder = Advancement.Builder.advancement();
+        private final Advancement.Builder advancementBuilder;
         private final String group;
         private final Ingredient ingredient;
         private final IOil ingredientOil;
@@ -109,7 +109,7 @@ public class AlchemyTableRecipeBuilder {
         private final ISkill[] skills;
         private final ResourceLocation advancementId;
 
-        public Result(ResourceLocation id, String group, Ingredient ingredient, IOil ingredientOil, Ingredient input, ItemStack result, IOil resultOil, ISkill[] skills, ResourceLocation advancementId) {
+        public Result(ResourceLocation id, String group, Ingredient ingredient, IOil ingredientOil, Ingredient input, ItemStack result, IOil resultOil, ISkill[] skills, ResourceLocation advancementId, Advancement.Builder advancementBuilder) {
             this.id = id;
             this.result = result;
             this.resultOil = resultOil;
@@ -119,6 +119,7 @@ public class AlchemyTableRecipeBuilder {
             this.input = input;
             this.skills = skills;
             this.advancementId = advancementId;
+            this.advancementBuilder = advancementBuilder;
         }
 
         @Nullable

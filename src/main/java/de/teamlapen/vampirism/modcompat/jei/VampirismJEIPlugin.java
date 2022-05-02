@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.client.gui.AlchemicalCauldronScreen;
+import de.teamlapen.vampirism.client.gui.AlchemyTableScreen;
 import de.teamlapen.vampirism.client.gui.WeaponTableScreen;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModRecipes;
@@ -61,6 +62,8 @@ public class VampirismJEIPlugin implements IModPlugin {
     public void registerGuiHandlers(IGuiHandlerRegistration registration) {
         registration.addRecipeClickArea(AlchemicalCauldronScreen.class, 80, 34, 20, 15, ALCHEMICAL_CAULDRON_RECIPE_UID);
         registration.addRecipeClickArea(WeaponTableScreen.class, 114, 46, 20, 15, WEAPON_TABLE_RECIPE_ID);
+        registration.addRecipeClickArea(AlchemyTableScreen.class, 73,57,28, 8, ALCHEMY_TABLE_UID);
+        registration.addRecipeClickArea(AlchemyTableScreen.class, 104,36,32, 32, ALCHEMY_TABLE_UID);
     }
 
     @Override

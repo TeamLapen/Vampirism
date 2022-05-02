@@ -14,12 +14,14 @@ import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Arrays;
 
 public class AlchemyTableRecipe extends AbstractBrewingRecipe {
 
@@ -51,6 +53,12 @@ public class AlchemyTableRecipe extends AbstractBrewingRecipe {
 
     @Nonnull
     @Override
+    public NonNullList<Ingredient> getIngredients() {
+        return NonNullList.of(Ingredient.EMPTY, Ingredient.of(Arrays.stream(this.ingredient.getItems()).map(stack -> OilUtils.setOil(stack, this.ingredientOil))));
+    }
+
+    @Nonnull
+    @Override
     public IRecipeSerializer<?> getSerializer() {
         return ModRecipes.alchemical_table;
     }
@@ -72,7 +80,7 @@ public class AlchemyTableRecipe extends AbstractBrewingRecipe {
             }
             IOil ingredientOil = ModOils.empty;
             if (json.has("ingredient_oil")){
-                ResourceLocation oil = new ResourceLocation(json.get("oil").getAsString());
+                ResourceLocation oil = new ResourceLocation(json.get("ingredient_oil").getAsString());
                 ingredientOil = ModRegistries.OILS.getValue(oil);
             }
             ISkill[] skills = VampirismRecipeHelper.deserializeSkills(JSONUtils.getAsJsonArray(json, "skill", null));

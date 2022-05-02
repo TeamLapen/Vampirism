@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "vampirism:alchemy_table/plant_oil"
+    ]
+  },
+  "criteria": {
+    "has_bottles": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:glass_bottle"
+          }
+        ]
+      }
+    },
+    "has_wheat_seeds": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:wheat_seeds"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "vampirism:alchemy_table/plant_oil"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_bottles",
+      "has_wheat_seeds",
+      "has_the_recipe"
+    ]
+  ]
+}
