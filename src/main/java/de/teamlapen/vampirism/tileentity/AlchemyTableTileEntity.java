@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.tileentity;
 
+import de.teamlapen.vampirism.blocks.AlchemyTableBlock;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.inventory.container.AlchemyTableContainer;
 import de.teamlapen.vampirism.inventory.recipes.AbstractBrewingRecipe;
 import de.teamlapen.vampirism.util.OilUtils;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.BrewingStandBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.InventoryHelper;
@@ -19,7 +19,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.LockableTileEntity;
 import net.minecraft.util.IIntArray;
-import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -32,7 +31,7 @@ public class AlchemyTableTileEntity extends LockableTileEntity implements ITicka
 
     private NonNullList<ItemStack> items = NonNullList.withSize(6, ItemStack.EMPTY);
     private int brewTime;
-    private boolean[] lastPotionCount;
+    private boolean[] lastOilCount;
     private Item ingredient;
     private int fuel;
     private int productColor;
@@ -83,7 +82,7 @@ public class AlchemyTableTileEntity extends LockableTileEntity implements ITicka
     @Nonnull
     @Override
     protected Container createMenu(int menuId, @Nonnull PlayerInventory playerInventory) {
-        return new AlchemyTableContainer(menuId, IWorldPosCallable.create(this.level, this.worldPosition), playerInventory, this, this.dataAccess);
+        return new AlchemyTableContainer(menuId, this.level, playerInventory, this, this.dataAccess);
     }
 
     @Override
@@ -102,9 +101,9 @@ public class AlchemyTableTileEntity extends LockableTileEntity implements ITicka
     }
 
     public boolean[] getPotionBits() {
-        boolean[] aboolean = new boolean[3];
+        boolean[] aboolean = new boolean[4];
 
-        for(int i = 0; i < 2; ++i) {
+        for(int i = 0; i < 4; ++i) {
             if (!this.items.get(i).isEmpty()) {
                 aboolean[i] = true;
             }
@@ -189,16 +188,17 @@ public class AlchemyTableTileEntity extends LockableTileEntity implements ITicka
 
         if (!this.level.isClientSide) {
             boolean[] aboolean = this.getPotionBits();
-            if (!Arrays.equals(aboolean, this.lastPotionCount)) {
-                this.lastPotionCount = aboolean;
+            if (!Arrays.equals(aboolean, this.lastOilCount)) {
+                this.lastOilCount = aboolean;
                 BlockState blockstate = this.level.getBlockState(this.getBlockPos());
-                if (!(blockstate.getBlock() instanceof BrewingStandBlock)) {
+                if (!(blockstate.getBlock() instanceof AlchemyTableBlock)) {
                     return;
                 }
 
-                for(int i = 0; i < 2; ++i) {
-                    blockstate = blockstate.setValue(BrewingStandBlock.HAS_BOTTLE[i], aboolean[i]);
-                }
+                blockstate = blockstate.setValue(AlchemyTableBlock.HAS_BOTTLE_INPUT_0, aboolean[0]);
+                blockstate = blockstate.setValue(AlchemyTableBlock.HAS_BOTTLE_INPUT_1, aboolean[1]);
+                blockstate = blockstate.setValue(AlchemyTableBlock.HAS_BOTTLE_OUTPUT_0, aboolean[2]);
+                blockstate = blockstate.setValue(AlchemyTableBlock.HAS_BOTTLE_OUTPUT_1, aboolean[3]);
 
                 this.level.setBlock(this.worldPosition, blockstate, 2);
             }
@@ -308,4 +308,8 @@ public class AlchemyTableTileEntity extends LockableTileEntity implements ITicka
         return compound;
     }
 
+    @Override
+    public CompoundNBT getUpdateTag() {
+        return super.getUpdateTag();
+    }
 }

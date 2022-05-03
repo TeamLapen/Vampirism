@@ -30,6 +30,11 @@ public class OilItem extends Item implements IOilItem {
         return OilUtils.setOil(super.getDefaultInstance(), ModOils.empty);
     }
 
+    @Override
+    public ItemStack withOil(IOil oil) {
+        return OilUtils.setOil(new ItemStack(this), oil);
+    }
+
     @Nonnull
     @Override
     public ITextComponent getName(@Nonnull ItemStack stack) {

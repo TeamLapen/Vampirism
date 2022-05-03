@@ -11,7 +11,6 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.IIntArray;
-import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.IntArray;
 import net.minecraft.world.World;
 
@@ -24,20 +23,20 @@ public class AlchemyTableContainer extends Container {
     private final Slot ingredientSlot;
 
     public AlchemyTableContainer(int containerId, PlayerInventory playerInventory) {
-        this(containerId, IWorldPosCallable.NULL, playerInventory, new Inventory(6), new IntArray(3));
+        this(containerId, playerInventory.player.level, playerInventory, new Inventory(6), new IntArray(3));
     }
 
-    public AlchemyTableContainer(int containerId, IWorldPosCallable worldPos, PlayerInventory playerInventory, IInventory inventory, IIntArray data) {
+    public AlchemyTableContainer(int containerId, World level, PlayerInventory playerInventory, IInventory inventory, IIntArray data) {
         super(ModContainer.alchemical_table, containerId);
         checkContainerSize(inventory, 5);
         checkContainerDataCount(data, 3);
         this.alchemyTable = inventory;
         this.alchemyTableData = data;
-        this.addSlot(new OilSlot(worldPos, inventory, 0, 55, 16));
-        this.addSlot(new OilSlot(worldPos, inventory, 1, 79, 16));
+        this.addSlot(new OilSlot(level, inventory, 0, 55, 16));
+        this.addSlot(new OilSlot(level, inventory, 1, 79, 16));
         this.addSlot(new ResultSlot(inventory, 2, 112,72));
         this.addSlot(new ResultSlot(inventory, 3, 140,44));
-        this.ingredientSlot = this.addSlot(new IngredientSlot(worldPos, inventory, 4, 15, 25));
+        this.ingredientSlot = this.addSlot(new IngredientSlot(level, inventory, 4, 15, 25));
         this.addSlot(new FuelSlot(inventory, 5, 34, 69));
         this.addDataSlots(data);
 
@@ -129,11 +128,11 @@ public class AlchemyTableContainer extends Container {
 
     static class OilSlot extends Slot {
 
-        private final IWorldPosCallable worldPos;
+        private final World world;
 
-        public OilSlot(IWorldPosCallable worldPos, IInventory inventory, int slotId, int xPos, int yPos) {
+        public OilSlot(World worldPos, IInventory inventory, int slotId, int xPos, int yPos) {
             super(inventory, slotId, xPos, yPos);
-            this.worldPos = worldPos;
+            this.world = worldPos;
         }
 
         public static boolean mayPlaceItem(World world, ItemStack itemstack) {
@@ -141,7 +140,7 @@ public class AlchemyTableContainer extends Container {
         }
 
         public boolean mayPlace(@Nonnull ItemStack stack) {
-            return this.worldPos.evaluate((world, pos) -> mayPlaceItem(world, stack),false);
+            return mayPlaceItem(world, stack);
         }
 
         public int getMaxStackSize() {
@@ -161,17 +160,16 @@ public class AlchemyTableContainer extends Container {
     }
 
     static class IngredientSlot extends Slot {
-        private final IWorldPosCallable worldPos;
+        private final World world;
 
-        public IngredientSlot(IWorldPosCallable worldPos, IInventory inventory, int slotId, int xPos, int yPos) {
+        public IngredientSlot(World worldPos, IInventory inventory, int slotId, int xPos, int yPos) {
             super(inventory, slotId, xPos, yPos);
-            this.worldPos = worldPos;
+            this.world = worldPos;
 
         }
 
         public boolean mayPlace(@Nonnull ItemStack stack) {
-            return this.worldPos.evaluate((world, pos) -> world.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE).stream().anyMatch(recipe -> recipe.isInput(stack)),false);
-
+            return this.world.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE).stream().anyMatch(recipe -> recipe.isInput(stack));
         }
 
         public int getMaxStackSize() {

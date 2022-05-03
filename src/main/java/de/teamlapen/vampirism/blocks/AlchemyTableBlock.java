@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.tileentity.AlchemyTableTileEntity;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -11,12 +12,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -31,14 +29,15 @@ import javax.annotation.Nullable;
 
 public class AlchemyTableBlock extends HorizontalContainerBlock {
     private static final String regName = "alchemy_table";
-    public static final DirectionProperty HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
-    public static final BooleanProperty HAS_BOTTLE_0 = BlockStateProperties.HAS_BOTTLE_0;
-    public static final BooleanProperty HAS_BOTTLE_1 = BlockStateProperties.HAS_BOTTLE_1;
+    public static final BooleanProperty HAS_BOTTLE_INPUT_0 = BooleanProperty.create("has_bottle_input_0");;
+    public static final BooleanProperty HAS_BOTTLE_INPUT_1 = BooleanProperty.create("has_bottle_input_1");;
+    public static final BooleanProperty HAS_BOTTLE_OUTPUT_0 = BooleanProperty.create("has_bottle_output_0");;
+    public static final BooleanProperty HAS_BOTTLE_OUTPUT_1 = BooleanProperty.create("has_bottle_output_1");;
     private static final VoxelShape shape = makeShape();
 
     public AlchemyTableBlock() {
         super(regName, AbstractBlock.Properties.of(Material.METAL).requiresCorrectToolForDrops().strength(0.5F).lightLevel((p_235461_0_) -> 1).noOcclusion(), shape);
-        this.registerDefaultState(this.getStateDefinition().any().setValue(HAS_BOTTLE_0, false).setValue(HAS_BOTTLE_1, false).setValue(HORIZONTAL_FACING, Direction.NORTH));
+        this.registerDefaultState(this.defaultBlockState().setValue(HAS_BOTTLE_INPUT_0, false).setValue(HAS_BOTTLE_INPUT_1, false).setValue(HAS_BOTTLE_OUTPUT_0, false).setValue(HAS_BOTTLE_OUTPUT_1, false));
     }
 
     @Nonnull
@@ -53,15 +52,16 @@ public class AlchemyTableBlock extends HorizontalContainerBlock {
         return new AlchemyTableTileEntity();
     }
 
+    @Nonnull
     @Override
-    public ActionResultType use(BlockState p_225533_1_, World p_225533_2_, BlockPos p_225533_3_, PlayerEntity p_225533_4_, Hand p_225533_5_, BlockRayTraceResult p_225533_6_) {
-        if (p_225533_2_.isClientSide) {
+    public ActionResultType use(@Nonnull BlockState state, World level, @Nonnull BlockPos pos, @Nonnull PlayerEntity player, @Nonnull Hand hand, @Nonnull BlockRayTraceResult rayTrace) {
+        if (level.isClientSide) {
             return ActionResultType.SUCCESS;
         } else {
-            TileEntity tileentity = p_225533_2_.getBlockEntity(p_225533_3_);
+            TileEntity tileentity = level.getBlockEntity(pos);
             if (tileentity instanceof AlchemyTableTileEntity) {
-                p_225533_4_.openMenu((AlchemyTableTileEntity)tileentity);
-//                p_225533_4_.awardStat(Stats.INTERACT_WITH_BREWINGSTAND);
+                player.openMenu((AlchemyTableTileEntity)tileentity);
+                player.awardStat(ModStats.interact_with_alchemy_table);
             }
 
             return ActionResultType.CONSUME;
@@ -69,17 +69,17 @@ public class AlchemyTableBlock extends HorizontalContainerBlock {
     }
 
     @Override
-    public void setPlacedBy(World p_180633_1_, BlockPos p_180633_2_, BlockState p_180633_3_, @Nullable LivingEntity p_180633_4_, ItemStack p_180633_5_) {
-        if (p_180633_5_.hasCustomHoverName()) {
-            TileEntity tileentity = p_180633_1_.getBlockEntity(p_180633_2_);
+    public void setPlacedBy(@Nonnull World level, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
+        if (stack.hasCustomHoverName()) {
+            TileEntity tileentity = level.getBlockEntity(pos);
             if (tileentity instanceof AlchemyTableTileEntity) {
-                ((AlchemyTableTileEntity)tileentity).setCustomName(p_180633_5_.getHoverName());
+                ((AlchemyTableTileEntity)tileentity).setCustomName(stack.getHoverName());
             }
         }
     }
 
     @Override
-    public void onRemove(BlockState state, World level, BlockPos pos, BlockState state1, boolean p_196243_5_) {
+    public void onRemove(BlockState state, @Nonnull World level, @Nonnull BlockPos pos, BlockState state1, boolean p_196243_5_) {
         if (!state.is(state1.getBlock())) {
             TileEntity tileEntity = level.getBlockEntity(pos);
             if (tileEntity instanceof AlchemyTableTileEntity){
@@ -91,57 +91,58 @@ public class AlchemyTableBlock extends HorizontalContainerBlock {
 
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(HAS_BOTTLE_0).add(HAS_BOTTLE_1).add(HORIZONTAL_FACING);
+        super.createBlockStateDefinition(builder);
+        builder.add(HAS_BOTTLE_INPUT_0).add(HAS_BOTTLE_INPUT_1).add(HAS_BOTTLE_OUTPUT_0).add(HAS_BOTTLE_OUTPUT_1);
     }
 
     private static VoxelShape makeShape() {
         VoxelShape shape = VoxelShapes.empty();
         shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0.625, 0.3125, 1, 0.6875, 0.6875), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.0625, 0.625, 0.6875, 0.9375, 0.6875, 0.75), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.125, 0.625, 0.6875, 0.875, 0.6875, 0.8125), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.1875, 0.625, 0.8125, 0.8125, 0.6875, 0.875), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.3125, 0.625, 0.9375, 0.6875, 0.6875, 1), IBooleanFunction.OR);
         shape = VoxelShapes.join(shape, VoxelShapes.box(0.0625, 0.625, 0.25, 0.9375, 0.6875, 0.3125), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.125, 0.625, 0.1875, 0.875, 0.6875, 0.25), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.25, 0.625, 0.0625, 0.75, 0.6875, 0.125), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.3125, 0.625, 0, 0.6875, 0.6875, 0.0625), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.125, 0.625, 0.1875, 0.875, 0.6875, 0.3125), IBooleanFunction.OR);
         shape = VoxelShapes.join(shape, VoxelShapes.box(0.1875, 0.625, 0.125, 0.8125, 0.6875, 0.1875), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.3125, 0.625, 0, 0.6875, 0.6875, 0.0625), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.0625, 0.625, 0.6875, 0.9375, 0.6875, 0.75), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.125, 0.625, 0.75, 0.875, 0.6875, 0.8125), IBooleanFunction.OR);
         shape = VoxelShapes.join(shape, VoxelShapes.box(0.25, 0.625, 0.875, 0.75, 0.6875, 0.9375), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.5625, 0.6875, 0.3125, 1, 0.75, 0.6875), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.3125, 0.625, 0.9375, 0.6875, 0.6875, 1), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.1875, 0.625, 0.8125, 0.8125, 0.6875, 0.875), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.25, 0.625, 0.0625, 0.75, 0.6875, 0.125), IBooleanFunction.OR);
         shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0.6875, 0.3125, 0.4375, 0.75, 0.6875), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.0625, 0.6875, 0.6875, 0.9375, 0.75, 0.75), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.125, 0.6875, 0.6875, 0.875, 0.75, 0.8125), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.1875, 0.6875, 0.8125, 0.8125, 0.75, 0.875), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.3125, 0.6875, 0.9375, 0.6875, 0.75, 1), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.0625, 0.6875, 0.25, 0.375, 0.75, 0.3125), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.625, 0.6875, 0.25, 0.9375, 0.75, 0.3125), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.625, 0.6875, 0.1875, 0.875, 0.75, 0.25), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.125, 0.6875, 0.1875, 0.375, 0.75, 0.25), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.25, 0.6875, 0.0625, 0.75, 0.75, 0.125), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.5625, 0.6875, 0.3125, 1, 0.75, 0.6875), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.0625, 0.6875, 0.25, 0.9375, 0.75, 0.3125), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.125, 0.6875, 0.1875, 0.875, 0.75, 0.3125), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.1875, 0.6875, 0.125, 0.8125, 0.75, 0.1875), IBooleanFunction.OR);
         shape = VoxelShapes.join(shape, VoxelShapes.box(0.3125, 0.6875, 0, 0.6875, 0.75, 0.0625), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.5625, 0.6875, 0.125, 0.8125, 0.75, 0.1875), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.1875, 0.6875, 0.125, 0.4375, 0.75, 0.1875), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.625, 0.6875, 0.6875, 0.9375, 0.75, 0.75), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.0625, 0.6875, 0.6875, 0.375, 0.75, 0.75), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.125, 0.6875, 0.75, 0.375, 0.75, 0.8125), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.625, 0.6875, 0.75, 0.875, 0.75, 0.8125), IBooleanFunction.OR);
         shape = VoxelShapes.join(shape, VoxelShapes.box(0.25, 0.6875, 0.875, 0.75, 0.75, 0.9375), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.4375, 0.6875, 0.375, 0.5625, 0.75, 0.6875), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.75, 0, 0.5625, 0.875, 0.625, 0.6875), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.4375, 0, 0.8125, 0.5625, 0.625, 0.9375), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.125, 0, 0.5625, 0.25, 0.625, 0.6875), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.6875, 0, 0.1875, 0.8125, 0.625, 0.3125), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.1875, 0, 0.1875, 0.3125, 0.625, 0.3125), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.8125, 0.875, 0.625, 0.875, 0.9375, 0.75), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.625, 0.75, 0.9375, 0.6875, 0.875, 1), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.875, 0.75, 0.6875, 0.9375, 0.875, 0.75), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.75, 0.75, 0.8125, 0.8125, 0.875, 0.875), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.9375, 0.75, 0.5625, 1, 0.875, 0.625), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.875, 0.875, 0.5, 1, 0.9375, 0.75), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.625, 0.875, 0.875, 0.75, 0.9375, 1.0625), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.75, 0.875, 0.75, 0.875, 0.9375, 0.9375), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.75, 0.875, 0.9375, 0.8125, 0.9375, 1), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.875, 0.875, 0.75, 1, 0.9375, 0.8125), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.875, 0.875, 0.8125, 0.9375, 0.9375, 0.875), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(1, 0.875, 0.5, 1.0625, 0.9375, 0.75), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.5625, 0.875, 0.875, 0.625, 0.9375, 1.0625), IBooleanFunction.OR);
-        shape = VoxelShapes.join(shape, VoxelShapes.box(0.6875, 0.875, 0.75, 0.75, 0.9375, 0.875), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.3125, 0.6875, 0.9375, 0.6875, 0.75, 1), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.1875, 0.6875, 0.8125, 0.4375, 0.75, 0.875), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.5625, 0.6875, 0.8125, 0.8125, 0.75, 0.875), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.25, 0.6875, 0.0625, 0.75, 0.75, 0.125), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.4375, 0.6875, 0.3125, 0.5625, 0.75, 0.625), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.125, 0, 0.3125, 0.25, 0.625, 0.4375), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.4375, 0, 0.0625, 0.5625, 0.625, 0.1875), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.75, 0, 0.3125, 0.875, 0.625, 0.4375), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.1875, 0, 0.6875, 0.3125, 0.625, 0.8125), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.6875, 0, 0.6875, 0.8125, 0.625, 0.8125), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.1875, 0.875, 0.3125, 0.25, 0.9375, 0.4375), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.375, 0.75, 0.0625, 0.4375, 0.875, 0.125), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.125, 0.75, 0.3125, 0.1875, 0.875, 0.375), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.25, 0.75, 0.1875, 0.3125, 0.875, 0.25), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.0625, 0.75, 0.4375, 0.125, 0.875, 0.5), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.0625, 0.875, 0.3125, 0.1875, 0.9375, 0.5625), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.3125, 0.875, 0, 0.4375, 0.9375, 0.1875), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.1875, 0.875, 0.125, 0.3125, 0.9375, 0.3125), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.25, 0.875, 0.0625, 0.3125, 0.9375, 0.125), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.0625, 0.875, 0.25, 0.1875, 0.9375, 0.3125), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.125, 0.875, 0.1875, 0.1875, 0.9375, 0.25), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0.875, 0.3125, 0.0625, 0.9375, 0.5625), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.4375, 0.875, 0, 0.5, 0.9375, 0.1875), IBooleanFunction.OR);
+        shape = VoxelShapes.join(shape, VoxelShapes.box(0.3125, 0.875, 0.1875, 0.375, 0.9375, 0.3125), IBooleanFunction.OR);
 
         return shape;
     }

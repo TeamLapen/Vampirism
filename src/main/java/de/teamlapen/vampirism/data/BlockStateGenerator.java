@@ -11,13 +11,11 @@ import net.minecraft.state.properties.AttachFace;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.generators.BlockStateProvider;
-import net.minecraftforge.client.model.generators.ConfiguredModel;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.client.model.generators.VariantBlockStateBuilder;
+import net.minecraftforge.client.model.generators.*;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 import java.util.Arrays;
+import java.util.function.Consumer;
 
 
 public class BlockStateGenerator extends BlockStateProvider {
@@ -246,7 +244,12 @@ public class BlockStateGenerator extends BlockStateProvider {
         horizontalBlock(ModBlocks.vampire_rack, models().getExistingFile(modLoc("block/vampire_rack")));
         horizontalBlock(ModBlocks.throne, models().getExistingFile(modLoc("block/throne")));
 
-        horizontalBlock(ModBlocks.alchemy_table, models().getExistingFile(modLoc("block/alchemy_table/alchemy_table")));
+        MultiPartBlockStateBuilder alchemy_table = getMultipartBuilder(ModBlocks.alchemy_table);
+        applyHorizontalModel(alchemy_table, models().getExistingFile(modLoc("block/alchemy_table/alchemy_table")));
+        applyHorizontalModel(alchemy_table, models().getExistingFile(modLoc("block/alchemy_table/alchemy_table_input_0")), partBuilder -> partBuilder.condition(AlchemyTableBlock.HAS_BOTTLE_INPUT_0, true));
+        applyHorizontalModel(alchemy_table, models().getExistingFile(modLoc("block/alchemy_table/alchemy_table_input_1")), partBuilder -> partBuilder.condition(AlchemyTableBlock.HAS_BOTTLE_INPUT_1, true));
+        applyHorizontalModel(alchemy_table, models().getExistingFile(modLoc("block/alchemy_table/alchemy_table_output_0")), partBuilder -> partBuilder.condition(AlchemyTableBlock.HAS_BOTTLE_OUTPUT_0, true));
+        applyHorizontalModel(alchemy_table, models().getExistingFile(modLoc("block/alchemy_table/alchemy_table_output_1")), partBuilder -> partBuilder.condition(AlchemyTableBlock.HAS_BOTTLE_OUTPUT_1, true));
     }
 
     private void createWoodStates() {
@@ -360,6 +363,47 @@ public class BlockStateGenerator extends BlockStateProvider {
         getVariantBuilder(block)
                 .partialState().with(PressurePlateBlock.POWERED, false).modelForState().modelFile(pressure_plate).addModel()
                 .partialState().with(PressurePlateBlock.POWERED, true).modelForState().modelFile(pressure_plate_down).addModel();
+    }
+
+    private MultiPartBlockStateBuilder applyHorizontalModel(MultiPartBlockStateBuilder builder, ModelFile file) {
+        return applyHorizontalModel(builder, file, partBuilder -> {});
+    }
+
+    private MultiPartBlockStateBuilder applyHorizontalModel(MultiPartBlockStateBuilder builder, ModelFile file, Consumer<MultiPartBlockStateBuilder.PartBuilder> conditions) {
+        MultiPartBlockStateBuilder.PartBuilder partBuilder = builder.part().modelFile(file).rotationY(0).addModel().condition(HunterTableBlock.FACING, Direction.NORTH);
+        conditions.accept(partBuilder);
+        partBuilder.end();
+        partBuilder = builder.part().modelFile(file).rotationY(90).addModel().condition(HunterTableBlock.FACING, Direction.EAST);
+        conditions.accept(partBuilder);
+        partBuilder.end();
+        partBuilder = builder.part().modelFile(file).rotationY(180).addModel().condition(HunterTableBlock.FACING, Direction.SOUTH);
+        conditions.accept(partBuilder);
+        partBuilder.end();
+        partBuilder = builder.part().modelFile(file).rotationY(270).addModel().condition(HunterTableBlock.FACING, Direction.WEST);
+        conditions.accept(partBuilder);
+        partBuilder.end();
+
+        return builder;
+    }
+
+
+
+        private MultiPartBlockStateBuilder getHorizontalMultiPartBlockStateBuilder(Block block, ModelFile file, Consumer<MultiPartBlockStateBuilder.PartBuilder> conditions) {
+        MultiPartBlockStateBuilder builder = getMultipartBuilder(block);
+        MultiPartBlockStateBuilder.PartBuilder partBuilder = builder.part().modelFile(file).rotationY(0).addModel().condition(HunterTableBlock.FACING, Direction.NORTH);
+        conditions.accept(partBuilder);
+        partBuilder.end();
+        partBuilder = builder.part().modelFile(file).rotationY(90).addModel().condition(HunterTableBlock.FACING, Direction.EAST);
+        conditions.accept(partBuilder);
+        partBuilder.end();
+        partBuilder = builder.part().modelFile(file).rotationY(180).addModel().condition(HunterTableBlock.FACING, Direction.SOUTH);
+        conditions.accept(partBuilder);
+        partBuilder.end();
+        partBuilder = builder.part().modelFile(file).rotationY(270).addModel().condition(HunterTableBlock.FACING, Direction.WEST);
+        conditions.accept(partBuilder);
+        partBuilder.end();
+
+        return builder;
     }
 
 }

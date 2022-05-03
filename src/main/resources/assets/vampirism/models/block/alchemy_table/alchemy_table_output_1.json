@@ -1,0 +1,17 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"4": "vampirism:item/oil_bottle_screen"
+	},
+	"elements": [
+		{
+			"from": [10, 12, 12.5],
+			"to": [14, 17, 12.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [3, 15, 7]},
+			"faces": {
+				"north": {"uv": [2, 0, 15, 15], "texture": "#4"},
+				"south": {"uv": [2, 0, 15, 15], "texture": "#4"}
+			}
+		}
+	]
+}
