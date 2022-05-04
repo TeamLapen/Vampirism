@@ -21,11 +21,7 @@ public interface IOil extends IForgeRegistryEntry<IOil> {
 
     String getName(String item);
 
-    int getMaxDuration(ItemStack stack);
-
     void getDescription(ItemStack stack, List<ITextComponent> tooltips);
-
-    boolean canBeAppliedTo(ItemStack stack);
 
     int getColor();
 }

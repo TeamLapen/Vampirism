@@ -18,9 +18,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class OilItem extends Item implements IOilItem {
+public class OilBottle extends Item implements IOilItem {
 
-    public OilItem(Properties properties) {
+    public OilBottle(Properties properties) {
         super(properties);
     }
 
@@ -32,7 +32,7 @@ public class OilItem extends Item implements IOilItem {
 
     @Override
     public ItemStack withOil(IOil oil) {
-        return OilUtils.setOil(new ItemStack(this), oil);
+        return OilUtils.setOil(getDefaultInstance(), oil);
     }
 
     @Nonnull

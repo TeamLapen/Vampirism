@@ -8,6 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.ShapedRecipe;
+import net.minecraft.item.crafting.SpecialRecipeSerializer;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
@@ -38,6 +39,8 @@ public class ModRecipes {
     public static final IRecipeSerializer<AlchemicalCauldronRecipe> alchemical_cauldron = getNull();
     @ObjectHolder(REFERENCE.MODID + ":alchemical_table")
     public static final IRecipeSerializer<AlchemyTableRecipe> alchemical_table = getNull();
+    @ObjectHolder(REFERENCE.MODID + ":applicable_oil")
+    public static final SpecialRecipeSerializer<ApplicableOilRecipe> applicable_oil = getNull();
 
     public static final IConditionSerializer<?> CONFIG_CONDITION = CraftingHelper.register(new ConfigCondition.Serializer());
 
@@ -59,7 +62,7 @@ public class ModRecipes {
         registry.register(new ShapedItemWithTierRepair.Serializer().setRegistryName(REFERENCE.MODID, "repair_iitemwithtier"));
         registry.register(new AlchemicalCauldronRecipe.Serializer().setRegistryName(REFERENCE.MODID, "alchemical_cauldron"));
         registry.register(new AlchemyTableRecipe.Serializer().setRegistryName(REFERENCE.MODID, "alchemical_table"));
-
+        registry.register(new SpecialRecipeSerializer<>(ApplicableOilRecipe::new).setRegistryName(REFERENCE.MODID, "applicable_oil"));
     }
 
     public static void registerLiquidColor(Item item, int color) {

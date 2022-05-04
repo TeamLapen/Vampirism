@@ -3,10 +3,7 @@ package de.teamlapen.vampirism.data;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.core.ModOils;
-import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.data.recipebuilder.*;
 import de.teamlapen.vampirism.inventory.recipes.ConfigCondition;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
@@ -288,7 +285,7 @@ public class RecipesGenerator extends RecipeProvider {
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.crucifix_enhanced).pattern("XYYX").pattern("YZAY").pattern("XYYX").pattern("XYYX").define('X', ModItems.holy_salt).define('Y', iron_ingot).define('Z', ModItems.holy_water_bottle_normal).define('A', ModItems.stake).unlockedBy("iron", has(iron_ingot)).unlockedBy("blessed_salt", has(ModItems.holy_salt)).unlockedBy("holy_water", has(ModItems.holy_water_bottle_normal)).unlockedBy("stake", has(ModItems.stake)).skills(HunterSkills.crucifix_wielder).save(consumer, hunter("crucifix_enhanced"));
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.crucifix_ultimate).pattern("XYYX").pattern("YZAY").pattern("XYYX").pattern("XYYX").define('X', ModItems.item_alchemical_fire).define('Y', Tags.Items.STORAGE_BLOCKS_GOLD).define('Z', ModItems.holy_water_bottle_enhanced).define('A', ModItems.stake).unlockedBy("fire", has(ModItems.item_alchemical_fire)).unlockedBy("gold", has(Tags.Items.STORAGE_BLOCKS_GOLD)).unlockedBy("holy_water", has(ModItems.holy_water_bottle_enhanced)).unlockedBy("stake", has(ModItems.stake)).skills(HunterSkills.ultimate_crucifix).save(consumer, hunter("crucifix_ultimate"));
 
-
+        CustomRecipeBuilder.special(ModRecipes.applicable_oil).save(consumer, REFERENCE.MODID+":applicable_oil");
         AlchemyTableRecipeBuilder.builder(OilUtils.createOilItem(ModOils.plant_oil)).ingredient(Ingredient.of(new ItemStack(Items.GLASS_BOTTLE))).input(Ingredient.of(new ItemStack(Items.WHEAT_SEEDS))).withCriterion("has_bottles", has(Items.GLASS_BOTTLE)).withCriterion("has_wheat_seeds", has(Items.WHEAT_SEEDS)).build(consumer, new ResourceLocation(REFERENCE.MODID, "plant_oil"));
     }
 

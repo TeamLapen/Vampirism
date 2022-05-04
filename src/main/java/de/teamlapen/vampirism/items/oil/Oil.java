@@ -28,16 +28,6 @@ public class Oil extends ForgeRegistryEntry<IOil> implements IOil {
     }
 
     @Override
-    public boolean canBeAppliedTo(ItemStack stack) {
-        return false;
-    }
-
-    @Override
-    public int getMaxDuration(ItemStack stack) {
-        return 0;
-    }
-
-    @Override
     public String getName(String item) {
         return item + this.getRegistryName().toString().replace(':', '_');
     }

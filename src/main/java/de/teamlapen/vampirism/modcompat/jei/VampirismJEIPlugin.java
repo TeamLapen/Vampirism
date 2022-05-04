@@ -4,14 +4,17 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.items.oil.IApplicableOil;
 import de.teamlapen.vampirism.client.gui.AlchemicalCauldronScreen;
 import de.teamlapen.vampirism.client.gui.AlchemyTableScreen;
 import de.teamlapen.vampirism.client.gui.WeaponTableScreen;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModRecipes;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.inventory.container.AlchemicalCauldronContainer;
 import de.teamlapen.vampirism.inventory.container.WeaponTableContainer;
 import de.teamlapen.vampirism.player.tasks.TaskUtil;
+import de.teamlapen.vampirism.util.OilUtils;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaRecipeCategoryUid;
@@ -25,8 +28,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTier;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.RecipeManager;
+import net.minecraft.item.crafting.ShapelessRecipe;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -83,6 +89,7 @@ public class VampirismJEIPlugin implements IModPlugin {
         registration.addRecipes(VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().map(JEIPotionMix::createFromMix).flatMap(Collection::stream).collect(Collectors.toList()), POTION_RECIPE_UID);
         registration.addRecipes(getRepairRecipes(registration.getVanillaRecipeFactory()), VanillaRecipeCategoryUid.ANVIL);
         registration.addRecipes(recipeManager.byType(ModRecipes.ALCHEMICAL_TABLE_TYPE).values(), ALCHEMY_TABLE_UID);
+        registration.addRecipes(getApplicableOilRecipes(), VanillaRecipeCategoryUid.CRAFTING);
     }
 
     @Override
@@ -128,5 +135,12 @@ public class VampirismJEIPlugin implements IModPlugin {
             }
         }
         return recipes;
+    }
+
+    private List<ShapelessRecipe> getApplicableOilRecipes() {
+        Collection<IApplicableOil> oils = ModRegistries.OILS.getValues().stream().filter(IApplicableOil.class::isInstance).map(IApplicableOil.class::cast).collect(Collectors.toList());
+        Collection<ItemStack> allItems = ForgeRegistries.ITEMS.getValues().stream().map(Item::getDefaultInstance).collect(Collectors.toList());
+        Map<IApplicableOil, Collection<ItemStack>> compatiblePairs = oils.stream().collect(Collectors.toMap(x -> x,x -> allItems.stream().filter(x::canBeApplied).collect(Collectors.toList())));
+        return compatiblePairs.entrySet().stream().flatMap(entry -> entry.getValue().stream().map(stack -> new ShapelessRecipe(new ResourceLocation(REFERENCE.MODID, (entry.getKey().getRegistryName().toString() + stack.getItem().getRegistryName().toString()).replace(':', '_')), "", OilUtils.setAppliedOil(stack, entry.getKey()), NonNullList.of(Ingredient.EMPTY, Ingredient.of(stack), Ingredient.of(OilUtils.createOilItem(entry.getKey())))))).collect(Collectors.toList());
     }
 }
