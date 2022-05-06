@@ -8,7 +8,6 @@ import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
@@ -31,7 +30,6 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.*;
-import net.minecraftforge.event.entity.EntityEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -223,17 +221,6 @@ public class CoffinBlock extends VampirismBlockContainer {
                 });
                 return ActionResultType.CONSUME;
             }
-        }
-    }
-
-    public static void setSleepSize(EntityEvent.Size event, LivingEntity entity) {
-        if (entity.isSleeping()){
-            entity.getSleepingPos().ifPresent(pos -> {
-                BlockState state = entity.level.getBlockState(pos);
-                if (state.getBlock() instanceof CoffinBlock && state.getValue(VERTICAL)) {
-                    event.setNewSize(new EntitySize(0.2f, 0.6f,true), true);
-                }
-            });
         }
     }
 
