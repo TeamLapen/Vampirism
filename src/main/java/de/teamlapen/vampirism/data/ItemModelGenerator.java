@@ -41,7 +41,6 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             add(ModBlocks.BLOOD_SIEVE.get());
             add(ModBlocks.ALTAR_CLEANSING.get());
             add(ModBlocks.CURSED_EARTH.get());
-            add(ModBlocks.HUNTER_TABLE.get());
             add(ModBlocks.SUNSCREEN_BEACON.get());
             add(ModBlocks.TOTEM_TOP.get());
             add(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE.get());
@@ -268,6 +267,8 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
         withExistingParent(ModBlocks.CURSED_SPRUCE_BUTTON.get().asItem(), modLoc("block/cursed_spruce_button_inventory"));
         withExistingParent(ModBlocks.DARK_SPRUCE_FENCE.get().asItem(), modLoc("block/dark_spruce_fence_inventory"));
         withExistingParent(ModBlocks.CURSED_SPRUCE_FENCE.get().asItem(), modLoc("block/cursed_spruce_fence_inventory"));
+
+        withExistingParent(ModBlocks.HUNTER_TABLE.get(), modLoc("block/hunter_table/hunter_table"));
 
     }
 
