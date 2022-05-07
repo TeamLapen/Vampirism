@@ -7,7 +7,7 @@
   ],
   "key": {
     "X": {
-      "item": "minecraft:spruce_planks"
+      "tag": "minecraft:planks"
     },
     "Y": {
       "item": "minecraft:lime_wool"

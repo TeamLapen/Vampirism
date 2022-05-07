@@ -377,7 +377,7 @@ public class CoffinBlock extends VampirismBlockContainer {
             lidShape = VoxelShapes.join(lidShape, VoxelShapes.box(0.09375, 0.5625, 0, 0.90625, 0.625, 0.078125), IBooleanFunction.OR);
             lidShape = VoxelShapes.join(lidShape, VoxelShapes.box(0.90625, 0.5625, 0, 1, 0.625, 2), IBooleanFunction.OR);
             lidShape = VoxelShapes.join(lidShape, VoxelShapes.box(0.09375, 0.5625, 1.90625, 0.90625, 0.625, 2), IBooleanFunction.OR);
-            lidShape = VoxelShapes.join(lidShape, VoxelShapes.box(0.09375, 0.625, 0.078125, 0.90625, 0.6875, 1.9375), IBooleanFunction.OR);
+            lidShape = VoxelShapes.join(lidShape, VoxelShapes.box(0.09375, 0.625, 0.0625, 0.90625, 0.6875, 1.921875), IBooleanFunction.OR);
 
             VoxelShape head = VoxelShapes.join(shape, VoxelShapes.box(0,0,0,1,1,1), IBooleanFunction.AND);
             VoxelShape foot = VoxelShapes.join(shape, VoxelShapes.box(0,0,1,1,1,2), IBooleanFunction.AND).move(0,0,-1);
