@@ -48,6 +48,7 @@ public class ModTags {
         public static final ITag.INamedTag<Item> CURSEDEARTH = tag("cursed_earth");
         public static final ITag.INamedTag<Item> DARK_SPRUCE_LOG = tag("dark_spruce_log");
         public static final ITag.INamedTag<Item> CURSED_SPRUCE_LOG = tag("cursed_spruce_log");
+        public static final ITag.INamedTag<Item> HEART = tag("heart");
 
 
         private static ITag.INamedTag<Item> tag(ResourceLocation resourceLocation) {
