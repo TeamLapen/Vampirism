@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:human_heart"
-            ]
+            "tag": "vampirism:heart"
           }
         ]
       },

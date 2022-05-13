@@ -55,6 +55,7 @@ public class ModTags {
         public static final TagKey<Item> CURSEDEARTH = tag("cursed_earth");
         public static final TagKey<Item> DARK_SPRUCE_LOG = tag("dark_spruce_log");
         public static final TagKey<Item> CURSED_SPRUCE_LOG = tag("cursed_spruce_log");
+        public static final TagKey<Item> HEART = tag("heart");
 
         private static TagKey<Item> tag(ResourceLocation resourceLocation) {
             return ItemTags.create(resourceLocation);

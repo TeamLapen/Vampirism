@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.client.model.armor.*;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.RegUtil;
+import de.teamlapen.vampirism.util.VampirismArmorMaterials;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.Model;
 import net.minecraft.network.chat.Component;
@@ -32,12 +33,10 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-import net.minecraft.world.item.Item.Properties;
-
 public class VampireClothingItem extends ArmorItem implements IFactionExclusiveItem {
 
     public VampireClothingItem(EquipmentSlot slotType) {
-        super(ArmorMaterials.LEATHER, slotType, new Properties().defaultDurability(ArmorMaterials.IRON.getDurabilityForSlot(slotType)).tab(VampirismMod.creativeTab));
+        super(VampirismArmorMaterials.VAMPIRE_CLOTH, slotType, new Properties().defaultDurability(ArmorMaterials.IRON.getDurabilityForSlot(slotType)).tab(VampirismMod.creativeTab));
     }
 
     @OnlyIn(Dist.CLIENT)
