@@ -3,7 +3,10 @@ package de.teamlapen.vampirism.items;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.items.IItemWithTier;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -15,6 +18,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -44,8 +48,8 @@ public class VampirismItemWeapon extends SwordItem {
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if (flagIn.isAdvanced()) {
-            tooltip.add(new StringTextComponent("ModDamage: " + getAttackDamage(stack)));
-            tooltip.add(new StringTextComponent("ModSpeed: " + getAttackSpeed(stack)));
+            tooltip.add(new StringTextComponent("ModDamage: " + getAttackDamage(stack)).withStyle(TextFormatting.GRAY));
+            tooltip.add(new StringTextComponent("ModSpeed: " + getAttackSpeed(stack)).withStyle(TextFormatting.GRAY));
         }
     }
 
@@ -58,6 +62,14 @@ public class VampirismItemWeapon extends SwordItem {
         }
 
         return multimap;
+    }
+
+    @Override
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+        if((enchantment == Enchantments.MENDING && (this instanceof IItemWithTier) && ((IItemWithTier) this).getVampirismTier() == IItemWithTier.TIER.ULTIMATE)){
+            return false;
+        }
+        return super.canApplyAtEnchantingTable(stack, enchantment);
     }
 
     protected float getAttackDamage(ItemStack stack) {

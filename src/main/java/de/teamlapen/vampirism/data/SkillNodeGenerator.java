@@ -88,7 +88,7 @@ public class SkillNodeGenerator implements IDataProvider {
         {
             ResourceLocation skill2 = SkillNodeBuilder.vampire(modId("vampire"), VampireSkills.night_vision).build(consumer, modId("skill2"));
             ResourceLocation skill3 = SkillNodeBuilder.vampire(skill2, VampireSkills.vampire_regeneration).build(consumer, modId("skill3"));
-            ResourceLocation skill4 = SkillNodeBuilder.vampire(skill3, VampireSkills.bat).build(consumer, modId("skill4"));
+            ResourceLocation skill4 = SkillNodeBuilder.vampire(skill3, VampireSkills.fledgling).build(consumer, modId("skill4"));
 
             ResourceLocation util1 = SkillNodeBuilder.vampire(skill4, VampireSkills.summon_bats).build(consumer, modId("util1"));
             ResourceLocation util15 = SkillNodeBuilder.vampire(util1, VampireSkills.hissing).build(consumer, modId("util15"));

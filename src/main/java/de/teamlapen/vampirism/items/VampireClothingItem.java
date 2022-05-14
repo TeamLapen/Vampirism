@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.client.model.armor.*;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.VampirismArmorMaterials;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -32,7 +33,7 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
 
 
     public VampireClothingItem(EquipmentSlotType slotType, String regName) {
-        super(ArmorMaterial.LEATHER, slotType, new Properties().defaultDurability(ArmorMaterial.IRON.getDurabilityForSlot(slotType)).tab(VampirismMod.creativeTab));
+        super(VampirismArmorMaterials.VAMPIRE_CLOTH, slotType, new Properties().defaultDurability(ArmorMaterial.IRON.getDurabilityForSlot(slotType)).tab(VampirismMod.creativeTab));
         this.regName = regName;
         this.setRegistryName(REFERENCE.MODID, regName);
     }

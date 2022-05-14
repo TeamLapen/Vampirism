@@ -4,7 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
-import de.teamlapen.vampirism.network.InputEventPacket;
+import de.teamlapen.vampirism.network.CNameItemPacket;
 import net.minecraft.client.AbstractOption;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
@@ -53,13 +53,13 @@ public class NameSwordScreen extends Screen {
         this.addButton(new OptionButton(this.width / 2 - 155, this.height / 6 + 96, 150, 20, AbstractOption.AMBIENT_OCCLUSION, this.yes, (context) -> {
             if (!StringUtils.isBlank(nameField.getValue())) {
                 NameSwordScreen.this.sword.setHoverName(new StringTextComponent(nameField.getValue()));
-                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.NAME_ITEM, nameField.getValue()));
+                VampirismMod.dispatcher.sendToServer(new CNameItemPacket(nameField.getValue()));
             }
             this.minecraft.setScreen(null);
             this.minecraft.setWindowActive(true);
         }));
         this.addButton(new OptionButton(this.width / 2 - 155 + 160, this.height / 6 + 96, 150, 20, AbstractOption.AMBIENT_OCCLUSION, this.no, (context) -> {
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.NAME_ITEM, VampirismVampireSword.DO_NOT_NAME_STRING));
+            VampirismMod.dispatcher.sendToServer(new CNameItemPacket(VampirismVampireSword.DO_NOT_NAME_STRING));
             this.minecraft.setScreen(null);
             this.minecraft.setWindowActive(true);
         }));

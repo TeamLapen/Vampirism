@@ -10,9 +10,9 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.*;
 import java.util.function.Supplier;
 
-public class TaskPacket implements IMessage {
+public class STaskPacket implements IMessage {
 
-    public static void encode(TaskPacket msg, PacketBuffer buffer) {
+    public static void encode(STaskPacket msg, PacketBuffer buffer) {
         buffer.writeVarInt(msg.containerId);
         buffer.writeVarInt(msg.completableTasks.size());
         buffer.writeVarInt(msg.completedRequirements.size());
@@ -37,7 +37,7 @@ public class TaskPacket implements IMessage {
         msg.taskWrappers.forEach((id, taskWrapper) -> taskWrapper.encode(buffer));
     }
 
-    public static TaskPacket decode(PacketBuffer buffer) {
+    public static STaskPacket decode(PacketBuffer buffer) {
         int containerId = buffer.readVarInt();
         int completableSize = buffer.readVarInt();
         int statSize = buffer.readVarInt();
@@ -73,10 +73,10 @@ public class TaskPacket implements IMessage {
             TaskManager.TaskWrapper wrapper = TaskManager.TaskWrapper.decode(buffer);
             taskWrapper.put(wrapper.getId(), wrapper);
         }
-        return new TaskPacket(containerId, taskWrapper, completableTasks, completedRequirements);
+        return new STaskPacket(containerId, taskWrapper, completableTasks, completedRequirements);
     }
 
-    public static void handle(final TaskPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final STaskPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> VampirismMod.proxy.handleTaskPacket(msg));
         ctx.setPacketHandled(true);
@@ -88,7 +88,7 @@ public class TaskPacket implements IMessage {
 
     public final Map<UUID, TaskManager.TaskWrapper> taskWrappers;
 
-    public TaskPacket(int containerId, Map<UUID, TaskManager.TaskWrapper> taskWrappers, Map<UUID, Set<UUID>> completableTasks, Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements) {
+    public STaskPacket(int containerId, Map<UUID, TaskManager.TaskWrapper> taskWrappers, Map<UUID, Set<UUID>> completableTasks, Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements) {
         this.containerId = containerId;
         this.taskWrappers = taskWrappers;
         this.completedRequirements = completedRequirements;

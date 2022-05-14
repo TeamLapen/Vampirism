@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.player.vampire;
 
 import de.teamlapen.lib.HelperLib;
+import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.lib.util.ISoundReference;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.VampireActionTrigger;
@@ -27,7 +29,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.fluids.BloodHelper;
 import de.teamlapen.vampirism.items.VampirismHunterArmor;
 import de.teamlapen.vampirism.mixin.ArmorItemAccessor;
-import de.teamlapen.vampirism.network.InputEventPacket;
+import de.teamlapen.vampirism.network.CSimpleInputEvent;
 import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleData;
 import de.teamlapen.vampirism.player.IVampirismPlayer;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
@@ -182,6 +184,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private IVampireVision activatedVision = null;
     private int wing_counter = 0;
     private int feed_victim = -1;
+    /**
+     * Holds a sound reference (client side only) for the feeding sound while feed_victim!=-1
+     */
+    @Nullable
+    private ISoundReference feedingSoundReference;
     private BITE_TYPE feed_victim_bite_type;
     private int feedBiteTickCounter = 0;
     private boolean forceNaturalArmorUpdate;
@@ -594,6 +601,20 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     @Override
+    public boolean canBeInfected(IVampire vampire) {
+        return !player.hasEffect(ModEffects.sanguinare) && Helper.canTurnPlayer(vampire, player) && Helper.canBecomeVampire(player);
+    }
+
+    @Override
+    public boolean tryInfect(IVampire vampire) {
+        if (canBeInfected(vampire)) {
+            SanguinareEffect.addRandom(player, true);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public int onBite(IVampire biter) {
         float perc = biter instanceof IVampirePlayer ? 0.2F : 0.08F;
         if (getLevel() == 0) {
@@ -601,9 +622,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             int sucked = (int) Math.ceil((amt * perc));
             player.getFoodData().setFoodLevel(amt - sucked);
             player.causeFoodExhaustion(1000F);
-            if (!player.hasEffect(ModEffects.sanguinare) && Helper.canTurnPlayer(biter, player) && Helper.canBecomeVampire(player)) {
-                if (!player.isCreative()) SanguinareEffect.addRandom(player, true);
-            }
             return sucked;
         }
         int amt = this.getBloodStats().getBloodLevel();
@@ -690,7 +708,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 if (useBlood(VampirismConfig.BALANCE.vaHalfInvulnerableBloodCost.get(), false)) {
                     return true;
                 } else {
-                    this.actionHandler.toggleAction(VampireActions.half_invulnerable);
+                    this.actionHandler.deactivateAction(VampireActions.half_invulnerable);
                 }
             }
         }
@@ -919,7 +937,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             if (feed_victim != -1 && feedBiteTickCounter++ % 5 == 0) {
                 Entity e = VampirismMod.proxy.getMouseOverEntity();
                 if (e == null || e.getId() != feed_victim) {
-                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.ENDSUCKBLOOD, ""));
+                    VampirismMod.dispatcher.sendToServer(new CSimpleInputEvent(CSimpleInputEvent.Type.FINISH_SUCK_BLOOD));
                     feedBiteTickCounter = 0;
                     feed_victim = -1;
                     return;
@@ -1181,6 +1199,18 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
         if (nbt.contains(KEY_FEED_VICTIM_ID)) {
             feed_victim = nbt.getInt(KEY_FEED_VICTIM_ID);
+            if(feed_victim != -1){
+                if(feedingSoundReference == null || !feedingSoundReference.isPlaying()){
+                    feedingSoundReference = VampLib.proxy.createSoundReference(ModSounds.player_feeding, SoundCategory.PLAYERS, player.getX(), player.getY(), player.getZ(),1,1);
+                    feedingSoundReference.startPlaying();
+                }
+            }
+            else{
+                if(feedingSoundReference != null){
+                    feedingSoundReference.stopPlaying();
+                    feedingSoundReference = null;
+                }
+            }
         }
         if (nbt.contains(KEY_WING_COUNTER)) {
             wing_counter = nbt.getInt(KEY_WING_COUNTER);
@@ -1237,7 +1267,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     private void applyEntityAttributes() {
         player.getAttribute(ModAttributes.sundamage).setBaseValue(VampirismConfig.BALANCE.vpSundamage.get());
-        player.getAttribute(ModAttributes.blood_exhaustion).setBaseValue(VampirismConfig.BALANCE.vpExhaustionMaxMod.get());
+        player.getAttribute(ModAttributes.blood_exhaustion).setBaseValue(VampirismConfig.BALANCE.vpBasicBloodExhaustionMod.get());
         player.getAttribute(ModAttributes.bite_damage).setBaseValue(0);
     }
 
@@ -1426,8 +1456,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
             player.level.addParticle(new ItemParticleData(ParticleTypes.ITEM, new ItemStack(Items.APPLE)), vec31.x, vec31.y, vec31.z, vec3.x, vec3.y + 0.05D, vec3.z);
         }
-        //Play bite sounds. Using this method since it is the only client side method. And this is called on every relevant client anyway
-        player.level.playLocalSound(player.getX(), player.getY(), player.getZ(), ModSounds.player_bite, SoundCategory.PLAYERS, 1.0F, 1.0F, false);
     }
 
     /**

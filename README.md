@@ -41,7 +41,7 @@ The following labeling scheme is used:
 - [xXvPendragonvXx](https://github.com/PendragonII) _Community/Official Server_
 
 ## Special Thanks to
-- PixelEyeStudios _Models/Textures_
+- TheRebelT _Models/Textures_
 - TinkerHatWill _Textures_
 - Alis _Textures_
 - dimensionpainter _Textures_
@@ -59,6 +59,8 @@ The following labeling scheme is used:
 - Random _Textures/Models_
 - Shumnik _Textures/Models_
 - BugraaK _Textures/Models_
+- MrVityaTrash _Textures_
+- FrostedOver _Textures_
 
 ## API
 Vampirism has an API you can use to add blood values to your mod's creatures or make them convertible and more.
@@ -195,6 +197,7 @@ Boiling Towel by unfa https://www.freesound.org/people/unfa/sounds/174499/ -- Li
 Pepper mill grinds pepper by Black_River_Phonogram https://freesound.org/people/Black_River_Phonogram/sounds/424605/ --
 Licence: CC0  
 Slimey by Nebulasnails https://freesound.org/people/nebulasnails/sounds/495116/ -- Licence: CC0
+blood_sucker by Bernuy https://freesound.org/people/Bernuy/sounds/268499/ -- Licence: CC Attribution
 
 ##### Sit functionality - `sit` package
 

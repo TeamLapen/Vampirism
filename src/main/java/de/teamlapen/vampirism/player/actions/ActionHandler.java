@@ -12,17 +12,16 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Handles actions for vampire players
@@ -221,8 +220,8 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     public void relockActions(Collection<IAction> actions) {
         unlockedActions.removeAll(actions);
         for (IAction action : actions) {
-            if (action instanceof ILastingAction && isActionActive((ILastingAction) action)) {
-                toggleAction(action);
+            if (action instanceof ILastingAction) {
+                deactivateAction((ILastingAction<?>) action);
             }
         }
     }
@@ -239,6 +238,16 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
         dirty = true;
     }
 
+    @Override
+    public void resetTimer(@Nonnull IAction action) {
+        if (activeTimers.containsKey(action.getRegistryName())) {
+            ((ILastingAction<T>) action).onDeactivated(player);
+            activeTimers.removeInt(action.getRegistryName());
+        }
+        cooldownTimers.removeInt(action.getRegistryName());
+        dirty = true;
+    }
+
     /**
      * Saves action timings to nbt
      * Should only be called by the corresponding Capability instance
@@ -252,18 +261,10 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     }
 
     @Override
-    public IAction.PERM toggleAction(IAction action) {
-
+    public IAction.PERM toggleAction(IAction action, IAction.ActivationContext context) {
         ResourceLocation id = action.getRegistryName();
         if (activeTimers.containsKey(id)) {
-            int cooldown = action.getCooldown(player);
-            int leftTime = activeTimers.get(id);
-            int duration = ((ILastingAction) action).getDuration(player);
-            cooldown -= cooldown * (leftTime / (float) duration / 2f);
-            ((ILastingAction<T>) action).onDeactivated(player);
-            activeTimers.remove(id);
-            cooldownTimers.put(id, Math.max(cooldown, 1));//Entries should to be at least 1
-
+            deactivateAction((ILastingAction<?>) action);
             dirty = true;
             return IAction.PERM.ALLOWED;
         } else if (cooldownTimers.containsKey(id)) {
@@ -273,9 +274,9 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
             if (!isActionAllowedPermission(action)) return IAction.PERM.DISALLOWED;
             IAction.PERM r = action.canUse(player);
             if (r == IAction.PERM.ALLOWED) {
-                if (action.onActivated(player)) {
+                if (action.onActivated(player, context)) {
                     if (action instanceof ILastingAction) {
-                        activeTimers.put(id, ((ILastingAction) action).getDuration(player));
+                        activeTimers.put(id, ((ILastingAction<?>) action).getDuration(player));
                     } else {
                         cooldownTimers.put(id, action.getCooldown(player));
                     }
@@ -287,7 +288,26 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
                 return r;
             }
         }
+    }
 
+    @Override
+    public IAction.PERM toggleAction(IAction action) {
+        return toggleAction(action, new ActivationContext());
+    }
+
+    @Override
+    public void deactivateAction(ILastingAction<?> action) {
+        ResourceLocation id = action.getRegistryName();
+        if (activeTimers.containsKey(id)) {
+            int cooldown = action.getCooldown(player);
+            int leftTime = activeTimers.get(id);
+            int duration = action.getDuration(player);
+            cooldown -= cooldown * (leftTime / (float) duration / 2f);
+            ((ILastingAction<T>) action).onDeactivated(player);
+            activeTimers.remove(id);
+            cooldownTimers.put(id, Math.max(cooldown, 1));//Entries should to be at least 1
+            dirty = true;
+        }
     }
 
     @Override
@@ -389,6 +409,37 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
 
         public ActionNotRegisteredException(IAction action) {
             this(action.toString());
+        }
+    }
+
+    public static class ActivationContext implements IAction.ActivationContext{
+
+        private final Entity entity;
+        private final BlockPos blockPos;
+
+        public ActivationContext(Entity entity){
+            this.entity = entity;
+            this.blockPos = null;
+        }
+
+        public ActivationContext(BlockPos pos){
+            this.entity=null;
+            this.blockPos = pos;
+        }
+
+        public ActivationContext(){
+            this.entity=null;
+            this.blockPos=null;
+        }
+
+        @Override
+        public Optional<BlockPos> targetBlock() {
+            return Optional.ofNullable(blockPos);
+        }
+
+        @Override
+        public Optional<Entity> targetEntity() {
+            return Optional.ofNullable(entity);
         }
     }
 }

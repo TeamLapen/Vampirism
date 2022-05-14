@@ -18,7 +18,6 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -95,7 +94,7 @@ public class ConvertedDonkeyEntity extends DonkeyEntity implements CurableConver
 
     @Override
     protected ITextComponent getTypeName() {
-        return this.getNameC(() -> new TranslationTextComponent("entity.donkey"));
+        return this.getNameC(EntityType.DONKEY::getDescription);
     }
 
     @Nonnull

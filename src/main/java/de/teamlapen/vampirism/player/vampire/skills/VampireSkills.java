@@ -20,6 +20,8 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
+import java.util.Collection;
+
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
 /**
@@ -30,7 +32,7 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 public class VampireSkills {
 
     public static final ISkill advanced_biter = getNull();
-    public static final ISkill bat = getNull();
+    public static final ISkill fledgling = getNull();
     public static final ISkill blood_charge = getNull();
     public static final ISkill blood_vision = getNull();
     public static final ISkill blood_vision_garlic = getNull();
@@ -63,7 +65,13 @@ public class VampireSkills {
         registry.register(new VampirismSkill.SimpleVampireSkill(SkillType.LEVEL.id(VReference.VAMPIRE_FACTION.getID()), false));
         registry.register(new VampirismSkill.SimpleVampireSkill(SkillType.LORD.id(VReference.VAMPIRE_FACTION.getID()), false));
         registry.register(new VampirismSkill.SimpleVampireSkill("advanced_biter", false).setToggleActions(player -> ((VampirePlayer) player).getSpecialAttributes().advanced_biter = true, player -> ((VampirePlayer) player).getSpecialAttributes().advanced_biter = false).setHasDefaultDescription());
-        registry.register(actionSkillDesc("bat", VampireActions.bat));
+        registry.register(new VampirismSkill.SimpleVampireSkill("fledgling", true) {
+            @Override
+            protected void getActions(Collection<IAction> list) {
+                list.add(VampireActions.bat);
+                list.add(VampireActions.infect);
+            }
+        });
         registry.register(new VampirismSkill.SimpleVampireSkill("blood_charge", true));
         registry.register(new VampirismSkill.SimpleVampireSkill("blood_vision", true).setToggleActions(player -> player.unlockVision(VReference.vision_bloodVision), player -> player.unUnlockVision(VReference.vision_bloodVision)));
         registry.register(new VampirismSkill.SimpleVampireSkill("blood_vision_garlic", true).setToggleActions(player -> ((VampirePlayer) player).getSpecialAttributes().blood_vision_garlic = true, player -> ((VampirePlayer) player).getSpecialAttributes().blood_vision_garlic = false));
@@ -115,6 +123,8 @@ public class VampireSkills {
                 missingMapping.ignore();
             } else if ("vampirism:vampire_forest_fog".equals(missingMapping.key.toString())) {
                 missingMapping.ignore();
+            } else if ("vampirism:bat".equals(missingMapping.key.toString())) {
+                missingMapping.remap(fledgling);
             }
         });
     }

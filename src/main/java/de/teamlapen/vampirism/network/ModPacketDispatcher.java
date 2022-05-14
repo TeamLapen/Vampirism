@@ -18,19 +18,25 @@ public class ModPacketDispatcher extends AbstractPacketDispatcher {
 
     @Override
     public void registerPackets() {
-        dispatcher.registerMessage(nextID(), InputEventPacket.class, InputEventPacket::encode, InputEventPacket::decode, InputEventPacket::handle);
-        dispatcher.registerMessage(nextID(), SkillTreePacket.class, SkillTreePacket::encode, SkillTreePacket::decode, SkillTreePacket::handle);
-        dispatcher.registerMessage(nextID(), OpenVampireBookPacket.class, OpenVampireBookPacket::encode, OpenVampireBookPacket::decode, OpenVampireBookPacket::handle);
-        dispatcher.registerMessage(nextID(), BloodValuePacket.class, BloodValuePacket::encode, BloodValuePacket::decode, BloodValuePacket::handle);
-        dispatcher.registerMessage(nextID(), PlayEventPacket.class, PlayEventPacket::encode, PlayEventPacket::decode, PlayEventPacket::handle);
-        dispatcher.registerMessage(nextID(), SelectMinionTaskPacket.class, SelectMinionTaskPacket::encode, SelectMinionTaskPacket::decode, SelectMinionTaskPacket::handle);
-        dispatcher.registerMessage(nextID(), RequestMinionSelectPacket.class, RequestMinionSelectPacket::encode, RequestMinionSelectPacket::decode, RequestMinionSelectPacket::handle);
-        dispatcher.registerMessage(nextID(), AppearancePacket.class, AppearancePacket::encode, AppearancePacket::decode, AppearancePacket::handle);
-        dispatcher.registerMessage(nextID(), TaskStatusPacket.class, TaskStatusPacket::encode, TaskStatusPacket::decode, TaskStatusPacket::handle);
-        dispatcher.registerMessage(nextID(), TaskActionPacket.class, TaskActionPacket::encode, TaskActionPacket::decode, TaskActionPacket::handle);
-        dispatcher.registerMessage(nextID(), UpgradeMinionStatPacket.class, UpgradeMinionStatPacket::encode, UpgradeMinionStatPacket::decode, UpgradeMinionStatPacket::handle);
-        dispatcher.registerMessage(nextID(), ActionBindingPacket.class, ActionBindingPacket::encode, ActionBindingPacket::decode, ActionBindingPacket::handle);
-        dispatcher.registerMessage(nextID(), TaskPacket.class, TaskPacket::encode, TaskPacket::decode, TaskPacket::handle);
-        dispatcher.registerMessage(nextID(), UpdateMultiBossInfoPacket.class, UpdateMultiBossInfoPacket::encode, UpdateMultiBossInfoPacket::decode, UpdateMultiBossInfoPacket::handle);
+        dispatcher.registerMessage(nextID(), SSkillTreePacket.class, SSkillTreePacket::encode, SSkillTreePacket::decode, SSkillTreePacket::handle);
+        dispatcher.registerMessage(nextID(), SOpenVampireBookPacket.class, SOpenVampireBookPacket::encode, SOpenVampireBookPacket::decode, SOpenVampireBookPacket::handle);
+        dispatcher.registerMessage(nextID(), SBloodValuePacket.class, SBloodValuePacket::encode, SBloodValuePacket::decode, SBloodValuePacket::handle);
+        dispatcher.registerMessage(nextID(), SPlayEventPacket.class, SPlayEventPacket::encode, SPlayEventPacket::decode, SPlayEventPacket::handle);
+        dispatcher.registerMessage(nextID(), CSelectMinionTaskPacket.class, CSelectMinionTaskPacket::encode, CSelectMinionTaskPacket::decode, CSelectMinionTaskPacket::handle);
+        dispatcher.registerMessage(nextID(), SRequestMinionSelectPacket.class, SRequestMinionSelectPacket::encode, SRequestMinionSelectPacket::decode, SRequestMinionSelectPacket::handle);
+        dispatcher.registerMessage(nextID(), CAppearancePacket.class, CAppearancePacket::encode, CAppearancePacket::decode, CAppearancePacket::handle);
+        dispatcher.registerMessage(nextID(), STaskStatusPacket.class, STaskStatusPacket::encode, STaskStatusPacket::decode, STaskStatusPacket::handle);
+        dispatcher.registerMessage(nextID(), CTaskActionPacket.class, CTaskActionPacket::encode, CTaskActionPacket::decode, CTaskActionPacket::handle);
+        dispatcher.registerMessage(nextID(), CUpgradeMinionStatPacket.class, CUpgradeMinionStatPacket::encode, CUpgradeMinionStatPacket::decode, CUpgradeMinionStatPacket::handle);
+        dispatcher.registerMessage(nextID(), CActionBindingPacket.class, CActionBindingPacket::encode, CActionBindingPacket::decode, CActionBindingPacket::handle);
+        dispatcher.registerMessage(nextID(), STaskPacket.class, STaskPacket::encode, STaskPacket::decode, STaskPacket::handle);
+        dispatcher.registerMessage(nextID(), SUpdateMultiBossInfoPacket.class, SUpdateMultiBossInfoPacket::encode, SUpdateMultiBossInfoPacket::decode, SUpdateMultiBossInfoPacket::handle);
+        dispatcher.registerMessage(nextID(), CSimpleInputEvent.class, CSimpleInputEvent::encode, CSimpleInputEvent::decode, CSimpleInputEvent::handle);
+        dispatcher.registerMessage(nextID(), CStartFeedingPacket.class, CStartFeedingPacket::encode, CStartFeedingPacket::decode, CStartFeedingPacket::handle);
+        dispatcher.registerMessage(nextID(), CToggleActionPacket.class, CToggleActionPacket::encode, CToggleActionPacket::decode, CToggleActionPacket::handle);
+        dispatcher.registerMessage(nextID(), CUnlockSkillPacket.class, CUnlockSkillPacket::encode, CUnlockSkillPacket::decode, CUnlockSkillPacket::handle);
+        dispatcher.registerMessage(nextID(), CNameItemPacket.class, CNameItemPacket::encode, CNameItemPacket::decode, CNameItemPacket::handle);
+        dispatcher.registerMessage(nextID(), CToggleMinionTaskLock.class, CToggleMinionTaskLock::encode, CToggleMinionTaskLock::decode, CToggleMinionTaskLock::handle);
+        dispatcher.registerMessage(nextID(), CDeleteRefinementPacket.class, CDeleteRefinementPacket::encode, CDeleteRefinementPacket::decode, CDeleteRefinementPacket::handle);
     }
 }

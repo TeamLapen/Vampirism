@@ -11,7 +11,7 @@
       "conditions": {
         "items": [
           {
-            "item": "vampirism:human_heart"
+            "tag": "vampirism:heart"
           }
         ]
       }

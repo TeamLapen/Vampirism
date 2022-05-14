@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.network.OpenVampireBookPacket;
+import de.teamlapen.vampirism.network.SOpenVampireBookPacket;
 import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
@@ -85,7 +85,7 @@ public class VampireBookItem extends VampirismItem {
         ItemStack stack = playerIn.getItemInHand(handIn);
         if (!worldIn.isClientSide && playerIn instanceof ServerPlayerEntity) {
             this.resolveContents(stack, playerIn);
-            VampirismMod.dispatcher.sendTo(new OpenVampireBookPacket(stack), (ServerPlayerEntity) playerIn);
+            VampirismMod.dispatcher.sendTo(new SOpenVampireBookPacket(stack), (ServerPlayerEntity) playerIn);
         }
         return new ActionResult(ActionResultType.SUCCESS, stack);
     }

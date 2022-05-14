@@ -33,8 +33,8 @@ public class TaskBuilder {
     private final List<TaskUnlocker> unlocker = Lists.newArrayList();
     @Nullable
     private TaskReward reward;
-    @Nullable
-    private IPlayableFaction<?> faction;
+    @Nonnull
+    private Supplier<IPlayableFaction<?>> faction = () -> null;
     @Nonnull
     private Task.Variant variant = Task.Variant.REPEATABLE;
     private boolean useDescription = false;
@@ -131,8 +131,18 @@ public class TaskBuilder {
         return this;
     }
 
+    /**
+     * @deprecated use {@link #withFaction(Supplier)}
+     */
+    @Deprecated
     @Nonnull
     public TaskBuilder withFaction(@Nullable IPlayableFaction<?> faction) {
+        this.faction = () -> faction;
+        return this;
+    }
+
+    @Nonnull
+    public TaskBuilder withFaction(@Nullable Supplier<IPlayableFaction<?>> faction) {
         this.faction = faction;
         return this;
     }

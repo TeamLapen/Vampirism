@@ -247,6 +247,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
         brain.setDefaultActivity(Activity.IDLE);
         brain.setActiveActivityIfPossible(Activity.IDLE);
         brain.updateActivityFromSchedule(this.level.getDayTime(), this.level.getGameTime());
+        //TODO can't we just use super function and overwrite schedule and refresh activity afterwards?
     }
 
     @Override

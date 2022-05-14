@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.client.gui;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.network.InputEventPacket;
+import de.teamlapen.vampirism.network.CSimpleInputEvent;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
@@ -82,14 +82,14 @@ public class DBNOScreen extends Screen {
     protected void init() {
         this.enableButtonsTimer = 0;
         dieButton = this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 72, 200, 20, new TranslationTextComponent("gui.vampirism.dbno.die"), (p_213021_1_) -> {
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.DIE, ""));
+            VampirismMod.dispatcher.sendToServer(new CSimpleInputEvent(CSimpleInputEvent.Type.GIVE_UP));
             this.minecraft.setScreen(null);
         }));
         dieButton.active = false;
         resurrectButton = this.addButton(new CooldownButton(this.width / 2 - 100, this.height / 4 + 96, 200, 20, new TranslationTextComponent("gui.vampirism.dbno.resurrect"), (p_213020_1_) -> {
             if (this.minecraft.player != null)
                 VampirePlayer.getOpt(this.minecraft.player).ifPresent(VampirePlayer::tryResurrect);
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.RESURRECT, ""));
+            VampirismMod.dispatcher.sendToServer(new CSimpleInputEvent(CSimpleInputEvent.Type.RESURRECT));
             this.minecraft.setScreen(null);
         }));
         resurrectButton.updateState(1f);
