@@ -10,6 +10,7 @@ import de.teamlapen.lib.util.OptifineHandler;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
+import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.client.core.ClientEventHandler;
 import de.teamlapen.vampirism.config.BloodValues;
@@ -269,6 +270,8 @@ public class VampirismMod {
         registryManager.onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
         proxy.onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
         modCompatLoader.onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
+        VampirismAPI.skillManager().registerSkillType(SkillType.LEVEL);
+        VampirismAPI.skillManager().registerSkillType(SkillType.LORD);
     }
 
     /**

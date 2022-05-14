@@ -1,7 +1,10 @@
 package de.teamlapen.vampirism.api.entity.player.skills;
 
+import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import net.minecraft.util.ResourceLocation;
+
+import javax.annotation.Nonnull;
 
 public interface ISkillType {
 
@@ -11,7 +14,11 @@ public interface ISkillType {
      * @param id the faction id
      * @return skill type id
      */
-    ResourceLocation createIdForFaction(ResourceLocation id);
+    ResourceLocation createIdForFaction(@Nonnull ResourceLocation id);
 
-    boolean isForFaction(IPlayableFaction faction);
+    boolean isForFaction(@Nonnull IPlayableFaction faction);
+
+    ResourceLocation getRegistryName();
+
+    boolean isUnlocked(IFactionPlayerHandler handler);
 }

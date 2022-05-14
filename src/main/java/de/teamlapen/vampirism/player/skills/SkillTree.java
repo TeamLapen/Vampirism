@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillType;
-import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -102,9 +101,9 @@ public class SkillTree {
         //Built root nodes
         rootNodes.clear();
         for (IPlayableFaction faction : VampirismAPI.factionRegistry().getPlayableFactions()) {
-            for (SkillType value : SkillType.values()) {
+            for (ISkillType value : VampirismAPI.skillManager().getSkillTypes()) {
                 if (value.isForFaction(faction)) {
-                    SkillNode rootNode = new SkillNode(faction, ((SkillManager) VampirismAPI.skillManager()).getRootSkill(faction.getID(), value), value);
+                    SkillNode rootNode = new SkillNode(faction, ((SkillManager) VampirismAPI.skillManager()).getRootSkill(faction, value), value);
                     rootNodes.put(rootNode.getId(), rootNode);
                 }
             }
@@ -117,9 +116,9 @@ public class SkillTree {
         //Built root nodes
         rootNodes.clear();
         for (IPlayableFaction faction : VampirismAPI.factionRegistry().getPlayableFactions()) {
-            for (SkillType value : SkillType.values()) {
+            for (ISkillType value : VampirismAPI.skillManager().getSkillTypes()) {
                 if (value.isForFaction(faction)) {
-                    SkillNode rootNode = new SkillNode(faction, ((SkillManager) VampirismAPI.skillManager()).getRootSkill(faction.getID(), value), value);
+                    SkillNode rootNode = new SkillNode(faction, ((SkillManager) VampirismAPI.skillManager()).getRootSkill(faction, value), value);
                     builtNodes.put(rootNode.getId(), rootNode);
                     rootNodes.put(rootNode.getId(), rootNode);
                 }

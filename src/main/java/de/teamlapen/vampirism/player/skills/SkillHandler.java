@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.player.skills;
 
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
@@ -8,12 +9,12 @@ import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillType;
-import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModRegistries;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.items.VampireRefinementItem;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -52,19 +53,19 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
     }
 
     public Optional<SkillNode> anyLastNode() {
-        SkillNode rootNode = getRootNode();
         Queue<SkillNode> queue = new ArrayDeque<>();
-        queue.add(rootNode);
+        for (ISkillType skillType : VampirismAPI.skillManager().getSkillTypes()) {
+            if(skillType.isForFaction(faction)) {
+                queue.add(getRootNode(skillType));
+            }
+        }
 
         for (SkillNode skillNode = queue.poll(); skillNode != null; skillNode = queue.poll()) {
             List<SkillNode> child = skillNode.getChildren().stream().filter(this::isNodeEnabled).collect(Collectors.toList());
-            if (child.isEmpty()) {
-                if (skillNode == rootNode) {
-                    skillNode = null;
-                }
-                return Optional.ofNullable(skillNode);
-            } else {
+            if (!child.isEmpty()) {
                 queue.addAll(child);
+            } else if (skillNode.getParent() != null) {
+                return Optional.of(skillNode);
             }
         }
         return Optional.empty();
@@ -141,11 +142,25 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
 
     }
 
+    @Deprecated //TODO for removal
     public void enableRootSkill() {
         enableSkill(getRootNode().getElements()[0]);
     }
 
-    public void enableRootSkill(SkillType type) {
+    @Override
+    public void enableRootSkills() {
+        FactionPlayerHandler.getOpt(this.player.getRepresentingPlayer()).ifPresent(handler -> {
+            for (ISkillType skillType : VampirismAPI.skillManager().getSkillTypes()) {
+                if (!skillType.isForFaction(this.faction)) continue;
+                if (skillType.isUnlocked(handler)) {
+                    enableRootSkill(skillType);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void enableRootSkill(ISkillType type) {
         enableSkill(getRootNode(type).getElements()[0]);
     }
 
@@ -353,7 +368,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
 
     public void resetSkills() {
         disableAllSkills();
-        enableRootSkill();
+        enableRootSkills();
     }
 
     public void saveToNbt(CompoundNBT nbt) {

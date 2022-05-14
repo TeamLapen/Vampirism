@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.api.entity.player.skills;
 
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import net.minecraft.util.ResourceLocation;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -19,4 +21,9 @@ public interface ISkillManager {
      * @return
      */
     List<ISkill> getSkillsForFaction(IPlayableFaction faction);
+
+    Collection<ISkillType> getSkillTypes();
+    ISkillType getSkillType(ResourceLocation id);
+
+    ISkillType registerSkillType(ISkillType type);
 }

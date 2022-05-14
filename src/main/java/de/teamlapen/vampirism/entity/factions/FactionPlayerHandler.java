@@ -11,14 +11,12 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
-import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.player.IVampirismPlayer;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
-import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.tasks.reward.LordLevelReward;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.ScoreboardUtil;
@@ -389,6 +387,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         if (currentLordLevel != newLordLevel) {
             this.setLordLevel(newLordLevel, false);
         }
+        this.updateSkillTypes();
         updateCache();
         notifyFaction(old, oldLevel);
         if(old != currentFaction || oldLevel != currentLevel){
@@ -493,6 +492,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             } else {
                 currentLevel = Math.min(nbt.getInt("level"), this.currentFaction.getHighestReachableLevel());
                 currentLordLevel = Math.min(nbt.getInt("lord_level"), this.currentFaction.getHighestLordLevel());
+                this.updateSkillTypes();
                 updateCache();
                 notifyFaction(null, 0);
             }
@@ -502,6 +502,10 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         }
         loadBoundActions(nbt);
         updateCache();
+    }
+
+    private void updateSkillTypes() {
+        this.getCurrentFactionPlayer().ifPresent(a -> a.getSkillHandler().enableRootSkills());
     }
 
     /**
@@ -547,7 +551,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
 
         this.currentLordLevel = level;
         if (this.currentLordLevel > 0) {
-            this.getCurrentFactionPlayer().ifPresent(p -> ((SkillHandler<?>) p.getSkillHandler()).enableRootSkill(SkillType.LORD));
+            this.updateSkillTypes();
         }
         this.updateCache();
         MinionWorldData.getData(player.level).ifPresent(data -> {

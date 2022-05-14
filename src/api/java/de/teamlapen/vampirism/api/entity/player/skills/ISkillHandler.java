@@ -66,6 +66,10 @@ public interface ISkillHandler<T extends ISkillPlayer<?>> {
      */
     void resetSkills();
 
+    void enableRootSkill(ISkillType type);
+
+    void enableRootSkills();
+
     enum Result {
         /**
          * can be enabled

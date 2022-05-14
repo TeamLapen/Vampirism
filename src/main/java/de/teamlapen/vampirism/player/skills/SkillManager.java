@@ -15,7 +15,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 1.12
@@ -24,7 +28,8 @@ import java.util.List;
  */
 public class SkillManager implements ISkillManager {
 
-    private final static Logger LOGGER = LogManager.getLogger(SkillManager.class);
+    private final static Logger LOGGER = LogManager.getLogger();
+    private final Map<ResourceLocation,ISkillType> skillTypes = new HashMap<>();
 
     @Deprecated
     @Nonnull ISkill getRootSkill(IPlayableFaction faction) {
@@ -68,6 +73,11 @@ public class SkillManager implements ISkillManager {
         return list;
     }
 
+    @Override
+    public Collection<ISkillType> getSkillTypes() {
+        return this.skillTypes.values();
+    }
+
     /**
      * For debug purpose only.
      * Prints the skills of the given faction to the given sender
@@ -81,4 +91,17 @@ public class SkillManager implements ISkillManager {
         }
     }
 
+    @Nullable
+    @Override
+    public ISkillType getSkillType(ResourceLocation id) {
+        return this.skillTypes.get(id);
+    }
+
+    @Override
+    public ISkillType registerSkillType(ISkillType type) {
+        if (this.skillTypes.containsKey(type.getRegistryName())) {
+            throw new IllegalStateException("A skill type with the id " + type.getRegistryName() + " has already been registered");
+        }
+        return this.skillTypes.put(type.getRegistryName(), type);
+    }
 }
