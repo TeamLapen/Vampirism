@@ -60,8 +60,8 @@ public class HunterSkills {
 
     @SuppressWarnings("deprecation")
     public static void registerHunterSkills(IForgeRegistry<ISkill> registry) {
-        registry.register(new VampirismSkill.SimpleVampireSkill(SkillType.LEVEL.id(VReference.HUNTER_FACTION.getID()), false));
-        registry.register(new VampirismSkill.SimpleVampireSkill(SkillType.LORD.id(VReference.HUNTER_FACTION.getID()), false));
+        registry.register(new VampirismSkill.SimpleVampireSkill(SkillType.LEVEL.createIdForFaction(VReference.HUNTER_FACTION.getID()), false));
+        registry.register(new VampirismSkill.SimpleVampireSkill(SkillType.LORD.createIdForFaction(VReference.HUNTER_FACTION.getID()), false));
         registry.register(new VampirismSkill.SimpleHunterSkill("basic_alchemy", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("double_crossbow", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("enhanced_armor", true));

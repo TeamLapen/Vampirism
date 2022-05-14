@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.player.skills;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillType;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -16,7 +17,7 @@ import java.util.Collection;
  */
 public class ActionSkill<T extends IFactionPlayer> extends VampirismSkill<T> {
     private final IAction action;
-    private final SkillType type;
+    private final ISkillType type;
 
     public ActionSkill(ResourceLocation id, IAction action) {
         this(id, action, false);
@@ -31,7 +32,7 @@ public class ActionSkill<T extends IFactionPlayer> extends VampirismSkill<T> {
      * @param action            The corresponding action
      * @param customDescription If false a generic "unlocks action" string is used
      */
-    public ActionSkill(ResourceLocation id, IAction action, SkillType type, boolean customDescription) {
+    public ActionSkill(ResourceLocation id, IAction action, ISkillType type, boolean customDescription) {
         this.action = action;
         this.type = type;
         this.setRegistryName(id);
@@ -70,7 +71,7 @@ public class ActionSkill<T extends IFactionPlayer> extends VampirismSkill<T> {
     }
 
     @Override
-    public SkillType getType() {
+    public ISkillType getType() {
         return this.type;
     }
 }

@@ -1,9 +1,11 @@
 package de.teamlapen.vampirism.player.skills;
 
 import com.google.common.collect.Lists;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillManager;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillType;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraft.command.CommandSource;
@@ -25,23 +27,36 @@ public class SkillManager implements ISkillManager {
     private final static Logger LOGGER = LogManager.getLogger(SkillManager.class);
 
     @Deprecated
-    public @Nonnull
-    ISkill getRootSkill(IPlayableFaction faction) {
-        return getRootSkill(faction.getID(), SkillType.LEVEL);
+    @Nonnull ISkill getRootSkill(IPlayableFaction faction) {
+        return getRootSkill(faction, SkillType.LEVEL);
     }
     /**
      * Get the root skill of the faction (Registered with the same key as the faction itself.
      * If none ist found, prints a warning and returns a dummy one
      *
-     * @param factionId
-     * @return
+     * @throws java.lang.ClassCastException if the faction id is not for a {@link de.teamlapen.vampirism.api.entity.factions.IPlayableFaction}
      */
+    @Deprecated // for removal
     public @Nonnull
-    ISkill getRootSkill(ResourceLocation factionId, SkillType type) {
-        ISkill skill = ModRegistries.SKILLS.getValue(type.id(factionId));
+    ISkill getRootSkill(ResourceLocation factionId, ISkillType type) {
+        return getRootSkill(((IPlayableFaction) VampirismAPI.factionRegistry().getFactionByID(factionId)), type);
+    }
+
+    /**
+     * Gets the root skill of the faction for the given skill type. The skill must be registered with an id that matches {@link de.teamlapen.vampirism.api.entity.player.skills.ISkillType#createIdForFaction(net.minecraft.util.ResourceLocation)}
+     *
+     * @param faction the faction for which the skill should be returned
+     * @param type the type of skill that is searched for
+     * @return th root skill for the parameters
+     * @throws java.lang.IllegalStateException when the faction can not have a skill for the given skill type or when there is no skill registered conforming to the skill type's naming scheme
+     */
+    @Nonnull
+    public ISkill getRootSkill(IPlayableFaction faction, ISkillType type) {
+        if (!type.isForFaction(faction)) throw new IllegalStateException("The skilltype " + type + " is not applicable for the faction " + faction.getID());
+        ISkill skill = ModRegistries.SKILLS.getValue(type.createIdForFaction(faction.getID()));
         if (skill == null) {
-            LOGGER.warn("No root skill exists for faction {}", factionId);
-            throw new IllegalStateException("You need to register a root skill for your faction " + factionId);
+            LOGGER.warn("No root skill exists for faction {}", faction.getID());
+            throw new IllegalStateException("You need to register a root skill for your faction " + faction.getID());
         }
         return skill;
     }

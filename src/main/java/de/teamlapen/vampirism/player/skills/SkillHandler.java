@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillType;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -235,8 +236,8 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
         return VampirismMod.proxy.getSkillTree(player.isRemote()).getRootNodeForFaction(faction.getID());
     }
 
-    public SkillNode getRootNode(SkillType type) {
-        return VampirismMod.proxy.getSkillTree(player.isRemote()).getRootNodeForFaction(type.id(faction.getID()));
+    public SkillNode getRootNode(ISkillType type) {
+        return VampirismMod.proxy.getSkillTree(player.isRemote()).getRootNodeForFaction(type.createIdForFaction(faction.getID()));
     }
 
 

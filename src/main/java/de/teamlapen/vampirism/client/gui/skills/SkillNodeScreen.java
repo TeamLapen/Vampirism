@@ -96,7 +96,7 @@ public class SkillNodeScreen extends AbstractGui {
             return SkillNodeState.UNLOCKED;
         } else if (this.skillHandler.isSkillNodeLocked(this.skillNode)) {
             return SkillNodeState.LOCKED;
-        } else if (Arrays.stream(this.skillNode.getParent().getElements()).anyMatch(this.skillHandler::isSkillEnabled)) {
+        } else if (this.skillNode.getParent() == null || Arrays.stream(this.skillNode.getParent().getElements()).anyMatch(this.skillHandler::isSkillEnabled)) {
             return SkillNodeState.AVAILABLE;
         } else {
             return this.skillNode.isHidden() ? SkillNodeState.HIDDEN :SkillNodeState.VISIBLE;

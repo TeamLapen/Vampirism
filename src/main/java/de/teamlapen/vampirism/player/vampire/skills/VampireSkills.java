@@ -62,8 +62,8 @@ public class VampireSkills {
 
     @SuppressWarnings({"deprecation", "Convert2MethodRef"})
     public static void registerVampireSkills(IForgeRegistry<ISkill> registry) {
-        registry.register(new VampirismSkill.SimpleVampireSkill(SkillType.LEVEL.id(VReference.VAMPIRE_FACTION.getID()), false));
-        registry.register(new VampirismSkill.SimpleVampireSkill(SkillType.LORD.id(VReference.VAMPIRE_FACTION.getID()), false));
+        registry.register(new VampirismSkill.SimpleVampireSkill(SkillType.LEVEL.createIdForFaction(VReference.VAMPIRE_FACTION.getID()), false));
+        registry.register(new VampirismSkill.SimpleVampireSkill(SkillType.LORD.createIdForFaction(VReference.VAMPIRE_FACTION.getID()), false));
         registry.register(new VampirismSkill.SimpleVampireSkill("advanced_biter", false).setToggleActions(player -> ((VampirePlayer) player).getSpecialAttributes().advanced_biter = true, player -> ((VampirePlayer) player).getSpecialAttributes().advanced_biter = false).setHasDefaultDescription());
         registry.register(new VampirismSkill.SimpleVampireSkill("fledgling", true) {
             @Override

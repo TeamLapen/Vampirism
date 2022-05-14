@@ -9,7 +9,6 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
-import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -92,7 +91,7 @@ public class SkillsScreen extends Screen {
             SkillNode rootNode = VampirismMod.proxy.getSkillTree(true).getRootNodeForFaction(this.factionPlayer.getFaction().getID(), SkillType.LEVEL);
             this.tabs.add(new SkillsTabScreen(this.minecraft, this, 0, new ItemStack(ModItems.vampire_book), rootNode, this.factionPlayer.getSkillHandler()));
             if (this.factionPlayer.getFaction().hasLordSkills() && FactionPlayerHandler.getOpt(factionPlayer.getRepresentingPlayer()).map(a -> a.getLordLevel() > 0).orElse(false)) {
-                rootNode = SkillTreeManager.getInstance().getSkillTree().getRootNodeForFaction(this.factionPlayer.getFaction().getID(), SkillType.LORD);
+                rootNode = VampirismMod.proxy.getSkillTree(true).getRootNodeForFaction(this.factionPlayer.getFaction().getID(), SkillType.LORD);
                 this.tabs.add(new SkillsTabScreen(this.minecraft, this, 1, new ItemStack(ModItems.vampire_minion_binding), rootNode, this.factionPlayer.getSkillHandler()));
             }
         }

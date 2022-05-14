@@ -5,7 +5,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillType;
 import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
@@ -46,8 +46,8 @@ public class SkillNode {
     /**
      * For root skill node
      */
-    public SkillNode(IPlayableFaction<?> faction, ISkill element, SkillType type) {
-        this(type.id(faction.getID()), faction, null, 0, new ISkill[]{element});
+    public SkillNode(IPlayableFaction<?> faction, ISkill element, ISkillType type) {
+        this(type.createIdForFaction(faction.getID()), faction, null, 0, new ISkill[]{element});
 
     }
 

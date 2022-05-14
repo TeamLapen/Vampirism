@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.DefaultSkill;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillType;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import net.minecraft.util.ResourceLocation;
@@ -88,7 +89,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
         }
 
         @Override
-        public SkillType getType() {
+        public ISkillType getType() {
             return SkillType.LEVEL;
         }
     }
@@ -104,7 +105,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
         }
 
         @Override
-        public SkillType getType() {
+        public ISkillType getType() {
             return SkillType.LORD;
         }
     }
@@ -134,7 +135,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
         }
 
         @Override
-        public SkillType getType() {
+        public ISkillType getType() {
             return SkillType.LEVEL;
         }
     }
@@ -149,7 +150,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
         }
 
         @Override
-        public SkillType getType() {
+        public ISkillType getType() {
             return SkillType.LORD;
         }
     }

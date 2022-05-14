@@ -71,7 +71,7 @@ public interface ISkill extends IForgeRegistryEntry<ISkill> {
      */
     void setRenderPos(int row, int column);
 
-    default SkillType getType() {
+    default ISkillType getType() {
         return SkillType.LEVEL;
     }
 }
