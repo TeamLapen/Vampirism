@@ -16,6 +16,7 @@ import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.items.VampireRefinementItem;
+import de.teamlapen.vampirism.player.IVampirismPlayer;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
@@ -223,6 +224,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
     public int getLeftSkillPoints() {
         int level = player.getLevel();
         int totalSkillPoints = (int) (level * VampirismConfig.BALANCE.skillPointsPerLevel.get());
+        totalSkillPoints += ((IVampirismPlayer) player.getRepresentingPlayer()).getVampAtts().lordLevel * VampirismConfig.BALANCE.skillPointsPerLordLevel.get();
         int remainingSkillPoints = totalSkillPoints - enabledSkills.size();
         if (VampirismConfig.SERVER.unlockAllSkills.get() && level == player.getMaxLevel()) {
             return Math.max(remainingSkillPoints, 1);
