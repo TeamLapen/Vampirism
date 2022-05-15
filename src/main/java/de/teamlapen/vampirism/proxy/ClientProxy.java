@@ -10,7 +10,6 @@ import de.teamlapen.vampirism.client.core.*;
 import de.teamlapen.vampirism.client.gui.*;
 import de.teamlapen.vampirism.client.gui.overlay.*;
 import de.teamlapen.vampirism.client.render.RenderHandler;
-import de.teamlapen.vampirism.client.render.VampirismBlockEntityWitoutLevelRenderer;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.inventory.container.TaskBoardContainer;
 import de.teamlapen.vampirism.inventory.container.VampirismContainer;
@@ -60,7 +59,6 @@ public class ClientProxy extends CommonProxy {
     private final ClientSkillTreeManager skillTreeManager = new ClientSkillTreeManager();
     private VampirismHUDOverlay overlay;
     private CustomBossEventOverlay bossInfoOverlay;
-    private VampirismBlockEntityWitoutLevelRenderer itemStackBESR;
 
     public ClientProxy() {
         RenderHandler renderHandler = new RenderHandler(Minecraft.getInstance());
@@ -94,10 +92,6 @@ public class ClientProxy extends CommonProxy {
     @Override
     public Player getClientPlayer() {
         return Minecraft.getInstance().player;
-    }
-
-    public VampirismBlockEntityWitoutLevelRenderer getItemStackBESR() {
-        return itemStackBESR;
     }
 
     @Nullable
@@ -155,7 +149,7 @@ public class ClientProxy extends CommonProxy {
                     if (Minecraft.getInstance().screen instanceof InBedChatScreen && !(Minecraft.getInstance().screen instanceof SleepInMultiplayerModScreen)) {
                         Minecraft.getInstance().setScreen(new SleepInMultiplayerModScreen("text.vampirism.coffin.stop_sleeping"));
                     }
-                    CoffinBlock.setCoffinSleepPosition(player,pos);
+                    CoffinBlock.setCoffinSleepPosition(player,pos, player.level.getBlockState(pos));
                 }
             });
         }
@@ -202,7 +196,6 @@ public class ClientProxy extends CommonProxy {
                 event.enqueueWork(ModItemsRender::registerItemModelPropertyUnsafe);
                 event.enqueueWork(ModScreens::registerScreensUnsafe);
                 skillTreeManager.init();
-                itemStackBESR = new VampirismBlockEntityWitoutLevelRenderer(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
             }
             default -> {
             }

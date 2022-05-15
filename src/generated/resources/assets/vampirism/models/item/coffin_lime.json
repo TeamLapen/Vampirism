@@ -1,0 +1,97 @@
+{
+  "parent": "vampirism:block/coffin/coffin_bottom_lime",
+  "display": {
+    "firstperson_righthand": {
+      "rotation": [
+        30,
+        160,
+        0
+      ],
+      "scale": [
+        0.375,
+        0.375,
+        0.375
+      ],
+      "translation": [
+        0,
+        0,
+        3
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        270,
+        0,
+        0
+      ],
+      "scale": [
+        0.5,
+        0.5,
+        0.5
+      ],
+      "translation": [
+        0,
+        -4,
+        -4
+      ]
+    },
+    "ground": {
+      "scale": [
+        0.25,
+        0.25,
+        0.25
+      ],
+      "translation": [
+        0,
+        2,
+        -2
+      ]
+    },
+    "gui": {
+      "rotation": [
+        30,
+        160,
+        0
+      ],
+      "scale": [
+        0.5325,
+        0.5325,
+        0.5325
+      ],
+      "translation": [
+        -1,
+        -1,
+        -4
+      ]
+    },
+    "head": {
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "translation": [
+        0,
+        2,
+        -8
+      ]
+    },
+    "thirdperson_righthand": {
+      "rotation": [
+        30,
+        160,
+        0
+      ],
+      "scale": [
+        0.23,
+        0.23,
+        0.23
+      ],
+      "translation": [
+        -1,
+        0,
+        1
+      ]
+    }
+  }
+}

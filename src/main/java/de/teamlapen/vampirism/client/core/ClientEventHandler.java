@@ -25,11 +25,13 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.ComputeFovModifierEvent;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.ModelEvent.BakingCompleted;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -46,7 +48,9 @@ import java.util.Map;
  */
 @OnlyIn(Dist.CLIENT)
 public class ClientEventHandler {
+    public static final ResourceLocation COFFIN_SHEET = new ResourceLocation(REFERENCE.MODID, "textures/atlas/coffins.png");
     private final static Logger LOGGER = LogManager.getLogger();
+
 
     @SubscribeEvent
     public static void onModelBakeEvent(BakingCompleted event) {
@@ -142,5 +146,14 @@ public class ClientEventHandler {
     @SubscribeEvent
     public void onWorldClosed(LevelEvent.Unload event) {
         ((ClientProxy) VampirismMod.proxy).clearBossBarOverlay();
+    }
+
+    @SubscribeEvent
+    public static void onModelRegistry(ModelEvent.RegisterAdditional event) {
+        for (DyeColor dye : DyeColor.values()) {
+            event.register(new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_bottom_" + dye.getName()));
+            event.register(new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_top_" + dye.getName()));
+            event.register(new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_" + dye.getName()));
+        }
     }
 }

@@ -220,7 +220,7 @@ public class LootTablesGenerator extends LootTableProvider {
                             .add(LootItem.lootTableItem(Items.GOLD_BLOCK).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(ModBlocks.ALTAR_PILLAR.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(AltarPillarBlock.TYPE_PROPERTY, "gold"))))
                             .add(LootItem.lootTableItem(Items.BONE_BLOCK).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(ModBlocks.ALTAR_PILLAR.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(AltarPillarBlock.TYPE_PROPERTY, "bone"))))));
             this.dropSelf(ModBlocks.ALTAR_TIP.get());
-            this.add(ModBlocks.COFFIN.get(), block -> createSinglePropConditionTable(block, CoffinBlock.PART, CoffinBlock.CoffinPart.HEAD));
+            CoffinBlock.COFFIN_BLOCKS.values().forEach(coffin -> this.add(coffin, block -> createSinglePropConditionTable(block, CoffinBlock.PART, CoffinBlock.CoffinPart.HEAD)));
             this.dropSelf(ModBlocks.BLOOD_CONTAINER.get());
             this.dropSelf(ModBlocks.BLOOD_GRINDER.get());
             this.dropSelf(ModBlocks.BLOOD_PEDESTAL.get());

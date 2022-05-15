@@ -552,6 +552,49 @@ public class UtilLib {
         return rotatedShapes.stream().reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElseGet(() -> Block.box(0, 0, 0, 16, 16, 16));
     }
 
+    /**
+     * modifies the rolls or pitch of the shape by 90 degree
+     */
+    public static VoxelShape rollShape(VoxelShape shape, Direction direction) {
+        Set<VoxelShape> rotatedShapes = new HashSet<VoxelShape>();
+        shape.forAllBoxes((x1, y1, z1, x2, y2, z2) -> {
+            double yMin;
+            double yMax;
+            double zMin;
+            double zMax;
+            y1 = (y1 * 16) - 8;
+            y2 = (y2 * 16) - 8;
+            z1 = (z1 * 16) - 8;
+            z2 = (z2 * 16) - 8;
+            switch (direction) {
+                case NORTH -> {
+                    z1 = 8 - z1;
+                    z2 = 8 - z2;
+                    y1 = 8 + y1;
+                    y2 = 8 + y2;
+                    yMin = Math.min(y1, y2);
+                    yMax = Math.max(y1, y2);
+                    zMin = Math.min(z1, z2);
+                    zMax = Math.max(z1, z2);
+                    rotatedShapes.add(Block.box(x1 * 16, zMin, yMin, x2 * 16, zMax, yMax));
+                }
+                case SOUTH -> {
+                    z1 = 8 + z1;
+                    z2 = 8 + z2;
+                    y1 = 8 - y1;
+                    y2 = 8 - y2;
+                    yMin = Math.min(y1, y2);
+                    yMax = Math.max(y1, y2);
+                    zMin = Math.min(z1, z2);
+                    zMax = Math.max(z1, z2);
+                    rotatedShapes.add(Block.box(x1 * 16, zMin, yMin, x2 * 16, zMax, yMax));
+                }
+            }
+
+        });
+        return rotatedShapes.stream().reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElseGet(() -> Block.box(0, 0, 0, 16, 16, 16));
+    }
+
     public static VoxelShape blockBox(double pX1, double pY1, double pZ1, double pX2, double pY2, double pZ2) {
         return Block.box(Math.min(pX1, pX2), Math.min(pY1, pY2), Math.min(pZ1, pZ2), Math.max(pX1, pX2), Math.max(pY1, pY2), Math.max(pZ1, pZ2));
     }
@@ -732,4 +775,8 @@ public class UtilLib {
         return i;
     }
 
+
+    public static ResourceLocation amend(ResourceLocation original, String amendment) {
+        return new ResourceLocation(original.getNamespace(), original.getPath() + amendment);
+    }
 }

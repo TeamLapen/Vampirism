@@ -4,12 +4,12 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.BushBlock;
 import de.teamlapen.vampirism.blocks.*;
-import de.teamlapen.vampirism.items.CoffinItem;
 import de.teamlapen.vampirism.util.BlockVoxelshapes;
 import de.teamlapen.vampirism.world.gen.CursedSpruceTree;
 import de.teamlapen.vampirism.world.gen.DarkSpruceTreeGrower;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -56,7 +56,6 @@ public class ModBlocks {
     public static final RegistryObject<CastleStairsBlock> CASTLE_STAIRS_DARK_STONE = registerWithItem("castle_stairs_dark_stone", () -> new CastleStairsBlock(() -> CASTLE_BLOCK_DARK_STONE.get().defaultBlockState(), CastleBricksBlock.EnumVariant.DARK_STONE));
     public static final RegistryObject<CastleStairsBlock> CASTLE_STAIRS_PURPLE_BRICK = registerWithItem("castle_stairs_purple_brick", () -> new CastleStairsBlock(() -> CASTLE_BLOCK_PURPLE_BRICK.get().defaultBlockState(), CastleBricksBlock.EnumVariant.PURPLE_BRICK));
     public static final RegistryObject<AltarCleansingBlock> ALTAR_CLEANSING = registerWithItem("altar_cleansing", AltarCleansingBlock::new);
-    public static final RegistryObject<CoffinBlock> COFFIN = registerWithItem("coffin", CoffinBlock::new, CoffinItem::new);
     public static final RegistryObject<CursedEarthBlock> CURSED_EARTH = registerWithItem("cursed_earth", CursedEarthBlock::new);
     public static final RegistryObject<FirePlaceBlock> FIRE_PLACE = registerWithItem("fire_place", FirePlaceBlock::new);
     public static final RegistryObject<GarlicBlock> GARLIC = BLOCKS.register("garlic", GarlicBlock::new);
@@ -138,6 +137,22 @@ public class ModBlocks {
     public static final RegistryObject<FenceBlock> CURSED_SPRUCE_FENCE = registerWithItem("cursed_spruce_fence",() -> new FenceBlock(BlockBehaviour.Properties.of(Material.WOOD, CURSED_SPRUCE_PLANKS.get().defaultMaterialColor()).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
     public static final RegistryObject<VampirismBlock> VAMPIRE_RACK = registerWithItem("vampire_rack", () -> new VampirismHorizontalBlock(BlockBehaviour.Properties.of(Material.WOOD).strength(2, 3), BlockVoxelshapes.vampire_rack).markDecorativeBlock());
     public static final RegistryObject<VampirismBlock> THRONE = registerWithItem("throne", ThroneBlock::new);
+    public static final RegistryObject<CoffinBlock> coffin_white = registerWithItem("coffin_white", () -> new CoffinBlock(DyeColor.WHITE));
+    public static final RegistryObject<CoffinBlock> coffin_orange = registerWithItem("coffin_orange", () -> new CoffinBlock(DyeColor.ORANGE));
+    public static final RegistryObject<CoffinBlock> coffin_magenta = registerWithItem("coffin_magenta", () -> new CoffinBlock(DyeColor.MAGENTA));
+    public static final RegistryObject<CoffinBlock> coffin_light_blue = registerWithItem("coffin_light_blue", () -> new CoffinBlock(DyeColor.LIGHT_BLUE));
+    public static final RegistryObject<CoffinBlock> coffin_yellow = registerWithItem("coffin_yellow", () -> new CoffinBlock(DyeColor.YELLOW));
+    public static final RegistryObject<CoffinBlock> coffin_lime = registerWithItem("coffin_lime", () -> new CoffinBlock(DyeColor.LIME));
+    public static final RegistryObject<CoffinBlock> coffin_pink = registerWithItem("coffin_pink", () -> new CoffinBlock(DyeColor.PINK));
+    public static final RegistryObject<CoffinBlock> coffin_gray = registerWithItem("coffin_gray", () -> new CoffinBlock(DyeColor.GRAY));
+    public static final RegistryObject<CoffinBlock> coffin_light_gray = registerWithItem("coffin_light_gray", () -> new CoffinBlock(DyeColor.LIGHT_GRAY));
+    public static final RegistryObject<CoffinBlock> coffin_cyan = registerWithItem("coffin_cyan", () -> new CoffinBlock(DyeColor.CYAN));
+    public static final RegistryObject<CoffinBlock> coffin_purple = registerWithItem("coffin_purple", () -> new CoffinBlock(DyeColor.PURPLE));
+    public static final RegistryObject<CoffinBlock> coffin_blue = registerWithItem("coffin_blue", () -> new CoffinBlock(DyeColor.BLUE));
+    public static final RegistryObject<CoffinBlock> coffin_brown = registerWithItem("coffin_brown", () -> new CoffinBlock(DyeColor.BROWN));
+    public static final RegistryObject<CoffinBlock> coffin_green = registerWithItem("coffin_green", () -> new CoffinBlock(DyeColor.GREEN));
+    public static final RegistryObject<CoffinBlock> coffin_red = registerWithItem("coffin_red", () -> new CoffinBlock(DyeColor.RED));
+    public static final RegistryObject<CoffinBlock> coffin_black = registerWithItem("coffin_black", () -> new CoffinBlock(DyeColor.BLACK));
 
     /**
      * TUTORIAL:

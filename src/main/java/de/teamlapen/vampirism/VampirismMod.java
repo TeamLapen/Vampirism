@@ -177,6 +177,7 @@ public class VampirismMod {
             modbus.addListener(ModItemsRender::registerColors);
             modbus.addListener(ModParticleFactories::registerFactories);
             modbus.addListener(ModKeys::registerKeyMapping);
+            modbus.addListener(ClientEventHandler::onModelRegistry);
         });
         VampirismConfig.init();
         MinecraftForge.EVENT_BUS.register(this);

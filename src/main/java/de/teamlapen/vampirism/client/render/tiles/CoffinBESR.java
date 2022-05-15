@@ -1,80 +1,115 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.blockentity.CoffinBlockEntity;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
-import de.teamlapen.vampirism.client.core.ModEntitiesRender;
-import de.teamlapen.vampirism.client.model.CoffinModel;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.DyeColor;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.model.data.ModelData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
 
 import javax.annotation.Nonnull;
+
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
 /**
  * Render the coffin with its different colors and the lid opening animation
  */
 @OnlyIn(Dist.CLIENT)
 public class CoffinBESR extends VampirismBESR<CoffinBlockEntity> {
-    private final int maxLidPos = 61;
-    private final CoffinModel model;
-    private final ResourceLocation[] textures = new ResourceLocation[DyeColor.values().length];
+    private static final Marker COFFIN = new MarkerManager.Log4jMarker("COFFIN");
     private final Logger LOGGER = LogManager.getLogger();
 
     public CoffinBESR(BlockEntityRendererProvider.Context context) {
-        this.model = new CoffinModel(context.bakeLayer(ModEntitiesRender.COFFIN));
-        for (DyeColor e : DyeColor.values()) {
-            textures[e.getId()] = new ResourceLocation(REFERENCE.MODID, "textures/block/coffin/coffin_" + e.getSerializedName() + ".png");
-        }
     }
 
     @Override
-    public void render(CoffinBlockEntity tile, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource iRenderTypeBuffer, int i, int i1) {
-        if (!tile.renderAsItem) {
-            if (!isHeadSafe(tile.getLevel(), tile.getBlockPos())) return;
-
-            // Calculate lid position
-            boolean occupied = tile.hasLevel() && CoffinBlock.isClosed(tile.getLevel(), tile.getBlockPos());
-            if (!occupied && tile.lidPos > 0)
-                tile.lidPos--;
-            else if (occupied && tile.lidPos < maxLidPos)
-                tile.lidPos++;
-        } else {
-            tile.lidPos = maxLidPos;
-        }
-        model.rotateLid(calcLidAngle(tile.lidPos));
-        int color = Math.min(tile.color.getId(), 15);
-        matrixStack.pushPose();
-        matrixStack.translate(0.5F, +1.5F, 0.5F);
-        matrixStack.pushPose();
-        adjustRotatePivotViaState(tile, matrixStack);
-        matrixStack.mulPose(Vector3f.XP.rotationDegrees(180));
-        matrixStack.translate(0, 0, -1);
-        VertexConsumer vertexBuilder = iRenderTypeBuffer.getBuffer(RenderType.entitySolid(textures[color]));
-        this.model.renderToBuffer(matrixStack, vertexBuilder, i, i1, 1, 1, 1, 1);
-        matrixStack.popPose();
-        matrixStack.popPose();
-
+    public void render(@Nonnull CoffinBlockEntity tile, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource iRenderTypeBuffer, int i, int i1) {
+        this.renderBlock(tile, partialTicks, matrixStack, iRenderTypeBuffer, i, i1);
     }
 
+    public void renderBlock(CoffinBlockEntity tile, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource iRenderTypeBuffer, int i, int i1) {
+        assert tile.getLevel() != null;
+        BlockState state = tile.getBlockState();
+        Direction direction = state.getValue(HORIZONTAL_FACING);
 
-    private float calcLidAngle(int pos) {
-        if (pos == maxLidPos)
-            return 0.0F;
-        else if (pos == 0)
-            return (float) (0.75F * Math.PI);
-        return (float) (-Math.pow(1.02, pos) + 1 + 0.75 * Math.PI);
+        if (!isHeadSafe(tile.getLevel(), tile.getBlockPos())) return;
+
+        matrixStack.pushPose();
+        boolean vertical = state.getValue(CoffinBlock.VERTICAL);
+        switch (direction){
+            case EAST:
+                if (vertical) {
+                    matrixStack.mulPose(new Quaternion(new Vector3f(0, 0, 1), 90, true));
+                    matrixStack.translate(0, -1, 0);
+                }
+                matrixStack.mulPose(new Quaternion(new Vector3f(0,1,0), 90, true));
+                matrixStack.translate(-1,0,-1);
+                break;
+            case WEST:
+                if (vertical) {
+                    matrixStack.mulPose(new Quaternion(new Vector3f(0, 0, 1), -90, true));
+                    matrixStack.translate(-1, 0, 0);
+                }
+                matrixStack.mulPose(new Quaternion(new Vector3f(0,1,0), -90, true));
+                matrixStack.translate(0,0,-2);
+                break;
+            case SOUTH:
+                if (vertical) {
+                    matrixStack.mulPose(new Quaternion(new Vector3f(1, 0, 0), -90, true));
+                    matrixStack.translate(0, -1, 0);
+                }
+                matrixStack.translate(0,0,-1);
+                break;
+            case NORTH:
+                if (vertical) {
+                    matrixStack.mulPose(new Quaternion(new Vector3f(1, 0, 0), 90, true));
+                    matrixStack.translate(0, 0, -1);
+                }
+                matrixStack.mulPose(new Quaternion(new Vector3f(0,1,0), 180, true));
+                matrixStack.translate(-1,0,-2);
+                break;
+        }
+
+        BakedModel baseModel = Minecraft.getInstance().getModelManager().getModel(new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_bottom_" + tile.color.getName()));
+        ModelData modelData = baseModel.getModelData(tile.getLevel(), tile.getBlockPos(), state, ModelData.EMPTY);
+        for (RenderType renderType : baseModel.getRenderTypes(state, RandomSource.create(42), modelData)) {
+            Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(matrixStack.last(), iRenderTypeBuffer.getBuffer(net.minecraftforge.client.RenderTypeHelper.getEntityRenderType(renderType, false)), state, baseModel, 1,1,1,i, i1, modelData, renderType);
+        }
+
+        matrixStack.pushPose();
+        if (vertical) {
+            matrixStack.mulPose(new Quaternion(new Vector3f(0,0,1), 80 * tile.lidPos, true));
+            matrixStack.translate(0,-0.5 * tile.lidPos,0);
+        } else {
+            matrixStack.mulPose(new Quaternion(new Vector3f(0, 1, 0), -35 * tile.lidPos, true));
+            matrixStack.translate(0, 0, -0.5 * tile.lidPos);
+        }
+
+        BakedModel lidModel = Minecraft.getInstance().getModelManager().getModel( new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_top_" + tile.color.getName()));
+        modelData = lidModel.getModelData(tile.getLevel(), tile.getBlockPos(), state, ModelData.EMPTY);
+        for (RenderType renderType : lidModel.getRenderTypes(state, RandomSource.create(42), modelData)) {
+            Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(matrixStack.last(), iRenderTypeBuffer.getBuffer(net.minecraftforge.client.RenderTypeHelper.getEntityRenderType(renderType,false)), state, lidModel, 1,1,1,i, i1, modelData, renderType);
+        }
+        matrixStack.popPose();
+        matrixStack.popPose();
     }
 
     /**
@@ -84,9 +119,9 @@ public class CoffinBESR extends VampirismBESR<CoffinBlockEntity> {
         try {
             return CoffinBlock.isHead(world, pos);
         } catch (IllegalArgumentException e) {
-            LOGGER.error("Failed to check coffin head at {} caused by wrong blockstate. Block at that pos: {}", pos, world.getBlockState(pos));
+            LOGGER.error(COFFIN, "Failed to check coffin head at {} caused by wrong blockstate. Block at that pos: {}", pos, world.getBlockState(pos));
         } catch (Exception e) {
-            LOGGER.error("Failed to check coffin head.", e);
+            LOGGER.error(COFFIN, "Failed to check coffin head at "+pos+".", e);
         }
         return false;
     }
