@@ -923,7 +923,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             }
         } else {
             if (level > 0) {
-                VampirismMod.proxy.handleSleepClient(player);
                 actionHandler.updateActions();
                 if (isGettingSundamage(world)) {
                     handleSunDamage(true);
@@ -962,6 +961,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     @Override
     public void onUpdatePlayer(TickEvent.Phase phase) {
         if (phase == TickEvent.Phase.END) {
+            //update sleeping pose
+            if (getLevel() > 0) {
+                VampirismMod.proxy.handleSleepClient(player);
+            }
+
             //Update blood stats
             if (getLevel() > 0 && !isDBNO()) {
                 player.level.getProfiler().push("vampirism_bloodupdate");

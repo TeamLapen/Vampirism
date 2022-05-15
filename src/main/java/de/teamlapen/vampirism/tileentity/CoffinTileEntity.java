@@ -12,6 +12,7 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -22,29 +23,17 @@ import javax.annotation.Nullable;
  * TileEntity for coffins. Handles coffin lid position and color
  */
 public class CoffinTileEntity extends TileEntity implements ITickableTileEntity {
-    public final boolean renderAsItem;
-    public int lidPos;
-    public DyeColor color = DyeColor.BLACK;
+    public float lidPos;
+    public DyeColor color = DyeColor.RED;
     private boolean lastTickOccupied;
 
     public CoffinTileEntity() {
         super(ModTiles.coffin);
-        this.renderAsItem = false;
-    }
-
-    public CoffinTileEntity(boolean renderAsItem) {
-        super(ModTiles.coffin);
-        this.renderAsItem = renderAsItem;
     }
 
     public CoffinTileEntity(DyeColor color) {
-        this();
-        this.changeColor(color);
-    }
-
-    public void changeColor(DyeColor color) {
+        super(ModTiles.coffin);
         this.color = color;
-        setChanged();
     }
 
     @Override
@@ -68,6 +57,7 @@ public class CoffinTileEntity extends TileEntity implements ITickableTileEntity 
     public void load(BlockState state, CompoundNBT compound) {
         super.load(state, compound);
         this.color = compound.contains("color") ? DyeColor.byId(compound.getInt("color")) : DyeColor.BLACK;
+        this.lidPos = compound.getFloat("lidPos");
 
     }
 
@@ -81,14 +71,16 @@ public class CoffinTileEntity extends TileEntity implements ITickableTileEntity 
     public CompoundNBT save(CompoundNBT compound) {
         CompoundNBT nbt = super.save(compound);
         nbt.putInt("color", color.getId());
+        nbt.putFloat("lidPos", this.lidPos);
         return nbt;
     }
 
     @Override
     public void setChanged() {
         super.setChanged();
-        if (level != null)
+        if (level != null) {
             level.sendBlockUpdated(getBlockPos(), level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
+        }
     }
 
     @Override
@@ -103,6 +95,14 @@ public class CoffinTileEntity extends TileEntity implements ITickableTileEntity 
             lastTickOccupied = occupied;
         }
 
+        // Calculate lid position
+        boolean isClosed = hasLevel() && CoffinBlock.isClosed(getLevel(), getBlockPos());
+        if (!isClosed) {
+            lidPos += 0.02;
+        } else {
+            lidPos -= 0.02;
+        }
+        lidPos = MathHelper.clamp(lidPos, 0, 1);
 
     }
 }

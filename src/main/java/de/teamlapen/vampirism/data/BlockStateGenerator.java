@@ -6,13 +6,13 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.PressurePlateBlock;
 import net.minecraft.block.WoodButtonBlock;
-import net.minecraft.data.*;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.item.DyeColor;
 import net.minecraft.state.properties.AttachFace;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.*;
-import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 import java.util.Arrays;
@@ -28,7 +28,6 @@ public class BlockStateGenerator extends BlockStateProvider {
     @Override
     protected void registerStatesAndModels() {
         //models
-        models().getBuilder("coffin").texture("particle", mcLoc("block/spruce_planks"));
         models().withExistingParent("fire_side_alt0", modLoc("block/fire_side_alt")).texture("particle", mcLoc("block/fire_0")).texture("fire", mcLoc("block/fire_0"));
         models().withExistingParent("fire_side_alt1", modLoc("block/fire_side_alt")).texture("particle", mcLoc("block/fire_1")).texture("fire", mcLoc("block/fire_1"));
         models().withExistingParent("fire_side0", modLoc("block/fire_side")).texture("particle", mcLoc("block/fire_0")).texture("fire", mcLoc("block/fire_0"));
@@ -52,7 +51,8 @@ public class BlockStateGenerator extends BlockStateProvider {
         simpleBlock(ModBlocks.castle_block_purple_brick);
         simpleBlock(ModBlocks.cursed_earth);
         simpleBlock(ModBlocks.sunscreen_beacon, models().withExistingParent("vampirism:block/sunscreen_beacon", "minecraft:block/beacon").texture("beacon", "vampirism:block/cursed_earth"));
-        simpleBlock(ModBlocks.coffin, models().getExistingFile(modLoc("block/coffin")));
+        BlockModelBuilder builder1 = models().getBuilder("vampirism:block/empty").texture("particle", "minecraft:block/spruce_planks");
+        CoffinBlock.COFFIN_BLOCKS.values().forEach(coffin -> getVariantBuilder(coffin).forAllStates(state -> ConfiguredModel.builder().modelFile(builder1).build()));
         simpleBlock(ModBlocks.vampire_orchid, models().cross("vampire_orchid", modLoc("block/vampire_orchid")));
         simpleBlock(ModBlocks.totem_top, models().getExistingFile(modLoc("block/totem_top")));
         simpleBlock(ModBlocks.totem_top_crafted, models().getExistingFile(modLoc("block/totem_top_crafted")));
@@ -243,6 +243,12 @@ public class BlockStateGenerator extends BlockStateProvider {
 
         horizontalBlock(ModBlocks.vampire_rack, models().getExistingFile(modLoc("block/vampire_rack")));
         horizontalBlock(ModBlocks.throne, models().getExistingFile(modLoc("block/throne")));
+
+        for (DyeColor dye : DyeColor.values()) {
+            models().withExistingParent(REFERENCE.MODID + ":block/coffin/coffin_" + dye.getName(),"vampirism:block/coffin").texture("0", "vampirism:block/coffin/coffin_" + dye.getName());
+            models().withExistingParent(REFERENCE.MODID + ":block/coffin/coffin_bottom_" + dye.getName(),"vampirism:block/coffin_bottom").texture("0", "vampirism:block/coffin/coffin_" + dye.getName());
+            models().withExistingParent(REFERENCE.MODID + ":block/coffin/coffin_top_" + dye.getName(),"vampirism:block/coffin_top").texture("0", "vampirism:block/coffin/coffin_" + dye.getName());
+        }
     }
 
     private void createWoodStates() {

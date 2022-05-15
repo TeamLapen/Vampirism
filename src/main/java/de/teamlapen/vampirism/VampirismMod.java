@@ -148,6 +148,7 @@ public class VampirismMod {
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
             FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientEventHandler::onModelBakeEvent);
             FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
+            FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientEventHandler::onModelRegistry);
         });
         VampirismConfig.init();
         MinecraftForge.EVENT_BUS.register(this);

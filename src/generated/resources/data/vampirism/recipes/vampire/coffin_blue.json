@@ -10,10 +10,10 @@
       "tag": "minecraft:planks"
     },
     "Y": {
-      "tag": "minecraft:wool"
+      "item": "minecraft:blue_wool"
     }
   },
   "result": {
-    "item": "vampirism:coffin"
+    "item": "vampirism:coffin_blue"
   }
 }
