@@ -18,6 +18,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -47,8 +48,8 @@ public class VampirismItemWeapon extends SwordItem {
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if (flagIn.isAdvanced()) {
-            tooltip.add(new StringTextComponent("ModDamage: " + getAttackDamage(stack)));
-            tooltip.add(new StringTextComponent("ModSpeed: " + getAttackSpeed(stack)));
+            tooltip.add(new StringTextComponent("ModDamage: " + getAttackDamage(stack)).withStyle(TextFormatting.GRAY));
+            tooltip.add(new StringTextComponent("ModSpeed: " + getAttackSpeed(stack)).withStyle(TextFormatting.GRAY));
         }
     }
 

@@ -7,6 +7,7 @@ import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.item.*;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.RegistryKey;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -167,13 +168,13 @@ public class Trades {
 
     public static class BiomeMapForEmeralds implements VillagerTrades.ITrade {
         private final int emeraldCost;
-        private final RegistryKey<Biome> destination;
+        private final ResourceLocation destination;
         private final int maxUses;
         private final int villagerXp;
 
         public BiomeMapForEmeralds(int pEmeraldCost, RegistryKey<Biome> pDestination, int pMaxUses, int pVillagerXp) {
             this.emeraldCost = pEmeraldCost;
-            this.destination = pDestination;
+            this.destination = pDestination.location();
             this.maxUses = pMaxUses;
             this.villagerXp = pVillagerXp;
         }
@@ -194,7 +195,7 @@ public class Trades {
                     ItemStack itemstack = FilledMapItem.create(serverlevel, blockpos.getX(), blockpos.getZ(), (byte)3, true, true);
                     FilledMapItem.renderBiomePreviewMap(serverlevel, itemstack);
                     MapData.addTargetDecoration(itemstack, blockpos, "+", MapDecoration.Type.TARGET_POINT);
-                    itemstack.setHoverName(new TranslationTextComponent("biome."+destination.location().getNamespace()+ "."+destination.location().getPath()));
+                    itemstack.setHoverName(new TranslationTextComponent("biome."+destination.getNamespace()+ "."+destination.getPath()));
                     return new MerchantOffer(new ItemStack(Items.EMERALD, this.emeraldCost), new ItemStack(Items.COMPASS), itemstack, this.maxUses, this.villagerXp, 0.2F);
                 } else {
                     return null;

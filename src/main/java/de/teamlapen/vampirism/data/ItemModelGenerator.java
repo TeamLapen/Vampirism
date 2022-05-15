@@ -99,7 +99,6 @@ public class ItemModelGenerator extends ItemModelProvider {
             add(ModBlocks.garlic_beacon_weak);
             add(ModBlocks.garlic_beacon_normal);
             add(ModBlocks.garlic_beacon_improved);
-            add(ModBlocks.hunter_table);
             add(ModBlocks.sunscreen_beacon);
             add(ModBlocks.totem_top);
             add(ModBlocks.totem_top_vampirism_vampire);
@@ -320,6 +319,8 @@ public class ItemModelGenerator extends ItemModelProvider {
         withExistingParent(ModBlocks.cursed_spruce_button.asItem(), modLoc("block/cursed_spruce_button_inventory"));
         withExistingParent(ModBlocks.dark_spruce_fence.asItem(), modLoc("block/dark_spruce_fence_inventory"));
         withExistingParent(ModBlocks.cursed_spruce_fence.asItem(), modLoc("block/cursed_spruce_fence_inventory"));
+
+        withExistingParent(ModBlocks.hunter_table, modLoc("block/hunter_table/hunter_table"));
 
         for (DyeColor dye : DyeColor.values()) {
             getBuilder("coffin_" + dye.getName()).parent(new ModelFile.UncheckedModelFile(REFERENCE.MODID + ":block/coffin/coffin_bottom_" + dye.getName()))

@@ -104,6 +104,7 @@ public class TagGenerator {
             tag(ItemTags.STAIRS).addTag(ModTags.Items.CASTLE_STAIRS);
             tag(ItemTags.SLABS).addTag(ModTags.Items.CASTLE_SLAPS);
             tag(ItemTags.PIGLIN_LOVED).add(ModItems.vampire_clothing_crown);
+            tag(ModTags.Items.HEART).add(ModItems.human_heart, ModItems.weak_human_heart);
         }
     }
 
