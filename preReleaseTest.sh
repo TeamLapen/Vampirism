@@ -54,6 +54,6 @@ else
 fi
 
 
-sudo docker run -v "$dir/vampirism:/data/mods" -e TYPE=FORGE -e VERSION="$mc_version" -e FORGE_VERSION="$forge_version" -e EULA=true --name vampirism_test_runner --rm -it docker.io/itzg/minecraft-server
+sudo docker run -v "$dir/vampirism:/data/mods" -e TYPE=FORGE -e VERSION="$mc_version" -e FORGE_VERSION="$forge_version" -e EULA=true --name vampirism_test_runner --rm -it docker.io/itzg/minecraft-server:java8-multiarch
 
 rm -rf $dir
