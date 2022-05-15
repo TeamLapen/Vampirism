@@ -282,6 +282,7 @@ public class VampirismConfig {
 
         //World
         public final ForgeConfigSpec.BooleanValue addVampireForestToOverworld;
+        public final ForgeConfigSpec.IntValue vampireForestWeight_terrablender;
         public final ForgeConfigSpec.BooleanValue enableHunterTentGeneration;
         public final ForgeConfigSpec.BooleanValue useVanillaCampfire;
 
@@ -318,6 +319,7 @@ public class VampirismConfig {
             builder.pop();
             builder.comment("Settings here require a game restart").push("world");
             addVampireForestToOverworld = builder.comment("Whether to inject the vampire forest into the default overworld generation and to replace some Taiga areas").define("addVampireForestToOverworld", true);
+            vampireForestWeight_terrablender = builder.comment("Only considered if terrablender installed. Heigher values increase Vampirism region weight (likelyhood to appear)").defineInRange("vampireForestWeight_terrablender", 2,1, 1000);
             enableHunterTentGeneration = builder.comment("Control hunter camp generation. If disabled you should set hunterSpawnChance to 75.").define("enableHunterTentGeneration", true);
             useVanillaCampfire = builder.comment("Use the vanilla campfire block instead of Vampirism's much cooler one").define("useVanillaCampfire", false);
 
