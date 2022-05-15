@@ -236,7 +236,7 @@ public class SkillsTabScreen extends AbstractGui {
             this.zoom = Math.max(this.zoom, (float) (SCREEN_HEIGHT) / (this.treeHeight));
         }
         if (this.zoom * this.treeWidth < (SCREEN_WIDTH - 20)) {
-            this.zoom = Math.max(this.zoom, (float) (SCREEN_WIDTH - 20) / this.treeWidth);
+            this.zoom = Math.max(this.zoom, (float) (SCREEN_WIDTH - 20) / (Math.max(60,this.treeWidth)) );
         }
 
         this.scrollX = scrollXP / this.zoom;

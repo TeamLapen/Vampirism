@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillType;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -58,6 +59,9 @@ public class VampireSkills {
     public static final ISkill neonatal_decrease = getNull();
     public static final ISkill dbno_duration = getNull();
     public static final ISkill hissing = getNull();
+    public static final ISkill vampire_minion_stats_increase = getNull();
+    public static final ISkill vampire_lord_speed = getNull();
+    public static final ISkill vampire_lord_attack_speed = getNull();
 
 
     @SuppressWarnings({"deprecation", "Convert2MethodRef"})
@@ -105,14 +109,24 @@ public class VampireSkills {
         registry.register(new VampirismSkill.SimpleVampireSkill("neonatal_decrease", true));
         registry.register(new VampirismSkill.SimpleVampireSkill("dbno_duration", true));
         registry.register(actionSkillDesc("hissing", VampireActions.hissing));
+        registry.register(new VampirismSkill.LordVampireSkill("vampire_minion_stats_increase", true));
+        registry.register(actionSkillDesc("vampire_lord_speed", VampireActions.vampire_lord_speed, SkillType.LORD));
+        registry.register(actionSkillDesc("vampire_lord_attack_speed", VampireActions.vampire_lord_attack_speed, SkillType.LORD));
     }
 
     private static ActionSkill<IVampirePlayer> actionSkill(String id, IAction action) {
-        return new ActionSkill<>(new ResourceLocation(REFERENCE.MODID, id), action, SkillType.LEVEL, false);
+        return actionSkill(id, action, SkillType.LEVEL);
+    }
+
+    private static ActionSkill<IVampirePlayer> actionSkill(String id, IAction action, ISkillType type) {
+        return new ActionSkill<>(new ResourceLocation(REFERENCE.MODID, id), action, type, false);
     }
 
     private static ActionSkill<IVampirePlayer> actionSkillDesc(String id, IAction action) {
-        return new ActionSkill<>(new ResourceLocation(REFERENCE.MODID, id), action, SkillType.LEVEL, true);
+        return actionSkillDesc(id, action, SkillType.LEVEL);
+    }
+    private static ActionSkill<IVampirePlayer> actionSkillDesc(String id, IAction action, ISkillType type) {
+        return new ActionSkill<>(new ResourceLocation(REFERENCE.MODID, id), action, type, true);
     }
 
     public static void fixMappings(RegistryEvent.MissingMappings<ISkill> event) {

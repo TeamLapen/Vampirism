@@ -79,6 +79,9 @@ public class SkillNodeGenerator implements IDataProvider {
             ResourceLocation weapon4 = SkillNodeBuilder.hunter(weapon3, HunterSkills.enhanced_armor).build(consumer, modId("weapon4"));
             ResourceLocation weapon5 = SkillNodeBuilder.hunter(weapon4, HunterSkills.tech_weapons).build(consumer, modId("weapon5"));
             ResourceLocation weapon6 = SkillNodeBuilder.hunter(weapon5, HunterSkills.stake2).build(consumer, modId("weapon6"));
+
+            ResourceLocation lord_2 = SkillNodeBuilder.hunter(modId("hunter_lord"), HunterSkills.hunter_minion_stats_increase).build(consumer, modId("lord_2"));
+            ResourceLocation lord_3 = SkillNodeBuilder.hunter(modId("hunter_lord"), HunterSkills.hunter_lord_speed, HunterSkills.hunter_lord_attack_speed).build(consumer, modId("lord_3"));
         }
 
         //vampire
@@ -109,6 +112,10 @@ public class SkillNodeGenerator implements IDataProvider {
             ResourceLocation defensive4_2 = SkillNodeBuilder.vampire(defensive3, VampireSkills.blood_vision_garlic).build(consumer, modId("defensive4"));
             ResourceLocation defensive5 = SkillNodeBuilder.vampire(defensive4_1, VampireSkills.neonatal_decrease, VampireSkills.dbno_duration).build(consumer, modId("defensive6"));
             ResourceLocation defensive6 = SkillNodeBuilder.vampire(defensive5, VampireSkills.teleport).build(consumer, modId("defensive7"));
+
+            ResourceLocation lord_2 = SkillNodeBuilder.vampire(modId("vampire_lord"), VampireSkills.vampire_minion_stats_increase).build(consumer, modId("lord_2"));
+            ResourceLocation lord_3 = SkillNodeBuilder.vampire(modId("vampire_lord"), VampireSkills.vampire_lord_speed, VampireSkills.vampire_lord_attack_speed).build(consumer, modId("lord_3"));
+
         }
 
     }

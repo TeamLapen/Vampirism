@@ -36,7 +36,7 @@ public class OblivionItem extends VampirismItem {
         PlayerEntity player = factionPlayer.getRepresentingPlayer();
         FactionPlayerHandler.getOpt(player).ifPresent(fph -> {
             ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
-            if (((SkillHandler<?>) skillHandler).getRootNode().getChildren().stream().flatMap(a -> Arrays.stream(a.getElements())).noneMatch(skillHandler::isSkillEnabled))
+            if (((SkillHandler<?>) skillHandler).getRootNodes().stream().flatMap(a -> a.getChildren().stream()).flatMap(a -> Arrays.stream(a.getElements())).noneMatch(skillHandler::isSkillEnabled))
                 return;
             boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
             player.addEffect(new EffectInstance(ModEffects.oblivion, Integer.MAX_VALUE, test ? 100 : 4));

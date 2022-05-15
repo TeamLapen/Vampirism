@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillType;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
@@ -57,6 +58,9 @@ public class HunterSkills {
     public static final ISkill potion_resistance = getNull();
     public static final ISkill crucifix_wielder = getNull();
     public static final ISkill ultimate_crucifix = getNull();
+    public static final ISkill hunter_minion_stats_increase = getNull();
+    public static final ISkill hunter_lord_speed = getNull();
+    public static final ISkill hunter_lord_attack_speed = getNull();
 
     @SuppressWarnings("deprecation")
     public static void registerHunterSkills(IForgeRegistry<ISkill> registry) {
@@ -113,14 +117,24 @@ public class HunterSkills {
         registry.register(actionSkillDesc("potion_resistance", HunterActions.potion_resistance_hunter));
         registry.register(new VampirismSkill.SimpleHunterSkill("crucifix_wielder", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("ultimate_crucifix", true));
+        registry.register(new VampirismSkill.LordHunterSkill("hunter_minion_stats_increase", true));
+        registry.register(actionSkillDesc("hunter_lord_speed", HunterActions.hunter_lord_speed, SkillType.LORD));
+        registry.register(actionSkillDesc("hunter_lord_attack_speed", HunterActions.hunter_lord_attack_speed, SkillType.LORD));
     }
 
     private static ActionSkill<IHunterPlayer> actionSkill(String id, IAction action) {
-        return new ActionSkill<>(new ResourceLocation(REFERENCE.MODID, id), action, SkillType.LEVEL, false);
+        return actionSkill(id, action, SkillType.LEVEL);
+    }
+
+    private static ActionSkill<IHunterPlayer> actionSkill(String id, IAction action, ISkillType type) {
+        return new ActionSkill<>(new ResourceLocation(REFERENCE.MODID, id), action, type, false);
     }
 
     private static ActionSkill<IHunterPlayer> actionSkillDesc(String id, IAction action) {
-        return new ActionSkill<>(new ResourceLocation(REFERENCE.MODID, id), action, SkillType.LEVEL, true);
+        return actionSkillDesc(id, action, SkillType.LEVEL);
+    }
+    private static ActionSkill<IHunterPlayer> actionSkillDesc(String id, IAction action, ISkillType type) {
+        return new ActionSkill<>(new ResourceLocation(REFERENCE.MODID, id), action, type, true);
     }
 
     public static void fixMappings(RegistryEvent.MissingMappings<ISkill> event) {

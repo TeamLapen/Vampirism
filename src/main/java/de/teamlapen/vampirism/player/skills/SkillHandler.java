@@ -80,7 +80,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
         if (isSkillEnabled(skill)) {
             return Result.ALREADY_ENABLED;
         }
-        SkillNode node = findSkillNode(getRootNode(), skill);
+        SkillNode node = findSkillNode(getRootNode(skill.getType()), skill);
         if (node != null) {
             if (isSkillNodeLocked(node)) {
                 return Result.LOCKED_BY_OTHER_NODE;
@@ -249,8 +249,13 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
         return player;
     }
 
+    @Deprecated
     public SkillNode getRootNode() {
         return VampirismMod.proxy.getSkillTree(player.isRemote()).getRootNodeForFaction(faction.getID());
+    }
+
+    public Collection<SkillNode> getRootNodes() {
+        return VampirismAPI.skillManager().getSkillTypes().stream().map(this::getRootNode).collect(Collectors.toList());
     }
 
     public SkillNode getRootNode(ISkillType type) {

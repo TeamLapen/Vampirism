@@ -1,7 +1,11 @@
 package de.teamlapen.vampirism.player.hunter.actions;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
+import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
+import de.teamlapen.vampirism.player.actions.AttackSpeedLordAction;
+import de.teamlapen.vampirism.player.actions.SpeedLordAction;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -15,10 +19,14 @@ public class HunterActions {
     public static final AwarenessHunterAction awareness_hunter = getNull();
     public static final DisguiseHunterAction disguise_hunter = getNull();
     public static final PotionResistanceHunterAction potion_resistance_hunter = getNull();
+    public static final SpeedLordAction<IHunterPlayer> hunter_lord_speed = getNull();
+    public static final AttackSpeedLordAction<IHunterPlayer> hunter_lord_attack_speed = getNull();
 
     public static void registerDefaultActions(IForgeRegistry<IAction> registry) {
         registry.register(new AwarenessHunterAction().setRegistryName(REFERENCE.MODID, "awareness_hunter"));
         registry.register(new DisguiseHunterAction().setRegistryName(REFERENCE.MODID, "disguise_hunter"));
         registry.register(new PotionResistanceHunterAction().setRegistryName(REFERENCE.MODID, "potion_resistance_hunter"));
+        registry.register(new SpeedLordAction<>(VReference.HUNTER_FACTION).setRegistryName(REFERENCE.MODID, "hunter_lord_speed"));
+        registry.register(new AttackSpeedLordAction<>(VReference.HUNTER_FACTION).setRegistryName(REFERENCE.MODID, "hunter_lord_attack_speed"));
     }
 }

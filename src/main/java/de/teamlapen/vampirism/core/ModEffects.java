@@ -35,6 +35,8 @@ public class ModEffects {
     public static final Effect armor_regeneration = getNull();
     public static final Effect bad_omen_hunter = getNull();
     public static final Effect bad_omen_vampire = getNull();
+    public static final Effect lord_speed = getNull();
+    public static final Effect lord_attack_speed = getNull();
     private static final Logger LOGGER = LogManager.getLogger();
     private static Effect modded_night_vision;  //Substituted version
     private static Effect vanilla_night_vision; //Vanilla night vision instance
@@ -67,6 +69,8 @@ public class ModEffects {
                 return VReference.VAMPIRE_FACTION;
             }
         });
+        registry.register(new VampirismEffect("lord_speed", EffectType.BENEFICIAL, 0xffffff).addAttributeModifier(Attributes.MOVEMENT_SPEED, "efe607d8-db8a-4156-b9d0-6a0640593057", 0.07F, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        registry.register(new VampirismEffect("lord_attack_speed", EffectType.BENEFICIAL, 0xffffff).addAttributeModifier(Attributes.ATTACK_SPEED, "a2ca9534-3baf-404f-b159-bc835bf963e6", 0.05F, AttributeModifier.Operation.MULTIPLY_TOTAL));
     }
 
     static void fixNightVisionEffectTypes() {

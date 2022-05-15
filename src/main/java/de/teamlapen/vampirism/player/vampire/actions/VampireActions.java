@@ -1,7 +1,11 @@
 package de.teamlapen.vampirism.player.vampire.actions;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
+import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.player.actions.AttackSpeedLordAction;
+import de.teamlapen.vampirism.player.actions.SpeedLordAction;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -25,6 +29,8 @@ public class VampireActions {
     public static final RageVampireAction vampire_rage = getNull();
     public static final HissingAction hissing = getNull();
     public static final InfectAction infect = getNull();
+    public static final SpeedLordAction<IVampirePlayer> vampire_lord_speed = getNull();
+    public static final AttackSpeedLordAction<IVampirePlayer> vampire_lord_attack_speed = getNull();
 
     public static void registerDefaultActions(IForgeRegistry<IAction> registry) {
         registry.register(new BatVampireAction().setRegistryName(REFERENCE.MODID, "bat"));
@@ -40,5 +46,7 @@ public class VampireActions {
         registry.register(new RageVampireAction().setRegistryName(REFERENCE.MODID, "vampire_rage"));
         registry.register(new HissingAction().setRegistryName(REFERENCE.MODID, "hissing"));
         registry.register(new InfectAction().setRegistryName(REFERENCE.MODID, "infect"));
+        registry.register(new SpeedLordAction<>(VReference.VAMPIRE_FACTION).setRegistryName(REFERENCE.MODID, "vampire_lord_speed"));
+        registry.register(new AttackSpeedLordAction<>(VReference.VAMPIRE_FACTION).setRegistryName(REFERENCE.MODID, "vampire_lord_attack_speed"));
     }
 }

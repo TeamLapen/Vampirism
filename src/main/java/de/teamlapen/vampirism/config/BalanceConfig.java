@@ -200,6 +200,10 @@ public class BalanceConfig {
     public final ForgeConfigSpec.DoubleValue vrHalfInvulnerableThresholdMod;
     public final ForgeConfigSpec.DoubleValue vrSwordFinisherThresholdMod;
 
+    public final ForgeConfigSpec.BooleanValue faLordSpeedEnabled;
+    public final ForgeConfigSpec.IntValue faLordSpeedCooldown;
+    public final ForgeConfigSpec.IntValue faLordSpeedDuration;
+
     BalanceConfig(BalanceBuilder builder) {
         boolean iceAndFire = ModList.get().isLoaded("iceandfire");
         if (iceAndFire) {
@@ -413,5 +417,11 @@ public class BalanceConfig {
         vrTeleportDistanceMod = builder.defineInRange("teleportDistanceMod", 1.5, 1, Double.MAX_VALUE);
         vrHalfInvulnerableThresholdMod = builder.comment("Threshold for attacks that are considered high damage is multiplied by this value").defineInRange("halfInvulnerableThresholdMod", 0.7, 0, 2);
         vrSwordFinisherThresholdMod = builder.comment("Threshold for instant kill is modified by this amount").defineInRange("swordFinisherThresholdMod", 1.25, 1, Double.MAX_VALUE);
+
+        builder.category("faction actions", "fa");
+        faLordSpeedEnabled = builder.define("lordSpeedEnabled", true);
+        faLordSpeedDuration = builder.comment("In seconds").defineInRange("lordSpeedDuration", 30, 0, Integer.MAX_VALUE);
+        faLordSpeedCooldown = builder.comment("In seconds").defineInRange("lordSpeedCooldown", 120, 0, Integer.MAX_VALUE);
+
     }
 }
