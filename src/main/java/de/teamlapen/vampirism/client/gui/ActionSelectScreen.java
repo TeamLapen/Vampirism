@@ -20,6 +20,7 @@ import de.teamlapen.vampirism.network.ActionBindingPacket;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -30,6 +31,7 @@ import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -38,7 +40,7 @@ import java.util.stream.Collectors;
  */
 @OnlyIn(Dist.CLIENT)
 public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<IAction<T>> {
-    public final static List<IAction<?>> ACTIONORDER = Lists.newArrayList();
+    public final static List<IAction<?>> ACTIONORDER = NonNullList.create();
     /**
      * Fake skill which represents the cancel button
      */
@@ -78,7 +80,8 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
      */
     public static void loadActionOrder() {
         List<IAction<?>> actions = Lists.newArrayList(ModRegistries.ACTIONS.getValues());
-        VampirismConfig.CLIENT.actionOrder.get().stream().map(action -> ModRegistries.ACTIONS.getValue(new ResourceLocation(action))).forEachOrdered(action -> {
+        //Keep in mind some previously saved actions may have been removed
+        VampirismConfig.CLIENT.actionOrder.get().stream().map(action -> ModRegistries.ACTIONS.getValue(new ResourceLocation(action))).filter(Objects::nonNull).forEachOrdered(action -> {
             actions.remove(action);
             ACTIONORDER.add(action);
         });
