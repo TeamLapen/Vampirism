@@ -16,6 +16,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public abstract class RefinementSet extends ForgeRegistryEntry<IRefinementSet> implements IRefinementSet {
 
@@ -59,7 +60,13 @@ public abstract class RefinementSet extends ForgeRegistryEntry<IRefinementSet> i
 
     @Nonnull
     @Override
-    public Set<RegistryObject<? extends IRefinement>> getRefinements() {
+    public Set<IRefinement> getRefinements() {
+        return this.refinements.stream().map(RegistryObject::get).collect(Collectors.toSet());
+    }
+
+    @Nonnull
+    @Override
+    public Set<RegistryObject<? extends IRefinement>> getRefinementRegistryObjects() {
         return this.refinements;
     }
 

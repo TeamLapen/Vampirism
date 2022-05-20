@@ -388,7 +388,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
         this.appliedRefinementSets[slot] = set;
         this.refinementSetDamage[slot] = 0;
         if (set != null) {
-            Collection<RegistryObject<? extends IRefinement>> refinements = set.getRefinements();
+            Collection<RegistryObject<? extends IRefinement>> refinements = set.getRefinementRegistryObjects();
             for (RegistryObject<? extends IRefinement> refinementObject : refinements) {
                 IRefinement refinement = refinementObject.get();
                 this.activeRefinements.add(refinement);
@@ -415,7 +415,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
         IRefinementSet set = this.appliedRefinementSets[slot];
         this.appliedRefinementSets[slot] = null;
         if (set != null) {
-            Collection<RegistryObject<? extends IRefinement>> refinements = set.getRefinements();
+            Collection<RegistryObject<? extends IRefinement>> refinements = set.getRefinementRegistryObjects();
             for (RegistryObject<? extends IRefinement> refinementObject : refinements) {
                 IRefinement refinement = refinementObject.get();
                 this.activeRefinements.remove(refinement);

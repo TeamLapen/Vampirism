@@ -103,7 +103,7 @@ public class VampireRefinementItem extends Item implements IRefinementItem { //T
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         IRefinementSet set = getRefinementSet(stack);
         if (set != null) {
-            set.getRefinements().stream().map(RegistryObject::get).forEach(refinement -> {
+            set.getRefinementRegistryObjects().stream().map(RegistryObject::get).forEach(refinement -> {
                 tooltip.add(new StringTextComponent(" - ").append(refinement.getDescription()).withStyle(TextFormatting.GRAY));
             });
         }

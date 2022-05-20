@@ -44,7 +44,6 @@ import java.util.Set;
 
 public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusiveItem, IFactionLevelItem<IHunterPlayer> {
 
-    private final static String baseRegName = "crucifix";
     private final TIER tier;
     /**
      * All crucifix items are added to this set. This is used to add cooldown for all existing crucifix items at once.
