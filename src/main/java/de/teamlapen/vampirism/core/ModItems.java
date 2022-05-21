@@ -209,6 +209,9 @@ public class ModItems {
     public static final CrucifixItem crucifix_enhanced = getNull();
     public static final CrucifixItem crucifix_ultimate = getNull();
 
+    public static final VampirismBoatItem dark_spruce_boat = getNull();
+    public static final VampirismBoatItem cursed_spruce_boat = getNull();
+
     static void registerCraftingRecipes() {
         // Brewing
         BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER)), Ingredient.of(new ItemStack(holy_salt)), new ItemStack(holy_salt_water));
@@ -420,6 +423,9 @@ public class ModItems {
 
         registry.register(new SignItem((new Item.Properties()).stacksTo(16).tab(ItemGroup.TAB_DECORATIONS), ModBlocks.dark_spruce_sign, ModBlocks.dark_spruce_wall_sign).setRegistryName(REFERENCE.MODID, "dark_spruce_sign"));
         registry.register(new SignItem((new Item.Properties()).stacksTo(16).tab(ItemGroup.TAB_DECORATIONS), ModBlocks.cursed_spruce_sign, ModBlocks.cursed_spruce_wall_sign).setRegistryName(REFERENCE.MODID, "cursed_spruce_sign"));
+
+        registry.register(new VampirismBoatItem(VampirismBoatItem.BoatType.DARK_SPRUCE, creativeTabProps().stacksTo(1)).setRegistryName(REFERENCE.MODID, "dark_spruce_boat"));
+        registry.register(new VampirismBoatItem(VampirismBoatItem.BoatType.CURSED_SPRUCE, creativeTabProps().stacksTo(1)).setRegistryName(REFERENCE.MODID, "cursed_spruce_boat"));
 
         registry.register(new CrucifixItem(IItemWithTier.TIER.NORMAL));
         registry.register(new CrucifixItem(IItemWithTier.TIER.ENHANCED));

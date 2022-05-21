@@ -62,6 +62,7 @@ public class ModEntitiesRender {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.task_master_vampire, safeFactory(VampireTaskMasterRenderer::new));
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.task_master_hunter, safeFactory(HunterTaskMasterRenderer::new));
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.dummy_sit_entity, safeFactory(DummyRenderer::new));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.boat, safeFactory(VampirismBoatRenderer::new));
     }
 
     private static <T extends Entity> IRenderFactory<? super T> safeFactory(IRenderFactory<? super T> f) {

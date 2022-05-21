@@ -66,6 +66,7 @@ public class ModEntities {
     public static final EntityType<VampireTaskMasterEntity> task_master_vampire = getNull();
     public static final EntityType<HunterTaskMasterEntity> task_master_hunter = getNull();
     public static final EntityType<SitEntity> dummy_sit_entity = getNull();
+    public static final EntityType<VampirismBoatEntity> boat = getNull();
     /**
      * empty unless in datagen
      */
@@ -148,6 +149,7 @@ public class ModEntities {
         registry.register(prepareEntityType("task_master_vampire", EntityType.Builder.of(VampireTaskMasterEntity::new, VReference.VAMPIRE_CREATURE_TYPE).sized(0.6f, 1.95f), true));
         registry.register(prepareEntityType("task_master_hunter", EntityType.Builder.of(HunterTaskMasterEntity::new, VReference.HUNTER_CREATURE_TYPE).sized(0.6f, 1.95f), true));
         registry.register(prepareEntityType("dummy_sit_entity", EntityType.Builder.of(SitEntity::new, EntityClassification.MISC).sized(0.0001f, 0.0001f).setTrackingRange(256).setUpdateInterval(20), false));
+        registry.register(prepareEntityType("boat", EntityType.Builder.<VampirismBoatEntity>of(VampirismBoatEntity::new, EntityClassification.MISC).sized(1.375F, 0.5625F).clientTrackingRange(10).setCustomClientFactory((spawnENtity, level) -> new VampirismBoatEntity(level, spawnENtity.getPosX(), spawnENtity.getPosY(), spawnENtity.getPosZ())), false));
     }
 
     static void registerSpawns() {

@@ -300,6 +300,9 @@ public class RecipesGenerator extends RecipeProvider {
         woodenTrapdoor(consumer, ModBlocks.cursed_spruce_trapdoor, ModBlocks.cursed_spruce_planks);
         woodenSign(consumer, ModItems.dark_spruce_sign, ModBlocks.dark_spruce_planks);
         woodenSign(consumer, ModItems.cursed_spruce_sign, ModBlocks.cursed_spruce_planks);
+        woodenBoat(consumer, ModItems.dark_spruce_boat, ModBlocks.dark_spruce_planks);
+        woodenBoat(consumer, ModItems.cursed_spruce_boat, ModBlocks.cursed_spruce_planks);
+
         ShapedRecipeBuilder.shaped(ModBlocks.throne).pattern(" YZ").pattern("YYZ").pattern("XZX").define('Y', Blocks.RED_CARPET).define('Z', ItemTags.PLANKS).define('X', Items.STICK).unlockedBy("has_stick", has(Items.STICK)).unlockedBy("has_planks", has(ItemTags.PLANKS)).unlockedBy("has_wool", has(Blocks.RED_CARPET)).save(consumer, general("throne"));
         ShapedRecipeBuilder.shaped(ModBlocks.vampire_rack).pattern("XYX").pattern("ABC").pattern("XYX").define('X', ItemTags.PLANKS).define('Y', Items.BOOK).define('A', ModItems.vampire_fang).define('B', Items.GLASS_BOTTLE).define('C', Items.HONEYCOMB).unlockedBy("has_planks", has(ItemTags.PLANKS)).unlockedBy("has_book", has(Items.BOOK)).unlockedBy("has_fangs", has(ModItems.vampire_fang)).unlockedBy("has_honey", has(Items.HONEYCOMB)).unlockedBy("has_potion", has(Items.GLASS_BOTTLE)).save(consumer, general("vampire_rack"));
 

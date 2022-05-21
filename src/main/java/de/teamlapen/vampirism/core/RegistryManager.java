@@ -10,12 +10,15 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.entity.action.EntityActions;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
+import de.teamlapen.vampirism.items.VampirismBoatItem;
+import de.teamlapen.vampirism.misc.VampirismDispenseBoatBehavior;
 import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.world.biome.VampirismBiomeFeatures;
 import net.minecraft.block.Block;
+import net.minecraft.block.DispenserBlock;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.Attribute;
@@ -81,6 +84,8 @@ public class RegistryManager implements IInitListener {
                 ModLoot.registerLootFunctionType();
                 VampirismBiomeFeatures.init();
                 ModTiles.registerTileExtensionsUnsafe();
+                DispenserBlock.registerBehavior(ModItems.dark_spruce_boat, new VampirismDispenseBoatBehavior(VampirismBoatItem.BoatType.DARK_SPRUCE));
+                DispenserBlock.registerBehavior(ModItems.cursed_spruce_boat, new VampirismDispenseBoatBehavior(VampirismBoatItem.BoatType.CURSED_SPRUCE));
             case LOAD_COMPLETE:
                 event.enqueueWork(ModFeatures::registerStructureSeparation);
                 if (ModEffects.checkNightVision()) {
