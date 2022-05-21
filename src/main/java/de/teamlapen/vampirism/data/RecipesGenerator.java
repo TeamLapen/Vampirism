@@ -287,6 +287,7 @@ public class RecipesGenerator extends RecipeProvider {
 
         CustomRecipeBuilder.special(ModRecipes.applicable_oil).save(consumer, REFERENCE.MODID+":applicable_oil");
         AlchemyTableRecipeBuilder.builder(OilUtils.createOilItem(ModOils.plant_oil)).ingredient(Ingredient.of(new ItemStack(Items.GLASS_BOTTLE))).input(Ingredient.of(new ItemStack(Items.WHEAT_SEEDS))).withCriterion("has_bottles", has(Items.GLASS_BOTTLE)).withCriterion("has_wheat_seeds", has(Items.WHEAT_SEEDS)).build(consumer, new ResourceLocation(REFERENCE.MODID, "plant_oil"));
+        AlchemyTableRecipeBuilder.builder(OilUtils.createOilItem(ModOils.vampire_blood_oil)).ingredient(Ingredient.of(ModItems.oil_bottle), ModOils.plant_oil).input(Ingredient.of(ModItems.vampire_blood_bottle)).withCriterion("has_bottles", has(ModItems.oil_bottle)).withCriterion("has_wheat_seeds", has(ModItems.vampire_blood_bottle)).build(consumer, new ResourceLocation(REFERENCE.MODID, "vampire_blood_oil"));
     }
 
     private JsonObject enchantment(int level, Enchantment enchantment) {

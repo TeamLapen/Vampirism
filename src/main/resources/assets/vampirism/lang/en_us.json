@@ -1191,5 +1191,6 @@
   "text.vampirism.vampire_villager.decline_trade_normal": "Sorry, but my trades are only interesting for vampires",
   "__comment": "Oils",
   "oil.vampirism.plant_oil": "Plant",
-  "oil.vampirism.empty": "Uncraftable"
+  "oil.vampirism.empty": "Uncraftable",
+  "oil.vampirism.vampire_blood_oil": "Activated"
 }

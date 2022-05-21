@@ -32,26 +32,26 @@ public class AlchemyTableScreen extends ContainerScreen<AlchemyTableContainer> {
         this.renderTooltip(p_230430_1_, p_230430_2_, p_230430_3_);
     }
 
-    protected void renderBg(MatrixStack p_230450_1_, float p_230450_2_, int p_230450_3_, int p_230450_4_) {
+    protected void renderBg(MatrixStack stack, float p_230450_2_, int p_230450_3_, int p_230450_4_) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.minecraft.getTextureManager().bind(BREWING_STAND_LOCATION);
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        this.blit(p_230450_1_, i, j, 0, 0, this.imageWidth, this.imageHeight);
+        this.blit(stack, i, j, 0, 0, this.imageWidth, this.imageHeight);
         int k = this.menu.getFuel();
         int l = MathHelper.clamp((18 * k + 20 - 1) / 20, 0, 18);
         if (l > 0) {
-            this.blit(p_230450_1_, i + 33, j + 60, 176, 9, l, 4);
+            this.blit(stack, i + 33, j + 60, 176, 9, l, 4);
         }
 
         int i1 = this.menu.getBrewingTicks();
         if (i1 > 0) {
             float j1 = 1.0F - ((float)i1 / 600.0F);
             if (j1 > 0) {
-                this.blit(p_230450_1_, i + 73, j + 57, 176, 1, (int)(j1 * 28), 8);
+                this.blit(stack, i + 73, j + 57, 176, 1, (int)(j1 * 28), 8);
                 int color = this.menu.getColor();
-                RenderSystem.color4f((color>> 16) & 0xFF,(color >> 8) & 0xFF,(color) & 0xFF,1F);
-                this.blit(p_230450_1_, i + 104, j+36, 176, 13, (int)(j1 * 32), 32);
+                RenderSystem.color4f(((color>> 16) & 0xFF) / 255f,((color >> 8) & 0xFF) / 255f,((color) & 0xFF) / 255f,1F);
+                this.blit(stack, i + 104, j+36, 176, 13, (int)(j1 * 32), 32);
             }
         }
 

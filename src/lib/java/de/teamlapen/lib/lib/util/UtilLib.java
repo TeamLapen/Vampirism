@@ -803,8 +803,14 @@ public class UtilLib {
     }
 
     public static boolean matchesItem(Ingredient ingredient, ItemStack searchStack) {
-        return Arrays.stream(ingredient.getItems()).anyMatch(stack -> stack.sameItem(searchStack) && stack.areShareTagsEqual(searchStack));
-    }
+        return Arrays.stream(ingredient.getItems()).anyMatch(stack -> {
+            if (!stack.sameItem(searchStack)) return false;
+            if (stack.getTag() != null) {
+                return stack.areShareTagsEqual(searchStack);
+            }
+            return true;
+        });
+}
 
     public enum RotationAmount {
         NINETY,

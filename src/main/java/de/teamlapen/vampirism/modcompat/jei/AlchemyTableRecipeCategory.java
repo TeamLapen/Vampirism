@@ -133,7 +133,7 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<AlchemyTableR
         this.arrow.draw(matrixStack,73-9-2,57-10-2);
 
         int color = OilUtils.getOil(recipe.getResultItem()).getColor();
-        RenderSystem.color4f((color>> 16) & 0xFF,(color >> 8) & 0xFF,(color) & 0xFF,1F);
+        RenderSystem.color4f(((color>> 16) & 0xFF) / 255f,((color >> 8) & 0xFF) / 255f,((color) & 0xFF)/255f,1F);
         this.pool.draw(matrixStack,104-9-2,36-10-2);
         RenderSystem.color4f(1,1,1,1);
 
