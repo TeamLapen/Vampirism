@@ -341,7 +341,7 @@
   "action.vampirism.disguise_vampire": "Disguise",
   "action.vampirism.disguise_vampire.desc": "Temporarily disguise as a non vampire to trick mobs and players",
   "action.vampirism.disguise_hunter": "Disguise",
-  "action.vampirism.disguise_hunter.desc": "Temporarily significantly reduce your detection and visibility radius towards mobs and players.",
+  "action.vampirism.disguise_hunter.desc": "Temporarily significantly reduce your the radius in which mobs and players can see and detect you.",
   "action.vampirism.dark_blood_projectile": "Dark Blood Projectile",
   "action.vampirism.dark_blood_projectile.desc": "Fire a blood projectile that deals damage",
   "action.vampirism.half_invulnerable": "Damage Limiter",
