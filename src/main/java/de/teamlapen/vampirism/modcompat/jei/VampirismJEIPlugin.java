@@ -19,6 +19,8 @@ import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaRecipeCategoryUid;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.ingredients.subtypes.IIngredientSubtypeInterpreter;
+import mezz.jei.api.ingredients.subtypes.UidContext;
 import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
 import mezz.jei.api.registration.*;
 import net.minecraft.client.Minecraft;
@@ -29,6 +31,7 @@ import net.minecraft.item.ItemTier;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.item.crafting.ShapelessRecipe;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.Tags;
@@ -77,6 +80,27 @@ public class VampirismJEIPlugin implements IModPlugin {
         registration.addRecipeTransferHandler(AlchemicalCauldronContainer.class, ALCHEMICAL_CAULDRON_RECIPE_UID, 0, 2, 4, 36);
         registration.addRecipeTransferHandler(AlchemicalCauldronContainer.class, VanillaRecipeCategoryUid.FUEL, 3, 1, 4, 36);
         registration.addRecipeTransferHandler(WeaponTableContainer.class, WEAPON_TABLE_RECIPE_ID, 1, 16, 17, 36);
+    }
+
+    @Override
+    public void registerItemSubtypes(ISubtypeRegistration registration) {
+        registration.registerSubtypeInterpreter(ModItems.oil_bottle, OilNBT.INSTANCE);
+    }
+
+    private static class OilNBT implements IIngredientSubtypeInterpreter<ItemStack> {
+        public static final OilNBT INSTANCE = new OilNBT();
+
+        private OilNBT() {
+        }
+
+        @Override
+        public String apply(ItemStack itemStack, UidContext context) {
+            CompoundNBT nbtTagCompound = itemStack.getTag();
+            if (nbtTagCompound == null || nbtTagCompound.isEmpty()) {
+                return IIngredientSubtypeInterpreter.NONE;
+            }
+            return OilUtils.getOil(itemStack).getRegistryName().toString();
+        }
     }
 
     @Override
@@ -138,9 +162,13 @@ public class VampirismJEIPlugin implements IModPlugin {
     }
 
     private List<ShapelessRecipe> getApplicableOilRecipes() {
-        Collection<IApplicableOil> oils = ModRegistries.OILS.getValues().stream().filter(IApplicableOil.class::isInstance).map(IApplicableOil.class::cast).collect(Collectors.toList());
-        Collection<ItemStack> allItems = ForgeRegistries.ITEMS.getValues().stream().map(Item::getDefaultInstance).collect(Collectors.toList());
-        Map<IApplicableOil, Collection<ItemStack>> compatiblePairs = oils.stream().collect(Collectors.toMap(x -> x,x -> allItems.stream().filter(x::canBeApplied).collect(Collectors.toList())));
-        return compatiblePairs.entrySet().stream().flatMap(entry -> entry.getValue().stream().map(stack -> new ShapelessRecipe(new ResourceLocation(REFERENCE.MODID, (entry.getKey().getRegistryName().toString() + stack.getItem().getRegistryName().toString()).replace(':', '_')), "", OilUtils.setAppliedOil(stack, entry.getKey()), NonNullList.of(Ingredient.EMPTY, Ingredient.of(stack), Ingredient.of(OilUtils.createOilItem(entry.getKey())))))).collect(Collectors.toList());
+        return ModRegistries.OILS.getValues().stream()
+                .filter(IApplicableOil.class::isInstance)
+                .map(IApplicableOil.class::cast)
+                .flatMap(oil -> ForgeRegistries.ITEMS.getValues().stream()
+                        .map(Item::getDefaultInstance)
+                        .filter(oil::canBeApplied)
+                        .map(stack -> new ShapelessRecipe(new ResourceLocation(REFERENCE.MODID, (oil.getRegistryName().toString() + stack.getItem().getRegistryName().toString()).replace(':', '_')), "", OilUtils.setAppliedOil(stack.copy(), oil), NonNullList.of(Ingredient.EMPTY, Ingredient.of(stack), Ingredient.of(OilUtils.createOilItem(oil))))
+                        )).collect(Collectors.toList());
     }
 }

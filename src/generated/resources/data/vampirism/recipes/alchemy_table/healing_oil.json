@@ -16,11 +16,22 @@
   },
   "input": {
     "type": "vampirism:item",
-    "item": "minecraft:potion",
-    "count": 1,
-    "nbt": {
-      "Potion": "minecraft:healing"
-    }
+    "items": [
+      {
+        "item": "minecraft:potion",
+        "count": 1,
+        "nbt": {
+          "Potion": "minecraft:healing"
+        }
+      },
+      {
+        "item": "minecraft:potion",
+        "count": 1,
+        "nbt": {
+          "Potion": "minecraft:strong_healing"
+        }
+      }
+    ]
   },
   "skill": []
 }

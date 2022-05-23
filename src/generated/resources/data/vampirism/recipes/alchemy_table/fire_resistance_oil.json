@@ -16,11 +16,22 @@
   },
   "input": {
     "type": "vampirism:item",
-    "item": "minecraft:potion",
-    "count": 1,
-    "nbt": {
-      "Potion": "minecraft:fire_resistance"
-    }
+    "items": [
+      {
+        "item": "minecraft:potion",
+        "count": 1,
+        "nbt": {
+          "Potion": "minecraft:fire_resistance"
+        }
+      },
+      {
+        "item": "minecraft:potion",
+        "count": 1,
+        "nbt": {
+          "Potion": "minecraft:long_fire_resistance"
+        }
+      }
+    ]
   },
   "skill": []
 }

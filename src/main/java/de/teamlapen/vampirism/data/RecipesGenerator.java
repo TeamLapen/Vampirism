@@ -37,6 +37,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -300,42 +301,42 @@ public class RecipesGenerator extends RecipeProvider {
         AlchemyTableRecipeBuilder
                 .builder(ModOils.healing_oil)
                 .bloodOilIngredient()
-                .input(new NBTIngredient(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.HEALING)))
+                .input(potion(Potions.HEALING, Potions.STRONG_HEALING))
                 .build(consumer, new ResourceLocation(REFERENCE.MODID, "healing_oil"));
         AlchemyTableRecipeBuilder
                 .builder(ModOils.poison_oil)
                 .bloodOilIngredient()
-                .input(new NBTIngredient(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.POISON)))
+                .input(potion(Potions.POISON,Potions.LONG_POISON, Potions.STRONG_POISON))
                 .build(consumer, new ResourceLocation(REFERENCE.MODID, "poison_oil"));
         AlchemyTableRecipeBuilder
                 .builder(ModOils.weakness_oil)
                 .bloodOilIngredient()
-                .input(new NBTIngredient(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WEAKNESS)))
+                .input(potion(Potions.WEAKNESS, Potions.LONG_WEAKNESS))
                 .build(consumer, new ResourceLocation(REFERENCE.MODID, "weakness_oil"));
         AlchemyTableRecipeBuilder
                 .builder(ModOils.slowness_oil)
                 .bloodOilIngredient()
-                .input(new NBTIngredient(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.SLOWNESS)))
+                .input(potion(Potions.SLOWNESS, Potions.STRONG_SLOWNESS, Potions.LONG_SLOWNESS))
                 .build(consumer, new ResourceLocation(REFERENCE.MODID, "slowness_oil"));
         AlchemyTableRecipeBuilder
                 .builder(ModOils.fire_resistance_oil)
                 .bloodOilIngredient()
-                .input(new NBTIngredient(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.FIRE_RESISTANCE)))
+                .input(potion(Potions.FIRE_RESISTANCE, Potions.LONG_FIRE_RESISTANCE))
                 .build(consumer, new ResourceLocation(REFERENCE.MODID, "fire_resistance_oil"));
         AlchemyTableRecipeBuilder
                 .builder(ModOils.swiftness_oil)
                 .bloodOilIngredient()
-                .input(new NBTIngredient(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.SWIFTNESS)))
+                .input(potion(Potions.SWIFTNESS, Potions.LONG_SWIFTNESS, Potions.STRONG_SWIFTNESS))
                 .build(consumer, new ResourceLocation(REFERENCE.MODID, "swiftness_oil"));
         AlchemyTableRecipeBuilder
                 .builder(ModOils.regeneration_oil)
                 .bloodOilIngredient()
-                .input(new NBTIngredient(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.REGENERATION)))
+                .input(potion(Potions.REGENERATION, Potions.LONG_REGENERATION, Potions.STRONG_REGENERATION))
                 .build(consumer, new ResourceLocation(REFERENCE.MODID, "regeneration_oil"));
         AlchemyTableRecipeBuilder
                 .builder(ModOils.night_vision_oil)
                 .bloodOilIngredient()
-                .input(new NBTIngredient(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.NIGHT_VISION)))
+                .input(potion(Potions.NIGHT_VISION, Potions.LONG_NIGHT_VISION))
                 .build(consumer, new ResourceLocation(REFERENCE.MODID, "night_vision_oil"));
     }
 
@@ -362,6 +363,9 @@ public class RecipesGenerator extends RecipeProvider {
         return new ResourceLocation(REFERENCE.MODID, path);
     }
 
+    private Ingredient potion(Potion... potion) {
+        return new NBTIngredient(Arrays.stream(potion).map(p -> PotionUtils.setPotion(new ItemStack(Items.POTION, 1),p)).toArray(ItemStack[]::new));
+    }
     private Ingredient potion(Potion potion) {
         ItemStack stack = new ItemStack(Items.POTION, 1);
         PotionUtils.setPotion(stack, potion);

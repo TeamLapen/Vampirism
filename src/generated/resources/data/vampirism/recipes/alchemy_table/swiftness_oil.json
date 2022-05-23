@@ -16,11 +16,29 @@
   },
   "input": {
     "type": "vampirism:item",
-    "item": "minecraft:potion",
-    "count": 1,
-    "nbt": {
-      "Potion": "minecraft:swiftness"
-    }
+    "items": [
+      {
+        "item": "minecraft:potion",
+        "count": 1,
+        "nbt": {
+          "Potion": "minecraft:swiftness"
+        }
+      },
+      {
+        "item": "minecraft:potion",
+        "count": 1,
+        "nbt": {
+          "Potion": "minecraft:long_swiftness"
+        }
+      },
+      {
+        "item": "minecraft:potion",
+        "count": 1,
+        "nbt": {
+          "Potion": "minecraft:strong_swiftness"
+        }
+      }
+    ]
   },
   "skill": []
 }

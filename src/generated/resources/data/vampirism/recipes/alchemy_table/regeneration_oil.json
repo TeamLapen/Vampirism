@@ -16,11 +16,29 @@
   },
   "input": {
     "type": "vampirism:item",
-    "item": "minecraft:potion",
-    "count": 1,
-    "nbt": {
-      "Potion": "minecraft:regeneration"
-    }
+    "items": [
+      {
+        "item": "minecraft:potion",
+        "count": 1,
+        "nbt": {
+          "Potion": "minecraft:regeneration"
+        }
+      },
+      {
+        "item": "minecraft:potion",
+        "count": 1,
+        "nbt": {
+          "Potion": "minecraft:long_regeneration"
+        }
+      },
+      {
+        "item": "minecraft:potion",
+        "count": 1,
+        "nbt": {
+          "Potion": "minecraft:strong_regeneration"
+        }
+      }
+    ]
   },
   "skill": []
 }

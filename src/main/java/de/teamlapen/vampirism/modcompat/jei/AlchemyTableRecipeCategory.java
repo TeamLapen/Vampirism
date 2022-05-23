@@ -106,14 +106,12 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<AlchemyTableR
         List<List<ItemStack>> outputs = ingredients.getOutputs(VanillaTypes.ITEM);
 
         for (int i = 0; i < inputs.size(); i++) {
-            for (ItemStack stack : inputs.get(i)) {
-                if (i == 0) {
-                    group.set(i, stack);
-                } else if (i == 1) {
-                    group.set(1, stack);
-                    group.set(2, stack);
+            if (i == 0) {
+                group.set(i, inputs.get(i));
+            } else if (i == 1) {
+                group.set(1, inputs.get(i));
+                group.set(2, inputs.get(i));
 
-                }
             }
         }
 
