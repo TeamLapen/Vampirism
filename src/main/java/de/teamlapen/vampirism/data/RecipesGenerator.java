@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.data.recipebuilder.*;
 import de.teamlapen.vampirism.inventory.recipes.ConfigCondition;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.OilUtils;
+import de.teamlapen.vampirism.util.NBTIngredient;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.IRequirementsStrategy;
@@ -286,8 +286,57 @@ public class RecipesGenerator extends RecipeProvider {
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.crucifix_ultimate).pattern("XYYX").pattern("YZAY").pattern("XYYX").pattern("XYYX").define('X', ModItems.item_alchemical_fire).define('Y', Tags.Items.STORAGE_BLOCKS_GOLD).define('Z', ModItems.holy_water_bottle_enhanced).define('A', ModItems.stake).unlockedBy("fire", has(ModItems.item_alchemical_fire)).unlockedBy("gold", has(Tags.Items.STORAGE_BLOCKS_GOLD)).unlockedBy("holy_water", has(ModItems.holy_water_bottle_enhanced)).unlockedBy("stake", has(ModItems.stake)).skills(HunterSkills.ultimate_crucifix).save(consumer, hunter("crucifix_ultimate"));
 
         CustomRecipeBuilder.special(ModRecipes.applicable_oil).save(consumer, REFERENCE.MODID+":applicable_oil");
-        AlchemyTableRecipeBuilder.builder(OilUtils.createOilItem(ModOils.plant_oil)).ingredient(Ingredient.of(new ItemStack(Items.GLASS_BOTTLE))).input(Ingredient.of(new ItemStack(Items.WHEAT_SEEDS))).withCriterion("has_bottles", has(Items.GLASS_BOTTLE)).withCriterion("has_wheat_seeds", has(Items.WHEAT_SEEDS)).build(consumer, new ResourceLocation(REFERENCE.MODID, "plant_oil"));
-        AlchemyTableRecipeBuilder.builder(OilUtils.createOilItem(ModOils.vampire_blood_oil)).ingredient(Ingredient.of(ModItems.oil_bottle), ModOils.plant_oil).input(Ingredient.of(ModItems.vampire_blood_bottle)).withCriterion("has_bottles", has(ModItems.oil_bottle)).withCriterion("has_wheat_seeds", has(ModItems.vampire_blood_bottle)).build(consumer, new ResourceLocation(REFERENCE.MODID, "vampire_blood_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.plant_oil)
+                .ingredient(Ingredient.of(new ItemStack(Items.GLASS_BOTTLE)))
+                .input(Ingredient.of(new ItemStack(Items.WHEAT_SEEDS)))
+                .withCriterion("has_bottles", has(Items.GLASS_BOTTLE)).withCriterion("has_wheat_seeds", has(Items.WHEAT_SEEDS))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "plant_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.vampire_blood_oil)
+                .plantOilIngredient()
+                .input(Ingredient.of(ModItems.vampire_blood_bottle)).withCriterion("has_wheat_seeds", has(ModItems.vampire_blood_bottle))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "vampire_blood_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.healing_oil)
+                .bloodOilIngredient()
+                .input(new NBTIngredient(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.HEALING)))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "healing_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.poison_oil)
+                .bloodOilIngredient()
+                .input(new NBTIngredient(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.POISON)))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "poison_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.weakness_oil)
+                .bloodOilIngredient()
+                .input(new NBTIngredient(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WEAKNESS)))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "weakness_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.slowness_oil)
+                .bloodOilIngredient()
+                .input(new NBTIngredient(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.SLOWNESS)))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "slowness_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.fire_resistance_oil)
+                .bloodOilIngredient()
+                .input(new NBTIngredient(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.FIRE_RESISTANCE)))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "fire_resistance_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.swiftness_oil)
+                .bloodOilIngredient()
+                .input(new NBTIngredient(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.SWIFTNESS)))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "swiftness_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.regeneration_oil)
+                .bloodOilIngredient()
+                .input(new NBTIngredient(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.REGENERATION)))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "regeneration_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.night_vision_oil)
+                .bloodOilIngredient()
+                .input(new NBTIngredient(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.NIGHT_VISION)))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "night_vision_oil"));
     }
 
     private JsonObject enchantment(int level, Enchantment enchantment) {
@@ -321,12 +370,6 @@ public class RecipesGenerator extends RecipeProvider {
 
     private ResourceLocation vampire(String path) {
         return modId("vampire/" + path);
-    }
-
-    private static class NBTIngredient extends net.minecraftforge.common.crafting.NBTIngredient {
-        public NBTIngredient(ItemStack stack) {
-            super(stack);
-        }
     }
 
     private static class Shapeless extends ShapelessRecipeBuilder {

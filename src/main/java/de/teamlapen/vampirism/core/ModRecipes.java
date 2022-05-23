@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.inventory.recipes.*;
+import de.teamlapen.vampirism.util.NBTIngredient;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
@@ -63,6 +64,7 @@ public class ModRecipes {
         registry.register(new AlchemicalCauldronRecipe.Serializer().setRegistryName(REFERENCE.MODID, "alchemical_cauldron"));
         registry.register(new AlchemyTableRecipe.Serializer().setRegistryName(REFERENCE.MODID, "alchemical_table"));
         registry.register(new SpecialRecipeSerializer<>(ApplicableOilRecipe::new).setRegistryName(REFERENCE.MODID, "applicable_oil"));
+        CraftingHelper.register(new ResourceLocation(REFERENCE.MODID, "item"), NBTIngredient.Serializer.INSTANCE);
     }
 
     public static void registerLiquidColor(Item item, int color) {

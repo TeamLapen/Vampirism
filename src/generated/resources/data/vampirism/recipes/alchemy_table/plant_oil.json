@@ -1,9 +1,11 @@
 {
   "type": "vampirism:alchemical_table",
   "result": {
-    "item": "vampirism:oil_bottle"
+    "item": "vampirism:oil_bottle",
+    "nbt": {
+      "oil": "vampirism:plant_oil"
+    }
   },
-  "result_oil": "vampirism:plant_oil",
   "ingredient": {
     "item": "minecraft:glass_bottle"
   },

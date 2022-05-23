@@ -3,7 +3,7 @@
   "result": {
     "item": "vampirism:oil_bottle",
     "nbt": {
-      "oil": "vampirism:vampire_blood_oil"
+      "oil": "vampirism:night_vision_oil"
     }
   },
   "ingredient": {
@@ -11,11 +11,16 @@
     "item": "vampirism:oil_bottle",
     "count": 1,
     "nbt": {
-      "oil": "vampirism:plant_oil"
+      "oil": "vampirism:vampire_blood_oil"
     }
   },
   "input": {
-    "item": "vampirism:vampire_blood_bottle"
+    "type": "vampirism:item",
+    "item": "minecraft:potion",
+    "count": 1,
+    "nbt": {
+      "Potion": "minecraft:night_vision"
+    }
   },
   "skill": []
 }

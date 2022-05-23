@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "vampirism:alchemy_table/healing_oil"
+    ]
+  },
+  "criteria": {
+    "has_bottles": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "vampirism:oil_bottle"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "vampirism:alchemy_table/healing_oil"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_bottles",
+      "has_the_recipe"
+    ]
+  ]
+}

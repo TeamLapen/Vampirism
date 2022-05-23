@@ -286,7 +286,7 @@ public class AlchemyTableTileEntity extends LockableTileEntity implements ITicka
     }
 
     public ItemStack getOutput(ItemStack input, ItemStack ingredient) {
-        return this.level.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE).stream().map(recipe -> recipe.getResult(input, ingredient)).findFirst().orElse(ItemStack.EMPTY);
+        return this.level.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE).stream().map(recipe -> recipe.getResult(input, ingredient)).filter(a -> !a.isEmpty()).findFirst().orElse(ItemStack.EMPTY);
     }
 
     @Override

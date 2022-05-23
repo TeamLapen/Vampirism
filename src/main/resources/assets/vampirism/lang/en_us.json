@@ -1190,7 +1190,15 @@
   "text.vampirism.vampire_villager.decline_trade_vampire": "I do not trade with wicked vampire hunters",
   "text.vampirism.vampire_villager.decline_trade_normal": "Sorry, but my trades are only interesting for vampires",
   "__comment": "Oils",
-  "oil.vampirism.plant_oil": "Plant",
   "oil.vampirism.empty": "Uncraftable",
-  "oil.vampirism.vampire_blood_oil": "Activated"
+  "oil.vampirism.plant_oil": "Plant",
+  "oil.vampirism.vampire_blood_oil": "Activated",
+  "oil.vampirism.poison_oil": "Poison",
+  "oil.vampirism.weakness_oil": "Weakness",
+  "oil.vampirism.slowness_oil": "Slowness",
+  "oil.vampirism.healing_oil": "Healing",
+  "oil.vampirism.fire_resistance_oil": "Fire Resistance",
+  "oil.vampirism.swiftness_oil": "Swiftness",
+  "oil.vampirism.regeneration_oil": "Regeneration",
+  "oil.vampirism.night_vision_oil": "Night Vision"
 }

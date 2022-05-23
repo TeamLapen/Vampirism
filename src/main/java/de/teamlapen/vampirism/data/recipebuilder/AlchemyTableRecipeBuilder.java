@@ -2,20 +2,26 @@ package de.teamlapen.vampirism.data.recipebuilder;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.oil.IOil;
+import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModOils;
 import de.teamlapen.vampirism.core.ModRecipes;
+import de.teamlapen.vampirism.util.NBTIngredient;
 import de.teamlapen.vampirism.util.OilUtils;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.ICriterionInstance;
 import net.minecraft.advancements.IRequirementsStrategy;
-import net.minecraft.advancements.criterion.RecipeUnlockedTrigger;
+import net.minecraft.advancements.criterion.*;
 import net.minecraft.data.IFinishedRecipe;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.tags.ITag;
+import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
@@ -29,6 +35,9 @@ public class AlchemyTableRecipeBuilder {
 
     public static AlchemyTableRecipeBuilder builder(ItemStack stack) {
         return new AlchemyTableRecipeBuilder(stack);
+    }
+    public static AlchemyTableRecipeBuilder builder(IOil stack) {
+        return new AlchemyTableRecipeBuilder(OilUtils.createOilItem(stack));
     }
 
     private final ItemStack result;
@@ -61,10 +70,16 @@ public class AlchemyTableRecipeBuilder {
         return this;
     }
 
-    public AlchemyTableRecipeBuilder ingredient(Ingredient ingredient, IOil ingredientOil){
-        this.ingredient = ingredient;
-        this.ingredientOil = ingredientOil;
+    public AlchemyTableRecipeBuilder oilIngredient(IOil oil) {
+        this.ingredient = new NBTIngredient(ModItems.oil_bottle.withOil(oil));
         return this;
+    }
+
+    public AlchemyTableRecipeBuilder plantOilIngredient() {
+        return ingredient(new NBTIngredient(ModItems.oil_bottle.withOil(ModOils.plant_oil))).withCriterion("has_bottles", has(ModItems.oil_bottle));
+    }
+    public AlchemyTableRecipeBuilder bloodOilIngredient() {
+        return ingredient(new NBTIngredient(ModItems.oil_bottle.withOil(ModOils.vampire_blood_oil))).withCriterion("has_bottles", has(ModItems.oil_bottle));
     }
 
     public AlchemyTableRecipeBuilder input(Ingredient input){
@@ -95,6 +110,18 @@ public class AlchemyTableRecipeBuilder {
         } else if (this.input == null) {
             throw new IllegalStateException("No input defined for alchemical table recipe " + id + "!");
         }
+    }
+
+    protected static InventoryChangeTrigger.Instance has(IItemProvider p_200403_0_) {
+        return inventoryTrigger(ItemPredicate.Builder.item().of(p_200403_0_).build());
+    }
+
+    protected static InventoryChangeTrigger.Instance has(ITag<Item> p_200409_0_) {
+        return inventoryTrigger(ItemPredicate.Builder.item().of(p_200409_0_).build());
+    }
+
+    protected static InventoryChangeTrigger.Instance inventoryTrigger(ItemPredicate... p_200405_0_) {
+        return new InventoryChangeTrigger.Instance(EntityPredicate.AndPredicate.ANY, MinMaxBounds.IntBound.ANY, MinMaxBounds.IntBound.ANY, MinMaxBounds.IntBound.ANY, p_200405_0_);
     }
 
     private static class Result implements IFinishedRecipe {
@@ -151,20 +178,8 @@ public class AlchemyTableRecipeBuilder {
             if (!this.group.isEmpty()) {
                 json.addProperty("group", this.group);
             }
-            JsonObject result = new JsonObject();
-            result.addProperty("item", this.result.getItem().getRegistryName().toString());
-            if (this.result.getCount() > 1) {
-                result.addProperty("count", this.result.getCount());
-            }
-            json.add("result", result);
-            if (this.resultOil != ModOils.empty) {
-                json.addProperty("result_oil", this.resultOil.getRegistryName().toString());
-            }
-
+            json.add("result", item(this.result));
             json.add("ingredient", this.ingredient.toJson());
-            if (this.ingredientOil != ModOils.empty) {
-                json.addProperty("ingredient_oil", this.ingredientOil.getRegistryName().toString());
-            }
             json.add("input", this.input.toJson());
 
             JsonArray skills = new JsonArray();
@@ -172,6 +187,18 @@ public class AlchemyTableRecipeBuilder {
                 skills.add(skill.getRegistryName().toString());
             }
             json.add("skill", skills);
+        }
+
+        private JsonObject item(ItemStack stack) {
+            JsonObject obj = new JsonObject();
+            obj.addProperty("item", stack.getItem().getRegistryName().toString());
+            if (stack.getCount() > 1) {
+                obj.addProperty("count", stack.getCount());
+            }
+            if (stack.hasTag()) {
+                obj.add("nbt", new JsonParser().parse(stack.getTag().toString()).getAsJsonObject());
+            }
+            return obj;
         }
     }
 }
