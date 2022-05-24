@@ -320,7 +320,7 @@ public class ModEntityEventHandler {
             OilUtils.getAppliedOil(stack).ifPresent(oil -> {
                 if (oil instanceof IWeaponOil) {
                     event.setAmount(event.getAmount() + ((IWeaponOil) oil).onHit(stack, event.getAmount(), ((IWeaponOil) oil), event.getEntityLiving(), player));
-                    oil.reduceDuration(stack, oil, ((IWeaponOil) oil).getOilValuePerHit());
+                    oil.reduceDuration(stack, oil, oil.getDurationReduction());
                 }
             });
         }

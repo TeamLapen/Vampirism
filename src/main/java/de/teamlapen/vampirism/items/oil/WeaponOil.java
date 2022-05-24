@@ -26,7 +26,7 @@ public class WeaponOil extends ApplicableOil implements IWeaponOil {
     }
 
     @Override
-    public int getOilValuePerHit() {
+    public int getDurationReduction() {
         return 1;
     }
 }

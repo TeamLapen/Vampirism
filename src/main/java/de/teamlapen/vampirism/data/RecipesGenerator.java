@@ -368,6 +368,11 @@ public class RecipesGenerator extends RecipeProvider {
                 .bloodOilIngredient()
                 .input(potion(Potions.LUCK))
                 .build(consumer, new ResourceLocation(REFERENCE.MODID, "luck_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.smelt_oil)
+                .bloodOilIngredient()
+                .input(new NBTIngredient(new ItemStack(ModItems.item_alchemical_fire)))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "smelt_oil"));
     }
 
     private JsonObject enchantment(int level, Enchantment enchantment) {

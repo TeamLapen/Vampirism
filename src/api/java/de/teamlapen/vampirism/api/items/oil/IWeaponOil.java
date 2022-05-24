@@ -27,13 +27,6 @@ public interface IWeaponOil extends IApplicableOil {
      */
     float onDamage(ItemStack stack, float amount, IWeaponOil oil, LivingEntity target, LivingEntity source);
 
-    /**
-     * determines how much the duration is reduced on a hit
-     *
-     * @return duration reduction
-     */
-    int getOilValuePerHit();
-
     @Override
     default boolean hasDuration() {
         return true;

@@ -24,5 +24,12 @@ public interface IApplicableOil extends IOil {
 
     boolean hasDuration();
 
+    /**
+     * determines how much the duration is reduced per reduction
+     *
+     * @return duration reduction
+     */
+    int getDurationReduction();
+
     Optional<ITextComponent> getToolTipLine(ItemStack stack, IApplicableOil oil, int duration);
 }

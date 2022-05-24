@@ -45,6 +45,10 @@ public class OilUtils {
         return getAppliedOilStatus(stack).map(Pair::getLeft);
     }
 
+    public static boolean reduceAppliedOilDuration(ItemStack stack) {
+        return OilUtils.getAppliedOil(stack).map(oil -> reduceAppliedOilDuration(stack, oil, oil.getDurationReduction())).orElse(true);
+    }
+
     public static boolean reduceAppliedOilDuration(@Nonnull ItemStack stack, IApplicableOil oil, int durationReduction) {
         CompoundNBT compound = stack.getOrCreateTag().getCompound("applied_oil");
         if (compound.getString("oil").equals(oil.getRegistryName().toString())) {

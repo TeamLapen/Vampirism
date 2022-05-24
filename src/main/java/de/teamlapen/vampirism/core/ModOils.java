@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.items.oil.EffectWeaponOil;
 import de.teamlapen.vampirism.items.oil.Oil;
+import de.teamlapen.vampirism.items.oil.SmeltingOil;
 import net.minecraft.potion.Effects;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
@@ -31,6 +32,7 @@ public class ModOils {
     public static final EffectWeaponOil slow_falling_oil = getNull();
     public static final EffectWeaponOil luck_oil = getNull();
     public static final EffectWeaponOil harm_oil = getNull();
+    public static final SmeltingOil smelt_oil = getNull();
 
     public static void register(IForgeRegistry<IOil> registry) {
         registry.register(new Oil(16253176).setRegistryName(REFERENCE.MODID, "empty"));
@@ -51,5 +53,6 @@ public class ModOils {
         registry.register(new EffectWeaponOil(Effects.SLOW_FALLING, 200, 20).setRegistryName(REFERENCE.MODID, "slow_falling_oil"));
         registry.register(new EffectWeaponOil(Effects.LUCK, 200, 20).setRegistryName(REFERENCE.MODID, "luck_oil"));
         registry.register(new EffectWeaponOil(Effects.HARM, 1, 5).setRegistryName(REFERENCE.MODID, "harm_oil"));
+        registry.register(new SmeltingOil(0x123456, 10).setRegistryName(REFERENCE.MODID, "smelt_oil"));
     }
 }

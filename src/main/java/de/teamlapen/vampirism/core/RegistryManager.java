@@ -38,6 +38,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.treedecorator.TreeDecoratorType;
+import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
@@ -281,5 +282,10 @@ public class RegistryManager implements IInitListener {
     @SubscribeEvent
     public void onRegisterOil(RegistryEvent.Register<IOil> event) {
         ModOils.register(event.getRegistry());
+    }
+
+    @SubscribeEvent
+    public void onRegisterGlobalLootModifier(RegistryEvent.Register<GlobalLootModifierSerializer<?>> event) {
+        ModLoot.registerLootModifier(event.getRegistry());
     }
 }
