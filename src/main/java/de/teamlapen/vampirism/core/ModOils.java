@@ -33,6 +33,7 @@ public class ModOils {
     public static final EffectWeaponOil luck_oil = getNull();
     public static final EffectWeaponOil harm_oil = getNull();
     public static final SmeltingOil smelt_oil = getNull();
+    public static final IOil teleport_oil = getNull();
 
     public static void register(IForgeRegistry<IOil> registry) {
         registry.register(new Oil(16253176).setRegistryName(REFERENCE.MODID, "empty"));
@@ -54,5 +55,6 @@ public class ModOils {
         registry.register(new EffectWeaponOil(Effects.LUCK, 200, 20).setRegistryName(REFERENCE.MODID, "luck_oil"));
         registry.register(new EffectWeaponOil(Effects.HARM, 1, 5).setRegistryName(REFERENCE.MODID, "harm_oil"));
         registry.register(new SmeltingOil(0x123456, 10).setRegistryName(REFERENCE.MODID, "smelt_oil"));
+        registry.register(new Oil(0x0b4d42).setRegistryName(REFERENCE.MODID, "teleport_oil"));
     }
 }

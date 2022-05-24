@@ -66,6 +66,7 @@ public class ModItems {
     public static final CrossbowArrowItem crossbow_arrow_normal = getNull();
     public static final CrossbowArrowItem crossbow_arrow_spitfire = getNull();
     public static final CrossbowArrowItem crossbow_arrow_vampire_killer = getNull();
+    public static final CrossbowArrowItem crossbow_arrow_teleport = getNull();
 
     public static final SimpleCrossbowItem enhanced_crossbow = getNull();
     public static final DoubleCrossbowItem enhanced_double_crossbow = getNull();
@@ -277,6 +278,7 @@ public class ModItems {
         registry.register(new CrossbowArrowItem(CrossbowArrowItem.EnumArrowType.VAMPIRE_KILLER));
         registry.register(new CrossbowArrowItem(CrossbowArrowItem.EnumArrowType.NORMAL));
         registry.register(new CrossbowArrowItem(CrossbowArrowItem.EnumArrowType.SPITFIRE));
+        registry.register(new CrossbowArrowItem(CrossbowArrowItem.EnumArrowType.TELEPORT));
 
         registry.register(new StakeItem());
         registry.register(new VampireBloodBottleItem());

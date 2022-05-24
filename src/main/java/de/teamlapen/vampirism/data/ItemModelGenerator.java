@@ -228,6 +228,7 @@ public class ItemModelGenerator extends ItemModelProvider {
         withExistingParent(ModItems.crossbow_arrow_normal, modLoc("item/crossbow_arrow"));
         withExistingParent(ModItems.crossbow_arrow_spitfire, modLoc("item/crossbow_arrow"));
         withExistingParent(ModItems.crossbow_arrow_vampire_killer, modLoc("item/crossbow_arrow"));
+        withExistingParent(ModItems.crossbow_arrow_teleport, modLoc("item/crossbow_arrow"));
 
         item(ModItems.armor_of_swiftness_chest_normal, modLoc("item/armor_of_swiftness_chest_normal"), modLoc("item/armor_of_swiftness_chest_normal_overlay"));
         item(ModItems.armor_of_swiftness_chest_enhanced, modLoc("item/armor_of_swiftness_chest_enhanced"), modLoc("item/armor_of_swiftness_chest_enhanced_overlay"));

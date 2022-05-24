@@ -674,6 +674,7 @@
   "item.vampirism.crossbow_arrow_vampire_killer": "Vampire Killer Quarrel",
   "item.vampirism.crossbow_arrow_spitfire": "Spitfire",
   "item.vampirism.crossbow_arrow_normal": "Quarrel",
+  "item.vampirism.crossbow_arrow_teleport": "Teleport Quarrel",
   "item.vampirism.stake": "Stake",
   "item.vampirism.blood_bottle": "Blood Bottle",
   "item.vampirism.blood_potion": "Blood Potion",
@@ -788,6 +789,7 @@
   "__comment": "item tooltips",
   "item.vampirism.crossbow_arrow_vampire_killer.tooltip": "Instantly kills low level vampire NPCs.",
   "item.vampirism.crossbow_arrow_spitfire.tooltip": "Creates a alchemical fire on impact",
+  "item.vampirism.crossbow_arrow_teleport.tooltip": "Teleports the shooter on impact",
   "item.vampirism.tech_crossbow_ammo_package.tooltip": "Can be used to fill a %s",
   "item.vampirism.item.tier.normal": "Normal",
   "item.vampirism.item.tier.enhanced": "Enhanced",
@@ -1208,6 +1210,7 @@
   "oil.vampirism.slow_falling_oil": "Slow Falling",
   "oil.vampirism.luck_oil": "Luck",
   "oil.vampirism.harm_oil": "Harm",
-  "oil.vampirism.smelt_oil": "Smelting"
+  "oil.vampirism.smelt_oil": "Smelting",
+  "oil.vampirism.teleport_oil": "Teleport"
 
 }
