@@ -1200,5 +1200,13 @@
   "oil.vampirism.fire_resistance_oil": "Fire Resistance",
   "oil.vampirism.swiftness_oil": "Swiftness",
   "oil.vampirism.regeneration_oil": "Regeneration",
-  "oil.vampirism.night_vision_oil": "Night Vision"
+  "oil.vampirism.night_vision_oil": "Night Vision",
+  "oil.vampirism.strength_oil": "Strength",
+  "oil.vampirism.jump_oil": "Jump Boost",
+  "oil.vampirism.water_breathing_oil": "Water Breathing",
+  "oil.vampirism.invisibility_oil": "Invisibility",
+  "oil.vampirism.slow_falling_oil": "Slow Falling",
+  "oil.vampirism.luck_oil": "Luck",
+  "oil.vampirism.harm_oil": "Harm"
+
 }

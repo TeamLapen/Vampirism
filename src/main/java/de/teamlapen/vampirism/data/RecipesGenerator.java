@@ -338,6 +338,36 @@ public class RecipesGenerator extends RecipeProvider {
                 .bloodOilIngredient()
                 .input(potion(Potions.NIGHT_VISION, Potions.LONG_NIGHT_VISION))
                 .build(consumer, new ResourceLocation(REFERENCE.MODID, "night_vision_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.strength_oil)
+                .bloodOilIngredient()
+                .input(potion(Potions.STRENGTH, Potions.STRONG_STRENGTH, Potions.LONG_STRENGTH))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "strength_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.jump_oil)
+                .bloodOilIngredient()
+                .input(potion(Potions.LEAPING, Potions.LONG_LEAPING, Potions.STRONG_LEAPING))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "jump_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.water_breathing_oil)
+                .bloodOilIngredient()
+                .input(potion(Potions.WATER_BREATHING, Potions.LONG_WATER_BREATHING))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "water_breathing_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.invisibility_oil)
+                .bloodOilIngredient()
+                .input(potion(Potions.INVISIBILITY, Potions.LONG_INVISIBILITY))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "invisibility_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.slow_falling_oil)
+                .bloodOilIngredient()
+                .input(potion(Potions.SLOW_FALLING, Potions.LONG_SLOW_FALLING))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "slow_falling_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.luck_oil)
+                .bloodOilIngredient()
+                .input(potion(Potions.LUCK))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "luck_oil"));
     }
 
     private JsonObject enchantment(int level, Enchantment enchantment) {

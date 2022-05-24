@@ -8,18 +8,22 @@ import net.minecraft.potion.EffectInstance;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 public class EffectWeaponOil extends WeaponOil {
 
     @Nonnull
-    private final EffectInstance effectIns;
-    @Nonnull
     private final Effect effect;
+    private final Supplier<Integer> effectDuration;
 
-    public EffectWeaponOil(@Nonnull EffectInstance effect, int maxDuration) {
+    public EffectWeaponOil(@Nonnull Effect effect, @Nonnull Supplier<Integer> effectDuration, int maxDuration) {
         super(effect.getEffect().getColor(), maxDuration);
-        this.effectIns = effect;
-        this.effect = Objects.requireNonNull(effect.getEffect());
+        this.effect = Objects.requireNonNull(effect);
+        this.effectDuration = Objects.requireNonNull(effectDuration);
+    }
+
+    public EffectWeaponOil(@Nonnull Effect effect, int effectDuration, int maxDuration) {
+        this(effect, ()-> effectDuration, maxDuration);
     }
 
     @Nonnull
@@ -29,7 +33,7 @@ public class EffectWeaponOil extends WeaponOil {
 
     @Nonnull
     public EffectInstance getEffectInstance() {
-        return new EffectInstance(effectIns);
+        return new EffectInstance(this.effect, this.effectDuration.get());
     }
 
     @Override
