@@ -64,9 +64,9 @@ public class ModVillage {
     }
 
     static void registerVillagePointOfInterestType(IForgeRegistry<PoiType> registry) {
-        PoiType hunter_faction = new FactionPointOfInterestType("hunter_faction", getAllStates(ModBlocks.totem_top_vampirism_hunter.get().get(), ModBlocks.totem_top_vampirism_hunter_crafted.get().get()), 1, 1).setRegistryName(REFERENCE.MODID, "hunter_faction");
-        PoiType vampire_faction = new FactionPointOfInterestType("vampire_faction", getAllStates(ModBlocks.totem_top_vampirism_vampire.get().get(), ModBlocks.totem_top_vampirism_vampire_crafted.get().get()), 1, 1).setRegistryName(REFERENCE.MODID, "vampire_faction");
-        PoiType no_faction = new FactionPointOfInterestType("no_faction", getAllStates(ModBlocks.totem_top.get().get(), ModBlocks.totem_top_crafted.get().get()), 1, 1).setRegistryName(REFERENCE.MODID, "no_faction");
+        PoiType hunter_faction = new FactionPointOfInterestType("hunter_faction", getAllStates(ModBlocks.totem_top_vampirism_hunter.get(), ModBlocks.totem_top_vampirism_hunter_crafted.get()), 1, 1).setRegistryName(REFERENCE.MODID, "hunter_faction");
+        PoiType vampire_faction = new FactionPointOfInterestType("vampire_faction", getAllStates(ModBlocks.totem_top_vampirism_vampire.get(), ModBlocks.totem_top_vampirism_vampire_crafted.get()), 1, 1).setRegistryName(REFERENCE.MODID, "vampire_faction");
+        PoiType no_faction = new FactionPointOfInterestType("no_faction", getAllStates(ModBlocks.totem_top.get(), ModBlocks.totem_top_crafted.get()), 1, 1).setRegistryName(REFERENCE.MODID, "no_faction");
         registry.register(hunter_faction);
         registry.register(vampire_faction);
         registry.register(no_faction);
@@ -101,11 +101,11 @@ public class ModVillage {
                         new Trades.ItemsForSouls(new Trades.Price(25, 45), Items.DIAMOND, new Trades.Price(1, 1), 2, 5),
                         new Trades.ItemsForSouls(new Trades.Price(10, 20), ModItems.crossbow_arrow_normal.get(), new Trades.Price(5, 15)),
                         new VillagerTrades.ItemsForEmeralds(ModItems.soul_orb_vampire.get(), 10, 10, 4),
-                        new Trades.ItemsForSouls(new Trades.Price(30, 40), ModItems.hunter_coat_chest_normal.get().get(), new Trades.Price(1, 1), 8, 1),
+                        new Trades.ItemsForSouls(new Trades.Price(30, 40), ModItems.hunter_coat_chest_normal.get(), new Trades.Price(1, 1), 8, 1),
                         new Trades.ItemsForSouls(new Trades.Price(25, 35), ModItems.hunter_coat_legs_normal.get(), new Trades.Price(1, 1), 7, 1),
                         new Trades.ItemsForSouls(new Trades.Price(10, 15), ModItems.hunter_coat_feet_normal.get(), new Trades.Price(1, 1), 5, 1),
                         new Trades.ItemsForSouls(new Trades.Price(20, 30), ModItems.hunter_coat_head_normal.get(), new Trades.Price(1, 1), 6, 1),
-                        new Trades.ItemsForSouls(new Trades.Price(30, 40), ModItems.armor_of_swiftness_chest_enhanced.get().get(), new Trades.Price(1, 1), 8, 1),
+                        new Trades.ItemsForSouls(new Trades.Price(30, 40), ModItems.armor_of_swiftness_chest_enhanced.get(), new Trades.Price(1, 1), 8, 1),
                         new Trades.ItemsForSouls(new Trades.Price(25, 35), ModItems.armor_of_swiftness_legs_enhanced.get(), new Trades.Price(1, 1), 7, 1),
                         new Trades.ItemsForSouls(new Trades.Price(10, 15), ModItems.armor_of_swiftness_feet_enhanced.get(), new Trades.Price(1, 1), 5, 1),
                         new Trades.ItemsForSouls(new Trades.Price(20, 30), ModItems.armor_of_swiftness_head_enhanced.get(), new Trades.Price(1, 1), 6, 1)
@@ -117,7 +117,7 @@ public class ModVillage {
                         new Trades.ItemsForSouls(new Trades.Price(25, 35), ModItems.obsidian_armor_legs_normal.get(), new Trades.Price(1, 1), 7, 1),
                         new Trades.ItemsForSouls(new Trades.Price(10, 15), ModItems.obsidian_armor_feet_normal.get(), new Trades.Price(1, 1), 5, 1),
                         new Trades.ItemsForSouls(new Trades.Price(20, 30), ModItems.obsidian_armor_head_normal.get(), new Trades.Price(1, 1), 6, 1),
-                        new Trades.ItemsForSouls(new Trades.Price(30, 40), ModItems.hunter_coat_chest_enhanced.get().get(), new Trades.Price(1, 1), 8, 1),
+                        new Trades.ItemsForSouls(new Trades.Price(30, 40), ModItems.hunter_coat_chest_enhanced.get(), new Trades.Price(1, 1), 8, 1),
                         new Trades.ItemsForSouls(new Trades.Price(25, 35), ModItems.hunter_coat_legs_enhanced.get(), new Trades.Price(1, 1), 7, 1),
                         new Trades.ItemsForSouls(new Trades.Price(10, 15), ModItems.hunter_coat_feet_enhanced.get(), new Trades.Price(1, 1), 5, 1),
                         new Trades.ItemsForSouls(new Trades.Price(20, 30), ModItems.hunter_coat_head_enhanced.get(), new Trades.Price(1, 1), 6, 1),
@@ -151,12 +151,12 @@ public class ModVillage {
                 1, new VillagerTrades.ItemListing[]{
                         new Trades.ItemsForHeart(new Trades.Price(10, 15), ModItems.pure_blood_0.get(), new Trades.Price(1, 1)),
                         new Trades.BloodBottleForHeart(new Trades.Price(3, 12), new Trades.Price(1, 15), 9),
-                        new VillagerTrades.EmeraldForItems(ModBlocks.vampire_orchid.get().get(), 4, 1, 3),
+                        new VillagerTrades.EmeraldForItems(ModBlocks.vampire_orchid.get(), 4, 1, 3),
                         new Trades.BiomeMapForEmeralds(5, ModBiomes.VAMPIRE_FOREST, 3, 2)
                 },
                 2, new VillagerTrades.ItemListing[]{
                         new Trades.ItemsForHeart(new Trades.Price(25, 30), ModItems.pure_blood_1.get(), new Trades.Price(1, 1), 10, 1),
-                        new Trades.ItemsForHeart(new Trades.Price(1, 5), ModBlocks.coffin.get().get(), new Trades.Price(1, 1), 2, 2),
+                        new Trades.ItemsForHeart(new Trades.Price(1, 5), ModBlocks.coffin.get(), new Trades.Price(1, 1), 2, 2),
                         new Trades.ItemsForHeart(new Trades.Price(10, 25), ModItems.blood_infused_iron_ingot.get(), new Trades.Price(1, 3))
                 },
                 3, new VillagerTrades.ItemListing[]{
@@ -180,8 +180,8 @@ public class ModVillage {
                                 new ItemStack(ModItems.vampire_cloak_black_white.get()),
                                 new ItemStack(ModItems.vampire_cloak_red_black.get()),
                                 new ItemStack(ModItems.vampire_cloak_white_black.get())}, new Trades.Price(1, 1), 10, 2),
-                        new VillagerTrades.ItemsForEmeralds(ModItems.heart_seeker_ultimate.get().get(), 40, 1, 15),
-                        new VillagerTrades.ItemsForEmeralds(ModItems.heart_striker_ultimate.get().get(), 40, 1, 15)
+                        new VillagerTrades.ItemsForEmeralds(ModItems.heart_seeker_ultimate.get(), 40, 1, 15),
+                        new VillagerTrades.ItemsForEmeralds(ModItems.heart_striker_ultimate.get(), 40, 1, 15)
 
                 });
     }

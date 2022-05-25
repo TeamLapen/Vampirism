@@ -36,6 +36,7 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -48,7 +49,11 @@ import net.minecraftforge.registries.ObjectHolderRegistry;
  * dependent things
  */
 public class RegistryManager implements IInitListener {
-
+    public static void setupRegistries(IEventBus modbus) {
+        ModBlocks.registerBlocks(modbus);
+        ModItems.registerItems(modbus);
+        ModEnchantments.registerEnchantments(modbus);
+    }
 
     @SubscribeEvent
     public void onBuildRegistries(NewRegistryEvent event) {
@@ -70,7 +75,7 @@ public class RegistryManager implements IInitListener {
                 ModEntities.registerConvertibles();
                 ModEntities.registerSpawns();
                 ModEntities.registerCustomExtendedCreatures();
-                ModItems.registerCraftingRecipes.get()();
+                ModItems.registerCraftingRecipes();
                 ModPotions.registerPotionMixes();
                 ModAdvancements.registerAdvancementTrigger();
                 event.enqueueWork(ModCommands::registerArgumentTypesUsage);
@@ -94,7 +99,7 @@ public class RegistryManager implements IInitListener {
 
     @SubscribeEvent
     public void onMissingMappingsBlocks(RegistryEvent.MissingMappings<Block> event) {
-        ModBlocks.fixMappings.get()(event);
+        ModBlocks.fixMappings(event);
     }
 
     @SubscribeEvent
@@ -104,7 +109,7 @@ public class RegistryManager implements IInitListener {
 
     @SubscribeEvent
     public void onMissingMappingsItems(RegistryEvent.MissingMappings<Item> event) {
-        ModItems.fixMappings.get()(event);
+        ModItems.fixMappings(event);
     }
 
     @SubscribeEvent
@@ -141,11 +146,6 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
-    public void onRegisterBlocks(RegistryEvent.Register<Block> event) {
-        ModBlocks.registerBlocks.get()(event.getRegistry());
-    }
-
-    @SubscribeEvent
     public void onRegisterContainer(RegistryEvent.Register<MenuType<?>> event) {
         ModContainer.registerContainer(event.getRegistry());
     }
@@ -153,11 +153,6 @@ public class RegistryManager implements IInitListener {
     @SubscribeEvent
     public void onRegisterEffects(RegistryEvent.Register<MobEffect> event) {
         ModEffects.registerEffects(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onRegisterEnchantments(RegistryEvent.Register<Enchantment> event) {
-        ModEnchantments.registerEnchantments(event.getRegistry());
     }
 
     @SubscribeEvent
@@ -178,12 +173,6 @@ public class RegistryManager implements IInitListener {
     @SubscribeEvent
     public void onRegisterFluids(RegistryEvent.Register<Fluid> event) {
         ModFluids.registerFluids(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onRegisterItems(RegistryEvent.Register<Item> event) {
-        ModItems.registerItems.get()(event.getRegistry());
-        ModBlocks.registerItemBlocks.get()(event.getRegistry());
     }
 
     @SubscribeEvent

@@ -13,10 +13,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class GarlicBreadItem extends VampirismItem implements IFactionExclusiveItem {
-    private static final String regName = "garlic_bread";
 
     public GarlicBreadItem() {
-        super(regName, new Properties().food((new FoodProperties.Builder()).nutrition(6).saturationMod(0.7F).build()).tab(CreativeModeTab.TAB_FOOD));
+        super(new Properties().food((new FoodProperties.Builder()).nutrition(6).saturationMod(0.7F).build()).tab(CreativeModeTab.TAB_FOOD));
     }
 
     @Nullable

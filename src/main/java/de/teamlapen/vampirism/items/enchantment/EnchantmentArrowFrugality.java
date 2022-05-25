@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.items.enchantment;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.items.VampirismItemCrossbow;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -16,7 +15,6 @@ import javax.annotation.Nonnull;
 public class EnchantmentArrowFrugality extends Enchantment {
     public EnchantmentArrowFrugality(Rarity rarityIn) {
         super(rarityIn, VReference.CROSSBOW_ENCHANTMENT, new EquipmentSlot[]{EquipmentSlot.MAINHAND});
-        this.setRegistryName(REFERENCE.MODID, "crossbowfrugality");
 
     }
 

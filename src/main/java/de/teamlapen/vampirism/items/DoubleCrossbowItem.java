@@ -17,7 +17,6 @@ import javax.annotation.Nullable;
 
 public class DoubleCrossbowItem extends SimpleCrossbowItem {
     /**
-     * @param regName       Registry name
      * @param speed         Speed of the shot arrows (0.1F-20F)
      * @param coolDownTicks Cooldown ticks >0
      * @param maxDamage     Max amount of shot arrrows or 0 if unbreakable

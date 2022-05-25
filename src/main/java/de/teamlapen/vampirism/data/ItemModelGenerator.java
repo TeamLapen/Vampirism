@@ -58,8 +58,8 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             add(ModBlocks.cursed_grass_block.get());
         }};
         Set<Item> items = new HashSet<>() {{
-            add(ModItems.hunter_coat_chest_normal.get().get());
-            add(ModItems.hunter_coat_chest_enhanced.get().get());
+            add(ModItems.hunter_coat_chest_normal.get());
+            add(ModItems.hunter_coat_chest_enhanced.get());
             add(ModItems.hunter_coat_chest_ultimate.get());
             add(ModItems.hunter_coat_feet_normal.get());
             add(ModItems.hunter_coat_feet_enhanced.get());
@@ -70,12 +70,12 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             add(ModItems.hunter_coat_legs_normal.get());
             add(ModItems.hunter_coat_legs_enhanced.get());
             add(ModItems.hunter_coat_legs_ultimate.get());
-            add(ModItems.blood_bucket.get().get());
+            add(ModItems.blood_bucket.get());
             add(ModItems.impure_blood_bucket.get());
             add(ModItems.blood_infused_enhanced_iron_ingot.get());
             add(ModItems.blood_infused_iron_ingot.get());
             add(ModItems.holy_salt.get());
-            add(ModItems.holy_salt_water.get().get());
+            add(ModItems.holy_salt_water.get());
             add(ModItems.human_heart.get());
             add(ModItems.injection_empty.get());
             add(ModItems.injection_garlic.get());
@@ -130,9 +130,9 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             put(ModItems.holy_water_bottle_normal.get(), modLoc("item/holy_water_normal"));
             put(ModItems.holy_water_bottle_enhanced.get(), modLoc("item/holy_water_enhanced"));
             put(ModItems.holy_water_bottle_ultimate.get(), modLoc("item/holy_water_ultimate"));
-            put(ModItems.holy_water_splash_bottle_normal.get().get(), modLoc("item/holy_water_splash_normal"));
-            put(ModItems.holy_water_splash_bottle_enhanced.get().get(), modLoc("item/holy_water_splash_enhanced"));
-            put(ModItems.holy_water_splash_bottle_ultimate.get().get(), modLoc("item/holy_water_splash_ultimate"));
+            put(ModItems.holy_water_splash_bottle_normal.get(), modLoc("item/holy_water_splash_normal"));
+            put(ModItems.holy_water_splash_bottle_enhanced.get(), modLoc("item/holy_water_splash_enhanced"));
+            put(ModItems.holy_water_splash_bottle_ultimate.get(), modLoc("item/holy_water_splash_ultimate"));
             put(ModItems.garlic_bread.get(), modLoc("item/garlic_bread"));
             put(ModItems.hunter_hat_head_0.get(), modLoc("item/hunter_hat_0"));
             put(ModItems.hunter_hat_head_1.get(), modLoc("item/hunter_hat_1"));
@@ -168,7 +168,7 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
 
         item("armor_of_swiftness_chest", mcLoc("item/leather_chestplate"), modLoc("item/swiftness_chest_overlay"));
         withExistingParent(ModItems.armor_of_swiftness_chest_normal.get(), modLoc("item/armor_of_swiftness_chest"));
-        withExistingParent(ModItems.armor_of_swiftness_chest_enhanced.get().get(), modLoc("item/armor_of_swiftness_chest"));
+        withExistingParent(ModItems.armor_of_swiftness_chest_enhanced.get(), modLoc("item/armor_of_swiftness_chest"));
         withExistingParent(ModItems.armor_of_swiftness_chest_ultimate.get(), modLoc("item/armor_of_swiftness_chest"));
 
         item("armor_of_swiftness_feet", mcLoc("item/leather_boots"), modLoc("item/swiftness_feet_overlay"));
@@ -205,19 +205,19 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
         withExistingParent(ModItems.enhanced_double_crossbow.get(), modLoc("item/double_crossbow")).texture("texture", "item/enhanced_crossbow");
         withExistingParent(ModItems.enhanced_tech_crossbow.get(), modLoc("item/tech_crossbow")).texture("extra", "item/tech_crossbow_extra_enhanced");
 
-        withExistingParent(ModItems.garlic_diffuser_core_improved.get().get(), ModItems.garlic_diffuser_core.get()).texture("texture", "block/garlic_diffuser_inside_improved");
+        withExistingParent(ModItems.garlic_diffuser_core_improved.get(), ModItems.garlic_diffuser_core.get()).texture("texture", "block/garlic_diffuser_inside_improved");
 
         withExistingParent(ModItems.heart_seeker_normal.get(), modLoc("item/heart_seeker_model"));
         withExistingParent(ModItems.heart_seeker_enhanced.get(), modLoc("item/heart_seeker_model")).texture("3", "item/heart_seeker_enhanced");
-        withExistingParent(ModItems.heart_seeker_ultimate.get().get(), modLoc("item/heart_seeker_model")).texture("3", "item/heart_seeker_ultimate");
+        withExistingParent(ModItems.heart_seeker_ultimate.get(), modLoc("item/heart_seeker_model")).texture("3", "item/heart_seeker_ultimate");
 
         withExistingParent(ModItems.heart_striker_normal.get(), modLoc("item/heart_striker_model"));
         withExistingParent(ModItems.heart_striker_enhanced.get(), modLoc("item/heart_striker_model")).texture("2", "item/heart_striker_enhanced");
-        withExistingParent(ModItems.heart_striker_ultimate.get().get(), modLoc("item/heart_striker_model")).texture("2", "item/heart_striker_ultimate");
+        withExistingParent(ModItems.heart_striker_ultimate.get(), modLoc("item/heart_striker_model")).texture("2", "item/heart_striker_ultimate");
 
-        withExistingParent(ModItems.hunter_axe_normal.get().get(), modLoc("item/hunter_axe"));
-        withExistingParent(ModItems.hunter_axe_enhanced.get().get(), modLoc("item/hunter_axe")).texture("texture", "item/hunter_axe_enhanced");
-        withExistingParent(ModItems.hunter_axe_ultimate.get().get(), modLoc("item/hunter_axe")).texture("texture", "item/hunter_axe_ultimate");
+        withExistingParent(ModItems.hunter_axe_normal.get(), modLoc("item/hunter_axe"));
+        withExistingParent(ModItems.hunter_axe_enhanced.get(), modLoc("item/hunter_axe")).texture("texture", "item/hunter_axe_enhanced");
+        withExistingParent(ModItems.hunter_axe_ultimate.get(), modLoc("item/hunter_axe")).texture("texture", "item/hunter_axe_ultimate");
 
         withExistingParent(ModItems.hunter_intel_0.get(), modLoc("item/hunter_intel"));
         withExistingParent(ModItems.hunter_intel_1.get(), modLoc("item/hunter_intel"));

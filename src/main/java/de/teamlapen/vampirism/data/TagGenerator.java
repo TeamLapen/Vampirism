@@ -82,10 +82,10 @@ public class TagGenerator {
             tag(ModTags.Items.HUNTER_INTEL).add(ModItems.hunter_intel_0.get(), ModItems.hunter_intel_1.get(), ModItems.hunter_intel_2.get(), ModItems.hunter_intel_3.get(), ModItems.hunter_intel_4.get(), ModItems.hunter_intel_5.get(), ModItems.hunter_intel_6.get(), ModItems.hunter_intel_7.get(), ModItems.hunter_intel_8.get(), ModItems.hunter_intel_9.get());
             tag(ModTags.Items.PURE_BLOOD).add(ModItems.pure_blood_0.get(), ModItems.pure_blood_1.get(), ModItems.pure_blood_2.get(), ModItems.pure_blood_3.get(), ModItems.pure_blood_4.get());
             tag(ModTags.Items.VAMPIRE_CLOAK).add(ModItems.vampire_cloak_black_blue.get(), ModItems.vampire_cloak_black_red.get(), ModItems.vampire_cloak_black_white.get(), ModItems.vampire_cloak_red_black.get(), ModItems.vampire_cloak_white_black.get());
-            tag(ItemTags.SMALL_FLOWERS).add(ModItems.vampire_orchid.get());
+            tag(ItemTags.SMALL_FLOWERS).add(ModBlocks.vampire_orchid.get().asItem());
             tag(ModTags.Items.GARLIC).add(ModItems.item_garlic.get());
             tag(ModTags.Items.HOLY_WATER).add(ModItems.holy_water_bottle_normal.get(), ModItems.holy_water_bottle_enhanced.get(), ModItems.holy_water_bottle_ultimate.get());
-            tag(ModTags.Items.HOLY_WATER_SPLASH).add(ModItems.holy_water_splash_bottle_normal.get().get(), ModItems.holy_water_splash_bottle_enhanced.get().get(), ModItems.holy_water_splash_bottle_ultimate.get().get());
+            tag(ModTags.Items.HOLY_WATER_SPLASH).add(ModItems.holy_water_splash_bottle_normal.get(), ModItems.holy_water_splash_bottle_enhanced.get(), ModItems.holy_water_splash_bottle_ultimate.get());
             tag(ItemTags.STAIRS).addTag(ModTags.Items.CASTLE_STAIRS);
             tag(ItemTags.SLABS).addTag(ModTags.Items.CASTLE_SLAPS);
             tag(ItemTags.SPRUCE_LOGS).add(ModBlocks.bloody_spruce_log.get().asItem());

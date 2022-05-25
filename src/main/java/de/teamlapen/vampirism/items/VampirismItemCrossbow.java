@@ -48,7 +48,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
      * @return the enchantment level
      */
     protected static int isCrossbowFrugal(ItemStack crossbowStack) {
-        return EnchantmentHelper.getItemEnchantmentLevel(ModEnchantments.crossbowfrugality, crossbowStack);
+        return EnchantmentHelper.getItemEnchantmentLevel(ModEnchantments.crossbowfrugality.get(), crossbowStack);
     }
 
     private int enchantability = 0;

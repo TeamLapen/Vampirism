@@ -76,7 +76,7 @@ public class RecipesGenerator extends RecipeProvider {
         ItemLike injection_empty = ModItems.injection_empty.get();
         ItemLike glass_bottle = Items.GLASS_BOTTLE;
         ItemLike garlic_diffuser_core = ModItems.garlic_diffuser_core.get();
-        ItemLike garlic_diffuser_core_improved = ModItems.garlic_diffuser_core_improved.get().get();
+        ItemLike garlic_diffuser_core_improved = ModItems.garlic_diffuser_core_improved.get();
         ItemLike garlic_diffuser_normal = ModBlocks.garlic_diffuser_normal.get();
         ItemLike bucket = Items.BUCKET;
         ItemLike gun_powder = Items.GUNPOWDER;
@@ -176,12 +176,12 @@ public class RecipesGenerator extends RecipeProvider {
         AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModItems.item_alchemical_fire.get(), 5).withIngredient(gun_powder).withFluid(holy_water_bottle_enhanced).build(consumer, modId("alchemical_fire_5"));
         AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModItems.item_alchemical_fire.get(), 6).withIngredient(gun_powder).withFluid(holy_water_bottle_ultimate).build(consumer, modId("alchemical_fire_6"));
         AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModItems.garlic_diffuser_core.get()).withIngredient(wool).withFluid(garlic).withSkills(HunterSkills.garlic_diffuser).build(consumer, modId("garlic_diffuser_core"));
-        AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModItems.garlic_diffuser_core_improved.get().get()).withIngredient(garlic_diffuser_core).withFluid(holy_water_bottle_ultimate).withSkills(HunterSkills.garlic_diffuser_improved).experience(2.0f).build(consumer, modId("garlic_diffuser" +
+        AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModItems.garlic_diffuser_core_improved.get()).withIngredient(garlic_diffuser_core).withFluid(holy_water_bottle_ultimate).withSkills(HunterSkills.garlic_diffuser_improved).experience(2.0f).build(consumer, modId("garlic_diffuser" +
                 "_core_improved"));
         AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModItems.purified_garlic.get(), 2).withIngredient(garlic).withFluid(holy_water).withSkills(HunterSkills.purified_garlic).build(consumer, modId("purified_garlic"));
 
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.armor_of_swiftness_chest_normal.get()).lava(1).pattern("XZZX").pattern("XXXX").pattern("XYYX").pattern("XXXX").define('X', leather).define('Y', garlic).define('Z', potion(Potions.SWIFTNESS)).save(consumer);
-        ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.armor_of_swiftness_chest_enhanced.get().get()).lava(3).skills(HunterSkills.enhanced_armor).pattern("XZZX").pattern("XXXX").pattern("XYYX").pattern("XXXX").define('X', leather).define('Y', garlic).define('Z', gold_ingot).save(consumer);
+        ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.armor_of_swiftness_chest_enhanced.get()).lava(3).skills(HunterSkills.enhanced_armor).pattern("XZZX").pattern("XXXX").pattern("XYYX").pattern("XXXX").define('X', leather).define('Y', garlic).define('Z', gold_ingot).save(consumer);
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.armor_of_swiftness_feet_normal.get()).lava(1).pattern("XZZX").pattern("XYYX").pattern("XXXX").define('X', leather).define('Y', garlic).define('Z', potion(Potions.SWIFTNESS)).save(consumer);
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.armor_of_swiftness_feet_enhanced.get()).lava(3).skills(HunterSkills.enhanced_armor).pattern("XZZX").pattern("XYYX").pattern("XXXX").define('X', leather).define('Y', garlic).define('Z', gold_ingot).save(consumer);
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.armor_of_swiftness_head_normal.get()).lava(1).pattern("XXXX").pattern("XYYX").pattern("XZZX").pattern("    ").define('X', leather).define('Y', garlic).define('Z', potion(Potions.SWIFTNESS)).save(consumer);
@@ -189,8 +189,8 @@ public class RecipesGenerator extends RecipeProvider {
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.armor_of_swiftness_legs_normal.get()).pattern("XXXX").pattern("XYYX").pattern("XZZX").pattern("X  X").define('X', leather).define('Y', garlic).define('Z', potion(Potions.SWIFTNESS)).save(consumer);
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.armor_of_swiftness_legs_enhanced.get()).lava(3).skills(HunterSkills.enhanced_armor).pattern("XXXX").pattern("XYYX").pattern("XZZX").pattern("X  X").define('X', leather).define('Y', garlic).define('Z', gold_ingot).save(consumer);
 
-        ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.hunter_coat_chest_normal.get().get()).lava(2).pattern("XWWX").pattern("XZZX").pattern("XZZX").pattern("XYYX").define('X', iron_ingot).define('Y', leather).define('Z', garlic).define('W', vampire_fang).save(consumer);
-        ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.hunter_coat_chest_enhanced.get().get()).lava(5).skills(HunterSkills.enhanced_armor).pattern("XWWX").pattern("XZZX").pattern("XYYX").pattern("XYYX").define('X', iron_ingot).define('Y', diamond).define('Z', garlic).define('W', vampire_fang).save(consumer);
+        ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.hunter_coat_chest_normal.get()).lava(2).pattern("XWWX").pattern("XZZX").pattern("XZZX").pattern("XYYX").define('X', iron_ingot).define('Y', leather).define('Z', garlic).define('W', vampire_fang).save(consumer);
+        ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.hunter_coat_chest_enhanced.get()).lava(5).skills(HunterSkills.enhanced_armor).pattern("XWWX").pattern("XZZX").pattern("XYYX").pattern("XYYX").define('X', iron_ingot).define('Y', diamond).define('Z', garlic).define('W', vampire_fang).save(consumer);
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.hunter_coat_legs_normal.get()).lava(2).pattern("XYYX").pattern("XZZX").pattern("XZZX").pattern("X  X").define('X', iron_ingot).define('Z', garlic).define('Y', leather).save(consumer);
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.hunter_coat_legs_enhanced.get()).lava(5).skills(HunterSkills.enhanced_armor).pattern("XYYX").pattern("XZZX").pattern("XZZX").pattern("X  X").define('X', iron_ingot).define('Z', garlic).define('Y', diamond).save(consumer);
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.hunter_coat_head_normal.get()).lava(2).pattern("XYYX").pattern("XZZX").pattern("XZZX").pattern("    ").define('X', iron_ingot).define('Y', leather).define('Z', garlic).save(consumer);
@@ -219,8 +219,8 @@ public class RecipesGenerator extends RecipeProvider {
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.hunter_hat_head_1.get()).lava(1).pattern(" YY ").pattern("XXXX").define('X', iron_ingot).define('Y', black_wool).save(consumer);
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.pitchfork.get()).pattern("X X").pattern("YYY").pattern(" Y ").pattern(" Y ").define('X', iron_ingot).define('Y', stick).save(consumer);
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.tech_crossbow_ammo_package.get()).lava(1).pattern(" XZ ").pattern("YYYY").pattern("YYYY").pattern("YYYY").define('X', iron_ingot).define('Y', crossbow_arrow_normal).define('Z', planks).save(consumer);
-        ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.hunter_axe_normal.get().get(), 1, enchantment(2, Enchantments.KNOCKBACK)).lava(5).pattern("XXZY").pattern("XXZY").pattern("  ZY").pattern("  Z ").define('X', iron_ingot).define('Y', garlic).define('Z', stick).save(consumer);
-        ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.hunter_axe_enhanced.get().get(), 1, enchantment(3, Enchantments.KNOCKBACK)).lava(5).skills(HunterSkills.enhanced_weapons).pattern("XWZY").pattern("XWZY").pattern("  ZY").pattern("  Z ").define('X', iron_ingot).define('Y', garlic).define('W', diamond).define('Z', stick).save(consumer);
+        ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.hunter_axe_normal.get(), 1, enchantment(2, Enchantments.KNOCKBACK)).lava(5).pattern("XXZY").pattern("XXZY").pattern("  ZY").pattern("  Z ").define('X', iron_ingot).define('Y', garlic).define('Z', stick).save(consumer);
+        ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.hunter_axe_enhanced.get(), 1, enchantment(3, Enchantments.KNOCKBACK)).lava(5).skills(HunterSkills.enhanced_weapons).pattern("XWZY").pattern("XWZY").pattern("  ZY").pattern("  Z ").define('X', iron_ingot).define('Y', garlic).define('W', diamond).define('Z', stick).save(consumer);
 
         ShapedRecipeBuilder.shaped(ModBlocks.altar_infusion.get()).pattern("YZY").pattern("ZZZ").define('Y', gold_ingot).define('Z', obsidian).unlockedBy("has_gold", has(gold_ingot)).save(consumer, vampire("altar_infusion"));
         ShapedRecipeBuilder.shaped(ModBlocks.altar_inspiration.get()).pattern(" X ").pattern("XYX").pattern("ZZZ").define('X', glass).define('Y', glass_bottle).define('Z', iron_ingot).unlockedBy("has_iron", has(iron_ingot)).save(consumer, vampire("altar_inspiration"));

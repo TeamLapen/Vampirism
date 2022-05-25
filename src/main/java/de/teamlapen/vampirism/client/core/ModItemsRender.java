@@ -48,7 +48,7 @@ public class ModItemsRender {
                     default -> 0xFFF100;
                 };
             }
-        }, ModItems.armor_of_swiftness_feet_normal.get(), ModItems.armor_of_swiftness_chest_normal.get(), ModItems.armor_of_swiftness_head_normal.get(), ModItems.armor_of_swiftness_legs_normal.get(), ModItems.armor_of_swiftness_feet_enhanced.get(), ModItems.armor_of_swiftness_chest_enhanced.get().get(), ModItems.armor_of_swiftness_head_enhanced.get(), ModItems.armor_of_swiftness_legs_enhanced.get(), ModItems.armor_of_swiftness_feet_ultimate.get(), ModItems.armor_of_swiftness_chest_ultimate.get(), ModItems.armor_of_swiftness_head_ultimate.get(), ModItems.armor_of_swiftness_legs_ultimate.get());
+        }, ModItems.armor_of_swiftness_feet_normal.get(), ModItems.armor_of_swiftness_chest_normal.get(), ModItems.armor_of_swiftness_head_normal.get(), ModItems.armor_of_swiftness_legs_normal.get(), ModItems.armor_of_swiftness_feet_enhanced.get(), ModItems.armor_of_swiftness_chest_enhanced.get(), ModItems.armor_of_swiftness_head_enhanced.get(), ModItems.armor_of_swiftness_legs_enhanced.get(), ModItems.armor_of_swiftness_feet_ultimate.get(), ModItems.armor_of_swiftness_chest_ultimate.get(), ModItems.armor_of_swiftness_head_ultimate.get(), ModItems.armor_of_swiftness_legs_ultimate.get());
         //Crossbow arrow
         colors.register((stack, tintIndex) -> {
             if (tintIndex == 1) {

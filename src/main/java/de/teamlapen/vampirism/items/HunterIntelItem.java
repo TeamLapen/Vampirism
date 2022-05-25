@@ -26,7 +26,6 @@ public class HunterIntelItem extends VampirismItem {
 
 
     private final static Logger LOGGER = LogManager.getLogger();
-    private final static String name = "hunter_intel";
 
     public static HunterIntelItem getIntelForExactlyLevel(int level) {
         return getIntelForLevel(level - 5);

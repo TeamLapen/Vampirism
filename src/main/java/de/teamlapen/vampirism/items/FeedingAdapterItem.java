@@ -20,10 +20,9 @@ import net.minecraftforge.fluids.FluidStack;
 import javax.annotation.Nonnull;
 
 public class FeedingAdapterItem extends VampirismItem {
-    private final static String regName = "feeding_adapter";
 
     public FeedingAdapterItem() {
-        super(regName, new Item.Properties().stacksTo(1).tab(VampirismMod.creativeTab));
+        super(new Item.Properties().stacksTo(1).tab(VampirismMod.creativeTab));
     }
 
 

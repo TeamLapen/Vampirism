@@ -34,13 +34,11 @@ import java.util.List;
  * Ammo for the crossbows. Has different subtypes with different base damage/names/special effects.
  */
 public class CrossbowArrowItem extends VampirismItem implements IVampirismCrossbowArrow<CrossbowArrowEntity> {
-
-    private static final String regName = "crossbow_arrow";
     private final EnumArrowType type;
 
 
     public CrossbowArrowItem(EnumArrowType type) {
-        super(regName + "_" + type.getName(), new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties().tab(VampirismMod.creativeTab));
         this.type = type;
     }
 

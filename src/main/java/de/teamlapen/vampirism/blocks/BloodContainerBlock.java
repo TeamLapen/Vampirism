@@ -47,7 +47,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
     private final static Logger LOGGER = LogManager.getLogger();
 
     public static FluidStack getFluidFromItemStack(ItemStack stack) {
-        if (ModBlocks.blood_container.get().get().asItem().equals(stack.getItem())) {
+        if (ModBlocks.blood_container.get().asItem().equals(stack.getItem())) {
             if (stack.hasTag() && stack.getTag().contains("fluid", 10)) {
                 CompoundTag fluidTag = stack.getTag().getCompound("fluid");
                 return FluidStack.loadFluidStackFromNBT(fluidTag);

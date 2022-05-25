@@ -27,11 +27,8 @@ import java.util.List;
  * @author maxanier
  */
 public class AlchemicalFireItem extends VampirismItem {
-
-    private static final String regName = "item_alchemical_fire";
-
     public AlchemicalFireItem() {
-        super(regName, new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties().tab(VampirismMod.creativeTab));
     }
 
 

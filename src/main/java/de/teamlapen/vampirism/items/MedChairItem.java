@@ -22,10 +22,9 @@ import javax.annotation.Nonnull;
  * Item which places the two med chair blocks
  */
 public class MedChairItem extends VampirismItem {
-    private final static String regName = "item_med_chair";
 
     public MedChairItem() {
-        super(regName, new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties().tab(VampirismMod.creativeTab));
     }
 
 

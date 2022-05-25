@@ -17,11 +17,8 @@ import net.minecraft.world.level.Level;
 import javax.annotation.Nonnull;
 
 public class VampireFangItem extends VampirismItem {
-
-    private static final String name = "vampire_fang";
-
     public VampireFangItem() {
-        super(name, new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties().tab(VampirismMod.creativeTab));
     }
 
     @Nonnull

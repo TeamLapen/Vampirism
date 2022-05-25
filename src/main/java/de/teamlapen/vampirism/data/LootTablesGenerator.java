@@ -171,7 +171,7 @@ public class LootTablesGenerator extends LootTableProvider {
                             .add(LootItem.lootTableItem(ModItems.vampire_book.get()).setWeight(50).apply(AddBookNbt.builder()))
                             .add(EmptyLootItem.emptyItem().setWeight(95)))
                     .withPool(LootPool.lootPool().name("hunter_weapons").setRolls(ConstantValue.exactly(1))
-                            .add(LootItem.lootTableItem(ModItems.hunter_axe_ultimate.get().get()).setWeight(10).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0.3f, 0.9f))))
+                            .add(LootItem.lootTableItem(ModItems.hunter_axe_ultimate.get()).setWeight(10).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0.3f, 0.9f))))
                             .add(EmptyLootItem.emptyItem().setWeight(95)))
                     .withPool(LootPool.lootPool().name("swiftness_armor").setRolls(ConstantValue.exactly(1))
                             .add(LootItem.lootTableItem(ModItems.armor_of_swiftness_head_ultimate.get()).setWeight(10).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0.3f, 0.9f))))
@@ -205,9 +205,9 @@ public class LootTablesGenerator extends LootTableProvider {
                             .add(EmptyLootItem.emptyItem().setWeight(30)))
                     .withPool(LootPool.lootPool().name("equipment").setRolls(ConstantValue.exactly(1))
                             .add(LootItem.lootTableItem(ModItems.heart_seeker_enhanced.get()).setWeight(21).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0.6f, 0.99f))).apply(SetItemBloodCharge.builder(UniformGenerator.between(500f, 2000f))))
-                            .add(LootItem.lootTableItem(ModItems.heart_seeker_ultimate.get().get()).setWeight(9).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0.6f, 0.99f))).apply(SetItemBloodCharge.builder(UniformGenerator.between(500f, 2000f))))
+                            .add(LootItem.lootTableItem(ModItems.heart_seeker_ultimate.get()).setWeight(9).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0.6f, 0.99f))).apply(SetItemBloodCharge.builder(UniformGenerator.between(500f, 2000f))))
                             .add(LootItem.lootTableItem(ModItems.heart_striker_enhanced.get()).setWeight(21).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0.6f, 0.99f))).apply(SetItemBloodCharge.builder(UniformGenerator.between(500f, 2000f))))
-                            .add(LootItem.lootTableItem(ModItems.heart_striker_ultimate.get().get()).setWeight(9).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0.6f, 0.99f))).apply(SetItemBloodCharge.builder(UniformGenerator.between(500f, 2000f))))
+                            .add(LootItem.lootTableItem(ModItems.heart_striker_ultimate.get()).setWeight(9).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0.6f, 0.99f))).apply(SetItemBloodCharge.builder(UniformGenerator.between(500f, 2000f))))
                             .add(EmptyLootItem.emptyItem().setWeight(40)))
                     .withPool(LootPool.lootPool().name("refinement_item").setRolls(ConstantValue.exactly(3))
                             .add(LootItem.lootTableItem(ModItems.amulet.get()).setWeight(1).apply(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
@@ -298,7 +298,7 @@ public class LootTablesGenerator extends LootTableProvider {
         @Nonnull
         @Override
         protected Iterable<Block> getKnownBlocks() {
-            return ModBlocks.getAllBlocks.get()();
+            return ModBlocks.getAllBlocks();
         }
     }
 
@@ -319,7 +319,7 @@ public class LootTablesGenerator extends LootTableProvider {
                             .add(LootItem.lootTableItem(ModItems.armor_of_swiftness_feet_ultimate.get()).setWeight(3).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0.3f, 0.9f))))
                             .add(EmptyLootItem.emptyItem().setWeight(88)))
                     .withPool(LootPool.lootPool().name("hunter_weapons").setRolls(ConstantValue.exactly(1))
-                            .add(LootItem.lootTableItem(ModItems.hunter_axe_ultimate.get().get()).setWeight(10).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0.3f, 0.9f))))
+                            .add(LootItem.lootTableItem(ModItems.hunter_axe_ultimate.get()).setWeight(10).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0.3f, 0.9f))))
                             .add(EmptyLootItem.emptyItem().setWeight(95)))
                     .withPool(LootPool.lootPool().name("vampire_weapons").setRolls(ConstantValue.exactly(1))
                             .add(LootItem.lootTableItem(ModItems.heart_seeker_enhanced.get()).setWeight(20).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0.3f, 0.9f))))

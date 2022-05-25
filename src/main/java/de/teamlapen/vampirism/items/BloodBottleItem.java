@@ -43,7 +43,7 @@ public class BloodBottleItem extends VampirismItem implements IFactionExclusiveI
     private static final int capacity = AMOUNT * MULTIPLIER;
 
     public static ItemStack getStackWithDamage(int damage) {
-        ItemStack stack = new ItemStack(ModItems.blood_bottle.get().get());
+        ItemStack stack = new ItemStack(ModItems.blood_bottle.get());
         stack.setDamageValue(damage);
         return stack;
     }
@@ -65,7 +65,7 @@ public class BloodBottleItem extends VampirismItem implements IFactionExclusiveI
     public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> list) {
         super.fillItemCategory(group, list);
         if (this.allowdedIn(group)) {
-            ItemStack stack = new ItemStack(ModItems.blood_bottle.get().get());
+            ItemStack stack = new ItemStack(ModItems.blood_bottle.get());
             stack.setDamageValue(9);
             list.add(stack);
         }
