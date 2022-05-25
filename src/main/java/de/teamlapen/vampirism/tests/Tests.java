@@ -105,11 +105,11 @@ public class Tests {
     private static boolean checkObjectHolders() {
         boolean failed;
         failed = !checkObjectHolders(ModBiomes.class);
-        failed |= !checkObjectHolders(ModBlocks.class.get());
+        failed |= !checkObjectHolders(ModBlocks.class);
         failed |= !checkObjectHolders(ModEnchantments.class);
         failed |= !checkObjectHolders(ModEntities.class);
         failed |= !checkObjectHolders(ModFluids.class);
-        failed |= !checkObjectHolders(ModItems.class.get());
+        failed |= !checkObjectHolders(ModItems.class);
         failed |= !checkObjectHolders(ModEffects.class);
         failed |= !checkObjectHolders(ModSounds.class);
         return !failed;

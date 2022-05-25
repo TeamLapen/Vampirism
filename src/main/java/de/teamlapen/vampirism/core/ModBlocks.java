@@ -116,7 +116,11 @@ public class ModBlocks {
     public static final RegistryObject<VampirismFlowerBlock> vampire_orchid =
         registerWithItem("vampire_orchid", () -> new VampirismFlowerBlock(VampirismFlowerBlock.TYPE.ORCHID));
     public static final RegistryObject<FlowerPotBlock> potted_vampire_orchid =
-            BLOCKS.register("potted_vampire_orchid", () -> new FlowerPotBlock(null, vampire_orchid, Block.Properties.of(Material.DECORATION).instabreak().noOcclusion()));
+            BLOCKS.register("potted_vampire_orchid", () -> {
+                FlowerPotBlock block = new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, vampire_orchid, Block.Properties.of(Material.DECORATION).instabreak().noOcclusion());
+                ((FlowerPotBlock)Blocks.FLOWER_POT).addPlant(vampire_orchid.getId(), () -> block);
+                return block;
+            });
     public static final RegistryObject<WeaponTableBlock> weapon_table =
         registerWithItem("weapon_table", WeaponTableBlock::new);
     public static final RegistryObject<PotionTableBlock> potion_table =
