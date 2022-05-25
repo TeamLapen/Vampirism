@@ -37,7 +37,7 @@ public class ModBlocksRender {
                 return 0x9966FF;
             }
             return 0x8855FF;
-        }, ModBlocks.alchemical_fire);
+        }, ModBlocks.alchemical_fire.get());
         colors.register((state, worldIn, pos, tintIndex) -> {
             if (tintIndex == 255) {
                 BlockEntity tile = (worldIn == null || pos == null) ? null : worldIn.getBlockEntity(pos);
@@ -46,7 +46,7 @@ public class ModBlocksRender {
                 }
             }
             return 0xFFFFFF;
-        }, ModBlocks.alchemical_cauldron);
+        }, ModBlocks.alchemical_cauldron.get());
         colors.register((state, worldIn, pos, tintIndex) -> {
             if (tintIndex == 255) {
                 BlockEntity tile = (worldIn == null || pos == null) ? null : worldIn.getBlockEntity(pos);
@@ -57,9 +57,9 @@ public class ModBlocksRender {
             }
             return 0xFFFFFF;
         }, TotemTopBlock.getBlocks().toArray(new TotemTopBlock[0]));
-        colors.register((state, worldIn, pos, tintIndex) -> 0x1E1F1F, ModBlocks.vampire_spruce_leaves);
-        colors.register((state, worldIn, pos, tintIndex) -> 0x2e0606, ModBlocks.bloody_spruce_leaves);
-        colors.register((state, worldIn, pos, tintIndex) -> worldIn != null && pos != null ? BiomeColors.getAverageGrassColor(worldIn, pos) : GrassColor.get(0.5D, 1.0D), ModBlocks.cursed_grass_block);
+        colors.register((state, worldIn, pos, tintIndex) -> 0x1E1F1F, ModBlocks.vampire_spruce_leaves.get());
+        colors.register((state, worldIn, pos, tintIndex) -> 0x2e0606, ModBlocks.bloody_spruce_leaves.get());
+        colors.register((state, worldIn, pos, tintIndex) -> worldIn != null && pos != null ? BiomeColors.getAverageGrassColor(worldIn, pos) : GrassColor.get(0.5D, 1.0D), ModBlocks.cursed_grass_block.get());
     }
 
     public static void registerBlockEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
@@ -72,51 +72,51 @@ public class ModBlocksRender {
 
     private static void registerRenderType() {
         RenderType cutout = RenderType.cutout();
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.garlic_diffuser_weak, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.garlic_diffuser_improved, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.garlic_diffuser_normal, cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.garlic_diffuser_weak.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.garlic_diffuser_improved.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.garlic_diffuser_normal.get(), cutout);
         ItemBlockRenderTypes.setRenderLayer(ModFluids.impure_blood, RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(ModFluids.blood, RenderType.translucent());
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.alchemical_cauldron, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.alchemical_fire, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.altar_infusion, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.altar_inspiration, RenderType.translucent());
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.altar_pillar, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.altar_tip, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.blood_container, RenderType.translucent());
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.blood_pedestal, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.potion_table, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.blood_sieve, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.altar_cleansing, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.fire_place, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.sunscreen_beacon, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.tent, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.tent_main, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.totem_base, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.totem_top, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.totem_top_vampirism_hunter, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.totem_top_vampirism_vampire, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.blood_grinder, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.coffin, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.hunter_table, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.med_chair, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.weapon_table, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.vampire_orchid, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.garlic, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.potted_vampire_orchid, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.bloody_spruce_leaves, RenderType.cutoutMipped());
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.vampire_spruce_leaves, RenderType.cutoutMipped());
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.bloody_spruce_sapling, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.vampire_spruce_sapling, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.chandelier, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.candelabra, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.candelabra_wall, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.cross, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.tombstone1, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.tombstone2, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.tombstone3, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.grave_cage, cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.cursed_grass_block, RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.alchemical_cauldron.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.alchemical_fire.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.altar_infusion.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.altar_inspiration.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.altar_pillar.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.altar_tip.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.blood_container.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.blood_pedestal.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.potion_table.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.blood_sieve.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.altar_cleansing.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.fire_place.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.sunscreen_beacon.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.tent.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.tent_main.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.totem_base.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.totem_top.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.totem_top_vampirism_hunter.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.totem_top_vampirism_vampire.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.blood_grinder.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.coffin.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.hunter_table.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.med_chair.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.weapon_table.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.vampire_orchid.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.garlic.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.potted_vampire_orchid.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.bloody_spruce_leaves.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.vampire_spruce_leaves.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.bloody_spruce_sapling.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.vampire_spruce_sapling.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.chandelier.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.candelabra.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.candelabra_wall.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.cross.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.tombstone1.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.tombstone2.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.tombstone3.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.grave_cage.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.cursed_grass_block.get(), RenderType.cutoutMipped());
     }
 
 

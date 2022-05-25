@@ -20,8 +20,8 @@ public class VampirismItemBloodFood extends VampirismItem {
 
     private final FoodProperties vampireFood;
 
-    public VampirismItemBloodFood(String regName, FoodProperties vampireFood, FoodProperties humanFood) {
-        super(regName, new Properties().tab(VampirismMod.creativeTab).food(humanFood));
+    public VampirismItemBloodFood(FoodProperties vampireFood, FoodProperties humanFood) {
+        super(new Properties().tab(VampirismMod.creativeTab).food(humanFood));
         this.vampireFood = vampireFood;
     }
 

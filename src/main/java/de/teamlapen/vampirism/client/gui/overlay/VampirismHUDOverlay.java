@@ -165,7 +165,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     });
 
                 }
-                if (atts.hunterLevel > 0 && !mc.player.isSpectator() && mc.player.getMainHandItem().getItem() == ModItems.stake) {
+                if (atts.hunterLevel > 0 && !mc.player.isSpectator() && mc.player.getMainHandItem().getItem() == ModItems.stake.get()) {
                     if (entity instanceof LivingEntity && entity instanceof IVampireMob) {
                         if (StakeItem.canKillInstant((LivingEntity) entity, mc.player)) {
                             if (((LivingEntity) entity).getHealth() > 0) {
@@ -179,7 +179,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
         } else if (p != null && p.getType() == HitResult.Type.BLOCK) {
             BlockState block = Minecraft.getInstance().level.getBlockState(((BlockHitResult) p).getBlockPos());
-            if (ModBlocks.blood_container.equals(block.getBlock())) {
+            if (ModBlocks.blood_container.get().equals(block.getBlock())) {
                 if (VampirePlayer.getOpt(mc.player).map(VampirePlayer::wantsBlood).orElse(false)) {
                     BlockEntity tile = Minecraft.getInstance().level.getBlockEntity(((BlockHitResult) p).getBlockPos());
                     if (tile != null) {

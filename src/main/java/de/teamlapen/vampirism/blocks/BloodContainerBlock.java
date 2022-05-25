@@ -43,15 +43,11 @@ import java.util.List;
  * Tileentity container that can store liquids.
  */
 public class BloodContainerBlock extends VampirismBlockContainer {
-
-    public final static String regName = "blood_container";
-    @ObjectHolder("vampirism:blood_container")
-    public static final Item item = UtilLib.getNull();
     protected static final VoxelShape containerShape = Block.box(2, 0, 2, 14, 16, 14);
     private final static Logger LOGGER = LogManager.getLogger();
 
     public static FluidStack getFluidFromItemStack(ItemStack stack) {
-        if (stack.getItem() == item) {
+        if (ModBlocks.blood_container.get().get().asItem().equals(stack.getItem())) {
             if (stack.hasTag() && stack.getTag().contains("fluid", 10)) {
                 CompoundTag fluidTag = stack.getTag().getCompound("fluid");
                 return FluidStack.loadFluidStackFromNBT(fluidTag);
@@ -73,7 +69,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
     }
 
     public BloodContainerBlock() {
-        super(regName, Properties.of(Material.GLASS).strength(1f).noOcclusion());
+        super(Properties.of(Material.GLASS).strength(1f).noOcclusion());
     }
 
     @Override
@@ -116,7 +112,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
 
     @Override
     public void playerDestroy(@Nonnull Level worldIn, @Nonnull Player player, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nullable BlockEntity te, @Nonnull ItemStack heldStack) {
-        ItemStack stack = new ItemStack(ModBlocks.blood_container, 1);
+        ItemStack stack = new ItemStack(ModBlocks.blood_container.get(), 1);
         if (te != null) {
             FluidStack fluid = ((BloodContainerBlockEntity) te).getFluid();
             if (!fluid.isEmpty() && fluid.getAmount() >= VReference.FOOD_TO_FLUID_BLOOD) {
@@ -147,7 +143,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
             FluidUtil.getFluidHandler(worldIn, pos, hit.getDirection()).ifPresent((fluidHandler -> {
                 if (fluidHandler.getFluidInTank(0).getFluid().equals(ModFluids.blood)) {
                     ItemStack glass = playerIn.getItemInHand(hand);
-                    ItemStack bloodBottle = new ItemStack(ModItems.blood_bottle, 1);
+                    ItemStack bloodBottle = new ItemStack(ModItems.blood_bottle.get(), 1);
                     playerIn.setItemInHand(hand, bloodBottle);
                     bloodBottle = FluidUtil.tryFillContainer(bloodBottle, fluidHandler, Integer.MAX_VALUE, playerIn, true).getResult();
                     if (glass.getCount() > 1) {

@@ -41,13 +41,12 @@ import javax.annotation.Nullable;
  */
 public class MedChairBlock extends VampirismHorizontalBlock {
     public static final EnumProperty<EnumPart> PART = EnumProperty.create("part", EnumPart.class);
-    private final static String name = "med_chair";
     private final VoxelShape SHAPE_TOP;
     private final VoxelShape SHAPE_BOTTOM;
 
 
     public MedChairBlock() {
-        super(name, Properties.of(Material.METAL).strength(1).noOcclusion());
+        super(Properties.of(Material.METAL).strength(1).noOcclusion());
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(PART, EnumPart.TOP));
         SHAPE_TOP = box(2, 6, 0, 14, 16, 16);
         SHAPE_BOTTOM = box(1, 1, 0, 15, 10, 16);
@@ -56,7 +55,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
     @Nonnull
     @Override
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-        return new ItemStack(ModItems.item_med_chair);
+        return new ItemStack(ModItems.item_med_chair.get());
     }
 
     @Nonnull
@@ -107,7 +106,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
                 }
             }
         } else if (world.isClientSide) {
-            player.displayClientMessage(new TranslatableComponent("text.vampirism.need_item_to_use", new TranslatableComponent((new ItemStack(ModItems.injection_garlic).getDescriptionId()))), true);
+            player.displayClientMessage(new TranslatableComponent("text.vampirism.need_item_to_use", new TranslatableComponent((new ItemStack(ModItems.injection_garlic.get()).getDescriptionId()))), true);
         }
         return InteractionResult.SUCCESS;
     }
@@ -137,13 +136,13 @@ public class MedChairBlock extends VampirismHorizontalBlock {
     private boolean handleInjections(Player player, Level world, ItemStack stack) {
         return FactionPlayerHandler.getOpt(player).map(handler -> {
             IPlayableFaction<?> faction = handler.getCurrentFaction();
-            if (stack.getItem().equals(ModItems.injection_garlic)) {
+            if (stack.getItem().equals(ModItems.injection_garlic.get())) {
                 return handleGarlicInjection(player, world, handler, faction);
             }
-            if (stack.getItem().equals(ModItems.injection_sanguinare)) {
+            if (stack.getItem().equals(ModItems.injection_sanguinare.get())) {
                 return handleSanguinareInjection(player, handler, faction);
             }
-            if (stack.getItem().equals(ModItems.injection_zombie_blood)) {
+            if (stack.getItem().equals(ModItems.injection_zombie_blood.get())) {
                 return handleZombieBloodInjection(player);
             }
             return false;

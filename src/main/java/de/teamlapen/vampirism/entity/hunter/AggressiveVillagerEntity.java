@@ -55,7 +55,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
         villager.saveWithoutId(nbt);
         hunter.load(nbt);
         hunter.setUUID(Mth.createInsecureUUID(hunter.random));
-        hunter.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.pitchfork));
+        hunter.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.pitchfork.get()));
         return hunter;
     }
 
@@ -115,7 +115,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     @Override
     public SpawnGroupData finalizeSpawn(@Nonnull ServerLevelAccessor worldIn, @Nonnull DifficultyInstance difficultyIn, @Nonnull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
         SpawnGroupData data = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
-        this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(ModItems.pitchfork));
+        this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(ModItems.pitchfork.get()));
         return data;
     }
 

@@ -772,7 +772,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         if (!(this.level instanceof ServerLevel)) return;
 
         Block b = this.level.getBlockState(this.worldPosition).getBlock();
-        if (!(this.isComplete = b instanceof TotemTopBlock && this.level.getBlockState(this.worldPosition.below()).getBlock().equals(ModBlocks.totem_base)))
+        if (!(this.isComplete = b instanceof TotemTopBlock && this.level.getBlockState(this.worldPosition.below()).getBlock().equals(ModBlocks.totem_base.get())))
             return;
         ResourceLocation blockFaction = ((TotemTopBlock) b).faction;
         if (!(blockFaction.equals(this.controllingFaction == null ? nonFactionTotem : this.controllingFaction.getID()))) { //If block faction does not match tile faction, force the tile to update to the block faction
@@ -1011,7 +1011,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
             BlockState oldBlockState = this.getBlockState();
             Block b = oldBlockState.getBlock();
             boolean crafted = b instanceof TotemTopBlock && ((TotemTopBlock) b).isCrafted();
-            BlockState newBlockState = (faction == null ? crafted ? ModBlocks.totem_top_crafted : ModBlocks.totem_top : faction.getVillageData().getTotemTopBlock(crafted)).defaultBlockState();
+            BlockState newBlockState = (faction == null ? crafted ? ModBlocks.totem_top_crafted.get() : ModBlocks.totem_top.get() : faction.getVillageData().getTotemTopBlock(crafted)).defaultBlockState();
             try { //https://github.com/TeamLapen/Vampirism/issues/793 no idea what might cause this
                 this.level.setBlock(this.worldPosition, newBlockState, 55);
             } catch (IllegalStateException e) {

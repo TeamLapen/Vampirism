@@ -54,6 +54,6 @@ public class VampireVillage {
                 .guardSuperClass(VampireBaseEntity.class)
                 .taskMaster(() -> ModEntities.task_master_vampire)
                 .banner(VampireVillage::createBanner)
-                .totem(() -> ModBlocks.totem_top_vampirism_vampire, () -> ModBlocks.totem_top_vampirism_vampire_crafted);
+                .totem(() -> ModBlocks.totem_top_vampirism_vampire.get(), () -> ModBlocks.totem_top_vampirism_vampire_crafted.get());
     }
 }

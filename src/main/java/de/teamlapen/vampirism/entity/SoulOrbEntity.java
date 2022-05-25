@@ -211,9 +211,9 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
     private ItemStack createSoulItemStack() {
         //noinspection IfStatementWithIdenticalBranches
         if (getVariant() == VARIANT.VAMPIRE) {
-            return new ItemStack(ModItems.soul_orb_vampire);
+            return new ItemStack(ModItems.soul_orb_vampire.get());
         }
-        return new ItemStack(ModItems.soul_orb_vampire);
+        return new ItemStack(ModItems.soul_orb_vampire.get());
     }
 
 

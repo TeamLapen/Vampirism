@@ -22,10 +22,9 @@ import javax.annotation.Nullable;
  * Item for the garlic plant
  */
 public class GarlicItem extends VampirismItem implements IPlantable, IFactionExclusiveItem {
-    private final static String regName = "item_garlic";
 
     public GarlicItem() {
-        super(regName, new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties().tab(VampirismMod.creativeTab));
     }
 
     @Nullable
@@ -36,7 +35,7 @@ public class GarlicItem extends VampirismItem implements IPlantable, IFactionExc
 
     @Override
     public BlockState getPlant(BlockGetter world, BlockPos pos) {
-        return ModBlocks.garlic.defaultBlockState();
+        return ModBlocks.garlic.get().defaultBlockState();
     }
 
     @Override

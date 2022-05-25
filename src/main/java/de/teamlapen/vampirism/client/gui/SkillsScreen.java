@@ -136,18 +136,18 @@ public class SkillsScreen<T extends IFactionPlayer<T>> extends Screen {
 
                 resetSkills = this.addRenderableWidget(new Button(guiLeft + 88, guiTop + 175, 80, 20, new TranslatableComponent("text.vampirism.skill.resetall"), (context) -> {
                     VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.RESETSKILL, ""));
-                    InventoryHelper.removeItemFromInventory(factionPlayer.getRepresentingPlayer().getInventory(), new ItemStack(ModItems.oblivion_potion)); //server syncs after the screen is closed
-                    if ((factionPlayer.getLevel() < 2 || minecraft.player.getInventory().countItem(ModItems.oblivion_potion) <= 1) && !test) {
+                    InventoryHelper.removeItemFromInventory(factionPlayer.getRepresentingPlayer().getInventory(), new ItemStack(ModItems.oblivion_potion.get())); //server syncs after the screen is closed
+                    if ((factionPlayer.getLevel() < 2 || minecraft.player.getInventory().countItem(ModItems.oblivion_potion.get()) <= 1) && !test) {
                         context.active = false;
                     }
                 }, (button, stack, mouseX, mouseY) -> {
                     if (button.active) {
-                        SkillsScreen.this.renderTooltip(stack, new TranslatableComponent("text.vampirism.skills.reset_consume", ModItems.oblivion_potion.getDescription()), mouseX, mouseY);
+                        SkillsScreen.this.renderTooltip(stack, new TranslatableComponent("text.vampirism.skills.reset_consume", ModItems.oblivion_potion.get().getDescription()), mouseX, mouseY);
                     } else {
-                        SkillsScreen.this.renderTooltip(stack, new TranslatableComponent("text.vampirism.skills.reset_req", ModItems.oblivion_potion.getDescription()), mouseX, mouseY);
+                        SkillsScreen.this.renderTooltip(stack, new TranslatableComponent("text.vampirism.skills.reset_req", ModItems.oblivion_potion.get().getDescription()), mouseX, mouseY);
                     }
                 }));
-                if ((factionPlayer.getLevel() < 2 || minecraft.player.getInventory().countItem(ModItems.oblivion_potion) <= 0) && !test) {
+                if ((factionPlayer.getLevel() < 2 || minecraft.player.getInventory().countItem(ModItems.oblivion_potion.get()) <= 0) && !test) {
                     resetSkills.active = false;
                 }
             });
@@ -369,11 +369,11 @@ public class SkillsScreen<T extends IFactionPlayer<T>> extends Screen {
                             textureatlassprite = this.getTexture(Blocks.REDSTONE_BLOCK);
                         }
                     } else if (j4 == 10) {
-                        textureatlassprite = this.getTexture(ModBlocks.castle_block_dark_brick_bloody);
+                        textureatlassprite = this.getTexture(ModBlocks.castle_block_dark_brick_bloody.get());
                     } else if (j4 == 8) {
                         textureatlassprite = this.getTexture(Blocks.STONE_BRICKS);
                     } else if (j4 > 4) {
-                        textureatlassprite = this.getTexture(ModBlocks.castle_block_normal_brick);
+                        textureatlassprite = this.getTexture(ModBlocks.castle_block_normal_brick.get());
                     } else if (j4 > 0) {
                         textureatlassprite = this.getTexture(Blocks.DIRT);
 

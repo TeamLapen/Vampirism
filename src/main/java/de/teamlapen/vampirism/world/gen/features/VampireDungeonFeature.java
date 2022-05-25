@@ -87,9 +87,9 @@ public class VampireDungeonFeature extends MonsterRoomFeature {
                         } else if (blockstate.getMaterial().isSolid() && !blockstate.is(Blocks.CHEST)) {
                             if (i4 == -1 && context.random().nextInt(4) != 0) {
                                 if (context.random().nextInt(20) == 0) // changed to castle bricks
-                                    context.level().setBlock(blockpos1, ModBlocks.castle_block_dark_brick_bloody.defaultBlockState(), 2);
+                                    context.level().setBlock(blockpos1, ModBlocks.castle_block_dark_brick_bloody.get().defaultBlockState(), 2);
                                 else
-                                    context.level().setBlock(blockpos1, ModBlocks.castle_block_dark_brick.defaultBlockState(), 2);
+                                    context.level().setBlock(blockpos1, ModBlocks.castle_block_dark_brick.get().defaultBlockState(), 2);
                             } else {
                                 context.level().setBlock(blockpos1, Blocks.SPRUCE_PLANKS.defaultBlockState(), 2);
                             }

@@ -120,7 +120,7 @@ public class BloodHelper {
         }
         ItemStack glass = getGlassBottleInHotbar(player.getInventory());
         if (!glass.isEmpty() && VampirismConfig.COMMON.autoConvertGlassBottles.get()) {
-            ItemStack bloodBottle = new ItemStack(ModItems.blood_bottle, 1);
+            ItemStack bloodBottle = new ItemStack(ModItems.blood_bottle.get(), 1);
             int filled = fill(bloodBottle, amt, IFluidHandler.FluidAction.EXECUTE);
             if (filled == 0) {
                 LOGGER.warn("Failed to fill blood bottle with blood");
@@ -153,7 +153,7 @@ public class BloodHelper {
         int hotbarSize = Inventory.getSelectionSize();
         for (int i = 0; i < hotbarSize; i++) {
             ItemStack itemStack = inventory.getItem(i);
-            if (!itemStack.isEmpty() && itemStack.getItem().equals(ModItems.feeding_adapter)) {
+            if (!itemStack.isEmpty() && itemStack.getItem().equals(ModItems.feeding_adapter.get())) {
                 return true;
             }
         }

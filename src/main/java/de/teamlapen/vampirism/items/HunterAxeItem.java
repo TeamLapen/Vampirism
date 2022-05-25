@@ -25,15 +25,13 @@ import java.util.List;
 import java.util.Map;
 
 public class HunterAxeItem extends VampirismHunterWeapon implements IItemWithTier {
-    private static final String regName = "hunter_axe";
 
     private final TIER tier;
 
 
     public HunterAxeItem(TIER tier) {
-        super(regName + "_" + tier.getName(), Tiers.IRON, 10, -2.9f, new Properties().tab(VampirismMod.creativeTab));
+        super(Tiers.IRON, 10, -2.9f, new Properties().tab(VampirismMod.creativeTab));
         this.tier = tier;
-        this.setTranslation_key(regName);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -49,11 +47,6 @@ public class HunterAxeItem extends VampirismHunterWeapon implements IItemWithTie
         if (this.allowdedIn(group)) {
             items.add(getEnchantedStack());
         }
-    }
-
-    @Override
-    public String getBaseRegName() {
-        return regName;
     }
 
     @Override

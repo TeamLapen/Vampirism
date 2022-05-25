@@ -57,7 +57,7 @@ public class ObsidianArmorItem extends VampirismHunterArmor implements IItemWith
     }
 
     public ObsidianArmorItem(EquipmentSlot equipmentSlotIn, TIER tier) {
-        super(baseRegName, tier.getName(), VampirismArmorMaterials.OBSIDIAN, equipmentSlotIn, new Properties().tab(VampirismMod.creativeTab).fireResistant(), getModifiers(equipmentSlotIn, tier));
+        super(VampirismArmorMaterials.OBSIDIAN, equipmentSlotIn, new Properties().tab(VampirismMod.creativeTab).fireResistant(), getModifiers(equipmentSlotIn, tier));
         this.tier = tier;
     }
 
@@ -76,11 +76,6 @@ public class ObsidianArmorItem extends VampirismHunterArmor implements IItemWith
             default -> getTextureLocation("obsidian_armor_of_hell", slot, type);
         };
 
-    }
-
-    @Override
-    public String getBaseRegName() {
-        return baseRegName;
     }
 
     @Override

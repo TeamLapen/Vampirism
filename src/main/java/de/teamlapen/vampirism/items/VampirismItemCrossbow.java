@@ -54,11 +54,11 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
     private int enchantability = 0;
 
     /**
-     * @param regName   Registration name
      * @param maxDamage Max damage or 0 if unbreakable
      */
-    public VampirismItemCrossbow(String regName, int maxDamage) {
-        super(regName, new Properties().stacksTo(1).defaultDurability(maxDamage).tab(VampirismMod.creativeTab));
+    public VampirismItemCrossbow(int maxDamage, Tiers material) {
+        super(new Properties().stacksTo(1).defaultDurability(maxDamage).tab(VampirismMod.creativeTab));
+        setEnchantability(material);
     }
 
     @Override
@@ -99,7 +99,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
         return VReference.HUNTER_FACTION;
     }
 
-    public void setEnchantability(Tiers material) {
+    private void setEnchantability(Tiers material) {
         this.enchantability = material.getEnchantmentValue();
     }
 
@@ -203,7 +203,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
 
         if (!itemstack.isEmpty() || creative) {
             if (itemstack.isEmpty()) {
-                itemstack = new ItemStack(ModItems.crossbow_arrow_normal);
+                itemstack = new ItemStack(ModItems.crossbow_arrow_normal.get());
             }
 
             float f = getArrowVelocity();
@@ -213,7 +213,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
 
                 if (!world.isClientSide) {
                     boolean rightHand = player.getMainArm() == HumanoidArm.RIGHT && hand == InteractionHand.MAIN_HAND || player.getMainArm() == HumanoidArm.LEFT && hand == InteractionHand.OFF_HAND;
-                    IVampirismCrossbowArrow<?> itemarrow = itemstack.getItem() instanceof IVampirismCrossbowArrow ? (IVampirismCrossbowArrow<?>) itemstack.getItem() : ModItems.crossbow_arrow_normal;
+                    IVampirismCrossbowArrow<?> itemarrow = itemstack.getItem() instanceof IVampirismCrossbowArrow ? (IVampirismCrossbowArrow<?>) itemstack.getItem() : ModItems.crossbow_arrow_normal.get();
                     AbstractArrow entityarrow = itemarrow.createEntity(itemstack, world, player, heightOffset, 0.3F + centerOffset, rightHand);
 
                     Vec3 vector3d = player.getViewVector(1.0F);

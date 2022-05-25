@@ -18,13 +18,10 @@ import javax.annotation.Nonnull;
  * Item with different injection types
  */
 public class InjectionItem extends VampirismItem {
-
-
-    private final static String regName = "injection";
     private final TYPE type;
 
     public InjectionItem(TYPE type) {
-        super(regName + "_" + type.getName(), new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties().tab(VampirismMod.creativeTab));
         this.type = type;
     }
 
@@ -34,7 +31,7 @@ public class InjectionItem extends VampirismItem {
     public InteractionResultHolder<ItemStack> use(@Nonnull Level worldIn, Player playerIn, @Nonnull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         if (type == TYPE.SANGUINARE) {
-            playerIn.displayClientMessage(new TextComponent("Please use a ").append(new TranslatableComponent(ModBlocks.med_chair.getDescriptionId())), true);
+            playerIn.displayClientMessage(new TextComponent("Please use a ").append(new TranslatableComponent(ModBlocks.med_chair.get().getDescriptionId())), true);
         }
         return new InteractionResultHolder<>(InteractionResult.PASS, stack);
     }

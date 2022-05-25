@@ -26,8 +26,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class PedestalBlock extends VampirismBlockContainer {
-
-    public final static String regName = "blood_pedestal";
     private static final VoxelShape pedestalShape = makeShape();
 
     private static void takeItemPlayer(Player player, InteractionHand hand, ItemStack stack) {
@@ -55,7 +53,7 @@ public class PedestalBlock extends VampirismBlockContainer {
     }
 
     public PedestalBlock() {
-        super(regName, Properties.of(Material.STONE).strength(3f).noOcclusion());
+        super(Properties.of(Material.STONE).strength(3f).noOcclusion());
     }
 
     @Nonnull

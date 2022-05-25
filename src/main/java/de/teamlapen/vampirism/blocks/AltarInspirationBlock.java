@@ -32,7 +32,6 @@ import javax.annotation.Nullable;
  * Altar of inspiration used for vampire levels 1-4
  */
 public class AltarInspirationBlock extends VampirismBlockContainer {
-    public final static String regName = "altar_inspiration";
     protected static final VoxelShape altarShape = makeShape();
 
     private static VoxelShape makeShape() {
@@ -57,7 +56,7 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
     }
 
     public AltarInspirationBlock() {
-        super(regName, Properties.of(Material.METAL).strength(2f).noOcclusion());
+        super(Properties.of(Material.METAL).strength(2f).noOcclusion());
     }
 
     @Nonnull

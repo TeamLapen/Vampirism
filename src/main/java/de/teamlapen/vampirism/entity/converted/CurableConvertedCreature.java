@@ -76,7 +76,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     @SuppressWarnings("JavadocReference")
     default InteractionResult mobInteractC(@Nonnull Player player, @Nonnull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (stack.getItem() != ModItems.cure_apple) {
+        if (stack.getItem() != ModItems.cure_apple.get()) {
             return mobInteractSuper(player, hand);
         }
         return interactWithCureItem(player, stack, ((PathfinderMob) this));

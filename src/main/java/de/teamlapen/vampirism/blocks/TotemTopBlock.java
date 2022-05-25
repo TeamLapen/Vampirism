@@ -121,7 +121,7 @@ public class TotemTopBlock extends BaseEntityBlock {
     public InteractionResult use(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
         if (world.isClientSide) return InteractionResult.SUCCESS;
         TotemBlockEntity t = getTile(world, pos);
-        if (t != null && world.getBlockState(pos.below()).getBlock().equals(ModBlocks.totem_base)) {
+        if (t != null && world.getBlockState(pos.below()).getBlock().equals(ModBlocks.totem_base.get())) {
             t.initiateCapture(player);
             return InteractionResult.SUCCESS;
         }

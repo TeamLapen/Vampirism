@@ -54,6 +54,6 @@ public class HunterVillage {
                 .guardSuperClass(HunterBaseEntity.class)
                 .taskMaster(() -> ModEntities.task_master_hunter)
                 .banner(HunterVillage::createBanner)
-                .totem(() -> ModBlocks.totem_top_vampirism_hunter, () -> ModBlocks.totem_top_vampirism_hunter_crafted);
+                .totem(() -> ModBlocks.totem_top_vampirism_hunter.get(), () -> ModBlocks.totem_top_vampirism_hunter_crafted.get());
     }
 }

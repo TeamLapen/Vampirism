@@ -70,7 +70,7 @@ public class RegistryManager implements IInitListener {
                 ModEntities.registerConvertibles();
                 ModEntities.registerSpawns();
                 ModEntities.registerCustomExtendedCreatures();
-                ModItems.registerCraftingRecipes();
+                ModItems.registerCraftingRecipes.get()();
                 ModPotions.registerPotionMixes();
                 ModAdvancements.registerAdvancementTrigger();
                 event.enqueueWork(ModCommands::registerArgumentTypesUsage);
@@ -94,7 +94,7 @@ public class RegistryManager implements IInitListener {
 
     @SubscribeEvent
     public void onMissingMappingsBlocks(RegistryEvent.MissingMappings<Block> event) {
-        ModBlocks.fixMappings(event);
+        ModBlocks.fixMappings.get()(event);
     }
 
     @SubscribeEvent
@@ -104,7 +104,7 @@ public class RegistryManager implements IInitListener {
 
     @SubscribeEvent
     public void onMissingMappingsItems(RegistryEvent.MissingMappings<Item> event) {
-        ModItems.fixMappings(event);
+        ModItems.fixMappings.get()(event);
     }
 
     @SubscribeEvent
@@ -142,7 +142,7 @@ public class RegistryManager implements IInitListener {
 
     @SubscribeEvent
     public void onRegisterBlocks(RegistryEvent.Register<Block> event) {
-        ModBlocks.registerBlocks(event.getRegistry());
+        ModBlocks.registerBlocks.get()(event.getRegistry());
     }
 
     @SubscribeEvent
@@ -182,8 +182,8 @@ public class RegistryManager implements IInitListener {
 
     @SubscribeEvent
     public void onRegisterItems(RegistryEvent.Register<Item> event) {
-        ModItems.registerItems(event.getRegistry());
-        ModBlocks.registerItemBlocks(event.getRegistry());
+        ModItems.registerItems.get()(event.getRegistry());
+        ModBlocks.registerItemBlocks.get()(event.getRegistry());
     }
 
     @SubscribeEvent

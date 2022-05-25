@@ -39,12 +39,11 @@ import javax.annotation.Nullable;
 public class BloodBottleItem extends VampirismItem implements IFactionExclusiveItem {
 
     public static final int AMOUNT = 9;
-    private static final String name = "blood_bottle";
     private static final int MULTIPLIER = VReference.FOOD_TO_FLUID_BLOOD;
     private static final int capacity = AMOUNT * MULTIPLIER;
 
     public static ItemStack getStackWithDamage(int damage) {
-        ItemStack stack = new ItemStack(ModItems.blood_bottle);
+        ItemStack stack = new ItemStack(ModItems.blood_bottle.get().get());
         stack.setDamageValue(damage);
         return stack;
     }
@@ -53,7 +52,7 @@ public class BloodBottleItem extends VampirismItem implements IFactionExclusiveI
      * Set's the registry name and the unlocalized name
      */
     public BloodBottleItem() {
-        super(name, new Properties().defaultDurability(AMOUNT).tab(VampirismMod.creativeTab).setNoRepair());
+        super(new Properties().defaultDurability(AMOUNT).tab(VampirismMod.creativeTab).setNoRepair());
     }
 
     @Override
@@ -66,7 +65,7 @@ public class BloodBottleItem extends VampirismItem implements IFactionExclusiveI
     public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> list) {
         super.fillItemCategory(group, list);
         if (this.allowdedIn(group)) {
-            ItemStack stack = new ItemStack(ModItems.blood_bottle);
+            ItemStack stack = new ItemStack(ModItems.blood_bottle.get().get());
             stack.setDamageValue(9);
             list.add(stack);
         }

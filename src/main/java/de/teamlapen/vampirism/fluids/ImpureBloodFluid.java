@@ -34,7 +34,7 @@ public class ImpureBloodFluid extends VampirismFluid {
     @Nonnull
     @Override
     public Item getBucket() {
-        return ModItems.impure_blood_bucket;
+        return ModItems.impure_blood_bucket.get();
     }
 
     @Override

@@ -44,7 +44,7 @@ public class CrossbowArrowEntity extends AbstractArrow implements IEntityCrossbo
 
     private
     @Nonnull
-    ItemStack arrowStack = new ItemStack(ModItems.crossbow_arrow_normal);
+    ItemStack arrowStack = new ItemStack(ModItems.crossbow_arrow_normal.get());
     private boolean ignoreHurtTimer = false;
 
     public CrossbowArrowEntity(EntityType<? extends CrossbowArrowEntity> type, Level world) {

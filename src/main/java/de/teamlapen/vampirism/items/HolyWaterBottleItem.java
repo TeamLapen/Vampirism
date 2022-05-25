@@ -20,17 +20,14 @@ import java.util.List;
  * Exists in different tiers and as splash versions.
  */
 public class HolyWaterBottleItem extends VampirismItem implements IItemWithTier, IFactionExclusiveItem {
-
-    public static final String regName = "holy_water_bottle";
     private final TIER tier;
 
     public HolyWaterBottleItem(TIER tier) {
-        this(regName + "_" + tier.getName(), tier, new Properties().tab(VampirismMod.creativeTab));
-        setTranslation_key(regName);
+        this(tier, new Properties().tab(VampirismMod.creativeTab));
     }
 
-    protected HolyWaterBottleItem(String regName, TIER tier, Properties props) {
-        super(regName, props);
+    protected HolyWaterBottleItem(TIER tier, Properties props) {
+        super(props);
         this.tier = tier;
     }
 
@@ -38,11 +35,6 @@ public class HolyWaterBottleItem extends VampirismItem implements IItemWithTier,
     public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         addTierInformation(tooltip);
-    }
-
-    @Override
-    public String getBaseRegName() {
-        return regName;
     }
 
     @Nullable

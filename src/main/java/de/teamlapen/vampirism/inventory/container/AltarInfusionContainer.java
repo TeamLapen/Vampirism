@@ -14,7 +14,7 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import javax.annotation.Nonnull;
 
 public class AltarInfusionContainer extends InventoryContainer {
-    public static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(ModTags.Items.PURE_BLOOD, 44, 34), new SelectorInfo(ModItems.human_heart, 80, 34), new SelectorInfo(ModItems.vampire_book, 116, 34)};
+    public static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(ModTags.Items.PURE_BLOOD, 44, 34), new SelectorInfo(ModItems.human_heart.get(), 80, 34), new SelectorInfo(ModItems.vampire_book.get(), 116, 34)};
 
     @Deprecated
     public AltarInfusionContainer(int id, Inventory playerInventory) {
@@ -29,6 +29,6 @@ public class AltarInfusionContainer extends InventoryContainer {
 
     @Override
     public boolean stillValid(@Nonnull Player playerIn) {
-        return stillValid(this.worldPos, playerIn, ModBlocks.altar_infusion);
+        return stillValid(this.worldPos, playerIn, ModBlocks.altar_infusion.get());
     }
 }

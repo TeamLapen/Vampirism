@@ -426,7 +426,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                             //noinspection Convert2MethodRef
                             boolean freeSlot = MinionWorldData.getData(player.level).map(data -> data.getOrCreateController(fph)).map(c -> c.hasFreeMinionSlot()).orElse(false);
                             player.displayClientMessage(new TranslatableComponent("text.vampirism.basic_vampire.minion.available"), true);
-                            if (heldItem.getItem() == ModItems.vampire_minion_binding) {
+                            if (heldItem.getItem() == ModItems.vampire_minion_binding.get()) {
                                 if (!freeSlot) {
                                     player.displayClientMessage(new TranslatableComponent("text.vampirism.basic_vampire.minion.no_free_slot"), true);
                                 } else {
@@ -440,7 +440,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                                     if (!player.getAbilities().instabuild) heldItem.shrink(1);
                                 }
                             } else if (freeSlot) {
-                                player.displayClientMessage(new TranslatableComponent("text.vampirism.basic_vampire.minion.require_binding", UtilLib.translate(ModItems.vampire_minion_binding.getDescriptionId())), true);
+                                player.displayClientMessage(new TranslatableComponent("text.vampirism.basic_vampire.minion.require_binding", UtilLib.translate(ModItems.vampire_minion_binding.get().getDescriptionId())), true);
                             }
                             return InteractionResult.SUCCESS;
                         }

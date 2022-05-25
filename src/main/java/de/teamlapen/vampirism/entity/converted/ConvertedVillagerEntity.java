@@ -205,7 +205,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     @Override
     public InteractionResult mobInteract(Player player, @Nonnull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (stack.getItem() != ModItems.cure_apple) return super.mobInteract(player, hand);
+        if (stack.getItem() != ModItems.cure_apple.get()) return super.mobInteract(player, hand);
         return interactWithCureItem(player, stack, this);
     }
 

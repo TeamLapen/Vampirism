@@ -235,7 +235,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     @Nonnull
     @Override
     public ItemStack getArrowStackForAttack(LivingEntity target) {
-        return new ItemStack(ModItems.crossbow_arrow_normal);
+        return new ItemStack(ModItems.crossbow_arrow_normal.get());
     }
 
     @Nullable
@@ -287,7 +287,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
         if (this.getRandom().nextInt(4) == 0) {
             this.setLeftHanded(true);
-            Item crossBow = getEntityLevel() > 1 ? ModItems.enhanced_crossbow : ModItems.basic_crossbow;
+            Item crossBow = getEntityLevel() > 1 ? ModItems.enhanced_crossbow.get() : ModItems.basic_crossbow.get();
             this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(crossBow));
 
         } else {
@@ -386,7 +386,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
         if (tagCompund.contains("crossbow") && tagCompund.getBoolean("crossbow")) {
             this.setLeftHanded(true);
-            this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(ModItems.basic_crossbow));
+            this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(ModItems.basic_crossbow.get()));
         } else {
             this.setLeftHanded(false);
             this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
@@ -479,13 +479,13 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                             ItemStack heldItem = player.getItemInHand(hand);
 
                             if (this.getEntityLevel() > 0) {
-                                if (heldItem.getItem() == ModItems.hunter_minion_equipment) {
+                                if (heldItem.getItem() == ModItems.hunter_minion_equipment.get()) {
                                     player.displayClientMessage(new TranslatableComponent("text.vampirism.basic_hunter.minion.unavailable"), true);
                                 }
                             } else {
                                 boolean freeSlot = MinionWorldData.getData(player.level).map(data -> data.getOrCreateController(fph)).map(PlayerMinionController::hasFreeMinionSlot).orElse(false);
                                 player.displayClientMessage(new TranslatableComponent("text.vampirism.basic_hunter.minion.available"), false);
-                                if (heldItem.getItem() == ModItems.hunter_minion_equipment) {
+                                if (heldItem.getItem() == ModItems.hunter_minion_equipment.get()) {
                                     if (!freeSlot) {
                                         player.displayClientMessage(new TranslatableComponent("text.vampirism.basic_hunter.minion.no_free_slot"), false);
                                     } else {
@@ -494,7 +494,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                                         if (!player.getAbilities().instabuild) heldItem.shrink(1);
                                     }
                                 } else if (freeSlot) {
-                                    player.displayClientMessage(new TranslatableComponent("text.vampirism.basic_hunter.minion.require_equipment", UtilLib.translate(ModItems.hunter_minion_equipment.getDescriptionId())), false);
+                                    player.displayClientMessage(new TranslatableComponent("text.vampirism.basic_hunter.minion.require_equipment", UtilLib.translate(ModItems.hunter_minion_equipment.get().getDescriptionId())), false);
                                 }
                             }
                         } else {

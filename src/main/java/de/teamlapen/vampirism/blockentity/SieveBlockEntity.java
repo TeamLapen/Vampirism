@@ -131,7 +131,7 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
     private void setActive(boolean active, BlockState blockState) {
         if (this.active != active) {
             this.active = active;
-            if (this.level != null && blockState.getBlock() == ModBlocks.blood_sieve)
+            if (this.level != null && blockState.getBlock() == ModBlocks.blood_sieve.get())
                 this.level.setBlockAndUpdate(getBlockPos(), blockState.setValue(SieveBlock.PROPERTY_ACTIVE, active));
         }
     }

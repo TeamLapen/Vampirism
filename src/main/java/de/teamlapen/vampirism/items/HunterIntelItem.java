@@ -35,28 +35,28 @@ public class HunterIntelItem extends VampirismItem {
     public static HunterIntelItem getIntelForLevel(int level) {
         switch (level) {
             case 0:
-                return ModItems.hunter_intel_0;
+                return ModItems.hunter_intel_0.get();
             case 1:
-                return ModItems.hunter_intel_1;
+                return ModItems.hunter_intel_1.get();
             case 2:
-                return ModItems.hunter_intel_2;
+                return ModItems.hunter_intel_2.get();
             case 3:
-                return ModItems.hunter_intel_3;
+                return ModItems.hunter_intel_3.get();
             case 4:
-                return ModItems.hunter_intel_4;
+                return ModItems.hunter_intel_4.get();
             case 5:
-                return ModItems.hunter_intel_5;
+                return ModItems.hunter_intel_5.get();
             case 6:
-                return ModItems.hunter_intel_6;
+                return ModItems.hunter_intel_6.get();
             case 7:
-                return ModItems.hunter_intel_7;
+                return ModItems.hunter_intel_7.get();
             case 8:
-                return ModItems.hunter_intel_8;
+                return ModItems.hunter_intel_8.get();
             case 9:
-                return ModItems.hunter_intel_9;
+                return ModItems.hunter_intel_9.get();
             default:
                 LOGGER.warn("HunterIntel of level {} does not exist", level);
-                return ModItems.hunter_intel_9;
+                return ModItems.hunter_intel_9.get();
 
         }
     }
@@ -65,9 +65,8 @@ public class HunterIntelItem extends VampirismItem {
     private Component tooltip;
 
     public HunterIntelItem(int level) {
-        super(name + "_" + level, new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties().tab(VampirismMod.creativeTab));
         this.level = level;
-        setTranslation_key(name);
     }
 
     @OnlyIn(Dist.CLIENT)

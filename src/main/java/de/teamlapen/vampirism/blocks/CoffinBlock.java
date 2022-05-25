@@ -45,8 +45,6 @@ import java.util.Map;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
 public class CoffinBlock extends VampirismBlockContainer {
-
-    public static final String name = "coffin";
     public static final EnumProperty<CoffinPart> PART = EnumProperty.create("part", CoffinPart.class);
     private static final VoxelShape shape = makeShape();
     private static final Map<Player.BedSleepingProblem, Component> sleepResults = ImmutableMap.of(Player.BedSleepingProblem.NOT_POSSIBLE_NOW, new TranslatableComponent("text.vampirism.coffin.no_sleep"), Player.BedSleepingProblem.TOO_FAR_AWAY, new TranslatableComponent("text.vampirism.coffin.too_far_away"), Player.BedSleepingProblem.OBSTRUCTED, new TranslatableComponent("text.vampirism.coffin.obstructed"));
@@ -71,7 +69,7 @@ public class CoffinBlock extends VampirismBlockContainer {
     }
 
     public CoffinBlock() {
-        super(name, Properties.of(Material.WOOD).strength(0.2f).noOcclusion());
+        super(Properties.of(Material.WOOD).strength(0.2f).noOcclusion());
         this.registerDefaultState(this.getStateDefinition().any().setValue(BedBlock.OCCUPIED, Boolean.FALSE).setValue(PART, CoffinPart.FOOT).setValue(HORIZONTAL_FACING, Direction.NORTH));
 
     }

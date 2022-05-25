@@ -43,8 +43,8 @@ public class OblivionItem extends VampirismItem {
 
     }
 
-    public OblivionItem(String regName, Properties properties) {
-        super(regName, properties.stacksTo(1).rarity(Rarity.UNCOMMON));
+    public OblivionItem(Properties properties) {
+        super(properties.stacksTo(1).rarity(Rarity.UNCOMMON));
     }
 
     @Override

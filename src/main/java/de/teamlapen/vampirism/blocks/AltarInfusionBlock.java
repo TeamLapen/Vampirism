@@ -31,7 +31,6 @@ import javax.annotation.Nullable;
  */
 public class AltarInfusionBlock extends VampirismBlockContainer {
     protected static final VoxelShape altarBase = makeShape();
-    private final static String name = "altar_infusion";
 
     private static VoxelShape makeShape() {
         //base
@@ -64,7 +63,7 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
     }
 
     public AltarInfusionBlock() {
-        super(name, Properties.of(Material.STONE).strength(5).noOcclusion());
+        super(Properties.of(Material.STONE).strength(5).noOcclusion());
     }
 
     @Nonnull

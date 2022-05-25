@@ -38,8 +38,8 @@ public class VampirismHorizontalBlock extends VampirismBlock {
     /**
      * @param shape Shape (collision box) for a north facing placement. Rotated shapes are derived from this
      */
-    public VampirismHorizontalBlock(String regName, Block.Properties properties, VoxelShape shape) {
-        super(regName, properties);
+    public VampirismHorizontalBlock(Block.Properties properties, VoxelShape shape) {
+        super(properties);
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
 
         NORTH = shape;
@@ -48,8 +48,8 @@ public class VampirismHorizontalBlock extends VampirismBlock {
         WEST = UtilLib.rotateShape(NORTH, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY);
     }
 
-    public VampirismHorizontalBlock(String regName, Block.Properties properties) {
-        this(regName, properties, Shapes.block());
+    public VampirismHorizontalBlock(Block.Properties properties) {
+        this(properties, Shapes.block());
     }
 
     @Nonnull

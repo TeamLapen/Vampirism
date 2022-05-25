@@ -168,7 +168,7 @@ public class ModPotions {
         master(nausea, () -> Ingredient.of(Tags.Items.MUSHROOMS), 32, 16);
         durable(nausea, long_nausea);
         veryDurable(long_nausea, very_long_nausea);
-        master(thirst, () -> Ingredient.of(ModItems.vampire_fang), 10, 5);
+        master(thirst, () -> Ingredient.of(ModItems.vampire_fang.get()), 10, 5);
         durable(thirst, long_thirst);
         strong(thirst, strong_thirst);
         veryDurable(long_thirst, very_long_thirst);

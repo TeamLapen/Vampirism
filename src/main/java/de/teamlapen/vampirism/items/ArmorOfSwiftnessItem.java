@@ -28,8 +28,6 @@ import java.util.List;
 import java.util.Map;
 
 public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemWithTier, DyeableLeatherItem {
-
-    private final static String baseRegName = "armor_of_swiftness";
     private static final int[] DAMAGE_REDUCTION_ULTIMATE = new int[]{3, 6, 8, 3};
     private static final int[] DAMAGE_REDUCTION_ENHANCED = new int[]{2, 5, 6, 2};
     private static final int[] DAMAGE_REDUCTION_NORMAL = new int[]{1, 2, 3, 1};
@@ -56,7 +54,7 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
     }
 
     public ArmorOfSwiftnessItem(EquipmentSlot equipmentSlotIn, TIER tier) {
-        super(baseRegName, tier.getSerializedName(), VampirismArmorMaterials.MASTERLY_LEATHER, equipmentSlotIn, new Item.Properties().tab(VampirismMod.creativeTab), getModifiers(equipmentSlotIn, tier));
+        super(VampirismArmorMaterials.MASTERLY_LEATHER, equipmentSlotIn, new Item.Properties().tab(VampirismMod.creativeTab), getModifiers(equipmentSlotIn, tier));
         this.tier = tier;
     }
 
@@ -77,11 +75,6 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
             case ULTIMATE -> getTextureLocation("swiftness_ultimate", slot, type);
             default -> getTextureLocation("swiftness", slot, type);
         };
-    }
-
-    @Override
-    public String getBaseRegName() {
-        return baseRegName;
     }
 
     @Override

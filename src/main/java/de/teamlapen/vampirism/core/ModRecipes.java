@@ -42,9 +42,9 @@ public class ModRecipes {
     private static final Map<TagKey<Item>, Integer> liquidColorsTags = Maps.newHashMap();
 
     static void registerDefaultLiquidColors() {
-        registerLiquidColor(ModItems.holy_water_bottle_normal, 0x6666FF);
-        registerLiquidColor(ModItems.holy_water_bottle_enhanced, 0x6666FF);
-        registerLiquidColor(ModItems.holy_water_bottle_ultimate, 0x6666FF);
+        registerLiquidColor(ModItems.holy_water_bottle_normal.get().get(), 0x6666FF);
+        registerLiquidColor(ModItems.holy_water_bottle_enhanced.get(), 0x6666FF);
+        registerLiquidColor(ModItems.holy_water_bottle_ultimate.get(), 0x6666FF);
 
         registerLiquidColor(ModTags.Items.GARLIC, 0xBBBBBB);
 

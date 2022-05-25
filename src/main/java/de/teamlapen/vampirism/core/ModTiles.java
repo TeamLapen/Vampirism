@@ -32,19 +32,19 @@ public class ModTiles {
     public static final BlockEntityType<PotionTableBlockEntity> potion_table = getNull();
 
     static void registerTiles(IForgeRegistry<BlockEntityType<?>> registry) {
-        registry.register(create("tent", TentBlockEntity::new, ModBlocks.tent_main));
-        registry.register(create("coffin", CoffinBlockEntity::new, ModBlocks.coffin));
-        registry.register(create("altar_infusion", AltarInfusionBlockEntity::new, ModBlocks.altar_infusion));
-        registry.register(create("blood_container", BloodContainerBlockEntity::new, ModBlocks.blood_container));
-        registry.register(create("altar_inspiration", AltarInspirationBlockEntity::new, ModBlocks.altar_inspiration));
-        registry.register(create("sunscreen_beacon", SunscreenBeaconBlockEntity::new, ModBlocks.sunscreen_beacon));
-        registry.register(create("alchemical_cauldron", AlchemicalCauldronBlockEntity::new, ModBlocks.alchemical_cauldron));
-        registry.register(create("garlic_diffuser", GarlicDiffuserBlockEntity::new, ModBlocks.garlic_diffuser_normal, ModBlocks.garlic_diffuser_improved, ModBlocks.garlic_diffuser_weak));
-        registry.register(create("blood_pedestal", PedestalBlockEntity::new, ModBlocks.blood_pedestal));
-        registry.register(create("grinder", BloodGrinderBlockEntity::new, ModBlocks.blood_grinder));
-        registry.register(create("sieve", SieveBlockEntity::new, ModBlocks.blood_sieve));
+        registry.register(create("tent", TentBlockEntity::new, ModBlocks.tent_main.get()));
+        registry.register(create("coffin", CoffinBlockEntity::new, ModBlocks.coffin.get()));
+        registry.register(create("altar_infusion", AltarInfusionBlockEntity::new, ModBlocks.altar_infusion.get()));
+        registry.register(create("blood_container", BloodContainerBlockEntity::new, ModBlocks.blood_container.get()));
+        registry.register(create("altar_inspiration", AltarInspirationBlockEntity::new, ModBlocks.altar_inspiration.get()));
+        registry.register(create("sunscreen_beacon", SunscreenBeaconBlockEntity::new, ModBlocks.sunscreen_beacon.get()));
+        registry.register(create("alchemical_cauldron", AlchemicalCauldronBlockEntity::new, ModBlocks.alchemical_cauldron.get()));
+        registry.register(create("garlic_diffuser", GarlicDiffuserBlockEntity::new, ModBlocks.garlic_diffuser_normal.get(), ModBlocks.garlic_diffuser_improved.get(), ModBlocks.garlic_diffuser_weak.get()));
+        registry.register(create("blood_pedestal", PedestalBlockEntity::new, ModBlocks.blood_pedestal.get()));
+        registry.register(create("grinder", BloodGrinderBlockEntity::new, ModBlocks.blood_grinder.get()));
+        registry.register(create("sieve", SieveBlockEntity::new, ModBlocks.blood_sieve.get()));
         registry.register(create("totem", TotemBlockEntity::new, TotemTopBlock.getBlocks().toArray(new TotemTopBlock[0])));
-        registry.register(create("potion_table", PotionTableBlockEntity::new, ModBlocks.potion_table));
+        registry.register(create("potion_table", PotionTableBlockEntity::new, ModBlocks.potion_table.get()));
     }
 
     private static <T extends BlockEntity> BlockEntityType<?> create(String id, BlockEntityType.BlockEntitySupplier<? extends T> factoryIn, Block... blocks) {

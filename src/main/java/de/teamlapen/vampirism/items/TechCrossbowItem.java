@@ -12,6 +12,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
@@ -87,8 +88,8 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
     }
 
 
-    public TechCrossbowItem(String regName, float speed, int cooldown, int maxDamage) {
-        super(regName, speed, cooldown, maxDamage);
+    public TechCrossbowItem(float speed, int cooldown, int maxDamage, Tiers material) {
+        super(speed, cooldown, maxDamage, material);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -143,7 +144,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
             }
             return ItemStack.EMPTY;
         }
-        return new ItemStack(ModItems.crossbow_arrow_normal);
+        return new ItemStack(ModItems.crossbow_arrow_normal.get());
     }
 
     @Override
@@ -171,7 +172,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
     }
 
     private boolean isArrowPackage(@Nonnull ItemStack stack) {
-        return ModItems.tech_crossbow_ammo_package.equals(stack.getItem());
+        return ModItems.tech_crossbow_ammo_package.get().equals(stack.getItem());
     }
 
 

@@ -105,11 +105,11 @@ public class Tests {
     private static boolean checkObjectHolders() {
         boolean failed;
         failed = !checkObjectHolders(ModBiomes.class);
-        failed |= !checkObjectHolders(ModBlocks.class);
+        failed |= !checkObjectHolders(ModBlocks.class.get());
         failed |= !checkObjectHolders(ModEnchantments.class);
         failed |= !checkObjectHolders(ModEntities.class);
         failed |= !checkObjectHolders(ModFluids.class);
-        failed |= !checkObjectHolders(ModItems.class);
+        failed |= !checkObjectHolders(ModItems.class.get());
         failed |= !checkObjectHolders(ModEffects.class);
         failed |= !checkObjectHolders(ModSounds.class);
         return !failed;
@@ -138,15 +138,15 @@ public class Tests {
     }
 
     private static boolean bloodFluidHandler(TestInfo info) {
-        info.world.setBlockAndUpdate(info.pos, ModBlocks.blood_container.defaultBlockState());
+        info.world.setBlockAndUpdate(info.pos, ModBlocks.blood_container.get().defaultBlockState());
         BlockEntity t = info.world.getBlockEntity(info.pos);
         LazyOptional<IFluidHandler> opt = t.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, Direction.getRandom(info.world.random));
         opt.ifPresent(handler -> handler.fill(new FluidStack(ModFluids.blood, 10000000), IFluidHandler.FluidAction.EXECUTE));
         int blood = BloodHelper.getBlood(opt);
         assert blood > 0 : "Could not fill blood container";
 
-        ItemStack bloodBottle1 = new ItemStack(ModItems.blood_bottle);
-        ItemStack bloodBottle2 = new ItemStack(ModItems.blood_bottle);
+        ItemStack bloodBottle1 = new ItemStack(ModItems.blood_bottle.get());
+        ItemStack bloodBottle2 = new ItemStack(ModItems.blood_bottle.get());
         IFluidHandler handler = opt.orElse(null);
         FluidActionResult result1 = FluidUtil.tryFillContainer(bloodBottle1, handler, Integer.MAX_VALUE, null, true);
         assert result1.isSuccess() : "Transaction 1 failed";
@@ -168,7 +168,7 @@ public class Tests {
     }
 
     private static boolean blockWeaponTableFluids(TestInfo info) {
-        info.world.setBlockAndUpdate(info.pos, ModBlocks.weapon_table.defaultBlockState());
+        info.world.setBlockAndUpdate(info.pos, ModBlocks.weapon_table.get().defaultBlockState());
         info.player.setItemInHand(info.player.getUsedItemHand(), new ItemStack(Items.LAVA_BUCKET));
         BlockState block = info.world.getBlockState(info.pos);
         block.use(info.world, info.player, info.player.getUsedItemHand(), new BlockHitResult(new Vec3(0, 0, 0), Direction.getRandom(info.world.random), info.pos, false));
@@ -187,7 +187,7 @@ public class Tests {
         for (int x = -21; x < 22; x++) {
             for (int y = 1; y < 22; y++) {
                 for (int z = -21; z < 22; z++) {
-                    BlockState s = (y == 1 || x == -21 || x == 21 || z == -21 || z == 21 || y == 21) ? ModBlocks.castle_block_dark_stone.defaultBlockState() : Blocks.AIR.defaultBlockState();
+                    BlockState s = (y == 1 || x == -21 || x == 21 || z == -21 || z == 21 || y == 21) ? ModBlocks.castle_block_dark_stone.get().defaultBlockState() : Blocks.AIR.defaultBlockState();
                     world.setBlockAndUpdate(new BlockPos(x, y, z), s);
                 }
             }

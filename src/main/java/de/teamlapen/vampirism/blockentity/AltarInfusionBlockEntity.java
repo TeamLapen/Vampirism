@@ -347,7 +347,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     private boolean checkItemRequirements(Player player, boolean messagePlayer) {
         int newLevel = targetLevel;
         VampireLevelingConf.AltarInfusionRequirements requirements = VampireLevelingConf.getInstance().getAltarInfusionRequirements(newLevel);
-        ItemStack missing = InventoryHelper.checkItems(this, new Item[]{PureBloodItem.getBloodItemForLevel(requirements.pureBloodLevel()), ModItems.human_heart, ModItems.vampire_book}, new int[]{requirements.blood(), requirements.heart(), requirements.vampireBook()}, (supplied, required) -> supplied.equals(required) || (supplied instanceof PureBloodItem && required instanceof PureBloodItem && ((PureBloodItem) supplied).getLevel() >= ((PureBloodItem) required).getLevel()));
+        ItemStack missing = InventoryHelper.checkItems(this, new Item[]{PureBloodItem.getBloodItemForLevel(requirements.pureBloodLevel()), ModItems.human_heart.get(), ModItems.vampire_book.get()}, new int[]{requirements.blood(), requirements.heart(), requirements.vampireBook()}, (supplied, required) -> supplied.equals(required) || (supplied instanceof PureBloodItem && required instanceof PureBloodItem && ((PureBloodItem) supplied).getLevel() >= ((PureBloodItem) required).getLevel()));
         if (!missing.isEmpty()) {
             if (messagePlayer) {
                 Component item = missing.getItem() instanceof PureBloodItem ? ((PureBloodItem) missing.getItem()).getCustomName() : new TranslatableComponent(missing.getDescriptionId());
@@ -390,7 +390,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
             int j = 0;
             AltarPillarBlock.EnumPillarType type = null;
             BlockState temp;
-            while ((temp = level.getBlockState(pPos.offset(0, -j - 1, 0))).getBlock().equals(ModBlocks.altar_pillar)) {
+            while ((temp = level.getBlockState(pPos.offset(0, -j - 1, 0))).getBlock().equals(ModBlocks.altar_pillar.get())) {
                 AltarPillarBlock.EnumPillarType t = temp.getValue(AltarPillarBlock.TYPE_PROPERTY);
                 if (type == null) {
                     type = t;
@@ -440,7 +440,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
         for (int x = getBlockPos().getX() - 4; x < getBlockPos().getX() + 5; x++) {
             for (int y = getBlockPos().getY() + 1; y < getBlockPos().getY() + 4; y++) {
                 for (int z = getBlockPos().getZ() - 4; z < getBlockPos().getZ() + 5; z++) {
-                    if (level.getBlockState(pos.set(x, y, z)).getBlock().equals(ModBlocks.altar_tip)) {
+                    if (level.getBlockState(pos.set(x, y, z)).getBlock().equals(ModBlocks.altar_tip.get())) {
                         list.add(new BlockPos(x, y, z));
                     }
                 }

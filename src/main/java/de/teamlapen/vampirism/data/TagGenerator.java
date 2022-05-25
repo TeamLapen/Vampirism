@@ -38,25 +38,25 @@ public class TagGenerator {
 
         @Override
         protected void addTags() {
-            tag(BlockTags.DIRT).add(ModBlocks.cursed_earth, ModBlocks.cursed_grass_block);
-            tag(ModTags.Blocks.CURSEDEARTH).add(ModBlocks.cursed_earth, ModBlocks.cursed_grass_block);
-            tag(ModTags.Blocks.CASTLE_BLOCK).add(ModBlocks.castle_block_dark_brick, ModBlocks.castle_block_dark_brick_bloody, ModBlocks.castle_block_dark_stone, ModBlocks.castle_block_normal_brick, ModBlocks.castle_block_purple_brick);
-            tag(ModTags.Blocks.CASTLE_SLAPS).add(ModBlocks.castle_slab_dark_brick, ModBlocks.castle_slab_dark_stone, ModBlocks.castle_slab_purple_brick);
-            tag(ModTags.Blocks.CASTLE_STAIRS).add(ModBlocks.castle_stairs_dark_stone, ModBlocks.castle_stairs_dark_brick, ModBlocks.castle_stairs_purple_brick);
+            tag(BlockTags.DIRT).add(ModBlocks.cursed_earth.get(), ModBlocks.cursed_grass_block.get());
+            tag(ModTags.Blocks.CURSEDEARTH).add(ModBlocks.cursed_earth.get(), ModBlocks.cursed_grass_block.get());
+            tag(ModTags.Blocks.CASTLE_BLOCK).add(ModBlocks.castle_block_dark_brick.get(), ModBlocks.castle_block_dark_brick_bloody.get(), ModBlocks.castle_block_dark_stone.get(), ModBlocks.castle_block_normal_brick.get(), ModBlocks.castle_block_purple_brick.get());
+            tag(ModTags.Blocks.CASTLE_SLAPS).add(ModBlocks.castle_slab_dark_brick.get(), ModBlocks.castle_slab_dark_stone.get(), ModBlocks.castle_slab_purple_brick.get());
+            tag(ModTags.Blocks.CASTLE_STAIRS).add(ModBlocks.castle_stairs_dark_stone.get(), ModBlocks.castle_stairs_dark_brick.get(), ModBlocks.castle_stairs_purple_brick.get());
             tag(BlockTags.STAIRS).addTag(ModTags.Blocks.CASTLE_STAIRS);
             tag(BlockTags.SLABS).addTag(ModTags.Blocks.CASTLE_SLAPS);
-            tag(BlockTags.FLOWER_POTS).add(ModBlocks.potted_vampire_orchid);
-            tag(BlockTags.SPRUCE_LOGS).add(ModBlocks.bloody_spruce_log);
-            tag(BlockTags.LEAVES).add(ModBlocks.vampire_spruce_leaves, ModBlocks.bloody_spruce_leaves);
-            tag(BlockTags.SAPLINGS).add(ModBlocks.bloody_spruce_sapling, ModBlocks.vampire_spruce_sapling);
+            tag(BlockTags.FLOWER_POTS).add(ModBlocks.potted_vampire_orchid.get());
+            tag(BlockTags.SPRUCE_LOGS).add(ModBlocks.bloody_spruce_log.get());
+            tag(BlockTags.LEAVES).add(ModBlocks.vampire_spruce_leaves.get(), ModBlocks.bloody_spruce_leaves.get());
+            tag(BlockTags.SAPLINGS).add(ModBlocks.bloody_spruce_sapling.get(), ModBlocks.vampire_spruce_sapling.get());
 
             //Tool types
-            tag(BlockTags.MINEABLE_WITH_SHOVEL).add(ModBlocks.cursed_earth, ModBlocks.cursed_grass_block);
+            tag(BlockTags.MINEABLE_WITH_SHOVEL).add(ModBlocks.cursed_earth.get(), ModBlocks.cursed_grass_block.get());
             //noinspection unchecked
-            tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ModBlocks.altar_inspiration, ModBlocks.altar_pillar, ModBlocks.altar_tip, ModBlocks.blood_pedestal, ModBlocks.altar_infusion, ModBlocks.grave_cage, ModBlocks.tombstone1, ModBlocks.tombstone2, ModBlocks.tombstone3).addTags(ModTags.Blocks.CASTLE_BLOCK, ModTags.Blocks.CASTLE_SLAPS, ModTags.Blocks.CASTLE_STAIRS);
+            tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ModBlocks.altar_inspiration.get(), ModBlocks.altar_pillar.get(), ModBlocks.altar_tip.get(), ModBlocks.blood_pedestal.get(), ModBlocks.altar_infusion.get(), ModBlocks.grave_cage.get(), ModBlocks.tombstone1.get(), ModBlocks.tombstone2.get(), ModBlocks.tombstone3.get()).addTags(ModTags.Blocks.CASTLE_BLOCK, ModTags.Blocks.CASTLE_SLAPS, ModTags.Blocks.CASTLE_STAIRS);
 
-            tag(BlockTags.NEEDS_STONE_TOOL).add(ModBlocks.altar_inspiration, ModBlocks.altar_tip);
-            tag(BlockTags.NEEDS_IRON_TOOL).add(ModBlocks.blood_pedestal, ModBlocks.altar_infusion);
+            tag(BlockTags.NEEDS_STONE_TOOL).add(ModBlocks.altar_inspiration.get(), ModBlocks.altar_tip.get());
+            tag(BlockTags.NEEDS_IRON_TOOL).add(ModBlocks.blood_pedestal.get(), ModBlocks.altar_infusion.get());
         }
     }
 
@@ -78,19 +78,19 @@ public class TagGenerator {
             copy(ModTags.Blocks.CASTLE_SLAPS, ModTags.Items.CASTLE_SLAPS);
             copy(ModTags.Blocks.CURSEDEARTH, ModTags.Items.CURSEDEARTH);
 
-            tag(ModTags.Items.CROSSBOW_ARROW).add(ModItems.crossbow_arrow_normal, ModItems.crossbow_arrow_spitfire, ModItems.crossbow_arrow_vampire_killer);
-            tag(ModTags.Items.HUNTER_INTEL).add(ModItems.hunter_intel_0, ModItems.hunter_intel_1, ModItems.hunter_intel_2, ModItems.hunter_intel_3, ModItems.hunter_intel_4, ModItems.hunter_intel_5, ModItems.hunter_intel_6, ModItems.hunter_intel_7, ModItems.hunter_intel_8, ModItems.hunter_intel_9);
-            tag(ModTags.Items.PURE_BLOOD).add(ModItems.pure_blood_0, ModItems.pure_blood_1, ModItems.pure_blood_2, ModItems.pure_blood_3, ModItems.pure_blood_4);
-            tag(ModTags.Items.VAMPIRE_CLOAK).add(ModItems.vampire_cloak_black_blue, ModItems.vampire_cloak_black_red, ModItems.vampire_cloak_black_white, ModItems.vampire_cloak_red_black, ModItems.vampire_cloak_white_black);
-            tag(ItemTags.SMALL_FLOWERS).add(ModItems.vampire_orchid);
-            tag(ModTags.Items.GARLIC).add(ModItems.item_garlic);
-            tag(ModTags.Items.HOLY_WATER).add(ModItems.holy_water_bottle_normal, ModItems.holy_water_bottle_enhanced, ModItems.holy_water_bottle_ultimate);
-            tag(ModTags.Items.HOLY_WATER_SPLASH).add(ModItems.holy_water_splash_bottle_normal, ModItems.holy_water_splash_bottle_enhanced, ModItems.holy_water_splash_bottle_ultimate);
+            tag(ModTags.Items.CROSSBOW_ARROW).add(ModItems.crossbow_arrow_normal.get(), ModItems.crossbow_arrow_spitfire.get(), ModItems.crossbow_arrow_vampire_killer.get());
+            tag(ModTags.Items.HUNTER_INTEL).add(ModItems.hunter_intel_0.get(), ModItems.hunter_intel_1.get(), ModItems.hunter_intel_2.get(), ModItems.hunter_intel_3.get(), ModItems.hunter_intel_4.get(), ModItems.hunter_intel_5.get(), ModItems.hunter_intel_6.get(), ModItems.hunter_intel_7.get(), ModItems.hunter_intel_8.get(), ModItems.hunter_intel_9.get());
+            tag(ModTags.Items.PURE_BLOOD).add(ModItems.pure_blood_0.get(), ModItems.pure_blood_1.get(), ModItems.pure_blood_2.get(), ModItems.pure_blood_3.get(), ModItems.pure_blood_4.get());
+            tag(ModTags.Items.VAMPIRE_CLOAK).add(ModItems.vampire_cloak_black_blue.get(), ModItems.vampire_cloak_black_red.get(), ModItems.vampire_cloak_black_white.get(), ModItems.vampire_cloak_red_black.get(), ModItems.vampire_cloak_white_black.get());
+            tag(ItemTags.SMALL_FLOWERS).add(ModItems.vampire_orchid.get());
+            tag(ModTags.Items.GARLIC).add(ModItems.item_garlic.get());
+            tag(ModTags.Items.HOLY_WATER).add(ModItems.holy_water_bottle_normal.get(), ModItems.holy_water_bottle_enhanced.get(), ModItems.holy_water_bottle_ultimate.get());
+            tag(ModTags.Items.HOLY_WATER_SPLASH).add(ModItems.holy_water_splash_bottle_normal.get().get(), ModItems.holy_water_splash_bottle_enhanced.get().get(), ModItems.holy_water_splash_bottle_ultimate.get().get());
             tag(ItemTags.STAIRS).addTag(ModTags.Items.CASTLE_STAIRS);
             tag(ItemTags.SLABS).addTag(ModTags.Items.CASTLE_SLAPS);
-            tag(ItemTags.SPRUCE_LOGS).add(ModBlocks.bloody_spruce_log.asItem());
-            tag(ItemTags.LEAVES).add(ModBlocks.vampire_spruce_leaves.asItem(), ModBlocks.bloody_spruce_leaves.asItem());
-            tag(ItemTags.SAPLINGS).add(ModBlocks.bloody_spruce_sapling.asItem(), ModBlocks.vampire_spruce_sapling.asItem());
+            tag(ItemTags.SPRUCE_LOGS).add(ModBlocks.bloody_spruce_log.get().asItem());
+            tag(ItemTags.LEAVES).add(ModBlocks.vampire_spruce_leaves.get().asItem(), ModBlocks.bloody_spruce_leaves.get().asItem());
+            tag(ItemTags.SAPLINGS).add(ModBlocks.bloody_spruce_sapling.get().asItem(), ModBlocks.vampire_spruce_sapling.get().asItem());
         }
     }
 

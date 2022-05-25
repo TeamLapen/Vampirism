@@ -219,7 +219,7 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
 
     @Override
     public boolean stillValid(@Nonnull Player playerIn) {
-        return stillValid(this.worldPos, playerIn, ModBlocks.weapon_table);
+        return stillValid(this.worldPos, playerIn, ModBlocks.weapon_table.get());
     }
 
     private void slotChangedCraftingGrid(Level worldIn, Player playerIn, HunterPlayer hunter, CraftingContainer craftMatrixIn, ResultContainer craftResultIn) {

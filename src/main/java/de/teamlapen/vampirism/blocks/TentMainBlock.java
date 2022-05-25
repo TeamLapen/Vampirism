@@ -17,10 +17,9 @@ import javax.annotation.Nullable;
  * Main block for the 2x2 block tent. Handles spawning
  */
 public class TentMainBlock extends TentBlock implements EntityBlock {
-    private static final String name = "tent_main";
 
     public TentMainBlock() {
-        super(name);
+        super();
     }
 
     @Nullable
