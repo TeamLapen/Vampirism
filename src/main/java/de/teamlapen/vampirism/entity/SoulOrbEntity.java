@@ -47,7 +47,7 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
     private ItemStack soulItemStack;
 
     public SoulOrbEntity(Level worldIn, double x, double y, double z, VARIANT type) {
-        super(ModEntities.soul_orb, worldIn);
+        super(ModEntities.soul_orb.get(), worldIn);
         this.setVariant(type);
         delayBeforePickup = 10;
         this.setPos(x, y, z);

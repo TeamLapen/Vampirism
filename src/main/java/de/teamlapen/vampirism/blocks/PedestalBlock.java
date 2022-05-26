@@ -121,6 +121,6 @@ public class PedestalBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
-        return createTickerHelper(type, ModTiles.blood_pedestal, level.isClientSide() ? PedestalBlockEntity::clientTick : PedestalBlockEntity::serverTick);
+        return createTickerHelper(type, ModTiles.blood_pedestal.get(), level.isClientSide() ? PedestalBlockEntity::clientTick : PedestalBlockEntity::serverTick);
     }
 }

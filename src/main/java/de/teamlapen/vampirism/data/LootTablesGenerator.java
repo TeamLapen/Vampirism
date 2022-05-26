@@ -87,8 +87,8 @@ public class LootTablesGenerator extends LootTableProvider {
                             .add(LootItem.lootTableItem(ModItems.holy_salt.get()).setWeight(4).apply(LootingEnchantFunction.lootingMultiplier(UniformGenerator.between(0, 1))).apply(SetItemCountFunction.setCount(UniformGenerator.between(1, 2)))))
                     .withPool(LootPool.lootPool().name("special").when(LootItemRandomChanceWithLootingCondition.randomChanceAndLootingBoost(0.05f, 0.01f)).setRolls(ConstantValue.exactly(1))
                             .add(LootItem.lootTableItem(ModItems.vampire_book.get()).setWeight(1).apply(AddBookNbt.builder())));
-            this.add(ModEntities.advanced_hunter, advanced_hunter);
-            this.add(ModEntities.advanced_hunter_imob, advanced_hunter);
+            this.add(ModEntities.advanced_hunter.get(), advanced_hunter);
+            this.add(ModEntities.advanced_hunter_imob.get(), advanced_hunter);
             LootTable.Builder advanced_vampire = LootTable.lootTable()
                     .withPool(LootPool.lootPool().name("general").when(LootItemKilledByPlayerCondition.killedByPlayer()).setRolls(ConstantValue.exactly(1))
                             .add(LootItem.lootTableItem(ModItems.vampire_blood_bottle.get()).setWeight(1))
@@ -99,18 +99,18 @@ public class LootTablesGenerator extends LootTableProvider {
                             .add(LootItem.lootTableItem(ModItems.amulet.get()).setWeight(1).apply(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
                             .add(LootItem.lootTableItem(ModItems.ring.get()).setWeight(1).apply(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
                             .add(LootItem.lootTableItem(ModItems.obi_belt.get()).setWeight(1).apply(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION))));
-            this.add(ModEntities.advanced_vampire, advanced_vampire);
-            this.add(ModEntities.advanced_vampire_imob, advanced_vampire);
-            this.add(ModEntities.blinding_bat, LootTable.lootTable());
-            this.add(ModEntities.converted_creature, LootTable.lootTable());
-            this.add(ModEntities.converted_creature_imob, LootTable.lootTable());
-            this.add(ModEntities.converted_sheep, LootTable.lootTable());
-            this.add(ModEntities.converted_cow, LootTable.lootTable());
-            this.add(ModEntities.converted_horse, LootTable.lootTable());
-            this.add(ModEntities.converted_donkey, LootTable.lootTable());
-            this.add(ModEntities.converted_mule, LootTable.lootTable());
-            this.add(ModEntities.dummy_creature, LootTable.lootTable());
-            this.add(ModEntities.hunter_trainer, LootTable.lootTable());
+            this.add(ModEntities.advanced_vampire.get(), advanced_vampire);
+            this.add(ModEntities.advanced_vampire_imob.get(), advanced_vampire);
+            this.add(ModEntities.blinding_bat.get(), LootTable.lootTable());
+            this.add(ModEntities.converted_creature.get(), LootTable.lootTable());
+            this.add(ModEntities.converted_creature_imob.get(), LootTable.lootTable());
+            this.add(ModEntities.converted_sheep.get(), LootTable.lootTable());
+            this.add(ModEntities.converted_cow.get(), LootTable.lootTable());
+            this.add(ModEntities.converted_horse.get(), LootTable.lootTable());
+            this.add(ModEntities.converted_donkey.get(), LootTable.lootTable());
+            this.add(ModEntities.converted_mule.get(), LootTable.lootTable());
+            this.add(ModEntities.dummy_creature.get(), LootTable.lootTable());
+            this.add(ModEntities.hunter_trainer.get(), LootTable.lootTable());
             LootTable.Builder vampire = LootTable.lootTable()
                     .withPool(LootPool.lootPool().name("general").setRolls(ConstantValue.exactly(1)).when(LootItemKilledByPlayerCondition.killedByPlayer()).when(LootItemRandomChanceWithLootingCondition.randomChanceAndLootingBoost(0.33f, 0.05f))
                             .add(LootItem.lootTableItem(ModItems.vampire_fang.get()).setWeight(1)))
@@ -120,9 +120,9 @@ public class LootTablesGenerator extends LootTableProvider {
                             .add(LootItem.lootTableItem(ModItems.amulet.get()).setWeight(1).apply(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
                             .add(LootItem.lootTableItem(ModItems.ring.get()).setWeight(1).apply(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
                             .add(LootItem.lootTableItem(ModItems.obi_belt.get()).setWeight(1).apply(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION))));
-            this.add(ModEntities.vampire, vampire);
-            this.add(ModEntities.vampire_imob, vampire);
-            this.add(ModEntities.vampire_baron, LootTable.lootTable()
+            this.add(ModEntities.vampire.get(), vampire);
+            this.add(ModEntities.vampire_imob.get(), vampire);
+            this.add(ModEntities.vampire_baron.get(), LootTable.lootTable()
                     .withPool(LootPool.lootPool().name("pure_blood_0").setRolls(ConstantValue.exactly(1)).when(LootItemKilledByPlayerCondition.killedByPlayer()).when(AdjustableLevelCondition.builder(0, LootContext.EntityTarget.THIS))
                             .add(LootItem.lootTableItem(ModItems.pure_blood_0.get()).setWeight(1)))
                     .withPool(LootPool.lootPool().name("pure_blood_1").setRolls(ConstantValue.exactly(1)).when(LootItemKilledByPlayerCondition.killedByPlayer()).when(AdjustableLevelCondition.builder(1, LootContext.EntityTarget.THIS))
@@ -142,14 +142,14 @@ public class LootTablesGenerator extends LootTableProvider {
                             .add(LootItem.lootTableItem(ModItems.amulet.get()).setWeight(1).apply(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
                             .add(LootItem.lootTableItem(ModItems.ring.get()).setWeight(1).apply(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
                             .add(LootItem.lootTableItem(ModItems.obi_belt.get()).setWeight(1).apply(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION))));
-            this.add(ModEntities.hunter, hunter);
-            this.add(ModEntities.hunter_imob, hunter);
-            this.add(ModEntities.villager_angry, LootTable.lootTable());
-            this.add(ModEntities.villager_converted, LootTable.lootTable());
-            this.add(ModEntities.task_master_vampire, LootTable.lootTable());
-            this.add(ModEntities.task_master_hunter, LootTable.lootTable());
-            this.add(ModEntities.vampire_minion, LootTable.lootTable());
-            this.add(ModEntities.hunter_minion, LootTable.lootTable());
+            this.add(ModEntities.hunter.get(), hunter);
+            this.add(ModEntities.hunter_imob.get(), hunter);
+            this.add(ModEntities.villager_angry.get(), LootTable.lootTable());
+            this.add(ModEntities.villager_converted.get(), LootTable.lootTable());
+            this.add(ModEntities.task_master_vampire.get(), LootTable.lootTable());
+            this.add(ModEntities.task_master_hunter.get(), LootTable.lootTable());
+            this.add(ModEntities.vampire_minion.get(), LootTable.lootTable());
+            this.add(ModEntities.hunter_minion.get(), LootTable.lootTable());
         }
 
         @Nonnull

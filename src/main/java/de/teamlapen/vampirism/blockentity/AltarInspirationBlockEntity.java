@@ -64,7 +64,7 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
     private IModelData modelData;
 
     public AltarInspirationBlockEntity(BlockPos pos, BlockState state) {
-        super(ModTiles.altar_inspiration, pos, state);
+        super(ModTiles.altar_inspiration.get(), pos, state);
         this.tank = new InternalTank(CAPACITY).setListener(this);
     }
 
@@ -128,7 +128,7 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
             return;
         }
         if (!p.level.isClientSide) {
-            ModParticles.spawnParticlesServer(p.level, new FlyingBloodEntityParticleData(ModParticles.flying_blood_entity, p.getId(), false), this.worldPosition.getX() + 0.5, this.worldPosition.getY() + 1, this.worldPosition.getZ() + 0.5, 40, 0.1F, 0.1f, 0.1f, 0);
+            ModParticles.spawnParticlesServer(p.level, new FlyingBloodEntityParticleData(ModParticles.flying_blood_entity.get(), p.getId(), false), this.worldPosition.getX() + 0.5, this.worldPosition.getY() + 1, this.worldPosition.getZ() + 0.5, 40, 0.1F, 0.1f, 0.1f, 0);
         } else {
             ((InternalTank) tank).doDrain(neededBlood, IFluidHandler.FluidAction.EXECUTE);
         }

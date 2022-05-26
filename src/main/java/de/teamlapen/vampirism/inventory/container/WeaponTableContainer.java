@@ -224,7 +224,7 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
 
     private void slotChangedCraftingGrid(Level worldIn, Player playerIn, HunterPlayer hunter, CraftingContainer craftMatrixIn, ResultContainer craftResultIn) {
         if (!worldIn.isClientSide && playerIn instanceof ServerPlayer serverPlayer) {
-            Optional<IWeaponTableRecipe> optional = worldIn.getServer() == null ? Optional.empty() : worldIn.getServer().getRecipeManager().getRecipeFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE, craftMatrixIn, worldIn);
+            Optional<IWeaponTableRecipe> optional = worldIn.getServer() == null ? Optional.empty() : worldIn.getServer().getRecipeManager().getRecipeFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get(), craftMatrixIn, worldIn);
             this.missingLava.set(false);
             craftResultIn.setItem(0, ItemStack.EMPTY);
             if (optional.isPresent()) {

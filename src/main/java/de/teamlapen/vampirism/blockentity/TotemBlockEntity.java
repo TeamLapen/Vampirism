@@ -146,7 +146,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     private float[] progressColor = DyeColor.WHITE.getTextureDiffuseColors();
 
     public TotemBlockEntity(BlockPos pos, BlockState state) {
-        super(ModTiles.totem, pos, state);
+        super(ModTiles.totem.get(), pos, state);
     }
 
     public void abortCapture() {
@@ -542,7 +542,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
 
     public static void clientTick(Level level, BlockPos pos, BlockState state, TotemBlockEntity blockEntity) {
         if (level.getGameTime() % 10 == 7 && blockEntity.controllingFaction != null) {
-            ModParticles.spawnParticlesClient(level, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "generic_4"), 20, blockEntity.controllingFaction.getColor(), 0.2F), pos.getX(), pos.getY(), pos.getZ(), 3, 30, level.random);
+            ModParticles.spawnParticlesClient(level, new GenericParticleData(ModParticles.generic.get(), new ResourceLocation("minecraft", "generic_4"), 20, blockEntity.controllingFaction.getColor(), 0.2F), pos.getX(), pos.getY(), pos.getZ(), 3, 30, level.random);
         }
     }
 
@@ -806,10 +806,10 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         EntityType<? extends VampirismEntity> entityType;
         if (toDummy) {
             trainer = this.level.getEntitiesOfClass(HunterTrainerEntity.class, this.getVillageArea());
-            entityType = ModEntities.hunter_trainer_dummy;
+            entityType = ModEntities.hunter_trainer_dummy.get();
         } else {
             trainer = this.level.getEntitiesOfClass(DummyHunterTrainerEntity.class, this.getVillageArea());
-            entityType = ModEntities.hunter_trainer;
+            entityType = ModEntities.hunter_trainer.get();
         }
         for (VampirismEntity oldEntity : trainer) {
             VampirismEntity newEntity = entityType.create(this.level);
@@ -1126,7 +1126,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
 
     @SuppressWarnings("ConstantConditions")
     private void spawnVillagerVampire() {
-        this.spawnEntity(ModEntities.villager_converted.create(this.level));
+        this.spawnEntity(ModEntities.villager_converted.get().create(this.level));
     }
 
     /**

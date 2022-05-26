@@ -303,7 +303,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
 
     @Override
     protected EntityType<?> getIMobTypeOpt(boolean iMob) {
-        return iMob ? ModEntities.converted_creature_imob : ModEntities.converted_creature;
+        return iMob ? ModEntities.converted_creature_imob.get() : ModEntities.converted_creature.get();
     }
 
     @Nonnull

@@ -123,7 +123,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
     @Nullable
     @Override
     public ISkill<IHunterPlayer> getRequiredSkill(@Nonnull ItemStack stack) {
-        return HunterSkills.tech_weapons;
+        return HunterSkills.tech_weapons.get();
     }
 
     @Nonnull

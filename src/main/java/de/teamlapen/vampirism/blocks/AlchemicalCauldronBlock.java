@@ -59,14 +59,14 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
     public void animateTick(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull Random rng) {
         super.animateTick(state, world, pos, rng);
         if (state.getValue(LIQUID) == 2) {
-            world.playLocalSound(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, ModSounds.boiling, SoundSource.BLOCKS, 0.05F, 1, false);
+            world.playLocalSound(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, ModSounds.boiling.get(), SoundSource.BLOCKS, 0.05F, 1, false);
         }
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153212_, @Nonnull BlockState p_153213_, @Nonnull BlockEntityType<T> p_153214_) {
-        return p_153212_.isClientSide() ? null : createTickerHelper(p_153214_, ModTiles.alchemical_cauldron, AlchemicalCauldronBlockEntity::serverTick);
+        return p_153212_.isClientSide() ? null : createTickerHelper(p_153214_, ModTiles.alchemical_cauldron.get(), AlchemicalCauldronBlockEntity::serverTick);
     }
 
     @Nullable

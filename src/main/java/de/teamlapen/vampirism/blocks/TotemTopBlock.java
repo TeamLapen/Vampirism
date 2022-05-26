@@ -106,7 +106,7 @@ public class TotemTopBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
-        return ModTiles.totem.create(pos, state);
+        return ModTiles.totem.get().create(pos, state);
     }
 
     @Override
@@ -156,6 +156,6 @@ public class TotemTopBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
-        return createTickerHelper(type, ModTiles.totem, level.isClientSide() ? TotemBlockEntity::clientTick : TotemBlockEntity::serverTick);
+        return createTickerHelper(type, ModTiles.totem.get(), level.isClientSide() ? TotemBlockEntity::clientTick : TotemBlockEntity::serverTick);
     }
 }

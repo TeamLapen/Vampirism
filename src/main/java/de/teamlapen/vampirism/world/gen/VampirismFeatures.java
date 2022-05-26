@@ -62,7 +62,7 @@ public class VampirismFeatures {
     public static final RegistryObject<PlacedFeature> vampire_tree_red_placed = PLACED_FEATURES.register("vampire_tree_red_placed", () -> new PlacedFeature(getHolder(vampire_tree_red), List.of(PlacementUtils.filteredByBlockSurvival((ModBlocks.bloody_spruce_sapling.get())))));
 
 
-    public static final RegistryObject<ConfiguredFeature<NoneFeatureConfiguration, VampireDungeonFeature>> vampire_dungeon = CONFIGURED_FEATURES.register("vampire_dungeon", () -> new ConfiguredFeature<>(ModFeatures.vampire_dungeon, FeatureConfiguration.NONE));
+    public static final RegistryObject<ConfiguredFeature<NoneFeatureConfiguration, VampireDungeonFeature>> vampire_dungeon = CONFIGURED_FEATURES.register("vampire_dungeon", () -> new ConfiguredFeature<>(ModFeatures.vampire_dungeon.get(), FeatureConfiguration.NONE));
     public static final RegistryObject<PlacedFeature> vampire_dungeon_placed = PLACED_FEATURES.register("vampire_dungeon", () -> new PlacedFeature(getHolder(vampire_dungeon), List.of(CountPlacement.of(3), InSquarePlacement.spread(), HeightRangePlacement.uniform(VerticalAnchor.absolute(0), VerticalAnchor.top()), BiomeFilter.biome())));
 
     public static final RegistryObject<ConfiguredFeature<LakeFeature.Configuration, Feature<LakeFeature.Configuration>>> water_lake = CONFIGURED_FEATURES.register("mod_lake", () -> new ConfiguredFeature<>(Feature.LAKE, new LakeFeature.Configuration(BlockStateProvider.simple(Blocks.WATER.defaultBlockState()), BlockStateProvider.simple(ModBlocks.castle_block_dark_stone.get().defaultBlockState()))));
@@ -76,7 +76,7 @@ public class VampirismFeatures {
 
 
     //Structure features
-    public static final RegistryObject<ConfiguredStructureFeature<?,?>> hunter_camp = CONFIGURED_STRUCTURE_FEATURES.register("hunter_camp", () -> ModFeatures.hunter_camp.configured(FeatureConfiguration.NONE, ModTags.Biomes.HAS_HUNTER_TENT));
+    public static final RegistryObject<ConfiguredStructureFeature<?,?>> hunter_camp = CONFIGURED_STRUCTURE_FEATURES.register("hunter_camp", () -> ModFeatures.hunter_camp.get().configured(FeatureConfiguration.NONE, ModTags.Biomes.HAS_HUNTER_TENT));
     //Hunter camp structure set is added in data pack
     //public static final Holder<StructureSet> hunter_camp_set = registerStructureSet(createStructureSetKey("hunter_camp"), new StructureSet(hunter_camp, new RandomSpreadStructurePlacement(10, 4, RandomSpreadType.LINEAR, 14387363)));
 

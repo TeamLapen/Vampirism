@@ -61,12 +61,12 @@ public class MinionData implements INBTSerializable<CompoundTag>, IMinionData {
         this.health = getMaxHealth();
         this.name = name;
         this.inventory = new MinionInventory(invSize);
-        this.activeTaskDesc = new IMinionTask.NoDesc<>(MinionTasks.nothing);
+        this.activeTaskDesc = new IMinionTask.NoDesc<>(MinionTasks.nothing.get());
     }
 
     protected MinionData() {
         this.inventory = new MinionInventory();
-        this.activeTaskDesc = new IMinionTask.NoDesc<>(MinionTasks.nothing);
+        this.activeTaskDesc = new IMinionTask.NoDesc<>(MinionTasks.nothing.get());
     }
 
     @Override

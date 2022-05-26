@@ -87,7 +87,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
     };
 
     public PotionTableBlockEntity(BlockPos pos, BlockState state) {
-        super(ModTiles.potion_table, pos, state);
+        super(ModTiles.potion_table.get(), pos, state);
     }
 
     @Override
@@ -395,12 +395,12 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
 
         public void deriveFromHunter(IHunterPlayer player) {
             ISkillHandler<IHunterPlayer> manager = player.getSkillHandler();
-            durableBrewing = manager.isSkillEnabled(HunterSkills.durable_brewing) || manager.isSkillEnabled(HunterSkills.concentrated_durable_brewing);
-            concentratedBrewing = manager.isSkillEnabled(HunterSkills.concentrated_brewing) || manager.isSkillEnabled(HunterSkills.concentrated_durable_brewing);
-            swiftBrewing = manager.isSkillEnabled(HunterSkills.swift_brewing);
-            masterBrewing = manager.isSkillEnabled(HunterSkills.master_brewer);
-            efficientBrewing = manager.isSkillEnabled(HunterSkills.efficient_brewing);
-            multiTaskBrewing = manager.isSkillEnabled(HunterSkills.multitask_brewing);
+            durableBrewing = manager.isSkillEnabled(HunterSkills.durable_brewing.get()) || manager.isSkillEnabled(HunterSkills.concentrated_durable_brewing.get());
+            concentratedBrewing = manager.isSkillEnabled(HunterSkills.concentrated_brewing.get()) || manager.isSkillEnabled(HunterSkills.concentrated_durable_brewing.get());
+            swiftBrewing = manager.isSkillEnabled(HunterSkills.swift_brewing.get());
+            masterBrewing = manager.isSkillEnabled(HunterSkills.master_brewer.get());
+            efficientBrewing = manager.isSkillEnabled(HunterSkills.efficient_brewing.get());
+            multiTaskBrewing = manager.isSkillEnabled(HunterSkills.multitask_brewing.get());
         }
 
         public void fromByte(byte d) {

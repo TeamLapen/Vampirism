@@ -139,7 +139,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
             if ((VampirismConfig.CLIENT.renderVampireForestFog.get() || VampirismConfig.SERVER.enforceRenderForestFog.get()) && (Helper.isEntityInArtificalVampireFogArea(mc.player) || Helper.isEntityInVampireBiome(mc.player))) {
                 insideFog = true;
                 vampireBiomeFogDistanceMultiplier = vampire != null && vampire.getLevel() > 0 ? 2 : 1;
-                vampireBiomeFogDistanceMultiplier += vampire != null && vampire.getSkillHandler().isRefinementEquipped(ModRefinements.vista) ? VampirismConfig.BALANCE.vrVistaMod.get() : 0;
+                vampireBiomeFogDistanceMultiplier += vampire != null && vampire.getSkillHandler().isRefinementEquipped(ModRefinements.vista.get()) ? VampirismConfig.BALANCE.vrVistaMod.get() : 0;
 
             } else {
                 insideFog = false;

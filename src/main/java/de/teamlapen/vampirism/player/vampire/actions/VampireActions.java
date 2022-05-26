@@ -2,41 +2,31 @@ package de.teamlapen.vampirism.player.vampire.actions;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.ObjectHolder;
-
-import static de.teamlapen.lib.lib.util.UtilLib.getNull;
+import de.teamlapen.vampirism.core.ModRegistries;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 
 /**
  * Registers and holds all skills for vampire player
  */
-@ObjectHolder(REFERENCE.MODID)
 public class VampireActions {
-    public static final BatVampireAction bat = getNull();
-    public static final DarkBloodProjectileAction dark_blood_projectile = getNull();
-    public static final DisguiseVampireAction disguise_vampire = getNull();
-    public static final FreezeVampireAction freeze = getNull();
-    public static final HalfInvulnerableAction half_invulnerable = getNull();
-    public static final RegenVampireAction regen = getNull();
-    public static final SunscreenVampireAction sunscreen = getNull();
-    public static final SummonBatVampireAction summon_bat = getNull();
-    public static final TeleportVampireAction teleport = getNull();
-    public static final InvisibilityVampireAction vampire_invisibility = getNull();
-    public static final RageVampireAction vampire_rage = getNull();
-    public static final HissingAction hissing = getNull();
+    public static final DeferredRegister<IAction<?>> ACTIONS = DeferredRegister.create(ModRegistries.ACTIONS, REFERENCE.MODID);
+    
+    public static final RegistryObject<BatVampireAction> bat = ACTIONS.register("bat", BatVampireAction::new);
+    public static final RegistryObject<DarkBloodProjectileAction> dark_blood_projectile = ACTIONS.register("dark_blood_projectile", DarkBloodProjectileAction::new);
+    public static final RegistryObject<DisguiseVampireAction> disguise_vampire = ACTIONS.register("disguise_vampire", DisguiseVampireAction::new);
+    public static final RegistryObject<FreezeVampireAction> freeze = ACTIONS.register("freeze", FreezeVampireAction::new);
+    public static final RegistryObject<HalfInvulnerableAction> half_invulnerable = ACTIONS.register("half_invulnerable", HalfInvulnerableAction::new);
+    public static final RegistryObject<RegenVampireAction> regen = ACTIONS.register("regen", RegenVampireAction::new);
+    public static final RegistryObject<SunscreenVampireAction> sunscreen = ACTIONS.register("sunscreen", SunscreenVampireAction::new);
+    public static final RegistryObject<SummonBatVampireAction> summon_bat = ACTIONS.register("summon_bat", SummonBatVampireAction::new);
+    public static final RegistryObject<TeleportVampireAction> teleport = ACTIONS.register("teleport", TeleportVampireAction::new);
+    public static final RegistryObject<InvisibilityVampireAction> vampire_invisibility = ACTIONS.register("vampire_invisibility", InvisibilityVampireAction::new);
+    public static final RegistryObject<RageVampireAction> vampire_rage = ACTIONS.register("vampire_rage", RageVampireAction::new);
+    public static final RegistryObject<HissingAction> hissing = ACTIONS.register("hissing", HissingAction::new);
 
-    public static void registerDefaultActions(IForgeRegistry<IAction<?>> registry) {
-        registry.register(new BatVampireAction().setRegistryName(REFERENCE.MODID, "bat"));
-        registry.register(new DarkBloodProjectileAction().setRegistryName(REFERENCE.MODID, "dark_blood_projectile"));
-        registry.register(new DisguiseVampireAction().setRegistryName(REFERENCE.MODID, "disguise_vampire"));
-        registry.register(new FreezeVampireAction().setRegistryName(REFERENCE.MODID, "freeze"));
-        registry.register(new HalfInvulnerableAction().setRegistryName(REFERENCE.MODID, "half_invulnerable"));
-        registry.register(new RegenVampireAction().setRegistryName(REFERENCE.MODID, "regen"));
-        registry.register(new SunscreenVampireAction().setRegistryName(REFERENCE.MODID, "sunscreen"));
-        registry.register(new SummonBatVampireAction().setRegistryName(REFERENCE.MODID, "summon_bat"));
-        registry.register(new TeleportVampireAction().setRegistryName(REFERENCE.MODID, "teleport"));
-        registry.register(new InvisibilityVampireAction().setRegistryName(REFERENCE.MODID, "vampire_invisibility"));
-        registry.register(new RageVampireAction().setRegistryName(REFERENCE.MODID, "vampire_rage"));
-        registry.register(new HissingAction().setRegistryName(REFERENCE.MODID, "hissing"));
+    public static void registerDefaultActions(IEventBus bus) {
+        ACTIONS.register(bus);
     }
 }

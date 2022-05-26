@@ -32,7 +32,7 @@ public class SunscreenBeaconBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
-        return level.isClientSide() ? null : createTickerHelper(type, ModTiles.sunscreen_beacon, SunscreenBeaconBlockEntity::serverTick);
+        return level.isClientSide() ? null : createTickerHelper(type, ModTiles.sunscreen_beacon.get(), SunscreenBeaconBlockEntity::serverTick);
     }
 
     @Override

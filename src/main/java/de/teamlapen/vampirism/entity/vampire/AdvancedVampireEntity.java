@@ -334,7 +334,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
 
     @Override
     protected EntityType<?> getIMobTypeOpt(boolean iMob) {
-        return iMob ? ModEntities.advanced_vampire_imob : ModEntities.advanced_vampire;
+        return iMob ? ModEntities.advanced_vampire_imob.get() : ModEntities.advanced_vampire.get();
     }
 
     @Override

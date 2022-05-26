@@ -69,8 +69,8 @@ public class DamageHandler {
         }
         if (vampire instanceof IVampirePlayer) {
             IActionHandler<IVampirePlayer> actionHandler = ((IVampirePlayer) vampire).getActionHandler();
-            if (actionHandler.isActionActive(VampireActions.disguise_vampire)) {
-                actionHandler.toggleAction(VampireActions.disguise_vampire);
+            if (actionHandler.isActionActive(VampireActions.disguise_vampire.get())) {
+                actionHandler.toggleAction(VampireActions.disguise_vampire.get());
             }
         }
     }
@@ -140,16 +140,16 @@ public class DamageHandler {
         }
         if (vampire && entity instanceof Player) {
             VampirePlayer.getOpt((Player) entity).map(VampirePlayer::getActionHandler).ifPresent(actionHandler -> {
-                if (actionHandler.isActionActive(VampireActions.disguise_vampire)) {
-                    actionHandler.toggleAction(VampireActions.disguise_vampire);
+                if (actionHandler.isActionActive(VampireActions.disguise_vampire.get())) {
+                    actionHandler.toggleAction(VampireActions.disguise_vampire.get());
                 }
-                if (actionHandler.isActionActive(VampireActions.vampire_invisibility)) {
-                    actionHandler.toggleAction(VampireActions.vampire_invisibility);
+                if (actionHandler.isActionActive(VampireActions.vampire_invisibility.get())) {
+                    actionHandler.toggleAction(VampireActions.vampire_invisibility.get());
                 }
             });
         } else if (vampire && entity instanceof IEntityActionUser) {
             IActionHandlerEntity h = ((IEntityActionUser) entity).getActionHandler();
-            if (h.isActionActive(EntityActions.entity_invisible)) {
+            if (h.isActionActive(EntityActions.entity_invisible.get())) {
                 h.deactivateAction();
             }
         }

@@ -57,15 +57,8 @@ import java.util.List;
 
 public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.VampireMinionData> implements IVampire {
 
-    static {
-        MinionData.registerDataType(VampireMinionEntity.VampireMinionData.ID, VampireMinionEntity.VampireMinionData::new);
-    }
-
-    /**
-     * Just required to execute static init
-     */
     public static void init() {
-
+        MinionData.registerDataType(VampireMinionEntity.VampireMinionData.ID, VampireMinionEntity.VampireMinionData::new);
     }
 
     public static AttributeSupplier.Builder getAttributeBuilder() {
@@ -91,7 +84,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
 
     @Override
     public List<IMinionTask<?, ?>> getAvailableTasks() {
-        return Lists.newArrayList(MinionTasks.follow_lord, MinionTasks.stay, MinionTasks.defend_area, MinionTasks.collect_blood, MinionTasks.protect_lord);
+        return Lists.newArrayList(MinionTasks.follow_lord.get(), MinionTasks.stay.get(), MinionTasks.defend_area.get(), MinionTasks.collect_blood.get(), MinionTasks.protect_lord.get());
     }
 
     @Override

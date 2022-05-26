@@ -34,7 +34,7 @@ public class AddBookNbt extends LootItemConditionalFunction {
     @Nonnull
     @Override
     public LootItemFunctionType getType() {
-        return ModLoot.add_book_nbt;
+        return ModLoot.add_book_nbt.get();
     }
 
     @Nonnull

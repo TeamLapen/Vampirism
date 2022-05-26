@@ -36,7 +36,7 @@ public class ThrowableItemEntity extends ThrowableProjectile implements ItemSupp
     }
 
     public ThrowableItemEntity(Level worldIn, LivingEntity thrower) {
-        super(ModEntities.throwable_item, thrower, worldIn);
+        super(ModEntities.throwable_item.get(), thrower, worldIn);
     }
 
     @Override

@@ -177,7 +177,7 @@ public class GarlicDiffuserBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
-        return createTickerHelper(type, ModTiles.garlic_diffuser, GarlicDiffuserBlockEntity::tick);
+        return createTickerHelper(type, ModTiles.garlic_diffuser.get(), GarlicDiffuserBlockEntity::tick);
     }
 
     public enum Type implements StringRepresentable {

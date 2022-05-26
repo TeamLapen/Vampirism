@@ -37,7 +37,7 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
     private boolean active;
 
     public SieveBlockEntity(BlockPos pos, BlockState state) {
-        super(ModTiles.sieve, pos, state);
+        super(ModTiles.sieve.get(), pos, state);
         tank = new FilteringFluidTank(2 * FluidAttributes.BUCKET_VOLUME).setListener(this);
         tank.setDrainable(false);
         cap = LazyOptional.of(() -> tank);

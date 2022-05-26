@@ -98,7 +98,7 @@ public class TaskBoardContainer extends AbstractContainerMenu implements TaskCon
                 taskInfo.complete();
                 this.completableTasks.remove(taskInfo.getId());
                 this.taskInstances.remove(taskInfo);
-                VampLib.proxy.createMasterSoundReference(ModSounds.task_complete, 1, 1).startPlaying();
+                VampLib.proxy.createMasterSoundReference(ModSounds.task_complete.get(), 1, 1).startPlaying();
             }
             case ACCEPT -> taskInfo.startTask(Minecraft.getInstance().level.getGameTime() + taskInfo.getTaskDuration());
             default -> taskInfo.aboardTask();

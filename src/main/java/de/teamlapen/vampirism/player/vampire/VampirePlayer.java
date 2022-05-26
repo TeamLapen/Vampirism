@@ -271,7 +271,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             LOGGER.warn("Player can't bite in spectator mode");
             return;
         }
-        if (getActionHandler().isActionActive(VampireActions.bat)) {
+        if (getActionHandler().isActionActive(VampireActions.bat.get())) {
             LOGGER.warn("Cannot bite in bat mode");
             return;
         }
@@ -429,7 +429,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
     public int getDbnoDuration() {
         int duration = VampirismConfig.BALANCE.vpDbnoDuration.get() * 20;
-        if (this.skillHandler.isSkillEnabled(VampireSkills.dbno_duration)) {
+        if (this.skillHandler.isSkillEnabled(VampireSkills.dbno_duration.get())) {
             duration = Math.max(1, (int) (duration * VampirismConfig.BALANCE.vsDbnoReduction.get()));
         }
         return duration;
@@ -638,7 +638,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     @Override
     public void onDeath(DamageSource src) {
         super.onDeath(src);
-        if (actionHandler.isActionActive(VampireActions.bat) && src.getDirectEntity() instanceof Projectile) {
+        if (actionHandler.isActionActive(VampireActions.bat.get()) && src.getDirectEntity() instanceof Projectile) {
             if (player instanceof ServerPlayer) {
                 ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((ServerPlayer) player, VampireActionTrigger.Action.SNIPED_IN_BAT);
             }
@@ -668,11 +668,11 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         }
         endFeeding(true);
         if (getSpecialAttributes().half_invulnerable) {
-            if (amt >= getRepresentingEntity().getMaxHealth() * (this.skillHandler.isRefinementEquipped(ModRefinements.half_invulnerable) ? VampirismConfig.BALANCE.vrHalfInvulnerableThresholdMod.get() : 1) * VampirismConfig.BALANCE.vaHalfInvulnerableThreshold.get() && amt < 999) { //Make sure "instant kills" are not blocked by this
+            if (amt >= getRepresentingEntity().getMaxHealth() * (this.skillHandler.isRefinementEquipped(ModRefinements.half_invulnerable.get()) ? VampirismConfig.BALANCE.vrHalfInvulnerableThresholdMod.get() : 1) * VampirismConfig.BALANCE.vaHalfInvulnerableThreshold.get() && amt < 999) { //Make sure "instant kills" are not blocked by this
                 if (useBlood(VampirismConfig.BALANCE.vaHalfInvulnerableBloodCost.get(), false)) {
                     return true;
                 } else {
-                    this.actionHandler.toggleAction(VampireActions.half_invulnerable);
+                    this.actionHandler.toggleAction(VampireActions.half_invulnerable.get());
                 }
             }
         }
@@ -682,13 +682,13 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
     @Override
     public void onEntityKilled(LivingEntity victim, DamageSource src) {
-        if (this.getSkillHandler().isRefinementEquipped(ModRefinements.rage_fury)) {
+        if (this.getSkillHandler().isRefinementEquipped(ModRefinements.rage_fury.get())) {
             //No need to check if rage active, extending only has an effect when already active
             int bonus = VampirismConfig.BALANCE.vrRageFuryDurationBonus.get() * 20;
             if (victim instanceof Player) {
                 bonus *= 2;
             }
-            this.getActionHandler().extendActionTimer(VampireActions.vampire_rage, bonus);
+            this.getActionHandler().extendActionTimer(VampireActions.vampire_rage.get(), bonus);
         }
     }
 
@@ -1040,7 +1040,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             this.player.refreshDimensions();
             this.sync(true);
             int duration = VampirismConfig.BALANCE.vpNeonatalDuration.get() * 20;
-            if (this.skillHandler.isSkillEnabled(VampireSkills.neonatal_decrease)) {
+            if (this.skillHandler.isSkillEnabled(VampireSkills.neonatal_decrease.get())) {
                 duration = Math.max(1, (int) (duration * VampirismConfig.BALANCE.vsNeonatalReduction.get()));
             }
             this.player.addEffect(new MobEffectInstance(ModEffects.neonatal.get(), duration));
@@ -1383,7 +1383,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             player.level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(Items.APPLE)), vec31.x, vec31.y, vec31.z, vec3.x, vec3.y + 0.05D, vec3.z);
         }
         //Play bite sounds. Using this method since it is the only client side method. And this is called on every relevant client anyway
-        player.level.playLocalSound(player.getX(), player.getY(), player.getZ(), ModSounds.player_bite, SoundSource.PLAYERS, 1.0F, 1.0F, false);
+        player.level.playLocalSound(player.getX(), player.getY(), player.getZ(), ModSounds.player_bite.get(), SoundSource.PLAYERS, 1.0F, 1.0F, false);
     }
 
     /**
@@ -1399,7 +1399,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         e.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 7, false, false));
         player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 25, 4, false, false));
 
-        ModParticles.spawnParticlesServer(player.level, new FlyingBloodEntityParticleData(ModParticles.flying_blood_entity, player.getId(), true), e.getX(), e.getY() + e.getEyeHeight() / 2, e.getZ(), 10, 0.1f, 0.1f, 0.1f, 0);
+        ModParticles.spawnParticlesServer(player.level, new FlyingBloodEntityParticleData(ModParticles.flying_blood_entity.get(), player.getId(), true), e.getX(), e.getY() + e.getEyeHeight() / 2, e.getZ(), 10, 0.1f, 0.1f, 0.1f, 0);
 
         if (!biteFeed(e)) {
             endFeeding(true);

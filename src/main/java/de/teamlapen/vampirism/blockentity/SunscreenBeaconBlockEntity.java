@@ -20,7 +20,7 @@ public class SunscreenBeaconBlockEntity extends BlockEntity {
     private Predicate<Player> selector;
 
     public SunscreenBeaconBlockEntity(BlockPos pos, BlockState state) {
-        super(ModTiles.sunscreen_beacon, pos, state);
+        super(ModTiles.sunscreen_beacon.get(), pos, state);
     }
 
 

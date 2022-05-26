@@ -163,16 +163,16 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                     if (controller.hasFreeMinionSlot()) {
                         if (fph.getCurrentFaction() == this.getFaction()) {
                             VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData("Minion", this.getEntityTextureType(), false);
-                            int id = controller.createNewMinionSlot(data, ModEntities.vampire_minion);
+                            int id = controller.createNewMinionSlot(data, ModEntities.vampire_minion.get());
                             if (id < 0) {
                                 LOGGER.error("Failed to get minion slot");
                                 return;
                             }
-                            VampireMinionEntity minion = ModEntities.vampire_minion.create(this.level);
+                            VampireMinionEntity minion = ModEntities.vampire_minion.get().create(this.level);
                             minion.claimMinionSlot(id, controller);
                             minion.copyPosition(this);
                             minion.markAsConverted();
-                            controller.activateTask(0, MinionTasks.stay);
+                            controller.activateTask(0, MinionTasks.stay.get());
                             UtilLib.replaceEntity(this, minion);
 
                         } else {
@@ -400,7 +400,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return ModSounds.entity_vampire_scream;
+        return ModSounds.entity_vampire_scream.get();
     }
 
     @Override
@@ -410,7 +410,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 
     @Override
     protected EntityType<?> getIMobTypeOpt(boolean iMob) {
-        return iMob ? ModEntities.vampire_imob : ModEntities.vampire;
+        return iMob ? ModEntities.vampire_imob.get() : ModEntities.vampire.get();
     }
 
     @Nonnull

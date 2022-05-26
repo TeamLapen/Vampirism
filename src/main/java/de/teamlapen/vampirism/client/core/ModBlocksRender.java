@@ -63,11 +63,11 @@ public class ModBlocksRender {
     }
 
     public static void registerBlockEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerBlockEntityRenderer(ModTiles.coffin, CoffinBESR::new);
-        event.registerBlockEntityRenderer(ModTiles.altar_infusion, AltarInfusionBESR::new);
-        event.registerBlockEntityRenderer(ModTiles.blood_pedestal, PedestalBESR::new);
-        event.registerBlockEntityRenderer(ModTiles.totem, TotemBESR::new);
-        event.registerBlockEntityRenderer(ModTiles.garlic_diffuser, GarlicDiffuserBESR::new);
+        event.registerBlockEntityRenderer(ModTiles.coffin.get(), CoffinBESR::new);
+        event.registerBlockEntityRenderer(ModTiles.altar_infusion.get(), AltarInfusionBESR::new);
+        event.registerBlockEntityRenderer(ModTiles.blood_pedestal.get(), PedestalBESR::new);
+        event.registerBlockEntityRenderer(ModTiles.totem.get(), TotemBESR::new);
+        event.registerBlockEntityRenderer(ModTiles.garlic_diffuser.get(), GarlicDiffuserBESR::new);
     }
 
     private static void registerRenderType() {

@@ -26,8 +26,8 @@ public class OblivionEffect extends VampirismEffect {
 
     private static final Logger LOGGER = LogManager.getLogger(FactionPlayerHandler.class);
 
-    public OblivionEffect(String name, MobEffectCategory effectType, int potionColor) {
-        super(name, effectType, potionColor);
+    public OblivionEffect(MobEffectCategory effectType, int potionColor) {
+        super(effectType, potionColor);
     }
 
     @Override

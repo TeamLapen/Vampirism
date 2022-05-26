@@ -69,41 +69,41 @@ public class ModEntitiesRender {
 
 
     public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(ModEntities.blinding_bat, BatRenderer::new);
-        event.registerEntityRenderer(ModEntities.converted_creature_imob, ConvertedCreatureRenderer::new);
-        event.registerEntityRenderer(ModEntities.converted_creature, (ConvertedCreatureRenderer::new));
-        event.registerEntityRenderer(ModEntities.converted_horse, renderingManager -> {
+        event.registerEntityRenderer(ModEntities.blinding_bat.get(), BatRenderer::new);
+        event.registerEntityRenderer(ModEntities.converted_creature_imob.get(), ConvertedCreatureRenderer::new);
+        event.registerEntityRenderer(ModEntities.converted_creature.get(), (ConvertedCreatureRenderer::new));
+        event.registerEntityRenderer(ModEntities.converted_horse.get(), renderingManager -> {
             HorseRenderer renderer = new HorseRenderer(renderingManager);
             renderer.addLayer(new VampireEntityLayer<>(renderer, new ResourceLocation(REFERENCE.MODID, "textures/entity/vanilla/horse_overlay.png"), false));
             return renderer;
         });
-        event.registerEntityRenderer(ModEntities.converted_donkey, (context) -> new ConvertedChestedHorseRenderer<>(context, ModelLayers.DONKEY));
-        event.registerEntityRenderer(ModEntities.converted_mule, (context -> new ConvertedChestedHorseRenderer<>(context, ModelLayers.MULE)));
-        event.registerEntityRenderer(ModEntities.converted_sheep, (ConvertedCreatureRenderer::new));
-        event.registerEntityRenderer(ModEntities.converted_cow, (ConvertedCreatureRenderer::new));
-        event.registerEntityRenderer(ModEntities.hunter, (BasicHunterRenderer::new));
-        event.registerEntityRenderer(ModEntities.hunter_imob, (BasicHunterRenderer::new));
-        event.registerEntityRenderer(ModEntities.vampire, (BasicVampireRenderer::new));
-        event.registerEntityRenderer(ModEntities.vampire_imob, (BasicVampireRenderer::new));
-        event.registerEntityRenderer(ModEntities.hunter_trainer, e -> new HunterTrainerRenderer(e, true));
-        event.registerEntityRenderer(ModEntities.vampire_baron, (VampireBaronRenderer::new));
-        event.registerEntityRenderer(ModEntities.advanced_hunter, (AdvancedHunterRenderer::new));
-        event.registerEntityRenderer(ModEntities.advanced_hunter_imob, (AdvancedHunterRenderer::new));
-        event.registerEntityRenderer(ModEntities.advanced_vampire, (AdvancedVampireRenderer::new));
-        event.registerEntityRenderer(ModEntities.advanced_vampire_imob, (AdvancedVampireRenderer::new));
-        event.registerEntityRenderer(ModEntities.villager_converted, (ConvertedVillagerRenderer::new));
-        event.registerEntityRenderer(ModEntities.villager_angry, HunterVillagerRenderer::new);
-        event.registerEntityRenderer(ModEntities.crossbow_arrow, (CrossbowArrowRenderer::new));
-        event.registerEntityRenderer(ModEntities.particle_cloud, (RenderAreaParticleCloud::new));
-        event.registerEntityRenderer(ModEntities.throwable_item, ThrowableItemRenderer::new);
-        event.registerEntityRenderer(ModEntities.dark_blood_projectile, (DarkBloodProjectileRenderer::new));
-        event.registerEntityRenderer(ModEntities.soul_orb, SoulOrbRenderer::new);
-        event.registerEntityRenderer(ModEntities.hunter_trainer_dummy, e -> new HunterTrainerRenderer(e, false));
-        event.registerEntityRenderer(ModEntities.dummy_creature, (DummyRenderer::new));
-        event.registerEntityRenderer(ModEntities.vampire_minion, (VampireMinionRenderer::new));
-        event.registerEntityRenderer(ModEntities.hunter_minion, (HunterMinionRenderer::new));
-        event.registerEntityRenderer(ModEntities.task_master_vampire, (VampireTaskMasterRenderer::new));
-        event.registerEntityRenderer(ModEntities.task_master_hunter, (HunterTaskMasterRenderer::new));
+        event.registerEntityRenderer(ModEntities.converted_donkey.get(), (context) -> new ConvertedChestedHorseRenderer<>(context, ModelLayers.DONKEY));
+        event.registerEntityRenderer(ModEntities.converted_mule.get(), (context -> new ConvertedChestedHorseRenderer<>(context, ModelLayers.MULE)));
+        event.registerEntityRenderer(ModEntities.converted_sheep.get(), (ConvertedCreatureRenderer::new));
+        event.registerEntityRenderer(ModEntities.converted_cow.get(), (ConvertedCreatureRenderer::new));
+        event.registerEntityRenderer(ModEntities.hunter.get(), (BasicHunterRenderer::new));
+        event.registerEntityRenderer(ModEntities.hunter_imob.get(), (BasicHunterRenderer::new));
+        event.registerEntityRenderer(ModEntities.vampire.get(), (BasicVampireRenderer::new));
+        event.registerEntityRenderer(ModEntities.vampire_imob.get(), (BasicVampireRenderer::new));
+        event.registerEntityRenderer(ModEntities.hunter_trainer.get(), e -> new HunterTrainerRenderer(e, true));
+        event.registerEntityRenderer(ModEntities.vampire_baron.get(), (VampireBaronRenderer::new));
+        event.registerEntityRenderer(ModEntities.advanced_hunter.get(), (AdvancedHunterRenderer::new));
+        event.registerEntityRenderer(ModEntities.advanced_hunter_imob.get(), (AdvancedHunterRenderer::new));
+        event.registerEntityRenderer(ModEntities.advanced_vampire.get(), (AdvancedVampireRenderer::new));
+        event.registerEntityRenderer(ModEntities.advanced_vampire_imob.get(), (AdvancedVampireRenderer::new));
+        event.registerEntityRenderer(ModEntities.villager_converted.get(), (ConvertedVillagerRenderer::new));
+        event.registerEntityRenderer(ModEntities.villager_angry.get(), HunterVillagerRenderer::new);
+        event.registerEntityRenderer(ModEntities.crossbow_arrow.get(), (CrossbowArrowRenderer::new));
+        event.registerEntityRenderer(ModEntities.particle_cloud.get(), (RenderAreaParticleCloud::new));
+        event.registerEntityRenderer(ModEntities.throwable_item.get(), ThrowableItemRenderer::new);
+        event.registerEntityRenderer(ModEntities.dark_blood_projectile.get(), (DarkBloodProjectileRenderer::new));
+        event.registerEntityRenderer(ModEntities.soul_orb.get(), SoulOrbRenderer::new);
+        event.registerEntityRenderer(ModEntities.hunter_trainer_dummy.get(), e -> new HunterTrainerRenderer(e, false));
+        event.registerEntityRenderer(ModEntities.dummy_creature.get(), (DummyRenderer::new));
+        event.registerEntityRenderer(ModEntities.vampire_minion.get(), (VampireMinionRenderer::new));
+        event.registerEntityRenderer(ModEntities.hunter_minion.get(), (HunterMinionRenderer::new));
+        event.registerEntityRenderer(ModEntities.task_master_vampire.get(), (VampireTaskMasterRenderer::new));
+        event.registerEntityRenderer(ModEntities.task_master_hunter.get(), (HunterTaskMasterRenderer::new));
     }
 
     public static void onRegisterLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {

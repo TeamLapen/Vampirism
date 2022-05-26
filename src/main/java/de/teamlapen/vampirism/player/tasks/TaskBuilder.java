@@ -75,20 +75,10 @@ public class TaskBuilder {
     }
 
     @Nonnull
-    public Task build(ResourceLocation registryName) {
-        if (requirement.isEmpty()) throw new IllegalStateException("The task " + registryName + " needs requirements");
-        if (reward == null) throw new IllegalStateException("The task " + registryName + " needs a reward");
-        return new Task(this.variant, this.faction, new TaskRequirement(this.requirement), this.reward, this.unlocker.toArray(new TaskUnlocker[]{}), this.useDescription).setRegistryName(registryName);
-    }
-
-    @Nonnull
-    public Task build(String modId, String name) {
-        return this.build(new ResourceLocation(modId, name));
-    }
-
-    @Nonnull
-    public Task build(String name) {
-        return this.build(new ResourceLocation(modId(), name));
+    public Task build() {
+        if (requirement.isEmpty()) throw new IllegalStateException("Task needs requirements");
+        if (reward == null) throw new IllegalStateException("Task needs a reward");
+        return new Task(this.variant, this.faction, new TaskRequirement(this.requirement), this.reward, this.unlocker.toArray(new TaskUnlocker[]{}), this.useDescription);
     }
 
     @Nonnull

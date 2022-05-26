@@ -123,6 +123,6 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
-        return createTickerHelper(type, ModTiles.altar_infusion, AltarInfusionBlockEntity::tick);
+        return createTickerHelper(type, ModTiles.altar_infusion.get(), AltarInfusionBlockEntity::tick);
     }
 }

@@ -24,7 +24,7 @@ public class SunscreenVampireAction extends DefaultVampireAction implements ILas
     @Override
     public int getDuration(IVampirePlayer player) {
         int duration = 20 * (VampirismConfig.BALANCE.vaSunscreenDuration.get());
-        if (player.getSkillHandler().isRefinementEquipped(ModRefinements.sun_screen)) {
+        if (player.getSkillHandler().isRefinementEquipped(ModRefinements.sun_screen.get())) {
             duration *= VampirismConfig.BALANCE.vrSunscreenDurationMod.get();
         }
         return duration;

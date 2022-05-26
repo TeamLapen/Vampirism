@@ -55,15 +55,8 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
      */
     private static final EntityDataAccessor<Boolean> RAISED_ARM = SynchedEntityData.defineId(HunterMinionEntity.class, EntityDataSerializers.BOOLEAN);
 
-    static {
-        MinionData.registerDataType(HunterMinionData.ID, HunterMinionData::new);
-    }
-
-    /**
-     * Just required to execute static init
-     */
     public static void init() {
-
+        MinionData.registerDataType(HunterMinionData.ID, HunterMinionData::new);
     }
 
     public static AttributeSupplier.Builder getAttributeBuilder() {
@@ -86,7 +79,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
 
     @Override
     public List<IMinionTask<?, ?>> getAvailableTasks() {
-        return Lists.newArrayList(MinionTasks.follow_lord, MinionTasks.defend_area, MinionTasks.stay, MinionTasks.collect_hunter_items, MinionTasks.protect_lord);
+        return Lists.newArrayList(MinionTasks.follow_lord.get(), MinionTasks.defend_area.get(), MinionTasks.stay.get(), MinionTasks.collect_hunter_items.get(), MinionTasks.protect_lord.get());
     }
 
     @Override

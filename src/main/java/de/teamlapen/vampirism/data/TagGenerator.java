@@ -101,10 +101,10 @@ public class TagGenerator {
 
         @Override
         protected void addTags() {
-            tag(ModTags.Entities.HUNTER).add(ModEntities.hunter, ModEntities.hunter_imob, ModEntities.advanced_hunter, ModEntities.advanced_hunter_imob, ModEntities.hunter_trainer, ModEntities.hunter_trainer, ModEntities.hunter_trainer_dummy, ModEntities.task_master_hunter);
-            tag(ModTags.Entities.VAMPIRE).add(ModEntities.vampire, ModEntities.vampire_imob, ModEntities.advanced_vampire, ModEntities.advanced_vampire_imob, ModEntities.vampire_baron, ModEntities.task_master_vampire);
-            tag(ModTags.Entities.ADVANCED_HUNTER).add(ModEntities.advanced_hunter, ModEntities.advanced_hunter_imob);
-            tag(ModTags.Entities.ADVANCED_VAMPIRE).add(ModEntities.advanced_vampire, ModEntities.advanced_vampire_imob);
+            tag(ModTags.Entities.HUNTER).add(ModEntities.hunter.get(), ModEntities.hunter_imob.get(), ModEntities.advanced_hunter.get(), ModEntities.advanced_hunter_imob.get(), ModEntities.hunter_trainer.get(), ModEntities.hunter_trainer.get(), ModEntities.hunter_trainer_dummy.get(), ModEntities.task_master_hunter.get());
+            tag(ModTags.Entities.VAMPIRE).add(ModEntities.vampire.get(), ModEntities.vampire_imob.get(), ModEntities.advanced_vampire.get(), ModEntities.advanced_vampire_imob.get(), ModEntities.vampire_baron.get(), ModEntities.task_master_vampire.get());
+            tag(ModTags.Entities.ADVANCED_HUNTER).add(ModEntities.advanced_hunter.get(), ModEntities.advanced_hunter_imob.get());
+            tag(ModTags.Entities.ADVANCED_VAMPIRE).add(ModEntities.advanced_vampire.get(), ModEntities.advanced_vampire_imob.get());
             tag(ModTags.Entities.ZOMBIES).add(EntityType.ZOMBIE, EntityType.HUSK, EntityType.DROWNED, EntityType.ZOMBIE_VILLAGER, EntityType.ZOMBIE_HORSE);
         }
     }
@@ -138,8 +138,8 @@ public class TagGenerator {
         protected void addTags() {
             tag(ModTags.Biomes.HAS_HUNTER_TENT).addTags(BiomeTags.IS_BADLANDS, BiomeTags.IS_FOREST, BiomeTags.IS_TAIGA).add(Biomes.PLAINS, Biomes.DESERT, Biomes.MEADOW, Biomes.SNOWY_PLAINS, Biomes.SPARSE_JUNGLE);
             tag(ModTags.Biomes.IS_FACTION_BIOME).addTags(ModTags.Biomes.IS_VAMPIRE_BIOME);
-            tag(ModTags.Biomes.IS_VAMPIRE_BIOME).add(ModBiomes.VAMPIRE_FOREST.getKey()());
-            tag(BiomeTags.IS_FOREST).add(ModBiomes.VAMPIRE_FOREST.getKey()());
+            tag(ModTags.Biomes.IS_VAMPIRE_BIOME).add(ModBiomes.VAMPIRE_FOREST.getKey());
+            tag(BiomeTags.IS_FOREST).add(ModBiomes.VAMPIRE_FOREST.getKey());
         }
     }
 }

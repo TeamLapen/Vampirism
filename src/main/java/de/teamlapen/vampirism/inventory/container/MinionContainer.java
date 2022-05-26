@@ -102,7 +102,7 @@ public class MinionContainer extends InventoryContainer {
 
     @Nonnull
     public IMinionTask<?, ?> getSelectedTask() {
-        return this.taskToActivate != null ? this.taskToActivate : (this.previousTask != null ? this.previousTask : MinionTasks.stay);
+        return this.taskToActivate != null ? this.taskToActivate : (this.previousTask != null ? this.previousTask : MinionTasks.stay.get());
     }
 
     public boolean isTaskLocked() {

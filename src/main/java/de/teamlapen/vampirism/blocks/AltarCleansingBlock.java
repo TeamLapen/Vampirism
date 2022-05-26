@@ -85,7 +85,7 @@ public class AltarCleansingBlock extends VampirismHorizontalBlock {
         } else if (!heldItem.isEmpty()) {
             if (ModItems.holy_salt_water.get().equals(heldItem.getItem())) {
                 if (world.isClientSide) return InteractionResult.SUCCESS;
-                boolean enhanced = handler.map(h-> h.isInFaction(VReference.HUNTER_FACTION) && h.getCurrentFactionPlayer().map(IFactionPlayer::getSkillHandler).map(s -> s.isSkillEnabled(HunterSkills.holy_water_enhanced)).orElse(false)).orElse(false);
+                boolean enhanced = handler.map(h-> h.isInFaction(VReference.HUNTER_FACTION) && h.getCurrentFactionPlayer().map(IFactionPlayer::getSkillHandler).map(s -> s.isSkillEnabled(HunterSkills.holy_water_enhanced.get())).orElse(false)).orElse(false);
                 ItemStack newStack = new ItemStack(enhanced ? ModItems.holy_water_bottle_enhanced.get() : ModItems.holy_water_bottle_normal.get(), heldItem.getCount());
                 player.setItemInHand(hand, newStack);
                 return InteractionResult.SUCCESS;

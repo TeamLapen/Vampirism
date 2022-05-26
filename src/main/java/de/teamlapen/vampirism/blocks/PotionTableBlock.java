@@ -100,6 +100,6 @@ public class PotionTableBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
-        return createTickerHelper(type, ModTiles.potion_table, PotionTableBlockEntity::tick);
+        return createTickerHelper(type, ModTiles.potion_table.get(), PotionTableBlockEntity::tick);
     }
 }

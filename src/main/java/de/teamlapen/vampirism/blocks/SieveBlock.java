@@ -69,6 +69,6 @@ public class SieveBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
-        return createTickerHelper(type, ModTiles.sieve, SieveBlockEntity::tick);
+        return createTickerHelper(type, ModTiles.sieve.get(), SieveBlockEntity::tick);
     }
 }
