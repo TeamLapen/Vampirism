@@ -16,6 +16,7 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.common.brewing.BrewingRecipe;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.event.RegistryEvent;
@@ -307,17 +308,17 @@ public class ModItems {
             ITEMS.register("weak_human_heart", () -> new VampirismItemBloodFood((new FoodProperties.Builder()).nutrition(10).saturationMod(0.9F).build(), new FoodProperties.Builder().nutrition(3).saturationMod(1f).build()));
 
     public static final RegistryObject<SpawnEggItem> vampire_spawn_egg =
-            ITEMS.register("vampire_spawn_egg", () -> new SpawnEggItem(ModEntities.vampire.get(), 0x8B15A3, 0xa735e3, new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
+            ITEMS.register("vampire_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.vampire, 0x8B15A3, 0xa735e3, new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
     public static final RegistryObject<SpawnEggItem> vampire_hunter_spawn_egg =
-            ITEMS.register("vampire_hunter_spawn_egg", () -> new SpawnEggItem(ModEntities.hunter.get(), 0x2d05f2, 0x2600e0, new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
+            ITEMS.register("vampire_hunter_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.hunter, 0x2d05f2, 0x2600e0, new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
     public static final RegistryObject<SpawnEggItem> advanced_vampire_spawn_egg =
-            ITEMS.register("advanced_vampire_spawn_egg", () -> new SpawnEggItem(ModEntities.advanced_vampire.get(), 0x8B15A3, 0x560a7e, new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
+            ITEMS.register("advanced_vampire_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.advanced_vampire, 0x8B15A3, 0x560a7e, new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
     public static final RegistryObject<SpawnEggItem> advanced_vampire_hunter_spawn_egg =
-            ITEMS.register("advanced_vampire_hunter_spawn_egg", () -> new SpawnEggItem(ModEntities.advanced_hunter.get(), 0x2d05f2, 0x1a028c, new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
+            ITEMS.register("advanced_vampire_hunter_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.advanced_hunter, 0x2d05f2, 0x1a028c, new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
     public static final RegistryObject<SpawnEggItem> vampire_baron_spawn_egg =
-            ITEMS.register("vampire_baron_spawn_egg", () -> new SpawnEggItem(ModEntities.vampire_baron.get(), 0x8B15A3, 0x15acda, new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
+            ITEMS.register("vampire_baron_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.vampire_baron, 0x8B15A3, 0x15acda, new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
     public static final RegistryObject<SpawnEggItem> hunter_trainer_spawn_egg =
-            ITEMS.register("hunter_trainer_spawn_egg", () -> new SpawnEggItem(ModEntities.hunter_trainer.get(), 0x2d05f2, 0x1cdb49, new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
+            ITEMS.register("hunter_trainer_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.hunter_trainer, 0x2d05f2, 0x1cdb49, new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
 
     public static final RegistryObject<UmbrellaItem> umbrella =
             ITEMS.register("umbrella", UmbrellaItem::new);
