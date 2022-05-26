@@ -37,7 +37,7 @@ public class VReference {
      */
     public static final EnchantmentCategory CROSSBOW_ENCHANTMENT = EnchantmentCategory.create("VAMPIRISM_CROSSBOW", input -> input instanceof IVampirismCrossbow);
 
-    @Deprecated
+    @Deprecated(forRemoval = true)
     public static Fluid blood_fluid;
     public static RegistryObject<Fluid> blood_fluid_supplier;
     /**
