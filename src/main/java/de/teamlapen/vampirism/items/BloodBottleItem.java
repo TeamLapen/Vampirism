@@ -17,6 +17,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
@@ -36,7 +37,7 @@ import javax.annotation.Nullable;
  * Currently the only thing that can interact with the players bloodstats.
  * Can only store blood in {@link BloodBottleItem#capacity} tenth units.
  */
-public class BloodBottleItem extends VampirismItem implements IFactionExclusiveItem {
+public class BloodBottleItem extends Item implements IFactionExclusiveItem {
 
     public static final int AMOUNT = 9;
     private static final int MULTIPLIER = VReference.FOOD_TO_FLUID_BLOOD;

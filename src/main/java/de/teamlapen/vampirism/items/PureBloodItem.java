@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class PureBloodItem extends VampirismItem {
+public class PureBloodItem extends Item {
 
     public static final int COUNT = 5;
     private final static Logger LOGGER = LogManager.getLogger();

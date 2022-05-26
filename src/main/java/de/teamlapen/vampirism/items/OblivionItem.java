@@ -26,7 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class OblivionItem extends VampirismItem {
+public class OblivionItem extends Item {
 
     public static void applyEffect(IFactionPlayer<?> factionPlayer) {
         Player player = factionPlayer.getRepresentingPlayer();

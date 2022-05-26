@@ -7,6 +7,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -23,7 +24,7 @@ import java.util.List;
 /**
  * Item used in the hunter leveling process. Is created in a hunter table.
  */
-public class HunterIntelItem extends VampirismItem {
+public class HunterIntelItem extends Item {
 
 
     private final static Logger LOGGER = LogManager.getLogger();

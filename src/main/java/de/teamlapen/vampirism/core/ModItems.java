@@ -73,10 +73,10 @@ public class ModItems {
             ITEMS.register("blood_bottle", BloodBottleItem::new);
     public static final RegistryObject<BucketItem> blood_bucket =
             ITEMS.register("blood_bucket", () -> new BucketItem(ModFluids.blood, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(CreativeModeTab.TAB_MISC)));
-    public static final RegistryObject<VampirismItem> blood_infused_iron_ingot =
-            ITEMS.register("blood_infused_iron_ingot", () -> new VampirismItem(creativeTabProps()));
-    public static final RegistryObject<VampirismItem> blood_infused_enhanced_iron_ingot =
-            ITEMS.register("blood_infused_enhanced_iron_ingot", () -> new VampirismItem(creativeTabProps()));
+    public static final RegistryObject<Item> blood_infused_iron_ingot =
+            ITEMS.register("blood_infused_iron_ingot", () -> new Item(creativeTabProps()));
+    public static final RegistryObject<Item> blood_infused_enhanced_iron_ingot =
+            ITEMS.register("blood_infused_enhanced_iron_ingot", () -> new Item(creativeTabProps()));
 
     public static final RegistryObject<CrossbowArrowItem> crossbow_arrow_normal =
             ITEMS.register("crossbow_arrow_normal", () -> new CrossbowArrowItem(CrossbowArrowItem.EnumArrowType.NORMAL));
@@ -92,10 +92,10 @@ public class ModItems {
     public static final RegistryObject<TechCrossbowItem> enhanced_tech_crossbow =
             ITEMS.register("enhanced_tech_crossbow", () -> new TechCrossbowItem(1.7F, 4, 450, Tiers.DIAMOND));
 
-    public static final RegistryObject<VampirismItem> garlic_diffuser_core =
-            ITEMS.register("garlic_diffuser_core", () -> new VampirismItem(creativeTabProps()));
-    public static final RegistryObject<VampirismItem> garlic_diffuser_core_improved =
-            ITEMS.register("garlic_diffuser_core_improved", () -> new VampirismItem(creativeTabProps()));
+    public static final RegistryObject<Item> garlic_diffuser_core =
+            ITEMS.register("garlic_diffuser_core", () -> new Item(creativeTabProps()));
+    public static final RegistryObject<Item> garlic_diffuser_core_improved =
+            ITEMS.register("garlic_diffuser_core_improved", () -> new Item(creativeTabProps()));
 
     public static final RegistryObject<HeartSeekerItem> heart_seeker_enhanced =
             ITEMS.register("heart_seeker_enhanced", () -> new HeartSeekerItem(IItemWithTier.TIER.ENHANCED));
@@ -111,16 +111,16 @@ public class ModItems {
     public static final RegistryObject<HeartStrikerItem> heart_striker_ultimate =
             ITEMS.register("heart_striker_ultimate", () -> new HeartStrikerItem(IItemWithTier.TIER.ULTIMATE));
 
-    public static final RegistryObject<VampirismItem> holy_salt =
-            ITEMS.register("holy_salt", () -> new VampirismItem(creativeTabProps()) {
+    public static final RegistryObject<Item> holy_salt =
+            ITEMS.register("holy_salt", () -> new Item(creativeTabProps()) {
             @Override
             public boolean isFoil(@Nonnull ItemStack stack) {
 
                 return true;
             }
         });
-    public static final RegistryObject<VampirismItem> holy_salt_water =
-            ITEMS.register("holy_salt_water", () -> new VampirismItem(creativeTabProps()) {
+    public static final RegistryObject<Item> holy_salt_water =
+            ITEMS.register("holy_salt_water", () -> new Item(creativeTabProps()) {
             @Override
             public boolean isFoil(@Nonnull ItemStack stack) {
 
@@ -211,8 +211,8 @@ public class ModItems {
     public static final RegistryObject<InjectionItem> injection_zombie_blood =
             ITEMS.register("injection_zombie_blood", () -> new InjectionItem(InjectionItem.TYPE.ZOMBIE_BLOOD));
 
-    public static final RegistryObject<VampirismItem> cure_apple =
-            ITEMS.register("cure_apple", () -> new VampirismItem(creativeTabProps().rarity(Rarity.RARE)));
+    public static final RegistryObject<Item> cure_apple =
+            ITEMS.register("cure_apple", () -> new Item(creativeTabProps().rarity(Rarity.RARE)));
 
     public static final RegistryObject<BucketItem> impure_blood_bucket =
             ITEMS.register("impure_blood_bucket", () -> new BucketItem(ModFluids.impure_blood, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(CreativeModeTab.TAB_MISC)));
@@ -269,17 +269,17 @@ public class ModItems {
     public static final RegistryObject<PureBloodItem> pure_blood_4 =
             ITEMS.register("pure_blood_4", () -> new PureBloodItem(4));
 
-    public static final RegistryObject<VampirismItem> purified_garlic =
-            ITEMS.register("purified_garlic", () -> new VampirismItem(creativeTabProps()));
-    public static final RegistryObject<VampirismItem> pure_salt =
-            ITEMS.register("pure_salt", () -> new VampirismItem(creativeTabProps()));
-    public static final RegistryObject<VampirismItem> soul_orb_vampire =
-            ITEMS.register("soul_orb_vampire", () -> new VampirismItem(creativeTabProps()));
+    public static final RegistryObject<Item> purified_garlic =
+            ITEMS.register("purified_garlic", () -> new Item(creativeTabProps()));
+    public static final RegistryObject<Item> pure_salt =
+            ITEMS.register("pure_salt", () -> new Item(creativeTabProps()));
+    public static final RegistryObject<Item> soul_orb_vampire =
+            ITEMS.register("soul_orb_vampire", () -> new Item(creativeTabProps()));
 
     public static final RegistryObject<StakeItem> stake =
             ITEMS.register("stake", StakeItem::new);
-    public static final RegistryObject<VampirismItem> tech_crossbow_ammo_package =
-            ITEMS.register("tech_crossbow_ammo_package", () -> new VampirismItem(new Item.Properties().tab(VampirismMod.creativeTab)) {
+    public static final RegistryObject<Item> tech_crossbow_ammo_package =
+            ITEMS.register("tech_crossbow_ammo_package", () -> new Item(new Item.Properties().tab(VampirismMod.creativeTab)) {
             @Override
             public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
                 tooltip.add(new TranslatableComponent("item.vampirism.tech_crossbow_ammo_package.tooltip", new TranslatableComponent(basic_tech_crossbow.get().getDescriptionId())).withStyle(ChatFormatting.GRAY));
@@ -323,8 +323,8 @@ public class ModItems {
     public static final RegistryObject<UmbrellaItem> umbrella =
             ITEMS.register("umbrella", UmbrellaItem::new);
 
-    public static final RegistryObject<VampirismItem> hunter_minion_equipment =
-            ITEMS.register("hunter_minion_equipment", () -> new VampirismItem(creativeTabProps()));
+    public static final RegistryObject<Item> hunter_minion_equipment =
+            ITEMS.register("hunter_minion_equipment", () -> new Item(creativeTabProps()));
     public static final RegistryObject<MinionUpgradeItem> hunter_minion_upgrade_simple =
             ITEMS.register("hunter_minion_upgrade_simple", () -> new MinionUpgradeItem(1, 2, VReference.HUNTER_FACTION));
     public static final RegistryObject<MinionUpgradeItem> hunter_minion_upgrade_enhanced =
@@ -333,8 +333,8 @@ public class ModItems {
             ITEMS.register("hunter_minion_upgrade_special", () -> new MinionUpgradeItem(5, 6, VReference.HUNTER_FACTION));
     public static final RegistryObject<FeedingAdapterItem> feeding_adapter =
             ITEMS.register("feeding_adapter", FeedingAdapterItem::new);
-    public static final RegistryObject<VampirismItem> vampire_minion_binding =
-            ITEMS.register("vampire_minion_binding", () -> new VampirismItem(creativeTabProps()));
+    public static final RegistryObject<Item> vampire_minion_binding =
+            ITEMS.register("vampire_minion_binding", () -> new Item(creativeTabProps()));
     public static final RegistryObject<MinionUpgradeItem> vampire_minion_upgrade_simple =
             ITEMS.register("vampire_minion_upgrade_simple", () -> new MinionUpgradeItem(1, 2, VReference.VAMPIRE_FACTION));
     public static final RegistryObject<MinionUpgradeItem> vampire_minion_upgrade_enhanced =
@@ -361,8 +361,8 @@ public class ModItems {
     public static final RegistryObject<VampireClothingItem> vampire_clothing_hat =
             ITEMS.register("vampire_clothing_hat", () -> new VampireClothingItem(EquipmentSlot.HEAD));
 
-    public static final RegistryObject<VampirismItem> garlic_finder =
-            ITEMS.register("garlic_finder", () -> new VampirismItem(creativeTabProps().rarity(Rarity.RARE)));
+    public static final RegistryObject<Item> garlic_finder =
+            ITEMS.register("garlic_finder", () -> new Item(creativeTabProps().rarity(Rarity.RARE)));
 
     public static final RegistryObject<StandingAndWallBlockItem> item_candelabra =
             ITEMS.register("item_candelabra", () -> new StandingAndWallBlockItem(ModBlocks.candelabra.get(), ModBlocks.candelabra_wall.get(), new Item.Properties().tab(VampirismMod.creativeTab)));

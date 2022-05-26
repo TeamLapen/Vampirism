@@ -10,6 +10,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
@@ -26,7 +27,7 @@ import java.util.List;
  *
  * @author maxanier
  */
-public class AlchemicalFireItem extends VampirismItem {
+public class AlchemicalFireItem extends Item {
     public AlchemicalFireItem() {
         super(new Properties().tab(VampirismMod.creativeTab));
     }

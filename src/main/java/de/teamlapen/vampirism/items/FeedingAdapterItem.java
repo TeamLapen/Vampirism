@@ -19,7 +19,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 
-public class FeedingAdapterItem extends VampirismItem {
+public class FeedingAdapterItem extends Item {
 
     public FeedingAdapterItem() {
         super(new Item.Properties().stacksTo(1).tab(VampirismMod.creativeTab));

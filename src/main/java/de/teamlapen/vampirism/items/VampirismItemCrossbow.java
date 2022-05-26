@@ -21,6 +21,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.TooltipFlag;
@@ -39,7 +40,7 @@ import java.util.Random;
 /**
  * Base class for crossbows
  */
-public abstract class VampirismItemCrossbow extends VampirismItem implements IFactionLevelItem<IHunterPlayer>, IVampirismCrossbow {
+public abstract class VampirismItemCrossbow extends Item implements IFactionLevelItem<IHunterPlayer>, IVampirismCrossbow {
 
     /**
      * Checks for Frugality enchantment on the crossbow

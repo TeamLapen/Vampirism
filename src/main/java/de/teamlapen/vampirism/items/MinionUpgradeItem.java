@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 
-public class MinionUpgradeItem extends VampirismItem {
+public class MinionUpgradeItem extends Item {
     private final int minLevel;
     private final int maxLevel;
     private final IFaction<?> faction;

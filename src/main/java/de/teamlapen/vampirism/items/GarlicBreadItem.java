@@ -6,13 +6,14 @@ import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class GarlicBreadItem extends VampirismItem implements IFactionExclusiveItem {
+public class GarlicBreadItem extends Item implements IFactionExclusiveItem {
 
     public GarlicBreadItem() {
         super(new Properties().food((new FoodProperties.Builder()).nutrition(6).saturationMod(0.7F).build()).tab(CreativeModeTab.TAB_FOOD));

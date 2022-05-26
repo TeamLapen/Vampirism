@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
-public class VampireBookItem extends VampirismItem {
+public class VampireBookItem extends Item {
 
     public static boolean validBookTagContents(CompoundTag nbt) {
         if (!WritableBookItem.makeSureTagIsValid(nbt)) {

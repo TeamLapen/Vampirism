@@ -9,6 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
@@ -21,7 +22,7 @@ import javax.annotation.Nonnull;
 /**
  * Item which places the two med chair blocks
  */
-public class MedChairItem extends VampirismItem {
+public class MedChairItem extends Item {
 
     public MedChairItem() {
         super(new Properties().tab(VampirismMod.creativeTab));

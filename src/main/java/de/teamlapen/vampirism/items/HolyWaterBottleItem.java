@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -20,7 +21,7 @@ import java.util.List;
  * HolyWaterBottle
  * Exists in different tiers and as splash versions.
  */
-public class HolyWaterBottleItem extends VampirismItem implements IItemWithTier, IFactionExclusiveItem {
+public class HolyWaterBottleItem extends Item implements IItemWithTier, IFactionExclusiveItem {
     private final TIER tier;
 
     public HolyWaterBottleItem(TIER tier) {
