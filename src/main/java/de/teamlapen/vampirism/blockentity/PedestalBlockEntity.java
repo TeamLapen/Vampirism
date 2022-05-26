@@ -215,9 +215,9 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
     private void drainBlood() {
         if (level == null) return;
         FluidUtil.getFluidHandler(this.level, this.worldPosition.below(), Direction.UP).ifPresent(handler -> {
-            FluidStack drained = handler.drain(new FluidStack(ModFluids.blood, VReference.FOOD_TO_FLUID_BLOOD), IFluidHandler.FluidAction.SIMULATE);
+            FluidStack drained = handler.drain(new FluidStack(ModFluids.blood.get(), VReference.FOOD_TO_FLUID_BLOOD), IFluidHandler.FluidAction.SIMULATE);
             if (!drained.isEmpty() && drained.getAmount() == VReference.FOOD_TO_FLUID_BLOOD) {
-                drained = handler.drain(new FluidStack(ModFluids.blood, VReference.FOOD_TO_FLUID_BLOOD), IFluidHandler.FluidAction.EXECUTE);
+                drained = handler.drain(new FluidStack(ModFluids.blood.get(), VReference.FOOD_TO_FLUID_BLOOD), IFluidHandler.FluidAction.EXECUTE);
                 bloodStored += drained.getAmount();
             }
         });

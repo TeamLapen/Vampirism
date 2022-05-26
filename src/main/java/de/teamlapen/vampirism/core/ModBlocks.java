@@ -32,89 +32,89 @@ public class ModBlocks {
 
     //Blocks
     public static final RegistryObject<AlchemicalCauldronBlock> alchemical_cauldron =
-        registerWithItem("alchemical_cauldron", AlchemicalCauldronBlock::new);
+            registerWithItem("alchemical_cauldron", AlchemicalCauldronBlock::new);
     public static final RegistryObject<AlchemicalFireBlock> alchemical_fire =
-        BLOCKS.register("alchemical_fire", AlchemicalFireBlock::new);
+            BLOCKS.register("alchemical_fire", AlchemicalFireBlock::new);
     public static final RegistryObject<AltarInfusionBlock> altar_infusion =
-        registerWithItem("altar_infusion", AltarInfusionBlock::new);
+            registerWithItem("altar_infusion", AltarInfusionBlock::new);
     public static final RegistryObject<AltarInspirationBlock> altar_inspiration =
-        registerWithItem("altar_inspiration", AltarInspirationBlock::new);
+            registerWithItem("altar_inspiration", AltarInspirationBlock::new);
     public static final RegistryObject<AltarPillarBlock> altar_pillar =
-        registerWithItem("altar_pillar", AltarPillarBlock::new);
+            registerWithItem("altar_pillar", AltarPillarBlock::new);
     public static final RegistryObject<AltarTipBlock> altar_tip =
-        registerWithItem("altar_tip", AltarTipBlock::new);
+            registerWithItem("altar_tip", AltarTipBlock::new);
     public static final RegistryObject<BloodContainerBlock> blood_container =
-        registerWithItem("blood_container", BloodContainerBlock::new, new Item.Properties().tab(VampirismMod.creativeTab).stacksTo(1));
+            registerWithItem("blood_container", BloodContainerBlock::new, new Item.Properties().tab(VampirismMod.creativeTab).stacksTo(1));
     public static final RegistryObject<GrinderBlock> blood_grinder =
-        registerWithItem("blood_grinder", GrinderBlock::new);
+            registerWithItem("blood_grinder", GrinderBlock::new);
     public static final RegistryObject<PedestalBlock> blood_pedestal =
-        registerWithItem("blood_pedestal", PedestalBlock::new);
+            registerWithItem("blood_pedestal", PedestalBlock::new);
     public static final RegistryObject<SieveBlock> blood_sieve =
-        registerWithItem("blood_sieve", SieveBlock::new);
+            registerWithItem("blood_sieve", SieveBlock::new);
     public static final RegistryObject<CastleBricksBlock> castle_block_dark_brick =
-        registerWithItem("castle_block_dark_brick", () -> new CastleBricksBlock(CastleBricksBlock.EnumVariant.DARK_BRICK));
+            registerWithItem("castle_block_dark_brick", () -> new CastleBricksBlock(CastleBricksBlock.EnumVariant.DARK_BRICK));
     public static final RegistryObject<CastleBricksBlock> castle_block_dark_brick_bloody =
-        registerWithItem("castle_block_dark_brick_bloody", () -> new CastleBricksBlock(CastleBricksBlock.EnumVariant.DARK_BRICK_BLOODY));
+            registerWithItem("castle_block_dark_brick_bloody", () -> new CastleBricksBlock(CastleBricksBlock.EnumVariant.DARK_BRICK_BLOODY));
     public static final RegistryObject<CastleBricksBlock> castle_block_dark_stone =
-        registerWithItem("castle_block_dark_stone", () -> new CastleBricksBlock(CastleBricksBlock.EnumVariant.DARK_STONE));
+            registerWithItem("castle_block_dark_stone", () -> new CastleBricksBlock(CastleBricksBlock.EnumVariant.DARK_STONE));
     public static final RegistryObject<CastleBricksBlock> castle_block_normal_brick =
-        registerWithItem("castle_block_normal_brick", () -> new CastleBricksBlock(CastleBricksBlock.EnumVariant.NORMAL_BRICK));
+            registerWithItem("castle_block_normal_brick", () -> new CastleBricksBlock(CastleBricksBlock.EnumVariant.NORMAL_BRICK));
     public static final RegistryObject<CastleBricksBlock> castle_block_purple_brick =
-        registerWithItem("castle_block_purple_brick", () -> new CastleBricksBlock(CastleBricksBlock.EnumVariant.PURPLE_BRICK));
+            registerWithItem("castle_block_purple_brick", () -> new CastleBricksBlock(CastleBricksBlock.EnumVariant.PURPLE_BRICK));
     public static final RegistryObject<CastleSlabBlock> castle_slab_dark_brick =
-        registerWithItem("castle_slab_dark_brick", () -> new CastleSlabBlock(CastleBricksBlock.EnumVariant.DARK_BRICK));
+            registerWithItem("castle_slab_dark_brick", () -> new CastleSlabBlock(CastleBricksBlock.EnumVariant.DARK_BRICK));
     public static final RegistryObject<CastleSlabBlock> castle_slab_dark_stone =
-        registerWithItem("castle_slab_dark_stone", () -> new CastleSlabBlock(CastleBricksBlock.EnumVariant.DARK_STONE));
+            registerWithItem("castle_slab_dark_stone", () -> new CastleSlabBlock(CastleBricksBlock.EnumVariant.DARK_STONE));
     public static final RegistryObject<CastleSlabBlock> castle_slab_purple_brick =
-        registerWithItem("castle_slab_purple_brick", () -> new CastleSlabBlock(CastleBricksBlock.EnumVariant.PURPLE_BRICK));
+            registerWithItem("castle_slab_purple_brick", () -> new CastleSlabBlock(CastleBricksBlock.EnumVariant.PURPLE_BRICK));
     public static final RegistryObject<CastleStairsBlock> castle_stairs_dark_brick =
-        registerWithItem("castle_stairs_dark_brick", () -> new CastleStairsBlock(() -> castle_block_dark_brick.get().defaultBlockState(), CastleBricksBlock.EnumVariant.DARK_BRICK));
+            registerWithItem("castle_stairs_dark_brick", () -> new CastleStairsBlock(() -> castle_block_dark_brick.get().defaultBlockState(), CastleBricksBlock.EnumVariant.DARK_BRICK));
     public static final RegistryObject<CastleStairsBlock> castle_stairs_dark_stone =
-        registerWithItem("castle_stairs_dark_stone", () -> new CastleStairsBlock(() -> castle_block_dark_stone.get().defaultBlockState(), CastleBricksBlock.EnumVariant.DARK_STONE));
+            registerWithItem("castle_stairs_dark_stone", () -> new CastleStairsBlock(() -> castle_block_dark_stone.get().defaultBlockState(), CastleBricksBlock.EnumVariant.DARK_STONE));
     public static final RegistryObject<CastleStairsBlock> castle_stairs_purple_brick =
-        registerWithItem("castle_stairs_purple_brick", () -> new CastleStairsBlock(() -> castle_block_purple_brick.get().defaultBlockState(), CastleBricksBlock.EnumVariant.PURPLE_BRICK));
+            registerWithItem("castle_stairs_purple_brick", () -> new CastleStairsBlock(() -> castle_block_purple_brick.get().defaultBlockState(), CastleBricksBlock.EnumVariant.PURPLE_BRICK));
     public static final RegistryObject<AltarCleansingBlock> altar_cleansing =
-        registerWithItem("altar_cleansing", AltarCleansingBlock::new);
+            registerWithItem("altar_cleansing", AltarCleansingBlock::new);
     public static final RegistryObject<CoffinBlock> coffin =
-        registerWithItem("coffin", CoffinBlock::new, CoffinItem::new);
+            registerWithItem("coffin", CoffinBlock::new, CoffinItem::new);
     public static final RegistryObject<CursedEarthBlock> cursed_earth =
-        registerWithItem("cursed_earth", CursedEarthBlock::new);
+            registerWithItem("cursed_earth", CursedEarthBlock::new);
     public static final RegistryObject<FirePlaceBlock> fire_place =
-        registerWithItem("fire_place", FirePlaceBlock::new);
+            registerWithItem("fire_place", FirePlaceBlock::new);
     public static final RegistryObject<GarlicBlock> garlic =
-        BLOCKS.register("garlic", GarlicBlock::new);
+            BLOCKS.register("garlic", GarlicBlock::new);
     public static final RegistryObject<GarlicDiffuserBlock> garlic_diffuser_improved =
-        registerWithItem("garlic_diffuser_improved", () -> new GarlicDiffuserBlock(GarlicDiffuserBlock.Type.IMPROVED));
+            registerWithItem("garlic_diffuser_improved", () -> new GarlicDiffuserBlock(GarlicDiffuserBlock.Type.IMPROVED));
     public static final RegistryObject<GarlicDiffuserBlock> garlic_diffuser_normal =
-        registerWithItem("garlic_diffuser_normal", () -> new GarlicDiffuserBlock(GarlicDiffuserBlock.Type.NORMAL));
+            registerWithItem("garlic_diffuser_normal", () -> new GarlicDiffuserBlock(GarlicDiffuserBlock.Type.NORMAL));
     public static final RegistryObject<GarlicDiffuserBlock> garlic_diffuser_weak =
-        registerWithItem("garlic_diffuser_weak", () -> new GarlicDiffuserBlock(GarlicDiffuserBlock.Type.WEAK));
+            registerWithItem("garlic_diffuser_weak", () -> new GarlicDiffuserBlock(GarlicDiffuserBlock.Type.WEAK));
     public static final RegistryObject<HunterTableBlock> hunter_table =
-        registerWithItem("hunter_table", HunterTableBlock::new);
+            registerWithItem("hunter_table", HunterTableBlock::new);
     public static final RegistryObject<MedChairBlock> med_chair =
-        BLOCKS.register("med_chair", MedChairBlock::new);
+            BLOCKS.register("med_chair", MedChairBlock::new);
     public static final RegistryObject<SunscreenBeaconBlock> sunscreen_beacon =
-        registerWithItem("sunscreen_beacon", SunscreenBeaconBlock::new);
+            registerWithItem("sunscreen_beacon", SunscreenBeaconBlock::new);
     public static final RegistryObject<TentBlock> tent =
-        BLOCKS.register("tent", TentBlock::new);
+            BLOCKS.register("tent", TentBlock::new);
     public static final RegistryObject<TentMainBlock> tent_main =
-        BLOCKS.register("tent_main", TentMainBlock::new);
+            BLOCKS.register("tent_main", TentMainBlock::new);
     public static final RegistryObject<TotemBaseBlock> totem_base =
-        registerWithItem("totem_base", TotemBaseBlock::new);
+            registerWithItem("totem_base", TotemBaseBlock::new);
     public static final RegistryObject<TotemTopBlock> totem_top =
-        registerWithItem("totem_top", () -> new TotemTopBlock(false, new ResourceLocation("none")));
+            registerWithItem("totem_top", () -> new TotemTopBlock(false, new ResourceLocation("none")));
     public static final RegistryObject<TotemTopBlock> totem_top_vampirism_vampire =
-        registerWithItem("totem_top_vampirism_vampire", () -> new TotemTopBlock(false, REFERENCE.VAMPIRE_PLAYER_KEY));
+            registerWithItem("totem_top_vampirism_vampire", () -> new TotemTopBlock(false, REFERENCE.VAMPIRE_PLAYER_KEY));
     public static final RegistryObject<TotemTopBlock> totem_top_vampirism_hunter =
-        registerWithItem("totem_top_vampirism_hunter", () -> new TotemTopBlock(false, REFERENCE.HUNTER_PLAYER_KEY));
+            registerWithItem("totem_top_vampirism_hunter", () -> new TotemTopBlock(false, REFERENCE.HUNTER_PLAYER_KEY));
     public static final RegistryObject<TotemTopBlock> totem_top_crafted =
-        registerWithItem("totem_top_crafted", () -> new TotemTopBlock(true, new ResourceLocation("none")));
+            registerWithItem("totem_top_crafted", () -> new TotemTopBlock(true, new ResourceLocation("none")));
     public static final RegistryObject<TotemTopBlock> totem_top_vampirism_vampire_crafted =
-        BLOCKS.register("totem_top_vampirism_vampire_crafted", () -> new TotemTopBlock(true, REFERENCE.VAMPIRE_PLAYER_KEY));
+            BLOCKS.register("totem_top_vampirism_vampire_crafted", () -> new TotemTopBlock(true, REFERENCE.VAMPIRE_PLAYER_KEY));
     public static final RegistryObject<TotemTopBlock> totem_top_vampirism_hunter_crafted =
-        BLOCKS.register("totem_top_vampirism_hunter_crafted", () -> new TotemTopBlock(true, REFERENCE.HUNTER_PLAYER_KEY));
+            BLOCKS.register("totem_top_vampirism_hunter_crafted", () -> new TotemTopBlock(true, REFERENCE.HUNTER_PLAYER_KEY));
     public static final RegistryObject<VampirismFlowerBlock> vampire_orchid =
-        registerWithItem("vampire_orchid", () -> new VampirismFlowerBlock(VampirismFlowerBlock.TYPE.ORCHID));
+            registerWithItem("vampire_orchid", () -> new VampirismFlowerBlock(VampirismFlowerBlock.TYPE.ORCHID));
     public static final RegistryObject<FlowerPotBlock> potted_vampire_orchid =
             BLOCKS.register("potted_vampire_orchid", () -> {
                 FlowerPotBlock block = new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, vampire_orchid, Block.Properties.of(Material.DECORATION).instabreak().noOcclusion());
@@ -122,41 +122,41 @@ public class ModBlocks {
                 return block;
             });
     public static final RegistryObject<WeaponTableBlock> weapon_table =
-        registerWithItem("weapon_table", WeaponTableBlock::new);
+            registerWithItem("weapon_table", WeaponTableBlock::new);
     public static final RegistryObject<PotionTableBlock> potion_table =
-        registerWithItem("potion_table", PotionTableBlock::new);
+            registerWithItem("potion_table", PotionTableBlock::new);
     public static final RegistryObject<RotatedPillarBlock> bloody_spruce_log =
-        registerWithItem("bloody_spruce_log", () -> {
+            registerWithItem("bloody_spruce_log", () -> {
             RotatedPillarBlock log = Blocks.log(MaterialColor.PODZOL, MaterialColor.COLOR_BROWN);
             ((FireBlock) Blocks.FIRE).setFlammable(log, 5, 5);
             return log;
         });
     public static final RegistryObject<BloodySpruceLeavesBlock> vampire_spruce_leaves =
-        registerWithItem("vampire_spruce_leaves", BloodySpruceLeavesBlock::new);
+            registerWithItem("vampire_spruce_leaves", BloodySpruceLeavesBlock::new);
     public static final RegistryObject<BloodySpruceLeavesBlock> bloody_spruce_leaves =
-        registerWithItem("bloody_spruce_leaves", BloodySpruceLeavesBlock::new);
+            registerWithItem("bloody_spruce_leaves", BloodySpruceLeavesBlock::new);
     public static final RegistryObject<BloodySpruceSaplingBlock> bloody_spruce_sapling =
-        registerWithItem("bloody_spruce_sapling", BloodySpruceSaplingBlock::new);
+            registerWithItem("bloody_spruce_sapling", BloodySpruceSaplingBlock::new);
     public static final RegistryObject<VampireSpruceSaplingBlock> vampire_spruce_sapling =
-        registerWithItem("vampire_spruce_sapling", VampireSpruceSaplingBlock::new);
+            registerWithItem("vampire_spruce_sapling", VampireSpruceSaplingBlock::new);
     public static final RegistryObject<VampirismBlock> chandelier =
-        registerWithItem("chandelier", ChandelierBlock::new);
+            registerWithItem("chandelier", ChandelierBlock::new);
     public static final RegistryObject<VampirismBlock> candelabra =
-        BLOCKS.register("candelabra", CandelabraBlock::new);
+            BLOCKS.register("candelabra", CandelabraBlock::new);
     public static final RegistryObject<VampirismBlock> candelabra_wall =
-        BLOCKS.register("candelabra_wall", CandelabraWallBlock::new);
+            BLOCKS.register("candelabra_wall", CandelabraWallBlock::new);
     public static final RegistryObject<VampirismBlock> cross =
-        registerWithItem("cross", CrossBlock::new);
+            registerWithItem("cross", CrossBlock::new);
     public static final RegistryObject<VampirismBlock> tombstone1 =
-        registerWithItem("tombstone1", () -> new VampirismHorizontalBlock(BlockBehaviour.Properties.of(Material.STONE).strength(2, 6), BlockVoxelshapes.tomb1).markDecorativeBlock());
+            registerWithItem("tombstone1", () -> new VampirismHorizontalBlock(BlockBehaviour.Properties.of(Material.STONE).strength(2, 6), BlockVoxelshapes.tomb1).markDecorativeBlock());
     public static final RegistryObject<VampirismBlock> tombstone2 =
-        registerWithItem("tombstone2", () -> new VampirismHorizontalBlock(BlockBehaviour.Properties.of(Material.STONE).strength(2, 6), BlockVoxelshapes.tomb2).markDecorativeBlock());
+            registerWithItem("tombstone2", () -> new VampirismHorizontalBlock(BlockBehaviour.Properties.of(Material.STONE).strength(2, 6), BlockVoxelshapes.tomb2).markDecorativeBlock());
     public static final RegistryObject<VampirismBlock> tombstone3 =
-        registerWithItem("tombstone3", () -> new VampirismHorizontalBlock(BlockBehaviour.Properties.of(Material.STONE).strength(2, 6), BlockVoxelshapes.tomb3).markDecorativeBlock());
+            registerWithItem("tombstone3", () -> new VampirismHorizontalBlock(BlockBehaviour.Properties.of(Material.STONE).strength(2, 6), BlockVoxelshapes.tomb3).markDecorativeBlock());
     public static final RegistryObject<VampirismBlock> grave_cage =
-        registerWithItem("grave_cage", () -> new VampirismHorizontalBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL).strength(6, 8).requiresCorrectToolForDrops().sound(SoundType.METAL), BlockVoxelshapes.grave_cage).markDecorativeBlock());
+            registerWithItem("grave_cage", () -> new VampirismHorizontalBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL).strength(6, 8).requiresCorrectToolForDrops().sound(SoundType.METAL), BlockVoxelshapes.grave_cage).markDecorativeBlock());
     public static final RegistryObject<CursedGrassBlock> cursed_grass_block =
-        registerWithItem("cursed_grass_block", CursedGrassBlock::new);
+            registerWithItem("cursed_grass_block", CursedGrassBlock::new);
 
     private static <T extends Block> RegistryObject<T> registerWithItem(String name, Supplier<T> supplier, Item.Properties properties) {
         RegistryObject<T> block = BLOCKS.register(name, supplier);

@@ -43,7 +43,7 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
     private final BooleanDataSlot missingLava = new BooleanDataSlot();
 
     public WeaponTableContainer(int id, Inventory playerInventory, ContainerLevelAccess worldPosCallable) {
-        super(ModContainer.weapon_table, id);
+        super(ModContainer.weapon_table.get(), id);
         this.worldPos = worldPosCallable;
         this.hunterPlayer = HunterPlayer.get(playerInventory.player);
         this.player = playerInventory.player;

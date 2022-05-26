@@ -108,9 +108,9 @@ public class Tests {
         failed |= !checkObjectHolders(ModBlocks.class);
         failed |= !checkObjectHolders(ModEnchantments.class);
         failed |= !checkObjectHolders(ModEntities.class);
-        failed |= !checkObjectHolders(ModFluids.class);
+        failed |= !checkObjectHolders(ModFluids.class.get());
         failed |= !checkObjectHolders(ModItems.class);
-        failed |= !checkObjectHolders(ModEffects.class);
+        failed |= !checkObjectHolders(ModEffects.class.get());
         failed |= !checkObjectHolders(ModSounds.class);
         return !failed;
     }
@@ -141,7 +141,7 @@ public class Tests {
         info.world.setBlockAndUpdate(info.pos, ModBlocks.blood_container.get().defaultBlockState());
         BlockEntity t = info.world.getBlockEntity(info.pos);
         LazyOptional<IFluidHandler> opt = t.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, Direction.getRandom(info.world.random));
-        opt.ifPresent(handler -> handler.fill(new FluidStack(ModFluids.blood, 10000000), IFluidHandler.FluidAction.EXECUTE));
+        opt.ifPresent(handler -> handler.fill(new FluidStack(ModFluids.blood.get(), 10000000), IFluidHandler.FluidAction.EXECUTE));
         int blood = BloodHelper.getBlood(opt);
         assert blood > 0 : "Could not fill blood container";
 

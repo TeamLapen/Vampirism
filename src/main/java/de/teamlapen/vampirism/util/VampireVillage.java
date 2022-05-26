@@ -48,7 +48,7 @@ public class VampireVillage {
     }
 
     public static void vampireVillage(IFactionVillageBuilder builder) {
-        builder.badOmenEffect(() -> ModEffects.bad_omen_vampire)
+        builder.badOmenEffect(() -> ModEffects.bad_omen_vampire.get())
                 .captureEntities(() -> Lists.newArrayList(new CaptureEntityEntry(ModEntities.vampire, 10), new CaptureEntityEntry(ModEntities.advanced_vampire, 2)))
                 .factionVillagerProfession(() -> ModVillage.vampire_expert)
                 .guardSuperClass(VampireBaseEntity.class)

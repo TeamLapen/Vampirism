@@ -18,14 +18,14 @@ public class IgnoreSunDamageEntityAction<T extends PathfinderMob & IEntityAction
 
     @Override
     public void activate(T entity) {
-        entity.addEffect(new MobEffectInstance(ModEffects.sunscreen, getDuration(entity.getEntityLevel()), 0));
+        entity.addEffect(new MobEffectInstance(ModEffects.sunscreen.get(), getDuration(entity.getEntityLevel()), 0));
 
     }
 
     @Override
     public void deactivate(T entity) {
-        if (entity.getEffect(ModEffects.sunscreen) != null && entity.getEffect(ModEffects.sunscreen).getAmplifier() == 0) {
-            entity.removeEffect(ModEffects.sunscreen);
+        if (entity.getEffect(ModEffects.sunscreen.get()) != null && entity.getEffect(ModEffects.sunscreen.get()).getAmplifier() == 0) {
+            entity.removeEffect(ModEffects.sunscreen.get());
         }
     }
 

@@ -75,8 +75,8 @@ public class ModBlocksRender {
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.garlic_diffuser_weak.get(), cutout);
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.garlic_diffuser_improved.get(), cutout);
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.garlic_diffuser_normal.get(), cutout);
-        ItemBlockRenderTypes.setRenderLayer(ModFluids.impure_blood, RenderType.translucent());
-        ItemBlockRenderTypes.setRenderLayer(ModFluids.blood, RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(ModFluids.impure_blood.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(ModFluids.blood.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.alchemical_cauldron.get(), cutout);
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.alchemical_fire.get(), cutout);
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.altar_infusion.get(), cutout);

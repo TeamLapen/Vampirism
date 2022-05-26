@@ -240,7 +240,7 @@ public class SkillsScreen<T extends IFactionPlayer<T>> extends Screen {
         int y = (this.height - display_height) / 2;
         this.font.drawShadow(stack, title.getVisualOrderText(), x + 15, y + 5, 0xFFFFFFFF);
         MutableComponent points = new TranslatableComponent("text.vampirism.skills.points_left", skillHandler.getLeftSkillPoints());
-        if (this.minecraft.player.getEffect(ModEffects.oblivion) != null) {
+        if (this.minecraft.player.getEffect(ModEffects.oblivion.get()) != null) {
             points.withStyle(ChatFormatting.DARK_RED);
         }
         x = (this.width + display_width) / 2 - this.font.width(points);
@@ -271,7 +271,7 @@ public class SkillsScreen<T extends IFactionPlayer<T>> extends Screen {
     }
 
     private void drawDisableText(PoseStack mStack) {
-        if (this.minecraft.player.getEffect(ModEffects.oblivion) == null) return;
+        if (this.minecraft.player.getEffect(ModEffects.oblivion.get()) == null) return;
         int tooltipX = (this.width - display_width) / 2 + 19 + 3;
         int tooltipY = (this.height - display_height) / 2 + 4 + 19;
         int tooltipTextWidth = display_width - 19 - 19 - 6;

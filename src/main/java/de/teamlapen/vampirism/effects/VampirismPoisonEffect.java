@@ -11,8 +11,8 @@ public class VampirismPoisonEffect extends VampirismEffect {
 
     public static int DEADLY_AMPLIFIER = 4;
 
-    public VampirismPoisonEffect(String name, int potionColor) {
-        super(name, MobEffectCategory.HARMFUL, potionColor);
+    public VampirismPoisonEffect(int potionColor) {
+        super(MobEffectCategory.HARMFUL, potionColor);
     }
 
     @Override

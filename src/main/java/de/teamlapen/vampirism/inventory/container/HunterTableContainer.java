@@ -43,7 +43,7 @@ public class HunterTableContainer extends InventoryContainer implements Containe
 
 
     public HunterTableContainer(int id, Inventory playerInventory, ContainerLevelAccess worldPosCallable) {
-        super(ModContainer.hunter_table, id, playerInventory, worldPosCallable, new SimpleContainer(SELECTOR_INFOS.length), SELECTOR_INFOS);
+        super(ModContainer.hunter_table.get(), id, playerInventory, worldPosCallable, new SimpleContainer(SELECTOR_INFOS.length), SELECTOR_INFOS);
         ((SimpleContainer) inventory).addListener(this);
         slotResult = new SlotResult(this, new ResultContainer() {
             @Override

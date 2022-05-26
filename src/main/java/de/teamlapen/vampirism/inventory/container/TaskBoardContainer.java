@@ -50,7 +50,7 @@ public class TaskBoardContainer extends AbstractContainerMenu implements TaskCon
     private Runnable listener;
 
     public TaskBoardContainer(int id, Inventory playerInventory) {
-        super(ModContainer.task_master, id);
+        super(ModContainer.task_master.get(), id);
         this.factionPlayer = FactionPlayerHandler.getCurrentFactionPlayer(playerInventory.player).orElseThrow(() -> new IllegalStateException("Can't open container without faction"));
         this.factionColor = this.factionPlayer.getFaction().getChatColor();
     }

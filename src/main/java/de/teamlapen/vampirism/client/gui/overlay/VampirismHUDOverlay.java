@@ -184,7 +184,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     BlockEntity tile = Minecraft.getInstance().level.getBlockEntity(((BlockHitResult) p).getBlockPos());
                     if (tile != null) {
                         tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(handler -> {
-                            if (FluidLib.getFluidAmount(handler, ModFluids.blood) > 0) {
+                            if (FluidLib.getFluidAmount(handler, ModFluids.blood.get()) > 0) {
                                 renderBloodFangs(event.getMatrixStack(), this.mc.getWindow().getGuiScaledWidth(), this.mc.getWindow().getGuiScaledHeight(), 1, 0xFF0000);
                                 event.setCanceled(true);
                             }
@@ -311,7 +311,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
         if (event.getOverlay() != ForgeIngameGui.PLAYER_HEALTH_ELEMENT) {
             return;
         }
-        addTempPoison = mc.player.hasEffect(ModEffects.poison) && !mc.player.activeEffects.containsKey(MobEffects.POISON);
+        addTempPoison = mc.player.hasEffect(ModEffects.poison.get()) && !mc.player.activeEffects.containsKey(MobEffects.POISON);
 
         if (addTempPoison) { //Add temporary dummy potion effect to trick renderer
             if (addedTempPoison == null) {
@@ -344,7 +344,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
             screenColor = 0xfff00000;
             fullScreen = false;
         } else if ((screenPercentage = vampire.getTicksInSun() / 2) > 0) {
-            MobEffectInstance effect = mc.player.getEffect(ModEffects.sunscreen);
+            MobEffectInstance effect = mc.player.getEffect(ModEffects.sunscreen.get());
             if (effect == null || effect.getAmplifier() < 5) {
                 screenColor = 0xfffff755;
                 fullScreen = false;

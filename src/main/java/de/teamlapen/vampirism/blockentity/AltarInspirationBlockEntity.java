@@ -49,7 +49,7 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
     public static void setBloodValue(BlockGetter worldIn, Random randomIn, BlockPos blockPosIn) {
         BlockEntity tileEntity = worldIn.getBlockEntity(blockPosIn);
         if (tileEntity instanceof AltarInspirationBlockEntity) {
-            tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(fluidHandler -> fluidHandler.fill(new FluidStack(ModFluids.blood, BloodBottleFluidHandler.getAdjustedAmount((int) (CAPACITY * randomIn.nextFloat()))), IFluidHandler.FluidAction.EXECUTE));
+            tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(fluidHandler -> fluidHandler.fill(new FluidStack(ModFluids.blood.get(), BloodBottleFluidHandler.getAdjustedAmount((int) (CAPACITY * randomIn.nextFloat()))), IFluidHandler.FluidAction.EXECUTE));
         }
     }
 
@@ -177,7 +177,7 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
     private static class InternalTank extends FluidTankWithListener {
 
         private InternalTank(int capacity) {
-            super(capacity, fluidStack -> ModFluids.blood.isSame(fluidStack.getFluid()));
+            super(capacity, fluidStack -> ModFluids.blood.get().isSame(fluidStack.getFluid()));
             setDrainable(false);
         }
 

@@ -35,7 +35,7 @@ public class OblivionItem extends VampirismItem {
             if (((SkillHandler<?>) skillHandler).getRootNode().getChildren().stream().flatMap(a -> Arrays.stream(a.getElements())).noneMatch(skillHandler::isSkillEnabled))
                 return;
             boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
-            player.addEffect(new MobEffectInstance(ModEffects.oblivion, Integer.MAX_VALUE, test ? 100 : 4));
+            player.addEffect(new MobEffectInstance(ModEffects.oblivion.get(), Integer.MAX_VALUE, test ? 100 : 4));
             if (factionPlayer instanceof ISyncable.ISyncableEntityCapabilityInst) {
                 HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, factionPlayer.getRepresentingPlayer(), false);
             }

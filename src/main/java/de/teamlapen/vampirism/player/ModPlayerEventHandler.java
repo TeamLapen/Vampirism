@@ -289,7 +289,7 @@ public class ModPlayerEventHandler {
             if (stack.getItem() == Items.POTION) {
                 Potion p = PotionUtils.getPotion(stack);
                 if (p instanceof VampirismPotion.HunterPotion && p.getEffects().stream().map(MobEffectInstance::getEffect).anyMatch(MobEffect::isBeneficial)) {
-                    event.getEntityLiving().addEffect(new MobEffectInstance(ModEffects.poison, Integer.MAX_VALUE, VampirismPoisonEffect.DEADLY_AMPLIFIER));
+                    event.getEntityLiving().addEffect(new MobEffectInstance(ModEffects.poison.get(), Integer.MAX_VALUE, VampirismPoisonEffect.DEADLY_AMPLIFIER));
                 }
             }
         }
@@ -368,7 +368,7 @@ public class ModPlayerEventHandler {
                         if (entity != null) {
                             convert = entity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, event.getFace()).map(fluidHandler -> {
                                 boolean flag = false;
-                                FluidStack drain = fluidHandler.drain(new FluidStack(ModFluids.blood, 1000), IFluidHandler.FluidAction.SIMULATE);
+                                FluidStack drain = fluidHandler.drain(new FluidStack(ModFluids.blood.get(), 1000), IFluidHandler.FluidAction.SIMULATE);
                                 if (drain.getAmount() >= BloodBottleFluidHandler.MULTIPLIER) {
                                     flag = true;
                                 }
@@ -419,7 +419,7 @@ public class ModPlayerEventHandler {
             world.removeBlock(pos, false);
             event.setCanceled(true);
         } else if ((ModBlocks.garlic_diffuser_normal.get().equals(state.getBlock()) || ModBlocks.garlic_diffuser_weak.get().equals(state.getBlock()) || ModBlocks.garlic_diffuser_improved.get().equals(state.getBlock())) && Helper.isVampire(event.getPlayer())) {
-            event.getPlayer().addEffect(new MobEffectInstance(ModEffects.garlic));
+            event.getPlayer().addEffect(new MobEffectInstance(ModEffects.garlic.get()));
         }
     }
 

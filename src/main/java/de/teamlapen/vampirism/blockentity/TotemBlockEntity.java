@@ -1205,8 +1205,8 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
 
         } else if (VReference.VAMPIRE_FACTION.equals(this.controllingFaction)) {
             for (Villager villager : villagerEntities) {
-                if (villager.hasEffect(ModEffects.sanguinare))
-                    villager.removeEffect(ModEffects.sanguinare);
+                if (villager.hasEffect(ModEffects.sanguinare.get()))
+                    villager.removeEffect(ModEffects.sanguinare.get());
                 if (fullConvert) {
                     if (villager instanceof ConvertedVillagerEntity) {
                         this.spawnVillagerReplaceForced(villager, this.capturingFaction == VReference.HUNTER_FACTION);

@@ -302,7 +302,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
                 this.level.addParticle(ParticleTypes.EXPLOSION, player.getX(), player.getY(), player.getZ(), 1.0D, 0.0D, 0.0D);
             }
 
-            player.addEffect(new MobEffectInstance(ModEffects.saturation, 400, 2));
+            player.addEffect(new MobEffectInstance(ModEffects.saturation.get(), 400, 2));
             player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 400, 2));
             player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 400, 2));
         }

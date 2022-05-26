@@ -52,7 +52,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
                 CompoundTag fluidTag = stack.getTag().getCompound("fluid");
                 return FluidStack.loadFluidStackFromNBT(fluidTag);
             } else {
-                return new FluidStack(ModFluids.blood, 0);
+                return new FluidStack(ModFluids.blood.get(), 0);
             }
         }
         return FluidStack.EMPTY;
@@ -88,7 +88,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
     public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
         super.fillItemCategory(group, items);
         ItemStack stack = new ItemStack(this, 1);
-        FluidStack fluid = new FluidStack(ModFluids.blood, BloodContainerBlockEntity.CAPACITY);
+        FluidStack fluid = new FluidStack(ModFluids.blood.get(), BloodContainerBlockEntity.CAPACITY);
         stack.addTagElement("fluid", fluid.writeToNBT(new CompoundTag()));
         items.add(stack);
     }
@@ -141,7 +141,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
     public InteractionResult use(@Nonnull BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull Player playerIn, @Nonnull InteractionHand hand, BlockHitResult hit) {
         if (!FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, hit.getDirection()) && playerIn.getItemInHand(hand).getItem().equals(Items.GLASS_BOTTLE) && VampirismConfig.COMMON.autoConvertGlassBottles.get()) {
             FluidUtil.getFluidHandler(worldIn, pos, hit.getDirection()).ifPresent((fluidHandler -> {
-                if (fluidHandler.getFluidInTank(0).getFluid().equals(ModFluids.blood)) {
+                if (fluidHandler.getFluidInTank(0).getFluid().equals(ModFluids.blood.get())) {
                     ItemStack glass = playerIn.getItemInHand(hand);
                     ItemStack bloodBottle = new ItemStack(ModItems.blood_bottle.get(), 1);
                     playerIn.setItemInHand(hand, bloodBottle);

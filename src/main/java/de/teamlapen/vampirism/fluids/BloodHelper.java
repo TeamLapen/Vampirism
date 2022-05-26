@@ -56,13 +56,13 @@ public class BloodHelper {
     }
 
     public static int getBlood(@Nonnull IFluidHandler cap) {
-        FluidStack stack = cap.drain(new FluidStack(ModFluids.blood, Integer.MAX_VALUE), IFluidHandler.FluidAction.SIMULATE);
+        FluidStack stack = cap.drain(new FluidStack(ModFluids.blood.get(), Integer.MAX_VALUE), IFluidHandler.FluidAction.SIMULATE);
         return stack.getAmount();
     }
 
     public static int getBlood(@Nonnull LazyOptional<IFluidHandler> opt) {
         return opt.map(handler -> {
-            FluidStack stack = handler.drain(new FluidStack(ModFluids.blood, Integer.MAX_VALUE), IFluidHandler.FluidAction.SIMULATE);
+            FluidStack stack = handler.drain(new FluidStack(ModFluids.blood.get(), Integer.MAX_VALUE), IFluidHandler.FluidAction.SIMULATE);
             return stack.getAmount();
         }).orElse(0);
     }
@@ -87,7 +87,7 @@ public class BloodHelper {
     }
 
     public static int fill(@Nonnull ItemStack stack, int amount, IFluidHandler.FluidAction action) {
-        return FluidUtil.getFluidHandler(stack).map(handler -> handler.fill(new FluidStack(ModFluids.blood, amount), action)).orElse(0);
+        return FluidUtil.getFluidHandler(stack).map(handler -> handler.fill(new FluidStack(ModFluids.blood.get(), amount), action)).orElse(0);
     }
 
     /**
@@ -164,7 +164,7 @@ public class BloodHelper {
         for (int i = 0; i < inventory.getContainerSize(); i++) {
             ItemStack stack = inventory.getItem(i);
             FluidStack content = BloodContainerBlock.getFluidFromItemStack(stack);
-            if (content.getRawFluid() == ModFluids.blood && (allowFull || content.getAmount() < BloodContainerBlockEntity.CAPACITY) && (allowEmpty || content.getAmount() > 0)) {
+            if (content.getRawFluid() == ModFluids.blood.get() && (allowFull || content.getAmount() < BloodContainerBlockEntity.CAPACITY) && (allowEmpty || content.getAmount() > 0)) {
                 return stack;
             }
         }

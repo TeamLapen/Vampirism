@@ -268,7 +268,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     public boolean hurt(@Nonnull DamageSource damageSource, float amount) {
         boolean flag = super.hurt(damageSource, amount);
         if (flag && damageSource.getEntity() instanceof Player && this.random.nextInt(4) == 0) {
-            this.addEffect(new MobEffectInstance(ModEffects.sunscreen, 150, 2));
+            this.addEffect(new MobEffectInstance(ModEffects.sunscreen.get(), 150, 2));
         }
         return flag;
     }

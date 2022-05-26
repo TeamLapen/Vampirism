@@ -128,7 +128,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
 
     @Override
     default boolean isIgnoringSundamage() {
-        return ((PathfinderMob) this).hasEffect(ModEffects.sunscreen);
+        return ((PathfinderMob) this).hasEffect(ModEffects.sunscreen.get());
     }
 
     /**
@@ -150,7 +150,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
         }
         if (!entity.level.isClientSide) {
             if (isGettingSundamage(entity.level) && entity.tickCount % 40 == 11) {
-                double dmg = entity.getAttribute(ModAttributes.sundamage).getValue();
+                double dmg = entity.getAttribute(ModAttributes.sundamage.get()).getValue();
                 if (dmg > 0) entity.hurt(VReference.SUNDAMAGE, (float) dmg);
             }
             if (isGettingGarlicDamage(entity.level) != EnumStrength.NONE) {

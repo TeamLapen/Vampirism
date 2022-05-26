@@ -45,8 +45,8 @@ public class SanguinareEffect extends VampirismEffect {
 
     }
 
-    public SanguinareEffect(String name, MobEffectCategory effectType, int potionColor) {
-        super(name, effectType, potionColor);
+    public SanguinareEffect(MobEffectCategory effectType, int potionColor) {
+        super(effectType, potionColor);
         addAttributeModifier(Attributes.ATTACK_DAMAGE, "22663B89-116E-49DC-9B6B-9971489B5BE5", 2.0D, AttributeModifier.Operation.ADDITION);
     }
 

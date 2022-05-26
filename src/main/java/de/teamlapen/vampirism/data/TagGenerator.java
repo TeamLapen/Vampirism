@@ -122,8 +122,8 @@ public class TagGenerator {
 
         @Override
         protected void addTags() {
-            tag(ModTags.Fluids.BLOOD).add(ModFluids.blood);
-            tag(ModTags.Fluids.IMPURE_BLOOD).add(ModFluids.impure_blood);
+            tag(ModTags.Fluids.BLOOD).add(ModFluids.blood.get());
+            tag(ModTags.Fluids.IMPURE_BLOOD).add(ModFluids.impure_blood.get());
         }
     }
 
@@ -138,8 +138,8 @@ public class TagGenerator {
         protected void addTags() {
             tag(ModTags.Biomes.HAS_HUNTER_TENT).addTags(BiomeTags.IS_BADLANDS, BiomeTags.IS_FOREST, BiomeTags.IS_TAIGA).add(Biomes.PLAINS, Biomes.DESERT, Biomes.MEADOW, Biomes.SNOWY_PLAINS, Biomes.SPARSE_JUNGLE);
             tag(ModTags.Biomes.IS_FACTION_BIOME).addTags(ModTags.Biomes.IS_VAMPIRE_BIOME);
-            tag(ModTags.Biomes.IS_VAMPIRE_BIOME).add(ModBiomes.VAMPIRE_FOREST);
-            tag(BiomeTags.IS_FOREST).add(ModBiomes.VAMPIRE_FOREST);
+            tag(ModTags.Biomes.IS_VAMPIRE_BIOME).add(ModBiomes.VAMPIRE_FOREST.getKey()());
+            tag(BiomeTags.IS_FOREST).add(ModBiomes.VAMPIRE_FOREST.getKey()());
         }
     }
 }

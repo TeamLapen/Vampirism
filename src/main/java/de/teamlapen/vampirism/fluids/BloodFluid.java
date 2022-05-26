@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 
 public class BloodFluid extends VampirismFluid {
     public BloodFluid() {
-        super("blood");
+        super();
     }
 
     @Override

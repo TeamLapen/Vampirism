@@ -229,7 +229,7 @@ public class GuideBook implements IGuideBook {
 
         List<IPage> armorPages = new ArrayList<>(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "armor.text")), new ResourceLocation("guide.vampirism.items.accessories")));
         entries.put(new ResourceLocation(base + "armor"), new EntryText(armorPages, translateComponent(base + "armor")));
-        List<IPage> dbnoPages = new ArrayList<>(PageHelper.pagesForLongText(translateComponent(base + "dbno.text", ModEffects.neonatal.getDisplayName())));
+        List<IPage> dbnoPages = new ArrayList<>(PageHelper.pagesForLongText(translateComponent(base + "dbno.text", ModEffects.neonatal.get().getDisplayName())));
         entries.put(new ResourceLocation(base + "dbno"), new EntryText(dbnoPages, translateComponent(base + "dbno")));
 
         List<IPage> lordPages = new ArrayList<>();
@@ -495,7 +495,7 @@ public class GuideBook implements IGuideBook {
         helper.info(ModBlocks.garlic_diffuser_normal.get(), ModBlocks.garlic_diffuser_weak.get(), ModBlocks.garlic_diffuser_weak.get()).setFormats(cn, cn, ce, ce, loc(ModItems.purified_garlic.get())).useCustomEntryName().setKeyName("garlic_diffuser").setLinks(new ResourceLocation("guide.vampirism.items.item_garlic"), new ResourceLocation("guide.vampirism.items.purified_garlic"), new ResourceLocation("guide.vampirism.items.holy_water_bottle")).recipes("hunter/garlic_diffuser_normal", "hunter/garlic_diffuser_improved", "alchemical_cauldron/garlic_diffuser_core", "alchemical_cauldron/garlic_diffuser_core_improved").build(entries);
         helper.info(ModBlocks.blood_pedestal.get()).recipes("vampire/blood_pedestal").build(entries);
         helper.info(ModBlocks.blood_grinder.get()).recipes("general/blood_grinder").setFormats(loc(ModItems.human_heart.get()), loc(Items.BEEF), loc(ModBlocks.blood_sieve.get())).build(entries);
-        helper.info(ModBlocks.blood_sieve.get()).recipes("general/blood_sieve").setFormats(translateComponent(ModFluids.impure_blood.getAttributes().getTranslationKey()), loc(ModBlocks.blood_grinder.get())).setLinks(new ResourceLocation("guide.vampirism.blocks.blood_grinder")).build(entries);
+        helper.info(ModBlocks.blood_sieve.get()).recipes("general/blood_sieve").setFormats(translateComponent(ModFluids.impure_blood.get().getAttributes().getTranslationKey()), loc(ModBlocks.blood_grinder.get())).setLinks(new ResourceLocation("guide.vampirism.blocks.blood_grinder")).build(entries);
         helper.info(ModBlocks.totem_top_crafted.get(), ModBlocks.totem_top.get()).setLinks(new ResourceLocation("guide.vampirism.blocks.totem_base"), new ResourceLocation("guide.vampirism.world.villages")).build(entries);
         helper.info(ModBlocks.totem_base.get()).recipes("general/totem_base").setLinks(new ResourceLocation("guide.vampirism.blocks.totem_top_crafted"), new ResourceLocation("guide.vampirism.world.villages")).build(entries);
         helper.info(ModBlocks.potion_table.get()).recipes("hunter/potion_table").customPages(generatePotionMixes()).build(entries);
