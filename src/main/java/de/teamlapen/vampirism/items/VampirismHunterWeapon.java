@@ -17,6 +17,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -58,5 +59,11 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
     @Override
     public IFaction<?> getSlayedFaction() {
         return VReference.VAMPIRE_FACTION;
+    }
+
+    @Override
+    @NotNull
+    protected String getOrCreateDescriptionId() {
+        return super.getOrCreateDescriptionId().replaceAll("_normal|_enhanced|_ultimate", "");
     }
 }

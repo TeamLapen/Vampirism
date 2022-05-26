@@ -44,5 +44,9 @@ public class HunterHatItem extends VampirismHunterArmor {
         });
     }
 
-
+    @Override
+    @NotNull
+    protected String getOrCreateDescriptionId() {
+        return super.getOrCreateDescriptionId().replaceAll("_0|_1", "");
+    }
 }

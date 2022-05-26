@@ -25,6 +25,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -119,5 +120,11 @@ public class PureBloodItem extends VampirismItem {
                 p.triggerWings();
             }
         }
+    }
+
+    @Override
+    @NotNull
+    protected String getOrCreateDescriptionId() {
+        return super.getOrCreateDescriptionId().replaceAll("_\\d", "");
     }
 }

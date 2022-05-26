@@ -80,6 +80,4 @@ public class ObsidianArmorItem extends VampirismHunterArmor implements IItemWith
     public TIER getVampirismTier() {
         return tier;
     }
-
-
 }
