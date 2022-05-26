@@ -15,7 +15,7 @@ import net.minecraftforge.registries.RegistryObject;
  * Register and holds all actions for vampirism entities
  */
 public class EntityActions {
-    public static final DeferredRegister<IEntityAction> ENTITY_ACTIONS = DeferredRegister.create(ModRegistries.ENTITYACTIONS, REFERENCE.MODID);
+    public static final DeferredRegister<IEntityAction> ENTITY_ACTIONS = DeferredRegister.create(ModRegistries.ENTITYACTIONS_ID, REFERENCE.MODID);
     
     public static final RegistryObject<InvisibleEntityAction<?>> entity_invisible;
     /**

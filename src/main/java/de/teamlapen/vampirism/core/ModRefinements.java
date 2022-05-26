@@ -12,7 +12,7 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.UUID;
 
 public class ModRefinements {
-    public static DeferredRegister<IRefinement> REFINEMENTS = DeferredRegister.create(ModRegistries.REFINEMENTS, REFERENCE.MODID);
+    public static DeferredRegister<IRefinement> REFINEMENTS = DeferredRegister.create(ModRegistries.REFINEMENT_ID, REFERENCE.MODID);
 
     public static final RegistryObject<Refinement> armor1;
     public static final RegistryObject<Refinement> armor2;

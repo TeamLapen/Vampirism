@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api.entity.player.task;
 
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.util.NonnullSupplier;
 import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -17,8 +18,7 @@ public class Task extends ForgeRegistryEntry<Task> {
     private final IPlayableFaction<?> faction;
     @Nonnull
     private final TaskRequirement requirements;
-    @Nonnull
-    private final TaskReward rewards;
+    private final NonnullSupplier<TaskReward> rewards;
     @Nonnull
     private final TaskUnlocker[] unlocker;
     private final boolean useDescription;
@@ -51,13 +51,18 @@ public class Task extends ForgeRegistryEntry<Task> {
      * @param unlocker       the unlocker to unlock the task for completion
      * @param useDescription whether the task should display a description of not
      */
-    public Task(@Nonnull Variant variant, @Nullable IPlayableFaction<?> faction, @Nonnull TaskRequirement requirements, @Nonnull TaskReward rewards, @Nonnull TaskUnlocker[] unlocker, boolean useDescription) {
+    public Task(@Nonnull Variant variant, @Nullable IPlayableFaction<?> faction, @Nonnull TaskRequirement requirements, NonnullSupplier<TaskReward> rewards, @Nonnull TaskUnlocker[] unlocker, boolean useDescription) {
         this.variant = variant;
         this.faction = faction;
         this.requirements = requirements;
         this.useDescription = useDescription;
         this.rewards = rewards;
         this.unlocker = unlocker;
+    }
+
+    @Deprecated
+    public Task(@Nonnull Variant variant, @Nullable IPlayableFaction<?> faction, @Nonnull TaskRequirement requirements, @Nonnull TaskReward rewards, @Nonnull TaskUnlocker[] unlocker, boolean useDescription) {
+        this(variant, faction, requirements, () -> rewards, unlocker, useDescription);
     }
 
     @Nonnull
@@ -82,7 +87,7 @@ public class Task extends ForgeRegistryEntry<Task> {
 
     @Nonnull
     public TaskReward getReward() {
-        return this.rewards;
+        return this.rewards.get();
     }
 
     @Nonnull

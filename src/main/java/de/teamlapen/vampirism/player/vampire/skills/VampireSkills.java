@@ -24,7 +24,7 @@ import net.minecraftforge.registries.RegistryObject;
  */
 @SuppressWarnings("unused")
 public class VampireSkills {
-    public static final DeferredRegister<ISkill<?>> SKILLS = DeferredRegister.create(ModRegistries.SKILLS, REFERENCE.MODID);
+    public static final DeferredRegister<ISkill<?>> SKILLS = DeferredRegister.create(ModRegistries.SKILLS_ID, REFERENCE.MODID);
 
     public static final RegistryObject<ISkill<IVampirePlayer>> advanced_biter;
     public static final RegistryObject<ISkill<IVampirePlayer>> bat;

@@ -11,7 +11,7 @@ import net.minecraftforge.registries.RegistryObject;
  * Registers and holds all skills for vampire player
  */
 public class VampireActions {
-    public static final DeferredRegister<IAction<?>> ACTIONS = DeferredRegister.create(ModRegistries.ACTIONS, REFERENCE.MODID);
+    public static final DeferredRegister<IAction<?>> ACTIONS = DeferredRegister.create(ModRegistries.ACTIONS_ID, REFERENCE.MODID);
     
     public static final RegistryObject<BatVampireAction> bat = ACTIONS.register("bat", BatVampireAction::new);
     public static final RegistryObject<DarkBloodProjectileAction> dark_blood_projectile = ACTIONS.register("dark_blood_projectile", DarkBloodProjectileAction::new);

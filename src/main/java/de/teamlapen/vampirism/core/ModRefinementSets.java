@@ -11,7 +11,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
 public class ModRefinementSets {
-    public static final DeferredRegister<IRefinementSet> REFINEMENT_SETS = DeferredRegister.create(ModRegistries.REFINEMENT_SETS, REFERENCE.MODID);
+    public static final DeferredRegister<IRefinementSet> REFINEMENT_SETS = DeferredRegister.create(ModRegistries.REFINEMENT_SET_ID, REFERENCE.MODID);
 
     public static void registerRefinementSets(IEventBus bus) {
         REFINEMENT_SETS.register(bus);

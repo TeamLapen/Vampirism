@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 
 public class MinionTasks {
-    public static final DeferredRegister<IMinionTask<?,?>> MINION_TASKS = DeferredRegister.create(ModRegistries.MINION_TASKS, REFERENCE.MODID);
+    public static final DeferredRegister<IMinionTask<?,?>> MINION_TASKS = DeferredRegister.create(ModRegistries.MINION_TASKS_ID, REFERENCE.MODID);
     
 
     public static final RegistryObject<SimpleMinionTask> nothing;

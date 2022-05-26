@@ -11,7 +11,7 @@ import net.minecraftforge.registries.RegistryObject;
  * Registers and holds all skills for hunter players
  */
 public class HunterActions {
-    public static final DeferredRegister<IAction<?>> ACTIONS = DeferredRegister.create(ModRegistries.ACTIONS, REFERENCE.MODID);
+    public static final DeferredRegister<IAction<?>> ACTIONS = DeferredRegister.create(ModRegistries.ACTIONS_ID, REFERENCE.MODID);
 
     public static final RegistryObject<AwarenessHunterAction> awareness_hunter;
     public static final RegistryObject<DisguiseHunterAction> disguise_hunter;

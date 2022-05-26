@@ -25,7 +25,7 @@ import net.minecraftforge.registries.RegistryObject;
  */
 @SuppressWarnings("unused")
 public class HunterSkills {
-    public static final DeferredRegister<ISkill<?>> SKILLS = DeferredRegister.create(ModRegistries.SKILLS, REFERENCE.MODID);
+    public static final DeferredRegister<ISkill<?>> SKILLS = DeferredRegister.create(ModRegistries.SKILLS_ID, REFERENCE.MODID);
 
     public static final RegistryObject<ISkill<IHunterPlayer>> basic_alchemy;
     public static final RegistryObject<ISkill<IHunterPlayer>> double_crossbow;

@@ -69,7 +69,7 @@ public class ModVillage {
                 return VReference.VAMPIRE_FACTION;
             }
         });
-        hunter_expert = PROFESSIONS.register("vampire_expert", () -> new FactionVillagerProfession("hunter_expert", hunter_faction.get(), ImmutableSet.of(), ImmutableSet.of(), null) {
+        hunter_expert = PROFESSIONS.register("hunter_expert", () -> new FactionVillagerProfession("hunter_expert", hunter_faction.get(), ImmutableSet.of(), ImmutableSet.of(), null) {
             @Override
             public IFaction<?> getFaction() {
                 return VReference.VAMPIRE_FACTION;

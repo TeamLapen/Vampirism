@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.player.tasks;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import de.teamlapen.vampirism.api.util.NonnullSupplier;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
@@ -33,7 +34,7 @@ public class TaskBuilder {
     @Nonnull
     private final List<TaskUnlocker> unlocker = Lists.newArrayList();
     @Nullable
-    private TaskReward reward;
+    private NonnullSupplier<TaskReward> reward;
     @Nullable
     private IPlayableFaction<?> faction;
     @Nonnull
@@ -59,7 +60,7 @@ public class TaskBuilder {
     }
 
     @Nonnull
-    public TaskBuilder addRequirement(String name, @Nonnull ItemStack itemStack) {
+    public TaskBuilder addRequirement(String name, NonnullSupplier<ItemStack> itemStack) {
         return this.addRequirement(new ItemRequirement(new ResourceLocation(modId(), name), itemStack));
     }
 
@@ -99,13 +100,13 @@ public class TaskBuilder {
     }
 
     @Nonnull
-    public TaskBuilder setReward(@Nonnull ItemStack reward) {
-        this.reward = new ItemReward(reward);
+    public TaskBuilder setItemReward(NonnullSupplier<ItemStack> reward) {
+        this.reward = () -> new ItemReward(reward.get());
         return this;
     }
 
     @Nonnull
-    public TaskBuilder setReward(@Nonnull TaskReward reward) {
+    public TaskBuilder setReward(NonnullSupplier<TaskReward> reward) {
         this.reward = reward;
         return this;
     }
