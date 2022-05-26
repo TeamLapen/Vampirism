@@ -11,17 +11,15 @@ import net.minecraftforge.registries.*;
 public class ModFluids {
     public static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(ForgeRegistries.FLUIDS, REFERENCE.MODID);
 
-    public static final RegistryObject<Fluid> blood = FLUIDS.register("blood", BloodFluid::new);
+    public static final RegistryObject<Fluid> blood = FLUIDS.register("blood", () -> {
+        Fluid blood = new BloodFluid();
+        VReference.blood_fluid = blood;
+        return blood;
+    });
     public static final RegistryObject<Fluid> impure_blood = FLUIDS.register("impure_blood", ImpureBloodFluid::new);
 
     static void registerFluids(IEventBus bus) {
         FLUIDS.register(bus);
         VReference.blood_fluid_supplier = blood;
-    }
-
-    @SuppressWarnings("deprecated")
-    static void setupBloodFluid() {
-        // This sets the now-deprecated "blood_fluid" field, in case something still used that.
-        VReference.blood_fluid = blood.get();
     }
 }
