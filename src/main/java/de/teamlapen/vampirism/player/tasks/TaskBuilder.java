@@ -34,7 +34,7 @@ public class TaskBuilder {
     @Nonnull
     private final List<TaskUnlocker> unlocker = Lists.newArrayList();
     @Nullable
-    private NonnullSupplier<TaskReward> reward;
+    private TaskReward reward;
     @Nullable
     private IPlayableFaction<?> faction;
     @Nonnull
@@ -100,13 +100,13 @@ public class TaskBuilder {
     }
 
     @Nonnull
-    public TaskBuilder setItemReward(NonnullSupplier<ItemStack> reward) {
-        this.reward = () -> new ItemReward(reward.get());
+    public TaskBuilder setReward(NonnullSupplier<ItemStack> reward) {
+        this.reward = new ItemReward(reward);
         return this;
     }
 
     @Nonnull
-    public TaskBuilder setReward(NonnullSupplier<TaskReward> reward) {
+    public TaskBuilder setReward(TaskReward reward) {
         this.reward = reward;
         return this;
     }
