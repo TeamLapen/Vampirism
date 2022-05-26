@@ -22,7 +22,6 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -96,9 +95,14 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
         return String.format(REFERENCE.MODID + ":textures/models/armor/%s_layer_%d%s.png", name, slot == EquipmentSlot.LEGS ? 2 : 1, type == null ? "" : "_overlay");
     }
 
+    private String descriptionId;
+    @Nonnull
     @Override
-    @NotNull
     protected String getOrCreateDescriptionId() {
-        return super.getOrCreateDescriptionId().replaceAll("_normal|_enhanced|_ultimate", "");
+        if (this.descriptionId == null) {
+            this.descriptionId = super.getOrCreateDescriptionId().replaceAll("_normal|_enhanced|_ultimate", "");
+        }
+
+        return this.descriptionId;
     }
 }

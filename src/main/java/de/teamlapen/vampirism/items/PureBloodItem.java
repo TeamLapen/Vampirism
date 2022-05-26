@@ -122,9 +122,14 @@ public class PureBloodItem extends VampirismItem {
         }
     }
 
+    private String descriptionId;
     @Override
     @NotNull
     protected String getOrCreateDescriptionId() {
-        return super.getOrCreateDescriptionId().replaceAll("_\\d", "");
+        if (this.descriptionId == null) {
+            this.descriptionId = super.getOrCreateDescriptionId().replaceAll("_\\d", "");
+        }
+
+        return this.descriptionId;
     }
 }

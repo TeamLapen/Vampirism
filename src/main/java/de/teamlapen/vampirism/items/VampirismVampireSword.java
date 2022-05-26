@@ -45,7 +45,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -365,11 +364,5 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         pos = pos.add((player.getRandom().nextFloat() - 0.5f) * 0.1f, (player.getRandom().nextFloat() - 0.3f) * 0.9f, (player.getRandom().nextFloat() - 0.5f) * 0.1f);
         Vec3 playerPos = new Vec3((player).getX(), (player).getY() + player.getEyeHeight() - 0.2f, (player).getZ());
         ModParticles.spawnParticleClient(player.getCommandSenderWorld(), new FlyingBloodParticleData(ModParticles.flying_blood.get(), (int) (4.0F / (player.getRandom().nextFloat() * 0.6F + 0.1F)), true, pos.x, pos.y, pos.z), playerPos.x, playerPos.y, playerPos.z);
-    }
-
-    @Override
-    @NotNull
-    protected String getOrCreateDescriptionId() {
-        return super.getOrCreateDescriptionId().replaceAll("_normal|_enhanced|_ultimate", "");
     }
 }

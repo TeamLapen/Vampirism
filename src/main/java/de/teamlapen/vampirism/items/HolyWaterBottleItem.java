@@ -60,9 +60,15 @@ public class HolyWaterBottleItem extends VampirismItem implements IItemWithTier,
         return tier;
     }
 
+
+    private String descriptionId;
     @Override
     @NotNull
     protected String getOrCreateDescriptionId() {
-        return super.getOrCreateDescriptionId().replaceAll("_normal|_enhanced|_ultimate", "");
+        if (this.descriptionId == null) {
+            this.descriptionId = super.getOrCreateDescriptionId().replaceAll("_normal|_enhanced|_ultimate", "");
+        }
+
+        return this.descriptionId;
     }
 }
