@@ -19,7 +19,9 @@ public class ModFluids {
         VReference.blood_fluid_supplier = blood;
     }
 
+    @SuppressWarnings("deprecated")
     static void setupBloodFluid() {
+        // This sets the now-deprecated "blood_fluid" field, in case something still used that.
         VReference.blood_fluid = blood.get();
     }
 }

@@ -93,7 +93,7 @@ public class HunterIntelItem extends VampirismItem {
     public boolean isFoil(@Nonnull ItemStack stack) {
         return true;
     }
-    
+
     @Override
     @NotNull
     protected String getOrCreateDescriptionId() {
