@@ -562,7 +562,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     @Override
     public boolean isGettingSundamage(LevelAccessor iWorld, boolean forcerefresh) {
         if (forcerefresh) {
-            sundamage_cache = Helper.gettingSundamge(player, iWorld, player.level.getProfiler()) && !ModItems.umbrella.get().equals(player.getMainHandItem().getItem());
+            sundamage_cache = Helper.gettingSundamge(player, iWorld, player.level.getProfiler()) && ModItems.umbrella.get() != player.getMainHandItem().getItem();
         }
         return sundamage_cache;
     }
@@ -1240,7 +1240,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         if (!bloodStats.needsBlood()) return;
 
         int need = Math.min(8, bloodStats.getMaxBlood() - bloodStats.getBloodLevel());
-        if (ModBlocks.blood_container.get().equals(blockState.getBlock())) {
+        if (ModBlocks.blood_container.get() == blockState.getBlock()) {
             if (tileEntity != null) {
                 tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).ifPresent(handler -> {
                     int blood = 0;

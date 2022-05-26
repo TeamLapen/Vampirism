@@ -230,7 +230,7 @@ public class ModPlayerEventHandler {
     public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
         if (VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().isCannotInteract()) {
             event.setCanceled(true);
-        } else if ((ModBlocks.garlic_diffuser_normal.get().equals(event.getState().getBlock()) || ModBlocks.garlic_diffuser_weak.get().equals(event.getState().getBlock()) || ModBlocks.garlic_diffuser_improved.get().equals(event.getState().getBlock())) && VampirismPlayerAttributes.get(event.getPlayer()).vampireLevel > 0) {
+        } else if ((ModBlocks.garlic_diffuser_normal.get() == event.getState().getBlock() || ModBlocks.garlic_diffuser_weak.get() == event.getState().getBlock() || ModBlocks.garlic_diffuser_improved.get() == event.getState().getBlock()) && VampirismPlayerAttributes.get(event.getPlayer()).vampireLevel > 0) {
             event.setNewSpeed(event.getOriginalSpeed() * 0.1F);
         }
     }
@@ -358,7 +358,7 @@ public class ModPlayerEventHandler {
             ItemStack heldStack = event.getItemStack();
             if (!heldStack.isEmpty() && heldStack.getCount() == 1) {
                 boolean glassBottle = Items.GLASS_BOTTLE.equals(heldStack.getItem());
-                boolean bloodBottle = ModItems.blood_bottle.get().equals(heldStack.getItem());
+                boolean bloodBottle = ModItems.blood_bottle.get() == heldStack.getItem();
                 if (bloodBottle || (glassBottle && VampirismConfig.COMMON.autoConvertGlassBottles.get())) {
                     Block block = event.getWorld().getBlockState(event.getPos()).getBlock();
                     BlockState state = event.getWorld().getBlockState(event.getPos());
@@ -418,7 +418,7 @@ public class ModPlayerEventHandler {
             world.levelEvent(null, 1009, pos, 0);
             world.removeBlock(pos, false);
             event.setCanceled(true);
-        } else if ((ModBlocks.garlic_diffuser_normal.get().equals(state.getBlock()) || ModBlocks.garlic_diffuser_weak.get().equals(state.getBlock()) || ModBlocks.garlic_diffuser_improved.get().equals(state.getBlock())) && Helper.isVampire(event.getPlayer())) {
+        } else if ((ModBlocks.garlic_diffuser_normal.get() == state.getBlock() || ModBlocks.garlic_diffuser_weak.get() == state.getBlock() || ModBlocks.garlic_diffuser_improved.get() == state.getBlock()) && Helper.isVampire(event.getPlayer())) {
             event.getPlayer().addEffect(new MobEffectInstance(ModEffects.garlic.get()));
         }
     }

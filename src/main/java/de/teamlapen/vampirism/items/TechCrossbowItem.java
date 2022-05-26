@@ -172,7 +172,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
     }
 
     private boolean isArrowPackage(@Nonnull ItemStack stack) {
-        return ModItems.tech_crossbow_ammo_package.get().equals(stack.getItem());
+        return ModItems.tech_crossbow_ammo_package.get() == stack.getItem();
     }
 
 

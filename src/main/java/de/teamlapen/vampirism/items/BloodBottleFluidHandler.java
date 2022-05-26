@@ -45,7 +45,7 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
     @Nonnull
     @Override
     public FluidStack drain(FluidStack resource, FluidAction action) {
-        if (container.getCount() != 1 || resource == null || resource.getAmount() <= 0 || !ModFluids.blood.get().equals(resource.getFluid())) {
+        if (container.getCount() != 1 || resource == null || resource.getAmount() <= 0 || ModFluids.blood.get() != resource.getFluid()) {
             return FluidStack.EMPTY;
         }
         return drain(resource.getAmount(), action);
