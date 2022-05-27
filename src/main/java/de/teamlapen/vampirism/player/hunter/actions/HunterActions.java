@@ -13,17 +13,11 @@ import net.minecraftforge.registries.RegistryObject;
 public class HunterActions {
     public static final DeferredRegister<IAction<?>> ACTIONS = DeferredRegister.create(ModRegistries.ACTIONS_ID, REFERENCE.MODID);
 
-    public static final RegistryObject<AwarenessHunterAction> awareness_hunter;
-    public static final RegistryObject<DisguiseHunterAction> disguise_hunter;
-    public static final RegistryObject<PotionResistanceHunterAction> potion_resistance_hunter;
+    public static final RegistryObject<AwarenessHunterAction> awareness_hunter = ACTIONS.register("awareness_hunter", AwarenessHunterAction::new);
+    public static final RegistryObject<DisguiseHunterAction> disguise_hunter = ACTIONS.register("disguise_hunter", DisguiseHunterAction::new);
+    public static final RegistryObject<PotionResistanceHunterAction> potion_resistance_hunter = ACTIONS.register("potion_resistance_hunter", PotionResistanceHunterAction::new);
 
     public static void registerDefaultActions(IEventBus bus) {
         ACTIONS.register(bus);
-    }
-
-    static {
-        awareness_hunter = ACTIONS.register("awareness_hunter", AwarenessHunterAction::new);
-        disguise_hunter = ACTIONS.register("disguise_hunter", DisguiseHunterAction::new);
-        potion_resistance_hunter = ACTIONS.register("potion_resistance_hunter", PotionResistanceHunterAction::new);
     }
 }

@@ -28,22 +28,22 @@ public class ModRecipes {
     public static DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, REFERENCE.MODID);
 
     public static final RegistryObject<RecipeType<IWeaponTableRecipe>> WEAPONTABLE_CRAFTING_TYPE =
-            RECIPE_TYPES.register("weapontable_crafting", () -> new RecipeType<IWeaponTableRecipe>() {
+            RECIPE_TYPES.register("weapontable_crafting", () -> new RecipeType<>() {
                 public String toString() {
                     return "weapontable_crafting";
                 }
             });
     public static final RegistryObject<RecipeType<AlchemicalCauldronRecipe>> ALCHEMICAL_CAULDRON_TYPE =
-            RECIPE_TYPES.register("alchemical_cauldron", () -> new RecipeType<AlchemicalCauldronRecipe>() {
+            RECIPE_TYPES.register("alchemical_cauldron", () -> new RecipeType<>() {
                 public String toString() {
                     return "alchemical_cauldron";
                 }
             });
 
-    public static final RegistryObject<RecipeSerializer<ShapedWeaponTableRecipe>> shaped_crafting_weapontable;
-    public static final RegistryObject<RecipeSerializer<ShapelessWeaponTableRecipe>> shapeless_crafting_weapontable;
-    public static final RegistryObject<RecipeSerializer<ShapedRecipe>> repair_iitemwithtier;
-    public static final RegistryObject<RecipeSerializer<AlchemicalCauldronRecipe>> alchemical_cauldron;
+    public static final RegistryObject<RecipeSerializer<ShapedWeaponTableRecipe>> shaped_crafting_weapontable = RECIPE_SERIALIZERS.register("shaped_crafting_weapontable", ShapedWeaponTableRecipe.Serializer::new);
+    public static final RegistryObject<RecipeSerializer<ShapelessWeaponTableRecipe>> shapeless_crafting_weapontable = RECIPE_SERIALIZERS.register("shapeless_crafting_weapontable", ShapelessWeaponTableRecipe.Serializer::new);
+    public static final RegistryObject<RecipeSerializer<ShapedRecipe>> repair_iitemwithtier = RECIPE_SERIALIZERS.register("repair_iitemwithtier", ShapedItemWithTierRepair.Serializer::new);
+    public static final RegistryObject<RecipeSerializer<AlchemicalCauldronRecipe>> alchemical_cauldron = RECIPE_SERIALIZERS.register("alchemical_cauldron", AlchemicalCauldronRecipe.Serializer::new);
 
     public static final IConditionSerializer<?> CONFIG_CONDITION = CraftingHelper.register(new ConfigCondition.Serializer());
 
@@ -62,13 +62,6 @@ public class ModRecipes {
     static void registerRecipeTypesAndSerializers(IEventBus bus) {
         RECIPE_TYPES.register(bus);
         RECIPE_SERIALIZERS.register(bus);
-    }
-
-    static {
-        shaped_crafting_weapontable = RECIPE_SERIALIZERS.register("shaped_crafting_weapontable", ShapedWeaponTableRecipe.Serializer::new);
-        shapeless_crafting_weapontable = RECIPE_SERIALIZERS.register("shapeless_crafting_weapontable", ShapelessWeaponTableRecipe.Serializer::new);
-        repair_iitemwithtier = RECIPE_SERIALIZERS.register("repair_iitemwithtier", ShapedItemWithTierRepair.Serializer::new);
-        alchemical_cauldron = RECIPE_SERIALIZERS.register("alchemical_cauldron", AlchemicalCauldronRecipe.Serializer::new);
     }
 
     public static void registerLiquidColor(Item item, int color) {
