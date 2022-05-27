@@ -21,9 +21,9 @@ public class VampireRefinementItem extends RefinementItem {
 
     public static RefinementItem getItemForType(AccessorySlotType type) {
         return switch (type) {
-            case AMULET -> ModItems.amulet.get();
-            case RING -> ModItems.ring.get();
-            default -> ModItems.obi_belt.get();
+            case AMULET -> ModItems.AMULET.get();
+            case RING -> ModItems.RING.get();
+            default -> ModItems.OBI_BELT.get();
         };
     }
 }

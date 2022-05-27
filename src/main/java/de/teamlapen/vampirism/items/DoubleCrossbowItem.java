@@ -28,7 +28,7 @@ public class DoubleCrossbowItem extends SimpleCrossbowItem {
     @Nullable
     @Override
     public ISkill<IHunterPlayer> getRequiredSkill(@Nonnull ItemStack stack) {
-        return HunterSkills.double_crossbow.get();
+        return HunterSkills.DOUBLE_CROSSBOW.get();
     }
 
 

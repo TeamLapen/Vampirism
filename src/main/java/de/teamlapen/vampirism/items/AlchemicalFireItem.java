@@ -51,7 +51,7 @@ public class AlchemicalFireItem extends Item {
         } else {
             if (ctx.getLevel().isEmptyBlock(pos)) {
                 ctx.getLevel().playSound(ctx.getPlayer(), pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, ctx.getPlayer().getRandom().nextFloat() * 0.4F + 0.8F);
-                ctx.getLevel().setBlock(pos, ModBlocks.alchemical_fire.get().defaultBlockState().setValue(AlchemicalFireBlock.AGE, 15), 11);
+                ctx.getLevel().setBlock(pos, ModBlocks.ALCHEMICAL_FIRE.get().defaultBlockState().setValue(AlchemicalFireBlock.AGE, 15), 11);
             }
 
             return InteractionResult.SUCCESS;

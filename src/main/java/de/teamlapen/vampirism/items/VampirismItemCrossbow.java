@@ -49,7 +49,7 @@ public abstract class VampirismItemCrossbow extends Item implements IFactionLeve
      * @return the enchantment level
      */
     protected static int isCrossbowFrugal(ItemStack crossbowStack) {
-        return EnchantmentHelper.getItemEnchantmentLevel(ModEnchantments.crossbowfrugality.get(), crossbowStack);
+        return EnchantmentHelper.getItemEnchantmentLevel(ModEnchantments.CROSSBOWFRUGALITY.get(), crossbowStack);
     }
 
     private int enchantability = 0;
@@ -204,7 +204,7 @@ public abstract class VampirismItemCrossbow extends Item implements IFactionLeve
 
         if (!itemstack.isEmpty() || creative) {
             if (itemstack.isEmpty()) {
-                itemstack = new ItemStack(ModItems.crossbow_arrow_normal.get());
+                itemstack = new ItemStack(ModItems.CROSSBOW_ARROW_NORMAL.get());
             }
 
             float f = getArrowVelocity();
@@ -214,7 +214,7 @@ public abstract class VampirismItemCrossbow extends Item implements IFactionLeve
 
                 if (!world.isClientSide) {
                     boolean rightHand = player.getMainArm() == HumanoidArm.RIGHT && hand == InteractionHand.MAIN_HAND || player.getMainArm() == HumanoidArm.LEFT && hand == InteractionHand.OFF_HAND;
-                    IVampirismCrossbowArrow<?> itemarrow = itemstack.getItem() instanceof IVampirismCrossbowArrow ? (IVampirismCrossbowArrow<?>) itemstack.getItem() : ModItems.crossbow_arrow_normal.get();
+                    IVampirismCrossbowArrow<?> itemarrow = itemstack.getItem() instanceof IVampirismCrossbowArrow ? (IVampirismCrossbowArrow<?>) itemstack.getItem() : ModItems.CROSSBOW_ARROW_NORMAL.get();
                     AbstractArrow entityarrow = itemarrow.createEntity(itemstack, world, player, heightOffset, 0.3F + centerOffset, rightHand);
 
                     Vec3 vector3d = player.getViewVector(1.0F);
@@ -251,7 +251,7 @@ public abstract class VampirismItemCrossbow extends Item implements IFactionLeve
                     }
 
                     world.addFreshEntity(entityarrow);
-                    world.playSound(null, player.getX(), player.getY() + 0.5, player.getZ(), ModSounds.crossbow.get(), SoundSource.PLAYERS, 1F, world.random.nextFloat() * 0.1F + 0.9F);
+                    world.playSound(null, player.getX(), player.getY() + 0.5, player.getZ(), ModSounds.CROSSBOW.get(), SoundSource.PLAYERS, 1F, world.random.nextFloat() * 0.1F + 0.9F);
 
                 }
 

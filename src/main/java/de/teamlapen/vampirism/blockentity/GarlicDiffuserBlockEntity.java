@@ -39,7 +39,7 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
 
 
     public GarlicDiffuserBlockEntity(BlockPos pos, BlockState state) {
-        super(ModTiles.garlic_diffuser.get(), pos, state);
+        super(ModTiles.GARLIC_DIFFUSER.get(), pos, state);
     }
 
     public float getBootProgress() {

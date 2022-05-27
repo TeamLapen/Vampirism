@@ -50,7 +50,7 @@ public class OblivionEffect extends VampirismEffect {
                             skillHandler.disableSkill(element);
                         }
                     } else {
-                        entityLivingBaseIn.removeEffect(ModEffects.oblivion.get());
+                        entityLivingBaseIn.removeEffect(ModEffects.OBLIVION.get());
                         ((Player) entityLivingBaseIn).displayClientMessage(new TranslatableComponent("text.vampirism.skill.skills_reset"), true);
                         LOGGER.debug(LogUtil.FACTION, "Skills were reset for {}", entityLivingBaseIn.getName().getString());
                     }

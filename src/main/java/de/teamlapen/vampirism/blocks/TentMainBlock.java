@@ -40,6 +40,6 @@ public class TentMainBlock extends TentBlock implements EntityBlock {
     @SuppressWarnings("unchecked")
     @Nullable
     private static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> type1, BlockEntityTicker<? super E> ticker) {
-        return ModTiles.tent.get() == type1 ? (BlockEntityTicker<A>) ticker : null;
+        return ModTiles.TENT.get() == type1 ? (BlockEntityTicker<A>) ticker : null;
     }
 }

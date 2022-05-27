@@ -84,7 +84,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
 
     @Override
     public List<IMinionTask<?, ?>> getAvailableTasks() {
-        return Lists.newArrayList(MinionTasks.follow_lord.get(), MinionTasks.stay.get(), MinionTasks.defend_area.get(), MinionTasks.collect_blood.get(), MinionTasks.protect_lord.get());
+        return Lists.newArrayList(MinionTasks.FOLLOW_LORD.get(), MinionTasks.STAY.get(), MinionTasks.DEFEND_AREA.get(), MinionTasks.COLLECT_BLOOD.get(), MinionTasks.PROTECT_LORD.get());
     }
 
     @Override
@@ -122,7 +122,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
         if (!level.isClientSide) {
             if (isGettingSundamage(level) && tickCount % 40 == 11) {
-                double dmg = getAttribute(ModAttributes.sundamage.get()).getValue();
+                double dmg = getAttribute(ModAttributes.SUNDAMAGE.get()).getValue();
                 if (dmg > 0) this.hurt(VReference.SUNDAMAGE, (float) dmg);
             }
             if (isGettingGarlicDamage(level) != EnumStrength.NONE) {
@@ -154,7 +154,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
 
     @Override
     public boolean isIgnoringSundamage() {
-        return this.hasEffect(ModEffects.sunscreen.get());
+        return this.hasEffect(ModEffects.SUNSCREEN.get());
     }
 
     @OnlyIn(Dist.CLIENT)

@@ -32,7 +32,7 @@ public class InjectionItem extends Item {
     public InteractionResultHolder<ItemStack> use(@Nonnull Level worldIn, Player playerIn, @Nonnull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         if (type == TYPE.SANGUINARE) {
-            playerIn.displayClientMessage(new TextComponent("Please use a ").append(new TranslatableComponent(ModBlocks.med_chair.get().getDescriptionId())), true);
+            playerIn.displayClientMessage(new TextComponent("Please use a ").append(new TranslatableComponent(ModBlocks.MED_CHAIR.get().getDescriptionId())), true);
         }
         return new InteractionResultHolder<>(InteractionResult.PASS, stack);
     }

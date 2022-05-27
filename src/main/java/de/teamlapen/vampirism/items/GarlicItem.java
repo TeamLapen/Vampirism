@@ -36,7 +36,7 @@ public class GarlicItem extends Item implements IPlantable, IFactionExclusiveIte
 
     @Override
     public BlockState getPlant(BlockGetter world, BlockPos pos) {
-        return ModBlocks.garlic.get().defaultBlockState();
+        return ModBlocks.GARLIC.get().defaultBlockState();
     }
 
     @Override

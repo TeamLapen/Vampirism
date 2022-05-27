@@ -232,7 +232,7 @@ public class TentBlock extends VampirismBlock {
 
     @Override
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-        return new ItemStack(ModItems.item_tent.get());
+        return new ItemStack(ModItems.ITEM_TENT.get());
     }
 
     @Override
@@ -294,7 +294,7 @@ public class TentBlock extends VampirismBlock {
                 }
                 if(main!=null){
                     BlockState blockstate = worldIn.getBlockState(main);
-                    if (blockstate.getBlock() == ModBlocks.tent_main.get()) {
+                    if (blockstate.getBlock() == ModBlocks.TENT_MAIN.get()) {
                         worldIn.setBlock(main, Blocks.AIR.defaultBlockState(), 35);
                         worldIn.levelEvent(player, 2001, main, Block.getId(blockstate));
                     }

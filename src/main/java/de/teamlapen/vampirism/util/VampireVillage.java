@@ -37,12 +37,12 @@ public class VampireVillage {
     }
 
     public static void vampireVillage(IFactionVillageBuilder builder) {
-        builder.badOmenEffect(ModEffects.bad_omen_vampire)
-                .captureEntities(() -> Lists.newArrayList(new CaptureEntityEntry(ModEntities.vampire.get(), 10), new CaptureEntityEntry(ModEntities.advanced_vampire.get(), 2)))
-                .factionVillagerProfession(ModVillage.vampire_expert)
+        builder.badOmenEffect(ModEffects.BAD_OMEN_VAMPIRE)
+                .captureEntities(() -> Lists.newArrayList(new CaptureEntityEntry(ModEntities.VAMPIRE.get(), 10), new CaptureEntityEntry(ModEntities.ADVANCED_VAMPIRE.get(), 2)))
+                .factionVillagerProfession(ModVillage.VAMPIRE_EXPERT)
                 .guardSuperClass(VampireBaseEntity.class)
-                .taskMaster(ModEntities.task_master_vampire::get)
+                .taskMaster(ModEntities.TASK_MASTER_VAMPIRE::get)
                 .banner(VampireVillage::createBanner)
-                .totem(ModBlocks.totem_top_vampirism_vampire::get, ModBlocks.totem_top_vampirism_vampire_crafted::get);
+                .totem(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE::get, ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED::get);
     }
 }

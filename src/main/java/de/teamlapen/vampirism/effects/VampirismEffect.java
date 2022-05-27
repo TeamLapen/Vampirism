@@ -23,12 +23,12 @@ public class VampirismEffect extends MobEffect {
 
     @Override
     public List<ItemStack> getCurativeItems() {
-        return (this == ModEffects.armor_regeneration.get() || this == ModEffects.neonatal.get() || this == ModEffects.disguise_as_vampire.get()) ? Collections.emptyList() : super.getCurativeItems();
+        return (this == ModEffects.ARMOR_REGENERATION.get() || this == ModEffects.NEONATAL.get() || this == ModEffects.DISGUISE_AS_VAMPIRE.get()) ? Collections.emptyList() : super.getCurativeItems();
     }
 
     @Override
     public void applyEffectTick(@Nonnull LivingEntity entityLivingBaseIn, int amplifier) {
-        if (this == ModEffects.armor_regeneration.get()) {
+        if (this == ModEffects.ARMOR_REGENERATION.get()) {
             if (entityLivingBaseIn instanceof Player && entityLivingBaseIn.isAlive()) {
                 VampirePlayer.getOpt((Player) entityLivingBaseIn).ifPresent(VampirePlayer::requestNaturalArmorUpdate);
             }
@@ -37,6 +37,6 @@ public class VampirismEffect extends MobEffect {
 
     @Override
     public boolean isDurationEffectTick(int duration, int amplifier) {
-        return this == ModEffects.armor_regeneration.get() && duration % 100 == 1;
+        return this == ModEffects.ARMOR_REGENERATION.get() && duration % 100 == 1;
     }
 }

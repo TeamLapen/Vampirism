@@ -61,7 +61,7 @@ public class MedChairItem extends Item {
         if (player == null || player.mayUseItemAt(pos, ctx.getClickedFace(), stack) && player.mayUseItemAt(otherPos, ctx.getClickedFace(), stack)) {
 
             if (flag1 && flag2 && UtilLib.doesBlockHaveSolidTopSurface(world, pos.below()) && UtilLib.doesBlockHaveSolidTopSurface(world, otherPos.below())) {
-                BlockState state1 = ModBlocks.med_chair.get().defaultBlockState().setValue(MedChairBlock.PART, MedChairBlock.EnumPart.BOTTOM).setValue(MedChairBlock.FACING, facing.getOpposite());
+                BlockState state1 = ModBlocks.MED_CHAIR.get().defaultBlockState().setValue(MedChairBlock.PART, MedChairBlock.EnumPart.BOTTOM).setValue(MedChairBlock.FACING, facing.getOpposite());
                 if (world.setBlock(pos, state1, 3)) {
                     BlockState state2 = state1.setValue(MedChairBlock.PART, MedChairBlock.EnumPart.TOP).setValue(MedChairBlock.FACING, facing.getOpposite());
                     world.setBlock(otherPos, state2, 3);

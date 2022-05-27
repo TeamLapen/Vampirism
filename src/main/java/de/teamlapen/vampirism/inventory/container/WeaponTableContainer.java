@@ -43,7 +43,7 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
     private final BooleanDataSlot missingLava = new BooleanDataSlot();
 
     public WeaponTableContainer(int id, Inventory playerInventory, ContainerLevelAccess worldPosCallable) {
-        super(ModContainer.weapon_table.get(), id);
+        super(ModContainer.WEAPON_TABLE.get(), id);
         this.worldPos = worldPosCallable;
         this.hunterPlayer = HunterPlayer.get(playerInventory.player);
         this.player = playerInventory.player;
@@ -219,7 +219,7 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
 
     @Override
     public boolean stillValid(@Nonnull Player playerIn) {
-        return stillValid(this.worldPos, playerIn, ModBlocks.weapon_table.get());
+        return stillValid(this.worldPos, playerIn, ModBlocks.WEAPON_TABLE.get());
     }
 
     private void slotChangedCraftingGrid(Level worldIn, Player playerIn, HunterPlayer hunter, CraftingContainer craftMatrixIn, ResultContainer craftResultIn) {

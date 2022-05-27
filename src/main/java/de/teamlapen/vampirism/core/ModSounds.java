@@ -14,15 +14,15 @@ import net.minecraftforge.registries.RegistryObject;
 public class ModSounds {
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, REFERENCE.MODID);
     
-    public static final RegistryObject<SoundEvent> entity_vampire_scream = create("entity_vampire_scream");
-    public static final RegistryObject<SoundEvent> player_bite = create("player_bite");
-    public static final RegistryObject<SoundEvent> ambient_castle = create("ambient_castle");
-    public static final RegistryObject<SoundEvent> coffin_lid = create("coffin_lid");
-    public static final RegistryObject<SoundEvent> crossbow = create("crossbow");
-    public static final RegistryObject<SoundEvent> bat_swarm = create("bat_swarm");
-    public static final RegistryObject<SoundEvent> boiling = create("boiling");
-    public static final RegistryObject<SoundEvent> grinder = create("grinder");
-    public static final RegistryObject<SoundEvent> task_complete = create("task_complete");
+    public static final RegistryObject<SoundEvent> ENTITY_VAMPIRE_SCREAM = create("entity_vampire_scream");
+    public static final RegistryObject<SoundEvent> PLAYER_BITE = create("player_bite");
+    public static final RegistryObject<SoundEvent> AMBIENT_CASTLE = create("ambient_castle");
+    public static final RegistryObject<SoundEvent> COFFIN_LID = create("coffin_lid");
+    public static final RegistryObject<SoundEvent> CROSSBOW = create("crossbow");
+    public static final RegistryObject<SoundEvent> BAT_SWARM = create("bat_swarm");
+    public static final RegistryObject<SoundEvent> BOILING = create("boiling");
+    public static final RegistryObject<SoundEvent> GRINDER = create("grinder");
+    public static final RegistryObject<SoundEvent> TASK_COMPLETE = create("task_complete");
 
 
     static void registerSounds(IEventBus bus) {

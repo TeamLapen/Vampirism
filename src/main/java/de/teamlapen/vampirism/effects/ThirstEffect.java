@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 public class ThirstEffect extends VampirismEffect {
     public ThirstEffect(MobEffectCategory effectType, int potionColor) {
         super(effectType, potionColor);
-        addAttributeModifier(ModAttributes.blood_exhaustion.get(), "f6d9889e-dfdc-11e5-b86d-9a79f06e9478", 0.5F, AttributeModifier.Operation.ADDITION);
+        addAttributeModifier(ModAttributes.BLOOD_EXHAUSTION.get(), "f6d9889e-dfdc-11e5-b86d-9a79f06e9478", 0.5F, AttributeModifier.Operation.ADDITION);
     }
 
     @Override

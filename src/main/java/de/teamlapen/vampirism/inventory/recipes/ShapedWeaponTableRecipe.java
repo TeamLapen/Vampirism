@@ -117,7 +117,7 @@ public class ShapedWeaponTableRecipe implements CraftingRecipe, IWeaponTableReci
     @Nonnull
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRecipes.shaped_crafting_weapontable.get();
+        return ModRecipes.SHAPED_CRAFTING_WEAPONTABLE.get();
     }
 
     @Nonnull

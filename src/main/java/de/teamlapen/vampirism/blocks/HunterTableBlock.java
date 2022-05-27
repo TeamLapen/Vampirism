@@ -118,9 +118,9 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
         Block left = world.getBlockState(pos.relative(facing.getClockWise())).getBlock();
         Block right = world.getBlockState(pos.relative(facing.getCounterClockWise())).getBlock();
         Block front = world.getBlockState(pos.relative(facing.getOpposite())).getBlock();
-        boolean weapon_table = left == ModBlocks.weapon_table.get() || right == ModBlocks.weapon_table.get() || behind == ModBlocks.weapon_table.get() || front == ModBlocks.weapon_table.get();
-        boolean potion_table = left == ModBlocks.potion_table.get() || right == ModBlocks.potion_table.get() || behind == ModBlocks.potion_table.get() || front == ModBlocks.potion_table.get();
-        boolean cauldron = left == ModBlocks.alchemical_cauldron.get() || right == ModBlocks.alchemical_cauldron.get() || behind == ModBlocks.alchemical_cauldron.get() || front == ModBlocks.alchemical_cauldron.get();
+        boolean weapon_table = left == ModBlocks.WEAPON_TABLE.get() || right == ModBlocks.WEAPON_TABLE.get() || behind == ModBlocks.WEAPON_TABLE.get() || front == ModBlocks.WEAPON_TABLE.get();
+        boolean potion_table = left == ModBlocks.POTION_TABLE.get() || right == ModBlocks.POTION_TABLE.get() || behind == ModBlocks.POTION_TABLE.get() || front == ModBlocks.POTION_TABLE.get();
+        boolean cauldron = left == ModBlocks.ALCHEMICAL_CAULDRON.get() || right == ModBlocks.ALCHEMICAL_CAULDRON.get() || behind == ModBlocks.ALCHEMICAL_CAULDRON.get() || front == ModBlocks.ALCHEMICAL_CAULDRON.get();
 
         return getTierFor(weapon_table, potion_table, cauldron);
     }

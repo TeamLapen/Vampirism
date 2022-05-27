@@ -40,10 +40,10 @@ public class ModRecipes {
                 }
             });
 
-    public static final RegistryObject<RecipeSerializer<ShapedWeaponTableRecipe>> shaped_crafting_weapontable = RECIPE_SERIALIZERS.register("shaped_crafting_weapontable", ShapedWeaponTableRecipe.Serializer::new);
-    public static final RegistryObject<RecipeSerializer<ShapelessWeaponTableRecipe>> shapeless_crafting_weapontable = RECIPE_SERIALIZERS.register("shapeless_crafting_weapontable", ShapelessWeaponTableRecipe.Serializer::new);
-    public static final RegistryObject<RecipeSerializer<ShapedRecipe>> repair_iitemwithtier = RECIPE_SERIALIZERS.register("repair_iitemwithtier", ShapedItemWithTierRepair.Serializer::new);
-    public static final RegistryObject<RecipeSerializer<AlchemicalCauldronRecipe>> alchemical_cauldron = RECIPE_SERIALIZERS.register("alchemical_cauldron", AlchemicalCauldronRecipe.Serializer::new);
+    public static final RegistryObject<RecipeSerializer<ShapedWeaponTableRecipe>> SHAPED_CRAFTING_WEAPONTABLE = RECIPE_SERIALIZERS.register("shaped_crafting_weapontable", ShapedWeaponTableRecipe.Serializer::new);
+    public static final RegistryObject<RecipeSerializer<ShapelessWeaponTableRecipe>> SHAPELESS_CRAFTING_WEAPONTABLE = RECIPE_SERIALIZERS.register("shapeless_crafting_weapontable", ShapelessWeaponTableRecipe.Serializer::new);
+    public static final RegistryObject<RecipeSerializer<ShapedRecipe>> REPAIR_IITEMWITHTIER = RECIPE_SERIALIZERS.register("repair_iitemwithtier", ShapedItemWithTierRepair.Serializer::new);
+    public static final RegistryObject<RecipeSerializer<AlchemicalCauldronRecipe>> ALCHEMICAL_CAULDRON = RECIPE_SERIALIZERS.register("alchemical_cauldron", AlchemicalCauldronRecipe.Serializer::new);
 
     public static final IConditionSerializer<?> CONFIG_CONDITION = CraftingHelper.register(new ConfigCondition.Serializer());
 
@@ -51,9 +51,9 @@ public class ModRecipes {
     private static final Map<TagKey<Item>, Integer> liquidColorsTags = Maps.newHashMap();
 
     static void registerDefaultLiquidColors() {
-        registerLiquidColor(ModItems.holy_water_bottle_normal.get(), 0x6666FF);
-        registerLiquidColor(ModItems.holy_water_bottle_enhanced.get(), 0x6666FF);
-        registerLiquidColor(ModItems.holy_water_bottle_ultimate.get(), 0x6666FF);
+        registerLiquidColor(ModItems.HOLY_WATER_BOTTLE_NORMAL.get(), 0x6666FF);
+        registerLiquidColor(ModItems.HOLY_WATER_BOTTLE_ENHANCED.get(), 0x6666FF);
+        registerLiquidColor(ModItems.HOLY_WATER_BOTTLE_ULTIMATE.get(), 0x6666FF);
 
         registerLiquidColor(ModTags.Items.GARLIC, 0xBBBBBB);
 

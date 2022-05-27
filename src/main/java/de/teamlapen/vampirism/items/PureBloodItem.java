@@ -39,18 +39,18 @@ public class PureBloodItem extends Item {
     public static Item getBloodItemForLevel(int level) {
         switch (level) {
             case 0:
-                return ModItems.pure_blood_0.get();
+                return ModItems.PURE_BLOOD_0.get();
             case 1:
-                return ModItems.pure_blood_1.get();
+                return ModItems.PURE_BLOOD_1.get();
             case 2:
-                return ModItems.pure_blood_2.get();
+                return ModItems.PURE_BLOOD_2.get();
             case 3:
-                return ModItems.pure_blood_3.get();
+                return ModItems.PURE_BLOOD_3.get();
             case 4:
-                return ModItems.pure_blood_4.get();
+                return ModItems.PURE_BLOOD_4.get();
             default:
                 LOGGER.warn("Pure blood of level {} does not exist", level);
-                return ModItems.pure_blood_4.get();
+                return ModItems.PURE_BLOOD_4.get();
         }
     }
 
@@ -73,7 +73,7 @@ public class PureBloodItem extends Item {
         if (entityLiving instanceof Player) {
             VampirePlayer.getOpt((Player) entityLiving).ifPresent(v -> {
                 v.drinkBlood(50, 0.3f, false);
-                entityLiving.addEffect(new MobEffectInstance(ModEffects.saturation.get()));
+                entityLiving.addEffect(new MobEffectInstance(ModEffects.SATURATION.get()));
                 stack.shrink(1);
                 checkWingConditions(v);
             });

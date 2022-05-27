@@ -67,7 +67,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
     private static boolean warnedRecipeType = false;
 
     public AlchemicalCauldronBlockEntity(BlockPos pos, BlockState state) {
-        super(ModTiles.alchemical_cauldron.get(), pos, state, ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get());
+        super(ModTiles.ALCHEMICAL_CAULDRON.get(), pos, state, ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get());
         this.items = NonNullList.withSize(4, ItemStack.EMPTY);
     }
 
@@ -75,7 +75,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
     @Override
     public boolean canOpen(@Nonnull Player player) {
         if (super.canOpen(player)) {
-            if (HunterPlayer.getOpt(player).map(HunterPlayer::getSkillHandler).map(h -> h.isSkillEnabled(HunterSkills.basic_alchemy.get())).orElse(false)) {
+            if (HunterPlayer.getOpt(player).map(HunterPlayer::getSkillHandler).map(h -> h.isSkillEnabled(HunterSkills.BASIC_ALCHEMY.get())).orElse(false)) {
                 if (ownerID == null) {
                     setOwnerID(player);
                     return true;

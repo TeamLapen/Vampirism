@@ -62,7 +62,7 @@ public class ClientEventHandler {
                 UnbakedModel model = event.getModelLoader().getModelOrMissing(loc);
                 BakedBloodContainerModel.BLOOD_FLUID_MODELS[x] = model.bake(event.getModelLoader(), ForgeModelBakery.defaultTextureGetter(), BlockModelRotation.X0_Y0, loc);
                 if (model instanceof BlockModel) {
-                    ((BlockModel) model).textureMap.put("fluid", Either.left(ForgeHooksClient.getBlockMaterial(ModFluids.impure_blood.get().getAttributes().getStillTexture())));
+                    ((BlockModel) model).textureMap.put("fluid", Either.left(ForgeHooksClient.getBlockMaterial(ModFluids.IMPURE_BLOOD.get().getAttributes().getStillTexture())));
                     BakedBloodContainerModel.IMPURE_BLOOD_FLUID_MODELS[x] = model.bake(event.getModelLoader(), ForgeModelBakery.defaultTextureGetter(), BlockModelRotation.X0_Y0, loc);
                 } else {
                     LOGGER.error("Cannot apply impure blood texture to blood container model {}", model);
@@ -73,7 +73,7 @@ public class ClientEventHandler {
             ArrayList<ResourceLocation> modelLocations = Lists.newArrayList();
 
             for (ResourceLocation modelLoc : registry.keySet()) {
-                if (modelLoc.getNamespace().equals(REFERENCE.MODID) && modelLoc.getPath().equals(ModBlocks.blood_container.getId().getPath())) {
+                if (modelLoc.getNamespace().equals(REFERENCE.MODID) && modelLoc.getPath().equals(ModBlocks.BLOOD_CONTAINER.getId().getPath())) {
                     modelLocations.add(modelLoc);
                 }
             }
@@ -101,7 +101,7 @@ public class ClientEventHandler {
             ArrayList<ResourceLocation> modelLocations = Lists.newArrayList();
 
             for (ResourceLocation modelLoc : registry.keySet()) {
-                if (modelLoc.getNamespace().equals(REFERENCE.MODID) && modelLoc.getPath().equals(ModBlocks.altar_inspiration.getId().getPath())) {
+                if (modelLoc.getNamespace().equals(REFERENCE.MODID) && modelLoc.getPath().equals(ModBlocks.ALTAR_INSPIRATION.getId().getPath())) {
                     modelLocations.add(modelLoc);
                 }
             }
@@ -132,7 +132,7 @@ public class ClientEventHandler {
             ArrayList<ResourceLocation> modelLocations = Lists.newArrayList();
 
             for (ResourceLocation modelLoc : registry.keySet()) {
-                if (modelLoc.getNamespace().equals(REFERENCE.MODID) && modelLoc.getPath().equals(ModBlocks.weapon_table.getId().getPath())) {
+                if (modelLoc.getNamespace().equals(REFERENCE.MODID) && modelLoc.getPath().equals(ModBlocks.WEAPON_TABLE.getId().getPath())) {
                     modelLocations.add(modelLoc);
                 }
             }

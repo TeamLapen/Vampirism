@@ -44,7 +44,7 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem {
     private static final int capacity = AMOUNT * MULTIPLIER;
 
     public static ItemStack getStackWithDamage(int damage) {
-        ItemStack stack = new ItemStack(ModItems.blood_bottle.get());
+        ItemStack stack = new ItemStack(ModItems.BLOOD_BOTTLE.get());
         stack.setDamageValue(damage);
         return stack;
     }
@@ -66,7 +66,7 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem {
     public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> list) {
         super.fillItemCategory(group, list);
         if (this.allowdedIn(group)) {
-            ItemStack stack = new ItemStack(ModItems.blood_bottle.get());
+            ItemStack stack = new ItemStack(ModItems.BLOOD_BOTTLE.get());
             stack.setDamageValue(9);
             list.add(stack);
         }

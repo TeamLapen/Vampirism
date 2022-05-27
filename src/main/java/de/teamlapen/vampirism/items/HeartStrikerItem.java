@@ -39,7 +39,7 @@ public class HeartStrikerItem extends VampirismVampireSword implements IItemWith
 
     @Override
     public boolean isValidRepairItem(@Nonnull ItemStack toRepair, ItemStack repair) {
-        return (this.getVampirismTier() == TIER.NORMAL ? ModItems.blood_infused_iron_ingot.get() : ModItems.blood_infused_enhanced_iron_ingot.get()).equals(repair.getItem()) || super.isValidRepairItem(toRepair, repair);
+        return (this.getVampirismTier() == TIER.NORMAL ? ModItems.BLOOD_INFUSED_IRON_INGOT.get() : ModItems.BLOOD_INFUSED_ENHANCED_IRON_INGOT.get()).equals(repair.getItem()) || super.isValidRepairItem(toRepair, repair);
     }
 
     @Override

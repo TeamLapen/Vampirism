@@ -20,7 +20,7 @@ import java.util.Random;
 public class ModParticles {
     public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, REFERENCE.MODID);
 
-    public static final RegistryObject<ParticleType<FlyingBloodParticleData>> flying_blood =
+    public static final RegistryObject<ParticleType<FlyingBloodParticleData>> FLYING_BLOOD =
             PARTICLE_TYPES.register("flying_blood", () -> new ParticleType<>(false, FlyingBloodParticleData.DESERIALIZER) {
 
                 @Nonnull
@@ -29,7 +29,7 @@ public class ModParticles {
                     return FlyingBloodParticleData.CODEC;
                 }
             });
-    public static final RegistryObject<ParticleType<FlyingBloodEntityParticleData>> flying_blood_entity =
+    public static final RegistryObject<ParticleType<FlyingBloodEntityParticleData>> FLYING_BLOOD_ENTITY =
             PARTICLE_TYPES.register("flying_blood_entity", () -> new ParticleType<>(false, FlyingBloodEntityParticleData.DESERIALIZER) {
 
                 @Nonnull
@@ -38,7 +38,7 @@ public class ModParticles {
                     return FlyingBloodEntityParticleData.CODEC;
                 }
             });
-    public static final RegistryObject<ParticleType<GenericParticleData>> generic =
+    public static final RegistryObject<ParticleType<GenericParticleData>> GENERIC =
             PARTICLE_TYPES.register("generic", () -> new ParticleType<>(false, GenericParticleData.DESERIALIZER) {
 
                 @Nonnull

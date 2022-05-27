@@ -63,7 +63,7 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
     @Nonnull
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRecipes.alchemical_cauldron.get();
+        return ModRecipes.ALCHEMICAL_CAULDRON.get();
     }
 
     @Override

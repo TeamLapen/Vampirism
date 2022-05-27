@@ -235,7 +235,7 @@ public class CoffinBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> blockEntity) {
-        return level.isClientSide() && state.getValue(PART) == CoffinPart.HEAD ? createTickerHelper(blockEntity, ModTiles.coffin.get(), CoffinBlockEntity::clientTickHead) : null;
+        return level.isClientSide() && state.getValue(PART) == CoffinPart.HEAD ? createTickerHelper(blockEntity, ModTiles.COFFIN.get(), CoffinBlockEntity::clientTickHead) : null;
     }
 
     public enum CoffinPart implements StringRepresentable {

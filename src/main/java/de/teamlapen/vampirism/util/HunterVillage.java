@@ -37,12 +37,12 @@ public class HunterVillage {
     }
 
     public static void hunterVillage(IFactionVillageBuilder builder) {
-        builder.badOmenEffect(ModEffects.bad_omen_hunter)
-                .captureEntities(() -> Lists.newArrayList(new CaptureEntityEntry(ModEntities.hunter.get(), 10)))
-                .factionVillagerProfession(ModVillage.hunter_expert)
+        builder.badOmenEffect(ModEffects.BAD_OMEN_HUNTER)
+                .captureEntities(() -> Lists.newArrayList(new CaptureEntityEntry(ModEntities.HUNTER.get(), 10)))
+                .factionVillagerProfession(ModVillage.HUNTER_EXPERT)
                 .guardSuperClass(HunterBaseEntity.class)
-                .taskMaster(ModEntities.task_master_hunter::get)
+                .taskMaster(ModEntities.TASK_MASTER_HUNTER::get)
                 .banner(HunterVillage::createBanner)
-                .totem(ModBlocks.totem_top_vampirism_hunter::get, ModBlocks.totem_top_vampirism_hunter_crafted::get);
+                .totem(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER::get, ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED::get);
     }
 }

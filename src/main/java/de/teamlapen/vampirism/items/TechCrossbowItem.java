@@ -123,7 +123,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
     @Nullable
     @Override
     public ISkill<IHunterPlayer> getRequiredSkill(@Nonnull ItemStack stack) {
-        return HunterSkills.tech_weapons.get();
+        return HunterSkills.TECH_WEAPONS.get();
     }
 
     @Nonnull
@@ -144,7 +144,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
             }
             return ItemStack.EMPTY;
         }
-        return new ItemStack(ModItems.crossbow_arrow_normal.get());
+        return new ItemStack(ModItems.CROSSBOW_ARROW_NORMAL.get());
     }
 
     @Override
@@ -172,7 +172,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
     }
 
     private boolean isArrowPackage(@Nonnull ItemStack stack) {
-        return ModItems.tech_crossbow_ammo_package.get() == stack.getItem();
+        return ModItems.TECH_CROSSBOW_AMMO_PACKAGE.get() == stack.getItem();
     }
 
 

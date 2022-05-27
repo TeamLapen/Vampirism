@@ -134,7 +134,7 @@ public class GarlicDiffuserBlock extends VampirismBlockContainer {
     @Override
     public InteractionResult use(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
         ItemStack heldItem = player.getItemInHand(hand);
-        if (!heldItem.isEmpty() && ModItems.purified_garlic.get() == heldItem.getItem()) {
+        if (!heldItem.isEmpty() && ModItems.PURIFIED_GARLIC.get() == heldItem.getItem()) {
             if (!world.isClientSide) {
                 GarlicDiffuserBlockEntity t = getTile(world, pos);
                 if (t != null) {
@@ -177,7 +177,7 @@ public class GarlicDiffuserBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
-        return createTickerHelper(type, ModTiles.garlic_diffuser.get(), GarlicDiffuserBlockEntity::tick);
+        return createTickerHelper(type, ModTiles.GARLIC_DIFFUSER.get(), GarlicDiffuserBlockEntity::tick);
     }
 
     public enum Type implements StringRepresentable {

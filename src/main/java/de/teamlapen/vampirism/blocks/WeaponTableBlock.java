@@ -127,7 +127,7 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
      */
     private boolean canUse(Player player) {
         if (Helper.isHunter(player)) {
-            return HunterPlayer.getOpt(player).map(HunterPlayer::getSkillHandler).map(handler -> handler.isSkillEnabled(HunterSkills.weapon_table.get())).orElse(false);
+            return HunterPlayer.getOpt(player).map(HunterPlayer::getSkillHandler).map(handler -> handler.isSkillEnabled(HunterSkills.WEAPON_TABLE.get())).orElse(false);
         }
         return false;
     }

@@ -58,7 +58,7 @@ public class DamageHandler {
     private static void affectVampireGarlic(IVampire vampire, EnumStrength strength, float multiplier, boolean ambient) {
         if (strength == EnumStrength.NONE) return;
         LivingEntity entity = vampire.getRepresentingEntity();
-        entity.addEffect(new MobEffectInstance(ModEffects.garlic.get(), (int) (multiplier * 20), strength.getStrength() - 1, ambient, true));
+        entity.addEffect(new MobEffectInstance(ModEffects.GARLIC.get(), (int) (multiplier * 20), strength.getStrength() - 1, ambient, true));
         if (entity instanceof Player && ((Player) entity).getAbilities().instabuild) return;
         entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, (int) (multiplier * 20), 1, ambient, false));
         if (strength == EnumStrength.MEDIUM || strength == EnumStrength.STRONG) {
@@ -69,8 +69,8 @@ public class DamageHandler {
         }
         if (vampire instanceof IVampirePlayer) {
             IActionHandler<IVampirePlayer> actionHandler = ((IVampirePlayer) vampire).getActionHandler();
-            if (actionHandler.isActionActive(VampireActions.disguise_vampire.get())) {
-                actionHandler.toggleAction(VampireActions.disguise_vampire.get());
+            if (actionHandler.isActionActive(VampireActions.DISGUISE_VAMPIRE.get())) {
+                actionHandler.toggleAction(VampireActions.DISGUISE_VAMPIRE.get());
             }
         }
     }
@@ -140,16 +140,16 @@ public class DamageHandler {
         }
         if (vampire && entity instanceof Player) {
             VampirePlayer.getOpt((Player) entity).map(VampirePlayer::getActionHandler).ifPresent(actionHandler -> {
-                if (actionHandler.isActionActive(VampireActions.disguise_vampire.get())) {
-                    actionHandler.toggleAction(VampireActions.disguise_vampire.get());
+                if (actionHandler.isActionActive(VampireActions.DISGUISE_VAMPIRE.get())) {
+                    actionHandler.toggleAction(VampireActions.DISGUISE_VAMPIRE.get());
                 }
-                if (actionHandler.isActionActive(VampireActions.vampire_invisibility.get())) {
-                    actionHandler.toggleAction(VampireActions.vampire_invisibility.get());
+                if (actionHandler.isActionActive(VampireActions.VAMPIRE_INVISIBILITY.get())) {
+                    actionHandler.toggleAction(VampireActions.VAMPIRE_INVISIBILITY.get());
                 }
             });
         } else if (vampire && entity instanceof IEntityActionUser) {
             IActionHandlerEntity h = ((IEntityActionUser) entity).getActionHandler();
-            if (h.isActionActive(EntityActions.entity_invisible.get())) {
+            if (h.isActionActive(EntityActions.ENTITY_INVISIBLE.get())) {
                 h.deactivateAction();
             }
         }
