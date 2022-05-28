@@ -221,6 +221,9 @@ public class ModItems {
     public static final RegistryObject<CrucifixItem> CRUCIFIX_ENHANCED = ITEMS.register("crucifix_enhanced", () -> new CrucifixItem(IItemWithTier.TIER.ENHANCED));
     public static final RegistryObject<CrucifixItem> CRUCIFIX_ULTIMATE = ITEMS.register("crucifix_ultimate", () -> new CrucifixItem(IItemWithTier.TIER.ULTIMATE));
 
+    public static final RegistryObject<VampirismBoatItem> dark_spruce_boat = ITEMS.register("dark_spruce_boat", () -> new VampirismBoatItem(VampirismBoatItem.BoatType.DARK_SPRUCE, creativeTabProps().stacksTo(1)));
+    public static final RegistryObject<VampirismBoatItem> cursed_spruce_boat = ITEMS.register("cursed_spruce_boat", () -> new VampirismBoatItem(VampirismBoatItem.BoatType.CURSED_SPRUCE, creativeTabProps().stacksTo(1)));
+
     static void registerCraftingRecipes() {
         // Brewing
         BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER)), Ingredient.of(new ItemStack(HOLY_SALT.get())), new ItemStack(HOLY_SALT_WATER.get()));

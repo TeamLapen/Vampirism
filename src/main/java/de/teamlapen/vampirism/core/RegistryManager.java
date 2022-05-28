@@ -3,11 +3,14 @@ package de.teamlapen.vampirism.core;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.entity.action.EntityActions;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
+import de.teamlapen.vampirism.items.VampirismBoatItem;
+import de.teamlapen.vampirism.misc.VampirismDispenseBoatBehavior;
 import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -81,6 +84,8 @@ public class RegistryManager implements IInitListener {
                     ModVillage.villagerTradeSetup();
                 });
                 ModTiles.registerTileExtensionsUnsafe();
+                DispenserBlock.registerBehavior(ModItems.dark_spruce_boat.get(), new VampirismDispenseBoatBehavior(VampirismBoatItem.BoatType.DARK_SPRUCE));
+                DispenserBlock.registerBehavior(ModItems.cursed_spruce_boat.get(), new VampirismDispenseBoatBehavior(VampirismBoatItem.BoatType.CURSED_SPRUCE));
             case LOAD_COMPLETE:
                 if (ModEffects.checkNightVision()) {
                     event.enqueueWork(ModEffects::fixNightVisionEffectTypesUnsafe);

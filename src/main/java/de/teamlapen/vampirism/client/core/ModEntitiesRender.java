@@ -105,6 +105,8 @@ public class ModEntitiesRender {
         event.registerEntityRenderer(ModEntities.TASK_MASTER_VAMPIRE.get(), (VampireTaskMasterRenderer::new));
         event.registerEntityRenderer(ModEntities.TASK_MASTER_HUNTER.get(), (HunterTaskMasterRenderer::new));
         event.registerEntityRenderer(ModEntities.dummy_sit_entity.get(), DummyRenderer::new);
+        event.registerEntityRenderer(ModEntities.BOAT.get(), context -> new VampirismBoatRenderer(context, false));
+
 
     }
 

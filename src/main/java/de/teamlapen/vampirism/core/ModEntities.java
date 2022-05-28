@@ -66,6 +66,8 @@ public class ModEntities {
     public static final RegistryObject<EntityType<VampireTaskMasterEntity>> TASK_MASTER_VAMPIRE = prepareEntityType("task_master_vampire", ()->EntityType.Builder.of(VampireTaskMasterEntity::new, VReference.VAMPIRE_CREATURE_TYPE).sized(0.6f, 1.95f), true);
     public static final RegistryObject<EntityType<HunterTaskMasterEntity>> TASK_MASTER_HUNTER = prepareEntityType("task_master_hunter", ()->EntityType.Builder.of(HunterTaskMasterEntity::new, VReference.HUNTER_CREATURE_TYPE).sized(0.6f, 1.95f), true);
     public static final RegistryObject<EntityType<SitEntity>> dummy_sit_entity = prepareEntityType("dummy_sit_entity", () -> EntityType.Builder.of(SitEntity::new, MobCategory.MISC).sized(0.0001f, 0.0001f).setTrackingRange(256).setUpdateInterval(20), false);
+    public static final RegistryObject<EntityType<VampirismBoatEntity>> BOAT = prepareEntityType("boat", () -> EntityType.Builder.<VampirismBoatEntity>of(VampirismBoatEntity::new, MobCategory.MISC).sized(1.375F, 0.5625F).clientTrackingRange(10).setCustomClientFactory((spawnENtity, level) -> new VampirismBoatEntity(level, spawnENtity.getPosX(), spawnENtity.getPosY(), spawnENtity.getPosZ())), false);
+
 
     /**
      * Registers special extended creature classes
