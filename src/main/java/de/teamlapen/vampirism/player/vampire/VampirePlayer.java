@@ -1270,9 +1270,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     private void applyEntityAttributes() {
-        player.getAttribute(ModAttributes.sundamage).setBaseValue(VampirismConfig.BALANCE.vpSundamage.get());
-        player.getAttribute(ModAttributes.blood_exhaustion).setBaseValue(VampirismConfig.BALANCE.vpBasicBloodExhaustionMod.get());
-        player.getAttribute(ModAttributes.bite_damage).setBaseValue(0);
+        player.getAttribute(ModAttributes.SUNDAMAGE.get()).setBaseValue(VampirismConfig.BALANCE.vpSundamage.get());
+        player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get()).setBaseValue(VampirismConfig.BALANCE.vpBasicBloodExhaustionMod.get());
+        player.getAttribute(ModAttributes.BITE_DAMAGE.get()).setBaseValue(0);
     }
 
     /**
@@ -1280,7 +1280,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      */
     private void applyLevelModifiersA(int level) {
         LevelAttributeModifier.applyModifier(player, Attributes.MAX_HEALTH, "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpHealthMaxMod.get(), 0.5, AttributeModifier.Operation.ADDITION, true);
-        LevelAttributeModifier.applyModifier(player, ModAttributes.blood_exhaustion, "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpExhaustionMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
+        LevelAttributeModifier.applyModifier(player, ModAttributes.BLOOD_EXHAUSTION.get(), "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpExhaustionMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
     }
 
     /**
@@ -1398,7 +1398,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             player.addEffect(new EffectInstance(Effects.WEAKNESS, 152, 0));
         }
         if (getLevel() >= VampirismConfig.BALANCE.vpSundamageMinLevel.get() && ticksInSun >= 100 && player.tickCount % 40 == 5) {
-            float damage = (float) (player.getAttribute(ModAttributes.sundamage).getValue());
+            float damage = (float) (player.getAttribute(ModAttributes.SUNDAMAGE.get()).getValue());
             if (damage > 0) player.hurt(VReference.SUNDAMAGE, damage);
             if (!player.isAlive()) {
                 turnToAsh(); //Instead of the normal dying animation, just turn to ash

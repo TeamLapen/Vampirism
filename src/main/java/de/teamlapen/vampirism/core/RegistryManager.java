@@ -41,6 +41,7 @@ import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.treedecorator.TreeDecoratorType;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
@@ -53,7 +54,34 @@ import net.minecraftforge.registries.ObjectHolderRegistry;
  */
 public class RegistryManager implements IInitListener {
 
-
+    public static void setupRegistries(IEventBus modbus) {
+        ModAttributes.registerAttributes(modbus);
+        ModBiomes.registerBiomes(modbus);
+        ModBlocks.registerBlocks(modbus);
+        ModContainer.registerContainer(modbus);
+        ModEffects.registerEffects(modbus);
+        ModEnchantments.registerEnchantments(modbus);
+        ModEntities.registerEntities(modbus);
+        ModFeatures.registerFeaturesAndStructures(modbus);
+        ModFluids.registerFluids(modbus);
+        ModItems.registerItems(modbus);
+        ModLoot.registerLoot(modbus);
+        ModParticles.registerParticles(modbus);
+        ModPotions.registerPotions(modbus);
+        ModRecipes.registerRecipeTypesAndSerializers(modbus);
+        ModRefinements.registerRefinements(modbus);
+        ModRefinementSets.registerRefinementSets(modbus);
+        ModSounds.registerSounds(modbus);
+        ModTasks.registerTasks(modbus);
+        ModTiles.registerTiles(modbus);
+        ModVillage.registerVillageObjects(modbus);
+        VampireActions.registerDefaultActions(modbus);
+        HunterActions.registerDefaultActions(modbus);
+        EntityActions.registerDefaultActions(modbus);
+        MinionTasks.register(modbus);
+        VampireSkills.registerVampireSkills(modbus);
+        HunterSkills.registerHunterSkills(modbus);
+    }
     @SubscribeEvent
     public void onBuildRegistries(RegistryEvent.NewRegistry event) {
         ModRegistries.init();
@@ -79,13 +107,18 @@ public class RegistryManager implements IInitListener {
                 ModItems.registerCraftingRecipes();
                 ModPotions.registerPotionMixes();
                 ModAdvancements.registerAdvancementTrigger();
-                event.enqueueWork(ModCommands::registerArgumentTypesUsage);
                 ModLoot.registerLootConditions();
                 ModLoot.registerLootFunctionType();
                 VampirismBiomeFeatures.init();
                 ModTiles.registerTileExtensionsUnsafe();
                 DispenserBlock.registerBehavior(ModItems.dark_spruce_boat, new VampirismDispenseBoatBehavior(VampirismBoatItem.BoatType.DARK_SPRUCE));
                 DispenserBlock.registerBehavior(ModItems.cursed_spruce_boat, new VampirismDispenseBoatBehavior(VampirismBoatItem.BoatType.CURSED_SPRUCE));
+                event.enqueueWork(() -> {
+                    ModEntities.initializeEntities();
+                    ModStats.registerCustomStats();
+                    ModCommands.registerArgumentTypesUsage();
+                    ModVillage.villagerTradeSetup();
+                });
             case LOAD_COMPLETE:
                 event.enqueueWork(ModFeatures::registerStructureSeparation);
                 if (ModEffects.checkNightVision()) {

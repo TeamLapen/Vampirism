@@ -33,8 +33,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class GarlicBeaconBlock extends VampirismBlockContainer {
-
-    public final static String regName = "garlic_beacon";
     public static final DirectionProperty FACING = HorizontalBlock.FACING;
     private final static AxisAlignedBB BOUNDING_BOX = new AxisAlignedBB(0.07, 0, 0.07, 0.93, 0.75, 0.93);
     private static final VoxelShape shape = makeShape();
@@ -48,7 +46,7 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
     private final Type type;
 
     public GarlicBeaconBlock(Type type) {
-        super(regName + "_" + type.getName(), Properties.of(Material.STONE).strength(3f).sound(SoundType.STONE).noOcclusion());
+        super(Properties.of(Material.STONE).strength(3f).sound(SoundType.STONE).noOcclusion());
         this.type = type;
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
     }

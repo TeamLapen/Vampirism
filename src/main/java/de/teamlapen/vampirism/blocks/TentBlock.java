@@ -54,7 +54,6 @@ public class TentBlock extends VampirismBlock {
      *
      */
     public static final IntegerProperty POSITION = IntegerProperty.create("position", 0, 3);
-    private static final String name = "tent";
     private static final Table<Direction, Integer, VoxelShape> shapes;
     private static final Map<PlayerEntity.SleepResult, ITextComponent> sleepResults;
     private static final Table<Integer, Direction, Pair<Double, Double>> offsets;
@@ -199,13 +198,8 @@ public class TentBlock extends VampirismBlock {
                 Block.box(1, 1, 0, 2, 14.65, 1),
                 Block.box(0, 1, 0, 1, 15.85, 1));
     }
-
     public TentBlock() {
-        this(name);
-    }
-
-    protected TentBlock(String name) {
-        super(name, Properties.of(Material.WOOL).strength(0.6f).sound(SoundType.WOOL).noOcclusion());
+        super(Properties.of(Material.WOOL).strength(0.6f).sound(SoundType.WOOL).noOcclusion());
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(POSITION, 0).setValue(BedBlock.OCCUPIED, false));
     }
 

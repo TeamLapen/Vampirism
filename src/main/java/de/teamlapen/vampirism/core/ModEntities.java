@@ -199,9 +199,9 @@ public class ModEntities {
     }
 
     static void onModifyEntityTypeAttributes(EntityAttributeModificationEvent event) {
-        event.add(EntityType.PLAYER, ModAttributes.sundamage);
-        event.add(EntityType.PLAYER, ModAttributes.blood_exhaustion);
-        event.add(EntityType.PLAYER, ModAttributes.bite_damage);
+        event.add(EntityType.PLAYER, ModAttributes.SUNDAMAGE.get());
+        event.add(EntityType.PLAYER, ModAttributes.BLOOD_EXHAUSTION.get());
+        event.add(EntityType.PLAYER, ModAttributes.BITE_DAMAGE.get());
 
     }
 

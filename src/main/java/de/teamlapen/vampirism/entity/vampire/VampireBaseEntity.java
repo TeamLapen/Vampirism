@@ -47,7 +47,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
-        return VampirismEntity.getAttributeBuilder().add(ModAttributes.sundamage, BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
+        return VampirismEntity.getAttributeBuilder().add(ModAttributes.SUNDAMAGE.get(), BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
     }
     private final boolean countAsMonsterForSpawn;
     protected EnumStrength garlicResist = EnumStrength.NONE;
@@ -88,7 +88,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
                     this.hurt(VReference.SUNDAMAGE, 1000);
                     turnToAsh();
                 } else if (tickCount % 40 == 11) {
-                    double dmg = getAttribute(ModAttributes.sundamage).getValue();
+                    double dmg = getAttribute(ModAttributes.SUNDAMAGE.get()).getValue();
                     if (dmg > 0) this.hurt(VReference.SUNDAMAGE, (float) dmg);
                 }
 

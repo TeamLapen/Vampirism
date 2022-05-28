@@ -33,7 +33,7 @@ public class CandelabraBlock extends VampirismHorizontalBlock {
     }
 
     public CandelabraBlock() {
-        super("candelabra", AbstractBlock.Properties.of(Material.METAL).strength(2f).lightLevel(s -> 14).noOcclusion(), makeCandelabraShape());
+        super(AbstractBlock.Properties.of(Material.METAL).strength(2f).lightLevel(s -> 14).noOcclusion(), makeCandelabraShape());
     }
 
     @Override

@@ -28,10 +28,8 @@ import javax.annotation.Nullable;
 
 public class CursedEarthBlock extends VampirismBlock {
 
-    private static final String name = "cursed_earth";
-
     public CursedEarthBlock() {
-        super(name, Properties.of(Material.DIRT, MaterialColor.TERRACOTTA_BROWN).strength(0.5f, 2.0f).sound(SoundType.GRAVEL));
+        super(Properties.of(Material.DIRT, MaterialColor.TERRACOTTA_BROWN).strength(0.5f, 2.0f).sound(SoundType.GRAVEL));
 
     }
 

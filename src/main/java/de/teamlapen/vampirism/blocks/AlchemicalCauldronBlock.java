@@ -31,7 +31,6 @@ import java.util.Random;
 
 
 public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
-    public static final String regName = "alchemical_cauldron";
     /**
      * 0: No liquid,
      * 1: Liquid,
@@ -50,7 +49,6 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
     public AlchemicalCauldronBlock() {
         super(Block.Properties.of(Material.METAL).strength(4f).noOcclusion());
         this.registerDefaultState(this.stateDefinition.any().setValue(LIQUID, 0).setValue(FACING, Direction.NORTH).setValue(LIT, false));
-        this.setRegistryName(REFERENCE.MODID, regName);
     }
 
     @OnlyIn(Dist.CLIENT)

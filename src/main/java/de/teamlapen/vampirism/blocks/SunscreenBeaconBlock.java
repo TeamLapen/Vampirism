@@ -20,10 +20,8 @@ import java.util.List;
 
 public class SunscreenBeaconBlock extends VampirismBlockContainer {
 
-    private static final String regName = "sunscreen_beacon";
-
     public SunscreenBeaconBlock() {
-        super(regName, Properties.of(Material.METAL).strength(-1, 3600000).noOcclusion());
+        super(Properties.of(Material.METAL).strength(-1, 3600000).noOcclusion());
     }
 
     @Override

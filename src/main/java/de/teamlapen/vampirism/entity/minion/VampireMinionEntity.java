@@ -128,7 +128,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
         if (!level.isClientSide) {
             if (isGettingSundamage(level) && tickCount % 40 == 11) {
-                double dmg = getAttribute(ModAttributes.sundamage).getValue();
+                double dmg = getAttribute(ModAttributes.SUNDAMAGE.get()).getValue();
                 if (dmg > 0) this.hurt(VReference.SUNDAMAGE, (float) dmg);
             }
             if (isGettingGarlicDamage(level) != EnumStrength.NONE) {

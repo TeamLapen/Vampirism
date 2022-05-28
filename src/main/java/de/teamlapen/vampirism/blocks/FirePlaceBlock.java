@@ -21,7 +21,6 @@ import java.util.Random;
 
 public class FirePlaceBlock extends VampirismBlock {
     private static final VoxelShape shape = makeShape();
-    private final static String regName = "fire_place";
 
     private static VoxelShape makeShape() {
         return Block.box(0, 0.01, 0, 16, 4, 16);
@@ -29,7 +28,7 @@ public class FirePlaceBlock extends VampirismBlock {
 
 
     public FirePlaceBlock() {
-        super(regName, Properties.of(Material.WOOD).lightLevel(s -> 15).strength(1).noOcclusion());
+        super(Properties.of(Material.WOOD).lightLevel(s -> 15).strength(1).noOcclusion());
 
     }
 

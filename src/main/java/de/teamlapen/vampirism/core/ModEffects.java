@@ -46,7 +46,7 @@ public class ModEffects {
         registry.register(new ThirstEffect("thirst", EffectType.HARMFUL, 859494));
         registry.register(new SanguinareEffect("sanguinare", EffectType.NEUTRAL, 0x6A0888));
         registry.register(new VampirismEffect("saturation", EffectType.BENEFICIAL, 0xDCFF00));
-        registry.register(new VampirismEffect("sunscreen", EffectType.BENEFICIAL, 0xFFF100).addAttributeModifier(ModAttributes.sundamage, "9dc9420c-3e5e-41c7-9ba4-ff70e9dc69fc", -0.5, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        registry.register(new VampirismEffect("sunscreen", EffectType.BENEFICIAL, 0xFFF100).addAttributeModifier(ModAttributes.SUNDAMAGE.get(), "9dc9420c-3e5e-41c7-9ba4-ff70e9dc69fc", -0.5, AttributeModifier.Operation.MULTIPLY_TOTAL));
         registry.register(new VampirismEffect("fire_protection", EffectType.BENEFICIAL, 14981690));
         registry.register(new VampirismEffect("disguise_as_vampire", EffectType.NEUTRAL, 0x999900));
         registry.register(new VampirismEffect("garlic", EffectType.HARMFUL, 0xFFFFFF));

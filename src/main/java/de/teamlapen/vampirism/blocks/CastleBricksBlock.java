@@ -20,11 +20,10 @@ import java.util.List;
 import java.util.Random;
 
 public class CastleBricksBlock extends VampirismBlock {
-    private static final String name = "castle_block";
     private final EnumVariant variant;
 
     public CastleBricksBlock(EnumVariant variant) {
-        super(name + "_" + variant.getName(), Properties.of(Material.STONE).strength(2, 10).sound(SoundType.STONE));
+        super(Properties.of(Material.STONE).strength(2, 10).sound(SoundType.STONE));
         this.variant = variant;
 
     }

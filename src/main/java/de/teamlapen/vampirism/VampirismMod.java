@@ -160,6 +160,8 @@ public class VampirismMod {
         MinecraftForge.EVENT_BUS.register(SitHandler.class);
 
         prepareAPI();
+        
+        RegistryManager.setupRegistries(modbus);
 
         if (OptifineHandler.isOptifineLoaded()) {
             LOGGER.warn("Using Optifine. Expect visual glitches and reduces blood vision functionality if using shaders.");

@@ -149,7 +149,7 @@ public interface CurableConvertedCreature<T extends CreatureEntity, Z extends Cr
         }
         if (!entity.level.isClientSide) {
             if (isGettingSundamage(entity.level) && entity.tickCount % 40 == 11) {
-                double dmg = entity.getAttribute(ModAttributes.sundamage).getValue();
+                double dmg = entity.getAttribute(ModAttributes.SUNDAMAGE.get()).getValue();
                 if (dmg > 0) entity.hurt(VReference.SUNDAMAGE, (float) dmg);
             }
             if (isGettingGarlicDamage(entity.level) != EnumStrength.NONE) {

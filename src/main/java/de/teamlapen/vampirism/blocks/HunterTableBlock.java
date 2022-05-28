@@ -30,7 +30,6 @@ import javax.annotation.Nullable;
  * Table for hunter "education/leveling"
  */
 public class HunterTableBlock extends VampirismHorizontalBlock {
-    public static final String name = "hunter_table";
     public static final EnumProperty<TABLE_VARIANT> VARIANT = EnumProperty.create("variant", TABLE_VARIANT.class);
     private static final VoxelShape SOUTH = makeShape();
     private static final VoxelShape WEST = UtilLib.rotateShape(SOUTH, UtilLib.RotationAmount.NINETY);
@@ -61,7 +60,7 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
 
 
     public HunterTableBlock() {
-        super(name, Properties.of(Material.WOOD).strength(0.5f).noOcclusion());
+        super(Properties.of(Material.WOOD).strength(0.5f).noOcclusion());
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(VARIANT, TABLE_VARIANT.SIMPLE));
     }
 

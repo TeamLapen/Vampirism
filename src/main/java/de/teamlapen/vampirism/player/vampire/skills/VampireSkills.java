@@ -74,8 +74,8 @@ public class VampireSkills {
         registry.register(new ActionSkill<>("dark_blood_projectile", VampireActions.dark_blood_projectile, true));
         registry.register(new ActionSkill<>("freeze", VampireActions.freeze, true));
         registry.register(new ActionSkill<>("half_invulnerable", VampireActions.half_invulnerable, true));
-        registry.register(new VampirismSkill.SimpleVampireSkill("less_blood_thirst", true).registerAttributeModifier(ModAttributes.blood_exhaustion, "980ad86f-fe76-433b-b26a-c4060e0e6751", () -> VampirismConfig.BALANCE.vsBloodThirstReduction1.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
-        registry.register(new VampirismSkill.SimpleVampireSkill("less_sundamage", true).registerAttributeModifier(ModAttributes.sundamage, "EB47EDC1-ED4E-4CD8-BDDC-BE40956042A2", () -> VampirismConfig.BALANCE.vsSundamageReduction1.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
+        registry.register(new VampirismSkill.SimpleVampireSkill("less_blood_thirst", true).registerAttributeModifier(ModAttributes.BLOOD_EXHAUSTION.get(), "980ad86f-fe76-433b-b26a-c4060e0e6751", () -> VampirismConfig.BALANCE.vsBloodThirstReduction1.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
+        registry.register(new VampirismSkill.SimpleVampireSkill("less_sundamage", true).registerAttributeModifier(ModAttributes.SUNDAMAGE.get(), "EB47EDC1-ED4E-4CD8-BDDC-BE40956042A2", () -> VampirismConfig.BALANCE.vsSundamageReduction1.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
         registry.register(new VampirismSkill.SimpleVampireSkill("night_vision", false)
                 .setToggleActions(player -> {
                     player.unlockVision(VReference.vision_nightVision);
