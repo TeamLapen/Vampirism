@@ -97,7 +97,7 @@ public class CrossbowArrowItem extends VampirismItem implements IVampirismCrossb
                         BlockState blockState = entity.getCommandSenderWorld().getBlockState(pos);
                         if (blockState.getMaterial().isReplaceable()
                                 && entity.getCommandSenderWorld().getBlockState(pos.below()).isFaceSturdy(entity.getCommandSenderWorld(), pos.below(), Direction.UP) && (entity).getRNG().nextInt(4) != 0) {
-                            entity.getCommandSenderWorld().setBlockAndUpdate(pos, ModBlocks.alchemical_fire.defaultBlockState());
+                            entity.getCommandSenderWorld().setBlockAndUpdate(pos, ModBlocks.ALCHEMICAL_FIRE.get().defaultBlockState());
                         }
                     }
                 }

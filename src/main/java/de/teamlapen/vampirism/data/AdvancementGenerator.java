@@ -141,14 +141,14 @@ public class AdvancementGenerator extends AdvancementProvider {
                     .addCriterion("flower", VampireActionTrigger.builder(VampireActionTrigger.Action.SUCK_BLOOD))
                     .save(consumer, REFERENCE.MODID + ":vampire/first_blood");
             Advancement blood_cult = Advancement.Builder.advancement()
-                    .display(ModBlocks.altar_infusion, new TranslationTextComponent("advancement.vampirism.blood_cult"), new TranslationTextComponent("advancement.vampirism.blood_cult.desc"), null, FrameType.TASK, true, true, true)
+                    .display(ModBlocks.ALTAR_INFUSION.get(), new TranslationTextComponent("advancement.vampirism.blood_cult"), new TranslationTextComponent("advancement.vampirism.blood_cult.desc"), null, FrameType.TASK, true, true, true)
                     .parent(become_vampire)
                     .addCriterion("flower", VampireActionTrigger.builder(VampireActionTrigger.Action.PERFORM_RITUAL_INFUSION))
                     .save(consumer, REFERENCE.MODID + ":vampire/blood_cult");
             Advancement extra_storage = Advancement.Builder.advancement()
-                    .display(ModBlocks.blood_container, new TranslationTextComponent("advancement.vampirism.extra_storage"), new TranslationTextComponent("advancement.vampirism.extra_storage.desc"), null, FrameType.TASK, true, true, true)
+                    .display(ModBlocks.BLOOD_CONTAINER.get(), new TranslationTextComponent("advancement.vampirism.extra_storage"), new TranslationTextComponent("advancement.vampirism.extra_storage.desc"), null, FrameType.TASK, true, true, true)
                     .parent(first_blood)
-                    .addCriterion("blood_container", InventoryChangeTrigger.Instance.hasItems(ModBlocks.blood_container))
+                    .addCriterion("blood_container", InventoryChangeTrigger.Instance.hasItems(ModBlocks.BLOOD_CONTAINER.get()))
                     .save(consumer, REFERENCE.MODID + ":vampire/extra_storage");
             Advancement max_level = Advancement.Builder.advancement()
                     .display(ModItems.vampire_fang, new TranslationTextComponent("advancement.vampirism.max_level_vampire"), new TranslationTextComponent("advancement.vampirism.max_level_vampire.desc"), null, FrameType.GOAL, true, true, true)

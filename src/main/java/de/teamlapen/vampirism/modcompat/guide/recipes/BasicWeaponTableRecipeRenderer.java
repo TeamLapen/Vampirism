@@ -39,7 +39,7 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe> extend
 
 
         CRAFTING_GRID.draw(stack, guiLeft + 62, guiTop + 43);
-        baseScreen.drawCenteredStringWithoutShadow(stack, fontRenderer, ModBlocks.weapon_table.getName(), guiLeft + baseScreen.xSize / 2, guiTop + 12, 0);
+        baseScreen.drawCenteredStringWithoutShadow(stack, fontRenderer, ModBlocks.WEAPON_TABLE.get().getName(), guiLeft + baseScreen.xSize / 2, guiTop + 12, 0);
         baseScreen.drawCenteredStringWithoutShadow(stack, fontRenderer, getRecipeName().withStyle(style -> style.withItalic(true)), guiLeft + baseScreen.xSize / 2, guiTop + 14 + fontRenderer.lineHeight, 0);
 
         int outputX = guiLeft + 152;

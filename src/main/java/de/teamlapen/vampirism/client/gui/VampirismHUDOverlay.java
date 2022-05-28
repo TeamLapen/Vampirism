@@ -187,7 +187,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
             }
         } else if (p != null && p.getType() == RayTraceResult.Type.BLOCK) {
             BlockState block = Minecraft.getInstance().level.getBlockState(((BlockRayTraceResult) p).getBlockPos());
-            if (ModBlocks.blood_container.equals(block.getBlock())) {
+            if (ModBlocks.BLOOD_CONTAINER.get().equals(block.getBlock())) {
                 if (VampirePlayer.getOpt(mc.player).map(VampirePlayer::wantsBlood).orElse(false)) {
                     TileEntity tile = Minecraft.getInstance().level.getBlockEntity(((BlockRayTraceResult) p).getBlockPos());
                     if (tile != null) {

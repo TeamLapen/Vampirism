@@ -35,7 +35,7 @@ public class GarlicItem extends VampirismItem implements IPlantable, IFactionExc
 
     @Override
     public BlockState getPlant(IBlockReader world, BlockPos pos) {
-        return ModBlocks.garlic.defaultBlockState();
+        return ModBlocks.GARLIC.get().defaultBlockState();
     }
 
     @Override

@@ -204,115 +204,115 @@ public class LootTablesGenerator extends LootTableProvider {
     private static class ModBlockLootTables extends BlockLootTables {
         @Override
         protected void addTables() {
-            this.dropSelf(ModBlocks.alchemical_cauldron);
-            this.dropSelf(ModBlocks.altar_infusion);
-            this.dropSelf(ModBlocks.altar_inspiration);
-            this.add(ModBlocks.altar_pillar, createSingleItemTable(ModBlocks.altar_pillar)
+            this.dropSelf(ModBlocks.ALCHEMICAL_CAULDRON.get());
+            this.dropSelf(ModBlocks.ALTAR_INFUSION.get());
+            this.dropSelf(ModBlocks.ALTAR_INSPIRATION.get());
+            this.add(ModBlocks.ALTAR_PILLAR.get(), createSingleItemTable(ModBlocks.ALTAR_PILLAR.get())
                     .withPool(LootPool.lootPool().setRolls(ConstantRange.exactly(1)).when(SurvivesExplosion.survivesExplosion())
-                            .add(ItemLootEntry.lootTableItem(Items.STONE_BRICKS).when(BlockStateProperty.hasBlockStateProperties(ModBlocks.altar_pillar).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(AltarPillarBlock.TYPE_PROPERTY, "stone"))))
-                            .add(ItemLootEntry.lootTableItem(Items.IRON_BLOCK).when(BlockStateProperty.hasBlockStateProperties(ModBlocks.altar_pillar).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(AltarPillarBlock.TYPE_PROPERTY, "iron"))))
-                            .add(ItemLootEntry.lootTableItem(Items.GOLD_BLOCK).when(BlockStateProperty.hasBlockStateProperties(ModBlocks.altar_pillar).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(AltarPillarBlock.TYPE_PROPERTY, "gold"))))
-                            .add(ItemLootEntry.lootTableItem(Items.BONE_BLOCK).when(BlockStateProperty.hasBlockStateProperties(ModBlocks.altar_pillar).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(AltarPillarBlock.TYPE_PROPERTY, "bone"))))));
-            this.dropSelf(ModBlocks.altar_tip);
+                            .add(ItemLootEntry.lootTableItem(Items.STONE_BRICKS).when(BlockStateProperty.hasBlockStateProperties(ModBlocks.ALTAR_PILLAR.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(AltarPillarBlock.TYPE_PROPERTY, "stone"))))
+                            .add(ItemLootEntry.lootTableItem(Items.IRON_BLOCK).when(BlockStateProperty.hasBlockStateProperties(ModBlocks.ALTAR_PILLAR.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(AltarPillarBlock.TYPE_PROPERTY, "iron"))))
+                            .add(ItemLootEntry.lootTableItem(Items.GOLD_BLOCK).when(BlockStateProperty.hasBlockStateProperties(ModBlocks.ALTAR_PILLAR.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(AltarPillarBlock.TYPE_PROPERTY, "gold"))))
+                            .add(ItemLootEntry.lootTableItem(Items.BONE_BLOCK).when(BlockStateProperty.hasBlockStateProperties(ModBlocks.ALTAR_PILLAR.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(AltarPillarBlock.TYPE_PROPERTY, "bone"))))));
+            this.dropSelf(ModBlocks.ALTAR_TIP.get());
             CoffinBlock.COFFIN_BLOCKS.values().forEach(coffin -> this.add(coffin, block -> createSinglePropConditionTable(block, CoffinBlock.PART, CoffinBlock.CoffinPart.HEAD)));
-            this.dropSelf(ModBlocks.blood_container);
-            this.dropSelf(ModBlocks.blood_grinder);
-            this.dropSelf(ModBlocks.blood_pedestal);
-            this.dropSelf(ModBlocks.potion_table);
-            this.dropSelf(ModBlocks.blood_sieve);
-            this.dropSelf(ModBlocks.castle_block_dark_brick);
-            this.dropSelf(ModBlocks.castle_block_dark_brick_bloody);
-            this.dropSelf(ModBlocks.castle_block_dark_stone);
-            this.dropSelf(ModBlocks.castle_block_normal_brick);
-            this.dropSelf(ModBlocks.castle_block_purple_brick);
-            this.dropSelf(ModBlocks.castle_slab_dark_brick);
-            this.dropSelf(ModBlocks.castle_slab_dark_stone);
-            this.dropSelf(ModBlocks.castle_slab_purple_brick);
-            this.dropSelf(ModBlocks.castle_stairs_dark_brick);
-            this.dropSelf(ModBlocks.castle_stairs_dark_stone);
-            this.dropSelf(ModBlocks.castle_stairs_purple_brick);
-            this.dropSelf(ModBlocks.stripped_dark_spruce_log);
-            this.dropSelf(ModBlocks.stripped_cursed_spruce_log);
-            this.dropSelf(ModBlocks.dark_spruce_planks);
-            this.dropSelf(ModBlocks.cursed_spruce_planks);
-            this.dropSelf(ModBlocks.dark_spruce_trapdoor);
-            this.dropSelf(ModBlocks.cursed_spruce_trapdoor);
-            this.add(ModBlocks.dark_spruce_door, BlockLootTables::createDoorTable);
-            this.add(ModBlocks.cursed_spruce_door, BlockLootTables::createDoorTable);
-            this.dropSelf(ModBlocks.church_altar);
-            this.dropSelf(ModBlocks.cursed_earth);
-            this.dropSelf(ModBlocks.fire_place);
-            this.add(ModBlocks.garlic, applyExplosionDecay(ModBlocks.garlic, LootTable.lootTable()
+            this.dropSelf(ModBlocks.BLOOD_CONTAINER.get());
+            this.dropSelf(ModBlocks.BLOOD_GRINDER.get());
+            this.dropSelf(ModBlocks.BLOOD_PEDESTAL.get());
+            this.dropSelf(ModBlocks.POTION_TABLE.get());
+            this.dropSelf(ModBlocks.BLOOD_SIEVE.get());
+            this.dropSelf(ModBlocks.CASTLE_BLOCK_DARK_BRICK.get());
+            this.dropSelf(ModBlocks.CASTLE_BLOCK_DARK_BRICK_BLOODY.get());
+            this.dropSelf(ModBlocks.CASTLE_BLOCK_DARK_STONE.get());
+            this.dropSelf(ModBlocks.CASTLE_BLOCK_NORMAL_BRICK.get());
+            this.dropSelf(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK.get());
+            this.dropSelf(ModBlocks.CASTLE_SLAB_DARK_BRICK.get());
+            this.dropSelf(ModBlocks.CASTLE_SLAB_DARK_STONE.get());
+            this.dropSelf(ModBlocks.CASTLE_SLAB_PURPLE_BRICK.get());
+            this.dropSelf(ModBlocks.CASTLE_STAIRS_DARK_BRICK.get());
+            this.dropSelf(ModBlocks.CASTLE_STAIRS_DARK_STONE.get());
+            this.dropSelf(ModBlocks.CASTLE_STAIRS_PURPLE_BRICK.get());
+            this.dropSelf(ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get());
+            this.dropSelf(ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get());
+            this.dropSelf(ModBlocks.DARK_SPRUCE_PLANKS.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_PLANKS.get());
+            this.dropSelf(ModBlocks.DARK_SPRUCE_TRAPDOOR.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_TRAPDOOR.get());
+            this.add(ModBlocks.DARK_SPRUCE_DOOR.get(), BlockLootTables::createDoorTable);
+            this.add(ModBlocks.CURSED_SPRUCE_DOOR.get(), BlockLootTables::createDoorTable);
+            this.dropSelf(ModBlocks.CHURCH_ALTAR.get());
+            this.dropSelf(ModBlocks.CURSED_EARTH.get());
+            this.dropSelf(ModBlocks.FIRE_PLACE.get());
+            this.add(ModBlocks.GARLIC.get(), applyExplosionDecay(ModBlocks.GARLIC.get(), LootTable.lootTable()
                     .withPool(LootPool.lootPool()
                             .add(ItemLootEntry.lootTableItem(ModItems.item_garlic)))
                     .withPool(LootPool.lootPool()
-                            .when(BlockStateProperty.hasBlockStateProperties(ModBlocks.garlic).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(GarlicBlock.AGE, 7)))
+                            .when(BlockStateProperty.hasBlockStateProperties(ModBlocks.GARLIC.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(GarlicBlock.AGE, 7)))
                             .add(ItemLootEntry.lootTableItem(ModItems.item_garlic).apply(ApplyBonus.addBonusBinomialDistributionCount(Enchantments.BLOCK_FORTUNE, 0.5714286F, 3))))));
-            this.dropSelf(ModBlocks.garlic_beacon_weak);
-            this.dropSelf(ModBlocks.garlic_beacon_normal);
-            this.dropSelf(ModBlocks.garlic_beacon_improved);
-            this.dropSelf(ModBlocks.hunter_table);
-            this.add(ModBlocks.med_chair, block -> createSinglePropConditionTable(block, MedChairBlock.PART, MedChairBlock.EnumPart.TOP));
-            this.dropSelf(ModBlocks.sunscreen_beacon);
-            this.add(ModBlocks.tent_main, createSingleItemTable(ModItems.item_tent)
+            this.dropSelf(ModBlocks.GARLIC_BEACON_WEAK.get());
+            this.dropSelf(ModBlocks.GARLIC_BEACON_NORMAL.get());
+            this.dropSelf(ModBlocks.GARLIC_BEACON_IMPROVED.get());
+            this.dropSelf(ModBlocks.HUNTER_TABLE.get());
+            this.add(ModBlocks.MED_CHAIR.get(), block -> createSinglePropConditionTable(block, MedChairBlock.PART, MedChairBlock.EnumPart.TOP));
+            this.dropSelf(ModBlocks.SUNSCREEN_BEACON.get());
+            this.add(ModBlocks.TENT_MAIN.get(), createSingleItemTable(ModItems.item_tent)
                     .withPool(LootPool.lootPool().name("bonus").setRolls(ConstantRange.exactly(1)).when(TentSpawnerCondition.builder())
                             .add(ItemLootEntry.lootTableItem(Items.APPLE))
                             .add(ItemLootEntry.lootTableItem(Items.BREAD))
                             .add(ItemLootEntry.lootTableItem(Items.COAL))
                             .add(ItemLootEntry.lootTableItem(Blocks.OAK_PLANKS))));
-            this.dropSelf(ModBlocks.totem_base);
-            this.dropSelf(ModBlocks.totem_top_crafted);
-            this.add(ModBlocks.totem_top_vampirism_vampire_crafted, createSingleItemTable(ModBlocks.totem_top_crafted));
-            this.add(ModBlocks.totem_top_vampirism_hunter_crafted, createSingleItemTable(ModBlocks.totem_top_crafted));
-            this.add(ModBlocks.totem_top, noDrop());
-            this.add(ModBlocks.totem_top_vampirism_hunter, noDrop());
-            this.add(ModBlocks.totem_top_vampirism_vampire, noDrop());
+            this.dropSelf(ModBlocks.TOTEM_BASE.get());
+            this.dropSelf(ModBlocks.TOTEM_TOP_CRAFTED.get());
+            this.add(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED.get(), createSingleItemTable(ModBlocks.TOTEM_TOP_CRAFTED.get()));
+            this.add(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED.get(), createSingleItemTable(ModBlocks.TOTEM_TOP_CRAFTED.get()));
+            this.add(ModBlocks.TOTEM_TOP.get(), noDrop());
+            this.add(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER.get(), noDrop());
+            this.add(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE.get(), noDrop());
 
-            this.dropSelf(ModBlocks.vampire_orchid);
-            this.dropSelf(ModBlocks.weapon_table);
-            this.add(ModBlocks.tent, noDrop());
-            this.dropPottedContents(ModBlocks.potted_vampire_orchid);
-            this.dropSelf(ModBlocks.dark_spruce_sapling);
-            this.dropSelf(ModBlocks.cursed_spruce_sapling);
-            this.add(ModBlocks.dark_spruce_leaves, (block) -> createLeavesDrops(block, ModBlocks.dark_spruce_sapling, DEFAULT_SAPLING_DROP_RATES));
-            this.dropSelf(ModBlocks.chandelier);
-            this.add(ModBlocks.candelabra_wall, createSingleItemTable(ModItems.item_candelabra));
-            this.add(ModBlocks.candelabra, createSingleItemTable(ModItems.item_candelabra));
-            this.add(ModBlocks.cross, (p_218567_0_) -> createSinglePropConditionTable(p_218567_0_, VampirismSplitBlock.PART, VampirismSplitBlock.Part.MAIN));
-            this.dropSelf(ModBlocks.tombstone1);
-            this.dropSelf(ModBlocks.tombstone2);
-            this.dropSelf(ModBlocks.tombstone3);
-            this.dropSelf(ModBlocks.grave_cage);
-            this.add(ModBlocks.cursed_grass, createSingleItemTable(ModBlocks.cursed_earth));
-            this.dropSelf(ModBlocks.dark_spruce_log);
-            this.add(ModBlocks.cursed_roots, (block) -> {
+            this.dropSelf(ModBlocks.VAMPIRE_ORCHID.get());
+            this.dropSelf(ModBlocks.WEAPON_TABLE.get());
+            this.add(ModBlocks.TENT.get(), noDrop());
+            this.dropPottedContents(ModBlocks.POTTED_VAMPIRE_ORCHID.get());
+            this.dropSelf(ModBlocks.DARK_SPRUCE_SAPLING.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_SAPLING.get());
+            this.add(ModBlocks.DARK_SPRUCE_LEAVES.get(), (block) -> createLeavesDrops(block, ModBlocks.DARK_SPRUCE_SAPLING.get(), DEFAULT_SAPLING_DROP_RATES));
+            this.dropSelf(ModBlocks.CHANDELIER.get());
+            this.add(ModBlocks.CANDELABRA_WALL.get(), createSingleItemTable(ModItems.item_candelabra));
+            this.add(ModBlocks.CANDELABRA.get(), createSingleItemTable(ModItems.item_candelabra));
+            this.add(ModBlocks.CROSS.get(), (p_218567_0_) -> createSinglePropConditionTable(p_218567_0_, VampirismSplitBlock.PART, VampirismSplitBlock.Part.MAIN));
+            this.dropSelf(ModBlocks.TOMBSTONE1.get());
+            this.dropSelf(ModBlocks.TOMBSTONE2.get());
+            this.dropSelf(ModBlocks.TOMBSTONE3.get());
+            this.dropSelf(ModBlocks.GRAVE_CAGE.get());
+            this.add(ModBlocks.CURSED_GRASS.get(), createSingleItemTable(ModBlocks.CURSED_EARTH.get()));
+            this.dropSelf(ModBlocks.DARK_SPRUCE_LOG.get());
+            this.add(ModBlocks.CURSED_ROOTS.get(), (block) -> {
                 return createShearsDispatchTable(block, applyExplosionDecay(block, ItemLootEntry.lootTableItem(Items.STICK).apply(SetCount.setCount(RandomValueRange.between(0.0F, 2.0F)))));
             });
-            this.dropPottedContents(ModBlocks.potted_cursed_roots);
-            this.dropSelf(ModBlocks.cursed_spruce_log);
-            this.add(ModBlocks.cursed_bark, noDrop());
-            this.dropSelf(ModBlocks.dark_spruce_stairs);
-            this.dropSelf(ModBlocks.cursed_spruce_stairs);
-            this.dropSelf(ModBlocks.dark_spruce_wood);
-            this.dropSelf(ModBlocks.cursed_spruce_wood);
-            this.dropSelf(ModBlocks.stripped_dark_spruce_wood);
-            this.dropSelf(ModBlocks.stripped_cursed_spruce_wood);
-            this.dropSelf(ModBlocks.dark_spruce_sign);
-            this.dropSelf(ModBlocks.cursed_spruce_sign);
-            this.dropSelf(ModBlocks.dark_spruce_wall_sign);
-            this.dropSelf(ModBlocks.cursed_spruce_wall_sign);
-            this.dropSelf(ModBlocks.dark_spruce_pressure_place);
-            this.dropSelf(ModBlocks.cursed_spruce_pressure_place);
-            this.dropSelf(ModBlocks.dark_spruce_button);
-            this.dropSelf(ModBlocks.cursed_spruce_button);
-            this.dropSelf(ModBlocks.dark_spruce_slab);
-            this.dropSelf(ModBlocks.cursed_spruce_slab);
-            this.dropSelf(ModBlocks.dark_spruce_fence_gate);
-            this.dropSelf(ModBlocks.cursed_spruce_fence_gate);
-            this.dropSelf(ModBlocks.dark_spruce_fence);
-            this.dropSelf(ModBlocks.cursed_spruce_fence);
-            this.dropSelf(ModBlocks.vampire_rack);
-            this.add(ModBlocks.throne, (p_218567_0_) -> createSinglePropConditionTable(p_218567_0_, VampirismSplitBlock.PART, VampirismSplitBlock.Part.MAIN));
+            this.dropPottedContents(ModBlocks.POTTED_CURSED_ROOTS.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_LOG.get());
+            this.add(ModBlocks.CURSED_BARK.get(), noDrop());
+            this.dropSelf(ModBlocks.DARK_SPRUCE_STAIRS.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_STAIRS.get());
+            this.dropSelf(ModBlocks.DARK_SPRUCE_WOOD.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_WOOD.get());
+            this.dropSelf(ModBlocks.STRIPPED_DARK_SPRUCE_WOOD.get());
+            this.dropSelf(ModBlocks.STRIPPED_CURSED_SPRUCE_WOOD.get());
+            this.dropSelf(ModBlocks.DARK_SPRUCE_SIGN.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_SIGN.get());
+            this.dropSelf(ModBlocks.DARK_SPRUCE_WALL_SIGN.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_WALL_SIGN.get());
+            this.dropSelf(ModBlocks.DARK_SPRUCE_PRESSURE_PLACE.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_PRESSURE_PLACE.get());
+            this.dropSelf(ModBlocks.DARK_SPRUCE_BUTTON.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_BUTTON.get());
+            this.dropSelf(ModBlocks.DARK_SPRUCE_SLAB.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_SLAB.get());
+            this.dropSelf(ModBlocks.DARK_SPRUCE_FENCE_GATE.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_FENCE_GATE.get());
+            this.dropSelf(ModBlocks.DARK_SPRUCE_FENCE.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_FENCE.get());
+            this.dropSelf(ModBlocks.VAMPIRE_RACK.get());
+            this.add(ModBlocks.THRONE.get(), (p_218567_0_) -> createSinglePropConditionTable(p_218567_0_, VampirismSplitBlock.PART, VampirismSplitBlock.Part.MAIN));
         }
 
         @Nonnull

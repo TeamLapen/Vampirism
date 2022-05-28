@@ -1297,7 +1297,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (!bloodStats.needsBlood()) return;
 
         int need = Math.min(8, bloodStats.getMaxBlood() - bloodStats.getBloodLevel());
-        if (ModBlocks.blood_container.equals(blockState.getBlock())) {
+        if (ModBlocks.BLOOD_CONTAINER.get().equals(blockState.getBlock())) {
             if (tileEntity != null) {
                 tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).ifPresent(handler -> {
                     int blood = 0;

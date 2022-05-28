@@ -35,8 +35,8 @@ public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> 
 
 
     PotionTableRecipeCategory(IGuiHelper guiHelper) {
-        this.localizedName = UtilLib.translate(ModBlocks.potion_table.getDescriptionId());
-        this.icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.potion_table));
+        this.localizedName = UtilLib.translate(ModBlocks.POTION_TABLE.get().getDescriptionId());
+        this.icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.POTION_TABLE.get()));
         this.background = guiHelper.drawableBuilder(backgroundLocation, 65, 6, 103, 73).addPadding(0, 33, 0, 25).build();
         this.slotDrawable = guiHelper.getSlotDrawable();
         ITickTimer bubblesTickTimer = new BrewingBubblesTickTimer(guiHelper);

@@ -64,9 +64,9 @@ public class ModVillage {
     }
 
     static void registerVillagePointOfInterestType(IForgeRegistry<PointOfInterestType> registry) {
-        PointOfInterestType hunter_faction = new FactionPointOfInterestType("hunter_faction", getAllStates(ModBlocks.totem_top_vampirism_hunter, ModBlocks.totem_top_vampirism_hunter_crafted), 1, 1).setRegistryName(REFERENCE.MODID, "hunter_faction");
-        PointOfInterestType vampire_faction = new FactionPointOfInterestType("vampire_faction", getAllStates(ModBlocks.totem_top_vampirism_vampire, ModBlocks.totem_top_vampirism_vampire_crafted), 1, 1).setRegistryName(REFERENCE.MODID, "vampire_faction");
-        PointOfInterestType no_faction = new FactionPointOfInterestType("no_faction", getAllStates(ModBlocks.totem_top, ModBlocks.totem_top_crafted), 1, 1).setRegistryName(REFERENCE.MODID, "no_faction");
+        PointOfInterestType hunter_faction = new FactionPointOfInterestType("hunter_faction", getAllStates(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER.get(), ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED.get()), 1, 1).setRegistryName(REFERENCE.MODID, "hunter_faction");
+        PointOfInterestType vampire_faction = new FactionPointOfInterestType("vampire_faction", getAllStates(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE.get(), ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED.get()), 1, 1).setRegistryName(REFERENCE.MODID, "vampire_faction");
+        PointOfInterestType no_faction = new FactionPointOfInterestType("no_faction", getAllStates(ModBlocks.TOTEM_TOP.get(), ModBlocks.TOTEM_TOP_CRAFTED.get()), 1, 1).setRegistryName(REFERENCE.MODID, "no_faction");
         registry.register(hunter_faction);
         registry.register(vampire_faction);
         registry.register(no_faction);
@@ -139,12 +139,12 @@ public class ModVillage {
                 1, new VillagerTrades.ITrade[]{
                         new Trades.ItemsForHeart(new Trades.Price(10, 15), ModItems.pure_blood_0, new Trades.Price(1, 1)),
                         new Trades.BloodBottleForHeart(new Trades.Price(3, 12), new Trades.Price(1, 15), 9),
-                        new VillagerTrades.EmeraldForItemsTrade(ModBlocks.vampire_orchid, 4, 1, 3),
+                        new VillagerTrades.EmeraldForItemsTrade(ModBlocks.VAMPIRE_ORCHID.get(), 4, 1, 3),
                         new Trades.BiomeMapForEmeralds(5, ModBiomes.VAMPIRE_FOREST_KEY,3,2)
                 },
                 2, new VillagerTrades.ITrade[]{
                         new Trades.ItemsForHeart(new Trades.Price(25, 30), ModItems.pure_blood_1, new Trades.Price(1, 1), 10, 1),
-                        new Trades.ItemsForHeart(new Trades.Price(1, 5), ModBlocks.coffin_red, new Trades.Price(1, 1), 2, 2),
+                        new Trades.ItemsForHeart(new Trades.Price(1, 5), ModBlocks.COFFIN_RED.get(), new Trades.Price(1, 1), 2, 2),
                         new Trades.ItemsForHeart(new Trades.Price(10, 25), ModItems.blood_infused_iron_ingot, new Trades.Price(1, 3))
                 },
                 3, new VillagerTrades.ITrade[]{

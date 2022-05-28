@@ -280,7 +280,7 @@ public class TentBlock extends VampirismBlock {
                 }
                 if(main!=null){
                     BlockState blockstate = worldIn.getBlockState(main);
-                    if (blockstate.getBlock() == ModBlocks.tent_main) {
+                    if (blockstate.getBlock() == ModBlocks.TENT_MAIN.get()) {
                         worldIn.setBlock(main, Blocks.AIR.defaultBlockState(), 35);
                         worldIn.levelEvent(player, 2001, main, Block.getId(blockstate));
                     }

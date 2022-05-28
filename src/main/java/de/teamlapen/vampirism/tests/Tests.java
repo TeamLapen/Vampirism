@@ -104,7 +104,7 @@ public class Tests {
     private static boolean checkObjectHolders() {
         boolean failed;
         failed = !checkObjectHolders(ModBiomes.class);
-        failed |= !checkObjectHolders(ModBlocks.class);
+        failed |= !checkObjectHolders(ModBlocks.CLASS.get());
         failed |= !checkObjectHolders(ModEnchantments.class);
         failed |= !checkObjectHolders(ModEntities.class);
         failed |= !checkObjectHolders(ModFluids.class);
@@ -137,7 +137,7 @@ public class Tests {
     }
 
     private static boolean bloodFluidHandler(TestInfo info) {
-        info.world.setBlockAndUpdate(info.pos, ModBlocks.blood_container.defaultBlockState());
+        info.world.setBlockAndUpdate(info.pos, ModBlocks.BLOOD_CONTAINER.get().defaultBlockState());
         TileEntity t = info.world.getBlockEntity(info.pos);
         LazyOptional<IFluidHandler> opt = t.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, Direction.getRandom(info.world.random));
         opt.ifPresent(handler -> handler.fill(new FluidStack(ModFluids.blood, 10000000), IFluidHandler.FluidAction.EXECUTE));
@@ -167,7 +167,7 @@ public class Tests {
     }
 
     private static boolean blockWeaponTableFluids(TestInfo info) {
-        info.world.setBlockAndUpdate(info.pos, ModBlocks.weapon_table.defaultBlockState());
+        info.world.setBlockAndUpdate(info.pos, ModBlocks.WEAPON_TABLE.get().defaultBlockState());
         info.player.setItemInHand(info.player.getUsedItemHand(), new ItemStack(Items.LAVA_BUCKET));
         BlockState block = info.world.getBlockState(info.pos);
         block.use(info.world, info.player, info.player.getUsedItemHand(), new BlockRayTraceResult(new Vector3d(0, 0, 0), Direction.getRandom(info.world.random), info.pos, false));
@@ -186,7 +186,7 @@ public class Tests {
         for (int x = -21; x < 22; x++) {
             for (int y = 1; y < 22; y++) {
                 for (int z = -21; z < 22; z++) {
-                    BlockState s = (y == 1 || x == -21 || x == 21 || z == -21 || z == 21 || y == 21) ? ModBlocks.castle_block_dark_stone.defaultBlockState() : Blocks.AIR.defaultBlockState();
+                    BlockState s = (y == 1 || x == -21 || x == 21 || z == -21 || z == 21 || y == 21) ? ModBlocks.CASTLE_BLOCK_DARK_STONE.get().defaultBlockState() : Blocks.AIR.defaultBlockState();
                     world.setBlockAndUpdate(new BlockPos(x, y, z), s);
                 }
             }

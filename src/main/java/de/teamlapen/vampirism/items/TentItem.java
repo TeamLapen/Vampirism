@@ -43,8 +43,8 @@ public class TentItem extends VampirismItem {
         int x3 = x + (dir == Direction.WEST ? -1 : (dir == Direction.EAST ? 1 : 0));
         int z3 = z + (dir == Direction.SOUTH ? 1 : (dir == Direction.NORTH ? -1 : 0));
 
-        Block tent = ModBlocks.tent;
-        Block main = ModBlocks.tent_main;
+        Block tent = ModBlocks.TENT.get();
+        Block main = ModBlocks.TENT_MAIN.get();
         BlockState mainState = main.defaultBlockState();
         if (force || canPlaceAt(mainState, tent, world, x, y, z) && canPlaceAt(mainState, tent, world, x1, y, z1) && canPlaceAt(mainState, tent, world, x2, y, z2) && canPlaceAt(mainState, tent, world, x3, y, z3)) {
             boolean flag = world.setBlock(pos, main.defaultBlockState().setValue(TentBlock.FACING, dir.getOpposite()), 3);

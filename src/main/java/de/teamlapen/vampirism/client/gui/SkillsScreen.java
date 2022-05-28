@@ -372,11 +372,11 @@ public class SkillsScreen extends Screen { //TODO BREAKING remove
                             textureatlassprite = this.getTexture(Blocks.REDSTONE_BLOCK);
                         }
                     } else if (j4 == 10) {
-                        textureatlassprite = this.getTexture(ModBlocks.castle_block_dark_brick_bloody);
+                        textureatlassprite = this.getTexture(ModBlocks.CASTLE_BLOCK_DARK_BRICK_BLOODY.get());
                     } else if (j4 == 8) {
                         textureatlassprite = this.getTexture(Blocks.STONE_BRICKS);
                     } else if (j4 > 4) {
-                        textureatlassprite = this.getTexture(ModBlocks.castle_block_normal_brick);
+                        textureatlassprite = this.getTexture(ModBlocks.CASTLE_BLOCK_NORMAL_BRICK.get());
                     } else if (j4 > 0) {
                         textureatlassprite = this.getTexture(Blocks.DIRT);
 

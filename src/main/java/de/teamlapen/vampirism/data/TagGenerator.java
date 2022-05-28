@@ -34,30 +34,30 @@ public class TagGenerator {
 
         @Override
         protected void addTags() {
-            tag(Tags.Blocks.DIRT).add(ModBlocks.cursed_earth, ModBlocks.cursed_grass);
-            tag(ModTags.Blocks.CURSEDEARTH).add(ModBlocks.cursed_earth, ModBlocks.cursed_grass);
-            tag(ModTags.Blocks.CASTLE_BLOCK).add(ModBlocks.castle_block_dark_brick, ModBlocks.castle_block_dark_brick_bloody, ModBlocks.castle_block_dark_stone, ModBlocks.castle_block_normal_brick, ModBlocks.castle_block_purple_brick);
-            tag(ModTags.Blocks.CASTLE_SLAPS).add(ModBlocks.castle_slab_dark_brick, ModBlocks.castle_slab_dark_stone, ModBlocks.castle_slab_purple_brick);
-            tag(ModTags.Blocks.CASTLE_STAIRS).add(ModBlocks.castle_stairs_dark_stone, ModBlocks.castle_stairs_dark_brick, ModBlocks.castle_stairs_purple_brick);
+            tag(Tags.Blocks.DIRT).add(ModBlocks.CURSED_EARTH.get(), ModBlocks.CURSED_GRASS.get());
+            tag(ModTags.Blocks.CURSEDEARTH).add(ModBlocks.CURSED_EARTH.get(), ModBlocks.CURSED_GRASS.get());
+            tag(ModTags.Blocks.CASTLE_BLOCK).add(ModBlocks.CASTLE_BLOCK_DARK_BRICK.get(), ModBlocks.CASTLE_BLOCK_DARK_BRICK_BLOODY.get(), ModBlocks.CASTLE_BLOCK_DARK_STONE.get(), ModBlocks.CASTLE_BLOCK_NORMAL_BRICK.get(), ModBlocks.CASTLE_BLOCK_PURPLE_BRICK.get());
+            tag(ModTags.Blocks.CASTLE_SLAPS).add(ModBlocks.CASTLE_SLAB_DARK_BRICK.get(), ModBlocks.CASTLE_SLAB_DARK_STONE.get(), ModBlocks.CASTLE_SLAB_PURPLE_BRICK.get());
+            tag(ModTags.Blocks.CASTLE_STAIRS).add(ModBlocks.CASTLE_STAIRS_DARK_STONE.get(), ModBlocks.CASTLE_STAIRS_DARK_BRICK.get(), ModBlocks.CASTLE_STAIRS_PURPLE_BRICK.get());
             tag(BlockTags.STAIRS).addTag(ModTags.Blocks.CASTLE_STAIRS);
             tag(BlockTags.SLABS).addTag(ModTags.Blocks.CASTLE_SLAPS);
-            tag(BlockTags.FLOWER_POTS).add(ModBlocks.potted_vampire_orchid);
-            tag(ModTags.Blocks.DARK_SPRUCE_LOG).add(ModBlocks.dark_spruce_log, ModBlocks.stripped_dark_spruce_log, ModBlocks.dark_spruce_wood, ModBlocks.stripped_dark_spruce_wood);
-            tag(ModTags.Blocks.CURSED_SPRUCE_LOG).add(ModBlocks.cursed_spruce_log, ModBlocks.stripped_cursed_spruce_log, ModBlocks.cursed_spruce_wood, ModBlocks.stripped_cursed_spruce_wood);
-            tag(BlockTags.LEAVES).add(ModBlocks.dark_spruce_leaves);
-            tag(BlockTags.SAPLINGS).add(ModBlocks.dark_spruce_sapling);
-            tag(BlockTags.WOODEN_TRAPDOORS).add(ModBlocks.dark_spruce_trapdoor, ModBlocks.cursed_spruce_trapdoor);
-            tag(BlockTags.WOODEN_DOORS).add(ModBlocks.dark_spruce_door, ModBlocks.cursed_spruce_door);
-            tag(BlockTags.PLANKS).add(ModBlocks.dark_spruce_planks, ModBlocks.cursed_spruce_planks);
-            tag(BlockTags.WOODEN_BUTTONS).add(ModBlocks.dark_spruce_button, ModBlocks.cursed_spruce_button);
-            tag(BlockTags.WOODEN_STAIRS).add(ModBlocks.dark_spruce_stairs, ModBlocks.cursed_spruce_stairs);
-            tag(BlockTags.WOODEN_SLABS).add(ModBlocks.dark_spruce_slab, ModBlocks.cursed_spruce_slab);
-            tag(BlockTags.WOODEN_FENCES).add(ModBlocks.dark_spruce_fence, ModBlocks.cursed_spruce_fence);
+            tag(BlockTags.FLOWER_POTS).add(ModBlocks.POTTED_VAMPIRE_ORCHID.get());
+            tag(ModTags.Blocks.DARK_SPRUCE_LOG).add(ModBlocks.DARK_SPRUCE_LOG.get(), ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get(), ModBlocks.DARK_SPRUCE_WOOD.get(), ModBlocks.STRIPPED_DARK_SPRUCE_WOOD.get());
+            tag(ModTags.Blocks.CURSED_SPRUCE_LOG).add(ModBlocks.CURSED_SPRUCE_LOG.get(), ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get(), ModBlocks.CURSED_SPRUCE_WOOD.get(), ModBlocks.STRIPPED_CURSED_SPRUCE_WOOD.get());
+            tag(BlockTags.LEAVES).add(ModBlocks.DARK_SPRUCE_LEAVES.get());
+            tag(BlockTags.SAPLINGS).add(ModBlocks.DARK_SPRUCE_SAPLING.get());
+            tag(BlockTags.WOODEN_TRAPDOORS).add(ModBlocks.DARK_SPRUCE_TRAPDOOR.get(), ModBlocks.CURSED_SPRUCE_TRAPDOOR.get());
+            tag(BlockTags.WOODEN_DOORS).add(ModBlocks.DARK_SPRUCE_DOOR.get(), ModBlocks.CURSED_SPRUCE_DOOR.get());
+            tag(BlockTags.PLANKS).add(ModBlocks.DARK_SPRUCE_PLANKS.get(), ModBlocks.CURSED_SPRUCE_PLANKS.get());
+            tag(BlockTags.WOODEN_BUTTONS).add(ModBlocks.DARK_SPRUCE_BUTTON.get(), ModBlocks.CURSED_SPRUCE_BUTTON.get());
+            tag(BlockTags.WOODEN_STAIRS).add(ModBlocks.DARK_SPRUCE_STAIRS.get(), ModBlocks.CURSED_SPRUCE_STAIRS.get());
+            tag(BlockTags.WOODEN_SLABS).add(ModBlocks.DARK_SPRUCE_SLAB.get(), ModBlocks.CURSED_SPRUCE_SLAB.get());
+            tag(BlockTags.WOODEN_FENCES).add(ModBlocks.DARK_SPRUCE_FENCE.get(), ModBlocks.CURSED_SPRUCE_FENCE.get());
             tag(BlockTags.LOGS_THAT_BURN).addTags(ModTags.Blocks.CURSED_SPRUCE_LOG, ModTags.Blocks.DARK_SPRUCE_LOG);
             tag(BlockTags.LOGS).addTags(ModTags.Blocks.CURSED_SPRUCE_LOG, ModTags.Blocks.DARK_SPRUCE_LOG);
-            tag(BlockTags.WOODEN_PRESSURE_PLATES).add(ModBlocks.dark_spruce_pressure_place, ModBlocks.cursed_spruce_pressure_place);
-            tag(BlockTags.WOODEN_DOORS).add(ModBlocks.dark_spruce_door, ModBlocks.cursed_spruce_door);
-            tag(BlockTags.WOODEN_TRAPDOORS).add(ModBlocks.dark_spruce_trapdoor, ModBlocks.cursed_spruce_trapdoor);
+            tag(BlockTags.WOODEN_PRESSURE_PLATES).add(ModBlocks.DARK_SPRUCE_PRESSURE_PLACE.get(), ModBlocks.CURSED_SPRUCE_PRESSURE_PLACE.get());
+            tag(BlockTags.WOODEN_DOORS).add(ModBlocks.DARK_SPRUCE_DOOR.get(), ModBlocks.CURSED_SPRUCE_DOOR.get());
+            tag(BlockTags.WOODEN_TRAPDOORS).add(ModBlocks.DARK_SPRUCE_TRAPDOOR.get(), ModBlocks.CURSED_SPRUCE_TRAPDOOR.get());
         }
     }
 

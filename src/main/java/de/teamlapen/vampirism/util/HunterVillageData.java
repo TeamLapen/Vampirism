@@ -52,7 +52,7 @@ public class HunterVillageData implements IVillageFactionData { // TODO 1.17 onl
                 .guardSuperClass(HunterBaseEntity.class)
                 .taskMaster(() -> ModEntities.task_master_hunter)
                 .banner(HunterVillageData::createBanner)
-                .totem(() -> ModBlocks.totem_top_vampirism_hunter, () -> ModBlocks.totem_top_vampirism_hunter_crafted);
+                .totem(() -> ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER.get(), () -> ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED.get());
     }
 
     private final ItemStack banner = createBanner();
@@ -92,7 +92,7 @@ public class HunterVillageData implements IVillageFactionData { // TODO 1.17 onl
     @Nonnull
     @Override
     public Pair<Block, Block> getTotemTopBlock() {
-        return Pair.of(ModBlocks.totem_top_vampirism_hunter, ModBlocks.totem_top_vampirism_hunter_crafted);
+        return Pair.of(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER.get(), ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED.get());
     }
 
     @Override

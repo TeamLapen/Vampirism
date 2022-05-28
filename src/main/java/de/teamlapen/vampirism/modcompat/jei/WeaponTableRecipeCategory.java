@@ -41,9 +41,9 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
 
 
     WeaponTableRecipeCategory(IGuiHelper guiHelper) {
-        localizedName = UtilLib.translate(ModBlocks.weapon_table.getDescriptionId());
+        localizedName = UtilLib.translate(ModBlocks.WEAPON_TABLE.get().getDescriptionId());
         background = guiHelper.drawableBuilder(location, 32, 14, 134, 77).addPadding(0, 33, 0, 0).build();
-        icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.weapon_table));
+        icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.WEAPON_TABLE.get()));
     }
 
     @Override

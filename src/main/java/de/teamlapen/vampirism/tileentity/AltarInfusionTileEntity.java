@@ -390,7 +390,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
             int j = 0;
             AltarPillarBlock.EnumPillarType type = null;
             BlockState temp;
-            while ((temp = level.getBlockState(pPos.offset(0, -j - 1, 0))).getBlock().equals(ModBlocks.altar_pillar)) {
+            while ((temp = level.getBlockState(pPos.offset(0, -j - 1, 0))).getBlock().equals(ModBlocks.ALTAR_PILLAR.get())) {
                 AltarPillarBlock.EnumPillarType t = temp.getValue(AltarPillarBlock.TYPE_PROPERTY);
                 if (type == null) {
                     type = t;
@@ -440,7 +440,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
         for (int x = getBlockPos().getX() - 4; x < getBlockPos().getX() + 5; x++) {
             for (int y = getBlockPos().getY() + 1; y < getBlockPos().getY() + 4; y++) {
                 for (int z = getBlockPos().getZ() - 4; z < getBlockPos().getZ() + 5; z++) {
-                    if (level.getBlockState(pos.set(x, y, z)).getBlock().equals(ModBlocks.altar_tip)) {
+                    if (level.getBlockState(pos.set(x, y, z)).getBlock().equals(ModBlocks.ALTAR_TIP.get())) {
                         list.add(new BlockPos(x, y, z));
                     }
                 }

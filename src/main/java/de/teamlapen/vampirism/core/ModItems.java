@@ -419,10 +419,10 @@ public class ModItems {
         registry.register(new VampirismItem("cure_apple", creativeTabProps().rarity(Rarity.RARE)));
         registry.register(new VampirismItem("garlic_finder", creativeTabProps().rarity(Rarity.RARE)));
 
-        registry.register(new WallOrFloorItem(ModBlocks.candelabra, ModBlocks.candelabra_wall, new Item.Properties().tab(VampirismMod.creativeTab)).setRegistryName(REFERENCE.MODID, "item_candelabra"));
+        registry.register(new WallOrFloorItem(ModBlocks.CANDELABRA.get(), ModBlocks.CANDELABRA_WALL.get(), new Item.Properties().tab(VampirismMod.creativeTab)).setRegistryName(REFERENCE.MODID, "item_candelabra"));
 
-        registry.register(new SignItem((new Item.Properties()).stacksTo(16).tab(ItemGroup.TAB_DECORATIONS), ModBlocks.dark_spruce_sign, ModBlocks.dark_spruce_wall_sign).setRegistryName(REFERENCE.MODID, "dark_spruce_sign"));
-        registry.register(new SignItem((new Item.Properties()).stacksTo(16).tab(ItemGroup.TAB_DECORATIONS), ModBlocks.cursed_spruce_sign, ModBlocks.cursed_spruce_wall_sign).setRegistryName(REFERENCE.MODID, "cursed_spruce_sign"));
+        registry.register(new SignItem((new Item.Properties()).stacksTo(16).tab(ItemGroup.TAB_DECORATIONS), ModBlocks.DARK_SPRUCE_SIGN.get(), ModBlocks.DARK_SPRUCE_WALL_SIGN.get()).setRegistryName(REFERENCE.MODID, "dark_spruce_sign"));
+        registry.register(new SignItem((new Item.Properties()).stacksTo(16).tab(ItemGroup.TAB_DECORATIONS), ModBlocks.CURSED_SPRUCE_SIGN.get(), ModBlocks.CURSED_SPRUCE_WALL_SIGN.get()).setRegistryName(REFERENCE.MODID, "cursed_spruce_sign"));
 
         registry.register(new VampirismBoatItem(VampirismBoatItem.BoatType.DARK_SPRUCE, creativeTabProps().stacksTo(1)).setRegistryName(REFERENCE.MODID, "dark_spruce_boat"));
         registry.register(new VampirismBoatItem(VampirismBoatItem.BoatType.CURSED_SPRUCE, creativeTabProps().stacksTo(1)).setRegistryName(REFERENCE.MODID, "cursed_spruce_boat"));
@@ -454,7 +454,7 @@ public class ModItems {
                     missingMapping.remap(vampire_clothing_boots);
                     break;
                 case "vampirism:item_med_chair":
-                    missingMapping.remap(Item.byBlock(ModBlocks.med_chair));
+                    missingMapping.remap(Item.byBlock(ModBlocks.MED_CHAIR.get()));
                     break;
                 case "vampirism:bloody_spruce_log":
                     missingMapping.remap(cursed_spruce_log);
@@ -463,7 +463,7 @@ public class ModItems {
                     missingMapping.remap(dark_spruce_leaves);
                     break;
                 case "vampirism:coffin":
-                    missingMapping.remap(Item.byBlock(ModBlocks.coffin_red));
+                    missingMapping.remap(Item.byBlock(ModBlocks.COFFIN_RED.get()));
             }
             if(missingMapping.key.toString().startsWith("vampirism:obsidian_armor")){
                 Item hunterArmorReplacement = event.getRegistry().getValue(new ResourceLocation(missingMapping.key.toString().replace("obsidian_armor","hunter_coat")));

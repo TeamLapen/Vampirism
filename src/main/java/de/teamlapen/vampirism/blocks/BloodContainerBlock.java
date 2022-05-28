@@ -117,7 +117,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
 
     @Override
     public void playerDestroy(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, @Nullable TileEntity te, ItemStack heldStack) {
-        ItemStack stack = new ItemStack(ModBlocks.blood_container, 1);
+        ItemStack stack = new ItemStack(ModBlocks.BLOOD_CONTAINER.get(), 1);
         if (te != null) {
             FluidStack fluid = ((BloodContainerTileEntity) te).getFluid();
             if (!fluid.isEmpty() && fluid.getAmount() >= VReference.FOOD_TO_FLUID_BLOOD) {

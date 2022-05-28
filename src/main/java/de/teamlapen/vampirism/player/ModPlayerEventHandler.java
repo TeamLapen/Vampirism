@@ -234,7 +234,7 @@ public class ModPlayerEventHandler {
     public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
         if (VampirismPlayerAttributes.get((PlayerEntity) event.getEntity()).getVampSpecial().isCannotInteract()) {
             event.setCanceled(true);
-        } else if ((ModBlocks.garlic_beacon_normal.equals(event.getState().getBlock()) || ModBlocks.garlic_beacon_weak.equals(event.getState().getBlock()) || ModBlocks.garlic_beacon_improved.equals(event.getState().getBlock())) && VampirismPlayerAttributes.get(event.getPlayer()).vampireLevel > 0) {
+        } else if ((ModBlocks.GARLIC_BEACON_NORMAL.get().equals(event.getState().getBlock()) || ModBlocks.GARLIC_BEACON_WEAK.get().equals(event.getState().getBlock()) || ModBlocks.GARLIC_BEACON_IMPROVED.get().equals(event.getState().getBlock())) && VampirismPlayerAttributes.get(event.getPlayer()).vampireLevel > 0) {
             event.setNewSpeed(event.getOriginalSpeed() * 0.1F);
         }
     }
@@ -417,11 +417,11 @@ public class ModPlayerEventHandler {
         World world = event.getWorld();
         BlockState state = world.getBlockState(pos);
 
-        if (state.getBlock() == ModBlocks.alchemical_fire) {
+        if (state.getBlock() == ModBlocks.ALCHEMICAL_FIRE.get()) {
             world.levelEvent(null, 1009, pos, 0);
             world.removeBlock(pos, false);
             event.setCanceled(true);
-        } else if ((ModBlocks.garlic_beacon_normal.equals(state.getBlock()) || ModBlocks.garlic_beacon_weak.equals(state.getBlock()) || ModBlocks.garlic_beacon_improved.equals(state.getBlock())) && Helper.isVampire(event.getPlayer())) {
+        } else if ((ModBlocks.GARLIC_BEACON_NORMAL.get().equals(state.getBlock()) || ModBlocks.GARLIC_BEACON_WEAK.get().equals(state.getBlock()) || ModBlocks.GARLIC_BEACON_IMPROVED.get().equals(state.getBlock())) && Helper.isVampire(event.getPlayer())) {
             event.getPlayer().addEffect(new EffectInstance(ModEffects.garlic));
         }
     }

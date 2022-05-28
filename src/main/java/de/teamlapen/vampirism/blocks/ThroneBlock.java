@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 
 public class ThroneBlock extends VampirismSplitBlock {
     public ThroneBlock() {
-        super("throne", AbstractBlock.Properties.of(Material.WOOD).strength(2, 3), BlockVoxelshapes.throneBottom, BlockVoxelshapes.throneTop, true);
+        super(AbstractBlock.Properties.of(Material.WOOD).strength(2, 3), BlockVoxelshapes.throneBottom, BlockVoxelshapes.throneTop, true);
         markDecorativeBlock();
     }
 

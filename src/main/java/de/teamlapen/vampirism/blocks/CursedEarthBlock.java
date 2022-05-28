@@ -51,7 +51,7 @@ public class CursedEarthBlock extends VampirismBlock {
 
     @Override
     public void onPlantGrow(BlockState state, IWorld world, BlockPos pos, BlockPos source) {
-        world.setBlock(pos, ModBlocks.cursed_earth.defaultBlockState(), 2);
+        world.setBlock(pos, ModBlocks.CURSED_EARTH.get().defaultBlockState(), 2);
     }
 
     @Override

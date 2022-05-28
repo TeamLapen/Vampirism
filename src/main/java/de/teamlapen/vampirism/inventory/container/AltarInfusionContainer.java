@@ -28,6 +28,6 @@ public class AltarInfusionContainer extends InventoryContainer {
 
     @Override
     public boolean stillValid(PlayerEntity playerIn) {
-        return stillValid(this.worldPos, playerIn, ModBlocks.altar_infusion);
+        return stillValid(this.worldPos, playerIn, ModBlocks.ALTAR_INFUSION.get());
     }
 }

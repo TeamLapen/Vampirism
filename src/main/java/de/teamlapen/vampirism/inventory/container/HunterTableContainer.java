@@ -93,7 +93,7 @@ public class HunterTableContainer extends InventoryContainer implements IInvento
 
     @Override
     public boolean stillValid(PlayerEntity playerIn) {
-        return stillValid(worldPos, playerIn, ModBlocks.hunter_table);
+        return stillValid(worldPos, playerIn, ModBlocks.HUNTER_TABLE.get());
     }
 
 

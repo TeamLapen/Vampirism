@@ -78,62 +78,62 @@ public class ItemModelGenerator extends ItemModelProvider {
     @Override
     protected void registerModels() {
         Set<Block> blocks = new HashSet<Block>() {{
-            add(ModBlocks.altar_tip);
-            add(ModBlocks.castle_block_dark_brick);
-            add(ModBlocks.castle_block_dark_brick_bloody);
-            add(ModBlocks.castle_block_dark_stone);
-            add(ModBlocks.castle_block_normal_brick);
-            add(ModBlocks.castle_block_purple_brick);
-            add(ModBlocks.castle_slab_dark_brick);
-            add(ModBlocks.castle_slab_dark_stone);
-            add(ModBlocks.castle_slab_purple_brick);
-            add(ModBlocks.castle_stairs_dark_brick);
-            add(ModBlocks.castle_stairs_dark_stone);
-            add(ModBlocks.castle_stairs_purple_brick);
-            add(ModBlocks.blood_grinder);
-            add(ModBlocks.blood_pedestal);
-            add(ModBlocks.potion_table);
-            add(ModBlocks.blood_sieve);
-            add(ModBlocks.church_altar);
-            add(ModBlocks.cursed_earth);
-            add(ModBlocks.garlic_beacon_weak);
-            add(ModBlocks.garlic_beacon_normal);
-            add(ModBlocks.garlic_beacon_improved);
-            add(ModBlocks.sunscreen_beacon);
-            add(ModBlocks.totem_top);
-            add(ModBlocks.totem_top_vampirism_vampire);
-            add(ModBlocks.totem_top_vampirism_hunter);
-            add(ModBlocks.vampire_orchid);
-            add(ModBlocks.chandelier);
-            add(ModBlocks.cross);
-            add(ModBlocks.tombstone1);
-            add(ModBlocks.tombstone2);
-            add(ModBlocks.tombstone3);
-            add(ModBlocks.grave_cage);
-            add(ModBlocks.cursed_grass);
-            add(ModBlocks.dark_spruce_log);
-            add(ModBlocks.cursed_roots);
-            add(ModBlocks.cursed_spruce_log);
-            add(ModBlocks.stripped_dark_spruce_log);
-            add(ModBlocks.stripped_cursed_spruce_log);
-            add(ModBlocks.dark_spruce_planks);
-            add(ModBlocks.cursed_spruce_planks);
-            add(ModBlocks.dark_spruce_stairs);
-            add(ModBlocks.cursed_spruce_stairs);
-            add(ModBlocks.dark_spruce_wood);
-            add(ModBlocks.cursed_spruce_wood);
-            add(ModBlocks.stripped_dark_spruce_wood);
-            add(ModBlocks.stripped_cursed_spruce_wood);
-            add(ModBlocks.dark_spruce_pressure_place);
-            add(ModBlocks.cursed_spruce_pressure_place);
-            add(ModBlocks.dark_spruce_button);
-            add(ModBlocks.cursed_spruce_button);
-            add(ModBlocks.dark_spruce_slab);
-            add(ModBlocks.cursed_spruce_slab);
-            add(ModBlocks.dark_spruce_fence_gate);
-            add(ModBlocks.cursed_spruce_fence_gate);
-            add(ModBlocks.vampire_rack);
-            add(ModBlocks.throne);
+            add(ModBlocks.ALTAR_TIP.get());
+            add(ModBlocks.CASTLE_BLOCK_DARK_BRICK.get());
+            add(ModBlocks.CASTLE_BLOCK_DARK_BRICK_BLOODY.get());
+            add(ModBlocks.CASTLE_BLOCK_DARK_STONE.get());
+            add(ModBlocks.CASTLE_BLOCK_NORMAL_BRICK.get());
+            add(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK.get());
+            add(ModBlocks.CASTLE_SLAB_DARK_BRICK.get());
+            add(ModBlocks.CASTLE_SLAB_DARK_STONE.get());
+            add(ModBlocks.CASTLE_SLAB_PURPLE_BRICK.get());
+            add(ModBlocks.CASTLE_STAIRS_DARK_BRICK.get());
+            add(ModBlocks.CASTLE_STAIRS_DARK_STONE.get());
+            add(ModBlocks.CASTLE_STAIRS_PURPLE_BRICK.get());
+            add(ModBlocks.BLOOD_GRINDER.get());
+            add(ModBlocks.BLOOD_PEDESTAL.get());
+            add(ModBlocks.POTION_TABLE.get());
+            add(ModBlocks.BLOOD_SIEVE.get());
+            add(ModBlocks.CHURCH_ALTAR.get());
+            add(ModBlocks.CURSED_EARTH.get());
+            add(ModBlocks.GARLIC_BEACON_WEAK.get());
+            add(ModBlocks.GARLIC_BEACON_NORMAL.get());
+            add(ModBlocks.GARLIC_BEACON_IMPROVED.get());
+            add(ModBlocks.SUNSCREEN_BEACON.get());
+            add(ModBlocks.TOTEM_TOP.get());
+            add(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE.get());
+            add(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER.get());
+            add(ModBlocks.VAMPIRE_ORCHID.get());
+            add(ModBlocks.CHANDELIER.get());
+            add(ModBlocks.CROSS.get());
+            add(ModBlocks.TOMBSTONE1.get());
+            add(ModBlocks.TOMBSTONE2.get());
+            add(ModBlocks.TOMBSTONE3.get());
+            add(ModBlocks.GRAVE_CAGE.get());
+            add(ModBlocks.CURSED_GRASS.get());
+            add(ModBlocks.DARK_SPRUCE_LOG.get());
+            add(ModBlocks.CURSED_ROOTS.get());
+            add(ModBlocks.CURSED_SPRUCE_LOG.get());
+            add(ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get());
+            add(ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get());
+            add(ModBlocks.DARK_SPRUCE_PLANKS.get());
+            add(ModBlocks.CURSED_SPRUCE_PLANKS.get());
+            add(ModBlocks.DARK_SPRUCE_STAIRS.get());
+            add(ModBlocks.CURSED_SPRUCE_STAIRS.get());
+            add(ModBlocks.DARK_SPRUCE_WOOD.get());
+            add(ModBlocks.CURSED_SPRUCE_WOOD.get());
+            add(ModBlocks.STRIPPED_DARK_SPRUCE_WOOD.get());
+            add(ModBlocks.STRIPPED_CURSED_SPRUCE_WOOD.get());
+            add(ModBlocks.DARK_SPRUCE_PRESSURE_PLACE.get());
+            add(ModBlocks.CURSED_SPRUCE_PRESSURE_PLACE.get());
+            add(ModBlocks.DARK_SPRUCE_BUTTON.get());
+            add(ModBlocks.CURSED_SPRUCE_BUTTON.get());
+            add(ModBlocks.DARK_SPRUCE_SLAB.get());
+            add(ModBlocks.CURSED_SPRUCE_SLAB.get());
+            add(ModBlocks.DARK_SPRUCE_FENCE_GATE.get());
+            add(ModBlocks.CURSED_SPRUCE_FENCE_GATE.get());
+            add(ModBlocks.VAMPIRE_RACK.get());
+            add(ModBlocks.THRONE.get());
         }};
         Set<Item> items = new HashSet<Item>() {{
             add(ModItems.hunter_coat_chest_normal);
@@ -209,8 +209,8 @@ public class ItemModelGenerator extends ItemModelProvider {
             put(ModItems.item_tent_spawner, modLoc("item/item_tent"));
             put(ModItems.pure_salt, modLoc("item/holy_salt"));
             put(ModItems.vampire_book, modLoc("item/vampire_book"));
-            put(Item.byBlock(ModBlocks.med_chair), modLoc("item/med_chair"));
-            put(ModBlocks.cursed_bark.asItem(), modLoc("block/" + ModBlocks.cursed_bark.getRegistryName().getPath()));
+            put(Item.byBlock(ModBlocks.MED_CHAIR.get()), modLoc("item/med_chair"));
+            put(ModBlocks.CURSED_BARK.get().asItem(), modLoc("block/" + ModBlocks.CURSED_BARK.get().getRegistryName().getPath()));
             put(ModItems.dark_spruce_sign, modLoc("item/" + ModItems.dark_spruce_sign.getRegistryName().getPath()));
             put(ModItems.cursed_spruce_sign, modLoc("item/" + ModItems.cursed_spruce_sign.getRegistryName().getPath()));
         }};
@@ -219,13 +219,13 @@ public class ItemModelGenerator extends ItemModelProvider {
         items.forEach(this::item);
         itemsWithTexture.forEach(this::item);
 
-        withExistingParent(ModBlocks.dark_spruce_leaves, mcLoc("block/oak_leaves"));
+        withExistingParent(ModBlocks.DARK_SPRUCE_LEAVES.get(), mcLoc("block/oak_leaves"));
 
-        withExistingParent(ModBlocks.dark_spruce_sapling, mcLoc("item/generated")).texture("layer0", REFERENCE.MODID + ":block/" + ModBlocks.dark_spruce_sapling.getRegistryName().getPath());
-        withExistingParent(ModBlocks.cursed_spruce_sapling, mcLoc("item/generated")).texture("layer0", REFERENCE.MODID + ":block/" + ModBlocks.cursed_spruce_sapling.getRegistryName().getPath());
+        withExistingParent(ModBlocks.DARK_SPRUCE_SAPLING.get(), mcLoc("item/generated")).texture("layer0", REFERENCE.MODID + ":block/" + ModBlocks.DARK_SPRUCE_SAPLING.get().getRegistryName().getPath());
+        withExistingParent(ModBlocks.CURSED_SPRUCE_SAPLING.get(), mcLoc("item/generated")).texture("layer0", REFERENCE.MODID + ":block/" + ModBlocks.CURSED_SPRUCE_SAPLING.get().getRegistryName().getPath());
 
-        withExistingParent(ModBlocks.alchemical_fire, modLoc("block/fire_side"));
-        withExistingParent(ModBlocks.altar_inspiration, modLoc("block/altar_inspiration/altar_inspiration"));
+        withExistingParent(ModBlocks.ALCHEMICAL_FIRE.get(), modLoc("block/fire_side"));
+        withExistingParent(ModBlocks.ALTAR_INSPIRATION.get(), modLoc("block/altar_inspiration/altar_inspiration"));
         item("crossbow_arrow", modLoc("item/crossbow_arrow"), modLoc("item/crossbow_arrow_tip"));
 
         withExistingParent(ModItems.crossbow_arrow_normal, modLoc("item/crossbow_arrow"));
@@ -311,18 +311,18 @@ public class ItemModelGenerator extends ItemModelProvider {
                 .override().predicate(mcLoc("damage"), 0.88f).model(withExistingParent("blood_bottle_8", mcLoc("item/generated")).texture("layer0", modLoc("item/blood_bottle_8"))).end()
                 .override().predicate(mcLoc("damage"), 0.99f).model(withExistingParent("blood_bottle_9", mcLoc("item/generated")).texture("layer0", modLoc("item/blood_bottle_9"))).end();
 
-        withExistingParent(ModBlocks.dark_spruce_trapdoor, modLoc("block/dark_spruce_trapdoor_bottom"));
-        withExistingParent(ModBlocks.cursed_spruce_trapdoor, modLoc("block/cursed_spruce_trapdoor_bottom"));
+        withExistingParent(ModBlocks.DARK_SPRUCE_TRAPDOOR.get(), modLoc("block/dark_spruce_trapdoor_bottom"));
+        withExistingParent(ModBlocks.CURSED_SPRUCE_TRAPDOOR.get(), modLoc("block/cursed_spruce_trapdoor_bottom"));
 
-        item(ModBlocks.dark_spruce_door.asItem(), modLoc("item/dark_spruce_door"));
-        item(ModBlocks.cursed_spruce_door.asItem(), modLoc("item/cursed_spruce_door"));
+        item(ModBlocks.DARK_SPRUCE_DOOR.get().asItem(), modLoc("item/dark_spruce_door"));
+        item(ModBlocks.CURSED_SPRUCE_DOOR.get().asItem(), modLoc("item/cursed_spruce_door"));
 
-        withExistingParent(ModBlocks.dark_spruce_button.asItem(), modLoc("block/dark_spruce_button_inventory"));
-        withExistingParent(ModBlocks.cursed_spruce_button.asItem(), modLoc("block/cursed_spruce_button_inventory"));
-        withExistingParent(ModBlocks.dark_spruce_fence.asItem(), modLoc("block/dark_spruce_fence_inventory"));
-        withExistingParent(ModBlocks.cursed_spruce_fence.asItem(), modLoc("block/cursed_spruce_fence_inventory"));
+        withExistingParent(ModBlocks.DARK_SPRUCE_BUTTON.get().asItem(), modLoc("block/dark_spruce_button_inventory"));
+        withExistingParent(ModBlocks.CURSED_SPRUCE_BUTTON.get().asItem(), modLoc("block/cursed_spruce_button_inventory"));
+        withExistingParent(ModBlocks.DARK_SPRUCE_FENCE.get().asItem(), modLoc("block/dark_spruce_fence_inventory"));
+        withExistingParent(ModBlocks.CURSED_SPRUCE_FENCE.get().asItem(), modLoc("block/cursed_spruce_fence_inventory"));
 
-        withExistingParent(ModBlocks.hunter_table, modLoc("block/hunter_table/hunter_table"));
+        withExistingParent(ModBlocks.HUNTER_TABLE.get(), modLoc("block/hunter_table/hunter_table"));
 
         for (DyeColor dye : DyeColor.values()) {
             getBuilder("coffin_" + dye.getName()).parent(new ModelFile.UncheckedModelFile(REFERENCE.MODID + ":block/coffin/coffin_bottom_" + dye.getName()))

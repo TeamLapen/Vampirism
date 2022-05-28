@@ -236,7 +236,7 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
 
     @Override
     public boolean stillValid(@Nonnull PlayerEntity playerIn) {
-        return stillValid(this.worldPos, playerIn, ModBlocks.weapon_table);
+        return stillValid(this.worldPos, playerIn, ModBlocks.WEAPON_TABLE.get());
     }
 
     private void slotChangedCraftingGrid(World worldIn, PlayerEntity playerIn, HunterPlayer hunter, CraftingInventory craftMatrixIn, CraftResultInventory craftResultIn) {
