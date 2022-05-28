@@ -105,6 +105,7 @@ public class TagGenerator {
             tag(ItemTags.SLABS).addTag(ModTags.Items.CASTLE_SLAPS);
             tag(ItemTags.PIGLIN_LOVED).add(ModItems.vampire_clothing_crown);
             tag(ModTags.Items.HEART).add(ModItems.human_heart, ModItems.weak_human_heart);
+            tag(ItemTags.BOATS).add(ModItems.dark_spruce_boat, ModItems.cursed_spruce_boat);
         }
     }
 
