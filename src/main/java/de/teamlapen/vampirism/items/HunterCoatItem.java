@@ -19,8 +19,6 @@ import java.util.List;
 
 public class HunterCoatItem extends VampirismHunterArmor implements IItemWithTier {
 
-    private final static String baseRegName = "hunter_coat";
-
     /**
      * Consider using cached value instead {@link HunterPlayerSpecialAttribute#fullHunterCoat}
      * Checks if the player has this armor fully equipped
@@ -47,7 +45,7 @@ public class HunterCoatItem extends VampirismHunterArmor implements IItemWithTie
     private final TIER tier;
 
     public HunterCoatItem(EquipmentSlotType equipmentSlotIn, TIER tier) {
-        super(baseRegName, tier.getName(), VampirismArmorMaterials.MASTERLY_IRON, equipmentSlotIn, new Properties().tab(VampirismMod.creativeTab));
+        super(VampirismArmorMaterials.MASTERLY_IRON, equipmentSlotIn, new Properties().tab(VampirismMod.creativeTab));
         this.tier = tier;
     }
 
@@ -69,11 +67,6 @@ public class HunterCoatItem extends VampirismHunterArmor implements IItemWithTie
                 return getTextureLocation("hunter_coat", slot, type);
         }
 
-    }
-
-    @Override
-    public String getBaseRegName() {
-        return baseRegName;
     }
 
     @Override

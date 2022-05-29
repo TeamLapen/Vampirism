@@ -45,7 +45,7 @@ public class CSimpleInputEvent implements IMessage {
                     VampirePlayer.getOpt(player).ifPresent(vampire -> vampire.endFeeding(true));
                     break;
                 case RESET_SKILLS:
-                    InventoryHelper.removeItemFromInventory(player.inventory, new ItemStack(ModItems.oblivion_potion));
+                    InventoryHelper.removeItemFromInventory(player.inventory, new ItemStack(ModItems.OBLIVION_POTION.get()));
                     factionPlayerOpt.ifPresent(OblivionItem::applyEffect);
                     break;
                 case REVERT_BACK:

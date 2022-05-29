@@ -23,6 +23,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.item.Item;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,7 +31,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class OblivionItem extends VampirismItem {
+public class OblivionItem extends Item {
 
     public static void applyEffect(IFactionPlayer<?> factionPlayer) {
         PlayerEntity player = factionPlayer.getRepresentingPlayer();
@@ -47,8 +48,8 @@ public class OblivionItem extends VampirismItem {
 
     }
 
-    public OblivionItem(String regName, Properties properties) {
-        super(regName, properties.stacksTo(1).rarity(Rarity.UNCOMMON));
+    public OblivionItem(Properties properties) {
+        super(properties.stacksTo(1).rarity(Rarity.UNCOMMON));
     }
 
     @Override

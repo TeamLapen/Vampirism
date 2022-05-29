@@ -28,8 +28,8 @@ import java.util.List;
 public abstract class VampirismHunterWeapon extends VampirismItemWeapon implements IFactionLevelItem, IFactionSlayerItem, IVampireFinisher, IFactionExclusiveItem {
 
 
-    public VampirismHunterWeapon(String regName, IItemTier material, int attackDamage, float attackSpeed, Properties props) {
-        super(regName, material, attackDamage, attackSpeed, props);
+    public VampirismHunterWeapon(IItemTier material, int attackDamage, float attackSpeed, Properties props) {
+        super(material, attackDamage, attackSpeed, props);
     }
 
 

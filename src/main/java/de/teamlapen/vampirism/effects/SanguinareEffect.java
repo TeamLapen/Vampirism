@@ -50,7 +50,7 @@ public class SanguinareEffect extends VampirismEffect {
     @Override
     public List<ItemStack> getCurativeItems() {
         List<ItemStack> l = super.getCurativeItems();
-        l.add(new ItemStack(ModItems.garlic_bread));
+        l.add(new ItemStack(ModItems.GARLIC_BREAD.get()));
         return l;
     }
 

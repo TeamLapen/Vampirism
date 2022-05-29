@@ -14,6 +14,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -25,12 +26,10 @@ import java.util.List;
  *
  * @author maxanier
  */
-public class AlchemicalFireItem extends VampirismItem {
-
-    private static final String regName = "item_alchemical_fire";
+public class AlchemicalFireItem extends Item {
 
     public AlchemicalFireItem() {
-        super(regName, new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties().tab(VampirismMod.creativeTab));
     }
 
 

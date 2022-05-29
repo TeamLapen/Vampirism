@@ -145,7 +145,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
             FluidUtil.getFluidHandler(worldIn, pos, hit.getDirection()).ifPresent((fluidHandler -> {
                 if (fluidHandler.getFluidInTank(0).getFluid().equals(ModFluids.blood)) {
                     ItemStack glass = playerIn.getItemInHand(hand);
-                    ItemStack bloodBottle = new ItemStack(ModItems.blood_bottle, 1);
+                    ItemStack bloodBottle = new ItemStack(ModItems.BLOOD_BOTTLE.get(), 1);
                     playerIn.setItemInHand(hand, bloodBottle);
                     bloodBottle = FluidUtil.tryFillContainer(bloodBottle, fluidHandler, Integer.MAX_VALUE, playerIn, true).getResult();
                     if (glass.getCount() > 1) {

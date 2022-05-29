@@ -81,7 +81,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     @Nonnull
     @Override
     public ItemStack getArrowStackForAttack(LivingEntity target) {
-        return new ItemStack(ModItems.crossbow_arrow_normal);
+        return new ItemStack(ModItems.CROSSBOW_ARROW_NORMAL.get());
     }
 
     @Override

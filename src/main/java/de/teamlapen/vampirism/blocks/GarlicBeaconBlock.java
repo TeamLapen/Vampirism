@@ -128,7 +128,7 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
     @Override
     public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         ItemStack heldItem = player.getItemInHand(hand);
-        if (!heldItem.isEmpty() && ModItems.purified_garlic.equals(heldItem.getItem())) {
+        if (!heldItem.isEmpty() && ModItems.PURIFIED_GARLIC.get().equals(heldItem.getItem())) {
             if (!world.isClientSide) {
                 GarlicBeaconTileEntity t = getTile(world, pos);
                 if (t != null) {

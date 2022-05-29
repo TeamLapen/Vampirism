@@ -12,7 +12,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.util.IWorldPosCallable;
 
 public class AltarInfusionContainer extends InventoryContainer {
-    public static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(ModTags.Items.PURE_BLOOD, 44, 34), new SelectorInfo(ModItems.human_heart, 80, 34), new SelectorInfo(ModItems.vampire_book, 116, 34)};
+    public static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(ModTags.Items.PURE_BLOOD, 44, 34), new SelectorInfo(ModItems.HUMAN_HEART.get(), 80, 34), new SelectorInfo(ModItems.VAMPIRE_BOOK.get(), 116, 34)};
 
     @Deprecated
     public AltarInfusionContainer(int id, PlayerInventory playerInventory) {

@@ -88,7 +88,7 @@ public class SkillsScreen extends Screen {
 
         if (this.factionPlayer != null) {
             SkillNode rootNode = VampirismMod.proxy.getSkillTree(true).getRootNodeForFaction(this.factionPlayer.getFaction().getID());
-            this.tabs.add(new SkillsTabScreen(this.minecraft, this, 0, new ItemStack(ModItems.vampire_book), rootNode, this.factionPlayer.getSkillHandler()));
+            this.tabs.add(new SkillsTabScreen(this.minecraft, this, 0, new ItemStack(ModItems.VAMPIRE_BOOK.get()), rootNode, this.factionPlayer.getSkillHandler()));
         }
 
         if (this.tabs.size() > 0) {
@@ -110,18 +110,18 @@ public class SkillsScreen extends Screen {
 
                 resetSkills = this.addButton(new Button(guiLeft + 85, guiTop + 194, 80, 20, new TranslationTextComponent("text.vampirism.skill.resetall"), (context) -> {
                     VampirismMod.dispatcher.sendToServer(new CSimpleInputEvent(CSimpleInputEvent.Type.RESET_SKILLS));
-                    InventoryHelper.removeItemFromInventory(factionPlayer.getRepresentingPlayer().inventory, new ItemStack(ModItems.oblivion_potion)); //server syncs after the screen is closed
-                    if ((factionPlayer.getLevel() < 2 || minecraft.player.inventory.countItem(ModItems.oblivion_potion) <= 1) && !test) {
+                    InventoryHelper.removeItemFromInventory(factionPlayer.getRepresentingPlayer().inventory, new ItemStack(ModItems.OBLIVION_POTION.get())); //server syncs after the screen is closed
+                    if ((factionPlayer.getLevel() < 2 || minecraft.player.inventory.countItem(ModItems.OBLIVION_POTION.get()) <= 1) && !test) {
                         context.active = false;
                     }
                 }, (button, stack, mouseX, mouseY) -> {
                     if (button.active) {
-                        SkillsScreen.this.renderTooltip(stack, new TranslationTextComponent("text.vampirism.skills.reset_consume", ModItems.oblivion_potion.getDescription()), mouseX, mouseY);
+                        SkillsScreen.this.renderTooltip(stack, new TranslationTextComponent("text.vampirism.skills.reset_consume", ModItems.OBLIVION_POTION.get().getDescription()), mouseX, mouseY);
                     } else {
-                        SkillsScreen.this.renderTooltip(stack, new TranslationTextComponent("text.vampirism.skills.reset_req", ModItems.oblivion_potion.getDescription()), mouseX, mouseY);
+                        SkillsScreen.this.renderTooltip(stack, new TranslationTextComponent("text.vampirism.skills.reset_req", ModItems.OBLIVION_POTION.get().getDescription()), mouseX, mouseY);
                     }
                 }));
-                if ((factionPlayer.getLevel() < 2 || minecraft.player.inventory.countItem(ModItems.oblivion_potion) <= 0) && !test) {
+                if ((factionPlayer.getLevel() < 2 || minecraft.player.inventory.countItem(ModItems.OBLIVION_POTION.get()) <= 0) && !test) {
                     resetSkills.active = false;
                 }
             });

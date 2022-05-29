@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
 /**
  * represents an accessory item
  *
- * @implSpec should only be implemented by {@link net.minecraft.item.Item}s
+ * @implSpec should only be implemented by {@link Item}s
  */
 public interface IRefinementItem extends IFactionExclusiveItem {
 

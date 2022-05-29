@@ -88,7 +88,7 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
     }
 
     public int getBlood(ItemStack stack) {
-        return stack.getItem() == ModItems.blood_bottle ? stack.getDamageValue() * MULTIPLIER : 0;
+        return stack.getItem() == ModItems.BLOOD_BOTTLE.get() ? stack.getDamageValue() * MULTIPLIER : 0;
     }
 
     @Nonnull

@@ -66,11 +66,11 @@ public class VampireRefinementItem extends Item implements IRefinementItem { //T
     public static VampireRefinementItem getItemForType(AccessorySlotType type) { //TODO 1.17 move to vampire subclass
         switch (type) {
             case AMULET:
-                return ModItems.amulet;
+                return ModItems.AMULET.get();
             case RING:
-                return ModItems.ring;
+                return ModItems.RING.get();
             default:
-                return ModItems.obi_belt;
+                return ModItems.OBI_BELT.get();
         }
     }
     private final AccessorySlotType type;

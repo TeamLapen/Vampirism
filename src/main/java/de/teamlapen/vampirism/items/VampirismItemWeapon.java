@@ -28,19 +28,15 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class VampirismItemWeapon extends SwordItem {
-
-    protected final String regName;
     private final float attackDamage;
     private final float attackSpeed;
     private String translation_key;
 
 
-    public VampirismItemWeapon(String regName, IItemTier material, int attackDamageIn, float attackSpeedIn, Properties builder) {
+    public VampirismItemWeapon(IItemTier material, int attackDamageIn, float attackSpeedIn, Properties builder) {
         super(material, attackDamageIn, attackSpeedIn, builder);
         this.attackDamage = attackDamageIn;
         this.attackSpeed = attackSpeedIn;
-        this.regName = regName;
-        setRegistryName(REFERENCE.MODID, regName);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -81,21 +77,5 @@ public class VampirismItemWeapon extends SwordItem {
      */
     protected float getAttackSpeed(ItemStack stack) {
         return attackSpeed;
-    }
-
-    @Override
-    protected String getOrCreateDescriptionId() {
-        if (this.translation_key == null) {
-            this.translation_key = Util.makeDescriptionId("item", ForgeRegistries.ITEMS.getKey(this));
-        }
-
-        return this.translation_key;
-    }
-
-    /**
-     * Set a custom translation key
-     */
-    protected void setTranslation_key(String name) {
-        this.translation_key = Util.makeDescriptionId("item", new ResourceLocation(REFERENCE.MODID, name));
     }
 }

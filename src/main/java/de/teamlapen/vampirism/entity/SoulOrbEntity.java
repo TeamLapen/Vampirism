@@ -206,9 +206,9 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
 
     private ItemStack createSoulItemStack() {
         if (getVariant() == VARIANT.VAMPIRE) {
-            return new ItemStack(ModItems.soul_orb_vampire);
+            return new ItemStack(ModItems.SOUL_ORB_VAMPIRE.get());
         }
-        return new ItemStack(ModItems.soul_orb_vampire);
+        return new ItemStack(ModItems.SOUL_ORB_VAMPIRE.get());
     }
 
 

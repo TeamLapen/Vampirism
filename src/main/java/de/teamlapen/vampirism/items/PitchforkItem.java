@@ -8,9 +8,7 @@ import net.minecraft.item.ItemTier;
  */
 public class PitchforkItem extends VampirismItemWeapon {
 
-    private final static String regName = "pitchfork";
-
     public PitchforkItem() {
-        super(regName, ItemTier.IRON, 6, -3, new Properties().tab(VampirismMod.creativeTab));
+        super(ItemTier.IRON, 6, -3, new Properties().tab(VampirismMod.creativeTab));
     }
 }

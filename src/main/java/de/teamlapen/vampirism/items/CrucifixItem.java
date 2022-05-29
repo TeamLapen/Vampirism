@@ -30,6 +30,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import net.minecraft.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -41,7 +42,7 @@ import java.util.List;
 import java.util.Set;
 
 
-public class CrucifixItem extends VampirismItem implements IItemWithTier, IFactionExclusiveItem, IFactionLevelItem<IHunterPlayer> {
+public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusiveItem, IFactionLevelItem<IHunterPlayer> {
 
     private final static String baseRegName = "crucifix";
     private final TIER tier;
@@ -52,14 +53,9 @@ public class CrucifixItem extends VampirismItem implements IItemWithTier, IFacti
     private static final Set<CrucifixItem> all_crucifix = Collections.synchronizedSet(new HashSet<>());
 
     public CrucifixItem(IItemWithTier.TIER tier) {
-        super(baseRegName + "_" + tier.getName(), new Properties().tab(VampirismMod.creativeTab).stacksTo(1));
+        super(new Properties().tab(VampirismMod.creativeTab).stacksTo(1));
         this.tier = tier;
         all_crucifix.add(this);
-    }
-
-    @Override
-    public String getBaseRegName() {
-        return baseRegName;
     }
 
     @Override

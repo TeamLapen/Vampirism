@@ -215,7 +215,7 @@ public class TentBlock extends VampirismBlock {
 
     @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
-        return new ItemStack(ModItems.item_tent);
+        return new ItemStack(ModItems.ITEM_TENT.get());
     }
 
     @Override

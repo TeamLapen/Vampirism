@@ -9,15 +9,15 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Item;
 
 import java.util.UUID;
 
-public class UmbrellaItem extends VampirismItem {
-    private final static String regName = "umbrella";
+public class UmbrellaItem extends Item {
     private static final UUID SPEED_MODIFIER = UUID.fromString("CB3F55D5-6A5C-4F18-A497-9C11A33DB5CF");
 
     public UmbrellaItem() {
-        super(regName, new Properties().stacksTo(1).tab(VampirismMod.creativeTab));
+        super(new Properties().stacksTo(1).tab(VampirismMod.creativeTab));
     }
 
     @Override

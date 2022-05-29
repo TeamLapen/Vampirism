@@ -111,8 +111,8 @@ public class RegistryManager implements IInitListener {
                 ModLoot.registerLootFunctionType();
                 VampirismBiomeFeatures.init();
                 ModTiles.registerTileExtensionsUnsafe();
-                DispenserBlock.registerBehavior(ModItems.dark_spruce_boat, new VampirismDispenseBoatBehavior(VampirismBoatItem.BoatType.DARK_SPRUCE));
-                DispenserBlock.registerBehavior(ModItems.cursed_spruce_boat, new VampirismDispenseBoatBehavior(VampirismBoatItem.BoatType.CURSED_SPRUCE));
+                DispenserBlock.registerBehavior(ModItems.DARK_SPRUCE_BOAT.get(), new VampirismDispenseBoatBehavior(VampirismBoatItem.BoatType.DARK_SPRUCE));
+                DispenserBlock.registerBehavior(ModItems.CURSED_SPRUCE_BOAT.get(), new VampirismDispenseBoatBehavior(VampirismBoatItem.BoatType.CURSED_SPRUCE));
                 event.enqueueWork(() -> {
                     ModEntities.initializeEntities();
                     ModStats.registerCustomStats();
@@ -172,18 +172,8 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
-    public void onRegisterAttributes(RegistryEvent.Register<Attribute> event) {
-        ModAttributes.registerAttributes(event.getRegistry());
-    }
-
-    @SubscribeEvent
     public void onRegisterBiomes(RegistryEvent.Register<Biome> event) {
         ModBiomes.registerBiomes(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onRegisterBlocks(RegistryEvent.Register<Block> event) {
-        ModBlocks.registerBlocks(event.getRegistry());
     }
 
     @SubscribeEvent
@@ -219,12 +209,6 @@ public class RegistryManager implements IInitListener {
     @SubscribeEvent
     public void onRegisterFluids(RegistryEvent.Register<Fluid> event) {
         ModFluids.registerFluids(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onRegisterItems(RegistryEvent.Register<Item> event) {
-        ModItems.registerItems(event.getRegistry());
-        ModBlocks.registerItemBlocks(event.getRegistry());
     }
 
     @SubscribeEvent

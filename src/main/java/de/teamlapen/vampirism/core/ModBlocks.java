@@ -1,36 +1,26 @@
 package de.teamlapen.vampirism.core;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.BushBlock;
 import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.client.core.ModBlocksRender;
-import de.teamlapen.vampirism.data.BlockStateGenerator;
-import de.teamlapen.vampirism.data.ItemModelGenerator;
-import de.teamlapen.vampirism.data.LootTablesGenerator;
 import de.teamlapen.vampirism.items.CoffinBlockItem;
 import de.teamlapen.vampirism.util.BlockVoxelshapes;
 import de.teamlapen.vampirism.world.gen.CursedSpruceTree;
-import de.teamlapen.vampirism.world.gen.DarkSpruceTree;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
-import net.minecraft.entity.EntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.Rarity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
@@ -43,8 +33,9 @@ import java.util.stream.Collectors;
  */
 @SuppressWarnings("unused")
 public class ModBlocks {
-
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, REFERENCE.MODID);
+
+
     public static final RegistryObject<AlchemicalCauldronBlock> ALCHEMICAL_CAULDRON =
             registerWithItem("alchemical_cauldron", AlchemicalCauldronBlock::new);
     public static final RegistryObject<AlchemicalFireBlock> ALCHEMICAL_FIRE =

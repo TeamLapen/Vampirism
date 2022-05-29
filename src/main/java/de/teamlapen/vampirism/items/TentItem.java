@@ -19,6 +19,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -28,7 +29,7 @@ import java.util.List;
 /**
  * Item used to place a tent
  */
-public class TentItem extends VampirismItem {
+public class TentItem extends Item {
     private static final String name = "item_tent";
     private static final String name_spawner = "item_tent_spawner";
 
@@ -71,9 +72,8 @@ public class TentItem extends VampirismItem {
     private final boolean spawner;
 
     public TentItem(boolean spawner) {
-        super(spawner ? name_spawner : name, new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties().tab(VampirismMod.creativeTab));
         this.spawner = spawner;
-        this.setTranslation_key(name);
     }
 
     @OnlyIn(Dist.CLIENT)

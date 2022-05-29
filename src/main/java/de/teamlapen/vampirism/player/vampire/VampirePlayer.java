@@ -572,7 +572,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     @Override
     public boolean isGettingSundamage(IWorld iWorld, boolean forcerefresh) {
         if (forcerefresh) {
-            sundamage_cache = Helper.gettingSundamge(player, iWorld, player.level.getProfiler()) && !ModItems.umbrella.equals(player.getMainHandItem().getItem());
+            sundamage_cache = Helper.gettingSundamge(player, iWorld, player.level.getProfiler()) && !ModItems.UMBRELLA.get().equals(player.getMainHandItem().getItem());
         }
         return sundamage_cache;
     }

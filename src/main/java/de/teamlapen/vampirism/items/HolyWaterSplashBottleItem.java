@@ -25,11 +25,8 @@ import java.util.List;
  */
 public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements ThrowableItemEntity.IVampirismThrowableItem {
 
-    public final static String regName = "holy_water_splash_bottle";
-
     public HolyWaterSplashBottleItem(TIER tier) {
-        super(regName + "_" + tier.getName(), tier, new Properties().tab(VampirismMod.creativeTab));
-        setTranslation_key(regName);
+        super(tier, new Properties().tab(VampirismMod.creativeTab));
     }
 
     @Override

@@ -70,6 +70,6 @@ public class GarlicBlock extends CropsBlock {
     @Nonnull
     @Override
     protected IItemProvider getBaseSeedId() {
-        return ModItems.item_garlic;
+        return ModItems.ITEM_GARLIC.get();
     }
 }

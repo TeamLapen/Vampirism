@@ -13,15 +13,14 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.item.Item;
 
 import javax.annotation.Nonnull;
 
-public class VampireFangItem extends VampirismItem {
-
-    private static final String name = "vampire_fang";
+public class VampireFangItem extends Item {
 
     public VampireFangItem() {
-        super(name, new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties().tab(VampirismMod.creativeTab));
     }
 
     @Nonnull

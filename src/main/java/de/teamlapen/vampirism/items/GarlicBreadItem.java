@@ -8,14 +8,14 @@ import net.minecraft.item.Food;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraft.item.Item;
 
 import javax.annotation.Nonnull;
 
-public class GarlicBreadItem extends VampirismItem implements IFactionExclusiveItem {
-    private static final String regName = "garlic_bread";
+public class GarlicBreadItem extends Item implements IFactionExclusiveItem {
 
     public GarlicBreadItem() {
-        super(regName, new Properties().food((new Food.Builder()).nutrition(6).saturationMod(0.7F).build()).tab(ItemGroup.TAB_FOOD));
+        super(new Properties().food((new Food.Builder()).nutrition(6).saturationMod(0.7F).build()).tab(ItemGroup.TAB_FOOD));
     }
 
     @Nonnull

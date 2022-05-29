@@ -87,7 +87,7 @@ public class VampirismMod {
         @Override
         public ItemStack makeIcon() {
 
-            return new ItemStack(ModItems.vampire_fang);
+            return new ItemStack(ModItems.VAMPIRE_FANG.get());
         }
 //
 //        @Override

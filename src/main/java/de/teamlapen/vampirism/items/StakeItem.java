@@ -30,7 +30,6 @@ import javax.annotation.Nullable;
  * Does almost no damage, but can one hit kill vampire from behind when used by skilled hunters
  */
 public class StakeItem extends VampirismItemWeapon implements IVampireFinisher, IFactionExclusiveItem {
-    private final static String regName = "stake";
 
     public static boolean canKillInstant(LivingEntity target, LivingEntity attacker) {
         boolean instaKillFromBehind = false;
@@ -59,7 +58,7 @@ public class StakeItem extends VampirismItemWeapon implements IVampireFinisher, 
     }
 
     public StakeItem() {
-        super(regName, ItemTier.WOOD, 1, -1, new Properties().tab(VampirismMod.creativeTab));
+        super(ItemTier.WOOD, 1, -1, new Properties().tab(VampirismMod.creativeTab));
     }
 
     @Nonnull

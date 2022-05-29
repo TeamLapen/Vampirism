@@ -174,7 +174,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     });
 
                 }
-                if (atts.hunterLevel > 0 && !mc.player.isSpectator() && mc.player.getMainHandItem().getItem() == ModItems.stake) {
+                if (atts.hunterLevel > 0 && !mc.player.isSpectator() && mc.player.getMainHandItem().getItem() == ModItems.STAKE.get()) {
                     if (entity instanceof LivingEntity && entity instanceof IVampireMob) {
                         if (StakeItem.canKillInstant((LivingEntity) entity, mc.player)) {
                             if (((LivingEntity) entity).getHealth() > 0) {

@@ -73,9 +73,9 @@ public class VampirismBoatEntity extends BoatEntity {
     public Item getDropItem() {
         switch (this.getBType()) {
             case DARK_SPRUCE:
-                return ModItems.dark_spruce_boat;
+                return ModItems.DARK_SPRUCE_BOAT.get();
             case CURSED_SPRUCE:
-                return ModItems.cursed_spruce_boat;
+                return ModItems.CURSED_SPRUCE_BOAT.get();
         }
         return Items.AIR;
     }

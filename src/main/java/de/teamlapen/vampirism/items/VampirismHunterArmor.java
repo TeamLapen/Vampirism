@@ -39,14 +39,8 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
     protected static final UUID[] VAMPIRISM_ARMOR_MODIFIER = new UUID[]{UUID.fromString("f0b9a417-0cec-4629-8623-053cd0feec3c"), UUID.fromString("e54474a9-62a0-48ee-baaf-7efddca3d711"), UUID.fromString("ac0c33f4-ebbf-44fe-9be3-a729f7633329"), UUID.fromString("8839e157-d576-4cff-bf34-0a788131fe0f")};
 
 
-    private final String translation_key;
-
-    public VampirismHunterArmor(String baseRegName, @Nullable String suffix, IArmorMaterial materialIn, EquipmentSlotType equipmentSlotIn, Item.Properties props) {
+    public VampirismHunterArmor(IArmorMaterial materialIn, EquipmentSlotType equipmentSlotIn, Item.Properties props) {
         super(materialIn, equipmentSlotIn, props);
-        String regName = baseRegName + "_" + equipmentSlotIn.getName();
-        if (suffix != null) regName += "_" + suffix;
-        setRegistryName(REFERENCE.MODID, regName);
-        translation_key = Util.makeDescriptionId("item", new ResourceLocation(REFERENCE.MODID, baseRegName + "_" + equipmentSlotIn.getName()));
     }
 
     @OnlyIn(Dist.CLIENT)

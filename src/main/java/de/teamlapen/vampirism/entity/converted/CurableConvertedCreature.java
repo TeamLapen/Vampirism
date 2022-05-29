@@ -75,7 +75,7 @@ public interface CurableConvertedCreature<T extends CreatureEntity, Z extends Cr
      */
     default ActionResultType mobInteractC(@Nonnull PlayerEntity player, @Nonnull Hand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (stack.getItem() != ModItems.cure_apple){
+        if (stack.getItem() != ModItems.CURE_APPLE.get()){
             return mobInteractSuper(player, hand);
         }
         return interactWithCureItem(player, stack, ((CreatureEntity) this));

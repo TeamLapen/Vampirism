@@ -29,13 +29,10 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class VampireClothingItem extends ArmorItem implements IFactionExclusiveItem {
-    private final String regName;
 
 
-    public VampireClothingItem(EquipmentSlotType slotType, String regName) {
+    public VampireClothingItem(EquipmentSlotType slotType) {
         super(VampirismArmorMaterials.VAMPIRE_CLOTH, slotType, new Properties().defaultDurability(ArmorMaterial.IRON.getDurabilityForSlot(slotType)).tab(VampirismMod.creativeTab));
-        this.regName = regName;
-        this.setRegistryName(REFERENCE.MODID, regName);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -49,7 +46,7 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
     @OnlyIn(Dist.CLIENT)
     @Override
     public BipedModel getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, BipedModel _default) {
-        switch (regName) {
+        switch (this.getRegistryName().getPath()) {
             case "vampire_clothing_crown":
                 return ClothingCrownModel.getInstance();
             case "vampire_clothing_legs":
@@ -65,7 +62,7 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
 
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
-        return String.format(REFERENCE.MODID + ":textures/models/armor/%s.png", regName);
+        return String.format(REFERENCE.MODID + ":textures/models/armor/%s.png", this.getRegistryName().getPath());
     }
 
     @Nonnull

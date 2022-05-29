@@ -59,8 +59,8 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     private final float untrainedAttackSpeed;
 
 
-    public VampirismVampireSword(String regName, ItemTier material, int attackDamage, float untrainedAttackSpeed, float trainedAttackSpeed, Properties prop) {
-        super(regName, material, attackDamage, untrainedAttackSpeed, prop);
+    public VampirismVampireSword(ItemTier material, int attackDamage, float untrainedAttackSpeed, float trainedAttackSpeed, Properties prop) {
+        super(material, attackDamage, untrainedAttackSpeed, prop);
         this.trainedAttackSpeed = trainedAttackSpeed;
         this.untrainedAttackSpeed = untrainedAttackSpeed;
     }

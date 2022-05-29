@@ -108,7 +108,7 @@ public class Tests {
         failed |= !checkObjectHolders(ModEnchantments.class);
         failed |= !checkObjectHolders(ModEntities.class);
         failed |= !checkObjectHolders(ModFluids.class);
-        failed |= !checkObjectHolders(ModItems.class);
+        failed |= !checkObjectHolders(ModItems.CLASS.get());
         failed |= !checkObjectHolders(ModEffects.class);
         failed |= !checkObjectHolders(ModSounds.class);
         return !failed;
@@ -144,8 +144,8 @@ public class Tests {
         int blood = BloodHelper.getBlood(opt);
         assert blood > 0 : "Could not fill blood container";
 
-        ItemStack bloodBottle1 = new ItemStack(ModItems.blood_bottle);
-        ItemStack bloodBottle2 = new ItemStack(ModItems.blood_bottle);
+        ItemStack bloodBottle1 = new ItemStack(ModItems.BLOOD_BOTTLE.get());
+        ItemStack bloodBottle2 = new ItemStack(ModItems.BLOOD_BOTTLE.get());
         IFluidHandler handler = opt.orElse(null);
         FluidActionResult result1 = FluidUtil.tryFillContainer(bloodBottle1, handler, Integer.MAX_VALUE, null, true);
         assert result1.isSuccess() : "Transaction 1 failed";

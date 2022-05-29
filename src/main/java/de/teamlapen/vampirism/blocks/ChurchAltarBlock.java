@@ -74,15 +74,15 @@ public class ChurchAltarBlock extends VampirismHorizontalBlock {
                 VampirismMod.proxy.displayRevertBackScreen();
                 return ActionResultType.SUCCESS;
             } else if (!heldItem.isEmpty()) {
-                if (ModItems.holy_salt_water.equals(heldItem.getItem())) {
+                if (ModItems.HOLY_SALT_WATER.get().equals(heldItem.getItem())) {
                     if (world.isClientSide) return ActionResultType.SUCCESS;
                     boolean enhanced = handler.isInFaction(VReference.HUNTER_FACTION) && handler.getCurrentFactionPlayer().map(s -> s.getSkillHandler()).map(s -> s.isSkillEnabled(HunterSkills.holy_water_enhanced)).orElse(false);
-                    ItemStack newStack = new ItemStack(enhanced ? ModItems.holy_water_bottle_enhanced : ModItems.holy_water_bottle_normal, heldItem.getCount());
+                    ItemStack newStack = new ItemStack(enhanced ? ModItems.HOLY_WATER_BOTTLE_ENHANCED.get() : ModItems.HOLY_WATER_BOTTLE_NORMAL.get(), heldItem.getCount());
                     player.setItemInHand(hand, newStack);
                     return ActionResultType.SUCCESS;
-                } else if (ModItems.pure_salt.equals(heldItem.getItem())) {
+                } else if (ModItems.PURE_SALT.get().equals(heldItem.getItem())) {
                     if (world.isClientSide) return ActionResultType.SUCCESS;
-                    player.setItemInHand(hand, new ItemStack(ModItems.holy_salt, heldItem.getCount()));
+                    player.setItemInHand(hand, new ItemStack(ModItems.HOLY_SALT.get(), heldItem.getCount()));
                 }
             }
             return ActionResultType.PASS;
