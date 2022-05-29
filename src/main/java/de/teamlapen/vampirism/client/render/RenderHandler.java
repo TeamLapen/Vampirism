@@ -180,7 +180,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
 
         //Saturation shader BUGGED this renderes the hotbar white
 //        if (mc.player != null && mc.player.getRNG().nextInt(10) == 3) {
-//            EffectInstance pe = mc.player.getActivePotionEffect(ModEffects.saturation);
+//            EffectInstance pe = mc.player.getActivePotionEffect(ModEffects.SATURATION.get());
 //            boolean active = pe != null && pe.getAmplifier() >= 2;
 //            GameRenderer renderer = mc.gameRenderer;
 //            if (active && renderer.getShaderGroup() == null) {

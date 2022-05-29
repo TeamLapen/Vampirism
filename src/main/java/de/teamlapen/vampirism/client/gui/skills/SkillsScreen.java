@@ -187,7 +187,7 @@ public class SkillsScreen extends Screen {
     }
 
     public void renderTooltip(MatrixStack stack, int mouseX, int mouseY, int guiLeft, int guiTop) {
-        if (this.minecraft.player.getEffect(ModEffects.oblivion) != null) return;
+        if (this.minecraft.player.getEffect(ModEffects.OBLIVION.get()) != null) return;
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         if (this.selectedTab != null) {
             stack.pushPose();
@@ -228,7 +228,7 @@ public class SkillsScreen extends Screen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        if (this.selectedTab != null && this.minecraft.player.getEffect(ModEffects.oblivion) == null) {
+        if (this.selectedTab != null && this.minecraft.player.getEffect(ModEffects.OBLIVION.get()) == null) {
             return this.selectedTab.mouseScrolled(mouseX, mouseY, amount);
         }
         return super.mouseScrolled(mouseX, mouseY, amount);
@@ -250,7 +250,7 @@ public class SkillsScreen extends Screen {
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double xDragged, double yDragged) {
         this.scrolling = true;
-        if (this.selectedTab != null && this.minecraft.player.getEffect(ModEffects.oblivion) == null) {
+        if (this.selectedTab != null && this.minecraft.player.getEffect(ModEffects.OBLIVION.get()) == null) {
             this.selectedTab.mouseDragged(mouseX, mouseY, mouseButton, xDragged, yDragged);
         }
         return super.mouseDragged(mouseX, mouseY, mouseButton, xDragged, yDragged);

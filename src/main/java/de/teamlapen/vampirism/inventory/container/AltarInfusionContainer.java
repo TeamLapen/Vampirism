@@ -21,7 +21,7 @@ public class AltarInfusionContainer extends InventoryContainer {
     }
 
     public AltarInfusionContainer(int id, PlayerInventory playerInventory, IInventory inventory, IWorldPosCallable worldPosCallable) {
-        super(ModContainer.altar_infusion, id, playerInventory, worldPosCallable, inventory, SELECTOR_INFOS);
+        super(ModContainer.ALTAR_INFUSION.get(), id, playerInventory, worldPosCallable, inventory, SELECTOR_INFOS);
         this.addPlayerSlots(playerInventory);
     }
 

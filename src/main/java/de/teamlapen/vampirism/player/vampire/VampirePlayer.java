@@ -289,7 +289,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 feed_victim_bite_type = determineBiteType((LivingEntity) e);
                 if (feed_victim_bite_type == BITE_TYPE.NONE) {
                 } else if (feed_victim_bite_type == BITE_TYPE.HUNTER_CREATURE) {
-                    player.addEffect(new EffectInstance(ModEffects.poison, 60));
+                    player.addEffect(new EffectInstance(ModEffects.POISON.get(), 60));
                     if (player instanceof ServerPlayerEntity) {
                         ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((ServerPlayerEntity) player, VampireActionTrigger.Action.POISONOUS_BITE);
                     }
@@ -314,7 +314,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     @Override
     public float calculateFireDamage(float amount) {
         float protectionMod = 1F;
-        EffectInstance protection = player.getEffect(ModEffects.fire_protection);
+        EffectInstance protection = player.getEffect(ModEffects.FIRE_PROTECTION.get());
         if (protection != null) {
             int amplifier = protection.getAmplifier();
             protectionMod = amplifier >= 5 ? 0 : 1F / (2F + amplifier);
@@ -602,7 +602,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public boolean canBeInfected(IVampire vampire) {
-        return !player.hasEffect(ModEffects.sanguinare) && Helper.canTurnPlayer(vampire, player) && Helper.canBecomeVampire(player);
+        return !player.hasEffect(ModEffects.SANGUINARE.get()) && Helper.canTurnPlayer(vampire, player) && Helper.canBecomeVampire(player);
     }
 
     @Override
@@ -653,7 +653,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public boolean onDeadlyHit(DamageSource source) {
-        if (getLevel() > 0 && !this.player.hasEffect(ModEffects.neonatal) && !Helper.canKillVampires(source)) {
+        if (getLevel() > 0 && !this.player.hasEffect(ModEffects.NEONATAL.get()) && !Helper.canKillVampires(source)) {
             this.setDBNOTimer(getDbnoDuration());
             this.player.setHealth(0.5f);
             this.player.setForcedPose(Pose.SLEEPING);
@@ -734,8 +734,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             actionHandler.onActionsReactivated();
             ticksInSun = 0;
             if (wasDead) {
-                player.addEffect(new EffectInstance(ModEffects.sunscreen, 400, 4, false, false));
-                player.addEffect(new EffectInstance(ModEffects.armor_regeneration, VampirismConfig.BALANCE.vpNaturalArmorRegenDuration.get() * 20, 0, false, false));
+                player.addEffect(new EffectInstance(ModEffects.SUNSCREEN.get(), 400, 4, false, false));
+                player.addEffect(new EffectInstance(ModEffects.ARMOR_REGENERATION.get(), VampirismConfig.BALANCE.vpNaturalArmorRegenDuration.get() * 20, 0, false, false));
                 requestNaturalArmorUpdate();
                 player.setHealth(player.getMaxHealth());
                 bloodStats.setBloodLevel(bloodStats.getMaxBlood());
@@ -791,7 +791,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     @Override
     public void onPlayerLoggedIn() {
         if (getLevel() > 0 && !player.level.isClientSide) {
-            player.addEffect(new EffectInstance(ModEffects.sunscreen, 200, 4, true, false));
+            player.addEffect(new EffectInstance(ModEffects.SUNSCREEN.get(), 200, 4, true, false));
         }
     }
 
@@ -886,12 +886,12 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
                 if (player.tickCount % 9 == 3 && VampirismConfig.BALANCE.vpFireResistanceReplace.get() && player.hasEffect(Effects.FIRE_RESISTANCE)) {
                     EffectInstance fireResistance = player.getEffect(Effects.FIRE_RESISTANCE);
-                    player.addEffect(new EffectInstance(ModEffects.fire_protection, fireResistance.getDuration(), fireResistance.getAmplifier()));
+                    player.addEffect(new EffectInstance(ModEffects.FIRE_PROTECTION.get(), fireResistance.getDuration(), fireResistance.getAmplifier()));
                     player.removeEffect(Effects.FIRE_RESISTANCE);
                 }
                 if (player.tickCount % 9 == 3 && player.hasEffect(Effects.HUNGER)) {
                     EffectInstance hunterEffect = player.getEffect(Effects.HUNGER);
-                    player.addEffect(new EffectInstance(ModEffects.thirst, hunterEffect.getDuration(), hunterEffect.getAmplifier()));
+                    player.addEffect(new EffectInstance(ModEffects.THIRST.get(), hunterEffect.getDuration(), hunterEffect.getAmplifier()));
                     player.removeEffect(Effects.HUNGER);
                 }
                 if (actionHandler.updateActions()) {
@@ -1087,7 +1087,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             if (this.skillHandler.isSkillEnabled(VampireSkills.neonatal_decrease)) {
                 duration = Math.max(1, (int) (duration * VampirismConfig.BALANCE.vsNeonatalReduction.get()));
             }
-            this.player.addEffect(new EffectInstance(ModEffects.neonatal, duration));
+            this.player.addEffect(new EffectInstance(ModEffects.NEONATAL.get(), duration));
         } else {
             if (this.isRemote()) {
                 this.setDBNOTimer(-1);
@@ -1137,7 +1137,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 AttributeModifier modArmor = armorAtt.getModifier(NATURAL_ARMOR_UUID);
                 AttributeModifier modToughness = toughnessAtt.getModifier(NATURAL_ARMOR_UUID);
                 double naturalArmor = getNaturalArmorValue(lvl);
-                EffectInstance armorRegen = player.getEffect(ModEffects.armor_regeneration);
+                EffectInstance armorRegen = player.getEffect(ModEffects.ARMOR_REGENERATION.get());
                 double armorRegenerationMod = armorRegen == null ? 0 : armorRegen.getDuration() / ((double) VampirismConfig.BALANCE.vpNaturalArmorRegenDuration.get() * 20);
                 naturalArmor *= (1 - 0.75 * armorRegenerationMod); //Modify natural armor between 25% and 100% depending on the armor regen state
                 double naturalToughness = getNaturalArmorToughnessValue(lvl);
@@ -1376,7 +1376,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      * Handle sun damage
      */
     private void handleSunDamage(boolean isRemote) {
-        EffectInstance potionEffect = player.getEffect(ModEffects.sunscreen);
+        EffectInstance potionEffect = player.getEffect(ModEffects.SUNSCREEN.get());
         int sunscreen = potionEffect == null ? -1 : potionEffect.getAmplifier();
         if (ticksInSun < 100) {
             ticksInSun++;

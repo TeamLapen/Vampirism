@@ -53,7 +53,7 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
     @Override
     public void die(DamageSource cause) {
         super.die(cause);
-        if (cause.getEntity() instanceof ServerPlayerEntity && Helper.isVampire(((PlayerEntity) cause.getEntity())) && this.getEffect(ModEffects.freeze) != null) {
+        if (cause.getEntity() instanceof ServerPlayerEntity && Helper.isVampire(((PlayerEntity) cause.getEntity())) && this.getEffect(ModEffects.FREEZE.get()) != null) {
             ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger(((ServerPlayerEntity) cause.getEntity()), VampireActionTrigger.Action.KILL_FROZEN_HUNTER);
         }
     }
@@ -75,8 +75,8 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
      * @return If player was cured
      */
     protected boolean tryCureSanguinare(PlayerEntity entity) {
-        if (!this.level.isClientSide && entity.hasEffect(ModEffects.sanguinare)) {
-            entity.removeEffect(ModEffects.sanguinare);
+        if (!this.level.isClientSide && entity.hasEffect(ModEffects.SANGUINARE.get())) {
+            entity.removeEffect(ModEffects.SANGUINARE.get());
             entity.sendMessage(new TranslationTextComponent("text.vampirism.hunter.cured_sanguinare"), Util.NIL_UUID);
             return true;
         }

@@ -16,6 +16,10 @@ import net.minecraft.world.gen.GenerationStage;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -27,18 +31,16 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
  * Handles all biome registrations and reference.
  */
 public class ModBiomes {
-    @ObjectHolder("vampirism:vampire_forest")
-    public static final Biome vampire_forest = getNull();
-    @ObjectHolder("vampirism:vampire_forest_hills")
-    public static final Biome vampire_forest_hills = getNull();
+    public static final DeferredRegister<Biome> BIOMES = DeferredRegister.create(ForgeRegistries.BIOMES, REFERENCE.MODID);
 
     public static final RegistryKey<Biome> VAMPIRE_FOREST_KEY = RegistryKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(REFERENCE.MODID, "vampire_forest"));
     public static final RegistryKey<Biome> VAMPIRE_FOREST_HILLS_KEY = RegistryKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(REFERENCE.MODID, "vampire_forest_hills"));
 
+    public static final RegistryObject<Biome> VAMPIRE_FOREST = BIOMES.register(VAMPIRE_FOREST_KEY.location().getPath(), () -> VampireForestBiome.createVampireForest(0.1F, 0.055F));
+    public static final RegistryObject<Biome> VAMPIRE_FOREST_HILLS = BIOMES.register(VAMPIRE_FOREST_HILLS_KEY.location().getPath(), () -> VampireForestBiome.createVampireForest(0.8f, 0.5f));
 
-    static void registerBiomes(IForgeRegistry<Biome> registry) {
-        registry.register(VampireForestBiome.createVampireForest(0.1F, 0.055F).setRegistryName(VAMPIRE_FOREST_KEY.location()));
-        registry.register(VampireForestBiome.createVampireForest(0.8f, 0.5f).setRegistryName(VAMPIRE_FOREST_HILLS_KEY.location()));
+    static void registerBiomes(IEventBus bus) {
+        BIOMES.register(bus);
 
         VampirismAPI.sundamageRegistry().addNoSundamageBiomes(VAMPIRE_FOREST_KEY.location());
         VampirismAPI.sundamageRegistry().addNoSundamageBiomes(VAMPIRE_FOREST_HILLS_KEY.location());

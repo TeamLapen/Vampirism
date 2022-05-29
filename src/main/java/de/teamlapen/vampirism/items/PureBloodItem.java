@@ -71,7 +71,7 @@ public class PureBloodItem extends Item {
         if (entityLiving instanceof PlayerEntity) {
             VampirePlayer.getOpt((PlayerEntity) entityLiving).ifPresent(v -> {
                 v.drinkBlood(50, 0.3f, false);
-                entityLiving.addEffect(new EffectInstance(ModEffects.saturation));
+                entityLiving.addEffect(new EffectInstance(ModEffects.SATURATION.get()));
                 stack.shrink(1);
                 checkWingConditions(v);
             });

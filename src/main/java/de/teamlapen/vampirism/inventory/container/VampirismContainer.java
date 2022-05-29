@@ -49,7 +49,7 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
     private final boolean refinementsAvailable;
 
     public VampirismContainer(int id, @Nonnull PlayerInventory playerInventory) {
-        super(ModContainer.vampirism, id, playerInventory, IWorldPosCallable.NULL, new Inventory(3), RemovingSelectorSlot::new, SELECTOR_INFOS.apply(playerInventory.player));
+        super(ModContainer.VAMPIRISM.get(), id, playerInventory, IWorldPosCallable.NULL, new Inventory(3), RemovingSelectorSlot::new, SELECTOR_INFOS.apply(playerInventory.player));
         this.factionPlayer = FactionPlayerHandler.get(playerInventory.player).getCurrentFactionPlayer().orElseThrow(() -> new IllegalStateException("Opening vampirism container without faction"));
         this.factionColor = factionPlayer.getFaction().getChatColor();
         this.refinementsAvailable = factionPlayer.getFaction().hasRefinements();

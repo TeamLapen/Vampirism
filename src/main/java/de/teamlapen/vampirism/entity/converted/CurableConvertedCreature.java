@@ -127,7 +127,7 @@ public interface CurableConvertedCreature<T extends CreatureEntity, Z extends Cr
 
     @Override
     default boolean isIgnoringSundamage() {
-        return ((CreatureEntity) this).hasEffect(ModEffects.sunscreen);
+        return ((CreatureEntity) this).hasEffect(ModEffects.SUNSCREEN.get());
     }
 
     /**

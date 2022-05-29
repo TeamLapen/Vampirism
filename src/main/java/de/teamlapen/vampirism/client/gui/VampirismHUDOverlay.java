@@ -377,7 +377,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
         if (event.getType() != RenderGameOverlayEvent.ElementType.HEALTH) {
             return;
         }
-        addTempPoison = mc.player.hasEffect(ModEffects.poison) && !mc.player.activeEffects.containsKey(Effects.POISON);
+        addTempPoison = mc.player.hasEffect(ModEffects.POISON.get()) && !mc.player.activeEffects.containsKey(Effects.POISON);
 
         if (addTempPoison) { //Add temporary dummy potion effect to trick renderer
             if (addedTempPoison == null) {
@@ -410,7 +410,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
             screenColor = 0xfff00000;
             fullScreen = false;
         } else if ((screenPercentage = vampire.getTicksInSun() / 2) > 0) {
-            EffectInstance effect = mc.player.getEffect(ModEffects.sunscreen);
+            EffectInstance effect = mc.player.getEffect(ModEffects.SUNSCREEN.get());
             if (effect == null || effect.getAmplifier() < 5) {
                 screenColor = 0xfffff755;
                 fullScreen = false;

@@ -34,7 +34,7 @@ public class HunterBasicContainer extends InventoryContainer {
     }
 
     public HunterBasicContainer(int id, PlayerInventory playerInventory, @Nullable BasicHunterEntity hunter) {
-        super(ModContainer.hunter_basic, id, playerInventory, hunter == null ? IWorldPosCallable.NULL : IWorldPosCallable.create(hunter.level, hunter.blockPosition()), new Inventory(SELECTOR_INFOS.length), SELECTOR_INFOS);
+        super(ModContainer.HUNTER_BASIC.get(), id, playerInventory, hunter == null ? IWorldPosCallable.NULL : IWorldPosCallable.create(hunter.level, hunter.blockPosition()), new Inventory(SELECTOR_INFOS.length), SELECTOR_INFOS);
         player = HunterPlayer.get(playerInventory.player);
         this.addPlayerSlots(playerInventory);
         this.entity = hunter;

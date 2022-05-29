@@ -136,7 +136,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                 EffectInstance fireResistance = this.removeEffectNoUpdate(Effects.FIRE_RESISTANCE);
                 assert fireResistance != null;
                 onEffectRemoved(fireResistance);
-                this.addEffect(new EffectInstance(ModEffects.fire_protection, fireResistance.getDuration(), fireResistance.getAmplifier()));
+                this.addEffect(new EffectInstance(ModEffects.FIRE_PROTECTION.get(), fireResistance.getDuration(), fireResistance.getAmplifier()));
             }
         }
         if (entityActionHandler != null) {
@@ -393,7 +393,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     @Override
     protected float calculateFireDamage(float amount) {
         float protectionMod = 1F;
-        EffectInstance protection = this.getEffect(ModEffects.fire_protection);
+        EffectInstance protection = this.getEffect(ModEffects.FIRE_PROTECTION.get());
         if (protection != null) {
             protectionMod = 1F / (2F + protection.getAmplifier());
         }

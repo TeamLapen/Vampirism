@@ -76,7 +76,7 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
         super.onArmorTick(stack, world, player);
         if (player.tickCount % 16 == 8) {
             if (!Helper.isVampire(player)) {
-                player.addEffect(new EffectInstance(ModEffects.poison, 20, 1));
+                player.addEffect(new EffectInstance(ModEffects.POISON.get(), 20, 1));
             }
         }
     }

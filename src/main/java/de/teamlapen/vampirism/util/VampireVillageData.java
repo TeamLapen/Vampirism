@@ -46,7 +46,7 @@ public class VampireVillageData implements IVillageFactionData {// TODO 1.17 onl
     }
 
     public static void vampireVillage(IFactionVillageBuilder builder) {
-        builder.badOmenEffect(() -> ModEffects.bad_omen_vampire)
+        builder.badOmenEffect(() -> ModEffects.BAD_OMEN_VAMPIRE.get())
                 .captureEntities(() -> Lists.newArrayList(new CaptureEntityEntry(ModEntities.vampire, 10), new CaptureEntityEntry(ModEntities.advanced_vampire, 2)))
                 .factionVillagerProfession(() -> ModVillage.vampire_expert)
                 .guardSuperClass(VampireBaseEntity.class)

@@ -68,7 +68,7 @@ public class MinionContainer extends InventoryContainer {
     private boolean taskLocked;
 
     public MinionContainer(int id, PlayerInventory playerInventory, MinionEntity<?> minionEntity, @Nonnull IInventory inventory, int extraSlots, SelectorInfo... selectorInfos) {
-        super(ModContainer.minion, id, playerInventory, IWorldPosCallable.create(minionEntity.level, minionEntity.blockPosition()), inventory, selectorInfos);
+        super(ModContainer.MINION.get(), id, playerInventory, IWorldPosCallable.create(minionEntity.level, minionEntity.blockPosition()), inventory, selectorInfos);
         this.minionEntity = minionEntity;
         this.extraSlots = extraSlots;
         this.availableTasks = this.minionEntity.getAvailableTasks().toArray(new IMinionTask[0]);

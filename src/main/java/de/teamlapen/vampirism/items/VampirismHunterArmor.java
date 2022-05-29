@@ -74,7 +74,7 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
         if (player.tickCount % 16 == 8) {
             IFaction<?> f = VampirismPlayerAttributes.get(player).faction;
             if (f != null && !VReference.HUNTER_FACTION.equals(f)) {
-                player.addEffect(new EffectInstance(ModEffects.poison, 20, 1));
+                player.addEffect(new EffectInstance(ModEffects.POISON.get(), 20, 1));
             }
         }
     }

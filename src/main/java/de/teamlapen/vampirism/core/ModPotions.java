@@ -106,12 +106,12 @@ public class ModPotions {
         registry.register(new HunterPotion("nausea", null, new EffectInstance(Effects.CONFUSION, 1200)));
         registry.register(new HunterPotion("long_nausea", "nausea", new EffectInstance(Effects.CONFUSION, 2400)));
         registry.register(new HunterPotion("very_long_nausea", "nausea", new EffectInstance(Effects.CONFUSION, 24000)));
-        registry.register(new HunterPotion("thirst", null, new EffectInstance(ModEffects.thirst, 1200)));
-        registry.register(new HunterPotion("long_thirst", "thirst", new EffectInstance(ModEffects.thirst, 4800)));
-        registry.register(new HunterPotion("strong_thirst", "thirst", new EffectInstance(ModEffects.thirst, 400, 1)));
-        registry.register(new HunterPotion("very_long_thirst", "thirst", new EffectInstance(ModEffects.thirst, 24000)));
-        registry.register(new HunterPotion("very_strong_thirst", "thirst", new EffectInstance(ModEffects.thirst, 1200, 2)));
-        registry.register(new HunterPotion("long_strong_thirst", "thirst", new EffectInstance(ModEffects.thirst, 9600, 1)));
+        registry.register(new HunterPotion("thirst", null, new EffectInstance(ModEffects.THIRST.get(), 1200)));
+        registry.register(new HunterPotion("long_thirst", "thirst", new EffectInstance(ModEffects.THIRST.get(), 4800)));
+        registry.register(new HunterPotion("strong_thirst", "thirst", new EffectInstance(ModEffects.THIRST.get(), 400, 1)));
+        registry.register(new HunterPotion("very_long_thirst", "thirst", new EffectInstance(ModEffects.THIRST.get(), 24000)));
+        registry.register(new HunterPotion("very_strong_thirst", "thirst", new EffectInstance(ModEffects.THIRST.get(), 1200, 2)));
+        registry.register(new HunterPotion("long_strong_thirst", "thirst", new EffectInstance(ModEffects.THIRST.get(), 9600, 1)));
         registry.register(new HunterPotion("blindness", null, new EffectInstance(Effects.BLINDNESS, 1200)));
         registry.register(new HunterPotion("long_blindness", "blindness", new EffectInstance(Effects.BLINDNESS, 4800)));
         registry.register(new HunterPotion("very_long_blindness", "blindness", new EffectInstance(Effects.BLINDNESS, 24000)));
@@ -126,8 +126,8 @@ public class ModPotions {
         registry.register(new HunterPotion("strong_resistance", "resistance", new EffectInstance(Effects.DAMAGE_RESISTANCE, 400, 1)));
 
         //Vampire
-        registry.register(new VampirismPotion("vampire_fire_resistance", null, new EffectInstance(ModEffects.fire_protection, 3600, 5)));
-        registry.register(new VampirismPotion("long_vampire_fire_resistance", "vampire_fire_resistance", new EffectInstance(ModEffects.fire_protection, 9600, 5)));
+        registry.register(new VampirismPotion("vampire_fire_resistance", null, new EffectInstance(ModEffects.FIRE_PROTECTION.get(), 3600, 5)));
+        registry.register(new VampirismPotion("long_vampire_fire_resistance", "vampire_fire_resistance", new EffectInstance(ModEffects.FIRE_PROTECTION.get(), 9600, 5)));
     }
 
     public static void registerPotionMixes() {

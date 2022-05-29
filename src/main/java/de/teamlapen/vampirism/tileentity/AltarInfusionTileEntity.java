@@ -319,7 +319,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
                 this.level.addParticle(ParticleTypes.EXPLOSION, player.getX(), player.getY(), player.getZ(), 1.0D, 0.0D, 0.0D);
             }
 
-            player.addEffect(new EffectInstance(ModEffects.saturation, 400, 2));
+            player.addEffect(new EffectInstance(ModEffects.SATURATION.get(), 400, 2));
             player.addEffect(new EffectInstance(Effects.REGENERATION, 400, 2));
             player.addEffect(new EffectInstance(Effects.DAMAGE_BOOST, 400, 2));
         }

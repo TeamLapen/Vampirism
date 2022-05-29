@@ -103,13 +103,13 @@ public class Tests {
 
     private static boolean checkObjectHolders() {
         boolean failed;
-        failed = !checkObjectHolders(ModBiomes.class);
+        failed = !checkObjectHolders(ModBiomes.CLASS.get());
         failed |= !checkObjectHolders(ModBlocks.CLASS.get());
-        failed |= !checkObjectHolders(ModEnchantments.class);
+        failed |= !checkObjectHolders(ModEnchantments.CLASS.get());
         failed |= !checkObjectHolders(ModEntities.class);
         failed |= !checkObjectHolders(ModFluids.class);
         failed |= !checkObjectHolders(ModItems.CLASS.get());
-        failed |= !checkObjectHolders(ModEffects.class);
+        failed |= !checkObjectHolders(ModEffects.CLASS.get());
         failed |= !checkObjectHolders(ModSounds.class);
         return !failed;
     }

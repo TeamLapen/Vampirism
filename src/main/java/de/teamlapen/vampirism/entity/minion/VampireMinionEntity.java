@@ -160,7 +160,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
 
     @Override
     public boolean isIgnoringSundamage() {
-        return this.hasEffect(ModEffects.sunscreen);
+        return this.hasEffect(ModEffects.SUNSCREEN.get());
     }
 
     @OnlyIn(Dist.CLIENT)

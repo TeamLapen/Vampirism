@@ -41,7 +41,7 @@ public class HunterTrainerContainer extends InventoryContainer implements IInven
     }
 
     public HunterTrainerContainer(int id, PlayerInventory playerInventory, @Nullable HunterTrainerEntity trainer) {
-        super(ModContainer.hunter_trainer, id, playerInventory, trainer == null ? IWorldPosCallable.NULL : IWorldPosCallable.create(trainer.level, trainer.blockPosition()), new Inventory(SELECTOR_INFOS.length), SELECTOR_INFOS);
+        super(ModContainer.HUNTER_TRAINER.get(), id, playerInventory, trainer == null ? IWorldPosCallable.NULL : IWorldPosCallable.create(trainer.level, trainer.blockPosition()), new Inventory(SELECTOR_INFOS.length), SELECTOR_INFOS);
         ((Inventory) this.inventory).addListener(this);
         this.player = playerInventory.player;
         this.addPlayerSlots(playerInventory);
@@ -93,7 +93,7 @@ public class HunterTrainerContainer extends InventoryContainer implements IInven
             FactionPlayerHandler.get(player).setFactionLevel(VReference.HUNTER_FACTION, old + 1);
             int[] req = HunterLevelingConf.instance().getItemRequirementsForTrainer(old + 1);
             InventoryHelper.removeItems(inventory, new int[]{req[0], req[1], 1});
-            player.addEffect(new EffectInstance(ModEffects.saturation, 400, 2));
+            player.addEffect(new EffectInstance(ModEffects.SATURATION.get(), 400, 2));
             changed = true;
         }
     }

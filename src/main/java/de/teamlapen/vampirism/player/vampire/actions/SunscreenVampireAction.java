@@ -17,7 +17,7 @@ public class SunscreenVampireAction extends DefaultVampireAction implements ILas
 
     @Override
     public boolean activate(IVampirePlayer vampire) {
-        addEffectInstance(vampire, new EffectInstance(ModEffects.sunscreen, getDuration(vampire), 3, false, false));
+        addEffectInstance(vampire, new EffectInstance(ModEffects.SUNSCREEN.get(), getDuration(vampire), 3, false, false));
         return true;
     }
 
@@ -52,7 +52,7 @@ public class SunscreenVampireAction extends DefaultVampireAction implements ILas
 
     @Override
     public void onDeactivated(IVampirePlayer vampire) {
-        removePotionEffect(vampire, ModEffects.sunscreen);
+        removePotionEffect(vampire, ModEffects.SUNSCREEN.get());
     }
 
     @Override

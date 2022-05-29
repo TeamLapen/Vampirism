@@ -41,7 +41,7 @@ public class HunterTableContainer extends InventoryContainer implements IInvento
 
 
     public HunterTableContainer(int id, PlayerInventory playerInventory, IWorldPosCallable worldPosCallable) {
-        super(ModContainer.hunter_table, id, playerInventory, worldPosCallable, new Inventory(SELECTOR_INFOS.length), SELECTOR_INFOS);
+        super(ModContainer.HUNTER_TABLE.get(), id, playerInventory, worldPosCallable, new Inventory(SELECTOR_INFOS.length), SELECTOR_INFOS);
         ((Inventory) inventory).addListener(this);
         slotResult = new SlotResult(this, new CraftResultInventory() {
             @Override

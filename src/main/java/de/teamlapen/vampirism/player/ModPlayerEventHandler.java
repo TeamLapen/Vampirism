@@ -294,7 +294,7 @@ public class ModPlayerEventHandler {
             if (stack.getItem() == Items.POTION) {
                 Potion p = PotionUtils.getPotion(stack);
                 if (p instanceof VampirismPotion.HunterPotion && p.getEffects().stream().map(EffectInstance::getEffect).anyMatch(Effect::isBeneficial)) {
-                    event.getEntityLiving().addEffect(new EffectInstance(ModEffects.poison, Integer.MAX_VALUE, VampirismPoisonEffect.DEADLY_AMPLIFIER));
+                    event.getEntityLiving().addEffect(new EffectInstance(ModEffects.POISON.get(), Integer.MAX_VALUE, VampirismPoisonEffect.DEADLY_AMPLIFIER));
                 }
             }
         }
@@ -422,7 +422,7 @@ public class ModPlayerEventHandler {
             world.removeBlock(pos, false);
             event.setCanceled(true);
         } else if ((ModBlocks.GARLIC_BEACON_NORMAL.get().equals(state.getBlock()) || ModBlocks.GARLIC_BEACON_WEAK.get().equals(state.getBlock()) || ModBlocks.GARLIC_BEACON_IMPROVED.get().equals(state.getBlock())) && Helper.isVampire(event.getPlayer())) {
-            event.getPlayer().addEffect(new EffectInstance(ModEffects.garlic));
+            event.getPlayer().addEffect(new EffectInstance(ModEffects.GARLIC.get()));
         }
     }
 

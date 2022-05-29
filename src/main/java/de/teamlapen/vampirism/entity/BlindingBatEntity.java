@@ -32,7 +32,7 @@ import java.util.Random;
 public class BlindingBatEntity extends BatEntity {
 
     public static boolean spawnPredicate(EntityType<? extends BlindingBatEntity> entityType, IWorld iWorld, SpawnReason spawnReason, BlockPos blockPos, Random random) {
-        if (ModBiomes.vampire_forest.getRegistryName().equals(Helper.getBiomeId(iWorld, blockPos)) || ModBiomes.vampire_forest_hills.getRegistryName().equals(Helper.getBiomeId(iWorld, blockPos)))
+        if (ModBiomes.VAMPIRE_FOREST.get().getRegistryName().equals(Helper.getBiomeId(iWorld, blockPos)) || ModBiomes.VAMPIRE_FOREST_HILLS.get().getRegistryName().equals(Helper.getBiomeId(iWorld, blockPos)))
             return true;
         if (blockPos.getY() >= iWorld.getSeaLevel()) {
             return false;

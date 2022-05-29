@@ -16,19 +16,19 @@ import java.util.List;
  * Base class for Vampirism's potions
  */
 public class VampirismEffect extends Effect {
-    public VampirismEffect(String name, EffectType effectType, int potionColor) {
+    public VampirismEffect(EffectType effectType, int potionColor) {
         super(effectType, potionColor);
         this.setRegistryName(REFERENCE.MODID, name);
     }
 
     @Override
     public List<ItemStack> getCurativeItems() {
-        return (this == ModEffects.armor_regeneration || this == ModEffects.neonatal || this == ModEffects.disguise_as_vampire) ? Collections.emptyList() : super.getCurativeItems();
+        return (this == ModEffects.ARMOR_REGENERATION.get() || this == ModEffects.NEONATAL.get() || this == ModEffects.DISGUISE_AS_VAMPIRE.get()) ? Collections.emptyList() : super.getCurativeItems();
     }
 
     @Override
     public void applyEffectTick(LivingEntity entityLivingBaseIn, int amplifier) {
-        if (this == ModEffects.armor_regeneration) {
+        if (this == ModEffects.ARMOR_REGENERATION.get()) {
             if (entityLivingBaseIn instanceof PlayerEntity) {
                 VampirePlayer.getOpt((PlayerEntity) entityLivingBaseIn).ifPresent(VampirePlayer::requestNaturalArmorUpdate);
             }
@@ -37,6 +37,6 @@ public class VampirismEffect extends Effect {
 
     @Override
     public boolean isDurationEffectTick(int duration, int amplifier) {
-        return this == ModEffects.armor_regeneration && duration % 100 == 1;
+        return this == ModEffects.ARMOR_REGENERATION.get() && duration % 100 == 1;
     }
 }

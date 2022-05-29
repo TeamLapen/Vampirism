@@ -183,7 +183,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
                 else if (((HunterCoatItem) e.getItem()).getVampirismTier().equals(IItemWithTier.TIER.ULTIMATE))
                     j = 3;
                 if (getRandom().nextInt((4 - j) * 2) == 0)
-                    addEffect(new EffectInstance(ModEffects.poison, (int) (20 * Math.sqrt(j)), j));
+                    addEffect(new EffectInstance(ModEffects.POISON.get(), (int) (20 * Math.sqrt(j)), j));
             }
         }
         return super.doHurtTarget(entity);
@@ -241,7 +241,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
 
     @Override
     public boolean isIgnoringSundamage() {
-        return this.hasEffect(ModEffects.sunscreen);
+        return this.hasEffect(ModEffects.SUNSCREEN.get());
     }
 
     /**
@@ -293,7 +293,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
      * Only exception is the vampire biome in which it returns true if ontop of {@link ModBlocks#cursed_earth}
      */
     private boolean getCanSpawnHereRestricted(IWorld iWorld) {
-        boolean vampireBiome = ModBiomes.vampire_forest.getRegistryName().equals(Helper.getBiomeId(iWorld, this.blockPosition())) || ModBiomes.vampire_forest_hills.getRegistryName().equals(Helper.getBiomeId(iWorld, this.blockPosition()));
+        boolean vampireBiome = ModBiomes.VAMPIRE_FOREST.get().getRegistryName().equals(Helper.getBiomeId(iWorld, this.blockPosition())) || ModBiomes.VAMPIRE_FOREST_HILLS.get().getRegistryName().equals(Helper.getBiomeId(iWorld, this.blockPosition()));
         if (!vampireBiome) return isLowLightLevel(iWorld);
         BlockState iblockstate = iWorld.getBlockState((this.blockPosition()).below());
         return iblockstate.is(ModTags.Blocks.CURSEDEARTH);

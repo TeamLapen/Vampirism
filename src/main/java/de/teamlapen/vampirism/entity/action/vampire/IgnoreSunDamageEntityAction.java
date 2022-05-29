@@ -18,14 +18,14 @@ public class IgnoreSunDamageEntityAction<T extends CreatureEntity & IEntityActio
 
     @Override
     public void activate(T entity) {
-        entity.addEffect(new EffectInstance(ModEffects.sunscreen, getDuration(entity.getLevel()), 0));
+        entity.addEffect(new EffectInstance(ModEffects.SUNSCREEN.get(), getDuration(entity.getLevel()), 0));
 
     }
 
     @Override
     public void deactivate(T entity) {
-        if (entity.getEffect(ModEffects.sunscreen) != null && entity.getEffect(ModEffects.sunscreen).getAmplifier() == 0) {
-            entity.removeEffect(ModEffects.sunscreen);
+        if (entity.getEffect(ModEffects.SUNSCREEN.get()) != null && entity.getEffect(ModEffects.SUNSCREEN.get()).getAmplifier() == 0) {
+            entity.removeEffect(ModEffects.SUNSCREEN.get());
         }
     }
 

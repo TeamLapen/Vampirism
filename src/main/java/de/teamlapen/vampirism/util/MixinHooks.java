@@ -63,8 +63,8 @@ public class MixinHooks {
         if (!(entity instanceof PlayerEntity)) return 0;
         if (!Helper.isVampire(entity)) return 0;
         Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(item);
-        if (!enchantments.containsKey(ModEnchantments.vampireslayer)) return 0;
-        return ModEnchantments.vampireslayer.getDamageBonus(enchantments.get(ModEnchantments.vampireslayer), VReference.VAMPIRE_CREATURE_ATTRIBUTE);
+        if (!enchantments.containsKey(ModEnchantments.VAMPIRESLAYER.get())) return 0;
+        return ModEnchantments.VAMPIRESLAYER.get().getDamageBonus(enchantments.get(ModEnchantments.VAMPIRESLAYER.get()), VReference.VAMPIRE_CREATURE_ATTRIBUTE);
     }
 
     private static String singleJigsawString(ResourceLocation resourceLocation) {

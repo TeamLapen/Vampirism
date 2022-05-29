@@ -34,12 +34,12 @@ public class VampireFangItem extends Item {
             } else {
                 if (Helper.canBecomeVampire(playerIn)) {
                     SanguinareEffect.addRandom(playerIn, true);
-                    playerIn.addEffect(new EffectInstance(ModEffects.poison, 60));
+                    playerIn.addEffect(new EffectInstance(ModEffects.POISON.get(), 60));
                 } else {
                     if (Helper.isVampire(playerIn)) {
                         playerIn.displayClientMessage(new TranslationTextComponent("text.vampirism.already_vampire"), true);
                     } else {
-                        playerIn.displayClientMessage(new TranslationTextComponent("text.vampirism.immune_to").append(new TranslationTextComponent(ModEffects.sanguinare.getDescriptionId())), true);
+                        playerIn.displayClientMessage(new TranslationTextComponent("text.vampirism.immune_to").append(new TranslationTextComponent(ModEffects.SANGUINARE.get().getDescriptionId())), true);
                     }
                 }
                 stack.shrink(1);

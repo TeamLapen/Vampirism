@@ -158,7 +158,7 @@ public class SkillsTabScreen extends AbstractGui {
         RenderSystem.depthFunc(515);
         stack.popPose();
 
-        if (this.minecraft.player.getEffect(ModEffects.oblivion) != null) {
+        if (this.minecraft.player.getEffect(ModEffects.OBLIVION.get()) != null) {
             stack.pushPose();
             RenderSystem.enableDepthTest();
             stack.translate(0.0F, 0.0F, 200.0F);
@@ -247,7 +247,7 @@ public class SkillsTabScreen extends AbstractGui {
     }
 
     public void drawDisableText(MatrixStack mStack) {
-        if (this.minecraft.player.getEffect(ModEffects.oblivion) == null) return;
+        if (this.minecraft.player.getEffect(ModEffects.OBLIVION.get()) == null) return;
 
         ITextComponent f = new TranslationTextComponent("text.vampirism.skill.unlock_unavailable").withStyle(TextFormatting.WHITE);
         IReorderingProcessor s = LanguageMap.getInstance().getVisualOrder(f);

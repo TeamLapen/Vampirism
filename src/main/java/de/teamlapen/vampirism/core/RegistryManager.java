@@ -172,18 +172,8 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
-    public void onRegisterBiomes(RegistryEvent.Register<Biome> event) {
-        ModBiomes.registerBiomes(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onRegisterContainer(RegistryEvent.Register<ContainerType<?>> event) {
-        ModContainer.registerContainer(event.getRegistry());
-    }
-
-    @SubscribeEvent
     public void onRegisterEffects(RegistryEvent.Register<Effect> event) {
-        ModEffects.registerEffects(event.getRegistry());
+        ModEffects.replaceEffects(event.getRegistry());
     }
 
     @SubscribeEvent

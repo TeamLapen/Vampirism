@@ -131,7 +131,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
                 VampirismMod.proxy.renderScreenFullColor(4, 30, 0xBBBBBBFF);
             } else {
                 handler.joinFaction(VReference.HUNTER_FACTION);
-                player.addEffect(new EffectInstance(ModEffects.poison, 200, 1));
+                player.addEffect(new EffectInstance(ModEffects.POISON.get(), 200, 1));
             }
             return true;
         } else if (currentFaction != null) {
@@ -173,7 +173,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
                     player.displayClientMessage(new TranslationTextComponent("text.vampirism.deactivated_by_serveradmin"), true);
                 } else {
                     SanguinareEffect.addRandom(player, true);
-                    player.addEffect(new EffectInstance(ModEffects.poison, 60));
+                    player.addEffect(new EffectInstance(ModEffects.POISON.get(), 60));
                     return true;
                 }
             }
@@ -182,7 +182,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
     }
 
     private boolean handleZombieBloodInjection(@Nonnull PlayerEntity player) {
-        player.addEffect(new EffectInstance(ModEffects.poison, 200));
+        player.addEffect(new EffectInstance(ModEffects.POISON.get(), 200));
         return true;
     }
 

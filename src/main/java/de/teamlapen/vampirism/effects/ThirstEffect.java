@@ -9,8 +9,8 @@ import net.minecraft.potion.EffectType;
 
 
 public class ThirstEffect extends VampirismEffect {
-    public ThirstEffect(String name, EffectType effectType, int potionColor) {
-        super(name, effectType, potionColor);
+    public ThirstEffect(EffectType effectType, int potionColor) {
+        super(effectType, potionColor);
         addAttributeModifier(ModAttributes.BLOOD_EXHAUSTION.get(), "f6d9889e-dfdc-11e5-b86d-9a79f06e9478", 0.5F, AttributeModifier.Operation.ADDITION);
     }
 

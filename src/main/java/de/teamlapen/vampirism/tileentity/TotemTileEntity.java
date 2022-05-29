@@ -1210,8 +1210,8 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
 
         } else if (VReference.VAMPIRE_FACTION.equals(this.controllingFaction)) {
             for (VillagerEntity villager : villagerEntities) {
-                if (villager.hasEffect(ModEffects.sanguinare))
-                    villager.removeEffect(ModEffects.sanguinare);
+                if (villager.hasEffect(ModEffects.SANGUINARE.get()))
+                    villager.removeEffect(ModEffects.SANGUINARE.get());
                 if (fullConvert) {
                     if (villager instanceof ConvertedVillagerEntity) {
                         this.spawnVillagerReplaceForced(villager, this.capturingFaction == VReference.HUNTER_FACTION);

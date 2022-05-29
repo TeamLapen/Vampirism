@@ -70,7 +70,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
 
     @Override
     public Result canSkillBeEnabled(ISkill skill) {
-        if (player.getRepresentingPlayer().getEffect(ModEffects.oblivion) != null) {
+        if (player.getRepresentingPlayer().getEffect(ModEffects.OBLIVION.get()) != null) {
             return Result.LOCKED_BY_PLAYER_STATE;
         }
         if (isSkillEnabled(skill)) {
