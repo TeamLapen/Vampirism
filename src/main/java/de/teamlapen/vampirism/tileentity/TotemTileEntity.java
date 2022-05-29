@@ -538,7 +538,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         //client ---------------------------------
         if (this.level.isClientSide) {
             if (time % 10 == 7 && controllingFaction != null) {
-                ModParticles.spawnParticlesClient(this.level, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "generic_4"), 20, controllingFaction.getColor().getRGB(), 0.2F), this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ(), 3, 30, this.level.random);
+                ModParticles.spawnParticlesClient(this.level, new GenericParticleData(ModParticles.GENERIC.get(), new ResourceLocation("minecraft", "generic_4"), 20, controllingFaction.getColor().getRGB(), 0.2F), this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ(), 3, 30, this.level.random);
             }
         }
         //server ---------------------------------
@@ -805,10 +805,10 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         EntityType<? extends VampirismEntity> entityType;
         if (toDummy) {
             trainer = this.level.getEntitiesOfClass(HunterTrainerEntity.class, this.getVillageArea());
-            entityType = ModEntities.hunter_trainer_dummy;
+            entityType = ModEntities.HUNTER_TRAINER_DUMMY.get();
         } else {
             trainer = this.level.getEntitiesOfClass(DummyHunterTrainerEntity.class, this.getVillageArea());
-            entityType = ModEntities.hunter_trainer;
+            entityType = ModEntities.HUNTER_TRAINER.get();
         }
         for (VampirismEntity oldEntity : trainer) {
             VampirismEntity newEntity = entityType.create(this.level);
@@ -1130,7 +1130,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
 
     @SuppressWarnings("ConstantConditions")
     private void spawnVillagerVampire() {
-        this.spawnEntity(ModEntities.villager_converted.create(this.level));
+        this.spawnEntity(ModEntities.VILLAGER_CONVERTED.get().create(this.level));
     }
 
     /**

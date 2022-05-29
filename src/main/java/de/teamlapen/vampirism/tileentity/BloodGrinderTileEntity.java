@@ -161,7 +161,7 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
                 ItemStack stack = itemHandler.extractItem(i, 1, true);
                 int blood = BloodConversionRegistry.getImpureBloodValue(stack.getItem());
                 if (blood > 0) {
-                    FluidStack fluid = new FluidStack(ModFluids.impure_blood, blood);
+                    FluidStack fluid = new FluidStack(ModFluids.IMPURE_BLOOD.get(), blood);
                     FluidUtil.getFluidHandler(this.level, this.worldPosition.below(), Direction.UP).ifPresent(handler -> {
                         int filled = handler.fill(fluid, IFluidHandler.FluidAction.SIMULATE);
                         if (filled >= 0.9f * blood) {

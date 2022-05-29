@@ -65,7 +65,6 @@ public class RegistryManager implements IInitListener {
         ModFeatures.registerFeaturesAndStructures(modbus);
         ModFluids.registerFluids(modbus);
         ModItems.registerItems(modbus);
-        ModLoot.registerLoot(modbus);
         ModParticles.registerParticles(modbus);
         ModPotions.registerPotions(modbus);
         ModRecipes.registerRecipeTypesAndSerializers(modbus);
@@ -174,11 +173,6 @@ public class RegistryManager implements IInitListener {
     @SubscribeEvent
     public void onRegisterEffects(RegistryEvent.Register<Effect> event) {
         ModEffects.replaceEffects(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onRegisterEnchantments(RegistryEvent.Register<Enchantment> event) {
-        ModEnchantments.registerEnchantments(event.getRegistry());
     }
 
     @SubscribeEvent

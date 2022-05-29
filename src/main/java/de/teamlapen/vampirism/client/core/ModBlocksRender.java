@@ -75,8 +75,8 @@ public class ModBlocksRender {
         RenderTypeLookup.setRenderLayer(ModBlocks.GARLIC_BEACON_WEAK.get(), cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.GARLIC_BEACON_IMPROVED.get(), cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.GARLIC_BEACON_NORMAL.get(), cutout);
-        RenderTypeLookup.setRenderLayer(ModFluids.impure_blood, RenderType.translucent());
-        RenderTypeLookup.setRenderLayer(ModFluids.blood, RenderType.translucent());
+        RenderTypeLookup.setRenderLayer(ModFluids.IMPURE_BLOOD.get(), RenderType.translucent());
+        RenderTypeLookup.setRenderLayer(ModFluids.BLOOD.get(), RenderType.translucent());
         RenderTypeLookup.setRenderLayer(ModBlocks.ALCHEMICAL_CAULDRON.get(), cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.ALCHEMICAL_FIRE.get(), cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.ALTAR_INFUSION.get(), cutout);

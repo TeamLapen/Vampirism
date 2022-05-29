@@ -27,7 +27,7 @@ public class VampirismBoatEntity extends BoatEntity {
     }
 
     public VampirismBoatEntity(World level, double x, double y, double z) {
-        this(ModEntities.boat, level);
+        this(ModEntities.BOAT.get(), level);
         this.setPos(x,y,z);
         this.setDeltaMovement(Vector3d.ZERO);
         this.xo = x;

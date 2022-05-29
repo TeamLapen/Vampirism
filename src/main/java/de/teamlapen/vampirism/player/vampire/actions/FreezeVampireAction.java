@@ -39,7 +39,7 @@ public class FreezeVampireAction extends DefaultVampireAction {
                 dur *= VampirismConfig.BALANCE.vrFreezeDurationMod.get();
             }
             e.addEffect(new EffectInstance(ModEffects.FREEZE.get(), dur));
-            ModParticles.spawnParticlesServer(player.getCommandSenderWorld(), new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "generic_2"), 20, 0xF0F0F0, 0.4F), e.getX(), e.getY(), e.getZ(), 20, 1, 1, 1, 0);
+            ModParticles.spawnParticlesServer(player.getCommandSenderWorld(), new GenericParticleData(ModParticles.GENERIC.get(), new ResourceLocation("minecraft", "generic_2"), 20, 0xF0F0F0, 0.4F), e.getX(), e.getY(), e.getZ(), 20, 1, 1, 1, 0);
         }
         return l.size() > 0;
     }

@@ -142,8 +142,8 @@ public class BloodConversionRegistry {
      * @return Impure blood amount in mB or 0
      */
     public static FluidStack getBloodFromFluid(@Nonnull FluidStack fluid) {
-        if (fluid.getFluid().isSame(VReference.blood_fluid))
+        if (fluid.getFluid().isSame(VReference.blood_fluid_supplier.get()))
             return fluid;
-        return new FluidStack(VReference.blood_fluid, (int) (getBloodValue(fluid) * fluid.getAmount()));
+        return new FluidStack(VReference.blood_fluid_supplier.get(), (int) (getBloodValue(fluid) * fluid.getAmount()));
     }
 }

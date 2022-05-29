@@ -49,14 +49,14 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
      * Adds a small random to the motion
      */
     public DarkBloodProjectileEntity(World worldIn, LivingEntity shooter, double accelX, double accelY, double accelZ) {
-        super(ModEntities.dark_blood_projectile, shooter, accelX, accelY, accelZ, worldIn);
+        super(ModEntities.DARK_BLOOD_PROJECTILE.get(), shooter, accelX, accelY, accelZ, worldIn);
     }
 
     /**
      * Does not add a small random to the motion
      */
     public DarkBloodProjectileEntity(World worldIn, double x, double y, double z, double accelX, double accelY, double accelZ) {
-        super(ModEntities.dark_blood_projectile, x, y, z, accelX, accelY, accelZ, worldIn);
+        super(ModEntities.DARK_BLOOD_PROJECTILE.get(), x, y, z, accelX, accelY, accelZ, worldIn);
     }
 
     @Override
@@ -89,8 +89,8 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
             }
         }
         if (!this.level.isClientSide) {
-            ModParticles.spawnParticlesServer(this.level, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_1"), 7, 0xA01010, 0.2F), this.getX(), this.getY(), this.getZ(), 40, 1, 1, 1, 0);
-            ModParticles.spawnParticlesServer(this.level, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_6"), 10, 0x700505), this.getX(), this.getY(), this.getZ(), 15, 1, 1, 1, 0);
+            ModParticles.spawnParticlesServer(this.level, new GenericParticleData(ModParticles.GENERIC.get(), new ResourceLocation("minecraft", "spell_1"), 7, 0xA01010, 0.2F), this.getX(), this.getY(), this.getZ(), 40, 1, 1, 1, 0);
+            ModParticles.spawnParticlesServer(this.level, new GenericParticleData(ModParticles.GENERIC.get(), new ResourceLocation("minecraft", "spell_6"), 10, 0x700505), this.getX(), this.getY(), this.getZ(), 15, 1, 1, 1, 0);
         }
         this.remove();
     }
@@ -157,10 +157,10 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
         super.tick();
         if (this.level.isClientSide) {
             Vector3d center = this.position();
-            ModParticles.spawnParticlesClient(this.level, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_4"), 4, 0xA01010, 0f), center.x, center.y, center.z, 5, getPickRadius(), this.random);
+            ModParticles.spawnParticlesClient(this.level, new GenericParticleData(ModParticles.GENERIC.get(), new ResourceLocation("minecraft", "spell_4"), 4, 0xA01010, 0f), center.x, center.y, center.z, 5, getPickRadius(), this.random);
 
             if (this.tickCount % 3 == 0) {
-                ModParticles.spawnParticleClient(this.level, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_4"), 12, 0xC01010, 0.4F), center.x, center.y, center.z);
+                ModParticles.spawnParticleClient(this.level, new GenericParticleData(ModParticles.GENERIC.get(), new ResourceLocation("minecraft", "effect_4"), 12, 0xC01010, 0.4F), center.x, center.y, center.z);
             }
         }
 

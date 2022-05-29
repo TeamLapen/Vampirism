@@ -192,7 +192,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     TileEntity tile = Minecraft.getInstance().level.getBlockEntity(((BlockRayTraceResult) p).getBlockPos());
                     if (tile != null) {
                         tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(handler -> {
-                            if (FluidLib.getFluidAmount(handler, ModFluids.blood) > 0) {
+                            if (FluidLib.getFluidAmount(handler, ModFluids.BLOOD.get()) > 0) {
                                 renderBloodFangs(event.getMatrixStack(), this.mc.getWindow().getGuiScaledWidth(), this.mc.getWindow().getGuiScaledHeight(), 1, 0xFF0000);
                                 event.setCanceled(true);
                             }

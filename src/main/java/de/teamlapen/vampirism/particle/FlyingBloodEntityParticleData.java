@@ -21,7 +21,7 @@ public class FlyingBloodEntityParticleData implements IParticleData {
             .group(
                     Codec.INT.fieldOf("e").forGetter((p_239807_0_) -> p_239807_0_.entity),
                     Codec.BOOL.fieldOf("d").forGetter((p_239806_0_) -> p_239806_0_.direct))
-            .apply(p_239803_0_, (e, d) -> new FlyingBloodEntityParticleData(ModParticles.flying_blood_entity, e, d)));
+            .apply(p_239803_0_, (e, d) -> new FlyingBloodEntityParticleData(ModParticles.FLYING_BLOOD_ENTITY.get(), e, d)));
 
     public static final IParticleData.IDeserializer<FlyingBloodEntityParticleData> DESERIALIZER = new IParticleData.IDeserializer<FlyingBloodEntityParticleData>() {
         public FlyingBloodEntityParticleData fromCommand(ParticleType<FlyingBloodEntityParticleData> particleTypeIn, StringReader reader) throws CommandSyntaxException {

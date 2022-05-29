@@ -29,7 +29,7 @@ public class SummonBatVampireAction extends DefaultVampireAction {
             amount = amount / 2;
         }
         for (int i = 0; i < amount; i++) {
-            BlindingBatEntity e = ModEntities.blinding_bat.create(entityPlayer.getCommandSenderWorld());
+            BlindingBatEntity e = ModEntities.BLINDING_BAT.get().create(entityPlayer.getCommandSenderWorld());
             e.restrictLiveSpan();
             if (refined) e.setTargeting();
             e.setResting(false);

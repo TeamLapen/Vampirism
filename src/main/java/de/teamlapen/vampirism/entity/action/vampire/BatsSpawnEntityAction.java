@@ -21,7 +21,7 @@ public class BatsSpawnEntityAction<T extends CreatureEntity & IEntityActionUser>
     public boolean activate(T entity) {
         int amount = VampirismConfig.BALANCE.eaBatspawnAmount.get();
         for (int i = 0; i < amount; i++) {
-            Helper.createEntity(ModEntities.blinding_bat, entity.getCommandSenderWorld()).ifPresent(e -> {
+            Helper.createEntity(ModEntities.BLINDING_BAT.get(), entity.getCommandSenderWorld()).ifPresent(e -> {
                 e.restrictLiveSpan();
                 e.setResting(false);
                 e.copyPosition(entity);

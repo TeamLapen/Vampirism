@@ -11,6 +11,7 @@ import net.minecraft.entity.EntityClassification;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.PlantType;
+import net.minecraftforge.fml.RegistryObject;
 
 /**
  * Holds constants (or at init set variables)
@@ -35,7 +36,9 @@ public class VReference {
      * Enchantment type for crossbows
      */
     public static final EnchantmentType CROSSBOW_ENCHANTMENT = EnchantmentType.create("VAMPIRISM_CROSSBOW", input -> input instanceof IVampirismCrossbow);
+    @Deprecated
     public static Fluid blood_fluid;
+    public static RegistryObject<Fluid> blood_fluid_supplier;
     /**
      * Hunter creatures are of this creature type. But when they are counted for spawning they belong to {@link EntityClassification#MONSTER}
      */

@@ -239,7 +239,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
         this.setChanged();
         if (!this.level.isClientSide) {
             for (BlockPos pTip : tips) {
-                ModParticles.spawnParticlesServer(level, new FlyingBloodParticleData(ModParticles.flying_blood, 60, false, pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5), worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5, 3, 0.1, 0.1, 0.1, 0);
+                ModParticles.spawnParticlesServer(level, new FlyingBloodParticleData(ModParticles.FLYING_BLOOD.get(), 60, false, pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5), worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5, 3, 0.1, 0.1, 0.1, 0);
             }
             BlockState state = this.level.getBlockState(getBlockPos());
             this.level.sendBlockUpdated(getBlockPos(), state, state, 3); //Notify client about started ritual
@@ -285,7 +285,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
                 if (runningTick % 15 == 0) {
                     BlockPos pos = getBlockPos();
                     for (BlockPos pTip : tips) {
-                        ModParticles.spawnParticlesClient(level, new FlyingBloodParticleData(ModParticles.flying_blood, 60, false, pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0, 5, 0.1, new Random());
+                        ModParticles.spawnParticlesClient(level, new FlyingBloodParticleData(ModParticles.FLYING_BLOOD.get(), 60, false, pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0, 5, 0.1, new Random());
                     }
                 }
             }

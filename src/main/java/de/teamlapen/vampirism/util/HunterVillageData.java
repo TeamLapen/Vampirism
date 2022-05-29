@@ -47,10 +47,10 @@ public class HunterVillageData implements IVillageFactionData { // TODO 1.17 onl
 
     public static void hunterVillage(IFactionVillageBuilder builder) {
         builder.badOmenEffect(() -> ModEffects.BAD_OMEN_HUNTER.get())
-                .captureEntities(() -> Lists.newArrayList(new CaptureEntityEntry(ModEntities.hunter, 10)))
+                .captureEntities(() -> Lists.newArrayList(new CaptureEntityEntry(ModEntities.HUNTER.get(), 10)))
                 .factionVillagerProfession(() -> ModVillage.hunter_expert)
                 .guardSuperClass(HunterBaseEntity.class)
-                .taskMaster(() -> ModEntities.task_master_hunter)
+                .taskMaster(() -> ModEntities.TASK_MASTER_HUNTER.get())
                 .banner(HunterVillageData::createBanner)
                 .totem(() -> ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER.get(), () -> ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED.get());
     }
@@ -67,7 +67,7 @@ public class HunterVillageData implements IVillageFactionData { // TODO 1.17 onl
     @Override
     public List<CaptureEntityEntry> getCaptureEntries() {
         if (this.captureEntityEntries == null) {
-            this.captureEntityEntries = Lists.newArrayList(new CaptureEntityEntry(ModEntities.hunter, 10)/*, new CaptureEntityEntry(ModEntities.advanced_hunter, 2)*/);
+            this.captureEntityEntries = Lists.newArrayList(new CaptureEntityEntry(ModEntities.HUNTER.get(), 10)/*, new CaptureEntityEntry(ModEntities.ADVANCED_HUNTER.get(), 2)*/);
         }
         return this.captureEntityEntries;
     }
@@ -86,7 +86,7 @@ public class HunterVillageData implements IVillageFactionData { // TODO 1.17 onl
 
     @Override
     public EntityType<? extends ITaskMasterEntity> getTaskMasterEntity() {
-        return ModEntities.task_master_hunter;
+        return ModEntities.TASK_MASTER_HUNTER.get();
     }
 
     @Nonnull

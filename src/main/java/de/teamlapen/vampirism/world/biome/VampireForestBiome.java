@@ -39,10 +39,10 @@ public class VampireForestBiome {
     public static MobSpawnInfo.Builder createMobInfoBuilder() {
         MobSpawnInfo.Builder builder = new MobSpawnInfo.Builder();
         builder.creatureGenerationProbability(0.25f);
-        builder.addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.vampire, 35, 1, 3));
-        builder.addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.vampire_baron, VampirismConfig.COMMON.baronSpawnChance.get(), 1, 1));
-        builder.addSpawn(EntityClassification.AMBIENT, new MobSpawnInfo.Spawners(ModEntities.blinding_bat, 60, 2, 4));
-        builder.addSpawn(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.dummy_creature, 80, 3, 6));
+        builder.addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.VAMPIRE.get(), 35, 1, 3));
+        builder.addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.VAMPIRE_BARON.get(), VampirismConfig.COMMON.baronSpawnChance.get(), 1, 1));
+        builder.addSpawn(EntityClassification.AMBIENT, new MobSpawnInfo.Spawners(ModEntities.BLINDING_BAT.get(), 60, 2, 4));
+        builder.addSpawn(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.DUMMY_CREATURE.get(), 80, 3, 6));
         return builder;
     }
 

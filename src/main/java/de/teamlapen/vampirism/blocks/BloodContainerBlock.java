@@ -59,7 +59,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
                 CompoundNBT fluidTag = stack.getTag().getCompound("fluid");
                 return FluidStack.loadFluidStackFromNBT(fluidTag);
             } else {
-                return new FluidStack(ModFluids.blood, 0);
+                return new FluidStack(ModFluids.BLOOD.get(), 0);
             }
         }
         return FluidStack.EMPTY;
@@ -95,7 +95,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
     public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
         super.fillItemCategory(group, items);
         ItemStack stack = new ItemStack(this, 1);
-        FluidStack fluid = new FluidStack(ModFluids.blood, BloodContainerTileEntity.CAPACITY);
+        FluidStack fluid = new FluidStack(ModFluids.BLOOD.get(), BloodContainerTileEntity.CAPACITY);
         stack.addTagElement("fluid", fluid.writeToNBT(new CompoundNBT()));
         items.add(stack);
     }
@@ -143,7 +143,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit) {
         if (!FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, hit.getDirection()) && playerIn.getItemInHand(hand).getItem().equals(Items.GLASS_BOTTLE) && VampirismConfig.COMMON.autoConvertGlassBottles.get()) {
             FluidUtil.getFluidHandler(worldIn, pos, hit.getDirection()).ifPresent((fluidHandler -> {
-                if (fluidHandler.getFluidInTank(0).getFluid().equals(ModFluids.blood)) {
+                if (fluidHandler.getFluidInTank(0).getFluid().equals(ModFluids.BLOOD.get())) {
                     ItemStack glass = playerIn.getItemInHand(hand);
                     ItemStack bloodBottle = new ItemStack(ModItems.BLOOD_BOTTLE.get(), 1);
                     playerIn.setItemInHand(hand, bloodBottle);

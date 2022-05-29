@@ -127,7 +127,7 @@ public class VampireDungeonFeature extends DungeonsFeature {
             reader.setBlock(pos, Blocks.SPAWNER.defaultBlockState(), 2);
             TileEntity tileentity = reader.getBlockEntity(pos);
             if (tileentity instanceof MobSpawnerTileEntity) {
-                ((MobSpawnerTileEntity) tileentity).getSpawner().setEntityId(ModEntities.vampire);
+                ((MobSpawnerTileEntity) tileentity).getSpawner().setEntityId(ModEntities.VAMPIRE.get());
             } else {
                 LOGGER.error("Failed to fetch mob spawner entity at ({}, {}, {})", pos.getX(), pos.getY(), pos.getZ());
             }

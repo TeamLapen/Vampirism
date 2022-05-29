@@ -105,7 +105,7 @@ public class AdvancementGenerator extends AdvancementProvider {
             Advancement regicide = Advancement.Builder.advancement()
                     .display(ModItems.PURE_BLOOD_0.get(), new TranslationTextComponent("advancement.vampirism.regicide"), new TranslationTextComponent("advancement.vampirism.regicide.desc"), null, FrameType.CHALLENGE, true, true, true)
                     .parent(vampire_forest)
-                    .addCriterion("main", KilledTrigger.Instance.playerKilledEntity(EntityPredicate.Builder.entity().of(ModEntities.vampire_baron)))
+                    .addCriterion("main", KilledTrigger.Instance.playerKilledEntity(EntityPredicate.Builder.entity().of(ModEntities.VAMPIRE_BARON.get())))
                     .save(consumer, REFERENCE.MODID + ":main/regicide");
         }
 

@@ -195,12 +195,12 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                     if (controller.hasFreeMinionSlot()) {
                         if (fph.getCurrentFaction() == this.getFaction()) {
                             HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData("Minion", this.getEntityTextureType(), this.getEntityTextureType() % 4, false);
-                            int id = controller.createNewMinionSlot(data, ModEntities.hunter_minion);
+                            int id = controller.createNewMinionSlot(data, ModEntities.HUNTER_MINION.get());
                             if (id < 0) {
                                 LOGGER.error("Failed to get minion slot");
                                 return;
                             }
-                            HunterMinionEntity minion = ModEntities.hunter_minion.create(this.level);
+                            HunterMinionEntity minion = ModEntities.HUNTER_MINION.get().create(this.level);
                             minion.claimMinionSlot(id, controller);
                             minion.copyPosition(this);
                             minion.markAsConverted();
@@ -464,7 +464,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     //IMob -------------------------------------------------------------------------------------------------------------
     @Override
     protected EntityType<?> getIMobTypeOpt(boolean iMob) {
-        return iMob ? ModEntities.hunter_imob : ModEntities.hunter;
+        return iMob ? ModEntities.HUNTER_IMOB.get() : ModEntities.HUNTER.get();
     }
 
     @Override

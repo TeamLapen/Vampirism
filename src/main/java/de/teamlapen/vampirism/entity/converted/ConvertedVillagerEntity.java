@@ -293,7 +293,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
         public IConvertedCreature<VillagerEntity> createFrom(VillagerEntity entity) {
             CompoundNBT nbt = new CompoundNBT();
             entity.saveWithoutId(nbt);
-            ConvertedVillagerEntity converted = ModEntities.villager_converted.create(entity.level);
+            ConvertedVillagerEntity converted = ModEntities.VILLAGER_CONVERTED.get().create(entity.level);
             converted.load(nbt);
             converted.setUUID(MathHelper.createInsecureUUID(converted.random));
             converted.yBodyRot = entity.yBodyRot;

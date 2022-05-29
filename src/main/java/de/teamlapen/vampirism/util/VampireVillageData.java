@@ -47,10 +47,10 @@ public class VampireVillageData implements IVillageFactionData {// TODO 1.17 onl
 
     public static void vampireVillage(IFactionVillageBuilder builder) {
         builder.badOmenEffect(() -> ModEffects.BAD_OMEN_VAMPIRE.get())
-                .captureEntities(() -> Lists.newArrayList(new CaptureEntityEntry(ModEntities.vampire, 10), new CaptureEntityEntry(ModEntities.advanced_vampire, 2)))
+                .captureEntities(() -> Lists.newArrayList(new CaptureEntityEntry(ModEntities.VAMPIRE.get(), 10), new CaptureEntityEntry(ModEntities.ADVANCED_VAMPIRE.get(), 2)))
                 .factionVillagerProfession(() -> ModVillage.vampire_expert)
                 .guardSuperClass(VampireBaseEntity.class)
-                .taskMaster(() -> ModEntities.task_master_vampire)
+                .taskMaster(() -> ModEntities.TASK_MASTER_VAMPIRE.get())
                 .banner(VampireVillageData::createBanner)
                 .totem(() -> ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE.get(), () -> ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED.get());
     }
@@ -67,7 +67,7 @@ public class VampireVillageData implements IVillageFactionData {// TODO 1.17 onl
     @Override
     public List<CaptureEntityEntry> getCaptureEntries() {
         if (this.captureEntityEntries == null) {
-            this.captureEntityEntries = Lists.newArrayList(new CaptureEntityEntry(ModEntities.vampire, 10), new CaptureEntityEntry(ModEntities.advanced_vampire, 2));
+            this.captureEntityEntries = Lists.newArrayList(new CaptureEntityEntry(ModEntities.VAMPIRE.get(), 10), new CaptureEntityEntry(ModEntities.ADVANCED_VAMPIRE.get(), 2));
         }
         return this.captureEntityEntries;
     }
@@ -86,7 +86,7 @@ public class VampireVillageData implements IVillageFactionData {// TODO 1.17 onl
 
     @Override
     public EntityType<? extends ITaskMasterEntity> getTaskMasterEntity() {
-        return ModEntities.task_master_vampire;
+        return ModEntities.TASK_MASTER_VAMPIRE.get();
     }
 
     @Nonnull
