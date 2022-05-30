@@ -249,11 +249,6 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
-    public void onRegisterTasks(RegistryEvent.Register<Task> event) {
-        ModTasks.registerTasks(event.getRegistry());
-    }
-
-    @SubscribeEvent
     public void onRegisterTiles(RegistryEvent.Register<TileEntityType<?>> event) {
         ModTiles.registerTiles(event.getRegistry());
     }
