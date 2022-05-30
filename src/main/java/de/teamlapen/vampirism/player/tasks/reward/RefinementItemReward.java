@@ -52,7 +52,7 @@ public class RefinementItemReward extends ItemReward {
 
     @Override
     public List<ItemStack> getAllPossibleRewards() {
-        return (!this.reward.get().isEmpty() ? Collections.singletonList(new ItemStack(this.reward.get().getItem())) : getAllRefinementItems());
+        return (!this.reward.get().isEmpty() ? Collections.singletonList(new ItemStack(this.reward.getItem())) : getAllRefinementItems());
     }
 
     protected <Z extends Item & IRefinementItem> ItemStack createItem() {

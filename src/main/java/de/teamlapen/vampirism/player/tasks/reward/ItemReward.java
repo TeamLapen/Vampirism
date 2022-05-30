@@ -19,8 +19,8 @@ public class ItemReward implements TaskReward {
 
     @Override
     public void applyReward(IFactionPlayer<?> player) {
-        if (!player.getRepresentingPlayer().addItem(this.reward.get().copy())) {
-            player.getRepresentingPlayer().drop(this.reward.get().copy(), true);
+        if (!player.getRepresentingPlayer().addItem(this.reward.get())) {
+            player.getRepresentingPlayer().drop(this.reward.get(), true);
         }
     }
 
