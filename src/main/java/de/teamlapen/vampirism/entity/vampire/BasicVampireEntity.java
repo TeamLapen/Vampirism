@@ -410,7 +410,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return ModSounds.entity_vampire_scream;
+        return ModSounds.ENTITY_VAMPIRE_SCREAM.get();
     }
 
     @Override

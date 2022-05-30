@@ -28,7 +28,7 @@ public class BatsSpawnEntityAction<T extends CreatureEntity & IEntityActionUser>
                 entity.getCommandSenderWorld().addFreshEntity(e);
             });
         }
-        entity.getCommandSenderWorld().playSound(null, entity.getX(), entity.getY(), entity.getZ(), ModSounds.bat_swarm, SoundCategory.PLAYERS, 1.3F, entity.getCommandSenderWorld().random.nextFloat() * 0.2F + 1.3F);
+        entity.getCommandSenderWorld().playSound(null, entity.getX(), entity.getY(), entity.getZ(), ModSounds.BAT_SWARM.get(), SoundCategory.PLAYERS, 1.3F, entity.getCommandSenderWorld().random.nextFloat() * 0.2F + 1.3F);
         return true;
     }
 

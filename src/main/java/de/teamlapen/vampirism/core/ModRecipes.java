@@ -49,7 +49,7 @@ public class ModRecipes {
 
     }
 
-    static void registerSerializer(IEventBus bus) {
+    static void registerRecipeTypesAndSerializers(IEventBus bus) {
         RECIPE_SERIALIZERS.register(bus);
     }
 

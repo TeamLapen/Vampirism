@@ -167,7 +167,7 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
                         if (filled >= 0.9f * blood) {
                             ItemStack extractedStack = itemHandler.extractItem(slot, 1, false);
                             handler.fill(fluid, IFluidHandler.FluidAction.EXECUTE);
-                            this.level.playSound(null, this.getBlockPos(), ModSounds.grinder, SoundCategory.BLOCKS, 0.5f, 0.7f);
+                            this.level.playSound(null, this.getBlockPos(), ModSounds.GRINDER.get(), SoundCategory.BLOCKS, 0.5f, 0.7f);
                             this.cooldownProcess = MathHelper.clamp(20 * filled / VReference.FOOD_TO_FLUID_BLOOD, 20, 100);
                         }
                     });

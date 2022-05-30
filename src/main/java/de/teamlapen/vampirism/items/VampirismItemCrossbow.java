@@ -255,7 +255,7 @@ public abstract class VampirismItemCrossbow extends Item implements IFactionLeve
                     }
 
                     world.addFreshEntity(entityarrow);
-                    world.playSound(null, player.getX(), player.getY() + 0.5, player.getZ(), ModSounds.crossbow, SoundCategory.PLAYERS, 1F, world.random.nextFloat() * 0.1F + 0.9F);
+                    world.playSound(null, player.getX(), player.getY() + 0.5, player.getZ(), ModSounds.CROSSBOW.get(), SoundCategory.PLAYERS, 1F, world.random.nextFloat() * 0.1F + 0.9F);
 
                 }
 

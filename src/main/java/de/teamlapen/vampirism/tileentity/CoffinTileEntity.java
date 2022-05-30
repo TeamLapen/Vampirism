@@ -91,7 +91,7 @@ public class CoffinTileEntity extends TileEntity implements ITickableTileEntity 
         }
         boolean occupied = CoffinBlock.isOccupied(level, worldPosition);
         if (lastTickOccupied != occupied) {
-            this.level.playLocalSound(worldPosition.getX(), (double) this.worldPosition.getY() + 0.5D, worldPosition.getZ(), ModSounds.coffin_lid, SoundCategory.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.9F, true);
+            this.level.playLocalSound(worldPosition.getX(), (double) this.worldPosition.getY() + 0.5D, worldPosition.getZ(), ModSounds.COFFIN_LID.get(), SoundCategory.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.9F, true);
             lastTickOccupied = occupied;
         }
 

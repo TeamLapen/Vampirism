@@ -25,7 +25,7 @@ public class HissingAction extends DefaultVampireAction {
 
     @Override
     protected boolean activate(IVampirePlayer vampire) {
-        vampire.getRepresentingPlayer().playNotifySound(ModSounds.entity_vampire_scream, SoundCategory.PLAYERS, 1, 1);
+        vampire.getRepresentingPlayer().playNotifySound(ModSounds.ENTITY_VAMPIRE_SCREAM.get(), SoundCategory.PLAYERS, 1, 1);
         vampire.getRepresentingPlayer().getCommandSenderWorld().getLoadedEntitiesOfClass(MobEntity.class, new AxisAlignedBB(vampire.getRepresentingPlayer().blockPosition()).inflate(10, 10, 10)).forEach(e -> {
             if (e.getTarget() == vampire.getRepresentingPlayer()) {
                 e.targetSelector.getRunningGoals().filter(g -> g.getGoal() instanceof TargetGoal).forEach(PrioritizedGoal::stop);

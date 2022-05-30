@@ -1205,7 +1205,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             feed_victim = nbt.getInt(KEY_FEED_VICTIM_ID);
             if(feed_victim != -1){
                 if(feedingSoundReference == null || !feedingSoundReference.isPlaying()){
-                    feedingSoundReference = VampLib.proxy.createSoundReference(ModSounds.player_feeding, SoundCategory.PLAYERS, player.getX(), player.getY(), player.getZ(),1,1);
+                    feedingSoundReference = VampLib.proxy.createSoundReference(ModSounds.PLAYER_FEEDING.get(), SoundCategory.PLAYERS, player.getX(), player.getY(), player.getZ(),1,1);
                     feedingSoundReference.startPlaying();
                 }
             }

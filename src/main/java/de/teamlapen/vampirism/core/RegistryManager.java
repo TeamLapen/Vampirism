@@ -21,12 +21,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.brain.schedule.Schedule;
 import net.minecraft.entity.ai.brain.sensor.SensorType;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.particles.ParticleType;
@@ -36,7 +34,6 @@ import net.minecraft.stats.StatType;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.village.PointOfInterestType;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.treedecorator.TreeDecoratorType;
@@ -67,7 +64,7 @@ public class RegistryManager implements IInitListener {
         ModItems.registerItems(modbus);
         ModParticles.registerParticles(modbus);
         ModPotions.registerPotions(modbus);
-        ModRecipes.registerSerializer(modbus);
+        ModRecipes.registerRecipeTypesAndSerializers(modbus);
         ModRefinements.registerRefinements(modbus);
         ModRefinementSets.registerRefinementSets(modbus);
         ModSounds.registerSounds(modbus);
@@ -197,13 +194,7 @@ public class RegistryManager implements IInitListener {
 
     @SubscribeEvent
     public void onRegisterMinionTasks(RegistryEvent.Register<IMinionTask<?, ?>> event) {
-
         MinionTasks.register(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onRegisterParticles(RegistryEvent.Register<ParticleType<?>> event) {
-        ModParticles.registerParticles(event.getRegistry());
     }
 
     @SubscribeEvent
@@ -219,11 +210,6 @@ public class RegistryManager implements IInitListener {
     @SubscribeEvent
     public void onRegisterProfessions(RegistryEvent.Register<VillagerProfession> event) {
         ModVillage.registerProfessions(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onRegisterRecipeSerializer(RegistryEvent.Register<IRecipeSerializer<?>> event) {
-        ModRecipes.registerSerializer(event.getRegistry());
     }
 
     @SubscribeEvent
@@ -250,12 +236,6 @@ public class RegistryManager implements IInitListener {
     public void onRegisterSkills(RegistryEvent.Register<ISkill> event) {
         HunterSkills.registerHunterSkills(event.getRegistry());
         VampireSkills.registerVampireSkills(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onRegisterSounds(RegistryEvent.Register<SoundEvent> event) {
-
-        ModSounds.registerSounds(event.getRegistry());
     }
 
     @SubscribeEvent
