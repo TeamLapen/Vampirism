@@ -177,7 +177,7 @@ public class AlchemicalCauldronRecipeBuilder {
         @Nonnull
         @Override
         public IRecipeSerializer<?> getType() {
-            return ModRecipes.alchemical_cauldron;
+            return ModRecipes.ALCHEMICAL_CAULDRON;
         }
 
         @Nullable

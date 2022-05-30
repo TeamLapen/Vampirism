@@ -127,7 +127,7 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
         @Nonnull
         @Override
         public IRecipeSerializer<?> getType() {
-            return ModRecipes.shaped_crafting_weapontable;
+            return ModRecipes.SHAPED_CRAFTING_WEAPONTABLE.get();
         }
 
         @Override

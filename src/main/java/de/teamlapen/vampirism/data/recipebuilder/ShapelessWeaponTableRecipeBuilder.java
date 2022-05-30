@@ -121,7 +121,7 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
 
         @Override
         public IRecipeSerializer<?> getType() {
-            return ModRecipes.shapeless_crafting_weapontable;
+            return ModRecipes.SHAPELESS_CRAFTING_WEAPONTABLE.get();
         }
 
         @Override

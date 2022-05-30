@@ -67,7 +67,7 @@ public class RegistryManager implements IInitListener {
         ModItems.registerItems(modbus);
         ModParticles.registerParticles(modbus);
         ModPotions.registerPotions(modbus);
-        ModRecipes.registerRecipeTypesAndSerializers(modbus);
+        ModRecipes.registerSerializer(modbus);
         ModRefinements.registerRefinements(modbus);
         ModRefinementSets.registerRefinementSets(modbus);
         ModSounds.registerSounds(modbus);

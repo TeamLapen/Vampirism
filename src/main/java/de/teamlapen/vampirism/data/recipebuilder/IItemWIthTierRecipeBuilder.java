@@ -41,7 +41,7 @@ public class IItemWIthTierRecipeBuilder extends ShapedRecipeBuilder {
 
         @Override
         public IRecipeSerializer<?> getType() {
-            return ModRecipes.repair_iitemwithtier;
+            return ModRecipes.REPAIR_IITEMWITHTIER.get();
         }
     }
 }

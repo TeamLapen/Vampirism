@@ -95,7 +95,7 @@ public class ShapelessWeaponTableRecipe implements ICraftingRecipe, IWeaponTable
 
     @Override
     public IRecipeSerializer<?> getSerializer() {
-        return ModRecipes.shapeless_crafting_weapontable;
+        return ModRecipes.SHAPELESS_CRAFTING_WEAPONTABLE.get();
     }
 
     @Override
