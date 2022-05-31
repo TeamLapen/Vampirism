@@ -45,7 +45,7 @@ public class BloodContainerTileEntity extends net.minecraftforge.fluids.capabili
     private IModelData modelData;
 
     public BloodContainerTileEntity() {
-        super(ModTiles.blood_container);
+        super(ModTiles.BLOOD_CONTAINER.get());
         this.tank = new FluidTankWithListener(CAPACITY, fluidStack -> ModFluids.BLOOD.get().isSame(fluidStack.getFluid()) || ModFluids.IMPURE_BLOOD.get().isSame(fluidStack.getFluid())).setListener(this);
 
     }

@@ -73,7 +73,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
     private int targetLevel;
 
     public AltarInfusionTileEntity() {
-        super(ModTiles.altar_infusion, 3, AltarInfusionContainer.SELECTOR_INFOS);
+        super(ModTiles.ALTAR_INFUSION.get(), 3, AltarInfusionContainer.SELECTOR_INFOS);
     }
 
     /**

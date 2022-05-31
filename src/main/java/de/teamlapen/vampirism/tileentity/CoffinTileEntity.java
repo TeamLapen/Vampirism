@@ -28,11 +28,11 @@ public class CoffinTileEntity extends TileEntity implements ITickableTileEntity 
     private boolean lastTickOccupied;
 
     public CoffinTileEntity() {
-        super(ModTiles.coffin);
+        super(ModTiles.COFFIN.get());
     }
 
     public CoffinTileEntity(DyeColor color) {
-        super(ModTiles.coffin);
+        super(ModTiles.COFFIN.get());
         this.color = color;
     }
 

@@ -99,7 +99,7 @@ public class TotemTopBlock extends ContainerBlock {
     @Nullable
     @Override
     public TileEntity newBlockEntity(@Nonnull IBlockReader worldIn) {
-        return ModTiles.totem.create();
+        return ModTiles.TOTEM.get().create();
     }
 
     @Override

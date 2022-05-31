@@ -152,7 +152,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     private float[] progressColor = DyeColor.WHITE.getTextureDiffuseColors();
 
     public TotemTileEntity() {
-        super(ModTiles.totem);
+        super(ModTiles.TOTEM.get());
     }
 
     public void abortCapture() {

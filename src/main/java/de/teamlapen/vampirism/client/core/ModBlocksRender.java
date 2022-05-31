@@ -63,11 +63,11 @@ public class ModBlocksRender {
     }
 
     private static void registerTileRenderer() {
-        ClientRegistry.bindTileEntityRenderer(ModTiles.coffin, CoffinTESR::new);
-        ClientRegistry.bindTileEntityRenderer(ModTiles.altar_infusion, AltarInfusionTESR::new);
-        ClientRegistry.bindTileEntityRenderer(ModTiles.blood_pedestal, PedestalTESR::new);
-        ClientRegistry.bindTileEntityRenderer(ModTiles.totem, TotemTESR::new);
-        ClientRegistry.bindTileEntityRenderer(ModTiles.garlic_beacon, GarlicBeaconTESR::new);
+        ClientRegistry.bindTileEntityRenderer(ModTiles.COFFIN.get(), CoffinTESR::new);
+        ClientRegistry.bindTileEntityRenderer(ModTiles.ALTAR_INFUSION.get(), AltarInfusionTESR::new);
+        ClientRegistry.bindTileEntityRenderer(ModTiles.BLOOD_PEDESTAL.get(), PedestalTESR::new);
+        ClientRegistry.bindTileEntityRenderer(ModTiles.TOTEM.get(), TotemTESR::new);
+        ClientRegistry.bindTileEntityRenderer(ModTiles.GARLIC_BEACON.get(), GarlicBeaconTESR::new);
     }
 
     private static void registerRenderType() {

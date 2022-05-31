@@ -47,7 +47,7 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
     private ItemStack internalStack;
 
     public PedestalTileEntity() {
-        super(ModTiles.blood_pedestal);
+        super(ModTiles.BLOOD_PEDESTAL.get());
         this.internalStack = ItemStack.EMPTY;
     }
 

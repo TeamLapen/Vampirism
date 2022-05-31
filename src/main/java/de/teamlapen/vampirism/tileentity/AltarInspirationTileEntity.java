@@ -61,7 +61,7 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
     private IModelData modelData;
 
     public AltarInspirationTileEntity() {
-        super(ModTiles.altar_inspiration);
+        super(ModTiles.ALTAR_INSPIRATION.get());
         this.tank = new InternalTank(CAPACITY).setListener(this);
     }
 

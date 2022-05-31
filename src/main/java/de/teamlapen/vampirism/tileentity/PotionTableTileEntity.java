@@ -92,7 +92,7 @@ public class PotionTableTileEntity extends LockableTileEntity implements ISidedI
     };
 
     public PotionTableTileEntity() {
-        super(ModTiles.potion_table);
+        super(ModTiles.POTION_TABLE.get());
     }
 
     @Override

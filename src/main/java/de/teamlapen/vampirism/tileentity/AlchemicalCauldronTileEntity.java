@@ -64,7 +64,7 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
     private boolean warnedRecipeType = false;
 
     public AlchemicalCauldronTileEntity() {
-        super(ModTiles.alchemical_cauldron, ModRecipes.ALCHEMICAL_CAULDRON_TYPE);
+        super(ModTiles.ALCHEMICAL_CAULDRON.get(), ModRecipes.ALCHEMICAL_CAULDRON_TYPE);
         this.items = NonNullList.withSize(4, ItemStack.EMPTY);
     }
 

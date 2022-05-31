@@ -19,7 +19,7 @@ public class SunscreenBeaconTileEntity extends TileEntity implements ITickableTi
     private Predicate<PlayerEntity> selector;
 
     public SunscreenBeaconTileEntity() {
-        super(ModTiles.sunscreen_beacon);
+        super(ModTiles.SUNSCREEN_BEACON.get());
     }
 
     @Override

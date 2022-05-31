@@ -35,7 +35,7 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity, 
     private boolean active;
 
     public SieveTileEntity() {
-        super(ModTiles.sieve);
+        super(ModTiles.SIEVE.get());
         tank = new FilteringFluidTank(2 * FluidAttributes.BUCKET_VOLUME).setListener(this);
         tank.setDrainable(false);
         cap = LazyOptional.of(() -> tank);

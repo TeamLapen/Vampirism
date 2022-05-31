@@ -53,7 +53,7 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
     private int cooldownProcess = 0;
 
     public BloodGrinderTileEntity() {
-        super(ModTiles.grinder, 1, BloodGrinderContainer.SELECTOR_INFOS);
+        super(ModTiles.GRINDER.get(), 1, BloodGrinderContainer.SELECTOR_INFOS);
         this.itemHandler = createWrapper();
         this.itemHandlerOptional = LazyOptional.of(() -> itemHandler);
     }
