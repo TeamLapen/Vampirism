@@ -48,7 +48,7 @@ public class HunterVillageData implements IVillageFactionData { // TODO 1.17 onl
     public static void hunterVillage(IFactionVillageBuilder builder) {
         builder.badOmenEffect(() -> ModEffects.BAD_OMEN_HUNTER.get())
                 .captureEntities(() -> Lists.newArrayList(new CaptureEntityEntry(ModEntities.HUNTER.get(), 10)))
-                .factionVillagerProfession(() -> ModVillage.hunter_expert)
+                .factionVillagerProfession(() -> ModVillage.HUNTER_EXPERT.get())
                 .guardSuperClass(HunterBaseEntity.class)
                 .taskMaster(() -> ModEntities.TASK_MASTER_HUNTER.get())
                 .banner(HunterVillageData::createBanner)
@@ -75,7 +75,7 @@ public class HunterVillageData implements IVillageFactionData { // TODO 1.17 onl
     @Nonnull
     @Override
     public VillagerProfession getFactionVillageProfession() {
-        return ModVillage.hunter_expert;
+        return ModVillage.HUNTER_EXPERT.get();
     }
 
     @Nonnull

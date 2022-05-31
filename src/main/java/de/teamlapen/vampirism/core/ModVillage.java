@@ -21,66 +21,56 @@ import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.village.PointOfInterestType;
-import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 
-import static de.teamlapen.lib.lib.util.UtilLib.getNull;
-
-@ObjectHolder(REFERENCE.MODID)
+@SuppressWarnings("unused")
 public class ModVillage {
+    public static final DeferredRegister<VillagerProfession> PROFESSIONS = DeferredRegister.create(ForgeRegistries.PROFESSIONS, REFERENCE.MODID);
+    public static final DeferredRegister<PointOfInterestType> POI_TYPES = DeferredRegister.create(ForgeRegistries.POI_TYPES, REFERENCE.MODID);
+    public static final DeferredRegister<SensorType<?>> SENSOR_TYPES = DeferredRegister.create(ForgeRegistries.SENSOR_TYPES, REFERENCE.MODID);
+    public static final DeferredRegister<Schedule> SCHEDULES = DeferredRegister.create(ForgeRegistries.SCHEDULES, REFERENCE.MODID);
 
-    public static final VillagerProfession hunter_expert = getNull();
-    public static final VillagerProfession vampire_expert = getNull();
+    public static final RegistryObject<FactionPointOfInterestType> HUNTER_FACTION = POI_TYPES.register("hunter_faction", () -> (FactionPointOfInterestType) PointOfInterestType.registerBlockStates(new FactionPointOfInterestType("hunter_faction", getAllStates(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER.get(), ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED.get()), 1, 1)));
+    public static final RegistryObject<FactionPointOfInterestType> VAMPIRE_FACTION = POI_TYPES.register("vampire_faction", () -> (FactionPointOfInterestType) PointOfInterestType.registerBlockStates(new FactionPointOfInterestType("vampire_faction", getAllStates(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE.get(), ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED.get()), 1, 1)));
+    public static final RegistryObject<FactionPointOfInterestType> NO_FACTION = POI_TYPES.register("no_faction", () -> (FactionPointOfInterestType) PointOfInterestType.registerBlockStates(new FactionPointOfInterestType("no_faction", getAllStates(ModBlocks.TOTEM_TOP.get(), ModBlocks.TOTEM_TOP_CRAFTED.get()), 1, 1)));
 
-    public static final FactionPointOfInterestType no_faction = getNull();
-    public static final FactionPointOfInterestType hunter_faction = getNull();
-    public static final FactionPointOfInterestType vampire_faction = getNull();
+    public static final RegistryObject<SensorType<VampireVillagerHostilesSensor>> VAMPIRE_VILLAGER_HOSTILES = SENSOR_TYPES.register("vampire_villager_hostiles", () -> new SensorType<>(VampireVillagerHostilesSensor::new));
 
-    public static final Schedule converted_default = getNull();
+    public static final RegistryObject<Schedule> CONVERTED_DEFAULT = SCHEDULES.register("converted_default", () ->
+            new ScheduleBuilder(new Schedule()).changeActivityAt(12000, Activity.IDLE).changeActivityAt(10, Activity.REST).changeActivityAt(14000, Activity.WORK).changeActivityAt(21000, Activity.MEET).changeActivityAt(23000, Activity.IDLE).build());
 
-    public static final SensorType<VampireVillagerHostilesSensor> vampire_villager_hostiles = getNull();
 
-    static void registerProfessions(IForgeRegistry<VillagerProfession> registry) {
-        VillagerProfession vampire_expert = new FactionVillagerProfession("vampire_expert", vampire_faction, ImmutableSet.of(), ImmutableSet.of(), null) {
-            @Override
-            public IFaction getFaction() {
-                return VReference.VAMPIRE_FACTION;
-            }
-        }.setRegistryName(REFERENCE.MODID, "vampire_expert");
-        VillagerProfession hunter_expert = new FactionVillagerProfession("hunter_expert", hunter_faction, ImmutableSet.of(), ImmutableSet.of(), null) {
-            @Override
-            public IFaction getFaction() {
-                return VReference.HUNTER_FACTION;
-            }
-        }.setRegistryName(REFERENCE.MODID, "hunter_expert");
-        registry.register(vampire_expert);
-        registry.register(hunter_expert);
-        VillagerTrades.TRADES.computeIfAbsent(hunter_expert, trades -> new Int2ObjectOpenHashMap<>()).putAll(getHunterTrades());
-        VillagerTrades.TRADES.computeIfAbsent(vampire_expert, trades -> new Int2ObjectOpenHashMap<>()).putAll(getVampireTrades());
+    public static final RegistryObject<VillagerProfession> VAMPIRE_EXPERT = PROFESSIONS.register("vampire_expert", () -> new FactionVillagerProfession("vampire_expert", VAMPIRE_FACTION.get(), ImmutableSet.of(), ImmutableSet.of(), null) {
+        @Override
+        public IFaction<?> getFaction() {
+            return VReference.VAMPIRE_FACTION;
+        }
+    });
+    public static final RegistryObject<VillagerProfession> HUNTER_EXPERT = PROFESSIONS.register("hunter_expert", () -> new FactionVillagerProfession("hunter_expert", HUNTER_FACTION.get(), ImmutableSet.of(), ImmutableSet.of(), null) {
+        @Override
+        public IFaction<?> getFaction() {
+            return VReference.VAMPIRE_FACTION;
+        }
+    });
+
+    static void registerVillageObjects(IEventBus bus) {
+        POI_TYPES.register(bus);
+        PROFESSIONS.register(bus);
+        SENSOR_TYPES.register(bus);
+        SCHEDULES.register(bus);
     }
 
-    static void registerVillagePointOfInterestType(IForgeRegistry<PointOfInterestType> registry) {
-        PointOfInterestType hunter_faction = new FactionPointOfInterestType("hunter_faction", getAllStates(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER.get(), ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED.get()), 1, 1).setRegistryName(REFERENCE.MODID, "hunter_faction");
-        PointOfInterestType vampire_faction = new FactionPointOfInterestType("vampire_faction", getAllStates(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE.get(), ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED.get()), 1, 1).setRegistryName(REFERENCE.MODID, "vampire_faction");
-        PointOfInterestType no_faction = new FactionPointOfInterestType("no_faction", getAllStates(ModBlocks.TOTEM_TOP.get(), ModBlocks.TOTEM_TOP_CRAFTED.get()), 1, 1).setRegistryName(REFERENCE.MODID, "no_faction");
-        registry.register(hunter_faction);
-        registry.register(vampire_faction);
-        registry.register(no_faction);
-        PointOfInterestType.registerBlockStates(hunter_faction);
-        PointOfInterestType.registerBlockStates(vampire_faction);
-        PointOfInterestType.registerBlockStates(no_faction);
-    }
-
-    static void registerSensor(IForgeRegistry<SensorType<?>> registry) {
-        registry.register(new SensorType<>(VampireVillagerHostilesSensor::new).setRegistryName(REFERENCE.MODID, "vampire_villager_hostiles"));
-    }
-
-    static void registerSchedule(IForgeRegistry<Schedule> registry) {
-        registry.register(new ScheduleBuilder(new Schedule()).changeActivityAt(12000, Activity.IDLE).changeActivityAt(10, Activity.REST).changeActivityAt(14000, Activity.WORK).changeActivityAt(21000, Activity.MEET).changeActivityAt(23000, Activity.IDLE).build().setRegistryName(REFERENCE.MODID, "converted_default"));
+    public static void villagerTradeSetup() {
+        VillagerTrades.TRADES.computeIfAbsent(VAMPIRE_EXPERT.get(), trades -> new Int2ObjectOpenHashMap<>()).putAll(getVampireTrades());
+        VillagerTrades.TRADES.computeIfAbsent(HUNTER_EXPERT.get(), trades -> new Int2ObjectOpenHashMap<>()).putAll(getHunterTrades());
     }
 
     private static Set<BlockState> getAllStates(Block... blocks) {

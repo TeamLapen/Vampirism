@@ -48,7 +48,7 @@ public class VampireVillageData implements IVillageFactionData {// TODO 1.17 onl
     public static void vampireVillage(IFactionVillageBuilder builder) {
         builder.badOmenEffect(() -> ModEffects.BAD_OMEN_VAMPIRE.get())
                 .captureEntities(() -> Lists.newArrayList(new CaptureEntityEntry(ModEntities.VAMPIRE.get(), 10), new CaptureEntityEntry(ModEntities.ADVANCED_VAMPIRE.get(), 2)))
-                .factionVillagerProfession(() -> ModVillage.vampire_expert)
+                .factionVillagerProfession(() -> ModVillage.VAMPIRE_EXPERT.get())
                 .guardSuperClass(VampireBaseEntity.class)
                 .taskMaster(() -> ModEntities.TASK_MASTER_VAMPIRE.get())
                 .banner(VampireVillageData::createBanner)
@@ -75,7 +75,7 @@ public class VampireVillageData implements IVillageFactionData {// TODO 1.17 onl
     @Nonnull
     @Override
     public VillagerProfession getFactionVillageProfession() {
-        return ModVillage.vampire_expert;
+        return ModVillage.VAMPIRE_EXPERT.get();
     }
 
     @Nonnull

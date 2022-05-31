@@ -70,7 +70,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     static {
         SENSOR_TYPES = Lists.newArrayList(VillagerEntity.SENSOR_TYPES);
         SENSOR_TYPES.remove(SensorType.VILLAGER_HOSTILES);
-        SENSOR_TYPES.add(ModVillage.vampire_villager_hostiles);
+        SENSOR_TYPES.add(ModVillage.VAMPIRE_VILLAGER_HOSTILES.get());
     }
 
     private EnumStrength garlicCache = EnumStrength.NONE;
@@ -231,7 +231,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
             brain.setSchedule(Schedule.VILLAGER_BABY);
             brain.addActivity(Activity.PLAY, VillagerTasks.getPlayPackage(f));
         } else {
-            brain.setSchedule(ModVillage.converted_default);
+            brain.setSchedule(ModVillage.CONVERTED_DEFAULT.get());
             brain.addActivityWithConditions(Activity.WORK, VillagerTasks.getWorkPackage(villagerprofession, 0.5F), ImmutableSet.of(Pair.of(MemoryModuleType.JOB_SITE, MemoryModuleStatus.VALUE_PRESENT)));
         }
 
