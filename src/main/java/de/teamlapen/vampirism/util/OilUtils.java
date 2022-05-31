@@ -64,6 +64,11 @@ public class OilUtils {
         return true;
     }
 
+    public static boolean hasAppliedOil(@Nonnull ItemStack stack) {
+        CompoundNBT applied_oil = stack.getOrCreateTag().getCompound("applied_oil");
+        return stack.getOrCreateTag().getCompound("applied_oil").contains("oil");
+    }
+
     public static Optional<Pair<IApplicableOil, Integer>> getAppliedOilStatus(@Nonnull ItemStack stack) {
         CompoundNBT compound = stack.getOrCreateTag().getCompound("applied_oil");
         if (compound.contains("oil")) {
