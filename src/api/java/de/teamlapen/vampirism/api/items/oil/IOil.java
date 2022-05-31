@@ -19,9 +19,13 @@ public interface IOil extends IForgeRegistryEntry<IOil> {
      */
     float getAdditionalDamage(ItemStack stack, LivingEntity entity, float damage);
 
-    String getName(String item);
-
+    /**
+     * adds oil tooltip lines to the oil item
+     */
     void getDescription(ItemStack stack, List<ITextComponent> tooltips);
 
+    /**
+     * oil color code
+     */
     int getColor();
 }

@@ -28,11 +28,6 @@ public class Oil extends ForgeRegistryEntry<IOil> implements IOil {
     }
 
     @Override
-    public String getName(String item) {
-        return item + this.getRegistryName().toString().replace(':', '_');
-    }
-
-    @Override
     public void getDescription(ItemStack stack, List<ITextComponent> tooltips) {
     }
 

@@ -8,11 +8,9 @@ import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 import java.util.Optional;
 
 public class OilUtils {
@@ -31,10 +29,6 @@ public class OilUtils {
     public static ItemStack setOil(@Nonnull ItemStack stack, @Nonnull IOil oil) {
         stack.getOrCreateTag().putString("oil", oil.getRegistryName().toString());
         return stack;
-    }
-
-    public static void addOilTooltip(ItemStack stack, List<ITextComponent> tooltips) {
-        getOil(stack).getDescription(stack, tooltips);
     }
 
     public static ItemStack createOilItem(IOil oil) {

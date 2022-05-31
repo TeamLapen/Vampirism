@@ -8,10 +8,21 @@ import java.util.Optional;
 
 public interface IApplicableOil extends IOil {
 
+    /**
+     * checks if the oil can be applied to the stack
+     *
+     * @return true if it is possible
+     */
     boolean canBeApplied(ItemStack stack);
 
+    /**
+     * gets the current duration of the oil for the given itemstack
+     */
     int getDuration(ItemStack stack);
 
+    /**
+     * gets the maximum duration of the oil for the given itemstack
+     */
     int getMaxDuration(ItemStack stack);
 
     /**
@@ -23,6 +34,9 @@ public interface IApplicableOil extends IOil {
      */
     boolean reduceDuration(ItemStack stack, IApplicableOil oil, int amount);
 
+    /**
+     * whether the oil is permanent or has a duration
+     */
     boolean hasDuration();
 
     /**
@@ -32,5 +46,8 @@ public interface IApplicableOil extends IOil {
      */
     int getDurationReduction();
 
+    /**
+     * creates an optional tooltip entry for an item which has this oil applied to
+     */
     Optional<ITextComponent> getToolTipLine(ItemStack stack, IApplicableOil oil, int duration, ITooltipFlag flag);
 }

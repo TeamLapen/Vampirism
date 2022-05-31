@@ -44,7 +44,7 @@ public class OilBottle extends Item implements IOilItem {
 
     @Override
     public void appendHoverText(@Nonnull ItemStack stack, @Nullable World level, @Nonnull List<ITextComponent> tooltips, @Nonnull ITooltipFlag flag) {
-        OilUtils.addOilTooltip(stack, tooltips);
+        OilUtils.getOil(stack).getDescription(stack, tooltips);
     }
 
     @Override
@@ -57,6 +57,7 @@ public class OilBottle extends Item implements IOilItem {
         }
     }
 
+    @Nonnull
     @Override
     public IOil getOil(ItemStack stack) {
         return OilUtils.getOil(stack);
