@@ -115,7 +115,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
 
     @Override
     public void breakDisguise() {
-        actionHandler.deactivateAction(HunterActions.disguise_hunter);
+        actionHandler.deactivateAction(HunterActions.DISGUISE_HUNTER.get());
     }
 
     @Override

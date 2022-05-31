@@ -405,7 +405,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
     private void handleScreenColorVampire(VampirePlayer vampire) {
 
         //Main area/borders
-        if (vampire.getActionHandler().isActionActive(VampireActions.vampire_rage)) {
+        if (vampire.getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE.get())) {
             screenPercentage = 100;
             screenColor = 0xfff00000;
             fullScreen = false;
@@ -426,8 +426,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
         }
 
         //Bottom Area
-        if (vampire.getActionHandler().isActionActive(VampireActions.bat)) {
-            float batPercentage = vampire.getActionHandler().getPercentageForAction(VampireActions.bat);
+        if (vampire.getActionHandler().isActionActive(VampireActions.BAT.get())) {
+            float batPercentage = vampire.getActionHandler().getPercentageForAction(VampireActions.BAT.get());
             if (batPercentage < 0.2F && batPercentage > 0.0F) {
                 screenBottomColor = 0xcc7067f9; // change color
                 screenBottomPercentage = (int) ((0.2F - batPercentage) * 1000);

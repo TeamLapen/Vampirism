@@ -300,7 +300,7 @@ public class GuideBook implements IGuideBook {
 
         List<IPage> skillPages = new ArrayList<>();
         skillPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "skills.intro")), new ResourceLocation(base + "vampirism_menu")));
-        String disguise = String.format("§l%s§r\n", HunterActions.disguise_hunter.getName().getString());
+        String disguise = String.format("§l%s§r\n", HunterActions.DISGUISE_HUNTER.get().getName().getString());
         disguise += translate(base + "skills.disguise.text", ModKeys.getKeyBinding(ModKeys.KEY.ACTION).saveString());
         skillPages.addAll(PageHelper.pagesForLongText(new StringTextComponent(disguise)));
         String weaponTable = String.format("§l%s§r\n", loc(ModBlocks.WEAPON_TABLE.get()));

@@ -74,8 +74,8 @@ public class HunterSkills {
         //Config null, so cannot get method ref
         //noinspection Convert2MethodRef
         registry.register(new VampirismSkill.SimpleHunterSkill("hunter_attack_damage", false).registerAttributeModifier(Attributes.ATTACK_DAMAGE, "ffafd115-96e2-4d08-9588-d1bc9be0d902", () -> VampirismConfig.BALANCE.hsSmallAttackDamageModifier.get(), AttributeModifier.Operation.ADDITION));
-        registry.register(new ActionSkill<IHunterPlayer>("hunter_awareness", HunterActions.awareness_hunter, true));
-        registry.register(new ActionSkill<IHunterPlayer>("hunter_disguise", HunterActions.disguise_hunter, true));
+        registry.register(new ActionSkill<IHunterPlayer>("hunter_awareness", HunterActions.AWARENESS_HUNTER.get(), true));
+        registry.register(new ActionSkill<IHunterPlayer>("hunter_disguise", HunterActions.DISGUISE_HUNTER.get(), true));
         registry.register(new VampirismSkill.SimpleHunterSkill("purified_garlic", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("stake1", false)
                 .setDescription(() -> {
@@ -106,7 +106,7 @@ public class HunterSkills {
         registry.register(new VampirismSkill.SimpleHunterSkill("master_brewer", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("swift_brewing", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("concentrated_durable_brewing", true));
-        registry.register(new ActionSkill<IHunterPlayer>("potion_resistance", HunterActions.potion_resistance_hunter, true));
+        registry.register(new ActionSkill<IHunterPlayer>("potion_resistance", HunterActions.POTION_RESISTANCE_HUNTER.get(), true));
         registry.register(new VampirismSkill.SimpleHunterSkill("crucifix_wielder", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("ultimate_crucifix", true));
     }

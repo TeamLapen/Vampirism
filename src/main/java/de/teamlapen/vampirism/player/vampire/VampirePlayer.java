@@ -280,7 +280,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             LOGGER.warn("Player can't bite in spectator mode");
             return;
         }
-        if (getActionHandler().isActionActive(VampireActions.bat)) {
+        if (getActionHandler().isActionActive(VampireActions.BAT.get())) {
             LOGGER.warn("Cannot bite in bat mode");
             return;
         }
@@ -674,7 +674,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     @Override
     public void onDeath(DamageSource src) {
         super.onDeath(src);
-        if (actionHandler.isActionActive(VampireActions.bat) && src.getDirectEntity() instanceof ProjectileEntity) {
+        if (actionHandler.isActionActive(VampireActions.BAT.get()) && src.getDirectEntity() instanceof ProjectileEntity) {
             if (player instanceof ServerPlayerEntity) {
                 ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((ServerPlayerEntity) player, VampireActionTrigger.Action.SNIPED_IN_BAT);
             }
@@ -708,7 +708,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 if (useBlood(VampirismConfig.BALANCE.vaHalfInvulnerableBloodCost.get(), false)) {
                     return true;
                 } else {
-                    this.actionHandler.deactivateAction(VampireActions.half_invulnerable);
+                    this.actionHandler.deactivateAction(VampireActions.HALF_INVULNERABLE.get());
                 }
             }
         }
@@ -724,7 +724,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             if (victim instanceof PlayerEntity) {
                 bonus *= 2;
             }
-            this.getActionHandler().extendActionTimer(VampireActions.vampire_rage, bonus);
+            this.getActionHandler().extendActionTimer(VampireActions.VAMPIRE_RAGE.get(), bonus);
         }
     }
 

@@ -83,7 +83,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
 
     @Override
     public boolean canBeUsedBy(IVampirePlayer vampire) {
-        return !vampire.getActionHandler().isActionActive(VampireActions.bat);
+        return !vampire.getActionHandler().isActionActive(VampireActions.BAT.get());
     }
 
     @Override

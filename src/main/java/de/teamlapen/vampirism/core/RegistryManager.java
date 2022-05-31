@@ -1,13 +1,8 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.lib.lib.util.IInitListener;
-import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
-import de.teamlapen.vampirism.api.entity.player.actions.IAction;
-import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
-import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.entity.action.EntityActions;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.items.VampirismBoatItem;
@@ -21,21 +16,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.brain.schedule.Schedule;
-import net.minecraft.entity.ai.brain.sensor.SensorType;
-import net.minecraft.entity.merchant.villager.VillagerProfession;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.particles.ParticleType;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.Potion;
-import net.minecraft.stats.StatType;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.village.PointOfInterestType;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.treedecorator.TreeDecoratorType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -43,7 +26,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.ObjectHolderRegistry;
 
 /**
  * Handles registrations of all registrable things as well as a few additional
@@ -161,20 +143,8 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
-    public void onRegisterActions(RegistryEvent.Register<IAction> event) {
-        VampireActions.registerDefaultActions(event.getRegistry());
-        HunterActions.registerDefaultActions(event.getRegistry());
-        ObjectHolderRegistry.applyObjectHolders(); //Apply object holders so action skills can use them
-    }
-
-    @SubscribeEvent
     public void onRegisterEffects(RegistryEvent.Register<Effect> event) {
         ModEffects.replaceEffects(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onRegisterEntityActions(RegistryEvent.Register<IEntityAction> event) {
-        EntityActions.registerDefaultActions(event.getRegistry());
     }
 
     @SubscribeEvent
@@ -183,34 +153,9 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
-    public void onRegisterPointOfInterest(RegistryEvent.Register<PointOfInterestType> event) {
-        ModVillage.registerVillagePointOfInterestType(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onRegisterProfessions(RegistryEvent.Register<VillagerProfession> event) {
-        ModVillage.registerProfessions(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onRegisterSchedule(RegistryEvent.Register<Schedule> event) {
-        ModVillage.registerSchedule(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onRegisterSensorTypes(RegistryEvent.Register<SensorType<?>> event) {
-        ModVillage.registerSensor(event.getRegistry());
-    }
-
-    @SubscribeEvent
     public void onRegisterSkills(RegistryEvent.Register<ISkill> event) {
         HunterSkills.registerHunterSkills(event.getRegistry());
         VampireSkills.registerVampireSkills(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onRegisterTiles(RegistryEvent.Register<TileEntityType<?>> event) {
-        ModTiles.registerTiles(event.getRegistry());
     }
 
     @SubscribeEvent

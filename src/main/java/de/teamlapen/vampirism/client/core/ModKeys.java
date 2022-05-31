@@ -129,7 +129,7 @@ public class ModKeys { //TODO 1.17 revamp to skip using the KEY enum for getting
             RayTraceResult mouseOver = Minecraft.getInstance().hitResult;
             suckKeyDown = true;
             PlayerEntity player = Minecraft.getInstance().player;
-            if (mouseOver != null && !player.isSpectator() && VampirePlayer.getOpt(player).map(vp -> vp.getLevel() > 0 && !vp.getActionHandler().isActionActive(VampireActions.bat)).orElse(false)) {
+            if (mouseOver != null && !player.isSpectator() && VampirePlayer.getOpt(player).map(vp -> vp.getLevel() > 0 && !vp.getActionHandler().isActionActive(VampireActions.BAT.get())).orElse(false)) {
                 if (mouseOver instanceof EntityRayTraceResult) {
                     VampirismMod.dispatcher.sendToServer(new CStartFeedingPacket(((EntityRayTraceResult) mouseOver).getEntity().getId()));
                 } else if (mouseOver instanceof BlockRayTraceResult) {
