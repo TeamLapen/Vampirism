@@ -200,22 +200,22 @@ public class AdvancementGenerator extends AdvancementProvider {
             Advancement collect_blood = Advancement.Builder.advancement()
                     .display(ModItems.BLOOD_BOTTLE.get(), new TranslationTextComponent("advancement.vampirism.collect_blood"), new TranslationTextComponent("advancement.vampirism.collect_blood.desc"), null, FrameType.TASK, true, true, true)
                     .parent(become_lord)
-                    .addCriterion("task", MinionTaskTrigger.tasks(MinionTasks.collect_blood))
+                    .addCriterion("task", MinionTaskTrigger.tasks(MinionTasks.COLLECT_BLOOD.get()))
                     .save(consumer, REFERENCE.MODID + ":minion/collect_blood");
             Advancement collect_hunter_items = Advancement.Builder.advancement()
                     .display(Items.GOLD_NUGGET, new TranslationTextComponent("advancement.vampirism.collect_hunter_items"), new TranslationTextComponent("advancement.vampirism.collect_hunter_items.desc"), null, FrameType.TASK, true, true, true)
                     .parent(become_lord)
-                    .addCriterion("task", MinionTaskTrigger.tasks(MinionTasks.collect_hunter_items))
+                    .addCriterion("task", MinionTaskTrigger.tasks(MinionTasks.COLLECT_HUNTER_ITEMS.get()))
                     .save(consumer, REFERENCE.MODID + ":minion/collect_hunter_items");
             Advancement protect_lord = Advancement.Builder.advancement()
                     .display(Items.SHIELD, new TranslationTextComponent("advancement.vampirism.protect_lord"), new TranslationTextComponent("advancement.vampirism.protect_lord.desc"), null, FrameType.TASK, true, true, true)
                     .parent(become_lord)
-                    .addCriterion("task", MinionTaskTrigger.tasks(MinionTasks.protect_lord))
+                    .addCriterion("task", MinionTaskTrigger.tasks(MinionTasks.PROTECT_LORD.get()))
                     .save(consumer, REFERENCE.MODID + ":minion/protect_lord");
             Advancement defend_area = Advancement.Builder.advancement()
                     .display(Items.SHIELD, new TranslationTextComponent("advancement.vampirism.defend_area"), new TranslationTextComponent("advancement.vampirism.defend_area.desc"), null, FrameType.TASK, true, true, true)
                     .parent(become_lord)
-                    .addCriterion("task", MinionTaskTrigger.tasks(MinionTasks.defend_area))
+                    .addCriterion("task", MinionTaskTrigger.tasks(MinionTasks.DEFEND_AREA.get()))
                     .save(consumer, REFERENCE.MODID + ":minion/defend_area");
         }
     }

@@ -204,7 +204,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                             minion.claimMinionSlot(id, controller);
                             minion.copyPosition(this);
                             minion.markAsConverted();
-                            controller.activateTask(0, MinionTasks.stay);
+                            controller.activateTask(0, MinionTasks.STAY.get());
                             UtilLib.replaceEntity(this, minion);
 
                         } else {

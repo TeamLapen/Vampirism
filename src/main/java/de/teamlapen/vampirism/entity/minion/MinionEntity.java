@@ -572,7 +572,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         this.goalSelector.addGoal(10, new LookRandomlyGoal(this){
             @Override
             public boolean canUse() {
-                return super.canUse() && !MinionEntity.this.getCurrentTask().filter(t -> t.getTask()== MinionTasks.stay).isPresent();
+                return super.canUse() && !MinionEntity.this.getCurrentTask().filter(t -> t.getTask()== MinionTasks.STAY.get()).isPresent();
             }
         });
 

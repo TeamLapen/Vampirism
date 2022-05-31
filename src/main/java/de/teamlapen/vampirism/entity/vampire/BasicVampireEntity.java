@@ -172,7 +172,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                             minion.claimMinionSlot(id, controller);
                             minion.copyPosition(this);
                             minion.markAsConverted();
-                            controller.activateTask(0, MinionTasks.stay);
+                            controller.activateTask(0, MinionTasks.STAY.get());
                             UtilLib.replaceEntity(this, minion);
 
                         } else {

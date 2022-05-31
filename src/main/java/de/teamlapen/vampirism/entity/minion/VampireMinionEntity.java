@@ -90,7 +90,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
 
     @Override
     public List<IMinionTask<?, ?>> getAvailableTasks() {
-        return Lists.newArrayList(MinionTasks.follow_lord, MinionTasks.stay, MinionTasks.defend_area, MinionTasks.collect_blood, MinionTasks.protect_lord);
+        return Lists.newArrayList(MinionTasks.FOLLOW_LORD.get(), MinionTasks.STAY.get(), MinionTasks.DEFEND_AREA.get(), MinionTasks.COLLECT_BLOOD.get(), MinionTasks.PROTECT_LORD.get());
     }
 
     @Override
