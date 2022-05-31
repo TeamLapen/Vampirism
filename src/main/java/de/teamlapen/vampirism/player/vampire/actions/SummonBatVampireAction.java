@@ -23,7 +23,7 @@ public class SummonBatVampireAction extends DefaultVampireAction {
     @Override
     public boolean activate(IVampirePlayer player) {
         PlayerEntity entityPlayer = player.getRepresentingPlayer();
-        boolean refined = player.getSkillHandler().isRefinementEquipped(ModRefinements.summon_bats);
+        boolean refined = player.getSkillHandler().isRefinementEquipped(ModRefinements.SUMMON_BATS.get());
         int amount = VampirismConfig.BALANCE.vaSummonBatsCount.get();
         if (amount > 1 && refined) {
             amount = amount / 2;
@@ -42,7 +42,7 @@ public class SummonBatVampireAction extends DefaultVampireAction {
 
     @Override
     public boolean canBeUsedBy(IVampirePlayer player) {
-        return player.getActionHandler().isActionActive(VampireActions.bat) || player.getSkillHandler().isRefinementEquipped(ModRefinements.summon_bats);
+        return player.getActionHandler().isActionActive(VampireActions.bat) || player.getSkillHandler().isRefinementEquipped(ModRefinements.SUMMON_BATS.get());
     }
 
     @Override
@@ -52,7 +52,7 @@ public class SummonBatVampireAction extends DefaultVampireAction {
 
     @Override
     public int getCooldown(IFactionPlayer player) {
-        return (int) ((player.getSkillHandler().isRefinementEquipped(ModRefinements.summon_bats) ? 0.7 : 1) * getCooldown());
+        return (int) ((player.getSkillHandler().isRefinementEquipped(ModRefinements.SUMMON_BATS.get()) ? 0.7 : 1) * getCooldown());
     }
 
     @Override

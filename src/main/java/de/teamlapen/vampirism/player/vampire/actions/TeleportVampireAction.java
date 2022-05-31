@@ -29,7 +29,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
     public boolean activate(IVampirePlayer vampire) {
         PlayerEntity player = vampire.getRepresentingPlayer();
         int dist = VampirismConfig.BALANCE.vaTeleportMaxDistance.get();
-        if (vampire.getSkillHandler().isRefinementEquipped(ModRefinements.teleport_distance)) {
+        if (vampire.getSkillHandler().isRefinementEquipped(ModRefinements.TELEPORT_DISTANCE.get())) {
             dist *= VampirismConfig.BALANCE.vrTeleportDistanceMod.get();
         }
         RayTraceResult target = UtilLib.getPlayerLookingSpot(player, dist);
@@ -93,7 +93,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
 
     @Override
     public int getCooldown(IFactionPlayer player) {
-        return (int) ((player.getSkillHandler().isRefinementEquipped(ModRefinements.teleport_distance) ? 0.5 : 1) * getCooldown());
+        return (int) ((player.getSkillHandler().isRefinementEquipped(ModRefinements.TELEPORT_DISTANCE.get()) ? 0.5 : 1) * getCooldown());
     }
 
     @Override

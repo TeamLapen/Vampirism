@@ -17,7 +17,7 @@ public class ModStats {
     public static final ResourceLocation win_village_capture = new ResourceLocation(REFERENCE.MODID, "win_village_capture");
     public static final ResourceLocation infected_creatures = new ResourceLocation(REFERENCE.MODID, "infected_creatures");
 
-    static void registerStats(IForgeRegistry<StatType<?>> registry) {
+    static void registerCustomStats() {
         register(weapon_table);
         register(interact_alchemical_cauldron);
         register(capture_village);

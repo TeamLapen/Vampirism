@@ -70,6 +70,7 @@ public class ModFeatures {
 
     static void registerFeaturesAndStructures(IEventBus bus) {
         FEATURES.register(bus);
+        STRUCTURES.register(bus);
     }
 
     static void registerTreeDecoratorTypes(IForgeRegistry<TreeDecoratorType<?>> registry) {

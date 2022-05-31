@@ -157,7 +157,7 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
             } else if (level >= 8) {
                 tier = 2;
             }
-            if (VampirePlayer.getOpt((PlayerEntity) e).map(VampirePlayer::getSkillHandler).map(h -> h.isRefinementEquipped(ModRefinements.crucifix_resistant)).orElse(false)) {
+            if (VampirePlayer.getOpt((PlayerEntity) e).map(VampirePlayer::getSkillHandler).map(h -> h.isRefinementEquipped(ModRefinements.CRUCIFIX_RESISTANT.get())).orElse(false)) {
                 tier++;
             }
             return tier;

@@ -173,23 +173,8 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
-    public void onRegisterEntities(RegistryEvent.Register<EntityType<?>> event) {
-        ModEntities.registerEntities(event.getRegistry());
-    }
-
-    @SubscribeEvent
     public void onRegisterEntityActions(RegistryEvent.Register<IEntityAction> event) {
         EntityActions.registerDefaultActions(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onRegisterFeatures(RegistryEvent.Register<Feature<?>> event) {
-        ModFeatures.registerFeatures(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onRegisterFluids(RegistryEvent.Register<Fluid> event) {
-        ModFluids.registerFluids(event.getRegistry());
     }
 
     @SubscribeEvent
@@ -203,23 +188,8 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
-    public void onRegisterPotions(RegistryEvent.Register<Potion> event) {
-        ModPotions.registerPotions(event.getRegistry());
-    }
-
-    @SubscribeEvent
     public void onRegisterProfessions(RegistryEvent.Register<VillagerProfession> event) {
         ModVillage.registerProfessions(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onRegisterRefinementSets(RegistryEvent.Register<IRefinementSet> event) {
-        ModRefinementSets.registerRefinementSets(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onRegisterRefinements(RegistryEvent.Register<IRefinement> event) {
-        ModRefinements.registerRefinements(event.getRegistry());
     }
 
     @SubscribeEvent
@@ -236,16 +206,6 @@ public class RegistryManager implements IInitListener {
     public void onRegisterSkills(RegistryEvent.Register<ISkill> event) {
         HunterSkills.registerHunterSkills(event.getRegistry());
         VampireSkills.registerVampireSkills(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onRegisterStats(RegistryEvent.Register<StatType<?>> event) {
-        ModStats.registerStats(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onRegisterStructures(RegistryEvent.Register<Structure<?>> event) {
-        ModFeatures.registerStructures(event.getRegistry());
     }
 
     @SubscribeEvent
