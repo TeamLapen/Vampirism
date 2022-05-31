@@ -54,8 +54,8 @@ public class ModTasks {
 
     static {
         //Vampire gadgets
-        TASKS.register("fire_resistance1", () -> TaskBuilder.builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement("magma", () -> new ItemStack(Items.MAGMA_CREAM, 3)).addRequirement("hunter", ModTags.Entities.HUNTER, 10).setReward(() -> PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotions.vampire_fire_resistance)).build());
-        TASKS.register("fire_resistance2", () -> TaskBuilder.builder().withFaction(VReference.VAMPIRE_FACTION).unlockedBy(new LvlUnlocker(7)).addRequirement("magma", () -> new ItemStack(Items.MAGMA_CREAM, 5)).addRequirement("hunter", ModTags.Entities.HUNTER, 15).setReward(() -> PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotions.long_vampire_fire_resistance)).build());
+        TASKS.register("fire_resistance1", () -> TaskBuilder.builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement("magma", () -> new ItemStack(Items.MAGMA_CREAM, 3)).addRequirement("hunter", ModTags.Entities.HUNTER, 10).setReward(() -> PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotions.VAMPIRE_FIRE_RESISTANCE.get())).build());
+        TASKS.register("fire_resistance2", () -> TaskBuilder.builder().withFaction(VReference.VAMPIRE_FACTION).unlockedBy(new LvlUnlocker(7)).addRequirement("magma", () -> new ItemStack(Items.MAGMA_CREAM, 5)).addRequirement("hunter", ModTags.Entities.HUNTER, 15).setReward(() -> PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotions.LONG_VAMPIRE_FIRE_RESISTANCE.get())).build());
 
         //Vampire Minion
         TASKS.register("vampire_minion_binding", () -> TaskBuilder.builder().withFaction(VReference.VAMPIRE_FACTION).unlockedBy(new LordLvlUnlocker(1)).addRequirement("advanced_hunter", ModTags.Entities.ADVANCED_HUNTER, 4).addRequirement("baron", ModEntities.VAMPIRE_BARON.get(), 5).addRequirement("gold", () -> new ItemStack(Items.GOLD_INGOT, 32)).setReward(() -> new ItemStack(ModItems.VAMPIRE_MINION_BINDING.get())).build());
