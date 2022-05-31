@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.api.items.oil;
 
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 
@@ -31,5 +32,5 @@ public interface IApplicableOil extends IOil {
      */
     int getDurationReduction();
 
-    Optional<ITextComponent> getToolTipLine(ItemStack stack, IApplicableOil oil, int duration);
+    Optional<ITextComponent> getToolTipLine(ItemStack stack, IApplicableOil oil, int duration, ITooltipFlag flag);
 }

@@ -183,7 +183,7 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public void onItemToolTip(ItemTooltipEvent event) {
-        OilUtils.getAppliedOilStatus(event.getItemStack()).flatMap(pair -> pair.getLeft().getToolTipLine(event.getItemStack(), pair.getKey(), pair.getValue())).ifPresent(tooltipLine -> {
+        OilUtils.getAppliedOilStatus(event.getItemStack()).flatMap(pair -> pair.getLeft().getToolTipLine(event.getItemStack(), pair.getKey(), pair.getValue(), event.getFlags())).ifPresent(tooltipLine -> {
             int position = 1;
             int flags = getHideFlags(event.getItemStack());
             if (shouldShowInTooltip(flags, ItemStack.TooltipDisplayFlags.ADDITIONAL)) ++position;

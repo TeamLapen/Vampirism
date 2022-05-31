@@ -67,6 +67,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
+import java.util.stream.StreamSupport;
 
 /**
  * Event handler for all entity related events
@@ -338,13 +339,8 @@ public class ModEntityEventHandler {
                 }
             });
         }
-        for (ItemStack slot : event.getEntityLiving().getArmorSlots()) {
-            OilUtils.getAppliedOil(slot).filter(EvasionOil.class::isInstance).ifPresent(oil -> {
-                if (((EvasionOil) oil).evasionChance() < event.getEntityLiving().getRandom().nextFloat()) {
-                    event.setAmount(0);
-                    OilUtils.reduceAppliedOilDuration(slot, oil, oil.getDurationReduction());
-                }
-            });
+        if (event.getSource() instanceof EntityDamageSource && !event.getSource().isBypassArmor() && StreamSupport.stream(event.getEntityLiving().getArmorSlots().spliterator(), false).map(OilUtils::getAppliedOil).filter(Optional::isPresent).map(Optional::get).filter(EvasionOil.class::isInstance).anyMatch(oil -> ((EvasionOil) oil).evasionChance() > event.getEntityLiving().getRandom().nextFloat())) {
+            event.setAmount(0);
         }
     }
 }

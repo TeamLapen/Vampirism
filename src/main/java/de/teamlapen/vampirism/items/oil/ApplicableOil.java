@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.items.oil;
 
 import de.teamlapen.vampirism.api.items.oil.IApplicableOil;
 import de.teamlapen.vampirism.util.OilUtils;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
@@ -36,12 +37,17 @@ public abstract class ApplicableOil extends Oil implements IApplicableOil {
     }
 
     @Override
-    public Optional<ITextComponent> getToolTipLine(ItemStack stack, IApplicableOil oil, int duration) {
+    public Optional<ITextComponent> getToolTipLine(ItemStack stack, IApplicableOil oil, int duration, ITooltipFlag flag) {
         IFormattableTextComponent component = new TranslationTextComponent(String.format("oil.%s.%s",this.getRegistryName().getNamespace(), this.getRegistryName().getPath())).withStyle(TextFormatting.LIGHT_PURPLE);
         if (oil.hasDuration()) {
-            float perc = duration / (float) oil.getMaxDuration(stack);
+            int maxDuration = oil.getMaxDuration(stack);
+            float perc = duration / (float) maxDuration;
             TextFormatting status = perc > 0.5 ? TextFormatting.GREEN : perc > 0.25 ? TextFormatting.GOLD : TextFormatting.RED;
-            component.append(" ").append(new TranslationTextComponent("Status").withStyle(status));
+            if (flag.isAdvanced()) {
+                component.append(" ").append(new TranslationTextComponent("%s/%s", duration, maxDuration).withStyle(status));
+            } else {
+                component.append(" ").append(new TranslationTextComponent("Status").withStyle(status));
+            }
         }
         return Optional.of(component);
     }

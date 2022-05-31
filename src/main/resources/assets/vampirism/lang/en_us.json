@@ -1211,6 +1211,6 @@
   "oil.vampirism.luck_oil": "Luck",
   "oil.vampirism.harm_oil": "Harm",
   "oil.vampirism.smelt_oil": "Smelting",
-  "oil.vampirism.teleport_oil": "Teleport"
-
+  "oil.vampirism.teleport_oil": "Teleport",
+  "oil.vampirism.evasion_oil": "Evasion"
 }
