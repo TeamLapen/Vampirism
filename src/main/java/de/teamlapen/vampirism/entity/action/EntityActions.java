@@ -1,25 +1,22 @@
 package de.teamlapen.vampirism.entity.action;
 
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
-import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.action.hunter.GarlicAOFEntityAction;
 import de.teamlapen.vampirism.entity.action.vampire.*;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.ObjectHolder;
 
 /**
  * Register and holds all actions for vampirism entities
  */
+@SuppressWarnings("unused")
 public class EntityActions {
-    public static final DeferredRegister<IAction> ENTITY_ACTIONS = DeferredRegister.create(ModRegistries.ENTITYACTIONS, REFERENCE.MODID);
+    public static final DeferredRegister<IEntityAction> ENTITY_ACTIONS = DeferredRegister.create(ModRegistries.ENTITYACTIONS, REFERENCE.MODID);
     
     
     public static final RegistryObject<InvisibleEntityAction<?>> ENTITY_INVISIBLE =

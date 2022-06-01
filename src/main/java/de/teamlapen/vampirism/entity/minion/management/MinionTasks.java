@@ -18,15 +18,10 @@ import net.minecraft.item.Items;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
 
-import static de.teamlapen.lib.lib.util.UtilLib.getNull;
-
-@ObjectHolder(REFERENCE.MODID)
 public class MinionTasks {
     public static final DeferredRegister<IMinionTask<?,?>> MINION_TASKS = DeferredRegister.create(ModRegistries.MINION_TASKS, REFERENCE.MODID);
 

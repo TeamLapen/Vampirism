@@ -32,7 +32,7 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
     private final TIER tier;
 
     public ArmorOfSwiftnessItem(EquipmentSlotType equipmentSlotIn, TIER tier) {
-        super(tier.getSerializedName(), VampirismArmorMaterials.MASTERLY_LEATHER, equipmentSlotIn, new Item.Properties().tab(VampirismMod.creativeTab));
+        super(VampirismArmorMaterials.MASTERLY_LEATHER, equipmentSlotIn, new Item.Properties().tab(VampirismMod.creativeTab));
         this.tier = tier;
     }
 

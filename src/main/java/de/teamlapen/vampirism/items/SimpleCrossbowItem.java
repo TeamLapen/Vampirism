@@ -16,7 +16,7 @@ public class SimpleCrossbowItem extends VampirismItemCrossbow {
      * @param maxDamage     Max usages or 0 if unbreakable
      */
     public SimpleCrossbowItem(float speed, int coolDownTicks, int maxDamage, ItemTier enchantability) {
-        super(regName, maxDamage);
+        super(maxDamage);
         this.speed = speed;
         this.coolDownTicks = coolDownTicks;
         if (coolDownTicks < 0) {

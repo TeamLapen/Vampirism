@@ -2,7 +2,9 @@ package de.teamlapen.vampirism.tests;
 
 import com.google.common.base.Stopwatch;
 import de.teamlapen.vampirism.blocks.WeaponTableBlock;
-import de.teamlapen.vampirism.core.*;
+import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModFluids;
+import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.fluids.BloodHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -29,10 +31,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -56,7 +55,6 @@ public class Tests {
 
         runTest(Tests::bloodFluidHandler, info);
         runTest(Tests::blockWeaponTableFluids, info.next("BlockWeaponTableFluids"));
-        runLightTest(Tests::checkObjectHolders, "Object holders", player);
 
         LOGGER.warn("Finished tests -> teleporting player", new Object[]{});
         player.randomTeleport(0, 5, 0, true);
@@ -97,43 +95,7 @@ public class Tests {
     public static void runBackgroundTests() {
         LOGGER.warn("Running background tests", new Object[]{});
         Stopwatch w = Stopwatch.createStarted();
-        runLightTest(Tests::checkObjectHolders, "Object holders", null);
         LOGGER.warn("Finished background tests after {} ms", new Object[]{w.stop().elapsed(TimeUnit.MILLISECONDS)});
-    }
-
-    private static boolean checkObjectHolders() {
-        boolean failed;
-        failed = !checkObjectHolders(ModBiomes.CLASS.get());
-        failed |= !checkObjectHolders(ModBlocks.CLASS.get());
-        failed |= !checkObjectHolders(ModEnchantments.CLASS.get());
-        failed |= !checkObjectHolders(ModEntities.CLASS.get());
-        failed |= !checkObjectHolders(ModFluids.CLASS.get());
-        failed |= !checkObjectHolders(ModItems.CLASS.get());
-        failed |= !checkObjectHolders(ModEffects.CLASS.get());
-        failed |= !checkObjectHolders(ModSounds.class);
-        return !failed;
-    }
-
-    private static boolean checkObjectHolders(@Nonnull Class clazz) {
-        boolean failed = false;
-        for (Field f : clazz.getFields()) {
-            int mods = f.getModifiers();
-            boolean isMatch = Modifier.isPublic(mods) && Modifier.isStatic(mods) && Modifier.isFinal(mods);
-            if (!isMatch) {
-                continue;
-            }
-            try {
-                if (f.get(null) == null) {
-                    LOGGER.warn("Field {} in class {} is null", new Object[]{f.getName(), clazz.getName()});
-                    failed = true;
-                }
-            } catch (IllegalAccessException e) {
-                LOGGER.error(String.format("Failed to check fields of class %s", clazz.getName()), e);
-                return false;
-            }
-
-        }
-        return !failed;
     }
 
     private static boolean bloodFluidHandler(TestInfo info) {

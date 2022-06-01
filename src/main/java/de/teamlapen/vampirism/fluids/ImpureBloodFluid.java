@@ -20,10 +20,10 @@ import net.minecraftforge.fluids.FluidAttributes;
 
 import javax.annotation.Nonnull;
 
-public class ImpureBloodFluid extends VampirismFluid {
+public class ImpureBloodFluid extends Fluid {
 
     public ImpureBloodFluid() {
-        super("impure_blood");
+        super();
     }
 
     @Override

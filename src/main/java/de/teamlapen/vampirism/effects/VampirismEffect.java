@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.effects;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.entity.LivingEntity;
@@ -18,7 +17,6 @@ import java.util.List;
 public class VampirismEffect extends Effect {
     public VampirismEffect(EffectType effectType, int potionColor) {
         super(effectType, potionColor);
-        this.setRegistryName(REFERENCE.MODID, name);
     }
 
     @Override

@@ -16,15 +16,12 @@ import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.blockplacer.SimpleBlockPlacer;
 import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
 import net.minecraft.world.gen.feature.*;
-import net.minecraft.world.gen.foliageplacer.BlobFoliagePlacer;
 import net.minecraft.world.gen.foliageplacer.SpruceFoliagePlacer;
 import net.minecraft.world.gen.placement.AtSurfaceWithExtraConfig;
 import net.minecraft.world.gen.placement.ChanceConfig;
 import net.minecraft.world.gen.placement.Placement;
-import net.minecraft.world.gen.treedecorator.LeaveVineTreeDecorator;
 import net.minecraft.world.gen.trunkplacer.StraightTrunkPlacer;
 
-import java.util.Collections;
 import java.util.OptionalInt;
 
 public class VampirismBiomeFeatures {
@@ -39,10 +36,10 @@ public class VampirismBiomeFeatures {
     public static final ConfiguredFeature<?, ?> ore_dark_stone = registerFeature("ore_dark_stone", Feature.ORE.configured(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.NATURAL_STONE, ModBlocks.CASTLE_BLOCK_DARK_STONE.get().defaultBlockState(), 33)).range(80).squared().count(10));
 
     public static final ConfiguredFeature<?, ?> vampire_flower = registerFeature("vampire_flower", Feature.FLOWER.configured(VAMPIRE_FLOWER).count(FeatureSpread.of(-1, 4)).decorated(Features.Placements.ADD_32).decorated(Features.Placements.HEIGHTMAP_SQUARE).count(5));
-    public static final ConfiguredFeature<?, ?> mod_water_lake = registerFeature("mod_water_lake", ModEntities.MOD_LAKE.get().configured(new BlockStateFeatureConfig(Blocks.WATER.defaultBlockState())).decorated(Placement.WATER_LAKE.configured(new ChanceConfig(4))));
+    public static final ConfiguredFeature<?, ?> mod_water_lake = registerFeature("mod_water_lake", ModFeatures.MOD_LAKE.get().configured(new BlockStateFeatureConfig(Blocks.WATER.defaultBlockState())).decorated(Placement.WATER_LAKE.configured(new ChanceConfig(4))));
 
-    public static final ConfiguredFeature<?, ?> vampire_dungeon = registerFeature("vampire_dungeon", ModEntities.VAMPIRE_DUNGEON.get().configured(IFeatureConfig.NONE).range(256).squared().count(2 /*not entirely sure, but higher is more frequent - vanilla is 8 */));
-    public static final StructureFeature<?, ?> hunter_camp = registerStructure("hunter_camp", ModEntities.HUNTER_CAMP.get().configured/*withConfiguration*/(IFeatureConfig.NONE));
+    public static final ConfiguredFeature<?, ?> vampire_dungeon = registerFeature("vampire_dungeon", ModFeatures.VAMPIRE_DUNGEON.get().configured(IFeatureConfig.NONE).range(256).squared().count(2 /*not entirely sure, but higher is more frequent - vanilla is 8 */));
+    public static final StructureFeature<?, ?> hunter_camp = registerStructure("hunter_camp", ModFeatures.HUNTER_CAMP.get().configured/*withConfiguration*/(IFeatureConfig.NONE));
 
     public static final ConfiguredFeature<BaseTreeFeatureConfig,?> dark_spruce_tree = registerFeature("dark_spruce_tree", Feature.TREE.configured(new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(ModBlocks.DARK_SPRUCE_LOG.get().defaultBlockState()), new SimpleBlockStateProvider(ModBlocks.DARK_SPRUCE_LEAVES.get().defaultBlockState()),
             new SpruceFoliagePlacer(FeatureSpread.of(2, 1), FeatureSpread.of(0, 2), FeatureSpread.of(3, 7)),
@@ -76,7 +73,7 @@ public class VampirismBiomeFeatures {
 
     public static void init() {
         if (VampirismConfig.COMMON.enforceTentGeneration.get())
-            FlatGenerationSettingsAccessor.getStructures_vampirism().put(ModEntities.HUNTER_CAMP.get(), hunter_camp);
+            FlatGenerationSettingsAccessor.getStructures_vampirism().put(ModFeatures.HUNTER_CAMP.get(), hunter_camp);
     }
 
 

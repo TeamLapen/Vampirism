@@ -23,7 +23,6 @@ import de.teamlapen.vampirism.entity.goals.*;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
-import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.util.VampireVillageData;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.entity.CreatureEntity;
@@ -432,7 +431,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                     return FactionPlayerHandler.getOpt(player).map(fph -> {
                         if (fph.getMaxMinions() > 0) {
                             ItemStack heldItem = player.getItemInHand(hand);
-                            boolean freeSlot = MinionWorldData.getData(player.level).map(data -> data.getOrCreateController(fph)).map(PlayerMinionController::hasFreeMinionSlot).orElse(false);
+                            boolean freeSlot = MinionWorldData.getData(player.level).map(data -> data.getOrCreateController(fph)).map(controller -> controller.hasFreeMinionSlot()).orElse(false);
                             player.displayClientMessage(new TranslationTextComponent("text.vampirism.basic_vampire.minion.available"), true);
                             if (heldItem.getItem() == ModItems.VAMPIRE_MINION_BINDING.get()) {
                                 if (!freeSlot) {

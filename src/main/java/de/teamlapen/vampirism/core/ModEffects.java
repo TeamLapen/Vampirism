@@ -48,20 +48,20 @@ public class ModEffects {
     public static final RegistryObject<VampirismEffect> ARMOR_REGENERATION =
             EFFECTS.register("armor_regeneration", () -> new VampirismEffect(EffectType.NEUTRAL, 0xD17642));
 
-    static {
-        EFFECTS.register(REFERENCE.HUNTER_PLAYER_KEY.getPath(), () -> new BadOmenEffect() {
-            @Override
-            public IFaction<?> getFaction() {
-                return VReference.HUNTER_FACTION;
-            }
-        });
-        EFFECTS.register(REFERENCE.VAMPIRE_PLAYER_KEY.getPath(), () -> new BadOmenEffect() {
-            @Override
-            public IFaction<?> getFaction() {
-                return VReference.VAMPIRE_FACTION;
-            }
-        });
-    }
+    public static final RegistryObject<BadOmenEffect> BAD_OMEN_HUNTER =
+            EFFECTS.register(REFERENCE.HUNTER_PLAYER_KEY.getPath(), () -> new BadOmenEffect() {
+                @Override
+                public IFaction<?> getFaction() {
+                    return VReference.HUNTER_FACTION;
+                }
+            });
+    public static final RegistryObject<BadOmenEffect> BAD_OMEN_VAMPIRE =
+            EFFECTS.register(REFERENCE.VAMPIRE_PLAYER_KEY.getPath(), () -> new BadOmenEffect() {
+                @Override
+                public IFaction<?> getFaction() {
+                    return VReference.VAMPIRE_FACTION;
+                }
+            });
 
     private static final Logger LOGGER = LogManager.getLogger();
     private static Effect modded_night_vision;  //Substituted version

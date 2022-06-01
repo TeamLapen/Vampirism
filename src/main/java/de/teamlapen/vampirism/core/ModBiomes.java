@@ -20,12 +20,8 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.List;
-
-import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
 /**
  * Handles all biome registrations and reference.
@@ -84,7 +80,7 @@ public class ModBiomes {
             event.getGeneration().addFeature(GenerationStage.Decoration.UNDERGROUND_STRUCTURES, VampirismBiomeFeatures.vampire_dungeon);
         }
 
-        if (VampirismAPI.worldGenRegistry().canStructureBeGeneratedInBiome(ModEntities.HUNTER_CAMP.get().getRegistryName(), event.getName(), event.getCategory())) {
+        if (VampirismAPI.worldGenRegistry().canStructureBeGeneratedInBiome(ModFeatures.HUNTER_CAMP.get().getRegistryName(), event.getName(), event.getCategory())) {
             event.getGeneration().addStructureStart(VampirismBiomeFeatures.hunter_camp);
         }
     }

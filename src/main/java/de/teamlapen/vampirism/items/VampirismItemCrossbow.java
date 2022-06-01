@@ -50,10 +50,9 @@ public abstract class VampirismItemCrossbow extends Item implements IFactionLeve
     private int enchantability = 0;
 
     /**
-     * @param regName   Registration name
      * @param maxDamage Max damage or 0 if unbreakable
      */
-    public VampirismItemCrossbow(String regName, int maxDamage) {
+    public VampirismItemCrossbow(int maxDamage) {
         super(new Properties().stacksTo(1).defaultDurability(maxDamage).tab(VampirismMod.creativeTab));
     }
 

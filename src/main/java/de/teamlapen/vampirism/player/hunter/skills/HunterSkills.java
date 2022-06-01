@@ -19,12 +19,10 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ObjectHolder;
 
 /**
  * Registers the default hunter skills
  */
-@ObjectHolder(REFERENCE.MODID)
 @SuppressWarnings("unused")
 public class HunterSkills {
     public static final DeferredRegister<ISkill> SKILLS = DeferredRegister.create(ModRegistries.SKILLS, REFERENCE.MODID);

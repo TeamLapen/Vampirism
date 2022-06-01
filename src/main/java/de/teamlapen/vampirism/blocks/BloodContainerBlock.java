@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -14,7 +13,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -35,7 +33,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.registries.ObjectHolder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -46,15 +43,11 @@ import java.util.List;
  * Tileentity container that can store liquids.
  */
 public class BloodContainerBlock extends VampirismBlockContainer {
-
-    public final static String regName = "blood_container";
-    @ObjectHolder("vampirism:blood_container")
-    public static final Item item = UtilLib.getNull();
     protected static final VoxelShape containerShape = Block.box(2, 0, 2, 14, 16, 14);
     private final static Logger LOGGER = LogManager.getLogger();
 
     public static FluidStack getFluidFromItemStack(ItemStack stack) {
-        if (stack.getItem() == item) {
+        if (stack.getItem() == ModBlocks.BLOOD_CONTAINER.get().asItem()) {
             if (stack.hasTag() && stack.getTag().contains("fluid", 10)) {
                 CompoundNBT fluidTag = stack.getTag().getCompound("fluid");
                 return FluidStack.loadFluidStackFromNBT(fluidTag);
@@ -76,7 +69,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
     }
 
     public BloodContainerBlock() {
-        super(regName, Properties.of(Material.GLASS).strength(1f).noOcclusion());
+        super(Properties.of(Material.GLASS).strength(1f).noOcclusion());
     }
 
     @Override

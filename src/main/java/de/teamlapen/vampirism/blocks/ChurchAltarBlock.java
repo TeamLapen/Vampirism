@@ -30,8 +30,6 @@ import javax.annotation.Nullable;
  * Placed in some churches
  */
 public class ChurchAltarBlock extends VampirismHorizontalBlock {
-
-    private final static String regName = "church_altar";
     private static final VoxelShape SHAPEX = makeShape();
     private static final VoxelShape SHAPEZ = UtilLib.rotateShape(SHAPEX, UtilLib.RotationAmount.NINETY);
 
@@ -45,7 +43,7 @@ public class ChurchAltarBlock extends VampirismHorizontalBlock {
 
 
     public ChurchAltarBlock() {
-        super(regName, Properties.of(Material.WOOD).strength(0.5f).noOcclusion());
+        super(Properties.of(Material.WOOD).strength(0.5f).noOcclusion());
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
     }
 

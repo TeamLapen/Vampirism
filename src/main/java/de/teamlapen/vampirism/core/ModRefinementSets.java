@@ -5,15 +5,11 @@ import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet.Rarity;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
-import de.teamlapen.vampirism.player.refinements.Refinement;
 import de.teamlapen.vampirism.player.refinements.RefinementSet;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.ObjectHolder;
 
-@ObjectHolder(REFERENCE.MODID)
 public class ModRefinementSets {
     public static final DeferredRegister<IRefinementSet> REFINEMENT_SETS = DeferredRegister.create(ModRegistries.REFINEMENT_SETS, REFERENCE.MODID);
 
@@ -218,19 +214,19 @@ public class ModRefinementSets {
         REFINEMENT_SETS.register(bus);
     }
 
-    private static IRefinementSet commonV(IRefinement... refinements) {
+    private static RefinementSet commonV(IRefinement... refinements) {
         return vampire(Rarity.COMMON, refinements);
     }
 
-    private static IRefinementSet uncommonV(IRefinement... refinements) {
+    private static RefinementSet uncommonV(IRefinement... refinements) {
         return vampire(Rarity.UNCOMMON, refinements);
     }
 
-    private static IRefinementSet rareV(IRefinement... refinements) {
+    private static RefinementSet rareV(IRefinement... refinements) {
         return vampire(Rarity.RARE, refinements);
     }
 
-    private static IRefinementSet epicV(IRefinement... refinements) {
+    private static RefinementSet epicV(IRefinement... refinements) {
         return vampire(Rarity.EPIC, refinements);
     }
 

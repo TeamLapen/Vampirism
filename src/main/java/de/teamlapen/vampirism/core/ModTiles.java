@@ -12,14 +12,10 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;
-
-import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
 
 public class ModTiles {
@@ -63,7 +59,7 @@ public class ModTiles {
         ((TileEntityTypeAccessor) TileEntityType.SIGN).setValidBlocks(blocks);
     }
 
-    private static <T extends TileEntity> TileEntityType<?> create(Supplier<? extends T> factoryIn, Block... blocks) {
+    private static <T extends TileEntity> TileEntityType<T> create(Supplier<T> factoryIn, Block... blocks) {
         return TileEntityType.Builder.of(factoryIn, blocks).build(null);
     }
 }

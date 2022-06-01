@@ -20,8 +20,6 @@ import net.minecraft.item.IArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Util;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -84,11 +82,6 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
      * @return The damage reduction the given stack gives
      */
     protected abstract int getDamageReduction(int slot, ItemStack stack);
-
-    @Override
-    protected String getOrCreateDescriptionId() {
-        return translation_key;
-    }
 
     protected String getTextureLocation(String name, EquipmentSlotType slot, String type) {
         return String.format(REFERENCE.MODID + ":textures/models/armor/%s_layer_%d%s.png", name, slot == EquipmentSlotType.LEGS ? 2 : 1, type == null ? "" : "_overlay");

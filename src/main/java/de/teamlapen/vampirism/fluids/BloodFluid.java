@@ -22,9 +22,9 @@ import net.minecraftforge.fml.ModList;
 import javax.annotation.Nonnull;
 
 
-public class BloodFluid extends VampirismFluid {
+public class BloodFluid extends Fluid {
     public BloodFluid() {
-        super("blood");
+        super();
     }
 
     @Override
