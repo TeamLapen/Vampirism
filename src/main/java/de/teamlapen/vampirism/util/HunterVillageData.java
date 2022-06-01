@@ -46,13 +46,13 @@ public class HunterVillageData implements IVillageFactionData { // TODO 1.17 onl
     }
 
     public static void hunterVillage(IFactionVillageBuilder builder) {
-        builder.badOmenEffect(() -> ModEffects.BAD_OMEN_HUNTER.get())
+        builder.badOmenEffect(ModEffects.BAD_OMEN_HUNTER::get)
                 .captureEntities(() -> Lists.newArrayList(new CaptureEntityEntry(ModEntities.HUNTER.get(), 10)))
-                .factionVillagerProfession(() -> ModVillage.HUNTER_EXPERT.get())
+                .factionVillagerProfession(ModVillage.HUNTER_EXPERT::get)
                 .guardSuperClass(HunterBaseEntity.class)
-                .taskMaster(() -> ModEntities.TASK_MASTER_HUNTER.get())
+                .taskMaster(ModEntities.TASK_MASTER_HUNTER::get)
                 .banner(HunterVillageData::createBanner)
-                .totem(() -> ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER.get(), () -> ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED.get());
+                .totem(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER::get, ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED::get);
     }
 
     private final ItemStack banner = createBanner();

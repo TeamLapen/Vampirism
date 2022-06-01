@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.world.biome;
 
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import net.minecraft.client.audio.BackgroundMusicTracks;
@@ -9,6 +10,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.world.biome.*;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
+import net.minecraftforge.event.world.BiomeLoadingEvent;
 
 public class VampireForestBiome {
 
@@ -18,22 +20,29 @@ public class VampireForestBiome {
 
     public static Biome.Builder createBiomeBuilder(float depth, float scale, MobSpawnInfo.Builder spawnBuilder, BiomeAmbience.Builder ambienceBuilder) {
         BiomeGenerationSettings.Builder builder = new BiomeGenerationSettings.Builder().surfaceBuilder(SurfaceBuilder.DEFAULT.configured(new SurfaceBuilderConfig(ModBlocks.CURSED_GRASS.get().defaultBlockState(), ModBlocks.CURSED_EARTH.get().defaultBlockState(), ModBlocks.CURSED_EARTH.get().defaultBlockState())));
-        DefaultBiomeFeatures.addDefaultCarvers(builder); //carver
-        VampirismBiomeFeatures.addModdedWaterLake(builder);
 
-        VampirismBiomeFeatures.addVampireFlower(builder);
-        VampirismBiomeFeatures.addBushPatch(builder);
-        DefaultBiomeFeatures.addForestGrass(builder);
-
-        VampirismBiomeFeatures.addUndergroundVariety(builder);
-        DefaultBiomeFeatures.addDefaultOres(builder); //ore
-        DefaultBiomeFeatures.addDefaultSoftDisks(builder); //disks
-        VampirismBiomeFeatures.addDarkStoneSoftDisk(builder); //disks
-
-        VampirismBiomeFeatures.addVampireTrees(builder);
-
-        VampirismBiomeFeatures.addWaterSprings(builder);
         return new Biome.Builder().precipitation(Biome.RainType.NONE).biomeCategory(Biome.Category.FOREST).depth(depth).scale(scale).temperature(0.3F).downfall(0F).specialEffects(ambienceBuilder.build()).mobSpawnSettings(spawnBuilder.build()).generationSettings(builder.build());
+    }
+
+    public static void addFeatures(BiomeLoadingEvent event) {
+        if (event.getName().equals(ModBiomes.VAMPIRE_FOREST.getId())) {
+            BiomeGenerationSettings.Builder builder = event.getGeneration();
+            DefaultBiomeFeatures.addDefaultCarvers(builder); //carver
+            VampirismBiomeFeatures.addModdedWaterLake(builder);
+
+            VampirismBiomeFeatures.addVampireFlower(builder);
+            VampirismBiomeFeatures.addBushPatch(builder);
+            DefaultBiomeFeatures.addForestGrass(builder);
+
+            VampirismBiomeFeatures.addUndergroundVariety(builder);
+            DefaultBiomeFeatures.addDefaultOres(builder); //ore
+            DefaultBiomeFeatures.addDefaultSoftDisks(builder); //disks
+            VampirismBiomeFeatures.addDarkStoneSoftDisk(builder); //disks
+
+            VampirismBiomeFeatures.addVampireTrees(builder);
+
+            VampirismBiomeFeatures.addWaterSprings(builder);
+        }
     }
 
     public static MobSpawnInfo.Builder createMobInfoBuilder() {

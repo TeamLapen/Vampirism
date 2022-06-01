@@ -45,6 +45,7 @@ import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.VampirismWorld;
 import de.teamlapen.vampirism.world.WorldGenManager;
+import de.teamlapen.vampirism.world.biome.VampireForestBiome;
 import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
@@ -160,6 +161,7 @@ public class VampirismMod {
         modbus.register(registryManager);
         MinecraftForge.EVENT_BUS.register(registryManager);
         MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, ModBiomes::onBiomeLoadingEventAdditions);
+        MinecraftForge.EVENT_BUS.addListener(VampireForestBiome::addFeatures);
         MinecraftForge.EVENT_BUS.register(SitHandler.class);
 
         prepareAPI();
