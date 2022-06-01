@@ -40,4 +40,14 @@ public class HunterHatItem extends VampirismHunterArmor {
     protected int getDamageReduction(int slot, ItemStack stack) {
         return 2;
     }
+
+    private String descriptionId;
+    @Override
+    protected String getOrCreateDescriptionId() {
+        if (this.descriptionId == null) {
+            this.descriptionId = super.getOrCreateDescriptionId().replaceAll("_\\d", "");
+        }
+
+        return this.descriptionId;
+    }
 }

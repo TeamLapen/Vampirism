@@ -117,4 +117,14 @@ public class PureBloodItem extends Item {
             }
         }
     }
+
+    private String descriptionId;
+    @Override
+    protected String getOrCreateDescriptionId() {
+        if (this.descriptionId == null) {
+            this.descriptionId = super.getOrCreateDescriptionId().replaceAll("_\\d", "");
+        }
+
+        return this.descriptionId;
+    }
 }

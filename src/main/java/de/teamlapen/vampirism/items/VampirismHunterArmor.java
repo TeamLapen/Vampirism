@@ -93,4 +93,14 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
     protected double getToughness(int slot, ItemStack stack) {
         return this.getToughness();
     }
+
+    private String descriptionId;
+    @Override
+    protected String getOrCreateDescriptionId() {
+        if (this.descriptionId == null) {
+            this.descriptionId = super.getOrCreateDescriptionId().replaceAll("_normal|_enhanced|_ultimate", "");
+        }
+
+        return this.descriptionId;
+    }
 }

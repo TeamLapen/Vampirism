@@ -67,5 +67,13 @@ public class HolyWaterBottleItem extends Item implements IItemWithTier, IFaction
         return tier;
     }
 
+    private String descriptionId;
+    @Override
+    protected String getOrCreateDescriptionId() {
+        if (this.descriptionId == null) {
+            this.descriptionId = super.getOrCreateDescriptionId().replaceAll("_normal|_enhanced|_ultimate", "");
+        }
 
+        return this.descriptionId;
+    }
 }
