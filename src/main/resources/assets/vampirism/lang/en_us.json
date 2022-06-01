@@ -590,7 +590,7 @@
   "block.vampirism.candelabra_wall": "Candelabra",
   "block.vampirism.cross": "Cross",
   "block.vampirism.tent": "Tent",
-  "block.vampirism.tent_spawner": "Tent",
+  "block.vampirism.tent_main": "Tent",
   "block.vampirism.med_chair": "Injection Chair",
   "block.vampirism.alchemical_fire": "Alchemical Fire",
   "block.vampirism.garlic_diffuser.already_fueled": "Already fueled",
