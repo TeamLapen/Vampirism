@@ -90,6 +90,7 @@ public class RegistryManager implements IInitListener {
                 DispenserBlock.registerBehavior(ModItems.DARK_SPRUCE_BOAT.get(), new VampirismDispenseBoatBehavior(VampirismBoatItem.BoatType.DARK_SPRUCE));
                 DispenserBlock.registerBehavior(ModItems.CURSED_SPRUCE_BOAT.get(), new VampirismDispenseBoatBehavior(VampirismBoatItem.BoatType.CURSED_SPRUCE));
                 event.enqueueWork(() -> {
+                    VampirismBiomeFeatures.registerBiomeFeatures();
                     ModEntities.initializeEntities();
                     ModStats.registerCustomStats();
                     ModCommands.registerArgumentTypesUsage();
