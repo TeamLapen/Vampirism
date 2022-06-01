@@ -92,4 +92,14 @@ public class HunterIntelItem extends Item {
     public boolean isFoil(ItemStack stack) {
         return true;
     }
+
+    private String descriptionId;
+    @Override
+    protected String getOrCreateDescriptionId() {
+        if (this.descriptionId == null) {
+            this.descriptionId = super.getOrCreateDescriptionId().replaceAll("_\\d", "");
+        }
+
+        return this.descriptionId;
+    }
 }

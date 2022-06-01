@@ -131,7 +131,7 @@ public class ModBlocks {
     public static final RegistryObject<VampirismFlowerBlock> VAMPIRE_ORCHID =
             registerWithItem("vampire_orchid", () -> new VampirismFlowerBlock(VampirismFlowerBlock.TYPE.ORCHID));
     public static final RegistryObject<FlowerPotBlock> POTTED_VAMPIRE_ORCHID =
-            registerWithItem("potted_vampire_orchid", () -> new FlowerPotBlock(()-> (FlowerPotBlock) Blocks.FLOWER_POT, VAMPIRE_ORCHID, Block.Properties.of(Material.DECORATION).instabreak().noOcclusion()));
+            BLOCKS.register("potted_vampire_orchid", () -> new FlowerPotBlock(()-> (FlowerPotBlock) Blocks.FLOWER_POT, VAMPIRE_ORCHID, Block.Properties.of(Material.DECORATION).instabreak().noOcclusion()));
     public static final RegistryObject<SunscreenBeaconBlock> SUNSCREEN_BEACON =
             registerWithItem("sunscreen_beacon", SunscreenBeaconBlock::new, block -> itemBlock(block, new Item.Properties().tab(VampirismMod.creativeTab).rarity(Rarity.EPIC)));
     public static final RegistryObject<TentBlock> TENT =
@@ -181,7 +181,7 @@ public class ModBlocks {
     public static final RegistryObject<Block> CURSED_ROOTS =
             registerWithItem("cursed_roots", flammable(()->new BushBlock(AbstractBlock.Properties.of(Material.REPLACEABLE_PLANT, MaterialColor.COLOR_RED).noCollission().instabreak().sound(SoundType.GRASS)), 60, 100));
     public static final RegistryObject<Block> POTTED_CURSED_ROOTS =
-            registerWithItem("potted_cursed_roots", () -> new FlowerPotBlock(()-> (FlowerPotBlock) Blocks.FLOWER_POT, CURSED_ROOTS, Block.Properties.of(Material.DECORATION).instabreak().noOcclusion()));
+            BLOCKS.register("potted_cursed_roots", () -> new FlowerPotBlock(()-> (FlowerPotBlock) Blocks.FLOWER_POT, CURSED_ROOTS, Block.Properties.of(Material.DECORATION).instabreak().noOcclusion()));
     public static final RegistryObject<RotatedPillarBlock> CURSED_SPRUCE_LOG =
             registerWithItem("cursed_spruce_log", CursedSpruceBlock::new);
     public static final RegistryObject<SaplingBlock> DARK_SPRUCE_SAPLING =
