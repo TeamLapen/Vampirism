@@ -38,10 +38,10 @@ public class StakeItem extends VampirismItemWeapon implements IVampireFinisher, 
             @Nullable IFactionPlayer<?> factionPlayer = FactionPlayerHandler.getCurrentFactionPlayer((PlayerEntity) attacker).orElse(null);
             if (factionPlayer != null && factionPlayer.getFaction().equals(VReference.HUNTER_FACTION)) {
                 ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
-                if (skillHandler.isSkillEnabled(HunterSkills.stake2)) {
+                if (skillHandler.isSkillEnabled(HunterSkills.STAKE2.get())) {
                     instaKillFromBehind = true;
                 }
-                if (skillHandler.isSkillEnabled(HunterSkills.stake1)) {
+                if (skillHandler.isSkillEnabled(HunterSkills.STAKE1.get())) {
                     instaKillLowHealth = true;
                 }
             }

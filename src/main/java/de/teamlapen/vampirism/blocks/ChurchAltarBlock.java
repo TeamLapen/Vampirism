@@ -76,7 +76,7 @@ public class ChurchAltarBlock extends VampirismHorizontalBlock {
             } else if (!heldItem.isEmpty()) {
                 if (ModItems.HOLY_SALT_WATER.get().equals(heldItem.getItem())) {
                     if (world.isClientSide) return ActionResultType.SUCCESS;
-                    boolean enhanced = handler.isInFaction(VReference.HUNTER_FACTION) && handler.getCurrentFactionPlayer().map(s -> s.getSkillHandler()).map(s -> s.isSkillEnabled(HunterSkills.holy_water_enhanced)).orElse(false);
+                    boolean enhanced = handler.isInFaction(VReference.HUNTER_FACTION) && handler.getCurrentFactionPlayer().map(s -> s.getSkillHandler()).map(s -> s.isSkillEnabled(HunterSkills.HOLY_WATER_ENHANCED.get())).orElse(false);
                     ItemStack newStack = new ItemStack(enhanced ? ModItems.HOLY_WATER_BOTTLE_ENHANCED.get() : ModItems.HOLY_WATER_BOTTLE_NORMAL.get(), heldItem.getCount());
                     player.setItemInHand(hand, newStack);
                     return ActionResultType.SUCCESS;

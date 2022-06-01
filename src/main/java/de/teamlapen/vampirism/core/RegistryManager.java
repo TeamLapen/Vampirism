@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.lib.lib.util.IInitListener;
-import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.entity.action.EntityActions;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
@@ -19,7 +18,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.Potion;
-import net.minecraft.world.gen.treedecorator.TreeDecoratorType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -145,16 +143,5 @@ public class RegistryManager implements IInitListener {
     @SubscribeEvent
     public void onRegisterEffects(RegistryEvent.Register<Effect> event) {
         ModEffects.replaceEffects(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onRegisterSkills(RegistryEvent.Register<ISkill> event) {
-        HunterSkills.registerHunterSkills(event.getRegistry());
-        VampireSkills.registerVampireSkills(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onTreeDecoratorType(RegistryEvent.Register<TreeDecoratorType<?>> event){
-        ModFeatures.registerTreeDecoratorTypes(event.getRegistry());
     }
 }

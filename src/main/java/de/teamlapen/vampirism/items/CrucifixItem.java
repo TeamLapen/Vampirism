@@ -66,8 +66,8 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
     @Nullable
     @Override
     public ISkill getRequiredSkill(@Nonnull ItemStack stack) {
-        if (tier == TIER.ULTIMATE) return HunterSkills.ultimate_crucifix;
-        return HunterSkills.crucifix_wielder;
+        if (tier == TIER.ULTIMATE) return HunterSkills.ULTIMATE_CRUCIFIX.get();
+        return HunterSkills.CRUCIFIX_WIELDER.get();
     }
 
     @Nullable

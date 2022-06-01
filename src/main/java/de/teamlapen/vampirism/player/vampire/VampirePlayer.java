@@ -436,7 +436,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     public int getDbnoDuration() {
         int duration = VampirismConfig.BALANCE.vpDbnoDuration.get() * 20;
-        if (this.skillHandler.isSkillEnabled(VampireSkills.dbno_duration)) {
+        if (this.skillHandler.isSkillEnabled(VampireSkills.DBNO_DURATION.get())) {
             duration = Math.max(1, (int) (duration * VampirismConfig.BALANCE.vsDbnoReduction.get()));
         }
         return duration;
@@ -1084,7 +1084,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             this.player.refreshDimensions();
             this.sync(true);
             int duration = VampirismConfig.BALANCE.vpNeonatalDuration.get() * 20;
-            if (this.skillHandler.isSkillEnabled(VampireSkills.neonatal_decrease)) {
+            if (this.skillHandler.isSkillEnabled(VampireSkills.NEONATAL_DECREASE.get())) {
                 duration = Math.max(1, (int) (duration * VampirismConfig.BALANCE.vsNeonatalReduction.get()));
             }
             this.player.addEffect(new EffectInstance(ModEffects.NEONATAL.get(), duration));

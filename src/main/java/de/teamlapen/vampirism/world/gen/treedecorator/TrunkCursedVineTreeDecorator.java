@@ -29,7 +29,7 @@ public class TrunkCursedVineTreeDecorator extends TreeDecorator {
     @Nonnull
     @Override
     protected TreeDecoratorType<?> type() {
-        return ModFeatures.trunk_cursed_vine;
+        return ModFeatures.TRUNK_CURSED_VINE.get();
     }
 
     /**

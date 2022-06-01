@@ -1,13 +1,11 @@
 package de.teamlapen.vampirism.player.skills;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.DefaultSkill;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -67,17 +65,10 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
     public static class SimpleHunterSkill extends VampirismSkill<IHunterPlayer> {
 
         /**
-         * @param id   Registry name
          * @param desc Enable description using the default unlocalized key
          */
-        public SimpleHunterSkill(ResourceLocation id, boolean desc) {
-            this.setRegistryName(id);
+        public SimpleHunterSkill(boolean desc) {
             if (desc) this.setHasDefaultDescription();
-        }
-
-        @Deprecated
-        public SimpleHunterSkill(String id, boolean desc) {
-            this(new ResourceLocation(REFERENCE.MODID, id), desc);
         }
 
         @Nonnull
@@ -92,17 +83,11 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
      * Simple vampire skill implementation. Does nothing by itself
      */
     public static class SimpleVampireSkill extends VampirismSkill<IVampirePlayer> {
-        @Deprecated
-        public SimpleVampireSkill(String id, boolean desc) {
-            this(new ResourceLocation(REFERENCE.MODID, id), desc);
-        }
 
         /**
-         * @param id   Registry name
          * @param desc Enable description using the default unlocalized key
          */
-        public SimpleVampireSkill(ResourceLocation id, boolean desc) {
-            this.setRegistryName(id);
+        public SimpleVampireSkill(boolean desc) {
             if (desc) setHasDefaultDescription();
         }
 

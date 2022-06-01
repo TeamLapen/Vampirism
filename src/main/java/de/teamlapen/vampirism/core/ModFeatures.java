@@ -43,6 +43,7 @@ import java.util.Map;
 public class ModFeatures {
     public static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(ForgeRegistries.FEATURES, REFERENCE.MODID);
     public static final DeferredRegister<Structure<?>> STRUCTURES = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, REFERENCE.MODID);
+    public static final DeferredRegister<TreeDecoratorType<?>> TREE_DECORATORS = DeferredRegister.create(ForgeRegistries.TREE_DECORATOR_TYPES, REFERENCE.MODID);
 
     //features
     public static final RegistryObject<VampireDungeonFeature> VAMPIRE_DUNGEON =
@@ -66,17 +67,14 @@ public class ModFeatures {
     public static final IStructureProcessorType<BiomeTopBlockProcessor> biome_based = IStructureProcessorType.register/*register*/(REFERENCE.MODID + ":biome_based", BiomeTopBlockProcessor.CODEC);
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public static final TreeDecoratorType<TrunkCursedVineTreeDecorator> trunk_cursed_vine = new TreeDecoratorType<>(TrunkCursedVineTreeDecorator.CODEC);
+    public static final RegistryObject<TreeDecoratorType<TrunkCursedVineTreeDecorator>> TRUNK_CURSED_VINE =
+            TREE_DECORATORS.register("trunk_cursed_vine", () -> new TreeDecoratorType<>(TrunkCursedVineTreeDecorator.CODEC));
 
     static void registerFeaturesAndStructures(IEventBus bus) {
         FEATURES.register(bus);
         STRUCTURES.register(bus);
+        TREE_DECORATORS.register(bus);
     }
-
-    static void registerTreeDecoratorTypes(IForgeRegistry<TreeDecoratorType<?>> registry) {
-        registry.register(trunk_cursed_vine.setRegistryName(REFERENCE.MODID, "trunk_cursed_vine"));
-    }
-
     static void registerIgnoredBiomesForStructures() {
         VampirismAPI.worldGenRegistry().removeStructureFromBiomeCategories(HUNTER_CAMP.get().getRegistryName(), Lists.newArrayList(Biome.Category.OCEAN, Biome.Category.THEEND, Biome.Category.NETHER, Biome.Category.BEACH, Biome.Category.ICY, Biome.Category.RIVER, Biome.Category.JUNGLE));
         VampirismAPI.worldGenRegistry().removeStructureFromBiomes(HUNTER_CAMP.get().getRegistryName(), Lists.newArrayList(ModBiomes.VAMPIRE_FOREST_KEY.location()));
