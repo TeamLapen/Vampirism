@@ -21,7 +21,7 @@ plugins {
     id 'de.undercouch.download' version '3.3.0'
 }
 
-apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'net.minecraftforge.gradle' 
 apply plugin: 'idea'
 apply plugin: 'eclipse'
 apply plugin: 'org.spongepowered.mixin'
