@@ -30,7 +30,7 @@ apply plugin: 'org.spongepowered.mixin'
 configurations {
     optionalRuntime
     runtime.extendsFrom optionalRuntime // optionalRuntime dependencies are downloaded but not exported to POM
-}
+} 
 
 group = "de.teamlapen.vampirism"
 archivesBaseName = "Vampirism"
