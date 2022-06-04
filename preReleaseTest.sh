@@ -1,6 +1,6 @@
 #!/bin/bash
 
-dir=$(mktemp -d)
+dir=$(mktemp -d) 
 echo "Working in $dir"
 mkdir "$dir/.m2"
 
