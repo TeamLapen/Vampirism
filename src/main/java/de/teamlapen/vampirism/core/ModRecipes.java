@@ -27,14 +27,12 @@ public class ModRecipes {
     public static DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(Registry.RECIPE_TYPE_REGISTRY, REFERENCE.MODID);
     public static DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, REFERENCE.MODID);
 
-    public static final RegistryObject<RecipeType<IWeaponTableRecipe>> WEAPONTABLE_CRAFTING_TYPE =
-            RECIPE_TYPES.register("weapontable_crafting", () -> new RecipeType<>() {
+    public static final RegistryObject<RecipeType<IWeaponTableRecipe>> WEAPONTABLE_CRAFTING_TYPE = RECIPE_TYPES.register("weapontable_crafting", () -> new RecipeType<>() {
                 public String toString() {
                     return "weapontable_crafting";
                 }
             });
-    public static final RegistryObject<RecipeType<AlchemicalCauldronRecipe>> ALCHEMICAL_CAULDRON_TYPE =
-            RECIPE_TYPES.register("alchemical_cauldron", () -> new RecipeType<>() {
+    public static final RegistryObject<RecipeType<AlchemicalCauldronRecipe>> ALCHEMICAL_CAULDRON_TYPE = RECIPE_TYPES.register("alchemical_cauldron", () -> new RecipeType<>() {
                 public String toString() {
                     return "alchemical_cauldron";
                 }

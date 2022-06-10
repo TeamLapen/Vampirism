@@ -15,10 +15,8 @@ import net.minecraftforge.registries.RegistryObject;
 public class ModEnchantments {
     public static final DeferredRegister<Enchantment> ENCHANTMENTS = DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, REFERENCE.MODID);
 
-    public static final RegistryObject<EnchantmentArrowFrugality> CROSSBOWFRUGALITY =
-            ENCHANTMENTS.register("crossbowfrugality", () -> new EnchantmentArrowFrugality(Enchantment.Rarity.VERY_RARE));
-    public static final RegistryObject<EnchantmentVampireSlayer> VAMPIRESLAYER =
-            ENCHANTMENTS.register("vampireslayer", () -> new EnchantmentVampireSlayer(Enchantment.Rarity.UNCOMMON));
+    public static final RegistryObject<EnchantmentArrowFrugality> CROSSBOWFRUGALITY = ENCHANTMENTS.register("crossbowfrugality", () -> new EnchantmentArrowFrugality(Enchantment.Rarity.VERY_RARE));
+    public static final RegistryObject<EnchantmentVampireSlayer> VAMPIRESLAYER = ENCHANTMENTS.register("vampireslayer", () -> new EnchantmentVampireSlayer(Enchantment.Rarity.UNCOMMON));
 
 
     static void registerEnchantments(IEventBus bus) {

@@ -24,39 +24,25 @@ import org.apache.logging.log4j.Logger;
 public class ModEffects {
     public static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, REFERENCE.MODID);
 
-    public static final RegistryObject<MobEffect> SANGUINARE =
-            EFFECTS.register("sanguinare", () -> new SanguinareEffect(MobEffectCategory.NEUTRAL, 0x6A0888));
-    public static final RegistryObject<MobEffect> THIRST =
-            EFFECTS.register("thirst", () -> new ThirstEffect(MobEffectCategory.HARMFUL, 859494));
-    public static final RegistryObject<MobEffect> SATURATION =
-            EFFECTS.register("saturation", () -> new VampirismEffect(MobEffectCategory.BENEFICIAL, 0xDCFF00));
-    public static final RegistryObject<MobEffect> SUNSCREEN =
-            EFFECTS.register("sunscreen", () -> new VampirismEffect(MobEffectCategory.BENEFICIAL, 0xFFF100).addAttributeModifier(ModAttributes.SUNDAMAGE.get(), "9dc9420c-3e5e-41c7-9ba4-ff70e9dc69fc", -0.5, AttributeModifier.Operation.MULTIPLY_TOTAL));
-    public static final RegistryObject<MobEffect> DISGUISE_AS_VAMPIRE =
-            EFFECTS.register("disguise_as_vampire", () -> new VampirismEffect(MobEffectCategory.NEUTRAL, 0x999900));
-    public static final RegistryObject<MobEffect> FIRE_PROTECTION =
-            EFFECTS.register("fire_protection", () -> new VampirismEffect(MobEffectCategory.BENEFICIAL, 14981690));
-    public static final RegistryObject<MobEffect> GARLIC =
-            EFFECTS.register("garlic", () -> new VampirismEffect(MobEffectCategory.HARMFUL, 0xFFFFFF));
-    public static final RegistryObject<MobEffect> POISON =
-            EFFECTS.register("poison", () -> new VampirismPoisonEffect(0x4E9331));
-    public static final RegistryObject<MobEffect> FREEZE =
-            EFFECTS.register("freeze", FreezeEffect::new);
-    public static final RegistryObject<MobEffect> NEONATAL =
-            EFFECTS.register("neonatal", () -> new VampirismEffect(MobEffectCategory.NEUTRAL, 0xFFBBBB).addAttributeModifier(Attributes.ATTACK_DAMAGE, "377d132d-d091-43b2-8a8f-b940f9bc894c", -0.15, AttributeModifier.Operation.MULTIPLY_TOTAL).addAttributeModifier(Attributes.MOVEMENT_SPEED, "ad6d7def-46e2-485f-afba-39252767f114", -0.15, AttributeModifier.Operation.MULTIPLY_TOTAL));
-    public static final RegistryObject<MobEffect> OBLIVION =
-            EFFECTS.register("oblivion", () -> new VampirismEffect(MobEffectCategory.NEUTRAL, 0x4E9331));
-    public static final RegistryObject<MobEffect> ARMOR_REGENERATION =
-            EFFECTS.register("armor_regeneration", () -> new VampirismEffect(MobEffectCategory.NEUTRAL, 0xD17642));
-    public static final RegistryObject<MobEffect> BAD_OMEN_HUNTER =
-            EFFECTS.register("bad_omen_hunter", () -> new BadOmenEffect() {
+    public static final RegistryObject<MobEffect> SANGUINARE = EFFECTS.register("sanguinare", () -> new SanguinareEffect(MobEffectCategory.NEUTRAL, 0x6A0888));
+    public static final RegistryObject<MobEffect> THIRST = EFFECTS.register("thirst", () -> new ThirstEffect(MobEffectCategory.HARMFUL, 859494));
+    public static final RegistryObject<MobEffect> SATURATION = EFFECTS.register("saturation", () -> new VampirismEffect(MobEffectCategory.BENEFICIAL, 0xDCFF00));
+    public static final RegistryObject<MobEffect> SUNSCREEN = EFFECTS.register("sunscreen", () -> new VampirismEffect(MobEffectCategory.BENEFICIAL, 0xFFF100).addAttributeModifier(ModAttributes.SUNDAMAGE.get(), "9dc9420c-3e5e-41c7-9ba4-ff70e9dc69fc", -0.5, AttributeModifier.Operation.MULTIPLY_TOTAL));
+    public static final RegistryObject<MobEffect> DISGUISE_AS_VAMPIRE = EFFECTS.register("disguise_as_vampire", () -> new VampirismEffect(MobEffectCategory.NEUTRAL, 0x999900));
+    public static final RegistryObject<MobEffect> FIRE_PROTECTION = EFFECTS.register("fire_protection", () -> new VampirismEffect(MobEffectCategory.BENEFICIAL, 14981690));
+    public static final RegistryObject<MobEffect> GARLIC = EFFECTS.register("garlic", () -> new VampirismEffect(MobEffectCategory.HARMFUL, 0xFFFFFF));
+    public static final RegistryObject<MobEffect> POISON = EFFECTS.register("poison", () -> new VampirismPoisonEffect(0x4E9331));
+    public static final RegistryObject<MobEffect> FREEZE = EFFECTS.register("freeze", FreezeEffect::new);
+    public static final RegistryObject<MobEffect> NEONATAL = EFFECTS.register("neonatal", () -> new VampirismEffect(MobEffectCategory.NEUTRAL, 0xFFBBBB).addAttributeModifier(Attributes.ATTACK_DAMAGE, "377d132d-d091-43b2-8a8f-b940f9bc894c", -0.15, AttributeModifier.Operation.MULTIPLY_TOTAL).addAttributeModifier(Attributes.MOVEMENT_SPEED, "ad6d7def-46e2-485f-afba-39252767f114", -0.15, AttributeModifier.Operation.MULTIPLY_TOTAL));
+    public static final RegistryObject<MobEffect> OBLIVION = EFFECTS.register("oblivion", () -> new VampirismEffect(MobEffectCategory.NEUTRAL, 0x4E9331));
+    public static final RegistryObject<MobEffect> ARMOR_REGENERATION = EFFECTS.register("armor_regeneration", () -> new VampirismEffect(MobEffectCategory.NEUTRAL, 0xD17642));
+    public static final RegistryObject<MobEffect> BAD_OMEN_HUNTER = EFFECTS.register("bad_omen_hunter", () -> new BadOmenEffect() {
                 @Override
                 public IFaction<?> getFaction() {
                     return VReference.HUNTER_FACTION;
                 }
             });
-    public static final RegistryObject<MobEffect> BAD_OMEN_VAMPIRE =
-            EFFECTS.register("bad_omen_vampire", () -> new BadOmenEffect() {
+    public static final RegistryObject<MobEffect> BAD_OMEN_VAMPIRE = EFFECTS.register("bad_omen_vampire", () -> new BadOmenEffect() {
                 @Override
                 public IFaction<?> getFaction() {
                     return VReference.VAMPIRE_FACTION;

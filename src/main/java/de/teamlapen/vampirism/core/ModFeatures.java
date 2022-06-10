@@ -22,11 +22,9 @@ public class ModFeatures {
     public static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(ForgeRegistries.FEATURES, REFERENCE.MODID);
     public static final DeferredRegister<StructureFeature<?>> STRUCTURE_FEATURES = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, REFERENCE.MODID);
     //features
-    public static final RegistryObject<VampireDungeonFeature> VAMPIRE_DUNGEON =
-            FEATURES.register("vampire_dungeon", () -> new VampireDungeonFeature(NoneFeatureConfiguration.CODEC));
+    public static final RegistryObject<VampireDungeonFeature> VAMPIRE_DUNGEON = FEATURES.register("vampire_dungeon", () -> new VampireDungeonFeature(NoneFeatureConfiguration.CODEC));
     //structures
-    public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> HUNTER_CAMP =
-            STRUCTURE_FEATURES.register("hunter_camp", () -> {
+    public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> HUNTER_CAMP = STRUCTURE_FEATURES.register("hunter_camp", () -> {
                 StructureFeature<NoneFeatureConfiguration> feature = new HunterCampFeature(NoneFeatureConfiguration.CODEC);
                 StructureFeature.STEP.put(feature, GenerationStep.Decoration.SURFACE_STRUCTURES);
                 return feature;
