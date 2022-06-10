@@ -95,8 +95,6 @@ public class ModEntities {
 
     static void registerEntities(IEventBus bus) {
         ENTITY_TYPES.register(bus);
-        //VampireMinionEntity.init();
-        //HunterMinionEntity.init();
     }
 
     static void initializeEntities() {

@@ -63,6 +63,12 @@ public abstract class RefinementSet extends ForgeRegistryEntry<IRefinementSet> i
         return this.refinements.stream().map(RegistryObject::get).collect(Collectors.toUnmodifiableSet());
     }
 
+    @Nonnull
+    @Override
+    public Set<RegistryObject<? extends IRefinement>> getRefinementRegistryObjects() {
+        return this.refinements;
+    }
+
     @Override
     public Optional<IRefinementItem.AccessorySlotType> getSlotType() {
         return Optional.ofNullable(restrictedType);

@@ -258,7 +258,7 @@ public class ModItems {
 
 
     public static void registerItems(IEventBus bus) {
-            ITEMS.register(bus);
+        ITEMS.register(bus);
         if (VampirismMod.inDataGen) {
             DeferredRegister<Item> DUMMY_ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, "guideapi_vp");
             DUMMY_ITEMS.register("vampirism-guidebook", DummyItem::new);
