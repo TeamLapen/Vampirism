@@ -46,13 +46,10 @@ public class ModFeatures {
     public static final DeferredRegister<TreeDecoratorType<?>> TREE_DECORATORS = DeferredRegister.create(ForgeRegistries.TREE_DECORATOR_TYPES, REFERENCE.MODID);
 
     //features
-    public static final RegistryObject<VampireDungeonFeature> VAMPIRE_DUNGEON =
-            FEATURES.register("vampire_dungeon", () -> new VampireDungeonFeature(NoFeatureConfig.CODEC));
-    public static final RegistryObject<VampirismLakeFeature> MOD_LAKE =
-            FEATURES.register("mod_lake", () -> new VampirismLakeFeature(BlockStateFeatureConfig.CODEC));
+    public static final RegistryObject<VampireDungeonFeature> VAMPIRE_DUNGEON = FEATURES.register("vampire_dungeon", () -> new VampireDungeonFeature(NoFeatureConfig.CODEC));
+    public static final RegistryObject<VampirismLakeFeature> MOD_LAKE = FEATURES.register("mod_lake", () -> new VampirismLakeFeature(BlockStateFeatureConfig.CODEC));
     //structures
-    public static final RegistryObject<Structure<NoFeatureConfig>> HUNTER_CAMP =
-            STRUCTURES.register("hunter_camp", () -> {
+    public static final RegistryObject<Structure<NoFeatureConfig>> HUNTER_CAMP = STRUCTURES.register("hunter_camp", () -> {
                 Structure<NoFeatureConfig> structure = new HunterCampStructure(NoFeatureConfig.CODEC/*deserialize*/);
                 Structure.STEP.put(structure, GenerationStage.Decoration.SURFACE_STRUCTURES);
                 Structure.STRUCTURES_REGISTRY.put(REFERENCE.MODID + ":hunter_camp", structure);
@@ -67,8 +64,7 @@ public class ModFeatures {
     public static final IStructureProcessorType<BiomeTopBlockProcessor> biome_based = IStructureProcessorType.register/*register*/(REFERENCE.MODID + ":biome_based", BiomeTopBlockProcessor.CODEC);
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public static final RegistryObject<TreeDecoratorType<TrunkCursedVineTreeDecorator>> TRUNK_CURSED_VINE =
-            TREE_DECORATORS.register("trunk_cursed_vine", () -> new TreeDecoratorType<>(TrunkCursedVineTreeDecorator.CODEC));
+    public static final RegistryObject<TreeDecoratorType<TrunkCursedVineTreeDecorator>> TRUNK_CURSED_VINE = TREE_DECORATORS.register("trunk_cursed_vine", () -> new TreeDecoratorType<>(TrunkCursedVineTreeDecorator.CODEC));
 
     static void registerFeaturesAndStructures(IEventBus bus) {
         FEATURES.register(bus);

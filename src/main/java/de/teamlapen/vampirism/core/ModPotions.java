@@ -25,108 +25,58 @@ public class ModPotions {
     public static final DeferredRegister<Potion> POTION_TYPES = DeferredRegister.create(ForgeRegistries.POTION_TYPES, REFERENCE.MODID);
 
     //Hunter
-    public static final RegistryObject<HunterPotion> VERY_LONG_SLOW_FALLING =
-            POTION_TYPES.register("very_long_slow_falling", () -> new HunterPotion("slow_falling", new EffectInstance(Effects.SLOW_FALLING, 48000)));
-    public static final RegistryObject<HunterPotion> LONG_LUCK =
-            POTION_TYPES.register("long_luck", () -> new HunterPotion("luck", new EffectInstance(Effects.LUCK, 60000)));
-    public static final RegistryObject<HunterPotion> VERY_LONG_WEAKNESS =
-            POTION_TYPES.register("very_long_weakness", () -> new HunterPotion("weakness", new EffectInstance(Effects.WEAKNESS, 48000)));
-    public static final RegistryObject<HunterPotion> VERY_STRONG_STRENGTH =
-            POTION_TYPES.register("very_strong_strength", () -> new HunterPotion("strength", new EffectInstance(Effects.DAMAGE_BOOST, 600, 2)));
-    public static final RegistryObject<HunterPotion> VERY_LONG_STRENGTH =
-            POTION_TYPES.register("very_long_strength", () -> new HunterPotion("strength", new EffectInstance(Effects.DAMAGE_BOOST, 96000)));
-    public static final RegistryObject<HunterPotion> LONG_STRONG_STRENGTH =
-            POTION_TYPES.register("long_strong_strength", () -> new HunterPotion("strength", new EffectInstance(Effects.DAMAGE_BOOST, 4800, 1)));
-    public static final RegistryObject<HunterPotion> VERY_STRONG_REGENERATION =
-            POTION_TYPES.register("very_strong_regeneration", () -> new HunterPotion("regeneration", new EffectInstance(Effects.REGENERATION, 450, 2)));
-    public static final RegistryObject<HunterPotion> VERY_LONG_REGENERATION =
-            POTION_TYPES.register("very_long_regeneration", () -> new HunterPotion("regeneration", new EffectInstance(Effects.REGENERATION, 18000)));
-    public static final RegistryObject<HunterPotion> LONG_STRONG_REGENERATION =
-            POTION_TYPES.register("long_strong_regeneration", () -> new HunterPotion("regeneration", new EffectInstance(Effects.REGENERATION, 1200, 1)));
-    public static final RegistryObject<HunterPotion> VERY_STRONG_POISON =
-            POTION_TYPES.register("very_strong_poison", () -> new HunterPotion("poison", new EffectInstance(Effects.POISON, 432, 2)));
-    public static final RegistryObject<HunterPotion> LONG_STRONG_POISON =
-            POTION_TYPES.register("long_strong_poison", () -> new HunterPotion("poison", new EffectInstance(Effects.POISON, 1200, 1)));
-    public static final RegistryObject<HunterPotion> VERY_LONG_POISON =
-            POTION_TYPES.register("very_long_poison", () -> new HunterPotion("poison", new EffectInstance(Effects.POISON, 18000)));
-    public static final RegistryObject<HunterPotion> VERY_STRONG_HARMING =
-            POTION_TYPES.register("very_strong_harming", () -> new HunterPotion("harming", new EffectInstance(Effects.HARM, 1, 2)));
-    public static final RegistryObject<HunterPotion> VERY_STRONG_HEALING =
-            POTION_TYPES.register("very_strong_healing", () -> new HunterPotion("healing", new EffectInstance(Effects.HEAL, 1, 2)));
-    public static final RegistryObject<HunterPotion> VERY_LONG_WATER_BREATHING =
-            POTION_TYPES.register("very_long_water_breathing", () -> new HunterPotion("water_breathing", new EffectInstance(Effects.WATER_BREATHING, 96000)));
-    public static final RegistryObject<HunterPotion> VERY_STRONG_SLOWNESS =
-            POTION_TYPES.register("very_strong_slowness", () -> new HunterPotion("slowness", new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 400, 5)));
-    public static final RegistryObject<HunterPotion> VERY_LONG_SLOWNESS =
-            POTION_TYPES.register("very_long_slowness", () -> new HunterPotion("slowness", new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 48000)));
-    public static final RegistryObject<HunterPotion> LONG_STRONG_SLOWNESS =
-            POTION_TYPES.register("long_strong_slowness", () -> new HunterPotion("slowness", new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 4800, 3)));
-    public static final RegistryObject<HunterPotion> VERY_STRONG_SWIFTNESS =
-            POTION_TYPES.register("very_strong_swiftness", () -> new HunterPotion("swiftness", new EffectInstance(Effects.MOVEMENT_SPEED, 1200, 2)));
-    public static final RegistryObject<HunterPotion> VERY_LONG_SWIFTNESS =
-            POTION_TYPES.register("very_long_swiftness", () -> new HunterPotion("swiftness", new EffectInstance(Effects.MOVEMENT_SPEED, 48000)));
-    public static final RegistryObject<HunterPotion> LONG_STRONG_SWIFTNESS =
-            POTION_TYPES.register("long_strong_swiftness", () -> new HunterPotion("swiftness", new EffectInstance(Effects.MOVEMENT_SPEED, 4800, 1)));
-    public static final RegistryObject<HunterPotion> VERY_LONG_FIRE_RESISTANCE =
-            POTION_TYPES.register("very_long_fire_resistance", () -> new HunterPotion("fire_resistance", new EffectInstance(Effects.FIRE_RESISTANCE, 96000)));
-    public static final RegistryObject<HunterPotion> VERY_STRONG_LEAPING =
-            POTION_TYPES.register("very_strong_leaping", () -> new HunterPotion("leaping", new EffectInstance(Effects.JUMP, 1800, 2)));
-    public static final RegistryObject<HunterPotion> VERY_LONG_LEAPING =
-            POTION_TYPES.register("very_long_leaping", () -> new HunterPotion("leaping", new EffectInstance(Effects.JUMP, 96000)));
-    public static final RegistryObject<HunterPotion> LONG_STRONG_LEAPING =
-            POTION_TYPES.register("long_strong_leaping", () -> new HunterPotion("leaping", new EffectInstance(Effects.JUMP, 9600, 1)));
-    public static final RegistryObject<HunterPotion> VERY_LONG_INVISIBILITY =
-            POTION_TYPES.register("very_long_invisibility", () -> new HunterPotion("invisibility", new EffectInstance(Effects.INVISIBILITY, 96000)));
-    public static final RegistryObject<HunterPotion> VERY_LONG_NIGHT_VISION =
-            POTION_TYPES.register("very_long_night_vision", () -> new HunterPotion("night_vision", new EffectInstance(Effects.NIGHT_VISION, 96000)));
-    public static final RegistryObject<HunterPotion> NAUSEA =
-            POTION_TYPES.register("nausea", () -> new HunterPotion(null, new EffectInstance(Effects.CONFUSION, 1200)));
-    public static final RegistryObject<HunterPotion> LONG_NAUSEA =
-            POTION_TYPES.register("long_nausea", () -> new HunterPotion("nausea", new EffectInstance(Effects.CONFUSION, 2400)));
-    public static final RegistryObject<HunterPotion> VERY_LONG_NAUSEA =
-            POTION_TYPES.register("very_long_nausea", () -> new HunterPotion("nausea", new EffectInstance(Effects.CONFUSION, 24000)));
-    public static final RegistryObject<HunterPotion> THIRST =
-            POTION_TYPES.register("thirst", () -> new HunterPotion(null, new EffectInstance(ModEffects.THIRST.get(), 1200)));
-    public static final RegistryObject<HunterPotion> LONG_THIRST =
-            POTION_TYPES.register("long_thirst", () -> new HunterPotion("thirst", new EffectInstance(ModEffects.THIRST.get(), 4800)));
-    public static final RegistryObject<HunterPotion> STRONG_THIRST =
-            POTION_TYPES.register("strong_thirst", () -> new HunterPotion("thirst", new EffectInstance(ModEffects.THIRST.get(), 400, 1)));
-    public static final RegistryObject<HunterPotion> VERY_LONG_THIRST =
-            POTION_TYPES.register("very_long_thirst", () -> new HunterPotion("thirst", new EffectInstance(ModEffects.THIRST.get(), 24000)));
-    public static final RegistryObject<HunterPotion> VERY_STRONG_THIRST =
-            POTION_TYPES.register("very_strong_thirst", () -> new HunterPotion("thirst", new EffectInstance(ModEffects.THIRST.get(), 1200, 2)));
-    public static final RegistryObject<HunterPotion> LONG_STRONG_THIRST =
-            POTION_TYPES.register("long_strong_thirst", () -> new HunterPotion("thirst", new EffectInstance(ModEffects.THIRST.get(), 9600, 1)));
-    public static final RegistryObject<HunterPotion> BLINDNESS =
-            POTION_TYPES.register("blindness", () -> new HunterPotion(null, new EffectInstance(Effects.BLINDNESS, 1200)));
-    public static final RegistryObject<HunterPotion> LONG_BLINDNESS =
-            POTION_TYPES.register("long_blindness", () -> new HunterPotion("blindness", new EffectInstance(Effects.BLINDNESS, 4800)));
-    public static final RegistryObject<HunterPotion> VERY_LONG_BLINDNESS =
-            POTION_TYPES.register("very_long_blindness", () -> new HunterPotion("blindness", new EffectInstance(Effects.BLINDNESS, 24000)));
-    public static final RegistryObject<HunterPotion> HEALTH_BOOST =
-            POTION_TYPES.register("health_boost", () -> new HunterPotion(null, new EffectInstance(Effects.HEALTH_BOOST, 1200)));
-    public static final RegistryObject<HunterPotion> LONG_HEALTH_BOOST =
-            POTION_TYPES.register("long_health_boost", () -> new HunterPotion("health_boost", new EffectInstance(Effects.HEALTH_BOOST, 4800)));
-    public static final RegistryObject<HunterPotion> STRONG_HEALTH_BOOST =
-            POTION_TYPES.register("strong_health_boost", () -> new HunterPotion("health_boost", new EffectInstance(Effects.HEALTH_BOOST, 400, 1)));
-    public static final RegistryObject<HunterPotion> VERY_LONG_HEALTH_BOOST =
-            POTION_TYPES.register("very_long_health_boost", () -> new HunterPotion("health_boost", new EffectInstance(Effects.HEALTH_BOOST, 48000)));
-    public static final RegistryObject<HunterPotion> VERY_STRONG_HEALTH_BOOST =
-            POTION_TYPES.register("very_strong_health_boost", () -> new HunterPotion("health_boost", new EffectInstance(Effects.HEALTH_BOOST, 400, 2)));
-    public static final RegistryObject<HunterPotion> LONG_STRONG_HEALTH_BOOST =
-            POTION_TYPES.register("long_strong_health_boost", () -> new HunterPotion("health_boost", new EffectInstance(Effects.HEALTH_BOOST, 1200, 1)));
-    public static final RegistryObject<HunterPotion> RESISTANCE =
-            POTION_TYPES.register("resistance", () -> new HunterPotion(null, new EffectInstance(Effects.DAMAGE_RESISTANCE, 1800)));
-    public static final RegistryObject<HunterPotion> LONG_RESISTANCE =
-            POTION_TYPES.register("long_resistance", () -> new HunterPotion("resistance", new EffectInstance(Effects.DAMAGE_RESISTANCE, 4800)));
-    public static final RegistryObject<HunterPotion> STRONG_RESISTANCE =
-            POTION_TYPES.register("strong_resistance", () -> new HunterPotion("resistance", new EffectInstance(Effects.DAMAGE_RESISTANCE, 400, 1)));
+    public static final RegistryObject<HunterPotion> VERY_LONG_SLOW_FALLING = POTION_TYPES.register("very_long_slow_falling", () -> new HunterPotion("slow_falling", new EffectInstance(Effects.SLOW_FALLING, 48000)));
+    public static final RegistryObject<HunterPotion> LONG_LUCK = POTION_TYPES.register("long_luck", () -> new HunterPotion("luck", new EffectInstance(Effects.LUCK, 60000)));
+    public static final RegistryObject<HunterPotion> VERY_LONG_WEAKNESS = POTION_TYPES.register("very_long_weakness", () -> new HunterPotion("weakness", new EffectInstance(Effects.WEAKNESS, 48000)));
+    public static final RegistryObject<HunterPotion> VERY_STRONG_STRENGTH = POTION_TYPES.register("very_strong_strength", () -> new HunterPotion("strength", new EffectInstance(Effects.DAMAGE_BOOST, 600, 2)));
+    public static final RegistryObject<HunterPotion> VERY_LONG_STRENGTH = POTION_TYPES.register("very_long_strength", () -> new HunterPotion("strength", new EffectInstance(Effects.DAMAGE_BOOST, 96000)));
+    public static final RegistryObject<HunterPotion> LONG_STRONG_STRENGTH = POTION_TYPES.register("long_strong_strength", () -> new HunterPotion("strength", new EffectInstance(Effects.DAMAGE_BOOST, 4800, 1)));
+    public static final RegistryObject<HunterPotion> VERY_STRONG_REGENERATION = POTION_TYPES.register("very_strong_regeneration", () -> new HunterPotion("regeneration", new EffectInstance(Effects.REGENERATION, 450, 2)));
+    public static final RegistryObject<HunterPotion> VERY_LONG_REGENERATION = POTION_TYPES.register("very_long_regeneration", () -> new HunterPotion("regeneration", new EffectInstance(Effects.REGENERATION, 18000)));
+    public static final RegistryObject<HunterPotion> LONG_STRONG_REGENERATION = POTION_TYPES.register("long_strong_regeneration", () -> new HunterPotion("regeneration", new EffectInstance(Effects.REGENERATION, 1200, 1)));
+    public static final RegistryObject<HunterPotion> VERY_STRONG_POISON = POTION_TYPES.register("very_strong_poison", () -> new HunterPotion("poison", new EffectInstance(Effects.POISON, 432, 2)));
+    public static final RegistryObject<HunterPotion> LONG_STRONG_POISON = POTION_TYPES.register("long_strong_poison", () -> new HunterPotion("poison", new EffectInstance(Effects.POISON, 1200, 1)));
+    public static final RegistryObject<HunterPotion> VERY_LONG_POISON = POTION_TYPES.register("very_long_poison", () -> new HunterPotion("poison", new EffectInstance(Effects.POISON, 18000)));
+    public static final RegistryObject<HunterPotion> VERY_STRONG_HARMING = POTION_TYPES.register("very_strong_harming", () -> new HunterPotion("harming", new EffectInstance(Effects.HARM, 1, 2)));
+    public static final RegistryObject<HunterPotion> VERY_STRONG_HEALING = POTION_TYPES.register("very_strong_healing", () -> new HunterPotion("healing", new EffectInstance(Effects.HEAL, 1, 2)));
+    public static final RegistryObject<HunterPotion> VERY_LONG_WATER_BREATHING = POTION_TYPES.register("very_long_water_breathing", () -> new HunterPotion("water_breathing", new EffectInstance(Effects.WATER_BREATHING, 96000)));
+    public static final RegistryObject<HunterPotion> VERY_STRONG_SLOWNESS = POTION_TYPES.register("very_strong_slowness", () -> new HunterPotion("slowness", new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 400, 5)));
+    public static final RegistryObject<HunterPotion> VERY_LONG_SLOWNESS = POTION_TYPES.register("very_long_slowness", () -> new HunterPotion("slowness", new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 48000)));
+    public static final RegistryObject<HunterPotion> LONG_STRONG_SLOWNESS = POTION_TYPES.register("long_strong_slowness", () -> new HunterPotion("slowness", new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 4800, 3)));
+    public static final RegistryObject<HunterPotion> VERY_STRONG_SWIFTNESS = POTION_TYPES.register("very_strong_swiftness", () -> new HunterPotion("swiftness", new EffectInstance(Effects.MOVEMENT_SPEED, 1200, 2)));
+    public static final RegistryObject<HunterPotion> VERY_LONG_SWIFTNESS = POTION_TYPES.register("very_long_swiftness", () -> new HunterPotion("swiftness", new EffectInstance(Effects.MOVEMENT_SPEED, 48000)));
+    public static final RegistryObject<HunterPotion> LONG_STRONG_SWIFTNESS = POTION_TYPES.register("long_strong_swiftness", () -> new HunterPotion("swiftness", new EffectInstance(Effects.MOVEMENT_SPEED, 4800, 1)));
+    public static final RegistryObject<HunterPotion> VERY_LONG_FIRE_RESISTANCE = POTION_TYPES.register("very_long_fire_resistance", () -> new HunterPotion("fire_resistance", new EffectInstance(Effects.FIRE_RESISTANCE, 96000)));
+    public static final RegistryObject<HunterPotion> VERY_STRONG_LEAPING = POTION_TYPES.register("very_strong_leaping", () -> new HunterPotion("leaping", new EffectInstance(Effects.JUMP, 1800, 2)));
+    public static final RegistryObject<HunterPotion> VERY_LONG_LEAPING = POTION_TYPES.register("very_long_leaping", () -> new HunterPotion("leaping", new EffectInstance(Effects.JUMP, 96000)));
+    public static final RegistryObject<HunterPotion> LONG_STRONG_LEAPING = POTION_TYPES.register("long_strong_leaping", () -> new HunterPotion("leaping", new EffectInstance(Effects.JUMP, 9600, 1)));
+    public static final RegistryObject<HunterPotion> VERY_LONG_INVISIBILITY = POTION_TYPES.register("very_long_invisibility", () -> new HunterPotion("invisibility", new EffectInstance(Effects.INVISIBILITY, 96000)));
+    public static final RegistryObject<HunterPotion> VERY_LONG_NIGHT_VISION = POTION_TYPES.register("very_long_night_vision", () -> new HunterPotion("night_vision", new EffectInstance(Effects.NIGHT_VISION, 96000)));
+    public static final RegistryObject<HunterPotion> NAUSEA = POTION_TYPES.register("nausea", () -> new HunterPotion(null, new EffectInstance(Effects.CONFUSION, 1200)));
+    public static final RegistryObject<HunterPotion> LONG_NAUSEA = POTION_TYPES.register("long_nausea", () -> new HunterPotion("nausea", new EffectInstance(Effects.CONFUSION, 2400)));
+    public static final RegistryObject<HunterPotion> VERY_LONG_NAUSEA = POTION_TYPES.register("very_long_nausea", () -> new HunterPotion("nausea", new EffectInstance(Effects.CONFUSION, 24000)));
+    public static final RegistryObject<HunterPotion> THIRST = POTION_TYPES.register("thirst", () -> new HunterPotion(null, new EffectInstance(ModEffects.THIRST.get(), 1200)));
+    public static final RegistryObject<HunterPotion> LONG_THIRST = POTION_TYPES.register("long_thirst", () -> new HunterPotion("thirst", new EffectInstance(ModEffects.THIRST.get(), 4800)));
+    public static final RegistryObject<HunterPotion> STRONG_THIRST = POTION_TYPES.register("strong_thirst", () -> new HunterPotion("thirst", new EffectInstance(ModEffects.THIRST.get(), 400, 1)));
+    public static final RegistryObject<HunterPotion> VERY_LONG_THIRST = POTION_TYPES.register("very_long_thirst", () -> new HunterPotion("thirst", new EffectInstance(ModEffects.THIRST.get(), 24000)));
+    public static final RegistryObject<HunterPotion> VERY_STRONG_THIRST = POTION_TYPES.register("very_strong_thirst", () -> new HunterPotion("thirst", new EffectInstance(ModEffects.THIRST.get(), 1200, 2)));
+    public static final RegistryObject<HunterPotion> LONG_STRONG_THIRST = POTION_TYPES.register("long_strong_thirst", () -> new HunterPotion("thirst", new EffectInstance(ModEffects.THIRST.get(), 9600, 1)));
+    public static final RegistryObject<HunterPotion> BLINDNESS = POTION_TYPES.register("blindness", () -> new HunterPotion(null, new EffectInstance(Effects.BLINDNESS, 1200)));
+    public static final RegistryObject<HunterPotion> LONG_BLINDNESS = POTION_TYPES.register("long_blindness", () -> new HunterPotion("blindness", new EffectInstance(Effects.BLINDNESS, 4800)));
+    public static final RegistryObject<HunterPotion> VERY_LONG_BLINDNESS = POTION_TYPES.register("very_long_blindness", () -> new HunterPotion("blindness", new EffectInstance(Effects.BLINDNESS, 24000)));
+    public static final RegistryObject<HunterPotion> HEALTH_BOOST = POTION_TYPES.register("health_boost", () -> new HunterPotion(null, new EffectInstance(Effects.HEALTH_BOOST, 1200)));
+    public static final RegistryObject<HunterPotion> LONG_HEALTH_BOOST = POTION_TYPES.register("long_health_boost", () -> new HunterPotion("health_boost", new EffectInstance(Effects.HEALTH_BOOST, 4800)));
+    public static final RegistryObject<HunterPotion> STRONG_HEALTH_BOOST = POTION_TYPES.register("strong_health_boost", () -> new HunterPotion("health_boost", new EffectInstance(Effects.HEALTH_BOOST, 400, 1)));
+    public static final RegistryObject<HunterPotion> VERY_LONG_HEALTH_BOOST = POTION_TYPES.register("very_long_health_boost", () -> new HunterPotion("health_boost", new EffectInstance(Effects.HEALTH_BOOST, 48000)));
+    public static final RegistryObject<HunterPotion> VERY_STRONG_HEALTH_BOOST = POTION_TYPES.register("very_strong_health_boost", () -> new HunterPotion("health_boost", new EffectInstance(Effects.HEALTH_BOOST, 400, 2)));
+    public static final RegistryObject<HunterPotion> LONG_STRONG_HEALTH_BOOST = POTION_TYPES.register("long_strong_health_boost", () -> new HunterPotion("health_boost", new EffectInstance(Effects.HEALTH_BOOST, 1200, 1)));
+    public static final RegistryObject<HunterPotion> RESISTANCE = POTION_TYPES.register("resistance", () -> new HunterPotion(null, new EffectInstance(Effects.DAMAGE_RESISTANCE, 1800)));
+    public static final RegistryObject<HunterPotion> LONG_RESISTANCE = POTION_TYPES.register("long_resistance", () -> new HunterPotion("resistance", new EffectInstance(Effects.DAMAGE_RESISTANCE, 4800)));
+    public static final RegistryObject<HunterPotion> STRONG_RESISTANCE = POTION_TYPES.register("strong_resistance", () -> new HunterPotion("resistance", new EffectInstance(Effects.DAMAGE_RESISTANCE, 400, 1)));
 
     //Vampire
-    public static final RegistryObject<VampirismPotion> VAMPIRE_FIRE_RESISTANCE =
-            POTION_TYPES.register("vampire_fire_resistance", () -> new VampirismPotion(null, new EffectInstance(ModEffects.FIRE_PROTECTION.get(), 3600, 5)));
-    public static final RegistryObject<VampirismPotion> LONG_VAMPIRE_FIRE_RESISTANCE =
-            POTION_TYPES.register("long_vampire_fire_resistance", () -> new VampirismPotion("vampire_fire_resistance", new EffectInstance(ModEffects.FIRE_PROTECTION.get(), 9600, 5)));
+    public static final RegistryObject<VampirismPotion> VAMPIRE_FIRE_RESISTANCE = POTION_TYPES.register("vampire_fire_resistance", () -> new VampirismPotion(null, new EffectInstance(ModEffects.FIRE_PROTECTION.get(), 3600, 5)));
+    public static final RegistryObject<VampirismPotion> LONG_VAMPIRE_FIRE_RESISTANCE = POTION_TYPES.register("long_vampire_fire_resistance", () -> new VampirismPotion("vampire_fire_resistance", new EffectInstance(ModEffects.FIRE_PROTECTION.get(), 9600, 5)));
 
     public static void registerPotions(IEventBus bus) {
         POTION_TYPES.register(bus);

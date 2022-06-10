@@ -24,22 +24,19 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 public class ModParticles {
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, REFERENCE.MODID);
 
-    public static final RegistryObject<ParticleType<FlyingBloodParticleData>> FLYING_BLOOD =
-            PARTICLES.register("flying_blood", () -> new ParticleType<FlyingBloodParticleData>(false, FlyingBloodParticleData.DESERIALIZER) {
+    public static final RegistryObject<ParticleType<FlyingBloodParticleData>> FLYING_BLOOD = PARTICLES.register("flying_blood", () -> new ParticleType<FlyingBloodParticleData>(false, FlyingBloodParticleData.DESERIALIZER) {
         @Override
         public Codec<FlyingBloodParticleData> codec() {
             return FlyingBloodParticleData.CODEC;
         }
     });
-    public static final RegistryObject<ParticleType<FlyingBloodEntityParticleData>> FLYING_BLOOD_ENTITY =
-            PARTICLES.register("flying_blood_entity", () -> new ParticleType<FlyingBloodEntityParticleData>(false, FlyingBloodEntityParticleData.DESERIALIZER) {
+    public static final RegistryObject<ParticleType<FlyingBloodEntityParticleData>> FLYING_BLOOD_ENTITY = PARTICLES.register("flying_blood_entity", () -> new ParticleType<FlyingBloodEntityParticleData>(false, FlyingBloodEntityParticleData.DESERIALIZER) {
                 @Override
                 public Codec<FlyingBloodEntityParticleData> codec() {
                     return FlyingBloodEntityParticleData.CODEC;
                 }
             });
-    public static final RegistryObject<ParticleType<GenericParticleData>> GENERIC =
-            PARTICLES.register("generic", () -> new ParticleType<GenericParticleData>(false, GenericParticleData.DESERIALIZER) {
+    public static final RegistryObject<ParticleType<GenericParticleData>> GENERIC = PARTICLES.register("generic", () -> new ParticleType<GenericParticleData>(false, GenericParticleData.DESERIALIZER) {
                 @Override
                 public Codec<GenericParticleData> codec() {
                     return GenericParticleData.CODEC;

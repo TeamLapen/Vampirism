@@ -16,12 +16,9 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 public class HunterActions {
     public static final DeferredRegister<IAction> ACTIONS = DeferredRegister.create(ModRegistries.ACTIONS, REFERENCE.MODID);
 
-    public static final RegistryObject<AwarenessHunterAction> AWARENESS_HUNTER =
-            ACTIONS.register("awareness_hunter", AwarenessHunterAction::new);
-    public static final RegistryObject<DisguiseHunterAction> DISGUISE_HUNTER =
-            ACTIONS.register("disguise_hunter", DisguiseHunterAction::new);
-    public static final RegistryObject<PotionResistanceHunterAction> POTION_RESISTANCE_HUNTER =
-            ACTIONS.register("potion_resistance_hunter", PotionResistanceHunterAction::new);
+    public static final RegistryObject<AwarenessHunterAction> AWARENESS_HUNTER = ACTIONS.register("awareness_hunter", AwarenessHunterAction::new);
+    public static final RegistryObject<DisguiseHunterAction> DISGUISE_HUNTER = ACTIONS.register("disguise_hunter", DisguiseHunterAction::new);
+    public static final RegistryObject<PotionResistanceHunterAction> POTION_RESISTANCE_HUNTER = ACTIONS.register("potion_resistance_hunter", PotionResistanceHunterAction::new);
 
     public static void registerDefaultActions(IEventBus bus) {
         ACTIONS.register(bus);
