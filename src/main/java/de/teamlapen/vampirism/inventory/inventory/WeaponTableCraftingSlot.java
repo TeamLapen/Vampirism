@@ -62,7 +62,7 @@ public class WeaponTableCraftingSlot extends Slot {
             }));
         }
         net.minecraftforge.common.ForgeHooks.setCraftingPlayer(playerIn);
-        NonNullList<ItemStack> remaining = playerIn.level.getRecipeManager().getRemainingItemsFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE, this.craftMatrix, playerIn.level);
+        NonNullList<ItemStack> remaining = playerIn.level.getRecipeManager().getRemainingItemsFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get(), this.craftMatrix, playerIn.level);
         net.minecraftforge.common.ForgeHooks.setCraftingPlayer(null);
         for (int i = 0; i < remaining.size(); ++i) {
             ItemStack itemstack = this.craftMatrix.getItem(i);
@@ -112,7 +112,7 @@ public class WeaponTableCraftingSlot extends Slot {
     }
 
     protected IWeaponTableRecipe findMatchingRecipe(Player playerIn, IFactionPlayer<IHunterPlayer> factionPlayer, int lava) {
-        Optional<IWeaponTableRecipe> optional = playerIn.getCommandSenderWorld().getRecipeManager().getRecipeFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE, this.craftMatrix, playerIn.getCommandSenderWorld());
+        Optional<IWeaponTableRecipe> optional = playerIn.getCommandSenderWorld().getRecipeManager().getRecipeFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get(), this.craftMatrix, playerIn.getCommandSenderWorld());
         if (optional.isPresent()) {
             IWeaponTableRecipe recipe = optional.get();
             if (factionPlayer.getLevel() >= recipe.getRequiredLevel() && lava >= recipe.getRequiredLavaUnits() && Helper.areSkillsEnabled(factionPlayer.getSkillHandler(), recipe.getRequiredSkills())) {

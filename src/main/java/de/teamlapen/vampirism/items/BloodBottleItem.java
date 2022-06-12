@@ -17,6 +17,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
@@ -36,15 +37,14 @@ import javax.annotation.Nullable;
  * Currently the only thing that can interact with the players bloodstats.
  * Can only store blood in {@link BloodBottleItem#capacity} tenth units.
  */
-public class BloodBottleItem extends VampirismItem implements IFactionExclusiveItem {
+public class BloodBottleItem extends Item implements IFactionExclusiveItem {
 
     public static final int AMOUNT = 9;
-    private static final String name = "blood_bottle";
     private static final int MULTIPLIER = VReference.FOOD_TO_FLUID_BLOOD;
     private static final int capacity = AMOUNT * MULTIPLIER;
 
     public static ItemStack getStackWithDamage(int damage) {
-        ItemStack stack = new ItemStack(ModItems.blood_bottle);
+        ItemStack stack = new ItemStack(ModItems.BLOOD_BOTTLE.get());
         stack.setDamageValue(damage);
         return stack;
     }
@@ -53,7 +53,7 @@ public class BloodBottleItem extends VampirismItem implements IFactionExclusiveI
      * Set's the registry name and the unlocalized name
      */
     public BloodBottleItem() {
-        super(name, new Properties().defaultDurability(AMOUNT).tab(VampirismMod.creativeTab).setNoRepair());
+        super(new Properties().defaultDurability(AMOUNT).tab(VampirismMod.creativeTab).setNoRepair());
     }
 
     @Override
@@ -66,7 +66,7 @@ public class BloodBottleItem extends VampirismItem implements IFactionExclusiveI
     public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> list) {
         super.fillItemCategory(group, list);
         if (this.allowdedIn(group)) {
-            ItemStack stack = new ItemStack(ModItems.blood_bottle);
+            ItemStack stack = new ItemStack(ModItems.BLOOD_BOTTLE.get());
             stack.setDamageValue(9);
             list.add(stack);
         }

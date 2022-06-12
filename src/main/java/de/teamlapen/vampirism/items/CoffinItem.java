@@ -18,7 +18,6 @@ public class CoffinItem extends BlockItem {
 
     public CoffinItem(Block coffin) {
         super(coffin, new Properties().tab(VampirismMod.creativeTab));
-        this.setRegistryName(coffin.getRegistryName());
     }
 
     @OnlyIn(Dist.CLIENT)

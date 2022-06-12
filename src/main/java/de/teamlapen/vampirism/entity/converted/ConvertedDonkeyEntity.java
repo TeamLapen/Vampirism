@@ -30,7 +30,7 @@ public class ConvertedDonkeyEntity extends Donkey implements CurableConvertedCre
     public static AttributeSupplier.Builder getAttributeBuilder() {
         return AbstractHorse.createBaseHorseAttributes()
                 .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_DMG)
-                .add(ModAttributes.sundamage, BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
+                .add(ModAttributes.SUNDAMAGE.get(), BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
     }
 
     private final Data<Donkey> data = new Data<>();

@@ -5,18 +5,21 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.fluids.BloodFluid;
 import de.teamlapen.vampirism.fluids.ImpureBloodFluid;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.*;
 
-@ObjectHolder(REFERENCE.MODID)
 public class ModFluids {
-    public static Fluid blood = new BloodFluid();
-    public static Fluid impure_blood = new ImpureBloodFluid();
+    public static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(ForgeRegistries.FLUIDS, REFERENCE.MODID);
 
-    static void registerFluids(IForgeRegistry<Fluid> registry) {
-        registry.register(blood);
-        registry.register(impure_blood);
-
+    public static final RegistryObject<Fluid> BLOOD = FLUIDS.register("blood", () -> {
+        Fluid blood = new BloodFluid();
         VReference.blood_fluid = blood;
+        return blood;
+    });
+    public static final RegistryObject<Fluid> IMPURE_BLOOD = FLUIDS.register("impure_blood", ImpureBloodFluid::new);
+
+    static void registerFluids(IEventBus bus) {
+        FLUIDS.register(bus);
+        VReference.blood_fluid_supplier = BLOOD;
     }
 }

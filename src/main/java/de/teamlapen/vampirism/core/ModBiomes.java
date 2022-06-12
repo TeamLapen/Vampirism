@@ -4,25 +4,24 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.world.biome.OverworldModifications;
 import de.teamlapen.vampirism.world.biome.VampirismBiomes;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 /**
  * For new dynamic registry related things see {@link VampirismBiomes} and {@link OverworldModifications}
  */
 public class ModBiomes {
-    public static final ResourceKey<Biome> VAMPIRE_FOREST = ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(REFERENCE.MODID, "vampire_forest"));
+    public static final DeferredRegister<Biome> BIOMES = DeferredRegister.create(ForgeRegistries.BIOMES, REFERENCE.MODID);
+    public static final RegistryObject<Biome> VAMPIRE_FOREST = BIOMES.register("vampire_forest", VampirismBiomes::createVampireForest);
 
-    static void registerBiomes(IForgeRegistry<Biome> registry) {
-        registry.register(VampirismBiomes.createVampireForest().setRegistryName(VAMPIRE_FOREST.location()));
-
-        VampirismAPI.sundamageRegistry().addNoSundamageBiomes(VAMPIRE_FOREST.location());
-
-        BiomeDictionary.addTypes(VAMPIRE_FOREST, BiomeDictionary.Type.OVERWORLD, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.DENSE, BiomeDictionary.Type.MAGICAL, BiomeDictionary.Type.SPOOKY);
+    static void registerBiomes(IEventBus bus) {
+        BIOMES.register(bus);
+        VampirismAPI.sundamageRegistry().addNoSundamageBiomes(VAMPIRE_FOREST.getKey().location());
+        BiomeDictionary.addTypes(VAMPIRE_FOREST.getKey(), BiomeDictionary.Type.OVERWORLD, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.DENSE, BiomeDictionary.Type.MAGICAL, BiomeDictionary.Type.SPOOKY);
     }
 
 }

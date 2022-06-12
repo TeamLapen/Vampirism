@@ -81,7 +81,7 @@ public class ChandelierBlock extends VampirismBlock {
     ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElseGet(Shapes::empty);
 
     public ChandelierBlock() {
-        super("chandelier", BlockBehaviour.Properties.of(Material.METAL).strength(2).lightLevel(s -> 14).noOcclusion());
+        super(BlockBehaviour.Properties.of(Material.METAL).strength(2).lightLevel(s -> 14).noOcclusion());
     }
 
     @Nonnull

@@ -67,7 +67,7 @@ public class MinionContainer extends InventoryContainer {
     private boolean taskLocked;
 
     public MinionContainer(int id, Inventory playerInventory, MinionEntity<?> minionEntity, @Nonnull Container inventory, int extraSlots, SelectorInfo... selectorInfos) {
-        super(ModContainer.minion, id, playerInventory, ContainerLevelAccess.create(minionEntity.level, minionEntity.blockPosition()), inventory, selectorInfos);
+        super(ModContainer.MINION.get(), id, playerInventory, ContainerLevelAccess.create(minionEntity.level, minionEntity.blockPosition()), inventory, selectorInfos);
         this.minionEntity = minionEntity;
         this.extraSlots = extraSlots;
         this.availableTasks = this.minionEntity.getAvailableTasks().toArray(new IMinionTask[0]);
@@ -102,7 +102,7 @@ public class MinionContainer extends InventoryContainer {
 
     @Nonnull
     public IMinionTask<?, ?> getSelectedTask() {
-        return this.taskToActivate != null ? this.taskToActivate : (this.previousTask != null ? this.previousTask : MinionTasks.stay);
+        return this.taskToActivate != null ? this.taskToActivate : (this.previousTask != null ? this.previousTask : MinionTasks.STAY.get());
     }
 
     public boolean isTaskLocked() {

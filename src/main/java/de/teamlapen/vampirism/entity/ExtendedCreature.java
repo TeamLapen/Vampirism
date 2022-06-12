@@ -268,7 +268,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
              * Make sure all entities with no blood die
              * check for sanguinare as the entity might be converting instead of dying
              */
-            if (blood == 0 && entity.tickCount % 20 == 10 && entity.getEffect(ModEffects.sanguinare) == null) {
+            if (blood == 0 && entity.tickCount % 20 == 10 && entity.getEffect(ModEffects.SANGUINARE.get()) == null) {
                 entity.hurt(VReference.NO_BLOOD, 1000);
             }
             if (blood > 0 && blood < getMaxBlood() && entity.tickCount % 40 == 8) {

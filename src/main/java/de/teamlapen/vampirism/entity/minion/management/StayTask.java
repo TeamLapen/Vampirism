@@ -42,7 +42,7 @@ public class StayTask extends DefaultMinionTask<StayTask.Desc, MinionData> {
 
         @Override
         public IMinionTask<?, MinionData> getTask() {
-            return MinionTasks.stay;
+            return MinionTasks.STAY.get();
         }
 
         @Override

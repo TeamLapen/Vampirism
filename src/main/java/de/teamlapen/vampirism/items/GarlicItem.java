@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
@@ -21,11 +22,10 @@ import javax.annotation.Nullable;
 /**
  * Item for the garlic plant
  */
-public class GarlicItem extends VampirismItem implements IPlantable, IFactionExclusiveItem {
-    private final static String regName = "item_garlic";
+public class GarlicItem extends Item implements IPlantable, IFactionExclusiveItem {
 
     public GarlicItem() {
-        super(regName, new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties().tab(VampirismMod.creativeTab));
     }
 
     @Nullable
@@ -36,7 +36,7 @@ public class GarlicItem extends VampirismItem implements IPlantable, IFactionExc
 
     @Override
     public BlockState getPlant(BlockGetter world, BlockPos pos) {
-        return ModBlocks.garlic.defaultBlockState();
+        return ModBlocks.GARLIC.get().defaultBlockState();
     }
 
     @Override

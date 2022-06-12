@@ -47,7 +47,7 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
     private ItemStack soulItemStack;
 
     public SoulOrbEntity(Level worldIn, double x, double y, double z, VARIANT type) {
-        super(ModEntities.soul_orb, worldIn);
+        super(ModEntities.SOUL_ORB.get(), worldIn);
         this.setVariant(type);
         delayBeforePickup = 10;
         this.setPos(x, y, z);
@@ -211,9 +211,9 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
     private ItemStack createSoulItemStack() {
         //noinspection IfStatementWithIdenticalBranches
         if (getVariant() == VARIANT.VAMPIRE) {
-            return new ItemStack(ModItems.soul_orb_vampire);
+            return new ItemStack(ModItems.SOUL_ORB_VAMPIRE.get());
         }
-        return new ItemStack(ModItems.soul_orb_vampire);
+        return new ItemStack(ModItems.SOUL_ORB_VAMPIRE.get());
     }
 
 

@@ -40,7 +40,7 @@ public class ConvertedCowEntity extends ConvertedCreatureEntity<Cow> {
 
         @Override
         public ConvertedCreatureEntity<Cow> createFrom(Cow entity) {
-            return Helper.createEntity(ModEntities.converted_cow, entity.getCommandSenderWorld()).map(creature -> {
+            return Helper.createEntity(ModEntities.CONVERTED_COW.get(), entity.getCommandSenderWorld()).map(creature -> {
                 this.copyImportantStuff(creature, entity);
                 return creature;
             }).orElse(null);

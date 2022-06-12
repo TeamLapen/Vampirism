@@ -22,32 +22,32 @@ public class SummonBatVampireAction extends DefaultVampireAction {
     @Override
     public boolean activate(IVampirePlayer player) {
         Player entityPlayer = player.getRepresentingPlayer();
-        boolean refined = player.getSkillHandler().isRefinementEquipped(ModRefinements.summon_bats);
+        boolean refined = player.getSkillHandler().isRefinementEquipped(ModRefinements.SUMMON_BATS.get());
         int amount = VampirismConfig.BALANCE.vaSummonBatsCount.get();
         if (amount > 1 && refined) {
             amount = amount / 2;
         }
         for (int i = 0; i < amount; i++) {
-            BlindingBatEntity e = ModEntities.blinding_bat.create(entityPlayer.getCommandSenderWorld());
+            BlindingBatEntity e = ModEntities.BLINDING_BAT.get().create(entityPlayer.getCommandSenderWorld());
             e.restrictLiveSpan();
             if (refined) e.setTargeting();
             e.setResting(false);
             e.copyPosition(player.getRepresentingPlayer());
             player.getRepresentingPlayer().getCommandSenderWorld().addFreshEntity(e);
         }
-        entityPlayer.getCommandSenderWorld().playSound(null, entityPlayer.getX(), entityPlayer.getY(), entityPlayer.getZ(), ModSounds.bat_swarm, SoundSource.PLAYERS, 1.3F, entityPlayer.getCommandSenderWorld().random.nextFloat() * 0.2F + 1.3F);
+        entityPlayer.getCommandSenderWorld().playSound(null, entityPlayer.getX(), entityPlayer.getY(), entityPlayer.getZ(), ModSounds.BAT_SWARM.get(), SoundSource.PLAYERS, 1.3F, entityPlayer.getCommandSenderWorld().random.nextFloat() * 0.2F + 1.3F);
         return true;
     }
 
     @Override
     public boolean canBeUsedBy(IVampirePlayer player) {
-        return player.getActionHandler().isActionActive(VampireActions.bat) || player.getSkillHandler().isRefinementEquipped(ModRefinements.summon_bats);
+        return player.getActionHandler().isActionActive(VampireActions.BAT.get()) || player.getSkillHandler().isRefinementEquipped(ModRefinements.SUMMON_BATS.get());
     }
 
 
     @Override
     public int getCooldown(IVampirePlayer player) {
-        return (int) ((player.getSkillHandler().isRefinementEquipped(ModRefinements.summon_bats) ? 0.7 : 1) * VampirismConfig.BALANCE.vaSummonBatsCooldown.get() * 20);
+        return (int) ((player.getSkillHandler().isRefinementEquipped(ModRefinements.SUMMON_BATS.get()) ? 0.7 : 1) * VampirismConfig.BALANCE.vaSummonBatsCooldown.get() * 20);
     }
 
     @Override

@@ -63,7 +63,6 @@ public class TentBlock extends VampirismBlock {
      *
      */
     public static final IntegerProperty POSITION = IntegerProperty.create("position", 0, 3);
-    private static final String name = "tent";
     private static final Table<Direction, Integer, VoxelShape> shapes;
     private static final Map<Player.BedSleepingProblem, Component> sleepResults;
     private static final Table<Integer, Direction, Pair<Double, Double>> offsets;
@@ -210,11 +209,7 @@ public class TentBlock extends VampirismBlock {
     }
 
     public TentBlock() {
-        this(name);
-    }
-
-    protected TentBlock(String name) {
-        super(name, Properties.of(Material.WOOL).strength(0.6f).sound(SoundType.WOOL).noOcclusion());
+        super(Properties.of(Material.WOOL).strength(0.6f).sound(SoundType.WOOL).noOcclusion());
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(POSITION, 0).setValue(OCCUPIED, false));
     }
 
@@ -237,7 +232,7 @@ public class TentBlock extends VampirismBlock {
 
     @Override
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-        return new ItemStack(ModItems.item_tent);
+        return new ItemStack(ModItems.ITEM_TENT.get());
     }
 
     @Override
@@ -299,7 +294,7 @@ public class TentBlock extends VampirismBlock {
                 }
                 if(main!=null){
                     BlockState blockstate = worldIn.getBlockState(main);
-                    if (blockstate.getBlock() == ModBlocks.tent_main) {
+                    if (blockstate.getBlock() == ModBlocks.TENT_MAIN.get()) {
                         worldIn.setBlock(main, Blocks.AIR.defaultBlockState(), 35);
                         worldIn.levelEvent(player, 2001, main, Block.getId(blockstate));
                     }

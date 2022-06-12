@@ -9,6 +9,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
@@ -17,14 +18,11 @@ import javax.annotation.Nonnull;
 /**
  * Item with different injection types
  */
-public class InjectionItem extends VampirismItem {
-
-
-    private final static String regName = "injection";
+public class InjectionItem extends Item {
     private final TYPE type;
 
     public InjectionItem(TYPE type) {
-        super(regName + "_" + type.getName(), new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties().tab(VampirismMod.creativeTab));
         this.type = type;
     }
 
@@ -34,7 +32,7 @@ public class InjectionItem extends VampirismItem {
     public InteractionResultHolder<ItemStack> use(@Nonnull Level worldIn, Player playerIn, @Nonnull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         if (type == TYPE.SANGUINARE) {
-            playerIn.displayClientMessage(new TextComponent("Please use a ").append(new TranslatableComponent(ModBlocks.med_chair.getDescriptionId())), true);
+            playerIn.displayClientMessage(new TextComponent("Please use a ").append(new TranslatableComponent(ModBlocks.MED_CHAIR.get().getDescriptionId())), true);
         }
         return new InteractionResultHolder<>(InteractionResult.PASS, stack);
     }

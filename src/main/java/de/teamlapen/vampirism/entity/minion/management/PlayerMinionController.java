@@ -202,7 +202,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
                     m.claimMinionSlot(id, this);
                     m.copyPosition(p);
                     p.level.addFreshEntity(m);
-                    activateTask(id, MinionTasks.stay);
+                    activateTask(id, MinionTasks.STAY.get());
                     return m;
                 }
             }).orElse(null);

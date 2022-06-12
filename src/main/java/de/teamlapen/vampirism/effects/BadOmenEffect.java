@@ -4,7 +4,6 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.blockentity.TotemHelper;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Difficulty;
@@ -50,9 +49,8 @@ public abstract class BadOmenEffect extends MobEffect {
         }
     }
 
-    public BadOmenEffect(String modID, ResourceLocation faction) {
+    public BadOmenEffect() {
         super(MobEffectCategory.NEUTRAL, 745784);
-        this.setRegistryName(modID, "bad_omen_" + faction.getPath());
     }
 
     public abstract IFaction<?> getFaction();

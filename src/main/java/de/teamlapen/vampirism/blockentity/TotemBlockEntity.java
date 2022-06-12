@@ -146,7 +146,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     private float[] progressColor = DyeColor.WHITE.getTextureDiffuseColors();
 
     public TotemBlockEntity(BlockPos pos, BlockState state) {
-        super(ModTiles.totem, pos, state);
+        super(ModTiles.TOTEM.get(), pos, state);
     }
 
     public void abortCapture() {
@@ -542,7 +542,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
 
     public static void clientTick(Level level, BlockPos pos, BlockState state, TotemBlockEntity blockEntity) {
         if (level.getGameTime() % 10 == 7 && blockEntity.controllingFaction != null) {
-            ModParticles.spawnParticlesClient(level, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "generic_4"), 20, blockEntity.controllingFaction.getColor(), 0.2F), pos.getX(), pos.getY(), pos.getZ(), 3, 30, level.random);
+            ModParticles.spawnParticlesClient(level, new GenericParticleData(ModParticles.GENERIC.get(), new ResourceLocation("minecraft", "generic_4"), 20, blockEntity.controllingFaction.getColor(), 0.2F), pos.getX(), pos.getY(), pos.getZ(), 3, 30, level.random);
         }
     }
 
@@ -772,7 +772,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         if (!(this.level instanceof ServerLevel)) return;
 
         Block b = this.level.getBlockState(this.worldPosition).getBlock();
-        if (!(this.isComplete = b instanceof TotemTopBlock && this.level.getBlockState(this.worldPosition.below()).getBlock().equals(ModBlocks.totem_base)))
+        if (!(this.isComplete = b instanceof TotemTopBlock && this.level.getBlockState(this.worldPosition.below()).getBlock().equals(ModBlocks.TOTEM_BASE.get())))
             return;
         ResourceLocation blockFaction = ((TotemTopBlock) b).faction;
         if (!(blockFaction.equals(this.controllingFaction == null ? nonFactionTotem : this.controllingFaction.getID()))) { //If block faction does not match tile faction, force the tile to update to the block faction
@@ -806,10 +806,10 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         EntityType<? extends VampirismEntity> entityType;
         if (toDummy) {
             trainer = this.level.getEntitiesOfClass(HunterTrainerEntity.class, this.getVillageArea());
-            entityType = ModEntities.hunter_trainer_dummy;
+            entityType = ModEntities.HUNTER_TRAINER_DUMMY.get();
         } else {
             trainer = this.level.getEntitiesOfClass(DummyHunterTrainerEntity.class, this.getVillageArea());
-            entityType = ModEntities.hunter_trainer;
+            entityType = ModEntities.HUNTER_TRAINER.get();
         }
         for (VampirismEntity oldEntity : trainer) {
             VampirismEntity newEntity = entityType.create(this.level);
@@ -1011,7 +1011,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
             BlockState oldBlockState = this.getBlockState();
             Block b = oldBlockState.getBlock();
             boolean crafted = b instanceof TotemTopBlock && ((TotemTopBlock) b).isCrafted();
-            BlockState newBlockState = (faction == null ? crafted ? ModBlocks.totem_top_crafted : ModBlocks.totem_top : faction.getVillageData().getTotemTopBlock(crafted)).defaultBlockState();
+            BlockState newBlockState = (faction == null ? crafted ? ModBlocks.TOTEM_TOP_CRAFTED.get() : ModBlocks.TOTEM_TOP.get() : faction.getVillageData().getTotemTopBlock(crafted)).defaultBlockState();
             try { //https://github.com/TeamLapen/Vampirism/issues/793 no idea what might cause this
                 this.level.setBlock(this.worldPosition, newBlockState, 55);
             } catch (IllegalStateException e) {
@@ -1126,7 +1126,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
 
     @SuppressWarnings("ConstantConditions")
     private void spawnVillagerVampire() {
-        this.spawnEntity(ModEntities.villager_converted.create(this.level));
+        this.spawnEntity(ModEntities.VILLAGER_CONVERTED.get().create(this.level));
     }
 
     /**
@@ -1205,8 +1205,8 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
 
         } else if (VReference.VAMPIRE_FACTION.equals(this.controllingFaction)) {
             for (Villager villager : villagerEntities) {
-                if (villager.hasEffect(ModEffects.sanguinare))
-                    villager.removeEffect(ModEffects.sanguinare);
+                if (villager.hasEffect(ModEffects.SANGUINARE.get()))
+                    villager.removeEffect(ModEffects.SANGUINARE.get());
                 if (fullConvert) {
                     if (villager instanceof ConvertedVillagerEntity) {
                         this.spawnVillagerReplaceForced(villager, this.capturingFaction == VReference.HUNTER_FACTION);

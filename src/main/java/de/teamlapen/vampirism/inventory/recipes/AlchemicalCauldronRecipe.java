@@ -33,7 +33,7 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
     private final int reqLevel;
 
     public AlchemicalCauldronRecipe(ResourceLocation idIn, String groupIn, Ingredient ingredientIn, Either<Ingredient, FluidStack> fluidIn, ItemStack resultIn, @Nonnull ISkill<?>[] skillsIn, int reqLevelIn, int cookTimeIn, float exp) {
-        super(ModRecipes.ALCHEMICAL_CAULDRON_TYPE, idIn, groupIn, ingredientIn, resultIn, exp, cookTimeIn);
+        super(ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get(), idIn, groupIn, ingredientIn, resultIn, exp, cookTimeIn);
         this.fluid = fluidIn;
         this.skills = skillsIn;
         this.reqLevel = reqLevelIn;
@@ -63,7 +63,7 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
     @Nonnull
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRecipes.alchemical_cauldron;
+        return ModRecipes.ALCHEMICAL_CAULDRON.get();
     }
 
     @Override

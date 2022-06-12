@@ -49,7 +49,7 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
     public static void setBloodValue(BlockGetter worldIn, Random randomIn, BlockPos blockPosIn) {
         BlockEntity tileEntity = worldIn.getBlockEntity(blockPosIn);
         if (tileEntity instanceof AltarInspirationBlockEntity) {
-            tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(fluidHandler -> fluidHandler.fill(new FluidStack(ModFluids.blood, BloodBottleFluidHandler.getAdjustedAmount((int) (CAPACITY * randomIn.nextFloat()))), IFluidHandler.FluidAction.EXECUTE));
+            tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(fluidHandler -> fluidHandler.fill(new FluidStack(ModFluids.BLOOD.get(), BloodBottleFluidHandler.getAdjustedAmount((int) (CAPACITY * randomIn.nextFloat()))), IFluidHandler.FluidAction.EXECUTE));
         }
     }
 
@@ -64,7 +64,7 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
     private IModelData modelData;
 
     public AltarInspirationBlockEntity(BlockPos pos, BlockState state) {
-        super(ModTiles.altar_inspiration, pos, state);
+        super(ModTiles.ALTAR_INSPIRATION.get(), pos, state);
         this.tank = new InternalTank(CAPACITY).setListener(this);
     }
 
@@ -128,7 +128,7 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
             return;
         }
         if (!p.level.isClientSide) {
-            ModParticles.spawnParticlesServer(p.level, new FlyingBloodEntityParticleData(ModParticles.flying_blood_entity, p.getId(), false), this.worldPosition.getX() + 0.5, this.worldPosition.getY() + 1, this.worldPosition.getZ() + 0.5, 40, 0.1F, 0.1f, 0.1f, 0);
+            ModParticles.spawnParticlesServer(p.level, new FlyingBloodEntityParticleData(ModParticles.FLYING_BLOOD_ENTITY.get(), p.getId(), false), this.worldPosition.getX() + 0.5, this.worldPosition.getY() + 1, this.worldPosition.getZ() + 0.5, 40, 0.1F, 0.1f, 0.1f, 0);
         } else {
             ((InternalTank) tank).doDrain(neededBlood, IFluidHandler.FluidAction.EXECUTE);
         }
@@ -177,7 +177,7 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
     private static class InternalTank extends FluidTankWithListener {
 
         private InternalTank(int capacity) {
-            super(capacity, fluidStack -> ModFluids.blood.isSame(fluidStack.getFluid()));
+            super(capacity, fluidStack -> ModFluids.BLOOD.get().isSame(fluidStack.getFluid()));
             setDrainable(false);
         }
 

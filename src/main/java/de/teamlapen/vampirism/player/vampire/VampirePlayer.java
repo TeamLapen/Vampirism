@@ -271,7 +271,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             LOGGER.warn("Player can't bite in spectator mode");
             return;
         }
-        if (getActionHandler().isActionActive(VampireActions.bat)) {
+        if (getActionHandler().isActionActive(VampireActions.BAT.get())) {
             LOGGER.warn("Cannot bite in bat mode");
             return;
         }
@@ -280,7 +280,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                 feed_victim_bite_type = determineBiteType((LivingEntity) e);
                 switch (feed_victim_bite_type) {
                     case HUNTER_CREATURE:
-                        player.addEffect(new MobEffectInstance(ModEffects.poison, 60));
+                        player.addEffect(new MobEffectInstance(ModEffects.POISON.get(), 60));
                         if (player instanceof ServerPlayer) {
                             ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((ServerPlayer) player, VampireActionTrigger.Action.POISONOUS_BITE);
                         }
@@ -309,7 +309,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     @Override
     public float calculateFireDamage(float amount) {
         float protectionMod = 1F;
-        MobEffectInstance protection = player.getEffect(ModEffects.fire_protection);
+        MobEffectInstance protection = player.getEffect(ModEffects.FIRE_PROTECTION.get());
         if (protection != null) {
             int amplifier = protection.getAmplifier();
             protectionMod = amplifier >= 5 ? 0 : 1F / (2F + amplifier);
@@ -429,7 +429,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
     public int getDbnoDuration() {
         int duration = VampirismConfig.BALANCE.vpDbnoDuration.get() * 20;
-        if (this.skillHandler.isSkillEnabled(VampireSkills.dbno_duration)) {
+        if (this.skillHandler.isSkillEnabled(VampireSkills.DBNO_DURATION.get())) {
             duration = Math.max(1, (int) (duration * VampirismConfig.BALANCE.vsDbnoReduction.get()));
         }
         return duration;
@@ -562,7 +562,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     @Override
     public boolean isGettingSundamage(LevelAccessor iWorld, boolean forcerefresh) {
         if (forcerefresh) {
-            sundamage_cache = Helper.gettingSundamge(player, iWorld, player.level.getProfiler()) && !ModItems.umbrella.equals(player.getMainHandItem().getItem());
+            sundamage_cache = Helper.gettingSundamge(player, iWorld, player.level.getProfiler()) && ModItems.UMBRELLA.get() != player.getMainHandItem().getItem();
         }
         return sundamage_cache;
     }
@@ -598,7 +598,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             int sucked = (int) Math.ceil((amt * perc));
             player.getFoodData().setFoodLevel(amt - sucked);
             player.causeFoodExhaustion(1000F);
-            if (!player.hasEffect(ModEffects.sanguinare) && Helper.canTurnPlayer(biter, player) && Helper.canBecomeVampire(player)) {
+            if (!player.hasEffect(ModEffects.SANGUINARE.get()) && Helper.canTurnPlayer(biter, player) && Helper.canBecomeVampire(player)) {
                 if (!player.isCreative()) SanguinareEffect.addRandom(player, true);
             }
             return sucked;
@@ -617,7 +617,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
     @Override
     public boolean onDeadlyHit(DamageSource source) {
-        if (getLevel() > 0 && !this.player.hasEffect(ModEffects.neonatal) && !Helper.canKillVampires(source)) {
+        if (getLevel() > 0 && !this.player.hasEffect(ModEffects.NEONATAL.get()) && !Helper.canKillVampires(source)) {
             this.setDBNOTimer(getDbnoDuration());
             this.player.setHealth(0.5f);
             this.player.setForcedPose(Pose.SLEEPING);
@@ -638,7 +638,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     @Override
     public void onDeath(DamageSource src) {
         super.onDeath(src);
-        if (actionHandler.isActionActive(VampireActions.bat) && src.getDirectEntity() instanceof Projectile) {
+        if (actionHandler.isActionActive(VampireActions.BAT.get()) && src.getDirectEntity() instanceof Projectile) {
             if (player instanceof ServerPlayer) {
                 ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((ServerPlayer) player, VampireActionTrigger.Action.SNIPED_IN_BAT);
             }
@@ -668,11 +668,11 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         }
         endFeeding(true);
         if (getSpecialAttributes().half_invulnerable) {
-            if (amt >= getRepresentingEntity().getMaxHealth() * (this.skillHandler.isRefinementEquipped(ModRefinements.half_invulnerable) ? VampirismConfig.BALANCE.vrHalfInvulnerableThresholdMod.get() : 1) * VampirismConfig.BALANCE.vaHalfInvulnerableThreshold.get() && amt < 999) { //Make sure "instant kills" are not blocked by this
+            if (amt >= getRepresentingEntity().getMaxHealth() * (this.skillHandler.isRefinementEquipped(ModRefinements.HALF_INVULNERABLE.get()) ? VampirismConfig.BALANCE.vrHalfInvulnerableThresholdMod.get() : 1) * VampirismConfig.BALANCE.vaHalfInvulnerableThreshold.get() && amt < 999) { //Make sure "instant kills" are not blocked by this
                 if (useBlood(VampirismConfig.BALANCE.vaHalfInvulnerableBloodCost.get(), false)) {
                     return true;
                 } else {
-                    this.actionHandler.toggleAction(VampireActions.half_invulnerable);
+                    this.actionHandler.toggleAction(VampireActions.HALF_INVULNERABLE.get());
                 }
             }
         }
@@ -682,13 +682,13 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
     @Override
     public void onEntityKilled(LivingEntity victim, DamageSource src) {
-        if (this.getSkillHandler().isRefinementEquipped(ModRefinements.rage_fury)) {
+        if (this.getSkillHandler().isRefinementEquipped(ModRefinements.RAGE_FURY.get())) {
             //No need to check if rage active, extending only has an effect when already active
             int bonus = VampirismConfig.BALANCE.vrRageFuryDurationBonus.get() * 20;
             if (victim instanceof Player) {
                 bonus *= 2;
             }
-            this.getActionHandler().extendActionTimer(VampireActions.vampire_rage, bonus);
+            this.getActionHandler().extendActionTimer(VampireActions.VAMPIRE_RAGE.get(), bonus);
         }
     }
 
@@ -698,8 +698,8 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             actionHandler.onActionsReactivated();
             ticksInSun = 0;
             if (wasDead) {
-                player.addEffect(new MobEffectInstance(ModEffects.sunscreen, 400, 4, false, false));
-                player.addEffect(new MobEffectInstance(ModEffects.armor_regeneration, VampirismConfig.BALANCE.vpNaturalArmorRegenDuration.get() * 20, 0, false, false));
+                player.addEffect(new MobEffectInstance(ModEffects.SUNSCREEN.get(), 400, 4, false, false));
+                player.addEffect(new MobEffectInstance(ModEffects.ARMOR_REGENERATION.get(), VampirismConfig.BALANCE.vpNaturalArmorRegenDuration.get() * 20, 0, false, false));
                 requestNaturalArmorUpdate();
                 player.setHealth(player.getMaxHealth());
                 bloodStats.setBloodLevel(bloodStats.getMaxBlood());
@@ -755,7 +755,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     @Override
     public void onPlayerLoggedIn() {
         if (getLevel() > 0 && !player.level.isClientSide) {
-            player.addEffect(new MobEffectInstance(ModEffects.sunscreen, 200, 4, true, false));
+            player.addEffect(new MobEffectInstance(ModEffects.SUNSCREEN.get(), 200, 4, true, false));
         }
     }
 
@@ -849,12 +849,12 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
                 if (player.tickCount % 9 == 3 && VampirismConfig.BALANCE.vpFireResistanceReplace.get() && player.hasEffect(MobEffects.FIRE_RESISTANCE)) {
                     MobEffectInstance fireResistance = player.getEffect(MobEffects.FIRE_RESISTANCE);
-                    player.addEffect(new MobEffectInstance(ModEffects.fire_protection, fireResistance.getDuration(), fireResistance.getAmplifier()));
+                    player.addEffect(new MobEffectInstance(ModEffects.FIRE_PROTECTION.get(), fireResistance.getDuration(), fireResistance.getAmplifier()));
                     player.removeEffect(MobEffects.FIRE_RESISTANCE);
                 }
                 if (player.tickCount % 9 == 3 && player.hasEffect(MobEffects.HUNGER)) {
                     MobEffectInstance hunterEffect = player.getEffect(MobEffects.HUNGER);
-                    player.addEffect(new MobEffectInstance(ModEffects.thirst, hunterEffect.getDuration(), hunterEffect.getAmplifier()));
+                    player.addEffect(new MobEffectInstance(ModEffects.THIRST.get(), hunterEffect.getDuration(), hunterEffect.getAmplifier()));
                     player.removeEffect(MobEffects.HUNGER);
                 }
                 if (player.tickCount % 64 == 0 && player instanceof ServerPlayer) {
@@ -1040,10 +1040,10 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             this.player.refreshDimensions();
             this.sync(true);
             int duration = VampirismConfig.BALANCE.vpNeonatalDuration.get() * 20;
-            if (this.skillHandler.isSkillEnabled(VampireSkills.neonatal_decrease)) {
+            if (this.skillHandler.isSkillEnabled(VampireSkills.NEONATAL_DECREASE.get())) {
                 duration = Math.max(1, (int) (duration * VampirismConfig.BALANCE.vsNeonatalReduction.get()));
             }
-            this.player.addEffect(new MobEffectInstance(ModEffects.neonatal, duration));
+            this.player.addEffect(new MobEffectInstance(ModEffects.NEONATAL.get(), duration));
         } else {
             if (this.isRemote()) {
                 this.setDBNOTimer(-1);
@@ -1093,7 +1093,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                 AttributeModifier modArmor = armorAtt.getModifier(NATURAL_ARMOR_UUID);
                 AttributeModifier modToughness = toughnessAtt.getModifier(NATURAL_ARMOR_UUID);
                 double naturalArmor = getNaturalArmorValue(lvl);
-                MobEffectInstance armorRegen = player.getEffect(ModEffects.armor_regeneration);
+                MobEffectInstance armorRegen = player.getEffect(ModEffects.ARMOR_REGENERATION.get());
                 double armorRegenerationMod = armorRegen == null ? 0 : armorRegen.getDuration() / ((double) VampirismConfig.BALANCE.vpNaturalArmorRegenDuration.get() * 20);
                 naturalArmor *= (1 - 0.75 * armorRegenerationMod); //Modify natural armor between 25% and 100% depending on the armor regen state
                 double naturalToughness = getNaturalArmorToughnessValue(lvl);
@@ -1214,8 +1214,8 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     private void applyEntityAttributes() {
-        player.getAttribute(ModAttributes.sundamage).setBaseValue(VampirismConfig.BALANCE.vpSundamage.get());
-        player.getAttribute(ModAttributes.blood_exhaustion).setBaseValue(VampirismConfig.BALANCE.vpBasicBloodExhaustionMod.get());
+        player.getAttribute(ModAttributes.SUNDAMAGE.get()).setBaseValue(VampirismConfig.BALANCE.vpSundamage.get());
+        player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get()).setBaseValue(VampirismConfig.BALANCE.vpBasicBloodExhaustionMod.get());
     }
 
     /**
@@ -1223,7 +1223,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
      */
     private void applyLevelModifiersA(int level) {
         LevelAttributeModifier.applyModifier(player, Attributes.MAX_HEALTH, "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpHealthMaxMod.get(), 0.5, AttributeModifier.Operation.ADDITION, true);
-        LevelAttributeModifier.applyModifier(player, ModAttributes.blood_exhaustion, "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpExhaustionMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
+        LevelAttributeModifier.applyModifier(player, ModAttributes.BLOOD_EXHAUSTION.get(), "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpExhaustionMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
     }
 
     /**
@@ -1240,12 +1240,12 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         if (!bloodStats.needsBlood()) return;
 
         int need = Math.min(8, bloodStats.getMaxBlood() - bloodStats.getBloodLevel());
-        if (ModBlocks.blood_container.equals(blockState.getBlock())) {
+        if (ModBlocks.BLOOD_CONTAINER.get() == blockState.getBlock()) {
             if (tileEntity != null) {
                 tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).ifPresent(handler -> {
                     int blood = 0;
 
-                    FluidStack drainable = handler.drain(new FluidStack(ModFluids.blood, need * VReference.FOOD_TO_FLUID_BLOOD), IFluidHandler.FluidAction.SIMULATE);
+                    FluidStack drainable = handler.drain(new FluidStack(ModFluids.BLOOD.get(), need * VReference.FOOD_TO_FLUID_BLOOD), IFluidHandler.FluidAction.SIMULATE);
                     if (drainable.getAmount() >= VReference.FOOD_TO_FLUID_BLOOD) {
                         FluidStack drained = handler.drain((drainable.getAmount() / VReference.FOOD_TO_FLUID_BLOOD) * VReference.FOOD_TO_FLUID_BLOOD, IFluidHandler.FluidAction.EXECUTE);
                         if (!drained.isEmpty()) {
@@ -1319,7 +1319,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
      * Handle sun damage
      */
     private void handleSunDamage(boolean isRemote) {
-        MobEffectInstance potionEffect = player.getEffect(ModEffects.sunscreen);
+        MobEffectInstance potionEffect = player.getEffect(ModEffects.SUNSCREEN.get());
         int sunscreen = potionEffect == null ? -1 : potionEffect.getAmplifier();
         if (ticksInSun < 100) {
             ticksInSun++;
@@ -1335,7 +1335,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 152, 0));
         }
         if (getLevel() >= VampirismConfig.BALANCE.vpSundamageMinLevel.get() && ticksInSun >= 100 && player.tickCount % 40 == 5) {
-            float damage = (float) (player.getAttribute(ModAttributes.sundamage).getValue());
+            float damage = (float) (player.getAttribute(ModAttributes.SUNDAMAGE.get()).getValue());
             if (damage > 0) player.hurt(VReference.SUNDAMAGE, damage);
         }
     }
@@ -1383,7 +1383,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             player.level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(Items.APPLE)), vec31.x, vec31.y, vec31.z, vec3.x, vec3.y + 0.05D, vec3.z);
         }
         //Play bite sounds. Using this method since it is the only client side method. And this is called on every relevant client anyway
-        player.level.playLocalSound(player.getX(), player.getY(), player.getZ(), ModSounds.player_bite, SoundSource.PLAYERS, 1.0F, 1.0F, false);
+        player.level.playLocalSound(player.getX(), player.getY(), player.getZ(), ModSounds.PLAYER_BITE.get(), SoundSource.PLAYERS, 1.0F, 1.0F, false);
     }
 
     /**
@@ -1399,7 +1399,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         e.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 7, false, false));
         player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 25, 4, false, false));
 
-        ModParticles.spawnParticlesServer(player.level, new FlyingBloodEntityParticleData(ModParticles.flying_blood_entity, player.getId(), true), e.getX(), e.getY() + e.getEyeHeight() / 2, e.getZ(), 10, 0.1f, 0.1f, 0.1f, 0);
+        ModParticles.spawnParticlesServer(player.level, new FlyingBloodEntityParticleData(ModParticles.FLYING_BLOOD_ENTITY.get(), player.getId(), true), e.getX(), e.getY() + e.getEyeHeight() / 2, e.getZ(), 10, 0.1f, 0.1f, 0.1f, 0);
 
         if (!biteFeed(e)) {
             endFeeding(true);

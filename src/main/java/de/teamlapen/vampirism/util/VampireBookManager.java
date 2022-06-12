@@ -41,7 +41,7 @@ public class VampireBookManager {
      * Return a vampire book with a randomly selected text and title
      */
     public ItemStack getRandomBook(Random rnd) {
-        ItemStack book = new ItemStack(ModItems.vampire_book, 1);
+        ItemStack book = new ItemStack(ModItems.VAMPIRE_BOOK.get(), 1);
         book.setTag(getRandomBookData(rnd));
         return book;
     }

@@ -11,6 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
@@ -29,9 +30,7 @@ import java.util.List;
 /**
  * Item used to place a tent
  */
-public class TentItem extends VampirismItem {
-    private static final String name = "item_tent";
-    private static final String name_spawner = "item_tent_spawner";
+public class TentItem extends Item {
 
     @SuppressWarnings("DuplicateExpressions")
     public static boolean placeAt(LevelAccessor world, BlockPos pos, Direction dir, boolean force, boolean spawner) {
@@ -45,8 +44,8 @@ public class TentItem extends VampirismItem {
         int x3 = x + (dir == Direction.WEST ? -1 : (dir == Direction.EAST ? 1 : 0));
         int z3 = z + (dir == Direction.SOUTH ? 1 : (dir == Direction.NORTH ? -1 : 0));
 
-        Block tent = ModBlocks.tent;
-        Block main = ModBlocks.tent_main;
+        Block tent = ModBlocks.TENT.get();
+        Block main = ModBlocks.TENT_MAIN.get();
         BlockState mainState = main.defaultBlockState();
         if (force || canPlaceAt(mainState, tent, world, x, y, z) && canPlaceAt(mainState, tent, world, x1, y, z1) && canPlaceAt(mainState, tent, world, x2, y, z2) && canPlaceAt(mainState, tent, world, x3, y, z3)) {
             boolean flag = world.setBlock(pos, main.defaultBlockState().setValue(TentBlock.FACING, dir.getOpposite()), 3);
@@ -73,9 +72,8 @@ public class TentItem extends VampirismItem {
     private final boolean spawner;
 
     public TentItem(boolean spawner) {
-        super(spawner ? name_spawner : name, new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties().tab(VampirismMod.creativeTab));
         this.spawner = spawner;
-        this.setTranslation_key(name);
     }
 
     @OnlyIn(Dist.CLIENT)

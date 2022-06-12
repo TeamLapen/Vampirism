@@ -77,7 +77,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     private int targetLevel;
 
     public AltarInfusionBlockEntity(BlockPos pos, BlockState state) {
-        super(ModTiles.altar_infusion, pos, state, 3, AltarInfusionContainer.SELECTOR_INFOS);
+        super(ModTiles.ALTAR_INFUSION.get(), pos, state, 3, AltarInfusionContainer.SELECTOR_INFOS);
     }
 
     /**
@@ -238,7 +238,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
         this.setChanged();
         if (!this.level.isClientSide) {
             for (BlockPos pTip : tips) {
-                ModParticles.spawnParticlesServer(level, new FlyingBloodParticleData(ModParticles.flying_blood, 60, false, pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5), worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5, 3, 0.1, 0.1, 0.1, 0);
+                ModParticles.spawnParticlesServer(level, new FlyingBloodParticleData(ModParticles.FLYING_BLOOD.get(), 60, false, pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5), worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5, 3, 0.1, 0.1, 0.1, 0);
             }
             BlockState state = this.level.getBlockState(getBlockPos());
             this.level.sendBlockUpdated(getBlockPos(), state, state, 3); //Notify client about started ritual
@@ -268,7 +268,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
                 if (runningTick % 15 == 0) {
                     BlockPos pos = getBlockPos();
                     for (BlockPos pTip : tips) {
-                        ModParticles.spawnParticlesClient(level, new FlyingBloodParticleData(ModParticles.flying_blood, 60, false, pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0, 5, 0.1, new Random());
+                        ModParticles.spawnParticlesClient(level, new FlyingBloodParticleData(ModParticles.FLYING_BLOOD.get(), 60, false, pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0, 5, 0.1, new Random());
                     }
                 }
             }
@@ -302,7 +302,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
                 this.level.addParticle(ParticleTypes.EXPLOSION, player.getX(), player.getY(), player.getZ(), 1.0D, 0.0D, 0.0D);
             }
 
-            player.addEffect(new MobEffectInstance(ModEffects.saturation, 400, 2));
+            player.addEffect(new MobEffectInstance(ModEffects.SATURATION.get(), 400, 2));
             player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 400, 2));
             player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 400, 2));
         }
@@ -347,7 +347,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     private boolean checkItemRequirements(Player player, boolean messagePlayer) {
         int newLevel = targetLevel;
         VampireLevelingConf.AltarInfusionRequirements requirements = VampireLevelingConf.getInstance().getAltarInfusionRequirements(newLevel);
-        ItemStack missing = InventoryHelper.checkItems(this, new Item[]{PureBloodItem.getBloodItemForLevel(requirements.pureBloodLevel()), ModItems.human_heart, ModItems.vampire_book}, new int[]{requirements.blood(), requirements.heart(), requirements.vampireBook()}, (supplied, required) -> supplied.equals(required) || (supplied instanceof PureBloodItem && required instanceof PureBloodItem && ((PureBloodItem) supplied).getLevel() >= ((PureBloodItem) required).getLevel()));
+        ItemStack missing = InventoryHelper.checkItems(this, new Item[]{PureBloodItem.getBloodItemForLevel(requirements.pureBloodLevel()), ModItems.HUMAN_HEART.get(), ModItems.VAMPIRE_BOOK.get()}, new int[]{requirements.blood(), requirements.heart(), requirements.vampireBook()}, (supplied, required) -> supplied.equals(required) || (supplied instanceof PureBloodItem && required instanceof PureBloodItem && ((PureBloodItem) supplied).getLevel() >= ((PureBloodItem) required).getLevel()));
         if (!missing.isEmpty()) {
             if (messagePlayer) {
                 Component item = missing.getItem() instanceof PureBloodItem ? ((PureBloodItem) missing.getItem()).getCustomName() : new TranslatableComponent(missing.getDescriptionId());
@@ -390,7 +390,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
             int j = 0;
             AltarPillarBlock.EnumPillarType type = null;
             BlockState temp;
-            while ((temp = level.getBlockState(pPos.offset(0, -j - 1, 0))).getBlock().equals(ModBlocks.altar_pillar)) {
+            while ((temp = level.getBlockState(pPos.offset(0, -j - 1, 0))).getBlock().equals(ModBlocks.ALTAR_PILLAR.get())) {
                 AltarPillarBlock.EnumPillarType t = temp.getValue(AltarPillarBlock.TYPE_PROPERTY);
                 if (type == null) {
                     type = t;
@@ -440,7 +440,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
         for (int x = getBlockPos().getX() - 4; x < getBlockPos().getX() + 5; x++) {
             for (int y = getBlockPos().getY() + 1; y < getBlockPos().getY() + 4; y++) {
                 for (int z = getBlockPos().getZ() - 4; z < getBlockPos().getZ() + 5; z++) {
-                    if (level.getBlockState(pos.set(x, y, z)).getBlock().equals(ModBlocks.altar_tip)) {
+                    if (level.getBlockState(pos.set(x, y, z)).getBlock().equals(ModBlocks.ALTAR_TIP.get())) {
                         list.add(new BlockPos(x, y, z));
                     }
                 }

@@ -16,29 +16,16 @@ import java.util.Collection;
 public class ActionSkill<T extends IFactionPlayer<T>> extends VampirismSkill<T> {
     private final IAction<T> action;
 
-    @Deprecated
-    public ActionSkill(String id, IAction<T> action) {
-        this(new ResourceLocation("vampirism", id), action, false);
-
-    }
-
-    @Deprecated
-    public ActionSkill(String id, IAction<T> action, boolean customDescription) {
-        this(new ResourceLocation("vampirism", id), action, customDescription);
-    }
-
-    public ActionSkill(ResourceLocation id, IAction<T> action) {
-        this(id, action, false);
+    public ActionSkill(IAction<T> action) {
+        this(action, false);
     }
 
     /**
-     * @param id                Registry id
      * @param action            The corresponding action
      * @param customDescription If false a generic "unlocks action" string is used
      */
-    public ActionSkill(ResourceLocation id, IAction<T> action, boolean customDescription) {
+    public ActionSkill(IAction<T> action, boolean customDescription) {
         this.action = action;
-        this.setRegistryName(id);
         if (customDescription) {
             this.setHasDefaultDescription();
         } else {

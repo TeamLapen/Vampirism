@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.items;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tiers;
 
 public class SimpleCrossbowItem extends VampirismItemCrossbow {
 
@@ -10,13 +11,12 @@ public class SimpleCrossbowItem extends VampirismItemCrossbow {
     private final int coolDownTicks;
 
     /**
-     * @param regName       Registry name
      * @param speed         Speed of the shot arrows (0.1F-20F)
      * @param coolDownTicks Cooldown ticks >0
      * @param maxDamage     Max usages or 0 if unbreakable
      */
-    public SimpleCrossbowItem(String regName, float speed, int coolDownTicks, int maxDamage) {
-        super(regName, maxDamage);
+    public SimpleCrossbowItem(float speed, int coolDownTicks, int maxDamage, Tiers material) {
+        super(maxDamage, material);
         this.speed = speed;
         this.coolDownTicks = coolDownTicks;
         if (coolDownTicks < 0) {

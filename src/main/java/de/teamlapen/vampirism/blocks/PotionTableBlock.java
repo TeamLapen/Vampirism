@@ -30,7 +30,6 @@ import javax.annotation.Nullable;
 
 public class PotionTableBlock extends VampirismBlockContainer {
     protected static final VoxelShape shape = makeShape();
-    private final static String regName = "potion_table";
 
     private static VoxelShape makeShape() {
         VoxelShape a = Block.box(0, 0, 0, 16, 1, 16);
@@ -41,7 +40,7 @@ public class PotionTableBlock extends VampirismBlockContainer {
     }
 
     public PotionTableBlock() {
-        super(regName, Properties.of(Material.METAL).strength(1f).noOcclusion());
+        super(Properties.of(Material.METAL).strength(1f).noOcclusion());
     }
 
     @Nonnull
@@ -101,6 +100,6 @@ public class PotionTableBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
-        return createTickerHelper(type, ModTiles.potion_table, PotionTableBlockEntity::tick);
+        return createTickerHelper(type, ModTiles.POTION_TABLE.get(), PotionTableBlockEntity::tick);
     }
 }

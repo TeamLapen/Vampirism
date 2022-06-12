@@ -19,6 +19,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -33,14 +34,12 @@ import java.util.List;
 /**
  * Ammo for the crossbows. Has different subtypes with different base damage/names/special effects.
  */
-public class CrossbowArrowItem extends VampirismItem implements IVampirismCrossbowArrow<CrossbowArrowEntity> {
-
-    private static final String regName = "crossbow_arrow";
+public class CrossbowArrowItem extends Item implements IVampirismCrossbowArrow<CrossbowArrowEntity> {
     private final EnumArrowType type;
 
 
     public CrossbowArrowItem(EnumArrowType type) {
-        super(regName + "_" + type.getName(), new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties().tab(VampirismMod.creativeTab));
         this.type = type;
     }
 
@@ -98,7 +97,7 @@ public class CrossbowArrowItem extends VampirismItem implements IVampirismCrossb
                         BlockState blockState = entity.getCommandSenderWorld().getBlockState(pos);
                         if (blockState.getMaterial().isReplaceable()
                                 && entity.getCommandSenderWorld().getBlockState(pos.below()).isFaceSturdy(entity.getCommandSenderWorld(), pos.below(), Direction.UP) && (entity).getRNG().nextInt(4) != 0) {
-                            entity.getCommandSenderWorld().setBlockAndUpdate(pos, ModBlocks.alchemical_fire.defaultBlockState());
+                            entity.getCommandSenderWorld().setBlockAndUpdate(pos, ModBlocks.ALCHEMICAL_FIRE.get().defaultBlockState());
                         }
                     }
                 }

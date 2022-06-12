@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.blockentity.AlchemicalCauldronBlockEntity;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModStats;
@@ -35,7 +34,6 @@ import java.util.Random;
 
 
 public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
-    public static final String regName = "alchemical_cauldron";
     /**
      * 0: No liquid,
      * 1: Liquid,
@@ -54,7 +52,6 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
     public AlchemicalCauldronBlock() {
         super(Block.Properties.of(Material.METAL).strength(4f).noOcclusion());
         this.registerDefaultState(this.stateDefinition.any().setValue(LIQUID, 0).setValue(FACING, Direction.NORTH).setValue(LIT, false));
-        this.setRegistryName(REFERENCE.MODID, regName);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -62,14 +59,14 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
     public void animateTick(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull Random rng) {
         super.animateTick(state, world, pos, rng);
         if (state.getValue(LIQUID) == 2) {
-            world.playLocalSound(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, ModSounds.boiling, SoundSource.BLOCKS, 0.05F, 1, false);
+            world.playLocalSound(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, ModSounds.BOILING.get(), SoundSource.BLOCKS, 0.05F, 1, false);
         }
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153212_, @Nonnull BlockState p_153213_, @Nonnull BlockEntityType<T> p_153214_) {
-        return p_153212_.isClientSide() ? null : createTickerHelper(p_153214_, ModTiles.alchemical_cauldron, AlchemicalCauldronBlockEntity::serverTick);
+        return p_153212_.isClientSide() ? null : createTickerHelper(p_153214_, ModTiles.ALCHEMICAL_CAULDRON.get(), AlchemicalCauldronBlockEntity::serverTick);
     }
 
     @Nullable

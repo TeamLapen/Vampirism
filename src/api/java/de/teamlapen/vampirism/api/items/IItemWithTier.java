@@ -26,11 +26,6 @@ public interface IItemWithTier extends ItemLike {
     }
 
     /**
-     * The registry name all tier items are derived from {@code (basename + "_" + tier)}
-     */
-    String getBaseRegName();
-
-    /**
      * @return The tier of the item stack
      */
     TIER getVampirismTier();

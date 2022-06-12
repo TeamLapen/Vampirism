@@ -83,7 +83,7 @@ public class BiteNearbyEntityVampireGoal<T extends Mob & IVampireMob> extends Go
         if (timer == 1) {
             if (canFeed(creature)) {
                 int amount = creature.onBite(vampire);
-                vampire.playSound(ModSounds.player_bite, 1, 1);
+                vampire.playSound(ModSounds.PLAYER_BITE.get(), 1, 1);
                 vampire.drinkBlood(amount, creature.getBloodSaturation());
             }
         }

@@ -44,8 +44,8 @@ public class GarlicAOFEntityAction<T extends PathfinderMob & IEntityActionUser> 
         List<Player> players = entity.getCommandSenderWorld().getEntitiesOfClass(Player.class, new AABB(entity.getX() - 4, entity.getY() - 1, entity.getZ() - 4, entity.getX() + 4, entity.getY() + 3, entity.getZ() + 4));
         for (Player e : players) {
             if (VampirismAPI.factionRegistry().getFaction(e) == VReference.VAMPIRE_FACTION) {
-                if (e.getEffect(ModEffects.garlic) == null || e.getEffect(ModEffects.garlic).getDuration() <= 60) {
-                    e.addEffect(new MobEffectInstance(ModEffects.garlic, 99));
+                if (e.getEffect(ModEffects.GARLIC.get()) == null || e.getEffect(ModEffects.GARLIC.get()).getDuration() <= 60) {
+                    e.addEffect(new MobEffectInstance(ModEffects.GARLIC.get(), 99));
                 }
             }
         }

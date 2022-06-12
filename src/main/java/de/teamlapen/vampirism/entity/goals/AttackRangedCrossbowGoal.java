@@ -130,7 +130,7 @@ public class AttackRangedCrossbowGoal<T extends VampirismEntity & AttackRangedCr
         double sz = target.getZ() - entityArrow.getZ();
         double dist = Math.sqrt(sx * sx + sz * sz);
         entityArrow.shoot(sx, sy + dist * 0.2, sz, 1.6F, (float) (13 - target.getCommandSenderWorld().getDifficulty().getId() * 4));
-        this.entity.playSound(ModSounds.crossbow, 0.5F, 1);
+        this.entity.playSound(ModSounds.CROSSBOW.get(), 0.5F, 1);
         this.entity.getCommandSenderWorld().addFreshEntity(entityArrow);
     }
 

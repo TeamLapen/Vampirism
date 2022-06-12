@@ -111,8 +111,8 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
 
     @Override
     public void breakDisguise() {
-        if (actionHandler.isActionActive(HunterActions.disguise_hunter)) {
-            actionHandler.toggleAction(HunterActions.disguise_hunter);
+        if (actionHandler.isActionActive(HunterActions.DISGUISE_HUNTER.get())) {
+            actionHandler.toggleAction(HunterActions.DISGUISE_HUNTER.get());
         }
     }
 
@@ -133,7 +133,7 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
 
     @Override
     public IFaction<?> getDisguisedAs() {
-        return player.hasEffect(ModEffects.disguise_as_vampire) ? VReference.VAMPIRE_FACTION : getFaction();
+        return player.hasEffect(ModEffects.DISGUISE_AS_VAMPIRE.get()) ? VReference.VAMPIRE_FACTION : getFaction();
     }
 
     @Override
@@ -176,7 +176,7 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
 
     @Override
     public boolean isDisguised() {
-        return player.hasEffect(ModEffects.disguise_as_vampire);
+        return player.hasEffect(ModEffects.DISGUISE_AS_VAMPIRE.get());
     }
 
     public void loadData(CompoundTag compound) {
@@ -194,7 +194,7 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
     public void onDeath(DamageSource src) {
         super.onDeath(src);
         actionHandler.deactivateAllActions();
-        if (src.getEntity() instanceof ServerPlayer && Helper.isVampire(((Player) src.getEntity())) && this.getRepresentingPlayer().getEffect(ModEffects.freeze) != null) {
+        if (src.getEntity() instanceof ServerPlayer && Helper.isVampire(((Player) src.getEntity())) && this.getRepresentingPlayer().getEffect(ModEffects.FREEZE.get()) != null) {
             ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger(((ServerPlayer) src.getEntity()), VampireActionTrigger.Action.KILL_FROZEN_HUNTER);
         }
     }

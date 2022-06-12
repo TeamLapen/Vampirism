@@ -71,7 +71,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     static {
         SENSOR_TYPES = Lists.newArrayList(Villager.SENSOR_TYPES);
         SENSOR_TYPES.remove(SensorType.VILLAGER_HOSTILES);
-        SENSOR_TYPES.add(ModVillage.vampire_villager_hostiles);
+        SENSOR_TYPES.add(ModVillage.VAMPIRE_VILLAGER_HOSTILES.get());
     }
 
     private EnumStrength garlicCache = EnumStrength.NONE;
@@ -205,7 +205,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     @Override
     public InteractionResult mobInteract(Player player, @Nonnull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (stack.getItem() != ModItems.cure_apple) return super.mobInteract(player, hand);
+        if (stack.getItem() != ModItems.CURE_APPLE.get()) return super.mobInteract(player, hand);
         return interactWithCureItem(player, stack, this);
     }
 
@@ -232,7 +232,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
             brain.setSchedule(Schedule.VILLAGER_BABY);
             brain.addActivity(Activity.PLAY, VillagerGoalPackages.getPlayPackage(f));
         } else {
-            brain.setSchedule(ModVillage.converted_default);
+            brain.setSchedule(ModVillage.CONVERTED_DEFAULT.get());
             brain.addActivityWithConditions(Activity.WORK, VillagerGoalPackages.getWorkPackage(villagerprofession, 0.5F), ImmutableSet.of(Pair.of(MemoryModuleType.JOB_SITE, MemoryStatus.VALUE_PRESENT)));
         }
 
@@ -294,7 +294,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
         public IConvertedCreature<Villager> createFrom(Villager entity) {
             CompoundTag nbt = new CompoundTag();
             entity.saveWithoutId(nbt);
-            ConvertedVillagerEntity converted = ModEntities.villager_converted.create(entity.level);
+            ConvertedVillagerEntity converted = ModEntities.VILLAGER_CONVERTED.get().create(entity.level);
             converted.load(nbt);
             converted.setUUID(Mth.createInsecureUUID(converted.random));
             converted.yBodyRot = entity.yBodyRot;

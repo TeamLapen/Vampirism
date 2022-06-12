@@ -438,6 +438,7 @@ public class UtilLib {
      * <p>
      * Make sure Settings -> Build, Execution, Deployment -> Compiler -> 'Add runtime assertions for not-null-annotated methods and parameters' is disabled (Unfortunately required)
      */
+    @Deprecated
     @SuppressWarnings("ConstantConditions")
     public static @Nonnull
     <T> T getNull() {

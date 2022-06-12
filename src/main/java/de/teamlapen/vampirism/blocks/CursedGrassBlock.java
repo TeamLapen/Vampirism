@@ -59,7 +59,7 @@ public class CursedGrassBlock extends SpreadingSnowyDirtBlock implements Bonemea
                 if (j >= i / 16) {
                     if (worldIn.isEmptyBlock(blockpos1)) {
                         if (rand.nextInt(8) == 0) {
-                            VampirismFlowerBlock blockflower = ModBlocks.vampire_orchid;
+                            VampirismFlowerBlock blockflower = ModBlocks.VAMPIRE_ORCHID.get();
                             BlockState iblockstate = blockflower.defaultBlockState();
 
                             if (blockflower.canSurvive(iblockstate, worldIn, blockpos1)) {
@@ -79,7 +79,7 @@ public class CursedGrassBlock extends SpreadingSnowyDirtBlock implements Bonemea
 
                 blockpos1 = blockpos1.offset(rand.nextInt(3) - 1, (rand.nextInt(3) - 1) * rand.nextInt(3) / 2, rand.nextInt(3) - 1);
 
-                if (worldIn.getBlockState(blockpos1.below()).getBlock() != ModBlocks.cursed_earth || worldIn.getBlockState(blockpos1).isRedstoneConductor(worldIn, blockpos1)) {
+                if (worldIn.getBlockState(blockpos1.below()).getBlock() != ModBlocks.CURSED_EARTH.get() || worldIn.getBlockState(blockpos1).isRedstoneConductor(worldIn, blockpos1)) {
                     break;
                 }
 
@@ -96,14 +96,14 @@ public class CursedGrassBlock extends SpreadingSnowyDirtBlock implements Bonemea
         if (!canBeGrass(blockState, level, pos)) {
             if (!level.isAreaLoaded(pos, 3))
                 return; // Forge: prevent loading unloaded chunks when checking neighbor's light and spreading
-            level.setBlockAndUpdate(pos, ModBlocks.cursed_earth.defaultBlockState());
+            level.setBlockAndUpdate(pos, ModBlocks.CURSED_EARTH.get().defaultBlockState());
         } else {
             if (level.getMaxLocalRawBrightness(pos.above()) >= 9) {
                 BlockState thisDefaultBlockState = this.defaultBlockState();
 
                 for (int i = 0; i < 4; ++i) {
                     BlockPos blockpos = pos.offset(random.nextInt(3) - 1, random.nextInt(5) - 3, random.nextInt(3) - 1);
-                    if (level.getBlockState(blockpos).is(ModBlocks.cursed_earth) && canPropagate(thisDefaultBlockState, level, blockpos)) {
+                    if (level.getBlockState(blockpos).is(ModBlocks.CURSED_EARTH.get()) && canPropagate(thisDefaultBlockState, level, blockpos)) {
                         level.setBlockAndUpdate(blockpos, thisDefaultBlockState.setValue(SNOWY, level.getBlockState(blockpos.above()).is(Blocks.SNOW)));
                     }
                 }
@@ -118,7 +118,7 @@ public class CursedGrassBlock extends SpreadingSnowyDirtBlock implements Bonemea
         ItemStack heldItemStack = player.getItemInHand(handIn);
         Item heldItem = heldItemStack.getItem();
         if (heldItem instanceof HolyWaterBottleItem) {
-            int uses = heldItem == ModItems.holy_water_bottle_ultimate ? 100 : (heldItem == ModItems.holy_water_bottle_enhanced ? 50 : 25);
+            int uses = heldItem == ModItems.HOLY_WATER_BOTTLE_ULTIMATE.get() ? 100 : (heldItem == ModItems.HOLY_WATER_BOTTLE_ENHANCED.get() ? 50 : 25);
             if (player.getRandom().nextInt(uses) == 0) {
                 heldItemStack.setCount(heldItemStack.getCount() - 1);
             }

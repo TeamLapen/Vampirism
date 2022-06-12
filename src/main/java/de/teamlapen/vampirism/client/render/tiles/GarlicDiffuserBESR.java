@@ -33,7 +33,7 @@ public class GarlicDiffuserBESR extends VampirismBESR<GarlicDiffuserBlockEntity>
     @Override
     public void render(@Nonnull GarlicDiffuserBlockEntity tileEntityIn, float partialTicks, @Nonnull PoseStack matrixStackIn, @Nonnull MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         Entity e = Minecraft.getInstance().getCameraEntity();
-        if (e != null && Streams.stream(e.getHandSlots()).map(ItemStack::getItem).anyMatch(i -> i == ModItems.garlic_finder) && tileEntityIn.isInRange(e.blockPosition())) {
+        if (e != null && Streams.stream(e.getHandSlots()).map(ItemStack::getItem).anyMatch(i -> i == ModItems.GARLIC_FINDER.get()) && tileEntityIn.isInRange(e.blockPosition())) {
             long totalWorldTime = tileEntityIn.getLevel() != null ? tileEntityIn.getLevel().getGameTime() : 0;
             float scale = (float) Mth.clamp(Math.sqrt(tileEntityIn.getBlockPos().distSqr(e.blockPosition())) / 16, 1, 3);
             VertexConsumer vertexConsumer = bufferIn.getBuffer(Accessor.CUTOUT_NODEPTH);
@@ -52,8 +52,8 @@ public class GarlicDiffuserBESR extends VampirismBESR<GarlicDiffuserBlockEntity>
 //            vertexConsumer.pos(matrix4f, (float)(p_230013_18_ ), (float)(p_230013_20_ ), (float)(p_230013_22_ )).color(1, 1, 1, 1f).endVertex();
 //        });
 
-            BakedModel garlic_model = Minecraft.getInstance().getItemRenderer().getModel(new ItemStack(ModItems.item_garlic), null, null, 0);
-            Minecraft.getInstance().getItemRenderer().renderModelLists(garlic_model, new ItemStack(ModItems.item_garlic), combinedLightIn, combinedOverlayIn, matrixStackIn, vertexConsumer);
+            BakedModel garlic_model = Minecraft.getInstance().getItemRenderer().getModel(new ItemStack(ModItems.ITEM_GARLIC.get()), null, null, 0);
+            Minecraft.getInstance().getItemRenderer().renderModelLists(garlic_model, new ItemStack(ModItems.ITEM_GARLIC.get()), combinedLightIn, combinedOverlayIn, matrixStackIn, vertexConsumer);
             matrixStackIn.popPose();
             matrixStackIn.popPose();
         }

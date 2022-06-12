@@ -20,7 +20,7 @@ public class SunscreenBeaconBlockEntity extends BlockEntity {
     private Predicate<Player> selector;
 
     public SunscreenBeaconBlockEntity(BlockPos pos, BlockState state) {
-        super(ModTiles.sunscreen_beacon, pos, state);
+        super(ModTiles.SUNSCREEN_BEACON.get(), pos, state);
     }
 
 
@@ -43,7 +43,7 @@ public class SunscreenBeaconBlockEntity extends BlockEntity {
             for (Player player : list) {
                 if (player.isAlive() && blockEntity.selector.test(player)) {
                     if (VampirismPlayerAttributes.get(player).vampireLevel > 0) {
-                        player.addEffect(new MobEffectInstance(ModEffects.sunscreen, 160, 5, true, false));
+                        player.addEffect(new MobEffectInstance(ModEffects.SUNSCREEN.get(), 160, 5, true, false));
                     }
                 }
             }

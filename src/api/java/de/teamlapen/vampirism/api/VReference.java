@@ -11,6 +11,7 @@ import net.minecraft.world.entity.MobType;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.PlantType;
+import net.minecraftforge.registries.RegistryObject;
 
 /**
  * Holds constants (or at init set variables)
@@ -35,7 +36,10 @@ public class VReference {
      * Enchantment type for crossbows
      */
     public static final EnchantmentCategory CROSSBOW_ENCHANTMENT = EnchantmentCategory.create("VAMPIRISM_CROSSBOW", input -> input instanceof IVampirismCrossbow);
+
+    @Deprecated(forRemoval = true)
     public static Fluid blood_fluid;
+    public static RegistryObject<Fluid> blood_fluid_supplier;
     /**
      * Hunter creatures are of this creature type. But when they are counted for spawning they belong to {@link MobCategory#MONSTER}
      */

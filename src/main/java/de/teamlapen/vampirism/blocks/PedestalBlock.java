@@ -26,8 +26,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class PedestalBlock extends VampirismBlockContainer {
-
-    public final static String regName = "blood_pedestal";
     private static final VoxelShape pedestalShape = makeShape();
 
     private static void takeItemPlayer(Player player, InteractionHand hand, ItemStack stack) {
@@ -55,7 +53,7 @@ public class PedestalBlock extends VampirismBlockContainer {
     }
 
     public PedestalBlock() {
-        super(regName, Properties.of(Material.STONE).strength(3f).noOcclusion());
+        super(Properties.of(Material.STONE).strength(3f).noOcclusion());
     }
 
     @Nonnull
@@ -123,6 +121,6 @@ public class PedestalBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
-        return createTickerHelper(type, ModTiles.blood_pedestal, level.isClientSide() ? PedestalBlockEntity::clientTick : PedestalBlockEntity::serverTick);
+        return createTickerHelper(type, ModTiles.BLOOD_PEDESTAL.get(), level.isClientSide() ? PedestalBlockEntity::clientTick : PedestalBlockEntity::serverTick);
     }
 }

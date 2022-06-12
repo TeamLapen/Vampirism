@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
 
 public class SanguinareEffectInstance extends MobEffectInstance {
     public SanguinareEffectInstance(int effectDuration) {
-        super(ModEffects.sanguinare, effectDuration, 0, false, true);
+        super(ModEffects.SANGUINARE.get(), effectDuration, 0, false, true);
     }
 
     @Override

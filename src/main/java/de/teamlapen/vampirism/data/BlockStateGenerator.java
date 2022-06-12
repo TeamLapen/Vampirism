@@ -36,59 +36,59 @@ public class BlockStateGenerator extends BlockStateProvider {
         ModelFile bloody_spruce_log = models().cubeColumn("bloody_spruce_log", modLoc("block/bloody_spruce_log"), modLoc("block/bloody_spruce_log_top"));
 
         //default blocks
-        horizontalBlock(ModBlocks.garlic_diffuser_normal, models().withExistingParent("garlic_diffuser_normal", modLoc("block/garlic_diffuser")));
-        horizontalBlock(ModBlocks.garlic_diffuser_weak, models().withExistingParent("garlic_diffuser_weak", modLoc("block/garlic_diffuser")));
-        horizontalBlock(ModBlocks.garlic_diffuser_improved, models().withExistingParent("garlic_diffuser_improved", modLoc("block/garlic_diffuser")));
-        horizontalBlock(ModBlocks.altar_cleansing, models().getExistingFile(modLoc("block/altar_cleansing")));
-        horizontalBlock(ModBlocks.blood_grinder, models().getExistingFile(modLoc("block/blood_grinder")));
+        horizontalBlock(ModBlocks.GARLIC_DIFFUSER_NORMAL.get(), models().withExistingParent("garlic_diffuser_normal", modLoc("block/garlic_diffuser")));
+        horizontalBlock(ModBlocks.GARLIC_DIFFUSER_WEAK.get(), models().withExistingParent("garlic_diffuser_weak", modLoc("block/garlic_diffuser")));
+        horizontalBlock(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get(), models().withExistingParent("garlic_diffuser_improved", modLoc("block/garlic_diffuser")));
+        horizontalBlock(ModBlocks.ALTAR_CLEANSING.get(), models().getExistingFile(modLoc("block/altar_cleansing")));
+        horizontalBlock(ModBlocks.BLOOD_GRINDER.get(), models().getExistingFile(modLoc("block/blood_grinder")));
 
-        simpleBlock(ModBlocks.castle_block_dark_brick);
-        simpleBlock(ModBlocks.castle_block_dark_brick_bloody);
-        simpleBlock(ModBlocks.castle_block_dark_stone);
-        simpleBlock(ModBlocks.castle_block_normal_brick);
-        simpleBlock(ModBlocks.castle_block_purple_brick);
-        simpleBlock(ModBlocks.cursed_earth);
-        simpleBlock(ModBlocks.sunscreen_beacon, models().withExistingParent("vampirism:block/sunscreen_beacon", "minecraft:block/beacon").texture("beacon", "vampirism:block/cursed_earth"));
-        simpleBlock(ModBlocks.coffin, models().getExistingFile(modLoc("block/coffin")));
-        simpleBlock(ModBlocks.vampire_orchid, models().cross("vampire_orchid", modLoc("block/vampire_orchid")));
-        simpleBlock(ModBlocks.totem_top, models().getExistingFile(modLoc("block/totem_top")));
-        simpleBlock(ModBlocks.totem_top_crafted, models().getExistingFile(modLoc("block/totem_top_crafted")));
-        simpleBlock(ModBlocks.totem_top_vampirism_hunter, models().withExistingParent("totem_top_vampirism_hunter", modLoc("block/totem_top")));
-        simpleBlock(ModBlocks.totem_top_vampirism_vampire, models().withExistingParent("totem_top_vampirism_vampire", modLoc("block/totem_top")));
-        simpleBlock(ModBlocks.totem_top_vampirism_hunter_crafted, models().withExistingParent("totem_top_vampirism_hunter_crafted", modLoc("block/totem_top_crafted")));
-        simpleBlock(ModBlocks.totem_top_vampirism_vampire_crafted, models().withExistingParent("totem_top_vampirism_vampire_crafted", modLoc("block/totem_top_crafted")));
-        simpleBlock(ModBlocks.totem_base, models().getExistingFile(modLoc("block/totem_base")));
-        simpleBlock(ModBlocks.altar_infusion, models().getExistingFile(modLoc("block/altar_infusion")));
-        simpleBlock(ModBlocks.altar_inspiration, models().getExistingFile(modLoc("block/altar_inspiration/altar_inspiration")));
-        simpleBlock(ModBlocks.altar_tip, models().getExistingFile(modLoc("block/altar_tip")));
-        simpleBlock(ModBlocks.blood_container, models().getExistingFile(modLoc("block/blood_container/blood_container")));
-        simpleBlock(ModBlocks.blood_pedestal, models().getExistingFile(modLoc("block/blood_pedestal")));
-        simpleBlock(ModBlocks.potion_table, models().getExistingFile(modLoc("block/potion_table")));
-        simpleBlock(ModBlocks.fire_place, models().getExistingFile(modLoc("block/fire_place")));
-        simpleBlock(ModBlocks.potted_vampire_orchid, models().withExistingParent("vampirism:block/potted_vampire_orchid", "minecraft:block/flower_pot_cross").texture("plant", "vampirism:block/vampire_orchid"));
-        simpleBlock(ModBlocks.vampire_spruce_leaves, models().getExistingFile(mcLoc("block/oak_leaves")));
-        simpleBlock(ModBlocks.bloody_spruce_leaves, models().getExistingFile(mcLoc("block/oak_leaves")));
-        simpleBlock(ModBlocks.bloody_spruce_sapling, bloody_spruce_sapling);
-        simpleBlock(ModBlocks.vampire_spruce_sapling, vampire_spruce_sapling);
+        simpleBlock(ModBlocks.CASTLE_BLOCK_DARK_BRICK.get());
+        simpleBlock(ModBlocks.CASTLE_BLOCK_DARK_BRICK_BLOODY.get());
+        simpleBlock(ModBlocks.CASTLE_BLOCK_DARK_STONE.get());
+        simpleBlock(ModBlocks.CASTLE_BLOCK_NORMAL_BRICK.get());
+        simpleBlock(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK.get());
+        simpleBlock(ModBlocks.CURSED_EARTH.get());
+        simpleBlock(ModBlocks.SUNSCREEN_BEACON.get(), models().withExistingParent("vampirism:block/sunscreen_beacon", "minecraft:block/beacon").texture("beacon", "vampirism:block/cursed_earth"));
+        simpleBlock(ModBlocks.COFFIN.get(), models().getExistingFile(modLoc("block/coffin")));
+        simpleBlock(ModBlocks.VAMPIRE_ORCHID.get(), models().cross("vampire_orchid", modLoc("block/vampire_orchid")));
+        simpleBlock(ModBlocks.TOTEM_TOP.get(), models().getExistingFile(modLoc("block/totem_top")));
+        simpleBlock(ModBlocks.TOTEM_TOP_CRAFTED.get(), models().getExistingFile(modLoc("block/totem_top_crafted")));
+        simpleBlock(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER.get(), models().withExistingParent("totem_top_vampirism_hunter", modLoc("block/totem_top")));
+        simpleBlock(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE.get(), models().withExistingParent("totem_top_vampirism_vampire", modLoc("block/totem_top")));
+        simpleBlock(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED.get(), models().withExistingParent("totem_top_vampirism_hunter_crafted", modLoc("block/totem_top_crafted")));
+        simpleBlock(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED.get(), models().withExistingParent("totem_top_vampirism_vampire_crafted", modLoc("block/totem_top_crafted")));
+        simpleBlock(ModBlocks.TOTEM_BASE.get(), models().getExistingFile(modLoc("block/totem_base")));
+        simpleBlock(ModBlocks.ALTAR_INFUSION.get(), models().getExistingFile(modLoc("block/altar_infusion")));
+        simpleBlock(ModBlocks.ALTAR_INSPIRATION.get(), models().getExistingFile(modLoc("block/altar_inspiration/altar_inspiration")));
+        simpleBlock(ModBlocks.ALTAR_TIP.get(), models().getExistingFile(modLoc("block/altar_tip")));
+        simpleBlock(ModBlocks.BLOOD_CONTAINER.get(), models().getExistingFile(modLoc("block/blood_container/blood_container")));
+        simpleBlock(ModBlocks.BLOOD_PEDESTAL.get(), models().getExistingFile(modLoc("block/blood_pedestal")));
+        simpleBlock(ModBlocks.POTION_TABLE.get(), models().getExistingFile(modLoc("block/potion_table")));
+        simpleBlock(ModBlocks.FIRE_PLACE.get(), models().getExistingFile(modLoc("block/fire_place")));
+        simpleBlock(ModBlocks.POTTED_VAMPIRE_ORCHID.get(), models().withExistingParent("vampirism:block/potted_vampire_orchid", "minecraft:block/flower_pot_cross").texture("plant", "vampirism:block/vampire_orchid"));
+        simpleBlock(ModBlocks.VAMPIRE_SPRUCE_LEAVES.get(), models().getExistingFile(mcLoc("block/oak_leaves")));
+        simpleBlock(ModBlocks.BLOODY_SPRUCE_LEAVES.get(), models().getExistingFile(mcLoc("block/oak_leaves")));
+        simpleBlock(ModBlocks.BLOODY_SPRUCE_SAPLING.get(), bloody_spruce_sapling);
+        simpleBlock(ModBlocks.VAMPIRE_SPRUCE_SAPLING.get(), vampire_spruce_sapling);
 
 
-        stairsBlock(ModBlocks.castle_stairs_dark_stone, modLoc("block/castle_block_dark_stone"));
-        stairsBlock(ModBlocks.castle_stairs_dark_brick, modLoc("block/castle_block_dark_brick"));
-        stairsBlock(ModBlocks.castle_stairs_purple_brick, modLoc("block/castle_block_purple_brick"));
+        stairsBlock(ModBlocks.CASTLE_STAIRS_DARK_STONE.get(), modLoc("block/castle_block_dark_stone"));
+        stairsBlock(ModBlocks.CASTLE_STAIRS_DARK_BRICK.get(), modLoc("block/castle_block_dark_brick"));
+        stairsBlock(ModBlocks.CASTLE_STAIRS_PURPLE_BRICK.get(), modLoc("block/castle_block_purple_brick"));
 
-        slabBlock(ModBlocks.castle_slab_dark_brick, modLoc("block/castle_block_dark_brick"), modLoc("block/castle_block_dark_brick"));
-        slabBlock(ModBlocks.castle_slab_dark_stone, modLoc("block/castle_block_dark_stone"), modLoc("block/castle_block_dark_stone"));
-        slabBlock(ModBlocks.castle_slab_purple_brick, modLoc("block/castle_block_purple_brick"), modLoc("block/castle_block_purple_brick"));
+        slabBlock(ModBlocks.CASTLE_SLAB_DARK_BRICK.get(), modLoc("block/castle_block_dark_brick"), modLoc("block/castle_block_dark_brick"));
+        slabBlock(ModBlocks.CASTLE_SLAB_DARK_STONE.get(), modLoc("block/castle_block_dark_stone"), modLoc("block/castle_block_dark_stone"));
+        slabBlock(ModBlocks.CASTLE_SLAB_PURPLE_BRICK.get(), modLoc("block/castle_block_purple_brick"), modLoc("block/castle_block_purple_brick"));
 
 
         //variants
 
-        getVariantBuilder(ModBlocks.bloody_spruce_log)
+        getVariantBuilder(ModBlocks.BLOODY_SPRUCE_LOG.get())
                 .partialState().with(BlockStateProperties.AXIS, Direction.Axis.Y).modelForState().modelFile(bloody_spruce_log).addModel()
                 .partialState().with(BlockStateProperties.AXIS, Direction.Axis.Z).modelForState().rotationX(90).modelFile(bloody_spruce_log).addModel()
                 .partialState().with(BlockStateProperties.AXIS, Direction.Axis.X).modelForState().rotationX(90).rotationY(90).modelFile(bloody_spruce_log).addModel();
 
-        getVariantBuilder(ModBlocks.garlic)
+        getVariantBuilder(ModBlocks.GARLIC.get())
                 .partialState().with(GarlicBlock.AGE, 0).modelForState().modelFile(models().getExistingFile(modLoc("block/garlic_stage_0"))).addModel()
                 .partialState().with(GarlicBlock.AGE, 1).modelForState().modelFile(models().getExistingFile(modLoc("block/garlic_stage_0"))).addModel()
                 .partialState().with(GarlicBlock.AGE, 2).modelForState().modelFile(models().getExistingFile(modLoc("block/garlic_stage_1"))).addModel()
@@ -98,7 +98,7 @@ public class BlockStateGenerator extends BlockStateProvider {
                 .partialState().with(GarlicBlock.AGE, 6).modelForState().modelFile(models().getExistingFile(modLoc("block/garlic_stage_3"))).addModel()
                 .partialState().with(GarlicBlock.AGE, 7).modelForState().modelFile(models().getExistingFile(modLoc("block/garlic_stage_3"))).addModel();
 
-        getVariantBuilder(ModBlocks.altar_pillar)
+        getVariantBuilder(ModBlocks.ALTAR_PILLAR.get())
                 .partialState().with(AltarPillarBlock.TYPE_PROPERTY, AltarPillarBlock.EnumPillarType.NONE).modelForState().modelFile(models().getExistingFile(modLoc("block/altar_pillar"))).addModel()
                 .partialState().with(AltarPillarBlock.TYPE_PROPERTY, AltarPillarBlock.EnumPillarType.BONE).modelForState().modelFile(models().withExistingParent("altar_pillar_filled_bone", modLoc("block/altar_pillar_filled")).texture("filler", mcLoc("block/bone_block_side"))).addModel()
                 .partialState().with(AltarPillarBlock.TYPE_PROPERTY, AltarPillarBlock.EnumPillarType.GOLD).modelForState().modelFile(models().withExistingParent("altar_pillar_filled_gold", modLoc("block/altar_pillar_filled")).texture("filler", mcLoc("block/gold_block"))).addModel()
@@ -107,15 +107,15 @@ public class BlockStateGenerator extends BlockStateProvider {
 
         ModelFile sieve = models().getExistingFile(modLoc("block/blood_sieve"));
         ModelFile activeSieve = models().getBuilder("active_blood_sieve").parent(sieve).texture("filter", modLoc("block/blood_sieve_filter_active"));
-        getVariantBuilder(ModBlocks.blood_sieve)
+        getVariantBuilder(ModBlocks.BLOOD_SIEVE.get())
                 .partialState().with(SieveBlock.PROPERTY_ACTIVE, true).modelForState().modelFile(activeSieve).addModel()
                 .partialState().with(SieveBlock.PROPERTY_ACTIVE, false).modelForState().modelFile(sieve).addModel();
 
-        getVariantBuilder(ModBlocks.med_chair).forAllStates(blockState -> ConfiguredModel.builder().modelFile(models().getExistingFile(modLoc(blockState.getValue(MedChairBlock.PART) == MedChairBlock.EnumPart.TOP ? "block/medchairhead" : "block/medchairbase"))).rotationY(((int) blockState.getValue(MedChairBlock.FACING).toYRot() + 180) % 360).build());
+        getVariantBuilder(ModBlocks.MED_CHAIR.get()).forAllStates(blockState -> ConfiguredModel.builder().modelFile(models().getExistingFile(modLoc(blockState.getValue(MedChairBlock.PART) == MedChairBlock.EnumPart.TOP ? "block/medchairhead" : "block/medchairbase"))).rotationY(((int) blockState.getValue(MedChairBlock.FACING).toYRot() + 180) % 360).build());
 
         //multiparts
 
-        getMultipartBuilder(ModBlocks.alchemical_fire)
+        getMultipartBuilder(ModBlocks.ALCHEMICAL_FIRE.get())
                 .part().modelFile(models().getExistingFile(modLoc("block/fire_floor0"))).nextModel().modelFile(models().getExistingFile(modLoc("block/fire_floor1"))).addModel().end()
                 .part().modelFile(models().getExistingFile(modLoc("block/fire_side0"))).nextModel().modelFile(models().getExistingFile(modLoc("block/fire_side1"))).nextModel().modelFile(models().getExistingFile(modLoc("block/fire_side_alt0"))).nextModel().modelFile(models().getExistingFile(modLoc("block/fire_side_alt1"))).addModel().end()
                 .part().modelFile(models().getExistingFile(modLoc("block/fire_side0"))).rotationY(90).nextModel().modelFile(models().getExistingFile(modLoc("block/fire_side1"))).rotationY(90).nextModel().modelFile(models().getExistingFile(modLoc("block/fire_side_alt0"))).rotationY(90).nextModel().modelFile(models().getExistingFile(modLoc("block/fire_side_alt1"))).rotationY(90).addModel().end()
@@ -124,7 +124,7 @@ public class BlockStateGenerator extends BlockStateProvider {
 
         ModelFile cauldronLiquid = models().getExistingFile(modLoc("block/alchemy_cauldron_liquid"));
         ModelFile cauldronLiquidBoiling = models().getBuilder("cauldron_boiling").parent(cauldronLiquid).texture("liquid", modLoc("block/blank_liquid_boiling"));
-        getMultipartBuilder(ModBlocks.alchemical_cauldron)
+        getMultipartBuilder(ModBlocks.ALCHEMICAL_CAULDRON.get())
                 .part().modelFile(models().getExistingFile(modLoc("block/alchemy_cauldron"))).addModel().end()
                 .part().modelFile(models().getExistingFile(modLoc("block/alchemy_cauldron_fire"))).addModel().condition(AlchemicalCauldronBlock.LIT, true).end()
                 .part().modelFile(cauldronLiquid).addModel().condition(AlchemicalCauldronBlock.LIQUID, 1).end()
@@ -138,7 +138,7 @@ public class BlockStateGenerator extends BlockStateProvider {
         ModelFile tentTL = models().getBuilder("tent_tl").parent(tentModel).texture("floor", modLoc("block/tent/floor_tl"));
         ModelFile tentBL = models().getBuilder("tent_bl").parent(tentModel).texture("floor", modLoc("block/tent/floor_bl"));
         ModelFile tentBR = models().getBuilder("tent_br").parent(tentModel).texture("floor", modLoc("block/tent/floor_br"));
-        Arrays.stream(new TentBlock[]{ModBlocks.tent, ModBlocks.tent_main}).forEach(t -> getMultipartBuilder(t)
+        Arrays.stream(new TentBlock[]{ModBlocks.TENT.get(), ModBlocks.TENT_MAIN.get()}).forEach(t -> getMultipartBuilder(t)
                 .part().modelFile(tentBR).rotationY(0).addModel().condition(TentBlock.FACING, Direction.NORTH).condition(TentBlock.POSITION, 0).end()
                 .part().modelFile(tentBR).rotationY(90).addModel().condition(TentBlock.FACING, Direction.EAST).condition(TentBlock.POSITION, 0).end()
                 .part().modelFile(tentBR).rotationY(180).addModel().condition(TentBlock.FACING, Direction.SOUTH).condition(TentBlock.POSITION, 0).end()
@@ -171,7 +171,7 @@ public class BlockStateGenerator extends BlockStateProvider {
         ModelFile weaponTableL4 = models().getExistingFile(modLoc("block/weapon_table/weapon_table_lava4"));
         ModelFile weaponTableL5 = models().getExistingFile(modLoc("block/weapon_table/weapon_table_lava5"));
 
-        getMultipartBuilder(ModBlocks.weapon_table)
+        getMultipartBuilder(ModBlocks.WEAPON_TABLE.get())
                 .part().modelFile(weaponTable).rotationY(0).addModel().condition(WeaponTableBlock.FACING, Direction.NORTH).end()
                 .part().modelFile(weaponTable).rotationY(90).addModel().condition(WeaponTableBlock.FACING, Direction.EAST).end()
                 .part().modelFile(weaponTable).rotationY(180).addModel().condition(WeaponTableBlock.FACING, Direction.SOUTH).end()
@@ -202,7 +202,7 @@ public class BlockStateGenerator extends BlockStateProvider {
         ModelFile hunterTableGarlic = models().getExistingFile(modLoc("block/hunter_table/hunter_table_garlic"));
         ModelFile hunterTableHammer = models().getExistingFile(modLoc("block/hunter_table/hunter_table_hammer"));
 
-        getMultipartBuilder(ModBlocks.hunter_table)
+        getMultipartBuilder(ModBlocks.HUNTER_TABLE.get())
                 .part().modelFile(hunterTable).rotationY(0).addModel().condition(HunterTableBlock.FACING, Direction.NORTH).end()
                 .part().modelFile(hunterTable).rotationY(90).addModel().condition(HunterTableBlock.FACING, Direction.EAST).end()
                 .part().modelFile(hunterTable).rotationY(180).addModel().condition(HunterTableBlock.FACING, Direction.SOUTH).end()
@@ -219,15 +219,15 @@ public class BlockStateGenerator extends BlockStateProvider {
                 .part().modelFile(hunterTableHammer).rotationY(90).addModel().condition(HunterTableBlock.FACING, Direction.EAST).condition(HunterTableBlock.VARIANT, HunterTableBlock.TABLE_VARIANT.WEAPON, HunterTableBlock.TABLE_VARIANT.WEAPON_CAULDRON, HunterTableBlock.TABLE_VARIANT.WEAPON_POTION, HunterTableBlock.TABLE_VARIANT.COMPLETE).end()
                 .part().modelFile(hunterTableHammer).rotationY(180).addModel().condition(HunterTableBlock.FACING, Direction.SOUTH).condition(HunterTableBlock.VARIANT, HunterTableBlock.TABLE_VARIANT.WEAPON, HunterTableBlock.TABLE_VARIANT.WEAPON_CAULDRON, HunterTableBlock.TABLE_VARIANT.WEAPON_POTION, HunterTableBlock.TABLE_VARIANT.COMPLETE).end()
                 .part().modelFile(hunterTableHammer).rotationY(270).addModel().condition(HunterTableBlock.FACING, Direction.WEST).condition(HunterTableBlock.VARIANT, HunterTableBlock.TABLE_VARIANT.WEAPON, HunterTableBlock.TABLE_VARIANT.WEAPON_CAULDRON, HunterTableBlock.TABLE_VARIANT.WEAPON_POTION, HunterTableBlock.TABLE_VARIANT.COMPLETE).end();
-        simpleBlock(ModBlocks.chandelier, models().getExistingFile(modLoc("block/chandelier")));
-        horizontalBlock(ModBlocks.candelabra, models().getExistingFile(modLoc("block/candelabra")));
-        horizontalBlock(ModBlocks.candelabra_wall, models().getExistingFile(modLoc("block/candelabra_wall")));
-        horizontalBlock(ModBlocks.cross, models().getExistingFile(modLoc("block/cross")));
-        horizontalBlock(ModBlocks.tombstone1, models().getExistingFile(modLoc("block/tombstone1")));
-        horizontalBlock(ModBlocks.tombstone2, models().getExistingFile(modLoc("block/tombstone2")));
-        horizontalBlock(ModBlocks.tombstone3, models().getExistingFile(modLoc("block/tombstone3")));
-        horizontalBlock(ModBlocks.grave_cage, models().getExistingFile(modLoc("block/grave_cage")));
+        simpleBlock(ModBlocks.CHANDELIER.get(), models().getExistingFile(modLoc("block/chandelier")));
+        horizontalBlock(ModBlocks.CANDELABRA.get(), models().getExistingFile(modLoc("block/candelabra")));
+        horizontalBlock(ModBlocks.CANDELABRA_WALL.get(), models().getExistingFile(modLoc("block/candelabra_wall")));
+        horizontalBlock(ModBlocks.CROSS.get(), models().getExistingFile(modLoc("block/cross")));
+        horizontalBlock(ModBlocks.TOMBSTONE1.get(), models().getExistingFile(modLoc("block/tombstone1")));
+        horizontalBlock(ModBlocks.TOMBSTONE2.get(), models().getExistingFile(modLoc("block/tombstone2")));
+        horizontalBlock(ModBlocks.TOMBSTONE3.get(), models().getExistingFile(modLoc("block/tombstone3")));
+        horizontalBlock(ModBlocks.GRAVE_CAGE.get(), models().getExistingFile(modLoc("block/grave_cage")));
 
-        getVariantBuilder(ModBlocks.cursed_grass_block).partialState().with(BlockStateProperties.SNOWY, false).modelForState().modelFile(models().getExistingFile(modLoc("block/cursed_grass_block"))).addModel().partialState().with(BlockStateProperties.SNOWY, true).modelForState().modelFile(models().getExistingFile(modLoc("block/cursed_grass_block_snowy"))).addModel();
+        getVariantBuilder(ModBlocks.CURSED_GRASS_BLOCK.get()).partialState().with(BlockStateProperties.SNOWY, false).modelForState().modelFile(models().getExistingFile(modLoc("block/cursed_grass_block"))).addModel().partialState().with(BlockStateProperties.SNOWY, true).modelForState().modelFile(models().getExistingFile(modLoc("block/cursed_grass_block_snowy"))).addModel();
     }
 }

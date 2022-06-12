@@ -165,7 +165,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     });
 
                 }
-                if (atts.hunterLevel > 0 && !mc.player.isSpectator() && mc.player.getMainHandItem().getItem() == ModItems.stake) {
+                if (atts.hunterLevel > 0 && !mc.player.isSpectator() && mc.player.getMainHandItem().getItem() == ModItems.STAKE.get()) {
                     if (entity instanceof LivingEntity && entity instanceof IVampireMob) {
                         if (StakeItem.canKillInstant((LivingEntity) entity, mc.player)) {
                             if (((LivingEntity) entity).getHealth() > 0) {
@@ -179,12 +179,12 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
         } else if (p != null && p.getType() == HitResult.Type.BLOCK) {
             BlockState block = Minecraft.getInstance().level.getBlockState(((BlockHitResult) p).getBlockPos());
-            if (ModBlocks.blood_container.equals(block.getBlock())) {
+            if (ModBlocks.BLOOD_CONTAINER.get() == block.getBlock()) {
                 if (VampirePlayer.getOpt(mc.player).map(VampirePlayer::wantsBlood).orElse(false)) {
                     BlockEntity tile = Minecraft.getInstance().level.getBlockEntity(((BlockHitResult) p).getBlockPos());
                     if (tile != null) {
                         tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(handler -> {
-                            if (FluidLib.getFluidAmount(handler, ModFluids.blood) > 0) {
+                            if (FluidLib.getFluidAmount(handler, ModFluids.BLOOD.get()) > 0) {
                                 renderBloodFangs(event.getMatrixStack(), this.mc.getWindow().getGuiScaledWidth(), this.mc.getWindow().getGuiScaledHeight(), 1, 0xFF0000);
                                 event.setCanceled(true);
                             }
@@ -311,7 +311,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
         if (event.getOverlay() != ForgeIngameGui.PLAYER_HEALTH_ELEMENT) {
             return;
         }
-        addTempPoison = mc.player.hasEffect(ModEffects.poison) && !mc.player.activeEffects.containsKey(MobEffects.POISON);
+        addTempPoison = mc.player.hasEffect(ModEffects.POISON.get()) && !mc.player.activeEffects.containsKey(MobEffects.POISON);
 
         if (addTempPoison) { //Add temporary dummy potion effect to trick renderer
             if (addedTempPoison == null) {
@@ -339,12 +339,12 @@ public class VampirismHUDOverlay extends ExtendedGui {
     private void handleScreenColorVampire(VampirePlayer vampire) {
 
         //Main area/borders
-        if (vampire.getActionHandler().isActionActive(VampireActions.vampire_rage)) {
+        if (vampire.getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE.get())) {
             screenPercentage = 100;
             screenColor = 0xfff00000;
             fullScreen = false;
         } else if ((screenPercentage = vampire.getTicksInSun() / 2) > 0) {
-            MobEffectInstance effect = mc.player.getEffect(ModEffects.sunscreen);
+            MobEffectInstance effect = mc.player.getEffect(ModEffects.SUNSCREEN.get());
             if (effect == null || effect.getAmplifier() < 5) {
                 screenColor = 0xfffff755;
                 fullScreen = false;
@@ -360,8 +360,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
         }
 
         //Bottom Area
-        if (vampire.getActionHandler().isActionActive(VampireActions.bat)) {
-            float batPercentage = vampire.getActionHandler().getPercentageForAction(VampireActions.bat);
+        if (vampire.getActionHandler().isActionActive(VampireActions.BAT.get())) {
+            float batPercentage = vampire.getActionHandler().getPercentageForAction(VampireActions.BAT.get());
             if (batPercentage < 0.2F && batPercentage > 0.0F) {
                 screenBottomColor = 0xcc7067f9; // change color
                 screenBottomPercentage = (int) ((0.2F - batPercentage) * 1000);

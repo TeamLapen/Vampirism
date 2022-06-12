@@ -9,6 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
@@ -21,11 +22,10 @@ import javax.annotation.Nonnull;
 /**
  * Item which places the two med chair blocks
  */
-public class MedChairItem extends VampirismItem {
-    private final static String regName = "item_med_chair";
+public class MedChairItem extends Item {
 
     public MedChairItem() {
-        super(regName, new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties().tab(VampirismMod.creativeTab));
     }
 
 
@@ -61,7 +61,7 @@ public class MedChairItem extends VampirismItem {
         if (player == null || player.mayUseItemAt(pos, ctx.getClickedFace(), stack) && player.mayUseItemAt(otherPos, ctx.getClickedFace(), stack)) {
 
             if (flag1 && flag2 && UtilLib.doesBlockHaveSolidTopSurface(world, pos.below()) && UtilLib.doesBlockHaveSolidTopSurface(world, otherPos.below())) {
-                BlockState state1 = ModBlocks.med_chair.defaultBlockState().setValue(MedChairBlock.PART, MedChairBlock.EnumPart.BOTTOM).setValue(MedChairBlock.FACING, facing.getOpposite());
+                BlockState state1 = ModBlocks.MED_CHAIR.get().defaultBlockState().setValue(MedChairBlock.PART, MedChairBlock.EnumPart.BOTTOM).setValue(MedChairBlock.FACING, facing.getOpposite());
                 if (world.setBlock(pos, state1, 3)) {
                     BlockState state2 = state1.setValue(MedChairBlock.PART, MedChairBlock.EnumPart.TOP).setValue(MedChairBlock.FACING, facing.getOpposite());
                     world.setBlock(otherPos, state2, 3);

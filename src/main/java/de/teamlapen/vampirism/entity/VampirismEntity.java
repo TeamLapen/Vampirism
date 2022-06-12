@@ -306,7 +306,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
      */
     protected void teleportAway() {
         this.setInvisible(true);
-        ModParticles.spawnParticlesServer(this.level, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_6"), 10, 0x0A0A0A, 0.6F), this.getX(), this.getY(), this.getZ(), 20, 1, 1, 1, 0);
+        ModParticles.spawnParticlesServer(this.level, new GenericParticleData(ModParticles.GENERIC.get(), new ResourceLocation("minecraft", "effect_6"), 10, 0x0A0A0A, 0.6F), this.getX(), this.getY(), this.getZ(), 20, 1, 1, 1, 0);
         this.playSound(SoundEvents.ENDERMAN_TELEPORT, 1, 1);
         this.discard();
     }

@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.items.enchantment;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.items.PitchforkItem;
 import net.minecraft.world.damagesource.DamageSource;
@@ -18,7 +17,6 @@ import javax.annotation.Nonnull;
 public class EnchantmentVampireSlayer extends Enchantment {
     public EnchantmentVampireSlayer(Rarity rarityIn) {
         super(rarityIn, EnchantmentCategory.WEAPON, new EquipmentSlot[]{EquipmentSlot.MAINHAND});
-        this.setRegistryName(REFERENCE.MODID, "vampireslayer");
     }
 
     @Override

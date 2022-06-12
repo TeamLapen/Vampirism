@@ -35,7 +35,7 @@ import javax.annotation.Nonnull;
  * Handles inventory setup  and "crafting"
  */
 public class HunterTableContainer extends InventoryContainer implements ContainerListener {
-    private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(Items.BOOK, 15, 28), new SelectorInfo(ModItems.vampire_fang, 42, 28), new SelectorInfo(ModTags.Items.PURE_BLOOD, 69, 28), new SelectorInfo(ModItems.vampire_book, 96, 28)};
+    private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(Items.BOOK, 15, 28), new SelectorInfo(ModItems.VAMPIRE_FANG.get(), 42, 28), new SelectorInfo(ModTags.Items.PURE_BLOOD, 69, 28), new SelectorInfo(ModItems.VAMPIRE_BOOK.get(), 96, 28)};
     private final SlotResult slotResult;
     private final int hunterLevel;
     private final HunterLevelingConf levelingConf = HunterLevelingConf.instance();
@@ -43,7 +43,7 @@ public class HunterTableContainer extends InventoryContainer implements Containe
 
 
     public HunterTableContainer(int id, Inventory playerInventory, ContainerLevelAccess worldPosCallable) {
-        super(ModContainer.hunter_table, id, playerInventory, worldPosCallable, new SimpleContainer(SELECTOR_INFOS.length), SELECTOR_INFOS);
+        super(ModContainer.HUNTER_TABLE.get(), id, playerInventory, worldPosCallable, new SimpleContainer(SELECTOR_INFOS.length), SELECTOR_INFOS);
         ((SimpleContainer) inventory).addListener(this);
         slotResult = new SlotResult(this, new ResultContainer() {
             @Override
@@ -95,7 +95,7 @@ public class HunterTableContainer extends InventoryContainer implements Containe
 
     @Override
     public boolean stillValid(@Nonnull Player playerIn) {
-        return stillValid(worldPos, playerIn, ModBlocks.hunter_table);
+        return stillValid(worldPos, playerIn, ModBlocks.HUNTER_TABLE.get());
     }
 
 
@@ -111,7 +111,7 @@ public class HunterTableContainer extends InventoryContainer implements Containe
      * Checks if the given tileInventory are present
      */
     private ItemStack checkItems(int fangs, int blood, int bloodLevel, int par3) {
-        return InventoryHelper.checkItems(inventory, new Item[]{Items.BOOK, ModItems.vampire_fang, PureBloodItem.getBloodItemForLevel(bloodLevel), ModItems.vampire_book}, new int[]{1, fangs, blood, par3});
+        return InventoryHelper.checkItems(inventory, new Item[]{Items.BOOK, ModItems.VAMPIRE_FANG.get(), PureBloodItem.getBloodItemForLevel(bloodLevel), ModItems.VAMPIRE_BOOK.get()}, new int[]{1, fangs, blood, par3});
     }
 
     public static class Factory implements IContainerFactory<HunterTableContainer> {

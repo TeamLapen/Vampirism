@@ -2,11 +2,11 @@ package de.teamlapen.vampirism.items;
 
 
 import de.teamlapen.vampirism.VampirismMod;
+import net.minecraft.world.item.Item;
 
-public class VampireBloodBottleItem extends VampirismItem {
-    private final static String regName = "vampire_blood_bottle";
+public class VampireBloodBottleItem extends Item {
 
     public VampireBloodBottleItem() {
-        super(regName, new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties().tab(VampirismMod.creativeTab));
     }
 }

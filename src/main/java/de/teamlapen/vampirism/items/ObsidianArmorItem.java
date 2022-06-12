@@ -25,8 +25,6 @@ import java.util.Map;
 
 public class ObsidianArmorItem extends VampirismHunterArmor implements IItemWithTier {
 
-    private final static String baseRegName = "obsidian_armor";
-
     public static boolean isFullyEquipped(Player player) {
         for (ItemStack stack : player.getInventory().armor) {
             if (stack.isEmpty() || !(stack.getItem() instanceof ObsidianArmorItem)) {
@@ -57,7 +55,7 @@ public class ObsidianArmorItem extends VampirismHunterArmor implements IItemWith
     }
 
     public ObsidianArmorItem(EquipmentSlot equipmentSlotIn, TIER tier) {
-        super(baseRegName, tier.getName(), VampirismArmorMaterials.OBSIDIAN, equipmentSlotIn, new Properties().tab(VampirismMod.creativeTab).fireResistant(), getModifiers(equipmentSlotIn, tier));
+        super(VampirismArmorMaterials.OBSIDIAN, equipmentSlotIn, new Properties().tab(VampirismMod.creativeTab).fireResistant(), getModifiers(equipmentSlotIn, tier));
         this.tier = tier;
     }
 
@@ -79,14 +77,7 @@ public class ObsidianArmorItem extends VampirismHunterArmor implements IItemWith
     }
 
     @Override
-    public String getBaseRegName() {
-        return baseRegName;
-    }
-
-    @Override
     public TIER getVampirismTier() {
         return tier;
     }
-
-
 }

@@ -103,7 +103,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
             getOblivionPotion().ifPresent(stack -> stack.shrink(1));//server syncs after the screen is closed
         }, (button, matrixStack, mouseX, mouseY) -> {
             MinionStatsScreen.this.renderTooltip(matrixStack, button.getMessage(), mouseX, mouseY);
-        }, new TranslatableComponent("text.vampirism.minion_screen.reset_stats", ModItems.oblivion_potion.getDescription())) {
+        }, new TranslatableComponent("text.vampirism.minion_screen.reset_stats", ModItems.OBLIVION_POTION.get().getDescription())) {
             @Override
             public void render(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
                 if (this.visible) {
@@ -151,7 +151,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
     }
 
     private Optional<ItemStack> getOblivionPotion() {
-        return Optional.ofNullable(entity.getMinionData().flatMap(data -> Optional.ofNullable(InventoryHelper.getFirst(data.getInventory(), ModItems.oblivion_potion))).orElse(InventoryHelper.getFirst(this.minecraft.player.getInventory(), ModItems.oblivion_potion)));
+        return Optional.ofNullable(entity.getMinionData().flatMap(data -> Optional.ofNullable(InventoryHelper.getFirst(data.getInventory(), ModItems.OBLIVION_POTION.get()))).orElse(InventoryHelper.getFirst(this.minecraft.player.getInventory(), ModItems.OBLIVION_POTION.get())));
     }
 
 

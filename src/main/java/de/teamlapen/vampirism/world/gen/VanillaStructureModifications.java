@@ -171,7 +171,7 @@ public class VanillaStructureModifications {
     }
 
     private static void addTotem(RegistryAccess reg, Map<ResourceLocation, VanillaStructureModifications.BiomeType> pools) {
-        StructureProcessor factionProcessor = new RandomStructureProcessor(ImmutableList.of(new RandomBlockState(new RandomBlockMatchTest(ModBlocks.totem_top, (VampirismConfig.COMMON.villageTotemFactionChance.get()).floatValue()), AlwaysTrueTest.INSTANCE, ModBlocks.totem_top.defaultBlockState(), TotemTopBlock.getBlocks().stream().filter((totemx) -> totemx != ModBlocks.totem_top && !totemx.isCrafted()).map(Block::defaultBlockState).collect(Collectors.toList()))));
+        StructureProcessor factionProcessor = new RandomStructureProcessor(ImmutableList.of(new RandomBlockState(new RandomBlockMatchTest(ModBlocks.TOTEM_TOP.get(), (VampirismConfig.COMMON.villageTotemFactionChance.get()).floatValue()), AlwaysTrueTest.INSTANCE, ModBlocks.TOTEM_TOP.get().defaultBlockState(), TotemTopBlock.getBlocks().stream().filter((totemx) -> totemx != ModBlocks.TOTEM_TOP.get() && !totemx.isCrafted()).map(Block::defaultBlockState).collect(Collectors.toList()))));
         StructureProcessor biomeTopBlockProcessor = new BiomeTopBlockProcessor(Blocks.DIRT.defaultBlockState());
         Holder<StructureProcessorList> TOTEM_FACTION_PROCESSOR = registerStructureProcessor("totem_faction", ImmutableList.of(factionProcessor, biomeTopBlockProcessor));
 

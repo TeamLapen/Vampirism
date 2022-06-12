@@ -76,7 +76,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     @SuppressWarnings("JavadocReference")
     default InteractionResult mobInteractC(@Nonnull Player player, @Nonnull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (stack.getItem() != ModItems.cure_apple) {
+        if (stack.getItem() != ModItems.CURE_APPLE.get()) {
             return mobInteractSuper(player, hand);
         }
         return interactWithCureItem(player, stack, ((PathfinderMob) this));
@@ -128,7 +128,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
 
     @Override
     default boolean isIgnoringSundamage() {
-        return ((PathfinderMob) this).hasEffect(ModEffects.sunscreen);
+        return ((PathfinderMob) this).hasEffect(ModEffects.SUNSCREEN.get());
     }
 
     /**
@@ -150,7 +150,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
         }
         if (!entity.level.isClientSide) {
             if (isGettingSundamage(entity.level) && entity.tickCount % 40 == 11) {
-                double dmg = entity.getAttribute(ModAttributes.sundamage).getValue();
+                double dmg = entity.getAttribute(ModAttributes.SUNDAMAGE.get()).getValue();
                 if (dmg > 0) entity.hurt(VReference.SUNDAMAGE, (float) dmg);
             }
             if (isGettingGarlicDamage(entity.level) != EnumStrength.NONE) {

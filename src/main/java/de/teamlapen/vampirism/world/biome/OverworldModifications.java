@@ -105,9 +105,9 @@ public class OverworldModifications {
             LOGGER.debug("Removed a total of {} points from {}", removed, oldCount);
 
 
-            LOGGER.info("Adding biome {} to ParameterPoints {} in Preset.OVERWORLD", ModBiomes.VAMPIRE_FOREST.location(), Arrays.toString(forestPoints));
+            LOGGER.info("Adding biome {} to ParameterPoints {} in Preset.OVERWORLD", ModBiomes.VAMPIRE_FOREST.getKey().location(), Arrays.toString(forestPoints));
             for (Climate.ParameterPoint forestPoint : forestPoints) {
-                biomes.add(Pair.of(forestPoint, registry.getHolderOrThrow(ModBiomes.VAMPIRE_FOREST)));
+                biomes.add(Pair.of(forestPoint, registry.getHolderOrThrow(ModBiomes.VAMPIRE_FOREST.getKey())));
             }
 
             return new Climate.ParameterList<>(biomes);
@@ -121,7 +121,7 @@ public class OverworldModifications {
         //Any blocks here must be available before block registration, so they must be initialized statically
         SurfaceRules.RuleSource cursed_earth = new CustomBlockRuleSource(new ResourceLocation(REFERENCE.MODID, "cursed_earth"));
         SurfaceRules.RuleSource grass = new CustomBlockRuleSource(new ResourceLocation(REFERENCE.MODID, "cursed_grass_block"));
-        SurfaceRules.ConditionSource inVampireBiome = SurfaceRules.isBiome(ModBiomes.VAMPIRE_FOREST);
+        SurfaceRules.ConditionSource inVampireBiome = SurfaceRules.isBiome(ModBiomes.VAMPIRE_FOREST.getKey());
         SurfaceRules.RuleSource vampireForestTopLayer = SurfaceRules.ifTrue(inVampireBiome, grass);
         SurfaceRules.RuleSource vampireForestBaseLayer = SurfaceRules.ifTrue(inVampireBiome, cursed_earth);
         return SurfaceRules.sequence(

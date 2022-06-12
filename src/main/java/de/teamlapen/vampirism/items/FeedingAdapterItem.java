@@ -19,11 +19,10 @@ import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 
-public class FeedingAdapterItem extends VampirismItem {
-    private final static String regName = "feeding_adapter";
+public class FeedingAdapterItem extends Item {
 
     public FeedingAdapterItem() {
-        super(regName, new Item.Properties().stacksTo(1).tab(VampirismMod.creativeTab));
+        super(new Item.Properties().stacksTo(1).tab(VampirismMod.creativeTab));
     }
 
 
@@ -46,7 +45,7 @@ public class FeedingAdapterItem extends VampirismItem {
         }
         ItemStack bloodContainer = BloodHelper.getBloodContainerInInventory(((Player) player).getInventory(), true, false);
         FluidStack fluidStack = BloodContainerBlock.getFluidFromItemStack(bloodContainer);
-        int blood = fluidStack.isEmpty() || fluidStack.getFluid() != ModFluids.blood ? 0 : fluidStack.getAmount();
+        int blood = fluidStack.isEmpty() || fluidStack.getFluid() != ModFluids.BLOOD.get() ? 0 : fluidStack.getAmount();
         VampirePlayer vampire = VampirePlayer.get((Player) player);
         if (vampire.getLevel() == 0 || blood == 0 || !vampire.getBloodStats().needsBlood()) {
             player.releaseUsingItem();
@@ -56,7 +55,7 @@ public class FeedingAdapterItem extends VampirismItem {
 
         if (blood > 0 && count == 1) {
             int drink = Math.min(blood, 3 * VReference.FOOD_TO_FLUID_BLOOD);
-            BloodContainerBlock.writeFluidToItemStack(bloodContainer, new FluidStack(ModFluids.blood, blood - drink));
+            BloodContainerBlock.writeFluidToItemStack(bloodContainer, new FluidStack(ModFluids.BLOOD.get(), blood - drink));
             vampire.drinkBlood(Math.round(((float) drink) / VReference.FOOD_TO_FLUID_BLOOD), 0.3F, false);
 
             blood = blood - drink;

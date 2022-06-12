@@ -7,48 +7,46 @@ import de.teamlapen.vampirism.particle.FlyingBloodParticleData;
 import de.teamlapen.vampirism.particle.GenericParticleData;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nonnull;
 import java.util.Random;
 
-import static de.teamlapen.lib.lib.util.UtilLib.getNull;
-
-@ObjectHolder(REFERENCE.MODID)
 public class ModParticles {
-    public static final ParticleType<FlyingBloodParticleData> flying_blood = getNull();
-    public static final ParticleType<FlyingBloodEntityParticleData> flying_blood_entity = getNull();
-    public static final ParticleType<GenericParticleData> generic = getNull();
+    public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, REFERENCE.MODID);
 
-    static void registerParticles(IForgeRegistry<ParticleType<?>> registry) {
-        registry.register(new ParticleType<>(false, FlyingBloodParticleData.DESERIALIZER) {
+    public static final RegistryObject<ParticleType<FlyingBloodParticleData>> FLYING_BLOOD = PARTICLE_TYPES.register("flying_blood", () -> new ParticleType<>(false, FlyingBloodParticleData.DESERIALIZER) {
 
-            @Nonnull
-            @Override
-            public Codec<FlyingBloodParticleData> codec() {
-                return FlyingBloodParticleData.CODEC;
-            }
-        }.setRegistryName(new ResourceLocation(REFERENCE.MODID, "flying_blood")));
-        registry.register(new ParticleType<>(false, FlyingBloodEntityParticleData.DESERIALIZER) {
+                @Nonnull
+                @Override
+                public Codec<FlyingBloodParticleData> codec() {
+                    return FlyingBloodParticleData.CODEC;
+                }
+            });
+    public static final RegistryObject<ParticleType<FlyingBloodEntityParticleData>> FLYING_BLOOD_ENTITY = PARTICLE_TYPES.register("flying_blood_entity", () -> new ParticleType<>(false, FlyingBloodEntityParticleData.DESERIALIZER) {
 
-            @Nonnull
-            @Override
-            public Codec<FlyingBloodEntityParticleData> codec() {
-                return FlyingBloodEntityParticleData.CODEC;
-            }
-        }.setRegistryName(new ResourceLocation(REFERENCE.MODID, "flying_blood_entity")));
-        registry.register(new ParticleType<>(false, GenericParticleData.DESERIALIZER) {
+                @Nonnull
+                @Override
+                public Codec<FlyingBloodEntityParticleData> codec() {
+                    return FlyingBloodEntityParticleData.CODEC;
+                }
+            });
+    public static final RegistryObject<ParticleType<GenericParticleData>> GENERIC = PARTICLE_TYPES.register("generic", () -> new ParticleType<>(false, GenericParticleData.DESERIALIZER) {
 
-            @Nonnull
-            @Override
-            public Codec<GenericParticleData> codec() {
-                return GenericParticleData.CODEC;
-            }
-        }.setRegistryName(new ResourceLocation(REFERENCE.MODID, "generic")));
+                @Nonnull
+                @Override
+                public Codec<GenericParticleData> codec() {
+                    return GenericParticleData.CODEC;
+                }
+            });
+
+    static void registerParticles(IEventBus bus) {
+        PARTICLE_TYPES.register(bus);
     }
 
     public static void spawnParticlesClient(Level worldIn, ParticleOptions particle, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, int count, double maxDist, Random rand) {

@@ -18,7 +18,6 @@ import javax.annotation.Nonnull;
 
 public class TotemBaseBlock extends VampirismBlock {
     private static final VoxelShape shape = makeShape();
-    private final static String regName = "totem_base";
 
     private static VoxelShape makeShape() {
         VoxelShape a = Block.box(1, 0, 1, 15, 1, 15);
@@ -36,8 +35,7 @@ public class TotemBaseBlock extends VampirismBlock {
     }
 
     public TotemBaseBlock() {
-        super(regName, Properties.of(Material.STONE).strength(40, 2000).sound(SoundType.STONE).noOcclusion());
-
+        super(Properties.of(Material.STONE).strength(40, 2000).sound(SoundType.STONE).noOcclusion());
     }
 
     @Nonnull

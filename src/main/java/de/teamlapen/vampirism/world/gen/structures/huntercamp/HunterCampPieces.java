@@ -79,7 +79,7 @@ public abstract class HunterCampPieces extends StructurePiece {
     protected boolean testPreconditions(WorldGenLevel worldIn, StructureFeatureManager manager, ChunkPos chunkPos) {
         if (!VampirismConfig.COMMON.enableHunterTentGeneration.get()) return false;
         for (StructureStart value : worldIn.getChunk(chunkPos.x, chunkPos.z).getAllStarts().values()) {
-            if (value != StructureStart.INVALID_START && value.getFeature().feature != ModFeatures.hunter_camp) {
+            if (value != StructureStart.INVALID_START && value.getFeature().feature != ModFeatures.HUNTER_CAMP.get()) {
                 return false;
             }
         }
@@ -91,12 +91,12 @@ public abstract class HunterCampPieces extends StructurePiece {
         private boolean advanced;
 
         public Fireplace(Random random, int x, int y, int z) {
-            super(VampirismFeatures.hunter_camp_fireplace.get(), 0, x, y, z);
+            super(VampirismFeatures.HUNTER_CAMP_FIREPLACE.get(), 0, x, y, z);
             this.setOrientation(Direction.Plane.HORIZONTAL.getRandomDirection(random));
         }
 
         public Fireplace(CompoundTag nbt) {
-            super(VampirismFeatures.hunter_camp_fireplace.get(), nbt);
+            super(VampirismFeatures.HUNTER_CAMP_FIREPLACE.get(), nbt);
             advanced = nbt.getBoolean("advanced");
             specialComponentAdd = nbt.getBoolean("specialComponentAdd");
         }
@@ -133,7 +133,7 @@ public abstract class HunterCampPieces extends StructurePiece {
             }
 
             //generation
-            this.placeBlock(worldIn, VampirismConfig.COMMON.useVanillaCampfire.get() ? Blocks.CAMPFIRE.defaultBlockState() : ModBlocks.fire_place.defaultBlockState(), 1, 0, 1, structureBoundingBoxIn);
+            this.placeBlock(worldIn, VampirismConfig.COMMON.useVanillaCampfire.get() ? Blocks.CAMPFIRE.defaultBlockState() : ModBlocks.FIRE_PLACE.get().defaultBlockState(), 1, 0, 1, structureBoundingBoxIn);
             this.placeBlock(worldIn, Blocks.AIR.defaultBlockState(), 1, 1, 1, structureBoundingBoxIn);
         }
 
@@ -181,14 +181,14 @@ public abstract class HunterCampPieces extends StructurePiece {
         private int mirror;
 
         public Tent(int x, int y, int z, Direction direction, boolean advanced) {
-            super(VampirismFeatures.hunter_camp_tent.get(), 1, x, y, z);
+            super(VampirismFeatures.HUNTER_CAMP_TENT.get(), 1, x, y, z);
             this.setOrientation(direction);
             this.direction = direction;
             this.advanced = advanced;
         }
 
         public Tent(CompoundTag nbt) {
-            super(VampirismFeatures.hunter_camp_tent.get(), nbt);
+            super(VampirismFeatures.HUNTER_CAMP_TENT.get(), nbt);
             direction = Direction.from2DDataValue(nbt.getInt("direction"));
             mirror = nbt.getInt("mirror");
             advanced = nbt.getBoolean("advanced");
@@ -229,15 +229,15 @@ public abstract class HunterCampPieces extends StructurePiece {
 
             //generation of tent blocks
             if (mirror == 1) {
-                this.placeBlock(worldIn, ModBlocks.tent.defaultBlockState().setValue(TentBlock.FACING, dir.getOpposite()).setValue(TentBlock.POSITION, a), xDiff, 0, 0, structureBoundingBoxIn);
-                this.placeBlock(worldIn, ModBlocks.tent.defaultBlockState().setValue(TentBlock.FACING, dir).setValue(TentBlock.POSITION, b), 1, 0, 0, structureBoundingBoxIn);
-                this.placeBlock(worldIn, ModBlocks.tent_main.defaultBlockState().setValue(TentBlock.FACING, dir).setValue(TentBlock.POSITION, c), 1, 0, 1, structureBoundingBoxIn);
-                this.placeBlock(worldIn, ModBlocks.tent.defaultBlockState().setValue(TentBlock.FACING, dir.getOpposite()).setValue(TentBlock.POSITION, d), xDiff, 0, 1, structureBoundingBoxIn);
+                this.placeBlock(worldIn, ModBlocks.TENT.get().defaultBlockState().setValue(TentBlock.FACING, dir.getOpposite()).setValue(TentBlock.POSITION, a), xDiff, 0, 0, structureBoundingBoxIn);
+                this.placeBlock(worldIn, ModBlocks.TENT.get().defaultBlockState().setValue(TentBlock.FACING, dir).setValue(TentBlock.POSITION, b), 1, 0, 0, structureBoundingBoxIn);
+                this.placeBlock(worldIn, ModBlocks.TENT_MAIN.get().defaultBlockState().setValue(TentBlock.FACING, dir).setValue(TentBlock.POSITION, c), 1, 0, 1, structureBoundingBoxIn);
+                this.placeBlock(worldIn, ModBlocks.TENT.get().defaultBlockState().setValue(TentBlock.FACING, dir.getOpposite()).setValue(TentBlock.POSITION, d), xDiff, 0, 1, structureBoundingBoxIn);
             } else {
-                this.placeBlock(worldIn, ModBlocks.tent.defaultBlockState().setValue(TentBlock.FACING, dir).setValue(TentBlock.POSITION, b), xDiff, 0, 0, structureBoundingBoxIn);
-                this.placeBlock(worldIn, ModBlocks.tent.defaultBlockState().setValue(TentBlock.FACING, dir.getOpposite()).setValue(TentBlock.POSITION, a), 1, 0, 0, structureBoundingBoxIn);
-                this.placeBlock(worldIn, ModBlocks.tent_main.defaultBlockState().setValue(TentBlock.FACING, dir.getOpposite()).setValue(TentBlock.POSITION, d), 1, 0, 1, structureBoundingBoxIn);
-                this.placeBlock(worldIn, ModBlocks.tent.defaultBlockState().setValue(TentBlock.FACING, dir).setValue(TentBlock.POSITION, c), xDiff, 0, 1, structureBoundingBoxIn);
+                this.placeBlock(worldIn, ModBlocks.TENT.get().defaultBlockState().setValue(TentBlock.FACING, dir).setValue(TentBlock.POSITION, b), xDiff, 0, 0, structureBoundingBoxIn);
+                this.placeBlock(worldIn, ModBlocks.TENT.get().defaultBlockState().setValue(TentBlock.FACING, dir.getOpposite()).setValue(TentBlock.POSITION, a), 1, 0, 0, structureBoundingBoxIn);
+                this.placeBlock(worldIn, ModBlocks.TENT_MAIN.get().defaultBlockState().setValue(TentBlock.FACING, dir.getOpposite()).setValue(TentBlock.POSITION, d), 1, 0, 1, structureBoundingBoxIn);
+                this.placeBlock(worldIn, ModBlocks.TENT.get().defaultBlockState().setValue(TentBlock.FACING, dir).setValue(TentBlock.POSITION, c), xDiff, 0, 1, structureBoundingBoxIn);
             }
 
             BlockEntity tile = worldIn.getBlockEntity(new BlockPos(x, y, z));
@@ -294,14 +294,14 @@ public abstract class HunterCampPieces extends StructurePiece {
         private final boolean advanced;
 
         public SpecialBlock(int x, int y, int z, Direction direction, boolean advanced) {
-            super(VampirismFeatures.hunter_camp_special.get(), 2, x, y, z);
+            super(VampirismFeatures.HUNTER_CAMP_SPECIAL.get(), 2, x, y, z);
             this.setOrientation(direction);
             this.direction = direction;
             this.advanced = advanced;
         }
 
         public SpecialBlock(CompoundTag compoundNBT) {
-            super(VampirismFeatures.hunter_camp_special.get(), compoundNBT);
+            super(VampirismFeatures.HUNTER_CAMP_SPECIAL.get(), compoundNBT);
             this.direction = Direction.from2DDataValue(compoundNBT.getInt("dir"));
             this.advanced = compoundNBT.getBoolean("advanced");
         }
@@ -318,7 +318,7 @@ public abstract class HunterCampPieces extends StructurePiece {
             //generation
             if (advanced) {
                 if (!worldIn.getBlockState(new BlockPos(this.x + 1, worldIn.getHeight(Heightmap.Types.WORLD_SURFACE_WG, this.x + 1, this.z) - 1, z)).getMaterial().isReplaceable())
-                    this.placeBlock(worldIn, ModBlocks.weapon_table.defaultBlockState(), 2, worldIn.getHeight(Heightmap.Types.WORLD_SURFACE_WG, this.x + 1, this.z) - y, 1, structureBoundingBoxIn);
+                    this.placeBlock(worldIn, ModBlocks.WEAPON_TABLE.get().defaultBlockState(), 2, worldIn.getHeight(Heightmap.Types.WORLD_SURFACE_WG, this.x + 1, this.z) - y, 1, structureBoundingBoxIn);
                 if (!worldIn.getBlockState(new BlockPos(this.x - 1, worldIn.getHeight(Heightmap.Types.WORLD_SURFACE_WG, this.x - 1, this.z) - 1, z)).getMaterial().isReplaceable())
                     this.placeBlock(worldIn, Blocks.CRAFTING_TABLE.defaultBlockState(), 0, worldIn.getHeight(Heightmap.Types.WORLD_SURFACE_WG, this.x - 1, this.z) - y, 1, structureBoundingBoxIn);
             } else {

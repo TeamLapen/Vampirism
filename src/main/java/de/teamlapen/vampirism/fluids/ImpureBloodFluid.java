@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 public class ImpureBloodFluid extends VampirismFluid {
 
     public ImpureBloodFluid() {
-        super("impure_blood");
+        super();
     }
 
     @Override
@@ -34,7 +34,7 @@ public class ImpureBloodFluid extends VampirismFluid {
     @Nonnull
     @Override
     public Item getBucket() {
-        return ModItems.impure_blood_bucket;
+        return ModItems.IMPURE_BLOOD_BUCKET.get();
     }
 
     @Override

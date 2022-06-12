@@ -187,7 +187,7 @@ public class InputEventPacket implements IMessage {
 
                     break;
                 case RESETSKILL:
-                    InventoryHelper.removeItemFromInventory(player.getInventory(), new ItemStack(ModItems.oblivion_potion));
+                    InventoryHelper.removeItemFromInventory(player.getInventory(), new ItemStack(ModItems.OBLIVION_POTION.get()));
                     factionPlayerOpt.ifPresent(OblivionItem::applyEffect);
                     break;
                 case TRAINERLEVELUP:

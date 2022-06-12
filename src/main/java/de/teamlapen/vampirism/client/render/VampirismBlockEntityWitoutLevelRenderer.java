@@ -33,7 +33,7 @@ public class VampirismBlockEntityWitoutLevelRenderer extends BlockEntityWithoutL
         Item item = itemStack.getItem();
         if (item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof CoffinBlock) {
             if (coffin == null) {
-                coffin = new CoffinBlockEntity(true, BlockPos.ZERO, ModBlocks.coffin.defaultBlockState());
+                coffin = new CoffinBlockEntity(true, BlockPos.ZERO, ModBlocks.COFFIN.get().defaultBlockState());
             }
             dispatcher.renderItem(this.coffin, matrixStack, buffer, combinedLightIn, combinedOverlayIn);
         } else {

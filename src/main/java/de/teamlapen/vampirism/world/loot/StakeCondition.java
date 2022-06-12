@@ -29,7 +29,7 @@ public class StakeCondition implements LootItemCondition {
     @Nonnull
     @Override
     public LootItemConditionType getType() {
-        return ModLoot.with_stake;
+        return ModLoot.with_stake.get();
     }
 
     @Override

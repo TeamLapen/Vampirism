@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -18,9 +17,8 @@ import javax.annotation.Nonnull;
 public abstract class VampirismBlockContainer extends BaseEntityBlock {
 
 
-    public VampirismBlockContainer(String regName, Block.Properties properties) {
+    public VampirismBlockContainer(Block.Properties properties) {
         super(properties);
-        setRegistryName(REFERENCE.MODID, regName);
 
     }
 

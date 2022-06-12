@@ -20,7 +20,7 @@ public class AlchemicalCauldronContainer extends AbstractFurnaceMenu {
     }
 
     public AlchemicalCauldronContainer(int id, Inventory playerInventory, Container inv, ContainerData data, ContainerLevelAccess worldPos) {
-        super(ModContainer.alchemical_cauldron, ModRecipes.ALCHEMICAL_CAULDRON_TYPE, RecipeBookType.FURNACE, id, playerInventory, inv, data);
+        super(ModContainer.ALCHEMICAL_CAULDRON.get(), ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get(), RecipeBookType.FURNACE, id, playerInventory, inv, data);
         setSlots(playerInventory);
     }
 

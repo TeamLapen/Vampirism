@@ -2,9 +2,7 @@ package de.teamlapen.vampirism.util;
 
 import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.entity.CaptureEntityEntry;
-import de.teamlapen.vampirism.api.entity.ITaskMasterEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFactionVillageBuilder;
-import de.teamlapen.vampirism.api.entity.factions.IFactionVillage;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModEntities;
@@ -14,19 +12,10 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BannerPattern;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
 
 public class HunterVillage {
 
@@ -48,12 +37,12 @@ public class HunterVillage {
     }
 
     public static void hunterVillage(IFactionVillageBuilder builder) {
-        builder.badOmenEffect(() -> ModEffects.bad_omen_hunter)
-                .captureEntities(() -> Lists.newArrayList(new CaptureEntityEntry(ModEntities.hunter, 10)))
-                .factionVillagerProfession(() -> ModVillage.hunter_expert)
+        builder.badOmenEffect(ModEffects.BAD_OMEN_HUNTER)
+                .captureEntities(() -> Lists.newArrayList(new CaptureEntityEntry(ModEntities.HUNTER.get(), 10)))
+                .factionVillagerProfession(ModVillage.HUNTER_EXPERT)
                 .guardSuperClass(HunterBaseEntity.class)
-                .taskMaster(() -> ModEntities.task_master_hunter)
+                .taskMaster(ModEntities.TASK_MASTER_HUNTER::get)
                 .banner(HunterVillage::createBanner)
-                .totem(() -> ModBlocks.totem_top_vampirism_hunter, () -> ModBlocks.totem_top_vampirism_hunter_crafted);
+                .totem(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER::get, ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED::get);
     }
 }

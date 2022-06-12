@@ -35,10 +35,8 @@ import java.util.Random;
 public class AlchemicalFireBlock extends VampirismBlock {
     public static final IntegerProperty AGE = IntegerProperty.create("age", 0, 15);
 
-    private static final String name = "alchemical_fire";
-
     public AlchemicalFireBlock() {
-        super(name, Properties.of(Material.FIRE, MaterialColor.FIRE).strength(0.0f).lightLevel(s -> 15).sound(SoundType.WOOL).noCollission().randomTicks().noOcclusion().noDrops());
+        super(Properties.of(Material.FIRE, MaterialColor.FIRE).strength(0.0f).lightLevel(s -> 15).sound(SoundType.WOOL).noCollission().randomTicks().noOcclusion().noDrops());
         this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0));
     }
 

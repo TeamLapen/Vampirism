@@ -11,17 +11,15 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 
-public class VampireFangItem extends VampirismItem {
-
-    private static final String name = "vampire_fang";
-
+public class VampireFangItem extends Item {
     public VampireFangItem() {
-        super(name, new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties().tab(VampirismMod.creativeTab));
     }
 
     @Nonnull
@@ -35,12 +33,12 @@ public class VampireFangItem extends VampirismItem {
             } else {
                 if (Helper.canBecomeVampire(playerIn)) {
                     SanguinareEffect.addRandom(playerIn, true);
-                    playerIn.addEffect(new MobEffectInstance(ModEffects.poison, 60));
+                    playerIn.addEffect(new MobEffectInstance(ModEffects.POISON.get(), 60));
                 } else {
                     if (Helper.isVampire(playerIn)) {
                         playerIn.displayClientMessage(new TranslatableComponent("text.vampirism.already_vampire"), true);
                     } else {
-                        playerIn.displayClientMessage(new TranslatableComponent("text.vampirism.immune_to").append(new TranslatableComponent(ModEffects.sanguinare.getDescriptionId())), true);
+                        playerIn.displayClientMessage(new TranslatableComponent("text.vampirism.immune_to").append(new TranslatableComponent(ModEffects.SANGUINARE.get().getDescriptionId())), true);
                     }
                 }
                 stack.shrink(1);

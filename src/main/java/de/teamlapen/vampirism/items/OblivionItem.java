@@ -26,7 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class OblivionItem extends VampirismItem {
+public class OblivionItem extends Item {
 
     public static void applyEffect(IFactionPlayer<?> factionPlayer) {
         Player player = factionPlayer.getRepresentingPlayer();
@@ -35,7 +35,7 @@ public class OblivionItem extends VampirismItem {
             if (((SkillHandler<?>) skillHandler).getRootNode().getChildren().stream().flatMap(a -> Arrays.stream(a.getElements())).noneMatch(skillHandler::isSkillEnabled))
                 return;
             boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
-            player.addEffect(new MobEffectInstance(ModEffects.oblivion, Integer.MAX_VALUE, test ? 100 : 4));
+            player.addEffect(new MobEffectInstance(ModEffects.OBLIVION.get(), Integer.MAX_VALUE, test ? 100 : 4));
             if (factionPlayer instanceof ISyncable.ISyncableEntityCapabilityInst) {
                 HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, factionPlayer.getRepresentingPlayer(), false);
             }
@@ -43,8 +43,8 @@ public class OblivionItem extends VampirismItem {
 
     }
 
-    public OblivionItem(String regName, Properties properties) {
-        super(regName, properties.stacksTo(1).rarity(Rarity.UNCOMMON));
+    public OblivionItem(Properties properties) {
+        super(properties.stacksTo(1).rarity(Rarity.UNCOMMON));
     }
 
     @Override

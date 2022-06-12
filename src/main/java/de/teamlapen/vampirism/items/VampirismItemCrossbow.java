@@ -21,6 +21,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.TooltipFlag;
@@ -39,7 +40,7 @@ import java.util.Random;
 /**
  * Base class for crossbows
  */
-public abstract class VampirismItemCrossbow extends VampirismItem implements IFactionLevelItem<IHunterPlayer>, IVampirismCrossbow {
+public abstract class VampirismItemCrossbow extends Item implements IFactionLevelItem<IHunterPlayer>, IVampirismCrossbow {
 
     /**
      * Checks for Frugality enchantment on the crossbow
@@ -48,17 +49,17 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
      * @return the enchantment level
      */
     protected static int isCrossbowFrugal(ItemStack crossbowStack) {
-        return EnchantmentHelper.getItemEnchantmentLevel(ModEnchantments.crossbowfrugality, crossbowStack);
+        return EnchantmentHelper.getItemEnchantmentLevel(ModEnchantments.CROSSBOWFRUGALITY.get(), crossbowStack);
     }
 
     private int enchantability = 0;
 
     /**
-     * @param regName   Registration name
      * @param maxDamage Max damage or 0 if unbreakable
      */
-    public VampirismItemCrossbow(String regName, int maxDamage) {
-        super(regName, new Properties().stacksTo(1).defaultDurability(maxDamage).tab(VampirismMod.creativeTab));
+    public VampirismItemCrossbow(int maxDamage, Tiers material) {
+        super(new Properties().stacksTo(1).defaultDurability(maxDamage).tab(VampirismMod.creativeTab));
+        setEnchantability(material);
     }
 
     @Override
@@ -99,7 +100,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
         return VReference.HUNTER_FACTION;
     }
 
-    public void setEnchantability(Tiers material) {
+    private void setEnchantability(Tiers material) {
         this.enchantability = material.getEnchantmentValue();
     }
 
@@ -203,7 +204,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
 
         if (!itemstack.isEmpty() || creative) {
             if (itemstack.isEmpty()) {
-                itemstack = new ItemStack(ModItems.crossbow_arrow_normal);
+                itemstack = new ItemStack(ModItems.CROSSBOW_ARROW_NORMAL.get());
             }
 
             float f = getArrowVelocity();
@@ -213,7 +214,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
 
                 if (!world.isClientSide) {
                     boolean rightHand = player.getMainArm() == HumanoidArm.RIGHT && hand == InteractionHand.MAIN_HAND || player.getMainArm() == HumanoidArm.LEFT && hand == InteractionHand.OFF_HAND;
-                    IVampirismCrossbowArrow<?> itemarrow = itemstack.getItem() instanceof IVampirismCrossbowArrow ? (IVampirismCrossbowArrow<?>) itemstack.getItem() : ModItems.crossbow_arrow_normal;
+                    IVampirismCrossbowArrow<?> itemarrow = itemstack.getItem() instanceof IVampirismCrossbowArrow ? (IVampirismCrossbowArrow<?>) itemstack.getItem() : ModItems.CROSSBOW_ARROW_NORMAL.get();
                     AbstractArrow entityarrow = itemarrow.createEntity(itemstack, world, player, heightOffset, 0.3F + centerOffset, rightHand);
 
                     Vec3 vector3d = player.getViewVector(1.0F);
@@ -250,7 +251,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
                     }
 
                     world.addFreshEntity(entityarrow);
-                    world.playSound(null, player.getX(), player.getY() + 0.5, player.getZ(), ModSounds.crossbow, SoundSource.PLAYERS, 1F, world.random.nextFloat() * 0.1F + 0.9F);
+                    world.playSound(null, player.getX(), player.getY() + 0.5, player.getZ(), ModSounds.CROSSBOW.get(), SoundSource.PLAYERS, 1F, world.random.nextFloat() * 0.1F + 0.9F);
 
                 }
 

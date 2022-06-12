@@ -73,8 +73,8 @@ public class VampirismJEIPlugin implements IModPlugin {
     public void registerRecipes(IRecipeRegistration registration) {
         ClientLevel world = Minecraft.getInstance().level;
         RecipeManager recipeManager = world.getRecipeManager();
-        registration.addRecipes(recipeManager.byType(ModRecipes.ALCHEMICAL_CAULDRON_TYPE).values(), ALCHEMICAL_CAULDRON_RECIPE_UID);
-        registration.addRecipes(recipeManager.byType(ModRecipes.WEAPONTABLE_CRAFTING_TYPE).values(), WEAPON_TABLE_RECIPE_ID);
+        registration.addRecipes(recipeManager.byType(ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get()).values(), ALCHEMICAL_CAULDRON_RECIPE_UID);
+        registration.addRecipes(recipeManager.byType(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get()).values(), WEAPON_TABLE_RECIPE_ID);
         registration.addRecipes(TaskUtil.getItemRewardTasks(), TASK_RECIPE_UID);
         registration.addRecipes(VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().map(JEIPotionMix::createFromMix).flatMap(Collection::stream).collect(Collectors.toList()), POTION_RECIPE_UID);
         registration.addRecipes(getRepairRecipes(registration.getVanillaRecipeFactory()), VanillaRecipeCategoryUid.ANVIL);
@@ -89,17 +89,17 @@ public class VampirismJEIPlugin implements IModPlugin {
         List<Object> recipes = new ArrayList<>();
         Map<Ingredient, List<Item>> items = Maps.newHashMap();
         Ingredient ironIngredient = Tiers.IRON.getRepairIngredient();
-        items.put(ironIngredient, Lists.newArrayList(ModItems.hunter_axe_normal, ModItems.hunter_axe_enhanced, ModItems.hunter_axe_ultimate, ModItems.basic_tech_crossbow, ModItems.enhanced_tech_crossbow, ModItems.hunter_coat_chest_normal, ModItems.hunter_coat_chest_enhanced, ModItems.hunter_coat_chest_ultimate, ModItems.hunter_coat_head_normal, ModItems.hunter_coat_head_enhanced, ModItems.hunter_coat_head_ultimate, ModItems.hunter_coat_legs_normal, ModItems.hunter_coat_legs_enhanced, ModItems.hunter_coat_legs_ultimate, ModItems.hunter_coat_feet_normal, ModItems.hunter_coat_feet_enhanced, ModItems.hunter_coat_feet_ultimate));
+        items.put(ironIngredient, Lists.newArrayList(ModItems.HUNTER_AXE_NORMAL.get(), ModItems.HUNTER_AXE_ENHANCED.get(), ModItems.HUNTER_AXE_ULTIMATE.get(), ModItems.BASIC_TECH_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get(), ModItems.HUNTER_COAT_CHEST_NORMAL.get(), ModItems.HUNTER_COAT_CHEST_ENHANCED.get(), ModItems.HUNTER_COAT_CHEST_ULTIMATE.get(), ModItems.HUNTER_COAT_HEAD_NORMAL.get(), ModItems.HUNTER_COAT_HEAD_ENHANCED.get(), ModItems.HUNTER_COAT_HEAD_ULTIMATE.get(), ModItems.HUNTER_COAT_LEGS_NORMAL.get(), ModItems.HUNTER_COAT_LEGS_ENHANCED.get(), ModItems.HUNTER_COAT_LEGS_ULTIMATE.get(), ModItems.HUNTER_COAT_FEET_NORMAL.get(), ModItems.HUNTER_COAT_FEET_ENHANCED.get(), ModItems.HUNTER_COAT_FEET_ULTIMATE.get()));
         Ingredient stringIngredient = Ingredient.of(Tags.Items.STRING);
-        items.put(stringIngredient, Lists.newArrayList(ModItems.basic_crossbow, ModItems.basic_double_crossbow, ModItems.enhanced_crossbow, ModItems.enhanced_double_crossbow));
+        items.put(stringIngredient, Lists.newArrayList(ModItems.BASIC_CROSSBOW.get(), ModItems.BASIC_DOUBLE_CROSSBOW.get(), ModItems.ENHANCED_CROSSBOW.get(), ModItems.ENHANCED_DOUBLE_CROSSBOW.get()));
         Ingredient obsidianIngredient = Ingredient.of(Tags.Items.OBSIDIAN);
-        items.put(obsidianIngredient, Lists.newArrayList(ModItems.obsidian_armor_chest_normal, ModItems.obsidian_armor_chest_enhanced, ModItems.obsidian_armor_chest_ultimate, ModItems.obsidian_armor_head_normal, ModItems.obsidian_armor_head_enhanced, ModItems.obsidian_armor_head_ultimate, ModItems.obsidian_armor_legs_normal, ModItems.obsidian_armor_legs_enhanced, ModItems.obsidian_armor_legs_ultimate, ModItems.obsidian_armor_feet_normal, ModItems.obsidian_armor_feet_enhanced, ModItems.obsidian_armor_feet_ultimate));
+        items.put(obsidianIngredient, Lists.newArrayList(ModItems.OBSIDIAN_ARMOR_CHEST_NORMAL.get(), ModItems.OBSIDIAN_ARMOR_CHEST_ENHANCED.get(), ModItems.OBSIDIAN_ARMOR_CHEST_ULTIMATE.get(), ModItems.OBSIDIAN_ARMOR_HEAD_NORMAL.get(), ModItems.OBSIDIAN_ARMOR_HEAD_ENHANCED.get(), ModItems.OBSIDIAN_ARMOR_HEAD_ULTIMATE.get(), ModItems.OBSIDIAN_ARMOR_LEGS_NORMAL.get(), ModItems.OBSIDIAN_ARMOR_LEGS_ENHANCED.get(), ModItems.OBSIDIAN_ARMOR_LEGS_ULTIMATE.get(), ModItems.OBSIDIAN_ARMOR_FEET_NORMAL.get(), ModItems.OBSIDIAN_ARMOR_FEET_ENHANCED.get(), ModItems.OBSIDIAN_ARMOR_FEET_ULTIMATE.get()));
         Ingredient leather = Ingredient.of(Tags.Items.LEATHER);
-        items.put(leather, Lists.newArrayList(ModItems.armor_of_swiftness_chest_normal, ModItems.armor_of_swiftness_chest_enhanced, ModItems.armor_of_swiftness_chest_ultimate, ModItems.armor_of_swiftness_head_normal, ModItems.armor_of_swiftness_head_enhanced, ModItems.armor_of_swiftness_head_ultimate, ModItems.armor_of_swiftness_legs_normal, ModItems.armor_of_swiftness_legs_enhanced, ModItems.armor_of_swiftness_legs_ultimate, ModItems.armor_of_swiftness_feet_normal, ModItems.armor_of_swiftness_feet_enhanced, ModItems.armor_of_swiftness_feet_ultimate));
-        Ingredient bloodIngot = Ingredient.of(ModItems.blood_infused_iron_ingot);
-        items.put(bloodIngot, Lists.newArrayList(ModItems.heart_seeker_normal, ModItems.heart_striker_normal));
-        Ingredient enhancedBloodIngot = Ingredient.of(ModItems.blood_infused_enhanced_iron_ingot);
-        items.put(enhancedBloodIngot, Lists.newArrayList(ModItems.heart_seeker_enhanced, ModItems.heart_seeker_ultimate, ModItems.heart_striker_enhanced, ModItems.heart_striker_ultimate));
+        items.put(leather, Lists.newArrayList(ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE.get()));
+        Ingredient bloodIngot = Ingredient.of(ModItems.BLOOD_INFUSED_IRON_INGOT.get());
+        items.put(bloodIngot, Lists.newArrayList(ModItems.HEART_SEEKER_NORMAL.get(), ModItems.HEART_STRIKER_NORMAL.get()));
+        Ingredient enhancedBloodIngot = Ingredient.of(ModItems.BLOOD_INFUSED_ENHANCED_IRON_INGOT.get());
+        items.put(enhancedBloodIngot, Lists.newArrayList(ModItems.HEART_SEEKER_ENHANCED.get(), ModItems.HEART_SEEKER_ULTIMATE.get(), ModItems.HEART_STRIKER_ENHANCED.get(), ModItems.HEART_STRIKER_ULTIMATE.get()));
 
         for (Map.Entry<Ingredient, List<Item>> entry : items.entrySet()) {
 

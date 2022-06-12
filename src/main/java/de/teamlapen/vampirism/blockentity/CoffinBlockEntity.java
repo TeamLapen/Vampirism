@@ -29,12 +29,12 @@ public class CoffinBlockEntity extends BlockEntity {
     private boolean lastTickOccupied;
 
     public CoffinBlockEntity(BlockPos pos, BlockState state) {
-        super(ModTiles.coffin, pos, state);
+        super(ModTiles.COFFIN.get(), pos, state);
         this.renderAsItem = false;
     }
 
     public CoffinBlockEntity(boolean renderAsItem, BlockPos pos, BlockState state) {
-        super(ModTiles.coffin, pos, state);
+        super(ModTiles.COFFIN.get(), pos, state);
         this.renderAsItem = renderAsItem;
     }
 
@@ -94,7 +94,7 @@ public class CoffinBlockEntity extends BlockEntity {
     public static void clientTickHead(Level level, BlockPos pos, BlockState state, CoffinBlockEntity blockEntity) {
         boolean occupied = CoffinBlock.isOccupied(level, pos);
         if (blockEntity.lastTickOccupied != occupied) {
-            level.playLocalSound(pos.getX(), (double) pos.getY() + 0.5D, pos.getZ(), ModSounds.coffin_lid, SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.1F + 0.9F, true);
+            level.playLocalSound(pos.getX(), (double) pos.getY() + 0.5D, pos.getZ(), ModSounds.COFFIN_LID.get(), SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.1F + 0.9F, true);
             blockEntity.lastTickOccupied = occupied;
         }
 

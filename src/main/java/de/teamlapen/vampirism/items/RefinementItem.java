@@ -4,7 +4,6 @@ import de.teamlapen.lib.util.WeightedRandomItem;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.core.ModRegistries;
@@ -24,6 +23,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -73,9 +73,9 @@ public abstract class RefinementItem extends Item implements IRefinementItem {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         IRefinementSet set = getRefinementSet(stack);
         if (set != null) {
-            for (IRefinement refinement : set.getRefinements()) {
+            set.getRefinementRegistryObjects().stream().map(RegistryObject::get).forEach(refinement -> {
                 tooltip.add(new TextComponent(" - ").append(refinement.getDescription()).withStyle(ChatFormatting.GRAY));
-            }
+            });
         }
     }
 

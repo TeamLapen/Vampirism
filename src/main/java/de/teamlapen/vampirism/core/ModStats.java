@@ -4,9 +4,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.StatFormatter;
-import net.minecraft.stats.StatType;
 import net.minecraft.stats.Stats;
-import net.minecraftforge.registries.IForgeRegistry;
 
 public class ModStats {
 
@@ -17,7 +15,7 @@ public class ModStats {
     public static final ResourceLocation win_village_capture = new ResourceLocation(REFERENCE.MODID, "win_village_capture");
     public static final ResourceLocation infected_creatures = new ResourceLocation(REFERENCE.MODID, "infected_creatures");
 
-    static void registerStats(IForgeRegistry<StatType<?>> registry) {
+    static void registerCustomStats() {
         register(weapon_table);
         register(interact_alchemical_cauldron);
         register(capture_village);
@@ -29,9 +27,5 @@ public class ModStats {
     private static void register(ResourceLocation id) {
         Registry.register(Registry.CUSTOM_STAT, id, id);
         Stats.CUSTOM.get(id, StatFormatter.DEFAULT);
-    }
-
-    private static void register(ResourceLocation id, StatFormatter formatter) {
-        Stats.CUSTOM.get(id, formatter);
     }
 }

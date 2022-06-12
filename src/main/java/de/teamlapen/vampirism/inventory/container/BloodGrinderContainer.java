@@ -21,7 +21,7 @@ public class BloodGrinderContainer extends InventoryContainer {
     }
 
     public BloodGrinderContainer(int id, Inventory playerInventory, Container inventory, ContainerLevelAccess worldPosIn) {
-        super(ModContainer.blood_grinder, id, playerInventory, worldPosIn, inventory, SELECTOR_INFOS);
+        super(ModContainer.BLOOD_GRINDER.get(), id, playerInventory, worldPosIn, inventory, SELECTOR_INFOS);
         this.addPlayerSlots(playerInventory);
     }
 

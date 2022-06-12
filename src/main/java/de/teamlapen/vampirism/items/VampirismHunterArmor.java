@@ -10,9 +10,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
-import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -38,18 +36,12 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
     protected static final UUID[] VAMPIRISM_ARMOR_MODIFIER = new UUID[]{UUID.fromString("f0b9a417-0cec-4629-8623-053cd0feec3c"), UUID.fromString("e54474a9-62a0-48ee-baaf-7efddca3d711"), UUID.fromString("ac0c33f4-ebbf-44fe-9be3-a729f7633329"), UUID.fromString("8839e157-d576-4cff-bf34-0a788131fe0f")};
     private final Multimap<Attribute, AttributeModifier> modifierMultimap;
 
-    private final String translation_key;
-
-    public VampirismHunterArmor(String baseRegName, @Nullable String suffix, ArmorMaterial materialIn, EquipmentSlot equipmentSlotIn, Item.Properties props) {
-        this(baseRegName, suffix, materialIn, equipmentSlotIn, props, ImmutableMap.of());
+    public VampirismHunterArmor(ArmorMaterial materialIn, EquipmentSlot equipmentSlotIn, Item.Properties props) {
+        this(materialIn, equipmentSlotIn, props, ImmutableMap.of());
     }
 
-    public VampirismHunterArmor(String baseRegName, @Nullable String suffix, ArmorMaterial materialIn, EquipmentSlot equipmentSlotIn, Item.Properties props, Map<Attribute, Tuple<Double, AttributeModifier.Operation>> modifiers) {
+    public VampirismHunterArmor(ArmorMaterial materialIn, EquipmentSlot equipmentSlotIn, Item.Properties props, Map<Attribute, Tuple<Double, AttributeModifier.Operation>> modifiers) {
         super(materialIn, equipmentSlotIn, props);
-        String regName = baseRegName + "_" + equipmentSlotIn.getName();
-        if (suffix != null) regName += "_" + suffix;
-        setRegistryName(REFERENCE.MODID, regName);
-        translation_key = Util.makeDescriptionId("item", new ResourceLocation(REFERENCE.MODID, baseRegName + "_" + equipmentSlotIn.getName()));
 
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         for (Map.Entry<Attribute, Tuple<Double, AttributeModifier.Operation>> modifier : modifiers.entrySet()) {
@@ -94,18 +86,23 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
         if (player.tickCount % 16 == 8) {
             IFaction<?> f = VampirismPlayerAttributes.get(player).faction;
             if (f != null && !VReference.HUNTER_FACTION.equals(f)) {
-                player.addEffect(new MobEffectInstance(ModEffects.poison, 20, 1));
+                player.addEffect(new MobEffectInstance(ModEffects.POISON.get(), 20, 1));
             }
         }
     }
 
+    protected String getTextureLocation(String name, EquipmentSlot slot, String type) {
+        return String.format(REFERENCE.MODID + ":textures/models/armor/%s_layer_%d%s.png", name, slot == EquipmentSlot.LEGS ? 2 : 1, type == null ? "" : "_overlay");
+    }
+
+    private String descriptionId;
     @Nonnull
     @Override
     protected String getOrCreateDescriptionId() {
-        return translation_key;
-    }
+        if (this.descriptionId == null) {
+            this.descriptionId = super.getOrCreateDescriptionId().replaceAll("_normal|_enhanced|_ultimate", "");
+        }
 
-    protected String getTextureLocation(String name, EquipmentSlot slot, String type) {
-        return String.format(REFERENCE.MODID + ":textures/models/armor/%s_layer_%d%s.png", name, slot == EquipmentSlot.LEGS ? 2 : 1, type == null ? "" : "_overlay");
+        return this.descriptionId;
     }
 }

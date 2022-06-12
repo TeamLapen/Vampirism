@@ -38,7 +38,7 @@ public class PotionTableContainer extends InventoryContainer {
     private final ContainerData syncedProperties;
 
     public PotionTableContainer(int id, Inventory playerInventory, ContainerLevelAccess worldPos, @Nonnull Container inventory, boolean extended, @Nullable ContainerData syncedProperties) {
-        super(ModContainer.extended_potion_table, id, playerInventory, worldPos, inventory, extended ? SELECTOR_INFOS_EXTENDED : SELECTOR_INFOS);
+        super(ModContainer.EXTENDED_POTION_TABLE.get(), id, playerInventory, worldPos, inventory, extended ? SELECTOR_INFOS_EXTENDED : SELECTOR_INFOS);
         assert inventory.getContainerSize() >= (extended ? 8 : 6);
         this.syncedProperties = syncedProperties == null ? new SimpleContainerData(2) : syncedProperties;
         addPlayerSlots(playerInventory);

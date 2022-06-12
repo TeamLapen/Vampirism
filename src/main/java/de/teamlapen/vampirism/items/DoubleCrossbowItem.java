@@ -8,6 +8,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
@@ -16,19 +17,18 @@ import javax.annotation.Nullable;
 
 public class DoubleCrossbowItem extends SimpleCrossbowItem {
     /**
-     * @param regName       Registry name
      * @param speed         Speed of the shot arrows (0.1F-20F)
      * @param coolDownTicks Cooldown ticks >0
      * @param maxDamage     Max amount of shot arrrows or 0 if unbreakable
      */
-    public DoubleCrossbowItem(String regName, float speed, int coolDownTicks, int maxDamage) {
-        super(regName, speed, coolDownTicks, maxDamage);
+    public DoubleCrossbowItem(float speed, int coolDownTicks, int maxDamage, Tiers material) {
+        super(speed, coolDownTicks, maxDamage, material);
     }
 
     @Nullable
     @Override
     public ISkill<IHunterPlayer> getRequiredSkill(@Nonnull ItemStack stack) {
-        return HunterSkills.double_crossbow;
+        return HunterSkills.DOUBLE_CROSSBOW.get();
     }
 
 

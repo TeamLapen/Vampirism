@@ -30,8 +30,6 @@ import javax.annotation.Nullable;
  * Does almost no damage, but can one hit kill vampire from behind when used by skilled hunters
  */
 public class StakeItem extends VampirismItemWeapon implements IVampireFinisher, IFactionExclusiveItem {
-    private final static String regName = "stake";
-
     public static boolean canKillInstant(LivingEntity target, LivingEntity attacker) {
         boolean instaKillFromBehind = false;
         boolean instaKillLowHealth = false;
@@ -39,10 +37,10 @@ public class StakeItem extends VampirismItemWeapon implements IVampireFinisher, 
             @Nullable IFactionPlayer<?> factionPlayer = FactionPlayerHandler.getOpt((Player) attacker).resolve().flatMap(FactionPlayerHandler::getCurrentFactionPlayer).orElse(null);
             if (factionPlayer != null && factionPlayer.getFaction().equals(VReference.HUNTER_FACTION)) {
                 ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
-                if (skillHandler.isSkillEnabled(HunterSkills.stake2)) {
+                if (skillHandler.isSkillEnabled(HunterSkills.STAKE2.get())) {
                     instaKillFromBehind = true;
                 }
-                if (skillHandler.isSkillEnabled(HunterSkills.stake1)) {
+                if (skillHandler.isSkillEnabled(HunterSkills.STAKE1.get())) {
                     instaKillLowHealth = true;
                 }
             }
@@ -59,7 +57,7 @@ public class StakeItem extends VampirismItemWeapon implements IVampireFinisher, 
     }
 
     public StakeItem() {
-        super(regName, Tiers.WOOD, 1, -1, new Properties().tab(VampirismMod.creativeTab));
+        super(Tiers.WOOD, 1, -1, new Properties().tab(VampirismMod.creativeTab));
     }
 
     @Nullable

@@ -25,16 +25,14 @@ import java.util.List;
 
 public class SunscreenBeaconBlock extends VampirismBlockContainer {
 
-    private static final String regName = "sunscreen_beacon";
-
     public SunscreenBeaconBlock() {
-        super(regName, Properties.of(Material.METAL).strength(-1, 3600000).noOcclusion());
+        super(Properties.of(Material.METAL).strength(-1, 3600000).noOcclusion());
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
-        return level.isClientSide() ? null : createTickerHelper(type, ModTiles.sunscreen_beacon, SunscreenBeaconBlockEntity::serverTick);
+        return level.isClientSide() ? null : createTickerHelper(type, ModTiles.SUNSCREEN_BEACON.get(), SunscreenBeaconBlockEntity::serverTick);
     }
 
     @Override

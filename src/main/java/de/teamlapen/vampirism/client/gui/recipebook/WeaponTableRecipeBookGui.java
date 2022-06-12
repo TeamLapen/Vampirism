@@ -28,7 +28,7 @@ public class WeaponTableRecipeBookGui extends RecipeBookComponent {
         List<RecipeCollection> list1 = Lists.newArrayList(recipeLists);
         FactionPlayerHandler.getOpt(this.minecraft.player).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).ifPresent(player -> {
             list1.removeIf(recipeList -> {
-                if (recipeList.getRecipes().stream().anyMatch(recipe -> recipe.getType() != ModRecipes.WEAPONTABLE_CRAFTING_TYPE)) {
+                if (recipeList.getRecipes().stream().anyMatch(recipe -> recipe.getType() != ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get())) {
                     return true;
                 }
                 return recipeList.getRecipes().stream().anyMatch(recipe -> {

@@ -56,7 +56,7 @@ public class BakedBloodContainerModel implements IDynamicBakedModel {
 
     public BakedBloodContainerModel(BakedModel baseModel, FluidStack stack) {
         this.baseModel = baseModel;
-        this.impure = stack.getFluid().equals(ModFluids.impure_blood);
+        this.impure = stack.getFluid().equals(ModFluids.IMPURE_BLOOD.get());
         this.fluidLevel = Mth.clamp(stack.getAmount() / BloodContainerBlockEntity.LEVEL_AMOUNT, 1, FLUID_LEVELS) - 1;
         item = true;
     }

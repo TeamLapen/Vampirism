@@ -28,8 +28,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
-public class VampireBookItem extends VampirismItem {
-    private static final String regName = "vampire_book";
+public class VampireBookItem extends Item {
 
     public static boolean validBookTagContents(CompoundTag nbt) {
         if (!WritableBookItem.makeSureTagIsValid(nbt)) {
@@ -43,7 +42,7 @@ public class VampireBookItem extends VampirismItem {
     }
 
     public VampireBookItem() {
-        super(regName, new Properties().rarity(Rarity.UNCOMMON).stacksTo(1).tab(VampirismMod.creativeTab));
+        super(new Properties().rarity(Rarity.UNCOMMON).stacksTo(1).tab(VampirismMod.creativeTab));
     }
 
     @Override

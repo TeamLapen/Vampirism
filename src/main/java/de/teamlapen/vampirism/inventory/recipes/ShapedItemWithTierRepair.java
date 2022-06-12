@@ -47,7 +47,7 @@ public class ShapedItemWithTierRepair extends ShapedRecipe {
     @Nonnull
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRecipes.repair_iitemwithtier;
+        return ModRecipes.REPAIR_IITEMWITHTIER.get();
     }
 
     public static class Serializer extends ShapedRecipe.Serializer {

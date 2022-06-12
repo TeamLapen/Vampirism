@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
  * Container for interacting with basic hunters to level up as a hunter
  */
 public class HunterBasicContainer extends InventoryContainer {
-    private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(ModItems.vampire_blood_bottle, 27, 32)};
+    private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(ModItems.VAMPIRE_BLOOD_BOTTLE.get(), 27, 32)};
     private final IHunterPlayer player;
     @Nullable
     private final BasicHunterEntity entity;
@@ -35,7 +35,7 @@ public class HunterBasicContainer extends InventoryContainer {
     }
 
     public HunterBasicContainer(int id, Inventory playerInventory, @Nullable BasicHunterEntity hunter) {
-        super(ModContainer.hunter_basic, id, playerInventory, hunter == null ? ContainerLevelAccess.NULL : ContainerLevelAccess.create(hunter.level, hunter.blockPosition()), new SimpleContainer(SELECTOR_INFOS.length), SELECTOR_INFOS);
+        super(ModContainer.HUNTER_BASIC.get(), id, playerInventory, hunter == null ? ContainerLevelAccess.NULL : ContainerLevelAccess.create(hunter.level, hunter.blockPosition()), new SimpleContainer(SELECTOR_INFOS.length), SELECTOR_INFOS);
         player = HunterPlayer.get(playerInventory.player);
         this.addPlayerSlots(playerInventory);
         this.entity = hunter;
@@ -51,7 +51,7 @@ public class HunterBasicContainer extends InventoryContainer {
         HunterLevelingConf conf = HunterLevelingConf.instance();
         if (!conf.isLevelValidForBasicHunter(targetLevel)) return -1;
         int required = conf.getVampireBloodCountForBasicHunter(targetLevel);
-        return (blood.isEmpty() || !blood.getItem().equals(ModItems.vampire_blood_bottle)) ? required : Math.max(0, required - blood.getCount());
+        return (blood.isEmpty() || !blood.getItem().equals(ModItems.VAMPIRE_BLOOD_BOTTLE.get())) ? required : Math.max(0, required - blood.getCount());
     }
 
     public boolean canLevelUp() {

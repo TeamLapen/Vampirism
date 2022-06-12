@@ -53,7 +53,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     public static AttributeSupplier.Builder getAttributeBuilder() {
-        return VampirismEntity.getAttributeBuilder().add(ModAttributes.sundamage, BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
+        return VampirismEntity.getAttributeBuilder().add(ModAttributes.SUNDAMAGE.get(), BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
     }
 
     private final boolean countAsMonsterForSpawn;
@@ -91,7 +91,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
         }
         if (!level.isClientSide) {
             if (isGettingSundamage(level) && tickCount % 40 == 11) {
-                double dmg = getAttribute(ModAttributes.sundamage).getValue();
+                double dmg = getAttribute(ModAttributes.SUNDAMAGE.get()).getValue();
                 if (dmg > 0) this.hurt(VReference.SUNDAMAGE, (float) dmg);
             }
             if (isGettingGarlicDamage(level) != EnumStrength.NONE) {
@@ -171,7 +171,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
                 else if (((HunterCoatItem) e.getItem()).getVampirismTier().equals(IItemWithTier.TIER.ULTIMATE))
                     j = 3;
                 if (getRandom().nextInt((4 - j) * 2) == 0)
-                    addEffect(new MobEffectInstance(ModEffects.poison, (int) (20 * Math.sqrt(j)), j));
+                    addEffect(new MobEffectInstance(ModEffects.POISON.get(), (int) (20 * Math.sqrt(j)), j));
             }
         }
         return super.doHurtTarget(entity);
@@ -230,7 +230,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
 
     @Override
     public boolean isIgnoringSundamage() {
-        return this.hasEffect(ModEffects.sunscreen);
+        return this.hasEffect(ModEffects.SUNSCREEN.get());
     }
 
     /**

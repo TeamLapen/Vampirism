@@ -21,6 +21,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
+import net.minecraftforge.registries.RegistryObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -71,7 +72,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
 
     @Override
     public Result canSkillBeEnabled(ISkill<T> skill) {
-        if (player.getRepresentingPlayer().getEffect(ModEffects.oblivion) != null) {
+        if (player.getRepresentingPlayer().getEffect(ModEffects.OBLIVION.get()) != null) {
             return Result.LOCKED_BY_PLAYER_STATE;
         }
         if (isSkillEnabled(skill)) {
@@ -394,8 +395,9 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         this.appliedRefinementSets[slot] = set;
         this.refinementSetDamage[slot] = 0;
         if (set != null) {
-            Collection<IRefinement> refinements = set.getRefinements();
-            for (IRefinement refinement : refinements) {
+            Collection<RegistryObject<? extends IRefinement>> refinements = set.getRefinementRegistryObjects();
+            for (RegistryObject<? extends IRefinement> refinementObject : refinements) {
+                IRefinement refinement = refinementObject.get();
                 this.activeRefinements.add(refinement);
                 if (!this.player.isRemote()) {
                     Attribute a = refinement.getAttribute();
@@ -420,9 +422,9 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         IRefinementSet set = this.appliedRefinementSets[slot];
         this.appliedRefinementSets[slot] = null;
         if (set != null) {
-            Collection<IRefinement> refinements = set.getRefinements();
-            for (IRefinement refinement : refinements) {
-                this.activeRefinements.remove(refinement);
+            Collection<RegistryObject<? extends IRefinement>> refinements = set.getRefinementRegistryObjects();
+            for (RegistryObject<? extends IRefinement> refinementObject : refinements) {
+                IRefinement refinement = refinementObject.get();
                 if (!this.player.isRemote()) {
                     Attribute a = refinement.getAttribute();
                     if (a != null) {

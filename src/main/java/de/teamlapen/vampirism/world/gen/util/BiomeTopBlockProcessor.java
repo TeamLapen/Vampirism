@@ -48,7 +48,7 @@ public class BiomeTopBlockProcessor extends StructureProcessor {
     @Nonnull
     @Override
     protected StructureProcessorType<?> getType() {
-        return VampirismFeatures.biome_based.get();
+        return VampirismFeatures.BIOME_BASED.get();
     }
 
 }

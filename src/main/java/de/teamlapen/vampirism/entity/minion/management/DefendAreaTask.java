@@ -49,7 +49,7 @@ public class DefendAreaTask extends DefaultMinionTask<Desc, MinionData> {
 
         @Override
         public IMinionTask<?, MinionData> getTask() {
-            return MinionTasks.defend_area;
+            return MinionTasks.DEFEND_AREA.get();
         }
 
         @Override

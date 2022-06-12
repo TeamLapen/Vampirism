@@ -37,7 +37,7 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
     private boolean active;
 
     public SieveBlockEntity(BlockPos pos, BlockState state) {
-        super(ModTiles.sieve, pos, state);
+        super(ModTiles.SIEVE.get(), pos, state);
         tank = new FilteringFluidTank(2 * FluidAttributes.BUCKET_VOLUME).setListener(this);
         tank.setDrainable(false);
         cap = LazyOptional.of(() -> tank);
@@ -131,7 +131,7 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
     private void setActive(boolean active, BlockState blockState) {
         if (this.active != active) {
             this.active = active;
-            if (this.level != null && blockState.getBlock() == ModBlocks.blood_sieve)
+            if (this.level != null && blockState.getBlock() == ModBlocks.BLOOD_SIEVE.get())
                 this.level.setBlockAndUpdate(getBlockPos(), blockState.setValue(SieveBlock.PROPERTY_ACTIVE, active));
         }
     }

@@ -32,13 +32,9 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class VampireClothingItem extends ArmorItem implements IFactionExclusiveItem {
-    private final String regName;
 
-
-    public VampireClothingItem(EquipmentSlot slotType, String regName) {
+    public VampireClothingItem(EquipmentSlot slotType) {
         super(ArmorMaterials.LEATHER, slotType, new Properties().defaultDurability(ArmorMaterials.IRON.getDurabilityForSlot(slotType)).tab(VampirismMod.creativeTab));
-        this.regName = regName;
-        this.setRegistryName(REFERENCE.MODID, regName);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -56,7 +52,7 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
             @NotNull
             @Override
             public Model getBaseArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel<?> _default) {
-                return switch (regName) {
+                return switch (getRegistryName().getPath()) {
                     case "vampire_clothing_crown" -> ClothingCrownModel.getAdjustedInstance(_default);
                     case "vampire_clothing_legs" ->  ClothingPantsModel.getAdjustedInstance(_default);
                     case "vampire_clothing_boots" -> ClothingBootsModel.getAdjustedInstance(_default);
@@ -69,7 +65,7 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
 
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-        return String.format(REFERENCE.MODID + ":textures/models/armor/%s.png", regName);
+        return String.format(REFERENCE.MODID + ":textures/models/armor/%s.png", getRegistryName().getPath());
     }
 
     @Nullable
@@ -83,7 +79,7 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
         super.onArmorTick(stack, world, player);
         if (player.tickCount % 16 == 8) {
             if (!Helper.isVampire(player)) {
-                player.addEffect(new MobEffectInstance(ModEffects.poison, 20, 1));
+                player.addEffect(new MobEffectInstance(ModEffects.POISON.get(), 20, 1));
             }
         }
     }

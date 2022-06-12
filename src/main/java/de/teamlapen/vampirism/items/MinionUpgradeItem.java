@@ -15,13 +15,13 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 
-public class MinionUpgradeItem extends VampirismItem {
+public class MinionUpgradeItem extends Item {
     private final int minLevel;
     private final int maxLevel;
     private final IFaction<?> faction;
 
-    public MinionUpgradeItem(String regName, int minLevel, int maxLevel, IFaction<?> faction) {
-        super(regName, new Item.Properties().tab(VampirismMod.creativeTab));
+    public MinionUpgradeItem(int minLevel, int maxLevel, IFaction<?> faction) {
+        super(new Item.Properties().tab(VampirismMod.creativeTab));
         this.faction = faction;
         this.maxLevel = maxLevel;
         this.minLevel = minLevel;

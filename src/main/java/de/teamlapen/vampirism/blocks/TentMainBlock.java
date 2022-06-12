@@ -17,10 +17,9 @@ import javax.annotation.Nullable;
  * Main block for the 2x2 block tent. Handles spawning
  */
 public class TentMainBlock extends TentBlock implements EntityBlock {
-    private static final String name = "tent_main";
 
     public TentMainBlock() {
-        super(name);
+        super();
     }
 
     @Nullable
@@ -41,6 +40,6 @@ public class TentMainBlock extends TentBlock implements EntityBlock {
     @SuppressWarnings("unchecked")
     @Nullable
     private static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> type1, BlockEntityTicker<? super E> ticker) {
-        return ModTiles.tent == type1 ? (BlockEntityTicker<A>) ticker : null;
+        return ModTiles.TENT.get() == type1 ? (BlockEntityTicker<A>) ticker : null;
     }
 }

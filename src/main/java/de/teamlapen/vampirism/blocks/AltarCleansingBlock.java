@@ -32,8 +32,6 @@ import javax.annotation.Nullable;
  * Placed in some churches
  */
 public class AltarCleansingBlock extends VampirismHorizontalBlock {
-
-    private final static String regName = "altar_cleansing";
     private static final VoxelShape SHAPEX = makeShape();
     private static final VoxelShape SHAPEZ = UtilLib.rotateShape(SHAPEX, UtilLib.RotationAmount.NINETY);
 
@@ -47,7 +45,7 @@ public class AltarCleansingBlock extends VampirismHorizontalBlock {
 
 
     public AltarCleansingBlock() {
-        super(regName, Properties.of(Material.WOOD).strength(0.5f).noOcclusion());
+        super(Properties.of(Material.WOOD).strength(0.5f).noOcclusion());
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
     }
 
@@ -85,15 +83,15 @@ public class AltarCleansingBlock extends VampirismHorizontalBlock {
             }
             return InteractionResult.SUCCESS;
         } else if (!heldItem.isEmpty()) {
-            if (ModItems.holy_salt_water.equals(heldItem.getItem())) {
+            if (ModItems.HOLY_SALT_WATER.get() == heldItem.getItem()) {
                 if (world.isClientSide) return InteractionResult.SUCCESS;
-                boolean enhanced = handler.map(h-> h.isInFaction(VReference.HUNTER_FACTION) && h.getCurrentFactionPlayer().map(IFactionPlayer::getSkillHandler).map(s -> s.isSkillEnabled(HunterSkills.holy_water_enhanced)).orElse(false)).orElse(false);
-                ItemStack newStack = new ItemStack(enhanced ? ModItems.holy_water_bottle_enhanced : ModItems.holy_water_bottle_normal, heldItem.getCount());
+                boolean enhanced = handler.map(h-> h.isInFaction(VReference.HUNTER_FACTION) && h.getCurrentFactionPlayer().map(IFactionPlayer::getSkillHandler).map(s -> s.isSkillEnabled(HunterSkills.HOLY_WATER_ENHANCED.get())).orElse(false)).orElse(false);
+                ItemStack newStack = new ItemStack(enhanced ? ModItems.HOLY_WATER_BOTTLE_ENHANCED.get() : ModItems.HOLY_WATER_BOTTLE_NORMAL.get(), heldItem.getCount());
                 player.setItemInHand(hand, newStack);
                 return InteractionResult.SUCCESS;
-            } else if (ModItems.pure_salt.equals(heldItem.getItem())) {
+            } else if (ModItems.PURE_SALT.get() == heldItem.getItem()) {
                 if (world.isClientSide) return InteractionResult.SUCCESS;
-                player.setItemInHand(hand, new ItemStack(ModItems.holy_salt, heldItem.getCount()));
+                player.setItemInHand(hand, new ItemStack(ModItems.HOLY_SALT.get(), heldItem.getCount()));
             }
         }
         return InteractionResult.PASS;

@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
@@ -31,8 +30,6 @@ import javax.annotation.Nonnull;
  * @author Maxanier
  */
 public class GarlicBlock extends CropBlock {
-
-    public static final String regName = "garlic";
     private static final VoxelShape[] shape = makeShape();
 
     private static VoxelShape[] makeShape() {
@@ -50,7 +47,6 @@ public class GarlicBlock extends CropBlock {
 
     public GarlicBlock() {
         super(Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.CROP));
-        setRegistryName(REFERENCE.MODID, regName);
     }
 
     @Override
@@ -74,6 +70,6 @@ public class GarlicBlock extends CropBlock {
     @Nonnull
     @Override
     protected ItemLike getBaseSeedId() {
-        return ModItems.item_garlic;
+        return ModItems.ITEM_GARLIC.get();
     }
 }

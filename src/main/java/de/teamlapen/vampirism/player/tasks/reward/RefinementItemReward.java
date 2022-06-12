@@ -13,11 +13,13 @@ import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class RefinementItemReward extends ItemReward {
@@ -34,11 +36,11 @@ public class RefinementItemReward extends ItemReward {
     }
 
     public RefinementItemReward(@Nullable IFaction<?> faction, @Nullable IRefinementSet.Rarity refinementRarity) {
-        this(faction, null, refinementRarity);
+        this(faction, () -> null, refinementRarity);
     }
 
-    public RefinementItemReward(@Nullable IFaction<?> faction, @Nullable IRefinementItem item, @Nullable IRefinementSet.Rarity refinementRarity) {
-        super(new ItemStack((Item) item));
+    public RefinementItemReward(@Nullable IFaction<?> faction, @Nonnull Supplier<IRefinementItem> item, @Nullable IRefinementSet.Rarity refinementRarity) {
+        super(() -> new ItemStack(item.get()));
         this.faction = faction;
         this.rarity = refinementRarity;
     }
@@ -50,7 +52,8 @@ public class RefinementItemReward extends ItemReward {
 
     @Override
     public List<ItemStack> getAllPossibleRewards() {
-        return (!this.reward.isEmpty() ? Collections.singletonList(new ItemStack(this.reward.getItem())) : getAllRefinementItems());
+        final ItemStack reward = this.reward.get();
+        return !reward.isEmpty() ? Collections.singletonList(new ItemStack(reward.getItem())) : getAllRefinementItems();
     }
 
     protected <Z extends Item & IRefinementItem> ItemStack createItem() {

@@ -56,13 +56,13 @@ public class BloodHelper {
     }
 
     public static int getBlood(@Nonnull IFluidHandler cap) {
-        FluidStack stack = cap.drain(new FluidStack(ModFluids.blood, Integer.MAX_VALUE), IFluidHandler.FluidAction.SIMULATE);
+        FluidStack stack = cap.drain(new FluidStack(ModFluids.BLOOD.get(), Integer.MAX_VALUE), IFluidHandler.FluidAction.SIMULATE);
         return stack.getAmount();
     }
 
     public static int getBlood(@Nonnull LazyOptional<IFluidHandler> opt) {
         return opt.map(handler -> {
-            FluidStack stack = handler.drain(new FluidStack(ModFluids.blood, Integer.MAX_VALUE), IFluidHandler.FluidAction.SIMULATE);
+            FluidStack stack = handler.drain(new FluidStack(ModFluids.BLOOD.get(), Integer.MAX_VALUE), IFluidHandler.FluidAction.SIMULATE);
             return stack.getAmount();
         }).orElse(0);
     }
@@ -87,7 +87,7 @@ public class BloodHelper {
     }
 
     public static int fill(@Nonnull ItemStack stack, int amount, IFluidHandler.FluidAction action) {
-        return FluidUtil.getFluidHandler(stack).map(handler -> handler.fill(new FluidStack(ModFluids.blood, amount), action)).orElse(0);
+        return FluidUtil.getFluidHandler(stack).map(handler -> handler.fill(new FluidStack(ModFluids.BLOOD.get(), amount), action)).orElse(0);
     }
 
     /**
@@ -120,7 +120,7 @@ public class BloodHelper {
         }
         ItemStack glass = getGlassBottleInHotbar(player.getInventory());
         if (!glass.isEmpty() && VampirismConfig.COMMON.autoConvertGlassBottles.get()) {
-            ItemStack bloodBottle = new ItemStack(ModItems.blood_bottle, 1);
+            ItemStack bloodBottle = new ItemStack(ModItems.BLOOD_BOTTLE.get(), 1);
             int filled = fill(bloodBottle, amt, IFluidHandler.FluidAction.EXECUTE);
             if (filled == 0) {
                 LOGGER.warn("Failed to fill blood bottle with blood");
@@ -153,7 +153,7 @@ public class BloodHelper {
         int hotbarSize = Inventory.getSelectionSize();
         for (int i = 0; i < hotbarSize; i++) {
             ItemStack itemStack = inventory.getItem(i);
-            if (!itemStack.isEmpty() && itemStack.getItem().equals(ModItems.feeding_adapter)) {
+            if (!itemStack.isEmpty() && itemStack.getItem().equals(ModItems.FEEDING_ADAPTER.get())) {
                 return true;
             }
         }
@@ -164,7 +164,7 @@ public class BloodHelper {
         for (int i = 0; i < inventory.getContainerSize(); i++) {
             ItemStack stack = inventory.getItem(i);
             FluidStack content = BloodContainerBlock.getFluidFromItemStack(stack);
-            if (content.getRawFluid() == ModFluids.blood && (allowFull || content.getAmount() < BloodContainerBlockEntity.CAPACITY) && (allowEmpty || content.getAmount() > 0)) {
+            if (content.getRawFluid() == ModFluids.BLOOD.get() && (allowFull || content.getAmount() < BloodContainerBlockEntity.CAPACITY) && (allowEmpty || content.getAmount() > 0)) {
                 return stack;
             }
         }

@@ -19,10 +19,10 @@ public class VampirismBiomes {
     public static Biome createVampireForest() {
         MobSpawnSettings.Builder mobSpawnBuilder = new MobSpawnSettings.Builder();
         mobSpawnBuilder.creatureGenerationProbability(0.25f);
-        mobSpawnBuilder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.vampire, 35, 1, 3));
-        mobSpawnBuilder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.vampire_baron, VampirismConfig.COMMON.baronSpawnChance.get(), 1, 1));
-        mobSpawnBuilder.addSpawn(MobCategory.AMBIENT, new MobSpawnSettings.SpawnerData(ModEntities.blinding_bat, 60, 2, 4));
-        mobSpawnBuilder.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(ModEntities.dummy_creature, 80, 3, 6));
+        mobSpawnBuilder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.VAMPIRE.get(), 35, 1, 3));
+        mobSpawnBuilder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.VAMPIRE_BARON.get(), VampirismConfig.COMMON.baronSpawnChance.get(), 1, 1));
+        mobSpawnBuilder.addSpawn(MobCategory.AMBIENT, new MobSpawnSettings.SpawnerData(ModEntities.BLINDING_BAT.get(), 60, 2, 4));
+        mobSpawnBuilder.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(ModEntities.DUMMY_CREATURE.get(), 80, 3, 6));
 
         BiomeSpecialEffects.Builder biomeSpecialEffectsBuilder =  new BiomeSpecialEffects.Builder().waterColor(0x7d0000).waterFogColor(0x7d0000).fogColor(0x7d3535).skyColor(0x7d3535).foliageColorOverride(0x1E1F1F).grassColorOverride(0x2c2132).ambientMoodSound(AmbientMoodSettings.LEGACY_CAVE_SETTINGS);
 
@@ -35,7 +35,7 @@ public class VampirismBiomes {
         addModdedWaterLake(builder);
 
         addVampireFlower(builder);
-        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.forest_grass_placed.getHolder().orElseThrow());
+        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.FOREST_GRASS_PLACED.getHolder().orElseThrow());
 
         BiomeDefaultFeatures.addDefaultUndergroundVariety(builder);
         BiomeDefaultFeatures.addDefaultOres(builder);
@@ -49,7 +49,7 @@ public class VampirismBiomes {
 
 
     public static void addVampireFlower(BiomeGenerationSettings.Builder builder) {
-        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.vampire_flower_placed.getHolder().orElseThrow());
+        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.VAMPIRE_FLOWER_PLACED.getHolder().orElseThrow());
     }
 
     public static void addWaterSprings(BiomeGenerationSettings.Builder builder) {
@@ -57,11 +57,11 @@ public class VampirismBiomes {
     }
 
     public static void addModdedWaterLake(BiomeGenerationSettings.Builder builder) {
-         builder.addFeature(GenerationStep.Decoration.LAKES, VampirismFeatures.water_lake_placed.getHolder().orElseThrow());
+         builder.addFeature(GenerationStep.Decoration.LAKES, VampirismFeatures.WATER_LAKE_PLACED.getHolder().orElseThrow());
     }
 
     public static void addVampireTrees(BiomeGenerationSettings.Builder builder) {
-        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.vampire_trees_placed.getHolder().orElseThrow());
+        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.VAMPIRE_TREES_PLACED.getHolder().orElseThrow());
     }
 
     public static void addDefaultCarversWithoutLakes(BiomeGenerationSettings.Builder builder) {
@@ -78,20 +78,20 @@ public class VampirismBiomes {
     public static void onBiomeLoadingEventAdditions(BiomeLoadingEvent event) {
         List<MobSpawnSettings.SpawnerData> monsterList = event.getSpawns().getSpawner(MobCategory.MONSTER);
         if (monsterList != null && monsterList.stream().anyMatch(spawners -> spawners.type == EntityType.ZOMBIE)) {
-            event.getSpawns().addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.vampire, VampirismConfig.COMMON.vampireSpawnChance.get(), 1, 3));
-            event.getSpawns().addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.advanced_vampire, VampirismConfig.COMMON.advancedVampireSpawnChance.get(), 1, 1));
+            event.getSpawns().addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.VAMPIRE.get(), VampirismConfig.COMMON.vampireSpawnChance.get(), 1, 3));
+            event.getSpawns().addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.ADVANCED_VAMPIRE.get(), VampirismConfig.COMMON.advancedVampireSpawnChance.get(), 1, 1));
             int hunterChance = VampirismConfig.COMMON.hunterSpawnChance.get();
             if (hunterChance > 0) {
-                event.getSpawns().addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.hunter, hunterChance, 1, 3));
+                event.getSpawns().addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.HUNTER.get(), hunterChance, 1, 3));
             }
             int advancedHunterChance = VampirismConfig.COMMON.advancedHunterSpawnChance.get();
             if (advancedHunterChance > 0) {
-                event.getSpawns().addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.advanced_hunter, advancedHunterChance, 1, 1));
+                event.getSpawns().addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.ADVANCED_HUNTER.get(), advancedHunterChance, 1, 1));
             }
         }
         Biome.BiomeCategory cat = event.getCategory();
         if (cat != Biome.BiomeCategory.NETHER && cat != Biome.BiomeCategory.THEEND && cat != Biome.BiomeCategory.OCEAN && cat != Biome.BiomeCategory.NONE) {
-            event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_STRUCTURES, VampirismFeatures.vampire_dungeon_placed.getHolder().orElseThrow());
+            event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_STRUCTURES, VampirismFeatures.VAMPIRE_DUNGEON_PLACED.getHolder().orElseThrow());
         }
     }
 }

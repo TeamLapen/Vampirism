@@ -230,7 +230,7 @@ public class ModPlayerEventHandler {
     public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
         if (VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().isCannotInteract()) {
             event.setCanceled(true);
-        } else if ((ModBlocks.garlic_diffuser_normal.equals(event.getState().getBlock()) || ModBlocks.garlic_diffuser_weak.equals(event.getState().getBlock()) || ModBlocks.garlic_diffuser_improved.equals(event.getState().getBlock())) && VampirismPlayerAttributes.get(event.getPlayer()).vampireLevel > 0) {
+        } else if ((ModBlocks.GARLIC_DIFFUSER_NORMAL.get() == event.getState().getBlock() || ModBlocks.GARLIC_DIFFUSER_WEAK.get() == event.getState().getBlock() || ModBlocks.GARLIC_DIFFUSER_IMPROVED.get() == event.getState().getBlock()) && VampirismPlayerAttributes.get(event.getPlayer()).vampireLevel > 0) {
             event.setNewSpeed(event.getOriginalSpeed() * 0.1F);
         }
     }
@@ -289,7 +289,7 @@ public class ModPlayerEventHandler {
             if (stack.getItem() == Items.POTION) {
                 Potion p = PotionUtils.getPotion(stack);
                 if (p instanceof VampirismPotion.HunterPotion && p.getEffects().stream().map(MobEffectInstance::getEffect).anyMatch(MobEffect::isBeneficial)) {
-                    event.getEntityLiving().addEffect(new MobEffectInstance(ModEffects.poison, Integer.MAX_VALUE, VampirismPoisonEffect.DEADLY_AMPLIFIER));
+                    event.getEntityLiving().addEffect(new MobEffectInstance(ModEffects.POISON.get(), Integer.MAX_VALUE, VampirismPoisonEffect.DEADLY_AMPLIFIER));
                 }
             }
         }
@@ -358,7 +358,7 @@ public class ModPlayerEventHandler {
             ItemStack heldStack = event.getItemStack();
             if (!heldStack.isEmpty() && heldStack.getCount() == 1) {
                 boolean glassBottle = Items.GLASS_BOTTLE.equals(heldStack.getItem());
-                boolean bloodBottle = ModItems.blood_bottle.equals(heldStack.getItem());
+                boolean bloodBottle = ModItems.BLOOD_BOTTLE.get() == heldStack.getItem();
                 if (bloodBottle || (glassBottle && VampirismConfig.COMMON.autoConvertGlassBottles.get())) {
                     Block block = event.getWorld().getBlockState(event.getPos()).getBlock();
                     BlockState state = event.getWorld().getBlockState(event.getPos());
@@ -368,7 +368,7 @@ public class ModPlayerEventHandler {
                         if (entity != null) {
                             convert = entity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, event.getFace()).map(fluidHandler -> {
                                 boolean flag = false;
-                                FluidStack drain = fluidHandler.drain(new FluidStack(ModFluids.blood, 1000), IFluidHandler.FluidAction.SIMULATE);
+                                FluidStack drain = fluidHandler.drain(new FluidStack(ModFluids.BLOOD.get(), 1000), IFluidHandler.FluidAction.SIMULATE);
                                 if (drain.getAmount() >= BloodBottleFluidHandler.MULTIPLIER) {
                                     flag = true;
                                 }
@@ -390,7 +390,7 @@ public class ModPlayerEventHandler {
                         //Dangerous, but only solution I found so far
                         //Changes the held stack while {@link NetHandlerPlayServer#processRightClickBlock} is running which has a hard reference to the old stack
                         InteractionHand hand = heldStack.equals(event.getPlayer().getMainHandItem()) ? InteractionHand.MAIN_HAND : (heldStack.equals(event.getPlayer().getOffhandItem()) ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
-                        heldStack = new ItemStack(ModItems.blood_bottle);
+                        heldStack = new ItemStack(ModItems.BLOOD_BOTTLE.get());
                         event.getPlayer().setItemInHand(hand, heldStack);
                     }
                 }
@@ -402,8 +402,8 @@ public class ModPlayerEventHandler {
     public void onPlayerInteract(PlayerInteractEvent.EntityInteract event) {
         if (!(event.getTarget().getType() == EntityType.ZOMBIE)) return;
         ItemStack stack = event.getPlayer().getItemInHand(event.getHand());
-        if (stack.getItem() != ModItems.injection_empty) return;
-        event.getPlayer().setItemInHand(event.getHand(), new ItemStack(ModItems.injection_zombie_blood));
+        if (stack.getItem() != ModItems.INJECTION_EMPTY.get()) return;
+        event.getPlayer().setItemInHand(event.getHand(), new ItemStack(ModItems.INJECTION_ZOMBIE_BLOOD.get()));
         event.setCanceled(true);
     }
 
@@ -414,12 +414,12 @@ public class ModPlayerEventHandler {
         Level world = event.getWorld();
         BlockState state = world.getBlockState(pos);
 
-        if (state.getBlock() == ModBlocks.alchemical_fire) {
+        if (state.getBlock() == ModBlocks.ALCHEMICAL_FIRE.get()) {
             world.levelEvent(null, 1009, pos, 0);
             world.removeBlock(pos, false);
             event.setCanceled(true);
-        } else if ((ModBlocks.garlic_diffuser_normal.equals(state.getBlock()) || ModBlocks.garlic_diffuser_weak.equals(state.getBlock()) || ModBlocks.garlic_diffuser_improved.equals(state.getBlock())) && Helper.isVampire(event.getPlayer())) {
-            event.getPlayer().addEffect(new MobEffectInstance(ModEffects.garlic));
+        } else if ((ModBlocks.GARLIC_DIFFUSER_NORMAL.get() == state.getBlock() || ModBlocks.GARLIC_DIFFUSER_WEAK.get() == state.getBlock() || ModBlocks.GARLIC_DIFFUSER_IMPROVED.get() == state.getBlock()) && Helper.isVampire(event.getPlayer())) {
+            event.getPlayer().addEffect(new MobEffectInstance(ModEffects.GARLIC.get()));
         }
     }
 

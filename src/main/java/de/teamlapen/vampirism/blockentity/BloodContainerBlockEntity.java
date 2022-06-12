@@ -39,7 +39,7 @@ public class BloodContainerBlockEntity extends net.minecraftforge.fluids.capabil
     public static void setBloodValue(BlockGetter worldIn, Random randomIn, BlockPos blockPosIn) {
         BlockEntity tileEntity = worldIn.getBlockEntity(blockPosIn);
         if (tileEntity instanceof BloodContainerBlockEntity) {
-            ((BloodContainerBlockEntity) tileEntity).setFluidStack(new FluidStack(ModFluids.blood, BloodBottleFluidHandler.getAdjustedAmount((int) (CAPACITY * randomIn.nextFloat()))));
+            ((BloodContainerBlockEntity) tileEntity).setFluidStack(new FluidStack(ModFluids.BLOOD.get(), BloodBottleFluidHandler.getAdjustedAmount((int) (CAPACITY * randomIn.nextFloat()))));
         }
     }
 
@@ -47,8 +47,8 @@ public class BloodContainerBlockEntity extends net.minecraftforge.fluids.capabil
     private IModelData modelData;
 
     public BloodContainerBlockEntity(BlockPos pos, BlockState state) {
-        super(ModTiles.blood_container, pos, state);
-        this.tank = new FluidTankWithListener(CAPACITY, fluidStack -> ModFluids.blood.isSame(fluidStack.getFluid()) || ModFluids.impure_blood.isSame(fluidStack.getFluid())).setListener(this);
+        super(ModTiles.BLOOD_CONTAINER.get(), pos, state);
+        this.tank = new FluidTankWithListener(CAPACITY, fluidStack -> ModFluids.BLOOD.get().isSame(fluidStack.getFluid()) || ModFluids.IMPURE_BLOOD.get().isSame(fluidStack.getFluid())).setListener(this);
 
     }
 
@@ -123,7 +123,7 @@ public class BloodContainerBlockEntity extends net.minecraftforge.fluids.capabil
             float amount = fluid.getAmount() / (float) BloodContainerBlockEntity.LEVEL_AMOUNT;
             l = (amount > 0 && amount < 1) ? 1 : (int) amount;
         }
-        modelData = new ModelDataMap.Builder().withInitial(FLUID_LEVEL_PROP, l).withInitial(FLUID_IMPURE, fluid.getFluid().equals(ModFluids.impure_blood)).build();
+        modelData = new ModelDataMap.Builder().withInitial(FLUID_LEVEL_PROP, l).withInitial(FLUID_IMPURE, fluid.getFluid().equals(ModFluids.IMPURE_BLOOD.get())).build();
         if (refresh) ModelDataManager.requestModelDataRefresh(this);
     }
 }

@@ -87,9 +87,9 @@ public class VampireDungeonFeature extends MonsterRoomFeature {
                         } else if (blockstate.getMaterial().isSolid() && !blockstate.is(Blocks.CHEST)) {
                             if (i4 == -1 && context.random().nextInt(4) != 0) {
                                 if (context.random().nextInt(20) == 0) // changed to castle bricks
-                                    context.level().setBlock(blockpos1, ModBlocks.castle_block_dark_brick_bloody.defaultBlockState(), 2);
+                                    context.level().setBlock(blockpos1, ModBlocks.CASTLE_BLOCK_DARK_BRICK_BLOODY.get().defaultBlockState(), 2);
                                 else
-                                    context.level().setBlock(blockpos1, ModBlocks.castle_block_dark_brick.defaultBlockState(), 2);
+                                    context.level().setBlock(blockpos1, ModBlocks.CASTLE_BLOCK_DARK_BRICK.get().defaultBlockState(), 2);
                             } else {
                                 context.level().setBlock(blockpos1, Blocks.SPRUCE_PLANKS.defaultBlockState(), 2);
                             }
@@ -125,7 +125,7 @@ public class VampireDungeonFeature extends MonsterRoomFeature {
             context.level().setBlock(context.origin(), Blocks.SPAWNER.defaultBlockState(), 2);
             BlockEntity tileentity = context.level().getBlockEntity(context.origin());
             if (tileentity instanceof SpawnerBlockEntity) {
-                ((SpawnerBlockEntity) tileentity).getSpawner().setEntityId(ModEntities.vampire);
+                ((SpawnerBlockEntity) tileentity).getSpawner().setEntityId(ModEntities.VAMPIRE.get());
             } else {
                 LOGGER.error("Failed to fetch mob spawner entity at ({}, {}, {})", context.origin().getX(), context.origin().getY(), context.origin().getZ());
             }

@@ -14,8 +14,8 @@ public class ModParticleFactories {
 
     public static void registerFactoriesUnsafe() {
         ParticleEngine manager = Minecraft.getInstance().particleEngine;
-        manager.register(ModParticles.flying_blood, new FlyingBloodParticle.Factory());
-        manager.register(ModParticles.flying_blood_entity, new FlyingBloodEntityParticle.Factory());
-        manager.register(ModParticles.generic, new GenericParticle.Factory());
+        manager.register(ModParticles.FLYING_BLOOD.get(), new FlyingBloodParticle.Factory());
+        manager.register(ModParticles.FLYING_BLOOD_ENTITY.get(), new FlyingBloodEntityParticle.Factory());
+        manager.register(ModParticles.GENERIC.get(), new GenericParticle.Factory());
     }
 }

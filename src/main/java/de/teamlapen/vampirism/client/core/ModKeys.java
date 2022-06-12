@@ -98,7 +98,7 @@ public class ModKeys {
                 HitResult mouseOver = Minecraft.getInstance().hitResult;
                 suckKeyDown = true;
                 Player player = Minecraft.getInstance().player;
-                if (mouseOver != null && !player.isSpectator() && VampirePlayer.getOpt(player).map(vp -> vp.getLevel() > 0 && !vp.getActionHandler().isActionActive(VampireActions.bat)).orElse(false)) {
+                if (mouseOver != null && !player.isSpectator() && VampirePlayer.getOpt(player).map(vp -> vp.getLevel() > 0 && !vp.getActionHandler().isActionActive(VampireActions.BAT.get())).orElse(false)) {
                     if (mouseOver instanceof EntityHitResult) {
                         VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + ((EntityHitResult) mouseOver).getEntity().getId()));
                     } else if (mouseOver instanceof BlockHitResult) {

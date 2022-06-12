@@ -2,11 +2,8 @@ package de.teamlapen.vampirism.items;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import de.teamlapen.vampirism.REFERENCE;
-import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -18,26 +15,21 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class VampirismItemWeapon extends SwordItem {
-
-    protected final String regName;
     private final float attackDamage;
     private final float attackSpeed;
     private String translation_key;
 
 
-    public VampirismItemWeapon(String regName, Tier material, int attackDamageIn, float attackSpeedIn, Properties builder) {
+    public VampirismItemWeapon(Tier material, int attackDamageIn, float attackSpeedIn, Properties builder) {
         super(material, attackDamageIn, attackSpeedIn, builder);
         this.attackDamage = attackDamageIn;
         this.attackSpeed = attackSpeedIn;
-        this.regName = regName;
-        setRegistryName(REFERENCE.MODID, regName);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -76,16 +68,9 @@ public class VampirismItemWeapon extends SwordItem {
     @Override
     protected String getOrCreateDescriptionId() {
         if (this.translation_key == null) {
-            this.translation_key = Util.makeDescriptionId("item", ForgeRegistries.ITEMS.getKey(this));
+            this.translation_key = super.getOrCreateDescriptionId().replaceAll("_normal|_enhanced|_ultimate", "");
         }
 
         return this.translation_key;
-    }
-
-    /**
-     * Set a custom translation key
-     */
-    protected void setTranslation_key(String name) {
-        this.translation_key = Util.makeDescriptionId("item", new ResourceLocation(REFERENCE.MODID, name));
     }
 }

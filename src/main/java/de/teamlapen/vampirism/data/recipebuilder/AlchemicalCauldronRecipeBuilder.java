@@ -58,7 +58,7 @@ public class AlchemicalCauldronRecipeBuilder {
                 .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id))
                 .rewards(AdvancementRewards.Builder.recipe(id))
                 .requirements(RequirementsStrategy.OR);
-        consumer.accept(new Result(id, this.group != null ? this.group : "", this.ingredient, this.fluid, this.result, this.skills != null ? skills : new ISkill[]{HunterSkills.basic_alchemy}, this.reqLevel, this.cookTime, this.exp, advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + id.getPath())));
+        consumer.accept(new Result(id, this.group != null ? this.group : "", this.ingredient, this.fluid, this.result, this.skills != null ? skills : new ISkill[]{HunterSkills.BASIC_ALCHEMY.get()}, this.reqLevel, this.cookTime, this.exp, advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + id.getPath())));
     }
 
     public AlchemicalCauldronRecipeBuilder cookTime(int cookTime) {
@@ -176,7 +176,7 @@ public class AlchemicalCauldronRecipeBuilder {
         @Nonnull
         @Override
         public RecipeSerializer<?> getType() {
-            return ModRecipes.alchemical_cauldron;
+            return ModRecipes.ALCHEMICAL_CAULDRON.get();
         }
 
         @Nullable

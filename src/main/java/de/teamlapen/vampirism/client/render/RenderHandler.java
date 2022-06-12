@@ -139,7 +139,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
             if ((VampirismConfig.CLIENT.renderVampireForestFog.get() || VampirismConfig.SERVER.enforceRenderForestFog.get()) && (Helper.isEntityInArtificalVampireFogArea(mc.player) || Helper.isEntityInVampireBiome(mc.player))) {
                 insideFog = true;
                 vampireBiomeFogDistanceMultiplier = vampire != null && vampire.getLevel() > 0 ? 2 : 1;
-                vampireBiomeFogDistanceMultiplier += vampire != null && vampire.getSkillHandler().isRefinementEquipped(ModRefinements.vista) ? VampirismConfig.BALANCE.vrVistaMod.get() : 0;
+                vampireBiomeFogDistanceMultiplier += vampire != null && vampire.getSkillHandler().isRefinementEquipped(ModRefinements.VISTA.get()) ? VampirismConfig.BALANCE.vrVistaMod.get() : 0;
 
             } else {
                 insideFog = false;
@@ -157,7 +157,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
 
         //Saturation shader BUGGED this renderes the hotbar white
 //        if (mc.player != null && mc.player.getRNG().nextInt(10) == 3) {
-//            EffectInstance pe = mc.player.getActivePotionEffect(ModEffects.saturation);
+//            EffectInstance pe = mc.player.getActivePotionEffect(ModEffects.SATURATION.get());
 //            boolean active = pe != null && pe.getAmplifier() >= 2;
 //            GameRenderer renderer = mc.gameRenderer;
 //            if (active && renderer.getShaderGroup() == null) {

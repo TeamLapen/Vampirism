@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
 import java.util.Map;
 
 public class ConvertedChestedHorseRenderer<T extends AbstractChestedHorse> extends ChestedHorseRenderer<T> {
-    private static final Map<EntityType<?>, ResourceLocation> entityTypes = Maps.newHashMap(ImmutableMap.of(ModEntities.converted_donkey, new ResourceLocation("textures/entity/horse/donkey.png"), ModEntities.converted_mule, new ResourceLocation("textures/entity/horse/mule.png")));
+    private static final Map<EntityType<?>, ResourceLocation> entityTypes = Maps.newHashMap(ImmutableMap.of(ModEntities.CONVERTED_DONKEY.get(), new ResourceLocation("textures/entity/horse/donkey.png"), ModEntities.CONVERTED_MULE.get(), new ResourceLocation("textures/entity/horse/mule.png")));
 
     public ConvertedChestedHorseRenderer(EntityRendererProvider.Context context, ModelLayerLocation type) {
         super(context, 0.87f, type);

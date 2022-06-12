@@ -67,7 +67,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
     private static boolean warnedRecipeType = false;
 
     public AlchemicalCauldronBlockEntity(BlockPos pos, BlockState state) {
-        super(ModTiles.alchemical_cauldron, pos, state, ModRecipes.ALCHEMICAL_CAULDRON_TYPE);
+        super(ModTiles.ALCHEMICAL_CAULDRON.get(), pos, state, ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get());
         this.items = NonNullList.withSize(4, ItemStack.EMPTY);
     }
 
@@ -75,7 +75,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
     @Override
     public boolean canOpen(@Nonnull Player player) {
         if (super.canOpen(player)) {
-            if (HunterPlayer.getOpt(player).map(HunterPlayer::getSkillHandler).map(h -> h.isSkillEnabled(HunterSkills.basic_alchemy)).orElse(false)) {
+            if (HunterPlayer.getOpt(player).map(HunterPlayer::getSkillHandler).map(h -> h.isSkillEnabled(HunterSkills.BASIC_ALCHEMY.get())).orElse(false)) {
                 if (ownerID == null) {
                     setOwnerID(player);
                     return true;
@@ -219,7 +219,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
         ItemStack itemstackFuel = blockEntity.items.get(3);
         if (blockEntity.isBurning() || !itemstackFuel.isEmpty() && !blockEntity.items.get(0).isEmpty() && !blockEntity.items.get(1).isEmpty()) {
             AlchemicalCauldronRecipe cauldronRecipe = null;
-            Optional<? extends AbstractCookingRecipe> irecipe = level.getRecipeManager().getRecipeFor(ModRecipes.ALCHEMICAL_CAULDRON_TYPE, blockEntity, level);
+            Optional<? extends AbstractCookingRecipe> irecipe = level.getRecipeManager().getRecipeFor(ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get(), blockEntity, level);
             if (irecipe.isPresent() && irecipe.get() instanceof AlchemicalCauldronRecipe) {
                 cauldronRecipe = (AlchemicalCauldronRecipe) irecipe.get();
             } else {
@@ -250,7 +250,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
                 blockEntity.dataAccess.set(2, blockEntity.dataAccess.get(2) + 1); //Increase cook time
                 if (blockEntity.dataAccess.get(2) == blockEntity.dataAccess.get(3)) { //If finished
                     blockEntity.dataAccess.set(2, 0);
-                    blockEntity.dataAccess.set(3, getTotalCookTime(level, ModRecipes.ALCHEMICAL_CAULDRON_TYPE, blockEntity));
+                    blockEntity.dataAccess.set(3, getTotalCookTime(level, ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get(), blockEntity));
                     blockEntity.finishCooking(cauldronRecipe);
                     dirty = true;
                 }

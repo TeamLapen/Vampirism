@@ -16,7 +16,6 @@ import javax.annotation.Nonnull;
  */
 public class AltarTipBlock extends VampirismBlock {
     protected static final VoxelShape tipShape = makeShape();
-    private final static String name = "altar_tip";
 
     private static VoxelShape makeShape() {
         VoxelShape a = Block.box(3, 0, 3, 13, 3, 13);
@@ -28,7 +27,7 @@ public class AltarTipBlock extends VampirismBlock {
     }
 
     public AltarTipBlock() {
-        super(name, Properties.of(Material.METAL).strength(1f).noOcclusion());
+        super(Properties.of(Material.METAL).strength(1f).noOcclusion());
     }
 
 

@@ -138,7 +138,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                 MobEffectInstance fireResistance = this.removeEffectNoUpdate(MobEffects.FIRE_RESISTANCE);
                 assert fireResistance != null;
                 onEffectRemoved(fireResistance);
-                this.addEffect(new MobEffectInstance(ModEffects.fire_protection, fireResistance.getDuration(), fireResistance.getAmplifier()));
+                this.addEffect(new MobEffectInstance(ModEffects.FIRE_PROTECTION.get(), fireResistance.getDuration(), fireResistance.getAmplifier()));
             }
         }
         if (entityActionHandler != null) {
@@ -163,16 +163,16 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                     if (controller.hasFreeMinionSlot()) {
                         if (fph.getCurrentFaction() == this.getFaction()) {
                             VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData("Minion", this.getEntityTextureType(), false);
-                            int id = controller.createNewMinionSlot(data, ModEntities.vampire_minion);
+                            int id = controller.createNewMinionSlot(data, ModEntities.VAMPIRE_MINION.get());
                             if (id < 0) {
                                 LOGGER.error("Failed to get minion slot");
                                 return;
                             }
-                            VampireMinionEntity minion = ModEntities.vampire_minion.create(this.level);
+                            VampireMinionEntity minion = ModEntities.VAMPIRE_MINION.get().create(this.level);
                             minion.claimMinionSlot(id, controller);
                             minion.copyPosition(this);
                             minion.markAsConverted();
-                            controller.activateTask(0, MinionTasks.stay);
+                            controller.activateTask(0, MinionTasks.STAY.get());
                             UtilLib.replaceEntity(this, minion);
 
                         } else {
@@ -383,7 +383,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     @Override
     protected float calculateFireDamage(float amount) {
         float protectionMod = 1F;
-        MobEffectInstance protection = this.getEffect(ModEffects.fire_protection);
+        MobEffectInstance protection = this.getEffect(ModEffects.FIRE_PROTECTION.get());
         if (protection != null) {
             protectionMod = 1F / (2F + protection.getAmplifier());
         }
@@ -400,7 +400,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return ModSounds.entity_vampire_scream;
+        return ModSounds.ENTITY_VAMPIRE_SCREAM.get();
     }
 
     @Override
@@ -410,7 +410,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 
     @Override
     protected EntityType<?> getIMobTypeOpt(boolean iMob) {
-        return iMob ? ModEntities.vampire_imob : ModEntities.vampire;
+        return iMob ? ModEntities.VAMPIRE_IMOB.get() : ModEntities.VAMPIRE.get();
     }
 
     @Nonnull
@@ -426,7 +426,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                             //noinspection Convert2MethodRef
                             boolean freeSlot = MinionWorldData.getData(player.level).map(data -> data.getOrCreateController(fph)).map(c -> c.hasFreeMinionSlot()).orElse(false);
                             player.displayClientMessage(new TranslatableComponent("text.vampirism.basic_vampire.minion.available"), true);
-                            if (heldItem.getItem() == ModItems.vampire_minion_binding) {
+                            if (heldItem.getItem() == ModItems.VAMPIRE_MINION_BINDING.get()) {
                                 if (!freeSlot) {
                                     player.displayClientMessage(new TranslatableComponent("text.vampirism.basic_vampire.minion.no_free_slot"), true);
                                 } else {
@@ -440,7 +440,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                                     if (!player.getAbilities().instabuild) heldItem.shrink(1);
                                 }
                             } else if (freeSlot) {
-                                player.displayClientMessage(new TranslatableComponent("text.vampirism.basic_vampire.minion.require_binding", UtilLib.translate(ModItems.vampire_minion_binding.getDescriptionId())), true);
+                                player.displayClientMessage(new TranslatableComponent("text.vampirism.basic_vampire.minion.require_binding", UtilLib.translate(ModItems.VAMPIRE_MINION_BINDING.get().getDescriptionId())), true);
                             }
                             return InteractionResult.SUCCESS;
                         }

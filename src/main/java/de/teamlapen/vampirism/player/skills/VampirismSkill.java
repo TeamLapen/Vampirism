@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.player.skills;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -9,7 +8,6 @@ import de.teamlapen.vampirism.api.entity.player.skills.DefaultSkill;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;
@@ -64,21 +62,13 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends Defaul
     /**
      * Simple hunter skill implementation. Does nothing by itself
      */
-    @SuppressWarnings("DeprecatedIsStillUsed")
     public static class SimpleHunterSkill extends VampirismSkill<IHunterPlayer> {
 
         /**
-         * @param id   Registry name
          * @param desc Enable description using the default unlocalized key
          */
-        public SimpleHunterSkill(ResourceLocation id, boolean desc) {
-            this.setRegistryName(id);
+        public SimpleHunterSkill(boolean desc) {
             if (desc) this.setHasDefaultDescription();
-        }
-
-        @Deprecated
-        public SimpleHunterSkill(String id, boolean desc) {
-            this(new ResourceLocation(REFERENCE.MODID, id), desc);
         }
 
         @Nonnull
@@ -92,19 +82,11 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends Defaul
     /**
      * Simple vampire skill implementation. Does nothing by itself
      */
-    @SuppressWarnings("DeprecatedIsStillUsed")
     public static class SimpleVampireSkill extends VampirismSkill<IVampirePlayer> {
-        @Deprecated
-        public SimpleVampireSkill(String id, boolean desc) {
-            this(new ResourceLocation(REFERENCE.MODID, id), desc);
-        }
-
         /**
-         * @param id   Registry name
          * @param desc Enable description using the default unlocalized key
          */
-        public SimpleVampireSkill(ResourceLocation id, boolean desc) {
-            this.setRegistryName(id);
+        public SimpleVampireSkill(boolean desc) {
             if (desc) setHasDefaultDescription();
         }
 

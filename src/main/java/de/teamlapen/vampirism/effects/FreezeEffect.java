@@ -7,8 +7,8 @@ import net.minecraft.world.entity.LivingEntity;
 import javax.annotation.Nonnull;
 
 public class FreezeEffect extends VampirismEffect {
-    public FreezeEffect(String name) {
-        super(name, MobEffectCategory.HARMFUL, 0xFFFFFF);
+    public FreezeEffect() {
+        super(MobEffectCategory.HARMFUL, 0xFFFFFF);
     }
 
     @Override

@@ -13,6 +13,6 @@ public class BloodySpruceTree extends AbstractTreeGrower {
     @Nullable
     @Override
     protected Holder<? extends ConfiguredFeature<?, ?>> getConfiguredFeature(@Nonnull Random randomIn, boolean largeHive) {
-        return VampirismFeatures.vampire_tree_red.getHolder().orElseThrow();
+        return VampirismFeatures.VAMPIRE_TREE_RED.getHolder().orElseThrow();
     }
 }

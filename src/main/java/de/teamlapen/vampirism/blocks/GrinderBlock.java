@@ -29,7 +29,6 @@ import javax.annotation.Nullable;
 
 public class GrinderBlock extends VampirismBlockContainer {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
-    private final static String regName = "blood_grinder";
     private static final VoxelShape SOUTH = makeShape();
     private static final VoxelShape WEST = UtilLib.rotateShape(SOUTH, UtilLib.RotationAmount.NINETY);
     private static final VoxelShape NORTH = UtilLib.rotateShape(SOUTH, UtilLib.RotationAmount.HUNDRED_EIGHTY);
@@ -75,7 +74,7 @@ public class GrinderBlock extends VampirismBlockContainer {
     }
 
     public GrinderBlock() {
-        super(regName, Properties.of(Material.METAL).strength(5).sound(SoundType.METAL).noOcclusion());
+        super(Properties.of(Material.METAL).strength(5).sound(SoundType.METAL).noOcclusion());
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
 
     }
@@ -142,6 +141,6 @@ public class GrinderBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153212_, @Nonnull BlockState p_153213_, @Nonnull BlockEntityType<T> p_153214_) {
-        return p_153212_.isClientSide() ? null : createTickerHelper(p_153214_, ModTiles.grinder, BloodGrinderBlockEntity::serverTick);
+        return p_153212_.isClientSide() ? null : createTickerHelper(p_153214_, ModTiles.GRINDER.get(), BloodGrinderBlockEntity::serverTick);
     }
 }

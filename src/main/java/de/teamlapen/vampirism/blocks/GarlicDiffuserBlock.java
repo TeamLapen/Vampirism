@@ -40,8 +40,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class GarlicDiffuserBlock extends VampirismBlockContainer {
-
-    public final static String regName = "garlic_diffuser";
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     private static final VoxelShape shape = makeShape();
 
@@ -54,7 +52,7 @@ public class GarlicDiffuserBlock extends VampirismBlockContainer {
     private final Type type;
 
     public GarlicDiffuserBlock(Type type) {
-        super(regName + "_" + type.getName(), Properties.of(Material.STONE).strength(3f).sound(SoundType.STONE).noOcclusion());
+        super(Properties.of(Material.STONE).strength(3f).sound(SoundType.STONE).noOcclusion());
         this.type = type;
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
     }
@@ -136,7 +134,7 @@ public class GarlicDiffuserBlock extends VampirismBlockContainer {
     @Override
     public InteractionResult use(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
         ItemStack heldItem = player.getItemInHand(hand);
-        if (!heldItem.isEmpty() && ModItems.purified_garlic.equals(heldItem.getItem())) {
+        if (!heldItem.isEmpty() && ModItems.PURIFIED_GARLIC.get() == heldItem.getItem()) {
             if (!world.isClientSide) {
                 GarlicDiffuserBlockEntity t = getTile(world, pos);
                 if (t != null) {
@@ -179,7 +177,7 @@ public class GarlicDiffuserBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
-        return createTickerHelper(type, ModTiles.garlic_diffuser, GarlicDiffuserBlockEntity::tick);
+        return createTickerHelper(type, ModTiles.GARLIC_DIFFUSER.get(), GarlicDiffuserBlockEntity::tick);
     }
 
     public enum Type implements StringRepresentable {

@@ -109,7 +109,7 @@ public class ConvertedSheepEntity extends ConvertedCreatureEntity<Sheep> impleme
 
         @Override
         public ConvertedCreatureEntity<Sheep> createFrom(Sheep entity) {
-            return Helper.createEntity(ModEntities.converted_sheep, entity.getCommandSenderWorld()).map(creature -> {
+            return Helper.createEntity(ModEntities.CONVERTED_SHEEP.get(), entity.getCommandSenderWorld()).map(creature -> {
                 this.copyImportantStuff(creature, entity);
                 creature.setSheared(entity.isSheared());
                 return creature;

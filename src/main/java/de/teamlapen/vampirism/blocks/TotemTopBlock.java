@@ -106,7 +106,7 @@ public class TotemTopBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
-        return ModTiles.totem.create(pos, state);
+        return ModTiles.TOTEM.get().create(pos, state);
     }
 
     @Override
@@ -121,7 +121,7 @@ public class TotemTopBlock extends BaseEntityBlock {
     public InteractionResult use(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
         if (world.isClientSide) return InteractionResult.SUCCESS;
         TotemBlockEntity t = getTile(world, pos);
-        if (t != null && world.getBlockState(pos.below()).getBlock().equals(ModBlocks.totem_base)) {
+        if (t != null && world.getBlockState(pos.below()).getBlock().equals(ModBlocks.TOTEM_BASE.get())) {
             t.initiateCapture(player);
             return InteractionResult.SUCCESS;
         }
@@ -156,6 +156,6 @@ public class TotemTopBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
-        return createTickerHelper(type, ModTiles.totem, level.isClientSide() ? TotemBlockEntity::clientTick : TotemBlockEntity::serverTick);
+        return createTickerHelper(type, ModTiles.TOTEM.get(), level.isClientSide() ? TotemBlockEntity::clientTick : TotemBlockEntity::serverTick);
     }
 }

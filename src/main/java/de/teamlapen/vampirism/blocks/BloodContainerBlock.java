@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.blockentity.BloodContainerBlockEntity;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -18,7 +17,10 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -31,7 +33,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.registries.ObjectHolder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -43,20 +44,16 @@ import java.util.List;
  * Tileentity container that can store liquids.
  */
 public class BloodContainerBlock extends VampirismBlockContainer {
-
-    public final static String regName = "blood_container";
-    @ObjectHolder("vampirism:blood_container")
-    public static final Item item = UtilLib.getNull();
     protected static final VoxelShape containerShape = Block.box(2, 0, 2, 14, 16, 14);
     private final static Logger LOGGER = LogManager.getLogger();
 
     public static FluidStack getFluidFromItemStack(ItemStack stack) {
-        if (stack.getItem() == item) {
+        if (ModBlocks.BLOOD_CONTAINER.get().asItem().equals(stack.getItem())) {
             if (stack.hasTag() && stack.getTag().contains("fluid", 10)) {
                 CompoundTag fluidTag = stack.getTag().getCompound("fluid");
                 return FluidStack.loadFluidStackFromNBT(fluidTag);
             } else {
-                return new FluidStack(ModFluids.blood, 0);
+                return new FluidStack(ModFluids.BLOOD.get(), 0);
             }
         }
         return FluidStack.EMPTY;
@@ -73,7 +70,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
     }
 
     public BloodContainerBlock() {
-        super(regName, Properties.of(Material.GLASS).strength(1f).noOcclusion());
+        super(Properties.of(Material.GLASS).strength(1f).noOcclusion());
     }
 
     @Override
@@ -92,7 +89,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
     public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
         super.fillItemCategory(group, items);
         ItemStack stack = new ItemStack(this, 1);
-        FluidStack fluid = new FluidStack(ModFluids.blood, BloodContainerBlockEntity.CAPACITY);
+        FluidStack fluid = new FluidStack(ModFluids.BLOOD.get(), BloodContainerBlockEntity.CAPACITY);
         stack.addTagElement("fluid", fluid.writeToNBT(new CompoundTag()));
         items.add(stack);
     }
@@ -116,7 +113,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
 
     @Override
     public void playerDestroy(@Nonnull Level worldIn, @Nonnull Player player, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nullable BlockEntity te, @Nonnull ItemStack heldStack) {
-        ItemStack stack = new ItemStack(ModBlocks.blood_container, 1);
+        ItemStack stack = new ItemStack(ModBlocks.BLOOD_CONTAINER.get(), 1);
         if (te != null) {
             FluidStack fluid = ((BloodContainerBlockEntity) te).getFluid();
             if (!fluid.isEmpty() && fluid.getAmount() >= VReference.FOOD_TO_FLUID_BLOOD) {
@@ -145,9 +142,9 @@ public class BloodContainerBlock extends VampirismBlockContainer {
     public InteractionResult use(@Nonnull BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull Player playerIn, @Nonnull InteractionHand hand, BlockHitResult hit) {
         if (!FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, hit.getDirection()) && playerIn.getItemInHand(hand).getItem().equals(Items.GLASS_BOTTLE) && VampirismConfig.COMMON.autoConvertGlassBottles.get()) {
             FluidUtil.getFluidHandler(worldIn, pos, hit.getDirection()).ifPresent((fluidHandler -> {
-                if (fluidHandler.getFluidInTank(0).getFluid().equals(ModFluids.blood)) {
+                if (fluidHandler.getFluidInTank(0).getFluid().equals(ModFluids.BLOOD.get())) {
                     ItemStack glass = playerIn.getItemInHand(hand);
-                    ItemStack bloodBottle = new ItemStack(ModItems.blood_bottle, 1);
+                    ItemStack bloodBottle = new ItemStack(ModItems.BLOOD_BOTTLE.get(), 1);
                     playerIn.setItemInHand(hand, bloodBottle);
                     bloodBottle = FluidUtil.tryFillContainer(bloodBottle, fluidHandler, Integer.MAX_VALUE, playerIn, true).getResult();
                     if (glass.getCount() > 1) {

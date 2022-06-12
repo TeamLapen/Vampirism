@@ -26,7 +26,7 @@ public class GenericParticleData implements ParticleOptions {
                     Codec.INT.fieldOf("a").forGetter((p_239806_0_) -> p_239806_0_.maxAge),
                     Codec.INT.fieldOf("c").forGetter((p_239805_0_) -> p_239805_0_.color),
                     Codec.FLOAT.fieldOf("s").forGetter((p_239804_0_) -> p_239804_0_.speed))
-            .apply(p_239803_0_, (t, a, c, s) -> new GenericParticleData(ModParticles.generic, new ResourceLocation(t), a, c, s)));
+            .apply(p_239803_0_, (t, a, c, s) -> new GenericParticleData(ModParticles.GENERIC.get(), new ResourceLocation(t), a, c, s)));
 
 
     public static final ParticleOptions.Deserializer<GenericParticleData> DESERIALIZER = new ParticleOptions.Deserializer<>() {

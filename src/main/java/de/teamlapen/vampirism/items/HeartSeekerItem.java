@@ -17,17 +17,14 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class HeartSeekerItem extends VampirismVampireSword implements IItemWithTier {
-
-    public static final String regName = "heart_seeker";
     private final static int[] DAMAGE_TIER = {7, 8, 9};
     private final static float[] UNTRAINED_SPEED_TIER = {-3.6f, -3.5f, -3.4f};
     private final static float[] TRAINED_SPEED_TIER = {-2.2f, -2.1f, -2f};
     private final TIER tier;
 
     public HeartSeekerItem(TIER tier) {
-        super(regName + "_" + tier.getName(), Tiers.IRON, DAMAGE_TIER[tier.ordinal()], UNTRAINED_SPEED_TIER[tier.ordinal()], TRAINED_SPEED_TIER[tier.ordinal()], new Properties().tab(VampirismMod.creativeTab).durability(2500));
+        super(Tiers.IRON, DAMAGE_TIER[tier.ordinal()], UNTRAINED_SPEED_TIER[tier.ordinal()], TRAINED_SPEED_TIER[tier.ordinal()], new Properties().tab(VampirismMod.creativeTab).durability(2500));
         this.tier = tier;
-        this.setTranslation_key(regName);
     }
 
 
@@ -39,13 +36,8 @@ public class HeartSeekerItem extends VampirismVampireSword implements IItemWithT
     }
 
     @Override
-    public String getBaseRegName() {
-        return regName;
-    }
-
-    @Override
     public boolean isValidRepairItem(@Nonnull ItemStack toRepair, ItemStack repair) {
-        return (this.getVampirismTier() == TIER.NORMAL ? ModItems.blood_infused_iron_ingot : ModItems.blood_infused_enhanced_iron_ingot).equals(repair.getItem()) || super.isValidRepairItem(toRepair, repair);
+        return (this.getVampirismTier() == TIER.NORMAL ? ModItems.BLOOD_INFUSED_IRON_INGOT.get() : ModItems.BLOOD_INFUSED_ENHANCED_IRON_INGOT.get()).equals(repair.getItem()) || super.isValidRepairItem(toRepair, repair);
     }
 
     @Override

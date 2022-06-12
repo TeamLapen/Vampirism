@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 public class ModItemsRender {
 
     public static void registerItemModelPropertyUnsafe() {
-        Stream.of(ModItems.basic_crossbow, ModItems.basic_double_crossbow, ModItems.enhanced_crossbow, ModItems.enhanced_double_crossbow, ModItems.basic_tech_crossbow, ModItems.enhanced_tech_crossbow).forEach(item -> {
+        Stream.of(ModItems.BASIC_CROSSBOW.get(), ModItems.BASIC_DOUBLE_CROSSBOW.get(), ModItems.ENHANCED_CROSSBOW.get(), ModItems.ENHANCED_DOUBLE_CROSSBOW.get(), ModItems.BASIC_TECH_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get()).forEach(item -> {
             ItemProperties.register(item, new ResourceLocation(REFERENCE.MODID, "charged"), (stack, world, entity, value) -> {
                 if (entity == null) {
                     return 0.0F;
@@ -48,16 +48,16 @@ public class ModItemsRender {
                     default -> 0xFFF100;
                 };
             }
-        }, ModItems.armor_of_swiftness_feet_normal, ModItems.armor_of_swiftness_chest_normal, ModItems.armor_of_swiftness_head_normal, ModItems.armor_of_swiftness_legs_normal, ModItems.armor_of_swiftness_feet_enhanced, ModItems.armor_of_swiftness_chest_enhanced, ModItems.armor_of_swiftness_head_enhanced, ModItems.armor_of_swiftness_legs_enhanced, ModItems.armor_of_swiftness_feet_ultimate, ModItems.armor_of_swiftness_chest_ultimate, ModItems.armor_of_swiftness_head_ultimate, ModItems.armor_of_swiftness_legs_ultimate);
+        }, ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE.get());
         //Crossbow arrow
         colors.register((stack, tintIndex) -> {
             if (tintIndex == 1) {
                 return ((CrossbowArrowItem) stack.getItem()).getType().color;
             }
             return 0xFFFFFF;
-        }, ModItems.crossbow_arrow_normal, ModItems.crossbow_arrow_vampire_killer, ModItems.crossbow_arrow_spitfire);
-        colors.register((state, tintIndex) -> 0x1E1F1F, ModBlocks.vampire_spruce_leaves);
-        colors.register((state, tintIndex) -> 0x2e0606, ModBlocks.bloody_spruce_leaves);
+        }, ModItems.CROSSBOW_ARROW_NORMAL.get(), ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get(), ModItems.CROSSBOW_ARROW_SPITFIRE.get());
+        colors.register((state, tintIndex) -> 0x1E1F1F, ModBlocks.VAMPIRE_SPRUCE_LEAVES.get());
+        colors.register((state, tintIndex) -> 0x2e0606, ModBlocks.BLOODY_SPRUCE_LEAVES.get());
         colors.register((stack, tintIndex) -> {
             if (tintIndex == 1) {
                 if (stack.getItem() instanceof IRefinementItem) {
@@ -68,6 +68,6 @@ public class ModItemsRender {
                 }
             }
             return 0xFFFFFF;
-        }, ModItems.amulet, ModItems.ring, ModItems.obi_belt);
+        }, ModItems.AMULET.get(), ModItems.RING.get(), ModItems.OBI_BELT.get());
     }
 }
