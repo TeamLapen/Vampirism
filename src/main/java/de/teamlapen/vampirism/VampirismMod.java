@@ -45,6 +45,7 @@ import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.VampirismWorld;
 import de.teamlapen.vampirism.world.WorldGenManager;
+import de.teamlapen.vampirism.world.biome.VampireForestBiome;
 import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
@@ -59,6 +60,7 @@ import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
@@ -87,7 +89,7 @@ public class VampirismMod {
         @Override
         public ItemStack makeIcon() {
 
-            return new ItemStack(ModItems.vampire_fang);
+            return new ItemStack(ModItems.VAMPIRE_FANG.get());
         }
 //
 //        @Override
@@ -139,27 +141,32 @@ public class VampirismMod {
             LOGGER.warn("Cannot get version from mod info");
         }
 
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::loadComplete);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::gatherData);
-        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, this::finalizeConfiguration);
+        IEventBus modbus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        modbus.addListener(this::setup);
+        modbus.addListener(this::enqueueIMC);
+        modbus.addListener(this::processIMC);
+        modbus.addListener(this::loadComplete);
+        modbus.addListener(this::gatherData);
+        modbus.addGenericListener(Block.class, this::finalizeConfiguration);
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-            FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientEventHandler::onModelBakeEvent);
-            FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
-            FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientEventHandler::onModelRegistry);
+            modbus.addListener(ClientEventHandler::onModelBakeEvent);
+            modbus.addListener(this::setupClient);
+            modbus.addListener(ClientEventHandler::onModelRegistry);
         });
         VampirismConfig.init();
         MinecraftForge.EVENT_BUS.register(this);
         addModCompats();
         registryManager = new RegistryManager();
-        FMLJavaModLoadingContext.get().getModEventBus().register(registryManager);
+        modbus.register(registryManager);
         MinecraftForge.EVENT_BUS.register(registryManager);
         MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, ModBiomes::onBiomeLoadingEventAdditions);
+        MinecraftForge.EVENT_BUS.addListener(VampireForestBiome::addFeatures);
         MinecraftForge.EVENT_BUS.register(SitHandler.class);
 
         prepareAPI();
+        
+        RegistryManager.setupRegistries(modbus);
 
         if (OptifineHandler.isOptifineLoaded()) {
             LOGGER.warn("Using Optifine. Expect visual glitches and reduces blood vision functionality if using shaders.");

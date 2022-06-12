@@ -50,7 +50,7 @@ public class TaskBoardContainer extends Container implements TaskContainer {
     private Runnable listener;
 
     public TaskBoardContainer(int id, PlayerInventory playerInventory) {
-        super(ModContainer.task_master, id);
+        super(ModContainer.TASK_MASTER.get(), id);
         this.factionPlayer = FactionPlayerHandler.getCurrentFactionPlayer(playerInventory.player).orElseThrow(() -> new IllegalStateException("Can't open container without faction"));
         this.factionColor = this.factionPlayer.getFaction().getChatColor();
     }
@@ -98,7 +98,7 @@ public class TaskBoardContainer extends Container implements TaskContainer {
                 taskInfo.complete();
                 this.completableTasks.remove(taskInfo.getId());
                 this.taskInstances.remove(taskInfo);
-                VampLib.proxy.createMasterSoundReference(ModSounds.task_complete, 1, 1).startPlaying();
+                VampLib.proxy.createMasterSoundReference(ModSounds.TASK_COMPLETE.get(), 1, 1).startPlaying();
                 break;
             case ACCEPT:
                 taskInfo.startTask(Minecraft.getInstance().level.getGameTime() + taskInfo.getTaskDuration());

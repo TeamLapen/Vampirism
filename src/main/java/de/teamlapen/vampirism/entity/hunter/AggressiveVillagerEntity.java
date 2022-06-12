@@ -47,7 +47,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
      * @param villager Is not modified or removed
      */
     public static AggressiveVillagerEntity makeHunter(@Nonnull VillagerEntity villager) {
-        AggressiveVillagerEntity hunter = ModEntities.villager_angry.create(villager.level);
+        AggressiveVillagerEntity hunter = ModEntities.VILLAGER_ANGRY.get().create(villager.level);
         assert hunter != null;
         CompoundNBT nbt = new CompoundNBT();
         if (villager.isSleeping()) {
@@ -56,7 +56,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
         villager.saveWithoutId(nbt);
         hunter.load(nbt);
         hunter.setUUID(MathHelper.createInsecureUUID(hunter.random));
-        hunter.setItemInHand(Hand.MAIN_HAND, new ItemStack(ModItems.pitchfork));
+        hunter.setItemInHand(Hand.MAIN_HAND, new ItemStack(ModItems.PITCHFORK.get()));
         return hunter;
     }
 
@@ -115,7 +115,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     @Override
     public ILivingEntityData finalizeSpawn(@Nonnull IServerWorld worldIn, @Nonnull DifficultyInstance difficultyIn, @Nonnull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         ILivingEntityData data = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
-        this.setItemSlot(EquipmentSlotType.MAINHAND, new ItemStack(ModItems.pitchfork));
+        this.setItemSlot(EquipmentSlotType.MAINHAND, new ItemStack(ModItems.PITCHFORK.get()));
         return data;
     }
 

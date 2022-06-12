@@ -442,7 +442,9 @@ public class UtilLib {
      * https://github.com/TeamLapen/Vampirism#intellij
      * <p>
      * Make sure Settings -> Build, Execution, Deployment -> Compiler -> 'Add runtime assertions for not-null-annotated methods and parameters' is disabled (Unfortunately required)
+     * @deprecated This method should no longer be necessary with the switch to RegistryObjects from ObjectHolders.
      */
+    @Deprecated
     @SuppressWarnings("ConstantConditions")
     public static @Nonnull
     <T> T getNull() {

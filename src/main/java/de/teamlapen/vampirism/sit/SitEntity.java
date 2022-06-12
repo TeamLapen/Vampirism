@@ -19,7 +19,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 public class SitEntity extends Entity {
 
     public static SitEntity newEntity(World world, BlockPos pos, double offset) {
-        SitEntity e = ModEntities.dummy_sit_entity.create(world);
+        SitEntity e = ModEntities.DUMMY_SIT_ENTITY.get().create(world);
         e.setPos(pos.getX() + 0.5D, pos.getY() + offset, pos.getZ() + 0.5D);
         e.noPhysics = true;
         return e;

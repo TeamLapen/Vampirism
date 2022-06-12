@@ -61,12 +61,12 @@ public class MinionData implements INBTSerializable<CompoundNBT>, IMinionData {
         this.health = getMaxHealth();
         this.name = name;
         this.inventory = new MinionInventory(invSize);
-        this.activeTaskDesc = new IMinionTask.NoDesc<>(MinionTasks.nothing);
+        this.activeTaskDesc = new IMinionTask.NoDesc<>(MinionTasks.NOTHING.get());
     }
 
     protected MinionData() {
         this.inventory = new MinionInventory();
-        this.activeTaskDesc = new IMinionTask.NoDesc<>(MinionTasks.nothing);
+        this.activeTaskDesc = new IMinionTask.NoDesc<>(MinionTasks.NOTHING.get());
     }
 
     @Override
@@ -148,8 +148,8 @@ public class MinionData implements INBTSerializable<CompoundNBT>, IMinionData {
 
     public void resetStats(MinionEntity<?> entity) {
         entity.getInventory().ifPresent(inv -> {
-            if (!InventoryHelper.removeItemFromInventory(inv, new ItemStack(ModItems.oblivion_potion))) {
-                entity.getLordOpt().ifPresent(lord -> InventoryHelper.removeItemFromInventory(lord.getPlayer().inventory, new ItemStack(ModItems.oblivion_potion)));
+            if (!InventoryHelper.removeItemFromInventory(inv, new ItemStack(ModItems.OBLIVION_POTION.get()))) {
+                entity.getLordOpt().ifPresent(lord -> InventoryHelper.removeItemFromInventory(lord.getPlayer().inventory, new ItemStack(ModItems.OBLIVION_POTION.get())));
             }
         });
         HelperLib.sync(entity);

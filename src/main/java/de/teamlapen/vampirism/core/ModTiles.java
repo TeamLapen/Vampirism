@@ -8,57 +8,45 @@ import de.teamlapen.vampirism.tileentity.*;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;
 
-import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
-
-@ObjectHolder(REFERENCE.MODID)
 public class ModTiles {
+    public static final DeferredRegister<TileEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, REFERENCE.MODID);
 
-    public static final TileEntityType<AlchemicalCauldronTileEntity> alchemical_cauldron = getNull();
-    public static final TileEntityType<TentTileEntity> tent = getNull();
-    public static final TileEntityType<CoffinTileEntity> coffin = (TileEntityType<CoffinTileEntity>) create("coffin", CoffinTileEntity::new, CoffinBlock.COFFIN_BLOCKS.values().toArray(new Block[0]));
-    public static final TileEntityType<AltarInfusionTileEntity> altar_infusion = getNull();
-    public static final TileEntityType<BloodContainerTileEntity> blood_container = getNull();
-    public static final TileEntityType<AltarInspirationTileEntity> altar_inspiration = getNull();
-    public static final TileEntityType<SunscreenBeaconTileEntity> sunscreen_beacon = getNull();
-    public static final TileEntityType<GarlicBeaconTileEntity> garlic_beacon = getNull();
-    public static final TileEntityType<PedestalTileEntity> blood_pedestal = getNull();
-    public static final TileEntityType<BloodGrinderTileEntity> grinder = getNull();
-    public static final TileEntityType<SieveTileEntity> sieve = getNull();
-    public static final TileEntityType<TotemTileEntity> totem = getNull();
-    public static final TileEntityType<PotionTableTileEntity> potion_table = getNull();
+    public static final RegistryObject<TileEntityType<TentTileEntity>> TENT = BLOCK_ENTITIES.register("tent", () -> create(TentTileEntity::new, ModBlocks.TENT_MAIN.get()));
+    public static final RegistryObject<TileEntityType<CoffinTileEntity>> COFFIN = BLOCK_ENTITIES.register("coffin", () -> create(CoffinTileEntity::new, CoffinBlock.COFFIN_BLOCKS.values().toArray(new Block[0])));
+    public static final RegistryObject<TileEntityType<AltarInfusionTileEntity>> ALTAR_INFUSION = BLOCK_ENTITIES.register("altar_infusion", () -> create(AltarInfusionTileEntity::new, ModBlocks.ALTAR_INFUSION.get()));
+    public static final RegistryObject<TileEntityType<BloodContainerTileEntity>> BLOOD_CONTAINER = BLOCK_ENTITIES.register("blood_container", () -> create(BloodContainerTileEntity::new, ModBlocks.BLOOD_CONTAINER.get()));
+    public static final RegistryObject<TileEntityType<AltarInspirationTileEntity>> ALTAR_INSPIRATION = BLOCK_ENTITIES.register("altar_inspiration", () -> create(AltarInspirationTileEntity::new, ModBlocks.ALTAR_INSPIRATION.get()));
+    public static final RegistryObject<TileEntityType<SunscreenBeaconTileEntity>> SUNSCREEN_BEACON = BLOCK_ENTITIES.register("sunscreen_beacon", () -> create(SunscreenBeaconTileEntity::new, ModBlocks.SUNSCREEN_BEACON.get()));
+    public static final RegistryObject<TileEntityType<AlchemicalCauldronTileEntity>> ALCHEMICAL_CAULDRON = BLOCK_ENTITIES.register("alchemical_cauldron", () -> create(AlchemicalCauldronTileEntity::new, ModBlocks.ALCHEMICAL_CAULDRON.get()));
+    public static final RegistryObject<TileEntityType<GarlicBeaconTileEntity>> GARLIC_BEACON = BLOCK_ENTITIES.register("garlic_beacon", () -> create(GarlicBeaconTileEntity::new, ModBlocks.GARLIC_BEACON_NORMAL.get(), ModBlocks.GARLIC_BEACON_IMPROVED.get(), ModBlocks.GARLIC_BEACON_WEAK.get()));
+    public static final RegistryObject<TileEntityType<PedestalTileEntity>> BLOOD_PEDESTAL = BLOCK_ENTITIES.register("blood_pedestal", () -> create(PedestalTileEntity::new, ModBlocks.BLOOD_PEDESTAL.get()));
+    public static final RegistryObject<TileEntityType<BloodGrinderTileEntity>> GRINDER = BLOCK_ENTITIES.register("grinder", () -> create(BloodGrinderTileEntity::new, ModBlocks.BLOOD_GRINDER.get()));
+    public static final RegistryObject<TileEntityType<SieveTileEntity>> SIEVE = BLOCK_ENTITIES.register("sieve", () -> create(SieveTileEntity::new, ModBlocks.BLOOD_SIEVE.get()));
+    public static final RegistryObject<TileEntityType<TotemTileEntity>> TOTEM = BLOCK_ENTITIES.register("totem", () -> create(TotemTileEntity::new, TotemTopBlock.getBlocks().toArray(new TotemTopBlock[0])));
+    public static final RegistryObject<TileEntityType<PotionTableTileEntity>> POTION_TABLE = BLOCK_ENTITIES.register("potion_table", () -> create(PotionTableTileEntity::new, ModBlocks.POTION_TABLE.get()));
 
-    static void registerTiles(IForgeRegistry<TileEntityType<?>> registry) {
-        registry.register(create("tent", TentTileEntity::new, ModBlocks.tent_main));
-        registry.register(coffin);
-        registry.register(create("altar_infusion", AltarInfusionTileEntity::new, ModBlocks.altar_infusion));
-        registry.register(create("blood_container", BloodContainerTileEntity::new, ModBlocks.blood_container));
-        registry.register(create("altar_inspiration", AltarInspirationTileEntity::new, ModBlocks.altar_inspiration));
-        registry.register(create("sunscreen_beacon", SunscreenBeaconTileEntity::new, ModBlocks.sunscreen_beacon));
-        registry.register(create("alchemical_cauldron", AlchemicalCauldronTileEntity::new, ModBlocks.alchemical_cauldron));
-        registry.register(create("garlic_beacon", GarlicBeaconTileEntity::new, ModBlocks.garlic_beacon_normal, ModBlocks.garlic_beacon_improved, ModBlocks.garlic_beacon_weak));
-        registry.register(create("blood_pedestal", PedestalTileEntity::new, ModBlocks.blood_pedestal));
-        registry.register(create("grinder", BloodGrinderTileEntity::new, ModBlocks.blood_grinder));
-        registry.register(create("sieve", SieveTileEntity::new, ModBlocks.blood_sieve));
-        registry.register(create("totem", TotemTileEntity::new, TotemTopBlock.getBlocks().toArray(new TotemTopBlock[0])));
-        registry.register(create("potion_table", PotionTableTileEntity::new, ModBlocks.potion_table));
+    static void registerTiles(IEventBus bus) {
+        BLOCK_ENTITIES.register(bus);
     }
 
     public static void registerTileExtensionsUnsafe() {
         Set<Block> blocks = new HashSet<>(((TileEntityTypeAccessor) TileEntityType.SIGN).getValidBlocks());
-        blocks.add(ModBlocks.dark_spruce_sign);
-        blocks.add(ModBlocks.cursed_spruce_sign);
+        blocks.add(ModBlocks.DARK_SPRUCE_SIGN.get());
+        blocks.add(ModBlocks.CURSED_SPRUCE_SIGN.get());
         ((TileEntityTypeAccessor) TileEntityType.SIGN).setValidBlocks(blocks);
     }
 
-    private static <T extends TileEntity> TileEntityType<?> create(String id, Supplier<? extends T> factoryIn, Block... blocks) {
-        return TileEntityType.Builder.of(factoryIn, blocks).build(null).setRegistryName(REFERENCE.MODID, id);
+    private static <T extends TileEntity> TileEntityType<T> create(Supplier<T> factoryIn, Block... blocks) {
+        return TileEntityType.Builder.of(factoryIn, blocks).build(null);
     }
 }

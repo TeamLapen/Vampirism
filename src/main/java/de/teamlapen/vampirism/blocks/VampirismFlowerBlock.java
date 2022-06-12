@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.block.FlowerBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -19,7 +18,6 @@ public class VampirismFlowerBlock extends FlowerBlock {
     public VampirismFlowerBlock(TYPE type) {
         super(type.effect, type.duration, Properties.of(Material.PLANT).instabreak().noCollission().sound(SoundType.GRASS));
         this.type = type;
-        this.setRegistryName(REFERENCE.MODID, type.getName());
     }
 
 

@@ -19,9 +19,8 @@ public class VampirismBlock extends Block {
 
     private boolean isDecorativeBlock;
 
-    public VampirismBlock(String regName, Block.Properties properties) {
+    public VampirismBlock(Block.Properties properties) {
         super(properties);
-        setRegistryName(REFERENCE.MODID, regName);
     }
 
     @Override

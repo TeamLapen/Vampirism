@@ -22,12 +22,12 @@ public class FollowLordGoal extends MoveToPositionGoal<MinionEntity<?>> {
 
     @Override
     public boolean canContinueToUse() {
-        return super.canContinueToUse() && this.entity.getCurrentTask().filter(task -> task.getTask() == MinionTasks.follow_lord || task.getTask() == MinionTasks.protect_lord).isPresent();
+        return super.canContinueToUse() && this.entity.getCurrentTask().filter(task -> task.getTask() == MinionTasks.FOLLOW_LORD.get() || task.getTask() == MinionTasks.PROTECT_LORD.get()).isPresent();
     }
 
     @Override
     public boolean canUse() {
-        if (!this.entity.getCurrentTask().filter(task -> task.getTask() == MinionTasks.follow_lord || task.getTask() == MinionTasks.protect_lord).isPresent())
+        if (!this.entity.getCurrentTask().filter(task -> task.getTask() == MinionTasks.FOLLOW_LORD.get() || task.getTask() == MinionTasks.PROTECT_LORD.get()).isPresent())
             return false;
         Optional<ILordPlayer> lord = this.entity.getLordOpt();
         if (!lord.isPresent()) {

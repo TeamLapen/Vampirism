@@ -58,7 +58,7 @@ public class DamageHandler {
     private static void affectVampireGarlic(IVampire vampire, EnumStrength strength, float multiplier, boolean ambient) {
         if (strength == EnumStrength.NONE) return;
         LivingEntity entity = vampire.getRepresentingEntity();
-        entity.addEffect(new EffectInstance(ModEffects.garlic, (int) (multiplier * 20), strength.getStrength() - 1, ambient, true));
+        entity.addEffect(new EffectInstance(ModEffects.GARLIC.get(), (int) (multiplier * 20), strength.getStrength() - 1, ambient, true));
         if (entity instanceof PlayerEntity && ((PlayerEntity) entity).abilities.instabuild) return;
         entity.addEffect(new EffectInstance(Effects.WEAKNESS, (int) (multiplier * 20), 1, ambient, false));
         if (strength == EnumStrength.MEDIUM || strength == EnumStrength.STRONG) {
@@ -69,7 +69,7 @@ public class DamageHandler {
         }
         if (vampire instanceof IVampirePlayer) {
             IActionHandler<IVampirePlayer> actionHandler = ((IVampirePlayer) vampire).getActionHandler();
-            actionHandler.deactivateAction(VampireActions.disguise_vampire);
+            actionHandler.deactivateAction(VampireActions.DISGUISE_VAMPIRE.get());
         }
     }
 
@@ -138,12 +138,12 @@ public class DamageHandler {
         }
         if (vampire && entity instanceof PlayerEntity) {
             VampirePlayer.getOpt((PlayerEntity) entity).map(VampirePlayer::getActionHandler).ifPresent(actionHandler -> {
-                actionHandler.deactivateAction(VampireActions.disguise_vampire);
-                actionHandler.deactivateAction(VampireActions.vampire_invisibility);
+                actionHandler.deactivateAction(VampireActions.DISGUISE_VAMPIRE.get());
+                actionHandler.deactivateAction(VampireActions.VAMPIRE_INVISIBILITY.get());
             });
         } else if (vampire && entity instanceof IEntityActionUser) {
             IActionHandlerEntity h = ((IEntityActionUser) entity).getActionHandler();
-            if (h.isActionActive(EntityActions.entity_invisible)) {
+            if (h.isActionActive(EntityActions.ENTITY_INVISIBLE.get())) {
                 h.deactivateAction();
             }
         }

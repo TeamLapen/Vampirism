@@ -9,6 +9,5 @@ public class CoffinBlockItem extends BlockItem {
 
     public CoffinBlockItem(CoffinBlock block) {
         super(block, new Item.Properties().tab(VampirismMod.creativeTab));
-        this.setRegistryName(block.getRegistryName());
     }
 }

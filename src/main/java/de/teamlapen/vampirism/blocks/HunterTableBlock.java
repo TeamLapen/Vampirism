@@ -30,7 +30,6 @@ import javax.annotation.Nullable;
  * Table for hunter "education/leveling"
  */
 public class HunterTableBlock extends VampirismHorizontalBlock {
-    public static final String name = "hunter_table";
     public static final EnumProperty<TABLE_VARIANT> VARIANT = EnumProperty.create("variant", TABLE_VARIANT.class);
     private static final VoxelShape SOUTH = makeShape();
     private static final VoxelShape WEST = UtilLib.rotateShape(SOUTH, UtilLib.RotationAmount.NINETY);
@@ -61,7 +60,7 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
 
 
     public HunterTableBlock() {
-        super(name, Properties.of(Material.WOOD).strength(0.5f).noOcclusion());
+        super(Properties.of(Material.WOOD).strength(0.5f).noOcclusion());
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(VARIANT, TABLE_VARIANT.SIMPLE));
     }
 
@@ -117,9 +116,9 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
         Block left = world.getBlockState(pos.relative(facing.getClockWise())).getBlock();
         Block right = world.getBlockState(pos.relative(facing.getCounterClockWise())).getBlock();
         Block front = world.getBlockState(pos.relative(facing.getOpposite())).getBlock();
-        boolean weapon_table = left == ModBlocks.weapon_table || right == ModBlocks.weapon_table || behind == ModBlocks.weapon_table || front == ModBlocks.weapon_table;
-        boolean potion_table = left == ModBlocks.potion_table || right == ModBlocks.potion_table || behind == ModBlocks.potion_table || front == ModBlocks.potion_table;
-        boolean cauldron = left == ModBlocks.alchemical_cauldron || right == ModBlocks.alchemical_cauldron || behind == ModBlocks.alchemical_cauldron || front == ModBlocks.alchemical_cauldron;
+        boolean weapon_table = left == ModBlocks.WEAPON_TABLE.get() || right == ModBlocks.WEAPON_TABLE.get() || behind == ModBlocks.WEAPON_TABLE.get() || front == ModBlocks.WEAPON_TABLE.get();
+        boolean potion_table = left == ModBlocks.POTION_TABLE.get() || right == ModBlocks.POTION_TABLE.get() || behind == ModBlocks.POTION_TABLE.get() || front == ModBlocks.POTION_TABLE.get();
+        boolean cauldron = left == ModBlocks.ALCHEMICAL_CAULDRON.get() || right == ModBlocks.ALCHEMICAL_CAULDRON.get() || behind == ModBlocks.ALCHEMICAL_CAULDRON.get() || front == ModBlocks.ALCHEMICAL_CAULDRON.get();
 
         return getTierFor(weapon_table, potion_table, cauldron);
     }

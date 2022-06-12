@@ -220,12 +220,12 @@ public class Helper {
         Biome b = w.getBiome(e.blockPosition());
         ResourceLocation biomeId = getBiomeId(w, b);
         Objects.requireNonNull(biomeId, "Cannot determine id of local biome");
-        return ModBiomes.vampire_forest.getRegistryName().equals(biomeId) || ModBiomes.vampire_forest_hills.getRegistryName().equals(biomeId);
+        return ModBiomes.VAMPIRE_FOREST.get().getRegistryName().equals(biomeId) || ModBiomes.VAMPIRE_FOREST_HILLS.get().getRegistryName().equals(biomeId);
     }
 
     public static boolean isPosInVampireBiome(BlockPos pos, IWorldReader level) {
         Biome biome = level.getBiome(pos);
-        return ModBiomes.vampire_forest.equals(biome) || ModBiomes.vampire_forest_hills.equals(biome);
+        return ModBiomes.VAMPIRE_FOREST.get().equals(biome) || ModBiomes.VAMPIRE_FOREST_HILLS.get().equals(biome);
     }
 
     /**

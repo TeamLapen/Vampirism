@@ -300,7 +300,7 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
 
     @Override
     protected EntityType<?> getIMobTypeOpt(boolean iMob) {
-        return iMob ? ModEntities.converted_creature_imob : ModEntities.converted_creature;
+        return iMob ? ModEntities.CONVERTED_CREATURE_IMOB.get() : ModEntities.CONVERTED_CREATURE.get();
     }
 
     @Nonnull
@@ -320,7 +320,7 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
     @Override
     protected ActionResultType mobInteract(PlayerEntity player, @Nonnull Hand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (stack.getItem() != ModItems.cure_apple) return super.mobInteract(player, hand);
+        if (stack.getItem() != ModItems.CURE_APPLE.get()) return super.mobInteract(player, hand);
         return interactWithCureItem(player, stack, this);
     }
 

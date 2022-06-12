@@ -12,6 +12,7 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.item.Item;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.PlantType;
 
@@ -20,11 +21,10 @@ import javax.annotation.Nonnull;
 /**
  * Item for the garlic plant
  */
-public class GarlicItem extends VampirismItem implements IPlantable, IFactionExclusiveItem {
-    private final static String regName = "item_garlic";
+public class GarlicItem extends Item implements IPlantable, IFactionExclusiveItem {
 
     public GarlicItem() {
-        super(regName, new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties().tab(VampirismMod.creativeTab));
     }
 
     @Nonnull
@@ -35,7 +35,7 @@ public class GarlicItem extends VampirismItem implements IPlantable, IFactionExc
 
     @Override
     public BlockState getPlant(IBlockReader world, BlockPos pos) {
-        return ModBlocks.garlic.defaultBlockState();
+        return ModBlocks.GARLIC.get().defaultBlockState();
     }
 
     @Override

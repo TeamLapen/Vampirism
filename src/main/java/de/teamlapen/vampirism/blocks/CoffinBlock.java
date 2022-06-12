@@ -44,7 +44,6 @@ import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FAC
 public class CoffinBlock extends VampirismBlockContainer {
 
     public static final Map<DyeColor, CoffinBlock> COFFIN_BLOCKS = new HashMap<>();
-    public static final String name = "coffin";
     public static final EnumProperty<CoffinPart> PART = EnumProperty.create("part", CoffinPart.class);
     public static final BooleanProperty CLOSED = BooleanProperty.create("closed");
     public static final BooleanProperty VERTICAL = BooleanProperty.create("vertical");
@@ -73,7 +72,7 @@ public class CoffinBlock extends VampirismBlockContainer {
     private final DyeColor color;
 
     public CoffinBlock(DyeColor color) {
-        super(name + "_" + color.getName(), Properties.of(Material.WOOD).strength(0.2f).noOcclusion());
+        super(Properties.of(Material.WOOD).strength(0.2f).noOcclusion());
         this.registerDefaultState(this.getStateDefinition().any().setValue(BedBlock.OCCUPIED, Boolean.FALSE).setValue(PART, CoffinPart.FOOT).setValue(HORIZONTAL_FACING, Direction.NORTH).setValue(CLOSED, false).setValue(VERTICAL, false));
         this.color = color;
         COFFIN_BLOCKS.put(color, this);

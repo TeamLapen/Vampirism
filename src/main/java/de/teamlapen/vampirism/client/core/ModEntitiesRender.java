@@ -26,43 +26,43 @@ import java.util.function.Supplier;
 public class ModEntitiesRender {
 
     public static void registerEntityRenderer(Supplier<Minecraft> minecraftSupplier) {
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.blinding_bat, safeFactory(BatRenderer::new));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.converted_creature_imob, safeFactory(ConvertedCreatureRenderer::new));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.converted_creature, safeFactory(ConvertedCreatureRenderer::new));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.converted_horse, renderingManager -> {
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.BLINDING_BAT.get(), safeFactory(BatRenderer::new));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.CONVERTED_CREATURE_IMOB.get(), safeFactory(ConvertedCreatureRenderer::new));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.CONVERTED_CREATURE.get(), safeFactory(ConvertedCreatureRenderer::new));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.CONVERTED_HORSE.get(), renderingManager -> {
             HorseRenderer renderer = new HorseRenderer(renderingManager);
             renderer.addLayer(new VampireEntityLayer<>(renderer, new ResourceLocation(REFERENCE.MODID, "textures/entity/vanilla/horse_overlay.png"), false));
             return renderer;
         });
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.converted_donkey, safeFactory(ConvertedChestedHorseRenderer::new));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.converted_mule, safeFactory(ConvertedChestedHorseRenderer::new));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.converted_sheep, safeFactory(ConvertedCreatureRenderer::new));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.converted_cow, safeFactory(ConvertedCreatureRenderer::new));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.hunter, safeFactory(BasicHunterRenderer::new));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.hunter_imob, safeFactory(BasicHunterRenderer::new));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.vampire, safeFactory(BasicVampireRenderer::new));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.vampire_imob, safeFactory(BasicVampireRenderer::new));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.hunter_trainer, e -> new HunterTrainerRenderer(e, true));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.vampire_baron, safeFactory(VampireBaronRenderer::new));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.advanced_hunter, safeFactory(AdvancedHunterRenderer::new));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.advanced_hunter_imob, safeFactory(AdvancedHunterRenderer::new));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.advanced_vampire, safeFactory(AdvancedVampireRenderer::new));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.advanced_vampire_imob, safeFactory(AdvancedVampireRenderer::new));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.villager_converted, safeFactory(ConvertedVillagerRenderer::new));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.villager_angry, (renderManager) -> new HunterVillagerRenderer(renderManager, (IReloadableResourceManager) minecraftSupplier.get().getResourceManager()));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.crossbow_arrow, safeFactory(CrossbowArrowRenderer::new));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.particle_cloud, safeFactory(RenderAreaParticleCloud::new));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.throwable_item, manager -> new ThrowableItemRenderer(manager, Minecraft.getInstance().getItemRenderer()));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.dark_blood_projectile, safeFactory(DarkBloodProjectileRenderer::new));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.soul_orb, manager -> new SoulOrbRenderer(manager, Minecraft.getInstance().getItemRenderer()));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.hunter_trainer_dummy, e -> new HunterTrainerRenderer(e, false));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.dummy_creature, safeFactory(DummyRenderer::new));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.vampire_minion, safeFactory(VampireMinionRenderer::new));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.hunter_minion, safeFactory(HunterMinionRenderer::new));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.task_master_vampire, safeFactory(VampireTaskMasterRenderer::new));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.task_master_hunter, safeFactory(HunterTaskMasterRenderer::new));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.dummy_sit_entity, safeFactory(DummyRenderer::new));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.boat, safeFactory(VampirismBoatRenderer::new));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.CONVERTED_DONKEY.get(), safeFactory(ConvertedChestedHorseRenderer::new));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.CONVERTED_MULE.get(), safeFactory(ConvertedChestedHorseRenderer::new));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.CONVERTED_SHEEP.get(), safeFactory(ConvertedCreatureRenderer::new));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.CONVERTED_COW.get(), safeFactory(ConvertedCreatureRenderer::new));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.HUNTER.get(), safeFactory(BasicHunterRenderer::new));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.HUNTER_IMOB.get(), safeFactory(BasicHunterRenderer::new));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.VAMPIRE.get(), safeFactory(BasicVampireRenderer::new));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.VAMPIRE_IMOB.get(), safeFactory(BasicVampireRenderer::new));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.HUNTER_TRAINER.get(), e -> new HunterTrainerRenderer(e, true));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.VAMPIRE_BARON.get(), safeFactory(VampireBaronRenderer::new));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ADVANCED_HUNTER.get(), safeFactory(AdvancedHunterRenderer::new));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ADVANCED_HUNTER_IMOB.get(), safeFactory(AdvancedHunterRenderer::new));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ADVANCED_VAMPIRE.get(), safeFactory(AdvancedVampireRenderer::new));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ADVANCED_VAMPIRE_IMOB.get(), safeFactory(AdvancedVampireRenderer::new));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.VILLAGER_CONVERTED.get(), safeFactory(ConvertedVillagerRenderer::new));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.VILLAGER_ANGRY.get(), (renderManager) -> new HunterVillagerRenderer(renderManager, (IReloadableResourceManager) minecraftSupplier.get().getResourceManager()));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.CROSSBOW_ARROW.get(), safeFactory(CrossbowArrowRenderer::new));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.PARTICLE_CLOUD.get(), safeFactory(RenderAreaParticleCloud::new));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.THROWABLE_ITEM.get(), manager -> new ThrowableItemRenderer(manager, Minecraft.getInstance().getItemRenderer()));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.DARK_BLOOD_PROJECTILE.get(), safeFactory(DarkBloodProjectileRenderer::new));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.SOUL_ORB.get(), manager -> new SoulOrbRenderer(manager, Minecraft.getInstance().getItemRenderer()));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.HUNTER_TRAINER_DUMMY.get(), e -> new HunterTrainerRenderer(e, false));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.DUMMY_CREATURE.get(), safeFactory(DummyRenderer::new));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.VAMPIRE_MINION.get(), safeFactory(VampireMinionRenderer::new));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.HUNTER_MINION.get(), safeFactory(HunterMinionRenderer::new));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.TASK_MASTER_VAMPIRE.get(), safeFactory(VampireTaskMasterRenderer::new));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.TASK_MASTER_HUNTER.get(), safeFactory(HunterTaskMasterRenderer::new));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.DUMMY_SIT_ENTITY.get(), safeFactory(DummyRenderer::new));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.BOAT.get(), safeFactory(VampirismBoatRenderer::new));
     }
 
     private static <T extends Entity> IRenderFactory<? super T> safeFactory(IRenderFactory<? super T> f) {

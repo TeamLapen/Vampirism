@@ -77,7 +77,7 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
     @Override
     public void save(Consumer<IFinishedRecipe> consumerIn, ResourceLocation id) {
         id = new ResourceLocation(id.getNamespace(), "weapontable/" + id.getPath());
-        this.advancement.addCriterion("has_skill", SkillUnlockedTrigger.builder(this.skills != null && this.skills.length >= 1 ? this.skills[0] : HunterSkills.weapon_table));
+        this.advancement.addCriterion("has_skill", SkillUnlockedTrigger.builder(this.skills != null && this.skills.length >= 1 ? this.skills[0] : HunterSkills.WEAPON_TABLE.get()));
         this.ensureValid(id);
         this.advancement
                 .parent(new ResourceLocation("recipes/root"))
@@ -121,7 +121,7 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
 
         @Override
         public IRecipeSerializer<?> getType() {
-            return ModRecipes.shapeless_crafting_weapontable;
+            return ModRecipes.SHAPELESS_CRAFTING_WEAPONTABLE.get();
         }
 
         @Override

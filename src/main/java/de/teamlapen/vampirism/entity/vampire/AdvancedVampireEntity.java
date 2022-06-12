@@ -263,7 +263,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     public boolean hurt(DamageSource damageSource, float amount) {
         boolean flag = super.hurt(damageSource, amount);
         if (flag && damageSource.getEntity() instanceof PlayerEntity && this.random.nextInt(4) == 0) {
-            this.addEffect(new EffectInstance(ModEffects.sunscreen, 150, 2));
+            this.addEffect(new EffectInstance(ModEffects.SUNSCREEN.get(), 150, 2));
         }
         return flag;
     }
@@ -329,7 +329,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
 
     @Override
     protected EntityType<?> getIMobTypeOpt(boolean iMob) {
-        return iMob ? ModEntities.advanced_vampire_imob : ModEntities.advanced_vampire;
+        return iMob ? ModEntities.ADVANCED_VAMPIRE_IMOB.get() : ModEntities.ADVANCED_VAMPIRE.get();
     }
 
     @Override

@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemTier;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -20,14 +21,14 @@ public class DoubleCrossbowItem extends SimpleCrossbowItem {
      * @param coolDownTicks Cooldown ticks >0
      * @param maxDamage     Max amount of shot arrrows or 0 if unbreakable
      */
-    public DoubleCrossbowItem(String regName, float speed, int coolDownTicks, int maxDamage) {
-        super(regName, speed, coolDownTicks, maxDamage);
+    public DoubleCrossbowItem(float speed, int coolDownTicks, int maxDamage, ItemTier enchantability) {
+        super(speed, coolDownTicks, maxDamage, enchantability);
     }
 
     @Nullable
     @Override
     public ISkill getRequiredSkill(@Nonnull ItemStack stack) {
-        return HunterSkills.double_crossbow;
+        return HunterSkills.DOUBLE_CROSSBOW.get();
     }
 
 

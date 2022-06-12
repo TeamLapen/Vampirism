@@ -152,7 +152,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     private float[] progressColor = DyeColor.WHITE.getTextureDiffuseColors();
 
     public TotemTileEntity() {
-        super(ModTiles.totem);
+        super(ModTiles.TOTEM.get());
     }
 
     public void abortCapture() {
@@ -538,7 +538,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         //client ---------------------------------
         if (this.level.isClientSide) {
             if (time % 10 == 7 && controllingFaction != null) {
-                ModParticles.spawnParticlesClient(this.level, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "generic_4"), 20, controllingFaction.getColor().getRGB(), 0.2F), this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ(), 3, 30, this.level.random);
+                ModParticles.spawnParticlesClient(this.level, new GenericParticleData(ModParticles.GENERIC.get(), new ResourceLocation("minecraft", "generic_4"), 20, controllingFaction.getColor().getRGB(), 0.2F), this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ(), 3, 30, this.level.random);
             }
         }
         //server ---------------------------------
@@ -733,7 +733,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                         if (!(level.getBlockState(pos.above()).getBlock() instanceof BushBlock)) {
                             if (b.getBlock() == level.getBiome(pos).getGenerationSettings().getSurfaceBuilderConfig().getTopMaterial().getBlock() && b.getBlock() != Blocks.SAND) {
                                 level.removeBlock(pos.above(), false);
-                                level.setBlockAndUpdate(pos, ModBlocks.cursed_earth.defaultBlockState());
+                                level.setBlockAndUpdate(pos, ModBlocks.CURSED_EARTH.get().defaultBlockState());
                                 if (level.getBlockState(pos.above()).getBlock() == Blocks.TALL_GRASS) {
                                     level.removeBlock(pos.above(), false);
                                     flag = true;
@@ -741,7 +741,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                             }
                         }
                     } else if (controllingFaction == VReference.HUNTER_FACTION) {
-                        if (b.getBlock() == ModBlocks.cursed_earth) {
+                        if (b.getBlock() == ModBlocks.CURSED_EARTH.get()) {
                             level.setBlockAndUpdate(pos, level.getBiome(pos).getGenerationSettings().getSurfaceBuilderConfig().getTopMaterial());
                             flag = true;
                         }
@@ -771,7 +771,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         if (!(this.level instanceof ServerWorld)) return;
 
         Block b = this.level.getBlockState(this.worldPosition).getBlock();
-        if (!(this.isComplete = b instanceof TotemTopBlock && this.level.getBlockState(this.worldPosition.below()).getBlock().equals(ModBlocks.totem_base)))
+        if (!(this.isComplete = b instanceof TotemTopBlock && this.level.getBlockState(this.worldPosition.below()).getBlock().equals(ModBlocks.TOTEM_BASE.get())))
             return;
         ResourceLocation blockFaction = ((TotemTopBlock) b).faction;
         if (!(blockFaction.equals(this.controllingFaction == null ? nonFactionTotem : this.controllingFaction.getID()))) { //If block faction does not match tile faction, force the tile to update to the block faction
@@ -805,10 +805,10 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         EntityType<? extends VampirismEntity> entityType;
         if (toDummy) {
             trainer = this.level.getEntitiesOfClass(HunterTrainerEntity.class, this.getVillageArea());
-            entityType = ModEntities.hunter_trainer_dummy;
+            entityType = ModEntities.HUNTER_TRAINER_DUMMY.get();
         } else {
             trainer = this.level.getEntitiesOfClass(DummyHunterTrainerEntity.class, this.getVillageArea());
-            entityType = ModEntities.hunter_trainer;
+            entityType = ModEntities.HUNTER_TRAINER.get();
         }
         for (VampirismEntity oldEntity : trainer) {
             VampirismEntity newEntity = entityType.create(this.level);
@@ -1015,7 +1015,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             BlockState oldBlockState = this.getBlockState();
             Block b = oldBlockState.getBlock();
             boolean crafted = b instanceof TotemTopBlock && ((TotemTopBlock) b).isCrafted();
-            BlockState newBlockState = (faction == null ? crafted ? ModBlocks.totem_top_crafted : ModBlocks.totem_top : faction.getVillageData().getTotemTopBlock(crafted)).defaultBlockState();
+            BlockState newBlockState = (faction == null ? crafted ? ModBlocks.TOTEM_TOP_CRAFTED.get() : ModBlocks.TOTEM_TOP.get() : faction.getVillageData().getTotemTopBlock(crafted)).defaultBlockState();
             try { //https://github.com/TeamLapen/Vampirism/issues/793 no idea what might cause this
                 this.level.setBlock(this.worldPosition, newBlockState, 55);
             } catch (IllegalStateException e) {
@@ -1130,7 +1130,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
 
     @SuppressWarnings("ConstantConditions")
     private void spawnVillagerVampire() {
-        this.spawnEntity(ModEntities.villager_converted.create(this.level));
+        this.spawnEntity(ModEntities.VILLAGER_CONVERTED.get().create(this.level));
     }
 
     /**
@@ -1210,8 +1210,8 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
 
         } else if (VReference.VAMPIRE_FACTION.equals(this.controllingFaction)) {
             for (VillagerEntity villager : villagerEntities) {
-                if (villager.hasEffect(ModEffects.sanguinare))
-                    villager.removeEffect(ModEffects.sanguinare);
+                if (villager.hasEffect(ModEffects.SANGUINARE.get()))
+                    villager.removeEffect(ModEffects.SANGUINARE.get());
                 if (fullConvert) {
                     if (villager instanceof ConvertedVillagerEntity) {
                         this.spawnVillagerReplaceForced(villager, this.capturingFaction == VReference.HUNTER_FACTION);

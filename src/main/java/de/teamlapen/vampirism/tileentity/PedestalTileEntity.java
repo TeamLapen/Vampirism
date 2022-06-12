@@ -47,7 +47,7 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
     private ItemStack internalStack;
 
     public PedestalTileEntity() {
-        super(ModTiles.blood_pedestal);
+        super(ModTiles.BLOOD_PEDESTAL.get());
         this.internalStack = ItemStack.EMPTY;
     }
 
@@ -217,9 +217,9 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
     private void drainBlood() {
         if (level == null) return;
         FluidUtil.getFluidHandler(this.level, this.worldPosition.below(), Direction.UP).ifPresent(handler -> {
-            FluidStack drained = handler.drain(new FluidStack(ModFluids.blood, VReference.FOOD_TO_FLUID_BLOOD), IFluidHandler.FluidAction.SIMULATE);
+            FluidStack drained = handler.drain(new FluidStack(ModFluids.BLOOD.get(), VReference.FOOD_TO_FLUID_BLOOD), IFluidHandler.FluidAction.SIMULATE);
             if (!drained.isEmpty() && drained.getAmount() == VReference.FOOD_TO_FLUID_BLOOD) {
-                drained = handler.drain(new FluidStack(ModFluids.blood, VReference.FOOD_TO_FLUID_BLOOD), IFluidHandler.FluidAction.EXECUTE);
+                drained = handler.drain(new FluidStack(ModFluids.BLOOD.get(), VReference.FOOD_TO_FLUID_BLOOD), IFluidHandler.FluidAction.EXECUTE);
                 bloodStored += drained.getAmount();
             }
         });
@@ -256,10 +256,10 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
     @OnlyIn(Dist.CLIENT)
     private void spawnChargedParticle() {
         Vector3d pos = Vector3d.upFromBottomCenterOf(this.getBlockPos(), 0.8);
-        ModParticles.spawnParticleClient(getLevel(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, new ResourceLocation("minecraft", "glitter_1")), this.worldPosition.getX() + 0.20, this.getBlockPos().getY() + 0.65, this.getBlockPos().getZ() + 0.20);
-        ModParticles.spawnParticleClient(getLevel(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, new ResourceLocation("minecraft", "glitter_1")), this.worldPosition.getX() + 0.80, this.getBlockPos().getY() + 0.65, this.getBlockPos().getZ() + 0.20);
-        ModParticles.spawnParticleClient(getLevel(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, new ResourceLocation("minecraft", "glitter_1")), this.worldPosition.getX() + 0.20, this.getBlockPos().getY() + 0.65, this.getBlockPos().getZ() + 0.80);
-        ModParticles.spawnParticleClient(getLevel(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (3.0F / (rand.nextFloat() * 0.6F + 0.4F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, new ResourceLocation("minecraft", "glitter_1")), this.worldPosition.getX() + 0.80, this.getBlockPos().getY() + 0.65, this.getBlockPos().getZ() + 0.80);
+        ModParticles.spawnParticleClient(getLevel(), new FlyingBloodParticleData(ModParticles.FLYING_BLOOD.get(), (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, new ResourceLocation("minecraft", "glitter_1")), this.worldPosition.getX() + 0.20, this.getBlockPos().getY() + 0.65, this.getBlockPos().getZ() + 0.20);
+        ModParticles.spawnParticleClient(getLevel(), new FlyingBloodParticleData(ModParticles.FLYING_BLOOD.get(), (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, new ResourceLocation("minecraft", "glitter_1")), this.worldPosition.getX() + 0.80, this.getBlockPos().getY() + 0.65, this.getBlockPos().getZ() + 0.20);
+        ModParticles.spawnParticleClient(getLevel(), new FlyingBloodParticleData(ModParticles.FLYING_BLOOD.get(), (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, new ResourceLocation("minecraft", "glitter_1")), this.worldPosition.getX() + 0.20, this.getBlockPos().getY() + 0.65, this.getBlockPos().getZ() + 0.80);
+        ModParticles.spawnParticleClient(getLevel(), new FlyingBloodParticleData(ModParticles.FLYING_BLOOD.get(), (int) (3.0F / (rand.nextFloat() * 0.6F + 0.4F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, new ResourceLocation("minecraft", "glitter_1")), this.worldPosition.getX() + 0.80, this.getBlockPos().getY() + 0.65, this.getBlockPos().getZ() + 0.80);
 
     }
 }

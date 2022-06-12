@@ -16,29 +16,27 @@ import net.minecraft.world.gen.GenerationStage;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
-
-import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
 /**
  * Handles all biome registrations and reference.
  */
 public class ModBiomes {
-    @ObjectHolder("vampirism:vampire_forest")
-    public static final Biome vampire_forest = getNull();
-    @ObjectHolder("vampirism:vampire_forest_hills")
-    public static final Biome vampire_forest_hills = getNull();
+    public static final DeferredRegister<Biome> BIOMES = DeferredRegister.create(ForgeRegistries.BIOMES, REFERENCE.MODID);
 
     public static final RegistryKey<Biome> VAMPIRE_FOREST_KEY = RegistryKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(REFERENCE.MODID, "vampire_forest"));
     public static final RegistryKey<Biome> VAMPIRE_FOREST_HILLS_KEY = RegistryKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(REFERENCE.MODID, "vampire_forest_hills"));
 
+    public static final RegistryObject<Biome> VAMPIRE_FOREST = BIOMES.register(VAMPIRE_FOREST_KEY.location().getPath(), () -> VampireForestBiome.createVampireForest(0.1F, 0.055F));
+    public static final RegistryObject<Biome> VAMPIRE_FOREST_HILLS = BIOMES.register(VAMPIRE_FOREST_HILLS_KEY.location().getPath(), () -> VampireForestBiome.createVampireForest(0.8f, 0.5f));
 
-    static void registerBiomes(IForgeRegistry<Biome> registry) {
-        registry.register(VampireForestBiome.createVampireForest(0.1F, 0.055F).setRegistryName(VAMPIRE_FOREST_KEY.location()));
-        registry.register(VampireForestBiome.createVampireForest(0.8f, 0.5f).setRegistryName(VAMPIRE_FOREST_HILLS_KEY.location()));
+    static void registerBiomes(IEventBus bus) {
+        BIOMES.register(bus);
 
         VampirismAPI.sundamageRegistry().addNoSundamageBiomes(VAMPIRE_FOREST_KEY.location());
         VampirismAPI.sundamageRegistry().addNoSundamageBiomes(VAMPIRE_FOREST_HILLS_KEY.location());
@@ -66,15 +64,15 @@ public class ModBiomes {
     public static void onBiomeLoadingEventAdditions(BiomeLoadingEvent event) {
         List<MobSpawnInfo.Spawners> monsterList = event.getSpawns().getSpawner(EntityClassification.MONSTER);
         if (monsterList != null && monsterList.stream().anyMatch(spawners -> spawners.type == EntityType.ZOMBIE)) {
-            event.getSpawns().addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.vampire, VampirismConfig.COMMON.vampireSpawnChance.get(), 1, 3));
-            event.getSpawns().addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.advanced_vampire, VampirismConfig.COMMON.advancedVampireSpawnChance.get(), 1, 1));
+            event.getSpawns().addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.VAMPIRE.get(), VampirismConfig.COMMON.vampireSpawnChance.get(), 1, 3));
+            event.getSpawns().addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.ADVANCED_VAMPIRE.get(), VampirismConfig.COMMON.advancedVampireSpawnChance.get(), 1, 1));
             int hunterChance = VampirismConfig.COMMON.hunterSpawnChance.get();
             if (hunterChance > 0) {
-                event.getSpawns().addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.hunter, hunterChance, 1, 3));
+                event.getSpawns().addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.HUNTER.get(), hunterChance, 1, 3));
             }
             int advancedHunterChance = VampirismConfig.COMMON.advancedHunterSpawnChance.get();
             if (advancedHunterChance > 0) {
-                event.getSpawns().addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.advanced_hunter, advancedHunterChance, 1, 1));
+                event.getSpawns().addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.ADVANCED_HUNTER.get(), advancedHunterChance, 1, 1));
             }
         }
         Biome.Category cat = event.getCategory();
@@ -82,7 +80,7 @@ public class ModBiomes {
             event.getGeneration().addFeature(GenerationStage.Decoration.UNDERGROUND_STRUCTURES, VampirismBiomeFeatures.vampire_dungeon);
         }
 
-        if (VampirismAPI.worldGenRegistry().canStructureBeGeneratedInBiome(ModFeatures.hunter_camp.getRegistryName(), event.getName(), event.getCategory())) {
+        if (VampirismAPI.worldGenRegistry().canStructureBeGeneratedInBiome(ModFeatures.HUNTER_CAMP.get().getRegistryName(), event.getName(), event.getCategory())) {
             event.getGeneration().addStructureStart(VampirismBiomeFeatures.hunter_camp);
         }
     }

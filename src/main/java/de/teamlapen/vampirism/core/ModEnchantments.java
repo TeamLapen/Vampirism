@@ -6,23 +6,26 @@ import de.teamlapen.vampirism.items.enchantment.EnchantmentVampireSlayer;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
 
-@ObjectHolder(REFERENCE.MODID)
 public class ModEnchantments {
+    public static final DeferredRegister<Enchantment> ENCHANTMENTS = DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, REFERENCE.MODID);
 
-    public static final EnchantmentArrowFrugality crossbowfrugality = getNull();
-    public static final EnchantmentVampireSlayer vampireslayer = getNull();
+    public static final RegistryObject<EnchantmentArrowFrugality> CROSSBOWFRUGALITY = ENCHANTMENTS.register("crossbowfrugality", () -> new EnchantmentArrowFrugality(Enchantment.Rarity.VERY_RARE));
+    public static final RegistryObject<EnchantmentVampireSlayer> VAMPIRESLAYER = ENCHANTMENTS.register("vampireslayer", () -> new EnchantmentVampireSlayer(Enchantment.Rarity.UNCOMMON));
 
 
-    static void registerEnchantments(IForgeRegistry<Enchantment> registry) {
+    static void registerEnchantments(IEventBus bus) {
         //Don't forget to add a enchantment description "enchantment.vampirism.<id>.desc" for new enchantments #624
-        registry.register(new EnchantmentArrowFrugality(Enchantment.Rarity.VERY_RARE));
-        registry.register(new EnchantmentVampireSlayer(Enchantment.Rarity.UNCOMMON));
+        ENCHANTMENTS.register(bus);
     }
 
     static void fixMapping(RegistryEvent.MissingMappings<Enchantment> event) {

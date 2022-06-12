@@ -19,13 +19,14 @@ repositories {
     }
     maven {
         url "https://nexus.resourcefulbees.com/repository/maven-public/"
+        content {
+            includeGroup "com.telepathicgrunt"
+        }
     }
-    repositories {
-        maven {
-            url "https://www.cursemaven.com"
-            content {
-                includeGroup "curse.maven"
-            }
+    maven {
+        url "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
         }
     }
     //3rd party library repos
