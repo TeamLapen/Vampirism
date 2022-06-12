@@ -17,18 +17,14 @@ repositories {
     maven {
         url = "https://maxanier.de/maven2"
     }
-    maven {
-        url "https://nexus.resourcefulbees.com/repository/maven-public/"
-    }
     maven {url='https://repo.spongepowered.org/repository/maven-public'}
-    repositories {
-        maven {
-            url "https://www.cursemaven.com"
-            content {
-                includeGroup "curse.maven"
-            }
+    maven {
+        url "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
         }
     }
+
     mavenCentral()
     mavenLocal()
 }
