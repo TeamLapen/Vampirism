@@ -494,6 +494,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
         contactMinion(i.minionID, MinionEntity::recallMinion);
         if (i.isActive()) {
             LOGGER.debug("Minion still active after recall");
+            i.checkin();
         }
         minionTokens[i.minionID] = Optional.empty();
         return !i.isStillRecovering();

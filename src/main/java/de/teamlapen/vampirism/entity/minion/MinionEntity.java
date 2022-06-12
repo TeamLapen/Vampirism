@@ -130,11 +130,11 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     @Override
     public void addAdditionalSaveData(@Nonnull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
-        if (isValid()) {
+//        if (isValid()) {
             this.getLordID().ifPresent(id -> nbt.putUUID("lord", id));
             nbt.putInt("minion_id", minionId);
             nbt.putInt("minion_token", token);
-        }
+//        }
     }
 
     @Override
@@ -366,6 +366,17 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         checkoutMinionData();
     }
 
+    @Override
+    public void onRemovedFromWorld() {
+        if (playerMinionController != null) {
+            playerMinionController.checkInMinion(this.minionId, this.token);
+            this.minionData = null;
+            this.playerMinionController = null;
+        }
+        super.onRemovedFromWorld();
+    }
+
+
     @Nonnull
     @Override
     public ItemStack getItemBySlot(@Nonnull EquipmentSlot slotIn) {
@@ -418,16 +429,6 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     @Deprecated
     public void recallMinion() {
         this.discard();
-    }
-
-    @Override
-    public void remove(@Nonnull RemovalReason p_146834_) {
-        super.remove(p_146834_);
-        if (playerMinionController != null) {
-            playerMinionController.checkInMinion(this.minionId, this.token);
-            this.minionData = null;
-            this.playerMinionController = null;
-        }
     }
 
     @Override
