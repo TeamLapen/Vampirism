@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAttributes;
 import de.teamlapen.vampirism.core.ModRegistries;
@@ -68,12 +69,13 @@ public class VampireSkills {
     public static final RegistryObject<ISkill> DBNO_DURATION = SKILLS.register("dbno_duration", () -> new VampirismSkill.SimpleVampireSkill(true));
     public static final RegistryObject<ISkill> HISSING = SKILLS.register("hissing", () -> new ActionSkill<>(VampireActions.HISSING.get(), true));
     public static final RegistryObject<ISkill> VAMPIRE_MINION_STATS_INCREASE = SKILLS.register("vampire_minion_stats_increase", () -> new VampirismSkill.LordVampireSkill(true));
-    public static final RegistryObject<ISkill> VAMPIRE_LORD_SPEED = SKILLS.register("vampire_lord_speed", () -> new ActionSkill<>(VampireActions.VAMPIRE_LORD_SPEED.get(), true));
-    public static final RegistryObject<ISkill> VAMPIRE_LORD_ATTACK_SPEED = SKILLS.register("vampire_lord_attack_speed", () -> new ActionSkill<>(VampireActions.VAMPIRE_LORD_ATTACK_SPEED.get(), true));
+    public static final RegistryObject<ISkill> VAMPIRE_LORD_SPEED = SKILLS.register("vampire_lord_speed", () -> new ActionSkill<>(VampireActions.VAMPIRE_LORD_SPEED.get(), SkillType.LORD,true));
+    public static final RegistryObject<ISkill> VAMPIRE_LORD_ATTACK_SPEED = SKILLS.register("vampire_lord_attack_speed", () -> new ActionSkill<>(VampireActions.VAMPIRE_LORD_ATTACK_SPEED.get(), SkillType.LORD,true));
 
 
     static {
-        SKILLS.register(VReference.VAMPIRE_FACTION.getID().getPath(), () -> new VampirismSkill.SimpleVampireSkill(false));
+        SKILLS.register(SkillType.LEVEL.createIdForFaction(VReference.VAMPIRE_FACTION.getID()).getPath(), () -> new VampirismSkill.SimpleVampireSkill(false));
+        SKILLS.register(SkillType.LORD.createIdForFaction(VReference.VAMPIRE_FACTION.getID()).getPath(), () -> new VampirismSkill.SimpleVampireSkill(false));
     }
 
     public static void registerVampireSkills(IEventBus bus) {

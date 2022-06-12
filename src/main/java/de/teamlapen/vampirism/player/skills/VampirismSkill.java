@@ -87,12 +87,8 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
 
     public static class LordHunterSkill extends SimpleHunterSkill {
 
-        public LordHunterSkill(ResourceLocation id, boolean desc) {
-            super(id, desc);
-        }
-
-        public LordHunterSkill(String id, boolean desc) {
-            super(id, desc);
+        public LordHunterSkill(boolean desc) {
+            super(desc);
         }
 
         @Override
@@ -126,12 +122,9 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
     }
 
     public static class LordVampireSkill extends SimpleVampireSkill {
-        public LordVampireSkill(String id, boolean desc) {
-            super(id, desc);
-        }
 
-        public LordVampireSkill(ResourceLocation id, boolean desc) {
-            super(id, desc);
+        public LordVampireSkill(boolean desc) {
+            super(desc);
         }
 
         @Override

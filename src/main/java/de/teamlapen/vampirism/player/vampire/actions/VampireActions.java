@@ -1,15 +1,15 @@
 package de.teamlapen.vampirism.player.vampire.actions;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
+import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.player.actions.AttackSpeedLordAction;
 import de.teamlapen.vampirism.player.actions.SpeedLordAction;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.ObjectHolder;
 
 /**
  * Registers and holds all skills for vampire player
@@ -30,8 +30,8 @@ public class VampireActions {
     public static final RegistryObject<RageVampireAction> VAMPIRE_RAGE = ACTIONS.register("vampire_rage", RageVampireAction::new);
     public static final RegistryObject<HissingAction> HISSING = ACTIONS.register("hissing", HissingAction::new);
     public static final RegistryObject<InfectAction> INFECT = ACTIONS.register("infect", InfectAction::new);
-    public static final RegistryObject<InfectAction> VAMPIRE_LORD_SPEED = ACTIONS.register("vampire_lord_speed", new SpeedLordAction<>(VReference.VAMPIRE_FACTION));
-    public static final RegistryObject<InfectAction> VAMPIRE_LORD_ATTACK_SPEED = ACTIONS.register("vampire_lord_attack_speed", new AttackSpeedLordAction<>(VReference.VAMPIRE_FACTION));
+    public static final RegistryObject<SpeedLordAction<IHunterPlayer>> VAMPIRE_LORD_SPEED = ACTIONS.register("vampire_lord_speed", () -> new SpeedLordAction<>(VReference.VAMPIRE_FACTION));
+    public static final RegistryObject<AttackSpeedLordAction<IHunterPlayer>> VAMPIRE_LORD_ATTACK_SPEED = ACTIONS.register("vampire_lord_attack_speed", () -> new AttackSpeedLordAction<>(VReference.VAMPIRE_FACTION));
 
     public static void registerDefaultActions(IEventBus bus) {
         ACTIONS.register(bus);

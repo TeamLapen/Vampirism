@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.core.ModEffects;
 public class AttackSpeedLordAction<T extends IFactionPlayer> extends LordRangeEffectAction<T> {
 
     public AttackSpeedLordAction(IPlayableFaction faction) {
-        super(ModEffects.lord_attack_speed, faction);
+        super(ModEffects.LORD_ATTACK_SPEED, faction);
     }
 
     @Override

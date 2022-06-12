@@ -561,9 +561,9 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             }
         });
         if (level == 0) {
-            LOGGER.debug(LogUtil.FACTION, "Resetting lord level for {}", this.player.getName());
+            LOGGER.debug(LogUtil.FACTION, "Resetting lord level for {}", this.player.getName().getString());
         } else {
-            LOGGER.debug(LogUtil.FACTION, "{} has now lord level {}", this.player.getName(), level);
+            LOGGER.debug(LogUtil.FACTION, "{} has now lord level {}", this.player.getName().getString(), level);
         }
         if (player instanceof ServerPlayerEntity) {
             ModAdvancements.TRIGGER_FACTION.trigger((ServerPlayerEntity) player, currentFaction, currentLevel, currentLordLevel);

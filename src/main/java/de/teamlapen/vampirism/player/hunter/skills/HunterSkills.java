@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
@@ -79,11 +80,12 @@ public class HunterSkills {
     public static final RegistryObject<ISkill> CRUCIFIX_WIELDER = SKILLS.register("crucifix_wielder", () -> new VampirismSkill.SimpleHunterSkill(true));
     public static final RegistryObject<ISkill> ULTIMATE_CRUCIFIX = SKILLS.register("ultimate_crucifix", () -> new VampirismSkill.SimpleHunterSkill(true));
     public static final RegistryObject<ISkill> HUNTER_MINION_STATS_INCREASE = SKILLS.register("hunter_minion_stats_increase", () -> new VampirismSkill.LordHunterSkill(true));
-    public static final RegistryObject<ISkill> HUNTER_LORD_SPEED = SKILLS.register("hunter_lord_speed", () -> new ActionSkill<IHunterPlayer>(HunterActions.HUNTER_LORD_SPEED.get(), true));
-    public static final RegistryObject<ISkill> HUNTER_LORD_ATTACK_SPEED = SKILLS.register("hunter_lord_attack_speed", () -> new ActionSkill<IHunterPlayer>(HunterActions.HUNTER_LORD_ATTACK_SPEED.get(),true));
+    public static final RegistryObject<ISkill> HUNTER_LORD_SPEED = SKILLS.register("hunter_lord_speed", () -> new ActionSkill<IHunterPlayer>(HunterActions.HUNTER_LORD_SPEED.get(), SkillType.LORD,true));
+    public static final RegistryObject<ISkill> HUNTER_LORD_ATTACK_SPEED = SKILLS.register("hunter_lord_attack_speed", () -> new ActionSkill<IHunterPlayer>(HunterActions.HUNTER_LORD_ATTACK_SPEED.get(),SkillType.LORD,true));
 
     static {
-        SKILLS.register(VReference.HUNTER_FACTION.getID().getPath(), () -> new VampirismSkill.SimpleVampireSkill(false));
+        SKILLS.register(SkillType.LEVEL.createIdForFaction(VReference.HUNTER_FACTION.getID()).getPath(), () -> new VampirismSkill.SimpleHunterSkill(false));
+        SKILLS.register(SkillType.LORD.createIdForFaction(VReference.HUNTER_FACTION.getID()).getPath(), () -> new VampirismSkill.SimpleHunterSkill(false));
     }
 
 
