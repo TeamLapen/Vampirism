@@ -39,7 +39,7 @@ public class InfectAction extends DefaultVampireAction {
             }
             if (deriveBiteableEntry(target).map(e -> e.tryInfect(vampire)).orElse(false)) {
                 player.awardStat(ModStats.infected_creatures);
-                player.level.playSound(null, target.getX(), target.getY() + 1.5d, target.getZ(), ModSounds.player_bite, SoundCategory.PLAYERS, 1, 1 );
+                player.level.playSound(null, target.getX(), target.getY() + 1.5d, target.getZ(), ModSounds.PLAYER_BITE.get(), SoundCategory.PLAYERS, 1, 1 );
                 return true;
             }
             return false;

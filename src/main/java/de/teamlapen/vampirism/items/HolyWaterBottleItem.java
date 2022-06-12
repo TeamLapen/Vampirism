@@ -10,6 +10,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import net.minecraft.item.Item;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -19,18 +20,15 @@ import java.util.List;
  * HolyWaterBottle
  * Exists in different tiers and as splash versions.
  */
-public class HolyWaterBottleItem extends VampirismItem implements IItemWithTier, IFactionExclusiveItem {
-
-    public static final String regName = "holy_water_bottle";
+public class HolyWaterBottleItem extends Item implements IItemWithTier, IFactionExclusiveItem {
     private final TIER tier;
 
     public HolyWaterBottleItem(TIER tier) {
-        this(regName + "_" + tier.getName(), tier, new Properties().tab(VampirismMod.creativeTab));
-        setTranslation_key(regName);
+        this(tier, new Properties().tab(VampirismMod.creativeTab));
     }
 
-    protected HolyWaterBottleItem(String regName, TIER tier, Properties props) {
-        super(regName, props);
+    protected HolyWaterBottleItem(TIER tier, Properties props) {
+        super(props);
         this.tier = tier;
     }
 
@@ -38,11 +36,6 @@ public class HolyWaterBottleItem extends VampirismItem implements IItemWithTier,
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         addTierInformation(tooltip);
-    }
-
-    @Override
-    public String getBaseRegName() {
-        return regName;
     }
 
     @Nonnull
@@ -74,5 +67,13 @@ public class HolyWaterBottleItem extends VampirismItem implements IItemWithTier,
         return tier;
     }
 
+    private String descriptionId;
+    @Override
+    protected String getOrCreateDescriptionId() {
+        if (this.descriptionId == null) {
+            this.descriptionId = super.getOrCreateDescriptionId().replaceAll("_normal|_enhanced|_ultimate", "");
+        }
 
+        return this.descriptionId;
+    }
 }

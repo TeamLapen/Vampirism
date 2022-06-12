@@ -48,7 +48,7 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
     @Nonnull
     @Override
     public FluidStack drain(FluidStack resource, FluidAction action) {
-        if (container.getCount() != 1 || resource == null || resource.getAmount() <= 0 || !ModFluids.blood.equals(resource.getFluid())) {
+        if (container.getCount() != 1 || resource == null || resource.getAmount() <= 0 || !ModFluids.BLOOD.get().equals(resource.getFluid())) {
             return FluidStack.EMPTY;
         }
         return drain(resource.getAmount(), action);
@@ -59,7 +59,7 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
     public FluidStack drain(int maxDrain, FluidAction action) {
         int currentAmt = getBlood(container);
         if (currentAmt == 0) return FluidStack.EMPTY;
-        FluidStack stack = new FluidStack(ModFluids.blood, Math.min(currentAmt, getAdjustedAmount(maxDrain)));
+        FluidStack stack = new FluidStack(ModFluids.BLOOD.get(), Math.min(currentAmt, getAdjustedAmount(maxDrain)));
         if (action.execute()) {
             setBlood(container, currentAmt - stack.getAmount());
             /*
@@ -75,7 +75,7 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
     @Override
     public int fill(FluidStack resource, FluidAction action) {
         if (resource == null) return 0;
-        if (!resource.getFluid().equals(ModFluids.blood)) {
+        if (!resource.getFluid().equals(ModFluids.BLOOD.get())) {
             return 0;
         }
         if (action.simulate()) {
@@ -88,7 +88,7 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
     }
 
     public int getBlood(ItemStack stack) {
-        return stack.getItem() == ModItems.blood_bottle ? stack.getDamageValue() * MULTIPLIER : 0;
+        return stack.getItem() == ModItems.BLOOD_BOTTLE.get() ? stack.getDamageValue() * MULTIPLIER : 0;
     }
 
     @Nonnull
@@ -107,7 +107,7 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
     @Nonnull
     @Override
     public FluidStack getFluidInTank(int tank) {
-        return new FluidStack(ModFluids.blood, getBlood(container));
+        return new FluidStack(ModFluids.BLOOD.get(), getBlood(container));
     }
 
     @Override
@@ -122,7 +122,7 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
 
     @Override
     public boolean isFluidValid(int tank, @Nonnull FluidStack stack) {
-        return ModFluids.blood.isSame(stack.getFluid());
+        return ModFluids.BLOOD.get().isSame(stack.getFluid());
     }
 
     public void setBlood(ItemStack stack, int amt) {

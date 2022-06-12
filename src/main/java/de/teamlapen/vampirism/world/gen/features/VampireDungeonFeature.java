@@ -89,9 +89,9 @@ public class VampireDungeonFeature extends DungeonsFeature {
                         } else if (blockstate.getMaterial().isSolid() && !blockstate.is(Blocks.CHEST)) {
                             if (i4 == -1 && rand.nextInt(4) != 0) {
                                 if (rand.nextInt(20) == 0) // changed to castle bricks
-                                    reader.setBlock(blockpos1, ModBlocks.castle_block_dark_brick_bloody.defaultBlockState(), 2);
+                                    reader.setBlock(blockpos1, ModBlocks.CASTLE_BLOCK_DARK_BRICK_BLOODY.get().defaultBlockState(), 2);
                                 else
-                                    reader.setBlock(blockpos1, ModBlocks.castle_block_dark_brick.defaultBlockState(), 2);
+                                    reader.setBlock(blockpos1, ModBlocks.CASTLE_BLOCK_DARK_BRICK.get().defaultBlockState(), 2);
                             } else {
                                 reader.setBlock(blockpos1, Blocks.SPRUCE_PLANKS.defaultBlockState(), 2);
                             }
@@ -127,7 +127,7 @@ public class VampireDungeonFeature extends DungeonsFeature {
             reader.setBlock(pos, Blocks.SPAWNER.defaultBlockState(), 2);
             TileEntity tileentity = reader.getBlockEntity(pos);
             if (tileentity instanceof MobSpawnerTileEntity) {
-                ((MobSpawnerTileEntity) tileentity).getSpawner().setEntityId(ModEntities.vampire);
+                ((MobSpawnerTileEntity) tileentity).getSpawner().setEntityId(ModEntities.VAMPIRE.get());
             } else {
                 LOGGER.error("Failed to fetch mob spawner entity at ({}, {}, {})", pos.getX(), pos.getY(), pos.getZ());
             }

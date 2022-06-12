@@ -35,11 +35,11 @@ public class FreezeVampireAction extends DefaultVampireAction {
             if (e instanceof PlayerEntity && VampirismPlayerAttributes.get((PlayerEntity) e).getHuntSpecial().fullHunterCoat != null)
                 continue;
             int dur = VampirismConfig.BALANCE.vaFreezeDuration.get() * 20;
-            if (vampire.getSkillHandler().isRefinementEquipped(ModRefinements.freeze_duration)) {
+            if (vampire.getSkillHandler().isRefinementEquipped(ModRefinements.FREEZE_DURATION.get())) {
                 dur *= VampirismConfig.BALANCE.vrFreezeDurationMod.get();
             }
-            e.addEffect(new EffectInstance(ModEffects.freeze, dur));
-            ModParticles.spawnParticlesServer(player.getCommandSenderWorld(), new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "generic_2"), 20, 0xF0F0F0, 0.4F), e.getX(), e.getY(), e.getZ(), 20, 1, 1, 1, 0);
+            e.addEffect(new EffectInstance(ModEffects.FREEZE.get(), dur));
+            ModParticles.spawnParticlesServer(player.getCommandSenderWorld(), new GenericParticleData(ModParticles.GENERIC.get(), new ResourceLocation("minecraft", "generic_2"), 20, 0xF0F0F0, 0.4F), e.getX(), e.getY(), e.getZ(), 20, 1, 1, 1, 0);
         }
         return l.size() > 0;
     }

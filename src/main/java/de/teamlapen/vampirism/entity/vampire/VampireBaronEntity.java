@@ -52,7 +52,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     private final static int ENRAGED_TRANSITION_TIME = 15;
 
     public static boolean spawnPredicateBaron(EntityType<? extends VampireBaronEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
-        return (ModBiomes.vampire_forest.getRegistryName().equals(Helper.getBiomeId(world, blockPos)) || ModBiomes.vampire_forest_hills.getRegistryName().equals(Helper.getBiomeId(world, blockPos))) && world.getDifficulty() != net.minecraft.world.Difficulty.PEACEFUL && spawnPredicateCanSpawn(entityType, world, spawnReason, blockPos, random);
+        return (ModBiomes.VAMPIRE_FOREST.get().getRegistryName().equals(Helper.getBiomeId(world, blockPos)) || ModBiomes.VAMPIRE_FOREST_HILLS.get().getRegistryName().equals(Helper.getBiomeId(world, blockPos))) && world.getDifficulty() != net.minecraft.world.Difficulty.PEACEFUL && spawnPredicateCanSpawn(entityType, world, spawnReason, blockPos, random);
     }
 
     public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {

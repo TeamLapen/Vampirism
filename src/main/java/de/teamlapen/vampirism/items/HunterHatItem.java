@@ -15,11 +15,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Simple headwear that look like a hunter head
  */
 public class HunterHatItem extends VampirismHunterArmor {
-    private static final String baseRegName = "hunter_hat";
     private final int type;
 
     public HunterHatItem(int type) {
-        super(baseRegName, "" + type, ArmorMaterial.IRON, EquipmentSlotType.HEAD, new Properties().tab(VampirismMod.creativeTab));
+        super(ArmorMaterial.IRON, EquipmentSlotType.HEAD, new Properties().tab(VampirismMod.creativeTab));
         this.type = type;
     }
 
@@ -40,5 +39,15 @@ public class HunterHatItem extends VampirismHunterArmor {
     @Override
     protected int getDamageReduction(int slot, ItemStack stack) {
         return 2;
+    }
+
+    private String descriptionId;
+    @Override
+    protected String getOrCreateDescriptionId() {
+        if (this.descriptionId == null) {
+            this.descriptionId = super.getOrCreateDescriptionId().replaceAll("_\\d", "");
+        }
+
+        return this.descriptionId;
     }
 }

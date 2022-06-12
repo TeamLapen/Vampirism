@@ -28,10 +28,8 @@ import javax.annotation.Nullable;
 
 public class CursedEarthBlock extends VampirismBlock {
 
-    private static final String name = "cursed_earth";
-
     public CursedEarthBlock() {
-        super(name, Properties.of(Material.DIRT, MaterialColor.TERRACOTTA_BROWN).strength(0.5f, 2.0f).sound(SoundType.GRAVEL));
+        super(Properties.of(Material.DIRT, MaterialColor.TERRACOTTA_BROWN).strength(0.5f, 2.0f).sound(SoundType.GRAVEL));
 
     }
 
@@ -53,7 +51,7 @@ public class CursedEarthBlock extends VampirismBlock {
 
     @Override
     public void onPlantGrow(BlockState state, IWorld world, BlockPos pos, BlockPos source) {
-        world.setBlock(pos, ModBlocks.cursed_earth.defaultBlockState(), 2);
+        world.setBlock(pos, ModBlocks.CURSED_EARTH.get().defaultBlockState(), 2);
     }
 
     @Override
@@ -61,7 +59,7 @@ public class CursedEarthBlock extends VampirismBlock {
         ItemStack heldItemStack = player.getItemInHand(handIn);
         Item heldItem = heldItemStack.getItem();
         if (heldItem instanceof HolyWaterBottleItem) {
-            int uses = heldItem == ModItems.holy_water_bottle_ultimate ? 100 : (heldItem == ModItems.holy_water_bottle_enhanced ? 50 : 25);
+            int uses = heldItem == ModItems.HOLY_WATER_BOTTLE_ULTIMATE.get() ? 100 : (heldItem == ModItems.HOLY_WATER_BOTTLE_ENHANCED.get() ? 50 : 25);
             if (player.getRandom().nextInt(uses) == 0) {
                 heldItemStack.setCount(heldItemStack.getCount() - 1);
             }

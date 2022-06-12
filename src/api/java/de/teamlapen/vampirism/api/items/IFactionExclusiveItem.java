@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IItemProvider;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -20,7 +21,7 @@ import java.util.List;
 /**
  * Should be implemented by all items that are supposed to be used by only a specific faction.
  */
-public interface IFactionExclusiveItem {
+public interface IFactionExclusiveItem extends IItemProvider {
 
     @OnlyIn(Dist.CLIENT)
     default void addFactionPoisonousToolTip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn, @Nullable PlayerEntity player) {

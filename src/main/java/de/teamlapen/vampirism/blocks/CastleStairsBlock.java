@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.StairsBlock;
@@ -16,14 +15,14 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class CastleStairsBlock extends StairsBlock {
     private final static String REGNAME_BASE = "castle_stairs";
     private final CastleBricksBlock.EnumVariant variant;
 
-    public CastleStairsBlock(BlockState state, CastleBricksBlock.EnumVariant variant) {
+    public CastleStairsBlock(Supplier<BlockState> state, CastleBricksBlock.EnumVariant variant) {
         super(state, Properties.of(Material.STONE).strength(2, 10).sound(SoundType.STONE));
-        this.setRegistryName(REFERENCE.MODID, REGNAME_BASE + "_" + variant.getName());
         this.variant = variant;
     }
 

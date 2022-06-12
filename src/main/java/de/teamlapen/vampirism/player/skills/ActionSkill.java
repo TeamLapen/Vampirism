@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillType;
-import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -19,23 +19,21 @@ public class ActionSkill<T extends IFactionPlayer> extends VampirismSkill<T> {
     private final IAction action;
     private final ISkillType type;
 
-    public ActionSkill(ResourceLocation id, IAction action) {
-        this(id, action, false);
+    public ActionSkill(IAction action) {
+        this(action, false);
     }
 
-    public ActionSkill(ResourceLocation id, IAction action, boolean customDescription) { //TODO 1.19 REMOVE
-        this(id, action, SkillType.LEVEL, customDescription);
+    public ActionSkill(IAction action, boolean customDescription) {
+        this(action, SkillType.LEVEL, false);
     }
 
     /**
-     * @param id                Registry id
      * @param action            The corresponding action
      * @param customDescription If false a generic "unlocks action" string is used
      */
-    public ActionSkill(ResourceLocation id, IAction action, ISkillType type, boolean customDescription) {
+    public ActionSkill(IAction action, ISkillType type, boolean customDescription) {
         this.action = action;
         this.type = type;
-        this.setRegistryName(id);
         if (customDescription) {
             this.setHasDefaultDescription();
         } else {

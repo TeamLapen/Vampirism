@@ -14,6 +14,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -25,12 +26,10 @@ import java.util.List;
  *
  * @author maxanier
  */
-public class AlchemicalFireItem extends VampirismItem {
-
-    private static final String regName = "item_alchemical_fire";
+public class AlchemicalFireItem extends Item {
 
     public AlchemicalFireItem() {
-        super(regName, new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties().tab(VampirismMod.creativeTab));
     }
 
 
@@ -51,7 +50,7 @@ public class AlchemicalFireItem extends VampirismItem {
         } else {
             if (ctx.getLevel().isEmptyBlock(pos)) {
                 ctx.getLevel().playSound(ctx.getPlayer(), pos, SoundEvents.FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, ctx.getPlayer().getRandom().nextFloat() * 0.4F + 0.8F);
-                ctx.getLevel().setBlock(pos, ModBlocks.alchemical_fire.defaultBlockState().setValue(AlchemicalFireBlock.AGE, 15), 11);
+                ctx.getLevel().setBlock(pos, ModBlocks.ALCHEMICAL_FIRE.get().defaultBlockState().setValue(AlchemicalFireBlock.AGE, 15), 11);
             }
 
             return ActionResultType.SUCCESS;

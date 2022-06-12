@@ -41,8 +41,8 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
 
 
     AlchemicalCauldronRecipeCategory(IGuiHelper guiHelper) {
-        this.localizedName = UtilLib.translate(ModBlocks.alchemical_cauldron.getDescriptionId());
-        this.icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.alchemical_cauldron));
+        this.localizedName = UtilLib.translate(ModBlocks.ALCHEMICAL_CAULDRON.get().getDescriptionId());
+        this.icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.ALCHEMICAL_CAULDRON.get()));
         background = guiHelper.drawableBuilder(location, 38, 10, 120, 70).addPadding(0, 33, 0, 0).build();
 
         IDrawableStatic flameDrawable = guiHelper.createDrawable(location, 176, 0, 14, 14);

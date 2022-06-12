@@ -29,6 +29,10 @@ import net.minecraft.world.gen.settings.DimensionStructuresSettings;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
 import net.minecraft.world.gen.treedecorator.TreeDecorator;
 import net.minecraft.world.gen.treedecorator.TreeDecoratorType;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,11 +41,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ModFeatures {
+    public static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(ForgeRegistries.FEATURES, REFERENCE.MODID);
+    public static final DeferredRegister<Structure<?>> STRUCTURES = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, REFERENCE.MODID);
+    public static final DeferredRegister<TreeDecoratorType<?>> TREE_DECORATORS = DeferredRegister.create(ForgeRegistries.TREE_DECORATOR_TYPES, REFERENCE.MODID);
+
     //features
-    public static final VampireDungeonFeature vampire_dungeon = new VampireDungeonFeature(NoFeatureConfig.CODEC);
-    public static final VampirismLakeFeature mod_lake = new VampirismLakeFeature(BlockStateFeatureConfig.CODEC);
+    public static final RegistryObject<VampireDungeonFeature> VAMPIRE_DUNGEON = FEATURES.register("vampire_dungeon", () -> new VampireDungeonFeature(NoFeatureConfig.CODEC));
+    public static final RegistryObject<VampirismLakeFeature> MOD_LAKE = FEATURES.register("mod_lake", () -> new VampirismLakeFeature(BlockStateFeatureConfig.CODEC));
     //structures
-    public static final Structure<NoFeatureConfig> hunter_camp = new HunterCampStructure(NoFeatureConfig.CODEC/*deserialize*/);
+    public static final RegistryObject<Structure<NoFeatureConfig>> HUNTER_CAMP = STRUCTURES.register("hunter_camp", () -> {
+                Structure<NoFeatureConfig> structure = new HunterCampStructure(NoFeatureConfig.CODEC/*deserialize*/);
+                Structure.STEP.put(structure, GenerationStage.Decoration.SURFACE_STRUCTURES);
+                Structure.STRUCTURES_REGISTRY.put(REFERENCE.MODID + ":hunter_camp", structure);
+                return structure;
+            });
     //structure pieces
     public static final IStructurePieceType hunter_camp_fireplace = IStructurePieceType.setPieceId(HunterCampPieces.Fireplace::new, REFERENCE.MODID + ":hunter_camp_fireplace");
     public static final IStructurePieceType hunter_camp_tent = IStructurePieceType.setPieceId(HunterCampPieces.Tent::new, REFERENCE.MODID + ":hunter_camp_tent");
@@ -51,28 +64,17 @@ public class ModFeatures {
     public static final IStructureProcessorType<BiomeTopBlockProcessor> biome_based = IStructureProcessorType.register/*register*/(REFERENCE.MODID + ":biome_based", BiomeTopBlockProcessor.CODEC);
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public static final TreeDecoratorType<TrunkCursedVineTreeDecorator> trunk_cursed_vine = new TreeDecoratorType<>(TrunkCursedVineTreeDecorator.CODEC);
+    public static final RegistryObject<TreeDecoratorType<TrunkCursedVineTreeDecorator>> TRUNK_CURSED_VINE = TREE_DECORATORS.register("trunk_cursed_vine", () -> new TreeDecoratorType<>(TrunkCursedVineTreeDecorator.CODEC));
 
-    static void registerFeatures(IForgeRegistry<Feature<?>> registry) {
-        registry.register(vampire_dungeon.setRegistryName(REFERENCE.MODID, "vampire_dungeon"));
-        registry.register(mod_lake.setRegistryName(REFERENCE.MODID, "mod_lake"));
+    static void registerFeaturesAndStructures(IEventBus bus) {
+        FEATURES.register(bus);
+        STRUCTURES.register(bus);
+        TREE_DECORATORS.register(bus);
     }
-
-    static void registerStructures(IForgeRegistry<Structure<?>> registry) {
-        Structure.STEP.put(hunter_camp, GenerationStage.Decoration.SURFACE_STRUCTURES);
-        Structure.STRUCTURES_REGISTRY.put(REFERENCE.MODID + ":hunter_camp", hunter_camp);
-        registry.register(hunter_camp.setRegistryName(REFERENCE.MODID, "hunter_camp"));
-    }
-
-    static void registerTreeDecoratorTypes(IForgeRegistry<TreeDecoratorType<?>> registry) {
-        registry.register(trunk_cursed_vine.setRegistryName(REFERENCE.MODID, "trunk_cursed_vine"));
-    }
-
     static void registerIgnoredBiomesForStructures() {
-        VampirismAPI.worldGenRegistry().removeStructureFromBiomeCategories(hunter_camp.getRegistryName(), Lists.newArrayList(Biome.Category.OCEAN, Biome.Category.THEEND, Biome.Category.NETHER, Biome.Category.BEACH, Biome.Category.ICY, Biome.Category.RIVER, Biome.Category.JUNGLE));
-        VampirismAPI.worldGenRegistry().removeStructureFromBiomes(hunter_camp.getRegistryName(), Lists.newArrayList(ModBiomes.VAMPIRE_FOREST_KEY.location()));
-        VampirismAPI.worldGenRegistry().removeStructureFromBiomes(hunter_camp.getRegistryName(), Lists.newArrayList(ModBiomes.VAMPIRE_FOREST_HILLS_KEY.location()));
-
+        VampirismAPI.worldGenRegistry().removeStructureFromBiomeCategories(HUNTER_CAMP.get().getRegistryName(), Lists.newArrayList(Biome.Category.OCEAN, Biome.Category.THEEND, Biome.Category.NETHER, Biome.Category.BEACH, Biome.Category.ICY, Biome.Category.RIVER, Biome.Category.JUNGLE));
+        VampirismAPI.worldGenRegistry().removeStructureFromBiomes(HUNTER_CAMP.get().getRegistryName(), Lists.newArrayList(ModBiomes.VAMPIRE_FOREST_KEY.location()));
+        VampirismAPI.worldGenRegistry().removeStructureFromBiomes(HUNTER_CAMP.get().getRegistryName(), Lists.newArrayList(ModBiomes.VAMPIRE_FOREST_HILLS_KEY.location()));
     }
 
 
@@ -106,7 +108,7 @@ public class ModFeatures {
         if (!VampirismConfig.COMMON.enforceTentGeneration.get()) return;
         //Copy/Overwrite
         Map<Structure<?>, StructureSeparationSettings> structureSettings = new HashMap<>(settings.structureConfig());
-        if (!structureSettings.containsKey(hunter_camp)) {
+        if (!structureSettings.containsKey(HUNTER_CAMP.get())) {
             LOGGER.info("Cannot find hunter camp configuration for loaded world -> Adding");
             int dist = VampirismConfig.COMMON.hunterTentDistance.get();
             int sep = VampirismConfig.COMMON.hunterTentSeparation.get();
@@ -114,13 +116,13 @@ public class ModFeatures {
                 LOGGER.warn("Hunter tent distance must be larger than separation. Adjusting");
                 dist = sep + 1;
             }
-            structureSettings.put(hunter_camp, new StructureSeparationSettings(dist, sep, 14357719));
+            structureSettings.put(HUNTER_CAMP.get(), new StructureSeparationSettings(dist, sep, 14357719));
         }
         ((DimensionStructureSettingsAccessor) settings).setStructureSeparation_vampirism(structureSettings);
     }
 
     private static void addStructureSeparationSettings(Map<Structure<?>, StructureSeparationSettings> settings) {
-        settings.put(hunter_camp, new ConfigurableStructureSeparationSettings(VampirismConfig.COMMON.hunterTentDistance, VampirismConfig.COMMON.hunterTentSeparation, 14357719));
+        settings.put(HUNTER_CAMP.get(), new ConfigurableStructureSeparationSettings(VampirismConfig.COMMON.hunterTentDistance, VampirismConfig.COMMON.hunterTentSeparation, 14357719));
 
     }
 }

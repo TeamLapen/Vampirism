@@ -47,8 +47,8 @@ public class VampirismSplitBlock extends VampirismBlock {
     private final boolean vertical;
 
 
-    public VampirismSplitBlock(String regName, Properties properties, VoxelShape mainShape, VoxelShape subShape, boolean vertical) {
-        super(regName, properties);
+    public VampirismSplitBlock(Properties properties, VoxelShape mainShape, VoxelShape subShape, boolean vertical) {
+        super(properties);
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(PART, Part.MAIN));
         NORTH1 = mainShape;
         EAST1 = UtilLib.rotateShape(NORTH1, UtilLib.RotationAmount.NINETY);

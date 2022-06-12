@@ -20,7 +20,7 @@ public class ColoredVampireClothingItem extends VampireClothingItem {
     private final EnumModel model;
 
     public ColoredVampireClothingItem(EquipmentSlotType slotType, EnumModel model, String baseRegName, EnumClothingColor color) {
-        super(slotType, baseRegName + "_" + color.getName());
+        super(slotType);
         this.baseName = baseRegName;
         this.color = color;
         this.model = model;

@@ -46,13 +46,13 @@ public class VampireVillageData implements IVillageFactionData {// TODO 1.17 onl
     }
 
     public static void vampireVillage(IFactionVillageBuilder builder) {
-        builder.badOmenEffect(() -> ModEffects.bad_omen_vampire)
-                .captureEntities(() -> Lists.newArrayList(new CaptureEntityEntry(ModEntities.vampire, 10), new CaptureEntityEntry(ModEntities.advanced_vampire, 2)))
-                .factionVillagerProfession(() -> ModVillage.vampire_expert)
+        builder.badOmenEffect(() -> ModEffects.BAD_OMEN_VAMPIRE.get())
+                .captureEntities(() -> Lists.newArrayList(new CaptureEntityEntry(ModEntities.VAMPIRE.get(), 10), new CaptureEntityEntry(ModEntities.ADVANCED_VAMPIRE.get(), 2)))
+                .factionVillagerProfession(() -> ModVillage.VAMPIRE_EXPERT.get())
                 .guardSuperClass(VampireBaseEntity.class)
-                .taskMaster(() -> ModEntities.task_master_vampire)
+                .taskMaster(() -> ModEntities.TASK_MASTER_VAMPIRE.get())
                 .banner(VampireVillageData::createBanner)
-                .totem(() -> ModBlocks.totem_top_vampirism_vampire, () -> ModBlocks.totem_top_vampirism_vampire_crafted);
+                .totem(() -> ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE.get(), () -> ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED.get());
     }
 
     private final ItemStack banner = createBanner();
@@ -67,7 +67,7 @@ public class VampireVillageData implements IVillageFactionData {// TODO 1.17 onl
     @Override
     public List<CaptureEntityEntry> getCaptureEntries() {
         if (this.captureEntityEntries == null) {
-            this.captureEntityEntries = Lists.newArrayList(new CaptureEntityEntry(ModEntities.vampire, 10), new CaptureEntityEntry(ModEntities.advanced_vampire, 2));
+            this.captureEntityEntries = Lists.newArrayList(new CaptureEntityEntry(ModEntities.VAMPIRE.get(), 10), new CaptureEntityEntry(ModEntities.ADVANCED_VAMPIRE.get(), 2));
         }
         return this.captureEntityEntries;
     }
@@ -75,7 +75,7 @@ public class VampireVillageData implements IVillageFactionData {// TODO 1.17 onl
     @Nonnull
     @Override
     public VillagerProfession getFactionVillageProfession() {
-        return ModVillage.vampire_expert;
+        return ModVillage.VAMPIRE_EXPERT.get();
     }
 
     @Nonnull
@@ -86,13 +86,13 @@ public class VampireVillageData implements IVillageFactionData {// TODO 1.17 onl
 
     @Override
     public EntityType<? extends ITaskMasterEntity> getTaskMasterEntity() {
-        return ModEntities.task_master_vampire;
+        return ModEntities.TASK_MASTER_VAMPIRE.get();
     }
 
     @Nonnull
     @Override
     public Pair<Block, Block> getTotemTopBlock() {
-        return Pair.of(ModBlocks.totem_top_vampirism_vampire, ModBlocks.totem_top_vampirism_vampire_crafted);
+        return Pair.of(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE.get(), ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED.get());
     }
 
     @Override

@@ -5,8 +5,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.EffectType;
 
 public class FreezeEffect extends VampirismEffect {
-    public FreezeEffect(String name) {
-        super(name, EffectType.HARMFUL, 0xFFFFFF);
+    public FreezeEffect() {
+        super(EffectType.HARMFUL, 0xFFFFFF);
     }
 
     @Override

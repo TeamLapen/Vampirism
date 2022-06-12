@@ -36,7 +36,7 @@ public class ThrowableItemEntity extends ThrowableEntity implements IRendersAsIt
     }
 
     public ThrowableItemEntity(World worldIn, LivingEntity thrower) {
-        super(ModEntities.throwable_item, thrower, worldIn);
+        super(ModEntities.THROWABLE_ITEM.get(), thrower, worldIn);
     }
 
     @Override

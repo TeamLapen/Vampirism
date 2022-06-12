@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
@@ -16,9 +15,8 @@ import net.minecraft.world.World;
 public abstract class VampirismBlockContainer extends ContainerBlock {
 
 
-    public VampirismBlockContainer(String regName, Block.Properties properties) {
+    public VampirismBlockContainer(Block.Properties properties) {
         super(properties);
-        setRegistryName(REFERENCE.MODID, regName);
 
     }
 
