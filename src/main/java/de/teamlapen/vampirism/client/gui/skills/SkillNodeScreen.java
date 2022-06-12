@@ -116,6 +116,8 @@ public class SkillNodeScreen extends AbstractGui {
     }
 
     public void draw(MatrixStack stack, int i, int j) {
+        stack.pushPose();
+        stack.translate(0,0,50);
         SkillNodeState state = getState();
         if (state == SkillNodeState.HIDDEN) return;
         int width = 26 * this.skillNode.getElements().length + (this.skillNode.getElements().length - 1) * 10;
@@ -150,6 +152,7 @@ public class SkillNodeScreen extends AbstractGui {
         for (SkillNodeScreen child : this.children) {
             child.draw(stack, i, j);
         }
+        stack.popPose();
     }
 
     public void drawConnectivity(MatrixStack stack, int startX, int startY, boolean outerLine) {
@@ -158,6 +161,10 @@ public class SkillNodeScreen extends AbstractGui {
         if (this.parent != null) {
             int color = state.pathColor(outerLine);
 
+            stack.pushPose();
+            if (state == SkillNodeState.UNLOCKED) {
+                stack.translate(0,0,10);
+            }
             int i = startX + x + 13;
             int i1 = startX + this.parent.x + 13;
             int j = startY + this.y - 30;
@@ -179,6 +186,8 @@ public class SkillNodeScreen extends AbstractGui {
                 this.vLine(stack, i1, j2, j3, color);
                 this.vLine(stack, i, j4, j5 + 1, color);
             }
+            stack.popPose();
+
         }
 
         for (SkillNodeScreen child : this.children) {
