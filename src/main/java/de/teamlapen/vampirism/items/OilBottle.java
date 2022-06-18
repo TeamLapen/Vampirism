@@ -27,7 +27,7 @@ public class OilBottle extends Item implements IOilItem {
     @Nonnull
     @Override
     public ItemStack getDefaultInstance() {
-        return OilUtils.setOil(super.getDefaultInstance(), ModOils.empty);
+        return OilUtils.setOil(super.getDefaultInstance(), ModOils.EMPTY.get());
     }
 
     @Override
@@ -51,7 +51,7 @@ public class OilBottle extends Item implements IOilItem {
     public void fillItemCategory(@Nonnull ItemGroup itemGroup, @Nonnull NonNullList<ItemStack> items) {
         if (this.allowdedIn(itemGroup)) {
             for (IOil value : ModRegistries.OILS.getValues()) {
-                if (value == ModOils.empty) continue;
+                if (value == ModOils.EMPTY.get()) continue;
                 items.add(OilUtils.setOil(new ItemStack(this), value));
             }
         }

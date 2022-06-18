@@ -13,19 +13,19 @@ import javax.annotation.Nullable;
 
 public abstract class HorizontalContainerBlock extends VampirismHorizontalBlock implements ITileEntityProvider {
 
-    public HorizontalContainerBlock(String regName, Properties properties, VoxelShape shape) {
-        super(regName, properties, shape);
+    public HorizontalContainerBlock(Properties properties, VoxelShape shape) {
+        super(properties, shape);
     }
 
-    public HorizontalContainerBlock(String regName, Properties properties) {
-        super(regName, properties);
+    public HorizontalContainerBlock(Properties properties) {
+        super(properties);
     }
 
     @Override
     public boolean triggerEvent(@Nonnull BlockState state, @Nonnull World level, @Nonnull BlockPos pos, int p_189539_4_, int p_189539_5_) {
         super.triggerEvent(state, level, pos, p_189539_4_, p_189539_5_);
         TileEntity tileentity = level.getBlockEntity(pos);
-        return tileentity == null ? false : tileentity.triggerEvent(p_189539_4_, p_189539_5_);
+        return tileentity != null && tileentity.triggerEvent(p_189539_4_, p_189539_5_);
     }
 
     @Override

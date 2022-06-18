@@ -74,6 +74,6 @@ public class ApplicableOilRecipe extends SpecialRecipe {
     @Nonnull
     @Override
     public IRecipeSerializer<?> getSerializer() {
-        return ModRecipes.applicable_oil;
+        return ModRecipes.APPLICABLE_OIL.get();
     }
 }

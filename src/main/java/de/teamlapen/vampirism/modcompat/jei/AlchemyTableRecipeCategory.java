@@ -42,9 +42,9 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<AlchemyTableR
     private final IDrawableAnimated pool;
 
     public AlchemyTableRecipeCategory(IGuiHelper helper) {
-        this.localizedName = UtilLib.translate(ModBlocks.alchemy_table.getDescriptionId());
+        this.localizedName = UtilLib.translate(ModBlocks.ALCHEMY_TABLE.get().getDescriptionId());
         this.background = helper.drawableBuilder(location, 11, 12, 149, 80).addPadding(0,30,0,0).build();
-        this.icon = helper.createDrawableIngredient(new ItemStack(ModBlocks.alchemy_table));
+        this.icon = helper.createDrawableIngredient(new ItemStack(ModBlocks.ALCHEMY_TABLE.get()));
         this.blazeHeat = helper.createDrawable(location, 176, 9, 18, 4);
         this.arrow = helper.drawableBuilder(location, 176,1, 28,8).buildAnimated(600, IDrawableAnimated.StartDirection.LEFT, false);
         this.pool = helper.drawableBuilder(location, 176,13, 32,32).buildAnimated(600, IDrawableAnimated.StartDirection.LEFT, false);

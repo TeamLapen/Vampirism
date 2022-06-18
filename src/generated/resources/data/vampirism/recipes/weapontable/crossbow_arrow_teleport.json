@@ -14,7 +14,7 @@
       "item": "vampirism:oil_bottle",
       "count": 1,
       "nbt": {
-        "oil": "vampirism:teleport_oil"
+        "oil": "vampirism:teleport"
       }
     }
   },

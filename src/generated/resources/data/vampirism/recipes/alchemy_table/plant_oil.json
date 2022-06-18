@@ -3,7 +3,7 @@
   "result": {
     "item": "vampirism:oil_bottle",
     "nbt": {
-      "oil": "vampirism:plant_oil"
+      "oil": "vampirism:plant"
     }
   },
   "ingredient": {

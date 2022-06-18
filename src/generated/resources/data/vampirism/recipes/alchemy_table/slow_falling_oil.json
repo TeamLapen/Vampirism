@@ -3,7 +3,7 @@
   "result": {
     "item": "vampirism:oil_bottle",
     "nbt": {
-      "oil": "vampirism:slow_falling_oil"
+      "oil": "vampirism:slow_falling"
     }
   },
   "ingredient": {
@@ -11,7 +11,7 @@
     "item": "vampirism:oil_bottle",
     "count": 1,
     "nbt": {
-      "oil": "vampirism:vampire_blood_oil"
+      "oil": "vampirism:vampire_blood"
     }
   },
   "input": {

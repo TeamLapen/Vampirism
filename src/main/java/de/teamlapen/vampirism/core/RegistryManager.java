@@ -2,8 +2,6 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import de.teamlapen.vampirism.api.entity.player.task.Task;
-import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.entity.action.EntityActions;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.items.VampirismBoatItem;
@@ -12,7 +10,6 @@ import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
-import de.teamlapen.vampirism.world.biome.VampireForestBiome;
 import de.teamlapen.vampirism.world.biome.VampirismBiomeFeatures;
 import net.minecraft.block.Block;
 import net.minecraft.block.DispenserBlock;
@@ -21,17 +18,8 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.Potion;
-import net.minecraft.stats.StatType;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.village.PointOfInterestType;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.gen.treedecorator.TreeDecoratorType;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
@@ -70,6 +58,7 @@ public class RegistryManager implements IInitListener {
         MinionTasks.register(modbus);
         VampireSkills.registerVampireSkills(modbus);
         HunterSkills.registerHunterSkills(modbus);
+        ModOils.registerOils(modbus);
     }
     @SubscribeEvent
     public void onBuildRegistries(RegistryEvent.NewRegistry event) {
@@ -157,11 +146,6 @@ public class RegistryManager implements IInitListener {
     @SubscribeEvent
     public void onRegisterEffects(RegistryEvent.Register<Effect> event) {
         ModEffects.replaceEffects(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onRegisterOil(RegistryEvent.Register<IOil> event) {
-        ModOils.register(event.getRegistry());
     }
 
     @SubscribeEvent

@@ -6,8 +6,8 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.items.oil.IApplicableOil;
 import de.teamlapen.vampirism.client.gui.AlchemicalCauldronScreen;
-import de.teamlapen.vampirism.client.gui.PotionTableScreen;
 import de.teamlapen.vampirism.client.gui.AlchemyTableScreen;
+import de.teamlapen.vampirism.client.gui.PotionTableScreen;
 import de.teamlapen.vampirism.client.gui.WeaponTableScreen;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModRecipes;
@@ -86,7 +86,7 @@ public class VampirismJEIPlugin implements IModPlugin {
 
     @Override
     public void registerItemSubtypes(ISubtypeRegistration registration) {
-        registration.registerSubtypeInterpreter(ModItems.oil_bottle, OilNBT.INSTANCE);
+        registration.registerSubtypeInterpreter(ModItems.OIL_BOTTLE.get(), OilNBT.INSTANCE);
     }
 
     private static class OilNBT implements IIngredientSubtypeInterpreter<ItemStack> {

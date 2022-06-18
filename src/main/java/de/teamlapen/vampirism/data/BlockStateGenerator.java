@@ -251,7 +251,7 @@ public class BlockStateGenerator extends BlockStateProvider {
             models().withExistingParent(REFERENCE.MODID + ":block/coffin/coffin_top_" + dye.getName(),"vampirism:block/coffin_top").texture("0", "vampirism:block/coffin/coffin_" + dye.getName());
         }
 
-        MultiPartBlockStateBuilder alchemy_table = getMultipartBuilder(ModBlocks.alchemy_table);
+        MultiPartBlockStateBuilder alchemy_table = getMultipartBuilder(ModBlocks.ALCHEMY_TABLE.get());
         applyHorizontalModel(alchemy_table, models().getExistingFile(modLoc("block/alchemy_table/alchemy_table")));
         applyHorizontalModel(alchemy_table, models().getExistingFile(modLoc("block/alchemy_table/alchemy_table_input_0")), partBuilder -> partBuilder.condition(AlchemyTableBlock.HAS_BOTTLE_INPUT_0, true));
         applyHorizontalModel(alchemy_table, models().getExistingFile(modLoc("block/alchemy_table/alchemy_table_input_1")), partBuilder -> partBuilder.condition(AlchemyTableBlock.HAS_BOTTLE_INPUT_1, true));

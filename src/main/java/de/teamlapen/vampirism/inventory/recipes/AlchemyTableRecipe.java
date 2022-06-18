@@ -46,7 +46,7 @@ public class AlchemyTableRecipe extends AbstractBrewingRecipe {
     @Nonnull
     @Override
     public IRecipeSerializer<?> getSerializer() {
-        return ModRecipes.alchemical_table;
+        return ModRecipes.ALCHEMICAL_TABLE.get();
     }
 
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<AlchemyTableRecipe> {

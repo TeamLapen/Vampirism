@@ -23,7 +23,7 @@ public class OilUtils {
             String oilStr = stack.getTag().getString("oil");
             oil = ModRegistries.OILS.getValue(new ResourceLocation(oilStr));
         }
-        return oil != null ? oil : ModOils.empty;
+        return oil != null ? oil : ModOils.EMPTY.get();
     }
 
     public static ItemStack setOil(@Nonnull ItemStack stack, @Nonnull IOil oil) {
@@ -32,7 +32,7 @@ public class OilUtils {
     }
 
     public static ItemStack createOilItem(IOil oil) {
-        return ModItems.oil_bottle.withOil(oil);
+        return ModItems.OIL_BOTTLE.get().withOil(oil);
     }
 
     public static Optional<IApplicableOil> getAppliedOil(@Nonnull ItemStack stack) {

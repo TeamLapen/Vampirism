@@ -23,7 +23,7 @@ public class ModContainer {
     public static final RegistryObject<ContainerType<TaskBoardContainer>> TASK_MASTER = CONTAINERS.register("task_master", () -> new ContainerType<>(TaskBoardContainer::new));
     public static final RegistryObject<ContainerType<PotionTableContainer>> EXTENDED_POTION_TABLE = CONTAINERS.register("extended_potion_table", () -> new ContainerType<>(new PotionTableContainer.Factory()));
     public static final RegistryObject<ContainerType<VampirismContainer>> VAMPIRISM = CONTAINERS.register("vampirism", () -> new ContainerType<>(VampirismContainer::new));
-    public static final RegistryObject<ContainerType<AlchemyTableContainer>> ALCHEMICAL_TABLE = CONTAINERS.register("alchemical_table", () -> new ContainerType<>(AlchemyTableContainer::new);)
+    public static final RegistryObject<ContainerType<AlchemyTableContainer>> ALCHEMICAL_TABLE = CONTAINERS.register("alchemical_table", () -> new ContainerType<>(AlchemyTableContainer::new));
 
 
     static void registerContainer(IEventBus bus) {

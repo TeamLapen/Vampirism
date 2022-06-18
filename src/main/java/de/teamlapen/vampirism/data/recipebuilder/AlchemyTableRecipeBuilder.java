@@ -29,6 +29,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 @ParametersAreNonnullByDefault
 public class AlchemyTableRecipeBuilder {
@@ -36,8 +37,12 @@ public class AlchemyTableRecipeBuilder {
     public static AlchemyTableRecipeBuilder builder(ItemStack stack) {
         return new AlchemyTableRecipeBuilder(stack);
     }
-    public static AlchemyTableRecipeBuilder builder(IOil stack) {
-        return new AlchemyTableRecipeBuilder(OilUtils.createOilItem(stack));
+    public static AlchemyTableRecipeBuilder builder(IOil oilStack) {
+        return new AlchemyTableRecipeBuilder(OilUtils.createOilItem(oilStack));
+    }
+
+    public static AlchemyTableRecipeBuilder builder(Supplier<? extends IOil> oilStack) {
+        return builder(oilStack.get());
     }
 
     private final ItemStack result;
@@ -45,7 +50,7 @@ public class AlchemyTableRecipeBuilder {
     private final Advancement.Builder advancementBuilder = Advancement.Builder.advancement();
     private String group;
     private Ingredient ingredient;
-    private IOil ingredientOil = ModOils.empty;
+    private IOil ingredientOil = ModOils.EMPTY.get();
     private Ingredient input;
     private ISkill[] skills;
 
@@ -71,15 +76,15 @@ public class AlchemyTableRecipeBuilder {
     }
 
     public AlchemyTableRecipeBuilder oilIngredient(IOil oil) {
-        this.ingredient = new NBTIngredient(ModItems.oil_bottle.withOil(oil));
+        this.ingredient = new NBTIngredient(ModItems.OIL_BOTTLE.get().withOil(oil));
         return this;
     }
 
     public AlchemyTableRecipeBuilder plantOilIngredient() {
-        return ingredient(new NBTIngredient(ModItems.oil_bottle.withOil(ModOils.plant_oil))).withCriterion("has_bottles", has(ModItems.oil_bottle));
+        return ingredient(new NBTIngredient(ModItems.OIL_BOTTLE.get().withOil(ModOils.PLANT.get()))).withCriterion("has_bottles", has(ModItems.OIL_BOTTLE.get()));
     }
     public AlchemyTableRecipeBuilder bloodOilIngredient() {
-        return ingredient(new NBTIngredient(ModItems.oil_bottle.withOil(ModOils.vampire_blood_oil))).withCriterion("has_bottles", has(ModItems.oil_bottle));
+        return ingredient(new NBTIngredient(ModItems.OIL_BOTTLE.get().withOil(ModOils.VAMPIRE_BLOOD.get()))).withCriterion("has_bottles", has(ModItems.OIL_BOTTLE.get()));
     }
 
     public AlchemyTableRecipeBuilder input(Ingredient input){
@@ -164,7 +169,7 @@ public class AlchemyTableRecipeBuilder {
         @Nonnull
         @Override
         public IRecipeSerializer<?> getType() {
-            return ModRecipes.alchemical_table;
+            return ModRecipes.ALCHEMICAL_TABLE.get();
         }
 
         @Nullable

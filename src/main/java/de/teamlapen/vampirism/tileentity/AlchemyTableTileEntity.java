@@ -70,7 +70,7 @@ public class AlchemyTableTileEntity extends LockableTileEntity implements ITicka
     };
 
     public AlchemyTableTileEntity() {
-        super(ModTiles.alchemical_table);
+        super(ModTiles.ALCHEMICAL_TABLE.get());
     }
 
     @Override

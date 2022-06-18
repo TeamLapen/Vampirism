@@ -22,7 +22,6 @@ public class ModRegistries {
     public static final ResourceLocation TASK_ID = new ResourceLocation("vampirism:tasks");
     public static final ResourceLocation REFINEMENT_ID = new ResourceLocation("vampirism:refinement");
     public static final ResourceLocation REFINEMENT_SET_ID = new ResourceLocation("vampirism:refinement_set");
-
     public static final ResourceLocation OIL_ID = new ResourceLocation("vampirism:oil");
 
     public static final IForgeRegistry<ISkill> SKILLS;

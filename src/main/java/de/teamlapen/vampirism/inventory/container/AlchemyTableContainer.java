@@ -27,7 +27,7 @@ public class AlchemyTableContainer extends Container {
     }
 
     public AlchemyTableContainer(int containerId, World level, PlayerInventory playerInventory, IInventory inventory, IIntArray data) {
-        super(ModContainer.alchemical_table, containerId);
+        super(ModContainer.ALCHEMICAL_TABLE.get(), containerId);
         checkContainerSize(inventory, 5);
         checkContainerDataCount(data, 3);
         this.alchemyTable = inventory;

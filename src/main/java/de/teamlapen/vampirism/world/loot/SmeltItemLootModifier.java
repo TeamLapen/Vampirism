@@ -37,7 +37,7 @@ public class SmeltItemLootModifier extends LootModifier {
     protected List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context) {
         ItemStack stack = context.getParamOrNull(LootParameters.TOOL);
         Entity entity = context.getParamOrNull(LootParameters.THIS_ENTITY);
-        if (!(entity instanceof LivingEntity) || stack == null || !OilUtils.getAppliedOil(stack).filter(oil -> oil == ModOils.smelt_oil).isPresent()) {
+        if (!(entity instanceof LivingEntity) || stack == null || !OilUtils.getAppliedOil(stack).filter(oil -> oil == ModOils.SMELT.get()).isPresent()) {
             return generatedLoot;
         }
         ItemStack entityStack = ((LivingEntity) entity).getMainHandItem();

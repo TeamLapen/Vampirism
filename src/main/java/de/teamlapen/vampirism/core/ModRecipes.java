@@ -8,7 +8,6 @@ import de.teamlapen.vampirism.util.NBTIngredient;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.*;
 import net.minecraft.tags.ITag;
-import net.minecraft.item.crafting.SpecialRecipeSerializer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.conditions.IConditionSerializer;
@@ -56,7 +55,7 @@ public class ModRecipes {
         CraftingHelper.register(new ResourceLocation(REFERENCE.MODID, "item"), NBTIngredient.Serializer.INSTANCE);
     }
 
-    private static <T extends IRecipe<?>> RegistryObject<IRecipeSerializer<T>> register(String name, Supplier<? extends IRecipeSerializer<T>> sup) {
+    private static <Z extends IRecipeSerializer<T>,T extends IRecipe<?>> RegistryObject<Z> register(String name, Supplier<Z> sup) {
         return RECIPE_SERIALIZERS.register(name, sup);
     }
 
