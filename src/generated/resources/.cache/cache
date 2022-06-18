@@ -1097,6 +1097,9 @@ a7ade90cb53949660a98f2a2343802e881f138f6 data/vampirism/tags/entity_types/advanc
 b4dea7afa6c480f3dc5788190dec4c9650babd8d data/vampirism/tags/entity_types/zombies.json
 052c96e352a5ab4d1d24dab25e8af31f59b42005 data/vampirism/tags/fluids/vampirism_blood.json
 471457089210d84add7fdacb9d0eb520abdf9002 data/vampirism/tags/fluids/vampirism_impure_blood.json
+13145e303647a1e64fd6522c82094b3bf0dadec9 data/vampirism/tags/items/applicable_oil/armor.json
+74700d556ca80c7a1db5fd4efb09c3ddb26cad66 data/vampirism/tags/items/applicable_oil/pickaxe.json
+74700d556ca80c7a1db5fd4efb09c3ddb26cad66 data/vampirism/tags/items/applicable_oil/sword.json
 d4a0a289e890be3685d664f380313daf4031bbb6 data/vampirism/tags/items/castle_block.json
 312ec0ba7b67b5eaf8f112891b3c7f5e073f8cbc data/vampirism/tags/items/castle_slaps.json
 eec0607ec57ff92feb16988f12898e94d99cc63e data/vampirism/tags/items/castle_stairs.json
