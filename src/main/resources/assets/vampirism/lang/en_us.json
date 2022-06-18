@@ -90,8 +90,7 @@
   "text.vampirism.actions.bind_action": "Bound action %s to action key %s",
   "text.vampirism.warning_optifine_bloodvision": "You appear to be running Optifine with shaders. Blood vision won't work with that. Therefore a substitute glowing effect is used. Not all shaders actually render the glowing effect though.",
   "text.vampirism.decorative_only": "Decorative block",
-  "text.vampirism.oil.applied_to": "Can be Applied to:",
-  "text.vampirism.oil.when_applied": "When Applied:",
+  "text.vampirism.oil.effect_on_hit": "Effect On Hit:",
   "gui.vampirism.jei.category.oil_brewing": "Process Oil",
   "__comment": "block interaction texts",
   "text.vampirism.med_chair_other_faction": "You cannot become a Hunter since you already are a %s",
@@ -1234,5 +1233,8 @@
   "oil.vampirism.harm": "Harm",
   "oil.vampirism.smelt": "Smelting",
   "oil.vampirism.teleport": "Teleport",
-  "oil.vampirism.evasion": "Evasion"
+  "oil.vampirism.evasion": "Evasion",
+  "__commend": "Oil description",
+  "oil.vampirism.smelt.desc": "Can be used on Pickaxes to auto smelt destroyed blocks",
+  "oil.vampirism.evasion.desc": "Increases evasion chances when applied to armor"
 }

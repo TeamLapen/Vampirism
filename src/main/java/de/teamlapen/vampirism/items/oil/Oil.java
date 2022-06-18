@@ -11,7 +11,6 @@ import java.util.List;
 public class Oil extends ForgeRegistryEntry<IOil> implements IOil {
 
     private final int color;
-    private ITextComponent desc;
 
     public Oil(int color) {
         this.color = color;
