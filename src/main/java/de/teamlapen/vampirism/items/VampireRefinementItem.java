@@ -4,7 +4,6 @@ import de.teamlapen.lib.util.WeightedRandomItem;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillPlayer;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
@@ -24,6 +23,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.RegistryObject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -66,11 +66,11 @@ public class VampireRefinementItem extends Item implements IRefinementItem { //T
     public static VampireRefinementItem getItemForType(AccessorySlotType type) { //TODO 1.17 move to vampire subclass
         switch (type) {
             case AMULET:
-                return ModItems.amulet;
+                return ModItems.AMULET.get();
             case RING:
-                return ModItems.ring;
+                return ModItems.RING.get();
             default:
-                return ModItems.obi_belt;
+                return ModItems.OBI_BELT.get();
         }
     }
     private final AccessorySlotType type;
@@ -103,9 +103,9 @@ public class VampireRefinementItem extends Item implements IRefinementItem { //T
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         IRefinementSet set = getRefinementSet(stack);
         if (set != null) {
-            for (IRefinement refinement : set.getRefinements()) {
+            set.getRefinementRegistryObjects().stream().map(RegistryObject::get).forEach(refinement -> {
                 tooltip.add(new StringTextComponent(" - ").append(refinement.getDescription()).withStyle(TextFormatting.GRAY));
-            }
+            });
         }
     }
 

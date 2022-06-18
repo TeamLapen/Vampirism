@@ -6,7 +6,9 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
+import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModRefinements;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
@@ -118,6 +120,16 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
         if (VampirismConfig.SERVER.preventRenderingDebugBoundingBoxes.get()) {
             Minecraft.getInstance().getEntityRenderDispatcher().setRenderHitBoxes(false);
         }
+        if(event.getInfo().getEntity() instanceof LivingEntity && ((LivingEntity) event.getInfo().getEntity()).isSleeping()){
+            ((LivingEntity) event.getInfo().getEntity()).getSleepingPos().map(pos -> event.getInfo().getEntity().level.getBlockState(pos)).filter(blockState -> blockState.getBlock() instanceof CoffinBlock).ifPresent(blockState -> {
+                if(blockState.getValue(CoffinBlock.VERTICAL)){
+                    event.getInfo().move(0.2, -0.2, 0);
+                }
+                else{
+                    event.getInfo().move(0, -0.2, 0);
+                }
+            });
+        }
     }
 
     @SubscribeEvent
@@ -150,7 +162,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
             if ((VampirismConfig.CLIENT.renderVampireForestFog.get() || VampirismConfig.SERVER.enforceRenderForestFog.get()) && (Helper.isEntityInArtificalVampireFogArea(mc.player) || Helper.isEntityInVampireBiome(mc.player))) {
                 insideFog = true;
                 vampireBiomeFogDistanceMultiplier = vampire != null && vampire.getLevel() > 0 ? 2 : 1;
-                vampireBiomeFogDistanceMultiplier += vampire!= null && vampire.getSkillHandler().isRefinementEquipped(ModRefinements.vista) ? VampirismConfig.BALANCE.vrVistaMod.get() : 0;
+                vampireBiomeFogDistanceMultiplier += vampire!= null && vampire.getSkillHandler().isRefinementEquipped(ModRefinements.VISTA.get()) ? VampirismConfig.BALANCE.vrVistaMod.get() : 0;
 
             } else {
                 insideFog = false;
@@ -168,7 +180,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
 
         //Saturation shader BUGGED this renderes the hotbar white
 //        if (mc.player != null && mc.player.getRNG().nextInt(10) == 3) {
-//            EffectInstance pe = mc.player.getActivePotionEffect(ModEffects.saturation);
+//            EffectInstance pe = mc.player.getActivePotionEffect(ModEffects.SATURATION.get());
 //            boolean active = pe != null && pe.getAmplifier() >= 2;
 //            GameRenderer renderer = mc.gameRenderer;
 //            if (active && renderer.getShaderGroup() == null) {
@@ -301,7 +313,10 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
             m.rightPants.visible = false;
             m.leftPants.visible = false;
         }
-
+        if(player.getSleepingPos().map(pos -> player.level.getBlockState(pos)).map(state -> state.getBlock() instanceof CoffinBlock).orElse(false)){
+            //Shrink player, so they fit into the coffin model
+            event.getMatrixStack().scale(0.8f,0.95f,0.8f);
+        }
     }
 
     @SubscribeEvent

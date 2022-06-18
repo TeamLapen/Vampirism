@@ -10,7 +10,7 @@ import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.registries.IForgeRegistry;
 
 
-//@ObjectHolder(REFERENCE.MODID) TODO 1.17 adapt if ForgeRegistries for LootFunctionType and LootConditionType have been implemented
+//TODO 1.17 adapt if ForgeRegistries for LootFunctionType and LootConditionType have been implemented
 public class ModLoot {
 
     public static LootFunctionType add_book_nbt;

@@ -90,7 +90,7 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
     @Override
     public void save(Consumer<IFinishedRecipe> consumer, ResourceLocation id) {
         id = new ResourceLocation(id.getNamespace(), "weapontable/" + id.getPath());
-        this.advancement.addCriterion("has_skill", SkillUnlockedTrigger.builder(this.skills != null && this.skills.length >= 1 ? this.skills[0] : HunterSkills.weapon_table));
+        this.advancement.addCriterion("has_skill", SkillUnlockedTrigger.builder(this.skills != null && this.skills.length >= 1 ? this.skills[0] : HunterSkills.WEAPON_TABLE.get()));
         this.ensureValid(id);
         this.advancement
                 .parent(new ResourceLocation("recipes/root"))
@@ -127,7 +127,7 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
         @Nonnull
         @Override
         public IRecipeSerializer<?> getType() {
-            return ModRecipes.shaped_crafting_weapontable;
+            return ModRecipes.SHAPED_CRAFTING_WEAPONTABLE.get();
         }
 
         @Override

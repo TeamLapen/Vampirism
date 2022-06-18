@@ -14,17 +14,17 @@ public class ModScreens {
      */
     @SuppressWarnings("RedundantTypeArguments")
     public static void registerScreensUnsafe() {
-        ScreenManager.<HunterTableContainer, HunterTableScreen>register(ModContainer.hunter_table, HunterTableScreen::new);
-        ScreenManager.<AlchemicalCauldronContainer, AlchemicalCauldronScreen>register(ModContainer.alchemical_cauldron, AlchemicalCauldronScreen::new);
-        ScreenManager.<WeaponTableContainer, WeaponTableScreen>register(ModContainer.weapon_table, WeaponTableScreen::new);
-        ScreenManager.<HunterTrainerContainer, HunterTrainerScreen>register(ModContainer.hunter_trainer, HunterTrainerScreen::new);
-        ScreenManager.<HunterBasicContainer, HunterBasicScreen>register(ModContainer.hunter_basic, HunterBasicScreen::new);
-        ScreenManager.<AltarInfusionContainer, AltarInfusionScreen>register(ModContainer.altar_infusion, AltarInfusionScreen::new);
-        ScreenManager.<BloodGrinderContainer, BloodGrinderScreen>register(ModContainer.blood_grinder, BloodGrinderScreen::new);
-        ScreenManager.<MinionContainer, MinionScreen>register(ModContainer.minion, MinionScreen::new);
-        ScreenManager.register(ModContainer.task_master, TaskBoardScreen::new);
-        ScreenManager.register(ModContainer.extended_potion_table, PotionTableScreen::new);
-        ScreenManager.register(ModContainer.vampirism, VampirismScreen::new);
-        ScreenManager.register(ModContainer.alchemical_table, AlchemyTableScreen::new);
+        ScreenManager.<HunterTableContainer, HunterTableScreen>register(ModContainer.HUNTER_TABLE.get(), HunterTableScreen::new);
+        ScreenManager.<AlchemicalCauldronContainer, AlchemicalCauldronScreen>register(ModContainer.ALCHEMICAL_CAULDRON.get(), AlchemicalCauldronScreen::new);
+        ScreenManager.<WeaponTableContainer, WeaponTableScreen>register(ModContainer.WEAPON_TABLE.get(), WeaponTableScreen::new);
+        ScreenManager.<HunterTrainerContainer, HunterTrainerScreen>register(ModContainer.HUNTER_TRAINER.get(), HunterTrainerScreen::new);
+        ScreenManager.<HunterBasicContainer, HunterBasicScreen>register(ModContainer.HUNTER_BASIC.get(), HunterBasicScreen::new);
+        ScreenManager.<AltarInfusionContainer, AltarInfusionScreen>register(ModContainer.ALTAR_INFUSION.get(), AltarInfusionScreen::new);
+        ScreenManager.<BloodGrinderContainer, BloodGrinderScreen>register(ModContainer.BLOOD_GRINDER.get(), BloodGrinderScreen::new);
+        ScreenManager.<MinionContainer, MinionScreen>register(ModContainer.MINION.get(), MinionScreen::new);
+        ScreenManager.register(ModContainer.TASK_MASTER.get(), TaskBoardScreen::new);
+        ScreenManager.register(ModContainer.EXTENDED_POTION_TABLE.get(), PotionTableScreen::new);
+        ScreenManager.register(ModContainer.VAMPIRISM.get(), VampirismScreen::new);
+        ScreenManager.register(ModContainer.ALCHEMICAL_TABLE.get(), AlchemyTableScreen::new);
     }
 }

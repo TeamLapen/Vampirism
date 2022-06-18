@@ -51,7 +51,7 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
     private boolean prevMissingLava = false;
 
     public WeaponTableContainer(int id, PlayerInventory playerInventory, IWorldPosCallable worldPosCallable) {
-        super(ModContainer.weapon_table, id);
+        super(ModContainer.WEAPON_TABLE.get(), id);
         this.worldPos = worldPosCallable;
         this.hunterPlayer = HunterPlayer.get(playerInventory.player);
         this.player = playerInventory.player;
@@ -236,7 +236,7 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
 
     @Override
     public boolean stillValid(@Nonnull PlayerEntity playerIn) {
-        return stillValid(this.worldPos, playerIn, ModBlocks.weapon_table);
+        return stillValid(this.worldPos, playerIn, ModBlocks.WEAPON_TABLE.get());
     }
 
     private void slotChangedCraftingGrid(World worldIn, PlayerEntity playerIn, HunterPlayer hunter, CraftingInventory craftMatrixIn, CraftResultInventory craftResultIn) {

@@ -39,7 +39,7 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
 
 
     public GarlicBeaconTileEntity() {
-        super(ModTiles.garlic_beacon);
+        super(ModTiles.GARLIC_BEACON.get());
     }
 
     public float getBootProgress() {

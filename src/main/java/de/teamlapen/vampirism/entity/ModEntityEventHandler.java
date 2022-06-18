@@ -278,8 +278,12 @@ public class ModEntityEventHandler {
 
     @SubscribeEvent
     public void onEyeHeightSet(EntityEvent.Size event) {
-        if (event.getEntity() instanceof VampireBaseEntity || event.getEntity() instanceof HunterBaseEntity)
+        if (event.getEntity() instanceof VampireBaseEntity || event.getEntity() instanceof HunterBaseEntity) {
             event.setNewEyeHeight(event.getOldEyeHeight() * 0.875f);
+        }
+        if (event.getEntity() instanceof LivingEntity) {
+            //(CoffinBlock.setSleepSize(event, ((LivingEntity) event.getEntity()));
+        }
     }
 
     @SubscribeEvent

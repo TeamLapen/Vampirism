@@ -25,8 +25,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemWithTier, IDyeableArmorItem {
-
-    private final static String baseRegName = "armor_of_swiftness";
     private final int[] DAMAGE_REDUCTION_ULTIMATE = new int[]{3, 6, 8, 3};
     private final int[] DAMAGE_REDUCTION_ENHANCED = new int[]{2, 5, 6, 2};
     private final int[] DAMAGE_REDUCTION_NORMAL = new int[]{1, 2, 3, 1};
@@ -34,7 +32,7 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
     private final TIER tier;
 
     public ArmorOfSwiftnessItem(EquipmentSlotType equipmentSlotIn, TIER tier) {
-        super(baseRegName, tier.getSerializedName(), VampirismArmorMaterials.MASTERLY_LEATHER, equipmentSlotIn, new Item.Properties().tab(VampirismMod.creativeTab));
+        super(VampirismArmorMaterials.MASTERLY_LEATHER, equipmentSlotIn, new Item.Properties().tab(VampirismMod.creativeTab));
         this.tier = tier;
     }
 
@@ -66,11 +64,6 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
         }
 
         return multimap;
-    }
-
-    @Override
-    public String getBaseRegName() {
-        return baseRegName;
     }
 
     @Override

@@ -51,7 +51,7 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
     }
 
     public static boolean spawnPredicateVampireFog(IWorld world, BlockPos blockPos) {
-        return ModBiomes.vampire_forest.getRegistryName().equals(Helper.getBiomeId(world, blockPos)) || ModBiomes.vampire_forest_hills.getRegistryName().equals(Helper.getBiomeId(world, blockPos)) || (world instanceof World && VampirismWorld.getOpt((World) world).map(vh -> vh.isInsideArtificialVampireFogArea(blockPos)).orElse(false));
+        return ModBiomes.VAMPIRE_FOREST.get().getRegistryName().equals(Helper.getBiomeId(world, blockPos)) || ModBiomes.VAMPIRE_FOREST_HILLS.get().getRegistryName().equals(Helper.getBiomeId(world, blockPos)) || (world instanceof World && VampirismWorld.getOpt((World) world).map(vh -> vh.isInsideArtificialVampireFogArea(blockPos)).orElse(false));
     }
 
     public static boolean spawnPredicateCanSpawn(EntityType<? extends MobEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
@@ -307,7 +307,7 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
      */
     protected void teleportAway() {
         this.setInvisible(true);
-        ModParticles.spawnParticlesServer(this.level, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_6"), 10, 0x0A0A0A, 0.6F), this.getX(), this.getY(), this.getZ(), 20, 1, 1, 1, 0);
+        ModParticles.spawnParticlesServer(this.level, new GenericParticleData(ModParticles.GENERIC.get(), new ResourceLocation("minecraft", "effect_6"), 10, 0x0A0A0A, 0.6F), this.getX(), this.getY(), this.getZ(), 20, 1, 1, 1, 0);
         this.playSound(SoundEvents.ENDERMAN_TELEPORT, 1, 1);
 
         this.remove();

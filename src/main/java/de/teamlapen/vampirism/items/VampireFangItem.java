@@ -13,15 +13,14 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.item.Item;
 
 import javax.annotation.Nonnull;
 
-public class VampireFangItem extends VampirismItem {
-
-    private static final String name = "vampire_fang";
+public class VampireFangItem extends Item {
 
     public VampireFangItem() {
-        super(name, new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties().tab(VampirismMod.creativeTab));
     }
 
     @Nonnull
@@ -35,12 +34,12 @@ public class VampireFangItem extends VampirismItem {
             } else {
                 if (Helper.canBecomeVampire(playerIn)) {
                     SanguinareEffect.addRandom(playerIn, true);
-                    playerIn.addEffect(new EffectInstance(ModEffects.poison, 60));
+                    playerIn.addEffect(new EffectInstance(ModEffects.POISON.get(), 60));
                 } else {
                     if (Helper.isVampire(playerIn)) {
                         playerIn.displayClientMessage(new TranslationTextComponent("text.vampirism.already_vampire"), true);
                     } else {
-                        playerIn.displayClientMessage(new TranslationTextComponent("text.vampirism.immune_to").append(new TranslationTextComponent(ModEffects.sanguinare.getDescriptionId())), true);
+                        playerIn.displayClientMessage(new TranslationTextComponent("text.vampirism.immune_to").append(new TranslationTextComponent(ModEffects.SANGUINARE.get().getDescriptionId())), true);
                     }
                 }
                 stack.shrink(1);

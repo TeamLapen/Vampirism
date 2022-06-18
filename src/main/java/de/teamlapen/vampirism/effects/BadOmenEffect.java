@@ -12,7 +12,6 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.EffectType;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.server.ServerWorld;
 
@@ -51,9 +50,8 @@ public abstract class BadOmenEffect extends Effect {
         }
     }
 
-    public BadOmenEffect(String modID, ResourceLocation faction) {
+    public BadOmenEffect() {
         super(EffectType.NEUTRAL, 745784);
-        this.setRegistryName(modID, "bad_omen_" + faction.getPath());
     }
 
     public abstract IFaction<?> getFaction();

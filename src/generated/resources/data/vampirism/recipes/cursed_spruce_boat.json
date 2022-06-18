@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "boat",
+  "pattern": [
+    "# #",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "vampirism:cursed_spruce_planks"
+    }
+  },
+  "result": {
+    "item": "vampirism:cursed_spruce_boat"
+  }
+}

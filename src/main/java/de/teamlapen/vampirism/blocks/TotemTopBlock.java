@@ -99,7 +99,7 @@ public class TotemTopBlock extends ContainerBlock {
     @Nullable
     @Override
     public TileEntity newBlockEntity(@Nonnull IBlockReader worldIn) {
-        return ModTiles.totem.create();
+        return ModTiles.TOTEM.get().create();
     }
 
     @Override
@@ -113,7 +113,7 @@ public class TotemTopBlock extends ContainerBlock {
     public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (world.isClientSide) return ActionResultType.SUCCESS;
         TotemTileEntity t = getTile(world, pos);
-        if (t != null && world.getBlockState(pos.below()).getBlock().equals(ModBlocks.totem_base)) {
+        if (t != null && world.getBlockState(pos.below()).getBlock().equals(ModBlocks.TOTEM_BASE.get())) {
             t.initiateCapture(player);
             return ActionResultType.SUCCESS;
         }

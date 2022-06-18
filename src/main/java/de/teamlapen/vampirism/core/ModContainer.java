@@ -4,39 +4,29 @@ package de.teamlapen.vampirism.core;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.inventory.container.*;
 import net.minecraft.inventory.container.ContainerType;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 
-import static de.teamlapen.lib.lib.util.UtilLib.getNull;
-
-@ObjectHolder(REFERENCE.MODID)
 public class ModContainer {
-    public static final ContainerType<HunterTrainerContainer> hunter_trainer = getNull();
-    public static final ContainerType<AlchemicalCauldronContainer> alchemical_cauldron = getNull();
-    public static final ContainerType<HunterBasicContainer> hunter_basic = getNull();
-    public static final ContainerType<HunterTableContainer> hunter_table = getNull();
-    public static final ContainerType<WeaponTableContainer> weapon_table = getNull();
-    public static final ContainerType<AltarInfusionContainer> altar_infusion = getNull();
-    public static final ContainerType<BloodGrinderContainer> blood_grinder = getNull();
-    public static final ContainerType<MinionContainer> minion = getNull();
-    public static final ContainerType<TaskBoardContainer> task_master = getNull();
-    public static final ContainerType<PotionTableContainer> extended_potion_table = getNull();
-    public static final ContainerType<VampirismContainer> vampirism = getNull();
-    public static final ContainerType<AlchemyTableContainer> alchemical_table = getNull();
+    public static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, REFERENCE.MODID);
+
+    public static final RegistryObject<ContainerType<HunterTrainerContainer>> HUNTER_TRAINER = CONTAINERS.register("hunter_trainer", () -> new ContainerType<>(HunterTrainerContainer::new));
+    public static final RegistryObject<ContainerType<AlchemicalCauldronContainer>> ALCHEMICAL_CAULDRON = CONTAINERS.register("alchemical_cauldron", () -> new ContainerType<>(AlchemicalCauldronContainer::new));
+    public static final RegistryObject<ContainerType<HunterBasicContainer>> HUNTER_BASIC = CONTAINERS.register("hunter_basic", () -> new ContainerType<>(HunterBasicContainer::new));
+    public static final RegistryObject<ContainerType<HunterTableContainer>> HUNTER_TABLE = CONTAINERS.register("hunter_table", () -> new ContainerType<>(new HunterTableContainer.Factory()));
+    public static final RegistryObject<ContainerType<WeaponTableContainer>> WEAPON_TABLE = CONTAINERS.register("weapon_table", () -> new ContainerType<>(new WeaponTableContainer.Factory()));
+    public static final RegistryObject<ContainerType<AltarInfusionContainer>> ALTAR_INFUSION = CONTAINERS.register("altar_infusion", () -> new ContainerType<>(AltarInfusionContainer::new));
+    public static final RegistryObject<ContainerType<BloodGrinderContainer>> BLOOD_GRINDER = CONTAINERS.register("blood_grinder", () -> new ContainerType<>(BloodGrinderContainer::new));
+    public static final RegistryObject<ContainerType<MinionContainer>> MINION = CONTAINERS.register("minion", () -> new ContainerType<>(new MinionContainer.Factory()));
+    public static final RegistryObject<ContainerType<TaskBoardContainer>> TASK_MASTER = CONTAINERS.register("task_master", () -> new ContainerType<>(TaskBoardContainer::new));
+    public static final RegistryObject<ContainerType<PotionTableContainer>> EXTENDED_POTION_TABLE = CONTAINERS.register("extended_potion_table", () -> new ContainerType<>(new PotionTableContainer.Factory()));
+    public static final RegistryObject<ContainerType<VampirismContainer>> VAMPIRISM = CONTAINERS.register("vampirism", () -> new ContainerType<>(VampirismContainer::new));
+    public static final RegistryObject<ContainerType<AlchemyTableContainer>> ALCHEMICAL_TABLE = CONTAINERS.register("alchemical_table", () -> new ContainerType<>(AlchemyTableContainer::new);)
 
 
-    static void registerContainer(IForgeRegistry<ContainerType<?>> registry) {
-        registry.register(new ContainerType<>(HunterTrainerContainer::new).setRegistryName(REFERENCE.MODID, "hunter_trainer"));
-        registry.register(new ContainerType<>(AlchemicalCauldronContainer::new).setRegistryName(REFERENCE.MODID, "alchemical_cauldron"));
-        registry.register(new ContainerType<>(HunterBasicContainer::new).setRegistryName(REFERENCE.MODID, "hunter_basic"));
-        registry.register(new ContainerType<>(new HunterTableContainer.Factory()).setRegistryName(REFERENCE.MODID, "hunter_table"));
-        registry.register(new ContainerType<>(new WeaponTableContainer.Factory()).setRegistryName(REFERENCE.MODID, "weapon_table"));
-        registry.register(new ContainerType<>(AltarInfusionContainer::new).setRegistryName(REFERENCE.MODID, "altar_infusion"));
-        registry.register(new ContainerType<>(BloodGrinderContainer::new).setRegistryName(REFERENCE.MODID, "blood_grinder"));
-        registry.register(new ContainerType<>(new MinionContainer.Factory()).setRegistryName(REFERENCE.MODID, "minion"));
-        registry.register(new ContainerType<>(TaskBoardContainer::new).setRegistryName(REFERENCE.MODID, "task_master"));
-        registry.register(new ContainerType<>(new PotionTableContainer.Factory()).setRegistryName(REFERENCE.MODID, "extended_potion_table"));
-        registry.register(new ContainerType<>(VampirismContainer::new).setRegistryName(REFERENCE.MODID, "vampirism"));
-        registry.register(new ContainerType<>(AlchemyTableContainer::new).setRegistryName(REFERENCE.MODID, "alchemical_table"));
+    static void registerContainer(IEventBus bus) {
+        CONTAINERS.register(bus);
     }
 }

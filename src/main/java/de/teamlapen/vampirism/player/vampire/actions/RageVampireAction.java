@@ -26,7 +26,7 @@ public class RageVampireAction extends DefaultVampireAction implements ILastingA
 
     @Override
     public boolean canBeUsedBy(IVampirePlayer vampire) {
-        return !vampire.getActionHandler().isActionActive(VampireActions.bat);
+        return !vampire.getActionHandler().isActionActive(VampireActions.BAT.get());
     }
 
     @Override

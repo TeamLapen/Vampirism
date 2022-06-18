@@ -8,65 +8,60 @@ import de.teamlapen.vampirism.util.SRGNAMES;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.potion.*;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.ObjectHolder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
 /**
  * Handles all potion registrations and reference.
  */
-@ObjectHolder(REFERENCE.MODID)
 public class ModEffects {
-    public static final Effect sanguinare = getNull();
-    public static final Effect thirst = getNull();
-    public static final Effect saturation = getNull();
-    public static final Effect sunscreen = getNull();
-    public static final Effect disguise_as_vampire = getNull();
-    public static final Effect fire_protection = getNull();
-    public static final Effect garlic = getNull();
-    public static final Effect poison = getNull();
-    public static final Effect freeze = getNull();
-    public static final Effect neonatal = getNull();
-    public static final Effect oblivion = getNull();
-    public static final Effect armor_regeneration = getNull();
-    public static final Effect bad_omen_hunter = getNull();
-    public static final Effect bad_omen_vampire = getNull();
+    public static final DeferredRegister<Effect> EFFECTS = DeferredRegister.create(ForgeRegistries.POTIONS, REFERENCE.MODID);
+
+    public static final RegistryObject<ThirstEffect> THIRST = EFFECTS.register("thirst", () -> new ThirstEffect(EffectType.HARMFUL, 859494));
+    public static final RegistryObject<SanguinareEffect> SANGUINARE = EFFECTS.register("sanguinare", () -> new SanguinareEffect(EffectType.NEUTRAL, 0x6A0888));
+    public static final RegistryObject<VampirismEffect> SATURATION = EFFECTS.register("saturation", () -> new VampirismEffect(EffectType.BENEFICIAL, 0xDCFF00));
+    public static final RegistryObject<VampirismEffect> SUNSCREEN = EFFECTS.register("sunscreen", () -> (VampirismEffect) new VampirismEffect(EffectType.BENEFICIAL, 0xFFF100).addAttributeModifier(ModAttributes.SUNDAMAGE.get(), "9dc9420c-3e5e-41c7-9ba4-ff70e9dc69fc", -0.5, AttributeModifier.Operation.MULTIPLY_TOTAL));
+    public static final RegistryObject<VampirismEffect> FIRE_PROTECTION = EFFECTS.register("fire_protection", () -> new VampirismEffect(EffectType.BENEFICIAL, 14981690));
+    public static final RegistryObject<VampirismEffect> DISGUISE_AS_VAMPIRE = EFFECTS.register("disguise_as_vampire", () -> new VampirismEffect(EffectType.NEUTRAL, 0x999900));
+    public static final RegistryObject<VampirismEffect> GARLIC = EFFECTS.register("garlic", () -> new VampirismEffect(EffectType.HARMFUL, 0xFFFFFF));
+    public static final RegistryObject<VampirismPoisonEffect> POISON = EFFECTS.register("poison", () -> new VampirismPoisonEffect(0x4E9331));
+    public static final RegistryObject<FreezeEffect> FREEZE = EFFECTS.register("freeze", FreezeEffect::new);
+    public static final RegistryObject<VampirismEffect> NEONATAL = EFFECTS.register("neonatal", () -> (VampirismEffect) new VampirismEffect(EffectType.NEUTRAL, 0xFFBBBB).addAttributeModifier(Attributes.ATTACK_DAMAGE, "377d132d-d091-43b2-8a8f-b940f9bc894c", -0.15, AttributeModifier.Operation.MULTIPLY_TOTAL).addAttributeModifier(Attributes.MOVEMENT_SPEED, "ad6d7def-46e2-485f-afba-39252767f114", -0.15, AttributeModifier.Operation.MULTIPLY_TOTAL));
+    public static final RegistryObject<OblivionEffect> OBLIVION = EFFECTS.register("oblivion", () -> new OblivionEffect(EffectType.NEUTRAL, 0x4E9331));
+    public static final RegistryObject<VampirismEffect> ARMOR_REGENERATION = EFFECTS.register("armor_regeneration", () -> new VampirismEffect(EffectType.NEUTRAL, 0xD17642));
+
+    public static final RegistryObject<BadOmenEffect> BAD_OMEN_HUNTER = EFFECTS.register(REFERENCE.HUNTER_PLAYER_KEY.getPath(), () -> new BadOmenEffect() {
+                @Override
+                public IFaction<?> getFaction() {
+                    return VReference.HUNTER_FACTION;
+                }
+            });
+    public static final RegistryObject<BadOmenEffect> BAD_OMEN_VAMPIRE = EFFECTS.register(REFERENCE.VAMPIRE_PLAYER_KEY.getPath(), () -> new BadOmenEffect() {
+                @Override
+                public IFaction<?> getFaction() {
+                    return VReference.VAMPIRE_FACTION;
+                }
+            });
+
     private static final Logger LOGGER = LogManager.getLogger();
     private static Effect modded_night_vision;  //Substituted version
     private static Effect vanilla_night_vision; //Vanilla night vision instance
 
 
-    static void registerEffects(IForgeRegistry<Effect> registry) {
+    static void replaceEffects(IForgeRegistry<Effect> registry) {
         vanilla_night_vision = Effects.NIGHT_VISION;
-        registry.register(new VampirismNightVisionPotion());
-        registry.register(new ThirstEffect("thirst", EffectType.HARMFUL, 859494));
-        registry.register(new SanguinareEffect("sanguinare", EffectType.NEUTRAL, 0x6A0888));
-        registry.register(new VampirismEffect("saturation", EffectType.BENEFICIAL, 0xDCFF00));
-        registry.register(new VampirismEffect("sunscreen", EffectType.BENEFICIAL, 0xFFF100).addAttributeModifier(ModAttributes.sundamage, "9dc9420c-3e5e-41c7-9ba4-ff70e9dc69fc", -0.5, AttributeModifier.Operation.MULTIPLY_TOTAL));
-        registry.register(new VampirismEffect("fire_protection", EffectType.BENEFICIAL, 14981690));
-        registry.register(new VampirismEffect("disguise_as_vampire", EffectType.NEUTRAL, 0x999900));
-        registry.register(new VampirismEffect("garlic", EffectType.HARMFUL, 0xFFFFFF));
-        registry.register(new VampirismPoisonEffect("poison", 0x4E9331));
-        registry.register(new FreezeEffect("freeze"));
-        registry.register(new VampirismEffect("neonatal", EffectType.NEUTRAL, 0xFFBBBB).addAttributeModifier(Attributes.ATTACK_DAMAGE, "377d132d-d091-43b2-8a8f-b940f9bc894c", -0.15, AttributeModifier.Operation.MULTIPLY_TOTAL).addAttributeModifier(Attributes.MOVEMENT_SPEED, "ad6d7def-46e2-485f-afba-39252767f114", -0.15, AttributeModifier.Operation.MULTIPLY_TOTAL));
-        registry.register(new OblivionEffect("oblivion", EffectType.NEUTRAL, 0x4E9331));
-        registry.register(new VampirismEffect("armor_regeneration", EffectType.NEUTRAL, 0xD17642));
-        registry.register(new BadOmenEffect(REFERENCE.MODID, REFERENCE.HUNTER_PLAYER_KEY) {
-            @Override
-            public IFaction<?> getFaction() {
-                return VReference.HUNTER_FACTION;
-            }
-        });
-        registry.register(new BadOmenEffect(REFERENCE.MODID, REFERENCE.VAMPIRE_PLAYER_KEY) {
-            @Override
-            public IFaction<?> getFaction() {
-                return VReference.VAMPIRE_FACTION;
-            }
-        });
+        modded_night_vision = new VampirismNightVisionPotion();
+        registry.register(modded_night_vision);
+    }
+
+    static void registerEffects(IEventBus bus) {
+        EFFECTS.register(bus);
     }
 
     static void fixNightVisionEffectTypes() {

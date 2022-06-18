@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.items.*;
-import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
@@ -20,418 +19,247 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.common.brewing.BrewingRecipe;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.ObjectHolder;
 import org.apache.logging.log4j.LogManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import static de.teamlapen.lib.lib.util.UtilLib.getNull;
-
 /**
  * Handles all item registrations and reference.
  */
-@ObjectHolder(REFERENCE.MODID)
 @SuppressWarnings("unused")
 public class ModItems {
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, REFERENCE.MODID);
 
     //Items
-    public static final ArmorOfSwiftnessItem armor_of_swiftness_chest_enhanced = getNull();
-    public static final ArmorOfSwiftnessItem armor_of_swiftness_chest_normal = getNull();
-    public static final ArmorOfSwiftnessItem armor_of_swiftness_chest_ultimate = getNull();
-    public static final ArmorOfSwiftnessItem armor_of_swiftness_feet_enhanced = getNull();
-    public static final ArmorOfSwiftnessItem armor_of_swiftness_feet_normal = getNull();
-    public static final ArmorOfSwiftnessItem armor_of_swiftness_feet_ultimate = getNull();
-    public static final ArmorOfSwiftnessItem armor_of_swiftness_head_enhanced = getNull();
-    public static final ArmorOfSwiftnessItem armor_of_swiftness_head_normal = getNull();
-    public static final ArmorOfSwiftnessItem armor_of_swiftness_head_ultimate = getNull();
-    public static final ArmorOfSwiftnessItem armor_of_swiftness_legs_enhanced = getNull();
-    public static final ArmorOfSwiftnessItem armor_of_swiftness_legs_normal = getNull();
-    public static final ArmorOfSwiftnessItem armor_of_swiftness_legs_ultimate = getNull();
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_ENHANCED = ITEMS.register("armor_of_swiftness_chest_enhanced", () -> new ArmorOfSwiftnessItem(EquipmentSlotType.CHEST, IItemWithTier.TIER.ENHANCED));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_NORMAL = ITEMS.register("armor_of_swiftness_chest_normal", () -> new ArmorOfSwiftnessItem(EquipmentSlotType.CHEST, IItemWithTier.TIER.NORMAL));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE = ITEMS.register("armor_of_swiftness_chest_ultimate", () -> new ArmorOfSwiftnessItem(EquipmentSlotType.CHEST, IItemWithTier.TIER.ULTIMATE));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_ENHANCED = ITEMS.register("armor_of_swiftness_feet_enhanced", () -> new ArmorOfSwiftnessItem(EquipmentSlotType.FEET, IItemWithTier.TIER.ENHANCED));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_NORMAL = ITEMS.register("armor_of_swiftness_feet_normal", () -> new ArmorOfSwiftnessItem(EquipmentSlotType.FEET, IItemWithTier.TIER.NORMAL));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_ULTIMATE = ITEMS.register("armor_of_swiftness_feet_ultimate", () -> new ArmorOfSwiftnessItem(EquipmentSlotType.FEET, IItemWithTier.TIER.ULTIMATE));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_HEAD_ENHANCED = ITEMS.register("armor_of_swiftness_head_enhanced", () -> new ArmorOfSwiftnessItem(EquipmentSlotType.HEAD, IItemWithTier.TIER.ENHANCED));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_HEAD_NORMAL = ITEMS.register("armor_of_swiftness_head_normal", () -> new ArmorOfSwiftnessItem(EquipmentSlotType.HEAD, IItemWithTier.TIER.NORMAL));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE = ITEMS.register("armor_of_swiftness_head_ultimate", () -> new ArmorOfSwiftnessItem(EquipmentSlotType.HEAD, IItemWithTier.TIER.ULTIMATE));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_ENHANCED = ITEMS.register("armor_of_swiftness_legs_enhanced", () -> new ArmorOfSwiftnessItem(EquipmentSlotType.LEGS, IItemWithTier.TIER.ULTIMATE));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_NORMAL = ITEMS.register("armor_of_swiftness_legs_normal", () -> new ArmorOfSwiftnessItem(EquipmentSlotType.LEGS, IItemWithTier.TIER.NORMAL));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE = ITEMS.register("armor_of_swiftness_legs_ultimate", () -> new ArmorOfSwiftnessItem(EquipmentSlotType.LEGS, IItemWithTier.TIER.ULTIMATE));
 
-    public static final SimpleCrossbowItem basic_crossbow = getNull();
-    public static final DoubleCrossbowItem basic_double_crossbow = getNull();
-    public static final TechCrossbowItem basic_tech_crossbow = getNull();
+    public static final RegistryObject<SimpleCrossbowItem> BASIC_CROSSBOW = ITEMS.register("basic_crossbow", () -> new SimpleCrossbowItem(1,20,300, ItemTier.WOOD));
+    public static final RegistryObject<DoubleCrossbowItem> BASIC_DOUBLE_CROSSBOW = ITEMS.register("basic_double_crossbow", () -> new DoubleCrossbowItem(1,20,300, ItemTier.WOOD));
+    public static final RegistryObject<TechCrossbowItem> BASIC_TECH_CROSSBOW = ITEMS.register("basic_tech_crossbow", () -> new TechCrossbowItem(1.6F, 6, 300, ItemTier.DIAMOND));
 
-    public static final BloodBottleItem blood_bottle = getNull();
-    public static final BucketItem blood_bucket = getNull();
-    public static final VampirismItem blood_infused_iron_ingot = getNull();
-    public static final VampirismItem blood_infused_enhanced_iron_ingot = getNull();
+    public static final RegistryObject<BloodBottleItem> BLOOD_BOTTLE = ITEMS.register("blood_bottle", BloodBottleItem::new);
+    public static final RegistryObject<BucketItem> BLOOD_BUCKET = ITEMS.register("blood_bucket", () -> new BucketItem(ModFluids.BLOOD, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(ItemGroup.TAB_MISC)));
+    public static final RegistryObject<Item> BLOOD_INFUSED_IRON_INGOT = ITEMS.register("blood_infused_iron_ingot", () -> new Item(creativeTabProps()));
+    public static final RegistryObject<Item> BLOOD_INFUSED_ENHANCED_IRON_INGOT = ITEMS.register("blood_infused_enhanced_iron_ingot", () -> new Item(creativeTabProps()));
 
-    public static final CrossbowArrowItem crossbow_arrow_normal = getNull();
-    public static final CrossbowArrowItem crossbow_arrow_spitfire = getNull();
-    public static final CrossbowArrowItem crossbow_arrow_vampire_killer = getNull();
-    public static final CrossbowArrowItem crossbow_arrow_teleport = getNull();
+    public static final RegistryObject<CrossbowArrowItem> CROSSBOW_ARROW_NORMAL = ITEMS.register("crossbow_arrow_normal", () -> new CrossbowArrowItem(CrossbowArrowItem.EnumArrowType.NORMAL));
+    public static final RegistryObject<CrossbowArrowItem> CROSSBOW_ARROW_SPITFIRE = ITEMS.register("crossbow_arrow_spitfire", () -> new CrossbowArrowItem(CrossbowArrowItem.EnumArrowType.SPITFIRE));
+    public static final RegistryObject<CrossbowArrowItem> CROSSBOW_ARROW_VAMPIRE_KILLER = ITEMS.register("crossbow_arrow_vampire_killer", () -> new CrossbowArrowItem(CrossbowArrowItem.EnumArrowType.VAMPIRE_KILLER));
+    public static final RegistryObject<CrossbowArrowItem> CROSSBOW_ARROW_TELEPORT = ITEMS.register("crossbow_arrow_teleport", () -> new CrossbowArrowItem(CrossbowArrowItem.EnumArrowType.TELEPORT));
 
-    public static final SimpleCrossbowItem enhanced_crossbow = getNull();
-    public static final DoubleCrossbowItem enhanced_double_crossbow = getNull();
-    public static final TechCrossbowItem enhanced_tech_crossbow = getNull();
+    public static final RegistryObject<SimpleCrossbowItem> ENHANCED_CROSSBOW = ITEMS.register("enhanced_crossbow", () -> new SimpleCrossbowItem(1.5F, 15, 250, ItemTier.IRON));
+    public static final RegistryObject<DoubleCrossbowItem> ENHANCED_DOUBLE_CROSSBOW = ITEMS.register("enhanced_double_crossbow", () -> new DoubleCrossbowItem(1.5F, 15, 350, ItemTier.IRON));
+    public static final RegistryObject<TechCrossbowItem> ENHANCED_TECH_CROSSBOW = ITEMS.register("enhanced_tech_crossbow", () -> new TechCrossbowItem(1.7F, 4, 450, ItemTier.DIAMOND));
 
-    public static final VampirismItem garlic_beacon_core = getNull();
-    public static final VampirismItem garlic_beacon_core_improved = getNull();
+    public static final RegistryObject<Item> GARLIC_BEACON_CORE = ITEMS.register("garlic_beacon_core", () -> new Item(creativeTabProps()));
+    public static final RegistryObject<Item> GARLIC_BEACON_CORE_IMPROVED = ITEMS.register("garlic_beacon_core_improved", () -> new Item(creativeTabProps()));
 
-    public static final HeartSeekerItem heart_seeker_enhanced = getNull();
-    public static final HeartSeekerItem heart_seeker_normal = getNull();
-    public static final HeartSeekerItem heart_seeker_ultimate = getNull();
+    public static final RegistryObject<HeartSeekerItem> HEART_SEEKER_ENHANCED = ITEMS.register("heart_seeker_enhanced", () -> new HeartSeekerItem(IItemWithTier.TIER.ENHANCED));
+    public static final RegistryObject<HeartSeekerItem> HEART_SEEKER_NORMAL = ITEMS.register("heart_seeker_normal", () -> new HeartSeekerItem(IItemWithTier.TIER.NORMAL));
+    public static final RegistryObject<HeartSeekerItem> HEART_SEEKER_ULTIMATE = ITEMS.register("heart_seeker_ultimate", () -> new HeartSeekerItem(IItemWithTier.TIER.ULTIMATE));
 
-    public static final HeartStrikerItem heart_striker_enhanced = getNull();
-    public static final HeartStrikerItem heart_striker_normal = getNull();
-    public static final HeartStrikerItem heart_striker_ultimate = getNull();
+    public static final RegistryObject<HeartStrikerItem> HEART_STRIKER_ENHANCED = ITEMS.register("heart_striker_enhanced", () -> new HeartStrikerItem(IItemWithTier.TIER.ENHANCED));
+    public static final RegistryObject<HeartStrikerItem> HEART_STRIKER_NORMAL = ITEMS.register("heart_striker_normal", () -> new HeartStrikerItem(IItemWithTier.TIER.NORMAL));
+    public static final RegistryObject<HeartStrikerItem> HEART_STRIKER_ULTIMATE = ITEMS.register("heart_striker_ultimate", () -> new HeartStrikerItem(IItemWithTier.TIER.ULTIMATE));
 
-    public static final VampirismItem holy_salt = getNull();
-    public static final VampirismItem holy_salt_water = getNull();
+    public static final RegistryObject<Item> HOLY_SALT = ITEMS.register("holy_salt", () -> new Item(creativeTabProps()));
+    public static final RegistryObject<Item> HOLY_SALT_WATER = ITEMS.register("holy_salt_water", () -> new Item(new Item.Properties().stacksTo(1)) {
+                @Override
+                public boolean isFoil(ItemStack stack) {
+                    return true;
+                }
+            });
 
-    public static final HolyWaterBottleItem holy_water_bottle_enhanced = getNull();
-    public static final HolyWaterBottleItem holy_water_bottle_normal = getNull();
-    public static final HolyWaterBottleItem holy_water_bottle_ultimate = getNull();
-    public static final HolyWaterSplashBottleItem holy_water_splash_bottle_enhanced = getNull();
-    public static final HolyWaterSplashBottleItem holy_water_splash_bottle_normal = getNull();
-    public static final HolyWaterSplashBottleItem holy_water_splash_bottle_ultimate = getNull();
+    public static final RegistryObject<HolyWaterBottleItem> HOLY_WATER_BOTTLE_ENHANCED = ITEMS.register("holy_water_bottle_enhanced", () -> new HolyWaterBottleItem(IItemWithTier.TIER.ENHANCED));
+    public static final RegistryObject<HolyWaterBottleItem> HOLY_WATER_BOTTLE_NORMAL = ITEMS.register("holy_water_bottle_normal", () -> new HolyWaterBottleItem(IItemWithTier.TIER.NORMAL));
+    public static final RegistryObject<HolyWaterBottleItem> HOLY_WATER_BOTTLE_ULTIMATE = ITEMS.register("holy_water_bottle_ultimate", () -> new HolyWaterBottleItem(IItemWithTier.TIER.ULTIMATE));
+    public static final RegistryObject<HolyWaterSplashBottleItem> HOLY_WATER_SPLASH_BOTTLE_ENHANCED = ITEMS.register("holy_water_splash_bottle_enhanced", () -> new HolyWaterSplashBottleItem(IItemWithTier.TIER.ENHANCED));
+    public static final RegistryObject<HolyWaterSplashBottleItem> HOLY_WATER_SPLASH_BOTTLE_NORMAL = ITEMS.register("holy_water_splash_bottle_normal", () -> new HolyWaterSplashBottleItem(IItemWithTier.TIER.NORMAL));
+    public static final RegistryObject<HolyWaterSplashBottleItem> HOLY_WATER_SPLASH_BOTTLE_ULTIMATE = ITEMS.register("holy_water_splash_bottle_ultimate", () -> new HolyWaterSplashBottleItem(IItemWithTier.TIER.ULTIMATE));
 
-    public static final HunterAxeItem hunter_axe_enhanced = getNull();
-    public static final HunterAxeItem hunter_axe_normal = getNull();
-    public static final HunterAxeItem hunter_axe_ultimate = getNull();
+    public static final RegistryObject<HunterAxeItem> HUNTER_AXE_ENHANCED = ITEMS.register("hunter_axe_enhanced", () -> new HunterAxeItem(IItemWithTier.TIER.ENHANCED));
+    public static final RegistryObject<HunterAxeItem> HUNTER_AXE_NORMAL = ITEMS.register("hunter_axe_normal", () -> new HunterAxeItem(IItemWithTier.TIER.NORMAL));
+    public static final RegistryObject<HunterAxeItem> HUNTER_AXE_ULTIMATE = ITEMS.register("hunter_axe_ultimate", () -> new HunterAxeItem(IItemWithTier.TIER.ULTIMATE));
 
-    public static final HunterCoatItem hunter_coat_chest_enhanced = getNull();
-    public static final HunterCoatItem hunter_coat_chest_normal = getNull();
-    public static final HunterCoatItem hunter_coat_chest_ultimate = getNull();
-    public static final HunterCoatItem hunter_coat_feet_enhanced = getNull();
-    public static final HunterCoatItem hunter_coat_feet_normal = getNull();
-    public static final HunterCoatItem hunter_coat_feet_ultimate = getNull();
-    public static final HunterCoatItem hunter_coat_head_enhanced = getNull();
-    public static final HunterCoatItem hunter_coat_head_normal = getNull();
-    public static final HunterCoatItem hunter_coat_head_ultimate = getNull();
-    public static final HunterCoatItem hunter_coat_legs_enhanced = getNull();
-    public static final HunterCoatItem hunter_coat_legs_normal = getNull();
-    public static final HunterCoatItem hunter_coat_legs_ultimate = getNull();
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_CHEST_ENHANCED = ITEMS.register("hunter_coat_chest_enhanced", () -> new HunterCoatItem(EquipmentSlotType.CHEST, IItemWithTier.TIER.ENHANCED));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_CHEST_NORMAL = ITEMS.register("hunter_coat_chest_normal", () -> new HunterCoatItem(EquipmentSlotType.CHEST, IItemWithTier.TIER.NORMAL));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_CHEST_ULTIMATE = ITEMS.register("hunter_coat_chest_ultimate", () -> new HunterCoatItem(EquipmentSlotType.CHEST, IItemWithTier.TIER.ULTIMATE));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_FEET_ENHANCED = ITEMS.register("hunter_coat_feet_enhanced", () -> new HunterCoatItem(EquipmentSlotType.FEET, IItemWithTier.TIER.ENHANCED));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_FEET_NORMAL = ITEMS.register("hunter_coat_feet_normal", () -> new HunterCoatItem(EquipmentSlotType.FEET, IItemWithTier.TIER.NORMAL));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_FEET_ULTIMATE = ITEMS.register("hunter_coat_feet_ultimate", () -> new HunterCoatItem(EquipmentSlotType.FEET, IItemWithTier.TIER.ULTIMATE));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_HEAD_ENHANCED = ITEMS.register("hunter_coat_head_enhanced", () -> new HunterCoatItem(EquipmentSlotType.HEAD, IItemWithTier.TIER.ENHANCED));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_HEAD_NORMAL = ITEMS.register("hunter_coat_head_normal", () -> new HunterCoatItem(EquipmentSlotType.HEAD, IItemWithTier.TIER.NORMAL));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_HEAD_ULTIMATE = ITEMS.register("hunter_coat_head_ultimate", () -> new HunterCoatItem(EquipmentSlotType.HEAD, IItemWithTier.TIER.ULTIMATE));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_LEGS_ENHANCED = ITEMS.register("hunter_coat_legs_enhanced", () -> new HunterCoatItem(EquipmentSlotType.LEGS, IItemWithTier.TIER.ENHANCED));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_LEGS_NORMAL = ITEMS.register("hunter_coat_legs_normal", () -> new HunterCoatItem(EquipmentSlotType.LEGS, IItemWithTier.TIER.NORMAL));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_LEGS_ULTIMATE = ITEMS.register("hunter_coat_legs_ultimate", () -> new HunterCoatItem(EquipmentSlotType.LEGS, IItemWithTier.TIER.ULTIMATE));
 
-    public static final HunterHatItem hunter_hat_head_0 = getNull();
-    public static final HunterHatItem hunter_hat_head_1 = getNull();
+    public static final RegistryObject<HunterHatItem> HUNTER_HAT_HEAD_0 = ITEMS.register("hunter_hat_head_0", () -> new HunterHatItem(0));
+    public static final RegistryObject<HunterHatItem> HUNTER_HAT_HEAD_1 = ITEMS.register("hunter_hat_head_1", () -> new HunterHatItem(1));
 
-    public static final HunterIntelItem hunter_intel_0 = getNull();
-    public static final HunterIntelItem hunter_intel_1 = getNull();
-    public static final HunterIntelItem hunter_intel_2 = getNull();
-    public static final HunterIntelItem hunter_intel_3 = getNull();
-    public static final HunterIntelItem hunter_intel_4 = getNull();
-    public static final HunterIntelItem hunter_intel_5 = getNull();
-    public static final HunterIntelItem hunter_intel_6 = getNull();
-    public static final HunterIntelItem hunter_intel_7 = getNull();
-    public static final HunterIntelItem hunter_intel_8 = getNull();
-    public static final HunterIntelItem hunter_intel_9 = getNull();
+    public static final RegistryObject<HunterIntelItem> HUNTER_INTEL_0 = ITEMS.register("hunter_intel_0", () -> new HunterIntelItem(0));
+    public static final RegistryObject<HunterIntelItem> HUNTER_INTEL_1 = ITEMS.register("hunter_intel_1", () -> new HunterIntelItem(1));
+    public static final RegistryObject<HunterIntelItem> HUNTER_INTEL_2 = ITEMS.register("hunter_intel_2", () -> new HunterIntelItem(2));
+    public static final RegistryObject<HunterIntelItem> HUNTER_INTEL_3 = ITEMS.register("hunter_intel_3", () -> new HunterIntelItem(3));
+    public static final RegistryObject<HunterIntelItem> HUNTER_INTEL_4 = ITEMS.register("hunter_intel_4", () -> new HunterIntelItem(4));
+    public static final RegistryObject<HunterIntelItem> HUNTER_INTEL_5 = ITEMS.register("hunter_intel_5", () -> new HunterIntelItem(5));
+    public static final RegistryObject<HunterIntelItem> HUNTER_INTEL_6 = ITEMS.register("hunter_intel_6", () -> new HunterIntelItem(6));
+    public static final RegistryObject<HunterIntelItem> HUNTER_INTEL_7 = ITEMS.register("hunter_intel_7", () -> new HunterIntelItem(7));
+    public static final RegistryObject<HunterIntelItem> HUNTER_INTEL_8 = ITEMS.register("hunter_intel_8", () -> new HunterIntelItem(8));
+    public static final RegistryObject<HunterIntelItem> HUNTER_INTEL_9 = ITEMS.register("hunter_intel_9", () -> new HunterIntelItem(9));
 
-    public static final VampirismItemBloodFood human_heart = getNull();
+    public static final RegistryObject<VampirismItemBloodFood> HUMAN_HEART = ITEMS.register("human_heart", () -> new VampirismItemBloodFood((new Food.Builder()).nutrition(20).saturationMod(1.5F).build(), new Food.Builder().nutrition(5).saturationMod(1f).build()));
 
-    public static final InjectionItem injection_empty = getNull();
-    public static final InjectionItem injection_garlic = getNull();
-    public static final InjectionItem injection_sanguinare = getNull();
-    public static final InjectionItem injection_zombie_blood = getNull();
+    public static final RegistryObject<InjectionItem> INJECTION_EMPTY = ITEMS.register("injection_empty", () -> new InjectionItem(InjectionItem.TYPE.EMPTY));
+    public static final RegistryObject<InjectionItem> INJECTION_GARLIC = ITEMS.register("injection_garlic", () -> new InjectionItem(InjectionItem.TYPE.GARLIC));
+    public static final RegistryObject<InjectionItem> INJECTION_SANGUINARE = ITEMS.register("injection_sanguinare", () -> new InjectionItem(InjectionItem.TYPE.SANGUINARE));
+    public static final RegistryObject<InjectionItem> INJECTION_ZOMBIE_BLOOD = ITEMS.register("injection_zombie_blood", () -> new InjectionItem(InjectionItem.TYPE.ZOMBIE_BLOOD));
 
-    public static final VampirismItem cure_apple = getNull();
+    public static final RegistryObject<Item> CURE_APPLE = ITEMS.register("cure_apple", () -> new Item(creativeTabProps().rarity(Rarity.RARE)));
 
-    public static final BucketItem impure_blood_bucket = getNull();
-    public static final GarlicItem item_garlic = getNull();
-    public static final GarlicBreadItem garlic_bread = getNull();
-    public static final AlchemicalFireItem item_alchemical_fire = getNull();
+    public static final RegistryObject<BucketItem> IMPURE_BLOOD_BUCKET = ITEMS.register("impure_blood_bucket", () -> new BucketItem(ModFluids.IMPURE_BLOOD, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(ItemGroup.TAB_MISC)));
+    public static final RegistryObject<GarlicItem> ITEM_GARLIC = ITEMS.register("item_garlic", GarlicItem::new);
+    public static final RegistryObject<GarlicBreadItem> GARLIC_BREAD = ITEMS.register("garlic_bread", GarlicBreadItem::new);
+    public static final RegistryObject<AlchemicalFireItem> ITEM_ALCHEMICAL_FIRE = ITEMS.register("item_alchemical_fire", AlchemicalFireItem::new);
 
-    public static final TentItem item_tent = getNull();
-    public static final TentItem item_tent_spawner = getNull();
+    public static final RegistryObject<TentItem> ITEM_TENT = ITEMS.register("item_tent", () -> new TentItem(false));
+    public static final RegistryObject<TentItem> ITEM_TENT_SPAWNER = ITEMS.register("item_tent_spawner", () -> new TentItem(true));
 
-    public static final PitchforkItem pitchfork = getNull();
+    public static final RegistryObject<PitchforkItem> PITCHFORK = ITEMS.register("pitchfork", PitchforkItem::new);
 
-    public static final PureBloodItem pure_blood_0 = getNull();
-    public static final PureBloodItem pure_blood_1 = getNull();
-    public static final PureBloodItem pure_blood_2 = getNull();
-    public static final PureBloodItem pure_blood_3 = getNull();
-    public static final PureBloodItem pure_blood_4 = getNull();
+    public static final RegistryObject<PureBloodItem> PURE_BLOOD_0 = ITEMS.register("pure_blood_0", () -> new PureBloodItem(0));
+    public static final RegistryObject<PureBloodItem> PURE_BLOOD_1 = ITEMS.register("pure_blood_1", () -> new PureBloodItem(1));
+    public static final RegistryObject<PureBloodItem> PURE_BLOOD_2 = ITEMS.register("pure_blood_2", () -> new PureBloodItem(2));
+    public static final RegistryObject<PureBloodItem> PURE_BLOOD_3 = ITEMS.register("pure_blood_3", () -> new PureBloodItem(3));
+    public static final RegistryObject<PureBloodItem> PURE_BLOOD_4 = ITEMS.register("pure_blood_4", () -> new PureBloodItem(4));
 
-    public static final VampirismItem purified_garlic = getNull();
-    public static final VampirismItem pure_salt = getNull();
-    public static final VampirismItem soul_orb_vampire = getNull();
+    public static final RegistryObject<Item> PURIFIED_GARLIC = ITEMS.register("purified_garlic", () -> new Item(creativeTabProps()));
+    public static final RegistryObject<Item> PURE_SALT = ITEMS.register("pure_salt", () -> new Item(creativeTabProps()));
+    public static final RegistryObject<Item> SOUL_ORB_VAMPIRE = ITEMS.register("soul_orb_vampire", () -> new Item(creativeTabProps()));
 
-    public static final StakeItem stake = getNull();
-    public static final VampirismItem tech_crossbow_ammo_package = getNull();
+    public static final RegistryObject<StakeItem> STAKE = ITEMS.register("stake", StakeItem::new);
+    public static final RegistryObject<Item> TECH_CROSSBOW_AMMO_PACKAGE = ITEMS.register("tech_crossbow_ammo_package", () -> new Item(new Item.Properties().tab(VampirismMod.creativeTab)) {
 
-    public static final ColoredVampireClothingItem vampire_cloak_black_blue = getNull();
-    public static final ColoredVampireClothingItem vampire_cloak_black_red = getNull();
-    public static final ColoredVampireClothingItem vampire_cloak_black_white = getNull();
-    public static final ColoredVampireClothingItem vampire_cloak_red_black = getNull();
-    public static final ColoredVampireClothingItem vampire_cloak_white_black = getNull();
+                @OnlyIn(Dist.CLIENT)
+                @Override
+                public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+                    tooltip.add(new TranslationTextComponent("item.vampirism.tech_crossbow_ammo_package.tooltip", new TranslationTextComponent(BASIC_TECH_CROSSBOW.get().getDescriptionId())).withStyle(TextFormatting.GRAY));
+                }
 
-    public static final VampireBloodBottleItem vampire_blood_bottle = getNull();
-    public static final VampireBookItem vampire_book = getNull();
-    public static final VampireFangItem vampire_fang = getNull();
-    public static final VampirismItemBloodFood weak_human_heart = getNull();
+            });
 
-    public static final SpawnEggItem vampire_spawn_egg = getNull();
-    public static final SpawnEggItem vampire_hunter_spawn_egg = getNull();
-    public static final SpawnEggItem advanced_vampire_spawn_egg = getNull();
-    public static final SpawnEggItem advanced_vampire_hunter_spawn_egg = getNull();
-    public static final SpawnEggItem vampire_baron_spawn_egg = getNull();
-    public static final SpawnEggItem hunter_trainer_spawn_egg = getNull();
+    public static final RegistryObject<ColoredVampireClothingItem> VAMPIRE_CLOAK_BLACK_BLUE = ITEMS.register("vampire_cloak_black_blue", () -> new ColoredVampireClothingItem(EquipmentSlotType.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.BLACKBLUE));
+    public static final RegistryObject<ColoredVampireClothingItem> VAMPIRE_CLOAK_BLACK_RED = ITEMS.register("vampire_cloak_black_red", () -> new ColoredVampireClothingItem(EquipmentSlotType.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.BLACKRED));
+    public static final RegistryObject<ColoredVampireClothingItem> VAMPIRE_CLOAK_BLACK_WHITE = ITEMS.register("vampire_cloak_black_white", () -> new ColoredVampireClothingItem(EquipmentSlotType.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.BLACKWHITE));
+    public static final RegistryObject<ColoredVampireClothingItem> VAMPIRE_CLOAK_RED_BLACK = ITEMS.register("vampire_cloak_red_black", () -> new ColoredVampireClothingItem(EquipmentSlotType.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.REDBLACK));
+    public static final RegistryObject<ColoredVampireClothingItem> VAMPIRE_CLOAK_WHITE_BLACK = ITEMS.register("vampire_cloak_white_black", () -> new ColoredVampireClothingItem(EquipmentSlotType.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.WHITEBLACK));
 
-    public static final UmbrellaItem umbrella = getNull();
-    public static final BlockItem vampire_orchid = getNull();
+    public static final RegistryObject<VampireBloodBottleItem> VAMPIRE_BLOOD_BOTTLE = ITEMS.register("vampire_blood_bottle", VampireBloodBottleItem::new);
+    public static final RegistryObject<VampireBookItem> VAMPIRE_BOOK = ITEMS.register("vampire_book", VampireBookItem::new);
+    public static final RegistryObject<VampireFangItem> VAMPIRE_FANG = ITEMS.register("vampire_fang", VampireFangItem::new);
+    public static final RegistryObject<VampirismItemBloodFood> WEAK_HUMAN_HEART = ITEMS.register("weak_human_heart", () -> new VampirismItemBloodFood((new Food.Builder()).nutrition(10).saturationMod(0.9F).build(), new Food.Builder().nutrition(3).saturationMod(1f).build()));
 
-    public static final VampirismItem hunter_minion_equipment = getNull();
-    public static final MinionUpgradeItem hunter_minion_upgrade_simple = getNull();
-    public static final MinionUpgradeItem hunter_minion_upgrade_enhanced = getNull();
-    public static final MinionUpgradeItem hunter_minion_upgrade_special = getNull();
-    public static final FeedingAdapterItem feeding_adapter = getNull();
-    public static final VampirismItem vampire_minion_binding = getNull();
-    public static final MinionUpgradeItem vampire_minion_upgrade_simple = getNull();
-    public static final MinionUpgradeItem vampire_minion_upgrade_enhanced = getNull();
-    public static final MinionUpgradeItem vampire_minion_upgrade_special = getNull();
 
-    public static final OblivionItem oblivion_potion = getNull();
+    public static final RegistryObject<SpawnEggItem> VAMPIRE_SPAWN_EGG = ITEMS.register("vampire_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.VAMPIRE, 0x8B15A3, 0xa735e3, new Item.Properties().tab(ItemGroup.TAB_MISC)));
+    public static final RegistryObject<SpawnEggItem> VAMPIRE_HUNTER_SPAWN_EGG = ITEMS.register("vampire_hunter_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.HUNTER, 0x2d05f2, 0x2600e0, new Item.Properties().tab(ItemGroup.TAB_MISC)));
+    public static final RegistryObject<SpawnEggItem> ADVANCED_VAMPIRE_SPAWN_EGG = ITEMS.register("advanced_vampire_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.ADVANCED_VAMPIRE, 0x8B15A3, 0x560a7e, new Item.Properties().tab(ItemGroup.TAB_MISC)));
+    public static final RegistryObject<SpawnEggItem> ADVANCED_VAMPIRE_HUNTER_SPAWN_EGG = ITEMS.register("advanced_vampire_hunter_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.ADVANCED_HUNTER, 0x2d05f2, 0x1a028c, new Item.Properties().tab(ItemGroup.TAB_MISC)));
+    public static final RegistryObject<SpawnEggItem> VAMPIRE_BARON_SPAWN_EGG = ITEMS.register("vampire_baron_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.VAMPIRE_BARON, 0x8B15A3, 0x15acda, new Item.Properties().tab(ItemGroup.TAB_MISC)));
+    public static final RegistryObject<SpawnEggItem> HUNTER_TRAINER_SPAWN_EGG = ITEMS.register("hunter_trainer_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.HUNTER_TRAINER, 0x2d05f2, 0x1cdb49, new Item.Properties().tab(ItemGroup.TAB_MISC)));
 
-    public static final VampireRefinementItem amulet = getNull();
-    public static final VampireRefinementItem ring = getNull();
-    public static final VampireRefinementItem obi_belt = getNull();
 
-    public static final VampireClothingItem vampire_clothing_crown = getNull();
-    public static final VampireClothingItem vampire_clothing_legs = getNull();
-    public static final VampireClothingItem vampire_clothing_boots = getNull();
-    public static final VampireClothingItem vampire_clothing_hat = getNull();
+    public static final RegistryObject<UmbrellaItem> UMBRELLA = ITEMS.register("umbrella", UmbrellaItem::new);
 
-    public static final VampirismItem garlic_finder = getNull();
+    public static final RegistryObject<Item> HUNTER_MINION_EQUIPMENT = ITEMS.register("hunter_minion_equipment", () -> new Item(creativeTabProps()));
+    public static final RegistryObject<MinionUpgradeItem> HUNTER_MINION_UPGRADE_SIMPLE = ITEMS.register("hunter_minion_upgrade_simple", () -> new MinionUpgradeItem(1,2, VReference.HUNTER_FACTION));
+    public static final RegistryObject<MinionUpgradeItem> HUNTER_MINION_UPGRADE_ENHANCED = ITEMS.register("hunter_minion_upgrade_enhanced", () -> new MinionUpgradeItem(3,4, VReference.HUNTER_FACTION));
+    public static final RegistryObject<MinionUpgradeItem> HUNTER_MINION_UPGRADE_SPECIAL = ITEMS.register("hunter_minion_upgrade_special", () -> new MinionUpgradeItem(5,6, VReference.HUNTER_FACTION));
+    public static final RegistryObject<FeedingAdapterItem> FEEDING_ADAPTER = ITEMS.register("feeding_adapter", FeedingAdapterItem::new);
+    public static final RegistryObject<Item> VAMPIRE_MINION_BINDING = ITEMS.register("vampire_minion_binding", () -> new Item(creativeTabProps()));
+    public static final RegistryObject<MinionUpgradeItem> VAMPIRE_MINION_UPGRADE_SIMPLE = ITEMS.register("vampire_minion_upgrade_simple", () -> new MinionUpgradeItem(1,2, VReference.VAMPIRE_FACTION));
+    public static final RegistryObject<MinionUpgradeItem> VAMPIRE_MINION_UPGRADE_ENHANCED = ITEMS.register("vampire_minion_upgrade_enhanced", () -> new MinionUpgradeItem(3,4, VReference.VAMPIRE_FACTION));
+    public static final RegistryObject<MinionUpgradeItem> VAMPIRE_MINION_UPGRADE_SPECIAL = ITEMS.register("vampire_minion_upgrade_special", () -> new MinionUpgradeItem(5,6, VReference.VAMPIRE_FACTION));
 
-    public static final WallOrFloorItem item_candelabra = getNull();
-    public static final BlockItem cursed_spruce_log = getNull();
-    public static final BlockItem dark_spruce_leaves = getNull();
-    public static final SignItem dark_spruce_sign = getNull();
-    public static final SignItem cursed_spruce_sign = getNull();
+    public static final RegistryObject<OblivionItem> OBLIVION_POTION = ITEMS.register("oblivion_potion", () -> new OblivionItem(creativeTabProps()));
 
-    public static final CrucifixItem crucifix_normal = getNull();
-    public static final CrucifixItem crucifix_enhanced = getNull();
-    public static final CrucifixItem crucifix_ultimate = getNull();
+    public static final RegistryObject<VampireRefinementItem> AMULET = ITEMS.register("amulet", () -> new VampireRefinementItem(creativeTabProps(), IRefinementItem.AccessorySlotType.AMULET));
+    public static final RegistryObject<VampireRefinementItem> RING = ITEMS.register("ring", () -> new VampireRefinementItem(creativeTabProps(), IRefinementItem.AccessorySlotType.RING));
+    public static final RegistryObject<VampireRefinementItem> OBI_BELT = ITEMS.register("obi_belt", () -> new VampireRefinementItem(creativeTabProps(), IRefinementItem.AccessorySlotType.OBI_BELT));
 
-    public static final OilBottle oil_bottle = getNull();
+    public static final RegistryObject<VampireClothingItem> VAMPIRE_CLOTHING_CROWN = ITEMS.register("vampire_clothing_crown", () -> new VampireClothingItem(EquipmentSlotType.HEAD));
+    public static final RegistryObject<VampireClothingItem> VAMPIRE_CLOTHING_LEGS = ITEMS.register("vampire_clothing_legs", () -> new VampireClothingItem(EquipmentSlotType.LEGS));
+    public static final RegistryObject<VampireClothingItem> VAMPIRE_CLOTHING_BOOTS = ITEMS.register("vampire_clothing_boots", () -> new VampireClothingItem(EquipmentSlotType.FEET));
+    public static final RegistryObject<VampireClothingItem> VAMPIRE_CLOTHING_HAT = ITEMS.register("vampire_clothing_hat", () -> new VampireClothingItem(EquipmentSlotType.HEAD));
 
+    public static final RegistryObject<Item> GARLIC_FINDER = ITEMS.register("garlic_finder", () -> new Item(creativeTabProps().rarity(Rarity.RARE)));
+
+    public static final RegistryObject<WallOrFloorItem> ITEM_CANDELABRA = ITEMS.register("item_candelabra", () -> new WallOrFloorItem(ModBlocks.CANDELABRA.get(), ModBlocks.CANDELABRA_WALL.get(), new Item.Properties().tab(VampirismMod.creativeTab)));
+    public static final RegistryObject<SignItem> DARK_SPRUCE_SIGN = ITEMS.register("dark_spruce_sign", () -> new SignItem((new Item.Properties()).stacksTo(16).tab(ItemGroup.TAB_DECORATIONS), ModBlocks.DARK_SPRUCE_SIGN.get(), ModBlocks.DARK_SPRUCE_WALL_SIGN.get()));
+    public static final RegistryObject<SignItem> CURSED_SPRUCE_SIGN = ITEMS.register("cursed_spruce_sign", () -> new SignItem((new Item.Properties()).stacksTo(16).tab(ItemGroup.TAB_DECORATIONS), ModBlocks.CURSED_SPRUCE_SIGN.get(), ModBlocks.CURSED_SPRUCE_WALL_SIGN.get()));
+
+    public static final RegistryObject<CrucifixItem> CRUCIFIX_NORMAL = ITEMS.register("crucifix_normal", () -> new CrucifixItem(IItemWithTier.TIER.NORMAL));
+    public static final RegistryObject<CrucifixItem> CRUCIFIX_ENHANCED = ITEMS.register("crucifix_enhanced", () -> new CrucifixItem(IItemWithTier.TIER.ENHANCED));
+    public static final RegistryObject<CrucifixItem> CRUCIFIX_ULTIMATE = ITEMS.register("crucifix_ultimate", () -> new CrucifixItem(IItemWithTier.TIER.ULTIMATE));
+
+    public static final RegistryObject<VampirismBoatItem> DARK_SPRUCE_BOAT = ITEMS.register("dark_spruce_boat", () -> new VampirismBoatItem(VampirismBoatItem.BoatType.DARK_SPRUCE, creativeTabProps().stacksTo(1)));
+    public static final RegistryObject<VampirismBoatItem> CURSED_SPRUCE_BOAT = ITEMS.register("cursed_spruce_boat", () -> new VampirismBoatItem(VampirismBoatItem.BoatType.CURSED_SPRUCE, creativeTabProps().stacksTo(1)));
+
+    public static final RegistryObject<OilBottle> OIL_BOTTLE = ITEMS.register("oil_bottle", () -> new OilBottle(creativeTabProps().stacksTo(1)));
     static void registerCraftingRecipes() {
         // Brewing
-        BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER)), Ingredient.of(new ItemStack(holy_salt)), new ItemStack(holy_salt_water));
+        BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER)), Ingredient.of(new ItemStack(HOLY_SALT.get())), new ItemStack(HOLY_SALT_WATER.get()));
 
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(holy_water_bottle_normal), Ingredient.of(Items.GUNPOWDER), new ItemStack(holy_water_splash_bottle_normal)) {
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(HOLY_WATER_BOTTLE_NORMAL.get()), Ingredient.of(Items.GUNPOWDER), new ItemStack(HOLY_WATER_SPLASH_BOTTLE_NORMAL.get())) {
             @Override
             public boolean isInput(@Nonnull ItemStack stack) {
 
-                return holy_water_bottle_normal.equals(stack.getItem());
+                return HOLY_WATER_BOTTLE_NORMAL.get().equals(stack.getItem());
             }
         });
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(holy_water_bottle_enhanced), Ingredient.of(Items.GUNPOWDER), new ItemStack(holy_water_splash_bottle_enhanced)) {
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(HOLY_WATER_BOTTLE_ENHANCED.get()), Ingredient.of(Items.GUNPOWDER), new ItemStack(HOLY_WATER_SPLASH_BOTTLE_ENHANCED.get())) {
             @Override
             public boolean isInput(@Nonnull ItemStack stack) {
 
-                return holy_water_bottle_enhanced.equals(stack.getItem());
+                return HOLY_WATER_BOTTLE_ENHANCED.get().equals(stack.getItem());
             }
         });
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(holy_water_bottle_ultimate), Ingredient.of(Items.GUNPOWDER), new ItemStack(holy_water_splash_bottle_ultimate)) {
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(HOLY_WATER_BOTTLE_ULTIMATE.get()), Ingredient.of(Items.GUNPOWDER), new ItemStack(HOLY_WATER_SPLASH_BOTTLE_ULTIMATE.get())) {
             @Override
             public boolean isInput(@Nonnull ItemStack stack) {
-                return holy_water_bottle_ultimate.equals(stack.getItem());
+                return HOLY_WATER_BOTTLE_ULTIMATE.get().equals(stack.getItem());
             }
         });
     }
 
 
-    static void registerItems(IForgeRegistry<Item> registry) {
-        registry.register(new VampireFangItem());
-        registry.register(new VampirismItemBloodFood("human_heart", (new Food.Builder()).nutrition(20).saturationMod(1.5F).build(), new Food.Builder().nutrition(5).saturationMod(1f).build()));
-        registry.register(new VampirismItemBloodFood("weak_human_heart", (new Food.Builder()).nutrition(10).saturationMod(0.9F).build(), new Food.Builder().nutrition(3).saturationMod(1f).build()));
-        registry.register(new BloodBottleItem());
-        registry.register(new TentItem(true));
-        registry.register(new TentItem(false));
-
-        registry.register(new PureBloodItem(0));
-        registry.register(new PureBloodItem(1));
-        registry.register(new PureBloodItem(2));
-        registry.register(new PureBloodItem(3));
-        registry.register(new PureBloodItem(4));
-
-        for (int i = 0; i < HunterLevelingConf.instance().HUNTER_INTEL_COUNT; i++) {
-            registry.register(new HunterIntelItem(i));
-        }
-        registry.register(new GarlicItem());
-        registry.register(new InjectionItem(InjectionItem.TYPE.GARLIC));
-        registry.register(new InjectionItem(InjectionItem.TYPE.SANGUINARE));
-        registry.register(new InjectionItem(InjectionItem.TYPE.EMPTY));
-        registry.register(new InjectionItem(InjectionItem.TYPE.ZOMBIE_BLOOD));
-
-        registry.register(new PitchforkItem());
-        SimpleCrossbowItem basic_crossbow = new SimpleCrossbowItem("basic_crossbow", 1, 20, 300);
-        basic_crossbow.setEnchantability(ItemTier.WOOD);
-        registry.register(basic_crossbow);
-        DoubleCrossbowItem basic_double_crossbow = new DoubleCrossbowItem("basic_double_crossbow", 1, 20, 300);
-        basic_double_crossbow.setEnchantability(ItemTier.WOOD);
-        registry.register(basic_double_crossbow);
-        SimpleCrossbowItem enhanced_crossbow = new SimpleCrossbowItem("enhanced_crossbow", 1.5F, 15, 350);
-        enhanced_crossbow.setEnchantability(ItemTier.IRON);
-        registry.register(enhanced_crossbow);
-        DoubleCrossbowItem enhanced_double_crossbow = new DoubleCrossbowItem("enhanced_double_crossbow", 1.5F, 15, 350);
-        enhanced_double_crossbow.setEnchantability(ItemTier.IRON);
-        registry.register(enhanced_double_crossbow);
-        registry.register(new CrossbowArrowItem(CrossbowArrowItem.EnumArrowType.VAMPIRE_KILLER));
-        registry.register(new CrossbowArrowItem(CrossbowArrowItem.EnumArrowType.NORMAL));
-        registry.register(new CrossbowArrowItem(CrossbowArrowItem.EnumArrowType.SPITFIRE));
-        registry.register(new CrossbowArrowItem(CrossbowArrowItem.EnumArrowType.TELEPORT));
-
-        registry.register(new StakeItem());
-        registry.register(new VampireBloodBottleItem());
-        TechCrossbowItem basic_tech_crossbow = new TechCrossbowItem("basic_tech_crossbow", 1.6F, 6, 300);
-        basic_tech_crossbow.setEnchantability(ItemTier.DIAMOND);
-        registry.register(basic_tech_crossbow);
-        TechCrossbowItem enhanced_tech_crossbow = new TechCrossbowItem("enhanced_tech_crossbow", 1.7F, 4, 450);
-        enhanced_tech_crossbow.setEnchantability(ItemTier.DIAMOND);
-        registry.register(enhanced_tech_crossbow);
-        registry.register(new VampirismItem("tech_crossbow_ammo_package", new Item.Properties().tab(VampirismMod.creativeTab)) {
-
-            @OnlyIn(Dist.CLIENT)
-            @Override
-            public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-                tooltip.add(new TranslationTextComponent("item.vampirism." + regName + ".tooltip", new TranslationTextComponent(basic_tech_crossbow.getDescriptionId())).withStyle(TextFormatting.GRAY));
-            }
-
-        });
-        registry.register(new VampireBookItem());
-        registry.register(new HolyWaterBottleItem(IItemWithTier.TIER.NORMAL));
-        registry.register(new HolyWaterBottleItem(IItemWithTier.TIER.ENHANCED));
-        registry.register(new HolyWaterBottleItem(IItemWithTier.TIER.ULTIMATE));
-
-
-        registry.register(new HolyWaterSplashBottleItem(IItemWithTier.TIER.NORMAL));
-        registry.register(new HolyWaterSplashBottleItem(IItemWithTier.TIER.ENHANCED));
-        registry.register(new HolyWaterSplashBottleItem(IItemWithTier.TIER.ULTIMATE));
-
-        registry.register(new VampirismItem("holy_salt", creativeTabProps()) {
-
-            @Override
-            public boolean isFoil(ItemStack stack) {
-
-                return true;
-            }
-        });
-        registry.register(new VampirismItem("pure_salt", creativeTabProps()));
-
-        registry.register(new VampirismItem("holy_salt_water", new Item.Properties().stacksTo(1)) {
-
-            @Override
-            public boolean isFoil(ItemStack stack) {
-
-                return true;
-            }
-        });
-        registry.register(new AlchemicalFireItem());
-        registry.register(new VampirismItem("garlic_beacon_core", creativeTabProps()));
-        registry.register(new VampirismItem("garlic_beacon_core_improved", creativeTabProps()));
-        registry.register(new VampirismItem("purified_garlic", creativeTabProps()));
-
-        registry.register(new ArmorOfSwiftnessItem(EquipmentSlotType.HEAD, IItemWithTier.TIER.NORMAL));
-        registry.register(new ArmorOfSwiftnessItem(EquipmentSlotType.CHEST, IItemWithTier.TIER.NORMAL));
-        registry.register(new ArmorOfSwiftnessItem(EquipmentSlotType.LEGS, IItemWithTier.TIER.NORMAL));
-        registry.register(new ArmorOfSwiftnessItem(EquipmentSlotType.FEET, IItemWithTier.TIER.NORMAL));
-        registry.register(new ArmorOfSwiftnessItem(EquipmentSlotType.HEAD, IItemWithTier.TIER.ENHANCED));
-        registry.register(new ArmorOfSwiftnessItem(EquipmentSlotType.CHEST, IItemWithTier.TIER.ENHANCED));
-        registry.register(new ArmorOfSwiftnessItem(EquipmentSlotType.LEGS, IItemWithTier.TIER.ENHANCED));
-        registry.register(new ArmorOfSwiftnessItem(EquipmentSlotType.FEET, IItemWithTier.TIER.ENHANCED));
-        registry.register(new ArmorOfSwiftnessItem(EquipmentSlotType.HEAD, IItemWithTier.TIER.ULTIMATE));
-        registry.register(new ArmorOfSwiftnessItem(EquipmentSlotType.CHEST, IItemWithTier.TIER.ULTIMATE));
-        registry.register(new ArmorOfSwiftnessItem(EquipmentSlotType.LEGS, IItemWithTier.TIER.ULTIMATE));
-        registry.register(new ArmorOfSwiftnessItem(EquipmentSlotType.FEET, IItemWithTier.TIER.ULTIMATE));
-
-        registry.register(new HunterHatItem(0));
-        registry.register(new HunterHatItem(1));
-
-        registry.register(new HunterAxeItem(IItemWithTier.TIER.NORMAL));
-        registry.register(new HunterAxeItem(IItemWithTier.TIER.ENHANCED));
-        registry.register(new HunterAxeItem(IItemWithTier.TIER.ULTIMATE));
-
-
-        registry.register(new HunterCoatItem(EquipmentSlotType.HEAD, IItemWithTier.TIER.NORMAL));
-        registry.register(new HunterCoatItem(EquipmentSlotType.CHEST, IItemWithTier.TIER.NORMAL));
-        registry.register(new HunterCoatItem(EquipmentSlotType.LEGS, IItemWithTier.TIER.NORMAL));
-        registry.register(new HunterCoatItem(EquipmentSlotType.FEET, IItemWithTier.TIER.NORMAL));
-        registry.register(new HunterCoatItem(EquipmentSlotType.HEAD, IItemWithTier.TIER.ENHANCED));
-        registry.register(new HunterCoatItem(EquipmentSlotType.CHEST, IItemWithTier.TIER.ENHANCED));
-        registry.register(new HunterCoatItem(EquipmentSlotType.LEGS, IItemWithTier.TIER.ENHANCED));
-        registry.register(new HunterCoatItem(EquipmentSlotType.FEET, IItemWithTier.TIER.ENHANCED));
-        registry.register(new HunterCoatItem(EquipmentSlotType.HEAD, IItemWithTier.TIER.ULTIMATE));
-        registry.register(new HunterCoatItem(EquipmentSlotType.CHEST, IItemWithTier.TIER.ULTIMATE));
-        registry.register(new HunterCoatItem(EquipmentSlotType.LEGS, IItemWithTier.TIER.ULTIMATE));
-        registry.register(new HunterCoatItem(EquipmentSlotType.FEET, IItemWithTier.TIER.ULTIMATE));
-
-        registry.register(new HeartSeekerItem(IItemWithTier.TIER.NORMAL));
-        registry.register(new HeartStrikerItem(IItemWithTier.TIER.NORMAL));
-        registry.register(new HeartSeekerItem(IItemWithTier.TIER.ENHANCED));
-        registry.register(new HeartStrikerItem(IItemWithTier.TIER.ENHANCED));
-        registry.register(new HeartSeekerItem(IItemWithTier.TIER.ULTIMATE));
-        registry.register(new HeartStrikerItem(IItemWithTier.TIER.ULTIMATE));
-
-        registry.register(new VampirismItem("blood_infused_iron_ingot", creativeTabProps()));
-        registry.register(new VampirismItem("blood_infused_enhanced_iron_ingot", creativeTabProps()));
-        registry.register(new VampirismItem("soul_orb_vampire", creativeTabProps()));
-
-        registry.register(new ColoredVampireClothingItem(EquipmentSlotType.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.REDBLACK));
-        registry.register(new ColoredVampireClothingItem(EquipmentSlotType.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.BLACKBLUE));
-        registry.register(new ColoredVampireClothingItem(EquipmentSlotType.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.BLACKRED));
-        registry.register(new ColoredVampireClothingItem(EquipmentSlotType.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.BLACKWHITE));
-        registry.register(new ColoredVampireClothingItem(EquipmentSlotType.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.WHITEBLACK));
-
-        registry.register(new SpawnEggItem(ModEntities.vampire, 0x8B15A3, 0xa735e3, new Item.Properties().tab(ItemGroup.TAB_MISC)).setRegistryName(REFERENCE.MODID, "vampire_spawn_egg"));
-        registry.register(new SpawnEggItem(ModEntities.hunter, 0x2d05f2, 0x2600e0, new Item.Properties().tab(ItemGroup.TAB_MISC)).setRegistryName(REFERENCE.MODID, "vampire_hunter_spawn_egg"));
-        registry.register(new SpawnEggItem(ModEntities.advanced_vampire, 0x8B15A3, 0x560a7e, new Item.Properties().tab(ItemGroup.TAB_MISC)).setRegistryName(REFERENCE.MODID, "advanced_vampire_spawn_egg"));
-        registry.register(new SpawnEggItem(ModEntities.advanced_hunter, 0x2d05f2, 0x1a028c, new Item.Properties().tab(ItemGroup.TAB_MISC)).setRegistryName(REFERENCE.MODID, "advanced_vampire_hunter_spawn_egg"));
-        registry.register(new SpawnEggItem(ModEntities.vampire_baron, 0x8B15A3, 0x15acda, new Item.Properties().tab(ItemGroup.TAB_MISC)).setRegistryName(REFERENCE.MODID, "vampire_baron_spawn_egg"));
-        registry.register(new SpawnEggItem(ModEntities.hunter_trainer, 0x2d05f2, 0x1cdb49, new Item.Properties().tab(ItemGroup.TAB_MISC)).setRegistryName(REFERENCE.MODID, "hunter_trainer_spawn_egg"));
-
-        registry.register(new BucketItem(ModFluids.blood, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(ItemGroup.TAB_MISC)).setRegistryName(REFERENCE.MODID, "blood_bucket"));
-        registry.register(new BucketItem(ModFluids.impure_blood, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(ItemGroup.TAB_MISC)).setRegistryName(REFERENCE.MODID, "impure_blood_bucket"));
-
-        registry.register(new GarlicBreadItem());
-        registry.register(new UmbrellaItem());
-
-        registry.register(new VampirismItem("hunter_minion_equipment", creativeTabProps()));
-        registry.register(new MinionUpgradeItem("hunter_minion_upgrade_simple", 1, 2, VReference.HUNTER_FACTION));
-        registry.register(new MinionUpgradeItem("hunter_minion_upgrade_enhanced", 3, 4, VReference.HUNTER_FACTION));
-        registry.register(new MinionUpgradeItem("hunter_minion_upgrade_special", 5, 6, VReference.HUNTER_FACTION));
-
-        registry.register(new FeedingAdapterItem());
-        registry.register(new VampirismItem("vampire_minion_binding", creativeTabProps()));
-        registry.register(new MinionUpgradeItem("vampire_minion_upgrade_simple", 1, 2, VReference.VAMPIRE_FACTION));
-        registry.register(new MinionUpgradeItem("vampire_minion_upgrade_enhanced", 3, 4, VReference.VAMPIRE_FACTION));
-        registry.register(new MinionUpgradeItem("vampire_minion_upgrade_special", 5, 6, VReference.VAMPIRE_FACTION));
-
-        registry.register(new OblivionItem("oblivion_potion", creativeTabProps()));
-
-        registry.register(new VampireRefinementItem(creativeTabProps(), IRefinementItem.AccessorySlotType.AMULET).setRegistryName(REFERENCE.MODID, "amulet"));
-        registry.register(new VampireRefinementItem(creativeTabProps(), IRefinementItem.AccessorySlotType.RING).setRegistryName(REFERENCE.MODID, "ring"));
-        registry.register(new VampireRefinementItem(creativeTabProps(), IRefinementItem.AccessorySlotType.OBI_BELT).setRegistryName(REFERENCE.MODID, "obi_belt"));
-
-        registry.register(new VampireClothingItem(EquipmentSlotType.HEAD, "vampire_clothing_crown"));
-        registry.register(new VampireClothingItem(EquipmentSlotType.LEGS, "vampire_clothing_legs"));
-        registry.register(new VampireClothingItem(EquipmentSlotType.FEET, "vampire_clothing_boots"));
-        registry.register(new VampireClothingItem(EquipmentSlotType.HEAD, "vampire_clothing_hat"));
-
-        registry.register(new VampirismItem("cure_apple", creativeTabProps().rarity(Rarity.RARE)));
-        registry.register(new VampirismItem("garlic_finder", creativeTabProps().rarity(Rarity.RARE)));
-
-        registry.register(new WallOrFloorItem(ModBlocks.candelabra, ModBlocks.candelabra_wall, new Item.Properties().tab(VampirismMod.creativeTab)).setRegistryName(REFERENCE.MODID, "item_candelabra"));
-
-        registry.register(new SignItem((new Item.Properties()).stacksTo(16).tab(ItemGroup.TAB_DECORATIONS), ModBlocks.dark_spruce_sign, ModBlocks.dark_spruce_wall_sign).setRegistryName(REFERENCE.MODID, "dark_spruce_sign"));
-        registry.register(new SignItem((new Item.Properties()).stacksTo(16).tab(ItemGroup.TAB_DECORATIONS), ModBlocks.cursed_spruce_sign, ModBlocks.cursed_spruce_wall_sign).setRegistryName(REFERENCE.MODID, "cursed_spruce_sign"));
-
-        registry.register(new CrucifixItem(IItemWithTier.TIER.NORMAL));
-        registry.register(new CrucifixItem(IItemWithTier.TIER.ENHANCED));
-        registry.register(new CrucifixItem(IItemWithTier.TIER.ULTIMATE));
-
-        registry.register(new OilBottle(creativeTabProps().stacksTo(1)).setRegistryName(REFERENCE.MODID, "oil_bottle"));
-
+    static void registerItems(IEventBus bus) {
+        ITEMS.register(bus);
         if (VampirismMod.inDataGen) {
-            registry.register(new DummyItem().setRegistryName("guideapi-vp", "vampirism-guidebook"));
+            DeferredRegister<Item> DUMMY_ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, "guideapi_vp");
+            DUMMY_ITEMS.register("vampirism-guidebook", DummyItem::new);
+            DUMMY_ITEMS.register(bus);
         }
     }
 
@@ -447,20 +275,22 @@ public class ModItems {
                     missingMapping.ignore();
                     break;
                 case "vampirism:vampire_clothing_head":
-                    missingMapping.remap(vampire_clothing_crown);
+                    missingMapping.remap(VAMPIRE_CLOTHING_CROWN.get());
                     break;
                 case "vampirism:vampire_clothing_feet":
-                    missingMapping.remap(vampire_clothing_boots);
+                    missingMapping.remap(VAMPIRE_CLOTHING_BOOTS.get());
                     break;
                 case "vampirism:item_med_chair":
-                    missingMapping.remap(Item.byBlock(ModBlocks.med_chair));
+                    missingMapping.remap(ModBlocks.MED_CHAIR.get().asItem());
                     break;
                 case "vampirism:bloody_spruce_log":
-                    missingMapping.remap(cursed_spruce_log);
+                    missingMapping.remap(ModBlocks.CURSED_SPRUCE_LOG.get().asItem());
                     break;
                 case "vampirism:bloody_spruce_leaves":
-                    missingMapping.remap(dark_spruce_leaves);
+                    missingMapping.remap(ModBlocks.DARK_SPRUCE_LEAVES.get().asItem());
                     break;
+                case "vampirism:coffin":
+                    missingMapping.remap(ModBlocks.COFFIN_RED.get().asItem());
             }
             if(missingMapping.key.toString().startsWith("vampirism:obsidian_armor")){
                 Item hunterArmorReplacement = event.getRegistry().getValue(new ResourceLocation(missingMapping.key.toString().replace("obsidian_armor","hunter_coat")));

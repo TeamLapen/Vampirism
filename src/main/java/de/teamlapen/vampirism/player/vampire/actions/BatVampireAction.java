@@ -55,9 +55,9 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     @Override
     public boolean canBeUsedBy(IVampirePlayer vampire) {
         return !vampire.isGettingSundamage(vampire.getRepresentingEntity().level)
-                && !ModItems.umbrella.equals(vampire.getRepresentingEntity().getMainHandItem().getItem())
+                && !ModItems.UMBRELLA.get().equals(vampire.getRepresentingEntity().getMainHandItem().getItem())
                 && vampire.isGettingGarlicDamage(vampire.getRepresentingEntity().level) == EnumStrength.NONE
-                && !vampire.getActionHandler().isActionActive(VampireActions.vampire_rage)
+                && !vampire.getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE.get())
                 && !vampire.getRepresentingPlayer().isInWater()
                 && (VampirismConfig.SERVER.batModeInEnd.get() || !(vampire.getRepresentingPlayer().getCommandSenderWorld().dimension() == World.END))
                 && !VampirismConfig.SERVER.batDimensionBlacklist.get().contains(vampire.getRepresentingPlayer().getCommandSenderWorld().dimension().location().toString())
@@ -110,7 +110,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         if (vampire.isGettingSundamage(vampire.getRepresentingEntity().level) && !vampire.isRemote()) {
             vampire.getRepresentingPlayer().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_day"), Util.NIL_UUID);
             return true;
-        } else if (ModItems.umbrella.equals(vampire.getRepresentingEntity().getMainHandItem().getItem()) && !vampire.isRemote()) {
+        } else if (ModItems.UMBRELLA.get().equals(vampire.getRepresentingEntity().getMainHandItem().getItem()) && !vampire.isRemote()) {
             vampire.getRepresentingPlayer().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_umbrella"), Util.NIL_UUID);
             return true;
         } else if (vampire.isGettingGarlicDamage(vampire.getRepresentingEntity().level) != EnumStrength.NONE && !vampire.isRemote()) {

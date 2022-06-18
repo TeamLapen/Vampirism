@@ -36,7 +36,7 @@ import java.util.Random;
 /**
  * Base class for crossbows
  */
-public abstract class VampirismItemCrossbow extends VampirismItem implements IFactionLevelItem<IHunterPlayer>, IVampirismCrossbow {
+public abstract class VampirismItemCrossbow extends Item implements IFactionLevelItem<IHunterPlayer>, IVampirismCrossbow {
 
     /**
      * Checks for Frugality enchantment on the crossbow
@@ -45,16 +45,15 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
      * @return the enchantment level
      */
     protected static int isCrossbowFrugal(ItemStack crossbowStack) {
-        return EnchantmentHelper.getItemEnchantmentLevel(ModEnchantments.crossbowfrugality, crossbowStack);
+        return EnchantmentHelper.getItemEnchantmentLevel(ModEnchantments.CROSSBOWFRUGALITY.get(), crossbowStack);
     }
     private int enchantability = 0;
 
     /**
-     * @param regName   Registration name
      * @param maxDamage Max damage or 0 if unbreakable
      */
-    public VampirismItemCrossbow(String regName, int maxDamage) {
-        super(regName, new Properties().stacksTo(1).defaultDurability(maxDamage).tab(VampirismMod.creativeTab));
+    public VampirismItemCrossbow(int maxDamage) {
+        super(new Properties().stacksTo(1).defaultDurability(maxDamage).tab(VampirismMod.creativeTab));
     }
 
     @Override
@@ -208,7 +207,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
 
         if (!itemstack.isEmpty() || creative) {
             if (itemstack.isEmpty()) {
-                itemstack = new ItemStack(ModItems.crossbow_arrow_normal);
+                itemstack = new ItemStack(ModItems.CROSSBOW_ARROW_NORMAL.get());
             }
 
             float f = getArrowVelocity();
@@ -218,7 +217,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
 
                 if (!world.isClientSide) {
                     boolean rightHand = player.getMainArm() == HandSide.RIGHT && hand == Hand.MAIN_HAND || player.getMainArm() == HandSide.LEFT && hand == Hand.OFF_HAND;
-                    IVampirismCrossbowArrow<?> itemarrow = itemstack.getItem() instanceof IVampirismCrossbowArrow ? (IVampirismCrossbowArrow<?>) itemstack.getItem() : ModItems.crossbow_arrow_normal;
+                    IVampirismCrossbowArrow<?> itemarrow = itemstack.getItem() instanceof IVampirismCrossbowArrow ? (IVampirismCrossbowArrow<?>) itemstack.getItem() : ModItems.CROSSBOW_ARROW_NORMAL.get();
                     AbstractArrowEntity entityarrow = itemarrow.createEntity(itemstack, world, player, heightOffset, 0.3F + centerOffset, rightHand);
 
                     Vector3d vector3d = player.getViewVector(1.0F);
@@ -255,7 +254,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
                     }
 
                     world.addFreshEntity(entityarrow);
-                    world.playSound(null, player.getX(), player.getY() + 0.5, player.getZ(), ModSounds.crossbow, SoundCategory.PLAYERS, 1F, world.random.nextFloat() * 0.1F + 0.9F);
+                    world.playSound(null, player.getX(), player.getY() + 0.5, player.getZ(), ModSounds.CROSSBOW.get(), SoundCategory.PLAYERS, 1F, world.random.nextFloat() * 0.1F + 0.9F);
 
                 }
 

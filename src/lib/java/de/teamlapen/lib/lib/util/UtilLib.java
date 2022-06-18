@@ -443,7 +443,9 @@ public class UtilLib {
      * https://github.com/TeamLapen/Vampirism#intellij
      * <p>
      * Make sure Settings -> Build, Execution, Deployment -> Compiler -> 'Add runtime assertions for not-null-annotated methods and parameters' is disabled (Unfortunately required)
+     * @deprecated This method should no longer be necessary with the switch to RegistryObjects from ObjectHolders.
      */
+    @Deprecated
     @SuppressWarnings("ConstantConditions")
     public static @Nonnull
     <T> T getNull() {
@@ -652,6 +654,33 @@ public class UtilLib {
         return rotatedShapes.stream().reduce((v1, v2) -> VoxelShapes.join(v1, v2, IBooleanFunction.OR)).orElseGet(() -> Block.box(0, 0, 0, 16, 16, 16));
     }
 
+    /**
+     * modifies the rolls or pitch of the shape by 90 degree
+     */
+    public static VoxelShape rollShape(VoxelShape shape, Direction direction) {
+        Set<VoxelShape> rotatedShapes = new HashSet<VoxelShape>();
+        shape.forAllBoxes((x1, y1, z1, x2, y2, z2) -> {
+            switch (direction) {
+                case NORTH:
+                    y1 = (y1 * 16) - 8;
+                    y2 = (y2 * 16) - 8;
+                    z1 = (z1 * 16) - 8;
+                    z2 = (z2 * 16) - 8;
+                    rotatedShapes.add(Block.box(x1*16,8-z1,8+y1,x2 * 16,8-z2,8+y2));
+                    break;
+                case SOUTH:
+                    y1 = (y1 * 16) - 8;
+                    y2 = (y2 * 16) - 8;
+                    z1 = (z1 * 16) - 8;
+                    z2 = (z2 * 16) - 8;
+                    rotatedShapes.add(Block.box(x1*16,8+z1,8-y1,x2 * 16,8+z2,8-y2));
+                    break;
+            }
+            
+        });
+        return rotatedShapes.stream().reduce((v1, v2) -> VoxelShapes.join(v1, v2, IBooleanFunction.OR)).orElseGet(() -> Block.box(0, 0, 0, 16, 16, 16));
+    }
+
     public static String aiTaskListToStringDebug(GoalSelector tasks) {
         Collection c = ObfuscationReflectionHelper.getPrivateValue(GoalSelector.class, tasks, "executingTaskEntries");
         if (c == null) return "Null";
@@ -816,5 +845,9 @@ public class UtilLib {
         NINETY,
         HUNDRED_EIGHTY,
         TWO_HUNDRED_SEVENTY
+    }
+
+    public static ResourceLocation amend(ResourceLocation original, String amendment) {
+        return new ResourceLocation(original.getNamespace(), original.getPath() + amendment);
     }
 }
