@@ -1,135 +1,17 @@
 {
-  "__comment": "Designed by Maxanier ",
-  "textures": {
-    "texture": "vampirism:block/blood_still"
-  },
-  "elements": [
-    {
-      "from": [
-        6,
-        3,
-        6
-      ],
-      "to": [
-        10,
-        4,
-        10
-      ],
-      "faces": {
-        "down": {
-          "uv": [
-            10,
-            10,
-            6,
-            6
-          ],
-          "texture": "#texture"
-        },
-        "north": {
-          "uv": [
-            6,
-            12,
-            10,
-            13
-          ],
-          "texture": "#texture"
-        },
-        "south": {
-          "uv": [
-            6,
-            12,
-            10,
-            13
-          ],
-          "texture": "#texture"
-        },
-        "west": {
-          "uv": [
-            6,
-            12,
-            10,
-            13
-          ],
-          "texture": "#texture"
-        },
-        "east": {
-          "uv": [
-            6,
-            12,
-            10,
-            13
-          ],
-          "texture": "#texture"
-        }
-      }
-    },
-    {
-      "from": [
-        5,
-        4,
-        5
-      ],
-      "to": [
-        11,
-        5,
-        11
-      ],
-      "faces": {
-        "down": {
-          "uv": [
-            11,
-            11,
-            5,
-            5
-          ],
-          "texture": "#texture"
-        },
-        "up": {
-          "uv": [
-            5,
-            5,
-            11,
-            11
-          ],
-          "texture": "#texture"
-        },
-        "north": {
-          "uv": [
-            5,
-            11,
-            11,
-            12
-          ],
-          "texture": "#texture"
-        },
-        "south": {
-          "uv": [
-            5,
-            11,
-            11,
-            12
-          ],
-          "texture": "#texture"
-        },
-        "west": {
-          "uv": [
-            5,
-            11,
-            11,
-            12
-          ],
-          "texture": "#texture"
-        },
-        "east": {
-          "uv": [
-            5,
-            11,
-            11,
-            12
-          ],
-          "texture": "#texture"
-        }
-      }
-    }
-  ]
+	"credit": "Zin",
+	"textures": {
+		"texture": "vampirism:block/blood_still"
+	},
+	"elements": [
+		{
+			"name": "blood fill",
+			"from": [3, 3, 3],
+			"to": [13, 3, 13],
+			"rotation": {"angle": 0, "axis": "y", "origin": [11, -1, 11]},
+			"faces": {
+				"up": {"uv": [3, 3, 13, 13], "texture": "#texture"}
+			}
+		}
+	]
 }
