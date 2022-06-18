@@ -80,7 +80,7 @@ public class HunterSkills {
     public static final RegistryObject<ISkill> ULTIMATE_CRUCIFIX = SKILLS.register("ultimate_crucifix", () -> new VampirismSkill.SimpleHunterSkill(true));
 
     static {
-        SKILLS.register(VReference.HUNTER_FACTION.getID().getPath(), () -> new VampirismSkill.SimpleVampireSkill(false));
+        SKILLS.register(VReference.HUNTER_FACTION.getID().getPath(), () -> new VampirismSkill.SimpleHunterSkill(false));
     }
 
 
