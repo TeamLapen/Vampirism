@@ -401,6 +401,11 @@ public class RecipesGenerator extends RecipeProvider {
                 .bloodOilIngredient()
                 .input(new de.teamlapen.vampirism.util.NBTIngredient(new ItemStack(Items.ENDER_PEARL)))
                 .build(consumer, new ResourceLocation(REFERENCE.MODID, "teleport_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.EVASION)
+                .bloodOilIngredient()
+                .input(Ingredient.of(new ItemStack(Items.HONEY_BOTTLE)))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "evasion_oil"));
     }
 
     private JsonObject enchantment(int level, Enchantment enchantment) {
