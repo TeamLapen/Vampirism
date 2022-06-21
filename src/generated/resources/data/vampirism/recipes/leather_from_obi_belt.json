@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "vampirism:obi_belt"
+    }
+  ],
+  "result": {
+    "item": "minecraft:leather"
+  }
+}
