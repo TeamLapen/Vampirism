@@ -130,6 +130,7 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
         return null;
     }
 
+    @Nonnull
     @Override
     public ISkillHandler<IVampirePlayer> getSkillHandler() {
         return null;
