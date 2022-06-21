@@ -38,13 +38,13 @@ public class ModEffects {
     public static final RegistryObject<Effect> LORD_SPEED = EFFECTS.register("lord_speed", () -> new VampirismEffect(EffectType.BENEFICIAL, 0xffffff).addAttributeModifier(Attributes.MOVEMENT_SPEED, "efe607d8-db8a-4156-b9d0-6a0640593057", 0.07F, AttributeModifier.Operation.MULTIPLY_TOTAL));
     public static final RegistryObject<Effect> LORD_ATTACK_SPEED = EFFECTS.register("lord_attack_speed", () -> new VampirismEffect(EffectType.BENEFICIAL, 0xffffff).addAttributeModifier(Attributes.ATTACK_SPEED, "a2ca9534-3baf-404f-b159-bc835bf963e6", 0.05F, AttributeModifier.Operation.MULTIPLY_TOTAL));
 
-    public static final RegistryObject<BadOmenEffect> BAD_OMEN_HUNTER = EFFECTS.register(REFERENCE.HUNTER_PLAYER_KEY.getPath(), () -> new BadOmenEffect() {
+    public static final RegistryObject<BadOmenEffect> BAD_OMEN_HUNTER = EFFECTS.register("bad_omen_" + REFERENCE.HUNTER_PLAYER_KEY.getPath(), () -> new BadOmenEffect() {
                 @Override
                 public IFaction<?> getFaction() {
                     return VReference.HUNTER_FACTION;
                 }
             });
-    public static final RegistryObject<BadOmenEffect> BAD_OMEN_VAMPIRE = EFFECTS.register(REFERENCE.VAMPIRE_PLAYER_KEY.getPath(), () -> new BadOmenEffect() {
+    public static final RegistryObject<BadOmenEffect> BAD_OMEN_VAMPIRE = EFFECTS.register("bad_omen_" + REFERENCE.VAMPIRE_PLAYER_KEY.getPath(), () -> new BadOmenEffect() {
                 @Override
                 public IFaction<?> getFaction() {
                     return VReference.VAMPIRE_FACTION;
