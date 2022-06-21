@@ -13,21 +13,21 @@ public class SpeedLordAction<T extends IFactionPlayer> extends LordRangeEffectAc
 
     @Override
     public boolean isEnabled() {
-        return VampirismConfig.BALANCE.faLordSpeedEnabled.get();
+        return VampirismConfig.BALANCE.laLordSpeedEnabled.get();
     }
 
     @Override
     public int getCooldown() {
-        return VampirismConfig.BALANCE.faLordSpeedCooldown.get();
+        return VampirismConfig.BALANCE.laLordSpeedCooldown.get();
     }
 
     @Override
     public int getCooldown(IFactionPlayer player) {
-        return super.getCooldown(player) + VampirismConfig.BALANCE.faLordSpeedCooldown.get();
+        return super.getCooldown(player) + VampirismConfig.BALANCE.laLordSpeedCooldown.get();
     }
 
     @Override
     protected int getEffectDuration(IFactionPlayer player) {
-        return VampirismConfig.BALANCE.faLordSpeedDuration.get() * 20;
+        return VampirismConfig.BALANCE.laLordSpeedDuration.get() * 20;
     }
 }

@@ -66,8 +66,16 @@ public interface ISkillHandler<T extends ISkillPlayer<?>> {
      */
     void resetSkills();
 
+    /**
+     * Enables the root skill for the given skill type
+     *
+     * @param type the skill type for which the root skill should be enabled
+     */
     void enableRootSkill(ISkillType type);
 
+    /**
+     * Enables all root skills that are available for the player
+     */
     void enableRootSkills();
 
     enum Result {

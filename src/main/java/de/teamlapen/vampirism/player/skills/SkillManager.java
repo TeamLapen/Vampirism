@@ -93,15 +93,17 @@ public class SkillManager implements ISkillManager {
 
     @Nullable
     @Override
-    public ISkillType getSkillType(ResourceLocation id) {
+    public ISkillType getSkillType(@Nonnull ResourceLocation id) {
         return this.skillTypes.get(id);
     }
 
+    @Nonnull
     @Override
-    public ISkillType registerSkillType(ISkillType type) {
+    public ISkillType registerSkillType(@Nonnull ISkillType type) {
         if (this.skillTypes.containsKey(type.getRegistryName())) {
             throw new IllegalStateException("A skill type with the id " + type.getRegistryName() + " has already been registered");
         }
-        return this.skillTypes.put(type.getRegistryName(), type);
+        this.skillTypes.put(type.getRegistryName(), type);
+        return type;
     }
 }

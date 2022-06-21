@@ -76,6 +76,11 @@ public interface IPlayableFactionBuilder<T extends IFactionPlayer<?>> extends IF
     @Override
     IPlayableFactionBuilder<T> namePlural(@Nonnull String namePluralKey);
 
+    /**
+     * Enables this faction to have lord skills
+     *
+     * @return the builder
+     */
     IPlayableFactionBuilder<T> enableLordSkills();
 
     @Override

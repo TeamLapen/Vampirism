@@ -200,9 +200,13 @@ public class BalanceConfig {
     public final ForgeConfigSpec.DoubleValue vrHalfInvulnerableThresholdMod;
     public final ForgeConfigSpec.DoubleValue vrSwordFinisherThresholdMod;
 
-    public final ForgeConfigSpec.BooleanValue faLordSpeedEnabled;
-    public final ForgeConfigSpec.IntValue faLordSpeedCooldown;
-    public final ForgeConfigSpec.IntValue faLordSpeedDuration;
+    public final ForgeConfigSpec.BooleanValue laLordSpeedEnabled;
+    public final ForgeConfigSpec.IntValue laLordSpeedCooldown;
+    public final ForgeConfigSpec.IntValue laLordSpeedDuration;
+
+    public final ForgeConfigSpec.BooleanValue laLordAttackSpeedEnabled;
+    public final ForgeConfigSpec.IntValue laLordAttackSpeedCooldown;
+    public final ForgeConfigSpec.IntValue laLordAttackSpeedDuration;
 
     BalanceConfig(BalanceBuilder builder) {
         boolean iceAndFire = ModList.get().isLoaded("iceandfire");
@@ -418,10 +422,13 @@ public class BalanceConfig {
         vrHalfInvulnerableThresholdMod = builder.comment("Threshold for attacks that are considered high damage is multiplied by this value").defineInRange("halfInvulnerableThresholdMod", 0.7, 0, 2);
         vrSwordFinisherThresholdMod = builder.comment("Threshold for instant kill is modified by this amount").defineInRange("swordFinisherThresholdMod", 1.25, 1, Double.MAX_VALUE);
 
-        builder.category("faction actions", "fa");
-        faLordSpeedEnabled = builder.define("lordSpeedEnabled", true);
-        faLordSpeedDuration = builder.comment("In seconds").defineInRange("lordSpeedDuration", 30, 0, Integer.MAX_VALUE);
-        faLordSpeedCooldown = builder.comment("In seconds").defineInRange("lordSpeedCooldown", 120, 0, Integer.MAX_VALUE);
+        builder.category("lord actions", "la");
+        laLordSpeedEnabled = builder.define("lordSpeedEnabled", true);
+        laLordSpeedDuration = builder.comment("In seconds").defineInRange("lordSpeedDuration", 30, 0, Integer.MAX_VALUE);
+        laLordSpeedCooldown = builder.comment("In seconds").defineInRange("lordSpeedCooldown", 120, 0, Integer.MAX_VALUE);
+        laLordAttackSpeedEnabled = builder.define("lordAttackSpeedEnabled", true);
+        laLordAttackSpeedDuration = builder.comment("In seconds").defineInRange("lordAttackSpeedDuration", 30, 0, Integer.MAX_VALUE);
+        laLordAttackSpeedCooldown = builder.comment("In seconds").defineInRange("lordAttackSpeedCooldown", 120, 0, Integer.MAX_VALUE);
 
     }
 }

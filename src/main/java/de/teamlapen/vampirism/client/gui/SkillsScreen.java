@@ -9,7 +9,6 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
-import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEffects;
@@ -127,7 +126,7 @@ public class SkillsScreen extends Screen { //TODO BREAKING remove
                 this.displayX = displayXNew = -100;
                 this.displayY = displayYNew = -10;
                 skillNodes.clear();
-                SkillNode root = VampirismMod.proxy.getSkillTree(true).getRootNodeForFaction(faction.getID(), SkillType.LORD);
+                SkillNode root = VampirismMod.proxy.getSkillTree(true).getRootNodeForFaction(faction.getID());
                 addToList(skillNodes, root);
 
                 boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
