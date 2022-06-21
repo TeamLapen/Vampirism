@@ -102,6 +102,9 @@ public class RecipesGenerator extends RecipeProvider {
         ItemLike blood_infused_iron_ingot = ModItems.BLOOD_INFUSED_IRON_INGOT.get();
         ItemLike rotten_flesh = Items.ROTTEN_FLESH;
         ItemLike alchemical_fire = ModItems.ITEM_ALCHEMICAL_FIRE.get();
+        ItemLike amulet = ModItems.AMULET.get();
+        ItemLike ring = ModItems.RING.get();
+        ItemLike obi_belt = ModItems.OBI_BELT.get();
         TagKey<Item> planks = ItemTags.PLANKS;
         TagKey<Item> glass = Tags.Items.GLASS;
         TagKey<Item> glass_pane = Tags.Items.GLASS_PANES;
@@ -297,6 +300,10 @@ public class RecipesGenerator extends RecipeProvider {
         ShapedRecipeBuilder.shaped(ModItems.CRUCIFIX_NORMAL.get()).pattern("XY ").pattern("ZYZ").pattern(" Y ").define('X', ModItems.HOLY_SALT.get()).define('Y', planks).define('Z', stick).unlockedBy("salt", has(ModItems.HOLY_SALT.get())).unlockedBy("stick", has(stick)).unlockedBy("planks", has(planks)).save(consumer, hunter("crucifix"));
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.CRUCIFIX_ENHANCED.get()).pattern("XYYX").pattern("YZAY").pattern("XYYX").pattern("XYYX").define('X', ModItems.HOLY_SALT.get()).define('Y', iron_ingot).define('Z', ModItems.HOLY_WATER_BOTTLE_NORMAL.get()).define('A', ModItems.STAKE.get()).unlockedBy("iron", has(iron_ingot)).unlockedBy("blessed_salt", has(ModItems.HOLY_SALT.get())).unlockedBy("holy_water", has(ModItems.HOLY_WATER_BOTTLE_NORMAL.get())).unlockedBy("stake", has(ModItems.STAKE.get())).skills(HunterSkills.crucifix_wielder.get()).save(consumer, hunter("crucifix_enhanced"));
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.CRUCIFIX_ULTIMATE.get()).pattern("XYYX").pattern("YZAY").pattern("XYYX").pattern("XYYX").define('X', ModItems.ITEM_ALCHEMICAL_FIRE.get()).define('Y', Tags.Items.STORAGE_BLOCKS_GOLD).define('Z', ModItems.HOLY_WATER_BOTTLE_ENHANCED.get()).define('A', ModItems.STAKE.get()).unlockedBy("fire", has(ModItems.ITEM_ALCHEMICAL_FIRE.get())).unlockedBy("gold", has(Tags.Items.STORAGE_BLOCKS_GOLD)).unlockedBy("holy_water", has(ModItems.HOLY_WATER_BOTTLE_ENHANCED.get())).unlockedBy("stake", has(ModItems.STAKE.get())).skills(HunterSkills.ultimate_crucifix.get()).save(consumer, hunter("crucifix_ultimate"));
+
+        CookingRecipeBuilder.smelting(Ingredient.of(amulet, ring), Items.GOLD_NUGGET, 0.1f,200).unlockedBy("has_amulet", has(amulet)).unlockedBy("has_ring", has(ring)).save(consumer, new ResourceLocation(REFERENCE.MODID, "gold_nugget_from_accessory_smelting"));
+        CookingRecipeBuilder.blasting(Ingredient.of(amulet, ring), Items.GOLD_NUGGET, 0.1f,100).unlockedBy("has_amulet", has(amulet)).unlockedBy("has_ring", has(ring)).save(consumer, new ResourceLocation(REFERENCE.MODID, "gold_nugget_from_accessory_blasting"));
+        ShapelessRecipeBuilder.shapeless(leather).requires(obi_belt).unlockedBy("has_obi_belt", has(obi_belt)).save(consumer, new ResourceLocation(REFERENCE.MODID, "leather_from_obi_belt"));
     }
 
     private JsonObject enchantment(int level, Enchantment enchantment) {
