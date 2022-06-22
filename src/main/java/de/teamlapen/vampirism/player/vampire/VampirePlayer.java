@@ -889,11 +889,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                     player.addEffect(new EffectInstance(ModEffects.FIRE_PROTECTION.get(), fireResistance.getDuration(), fireResistance.getAmplifier()));
                     player.removeEffect(Effects.FIRE_RESISTANCE);
                 }
-                if (player.tickCount % 9 == 3 && player.hasEffect(Effects.HUNGER)) {
-                    EffectInstance hunterEffect = player.getEffect(Effects.HUNGER);
-                    player.addEffect(new EffectInstance(ModEffects.THIRST.get(), hunterEffect.getDuration(), hunterEffect.getAmplifier()));
-                    player.removeEffect(Effects.HUNGER);
-                }
                 if (actionHandler.updateActions()) {
                     sync = true;
                     syncToAll = true;

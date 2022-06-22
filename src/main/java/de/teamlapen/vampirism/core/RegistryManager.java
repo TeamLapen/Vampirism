@@ -10,7 +10,6 @@ import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
-import de.teamlapen.vampirism.world.biome.VampireForestBiome;
 import de.teamlapen.vampirism.world.biome.VampirismBiomeFeatures;
 import net.minecraft.block.Block;
 import net.minecraft.block.DispenserBlock;
@@ -20,7 +19,6 @@ import net.minecraft.item.Item;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.Potion;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
@@ -130,6 +128,11 @@ public class RegistryManager implements IInitListener {
     @SubscribeEvent
     public void onMissingMappingsItems(RegistryEvent.MissingMappings<Item> event) {
         ModItems.fixMappings(event);
+    }
+
+    @SubscribeEvent
+    public void onMissingMappingsEffects(RegistryEvent.MissingMappings<Effect> event) {
+        ModEffects.fixMappings(event);
     }
 
     @SubscribeEvent

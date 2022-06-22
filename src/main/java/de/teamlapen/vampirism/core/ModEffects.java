@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.util.SRGNAMES;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.potion.*;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -23,7 +24,6 @@ import org.apache.logging.log4j.Logger;
 public class ModEffects {
     public static final DeferredRegister<Effect> EFFECTS = DeferredRegister.create(ForgeRegistries.POTIONS, REFERENCE.MODID);
 
-    public static final RegistryObject<ThirstEffect> THIRST = EFFECTS.register("thirst", () -> new ThirstEffect(EffectType.HARMFUL, 859494));
     public static final RegistryObject<SanguinareEffect> SANGUINARE = EFFECTS.register("sanguinare", () -> new SanguinareEffect(EffectType.NEUTRAL, 0x6A0888));
     public static final RegistryObject<VampirismEffect> SATURATION = EFFECTS.register("saturation", () -> new VampirismEffect(EffectType.BENEFICIAL, 0xDCFF00));
     public static final RegistryObject<VampirismEffect> SUNSCREEN = EFFECTS.register("sunscreen", () -> (VampirismEffect) new VampirismEffect(EffectType.BENEFICIAL, 0xFFF100).addAttributeModifier(ModAttributes.SUNDAMAGE.get(), "9dc9420c-3e5e-41c7-9ba4-ff70e9dc69fc", -0.5, AttributeModifier.Operation.MULTIPLY_TOTAL));
@@ -100,5 +100,15 @@ public class ModEffects {
             return false;
         }
         return true;
+    }
+
+    public static void fixMappings(RegistryEvent.MissingMappings<Effect> event) {
+        event.getAllMappings().forEach(missingMapping -> {
+            switch (missingMapping.key.toString()) {
+                case "vampirism:thirst":
+                    missingMapping.remap(Effects.HUNGER);
+                    break;
+            }
+        });
     }
 }
