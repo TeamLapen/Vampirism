@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": {
+    "vampirism:human_heart": 200,
+    "vampirism:weak_human_hear": 100
+  }
+}
