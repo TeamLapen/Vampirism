@@ -20,22 +20,27 @@ import java.util.concurrent.ConcurrentHashMap;
  * Liquids -> blood
  */
 public class BloodConversionRegistry {
+
     /**
      * stores conversion rate from items to impure blood
      */
     @Nonnull
-    private static final Map<ResourceLocation, Integer> items = Maps.newHashMap();
+    private static final Map<ResourceLocation, Float> items = Maps.newHashMap();
+
     /**
      * stores conversion rate from fluids to blood
      */
     @Nonnull
-    private static final Map<ResourceLocation, Integer> fluids = Maps.newHashMap();
+    private static final Map<ResourceLocation, Float> fluids = Maps.newHashMap();
+
+    @Nonnull
+    private static final Map<ResourceLocation, Float> entities = Maps.newHashMap();
 
     /**
      * stores conversion rate from not listed items to impure blood
      */
     @Nonnull
-    private static final Map<ResourceLocation, Integer> items_calculated = Maps.newHashMap();
+    private static final Map<ResourceLocation, Float> items_calculated = Maps.newHashMap();
     /**
      * stores items with no conversion rate
      */
@@ -45,16 +50,19 @@ public class BloodConversionRegistry {
     private static int fluidDivider = 100;
     private static int itemMultiplier = 100;
 
-    public static void applyNewFluidResources(Map<ResourceLocation, Integer> values, int divider) {
+    public static void applyNewFluidResources(Map<ResourceLocation, Float> values) {
         fluids.clear();
-        fluidDivider = divider;
         fluids.putAll(values);
     }
 
-    public static void applyNewItemResources(Map<ResourceLocation, Integer> values, int multiplier) {
+    public static void applyNewEntitiesResources(Map<ResourceLocation, Float> values) {
+        entities.clear();
+        entities.putAll(values);
+    }
+
+    public static void applyNewItemResources(Map<ResourceLocation, Float> values) {
         items.clear();
-        itemMultiplier = multiplier;
-        for (Map.Entry<ResourceLocation, Integer> value : values.entrySet()) {
+        for (Map.Entry<ResourceLocation, Float> value : values.entrySet()) {
             if (value.getValue() != 0) {
                 items.put(value.getKey(), value.getValue());
             } else {
@@ -63,19 +71,19 @@ public class BloodConversionRegistry {
         }
     }
 
-    public static void applyNewItemCalculated(Map<ResourceLocation, Integer> values) {
-        items_calculated.putAll(values);
-    }
-
-    public static Map<ResourceLocation, Integer> getItemValues() {
+    public static Map<ResourceLocation, Float> getItemValues() {
         return new ConcurrentHashMap<>(items);
     }
 
-    public static Map<ResourceLocation, Integer> getFluidValues() {
+    public static Map<ResourceLocation, Float> getEntityValues() {
+        return new ConcurrentHashMap<>(entities);
+    }
+
+    public static Map<ResourceLocation, Float> getFluidValues() {
         return new ConcurrentHashMap<>(fluids);
     }
 
-    public static Map<ResourceLocation, Integer> getItemValuesCalculated() {
+    public static Map<ResourceLocation, Float> getItemValuesCalculated() {
         return new ConcurrentHashMap<>(items_calculated);
     }
 
@@ -95,7 +103,7 @@ public class BloodConversionRegistry {
      */
     public static int getImpureBloodValue(@Nonnull Item item) {
         if (items.containsKey(item.getRegistryName()) || items_calculated.containsKey(item.getRegistryName())) {
-            return items.containsKey(item.getRegistryName()) ? items.get(item.getRegistryName()) * itemMultiplier : items_calculated.get(item.getRegistryName()) * itemMultiplier;
+            return (items.containsKey(item.getRegistryName()) ? items.get(item.getRegistryName()) : items_calculated.get(item.getRegistryName())).intValue();
         }
         return 0;
     }
@@ -109,7 +117,7 @@ public class BloodConversionRegistry {
             if (item.isEdible() && item.getFoodProperties().isMeat()) {
                 int value = MathHelper.clamp((item.getRegistryName() != null && item.getRegistryName().getPath().contains("cooked")) ? 0 : item.getFoodProperties().getNutrition() / 2, 0, 5);
                 if (value > 0) {
-                    items_calculated.put(item.getRegistryName(), value);
+                    items_calculated.put(item.getRegistryName(), (float) (value * 100));
                     return true;
                 }
             }
@@ -126,7 +134,7 @@ public class BloodConversionRegistry {
      */
     public static float getBloodValue(@Nonnull FluidStack fluid) {
         if (fluids.containsKey(fluid.getFluid().getRegistryName())) {
-            return (float) fluids.get(fluid.getFluid().getRegistryName()) / fluidDivider;
+            return fluids.get(fluid.getFluid().getRegistryName());
         }
         return 0f;
     }

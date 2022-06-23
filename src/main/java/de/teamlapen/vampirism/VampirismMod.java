@@ -182,9 +182,7 @@ public class VampirismMod {
     public void onAddReloadListenerEvent(AddReloadListenerEvent event) {
         SkillTreeManager.getInstance().getSkillTree().initRootSkills();//Load root skills here, so even if data pack reload fail, the root skills are available #622
         event.addListener(SkillTreeManager.getInstance());
-        event.addListener(BloodValues.ENTITIES);
-        event.addListener(BloodValues.ITEMS);
-        event.addListener(BloodValues.FLUIDS);
+        event.addListener(new BloodValues());
 
     }
 
