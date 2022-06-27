@@ -1381,7 +1381,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (ticksInSun < 100) {
             ticksInSun++;
         }
-        if (ticksInSun > 50 && (sunscreen >= 4 || (VampirismConfig.BALANCE.vpSunscreenBuff.get() && sunscreen>=0)) ) {
+        if (sunscreen >= 4 && ticksInSun > 50) {
             ticksInSun = 50;
         }
         if (!player.isAlive() || isRemote || player.abilities.instabuild || player.abilities.invulnerable) return;
