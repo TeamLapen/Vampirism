@@ -124,6 +124,7 @@ public class BalanceConfig {
     public final ForgeConfigSpec.DoubleValue vpSundamage;
     public final ForgeConfigSpec.IntValue vpSundamageWaterblocks;
     public final ForgeConfigSpec.BooleanValue vpSundamageInstantDeath;
+    public final ForgeConfigSpec.BooleanValue vpSunscreenBuff;
     public final ForgeConfigSpec.DoubleValue vpFireVulnerabilityMod;
     public final ForgeConfigSpec.BooleanValue vpFireResistanceReplace;
     public final ForgeConfigSpec.IntValue vpMaxYellowBorderPercentage;
@@ -331,6 +332,7 @@ public class BalanceConfig {
         vpSundamageWeaknessMinLevel = builder.defineInRange("sundamageWeaknessMinLevel", 2, 1, Integer.MAX_VALUE);
         vpSundamageWaterblocks = builder.defineInRange("sundamageWaterblocks", 4, 1, 10);
         vpSundamageInstantDeath = builder.comment("Whether vampires are instantly turned into ash when being in the sun").define("sundamageInstantDeath", false);
+        vpSunscreenBuff = builder.comment("Buff sunscreen potion to prevent negative effects at any level").define("sunscreenBuff",false);
         vpFireVulnerabilityMod = builder.comment("Multiply fire damage with this for vampires" + (iceAndFire ? " - Changed due to IceAndFire" : "")).defineInRange("fireVulnerabilityMod", iceAndFire ? 1.5d : 3d, 0.1, Double.MAX_VALUE);
         vpFireResistanceReplace = builder.comment("Whether to replace the vanilla fire resistance potion for vampires with a custom one that only reduces damage but does not remove it" + (iceAndFire ? " - Changed due to IceAndFire" : "")).define("fireResistanceReplace", !iceAndFire);
         vpMaxYellowBorderPercentage = builder.comment("Defines the maximum extend the yellow border covers when the player is in the sun. 100 is default. 0 to disable completely").defineInRange("maxYellowBorderPercentage", 100, 0, 100);

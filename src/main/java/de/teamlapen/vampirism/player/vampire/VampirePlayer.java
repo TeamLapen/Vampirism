@@ -1384,7 +1384,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         if (ticksInSun < 100) {
             ticksInSun++;
         }
-        if (sunscreen >= 4 && ticksInSun > 50) {
+        if (ticksInSun > 50 && (sunscreen >= 4 || (VampirismConfig.BALANCE.vpSunscreenBuff.get() && sunscreen>=0)) ) {
             ticksInSun = 50;
         }
         if (!player.isAlive() || isRemote || player.getAbilities().instabuild || player.getAbilities().invulnerable) return;
