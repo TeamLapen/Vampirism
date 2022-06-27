@@ -103,6 +103,7 @@ public class RecipesGenerator extends RecipeProvider {
         IItemProvider amulet = ModItems.AMULET.get();
         IItemProvider ring = ModItems.RING.get();
         IItemProvider obi_belt = ModItems.OBI_BELT.get();
+        IItemProvider blood_container = ModBlocks.BLOOD_CONTAINER.get();
         ITag<Item> planks = ItemTags.PLANKS;
         ITag<Item> glass = Tags.Items.GLASS;
         ITag<Item> glass_pane = Tags.Items.GLASS_PANES;
@@ -216,7 +217,7 @@ public class RecipesGenerator extends RecipeProvider {
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.HUNTER_AXE_ENHANCED.get(), 1, enchantment(3, Enchantments.KNOCKBACK)).lava(5).skills(HunterSkills.ENHANCED_WEAPONS.get()).pattern("XWZY").pattern("XWZY").pattern("  ZY").pattern("  Z ").define('X', iron_ingot).define('Y', garlic).define('W', diamond).define('Z', stick).save(consumer);
 
         ShapedRecipeBuilder.shaped(ModBlocks.ALTAR_INFUSION.get()).pattern("YZY").pattern("ZZZ").define('Y', gold_ingot).define('Z', obsidian).unlockedBy("has_gold", has(gold_ingot)).save(consumer, vampire("altar_infusion"));
-        ShapedRecipeBuilder.shaped(ModBlocks.ALTAR_INSPIRATION.get()).pattern(" X ").pattern("XYX").pattern("ZZZ").define('X', glass).define('Y', glass_bottle).define('Z', iron_ingot).unlockedBy("has_iron", has(iron_ingot)).save(consumer, vampire("altar_inspiration"));
+        ShapedRecipeBuilder.shaped(ModBlocks.ALTAR_INSPIRATION.get()).pattern("X X").pattern("XYX").pattern("XXX").define('X', planks).define('Y', blood_container).unlockedBy("has_planks", has(planks)).unlockedBy("has_blood_container", has(blood_container)).save(consumer, vampire("altar_inspiration"));
         ShapedRecipeBuilder.shaped(ModBlocks.ALTAR_PILLAR.get()).pattern("X X").pattern("   ").pattern("XXX").define('X', stone_bricks).unlockedBy("has_stones", has(stone_bricks)).save(consumer, vampire("altar_pillar"));
         ShapedRecipeBuilder.shaped(ModBlocks.ALTAR_TIP.get()).pattern(" X ").pattern("XYX").define('X', iron_ingot).define('Y', iron_block).unlockedBy("has_iron", has(iron_ingot)).save(consumer, vampire("altar_tip"));
         ShapelessRecipeBuilder.shapeless(Items.GLASS_BOTTLE).requires(blood_bottle).unlockedBy("has_blood_bottle", has(blood_bottle)).save(consumer, vampire("blood_bottle_to_glass"));
