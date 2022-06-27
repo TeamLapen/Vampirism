@@ -44,7 +44,7 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
     }
 
     public AltarInspirationBlock() {
-        super(Properties.of(Material.WOOD).strength(2f,3f).noOcclusion());
+        super(Properties.of(Material.METAL).strength(2f,3f).noOcclusion());
     }
 
     @Nonnull
