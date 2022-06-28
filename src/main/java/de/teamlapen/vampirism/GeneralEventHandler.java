@@ -95,9 +95,9 @@ public class GeneralEventHandler {
 
         @SuppressWarnings("unchecked")
         Map<ResourceLocation, Float>[] bloodValues = (Map<ResourceLocation, Float>[]) Array.newInstance(Map.class, 3);
-        bloodValues[0] = BloodConversionRegistry.getEntityValues();
-        bloodValues[1] = BloodConversionRegistry.getItemValues();
-        bloodValues[2] = BloodConversionRegistry.getFluidValues();
+        bloodValues[0] = BloodConversionRegistry.getEntityConversions();
+        bloodValues[1] = BloodConversionRegistry.getItemConversions();
+        bloodValues[2] = BloodConversionRegistry.getFluidConversions();
 
         VampirismMod.dispatcher.sendTo(new SBloodValuePacket(bloodValues), (ServerPlayerEntity) event.getPlayer());
         FactionPlayerHandler.getOpt(event.getPlayer()).ifPresent(FactionPlayerHandler::onPlayerLoggedIn);

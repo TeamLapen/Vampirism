@@ -10,9 +10,10 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Store blood conversion factors.
@@ -47,8 +48,53 @@ public class BloodConversionRegistry {
     @Nonnull
     private static final Set<ResourceLocation> items_blacklist = Sets.newHashSet();
 
-    private static int fluidDivider = 100;
-    private static int itemMultiplier = 100;
+    /**
+     * @deprecated use {@link #applyNewFluidResources(java.util.Map)}
+     */
+    @Deprecated //TODO remove
+    public static void applyNewFluidResources(Map<ResourceLocation, Integer> values, int divider) {
+        applyNewFluidResources(values.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() / (float)divider)));
+    }
+
+    /**
+     * @deprecated use {@link #applyNewItemResources(java.util.Map)}
+     */
+    @Deprecated //TODO remove
+    public static void applyNewItemResources(Map<ResourceLocation, Integer> values, int multiplier) {
+        applyNewItemResources(values.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() * (float)multiplier)));
+    }
+
+    /**
+     * @deprecated no longer used
+     */
+    @Deprecated //TODO remove
+    public static void applyNewItemCalculated(Map<ResourceLocation, Integer> values) {
+        items_calculated.putAll(values.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() * 100f)));
+    }
+
+    /**
+     * @deprecated use {@link #getItemConversions()}
+     */
+    @Deprecated //TODO remove
+    public static Map<ResourceLocation, Integer> getItemValues() {
+        return items.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> (int) (e.getValue() / 100)));
+    }
+
+    /**
+     * @deprecated use {@link #getFluidConversions()}
+     */
+    @Deprecated //TODO remove
+    public static Map<ResourceLocation, Integer> getFluidValues() {
+        return fluids.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> (int) (e.getValue() * 100)));
+    }
+
+    /**
+     * @deprecated use {@link #getItemConversionCalculated()}
+     */
+    @Deprecated //TODO remove
+    public static Map<ResourceLocation, Integer> getItemValuesCalculated() {
+        return items_calculated.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> (int) (e.getValue() / 100f)));
+    }
 
     public static void applyNewFluidResources(Map<ResourceLocation, Float> values) {
         fluids.clear();
@@ -71,28 +117,30 @@ public class BloodConversionRegistry {
         }
     }
 
-    public static Map<ResourceLocation, Float> getItemValues() {
-        return new ConcurrentHashMap<>(items);
+    public static Map<ResourceLocation, Float> getItemConversions() {
+        return Collections.unmodifiableMap(items);
     }
 
-    public static Map<ResourceLocation, Float> getEntityValues() {
-        return new ConcurrentHashMap<>(entities);
+    public static Map<ResourceLocation, Float> getEntityConversions() {
+        return Collections.unmodifiableMap(entities);
     }
 
-    public static Map<ResourceLocation, Float> getFluidValues() {
-        return new ConcurrentHashMap<>(fluids);
+    public static Map<ResourceLocation, Float> getFluidConversions() {
+        return Collections.unmodifiableMap(fluids);
     }
 
-    public static Map<ResourceLocation, Float> getItemValuesCalculated() {
-        return new ConcurrentHashMap<>(items_calculated);
+    public static Map<ResourceLocation, Float> getItemConversionCalculated() {
+        return Collections.unmodifiableMap(items_calculated);
     }
 
+    @Deprecated //TODO remove
     public static int getFluidDivider() {
-        return fluidDivider;
+        return 100;
     }
 
+    @Deprecated //TODO remove
     public static int getItemMultiplier() {
-        return itemMultiplier;
+        return 100;
     }
 
     /**
