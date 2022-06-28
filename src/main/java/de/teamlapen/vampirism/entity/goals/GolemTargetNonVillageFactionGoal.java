@@ -39,7 +39,7 @@ public class GolemTargetNonVillageFactionGoal extends NearestAttackableTargetGoa
         }
 
         if (faction != this.faction) {
-            this.targetConditions.selector(predicates.computeIfAbsent(this.faction = faction, faction1 -> VampirismAPI.factionRegistry().getPredicate(faction1, true, true, false, false, null)));
+            this.targetConditions.selector(predicates.computeIfAbsent(this.faction = faction, faction1 -> VampirismAPI.factionRegistry().getPredicate(faction1, true, true, false, true, null)));
         }
 
         return super.canUse();
