@@ -3,8 +3,7 @@ package de.teamlapen.vampirism.config;
 import de.teamlapen.lib.lib.config.BloodValueLoaderDynamic;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
-import de.teamlapen.vampirism.config.bloodvalues.BloodValueBuilder;
-import de.teamlapen.vampirism.config.bloodvalues.BloodValueReader;
+import de.teamlapen.vampirism.config.bloodvalues.*;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import net.minecraft.profiler.IProfiler;
 import net.minecraft.resources.IFutureReloadListener;
@@ -19,9 +18,10 @@ import java.util.concurrent.Executor;
 
 public class BloodValues implements IFutureReloadListener {
 
-    public final BloodValueReader<ResourceLocation> entities = new BloodValueReader<>(this::applyNewEntitiesResources, "vampirism/bloodvalues/entities", "entities");
-    public final BloodValueReader<ResourceLocation> items = new BloodValueReader<>(BloodConversionRegistry::applyNewItemResources, "vampirism/bloodvalues/items", "items");
-    public final BloodValueReader<ResourceLocation> fluids = new BloodValueReader<>(BloodConversionRegistry::applyNewFluidResources, "vampirism/bloodvalues/fluids", "fluids");
+    //TODO replace deprecated classes
+    public final BloodValueReader<ResourceLocation> entities = new BloodValuesEntitiesLoader(this::applyNewEntitiesResources, "vampirism/bloodvalues/entities", "entities");
+    public final BloodValueReader<ResourceLocation> items = new BloodValuesItemLoader(BloodConversionRegistry::applyNewItemResources, "vampirism/bloodvalues/items", "items");
+    public final BloodValueReader<ResourceLocation> fluids = new BloodValuesFluidLoader(BloodConversionRegistry::applyNewFluidResources, "vampirism/bloodvalues/fluids", "fluids");
 
     @Nonnull
     @Override

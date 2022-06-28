@@ -13,7 +13,7 @@ public class BloodValueBuilder {
 
     private final List<Proxy> entries = new ArrayList<>();
 
-    public void addFromJson(JsonObject json, String sourceName) {
+    public BloodValueBuilder addFromJson(JsonObject json, String sourceName) {
         if(JSONUtils.getAsBoolean(json, "replace", false)) {
             this.entries.clear();
         }
@@ -23,6 +23,12 @@ public class BloodValueBuilder {
             float value = e.getValue().getAsFloat();
             return new Proxy(new Entry(loc, value), sourceName);
         }).forEach(this.entries::add);
+        return this;
+    }
+
+    public BloodValueBuilder addValue(ResourceLocation id, float value, String sourceName) {
+        this.entries.add(new Proxy(new Entry(id, value), sourceName));
+        return this;
     }
 
     public Map<ResourceLocation, Float> build() {

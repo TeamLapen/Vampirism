@@ -37,10 +37,11 @@ public class BloodValueReader<T> {
     }
 
     public CompletableFuture<Map<ResourceLocation, BloodValueBuilder>> prepare(IResourceManager manager, Executor executor){
-        return CompletableFuture.supplyAsync(() -> loadValues(manager, new HashMap<>()), executor);
+        return CompletableFuture.supplyAsync(() -> loadValues(manager), executor);
     }
 
-    public Map<ResourceLocation, BloodValueBuilder> loadValues(IResourceManager manager, Map<ResourceLocation, BloodValueBuilder> values) {
+    public Map<ResourceLocation, BloodValueBuilder> loadValues(IResourceManager manager) {
+        Map<ResourceLocation, BloodValueBuilder> values = new HashMap<>();
         for (ResourceLocation resourcePath : manager.listResources(this.directory, (file) -> file.endsWith(".json"))) {
             String s = resourcePath.getPath();
             ResourceLocation resourceName = new ResourceLocation(resourcePath.getNamespace(), s.substring(this.directory.length() +1, s.length() - PATH_SUFFIX_LENGTH));
