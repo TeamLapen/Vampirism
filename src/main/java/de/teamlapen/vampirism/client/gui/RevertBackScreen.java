@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.client.gui;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.network.InputEventPacket;
+import de.teamlapen.vampirism.network.CSimpleInputEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.util.text.StringTextComponent;
@@ -27,7 +27,7 @@ public class RevertBackScreen extends ConfirmScreen {
     public RevertBackScreen() {
         super((context) -> {
             if (context) {
-                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.REVERTBACK, "0"));
+                VampirismMod.dispatcher.sendToServer(new CSimpleInputEvent(CSimpleInputEvent.Type.REVERT_BACK));
             }
             Minecraft.getInstance().setScreen(null);
         }, new TranslationTextComponent("gui.vampirism.revertback.head"), new StringTextComponent(getDescription()));

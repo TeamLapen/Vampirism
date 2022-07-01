@@ -7,6 +7,7 @@ import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.item.*;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.RegistryKey;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -20,7 +21,7 @@ import javax.annotation.Nullable;
 import java.util.Random;
 
 public class Trades {
-    public static final VillagerTrades.ITrade[] converted_trades = new VillagerTrades.ITrade[]{new net.minecraft.entity.merchant.villager.VillagerTrades.EmeraldForItemsTrade(ModItems.human_heart, 9, 2, 2), new VillagerTrades.ItemsForEmeraldsTrade(ModItems.human_heart, 3, 9, 2), new ItemsForEmeraldsTradeWithDamage(BloodBottleItem.getStackWithDamage(9), 1, 3, 12, 2)};
+    public static final VillagerTrades.ITrade[] converted_trades = new VillagerTrades.ITrade[]{new net.minecraft.entity.merchant.villager.VillagerTrades.EmeraldForItemsTrade(ModItems.HUMAN_HEART.get(), 9, 2, 2), new VillagerTrades.ItemsForEmeraldsTrade(ModItems.HUMAN_HEART.get(), 3, 9, 2), new ItemsForEmeraldsTradeWithDamage(BloodBottleItem.getStackWithDamage(9), 1, 3, 12, 2)};
 
     /**
      * copy of {@link VillagerTrades.ItemsForEmeraldsTrade} with damage of itemstack
@@ -95,7 +96,7 @@ public class Trades {
         @Nullable
         @Override
         public MerchantOffer getOffer(Entity entity, Random random) {
-            return new MerchantOffer(new ItemStack(ModItems.soul_orb_vampire, price.getPrice(random)), new ItemStack(sellingItem[random.nextInt(sellingItem.length)].getItem(), selling.getPrice(random)), maxUses, xp, 0.2F);
+            return new MerchantOffer(new ItemStack(ModItems.SOUL_ORB_VAMPIRE.get(), price.getPrice(random)), new ItemStack(sellingItem[random.nextInt(sellingItem.length)].getItem(), selling.getPrice(random)), maxUses, xp, 0.2F);
         }
     }
 
@@ -133,7 +134,7 @@ public class Trades {
         @Nullable
         @Override
         public MerchantOffer getOffer(Entity entity, Random random) {
-            return new MerchantOffer(new ItemStack(ModItems.human_heart, price.getPrice(random)), new ItemStack(sellingItem[random.nextInt(sellingItem.length)].getItem(), selling.getPrice(random)), maxUses, xp, 0.2F);
+            return new MerchantOffer(new ItemStack(ModItems.HUMAN_HEART.get(), price.getPrice(random)), new ItemStack(sellingItem[random.nextInt(sellingItem.length)].getItem(), selling.getPrice(random)), maxUses, xp, 0.2F);
         }
     }
 
@@ -159,21 +160,21 @@ public class Trades {
         @Nullable
         @Override
         public MerchantOffer getOffer(Entity entity, Random random) {
-            ItemStack bottle = new ItemStack(ModItems.blood_bottle, selling.getPrice(random));
+            ItemStack bottle = new ItemStack(ModItems.BLOOD_BOTTLE.get(), selling.getPrice(random));
             bottle.setDamageValue(damage);
-            return new MerchantOffer(new ItemStack(ModItems.human_heart, price.getPrice(random)), bottle, maxUses, xp, 0.2F);
+            return new MerchantOffer(new ItemStack(ModItems.HUMAN_HEART.get(), price.getPrice(random)), bottle, maxUses, xp, 0.2F);
         }
     }
 
     public static class BiomeMapForEmeralds implements VillagerTrades.ITrade {
         private final int emeraldCost;
-        private final RegistryKey<Biome> destination;
+        private final ResourceLocation destination;
         private final int maxUses;
         private final int villagerXp;
 
         public BiomeMapForEmeralds(int pEmeraldCost, RegistryKey<Biome> pDestination, int pMaxUses, int pVillagerXp) {
             this.emeraldCost = pEmeraldCost;
-            this.destination = pDestination;
+            this.destination = pDestination.location();
             this.maxUses = pMaxUses;
             this.villagerXp = pVillagerXp;
         }
@@ -194,7 +195,7 @@ public class Trades {
                     ItemStack itemstack = FilledMapItem.create(serverlevel, blockpos.getX(), blockpos.getZ(), (byte)3, true, true);
                     FilledMapItem.renderBiomePreviewMap(serverlevel, itemstack);
                     MapData.addTargetDecoration(itemstack, blockpos, "+", MapDecoration.Type.TARGET_POINT);
-                    itemstack.setHoverName(new TranslationTextComponent("biome."+destination.location().getNamespace()+ "."+destination.location().getPath()));
+                    itemstack.setHoverName(new TranslationTextComponent("biome."+destination.getNamespace()+ "."+destination.getPath()));
                     return new MerchantOffer(new ItemStack(Items.EMERALD, this.emeraldCost), new ItemStack(Items.COMPASS), itemstack, this.maxUses, this.villagerXp, 0.2F);
                 } else {
                     return null;

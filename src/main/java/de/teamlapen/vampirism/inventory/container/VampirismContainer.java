@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.network.TaskActionPacket;
+import de.teamlapen.vampirism.network.CTaskActionPacket;
 import de.teamlapen.vampirism.player.TaskManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -49,7 +49,7 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
     private final boolean refinementsAvailable;
 
     public VampirismContainer(int id, @Nonnull PlayerInventory playerInventory) {
-        super(ModContainer.vampirism, id, playerInventory, IWorldPosCallable.NULL, new Inventory(3), RemovingSelectorSlot::new, SELECTOR_INFOS.apply(playerInventory.player));
+        super(ModContainer.VAMPIRISM.get(), id, playerInventory, IWorldPosCallable.NULL, new Inventory(3), RemovingSelectorSlot::new, SELECTOR_INFOS.apply(playerInventory.player));
         this.factionPlayer = FactionPlayerHandler.get(playerInventory.player).getCurrentFactionPlayer().orElseThrow(() -> new IllegalStateException("Opening vampirism container without faction"));
         this.factionColor = factionPlayer.getFaction().getChatColor();
         this.refinementsAvailable = factionPlayer.getFaction().hasRefinements();
@@ -153,7 +153,7 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
 
     @Override
     public void pressButton(@Nonnull ITaskInstance taskInfo) {
-        VampirismMod.dispatcher.sendToServer(new TaskActionPacket(taskInfo.getId(), taskInfo.getTaskBoard(), buttonAction(taskInfo)));
+        VampirismMod.dispatcher.sendToServer(new CTaskActionPacket(taskInfo.getId(), taskInfo.getTaskBoard(), buttonAction(taskInfo)));
         this.taskWrapper.get(taskInfo.getTaskBoard()).removeTask(taskInfo, true);
         if (this.listener != null) {
             this.listener.run();

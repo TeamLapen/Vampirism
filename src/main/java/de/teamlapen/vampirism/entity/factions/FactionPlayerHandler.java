@@ -6,6 +6,7 @@ import de.teamlapen.lib.lib.util.LogUtil;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -434,6 +435,17 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         this.writeBoundActions(nbt);
     }
 
+    @Override
+    public void leaveFaction(boolean die) {
+        IFaction<?> oldFaction = currentFaction;
+        if(oldFaction==null)return;
+        setFactionAndLevel(null, 0);
+        player.displayClientMessage(new TranslationTextComponent("command.vampirism.base.level.successful", player.getName(), oldFaction.getName(), 0), true);
+        if (die) {
+            player.hurt(DamageSource.MAGIC, 1000);
+        }
+    }
+
     private IPlayableFaction<? extends IFactionPlayer<?>> getFactionFromKey(ResourceLocation key) {
         for (IPlayableFaction p : VampirismAPI.factionRegistry().getPlayableFactions()) {
             if (p.getID().equals(key)) {
@@ -444,20 +456,30 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     private void loadBoundActions(CompoundNBT nbt) {
+        // Read bound actions from legacy format
         if (nbt.contains("bound1")) {
-            this.boundActions.put(1, ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound1"))));
+            IAction i = ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound1")));
+            if(i!=null)this.boundActions.put(1,i);
         }
         if (nbt.contains("bound2")) {
-            this.boundActions.put(2, ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound2"))));
+            IAction i = ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound2")));
+            if(i!=null)this.boundActions.put(2,i);
         }
         if (nbt.contains("bound3")) {
-            this.boundActions.put(3, ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound3"))));
+            IAction i = ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound3")));
+            if(i!=null)this.boundActions.put(3,i);
         }
+        // Read bound actions from new format
         CompoundNBT bounds = nbt.getCompound("bound_actions");
         for (String s : bounds.getAllKeys()) {
             int id = Integer.parseInt(s);
             IAction action = ModRegistries.ACTIONS.getValue(new ResourceLocation(bounds.getString(s)));
-            this.boundActions.put(id, action);
+            if(action == null){
+                LOGGER.warn("Cannot find bound action {}", bounds.getString(s));
+            }
+            else{
+                this.boundActions.put(id, action);
+            }
         }
     }
 

@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.network.AppearancePacket;
+import de.teamlapen.vampirism.network.CAppearancePacket;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayerSpecialAttributes;
@@ -62,7 +62,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
 
     @Override
     public void removed() {
-        VampirismMod.dispatcher.sendToServer(new AppearancePacket(this.entity.getId(), "", fangType, eyeType, glowingEyes ? 1 : 0, lordGender ? 1: 0));
+        VampirismMod.dispatcher.sendToServer(new CAppearancePacket(this.entity.getId(), "", fangType, eyeType, glowingEyes ? 1 : 0, lordGender ? 1: 0));
         super.removed();
     }
 
@@ -155,6 +155,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
         this.eyeList.visible = show;
         this.fangButton.visible = !show;
         this.glowingEyesButton.visible = !show;
+        this.lordGenderButton.visible = !show;
         if (show) this.fangList.visible = false;
     }
 
@@ -162,6 +163,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
         fangButton.setMessage(fangList.getMessage().copy().append(" " + (fangType + 1)));
         this.fangList.visible = show;
         this.glowingEyesButton.visible = !show;
+        this.lordGenderButton.visible = !show;
         if (show) this.eyeList.visible = false;
     }
 }

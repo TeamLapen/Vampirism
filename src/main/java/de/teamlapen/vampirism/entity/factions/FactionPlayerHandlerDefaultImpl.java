@@ -117,4 +117,9 @@ class FactionPlayerHandlerDefaultImpl implements IFactionPlayerHandler {
     public boolean setLordLevel(int level) {
         return false;
     }
+
+    @Override
+    public void leaveFaction(boolean die) {
+
+    }
 }

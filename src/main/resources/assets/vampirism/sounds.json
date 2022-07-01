@@ -12,6 +12,12 @@
       "vampirism:entity/vampire/bite_long"
     ]
   },
+  "player.feeding": {
+    "category": "player",
+    "sounds": [
+      "vampirism:entity/vampire/feeding"
+    ]
+  },
   "ambient.scary": {
     "category": "ambient",
     "sounds": [

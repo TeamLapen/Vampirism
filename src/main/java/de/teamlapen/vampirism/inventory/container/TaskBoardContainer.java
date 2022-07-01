@@ -10,7 +10,7 @@ import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.network.TaskActionPacket;
+import de.teamlapen.vampirism.network.CTaskActionPacket;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
@@ -50,7 +50,7 @@ public class TaskBoardContainer extends Container implements TaskContainer {
     private Runnable listener;
 
     public TaskBoardContainer(int id, PlayerInventory playerInventory) {
-        super(ModContainer.task_master, id);
+        super(ModContainer.TASK_MASTER.get(), id);
         this.factionPlayer = FactionPlayerHandler.getCurrentFactionPlayer(playerInventory.player).orElseThrow(() -> new IllegalStateException("Can't open container without faction"));
         this.factionColor = this.factionPlayer.getFaction().getChatColor();
     }
@@ -98,7 +98,7 @@ public class TaskBoardContainer extends Container implements TaskContainer {
                 taskInfo.complete();
                 this.completableTasks.remove(taskInfo.getId());
                 this.taskInstances.remove(taskInfo);
-                VampLib.proxy.createMasterSoundReference(ModSounds.task_complete, 1, 1).startPlaying();
+                VampLib.proxy.createMasterSoundReference(ModSounds.TASK_COMPLETE.get(), 1, 1).startPlaying();
                 break;
             case ACCEPT:
                 taskInfo.startTask(Minecraft.getInstance().level.getGameTime() + taskInfo.getTaskDuration());
@@ -107,7 +107,7 @@ public class TaskBoardContainer extends Container implements TaskContainer {
                 taskInfo.aboardTask();
                 break;
         }
-        VampirismMod.dispatcher.sendToServer(new TaskActionPacket(taskInfo.getId(), taskInfo.getTaskBoard(), action));
+        VampirismMod.dispatcher.sendToServer(new CTaskActionPacket(taskInfo.getId(), taskInfo.getTaskBoard(), action));
         if (this.listener != null) {
             this.listener.run();
         }

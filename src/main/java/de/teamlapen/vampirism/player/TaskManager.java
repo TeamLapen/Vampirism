@@ -9,15 +9,21 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.inventory.container.TaskBoardContainer;
 import de.teamlapen.vampirism.inventory.container.TaskContainer;
-import de.teamlapen.vampirism.network.TaskPacket;
-import de.teamlapen.vampirism.network.TaskStatusPacket;
+import de.teamlapen.vampirism.inventory.container.VampirismContainer;
+import de.teamlapen.vampirism.network.CTaskActionPacket;
+import de.teamlapen.vampirism.network.STaskPacket;
+import de.teamlapen.vampirism.network.STaskStatusPacket;
 import de.teamlapen.vampirism.player.tasks.TaskInstance;
 import de.teamlapen.vampirism.player.tasks.req.ItemRequirement;
 import de.teamlapen.vampirism.player.tasks.reward.ItemRewardInstance;
 import de.teamlapen.vampirism.player.tasks.reward.LordLevelReward;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -26,6 +32,8 @@ import net.minecraft.stats.Stats;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -97,6 +105,23 @@ public class TaskManager implements ITaskManager {
     public void acceptTask(UUID taskBoardId, @Nonnull UUID taskInstance) {
         ITaskInstance ins = this.taskWrapperMap.get(taskBoardId).acceptTask(taskInstance, this.player.level.getGameTime() + getTaskTimeConfig() * 1200L);
         this.updateStats(ins);
+    }
+
+    /**
+     * Handle a task action message that was sent from client to server
+     */
+    public void handleTaskActionMessage(CTaskActionPacket msg){
+        switch (msg.action) {
+            case COMPLETE:
+                completeTask(msg.entityId, msg.task);
+                break;
+            case ACCEPT:
+                acceptTask(msg.entityId, msg.task);
+                break;
+            default:
+               abortTask(msg.entityId, msg.task, msg.action == TaskContainer.TaskAction.REMOVE);
+                break;
+        }
     }
 
     /**
@@ -187,15 +212,29 @@ public class TaskManager implements ITaskManager {
             TaskWrapper wrapper = this.taskWrapperMap.computeIfAbsent(taskBoardId, TaskWrapper::new);
             Set<ITaskInstance> selectedTasks = new HashSet<>(getTasks(taskBoardId));
             selectedTasks.addAll(getUniqueTasks());
-            VampirismMod.dispatcher.sendTo(new TaskStatusPacket(selectedTasks, this.getCompletableTasks(selectedTasks), getCompletedRequirements(selectedTasks), player.containerMenu.containerId, taskBoardId), player);
+            VampirismMod.dispatcher.sendTo(new STaskStatusPacket(selectedTasks, this.getCompletableTasks(selectedTasks), getCompletedRequirements(selectedTasks), player.containerMenu.containerId, taskBoardId), player);
             wrapper.lastSeenPos = this.player.blockPosition();
         }
     }
 
     @Override
     public void openVampirismMenu() {
+        if(!player.isAlive())return;
+        player.openMenu(new INamedContainerProvider() {
+            @Nonnull
+            @Override
+            public Container createMenu(int i, @Nonnull PlayerInventory playerInventory, @Nonnull PlayerEntity playerEntity) {
+                return new VampirismContainer(i, playerInventory);
+            }
+
+            @Nonnull
+            @Override
+            public ITextComponent getDisplayName() {
+                return new TranslationTextComponent("");
+            }
+        });
         if (player.containerMenu instanceof TaskContainer) {
-            VampirismMod.dispatcher.sendTo(new TaskPacket(player.containerMenu.containerId, this.taskWrapperMap, this.taskWrapperMap.entrySet().stream().map(entry -> Pair.of(entry.getKey(), getCompletableTasks(entry.getValue().getAcceptedTasks()))).collect(Collectors.toMap(Pair::getKey, Pair::getValue)), this.taskWrapperMap.values().stream().map(wrapper -> Pair.of(wrapper.id, getCompletedRequirements(wrapper.tasks.values()))).collect(Collectors.toMap(Pair::getKey, Pair::getValue))), player);
+            VampirismMod.dispatcher.sendTo(new STaskPacket(player.containerMenu.containerId, this.taskWrapperMap, this.taskWrapperMap.entrySet().stream().map(entry -> Pair.of(entry.getKey(), getCompletableTasks(entry.getValue().getAcceptedTasks()))).collect(Collectors.toMap(Pair::getKey, Pair::getValue)), this.taskWrapperMap.values().stream().map(wrapper -> Pair.of(wrapper.id, getCompletedRequirements(wrapper.tasks.values()))).collect(Collectors.toMap(Pair::getKey, Pair::getValue))), player);
         }
     }
 

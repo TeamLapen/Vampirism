@@ -37,7 +37,6 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nullable;
 
 public class WeaponTableBlock extends VampirismHorizontalBlock {
-    public final static String regName = "weapon_table";
     public static final int MAX_LAVA = 5;
     public static final int MB_PER_META = 200;
     public static final IntegerProperty LAVA = IntegerProperty.create("lava", 0, MAX_LAVA);
@@ -67,7 +66,7 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
     }
 
     public WeaponTableBlock() {
-        super(regName, Properties.of(Material.METAL).strength(3).noOcclusion(), makeShape());
+        super(Properties.of(Material.METAL).strength(3).noOcclusion(), makeShape());
         this.registerDefaultState(this.getStateDefinition().any().setValue(LAVA, 0).setValue(FACING, Direction.NORTH));
 
     }
@@ -126,7 +125,7 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
      */
     private boolean canUse(PlayerEntity player) {
         if (Helper.isHunter(player)) {
-            return HunterPlayer.getOpt(player).map(HunterPlayer::getSkillHandler).map(handler -> handler.isSkillEnabled(HunterSkills.weapon_table)).orElse(false);
+            return HunterPlayer.getOpt(player).map(HunterPlayer::getSkillHandler).map(handler -> handler.isSkillEnabled(HunterSkills.WEAPON_TABLE.get())).orElse(false);
         }
         return false;
     }

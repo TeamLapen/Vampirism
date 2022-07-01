@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 
 public class ThroneBlock extends VampirismSplitBlock {
     public ThroneBlock() {
-        super("throne", AbstractBlock.Properties.of(Material.WOOD).strength(2, 3), BlockVoxelshapes.throneBottom, BlockVoxelshapes.throneTop, true);
+        super(AbstractBlock.Properties.of(Material.WOOD).strength(2, 3), BlockVoxelshapes.throneBottom, BlockVoxelshapes.throneTop, true);
         markDecorativeBlock();
     }
 
@@ -30,6 +30,7 @@ public class ThroneBlock extends VampirismSplitBlock {
         }
         else if(part == Part.SUB && traceResult.getDirection() == oppFacing && world.getBlockState(pos.below()).is(this)){
             SitHandler.startSitting(player, world, pos.below(), 0.5);
+            return ActionResultType.SUCCESS;
         }
         return super.use(state, world, pos, player, p_225533_5_, traceResult);
     }

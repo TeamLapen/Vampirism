@@ -22,7 +22,7 @@ public class CursedSpruceBlock extends LogBlock {
     @Override
     public void randomTick(@Nonnull BlockState state, @Nonnull ServerWorld level, @Nonnull BlockPos pos, @Nonnull Random random) {
         List<Direction> directions = Arrays.stream(Direction.values()).collect(Collectors.toList());
-        if (state.getBlock() != ModBlocks.cursed_spruce_wood) {
+        if (state.getBlock() != ModBlocks.CURSED_SPRUCE_WOOD.get()) {
             switch (state.getValue(AXIS)) {
                 case X:
                     directions.remove(Direction.WEST);
@@ -43,7 +43,7 @@ public class CursedSpruceBlock extends LogBlock {
         Direction secondaryDirection = directions.get(random.nextInt(directions.size()));
         BlockPos pos1 = pos.relative(mainsDirection);
         if (mainsDirection != secondaryDirection) {
-            if (level.getBlockState(pos1).getBlock() == ModBlocks.cursed_bark) {
+            if (level.getBlockState(pos1).getBlock() == ModBlocks.CURSED_BARK.get()) {
                 pos1 = pos1.relative(secondaryDirection);
             } else {
                 return;
@@ -51,8 +51,8 @@ public class CursedSpruceBlock extends LogBlock {
         }
         boolean air = Feature.isAir(level, pos1);
         BlockState state1 = level.getBlockState(pos1);
-        if (air || (state1.getBlock() == ModBlocks.cursed_bark && state1.getValue(CursedBarkBlock.FACING) != state1.getValue(CursedBarkBlock.FACING2))) {
-            level.setBlock(pos1, ModBlocks.cursed_bark.defaultBlockState().setValue(CursedBarkBlock.FACING, mainsDirection.getOpposite()).setValue(CursedBarkBlock.FACING2, secondaryDirection.getOpposite()).setValue(CursedBarkBlock.AXIS, state.getValue(AXIS)), 3);
+        if (air || (state1.getBlock() == ModBlocks.CURSED_BARK.get() && state1.getValue(CursedBarkBlock.FACING) != state1.getValue(CursedBarkBlock.FACING2))) {
+            level.setBlock(pos1, ModBlocks.CURSED_BARK.get().defaultBlockState().setValue(CursedBarkBlock.FACING, mainsDirection.getOpposite()).setValue(CursedBarkBlock.FACING2, secondaryDirection.getOpposite()).setValue(CursedBarkBlock.AXIS, state.getValue(AXIS)), 3);
         }
     }
 }

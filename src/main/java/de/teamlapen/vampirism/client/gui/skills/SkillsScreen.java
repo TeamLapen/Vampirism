@@ -11,9 +11,9 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.network.InputEventPacket;
+import de.teamlapen.vampirism.network.CSimpleInputEvent;
+import de.teamlapen.vampirism.network.CUnlockSkillPacket;
 import de.teamlapen.vampirism.player.skills.SkillNode;
-import de.teamlapen.vampirism.player.skills.SkillTreeManager;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.chat.NarratorChatListener;
 import net.minecraft.client.gui.screen.Screen;
@@ -22,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -63,12 +64,19 @@ public class SkillsScreen extends Screen {
     private int guiLeft;
     private int guiTop;
     private boolean scrolling;
+    @Nullable
+    private Vector3d mousePos;
     private boolean clicked;
 
     public SkillsScreen(@Nullable IFactionPlayer<?> factionPlayer, @Nullable Screen backScreen) {
         super(NarratorChatListener.NO_TITLE);
         this.factionPlayer = factionPlayer;
         this.backScreen = backScreen;
+    }
+
+    @Override
+    public boolean isPauseScreen() {
+        return false;
     }
 
     @Override
@@ -79,8 +87,8 @@ public class SkillsScreen extends Screen {
         this.guiTop = (this.height - SCREEN_HEIGHT) / 2;
 
         if (this.factionPlayer != null) {
-            SkillNode rootNode = SkillTreeManager.getInstance().getSkillTree().getRootNodeForFaction(this.factionPlayer.getFaction().getID());
-            this.tabs.add(new SkillsTabScreen(this.minecraft, this, 0, new ItemStack(ModItems.vampire_book), rootNode, this.factionPlayer.getSkillHandler()));
+            SkillNode rootNode = VampirismMod.proxy.getSkillTree(true).getRootNodeForFaction(this.factionPlayer.getFaction().getID());
+            this.tabs.add(new SkillsTabScreen(this.minecraft, this, 0, new ItemStack(ModItems.VAMPIRE_BOOK.get()), rootNode, this.factionPlayer.getSkillHandler()));
         }
 
         if (this.tabs.size() > 0) {
@@ -101,19 +109,19 @@ public class SkillsScreen extends Screen {
                 boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
 
                 resetSkills = this.addButton(new Button(guiLeft + 85, guiTop + 194, 80, 20, new TranslationTextComponent("text.vampirism.skill.resetall"), (context) -> {
-                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.RESETSKILL, ""));
-                    InventoryHelper.removeItemFromInventory(factionPlayer.getRepresentingPlayer().inventory, new ItemStack(ModItems.oblivion_potion)); //server syncs after the screen is closed
-                    if ((factionPlayer.getLevel() < 2 || minecraft.player.inventory.countItem(ModItems.oblivion_potion) <= 1) && !test) {
+                    VampirismMod.dispatcher.sendToServer(new CSimpleInputEvent(CSimpleInputEvent.Type.RESET_SKILLS));
+                    InventoryHelper.removeItemFromInventory(factionPlayer.getRepresentingPlayer().inventory, new ItemStack(ModItems.OBLIVION_POTION.get())); //server syncs after the screen is closed
+                    if ((factionPlayer.getLevel() < 2 || minecraft.player.inventory.countItem(ModItems.OBLIVION_POTION.get()) <= 1) && !test) {
                         context.active = false;
                     }
                 }, (button, stack, mouseX, mouseY) -> {
                     if (button.active) {
-                        SkillsScreen.this.renderTooltip(stack, new TranslationTextComponent("text.vampirism.skills.reset_consume", ModItems.oblivion_potion.getDescription()), mouseX, mouseY);
+                        SkillsScreen.this.renderTooltip(stack, new TranslationTextComponent("text.vampirism.skills.reset_consume", ModItems.OBLIVION_POTION.get().getDescription()), mouseX, mouseY);
                     } else {
-                        SkillsScreen.this.renderTooltip(stack, new TranslationTextComponent("text.vampirism.skills.reset_req", ModItems.oblivion_potion.getDescription()), mouseX, mouseY);
+                        SkillsScreen.this.renderTooltip(stack, new TranslationTextComponent("text.vampirism.skills.reset_req", ModItems.OBLIVION_POTION.get().getDescription()), mouseX, mouseY);
                     }
                 }));
-                if ((factionPlayer.getLevel() < 2 || minecraft.player.inventory.countItem(ModItems.oblivion_potion) <= 0) && !test) {
+                if ((factionPlayer.getLevel() < 2 || minecraft.player.inventory.countItem(ModItems.OBLIVION_POTION.get()) <= 0) && !test) {
                     resetSkills.active = false;
                 }
             });
@@ -179,7 +187,7 @@ public class SkillsScreen extends Screen {
     }
 
     public void renderTooltip(MatrixStack stack, int mouseX, int mouseY, int guiLeft, int guiTop) {
-        if (this.minecraft.player.getEffect(ModEffects.oblivion) != null) return;
+        if (this.minecraft.player.getEffect(ModEffects.OBLIVION.get()) != null) return;
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         if (this.selectedTab != null) {
             stack.pushPose();
@@ -205,7 +213,8 @@ public class SkillsScreen extends Screen {
             scrolling = false;
         }
         if (button == 0) {
-            clicked = true;
+            this.clicked = true;
+            this.mousePos = new Vector3d( mouseX, mouseY, 0);
             for (SkillsTabScreen tab : this.tabs) {
                 if (tab != this.selectedTab && tab.isMouseOver(this.guiLeft, this.guiTop, mouseX, mouseY)) {
                     this.selectedTab = tab;
@@ -219,7 +228,7 @@ public class SkillsScreen extends Screen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        if (this.selectedTab != null && this.minecraft.player.getEffect(ModEffects.oblivion) == null) {
+        if (this.selectedTab != null && this.minecraft.player.getEffect(ModEffects.OBLIVION.get()) == null) {
             return this.selectedTab.mouseScrolled(mouseX, mouseY, amount);
         }
         return super.mouseScrolled(mouseX, mouseY, amount);
@@ -228,10 +237,12 @@ public class SkillsScreen extends Screen {
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         if (button == 0) {
-            if (!scrolling && clicked) {
-                unlockSkill(mouseX, mouseY);
+            if (this.clicked) {
+                if (!this.scrolling || (this.mousePos != null && this.mousePos.distanceTo(new Vector3d(mouseX, mouseY, 0)) < 5)) {
+                    unlockSkill(mouseX, mouseY);
+                }
             }
-            clicked = false;
+            this.clicked = false;
         }
         return super.mouseReleased(mouseX, mouseY, button);
     }
@@ -239,7 +250,7 @@ public class SkillsScreen extends Screen {
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double xDragged, double yDragged) {
         this.scrolling = true;
-        if (this.selectedTab != null && this.minecraft.player.getEffect(ModEffects.oblivion) == null) {
+        if (this.selectedTab != null && this.minecraft.player.getEffect(ModEffects.OBLIVION.get()) == null) {
             this.selectedTab.mouseDragged(mouseX, mouseY, mouseButton, xDragged, yDragged);
         }
         return super.mouseDragged(mouseX, mouseY, mouseButton, xDragged, yDragged);
@@ -247,11 +258,13 @@ public class SkillsScreen extends Screen {
 
     private void unlockSkill(double mouseX, double mouseY) {
         ISkill selected = selectedTab != null ? selectedTab.getSelected(mouseX, mouseY, guiLeft, guiTop) : null;
-        if (selected != null && canUnlockSkill(selected)) {
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.UNLOCKSKILL, selected.getRegistryName().toString()));
-            playSoundEffect(SoundEvents.PLAYER_LEVELUP, 0.7F);
-        } else {
-            playSoundEffect(SoundEvents.NOTE_BLOCK_BASS, 0.5F);
+        if (selected != null ) {
+            if (canUnlockSkill(selected)) {
+                VampirismMod.dispatcher.sendToServer(new CUnlockSkillPacket(selected.getRegistryName()));
+                playSoundEffect(SoundEvents.PLAYER_LEVELUP, 0.7F);
+            } else {
+                playSoundEffect(SoundEvents.NOTE_BLOCK_BASS, 0.5F);
+            }
         }
     }
 

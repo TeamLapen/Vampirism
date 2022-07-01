@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class BlessableItem extends VampirismItem {
+public class BlessableItem extends Item {
 
     private final Supplier<Item> blessedItem;
     @Nullable
@@ -63,8 +63,8 @@ public class BlessableItem extends VampirismItem {
         }
     }
 
-    public BlessableItem(String regName, Properties properties, Supplier<Item> blessedItem, @Nullable Supplier<Item> enhancedBlessedItem) {
-        super(regName, properties);
+    public BlessableItem(Properties properties, Supplier<Item> blessedItem, @Nullable Supplier<Item> enhancedBlessedItem) {
+        super(properties);
         this.blessedItem = blessedItem;
         this.enhancedBlessedItem = enhancedBlessedItem;
         BLESSABLE_ITEMS.add(this);
@@ -82,7 +82,7 @@ public class BlessableItem extends VampirismItem {
 
     @Override
     public ActionResultType useOn(ItemUseContext context) {
-        if (context.getLevel().getBlockState(context.getClickedPos()).getBlock() == ModBlocks.church_altar) {
+        if (context.getLevel().getBlockState(context.getClickedPos()).getBlock() == ModBlocks.CHURCH_ALTAR.get()) {
             if (!Helper.isHunter(context.getPlayer())) return ActionResultType.PASS;
             context.getPlayer().startUsingItem(context.getHand());
             context.getPlayer().addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 40, 2));
@@ -99,7 +99,7 @@ public class BlessableItem extends VampirismItem {
                 if (att.blessingSoundReference != null) {
                     att.blessingSoundReference.stopPlaying();
                 }
-                att.blessingSoundReference = VampLib.proxy.createSoundReference(ModSounds.blessing_music, SoundCategory.PLAYERS, player.blockPosition(), 1, 1);
+                att.blessingSoundReference = VampLib.proxy.createSoundReference(ModSounds.BLESSING_MUSIC.get(), SoundCategory.PLAYERS, player.blockPosition(), 1, 1);
                 att.blessingSoundReference.startPlaying();
 
             });
@@ -123,7 +123,7 @@ public class BlessableItem extends VampirismItem {
     public ItemStack finishUsingItem(ItemStack stack, World world, LivingEntity livingEntity) {
         if (enhancedBlessedItem != null && livingEntity instanceof PlayerEntity) {
             IFactionPlayerHandler handler = FactionPlayerHandler.get((PlayerEntity) livingEntity);
-            boolean enhanced = handler.isInFaction(VReference.HUNTER_FACTION) && handler.getCurrentFactionPlayer().map(ISkillPlayer::getSkillHandler).map(s -> s.isSkillEnabled(HunterSkills.enhanced_blessing)).orElse(false);
+            boolean enhanced = handler.isInFaction(VReference.HUNTER_FACTION) && handler.getCurrentFactionPlayer().map(ISkillPlayer::getSkillHandler).map(s -> s.isSkillEnabled(HunterSkills.ENHANCED_BLESSING.get())).orElse(false);
             return new ItemStack(enhanced ? enhancedBlessedItem.get() : blessedItem.get(), stack.getCount());
         }
         return new ItemStack(blessedItem.get(), stack.getCount());

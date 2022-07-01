@@ -31,7 +31,6 @@ public class AltarPillarBlock extends VampirismBlock {
     public final static EnumProperty<EnumPillarType> TYPE_PROPERTY = EnumProperty.create("type", EnumPillarType.class);
     protected static final VoxelShape pillarShape = makeShape();
     protected static final VoxelShape pillarShapeFilled = makeShapeFull();
-    private final static String name = "altar_pillar";
 
     private static VoxelShape makeShape() {
         VoxelShape a = Block.box(3, 0, 3, 13, 1, 13);
@@ -50,7 +49,7 @@ public class AltarPillarBlock extends VampirismBlock {
     }
 
     public AltarPillarBlock() {
-        super(name, Properties.of(Material.STONE).strength(0.9f).noOcclusion());
+        super(Properties.of(Material.STONE).strength(0.9f).noOcclusion());
         this.registerDefaultState(this.stateDefinition.any().setValue(TYPE_PROPERTY, EnumPillarType.NONE));
 
     }

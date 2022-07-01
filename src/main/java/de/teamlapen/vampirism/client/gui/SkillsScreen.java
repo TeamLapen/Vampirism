@@ -14,7 +14,8 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.network.InputEventPacket;
+import de.teamlapen.vampirism.network.CSimpleInputEvent;
+import de.teamlapen.vampirism.network.CUnlockSkillPacket;
 import de.teamlapen.vampirism.player.skills.ActionSkill;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.skills.SkillNode;
@@ -131,19 +132,19 @@ public class SkillsScreen extends Screen { //TODO BREAKING remove
                 boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
 
                 resetSkills = this.addButton(new Button(guiLeft + 88, guiTop + 175, 80, 20, new TranslationTextComponent("text.vampirism.skill.resetall"), (context) -> {
-                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.RESETSKILL, ""));
-                    InventoryHelper.removeItemFromInventory(factionPlayer.getRepresentingPlayer().inventory, new ItemStack(ModItems.oblivion_potion)); //server syncs after the screen is closed
-                    if ((factionPlayer.getLevel() < 2 || minecraft.player.inventory.countItem(ModItems.oblivion_potion) <= 1) && !test) {
+                    VampirismMod.dispatcher.sendToServer(new CSimpleInputEvent(CSimpleInputEvent.Type.RESET_SKILLS));
+                    InventoryHelper.removeItemFromInventory(factionPlayer.getRepresentingPlayer().inventory, new ItemStack(ModItems.OBLIVION_POTION.get())); //server syncs after the screen is closed
+                    if ((factionPlayer.getLevel() < 2 || minecraft.player.inventory.countItem(ModItems.OBLIVION_POTION.get()) <= 1) && !test) {
                         context.active = false;
                     }
                 }, (button, stack, mouseX, mouseY) -> {
                     if (button.active) {
-                        SkillsScreen.this.renderTooltip(stack, new TranslationTextComponent("text.vampirism.skills.reset_consume", ModItems.oblivion_potion.getDescription()), mouseX, mouseY);
+                        SkillsScreen.this.renderTooltip(stack, new TranslationTextComponent("text.vampirism.skills.reset_consume", ModItems.OBLIVION_POTION.get().getDescription()), mouseX, mouseY);
                     } else {
-                        SkillsScreen.this.renderTooltip(stack, new TranslationTextComponent("text.vampirism.skills.reset_req", ModItems.oblivion_potion.getDescription()), mouseX, mouseY);
+                        SkillsScreen.this.renderTooltip(stack, new TranslationTextComponent("text.vampirism.skills.reset_req", ModItems.OBLIVION_POTION.get().getDescription()), mouseX, mouseY);
                     }
                 }));
-                if ((factionPlayer.getLevel() < 2 || minecraft.player.inventory.countItem(ModItems.oblivion_potion) <= 0) && !test) {
+                if ((factionPlayer.getLevel() < 2 || minecraft.player.inventory.countItem(ModItems.OBLIVION_POTION.get()) <= 0) && !test) {
                     resetSkills.active = false;
                 }
             });
@@ -236,7 +237,7 @@ public class SkillsScreen extends Screen { //TODO BREAKING remove
         int y = (this.height - display_height) / 2;
         this.font.drawShadow(stack, title.getVisualOrderText(), x + 15, y + 5, 0xFFFFFFFF);
         IFormattableTextComponent points = new TranslationTextComponent("text.vampirism.skills.points_left", skillHandler.getLeftSkillPoints());
-        if (this.minecraft.player.getEffect(ModEffects.oblivion) != null) {
+        if (this.minecraft.player.getEffect(ModEffects.OBLIVION.get()) != null) {
             points.withStyle(TextFormatting.DARK_RED);
         }
         x = (this.width + display_width) / 2 - this.font.width(points);
@@ -270,7 +271,7 @@ public class SkillsScreen extends Screen { //TODO BREAKING remove
     }
 
     private void drawDisableText(MatrixStack mStack) {
-        if (this.minecraft.player.getEffect(ModEffects.oblivion) == null) return;
+        if (this.minecraft.player.getEffect(ModEffects.OBLIVION.get()) == null) return;
         int tooltipX = (this.width - this.display_width) / 2 + 19 + 3;
         int tooltipY = (this.height - this.display_height) / 2 + 4 + 19;
         int tooltipTextWidth = this.display_width - 19 - 19 - 6;
@@ -371,11 +372,11 @@ public class SkillsScreen extends Screen { //TODO BREAKING remove
                             textureatlassprite = this.getTexture(Blocks.REDSTONE_BLOCK);
                         }
                     } else if (j4 == 10) {
-                        textureatlassprite = this.getTexture(ModBlocks.castle_block_dark_brick_bloody);
+                        textureatlassprite = this.getTexture(ModBlocks.CASTLE_BLOCK_DARK_BRICK_BLOODY.get());
                     } else if (j4 == 8) {
                         textureatlassprite = this.getTexture(Blocks.STONE_BRICKS);
                     } else if (j4 > 4) {
-                        textureatlassprite = this.getTexture(ModBlocks.castle_block_normal_brick);
+                        textureatlassprite = this.getTexture(ModBlocks.CASTLE_BLOCK_NORMAL_BRICK.get());
                     } else if (j4 > 0) {
                         textureatlassprite = this.getTexture(Blocks.DIRT);
 
@@ -605,7 +606,7 @@ public class SkillsScreen extends Screen { //TODO BREAKING remove
 
     private void unlockSkill() {
         if (canUnlockSkill()) {
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.UNLOCKSKILL, selected.getRegistryName().toString()));
+            VampirismMod.dispatcher.sendToServer(new CUnlockSkillPacket(selected.getRegistryName()));
             playSoundEffect(SoundEvents.PLAYER_LEVELUP, 0.7F);
         } else {
             playSoundEffect(SoundEvents.NOTE_BLOCK_BASS, 0.5F);

@@ -11,20 +11,18 @@ import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.item.Item;
 
 import javax.annotation.Nonnull;
 
 /**
  * Item with different injection types
  */
-public class InjectionItem extends VampirismItem {
-
-
-    private final static String regName = "injection";
+public class InjectionItem extends Item {
     private final TYPE type;
 
     public InjectionItem(TYPE type) {
-        super(regName + "_" + type.getName(), new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties().tab(VampirismMod.creativeTab));
         this.type = type;
     }
 
@@ -33,7 +31,7 @@ public class InjectionItem extends VampirismItem {
     public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         if (type == TYPE.SANGUINARE) {
-            playerIn.displayClientMessage(new StringTextComponent("Please use a ").append(new TranslationTextComponent(ModBlocks.med_chair.getDescriptionId())), true);
+            playerIn.displayClientMessage(new StringTextComponent("Please use a ").append(new TranslationTextComponent(ModBlocks.MED_CHAIR.get().getDescriptionId())), true);
         }
         return new ActionResult<>(ActionResultType.PASS, stack);
     }

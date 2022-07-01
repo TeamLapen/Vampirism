@@ -4,7 +4,6 @@ import de.teamlapen.lib.util.WeightedRandomItem;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillPlayer;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
@@ -15,17 +14,16 @@ import de.teamlapen.vampirism.player.refinements.RefinementSet;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.WeightedRandom;
+import net.minecraft.util.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.RegistryObject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -68,11 +66,11 @@ public class VampireRefinementItem extends Item implements IRefinementItem { //T
     public static VampireRefinementItem getItemForType(AccessorySlotType type) { //TODO 1.17 move to vampire subclass
         switch (type) {
             case AMULET:
-                return ModItems.amulet;
+                return ModItems.AMULET.get();
             case RING:
-                return ModItems.ring;
+                return ModItems.RING.get();
             default:
-                return ModItems.obi_belt;
+                return ModItems.OBI_BELT.get();
         }
     }
     private final AccessorySlotType type;
@@ -80,6 +78,18 @@ public class VampireRefinementItem extends Item implements IRefinementItem { //T
     public VampireRefinementItem(Properties properties, AccessorySlotType type) {
         super(properties.defaultDurability(MAX_DAMAGE).setNoRepair());
         this.type = type;
+    }
+
+    @Override
+    public void fillItemCategory(@Nonnull ItemGroup itemGroup, @Nonnull NonNullList<ItemStack> items) {
+        if (this.allowdedIn(itemGroup)) {
+            ItemStack stack = new ItemStack(this);
+            IRefinementSet set = getRandomRefinementForItem(this.getExclusiveFaction(), this);
+            if (set != null) {
+                this.applyRefinementSet(stack, set);
+            }
+            items.add(stack);
+        }
     }
 
     @Nonnull
@@ -93,9 +103,9 @@ public class VampireRefinementItem extends Item implements IRefinementItem { //T
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         IRefinementSet set = getRefinementSet(stack);
         if (set != null) {
-            for (IRefinement refinement : set.getRefinements()) {
+            set.getRefinementRegistryObjects().stream().map(RegistryObject::get).forEach(refinement -> {
                 tooltip.add(new StringTextComponent(" - ").append(refinement.getDescription()).withStyle(TextFormatting.GRAY));
-            }
+            });
         }
     }
 

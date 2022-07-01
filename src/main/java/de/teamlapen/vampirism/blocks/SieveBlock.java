@@ -21,7 +21,6 @@ public class SieveBlock extends VampirismBlockContainer {
 
     public static final BooleanProperty PROPERTY_ACTIVE = BooleanProperty.create("active");
     protected static final VoxelShape sieveShape = makeShape();
-    private final static String regName = "blood_sieve";
 
     private static VoxelShape makeShape() {
         VoxelShape a = Block.box(1, 0, 1, 15, 1, 15);
@@ -35,7 +34,7 @@ public class SieveBlock extends VampirismBlockContainer {
     }
 
     public SieveBlock() {
-        super(regName, Properties.of(Material.WOOD).strength(2.5f).sound(SoundType.WOOD).noOcclusion());
+        super(Properties.of(Material.WOOD).strength(2.5f).sound(SoundType.WOOD).noOcclusion());
         this.registerDefaultState(this.getStateDefinition().any().setValue(PROPERTY_ACTIVE, false));
     }
 

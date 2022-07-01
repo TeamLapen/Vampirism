@@ -38,15 +38,15 @@ public class BloodContainerTileEntity extends net.minecraftforge.fluids.capabili
     public static void setBloodValue(IBlockReader worldIn, Random randomIn, BlockPos blockPosIn) {
         TileEntity tileEntity = worldIn.getBlockEntity(blockPosIn);
         if (tileEntity instanceof BloodContainerTileEntity) {
-            ((BloodContainerTileEntity) tileEntity).setFluidStack(new FluidStack(ModFluids.blood, BloodBottleFluidHandler.getAdjustedAmount((int) (CAPACITY * randomIn.nextFloat()))));
+            ((BloodContainerTileEntity) tileEntity).setFluidStack(new FluidStack(ModFluids.BLOOD.get(), BloodBottleFluidHandler.getAdjustedAmount((int) (CAPACITY * randomIn.nextFloat()))));
         }
     }
     private int lastSyncedAmount = Integer.MIN_VALUE;
     private IModelData modelData;
 
     public BloodContainerTileEntity() {
-        super(ModTiles.blood_container);
-        this.tank = new FluidTankWithListener(CAPACITY, fluidStack -> ModFluids.blood.isSame(fluidStack.getFluid()) || ModFluids.impure_blood.isSame(fluidStack.getFluid())).setListener(this);
+        super(ModTiles.BLOOD_CONTAINER.get());
+        this.tank = new FluidTankWithListener(CAPACITY, fluidStack -> ModFluids.BLOOD.get().isSame(fluidStack.getFluid()) || ModFluids.IMPURE_BLOOD.get().isSame(fluidStack.getFluid())).setListener(this);
 
     }
 
@@ -119,7 +119,7 @@ public class BloodContainerTileEntity extends net.minecraftforge.fluids.capabili
             float amount = fluid.getAmount() / (float) BloodContainerTileEntity.LEVEL_AMOUNT;
             l = (amount > 0 && amount < 1) ? 1 : (int) amount;
         }
-        modelData = new ModelDataMap.Builder().withInitial(FLUID_LEVEL_PROP, l).withInitial(FLUID_IMPURE, fluid.getFluid().equals(ModFluids.impure_blood)).build();
+        modelData = new ModelDataMap.Builder().withInitial(FLUID_LEVEL_PROP, l).withInitial(FLUID_IMPURE, fluid.getFluid().equals(ModFluids.IMPURE_BLOOD.get())).build();
         if (refresh) ModelDataManager.requestModelDataRefresh(this);
     }
 }

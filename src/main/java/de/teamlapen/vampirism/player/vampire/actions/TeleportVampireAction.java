@@ -29,7 +29,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
     public boolean activate(IVampirePlayer vampire) {
         PlayerEntity player = vampire.getRepresentingPlayer();
         int dist = VampirismConfig.BALANCE.vaTeleportMaxDistance.get();
-        if (vampire.getSkillHandler().isRefinementEquipped(ModRefinements.teleport_distance)) {
+        if (vampire.getSkillHandler().isRefinementEquipped(ModRefinements.TELEPORT_DISTANCE.get())) {
             dist *= VampirismConfig.BALANCE.vrTeleportDistanceMod.get();
         }
         RayTraceResult target = UtilLib.getPlayerLookingSpot(player, dist);
@@ -69,7 +69,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
             playerMp.disconnect();
             playerMp.teleportTo(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
         }
-        AreaParticleCloudEntity particleCloud = new AreaParticleCloudEntity(ModEntities.particle_cloud, player.getCommandSenderWorld());
+        AreaParticleCloudEntity particleCloud = new AreaParticleCloudEntity(ModEntities.PARTICLE_CLOUD.get(), player.getCommandSenderWorld());
         particleCloud.setPos(ox, oy, oz);
         particleCloud.setRadius(0.7F);
         particleCloud.setHeight(player.getBbHeight());
@@ -83,7 +83,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
 
     @Override
     public boolean canBeUsedBy(IVampirePlayer vampire) {
-        return !vampire.getActionHandler().isActionActive(VampireActions.bat);
+        return !vampire.getActionHandler().isActionActive(VampireActions.BAT.get());
     }
 
     @Override
@@ -93,7 +93,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
 
     @Override
     public int getCooldown(IFactionPlayer player) {
-        return (int) ((player.getSkillHandler().isRefinementEquipped(ModRefinements.teleport_distance) ? 0.5 : 1) * getCooldown());
+        return (int) ((player.getSkillHandler().isRefinementEquipped(ModRefinements.TELEPORT_DISTANCE.get()) ? 0.5 : 1) * getCooldown());
     }
 
     @Override

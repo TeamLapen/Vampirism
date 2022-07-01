@@ -12,7 +12,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.util.IWorldPosCallable;
 
 public class AltarInfusionContainer extends InventoryContainer {
-    public static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(ModTags.Items.PURE_BLOOD, 44, 34), new SelectorInfo(ModItems.human_heart, 80, 34), new SelectorInfo(ModItems.vampire_book, 116, 34)};
+    public static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(ModTags.Items.PURE_BLOOD, 44, 34), new SelectorInfo(ModItems.HUMAN_HEART.get(), 80, 34), new SelectorInfo(ModItems.VAMPIRE_BOOK.get(), 116, 34)};
 
     @Deprecated
     public AltarInfusionContainer(int id, PlayerInventory playerInventory) {
@@ -21,13 +21,13 @@ public class AltarInfusionContainer extends InventoryContainer {
     }
 
     public AltarInfusionContainer(int id, PlayerInventory playerInventory, IInventory inventory, IWorldPosCallable worldPosCallable) {
-        super(ModContainer.altar_infusion, id, playerInventory, worldPosCallable, inventory, SELECTOR_INFOS);
+        super(ModContainer.ALTAR_INFUSION.get(), id, playerInventory, worldPosCallable, inventory, SELECTOR_INFOS);
         this.addPlayerSlots(playerInventory);
     }
 
 
     @Override
     public boolean stillValid(PlayerEntity playerIn) {
-        return stillValid(this.worldPos, playerIn, ModBlocks.altar_infusion);
+        return stillValid(this.worldPos, playerIn, ModBlocks.ALTAR_INFUSION.get());
     }
 }

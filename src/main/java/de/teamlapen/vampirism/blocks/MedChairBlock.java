@@ -40,13 +40,12 @@ import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FAC
  */
 public class MedChairBlock extends VampirismHorizontalBlock {
     public static final EnumProperty<EnumPart> PART = EnumProperty.create("part", EnumPart.class);
-    private final static String name = "med_chair";
     private final VoxelShape SHAPE_TOP;
     private final VoxelShape SHAPE_BOTTOM;
 
 
     public MedChairBlock() {
-        super(name, Properties.of(Material.METAL).strength(1).noOcclusion());
+        super(Properties.of(Material.METAL).strength(1).noOcclusion());
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(PART, EnumPart.BOTTOM));
         SHAPE_TOP = box(2, 6, 0, 14, 16, 16);
         SHAPE_BOTTOM = box(1, 1, 0, 15, 10, 16);
@@ -116,7 +115,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
                 }
             }
         } else if (world.isClientSide) {
-            player.displayClientMessage(new TranslationTextComponent("text.vampirism.need_item_to_use", new TranslationTextComponent((new ItemStack(ModItems.injection_garlic).getDescriptionId()))), true);
+            player.displayClientMessage(new TranslationTextComponent("text.vampirism.need_item_to_use", new TranslationTextComponent((new ItemStack(ModItems.INJECTION_GARLIC.get()).getDescriptionId()))), true);
         }
         return ActionResultType.SUCCESS;
     }
@@ -132,7 +131,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
                 VampirismMod.proxy.renderScreenFullColor(4, 30, 0xBBBBBBFF);
             } else {
                 handler.joinFaction(VReference.HUNTER_FACTION);
-                player.addEffect(new EffectInstance(ModEffects.poison, 200, 1));
+                player.addEffect(new EffectInstance(ModEffects.POISON.get(), 200, 1));
             }
             return true;
         } else if (currentFaction != null) {
@@ -146,13 +145,13 @@ public class MedChairBlock extends VampirismHorizontalBlock {
     private boolean handleInjections(PlayerEntity player, World world, ItemStack stack) {
         return FactionPlayerHandler.getOpt(player).map(handler -> {
             IPlayableFaction<?> faction = handler.getCurrentFaction();
-            if (stack.getItem().equals(ModItems.injection_garlic)) {
+            if (stack.getItem().equals(ModItems.INJECTION_GARLIC.get())) {
                 return handleGarlicInjection(player, world, handler, faction);
             }
-            if (stack.getItem().equals(ModItems.injection_sanguinare)) {
+            if (stack.getItem().equals(ModItems.INJECTION_SANGUINARE.get())) {
                 return handleSanguinareInjection(player, handler, faction);
             }
-            if (stack.getItem().equals(ModItems.injection_zombie_blood)) {
+            if (stack.getItem().equals(ModItems.INJECTION_ZOMBIE_BLOOD.get())) {
                 return handleZombieBloodInjection(player);
             }
             return false;
@@ -174,7 +173,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
                     player.displayClientMessage(new TranslationTextComponent("text.vampirism.deactivated_by_serveradmin"), true);
                 } else {
                     SanguinareEffect.addRandom(player, true);
-                    player.addEffect(new EffectInstance(ModEffects.poison, 60));
+                    player.addEffect(new EffectInstance(ModEffects.POISON.get(), 60));
                     return true;
                 }
             }
@@ -183,7 +182,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
     }
 
     private boolean handleZombieBloodInjection(@Nonnull PlayerEntity player) {
-        player.addEffect(new EffectInstance(ModEffects.poison, 200));
+        player.addEffect(new EffectInstance(ModEffects.POISON.get(), 200));
         return true;
     }
 

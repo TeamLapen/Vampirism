@@ -26,7 +26,7 @@
         ]
       }
     },
-    "holy_water_enhanced": {
+    "has_holy_water_enhanced": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
@@ -63,7 +63,7 @@
     [
       "iron",
       "has_holy_water",
-      "holy_water_enhanced",
+      "has_holy_water_enhanced",
       "stake",
       "has_skill",
       "has_the_recipe"

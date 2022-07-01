@@ -26,8 +26,8 @@ public class OblivionEffect extends VampirismEffect {
 
     private static final Logger LOGGER = LogManager.getLogger(FactionPlayerHandler.class);
 
-    public OblivionEffect(String name, EffectType effectType, int potionColor) {
-        super(name, effectType, potionColor);
+    public OblivionEffect(EffectType effectType, int potionColor) {
+        super(effectType, potionColor);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class OblivionEffect extends VampirismEffect {
                             skillHandler.disableSkill(element);
                         }
                     } else {
-                        entityLivingBaseIn.removeEffect(ModEffects.oblivion);
+                        entityLivingBaseIn.removeEffect(ModEffects.OBLIVION.get());
                         ((PlayerEntity) entityLivingBaseIn).displayClientMessage(new TranslationTextComponent("text.vampirism.skill.skills_reset"), true);
                         LOGGER.debug(LogUtil.FACTION, "Skills were reset for {}", entityLivingBaseIn.getName().getString());
                     }

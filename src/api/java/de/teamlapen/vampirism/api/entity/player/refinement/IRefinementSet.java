@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
@@ -23,8 +24,16 @@ public interface IRefinementSet extends IForgeRegistryEntry<IRefinementSet> {
     @Nonnull
     Rarity getRarity();
 
+    /**
+     * TODO 1.19 remove and rename the new method
+     * Use {@link #getRefinementRegistryObjects()}
+     */
+    @Deprecated
     @Nonnull
     Set<IRefinement> getRefinements();
+
+    @Nonnull
+    Set<RegistryObject<? extends IRefinement>> getRefinementRegistryObjects();
 
     /**
      * @return The accessory type this can be on, or empty if all

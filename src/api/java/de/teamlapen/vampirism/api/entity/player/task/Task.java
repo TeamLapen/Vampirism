@@ -8,13 +8,14 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 public class Task extends ForgeRegistryEntry<Task> {
 
     @Nonnull
     private final Variant variant;
-    @Nullable
-    private final IPlayableFaction<?> faction;
+    @Nonnull
+    private final Supplier<IPlayableFaction<?>> faction;
     @Nonnull
     private final TaskRequirement requirements;
     @Nonnull
@@ -31,6 +32,13 @@ public class Task extends ForgeRegistryEntry<Task> {
     @Nullable
     private ITextComponent desc;
 
+    /**
+     * @deprecated use {@link #Task(Variant, Supplier, TaskRequirement, TaskReward, TaskUnlocker[], boolean)}
+     */
+    @Deprecated
+    public Task(@Nonnull Variant variant, @Nullable IPlayableFaction<?> faction, @Nonnull TaskRequirement requirements, @Nonnull TaskReward rewards, @Nonnull TaskUnlocker[] unlocker, boolean useDescription) {
+        this(variant, () -> faction, requirements, rewards, unlocker, useDescription);
+    }
     /**
      * translation keys used for a task are
      * <p>
@@ -51,7 +59,7 @@ public class Task extends ForgeRegistryEntry<Task> {
      * @param unlocker       the unlocker to unlock the task for completion
      * @param useDescription whether the task should display a description of not
      */
-    public Task(@Nonnull Variant variant, @Nullable IPlayableFaction<?> faction, @Nonnull TaskRequirement requirements, @Nonnull TaskReward rewards, @Nonnull TaskUnlocker[] unlocker, boolean useDescription) {
+    public Task(@Nonnull Variant variant, @Nonnull Supplier<IPlayableFaction<?>> faction, @Nonnull TaskRequirement requirements, @Nonnull TaskReward rewards, @Nonnull TaskUnlocker[] unlocker, boolean useDescription) {
         this.variant = variant;
         this.faction = faction;
         this.requirements = requirements;
@@ -72,7 +80,7 @@ public class Task extends ForgeRegistryEntry<Task> {
 
     @Nullable
     public IPlayableFaction<?> getFaction() {
-        return faction;
+        return this.faction.get();
     }
 
     @Nonnull

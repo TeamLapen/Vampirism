@@ -31,7 +31,7 @@ public class BlessingRecipeCategory implements IRecipeCategory<BlessableItem.Rec
 
     public BlessingRecipeCategory(IGuiHelper guiHelper) {
         background = guiHelper.drawableBuilder(new ResourceLocation(REFERENCE.MODID, "textures/gui/blessing_recipe_jei.png"), 0, 0, 83, 49).setTextureSize(83, 49).addPadding(10, 20, 20, 20).build();
-        icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.church_altar));
+        icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.CHURCH_ALTAR.get()));
     }
 
     @Override
@@ -70,7 +70,7 @@ public class BlessingRecipeCategory implements IRecipeCategory<BlessableItem.Rec
         if (recipe.enhanced) {
             Minecraft minecraft = Minecraft.getInstance();
             minecraft.font.draw(matrixStack, new TranslationTextComponent("gui.vampirism.skill_required"), 15, 52, Color.gray.getRGB());
-            minecraft.font.draw(matrixStack, HunterSkills.enhanced_blessing.getName(), 15, 52 + minecraft.font.lineHeight + 2, Color.gray.getRGB());
+            minecraft.font.draw(matrixStack, HunterSkills.ENHANCED_BLESSING.get().getName(), 15, 52 + minecraft.font.lineHeight + 2, Color.gray.getRGB());
 
         }
     }

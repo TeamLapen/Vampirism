@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.player.skills;
 
-import de.teamlapen.vampirism.network.SkillTreePacket;
+import de.teamlapen.vampirism.network.SSkillTreePacket;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -16,7 +16,7 @@ public class ClientSkillTreeManager {
         skillTree.initRootSkills();
     }
 
-    public void loadUpdate(SkillTreePacket msg) {
+    public void loadUpdate(SSkillTreePacket msg) {
         skillTree.loadNodes(msg.getNodes());
         skillTree.updateRenderInfo();
     }

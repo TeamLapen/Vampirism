@@ -212,8 +212,8 @@ public class ModEntityEventHandler {
             }
 
             if (VampirismConfig.BALANCE.skeletonIgnoreVampire.get()) {
-                if (event.getEntity() instanceof SkeletonEntity) {
-                    makeVampireFriendly("skeleton", (SkeletonEntity) event.getEntity(), NearestAttackableTargetGoal.class, PlayerEntity.class, 2, (entity, predicate) -> new NearestAttackableTargetGoal<PlayerEntity>(entity, PlayerEntity.class, 10, true, false, predicate), type -> type == EntityType.SKELETON);
+                if (event.getEntity() instanceof SkeletonEntity || event.getEntity() instanceof StrayEntity) {
+                    makeVampireFriendly("skeleton", (AbstractSkeletonEntity) event.getEntity(), NearestAttackableTargetGoal.class, PlayerEntity.class, 2, (entity, predicate) -> new NearestAttackableTargetGoal<>(entity, PlayerEntity.class, 10, true, false, predicate), type -> type == EntityType.SKELETON || type == EntityType.STRAY);
                 }
             }
 
@@ -273,8 +273,12 @@ public class ModEntityEventHandler {
 
     @SubscribeEvent
     public void onEyeHeightSet(EntityEvent.Size event) {
-        if (event.getEntity() instanceof VampireBaseEntity || event.getEntity() instanceof HunterBaseEntity)
+        if (event.getEntity() instanceof VampireBaseEntity || event.getEntity() instanceof HunterBaseEntity) {
             event.setNewEyeHeight(event.getOldEyeHeight() * 0.875f);
+        }
+        if (event.getEntity() instanceof LivingEntity) {
+            //(CoffinBlock.setSleepSize(event, ((LivingEntity) event.getEntity()));
+        }
     }
 
     @SubscribeEvent

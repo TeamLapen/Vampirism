@@ -1,19 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " X ",
+    "X X",
     "XYX",
-    "ZZZ"
+    "XXX"
   ],
   "key": {
     "X": {
-      "tag": "forge:glass"
+      "tag": "minecraft:planks"
     },
     "Y": {
-      "item": "minecraft:glass_bottle"
-    },
-    "Z": {
-      "tag": "forge:ingots/iron"
+      "item": "vampirism:blood_container"
     }
   },
   "result": {

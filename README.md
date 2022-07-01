@@ -1,5 +1,6 @@
-Vampirism for Minecraft 1.16 - Latest branch [![](http://cf.way2muchnoise.eu/short_233029_downloads.svg)](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire) [![Build Status](https://github.com/TeamLapen/Vampirism/workflows/Java%20CI/badge.svg?branch=1.16)](https://github.com/TeamLapen/Vampirism/actions) [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) [![Discord Server](https://img.shields.io/discord/430326060635258881)](https://discord.gg/wuamm4P) [![Crowdin](https://badges.crowdin.net/vampirism/localized.svg)](https://crowdin.com/project/vampirism)
+Vampirism for Minecraft 1.16 - Latest branch 
 ============================================
+[![](http://cf.way2muchnoise.eu/short_233029_downloads.svg)](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire) [![](https://img.shields.io/modrinth/dt/jVZ0F1wn?label=Modrinth)](https://modrinth.com/mod/vampirism) [![Build Status](https://github.com/TeamLapen/Vampirism/workflows/Java%20CI/badge.svg?branch=1.16)](https://github.com/TeamLapen/Vampirism/actions) [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) [![Discord Server](https://img.shields.io/discord/430326060635258881)](https://discord.gg/wuamm4P) [![Crowdin](https://badges.crowdin.net/vampirism/localized.svg)](https://crowdin.com/project/vampirism)
 
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://maxanier.de)  
 
@@ -41,7 +42,7 @@ The following labeling scheme is used:
 - [xXvPendragonvXx](https://github.com/PendragonII) _Community/Official Server_
 
 ## Special Thanks to
-- PixelEyeStudios _Models/Textures_
+- TheRebelT _Models/Textures_
 - TinkerHatWill _Textures_
 - Alis _Textures_
 - dimensionpainter _Textures_
@@ -55,10 +56,15 @@ The following labeling scheme is used:
 - XxKidDowdallxX _Textures_
 - F_Spade _Textures_
 - Matheo _Lore_
+- special_krab _Lore_
 - cournualllama2 _Lore_
 - Random _Textures/Models_
 - Shumnik _Textures/Models_
 - BugraaK _Textures/Models_
+- MrVityaTrash _Textures_
+- FrostedOver _Textures_
+- Grid _Textures_
+- T_Corvus _Textures_
 
 ## API
 Vampirism has an API you can use to add blood values to your mod's creatures or make them convertible and more.
@@ -195,6 +201,7 @@ Boiling Towel by unfa https://www.freesound.org/people/unfa/sounds/174499/ -- Li
 Pepper mill grinds pepper by Black_River_Phonogram https://freesound.org/people/Black_River_Phonogram/sounds/424605/ --
 Licence: CC0  
 Slimey by Nebulasnails https://freesound.org/people/nebulasnails/sounds/495116/ -- Licence: CC0
+blood_sucker by Bernuy https://freesound.org/people/Bernuy/sounds/268499/ -- Licence: CC Attribution
 Organ Ambience, Calm, A by InspectorJ https://freesound.org/people/InspectorJ/sounds/411991/ -- License CC Attribution
 
 

@@ -5,7 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.inventory.container.HunterBasicContainer;
-import de.teamlapen.vampirism.network.InputEventPacket;
+import de.teamlapen.vampirism.network.CSimpleInputEvent;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.player.PlayerInventory;
@@ -37,7 +37,7 @@ public class HunterBasicScreen extends ContainerScreen<HunterBasicContainer> {
         int i = (this.imageWidth - wid) / 2;
         int j = (this.height - this.imageHeight) / 2;
         addButton(buttonLevelup = new Button(this.leftPos + i, j + 50, wid, 20, name, (context) -> {
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.BASICHUNTERLEVELUP, ""));
+            VampirismMod.dispatcher.sendToServer(new CSimpleInputEvent(CSimpleInputEvent.Type.BASIC_HUNTER_LEVELUP));
             this.onClose();
         }));
         buttonLevelup.active = false;

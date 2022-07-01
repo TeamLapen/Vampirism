@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.api.entity.player.task.TaskReward;
 import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
+import de.teamlapen.vampirism.api.util.NonnullSupplier;
 import de.teamlapen.vampirism.player.tasks.req.*;
 import de.teamlapen.vampirism.player.tasks.reward.ItemReward;
 import de.teamlapen.vampirism.player.tasks.unlock.ParentUnlocker;
@@ -27,6 +28,7 @@ public class TaskBuilder {
     public static TaskBuilder builder() {
         return new TaskBuilder();
     }
+
     @Nonnull
     private final Map<TaskRequirement.Type, List<TaskRequirement.Requirement<?>>> requirement = Maps.newHashMapWithExpectedSize(TaskRequirement.Type.values().length);
     @Nonnull
@@ -34,7 +36,7 @@ public class TaskBuilder {
     @Nullable
     private TaskReward reward;
     @Nullable
-    private IPlayableFaction<?> faction;
+    private Supplier<IPlayableFaction<?>> faction;
     @Nonnull
     private Task.Variant variant = Task.Variant.REPEATABLE;
     private boolean useDescription = false;
@@ -58,7 +60,7 @@ public class TaskBuilder {
     }
 
     @Nonnull
-    public TaskBuilder addRequirement(String name, @Nonnull ItemStack itemStack) {
+    public TaskBuilder addRequirement(String name, NonnullSupplier<ItemStack> itemStack) {
         return this.addRequirement(new ItemRequirement(new ResourceLocation(modId(), name), itemStack));
     }
 
@@ -74,20 +76,10 @@ public class TaskBuilder {
     }
 
     @Nonnull
-    public Task build(ResourceLocation registryName) {
-        if (requirement.isEmpty()) throw new IllegalStateException("The task " + registryName + " needs requirements");
-        if (reward == null) throw new IllegalStateException("The task " + registryName + " needs a reward");
-        return new Task(this.variant, this.faction, new TaskRequirement(this.requirement), this.reward, this.unlocker.toArray(new TaskUnlocker[]{}), this.useDescription).setRegistryName(registryName);
-    }
-
-    @Nonnull
-    public Task build(String modId, String name) {
-        return this.build(new ResourceLocation(modId, name));
-    }
-
-    @Nonnull
-    public Task build(String name) {
-        return this.build(new ResourceLocation(modId(), name));
+    public Task build() {
+        if (requirement.isEmpty()) throw new IllegalStateException("Task needs requirements");
+        if (reward == null) throw new IllegalStateException("Task needs a reward");
+        return new Task(this.variant, this.faction, new TaskRequirement(this.requirement), this.reward, this.unlocker.toArray(new TaskUnlocker[]{}), this.useDescription);
     }
 
     @Nonnull
@@ -108,13 +100,13 @@ public class TaskBuilder {
     }
 
     @Nonnull
-    public TaskBuilder setReward(@Nonnull ItemStack reward) {
+    public TaskBuilder setReward(NonnullSupplier<ItemStack> reward) {
         this.reward = new ItemReward(reward);
         return this;
     }
 
     @Nonnull
-    public TaskBuilder setReward(@Nonnull TaskReward reward) {
+    public TaskBuilder setReward(TaskReward reward) {
         this.reward = reward;
         return this;
     }
@@ -131,8 +123,18 @@ public class TaskBuilder {
         return this;
     }
 
+    /**
+     * @deprecated use {@link #withFaction(Supplier)}
+     */
+    @Deprecated
     @Nonnull
     public TaskBuilder withFaction(@Nullable IPlayableFaction<?> faction) {
+        this.faction = () -> faction;
+        return this;
+    }
+
+    @Nonnull
+    public TaskBuilder withFaction(@Nullable Supplier<IPlayableFaction<?>> faction) {
         this.faction = faction;
         return this;
     }

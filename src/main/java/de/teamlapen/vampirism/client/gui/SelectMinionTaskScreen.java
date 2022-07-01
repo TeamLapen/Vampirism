@@ -8,8 +8,8 @@ import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
-import de.teamlapen.vampirism.network.InputEventPacket;
-import de.teamlapen.vampirism.network.SelectMinionTaskPacket;
+import de.teamlapen.vampirism.network.CSelectMinionTaskPacket;
+import de.teamlapen.vampirism.network.CSimpleInputEvent;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
@@ -88,21 +88,21 @@ public class SelectMinionTaskScreen extends GuiPieMenu<SelectMinionTaskScreen.En
     }
 
     private void callAll() {
-        VampirismMod.dispatcher.sendToServer(new SelectMinionTaskPacket(-1, SelectMinionTaskPacket.RECALL));
+        VampirismMod.dispatcher.sendToServer(new CSelectMinionTaskPacket(-1, CSelectMinionTaskPacket.RECALL));
 
     }
 
     private void callRespawn() {
-        VampirismMod.dispatcher.sendToServer(new SelectMinionTaskPacket(-1, SelectMinionTaskPacket.RESPAWN));
+        VampirismMod.dispatcher.sendToServer(new CSelectMinionTaskPacket(-1, CSelectMinionTaskPacket.RESPAWN));
 
     }
 
     private void callSingle() {
-        VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SELECT_CALL_MINION, ""));
+        VampirismMod.dispatcher.sendToServer(new CSimpleInputEvent(CSimpleInputEvent.Type.SHOW_MINION_CALL_SELECTION));
     }
 
     private void sendTask(IMinionTask<?, ?> task) {
-        VampirismMod.dispatcher.sendToServer(new SelectMinionTaskPacket(-1, task.getRegistryName()));
+        VampirismMod.dispatcher.sendToServer(new CSelectMinionTaskPacket(-1, task.getRegistryName()));
     }
 
     public static class Entry {

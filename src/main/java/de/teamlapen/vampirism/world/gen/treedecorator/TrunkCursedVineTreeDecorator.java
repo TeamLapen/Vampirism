@@ -29,7 +29,7 @@ public class TrunkCursedVineTreeDecorator extends TreeDecorator {
     @Nonnull
     @Override
     protected TreeDecoratorType<?> type() {
-        return ModFeatures.trunk_cursed_vine;
+        return ModFeatures.TRUNK_CURSED_VINE.get();
     }
 
     /**
@@ -80,7 +80,7 @@ public class TrunkCursedVineTreeDecorator extends TreeDecorator {
     }
 
     protected void placeCursedVine(IWorldWriter levelWriter, BlockPos pos, Direction mainDirection, Direction secondaryDirection, Direction.Axis axis,  Set<BlockPos> blockPositions, MutableBoundingBox boundingBox) {
-        this.setBlock(levelWriter, pos, ModBlocks.cursed_bark.defaultBlockState().setValue(CursedBarkBlock.FACING, mainDirection).setValue(CursedBarkBlock.FACING2, secondaryDirection).setValue(CursedBarkBlock.AXIS, axis), blockPositions, boundingBox);
+        this.setBlock(levelWriter, pos, ModBlocks.CURSED_BARK.get().defaultBlockState().setValue(CursedBarkBlock.FACING, mainDirection).setValue(CursedBarkBlock.FACING2, secondaryDirection).setValue(CursedBarkBlock.AXIS, axis), blockPositions, boundingBox);
     }
 
 }

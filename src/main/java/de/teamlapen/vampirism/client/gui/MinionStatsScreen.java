@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
-import de.teamlapen.vampirism.network.UpgradeMinionStatPacket;
+import de.teamlapen.vampirism.network.CUpgradeMinionStatPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
@@ -92,17 +92,17 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
         }
         for (int i = 0; i < statCount; i++) {
             int finalI = i;
-            Button button = this.addButton(new Button(guiLeft + 225, guiTop + 43 + 26 * i, 20, 20, new StringTextComponent("+"), (b) -> VampirismMod.dispatcher.sendToServer(new UpgradeMinionStatPacket(entity.getId(), finalI))));
+            Button button = this.addButton(new Button(guiLeft + 225, guiTop + 43 + 26 * i, 20, 20, new StringTextComponent("+"), (b) -> VampirismMod.dispatcher.sendToServer(new CUpgradeMinionStatPacket(entity.getId(), finalI))));
             statButtons.add(button);
             button.visible = false;
         }
 
         reset = this.addButton(new ImageButton(this.guiLeft + 225, this.guiTop + 8, 20, 20, 0, 0, 20, RESET, 20, 40, (context) -> {
-            VampirismMod.dispatcher.sendToServer(new UpgradeMinionStatPacket(entity.getId(), -1));
+            VampirismMod.dispatcher.sendToServer(new CUpgradeMinionStatPacket(entity.getId(), -1));
             getOblivionPotion().ifPresent(stack -> stack.shrink(1));//server syncs after the screen is closed
         }, (button, matrixStack, mouseX, mouseY) -> {
             MinionStatsScreen.this.renderTooltip(matrixStack, button.getMessage(), mouseX, mouseY);
-        }, new TranslationTextComponent("text.vampirism.minion_screen.reset_stats", ModItems.oblivion_potion.getDescription())) {
+        }, new TranslationTextComponent("text.vampirism.minion_screen.reset_stats", ModItems.OBLIVION_POTION.get().getDescription())) {
             @Override
             public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
                 if (this.visible) {
@@ -150,7 +150,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
     }
 
     private Optional<ItemStack> getOblivionPotion() {
-        return Optional.ofNullable(entity.getMinionData().flatMap(data -> Optional.ofNullable(InventoryHelper.getFirst(data.getInventory(), ModItems.oblivion_potion))).orElseGet(() -> InventoryHelper.getFirst(this.minecraft.player.inventory, ModItems.oblivion_potion)));
+        return Optional.ofNullable(entity.getMinionData().flatMap(data -> Optional.ofNullable(InventoryHelper.getFirst(data.getInventory(), ModItems.OBLIVION_POTION.get()))).orElseGet(() -> InventoryHelper.getFirst(this.minecraft.player.inventory, ModItems.OBLIVION_POTION.get())));
     }
 
 

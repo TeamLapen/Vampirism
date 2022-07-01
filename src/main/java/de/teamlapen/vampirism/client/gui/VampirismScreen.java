@@ -15,7 +15,7 @@ import de.teamlapen.vampirism.client.gui.skills.SkillsScreen;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.inventory.container.TaskContainer;
 import de.teamlapen.vampirism.inventory.container.VampirismContainer;
-import de.teamlapen.vampirism.network.InputEventPacket;
+import de.teamlapen.vampirism.network.CDeleteRefinementPacket;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.util.Helper;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -64,11 +64,6 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
         this.inventoryLabelY = this.imageHeight - 93;
         this.menu.setReloadListener(() -> this.list.refresh());
         this.factionPlayer = FactionPlayerHandler.getCurrentFactionPlayer(playerInventory.player).orElseThrow(() -> new IllegalStateException("Cannot open Vampirism container without faction player"));
-        if (factionPlayer.getLevel() > 0) {
-            this.level = FactionPlayerHandler.getOpt(playerInventory.player).filter(f -> f.getLordLevel() > 0).map(f -> f.getLordTitle().copy().append(" (" + f.getLordLevel() + ")")).orElseGet(() -> new TranslationTextComponent("text.vampirism.level").append(" " + factionPlayer.getLevel())).withStyle(factionPlayer.getFaction().getChatColor());
-        } else {
-            this.level = StringTextComponent.EMPTY;
-        }
     }
 
     @Override
@@ -145,6 +140,11 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
     @Override
     protected void init() {
         super.init();
+        if (factionPlayer.getLevel() > 0) {
+            this.level = FactionPlayerHandler.getOpt(factionPlayer.getRepresentingPlayer()).filter(f -> f.getLordLevel() > 0).map(f -> f.getLordTitle().copy().append(" (" + f.getLordLevel() + ")")).orElseGet(() -> new TranslationTextComponent("text.vampirism.level").append(" " + factionPlayer.getLevel())).withStyle(factionPlayer.getFaction().getChatColor());
+        } else {
+            this.level = StringTextComponent.EMPTY;
+        }
         this.addButton(list = new ScrollableListWithDummyWidget<>(this.leftPos + 83, this.topPos + 7, 145, 104, 21, this::refreshTasks, (item, list1, isDummy) -> new TaskItem(item, list1, isDummy, this, this.factionPlayer)));
 
         this.addButton(new ImageButton(this.leftPos + 5, this.topPos + 90, 20, 20, 40, 205, 20, BACKGROUND, 256, 256, context -> {
@@ -176,7 +176,7 @@ public class VampirismScreen extends ContainerScreen<VampirismContainer> impleme
         for (Slot slot : this.menu.slots) {
             if (slot instanceof VampirismContainer.RemovingSelectorSlot){
                 Button xButton = this.addButton(new ImageButton(this.getGuiLeft() + slot.x + 16 - 5, this.getGuiTop() + slot.y + 16 - 5, 5, 5, 60, 205, 0, BACKGROUND_REFINEMENTS, 256, 256, (button) -> {
-                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.DELETE_REFINEMENT, IRefinementItem.AccessorySlotType.values()[slot.index].name()));
+                    VampirismMod.dispatcher.sendToServer(new CDeleteRefinementPacket(IRefinementItem.AccessorySlotType.values()[slot.index]));
                     refinementList.set(slot.index, ItemStack.EMPTY);
                 }, (button12, matrixStack, xPos, yPos) -> {
                     VampirismScreen.this.renderTooltip(matrixStack,new TranslationTextComponent("gui.vampirism.vampirism_menu.destroy_item").withStyle(TextFormatting.RED), xPos, yPos);

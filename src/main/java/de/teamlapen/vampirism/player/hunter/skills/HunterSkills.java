@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.player.skills.ActionSkill;
 import de.teamlapen.vampirism.player.skills.VampirismSkill;
@@ -15,100 +16,76 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.ObjectHolder;
-
-import static de.teamlapen.lib.lib.util.UtilLib.getNull;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
 
 /**
  * Registers the default hunter skills
  */
-@ObjectHolder(REFERENCE.MODID)
 @SuppressWarnings("unused")
 public class HunterSkills {
+    public static final DeferredRegister<ISkill> SKILLS = DeferredRegister.create(ModRegistries.SKILLS, REFERENCE.MODID);
 
-    public static final ISkill basic_alchemy = getNull();
-    public static final ISkill double_crossbow = getNull();
-    public static final ISkill enhanced_armor = getNull();
-    public static final ISkill enhanced_weapons = getNull();
-    public static final ISkill garlic_beacon = getNull();
-    public static final ISkill garlic_beacon_improved = getNull();
-    public static final ISkill enhanced_blessing = getNull();
-    public static final ISkill hunter_attack_speed = getNull();
-    public static final ISkill hunter_attack_speed_advanced = getNull();
-    public static final ISkill hunter_attack_damage = getNull();
-    public static final ISkill hunter_awareness = getNull();
-    public static final ISkill hunter_disguise = getNull();
-    public static final ISkill purified_garlic = getNull();
-    public static final ISkill stake1 = getNull();
-    public static final ISkill stake2 = getNull();
-    public static final ISkill tech_weapons = getNull();
-    public static final ISkill weapon_table = getNull();
-    public static final ISkill durable_brewing = getNull();
-    public static final ISkill concentrated_brewing = getNull();
-    public static final ISkill multitask_brewing = getNull();
-    public static final ISkill efficient_brewing = getNull();
-    public static final ISkill master_brewer = getNull();
-    public static final ISkill swift_brewing = getNull();
-    public static final ISkill concentrated_durable_brewing = getNull();
-    public static final ISkill potion_resistance = getNull();
-    public static final ISkill crucifix_wielder = getNull();
-    public static final ISkill ultimate_crucifix = getNull();
+    public static final RegistryObject<ISkill> BASIC_ALCHEMY = SKILLS.register("basic_alchemy", () -> new VampirismSkill.SimpleHunterSkill(true));
+    public static final RegistryObject<ISkill> DOUBLE_CROSSBOW = SKILLS.register("double_crossbow", () -> new VampirismSkill.SimpleHunterSkill(true));
+    public static final RegistryObject<ISkill> ENHANCED_ARMOR = SKILLS.register("enhanced_armor", () -> new VampirismSkill.SimpleHunterSkill(true));
+    public static final RegistryObject<ISkill> ENHANCED_WEAPONS = SKILLS.register("enhanced_weapons", () -> new VampirismSkill.SimpleHunterSkill(true));
+    public static final RegistryObject<ISkill> GARLIC_BEACON = SKILLS.register("garlic_beacon", () -> new VampirismSkill.SimpleHunterSkill(true));
+    public static final RegistryObject<ISkill> GARLIC_BEACON_IMPROVED = SKILLS.register("garlic_beacon_improved", () -> new VampirismSkill.SimpleHunterSkill(true));
+    public static final RegistryObject<ISkill> ENHANCED_BLESSING = SKILLS.register("enhanced_blessing", () -> new VampirismSkill.SimpleHunterSkill(true));
+    //Config null, so cannot get method ref
+    //noinspection Convert2MethodRef
+    public static final RegistryObject<ISkill> HUNTER_ATTACK_SPEED = SKILLS.register("hunter_attack_speed", () -> new VampirismSkill.SimpleHunterSkill(false).registerAttributeModifier(Attributes.ATTACK_SPEED, "8dd2f8cc-6ae1-4db1-9e14-96b4c74d7bf2", () -> VampirismConfig.BALANCE.hsSmallAttackSpeedModifier.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
+    //Config null, so cannot get method ref
+    //noinspection Convert2MethodRef
+    public static final RegistryObject<ISkill> HUNTER_ATTACK_SPEED_ADVANCED = SKILLS.register("hunter_attack_speed_advanced", () -> new VampirismSkill.SimpleHunterSkill(true).registerAttributeModifier(Attributes.ATTACK_SPEED, "d9311f44-a4ba-4ef4-83f2-9274ae1a827e", () -> VampirismConfig.BALANCE.hsMajorAttackSpeedModifier.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
+    //Config null, so cannot get method ref
+    //noinspection Convert2MethodRef
+    public static final RegistryObject<ISkill> HUNTER_ATTACK_DAMAGE = SKILLS.register("hunter_attack_damage", () -> new VampirismSkill.SimpleHunterSkill(false).registerAttributeModifier(Attributes.ATTACK_DAMAGE, "ffafd115-96e2-4d08-9588-d1bc9be0d902", () -> VampirismConfig.BALANCE.hsSmallAttackDamageModifier.get(), AttributeModifier.Operation.ADDITION));
+    public static final RegistryObject<ISkill> HUNTER_AWARENESS = SKILLS.register("hunter_awareness", () -> new ActionSkill<IHunterPlayer>(HunterActions.AWARENESS_HUNTER.get(), true));
+    public static final RegistryObject<ISkill> HUNTER_DISGUISE = SKILLS.register("hunter_disguise", () -> new ActionSkill<IHunterPlayer>(HunterActions.DISGUISE_HUNTER.get(), true));
+    public static final RegistryObject<ISkill> PURIFIED_GARLIC = SKILLS.register("purified_garlic", () -> new VampirismSkill.SimpleHunterSkill(true));
+    public static final RegistryObject<ISkill> STAKE1 = SKILLS.register("stake1", () -> new VampirismSkill.SimpleHunterSkill(false)
+                    .setDescription(() -> {
+                        TextComponent desc = new TranslationTextComponent("skill.vampirism.stake1.desc", (int) (VampirismConfig.BALANCE.hsInstantKill1MaxHealth.get() * 100));
+                        if (VampirismConfig.BALANCE.hsInstantKill1FromBehind.get()) {
+                            desc.append(new StringTextComponent(" "));
+                            desc.append(new TranslationTextComponent("text.vampirism.from_behind"));
+                        }
+                        return desc;
+                    }));
+    public static final RegistryObject<ISkill> STAKE2 = SKILLS.register("stake2", () -> new VampirismSkill.SimpleHunterSkill(false)
+                    .setDescription(() -> {
+                        ITextComponent desc = null;
+                        if (VampirismConfig.BALANCE.hsInstantKill2OnlyNPC.get()) {
+                            desc = new TranslationTextComponent("skill.vampirism.stake2.desc_npc", VampirismConfig.BALANCE.hsInstantKill2MaxHealth.get());
+                        } else {
+                            desc = new TranslationTextComponent("skill.vampirism.stake2.desc_all", VampirismConfig.BALANCE.hsInstantKill2MaxHealth.get());
 
-    @SuppressWarnings("deprecation")
-    public static void registerHunterSkills(IForgeRegistry<ISkill> registry) {
-        registry.register(new VampirismSkill.SimpleHunterSkill(VReference.HUNTER_FACTION.getID(), false));
-        registry.register(new VampirismSkill.SimpleHunterSkill("basic_alchemy", true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("double_crossbow", true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("enhanced_armor", true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("enhanced_weapons", true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("garlic_beacon", true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("garlic_beacon_improved", true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("enhanced_blessing", true));
-        //Config null, so cannot get method ref
-        //noinspection Convert2MethodRef
-        registry.register(new VampirismSkill.SimpleHunterSkill("hunter_attack_speed", false).registerAttributeModifier(Attributes.ATTACK_SPEED, "8dd2f8cc-6ae1-4db1-9e14-96b4c74d7bf2", () -> VampirismConfig.BALANCE.hsSmallAttackSpeedModifier.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
-        //Config null, so cannot get method ref
-        //noinspection Convert2MethodRef
-        registry.register(new VampirismSkill.SimpleHunterSkill("hunter_attack_speed_advanced", true).registerAttributeModifier(Attributes.ATTACK_SPEED, "d9311f44-a4ba-4ef4-83f2-9274ae1a827e", () -> VampirismConfig.BALANCE.hsMajorAttackSpeedModifier.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
-        //Config null, so cannot get method ref
-        //noinspection Convert2MethodRef
-        registry.register(new VampirismSkill.SimpleHunterSkill("hunter_attack_damage", false).registerAttributeModifier(Attributes.ATTACK_DAMAGE, "ffafd115-96e2-4d08-9588-d1bc9be0d902", () -> VampirismConfig.BALANCE.hsSmallAttackDamageModifier.get(), AttributeModifier.Operation.ADDITION));
-        registry.register(new ActionSkill<IHunterPlayer>("hunter_awareness", HunterActions.awareness_hunter, true));
-        registry.register(new ActionSkill<IHunterPlayer>("hunter_disguise", HunterActions.disguise_hunter, true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("purified_garlic", true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("stake1", false)
-                .setDescription(() -> {
-                    TextComponent desc = new TranslationTextComponent("skill.vampirism.stake1.desc", (int) (VampirismConfig.BALANCE.hsInstantKill1MaxHealth.get() * 100));
-                    if (VampirismConfig.BALANCE.hsInstantKill1FromBehind.get()) {
-                        desc.append(new StringTextComponent(" "));
-                        desc.append(new TranslationTextComponent("text.vampirism.from_behind"));
-                    }
-                    return desc;
-                }));
-        registry.register(new VampirismSkill.SimpleHunterSkill("stake2", false)
-                .setDescription(() -> {
-                    ITextComponent desc = null;
-                    if (VampirismConfig.BALANCE.hsInstantKill2OnlyNPC.get()) {
-                        desc = new TranslationTextComponent("skill.vampirism.stake2.desc_npc", VampirismConfig.BALANCE.hsInstantKill2MaxHealth.get());
-                    } else {
-                        desc = new TranslationTextComponent("skill.vampirism.stake2.desc_all", VampirismConfig.BALANCE.hsInstantKill2MaxHealth.get());
+                        }
+                        return desc;
+                    }));
+    public static final RegistryObject<ISkill> TECH_WEAPONS = SKILLS.register("tech_weapons", () -> new VampirismSkill.SimpleHunterSkill(true));
+    public static final RegistryObject<ISkill> WEAPON_TABLE = SKILLS.register("weapon_table", () -> new VampirismSkill.SimpleHunterSkill(true));
+    public static final RegistryObject<ISkill> DURABLE_BREWING = SKILLS.register("durable_brewing", () -> new VampirismSkill.SimpleHunterSkill(true));
+    public static final RegistryObject<ISkill> CONCENTRATED_BREWING = SKILLS.register("concentrated_brewing", () -> new VampirismSkill.SimpleHunterSkill(true));
+    public static final RegistryObject<ISkill> MULTITASK_BREWING = SKILLS.register("multitask_brewing", () -> new VampirismSkill.SimpleHunterSkill(true));
+    public static final RegistryObject<ISkill> EFFICIENT_BREWING = SKILLS.register("efficient_brewing", () -> new VampirismSkill.SimpleHunterSkill(true));
+    public static final RegistryObject<ISkill> MASTER_BREWER = SKILLS.register("master_brewer", () -> new VampirismSkill.SimpleHunterSkill(true));
+    public static final RegistryObject<ISkill> SWIFT_BREWING = SKILLS.register("swift_brewing", () -> new VampirismSkill.SimpleHunterSkill(true));
+    public static final RegistryObject<ISkill> CONCENTRATED_DURABLE_BREWING = SKILLS.register("concentrated_durable_brewing", () -> new VampirismSkill.SimpleHunterSkill(true));
+    public static final RegistryObject<ISkill> POTION_RESISTANCE = SKILLS.register("potion_resistance", () -> new ActionSkill<IHunterPlayer>(HunterActions.POTION_RESISTANCE_HUNTER.get(), true));
+    public static final RegistryObject<ISkill> CRUCIFIX_WIELDER = SKILLS.register("crucifix_wielder", () -> new VampirismSkill.SimpleHunterSkill(true));
+    public static final RegistryObject<ISkill> ULTIMATE_CRUCIFIX = SKILLS.register("ultimate_crucifix", () -> new VampirismSkill.SimpleHunterSkill(true));
 
-                    }
-                    return desc;
-                }));
-        registry.register(new VampirismSkill.SimpleHunterSkill("tech_weapons", true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("weapon_table", true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("durable_brewing", true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("concentrated_brewing", true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("multitask_brewing", true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("efficient_brewing", true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("master_brewer", true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("swift_brewing", true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("concentrated_durable_brewing", true));
-        registry.register(new ActionSkill<IHunterPlayer>("potion_resistance", HunterActions.potion_resistance_hunter, true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("crucifix_wielder", true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("ultimate_crucifix", true));
+    static {
+        SKILLS.register(VReference.HUNTER_FACTION.getID().getPath(), () -> new VampirismSkill.SimpleHunterSkill(false));
+    }
+
+
+    public static void registerHunterSkills(IEventBus bus) {
+        SKILLS.register(bus);
     }
 
     public static void fixMappings(RegistryEvent.MissingMappings<ISkill> event) {
@@ -116,7 +93,7 @@ public class HunterSkills {
             if (missingMapping.key.toString().startsWith("vampirism:blood_potion_")) {
                 missingMapping.ignore();
             } else if (missingMapping.key.toString().equals("vampirism:holy_water_enhanced")) {
-                missingMapping.remap(enhanced_blessing);
+                missingMapping.remap(ENHANCED_BLESSING.get());
             }
         });
     }

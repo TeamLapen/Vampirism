@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.effects;
 
-import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.potion.EffectInstance;
@@ -21,14 +20,13 @@ public class VampirismPotion extends Potion {
         return Optional.empty();
     }
 
-    public VampirismPotion(String regName, @Nullable String baseName, EffectInstance... effects) {
+    public VampirismPotion(@Nullable String baseName, EffectInstance... effects) {
         super(baseName, effects);
-        this.setRegistryName(REFERENCE.MODID, regName);
     }
 
     public static class HunterPotion extends VampirismPotion {
-        public HunterPotion(String regName, @Nullable String baseName, EffectInstance... effects) {
-            super(regName, baseName, effects);
+        public HunterPotion(@Nullable String baseName, EffectInstance... effects) {
+            super(baseName, effects);
         }
     }
 }

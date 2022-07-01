@@ -18,7 +18,6 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -30,7 +29,7 @@ public class ConvertedDonkeyEntity extends DonkeyEntity implements CurableConver
     public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
         return AbstractHorseEntity.createBaseHorseAttributes()
                 .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_DMG)
-                .add(ModAttributes.sundamage, BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
+                .add(ModAttributes.SUNDAMAGE.get(), BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
     }
 
     private final Data<DonkeyEntity> data = new Data<>();
@@ -95,7 +94,7 @@ public class ConvertedDonkeyEntity extends DonkeyEntity implements CurableConver
 
     @Override
     protected ITextComponent getTypeName() {
-        return this.getNameC(() -> new TranslationTextComponent("entity.donkey"));
+        return this.getNameC(EntityType.DONKEY::getDescription);
     }
 
     @Nonnull

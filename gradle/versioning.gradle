@@ -2,18 +2,28 @@ project.mod_version = "${project.main_version}.${project.major_version}.${projec
 if (hasProperty("beta")) {
     project.mod_version = project.mod_version + "-beta." + beta
     project.type = "beta"
+    project.classification = "public"
 } else if (hasProperty("release")) {
     project.type = "release"
-} else if (System.getenv().CI) {
+    project.classification = "public"
+} else if (hasProperty("alpha")) {
+    project.mod_version = project.mod_version + "-alpha+" + getDate()
+    project.type = "alpha"
+    project.classification = "public"
+}
+else if (System.getenv().CI) {
     project.mod_version = project.mod_version + "-test+" + System.getenv().GIT_BRANCH + "." + System.getenv().GIT_COMMIT
     writeVersion()
     project.type = "test"
-} else if(hasProperty("testing")) {
-    project.mod_version = project.mod_version + "-test+" + getDate()+"+"+testing
+    project.classification = "private"
+} else if(hasProperty("testid")) {
+    project.mod_version = project.mod_version + "-test+" + getDate()+"+"+testid
     project.type = "test"
+    project.classification = "private"
 } else {
-    project.mod_version = project.mod_version + "-alpha+" + getDate()
-    project.type = "alpha"
+    project.mod_version = project.mod_version + "-build+" + getDate()
+    project.type = "test"
+    project.classification = "test"
 }
 
 version = project.minecraft_version + "-" + project.mod_version

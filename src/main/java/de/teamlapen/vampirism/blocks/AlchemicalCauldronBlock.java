@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.tileentity.AlchemicalCauldronTileEntity;
@@ -31,7 +30,6 @@ import java.util.Random;
 
 
 public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
-    public static final String regName = "alchemical_cauldron";
     /**
      * 0: No liquid,
      * 1: Liquid,
@@ -50,7 +48,6 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
     public AlchemicalCauldronBlock() {
         super(Block.Properties.of(Material.METAL).strength(4f).noOcclusion());
         this.registerDefaultState(this.stateDefinition.any().setValue(LIQUID, 0).setValue(FACING, Direction.NORTH).setValue(LIT, false));
-        this.setRegistryName(REFERENCE.MODID, regName);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -58,7 +55,7 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
     public void animateTick(BlockState state, World world, BlockPos pos, Random rng) {
         super.animateTick(state, world, pos, rng);
         if (state.getValue(LIQUID) == 2) {
-            world.playLocalSound(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, ModSounds.boiling, SoundCategory.BLOCKS, 0.05F, 1, false);
+            world.playLocalSound(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, ModSounds.BOILING.get(), SoundCategory.BLOCKS, 0.05F, 1, false);
         }
     }
 

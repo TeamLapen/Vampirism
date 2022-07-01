@@ -29,7 +29,7 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class PureBloodItem extends VampirismItem {
+public class PureBloodItem extends Item {
 
     public static final int COUNT = 5;
     private final static Logger LOGGER = LogManager.getLogger();
@@ -38,27 +38,26 @@ public class PureBloodItem extends VampirismItem {
     public static Item getBloodItemForLevel(int level) {
         switch (level) {
             case 0:
-                return ModItems.pure_blood_0;
+                return ModItems.PURE_BLOOD_0.get();
             case 1:
-                return ModItems.pure_blood_1;
+                return ModItems.PURE_BLOOD_1.get();
             case 2:
-                return ModItems.pure_blood_2;
+                return ModItems.PURE_BLOOD_2.get();
             case 3:
-                return ModItems.pure_blood_3;
+                return ModItems.PURE_BLOOD_3.get();
             case 4:
-                return ModItems.pure_blood_4;
+                return ModItems.PURE_BLOOD_4.get();
             default:
                 LOGGER.warn("Pure blood of level {} does not exist", level);
-                return ModItems.pure_blood_4;
+                return ModItems.PURE_BLOOD_4.get();
         }
     }
 
     private final int level;
 
     public PureBloodItem(int level) {
-        super(name + "_" + level, new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties().tab(VampirismMod.creativeTab));
         this.level = level;
-        this.setTranslation_key(name);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -72,7 +71,7 @@ public class PureBloodItem extends VampirismItem {
         if (entityLiving instanceof PlayerEntity) {
             VampirePlayer.getOpt((PlayerEntity) entityLiving).ifPresent(v -> {
                 v.drinkBlood(50, 0.3f, false);
-                entityLiving.addEffect(new EffectInstance(ModEffects.saturation));
+                entityLiving.addEffect(new EffectInstance(ModEffects.SATURATION.get()));
                 stack.shrink(1);
                 checkWingConditions(v);
             });
@@ -117,5 +116,15 @@ public class PureBloodItem extends VampirismItem {
                 p.triggerWings();
             }
         }
+    }
+
+    private String descriptionId;
+    @Override
+    protected String getOrCreateDescriptionId() {
+        if (this.descriptionId == null) {
+            this.descriptionId = super.getOrCreateDescriptionId().replaceAll("_\\d", "");
+        }
+
+        return this.descriptionId;
     }
 }

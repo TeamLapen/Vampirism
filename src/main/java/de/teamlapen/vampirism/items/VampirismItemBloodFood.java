@@ -13,13 +13,14 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
+import net.minecraft.item.Item;
 
-public class VampirismItemBloodFood extends VampirismItem {
+public class VampirismItemBloodFood extends Item {
 
     private final Food vampireFood;
 
-    public VampirismItemBloodFood(String regName, Food vampireFood, Food humanFood) {
-        super(regName, new Properties().tab(VampirismMod.creativeTab).food(humanFood));
+    public VampirismItemBloodFood(Food vampireFood, Food humanFood) {
+        super(new Properties().tab(VampirismMod.creativeTab).food(humanFood));
         this.vampireFood = vampireFood;
     }
 
