@@ -30,4 +30,9 @@ public class AttackSpeedLordAction<T extends IFactionPlayer> extends LordRangeEf
     protected int getEffectDuration(IFactionPlayer player) {
         return VampirismConfig.BALANCE.laLordAttackSpeedDuration.get() * 20;
     }
+
+    @Override
+    protected int getEffectAmplifier(IFactionPlayer player) {
+        return 0;
+    }
 }
