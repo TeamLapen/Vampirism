@@ -123,6 +123,7 @@ public class ModBlocksRender {
         RenderTypeLookup.setRenderLayer(ModBlocks.CURSED_SPRUCE_TRAPDOOR.get(), cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.VAMPIRE_RACK.get(), cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.THRONE.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.ALCHEMY_TABLE.get(), cutout);
     }
 
 

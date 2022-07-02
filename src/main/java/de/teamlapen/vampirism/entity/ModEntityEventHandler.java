@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
+import de.teamlapen.vampirism.api.items.oil.IWeaponOil;
 import de.teamlapen.vampirism.blocks.CastleBricksBlock;
 import de.teamlapen.vampirism.blocks.CastleSlabBlock;
 import de.teamlapen.vampirism.blocks.CastleStairsBlock;
@@ -19,12 +20,14 @@ import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
+import de.teamlapen.vampirism.items.oil.EvasionOil;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.tileentity.TotemHelper;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import de.teamlapen.vampirism.util.DifficultyCalculator;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.OilUtils;
 import it.unimi.dsi.fastutil.objects.Object2BooleanArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import net.minecraft.block.Block;
@@ -43,6 +46,7 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.PotionItem;
+import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
@@ -63,6 +67,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
+import java.util.stream.StreamSupport;
 
 /**
  * Event handler for all entity related events
@@ -310,6 +315,36 @@ public class ModEntityEventHandler {
             ExtendedCreature.getSafe(event.getEntity()).ifPresent(IExtendedCreatureVampirism::tick);
             event.getEntity().getCommandSenderWorld().getProfiler().pop();
 
+        }
+    }
+
+    @SubscribeEvent
+    public void onActuallyHurt(LivingHurtEvent event) {
+        if (event.getSource() instanceof EntityDamageSource && event.getSource().msgId.equals("player") && event.getSource().getEntity() instanceof PlayerEntity) {
+            PlayerEntity player = ((PlayerEntity) event.getSource().getEntity());
+            ItemStack stack = player.getMainHandItem();
+            OilUtils.getAppliedOil(stack).ifPresent(oil -> {
+                if (oil instanceof IWeaponOil) {
+                    event.setAmount(event.getAmount() + ((IWeaponOil) oil).onHit(stack, event.getAmount(), ((IWeaponOil) oil), event.getEntityLiving(), player));
+                    oil.reduceDuration(stack, oil, oil.getDurationReduction());
+                }
+            });
+        }
+    }
+
+    @SubscribeEvent
+    public void onLivingDamage(LivingDamageEvent event) {
+        if (event.getSource() instanceof EntityDamageSource && event.getSource().msgId.equals("player") && event.getSource().getEntity() instanceof PlayerEntity) {
+            PlayerEntity player = ((PlayerEntity) event.getSource().getEntity());
+            ItemStack stack = player.getMainHandItem();
+            OilUtils.getAppliedOil(stack).ifPresent(oil -> {
+                if (oil instanceof IWeaponOil) {
+                    event.setAmount(event.getAmount() + ((IWeaponOil) oil).onDamage(stack, event.getAmount(), ((IWeaponOil) oil), event.getEntityLiving(), player));
+                }
+            });
+        }
+        if (event.getSource() instanceof EntityDamageSource && !event.getSource().isBypassArmor() && StreamSupport.stream(event.getEntityLiving().getArmorSlots().spliterator(), false).map(OilUtils::getAppliedOil).filter(Optional::isPresent).map(Optional::get).filter(EvasionOil.class::isInstance).anyMatch(oil -> ((EvasionOil) oil).evasionChance() > event.getEntityLiving().getRandom().nextFloat())) {
+            event.setAmount(0);
         }
     }
 }

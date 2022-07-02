@@ -1,0 +1,26 @@
+{
+  "type": "vampirism:alchemical_table",
+  "result": {
+    "item": "vampirism:oil_bottle",
+    "nbt": {
+      "oil": "vampirism:luck"
+    }
+  },
+  "ingredient": {
+    "type": "vampirism:item",
+    "item": "vampirism:oil_bottle",
+    "count": 1,
+    "nbt": {
+      "oil": "vampirism:vampire_blood"
+    }
+  },
+  "input": {
+    "type": "vampirism:item",
+    "item": "minecraft:potion",
+    "count": 1,
+    "nbt": {
+      "Potion": "minecraft:luck"
+    }
+  },
+  "skill": []
+}

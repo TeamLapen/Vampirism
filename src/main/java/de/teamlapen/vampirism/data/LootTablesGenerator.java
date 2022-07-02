@@ -313,6 +313,7 @@ public class LootTablesGenerator extends LootTableProvider {
             this.dropSelf(ModBlocks.CURSED_SPRUCE_FENCE.get());
             this.dropSelf(ModBlocks.VAMPIRE_RACK.get());
             this.add(ModBlocks.THRONE.get(), (p_218567_0_) -> createSinglePropConditionTable(p_218567_0_, VampirismSplitBlock.PART, VampirismSplitBlock.Part.MAIN));
+            this.dropSelf(ModBlocks.ALCHEMY_TABLE.get());
         }
 
         @Nonnull

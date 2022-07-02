@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.config;
 
 import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.core.ModTags;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModList;
 import org.apache.logging.log4j.LogManager;
@@ -199,6 +200,10 @@ public class BalanceConfig {
     public final ForgeConfigSpec.DoubleValue vrTeleportDistanceMod;
     public final ForgeConfigSpec.DoubleValue vrHalfInvulnerableThresholdMod;
     public final ForgeConfigSpec.DoubleValue vrSwordFinisherThresholdMod;
+
+    public final ForgeConfigSpec.BooleanValue itApplicableOilArmorReverse;
+    public final ForgeConfigSpec.BooleanValue itApplicableOilPickaxeReverse;
+    public final ForgeConfigSpec.BooleanValue itApplicableOilSwordReverse;
 
     BalanceConfig(BalanceBuilder builder) {
         boolean iceAndFire = ModList.get().isLoaded("iceandfire");
@@ -413,5 +418,10 @@ public class BalanceConfig {
         vrTeleportDistanceMod = builder.defineInRange("teleportDistanceMod", 1.5, 1, Double.MAX_VALUE);
         vrHalfInvulnerableThresholdMod = builder.comment("Threshold for attacks that are considered high damage is multiplied by this value").defineInRange("halfInvulnerableThresholdMod", 0.7, 0, 2);
         vrSwordFinisherThresholdMod = builder.comment("Threshold for instant kill is modified by this amount").defineInRange("swordFinisherThresholdMod", 1.25, 1, Double.MAX_VALUE);
+
+        builder.category("items", "it");
+        itApplicableOilArmorReverse = builder.comment(String.format("Determines if the '%s' item tag should work as blacklist (false) or whitelist (true)" ,ModTags.Items.APPLICABLE_OIL_ARMOR.getName())).define("applicableOilArmorReverse", false);
+        itApplicableOilPickaxeReverse = builder.comment(String.format("Determines if the '%s' item tag should work as blacklist (false) or whitelist (true)" ,ModTags.Items.APPLICABLE_OIL_PICKAXE.getName())).define("applicableOilPickaxeReverse", false);
+        itApplicableOilSwordReverse = builder.comment(String.format("Determines if the '%s' item tag should work as blacklist (false) or whitelist (true)" ,ModTags.Items.APPLICABLE_OIL_SWORD.getName())).define("applicableOilSwordReverse", false);
     }
 }

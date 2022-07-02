@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.effects.VampirismPotion;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.proxy.ClientProxy;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.OilUtils;
 import net.minecraft.client.renderer.model.BlockModel;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.IUnbakedModel;
@@ -22,6 +23,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.item.DyeColor;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Potion;
@@ -188,5 +190,24 @@ public class ClientEventHandler {
             ModelLoader.addSpecialModel(new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_top_" + dye.getName()));
             ModelLoader.addSpecialModel(new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_" + dye.getName()));
         }
+    }
+
+    @SubscribeEvent
+    public void onItemToolTip(ItemTooltipEvent event) {
+        OilUtils.getAppliedOilStatus(event.getItemStack()).flatMap(pair -> pair.getLeft().getToolTipLine(event.getItemStack(), pair.getKey(), pair.getValue(), event.getFlags())).ifPresent(tooltipLine -> {
+            int position = 1;
+            int flags = getHideFlags(event.getItemStack());
+            if (shouldShowInTooltip(flags, ItemStack.TooltipDisplayFlags.ADDITIONAL)) ++position;
+
+            event.getToolTip().add(position, tooltipLine);
+        });
+    }
+
+    private static boolean shouldShowInTooltip(int p_242394_0_, ItemStack.TooltipDisplayFlags p_242394_1_) {
+        return (p_242394_0_ & p_242394_1_.getMask()) == 0;
+    }
+
+    private int getHideFlags(ItemStack stack) {
+        return stack.hasTag() && stack.getTag().contains("HideFlags", 99) ? stack.getTag().getInt("HideFlags") : 0;
     }
 }
