@@ -55,13 +55,12 @@ public abstract class VampirismVillageEvent extends Event {
 
     /**
      * Fired when a new villager will be spawned.
-     * Deny if none should spawn, allow and set villager if you own villager should spawn.
-     * Default spawns a standard villager.
+     * You can replace the villager object with a suitable alternative instance
      * <p>
      * Your villager should have the position set, but should not be spawned in the world.
+     *
+     * Does not actually have a result. TODO remove
      * <p>
-     * The {@linkplain #willBeConverted} field tells if the villager will be converted to an aggressive version. You can change this.
-     * DON'T set an aggressive villager even if this field is true
      */
     @HasResult
     public static class SpawnNewVillager extends VampirismVillageEvent {
@@ -73,8 +72,9 @@ public abstract class VampirismVillageEvent extends Event {
         private final @Nullable
         MobEntity oldEntity;
         private final boolean replace;
-        private @Nullable
+        private @Nonnull
         VillagerEntity newVillager;
+        @Deprecated
         private boolean willBeConverted;
 
         public SpawnNewVillager(ITotem totem, @Nullable MobEntity oldEntity, @Nonnull VillagerEntity newVillager, boolean replace, boolean willBeConverted) {
@@ -92,7 +92,7 @@ public abstract class VampirismVillageEvent extends Event {
             return this.totem.getControllingFaction();
         }
 
-        @Nullable
+        @Nonnull
         public VillagerEntity getNewVillager() {
             return newVillager;
         }
@@ -103,15 +103,13 @@ public abstract class VampirismVillageEvent extends Event {
          *
          * @param newVillager
          */
-        public void setNewVillager(@Nullable VillagerEntity newVillager) {
+        public void setNewVillager(@Nonnull VillagerEntity newVillager) {
             this.newVillager = newVillager;
         }
 
         /**
          * A random existing villager which can be used as a seed (e.g. for the position)
-         *
-         * @return
-         */
+         **/
         @Nullable
         public MobEntity getOldEntity() {
             return oldEntity;
@@ -125,16 +123,20 @@ public abstract class VampirismVillageEvent extends Event {
         }
 
         /**
+         * Ignore
          * If the villager will be converted afterwards (e.g. to a vampire version)
          * Default: Is sometimes true if the village is not controlled by hunters. Can be overridden by {@link #setWillBeConverted}
          */
+        @Deprecated
         public boolean isWillBeConverted() {
             return willBeConverted;
         }
 
         /**
+         * No effect
          * Overwrite the default value.
          */
+        @Deprecated
         public void setWillBeConverted(boolean willBeConverted) {
             this.willBeConverted = willBeConverted;
         }
