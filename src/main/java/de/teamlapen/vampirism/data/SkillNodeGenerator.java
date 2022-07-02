@@ -79,6 +79,11 @@ public class SkillNodeGenerator implements IDataProvider {
             ResourceLocation weapon4 = SkillNodeBuilder.hunter(weapon3, HunterSkills.ENHANCED_ARMOR.get()).build(consumer, modId("weapon4"));
             ResourceLocation weapon5 = SkillNodeBuilder.hunter(weapon4, HunterSkills.TECH_WEAPONS.get()).build(consumer, modId("weapon5"));
             ResourceLocation weapon6 = SkillNodeBuilder.hunter(weapon5, HunterSkills.STAKE2.get()).build(consumer, modId("weapon6"));
+
+            ResourceLocation lord_2 = SkillNodeBuilder.hunter(modId("hunter_lord"), HunterSkills.HUNTER_MINION_STATS_INCREASE.get()).build(consumer, modId("lord_2"));
+            ResourceLocation lord_3 = SkillNodeBuilder.hunter(modId("hunter_lord"), HunterSkills.HUNTER_LORD_SPEED.get(), HunterSkills.HUNTER_LORD_ATTACK_SPEED.get()).build(consumer, modId("lord_3"));
+            ResourceLocation lord_4 = SkillNodeBuilder.hunter(modId("hunter_lord"), HunterSkills.HUNTER_MINION_COLLECT.get()).build(consumer, modId("lord_4"));
+            ResourceLocation lord_5 = SkillNodeBuilder.hunter(modId("hunter_lord"), HunterSkills.HUNTER_MINION_RECOVERY.get()).build(consumer, modId("lord_5"));
         }
 
         //vampire
@@ -109,6 +114,12 @@ public class SkillNodeGenerator implements IDataProvider {
             ResourceLocation defensive4_2 = SkillNodeBuilder.vampire(defensive3, VampireSkills.BLOOD_VISION_GARLIC.get()).build(consumer, modId("defensive4"));
             ResourceLocation defensive5 = SkillNodeBuilder.vampire(defensive4_1, VampireSkills.NEONATAL_DECREASE.get(), VampireSkills.DBNO_DURATION.get()).build(consumer, modId("defensive6"));
             ResourceLocation defensive6 = SkillNodeBuilder.vampire(defensive5, VampireSkills.TELEPORT.get()).build(consumer, modId("defensive7"));
+
+            ResourceLocation lord_2 = SkillNodeBuilder.vampire(modId("vampire_lord"), VampireSkills.VAMPIRE_MINION_STATS_INCREASE.get()).build(consumer, modId("lord_2"));
+            ResourceLocation lord_3 = SkillNodeBuilder.vampire(modId("vampire_lord"), VampireSkills.VAMPIRE_LORD_SPEED.get(), VampireSkills.VAMPIRE_LORD_ATTACK_SPEED.get()).build(consumer, modId("lord_3"));
+            ResourceLocation lord_4 = SkillNodeBuilder.vampire(modId("vampire_lord"), VampireSkills.VAMPIRE_MINION_COLLECT.get()).build(consumer, modId("lord_4"));
+            ResourceLocation lord_5 = SkillNodeBuilder.vampire(modId("vampire_lord"), VampireSkills.VAMPIRE_MINION_RECOVERY.get()).build(consumer, modId("lord_5"));
+
         }
 
     }

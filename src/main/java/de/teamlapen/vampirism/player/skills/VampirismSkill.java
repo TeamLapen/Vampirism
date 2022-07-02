@@ -5,6 +5,8 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.DefaultSkill;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillType;
+import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -76,8 +78,24 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
         public IPlayableFaction getFaction() {
             return VReference.HUNTER_FACTION;
         }
+
+        @Override
+        public ISkillType getType() {
+            return SkillType.LEVEL;
+        }
     }
 
+    public static class LordHunterSkill extends SimpleHunterSkill {
+
+        public LordHunterSkill(boolean desc) {
+            super(desc);
+        }
+
+        @Override
+        public ISkillType getType() {
+            return SkillType.LORD;
+        }
+    }
 
     /**
      * Simple vampire skill implementation. Does nothing by itself
@@ -95,6 +113,23 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
         @Override
         public IPlayableFaction getFaction() {
             return VReference.VAMPIRE_FACTION;
+        }
+
+        @Override
+        public ISkillType getType() {
+            return SkillType.LEVEL;
+        }
+    }
+
+    public static class LordVampireSkill extends SimpleVampireSkill {
+
+        public LordVampireSkill(boolean desc) {
+            super(desc);
+        }
+
+        @Override
+        public ISkillType getType() {
+            return SkillType.LORD;
         }
     }
 }

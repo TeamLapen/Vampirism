@@ -764,10 +764,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 bloodStats.setMaxBlood(20);
             }
             if (newLevel > 0) {
-                if (oldLevel == 0) {
-                    skillHandler.enableRootSkill();
-                }
-
             } else {
                 actionHandler.resetTimers();
                 skillHandler.disableAllSkills();
