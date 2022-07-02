@@ -56,12 +56,6 @@ public class ModPotions {
     public static final RegistryObject<HunterPotion> NAUSEA = POTIONS.register("nausea", () -> new HunterPotion(null, new MobEffectInstance(MobEffects.CONFUSION, 1200)));
     public static final RegistryObject<HunterPotion> LONG_NAUSEA = POTIONS.register("long_nausea", () -> new HunterPotion("nausea", new MobEffectInstance(MobEffects.CONFUSION, 2400)));
     public static final RegistryObject<HunterPotion> VERY_LONG_NAUSEA = POTIONS.register("very_long_nausea", () -> new HunterPotion("nausea", new MobEffectInstance(MobEffects.CONFUSION, 24000)));
-    public static final RegistryObject<HunterPotion> THIRST = POTIONS.register("thirst", () -> new HunterPotion(null, new MobEffectInstance(ModEffects.THIRST.get(), 1200)));
-    public static final RegistryObject<HunterPotion> LONG_THIRST = POTIONS.register("long_thirst", () -> new HunterPotion("thirst", new MobEffectInstance(ModEffects.THIRST.get(), 4800)));
-    public static final RegistryObject<HunterPotion> STRONG_THIRST = POTIONS.register("strong_thirst", () -> new HunterPotion("thirst", new MobEffectInstance(ModEffects.THIRST.get(), 400, 1)));
-    public static final RegistryObject<HunterPotion> VERY_LONG_THIRST = POTIONS.register("very_long_thirst", () -> new HunterPotion("thirst", new MobEffectInstance(ModEffects.THIRST.get(), 24000)));
-    public static final RegistryObject<HunterPotion> VERY_STRONG_THIRST = POTIONS.register("very_strong_thirst", () -> new HunterPotion("thirst", new MobEffectInstance(ModEffects.THIRST.get(), 1200, 2)));
-    public static final RegistryObject<HunterPotion> LONG_STRONG_THIRST = POTIONS.register("long_strong_thirst", () -> new HunterPotion("thirst", new MobEffectInstance(ModEffects.THIRST.get(), 9600, 1)));
     public static final RegistryObject<HunterPotion> BLINDNESS = POTIONS.register("blindness", () -> new HunterPotion(null, new MobEffectInstance(MobEffects.BLINDNESS, 1200)));
     public static final RegistryObject<HunterPotion> LONG_BLINDNESS = POTIONS.register("long_blindness", () -> new HunterPotion("blindness", new MobEffectInstance(MobEffects.BLINDNESS, 4800)));
     public static final RegistryObject<HunterPotion> VERY_LONG_BLINDNESS = POTIONS.register("very_long_blindness", () -> new HunterPotion("blindness", new MobEffectInstance(MobEffects.BLINDNESS, 24000)));
@@ -120,13 +114,6 @@ public class ModPotions {
         master(NAUSEA, () -> Ingredient.of(Tags.Items.MUSHROOMS), 32, 16);
         durable(NAUSEA, LONG_NAUSEA);
         veryDurable(LONG_NAUSEA, VERY_LONG_NAUSEA);
-        master(THIRST, () -> Ingredient.of(ModItems.VAMPIRE_FANG.get()), 10, 5);
-        durable(THIRST, LONG_THIRST);
-        strong(THIRST, STRONG_THIRST);
-        veryDurable(LONG_THIRST, VERY_LONG_THIRST);
-        veryStrong(STRONG_THIRST, VERY_STRONG_THIRST);
-        veryDurable(VERY_STRONG_THIRST, LONG_STRONG_THIRST);
-        veryStrong(VERY_LONG_THIRST, LONG_STRONG_THIRST);
         master(BLINDNESS, () -> Ingredient.of(Items.INK_SAC), 64, 32);
         durable(BLINDNESS, LONG_BLINDNESS);
         veryDurable(LONG_BLINDNESS, VERY_LONG_BLINDNESS);
@@ -168,6 +155,7 @@ public class ModPotions {
             switch (missingMapping.getKey().toString()) {
                 case "vampirism:long_strong_resistance", "vampirism:very_long_resistance" -> missingMapping.remap(ModPotions.LONG_RESISTANCE.get());
                 case "vampirism:very_strong_resistance" -> missingMapping.remap(ModPotions.STRONG_RESISTANCE.get());
+                case "vampirism:thirst", "vampirism:long_thirst", "vampirism:strong_thirst","vampirism:very_long_thirst", "vampirism:very_strong_thirst", "vampirism:long_strong_thirst" -> missingMapping.ignore();
             }
         });
     }

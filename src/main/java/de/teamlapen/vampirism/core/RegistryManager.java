@@ -107,6 +107,7 @@ public class RegistryManager implements IInitListener {
         ModBlocks.fixMappings(event);
         ModEnchantments.fixMapping(event);
         ModEntities.fixMapping(event);
+        ModEffects.fixMappings(event);
     }
 
     @SubscribeEvent

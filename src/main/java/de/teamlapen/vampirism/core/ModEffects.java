@@ -14,10 +14,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,7 +25,6 @@ public class ModEffects {
     public static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, REFERENCE.MODID);
 
     public static final RegistryObject<MobEffect> SANGUINARE = EFFECTS.register("sanguinare", () -> new SanguinareEffect(MobEffectCategory.NEUTRAL, 0x6A0888));
-    public static final RegistryObject<MobEffect> THIRST = EFFECTS.register("thirst", () -> new ThirstEffect(MobEffectCategory.HARMFUL, 859494));
     public static final RegistryObject<MobEffect> SATURATION = EFFECTS.register("saturation", () -> new VampirismEffect(MobEffectCategory.BENEFICIAL, 0xDCFF00));
     public static final RegistryObject<MobEffect> SUNSCREEN = EFFECTS.register("sunscreen", () -> new VampirismEffect(MobEffectCategory.BENEFICIAL, 0xFFF100).addAttributeModifier(ModAttributes.SUNDAMAGE.get(), "9dc9420c-3e5e-41c7-9ba4-ff70e9dc69fc", -0.5, AttributeModifier.Operation.MULTIPLY_TOTAL));
     public static final RegistryObject<MobEffect> DISGUISE_AS_VAMPIRE = EFFECTS.register("disguise_as_vampire", () -> new VampirismEffect(MobEffectCategory.NEUTRAL, 0x999900));
@@ -105,4 +101,14 @@ public class ModEffects {
         }
         return true;
     }
+
+    public static void fixMappings(MissingMappingsEvent event) {
+        event.getAllMappings(ForgeRegistries.Keys.MOB_EFFECTS).forEach(missingMapping -> {
+            switch (missingMapping.getKey().toString()) {
+                case "vampirism:thirst" ->  missingMapping.remap(MobEffects.HUNGER);
+            }
+        });
+    }
+
+
 }

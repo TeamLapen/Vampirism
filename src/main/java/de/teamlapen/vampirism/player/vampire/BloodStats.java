@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.player.vampire;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAttributes;
+import de.teamlapen.vampirism.core.ModTags;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
@@ -87,8 +88,9 @@ public class BloodStats implements IBloodStats {
         foodStats.exhaustionLevel = 0;
         addExhaustion(exhaustion);
         this.prevBloodLevel = bloodLevel;
-        if (this.bloodExhaustionLevel > 4.0F) {
-            this.bloodExhaustionLevel -= 4.0F;
+        float bloodExhaustionGate = player.getCommandSenderWorld().getBiome(player.blockPosition()).is(ModTags.Biomes.IS_VAMPIRE_BIOME) ? 6f : 4f;
+        if (this.bloodExhaustionLevel > bloodExhaustionGate) {
+            this.bloodExhaustionLevel -= bloodExhaustionGate;
             if (bloodSaturationLevel > 0) {
                 bloodSaturationLevel = Math.max(bloodSaturationLevel - 1F, 0F);
             } else if (enumDifficulty != Difficulty.PEACEFUL || VampirismConfig.BALANCE.vpBloodUsagePeaceful.get()) {
@@ -170,17 +172,11 @@ public class BloodStats implements IBloodStats {
      * @param ignoreModifier If the entity exhaustion attribute {@link de.teamlapen.vampirism.core.ModAttributes#BLOOD_EXHAUSTION} should be ignored
      */
     void addExhaustion(float amount, boolean ignoreModifier) {
-        AttributeInstance attribute = player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get());
-        float mult;
-        if (ignoreModifier) {
-            mult = 1F;
-        } else {
-
-            mult = (float) attribute.getValue();
-
+        if  (!ignoreModifier) {
+            AttributeInstance attribute = player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get());
+            amount *= attribute.getValue();
         }
-
-        this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount * mult, 40F);
+        this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount, 40F);
     }
 
     void loadUpdate(CompoundTag nbt) {

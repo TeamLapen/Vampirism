@@ -892,11 +892,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                     player.addEffect(new MobEffectInstance(ModEffects.FIRE_PROTECTION.get(), fireResistance.getDuration(), fireResistance.getAmplifier()));
                     player.removeEffect(MobEffects.FIRE_RESISTANCE);
                 }
-                if (player.tickCount % 9 == 3 && player.hasEffect(MobEffects.HUNGER)) {
-                    MobEffectInstance hunterEffect = player.getEffect(MobEffects.HUNGER);
-                    player.addEffect(new MobEffectInstance(ModEffects.THIRST.get(), hunterEffect.getDuration(), hunterEffect.getAmplifier()));
-                    player.removeEffect(MobEffects.HUNGER);
-                }
                 if (actionHandler.updateActions()) {
                     sync = true;
                     syncToAll = true;
@@ -1279,7 +1274,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
      */
     private void applyLevelModifiersA(int level) {
         LevelAttributeModifier.applyModifier(player, Attributes.MAX_HEALTH, "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpHealthMaxMod.get(), 0.5, AttributeModifier.Operation.ADDITION, true);
-        LevelAttributeModifier.applyModifier(player, ModAttributes.BLOOD_EXHAUSTION.get(), "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpExhaustionMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
+        LevelAttributeModifier.applyModifier(player, ModAttributes.BLOOD_EXHAUSTION.get(), "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpExhaustionMaxMod.get(), 0.5, AttributeModifier.Operation.ADDITION, false);
     }
 
     /**
