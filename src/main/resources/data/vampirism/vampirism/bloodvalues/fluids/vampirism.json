@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "vampirism:impure_blood",
+      "value": 0.75
+    }
+  ]
+}

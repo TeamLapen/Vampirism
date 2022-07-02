@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.network;
 
 import com.google.common.collect.Maps;
-import com.mojang.datafixers.util.Pair;
 import de.teamlapen.lib.network.IMessage;
 import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.network.FriendlyByteBuf;
@@ -12,30 +11,28 @@ import java.lang.reflect.Array;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public record SBloodValuePacket(
-        Pair<Map<ResourceLocation, Integer>, Integer>[] values) implements IMessage {
+public record SBloodValuePacket(Map<ResourceLocation, Float>[] values) implements IMessage {
 
     static void encode(SBloodValuePacket msg, FriendlyByteBuf buf) {
-        for (Pair<Map<ResourceLocation, Integer>, Integer> e : msg.values) {
-            buf.writeVarInt(e.getFirst().size());
-            for (Map.Entry<ResourceLocation, Integer> f : e.getFirst().entrySet()) {
+        for (Map<ResourceLocation, Float> e : msg.values) {
+            buf.writeVarInt(e.size());
+            for (Map.Entry<ResourceLocation, Float> f : e.entrySet()) {
                 buf.writeResourceLocation(f.getKey());
-                buf.writeVarInt(f.getValue());
+                buf.writeFloat(f.getValue());
             }
-            buf.writeVarInt(e.getSecond());
         }
     }
 
     static SBloodValuePacket decode(FriendlyByteBuf buf) {
         @SuppressWarnings("unchecked")
-        Pair<Map<ResourceLocation, Integer>, Integer>[] values = (Pair<Map<ResourceLocation, Integer>, Integer>[]) Array.newInstance(Pair.class, 3);
+        Map<ResourceLocation, Float>[] values = (Map<ResourceLocation, Float>[]) Array.newInstance(Map.class, 3);
         for (int i = 0; i < 3; i++) {
-            Map<ResourceLocation, Integer> map = Maps.newConcurrentMap();
+            Map<ResourceLocation, Float> map = Maps.newConcurrentMap();
             int z = buf.readVarInt();
             for (int u = 0; u < z; u++) {
-                map.put(buf.readResourceLocation(), buf.readVarInt());
+                map.put(buf.readResourceLocation(), buf.readFloat());
             }
-            values[i] = new Pair<>(map, buf.readVarInt());
+            values[i] = map;
         }
         return new SBloodValuePacket(values);
     }
@@ -46,7 +43,7 @@ public record SBloodValuePacket(
         ctx.setPacketHandled(true);
     }
 
-    public Pair<Map<ResourceLocation, Integer>, Integer>[] getValues() {
+    public Map<ResourceLocation, Float>[] getValues() {
         return values;
     }
 }

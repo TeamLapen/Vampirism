@@ -26,6 +26,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+@Deprecated //TODO remove
 public class BloodValueLoaderDynamic extends BloodValueLoader {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final List<BloodValueLoaderDynamic> LOADER = Lists.newArrayList();

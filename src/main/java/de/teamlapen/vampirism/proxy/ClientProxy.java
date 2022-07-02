@@ -114,9 +114,9 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void handleBloodValuePacket(SBloodValuePacket msg) {
-        ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).applyNewResources(msg.getValues()[0].getFirst(), msg.getValues()[0].getSecond());
-        BloodConversionRegistry.applyNewItemResources(msg.getValues()[1].getFirst(), msg.getValues()[1].getSecond());
-        BloodConversionRegistry.applyNewFluidResources(msg.getValues()[2].getFirst(), msg.getValues()[2].getSecond());
+        ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).applyNewResources(msg.getValues()[0]);
+        BloodConversionRegistry.applyNewItemResources(msg.getValues()[1]);
+        BloodConversionRegistry.applyNewFluidResources(msg.getValues()[2]);
     }
 
     @Override

@@ -12,9 +12,10 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Store blood conversion factors.
@@ -22,41 +23,94 @@ import java.util.concurrent.ConcurrentHashMap;
  * Liquids -> blood
  */
 public class BloodConversionRegistry {
+
     /**
      * stores conversion rate from items to impure blood
      */
     @Nonnull
-    private static final Map<ResourceLocation, Integer> items = Maps.newHashMap();
+    private static final Map<ResourceLocation, Float> items = Maps.newHashMap();
+
     /**
      * stores conversion rate from fluids to blood
      */
     @Nonnull
-    private static final Map<ResourceLocation, Integer> fluids = Maps.newHashMap();
+    private static final Map<ResourceLocation, Float> fluids = Maps.newHashMap();
+
+    @Nonnull
+    private static final Map<ResourceLocation, Float> entities = Maps.newHashMap();
 
     /**
      * stores conversion rate from not listed items to impure blood
      */
     @Nonnull
-    private static final Map<ResourceLocation, Integer> items_calculated = Maps.newHashMap();
+    private static final Map<ResourceLocation, Float> items_calculated = Maps.newHashMap();
     /**
      * stores items with no conversion rate
      */
     @Nonnull
     private static final Set<ResourceLocation> items_blacklist = Sets.newHashSet();
 
-    private static int fluidDivider = 100;
-    private static int itemMultiplier = 100;
-
+    /**
+     * @deprecated use {@link #applyNewFluidResources(java.util.Map)}
+     */
+    @Deprecated //TODO remove
     public static void applyNewFluidResources(Map<ResourceLocation, Integer> values, int divider) {
+        applyNewFluidResources(values.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() / (float)divider)));
+    }
+
+    /**
+     * @deprecated use {@link #applyNewItemResources(java.util.Map)}
+     */
+    @Deprecated //TODO remove
+    public static void applyNewItemResources(Map<ResourceLocation, Integer> values, int multiplier) {
+        applyNewItemResources(values.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() * (float)multiplier)));
+    }
+
+    /**
+     * @deprecated no longer used
+     */
+    @Deprecated //TODO remove
+    public static void applyNewItemCalculated(Map<ResourceLocation, Integer> values) {
+        items_calculated.putAll(values.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() * 100f)));
+    }
+
+    /**
+     * @deprecated use {@link #getItemConversions()}
+     */
+    @Deprecated //TODO remove
+    public static Map<ResourceLocation, Integer> getItemValues() {
+        return items.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> (int) (e.getValue() / 100)));
+    }
+
+    /**
+     * @deprecated use {@link #getFluidConversions()}
+     */
+    @Deprecated //TODO remove
+    public static Map<ResourceLocation, Integer> getFluidValues() {
+        return fluids.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> (int) (e.getValue() * 100)));
+    }
+
+    /**
+     * @deprecated use {@link #getItemConversionCalculated()}
+     */
+    @Deprecated //TODO remove
+    public static Map<ResourceLocation, Integer> getItemValuesCalculated() {
+        return items_calculated.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> (int) (e.getValue() / 100f)));
+    }
+
+    public static void applyNewFluidResources(Map<ResourceLocation, Float> values) {
         fluids.clear();
-        fluidDivider = divider;
         fluids.putAll(values);
     }
 
-    public static void applyNewItemResources(Map<ResourceLocation, Integer> values, int multiplier) {
+    public static void applyNewEntitiesResources(Map<ResourceLocation, Float> values) {
+        entities.clear();
+        entities.putAll(values);
+    }
+
+    public static void applyNewItemResources(Map<ResourceLocation, Float> values) {
         items.clear();
-        itemMultiplier = multiplier;
-        for (Map.Entry<ResourceLocation, Integer> value : values.entrySet()) {
+        for (Map.Entry<ResourceLocation, Float> value : values.entrySet()) {
             if (value.getValue() != 0) {
                 items.put(value.getKey(), value.getValue());
             } else {
@@ -65,28 +119,30 @@ public class BloodConversionRegistry {
         }
     }
 
-    public static void applyNewItemCalculated(Map<ResourceLocation, Integer> values) {
-        items_calculated.putAll(values);
+    public static Map<ResourceLocation, Float> getItemConversions() {
+        return Collections.unmodifiableMap(items);
     }
 
-    public static Map<ResourceLocation, Integer> getItemValues() {
-        return new ConcurrentHashMap<>(items);
+    public static Map<ResourceLocation, Float> getEntityConversions() {
+        return Collections.unmodifiableMap(entities);
     }
 
-    public static Map<ResourceLocation, Integer> getFluidValues() {
-        return new ConcurrentHashMap<>(fluids);
+    public static Map<ResourceLocation, Float> getFluidConversions() {
+        return Collections.unmodifiableMap(fluids);
     }
 
-    public static Map<ResourceLocation, Integer> getItemValuesCalculated() {
-        return new ConcurrentHashMap<>(items_calculated);
+    public static Map<ResourceLocation, Float> getItemConversionCalculated() {
+        return Collections.unmodifiableMap(items_calculated);
     }
 
+    @Deprecated //TODO remove
     public static int getFluidDivider() {
-        return fluidDivider;
+        return 100;
     }
 
+    @Deprecated //TODO remove
     public static int getItemMultiplier() {
-        return itemMultiplier;
+        return 100;
     }
 
     /**
@@ -97,7 +153,7 @@ public class BloodConversionRegistry {
      */
     public static int getImpureBloodValue(@Nonnull Item item) {
         if (items.containsKey(id(item)) || items_calculated.containsKey(id(item))) {
-            return items.containsKey(id(item)) ? items.get(id(item)) * itemMultiplier : items_calculated.get(id(item)) * itemMultiplier;
+            return (items.containsKey(id(item)) ? items.get(id(item)) : items_calculated.get(id(item))).intValue();
         }
         return 0;
     }
@@ -120,7 +176,7 @@ public class BloodConversionRegistry {
             if (stack.isEdible() && stack.getFoodProperties(null).isMeat()) {
                 int value = Mth.clamp((id != null && id.getPath().contains("cooked")) ? 0 : stack.getFoodProperties(null).getNutrition() / 2, 0, 5);
                 if (value > 0) {
-                    items_calculated.put(id, value);
+                    items_calculated.put(id, (float) (value * 100));
                     return true;
                 }
             }
@@ -137,7 +193,7 @@ public class BloodConversionRegistry {
      */
     public static float getBloodValue(@Nonnull FluidStack fluid) {
         if (fluids.containsKey(id(fluid.getFluid()))) {
-            return (float) fluids.get(id(fluid.getFluid())) / fluidDivider;
+            return fluids.get(id(fluid.getFluid()));
         }
         return 0f;
     }

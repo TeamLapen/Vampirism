@@ -1,6 +1,0 @@
-#Values by Hydraheads
-grimoireofgaia:weresheep=15
-grimoireofgaia:creeper_girl=15
-grimoireofgaia:ender_girl=15
-grimoireofgaia:holstaurus=15
-grimoireofgaia:trader=15

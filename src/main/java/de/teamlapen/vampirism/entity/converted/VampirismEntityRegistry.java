@@ -31,7 +31,7 @@ import java.util.function.Function;
 public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     /**
      * Filled after ResourceManager reload (after 1 tick in game)
-     * Stores biteable entries
+     * Stores biteable values
      */
     @Nonnull
     public static final BiteableEntryManager biteableEntryManager = new BiteableEntryManager();
@@ -43,13 +43,10 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     private final Map<EntityType<? extends PathfinderMob>, IConvertingHandler<?>> convertibles = new ConcurrentHashMap<>();
     @Nonnull
     private final Map<EntityType<? extends PathfinderMob>, ResourceLocation> convertibleOverlay = new ConcurrentHashMap<>();
-    @Nonnull
-    private final Map<ResourceLocation, Integer> bloodValues = Maps.newHashMap();
     /**
      * Stores custom extended creature constructors after {@link InterModEnqueueEvent}
      */
     private final Map<Class<? extends PathfinderMob>, Function<? extends PathfinderMob,IExtendedCreatureVampirism>> extendedCreatureConstructors = new ConcurrentHashMap<>();
-    private int bloodMultiplier = 100;
     private Function<IConvertingHandler.IDefaultHelper, IConvertingHandler<?>> defaultConvertingHandlerCreator;
 
     /**
@@ -87,12 +84,9 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
         extendedCreatureConstructors.put(clazz, constructor);
     }
 
-    public void applyNewResources(Map<ResourceLocation, Integer> valuesIn, int multiplier) {
-        this.bloodValues.putAll(valuesIn);
-        this.bloodMultiplier = multiplier;
+    public void applyNewResources(Map<ResourceLocation, Float> valuesIn) {
         Map<ResourceLocation, BiteableEntry> biteables = Maps.newHashMap();
         Set<ResourceLocation> blacklist = Sets.newHashSet();
-        float bloodValueMultiplier = bloodMultiplier / 10F;
         final IConvertingHandler<?> defaultHandler = defaultConvertingHandlerCreator.apply(null);
         for (Map.Entry<EntityType<? extends PathfinderMob>, IConvertingHandler<?>> entry : convertibles.entrySet()) {
             ResourceLocation id = RegUtil.id(entry.getKey());
@@ -100,19 +94,19 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
                 LOGGER.warn("Cannot register convertible {} since there is no EntityString for it", entry.getKey());
                 continue;
             }
-            Integer blood = valuesIn.remove(id);
-            if (blood == null) {
+            Float bloodF = valuesIn.get(id);
+            if (bloodF == null) {
                 LOGGER.warn("Missing blood value for convertible creature {} ({})", entry.getKey().getDescription(), id);
                 continue;
             }
-            blood = Math.round(blood * bloodValueMultiplier);
+            int blood = Math.round(bloodF);
             LOGGER.debug("Registering convertible {} with blood {} and handler {}", entry.getKey().getDescription().getString(), blood, entry.getValue().getClass().getName());
             BiteableEntry biteEntry = new BiteableEntry(blood, (entry.getValue() == null ? defaultHandler : entry.getValue()));
             biteables.put(id, biteEntry);
         }
         LOGGER.info("Registered {} convertibles", biteables.size());
-        for (Map.Entry<ResourceLocation, Integer> entry : valuesIn.entrySet()) {
-            int blood = Math.abs(Math.round(entry.getValue() * bloodValueMultiplier));
+        for (Map.Entry<ResourceLocation, Float> entry : valuesIn.entrySet()) {
+            int blood = Math.abs(Math.round(entry.getValue()));
             if (blood == 0) {
                 blacklist.add(entry.getKey());
             } else {
@@ -136,15 +130,6 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
 
     public void finishRegistration() {
         finished = true;
-    }
-
-    public int getBloodMultiplier() {
-        return bloodMultiplier;
-    }
-
-    @Nonnull
-    public Map<ResourceLocation, Integer> getBloodValues() {
-        return bloodValues;
     }
 
     @Nonnull

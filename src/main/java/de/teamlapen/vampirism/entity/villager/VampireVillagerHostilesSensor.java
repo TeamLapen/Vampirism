@@ -16,7 +16,7 @@ public class VampireVillagerHostilesSensor extends VillagerHostilesSensor {
     public static final Map<EntityType<?>, Float> hostiles;
 
     static {
-        //Adding entries will probably not work outside Dev as hasPresence is not called for some reason
+        //Adding values will probably not work outside Dev as hasPresence is not called for some reason
         hostiles = Maps.newHashMap(VillagerHostilesSensor.ACCEPTABLE_DISTANCE_FROM_HOSTILES);
         hostiles.remove(EntityType.ZOMBIE);
         hostiles.remove(EntityType.ZOMBIE_VILLAGER);
@@ -26,7 +26,7 @@ public class VampireVillagerHostilesSensor extends VillagerHostilesSensor {
 
     @Override
     public boolean isClose(@Nonnull LivingEntity villager, LivingEntity hostile) {
-        //hasPresence is not checked first, so entries may not be present
+        //hasPresence is not checked first, so values may not be present
         @Nullable Float f = hostiles.get(hostile.getType()); //Careful about unboxing nullpointer
         if (f == null) return false;
         return hostile.distanceToSqr(villager) <= (double) (f * f);

@@ -1,5 +1,0 @@
-#MCA
-mca:entityhuman=15
-mca:entityvillagermca=15
-mca:male_villager=15
-mca:female_villager=15

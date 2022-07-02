@@ -1,12 +1,9 @@
 package de.teamlapen.vampirism;
 
-import com.mojang.datafixers.util.Pair;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.lib.util.VersionChecker;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.SBloodValuePacket;
 import de.teamlapen.vampirism.network.SSkillTreePacket;
@@ -93,10 +90,10 @@ public class GeneralEventHandler {
         }
 
         @SuppressWarnings("unchecked")
-        Pair<Map<ResourceLocation, Integer>, Integer>[] bloodValues = (Pair<Map<ResourceLocation, Integer>, Integer>[]) Array.newInstance(Pair.class, 3);
-        bloodValues[0] = new Pair<>(((VampirismEntityRegistry) VampirismAPI.entityRegistry()).getBloodValues(), ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).getBloodMultiplier());
-        bloodValues[1] = new Pair<>(BloodConversionRegistry.getItemValues(), BloodConversionRegistry.getItemMultiplier());
-        bloodValues[2] = new Pair<>(BloodConversionRegistry.getFluidValues(), BloodConversionRegistry.getFluidDivider());
+        Map<ResourceLocation, Float>[] bloodValues = (Map<ResourceLocation, Float>[]) Array.newInstance(Map.class, 3);
+        bloodValues[0] = BloodConversionRegistry.getEntityConversions();
+        bloodValues[1] = BloodConversionRegistry.getItemConversions();
+        bloodValues[2] = BloodConversionRegistry.getFluidConversions();
 
         if(player instanceof ServerPlayer serverPlayer) {
             VampirismMod.dispatcher.sendTo(new SBloodValuePacket(bloodValues), serverPlayer);

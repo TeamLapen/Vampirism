@@ -1,0 +1,89 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "minecraft:cow",
+      "value": 100
+    },
+    {
+      "id": "minecraft:pig",
+      "value": 50
+    },
+    {
+      "id": "minecraft:sheep",
+      "value": 50
+    },
+    {
+      "id": "minecraft:chicken",
+      "value": 0
+    },
+    {
+      "id": "minecraft:rabbit",
+      "value": 20
+    },
+    {
+      "id": "minecraft:wolf",
+      "value": 50
+    },
+    {
+      "id": "minecraft:mooshroom",
+      "value": 100
+    },
+    {
+      "id": "minecraft:ocelot",
+      "value": 40
+    },
+    {
+      "id": "minecraft:horse",
+      "value": 130
+    },
+    {
+      "id": "minecraft:donkey",
+      "value": 130
+    },
+    {
+      "id": "minecraft:mule",
+      "value": 130
+    },
+    {
+      "id": "minecraft:parrot",
+      "value": 0
+    },
+    {
+      "id": "minecraft:llama",
+      "value": 100
+    },
+    {
+      "id": "minecraft:bee",
+      "value": 0
+    },
+    {
+      "id": "minecraft:villager",
+      "value": 150
+    },
+    {
+      "id": "minecraft:polar_bear",
+      "value": 100
+    },
+    {
+      "id": "minecraft:trader_llama",
+      "value": 100
+    },
+    {
+      "id": "minecraft:panda",
+      "value": 130
+    },
+    {
+      "id": "minecraft:cat",
+      "value": 30
+    },
+    {
+      "id": "minecraft:turtle",
+      "value": 50
+    },
+    {
+      "id": "minecraft:fox",
+      "value": 40
+    }
+  ]
+}

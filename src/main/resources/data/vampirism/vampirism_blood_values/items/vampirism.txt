@@ -1,3 +1,0 @@
-#Vampirism
-vampirism:human_heart=20
-vampirism:weak_human_heart=10

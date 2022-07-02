@@ -1,0 +1,26 @@
+{
+  "replace": false,
+  "author": "Hydraheads",
+  "values": [
+    {
+      "id": "grimoireofgaia:weresheep",
+      "value": 150
+    },
+    {
+      "id": "grimoireofgaia:creeper_girl",
+      "value": 150
+    },
+    {
+      "id": "grimoireofgaia:ender_girl",
+      "value": 150
+    },
+    {
+      "id": "grimoireofgaia:holstaurus",
+      "value": 150
+    },
+    {
+      "id": "grimoireofgaia:trader",
+      "value": 150
+    }
+  ]
+}

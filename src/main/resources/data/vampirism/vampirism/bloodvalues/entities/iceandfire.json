@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "iceandfire:snowvillager",
+      "value": 150
+    },
+    {
+      "id": "iceandfire:dragon_skull",
+      "value": 0
+    },
+    {
+      "id": "iceandfire:mob_skull",
+      "value": 0
+    }
+  ]
+}

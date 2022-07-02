@@ -25,7 +25,7 @@ import java.util.Set;
 
 
 /**
- * Manages biteable entries.
+ * Manages biteable values.
  * Get values from various sources
  * Static values present in datapacks from {@link BloodValues#ENTITIES}
  * Dynamically calculated values from itself
