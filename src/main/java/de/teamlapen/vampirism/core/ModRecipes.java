@@ -4,11 +4,9 @@ import com.google.common.collect.Maps;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.inventory.recipes.*;
+import de.teamlapen.vampirism.util.NBTIngredient;
 import net.minecraft.item.Item;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.ShapedRecipe;
+import net.minecraft.item.crafting.*;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
@@ -29,11 +27,14 @@ public class ModRecipes {
     public static final DeferredRegister<IRecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, REFERENCE.MODID);
     public static final IRecipeType<IWeaponTableRecipe> WEAPONTABLE_CRAFTING_TYPE = IRecipeType.register(new ResourceLocation(REFERENCE.MODID, "weapontable_crafting").toString());
     public static final IRecipeType<AlchemicalCauldronRecipe> ALCHEMICAL_CAULDRON_TYPE = IRecipeType.register(new ResourceLocation(REFERENCE.MODID, "alchemical_cauldron").toString());
+    public static final IRecipeType<AlchemyTableRecipe> ALCHEMICAL_TABLE_TYPE = IRecipeType.register(new ResourceLocation(REFERENCE.MODID, "alchemical_table").toString());
 
     public static final RegistryObject<IRecipeSerializer<ShapedWeaponTableRecipe>> SHAPED_CRAFTING_WEAPONTABLE = register("shaped_crafting_weapontable", ShapedWeaponTableRecipe.Serializer::new);
     public static final RegistryObject<IRecipeSerializer<ShapelessWeaponTableRecipe>> SHAPELESS_CRAFTING_WEAPONTABLE = register("shapeless_crafting_weapontable", ShapelessWeaponTableRecipe.Serializer::new);
     public static final RegistryObject<IRecipeSerializer<ShapedRecipe>> REPAIR_IITEMWITHTIER = register("repair_iitemwithtier", ShapedItemWithTierRepair.Serializer::new);
     public static final RegistryObject<IRecipeSerializer<AlchemicalCauldronRecipe>> ALCHEMICAL_CAULDRON = register("alchemical_cauldron", AlchemicalCauldronRecipe.Serializer::new);
+    public static final RegistryObject<IRecipeSerializer<AlchemyTableRecipe>> ALCHEMICAL_TABLE = register("alchemical_table", AlchemyTableRecipe.Serializer::new);
+    public static final RegistryObject<SpecialRecipeSerializer<ApplicableOilRecipe>> APPLICABLE_OIL = register("applicable_oil", () -> new SpecialRecipeSerializer<>(ApplicableOilRecipe::new));
 
     public static final IConditionSerializer<?> CONFIG_CONDITION = CraftingHelper.register(new ConfigCondition.Serializer());
 
@@ -51,9 +52,10 @@ public class ModRecipes {
 
     static void registerRecipeTypesAndSerializers(IEventBus bus) {
         RECIPE_SERIALIZERS.register(bus);
+        CraftingHelper.register(new ResourceLocation(REFERENCE.MODID, "item"), NBTIngredient.Serializer.INSTANCE);
     }
 
-    private static <T extends IRecipe<?>> RegistryObject<IRecipeSerializer<T>> register(String name, Supplier<? extends IRecipeSerializer<T>> sup) {
+    private static <Z extends IRecipeSerializer<T>,T extends IRecipe<?>> RegistryObject<Z> register(String name, Supplier<Z> sup) {
         return RECIPE_SERIALIZERS.register(name, sup);
     }
 

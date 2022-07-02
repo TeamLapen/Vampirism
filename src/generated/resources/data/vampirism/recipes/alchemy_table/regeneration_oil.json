@@ -1,0 +1,44 @@
+{
+  "type": "vampirism:alchemical_table",
+  "result": {
+    "item": "vampirism:oil_bottle",
+    "nbt": {
+      "oil": "vampirism:regeneration"
+    }
+  },
+  "ingredient": {
+    "type": "vampirism:item",
+    "item": "vampirism:oil_bottle",
+    "count": 1,
+    "nbt": {
+      "oil": "vampirism:vampire_blood"
+    }
+  },
+  "input": {
+    "type": "vampirism:item",
+    "items": [
+      {
+        "item": "minecraft:potion",
+        "count": 1,
+        "nbt": {
+          "Potion": "minecraft:regeneration"
+        }
+      },
+      {
+        "item": "minecraft:potion",
+        "count": 1,
+        "nbt": {
+          "Potion": "minecraft:long_regeneration"
+        }
+      },
+      {
+        "item": "minecraft:potion",
+        "count": 1,
+        "nbt": {
+          "Potion": "minecraft:strong_regeneration"
+        }
+      }
+    ]
+  },
+  "skill": []
+}

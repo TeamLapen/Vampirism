@@ -166,7 +166,7 @@ public class DamageHandler {
      * @param maxDamage
      * @return
      */
-    private static double scaleDamageWithLevel(int level, int maxLevel, double minDamage, double maxDamage) {
+    public static double scaleDamageWithLevel(int level, int maxLevel, double minDamage, double maxDamage) {
         return minDamage + level / (double) maxLevel * (maxDamage - minDamage);
     }
 

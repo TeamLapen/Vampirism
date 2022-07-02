@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.config;
 
 import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.core.ModTags;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModList;
 import org.apache.logging.log4j.LogManager;
@@ -126,6 +127,7 @@ public class BalanceConfig {
     public final ForgeConfigSpec.DoubleValue vpSundamage;
     public final ForgeConfigSpec.IntValue vpSundamageWaterblocks;
     public final ForgeConfigSpec.BooleanValue vpSundamageInstantDeath;
+    public final ForgeConfigSpec.BooleanValue vpSunscreenBuff;
     public final ForgeConfigSpec.DoubleValue vpFireVulnerabilityMod;
     public final ForgeConfigSpec.BooleanValue vpFireResistanceReplace;
     public final ForgeConfigSpec.IntValue vpMaxYellowBorderPercentage;
@@ -199,6 +201,10 @@ public class BalanceConfig {
     public final ForgeConfigSpec.DoubleValue vrTeleportDistanceMod;
     public final ForgeConfigSpec.DoubleValue vrHalfInvulnerableThresholdMod;
     public final ForgeConfigSpec.DoubleValue vrSwordFinisherThresholdMod;
+
+    public final ForgeConfigSpec.BooleanValue itApplicableOilArmorReverse;
+    public final ForgeConfigSpec.BooleanValue itApplicableOilPickaxeReverse;
+    public final ForgeConfigSpec.BooleanValue itApplicableOilSwordReverse;
 
     public final ForgeConfigSpec.BooleanValue laLordSpeedEnabled;
     public final ForgeConfigSpec.IntValue laLordSpeedCooldown;
@@ -343,10 +349,11 @@ public class BalanceConfig {
         vpSundamageWeaknessMinLevel = builder.defineInRange("sundamageWeaknessMinLevel", 2, 1, Integer.MAX_VALUE);
         vpSundamageWaterblocks = builder.defineInRange("sundamageWaterblocks", 4, 1, 10);
         vpSundamageInstantDeath = builder.comment("Whether vampires are instantly turned into ash when being in the sun").define("sundamageInstantDeath", false);
+        vpSunscreenBuff = builder.comment("Buff sunscreen potion to prevent negative effects at any level").define("sunscreenBuff",false);
         vpFireVulnerabilityMod = builder.comment("Multiply fire damage with this for vampires" + (iceAndFire ? " - Changed due to IceAndFire" : "")).defineInRange("fireVulnerabilityMod", iceAndFire ? 1.5d : 3d, 0.1, Double.MAX_VALUE);
         vpFireResistanceReplace = builder.comment("Whether to replace the vanilla fire resistance potion for vampires with a custom one that only reduces damage but does not remove it" + (iceAndFire ? " - Changed due to IceAndFire" : "")).define("fireResistanceReplace", !iceAndFire);
         vpMaxYellowBorderPercentage = builder.comment("Defines the maximum extend the yellow border covers when the player is in the sun. 100 is default. 0 to disable completely").defineInRange("maxYellowBorderPercentage", 100, 0, 100);
-        vpImmortalFromDamageSources = builder.comment("List of damage source types that the player does not die from (immediately)").defineList("immortalFromDamageSources", Lists.asList("player", "mob", new String[]{"drown", "lightningBolt", "onFire", "cramming", "fall", "flyIntoWall", "magic", "wither", "anvil", "falling_block", "dragon_breath", "sweetBerryBush", "trident", "arrow", "fireworks", "fireBall", "witherSkull", "explosion", "explosion.player", "thrown", "indirectMagic", "vampire_on_fire"}), s -> s instanceof String);
+        vpImmortalFromDamageSources = builder.comment("List of damage source types that the player does not die from (immediately)").defineList("immortalFromDamageSources", Lists.asList("player", "mob", new String[]{"drown", "lightningBolt", "onFire", "cramming", "fall", "flyIntoWall", "magic", "wither", "anvil", "falling_block", "dragon_breath", "sweetBerryBush", "trident", "arrow", "fireworks", "fireBall", "witherSkull", "explosion", "explosion.player", "thrown", "indirectMagic", "vampire_on_fire", "sting"}), s -> s instanceof String);
         vpDbnoDuration = builder.comment("Base cooldown before a downed vampire can resurrect. In sec.").defineInRange("dbnoDuration", 60, 1, 1000);
         vpNeonatalDuration = builder.comment("Base duration of neonatal effect after resurrection. In sec.").defineInRange("neonatalDuration", 120, 1, Integer.MAX_VALUE);
         vpNaturalArmorRegenDuration = builder.comment("The duration it takes for the vampire natural armor to fully regenerate after respawn. In seconds").defineInRange("naturalArmorRegenDuration", 240, 1, 2400);
@@ -421,6 +428,11 @@ public class BalanceConfig {
         vrTeleportDistanceMod = builder.defineInRange("teleportDistanceMod", 1.5, 1, Double.MAX_VALUE);
         vrHalfInvulnerableThresholdMod = builder.comment("Threshold for attacks that are considered high damage is multiplied by this value").defineInRange("halfInvulnerableThresholdMod", 0.7, 0, 2);
         vrSwordFinisherThresholdMod = builder.comment("Threshold for instant kill is modified by this amount").defineInRange("swordFinisherThresholdMod", 1.25, 1, Double.MAX_VALUE);
+
+        builder.category("items", "it");
+        itApplicableOilArmorReverse = builder.comment(String.format("Determines if the '%s' item tag should work as blacklist (false) or whitelist (true)" ,ModTags.Items.APPLICABLE_OIL_ARMOR.getName())).define("applicableOilArmorReverse", false);
+        itApplicableOilPickaxeReverse = builder.comment(String.format("Determines if the '%s' item tag should work as blacklist (false) or whitelist (true)" ,ModTags.Items.APPLICABLE_OIL_PICKAXE.getName())).define("applicableOilPickaxeReverse", false);
+        itApplicableOilSwordReverse = builder.comment(String.format("Determines if the '%s' item tag should work as blacklist (false) or whitelist (true)" ,ModTags.Items.APPLICABLE_OIL_SWORD.getName())).define("applicableOilSwordReverse", false);
 
         builder.category("lord actions", "la");
         laLordSpeedEnabled = builder.define("lordSpeedEnabled", true);

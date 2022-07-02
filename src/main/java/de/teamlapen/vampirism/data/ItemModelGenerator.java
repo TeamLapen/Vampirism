@@ -231,6 +231,7 @@ public class ItemModelGenerator extends ItemModelProvider {
         withExistingParent(ModItems.CROSSBOW_ARROW_NORMAL.get(), modLoc("item/crossbow_arrow"));
         withExistingParent(ModItems.CROSSBOW_ARROW_SPITFIRE.get(), modLoc("item/crossbow_arrow"));
         withExistingParent(ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get(), modLoc("item/crossbow_arrow"));
+        withExistingParent(ModItems.CROSSBOW_ARROW_TELEPORT.get(), modLoc("item/crossbow_arrow"));
 
         item(ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL.get(), modLoc("item/armor_of_swiftness_chest_normal"), modLoc("item/armor_of_swiftness_chest_normal_overlay"));
         item(ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED.get(), modLoc("item/armor_of_swiftness_chest_enhanced"), modLoc("item/armor_of_swiftness_chest_enhanced_overlay"));
@@ -335,6 +336,8 @@ public class ItemModelGenerator extends ItemModelProvider {
                     .transform(ModelBuilder.Perspective.FIXED).rotation(270,0,0).translation(0,-4,-4).scale(0.5f,0.5f,0.5f).end()
                     .end();
         }
+        this.item(ModItems.OIL_BOTTLE.get(), modLoc("item/oil_bottle"), modLoc("item/oil_bottle_overlay"));
+        withExistingParent(ModBlocks.ALCHEMY_TABLE.get(), modLoc("block/alchemy_table/alchemy_table"));
     }
 
 }

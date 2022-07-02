@@ -10,7 +10,6 @@ import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
-import de.teamlapen.vampirism.world.biome.VampireForestBiome;
 import de.teamlapen.vampirism.world.biome.VampirismBiomeFeatures;
 import net.minecraft.block.Block;
 import net.minecraft.block.DispenserBlock;
@@ -19,8 +18,8 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.Potion;
+import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
@@ -59,6 +58,7 @@ public class RegistryManager implements IInitListener {
         MinionTasks.register(modbus);
         VampireSkills.registerVampireSkills(modbus);
         HunterSkills.registerHunterSkills(modbus);
+        ModOils.registerOils(modbus);
     }
     @SubscribeEvent
     public void onBuildRegistries(RegistryEvent.NewRegistry event) {
@@ -146,5 +146,10 @@ public class RegistryManager implements IInitListener {
     @SubscribeEvent
     public void onRegisterEffects(RegistryEvent.Register<Effect> event) {
         ModEffects.replaceEffects(event.getRegistry());
+    }
+
+    @SubscribeEvent
+    public void onRegisterGlobalLootModifier(RegistryEvent.Register<GlobalLootModifierSerializer<?>> event) {
+        ModLoot.registerLootModifier(event.getRegistry());
     }
 }

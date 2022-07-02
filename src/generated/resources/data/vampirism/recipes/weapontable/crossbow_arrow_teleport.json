@@ -1,0 +1,28 @@
+{
+  "type": "vampirism:shaped_crafting_weapontable",
+  "pattern": [
+    "XXX",
+    "XYX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "vampirism:crossbow_arrow_normal"
+    },
+    "Y": {
+      "type": "vampirism:item",
+      "item": "vampirism:oil_bottle",
+      "count": 1,
+      "nbt": {
+        "oil": "vampirism:teleport"
+      }
+    }
+  },
+  "result": {
+    "item": "vampirism:crossbow_arrow_teleport",
+    "count": 8
+  },
+  "lava": 2,
+  "skill": [],
+  "level": 1
+}
