@@ -115,7 +115,7 @@ public class BalanceConfig {
     public final ForgeConfigSpec.DoubleValue vpAttackSpeedMaxMod;
     public final ForgeConfigSpec.DoubleValue vpSpeedMaxMod;
     public final ForgeConfigSpec.DoubleValue vpExhaustionMaxMod;
-    public final ForgeConfigSpec.DoubleValue vpBasicBloodExhaustionMod;
+    public final ForgeConfigSpec.DoubleValue vpBloodExhaustionFactor;
     public final ForgeConfigSpec.BooleanValue vpBloodUsagePeaceful;
     public final ForgeConfigSpec.DoubleValue vpPlayerBloodSaturation;
     public final ForgeConfigSpec.IntValue vpSanguinareAverageDuration;
@@ -330,13 +330,13 @@ public class BalanceConfig {
         vsDbnoReduction = builder.comment("Reduced percentage of the downed timer required to resurrect").defineInRange("dbnoReduction", 0.5, 0, 1);
 
 
-        //Vampire Player
+        //Vampire Player TODO 1.19 rename *MaxMod to *MaxLevelMod and clarify whether it is a multiplicative or additive modifier
         builder.category("vampirePlayer", "vp");
         vpHealthMaxMod = builder.defineInRange("healthMaxMod", 16, 0.5, 40);
         vpAttackSpeedMaxMod = builder.defineInRange("attackSpeedMaxMod", 0.15, 0, 2);
         vpSpeedMaxMod = builder.defineInRange("speedMaxMod", 0.3, 0, 5);
         vpExhaustionMaxMod = builder.defineInRange("exhaustionMaxMod", 1.0, 0, 10);
-        vpBasicBloodExhaustionMod = builder.comment("Blood exhaustion is multiplied with this value").defineInRange("basicBloodExhaustionMod", 0.7, 0, 5);
+        vpBloodExhaustionFactor = builder.comment("Blood exhaustion is multiplied with this value").defineInRange("bloodExhaustionFactor", 0.7, 0, 5);
         vpBloodUsagePeaceful = builder.comment("Whether blood is consumed in peaceful gamemode").define("bloodUsagePeaceful", false);
         vpPlayerBloodSaturation = builder.defineInRange("playerBloodSaturation", 1.5, 0.3, 10);
         vpSanguinareAverageDuration = builder.comment("Average duration of the Sanguinare Vampiris Effect. The final duration is random between 0.5 x avgDuration - 1.5 x avgDuration. In Seconds.").defineInRange("sanguinareAverageDuration", 900, 1, 10000);
