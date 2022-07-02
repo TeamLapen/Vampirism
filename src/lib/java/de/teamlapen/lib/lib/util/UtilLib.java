@@ -29,6 +29,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -755,6 +756,16 @@ public class UtilLib {
         Collections.addAll(s, elements);
         return s;
     }
+
+    public static boolean matchesItem(Ingredient ingredient, ItemStack searchStack) {
+        return Arrays.stream(ingredient.getItems()).anyMatch(stack -> {
+            if (!stack.sameItem(searchStack)) return false;
+            if (stack.getTag() != null) {
+                return stack.areShareTagsEqual(searchStack);
+            }
+            return true;
+        });
+}
 
     public enum RotationAmount {
         NINETY,

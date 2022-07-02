@@ -14,6 +14,7 @@ public class ModStats {
     public static final ResourceLocation defend_village = new ResourceLocation(REFERENCE.MODID, "defend_village");
     public static final ResourceLocation win_village_capture = new ResourceLocation(REFERENCE.MODID, "win_village_capture");
     public static final ResourceLocation infected_creatures = new ResourceLocation(REFERENCE.MODID, "infected_creatures");
+    public static final ResourceLocation interact_with_alchemy_table = new ResourceLocation(REFERENCE.MODID, "interact_with_alchemy_table");
 
     static void registerCustomStats() {
         register(weapon_table);
@@ -22,6 +23,7 @@ public class ModStats {
         register(defend_village);
         register(win_village_capture);
         register(infected_creatures);
+        register(interact_with_alchemy_table);
     }
 
     private static void register(ResourceLocation id) {

@@ -1,0 +1,37 @@
+{
+  "type": "vampirism:alchemical_table",
+  "ingredient": {
+    "type": "vampirism:nbt",
+    "count": 1,
+    "item": "vampirism:oil_bottle",
+    "nbt": {
+      "oil": "vampirism:vampire_blood"
+    }
+  },
+  "input": {
+    "type": "vampirism:nbt",
+    "items": [
+      {
+        "count": 1,
+        "item": "minecraft:potion",
+        "nbt": {
+          "Potion": "minecraft:healing"
+        }
+      },
+      {
+        "count": 1,
+        "item": "minecraft:potion",
+        "nbt": {
+          "Potion": "minecraft:strong_healing"
+        }
+      }
+    ]
+  },
+  "result": {
+    "item": "vampirism:oil_bottle",
+    "nbt": {
+      "oil": "vampirism:healing"
+    }
+  },
+  "skill": []
+}

@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
+import de.teamlapen.vampirism.api.items.oil.IWeaponOil;
 import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.blockentity.TotemHelper;
 import de.teamlapen.vampirism.blocks.CastleBricksBlock;
@@ -21,15 +22,18 @@ import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
+import de.teamlapen.vampirism.items.oil.EvasionOil;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.DifficultyCalculator;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.OilUtils;
 import it.unimi.dsi.fastutil.objects.Object2BooleanArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -62,6 +66,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
+import java.util.stream.StreamSupport;
 
 /**
  * Event handler for all entity related events
@@ -313,6 +318,34 @@ public class ModEntityEventHandler {
             ExtendedCreature.getSafe(event.getEntity()).ifPresent(IExtendedCreatureVampirism::tick);
             event.getEntity().getCommandSenderWorld().getProfiler().pop();
 
+        }
+    }
+
+    @SubscribeEvent
+    public void onActuallyHurt(LivingHurtEvent event) {
+        if (event.getSource() instanceof EntityDamageSource && event.getSource().msgId.equals("player") && event.getSource().getEntity() instanceof Player player) {
+            ItemStack stack = player.getMainHandItem();
+            OilUtils.getAppliedOil(stack).ifPresent(oil -> {
+                if (oil instanceof IWeaponOil) {
+                    event.setAmount(event.getAmount() + ((IWeaponOil) oil).onHit(stack, event.getAmount(), ((IWeaponOil) oil), event.getEntity(), player));
+                    oil.reduceDuration(stack, oil, oil.getDurationReduction());
+                }
+            });
+        }
+    }
+
+    @SubscribeEvent
+    public void onLivingDamage(LivingDamageEvent event) {
+        if (event.getSource() instanceof EntityDamageSource && event.getSource().msgId.equals("player") && event.getSource().getEntity() instanceof Player player) {
+            ItemStack stack = player.getMainHandItem();
+            OilUtils.getAppliedOil(stack).ifPresent(oil -> {
+                if (oil instanceof IWeaponOil) {
+                    event.setAmount(event.getAmount() + ((IWeaponOil) oil).onDamage(stack, event.getAmount(), ((IWeaponOil) oil), event.getEntity(), player));
+                }
+            });
+        }
+        if (event.getSource() instanceof EntityDamageSource && !event.getSource().isBypassArmor() && StreamSupport.stream(event.getEntity().getArmorSlots().spliterator(), false).map(OilUtils::getAppliedOil).filter(Optional::isPresent).map(Optional::get).filter(EvasionOil.class::isInstance).anyMatch(oil -> ((EvasionOil) oil).evasionChance() > event.getEntity().getRandom().nextFloat())) {
+            event.setAmount(0);
         }
     }
 }

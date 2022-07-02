@@ -153,6 +153,8 @@ public class ModBlocks {
     public static final RegistryObject<CoffinBlock> coffin_green = registerWithItem("coffin_green", () -> new CoffinBlock(DyeColor.GREEN));
     public static final RegistryObject<CoffinBlock> coffin_red = registerWithItem("coffin_red", () -> new CoffinBlock(DyeColor.RED));
     public static final RegistryObject<CoffinBlock> coffin_black = registerWithItem("coffin_black", () -> new CoffinBlock(DyeColor.BLACK));
+    public static final RegistryObject<AlchemyTableBlock> ALCHEMY_TABLE = registerWithItem("alchemy_table", AlchemyTableBlock::new);
+
 
     /**
      * TUTORIAL:

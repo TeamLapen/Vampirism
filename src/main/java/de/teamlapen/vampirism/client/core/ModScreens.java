@@ -28,6 +28,7 @@ public class ModScreens {
         MenuScreens.register(ModContainer.TASK_MASTER.get(), TaskBoardScreen::new);
         MenuScreens.register(ModContainer.EXTENDED_POTION_TABLE.get(), PotionTableScreen::new);
         MenuScreens.register(ModContainer.VAMPIRISM.get(), VampirismScreen::new);
+        MenuScreens.register(ModContainer.ALCHEMICAL_TABLE.get(), AlchemyTableScreen::new);
     }
 
     public static void registerScreenOverlays(RegisterGuiOverlaysEvent event) {

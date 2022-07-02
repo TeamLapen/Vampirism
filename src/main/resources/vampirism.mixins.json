@@ -6,6 +6,8 @@
   "mixins": [
     "AbstractFurnaceBlockEntityAccessor",
     "ArmorItemAccessor",
+    "IngredientAccessor",
+    "ItemMixin",
     "LivingEntityAccessor",
     "MixinBellBlock",
     "MixinEffectInstance",

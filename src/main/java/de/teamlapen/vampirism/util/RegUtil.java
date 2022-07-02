@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
+import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -72,6 +73,9 @@ public class RegUtil {
     public static ResourceLocation id(VillagerProfession profession) {
         return ForgeRegistries.VILLAGER_PROFESSIONS.getKey(profession);
     }
+    public static ResourceLocation id(IOil oil) {
+        return ModRegistries.OILS.get().getKey(oil);
+    }
 
 
 
@@ -134,6 +138,10 @@ public class RegUtil {
 
     public static IRefinementSet getRefinementSet(ResourceLocation id) {
         return get(ModRegistries.REFINEMENT_SETS.get(), id);
+    }
+
+    public static IOil getOil(ResourceLocation id) {
+        return get(ModRegistries.OILS.get(), id);
     }
 
 

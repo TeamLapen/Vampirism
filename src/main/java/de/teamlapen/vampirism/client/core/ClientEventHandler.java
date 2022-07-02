@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.effects.VampirismPotion;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.proxy.ClientProxy;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.OilUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.resources.model.BakedModel;
@@ -26,6 +27,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -155,5 +157,24 @@ public class ClientEventHandler {
             event.register(new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_top_" + dye.getName()));
             event.register(new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_" + dye.getName()));
         }
+    }
+
+    @SubscribeEvent
+    public void onItemToolTip(ItemTooltipEvent event) {
+        OilUtils.getAppliedOilStatus(event.getItemStack()).flatMap(pair -> pair.getLeft().getToolTipLine(event.getItemStack(), pair.getKey(), pair.getValue(), event.getFlags())).ifPresent(tooltipLine -> {
+            int position = 1;
+            int flags = getHideFlags(event.getItemStack());
+            if (shouldShowInTooltip(flags, ItemStack.TooltipPart.ADDITIONAL)) ++position;
+
+            event.getToolTip().add(position, tooltipLine);
+        });
+    }
+
+    private static boolean shouldShowInTooltip(int p_242394_0_, ItemStack.TooltipPart p_242394_1_) {
+        return (p_242394_0_ & p_242394_1_.getMask()) == 0;
+    }
+
+    private int getHideFlags(ItemStack stack) {
+        return stack.hasTag() && stack.getTag().contains("HideFlags", 99) ? stack.getTag().getInt("HideFlags") : 0;
     }
 }

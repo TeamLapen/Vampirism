@@ -317,6 +317,7 @@ public class LootTablesGenerator extends LootTableProvider {
             this.add(ModBlocks.CURSED_ROOTS.get(), (block) -> createShearsDispatchTable(block, applyExplosionDecay(block, LootItem.lootTableItem(Items.STICK).apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F))))));
             this.dropSelf(ModBlocks.VAMPIRE_RACK.get());
             this.add(ModBlocks.THRONE.get(), (p_218567_0_) -> createSinglePropConditionTable(p_218567_0_, VampirismSplitBlock.PART, VampirismSplitBlock.Part.MAIN));
+            this.dropSelf(ModBlocks.ALCHEMY_TABLE.get());
         }
 
         @Nonnull

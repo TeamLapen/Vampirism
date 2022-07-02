@@ -1,0 +1,18 @@
+{
+	"credit": "Made by Cheaterpaul",
+	"textures": {
+		"4": "vampirism:item/oil_bottle_screen"
+	},
+	"render_type": "minecraft:cutout",
+	"elements": [
+		{
+			"from": [2, 12, 12.5],
+			"to": [6, 17, 12.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [3, 15, 7]},
+			"faces": {
+				"north": {"uv": [2, 0, 15, 15], "texture": "#4"},
+				"south": {"uv": [2, 0, 15, 15], "texture": "#4"}
+			}
+		}
+	]
+}

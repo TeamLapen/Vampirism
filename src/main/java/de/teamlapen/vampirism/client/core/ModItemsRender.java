@@ -3,10 +3,12 @@ package de.teamlapen.vampirism.client.core;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
+import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.CrossbowArrowItem;
 import de.teamlapen.vampirism.items.VampirismItemCrossbow;
+import de.teamlapen.vampirism.util.OilUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
@@ -51,8 +53,10 @@ public class ModItemsRender {
                 return ((CrossbowArrowItem) stack.getItem()).getType().color;
             }
             return 0xFFFFFF;
-        }, ModItems.CROSSBOW_ARROW_NORMAL.get(), ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get(), ModItems.CROSSBOW_ARROW_SPITFIRE.get());
-        event.register((state, tintIndex) -> 0x1E1F1F, ModBlocks.DARK_SPRUCE_LEAVES.get());
+        }, ModItems.CROSSBOW_ARROW_NORMAL.get(), ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get(), ModItems.CROSSBOW_ARROW_SPITFIRE.get(), ModItems.CROSSBOW_ARROW_TELEPORT.get());
+        event.register((state, tintIndex) -> {
+            return 0x1E1F1F;
+        }, ModBlocks.DARK_SPRUCE_LEAVES.get());
         event.register((stack, tintIndex) -> {
             if (tintIndex == 1) {
                 if (stack.getItem() instanceof IRefinementItem) {
@@ -64,5 +68,12 @@ public class ModItemsRender {
             }
             return 0xFFFFFF;
         }, ModItems.AMULET.get(), ModItems.RING.get(), ModItems.OBI_BELT.get());
+        event.register((stack, tintIndex) -> {
+            if (tintIndex == 1) {
+                IOil oil = OilUtils.getOil(stack);
+                return oil.getColor();
+            }
+            return 0xFFFFFF;
+        }, ModItems.OIL_BOTTLE.get());
     }
 }

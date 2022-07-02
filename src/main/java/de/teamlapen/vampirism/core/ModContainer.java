@@ -23,6 +23,7 @@ public class ModContainer {
     public static final RegistryObject<MenuType<TaskBoardContainer>> TASK_MASTER = MENUS.register("task_master", () -> new MenuType<>(TaskBoardContainer::new));
     public static final RegistryObject<MenuType<PotionTableContainer>> EXTENDED_POTION_TABLE = MENUS.register("extended_potion_table", () -> new MenuType<>(new PotionTableContainer.Factory()));
     public static final RegistryObject<MenuType<VampirismContainer>> VAMPIRISM = MENUS.register("vampirism", () -> new MenuType<>(VampirismContainer::new));
+    public static final RegistryObject<MenuType<AlchemyTableContainer>> ALCHEMICAL_TABLE = MENUS.register("alchemical_table", () -> new MenuType<>(AlchemyTableContainer::new));
 
 
     static void registerContainer(IEventBus bus) {

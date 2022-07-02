@@ -1,0 +1,23 @@
+{
+  "type": "vampirism:alchemical_table",
+  "ingredient": {
+    "type": "vampirism:nbt",
+    "count": 1,
+    "item": "vampirism:oil_bottle",
+    "nbt": {
+      "oil": "vampirism:vampire_blood"
+    }
+  },
+  "input": {
+    "type": "vampirism:nbt",
+    "count": 1,
+    "item": "minecraft:ender_pearl"
+  },
+  "result": {
+    "item": "vampirism:oil_bottle",
+    "nbt": {
+      "oil": "vampirism:teleport"
+    }
+  },
+  "skill": []
+}

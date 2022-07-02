@@ -6,34 +6,47 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
+import de.teamlapen.vampirism.api.items.oil.IApplicableOil;
 import de.teamlapen.vampirism.client.gui.AlchemicalCauldronScreen;
+import de.teamlapen.vampirism.client.gui.AlchemyTableScreen;
 import de.teamlapen.vampirism.client.gui.PotionTableScreen;
 import de.teamlapen.vampirism.client.gui.WeaponTableScreen;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModRecipes;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.inventory.container.AlchemicalCauldronContainer;
 import de.teamlapen.vampirism.inventory.container.WeaponTableContainer;
 import de.teamlapen.vampirism.inventory.recipes.AlchemicalCauldronRecipe;
+import de.teamlapen.vampirism.inventory.recipes.AlchemyTableRecipe;
 import de.teamlapen.vampirism.mixin.RecipeManagerAccessor;
 import de.teamlapen.vampirism.player.tasks.TaskUtil;
+import de.teamlapen.vampirism.util.OilUtils;
+import de.teamlapen.vampirism.util.RegUtil;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.ingredients.subtypes.IIngredientSubtypeInterpreter;
+import mezz.jei.api.ingredients.subtypes.UidContext;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.vanilla.IJeiAnvilRecipe;
 import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
 import mezz.jei.api.registration.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -49,6 +62,7 @@ public class VampirismJEIPlugin implements IModPlugin {
     public static final RecipeType<AlchemicalCauldronRecipe> ALCHEMICAL_CAULDRON = RecipeType.create("vampirism", "alchemical_cauldron", AlchemicalCauldronRecipe.class);
     public static final RecipeType<Task> TASK = RecipeType.create("vampirism", "task", Task.class);
     public static final RecipeType<JEIPotionMix> POTION = RecipeType.create("vampirism", "potion", JEIPotionMix.class);
+    public static final RecipeType<AlchemyTableRecipe> ALCHEMY_TABLE = RecipeType.create("vampirism", "alchemy_table", AlchemyTableRecipe.class);
     private static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "plugin");
 
     @Nonnull
@@ -61,7 +75,7 @@ public class VampirismJEIPlugin implements IModPlugin {
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
         IGuiHelper helper = registration.getJeiHelpers().getGuiHelper();
-        registration.addRecipeCategories(new AlchemicalCauldronRecipeCategory(helper), new WeaponTableRecipeCategory(helper), new TaskRecipeCategory(helper), new PotionTableRecipeCategory(helper));
+        registration.addRecipeCategories(new AlchemicalCauldronRecipeCategory(helper), new WeaponTableRecipeCategory(helper), new TaskRecipeCategory(helper), new PotionTableRecipeCategory(helper), new AlchemyTableRecipeCategory(helper));
     }
 
     @Override
@@ -69,6 +83,8 @@ public class VampirismJEIPlugin implements IModPlugin {
         registration.addRecipeClickArea(AlchemicalCauldronScreen.class, 80, 34, 20, 15, ALCHEMICAL_CAULDRON);
         registration.addRecipeClickArea(WeaponTableScreen.class, 114, 46, 20, 15, WEAPON_TABLE);
         registration.addRecipeClickArea(PotionTableScreen.class, 145, 17,9,28, POTION);
+        registration.addRecipeClickArea(AlchemyTableScreen.class, 73,57,28, 8, ALCHEMY_TABLE);
+        registration.addRecipeClickArea(AlchemyTableScreen.class, 104,36,32, 32, ALCHEMY_TABLE);
     }
 
     @Override
@@ -76,6 +92,27 @@ public class VampirismJEIPlugin implements IModPlugin {
         registration.addRecipeTransferHandler(AlchemicalCauldronContainer.class, ModContainer.ALCHEMICAL_CAULDRON.get(), ALCHEMICAL_CAULDRON, 0, 2, 4, 36);
         registration.addRecipeTransferHandler(AlchemicalCauldronContainer.class, ModContainer.ALCHEMICAL_CAULDRON.get(), RecipeTypes.FUELING, 3, 1, 4, 36);
         registration.addRecipeTransferHandler(WeaponTableContainer.class, ModContainer.WEAPON_TABLE.get(), WEAPON_TABLE, 1, 16, 17, 36);
+    }
+
+    @Override
+    public void registerItemSubtypes(ISubtypeRegistration registration) {
+        registration.registerSubtypeInterpreter(ModItems.OIL_BOTTLE.get(), OilNBT.INSTANCE);
+    }
+
+    private static class OilNBT implements IIngredientSubtypeInterpreter<ItemStack> {
+        public static final OilNBT INSTANCE = new OilNBT();
+
+        private OilNBT() {
+        }
+
+        @Override
+        public String apply(ItemStack itemStack, UidContext context) {
+            CompoundTag nbtTagCompound = itemStack.getTag();
+            if (nbtTagCompound == null || nbtTagCompound.isEmpty()) {
+                return IIngredientSubtypeInterpreter.NONE;
+            }
+            return RegUtil.id(OilUtils.getOil(itemStack)).toString();
+        }
     }
 
     @Override
@@ -87,6 +124,8 @@ public class VampirismJEIPlugin implements IModPlugin {
         registration.addRecipes(TASK, TaskUtil.getItemRewardTasks());
         registration.addRecipes(POTION, VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().map(JEIPotionMix::createFromMix).flatMap(Collection::stream).collect(Collectors.toList()));
         registration.addRecipes(RecipeTypes.ANVIL, getRepairRecipes(registration.getVanillaRecipeFactory()));
+        registration.addRecipes(ALCHEMY_TABLE, recipeManager.byType(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).values().stream().toList());
+        registration.addRecipes(RecipeTypes.CRAFTING, getApplicableOilRecipes());
     }
 
     @Override
@@ -132,5 +171,15 @@ public class VampirismJEIPlugin implements IModPlugin {
             }
         }
         return recipes;
+    }
+
+    private List<CraftingRecipe> getApplicableOilRecipes() {
+        return RegUtil.values(ModRegistries.OILS).stream()
+                .filter(IApplicableOil.class::isInstance)
+                .map(IApplicableOil.class::cast)
+                .flatMap(oil -> ForgeRegistries.ITEMS.getValues().stream()
+                        .map(Item::getDefaultInstance)
+                        .filter(oil::canBeApplied)
+                        .map(stack -> new ShapelessRecipe(new ResourceLocation(REFERENCE.MODID, (RegUtil.id(oil).toString() + RegUtil.id(stack.getItem()).toString()).replace(':', '_')), "", OilUtils.setAppliedOil(stack.copy(), oil), NonNullList.of(Ingredient.EMPTY, Ingredient.of(stack), Ingredient.of(OilUtils.createOilItem(oil)))))).collect(Collectors.toList());
     }
 }

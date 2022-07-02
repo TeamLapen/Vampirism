@@ -60,6 +60,7 @@ public class RegistryManager implements IInitListener {
         VampireSkills.registerVampireSkills(modbus);
         HunterSkills.registerHunterSkills(modbus);
         ModCommands.registerArgumentTypes(modbus);
+        ModOils.registerOils(modbus);
     }
 
     @SubscribeEvent
