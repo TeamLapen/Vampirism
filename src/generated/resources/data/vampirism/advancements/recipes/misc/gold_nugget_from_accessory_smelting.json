@@ -2,26 +2,26 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "vampirism:vampire/altar_inspiration"
+      "vampirism:gold_nugget_from_accessory_smelting"
     ]
   },
   "criteria": {
-    "has_planks": {
+    "has_amulet": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "tag": "minecraft:planks"
+            "item": "vampirism:amulet"
           }
         ]
       }
     },
-    "has_blood_container": {
+    "has_ring": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "vampirism:blood_container"
+            "item": "vampirism:ring"
           }
         ]
       }
@@ -29,14 +29,14 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "vampirism:vampire/altar_inspiration"
+        "recipe": "vampirism:gold_nugget_from_accessory_smelting"
       }
     }
   },
   "requirements": [
     [
-      "has_planks",
-      "has_blood_container",
+      "has_amulet",
+      "has_ring",
       "has_the_recipe"
     ]
   ]
