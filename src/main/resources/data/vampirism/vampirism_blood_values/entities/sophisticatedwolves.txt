@@ -1,7 +1,0 @@
-#Blood values for creatures from Sophisticated Wolves
-#List compiled by iamtpage
-
-sophisticatedwolves:textures/entity/gray/wolf.png=5
-sophisticatedwolves:textures/entity/forest/wolf.png=5
-sophisticatedwolves:textures/entity/black/wolf.png=5
-sophisticatedwolves:textures/entity/brown/wolf.png=5

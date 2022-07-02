@@ -46,7 +46,7 @@ public class BloodValueLoader extends ReloadListener<Collection<ResourceLocation
     }
 
     @Override
-    protected void apply(@Nonnull Collection<ResourceLocation> splashList, @Nonnull IResourceManager resourceManagerIn, @Nonnull IProfiler profilerIn) {
+    public void apply(@Nonnull Collection<ResourceLocation> splashList, @Nonnull IResourceManager resourceManagerIn, @Nonnull IProfiler profilerIn) {
         Map<ResourceLocation, Integer> values = Maps.newConcurrentMap();
         for (ResourceLocation location : splashList) {
             String modId = location.getPath().substring(folderLocation.length() + 1, location.getPath().length() - 4);
@@ -66,7 +66,7 @@ public class BloodValueLoader extends ReloadListener<Collection<ResourceLocation
      * @param modId should be equals to the file name of location
      */
     @Nullable
-    protected Map<ResourceLocation, Integer> loadBloodValuesFromDataPack(ResourceLocation location, String modId, IResourceManager resourceManager) {
+    public Map<ResourceLocation, Integer> loadBloodValuesFromDataPack(ResourceLocation location, String modId, IResourceManager resourceManager) {
         if (!ModList.get().isLoaded(modId)) return null;
         try {
             return loadBloodValuesFromReader(new InputStreamReader(resourceManager.getResource(location).getInputStream()), modId);
@@ -136,7 +136,7 @@ public class BloodValueLoader extends ReloadListener<Collection<ResourceLocation
 
     @Nonnull
     @Override
-    protected Collection<ResourceLocation> prepare(IResourceManager resourceManagerIn, @Nonnull IProfiler profilerIn) {
+    public Collection<ResourceLocation> prepare(IResourceManager resourceManagerIn, @Nonnull IProfiler profilerIn) {
         return resourceManagerIn.listResources(folderLocation, (file) -> file.endsWith(".txt"));
     }
 }
