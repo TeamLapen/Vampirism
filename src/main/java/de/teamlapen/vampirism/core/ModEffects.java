@@ -51,6 +51,9 @@ public class ModEffects {
                     return VReference.VAMPIRE_FACTION;
                 }
             });
+    public static final RegistryObject<MobEffect> LORD_SPEED = EFFECTS.register("lord_speed", () -> new VampirismEffect(MobEffectCategory.BENEFICIAL, 0xffffff).addAttributeModifier(Attributes.MOVEMENT_SPEED, "efe607d8-db8a-4156-b9d0-6a0640593057", 0.07F, AttributeModifier.Operation.MULTIPLY_TOTAL));
+    public static final RegistryObject<MobEffect> LORD_ATTACK_SPEED = EFFECTS.register("lord_attack_speed", () -> new VampirismEffect(MobEffectCategory.BENEFICIAL, 0xffffff).addAttributeModifier(Attributes.ATTACK_SPEED, "a2ca9534-3baf-404f-b159-bc835bf963e6", 0.05F, AttributeModifier.Operation.MULTIPLY_TOTAL));
+
     private static final Logger LOGGER = LogManager.getLogger();
     private static MobEffect modded_night_vision;  //Substituted version
     private static MobEffect vanilla_night_vision; //Vanilla night vision instance

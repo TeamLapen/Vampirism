@@ -233,6 +233,7 @@ public class FactionRegistry implements IFactionRegistry {
         protected int highestLordLevel = 0;
         protected BiFunction<Integer, Boolean, Component> lordTitleFunction;
         protected Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot;
+        protected boolean hasLordSkills = false;
 
         public PlayableFactionBuilder(ResourceLocation id, Class<T> entityInterface, NonNullSupplier<Capability<T>> playerCapabilitySupplier) {
             super(id, entityInterface);
@@ -262,6 +263,11 @@ public class FactionRegistry implements IFactionRegistry {
 
         public PlayableFactionBuilder<T> lordTitle(@Nonnull BiFunction<Integer, Boolean, Component> lordTitleFunction) {
             this.lordTitleFunction = lordTitleFunction;
+            return this;
+        }
+
+        public PlayableFactionBuilder<T> enableLordSkills(boolean enabled) {
+            this.hasLordSkills = enabled;
             return this;
         }
 
@@ -314,6 +320,7 @@ public class FactionRegistry implements IFactionRegistry {
         protected final PlayableFactionBuilder<T> factionBuilder;
         protected int maxLevel = 0;
         protected BiFunction<Integer, Boolean, Component> lordTitleFunction;
+        protected boolean lordSkillsEnabled;
 
         public LordPlayerBuilder(PlayableFactionBuilder<T> factionBuilder) {
             this.factionBuilder = factionBuilder;
@@ -331,11 +338,17 @@ public class FactionRegistry implements IFactionRegistry {
             return this;
         }
 
+        @Override
+        public ILordPlayerBuilder<T> enableLordSkills() {
+            this.lordSkillsEnabled = true;
+            return this;
+        }
+
         public IPlayableFactionBuilder<T> build() {
             if (this.lordTitleFunction == null) {
                 this.lordTitleFunction = (a, b) -> Component.literal("Lord " + a);
             }
-            return this.factionBuilder.lordTitle(this.lordTitleFunction).lordLevel(this.maxLevel);
+            return this.factionBuilder.lordTitle(this.lordTitleFunction).lordLevel(this.maxLevel).enableLordSkills(this.lordSkillsEnabled);
         }
     }
 

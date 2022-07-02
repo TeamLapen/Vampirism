@@ -5,7 +5,9 @@ import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.minion.IMinionInventory;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
+import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
 import de.teamlapen.vampirism.core.ModContainer;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.network.CSelectMinionTaskPacket;
@@ -34,9 +36,9 @@ public class MinionContainer extends InventoryContainer {
     private final static Logger LOGGER = LogManager.getLogger();
 
     @Nullable
-    public static MinionContainer create(int id, Inventory playerInventory, MinionEntity<?> minionEntity) {
+    public static MinionContainer create(int id, Inventory playerInventory, MinionEntity<?> minionEntity, ILordPlayer lord) {
         Optional<IMinionInventory> minionInv = minionEntity.getInventory();
-        return minionInv.map(inv -> new MinionContainer(id, playerInventory, minionEntity, inv, inv.getAvailableSize(), createSelectors(minionEntity, inv.getAvailableSize()))).orElse(null);
+        return minionInv.map(inv -> new MinionContainer(id, playerInventory, lord , minionEntity, inv, inv.getAvailableSize(), createSelectors(minionEntity, inv.getAvailableSize()))).orElse(null);
     }
 
     private static SelectorInfo[] createSelectors(MinionEntity<?> minionEntity, int extraSlots) {
@@ -67,11 +69,11 @@ public class MinionContainer extends InventoryContainer {
     private IMinionTask<?, ?> taskToActivate;
     private boolean taskLocked;
 
-    public MinionContainer(int id, Inventory playerInventory, MinionEntity<?> minionEntity, @Nonnull Container inventory, int extraSlots, SelectorInfo... selectorInfos) {
+    public MinionContainer(int id, Inventory playerInventory, ILordPlayer lord, MinionEntity<?> minionEntity, @Nonnull Container inventory, int extraSlots, SelectorInfo... selectorInfos) {
         super(ModContainer.MINION.get(), id, playerInventory, ContainerLevelAccess.create(minionEntity.level, minionEntity.blockPosition()), inventory, selectorInfos);
         this.minionEntity = minionEntity;
         this.extraSlots = extraSlots;
-        this.availableTasks = this.minionEntity.getAvailableTasks().toArray(new IMinionTask[0]);
+        this.availableTasks = this.minionEntity.getAvailableTasks().stream().filter(task -> task.isAvailable(lord.getLordFaction(), lord)).toArray(IMinionTask[]::new);
         this.minionEntity.setInteractingPlayer(playerInventory.player);
         this.addPlayerSlots(playerInventory, 27, 103);
         this.previousTask = this.minionEntity.getCurrentTask().map(IMinionTask.IMinionTaskDesc::getTask).orElse(null);
@@ -160,7 +162,9 @@ public class MinionContainer extends InventoryContainer {
                 LOGGER.error("Cannot find related minion entity {}", entityId);
                 return null;
             }
-            return MinionContainer.create(windowId, inv, (MinionEntity<?>) e);
+            //noinspection ConstantConditions
+            ILordPlayer player = FactionPlayerHandler.getOpt(inv.player).orElse(null);
+            return MinionContainer.create(windowId, inv, (MinionEntity<?>) e, player);
         }
     }
 

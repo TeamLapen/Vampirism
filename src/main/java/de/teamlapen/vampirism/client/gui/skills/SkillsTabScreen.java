@@ -76,16 +76,16 @@ public class SkillsTabScreen extends GuiComponent {
         addNode(this.root);
 
         recalculateBorders();
-        this.scrollX = (SkillsScreen.SCREEN_WIDTH - 18) / 2 - 13;
+        this.scrollX = (SkillsScreen.SCREEN_WIDTH - 18) / (float)2 - 13;
         this.scrollY = 20;
     }
 
     private void recalculateBorders() {
         this.maxY = 20;
-        this.minY = (int) (-this.treeHeight * this.zoom);
+        this.minY = (int) (-(this.treeHeight-40) * this.zoom);
 
-        this.minX = (int) ( (-this.treeWidth + (treeWidth/2 ))*this.zoom);
-        this.maxX = (int) ( (this.treeWidth  + (treeWidth/2))*this.zoom);
+        this.minX = 0;
+        this.maxX = this.treeWidth;
 
         this.centered = false;
     }
@@ -232,13 +232,18 @@ public class SkillsTabScreen extends GuiComponent {
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         double scrollXP = this.scrollX * this.zoom;
         double scrollYP = this.scrollY * this.zoom;
-        this.zoom = (float) Mth.clamp(this.zoom + (amount / 25), 0, 1);
+        this.zoom = (float) (this.zoom + (amount/25));
+        float heightZoom = this.zoom;
+        float widthZoom = this.zoom;
         if (this.zoom * (this.treeHeight) < (SCREEN_HEIGHT)) {
-            this.zoom = Math.max(this.zoom, (float) (SCREEN_HEIGHT) / (this.treeHeight));
+            heightZoom = Math.max(this.zoom, (float) (SCREEN_HEIGHT) / (this.treeHeight));
         }
         if (this.zoom * this.treeWidth < (SCREEN_WIDTH - 20)) {
-            this.zoom = Math.max(this.zoom, (float) (SCREEN_WIDTH - 20) / this.treeWidth);
+            widthZoom = Math.max(this.zoom, (float) (SCREEN_WIDTH - 20) /(Math.max(60,this.treeWidth)));
         }
+
+        this.zoom = Math.min(heightZoom, widthZoom);
+        this.zoom = Math.min(1, this.zoom);
 
         this.scrollX = scrollXP / this.zoom;
         this.scrollY = scrollYP / this.zoom;

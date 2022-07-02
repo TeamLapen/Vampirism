@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.api.entity.minion;
 
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -45,7 +45,7 @@ public interface IMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends
      * @param player  The lord player entity if loaded
      * @return Whether the task can currently be given by the lord player
      */
-    default boolean isAvailable(IFaction<?> faction, @Nullable ILordPlayer player) {
+    default boolean isAvailable(IPlayableFaction<?> faction, @Nullable ILordPlayer player) {
         return true;
     }
 

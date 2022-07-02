@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
+import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.world.IVampirismWorld;
 import de.teamlapen.vampirism.client.core.*;
@@ -309,6 +310,8 @@ public class VampirismMod {
     private void loadComplete(final FMLLoadCompleteEvent event) {
         onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
         event.enqueueWork(OverworldModifications::addBiomesToOverworldUnsafe);
+        VampirismAPI.skillManager().registerSkillType(SkillType.LEVEL);
+        VampirismAPI.skillManager().registerSkillType(SkillType.LORD);
     }
 
 
@@ -338,7 +341,7 @@ public class VampirismMod {
                 .namePlural("text.vampirism.vampires")
                 .hostileTowardsNeutral()
                 .highestLevel(REFERENCE.HIGHEST_VAMPIRE_LEVEL)
-                .lord().lordLevel(REFERENCE.HIGHEST_VAMPIRE_LORD).lordTitle(LordTitles::getVampireTitle).build()
+                .lord().lordLevel(REFERENCE.HIGHEST_VAMPIRE_LORD).lordTitle(LordTitles::getVampireTitle).enableLordSkills().build()
                 .village(VampireVillage::vampireVillage)
                 .refinementItems(VampireRefinementItem::getItemForType)
                 .register();
@@ -349,7 +352,7 @@ public class VampirismMod {
                 .name("text.vampirism.hunter")
                 .namePlural("text.vampirism.hunters")
                 .highestLevel(REFERENCE.HIGHEST_HUNTER_LEVEL)
-                .lord().lordLevel(REFERENCE.HIGHEST_HUNTER_LORD).lordTitle(LordTitles::getHunterTitle).build()
+                .lord().lordLevel(REFERENCE.HIGHEST_HUNTER_LORD).lordTitle(LordTitles::getHunterTitle).enableLordSkills().build()
                 .village(HunterVillage::hunterVillage)
                 .register();
         VReference.HUNTER_CREATURE_TYPE = HUNTER_CREATURE_TYPE;

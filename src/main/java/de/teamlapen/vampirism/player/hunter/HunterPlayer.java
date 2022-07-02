@@ -214,10 +214,6 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
             ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.HUNTER_LEVEL_CRITERIA, level);
             LevelAttributeModifier.applyModifier(player, Attributes.ATTACK_DAMAGE, "Hunter", level, getMaxLevel(), VampirismConfig.BALANCE.hpStrengthMaxMod.get(), VampirismConfig.BALANCE.hpStrengthType.get(), AttributeModifier.Operation.MULTIPLY_BASE, false);
             if (level > 0) {
-                if (oldLevel == 0) {
-                    skillHandler.enableRootSkill();
-
-                }
             } else {
                 skillHandler.disableAllSkills();
                 actionHandler.resetTimers();

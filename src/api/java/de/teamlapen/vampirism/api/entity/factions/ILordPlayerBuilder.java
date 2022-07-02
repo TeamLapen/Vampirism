@@ -27,5 +27,12 @@ public interface ILordPlayerBuilder<T extends IFactionPlayer<T>> {
      */
     ILordPlayerBuilder<T> lordTitle(@Nonnull BiFunction<Integer, Boolean, Component> lordTitleFunction);
 
+    /**
+     * Enables this faction to have lord skills
+     *
+     * @return the builder
+     */
+    ILordPlayerBuilder<T> enableLordSkills();
+
     IPlayableFactionBuilder<T> build();
 }

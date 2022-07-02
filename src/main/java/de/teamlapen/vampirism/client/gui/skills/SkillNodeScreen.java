@@ -101,7 +101,7 @@ public class SkillNodeScreen extends GuiComponent {
             return SkillNodeState.UNLOCKED;
         } else if (this.skillHandler.isSkillNodeLocked(this.skillNode)) {
             return SkillNodeState.LOCKED;
-        } else if (Arrays.stream(this.skillNode.getParent().getElements()).anyMatch(this.skillHandler::isSkillEnabled)) {
+        } else if (this.skillNode.getParent() == null || Arrays.stream(this.skillNode.getParent().getElements()).anyMatch(this.skillHandler::isSkillEnabled)) {
             return SkillNodeState.AVAILABLE;
         } else {
             return this.skillNode.isHidden() ? SkillNodeState.HIDDEN :SkillNodeState.VISIBLE;
@@ -121,6 +121,8 @@ public class SkillNodeScreen extends GuiComponent {
     }
 
     public void draw(PoseStack stack, int i, int j) {
+        stack.pushPose();
+        stack.translate(0,0,50);
         SkillNodeState state = getState();
         if (state == SkillNodeState.HIDDEN) return;
         int width = 26 * this.skillNode.getElements().length + (this.skillNode.getElements().length - 1) * 10;
@@ -159,6 +161,7 @@ public class SkillNodeScreen extends GuiComponent {
         for (SkillNodeScreen child : this.children) {
             child.draw(stack, i, j);
         }
+        stack.popPose();
     }
 
     public void drawConnectivity(PoseStack stack, int startX, int startY, boolean outerLine) {
@@ -167,6 +170,10 @@ public class SkillNodeScreen extends GuiComponent {
         if (this.parent != null) {
             int color = state.pathColor(outerLine);
 
+            stack.pushPose();
+            if (state == SkillNodeState.UNLOCKED) {
+                stack.translate(0,0,10);
+            }
             int i = startX + x + 13;
             int i1 = startX + this.parent.x + 13;
             int j = startY + this.y - 30;
@@ -188,6 +195,8 @@ public class SkillNodeScreen extends GuiComponent {
                 this.vLine(stack, i1, j2, j3, color);
                 this.vLine(stack, i, j4, j5 + 1, color);
             }
+            stack.popPose();
+
         }
 
         for (SkillNodeScreen child : this.children) {

@@ -24,6 +24,7 @@ public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> imp
     private final NonNullSupplier<Capability<T>> playerCapabilitySupplier;
     private final BiFunction<Integer, Boolean, Component> lordTitleFunction;
     private final Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot;
+    private boolean hasLordSkills;
 
     PlayableFaction(FactionRegistry.PlayableFactionBuilder<T> builder) {
         super(builder);
@@ -32,6 +33,7 @@ public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> imp
         this.playerCapabilitySupplier = builder.playerCapabilitySupplier;
         this.lordTitleFunction = builder.lordTitleFunction;
         this.refinementItemBySlot = builder.refinementItemBySlot;
+        this.hasLordSkills = builder.hasLordSkills;
     }
 
     @Override
@@ -47,6 +49,11 @@ public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> imp
     @Override
     public int getHighestReachableLevel() {
         return highestLevel;
+    }
+
+    @Override
+    public boolean hasLordSkills() {
+        return this.hasLordSkills;
     }
 
     @Nonnull

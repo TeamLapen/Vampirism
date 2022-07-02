@@ -41,6 +41,7 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue taskDurationSinglePlayer;
     public final ForgeConfigSpec.IntValue taskDurationDedicatedServer;
     public final ForgeConfigSpec.DoubleValue skillPointsPerLevel;
+    public final ForgeConfigSpec.DoubleValue skillPointsPerLordLevel;
     public final ForgeConfigSpec.BooleanValue allowInfiniteSpecialArrows;
     public final ForgeConfigSpec.IntValue garlicDiffuserStartupTime;
 
@@ -204,6 +205,14 @@ public class BalanceConfig {
     public final ForgeConfigSpec.BooleanValue itApplicableOilPickaxeReverse;
     public final ForgeConfigSpec.BooleanValue itApplicableOilSwordReverse;
 
+    public final ForgeConfigSpec.BooleanValue laLordSpeedEnabled;
+    public final ForgeConfigSpec.IntValue laLordSpeedCooldown;
+    public final ForgeConfigSpec.IntValue laLordSpeedDuration;
+
+    public final ForgeConfigSpec.BooleanValue laLordAttackSpeedEnabled;
+    public final ForgeConfigSpec.IntValue laLordAttackSpeedCooldown;
+    public final ForgeConfigSpec.IntValue laLordAttackSpeedDuration;
+
     BalanceConfig(BalanceBuilder builder) {
         boolean iceAndFire = ModList.get().isLoaded("iceandfire");
         if (iceAndFire) {
@@ -236,7 +245,8 @@ public class BalanceConfig {
         taskMasterMaxTaskAmount = builder.comment("Maximum amount of task shown at a taskmaster, except unique tasks").defineInRange("taskMasterMaxTaskAmount", 3, 1, Integer.MAX_VALUE);
         taskDurationSinglePlayer = builder.comment("Duration a task can be completed in a singleplayer world. In Minutes").defineInRange("taskDurationSinglePlayer", 120, 1, Integer.MAX_VALUE);
         taskDurationDedicatedServer = builder.comment("Duration a task can be completed on a dedicated server. In Minutes").defineInRange("taskDurationDedicatedServer", 1440, 1, Integer.MAX_VALUE);
-        skillPointsPerLevel = builder.comment("Players receive n skill points for each leve-up. Anything except 1 is unbalanced, but to unlock all skills on maxlevel this value should be set to skill-amount/(max-level - 1)").defineInRange("skillPointsPerLevel", 1D, 1D, 20D);
+        skillPointsPerLevel = builder.comment("Players receive n skill points for each level-up. Anything except 1 is unbalanced, but to unlock all skills on maxlevel this value should be set to skill-amount/(max-level - 1)").defineInRange("skillPointsPerLevel", 1D, 1D, 20D);
+        skillPointsPerLordLevel = builder.comment("Players receive n skill points for each lord level-up. Anything except 1 is unbalanced, but to unlock all skills on max lord level this value should be set to skill-amount/(max-level - 1)").defineInRange("skillPointsPerLordLevel", 1D, 1D, 20D);
         allowInfiniteSpecialArrows = builder.comment("Whether special crossbow arrows (e.g. spitfire) can be used with infinity enchantment").define("allowInfiniteSpecialArrows", false);
         garlicDiffuserStartupTime = builder.comment("Delay in seconds before a newly placed garlic diffuser becomes active. *0.25 in Singleplayer").defineInRange("garlicDiffuserStartupTime", 5 * 20, 1, 10000);
 
@@ -399,7 +409,7 @@ public class BalanceConfig {
         builder.category("minions", "mi");
         miResourceCooldown = builder.comment("Cooldown in ticks,before new resources are added in collect resource task types").defineInRange("resourceCooldown", 1500, 20, Integer.MAX_VALUE);
         miResourceCooldownOfflineMult = builder.comment("Cooldown multiplier for collect resource task types while player is offline").defineInRange("resourceCooldownOfflineMult", 20D, 1D, 100000D);
-        miDeathRecoveryTime = builder.comment("Time in seconds a minion needs to recover from death.").defineInRange("deathRecoveryTime", 180, 1, Integer.MAX_VALUE / 100);
+        miDeathRecoveryTime = builder.comment("Time in seconds a minion needs to recover from death.").defineInRange("deathRecoveryTime", 220, 1, Integer.MAX_VALUE / 100);
         miMinionPerLordLevel = builder.comment("How many minions a player can have per lord level. Probably don't want to go very high").defineInRange("minionPerLordLevel", 1, 0, 100);
 
         builder.category("vampire_refinements", "vr");
@@ -420,5 +430,14 @@ public class BalanceConfig {
         itApplicableOilArmorReverse = builder.comment(String.format("Determines if the '%s' item tag should work as blacklist (false) or whitelist (true)" ,ModTags.Items.APPLICABLE_OIL_ARMOR.location())).define("applicableOilArmorReverse", false);
         itApplicableOilPickaxeReverse = builder.comment(String.format("Determines if the '%s' item tag should work as blacklist (false) or whitelist (true)" ,ModTags.Items.APPLICABLE_OIL_PICKAXE.location())).define("applicableOilPickaxeReverse", false);
         itApplicableOilSwordReverse = builder.comment(String.format("Determines if the '%s' item tag should work as blacklist (false) or whitelist (true)" ,ModTags.Items.APPLICABLE_OIL_SWORD.location())).define("applicableOilSwordReverse", false);
+
+        builder.category("lord actions", "la");
+        laLordSpeedEnabled = builder.define("lordSpeedEnabled", true);
+        laLordSpeedDuration = builder.comment("In seconds").defineInRange("lordSpeedDuration", 30, 0, Integer.MAX_VALUE);
+        laLordSpeedCooldown = builder.comment("In seconds").defineInRange("lordSpeedCooldown", 120, 0, Integer.MAX_VALUE);
+        laLordAttackSpeedEnabled = builder.define("lordAttackSpeedEnabled", true);
+        laLordAttackSpeedDuration = builder.comment("In seconds").defineInRange("lordAttackSpeedDuration", 30, 0, Integer.MAX_VALUE);
+        laLordAttackSpeedCooldown = builder.comment("In seconds").defineInRange("lordAttackSpeedCooldown", 120, 0, Integer.MAX_VALUE);
+
     }
 }

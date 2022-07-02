@@ -3,11 +3,14 @@ package de.teamlapen.vampirism.player.hunter.skills;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismRegistries;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.player.skills.ActionSkill;
+import de.teamlapen.vampirism.player.skills.MinionRecoverySkill;
 import de.teamlapen.vampirism.player.skills.VampirismSkill;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -17,6 +20,9 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.registries.RegistryObject;
+
+import javax.annotation.Nonnull;
+import java.util.Optional;
 
 /**
  * Registers the default hunter skills
@@ -76,13 +82,25 @@ public class HunterSkills {
     public static final RegistryObject<ISkill<IHunterPlayer>> POTION_RESISTANCE = SKILLS.register("potion_resistance", () -> new ActionSkill<>(HunterActions.POTION_RESISTANCE_HUNTER.get(), true));
     public static final RegistryObject<ISkill<IHunterPlayer>> crucifix_wielder = SKILLS.register("crucifix_wielder",() ->new VampirismSkill.SimpleHunterSkill(true));
     public static final RegistryObject<ISkill<IHunterPlayer>> ultimate_crucifix = SKILLS.register("ultimate_crucifix", () -> new VampirismSkill.SimpleHunterSkill(true));
+    public static final RegistryObject<ISkill<IHunterPlayer>> HUNTER_MINION_STATS_INCREASE = SKILLS.register("hunter_minion_stats_increase", () -> new VampirismSkill.LordHunterSkill(true));
+    public static final RegistryObject<ISkill<IHunterPlayer>> HUNTER_LORD_SPEED = SKILLS.register("hunter_lord_speed", () -> new ActionSkill<>(HunterActions.HUNTER_LORD_SPEED.get(), SkillType.LORD, true));
+    public static final RegistryObject<ISkill<IHunterPlayer>> HUNTER_LORD_ATTACK_SPEED = SKILLS.register("hunter_lord_attack_speed", () -> new ActionSkill<>(HunterActions.HUNTER_LORD_ATTACK_SPEED.get(), SkillType.LORD, true));
+    public static final RegistryObject<ISkill<IHunterPlayer>> HUNTER_MINION_COLLECT = SKILLS.register("hunter_minion_collect", () -> new VampirismSkill.LordHunterSkill(true));
+    public static final RegistryObject<ISkill<IHunterPlayer>> HUNTER_MINION_RECOVERY = SKILLS.register("hunter_minion_recovery", () -> new MinionRecoverySkill<>() {
+        @Nonnull
+        @Override
+        public Optional<IPlayableFaction<?>> getFaction() {
+            return Optional.of(VReference.HUNTER_FACTION);
+        }
+    });
+
+    static {
+        SKILLS.register(SkillType.LEVEL.createIdForFaction(VReference.HUNTER_FACTION.getID()).getPath(), () -> new VampirismSkill.SimpleHunterSkill(false));
+        SKILLS.register(SkillType.LORD.createIdForFaction(VReference.HUNTER_FACTION.getID()).getPath(), () -> new VampirismSkill.SimpleHunterSkill(false));
+    }
 
     public static void registerHunterSkills(IEventBus bus) {
         SKILLS.register(bus);
-    }
-
-    static {
-        SKILLS.register(VReference.HUNTER_FACTION.getID().getPath(), () -> new VampirismSkill.SimpleHunterSkill(false));
     }
 
     public static void fixMappings(MissingMappingsEvent event) {

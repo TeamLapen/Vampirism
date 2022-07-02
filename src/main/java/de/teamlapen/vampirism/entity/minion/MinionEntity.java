@@ -548,7 +548,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     protected InteractionResult mobInteract(@Nonnull Player player, @Nonnull InteractionHand hand) {
         if (isLord(player)) {
             if (player instanceof ServerPlayer) {
-                NetworkHooks.openScreen((ServerPlayer) player, new SimpleMenuProvider((id, playerInventory, playerIn) -> MinionContainer.create(id, playerInventory, this), Component.translatable("text.vampirism.name").append(this.getMinionData().map(MinionData::getFormattedName).orElse(Component.literal("Minion")))), buf -> buf.writeVarInt(this.getId()));
+                NetworkHooks.openScreen((ServerPlayer) player, new SimpleMenuProvider((id, playerInventory, playerIn) -> MinionContainer.create(id, playerInventory, this, getLord()), Component.translatable("text.vampirism.name").append(this.getMinionData().map(MinionData::getFormattedName).orElse(Component.literal("Minion")))), buf -> buf.writeVarInt(this.getId()));
             }
             return InteractionResult.SUCCESS;
         }
