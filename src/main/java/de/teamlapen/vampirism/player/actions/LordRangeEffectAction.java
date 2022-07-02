@@ -4,8 +4,10 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.DefaultAction;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.IVampirismPlayer;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -26,8 +28,12 @@ public abstract class LordRangeEffectAction<T extends IFactionPlayer> extends De
 
     @Override
     protected boolean activate(T player, ActivationContext context) {
+        int lordLevel = FactionPlayerHandler.getOpt(player.getRepresentingPlayer()).map(FactionPlayerHandler::getLordLevel).orElse(0);
         List<LivingEntity> entitiesOfClass = player.getRepresentingPlayer().level.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(player.getRepresentingPlayer().blockPosition()).inflate(10, 10, 10), e -> player.getFaction() == VampirismAPI.factionRegistry().getFaction(e));
         for (LivingEntity entity : entitiesOfClass) {
+            if (entity instanceof PlayerEntity && FactionPlayerHandler.getOpt(((PlayerEntity) entity)).map(FactionPlayerHandler::getLordLevel).filter(l -> l >= lordLevel).isPresent()) {
+                continue;
+            }
             entity.addEffect(new EffectInstance(effect.get(), getEffectDuration(player), getEffectAmplifier(player)));
         }
         return !entitiesOfClass.isEmpty();
