@@ -55,12 +55,6 @@ public class ModPotions {
     public static final RegistryObject<HunterPotion> NAUSEA = POTION_TYPES.register("nausea", () -> new HunterPotion(null, new EffectInstance(Effects.CONFUSION, 1200)));
     public static final RegistryObject<HunterPotion> LONG_NAUSEA = POTION_TYPES.register("long_nausea", () -> new HunterPotion("nausea", new EffectInstance(Effects.CONFUSION, 2400)));
     public static final RegistryObject<HunterPotion> VERY_LONG_NAUSEA = POTION_TYPES.register("very_long_nausea", () -> new HunterPotion("nausea", new EffectInstance(Effects.CONFUSION, 24000)));
-    public static final RegistryObject<HunterPotion> THIRST = POTION_TYPES.register("thirst", () -> new HunterPotion(null, new EffectInstance(ModEffects.THIRST.get(), 1200)));
-    public static final RegistryObject<HunterPotion> LONG_THIRST = POTION_TYPES.register("long_thirst", () -> new HunterPotion("thirst", new EffectInstance(ModEffects.THIRST.get(), 4800)));
-    public static final RegistryObject<HunterPotion> STRONG_THIRST = POTION_TYPES.register("strong_thirst", () -> new HunterPotion("thirst", new EffectInstance(ModEffects.THIRST.get(), 400, 1)));
-    public static final RegistryObject<HunterPotion> VERY_LONG_THIRST = POTION_TYPES.register("very_long_thirst", () -> new HunterPotion("thirst", new EffectInstance(ModEffects.THIRST.get(), 24000)));
-    public static final RegistryObject<HunterPotion> VERY_STRONG_THIRST = POTION_TYPES.register("very_strong_thirst", () -> new HunterPotion("thirst", new EffectInstance(ModEffects.THIRST.get(), 1200, 2)));
-    public static final RegistryObject<HunterPotion> LONG_STRONG_THIRST = POTION_TYPES.register("long_strong_thirst", () -> new HunterPotion("thirst", new EffectInstance(ModEffects.THIRST.get(), 9600, 1)));
     public static final RegistryObject<HunterPotion> BLINDNESS = POTION_TYPES.register("blindness", () -> new HunterPotion(null, new EffectInstance(Effects.BLINDNESS, 1200)));
     public static final RegistryObject<HunterPotion> LONG_BLINDNESS = POTION_TYPES.register("long_blindness", () -> new HunterPotion("blindness", new EffectInstance(Effects.BLINDNESS, 4800)));
     public static final RegistryObject<HunterPotion> VERY_LONG_BLINDNESS = POTION_TYPES.register("very_long_blindness", () -> new HunterPotion("blindness", new EffectInstance(Effects.BLINDNESS, 24000)));
@@ -120,13 +114,6 @@ public class ModPotions {
         master(NAUSEA.get(), () -> Ingredient.of(Tags.Items.MUSHROOMS), 32, 16);
         durable(NAUSEA.get(), LONG_NAUSEA.get());
         veryDurable(LONG_NAUSEA.get(), VERY_LONG_NAUSEA.get());
-        master(THIRST.get(), () -> Ingredient.of(ModItems.VAMPIRE_FANG.get()), 10, 5);
-        durable(THIRST.get(), LONG_THIRST.get());
-        strong(THIRST.get(), STRONG_THIRST.get());
-        veryDurable(LONG_THIRST.get(), VERY_LONG_THIRST.get());
-        veryStrong(STRONG_THIRST.get(), VERY_STRONG_THIRST.get());
-        veryDurable(VERY_STRONG_THIRST.get(), LONG_STRONG_THIRST.get());
-        veryStrong(VERY_LONG_THIRST.get(), LONG_STRONG_THIRST.get());
         master(BLINDNESS.get(), () -> Ingredient.of(Items.INK_SAC), 64, 32);
         durable(BLINDNESS.get(), LONG_BLINDNESS.get());
         veryDurable(LONG_BLINDNESS.get(), VERY_LONG_BLINDNESS.get());
@@ -165,11 +152,21 @@ public class ModPotions {
 
     public static void fixMappings(RegistryEvent.MissingMappings<Potion> event) {
         event.getAllMappings().forEach(missingMapping -> {
-            String key = missingMapping.key.toString();
-            if (key.equals("vampirism:long_strong_resistance") || key.equals("vampirism:very_long_resistance")) {
-                missingMapping.remap(ModPotions.LONG_RESISTANCE.get());
-            } else if (key.equals("vampirism:very_strong_resistance")) {
-                missingMapping.remap(ModPotions.STRONG_RESISTANCE.get());
+            switch (missingMapping.key.toString()) {
+                case "vampirism:long_strong_resistance":
+                case "vampirism:very_long_resistance":
+                    missingMapping.remap(LONG_RESISTANCE.get());
+                    break;
+                case "vampirism:very_strong_resistance":
+                    missingMapping.remap(STRONG_RESISTANCE.get());
+                    break;
+                case "vampirism:thirst":
+                case "vampirism:long_thirst":
+                case "vampirism:strong_thirst":
+                case "vampirism:very_long_thirst":
+                case "vampirism:very_strong_thirst":
+                case "vampirism:long_strong_thirst":
+                    missingMapping.ignore();
             }
         });
     }

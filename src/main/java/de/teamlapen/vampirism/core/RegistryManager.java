@@ -133,6 +133,11 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
+    public void onMissingMappingsEffects(RegistryEvent.MissingMappings<Effect> event) {
+        ModEffects.fixMappings(event);
+    }
+
+    @SubscribeEvent
     public void onMissingMappingsPotions(RegistryEvent.MissingMappings<Potion> event) {
         ModPotions.fixMappings(event);
     }
