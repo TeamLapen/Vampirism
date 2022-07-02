@@ -559,11 +559,8 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
             int max = Math.min(beds, VampirismConfig.BALANCE.viMaxVillagerRespawn.get());
             if (villager < max) {
                 boolean isConverted = this.controllingFaction == VReference.VAMPIRE_FACTION && RNG.nextBoolean();
-                if (isConverted) {
-                    this.spawnVillagerVampire();
-                } else {
-                    this.spawnVillagerDefault(this.controllingFaction == VReference.HUNTER_FACTION);
-                }
+                this.spawnVillagerDefault(this.controllingFaction == VReference.HUNTER_FACTION, isConverted);
+
             } else {
                 spawnTaskMaster = true;
             }
@@ -1091,42 +1088,40 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         }
     }
 
-    private void spawnVillagerDefault(boolean poisonousBlood) {
+    private void spawnVillagerDefault(boolean poisonousBlood, boolean vampire) {
+        assert poisonousBlood != vampire;
         //noinspection ConstantConditions
-        Villager newVillager = EntityType.VILLAGER.create(this.level);
+        Villager newVillager = (vampire ? ModEntities.VILLAGER_CONVERTED.get() : EntityType.VILLAGER).create(this.level);
         //noinspection ConstantConditions
+        newVillager = VampirismEventFactory.fireSpawnNewVillagerEvent(this, null, newVillager, false);
         ExtendedCreature.getSafe(newVillager).ifPresent(e -> e.setPoisonousBlood(poisonousBlood));
-        newVillager = VampirismEventFactory.fireSpawnNewVillagerEvent(this, null, newVillager, false, poisonousBlood);
         spawnEntity(newVillager);
     }
 
     @SuppressWarnings("ConstantConditions")
-    private void spawnVillagerReplace(Mob oldEntity, boolean poisonousBlood) {
-        Villager newVillager = EntityType.VILLAGER.create(this.level);
-        ExtendedCreature.getSafe(newVillager).ifPresent(e -> e.setPoisonousBlood(poisonousBlood));
+    private void spawnVillagerReplace(Mob oldEntity, boolean poisonousBlood, boolean vampire) {
+        assert poisonousBlood != vampire;
+        Villager newVillager = (vampire ? ModEntities.VILLAGER_CONVERTED.get() : EntityType.VILLAGER).create(this.level);
         if (oldEntity instanceof Villager)
             newVillager.restrictTo(oldEntity.getRestrictCenter(), (int) oldEntity.getRestrictRadius());
-        newVillager = VampirismEventFactory.fireSpawnNewVillagerEvent(this, oldEntity, newVillager, true, poisonousBlood);
+        newVillager = VampirismEventFactory.fireSpawnNewVillagerEvent(this, oldEntity, newVillager, true);
+        ExtendedCreature.getSafe(newVillager).ifPresent(e -> e.setPoisonousBlood(poisonousBlood));
         spawnEntity(newVillager, oldEntity, true, true);
     }
 
     //client------------------------------------------------------------------------------------------------------------
 
     @SuppressWarnings("ConstantConditions")
-    private void spawnVillagerReplaceForced(Mob oldEntity, boolean poisonousBlood) {
-        Villager newVillager = EntityType.VILLAGER.create(this.level);
-        ExtendedCreature.getSafe(newVillager).ifPresent(e -> e.setPoisonousBlood(poisonousBlood));
+    private void spawnVillagerReplaceForced(Mob oldEntity, boolean poisonousBlood, boolean vampire) {
+        assert poisonousBlood != vampire;
+        Villager newVillager = (vampire ? ModEntities.VILLAGER_CONVERTED.get() : EntityType.VILLAGER).create(this.level);
         newVillager.copyPosition(oldEntity);
         if (oldEntity instanceof Villager) {
             newVillager.restrictTo(oldEntity.getRestrictCenter(), (int) oldEntity.getRestrictRadius());
         }
-        newVillager = VampirismEventFactory.fireSpawnNewVillagerEvent(this, oldEntity, newVillager, true, poisonousBlood);
+        newVillager = VampirismEventFactory.fireSpawnNewVillagerEvent(this, oldEntity, newVillager, true);
+        ExtendedCreature.getSafe(newVillager).ifPresent(e -> e.setPoisonousBlood(poisonousBlood));
         UtilLib.replaceEntity(oldEntity, newVillager);
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    private void spawnVillagerVampire() {
-        this.spawnEntity(ModEntities.VILLAGER_CONVERTED.get().create(this.level));
     }
 
     /**
@@ -1164,11 +1159,11 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
                 if (hunter instanceof ICaptureIgnore)
                     continue;
                 if (i-- > 0) {
-                    this.spawnVillagerReplace(hunter, true);
+                    this.spawnVillagerReplace(hunter, true, false);
                 }
             }
             for (int o = i; o > 0; o--) {
-                this.spawnVillagerDefault(true);
+                this.spawnVillagerDefault(true, false);
             }
             for (Villager villager : villagerEntities) {
                 ExtendedCreature.getSafe(villager).ifPresent(e -> e.setPoisonousBlood(true));

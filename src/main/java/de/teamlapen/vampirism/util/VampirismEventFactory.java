@@ -27,8 +27,8 @@ public class VampirismEventFactory {
         MinecraftForge.EVENT_BUS.post(new VampirismVillageEvent.VillagerCaptureFinish.Post(totem, villagerIn, forced));
     }
 
-    public static Villager fireSpawnNewVillagerEvent(@Nonnull ITotem totem, @Nullable Mob oldEntity, @Nonnull Villager newEntity, boolean replaceOld, boolean converted) {
-        VampirismVillageEvent.SpawnNewVillager event = new VampirismVillageEvent.SpawnNewVillager(totem, oldEntity, newEntity, replaceOld, converted);
+    public static Villager fireSpawnNewVillagerEvent(@Nonnull ITotem totem, @Nullable Mob oldEntity, @Nonnull Villager newEntity, boolean replaceOld) {
+        VampirismVillageEvent.SpawnNewVillager event = new VampirismVillageEvent.SpawnNewVillager(totem, oldEntity, newEntity, replaceOld);
         MinecraftForge.EVENT_BUS.post(event);
         return event.getNewVillager();
     }
