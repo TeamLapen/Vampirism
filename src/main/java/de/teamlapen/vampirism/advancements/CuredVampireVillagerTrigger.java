@@ -2,10 +2,10 @@ package de.teamlapen.vampirism.advancements;
 
 import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.entity.converted.ConvertedVillagerEntity;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.level.storage.loot.LootContext;
 
@@ -20,7 +20,7 @@ public class CuredVampireVillagerTrigger extends SimpleCriterionTrigger<CuredVam
         return ID;
     }
 
-    public void trigger(ServerPlayer player, ConvertedVillagerEntity vampire, Villager villager) {
+    public void trigger(ServerPlayer player, Entity vampire, Villager villager) {
         LootContext lootcontext = EntityPredicate.createContext(player, vampire);
         LootContext lootcontext1 = EntityPredicate.createContext(player, villager);
         this.trigger(player, (instance) -> instance.test(lootcontext, lootcontext1));
