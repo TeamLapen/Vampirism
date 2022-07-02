@@ -36,12 +36,12 @@ public class BloodValueReader<T> {
         this.name = name;
     }
 
-    public CompletableFuture<Map<ResourceLocation, BloodValueBuilder>> prepare(IResourceManager manager, Executor executor){
+    public CompletableFuture<Map<String, BloodValueBuilder>> prepare(IResourceManager manager, Executor executor){
         return CompletableFuture.supplyAsync(() -> loadValues(manager), executor);
     }
 
-    public Map<ResourceLocation, BloodValueBuilder> loadValues(IResourceManager manager) {
-        Map<ResourceLocation, BloodValueBuilder> values = new HashMap<>();
+    public Map<String, BloodValueBuilder> loadValues(IResourceManager manager) {
+        Map<String, BloodValueBuilder> values = new HashMap<>();
         for (ResourceLocation resourcePath : manager.listResources(this.directory, (file) -> file.endsWith(".json"))) {
             String s = resourcePath.getPath();
             ResourceLocation resourceName = new ResourceLocation(resourcePath.getNamespace(), s.substring(this.directory.length() +1, s.length() - PATH_SUFFIX_LENGTH));
@@ -52,7 +52,7 @@ public class BloodValueReader<T> {
                         if (json == null){
                             LOGGER.error("Couldn't load {} blood values {} from {} in datapack {} as it is empty or null", this.name, resourceName, resourcePath, resource.getSourceName());
                         } else {
-                            values.computeIfAbsent(resourceName, (id) -> new BloodValueBuilder()).addFromJson(json, resource.getSourceName());
+                            values.computeIfAbsent(resourceName.getPath(), (id) -> new BloodValueBuilder()).addFromJson(json, resource.getSourceName());
                         }
                     } catch (RuntimeException | IOException e){
                         LOGGER.error("Couldn't read {} blood values {} from {} in datapack {}", this.name, resourceName, resourcePath, resource.getSourceName(), e);
@@ -67,7 +67,7 @@ public class BloodValueReader<T> {
         return values;
     }
 
-    public void load(Map<ResourceLocation, BloodValueBuilder> values) {
+    public void load(Map<String, BloodValueBuilder> values) {
         this.valueConsumer.accept(values.entrySet().stream().flatMap(a -> a.getValue().build().entrySet().stream()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     }
 }

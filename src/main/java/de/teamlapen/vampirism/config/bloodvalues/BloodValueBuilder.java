@@ -5,36 +5,68 @@ import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class BloodValueBuilder {
 
-    private final List<Proxy> entries = new ArrayList<>();
+    private final List<BuilderEntries> entries = new ArrayList<>();
+    private final LegacyBuilderEntries legacyEntries = new LegacyBuilderEntries();
 
-    public BloodValueBuilder addFromJson(JsonObject json, String sourceName) {
-        if(JSONUtils.getAsBoolean(json, "replace", false)) {
-            this.entries.clear();
-        }
+    public BloodValueBuilder() {
+        this.entries.add(legacyEntries);
+    }
+
+    public void addFromJson(JsonObject json, String sourceName) {
         JsonObject values = json.getAsJsonObject("values");
-        values.entrySet().stream().map(e -> {
+        this.entries.add( new BuilderEntries(values.entrySet().stream().map(e -> {
             ResourceLocation loc = new ResourceLocation(e.getKey());
             float value = e.getValue().getAsFloat();
             return new Proxy(new Entry(loc, value), sourceName);
-        }).forEach(this.entries::add);
-        return this;
+        }).collect(Collectors.toList()), JSONUtils.getAsBoolean(json, "replace", false)));
     }
 
-    public BloodValueBuilder addValue(ResourceLocation id, float value, String sourceName) {
-        this.entries.add(new Proxy(new Entry(id, value), sourceName));
-        return this;
+    public void addValue(ResourceLocation id, float value, String sourceName) {
+        this.legacyEntries.addEntry(new Proxy(new Entry(id, value), sourceName));
     }
 
     public Map<ResourceLocation, Float> build() {
-        Map<ResourceLocation, Float> map = new HashMap<>();
-        this.entries.forEach(a -> map.put(a.entry.id, a.entry.value));
-        return map;
+        List<BuilderEntries> entries = this.entries.stream().filter(BuilderEntries::isReplace).collect(Collectors.toList());
+        if (entries.isEmpty()) {
+            entries = this.entries;
+        }
+        return entries.stream().flatMap(e -> e.getEntries().stream()).collect(Collectors.toMap(e -> e.entry.id, e -> e.entry.value));
+    }
+
+    public static class BuilderEntries {
+
+        protected final List<Proxy> entries;
+        private final boolean replace;
+
+        public BuilderEntries(List<Proxy> entries, boolean replace) {
+            this.entries = entries;
+            this.replace = replace;
+        }
+
+        public boolean isReplace() {
+            return replace;
+        }
+
+        public List<Proxy> getEntries() {
+            return entries;
+        }
+    }
+
+    public static class LegacyBuilderEntries extends BuilderEntries {
+
+        public LegacyBuilderEntries() {
+            super(new ArrayList<>(), false);
+        }
+
+        public void addEntry(Proxy entry) {
+            this.entries.add(entry);
+        }
     }
 
     public static class Proxy {

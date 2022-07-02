@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.config.bloodvalues;
 
 import de.teamlapen.lib.lib.config.BloodValueLoader;
-import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 
@@ -21,17 +20,16 @@ public class BloodValuesFluidLoader extends BloodValueReader<ResourceLocation> {
     }
 
     @Override
-    public Map<ResourceLocation, BloodValueBuilder> loadValues(IResourceManager manager) {
-        Map<ResourceLocation, BloodValueBuilder> values = super.loadValues(manager);
+    public Map<String, BloodValueBuilder> loadValues(IResourceManager manager) {
+        Map<String, BloodValueBuilder> values = super.loadValues(manager);
         loadLegacy(manager, values);
         return values;
     }
 
-    private void loadLegacy(IResourceManager manager,Map<ResourceLocation, BloodValueBuilder> values) {
+    private void loadLegacy(IResourceManager manager,Map<String, BloodValueBuilder> values) {
         BiConsumer<Map<ResourceLocation, Integer>, Integer> consumer = (map, multiplier) ->{
             map.forEach((loc, value) -> {
-                ResourceLocation id = new ResourceLocation(REFERENCE.MODID, loc.getNamespace());
-                values.computeIfAbsent(id, (id1) -> new BloodValueBuilder()).addValue(loc, (float)value / multiplier, "legacy");
+                values.computeIfAbsent(loc.getNamespace(), (id1) -> new BloodValueBuilder()).addValue(loc, (float)value / multiplier, "legacy");
             });
         };
         BloodValueLoader legacyLoader = new BloodValueLoader("fluids", consumer, new ResourceLocation("divider"));
