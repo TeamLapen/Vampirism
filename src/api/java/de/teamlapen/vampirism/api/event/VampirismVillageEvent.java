@@ -101,7 +101,7 @@ public abstract class VampirismVillageEvent extends Event {
          *
          * @param newVillager
          */
-        public void setNewVillager(@Nullable VillagerEntity newVillager) {
+        public void setNewVillager(@Nonnull VillagerEntity newVillager) {
             this.newVillager = newVillager;
         }
 
