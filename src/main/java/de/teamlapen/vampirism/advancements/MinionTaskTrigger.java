@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.advancements;
 import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
-import de.teamlapen.vampirism.core.ModRegistries;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -30,7 +30,7 @@ public class MinionTaskTrigger extends SimpleCriterionTrigger<MinionTaskTrigger.
     @Nonnull
     @Override
     protected Instance createInstance(@Nonnull JsonObject json, @Nonnull EntityPredicate.Composite entityPredicate, @Nonnull DeserializationContext conditionsParser) {
-        IMinionTask<?, ?> task = ModRegistries.MINION_TASKS.getValue(new ResourceLocation(json.get("action").getAsString()));
+        IMinionTask<?, ?> task = RegUtil.getMinionTask(new ResourceLocation(json.get("action").getAsString()));
         if (task != null) {
             return new Instance(task);
         } else {
@@ -51,7 +51,7 @@ public class MinionTaskTrigger extends SimpleCriterionTrigger<MinionTaskTrigger.
         @Override
         public JsonObject serializeToJson(@Nonnull SerializationContext serializer) {
             JsonObject json = super.serializeToJson(serializer);
-            json.addProperty("action", task.getRegistryName().toString());
+            json.addProperty("action", RegUtil.id(task).toString());
             return json;
         }
 

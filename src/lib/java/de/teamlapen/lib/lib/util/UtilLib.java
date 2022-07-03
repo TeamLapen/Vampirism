@@ -2,17 +2,17 @@ package de.teamlapen.lib.lib.util;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Matrix4f;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.core.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,6 +20,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
@@ -27,13 +28,12 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.*;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
@@ -49,6 +49,7 @@ import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.entity.living.LivingConversionEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -59,6 +60,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * General Utility Class
@@ -369,7 +371,7 @@ public class UtilLib {
         double z = zCoord;
         for (int i = 0; i < amount; i++) {
             world.addParticle(particle, x, y, z, xSpeed, ySpeed, zSpeed);
-            Random ran = world.random;
+            RandomSource ran = world.random;
             x = xCoord + (ran.nextGaussian() * maxOffset);
             y = yCoord + (ran.nextGaussian() * maxOffset);
             z = zCoord + (ran.nextGaussian() * maxOffset);
@@ -399,7 +401,7 @@ public class UtilLib {
     public static void sendMessageToAllExcept(Player player, Component message) {
         for (Player o : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
             if (!o.equals(player)) {
-                o.sendMessage(message, Util.NIL_UUID);
+                o.sendSystemMessage(message);
             }
         }
     }
@@ -496,63 +498,6 @@ public class UtilLib {
         return true;
     }
 
-    private static ChunkPos isBiomeAt(ServerLevel world, int x, int z, List<Biome> biomes) {
-        Pair<BlockPos, Holder<Biome>> pos = (world.getChunkSource()).getGenerator().getBiomeSource().findBiomeHorizontal(x, world.getSeaLevel(), z, 32, h -> biomes.contains(h.value()), new Random(), world.getChunkSource().getGenerator().climateSampler());
-        if (pos != null) {
-            return new ChunkPos(pos.getFirst().getX() >> 4, pos.getFirst().getZ() >> 4);
-        }
-        return null;
-    }
-
-    /**
-     * Search for a vampire biome by checking every second chunk starting at the player and moving in circles to the outside
-     *
-     * @param center  Pos to start with
-     * @param maxDist Max radius
-     */
-    public static ChunkPos findNearBiome(ServerLevel world, BlockPos center, int maxDist, List<Biome> biomes) {
-        long start = System.currentTimeMillis();
-        maxDist = (maxDist / 20) * 20;//Round it
-        long maxop = (((long) maxDist) * maxDist + maxDist) / 2;
-        ChunkPos loc;
-        for (int i = 0; i < maxDist; i += 4) {
-            int cx = -i;
-            for (int cz = -i; cz <= i; cz++) {
-                if (cz % 4 != 0) continue;
-                loc = isBiomeAt(world, center.getX() + (cx << 4), center.getZ() + (cz << 4), biomes);
-                if (loc != null) {
-                    LOGGER.trace("Took {} ms to find a vampire biome {} {}", (int) (System.currentTimeMillis() - start), loc.x, loc.z);
-                    return loc;
-                }
-                if (cz == i && cx < 0) {
-                    cz = -i;
-                    cx = i;
-                }
-            }
-            int cz = -i;
-            for (int cx2 = -i + 1; cx2 < i; cx2++) {
-                if (cx2 % 4 != 0) continue;
-                loc = isBiomeAt(world, center.getX() + (cx2 << 4), center.getZ() + (cz << 4), biomes);
-                if (loc != null) {
-                    LOGGER.trace("Took {} ms to find a vampire biome {} {}", (int) (System.currentTimeMillis() - start), loc.x, loc.z);
-                    return loc;
-                }
-                if (cx == i - 1 && cz < 0) {
-                    cz = i;
-                    cx = i - 1;
-                }
-            }
-            if ((i * 10) % maxDist == 0) {
-                long op = (((long) i) * i + i) / 2;
-                double perc = ((double) op / maxop) * 100;
-                LOGGER.trace("Search {} percent finished", (int) perc);
-            }
-
-        }
-        LOGGER.trace("Took {} ms to not find a vampire biome", (int) (System.currentTimeMillis() - start));
-        return null;
-    }
-
     public static boolean isPlayerOp(Player player) {
         return ServerLifecycleHooks.getCurrentServer().getPlayerList().getOps().get(player.getGameProfile()) != null;
     }
@@ -627,60 +572,52 @@ public class UtilLib {
         return Block.box(Math.min(pX1, pX2), Math.min(pY1, pY2), Math.min(pZ1, pZ2), Math.max(pX1, pX2), Math.max(pY1, pY2), Math.max(pZ1, pZ2));
     }
 
-    public static boolean isInsideStructure(Entity entity, ResourceKey<ConfiguredStructureFeature<?, ?>> s) {
-        StructureStart start = getStructureStartAt(entity, s);
-        return start != null && start.isValid();
-    }
-
-    public static boolean isInsideStructure(Level w, BlockPos p, ResourceKey<ConfiguredStructureFeature<?, ?>> s) {
-        StructureStart start = getStructureStartAt(w, p, s);
-        return start != null && start.isValid();
-    }
-
     @Nullable
-    public static StructureStart getStructureStartAt(Entity entity, ResourceKey<ConfiguredStructureFeature<?, ?>> s) {
+    public static StructureStart getStructureStartAt(Entity entity, Structure s) {
         return getStructureStartAt(entity.getCommandSenderWorld(), entity.blockPosition(), s);
-    }
-
-    @Nullable
-    public static StructureStart getStructureStartAt(Entity entity,StructureFeature<?> s) {
-        return getStructureStartAt(entity.getCommandSenderWorld(), entity.blockPosition(), s);
-    }
-
-    public static boolean isInsideStructure(Level w, BlockPos p, StructureFeature<?> s) {
-        StructureStart start = getStructureStartAt(w, p, s);
-        return start != null && start.isValid();
-    }
-
-    @Nullable
-    public static StructureStart getStructureStartAt(Level w, BlockPos pos, ResourceKey<ConfiguredStructureFeature<?, ?>> s) {
-        if (w instanceof ServerLevel && w.isLoaded(pos)) {
-            return getStructureStartAt((ServerLevel) w, pos, s);
-        }
-        return null;
-    }
-
-    public static boolean isInsideStructure(Entity entity,  StructureFeature<?> s) {
-        StructureStart start = getStructureStartAt(entity, s);
-        return start != null && start.isValid();
     }
 
     @Nonnull
-    public static StructureStart getStructureStartAt(ServerLevel w, BlockPos pos, ResourceKey<ConfiguredStructureFeature<?, ?>> s) {
-        ConfiguredStructureFeature<?, ?> configuredstructurefeature = w.registryAccess().registryOrThrow(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY).get(s);
-        return configuredstructurefeature == null ? StructureStart.INVALID_START : w.structureFeatureManager().getStructureAt(pos, configuredstructurefeature);
+    public static Optional<StructureStart> getStructureStartAt(Entity entity, Holder<StructureSet> s) {
+        return getStructureStartAt(entity.getCommandSenderWorld(), entity.blockPosition(), s);
+    }
+
+    public static boolean isInsideStructure(Level w, BlockPos p, Structure s) {
+        StructureStart start = getStructureStartAt(w, p, s);
+        return start != null && start.isValid();
+    }
+
+    public static boolean isInsideStructure(Level w, BlockPos p, Holder<StructureSet> s) {
+        return getStructureStartAt(w,p,s).isPresent();
+    }
+
+    public static boolean isInsideStructure(Entity entity,  Structure s) {
+        StructureStart start = getStructureStartAt(entity, s);
+        return start != null && start.isValid();
+    }
+
+    public static boolean isInsideStructure(Entity entity, Holder<StructureSet> structures) {
+        return getStructureStartAt(entity, structures).isPresent();
     }
 
     @Nullable
-    public static StructureStart getStructureStartAt(Level w, BlockPos pos, StructureFeature<?> s) {
+    public static StructureStart getStructureStartAt(Level w, BlockPos pos, Structure s) {
         if (w instanceof ServerLevel && w.isLoaded(pos)) {
             return getStructureStartAt((ServerLevel) w, pos, s);
         }
         return null;
     }
 
-    public static StructureStart getStructureStartAt(ServerLevel w, BlockPos pos, StructureFeature<?> feature){
-        for(StructureStart structurestart : w.structureFeatureManager().startsForFeature(SectionPos.of(pos), t -> t.feature.equals(feature))) {
+    public static Optional<StructureStart> getStructureStartAt(Level level, BlockPos pos, Holder<StructureSet> structureSet) {
+        if (level instanceof ServerLevel && level.isLoaded(pos)) {//TODO Recheck
+            Set<Structure> structures = structureSet.get().structures().stream().map(a -> a.structure().get()).collect(Collectors.toSet());
+            return ((ServerLevel) level).structureManager().startsForStructure(new ChunkPos(pos), structures::contains).stream().findFirst(); //TODO Recheck
+        }
+        return Optional.empty();
+    }
+
+    public static StructureStart getStructureStartAt(ServerLevel w, BlockPos pos, Structure structure){
+        for(StructureStart structurestart : w.structureManager().startsForStructure(SectionPos.of(pos), structure)){
             if(structurestart.getBoundingBox().isInside(pos)){
                 return structurestart;
             }
@@ -758,7 +695,7 @@ public class UtilLib {
         if (!item.builtInRegistryHolder().is(Tags.Items.DYES) ) return null;
         Optional<DyeColor> color = Arrays.stream(DyeColor.values()).filter(dye -> item.builtInRegistryHolder().is(dye.getTag())).findFirst();
         if (color.isPresent()) return color.get();
-        LOGGER.warn("Could not determine color of {}", item.getRegistryName());
+        LOGGER.warn("Could not determine color of {}", ForgeRegistries.ITEMS.getKey(item));
         return null;
     }
 

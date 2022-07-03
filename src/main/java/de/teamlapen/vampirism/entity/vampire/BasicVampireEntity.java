@@ -25,8 +25,9 @@ import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.util.VampireVillage;
 import de.teamlapen.vampirism.world.MinionWorldData;
+import net.minecraft.data.worldgen.StructureSets;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -49,7 +50,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
@@ -404,7 +404,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    protected int getExperienceReward(@Nonnull Player player) {
+    public int getExperienceReward() {
         return 6 + getEntityLevel();
     }
 
@@ -425,22 +425,22 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                             ItemStack heldItem = player.getItemInHand(hand);
                             //noinspection Convert2MethodRef
                             boolean freeSlot = MinionWorldData.getData(player.level).map(data -> data.getOrCreateController(fph)).map(c -> c.hasFreeMinionSlot()).orElse(false);
-                            player.displayClientMessage(new TranslatableComponent("text.vampirism.basic_vampire.minion.available"), true);
+                            player.displayClientMessage(Component.translatable("text.vampirism.basic_vampire.minion.available"), true);
                             if (heldItem.getItem() == ModItems.VAMPIRE_MINION_BINDING.get()) {
                                 if (!freeSlot) {
-                                    player.displayClientMessage(new TranslatableComponent("text.vampirism.basic_vampire.minion.no_free_slot"), true);
+                                    player.displayClientMessage(Component.translatable("text.vampirism.basic_vampire.minion.no_free_slot"), true);
                                 } else {
                                     String key = switch (this.getRandom().nextInt(3)) {
                                         case 0 -> "text.vampirism.basic_vampire.minion.start_serving1";
                                         case 1 -> "text.vampirism.basic_vampire.minion.start_serving2";
                                         default -> "text.vampirism.basic_vampire.minion.start_serving3";
                                     };
-                                    player.displayClientMessage(new TranslatableComponent(key), false);
+                                    player.displayClientMessage(Component.translatable(key), false);
                                     convertToMinion(player);
                                     if (!player.getAbilities().instabuild) heldItem.shrink(1);
                                 }
                             } else if (freeSlot) {
-                                player.displayClientMessage(new TranslatableComponent("text.vampirism.basic_vampire.minion.require_binding", UtilLib.translate(ModItems.VAMPIRE_MINION_BINDING.get().getDescriptionId())), true);
+                                player.displayClientMessage(Component.translatable("text.vampirism.basic_vampire.minion.require_binding", UtilLib.translate(ModItems.VAMPIRE_MINION_BINDING.get().getDescriptionId())), true);
                             }
                             return InteractionResult.SUCCESS;
                         }
@@ -476,7 +476,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         this.targetSelector.addGoal(4, new DefendVillageGoal<>(this));//Should automatically be mutually exclusive with  attack village
         this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, Player.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
         this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, PathfinderMob.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));//TODO maybe make them not attack hunters, although it looks interesting
-        this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, PatrollingMonster.class, 5, true, true, (living) -> UtilLib.isInsideStructure(living, StructureFeature.VILLAGE)));
+        this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, PatrollingMonster.class, 5, true, true, (living) -> UtilLib.isInsideStructure(living, StructureSets.VILLAGES)));
         this.targetSelector.addGoal(8, new DefendLeaderGoal(this));
     }
 

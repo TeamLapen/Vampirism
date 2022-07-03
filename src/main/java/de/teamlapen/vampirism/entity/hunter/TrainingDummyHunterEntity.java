@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.entity.hunter;
 
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -25,7 +25,7 @@ public class TrainingDummyHunterEntity extends BasicHunterEntity {
     @Override
     public boolean hurt(@Nonnull DamageSource damageSource, float amount) {
         if (!this.level.isClientSide) {
-            this.level.getNearbyPlayers(PREDICATE, this, this.getBoundingBox().inflate(40)).forEach(p -> p.displayClientMessage(new TextComponent("Damage " + amount + " from " + damageSource.msgId), false));
+            this.level.getNearbyPlayers(PREDICATE, this, this.getBoundingBox().inflate(40)).forEach(p -> p.displayClientMessage(Component.literal("Damage " + amount + " from " + damageSource.msgId), false));
             if (this.startTicks != 0) this.damageTaken += amount;
         }
         return super.hurt(damageSource, amount);
@@ -49,10 +49,10 @@ public class TrainingDummyHunterEntity extends BasicHunterEntity {
     protected InteractionResult mobInteract(@Nonnull Player player, @Nonnull InteractionHand hand) { //processInteract
         if (!this.level.isClientSide && hand == InteractionHand.MAIN_HAND) {
             if (startTicks == 0) {
-                player.displayClientMessage(new TextComponent("Start recording"), false);
+                player.displayClientMessage(Component.literal("Start recording"), false);
                 this.startTicks = this.tickCount;
             } else {
-                player.displayClientMessage(new TextComponent("Damage: " + damageTaken + " - DPS: " + (damageTaken / ((float) (this.tickCount - this.startTicks)) * 20f)), false);
+                player.displayClientMessage(Component.literal("Damage: " + damageTaken + " - DPS: " + (damageTaken / ((float) (this.tickCount - this.startTicks)) * 20f)), false);
                 this.discard();
             }
         }

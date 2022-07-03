@@ -9,15 +9,12 @@ import de.teamlapen.vampirism.inventory.recipes.AlchemicalCauldronRecipe;
 import de.teamlapen.vampirism.mixin.AbstractFurnaceBlockEntityAccessor;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.Mth;
 import net.minecraft.world.ContainerHelper;
@@ -35,8 +32,9 @@ import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.client.RenderProperties;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.apache.logging.log4j.LogManager;
@@ -82,10 +80,10 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
                 } else if (ownerID.equals(player.getUUID())) {
                     return true;
                 } else {
-                    player.sendMessage(new TranslatableComponent("text.vampirism.alchemical_cauldron.other", getOwnerName()), Util.NIL_UUID);
+                    player.sendSystemMessage(Component.translatable("text.vampirism.alchemical_cauldron.other", getOwnerName()));
                 }
             } else {
-                player.sendMessage(new TranslatableComponent("text.vampirism.alchemical_cauldron.cannot_use", getOwnerName()), Util.NIL_UUID);
+                player.sendSystemMessage(Component.translatable("text.vampirism.alchemical_cauldron.cannot_use", getOwnerName()));
             }
         }
         return false;
@@ -95,23 +93,23 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
     @Nonnull
     @Override
     public Component getCustomName() {
-        return new TranslatableComponent("tile.vampirism.alchemical_cauldron");
+        return Component.translatable("tile.vampirism.alchemical_cauldron");
     }
 
     @Nonnull
     @Override
     public Component getDisplayName() {
-        return new TranslatableComponent("tile.vampirism.alchemical_cauldron.display", ownerName, new TranslatableComponent("tile.vampirism.alchemical_cauldron"));
+        return Component.translatable("tile.vampirism.alchemical_cauldron.display", ownerName, Component.translatable("tile.vampirism.alchemical_cauldron"));
     }
 
     @OnlyIn(Dist.CLIENT)
     public int getLiquidColorClient() {
         ItemStack liquidItem = this.items.get(0);
-        return FluidUtil.getFluidContained(liquidItem).map(fluidStack -> fluidStack.getFluid().getAttributes().getColor()).orElseGet(()->ModRecipes.getLiquidColor(liquidItem.getItem()));
+        return FluidUtil.getFluidContained(liquidItem).map(fluidStack -> RenderProperties.get(fluidStack.getFluid()).getColorTint(fluidStack)).orElseGet(()->ModRecipes.getLiquidColor(liquidItem.getItem()));
     }
 
     public Component getOwnerName() {
-        return new TextComponent(ownerName == null ? "Unknown" : ownerName);
+        return Component.literal(ownerName == null ? "Unknown" : ownerName);
     }
 
     @Nonnull
@@ -250,7 +248,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
                 blockEntity.dataAccess.set(2, blockEntity.dataAccess.get(2) + 1); //Increase cook time
                 if (blockEntity.dataAccess.get(2) == blockEntity.dataAccess.get(3)) { //If finished
                     blockEntity.dataAccess.set(2, 0);
-                    blockEntity.dataAccess.set(3, getTotalCookTime(level, ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get(), blockEntity));
+                    blockEntity.dataAccess.set(3, getTotalCookTime(level, blockEntity));
                     blockEntity.finishCooking(cauldronRecipe);
                     dirty = true;
                 }
@@ -281,7 +279,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
     @Nonnull
     @Override
     protected Component getDefaultName() {
-        return new TranslatableComponent("tile.vampirism.alchemical_cauldron");
+        return Component.translatable("tile.vampirism.alchemical_cauldron");
     }
 
     private boolean canPlayerCook(@Nonnull AlchemicalCauldronRecipe recipe) {
@@ -327,7 +325,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
                 this.items.set(0, FluidUtil.getFluidHandler(itemstackfluid).map(handler -> {
                     FluidStack drained = handler.drain(fluidStack, IFluidHandler.FluidAction.EXECUTE);
                     if (drained.getAmount() < fluidStack.getAmount()) {
-                        handler.drain(new FluidStack(fluidStack.getFluid(), FluidAttributes.BUCKET_VOLUME), IFluidHandler.FluidAction.EXECUTE); //For bucket containers we need to draw at least one bucket size
+                        handler.drain(new FluidStack(fluidStack.getFluid(), FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.EXECUTE); //For bucket containers we need to draw at least one bucket size
                     }
                     return handler.getContainer();
                 }).orElse(ItemStack.EMPTY));

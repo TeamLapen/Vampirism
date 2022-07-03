@@ -4,8 +4,6 @@ import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -48,9 +46,9 @@ public class MinionDamageSource extends EntityDamageSource {
         ItemStack itemstack = minionEntity.getMainHandItem();
         String s = "death.attack." + this.msgId;
         String s1 = s + ".item";
-        MutableComponent msg = !itemstack.isEmpty() && itemstack.hasCustomHoverName() ? new TranslatableComponent(s1, entityLivingBaseIn.getDisplayName(), minionName, itemstack.getDisplayName()) : new TranslatableComponent(s, entityLivingBaseIn.getDisplayName(), minionName);
+        MutableComponent msg = !itemstack.isEmpty() && itemstack.hasCustomHoverName() ? Component.translatable(s1, entityLivingBaseIn.getDisplayName(), minionName, itemstack.getDisplayName()) : Component.translatable(s, entityLivingBaseIn.getDisplayName(), minionName);
         if (playerEntity != null) {
-            msg.append(new TextComponent(" ")).append(new TranslatableComponent("death.minion.on_behalf", playerEntity.getDisplayName()));
+            msg.append(Component.literal(" ")).append(Component.translatable("death.minion.on_behalf", playerEntity.getDisplayName()));
         }
         return msg;
     }

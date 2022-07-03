@@ -5,10 +5,8 @@ import com.google.common.collect.ImmutableSet;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.entity.FactionVillagerProfession;
 import de.teamlapen.vampirism.entity.villager.Trades;
 import de.teamlapen.vampirism.entity.villager.VampireVillagerHostilesSensor;
-import de.teamlapen.vampirism.world.FactionPointOfInterestType;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
@@ -34,9 +32,9 @@ public class ModVillage {
     public static final DeferredRegister<SensorType<?>> SENSOR_TYPES = DeferredRegister.create(ForgeRegistries.SENSOR_TYPES, REFERENCE.MODID);
     public static final DeferredRegister<Schedule> SCHEDULES = DeferredRegister.create(ForgeRegistries.SCHEDULES, REFERENCE.MODID);
 
-    public static final RegistryObject<FactionPointOfInterestType> HUNTER_FACTION = POI_TYPES.register("hunter_faction", () -> (FactionPointOfInterestType) PoiType.registerBlockStates(new FactionPointOfInterestType("hunter_faction", getAllStates(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER.get(), ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED.get()), 1, 1)));
-    public static final RegistryObject<FactionPointOfInterestType> VAMPIRE_FACTION = POI_TYPES.register("vampire_faction", () -> (FactionPointOfInterestType) PoiType.registerBlockStates(new FactionPointOfInterestType("vampire_faction", getAllStates(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE.get(), ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED.get()), 1, 1)));
-    public static final RegistryObject<FactionPointOfInterestType> NO_FACTION = POI_TYPES.register("no_faction", () -> (FactionPointOfInterestType) PoiType.registerBlockStates(new FactionPointOfInterestType("no_faction", getAllStates(ModBlocks.TOTEM_TOP.get(), ModBlocks.TOTEM_TOP_CRAFTED.get()), 1, 1)));
+    public static final RegistryObject<PoiType> HUNTER_FACTION = POI_TYPES.register("hunter_faction", () -> new PoiType(getAllStates(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER.get(), ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED.get()), 1, 1));
+    public static final RegistryObject<PoiType> VAMPIRE_FACTION = POI_TYPES.register("vampire_faction", () -> new PoiType(getAllStates(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE.get(), ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED.get()), 1, 1));
+    public static final RegistryObject<PoiType> NO_FACTION = POI_TYPES.register("no_faction", () -> new PoiType(getAllStates(ModBlocks.TOTEM_TOP.get(), ModBlocks.TOTEM_TOP_CRAFTED.get()), 1, 1));
 
     public static final RegistryObject<SensorType<VampireVillagerHostilesSensor>> VAMPIRE_VILLAGER_HOSTILES = SENSOR_TYPES.register("vampire_villager_hostiles", () -> new SensorType<>(VampireVillagerHostilesSensor::new));
 
@@ -44,18 +42,8 @@ public class ModVillage {
             new ScheduleBuilder(new Schedule()).changeActivityAt(12000, Activity.IDLE).changeActivityAt(10, Activity.REST).changeActivityAt(14000, Activity.WORK).changeActivityAt(21000, Activity.MEET).changeActivityAt(23000, Activity.IDLE).build());
 
 
-    public static final RegistryObject<VillagerProfession> VAMPIRE_EXPERT = PROFESSIONS.register("vampire_expert", () -> new FactionVillagerProfession("vampire_expert", VAMPIRE_FACTION.get(), ImmutableSet.of(), ImmutableSet.of(), null) {
-        @Override
-        public IFaction<?> getFaction() {
-            return VReference.VAMPIRE_FACTION;
-        }
-    });
-    public static final RegistryObject<VillagerProfession> HUNTER_EXPERT = PROFESSIONS.register("hunter_expert", () -> new FactionVillagerProfession("hunter_expert", HUNTER_FACTION.get(), ImmutableSet.of(), ImmutableSet.of(), null) {
-        @Override
-        public IFaction<?> getFaction() {
-            return VReference.VAMPIRE_FACTION;
-        }
-    });
+    public static final RegistryObject<VillagerProfession> VAMPIRE_EXPERT = PROFESSIONS.register("vampire_expert", () -> new VillagerProfession("vampire_expert", (holder) -> holder.is(VAMPIRE_FACTION.getKey()),(holder) -> holder.is(VAMPIRE_FACTION.getKey()), ImmutableSet.of(), ImmutableSet.of(), null));
+    public static final RegistryObject<VillagerProfession> HUNTER_EXPERT = PROFESSIONS.register("hunter_expert", () -> new VillagerProfession("hunter_expert", (holder) -> holder.is(HUNTER_FACTION.getKey()),(holder) -> holder.is(HUNTER_FACTION.getKey()), ImmutableSet.of(), ImmutableSet.of(), null));
 
     static void registerVillageObjects(IEventBus bus) {
         POI_TYPES.register(bus);

@@ -14,12 +14,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.Set;
@@ -162,12 +162,11 @@ public class ModEntities {
         });
     }
 
-    static void fixMapping(RegistryEvent.MissingMappings<EntityType<?>> missingMappings) {
-        missingMappings.getAllMappings().forEach((mapping) -> {
-            if (mapping.key.equals(new ResourceLocation("vampirism:vampire_hunter"))) {
-                mapping.remap(ModEntities.HUNTER.get());
-            } else if (mapping.key.equals(new ResourceLocation("vampirism:vampire_hunter_imob"))) {
-                mapping.remap(ModEntities.HUNTER_IMOB.get());
+    static void fixMapping(MissingMappingsEvent missingMappings) {
+        missingMappings.getAllMappings(ForgeRegistries.Keys.ENTITY_TYPES).forEach((mapping) -> {
+            switch (mapping.getKey().toString()) {
+                case "vampirism:vampire_hunter" -> mapping.remap(ModEntities.HUNTER.get());
+                case "vampirism:vampire_hunter_imob" -> mapping.remap(ModEntities.HUNTER_IMOB.get());
             }
         });
     }

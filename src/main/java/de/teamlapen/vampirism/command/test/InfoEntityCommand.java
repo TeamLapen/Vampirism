@@ -6,7 +6,7 @@ import de.teamlapen.lib.lib.util.LogUtil;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import org.apache.logging.log4j.LogManager;
@@ -30,7 +30,7 @@ public class InfoEntityCommand extends BasicCommand {
             o.saveAsPassenger(nbt);
             LogManager.getLogger().info(LogUtil.TEST, "Data {}", nbt);
         }
-        commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.infoentity.printed"), false);
+        commandSource.sendSuccess(Component.translatable("command.vampirism.test.infoentity.printed"), false);
         return 0;
     }
 }

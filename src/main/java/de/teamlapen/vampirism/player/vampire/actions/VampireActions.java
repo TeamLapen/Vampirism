@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.player.vampire.actions;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
-import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
@@ -11,7 +11,7 @@ import net.minecraftforge.registries.RegistryObject;
  * Registers and holds all skills for vampire player
  */
 public class VampireActions {
-    public static final DeferredRegister<IAction<?>> ACTIONS = DeferredRegister.create(ModRegistries.ACTIONS_ID, REFERENCE.MODID);
+    public static final DeferredRegister<IAction<?>> ACTIONS = DeferredRegister.create(VampirismRegistries.ACTIONS_ID, REFERENCE.MODID);
     
     public static final RegistryObject<BatVampireAction> BAT = ACTIONS.register("bat", BatVampireAction::new);
     public static final RegistryObject<DarkBloodProjectileAction> DARK_BLOOD_PROJECTILE = ACTIONS.register("dark_blood_projectile", DarkBloodProjectileAction::new);

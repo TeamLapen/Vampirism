@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.network.SelectMinionTaskPacket;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
@@ -139,7 +140,7 @@ public class MinionContainer extends InventoryContainer {
     private void sendChanges() {
         if (taskToActivate != null && taskToActivate != previousTask) {
             minionEntity.getMinionId().ifPresent(id ->
-                    VampirismMod.dispatcher.sendToServer(new SelectMinionTaskPacket(id, this.taskToActivate.getRegistryName()))
+                    VampirismMod.dispatcher.sendToServer(new SelectMinionTaskPacket(id, RegUtil.id(this.taskToActivate)))
             );
         }
         if (previousTaskLocked != taskLocked) {

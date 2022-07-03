@@ -42,7 +42,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -230,7 +229,7 @@ public class Helper {
     }
 
     public static int getExperiencePoints(LivingEntity entity, Player player) {
-        return ((LivingEntityAccessor) entity).invokeGetExperiencePoints_vampirism(player); //Use mixin instead of AT since AT does not want to work for this specific method for some reason
+        return ((LivingEntityAccessor) entity).invokeGetExperiencePoints_vampirism(); //Use mixin instead of AT since AT does not want to work for this specific method for some reason
     }
 
     /**
@@ -254,20 +253,10 @@ public class Helper {
     public static <T extends Entity> Optional<T> createEntity(@Nonnull EntityType<T> type, @Nonnull Level world) {
         T e = type.create(world);
         if (e == null) {
-            LOGGER.warn("Failed to create entity of type {}", type.getRegistryName());
+            LOGGER.warn("Failed to create entity of type {}", RegUtil.id(type));
             return Optional.empty();
         }
         return Optional.of(e);
-    }
-
-    @Nonnull
-    public static ResourceLocation getIDSafe(ForgeRegistryEntry<?> registryObject) {
-        ResourceLocation id = registryObject.getRegistryName();
-        if (id == null) {
-            LOGGER.warn("RegistryName not set for {}", registryObject);
-            return EMPTY_ID;
-        }
-        return id;
     }
 
     /**

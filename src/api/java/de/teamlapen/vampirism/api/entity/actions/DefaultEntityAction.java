@@ -1,14 +1,13 @@
 package de.teamlapen.vampirism.api.entity.actions;
 
 import de.teamlapen.vampirism.api.entity.EntityClassType;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
 
 /**
  * Default implementation of {@link IEntityAction}
  */
-public abstract class DefaultEntityAction extends ForgeRegistryEntry<IEntityAction> implements IEntityAction {
+public abstract class DefaultEntityAction implements IEntityAction {
     private final EntityClassType[] entityClassTypes;
     private final EntityActionTier entityActionTier;
 

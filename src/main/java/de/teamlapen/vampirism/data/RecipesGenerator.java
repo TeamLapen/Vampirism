@@ -12,7 +12,7 @@ import de.teamlapen.vampirism.data.recipebuilder.ShapedWeaponTableRecipeBuilder;
 import de.teamlapen.vampirism.data.recipebuilder.ShapelessWeaponTableRecipeBuilder;
 import de.teamlapen.vampirism.inventory.recipes.ConfigCondition;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
-import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.RequirementsStrategy;
@@ -277,7 +277,7 @@ public class RecipesGenerator extends RecipeProvider {
         JsonArray enchantmentarray = new JsonArray();
         JsonObject enchantment1 = new JsonObject();
         enchantment1.addProperty("lvl", level);
-        enchantment1.addProperty("id", Helper.getIDSafe(enchantment).toString());
+        enchantment1.addProperty("id", RegUtil.id(enchantment).toString());
         enchantmentarray.add(enchantment1);
         nbt.add("Enchantments", enchantmentarray);
         return nbt;
@@ -350,7 +350,7 @@ public class RecipesGenerator extends RecipeProvider {
                 super.serializeRecipeData(json);
                 JsonObject result = json.get("result").getAsJsonObject();
                 result.entrySet().clear();
-                result.addProperty("item", Helper.getIDSafe(this.stack.getItem()).toString());
+                result.addProperty("item", RegUtil.id(this.stack.getItem()).toString());
                 result.addProperty("count", this.stack.getCount());
                 if (stack.hasTag())
                     result.addProperty("nbt", this.stack.getTag().toString());

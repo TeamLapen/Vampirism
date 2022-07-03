@@ -11,8 +11,8 @@ import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.items.RefinementItem;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -267,7 +267,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         if (nbt.contains("skills")) {
             for (String id : nbt.getCompound("skills").getAllKeys()) {
                 //noinspection unchecked
-                ISkill<T> skill = (ISkill<T>) ModRegistries.SKILLS.getValue(new ResourceLocation(id));
+                ISkill<T> skill = (ISkill<T>) RegUtil.getSkill(new ResourceLocation(id));
                 if (skill == null) {
                     LOGGER.warn("Skill {} does not exist anymore", id);
                     continue;
@@ -286,7 +286,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
                 int damage = setNBT.getInt("damage");
                 if ("none".equals(setName)) continue;
                 ResourceLocation setId = new ResourceLocation(setName);
-                IRefinementSet set = ModRegistries.REFINEMENT_SETS.getValue(setId);
+                IRefinementSet set = RegUtil.getRefinementSet(setId);
                 this.applyRefinementSet(set, i);
                 this.refinementSetDamage[i] = damage;
             }
@@ -301,7 +301,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
             List<ISkill<T>> old = (List<ISkill<T>>) enabledSkills.clone();
             for (String id : nbt.getCompound("skills").getAllKeys()) {
                 //noinspection unchecked
-                ISkill<T> skill = (ISkill<T>) ModRegistries.SKILLS.getValue(new ResourceLocation(id));
+                ISkill<T> skill = (ISkill<T>) RegUtil.getSkill(new ResourceLocation(id));
                 if (skill == null) {
                     LOGGER.error("Skill {} does not exist on client!!!", id);
                     continue;
@@ -329,7 +329,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
                 int damage = setNBT.getInt("damage");
                 IRefinementSet set = null;
                 if (!"none".equals(setName)) {
-                    set = ModRegistries.REFINEMENT_SETS.getValue(new ResourceLocation(setName));
+                    set = RegUtil.getRefinementSet(new ResourceLocation(setName));
                 }
                 IRefinementSet oldSet = this.appliedRefinementSets[i];
                 if (oldSet != set) {
@@ -356,7 +356,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     public void saveToNbt(CompoundTag nbt) {
         CompoundTag skills = new CompoundTag();
         for (ISkill<T> skill : enabledSkills) {
-            skills.putBoolean(skill.getRegistryName().toString(), true);
+            skills.putBoolean(RegUtil.id(skill) .toString(), true);
         }
         nbt.put("skills", skills);
         CompoundTag refinements = new CompoundTag();
@@ -364,7 +364,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
             CompoundTag setNbt = new CompoundTag();
             IRefinementSet set = this.appliedRefinementSets[i];
             int damage = this.refinementSetDamage[i];
-            setNbt.putString("id", set != null ? set.getRegistryName().toString() : "none");
+            setNbt.putString("id", set != null ? RegUtil.id(set).toString() : "none");
             setNbt.putInt("damage", damage);
             refinements.put(String.valueOf(i), setNbt);
         }
@@ -375,7 +375,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     public void writeUpdateForClient(CompoundTag nbt) {
         CompoundTag skills = new CompoundTag();
         for (ISkill<T> skill : enabledSkills) {
-            skills.putBoolean(skill.getRegistryName().toString(), true);
+            skills.putBoolean(RegUtil.id(skill) .toString(), true);
         }
         nbt.put("skills", skills);
         CompoundTag refinements = new CompoundTag();
@@ -383,7 +383,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
             CompoundTag setNbt = new CompoundTag();
             IRefinementSet set = this.appliedRefinementSets[i];
             int damage = this.refinementSetDamage[i];
-            setNbt.putString("id", set != null ? set.getRegistryName().toString() : "none");
+            setNbt.putString("id", set != null ? RegUtil.id(set).toString() : "none");
             setNbt.putInt("damage", damage);
             refinements.put(String.valueOf(i), setNbt);
         }

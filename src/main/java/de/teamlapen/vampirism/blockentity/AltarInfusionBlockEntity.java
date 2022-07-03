@@ -16,18 +16,17 @@ import de.teamlapen.vampirism.particle.FlyingBloodParticleData;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampireLevelingConf;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Inventory;
@@ -50,7 +49,10 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 public class AltarInfusionBlockEntity extends InventoryBlockEntity {
 
@@ -89,7 +91,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     public Result canActivate(Player player, boolean messagePlayer) {
         if (runningTick > 0) {
             if (messagePlayer)
-                player.displayClientMessage(new TranslatableComponent("text.vampirism.altar_infusion.ritual_still_running"), true);
+                player.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual_still_running"), true);
 
             return Result.ISRUNNING;
         }
@@ -99,15 +101,15 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
         int requiredLevel = checkRequiredLevel();
         if (requiredLevel == -1) {
             if (messagePlayer)
-                player.displayClientMessage(new TranslatableComponent("text.vampirism.altar_infusion.ritual_level_wrong"), true);
+                player.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual_level_wrong"), true);
             return Result.WRONGLEVEL;
         } else if (player.getCommandSenderWorld().isDay()) {
             if (messagePlayer)
-                player.displayClientMessage(new TranslatableComponent("text.vampirism.altar_infusion.ritual_night_only"), true);
+                player.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual_night_only"), true);
             return Result.NIGHTONLY;
         } else if (!checkStructureLevel(requiredLevel)) {
             if (messagePlayer)
-                player.displayClientMessage(new TranslatableComponent("text.vampirism.altar_infusion.ritual_structure_wrong"), true);
+                player.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual_structure_wrong"), true);
             tips = null;
             return Result.STRUCTUREWRONG;
         } else if (!checkItemRequirements(player, messagePlayer)) {
@@ -268,7 +270,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
                 if (runningTick % 15 == 0) {
                     BlockPos pos = getBlockPos();
                     for (BlockPos pTip : tips) {
-                        ModParticles.spawnParticlesClient(level, new FlyingBloodParticleData(ModParticles.FLYING_BLOOD.get(), 60, false, pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0, 5, 0.1, new Random());
+                        ModParticles.spawnParticlesClient(level, new FlyingBloodParticleData(ModParticles.FLYING_BLOOD.get(), 60, false, pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0, 5, 0.1, RandomSource.create());
                     }
                 }
             }
@@ -336,7 +338,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     @Nonnull
     @Override
     protected Component getDefaultName() {
-        return new TranslatableComponent("tile.vampirism.altar_infusion");
+        return Component.translatable("tile.vampirism.altar_infusion");
     }
 
     /**
@@ -350,9 +352,9 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
         ItemStack missing = InventoryHelper.checkItems(this, new Item[]{PureBloodItem.getBloodItemForLevel(requirements.pureBloodLevel()), ModItems.HUMAN_HEART.get(), ModItems.VAMPIRE_BOOK.get()}, new int[]{requirements.blood(), requirements.heart(), requirements.vampireBook()}, (supplied, required) -> supplied.equals(required) || (supplied instanceof PureBloodItem && required instanceof PureBloodItem && ((PureBloodItem) supplied).getLevel() >= ((PureBloodItem) required).getLevel()));
         if (!missing.isEmpty()) {
             if (messagePlayer) {
-                Component item = missing.getItem() instanceof PureBloodItem ? ((PureBloodItem) missing.getItem()).getCustomName() : new TranslatableComponent(missing.getDescriptionId());
-                Component main = new TranslatableComponent("text.vampirism.altar_infusion.ritual_missing_items", missing.getCount(), item);
-                player.sendMessage(main, Util.NIL_UUID);
+                Component item = missing.getItem() instanceof PureBloodItem ? ((PureBloodItem) missing.getItem()).getCustomName() : Component.translatable(missing.getDescriptionId());
+                Component main = Component.translatable("text.vampirism.altar_infusion.ritual_missing_items", missing.getCount(), item);
+                player.sendSystemMessage(main);
             }
 
             return false;

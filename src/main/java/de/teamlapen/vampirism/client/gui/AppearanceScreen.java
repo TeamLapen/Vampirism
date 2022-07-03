@@ -9,7 +9,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -72,11 +71,11 @@ public class AppearanceScreen<T extends LivingEntity> extends Screen {
         this.guiLeft = (this.width - this.xSize) / 2;
         this.guiTop = (this.height - this.ySize) / 2;
 
-        this.addRenderableWidget(new Button(this.guiLeft + this.xSize - 80 - 10, this.guiTop + 152, 80, 20, new TranslatableComponent("gui.done"), (context) -> {
+        this.addRenderableWidget(new Button(this.guiLeft + this.xSize - 80 - 10, this.guiTop + 152, 80, 20, Component.translatable("gui.done"), (context) -> {
             this.onClose();
         }));
         if (this.backScreen != null) {
-            this.addRenderableWidget(new Button(this.guiLeft + 10, this.guiTop + 152, 80, 20, new TranslatableComponent("gui.back"), (context) -> {
+            this.addRenderableWidget(new Button(this.guiLeft + 10, this.guiTop + 152, 80, 20, Component.translatable("gui.back"), (context) -> {
                 if (this.minecraft != null) this.minecraft.setScreen(this.backScreen);
             }));
         }

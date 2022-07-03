@@ -18,8 +18,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -38,7 +38,7 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
 
     public SieveBlockEntity(BlockPos pos, BlockState state) {
         super(ModTiles.SIEVE.get(), pos, state);
-        tank = new FilteringFluidTank(2 * FluidAttributes.BUCKET_VOLUME).setListener(this);
+        tank = new FilteringFluidTank(2 * FluidType.BUCKET_VOLUME).setListener(this);
         tank.setDrainable(false);
         cap = LazyOptional.of(() -> tank);
     }

@@ -9,7 +9,6 @@ import de.teamlapen.vampirism.network.InputEventPacket;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
@@ -34,7 +33,7 @@ public class HunterBasicScreen extends AbstractContainerScreen<HunterBasicContai
     public void init() {
         super.init();
 
-        Component name = new TranslatableComponent("text.vampirism.level_up");
+        Component name = Component.translatable("text.vampirism.level_up");
         int wid = this.font.width(name) + 5;
         int i = (this.imageWidth - wid) / 2;
         int j = (this.height - this.imageHeight) / 2;
@@ -75,9 +74,9 @@ public class HunterBasicScreen extends AbstractContainerScreen<HunterBasicContai
 
         Component text = null;
         if (missing == 0) {
-            text = new TranslatableComponent("text.vampirism.basic_hunter.i_will_train_you");
+            text = Component.translatable("text.vampirism.basic_hunter.i_will_train_you");
         } else if (missing > 0) {
-            text = new TranslatableComponent("text.vampirism.basic_hunter.pay_n_vampire_blood_more", missing);
+            text = Component.translatable("text.vampirism.basic_hunter.pay_n_vampire_blood_more", missing);
         }
         if (text != null) {
             this.font.drawWordWrap(text, 50, 12, 120, 0);

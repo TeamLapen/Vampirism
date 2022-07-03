@@ -1,12 +1,13 @@
 package de.teamlapen.vampirism.player.skills;
 
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillManager;
-import de.teamlapen.vampirism.core.ModRegistries;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -30,7 +31,7 @@ public class SkillManager implements ISkillManager {
     @Nonnull
     public <T extends IFactionPlayer<T>> ISkill<T> getRootSkill(IPlayableFaction<T> faction) {
         //noinspection unchecked
-        ISkill<T> skill = (ISkill<T>) ModRegistries.SKILLS.getValue(faction.getID());
+        ISkill<T> skill = (ISkill<T>) RegUtil.get(VampirismRegistries.SKILLS, faction.getID());
         if (skill == null) {
             LOGGER.warn("No root skill exists for faction {}", faction.getID());
             throw new IllegalStateException("You need to register a root skill for your faction " + faction.getID());
@@ -41,7 +42,7 @@ public class SkillManager implements ISkillManager {
     @SuppressWarnings("unchecked")
     @Override
     public <T extends IFactionPlayer<T>> List<ISkill<T>> getSkillsForFaction(IPlayableFaction<T> faction) {
-        return ModRegistries.SKILLS.getValues().stream().filter(action -> action.getFaction() == faction).map(action -> (ISkill<T>)action).collect(Collectors.toList());
+        return RegUtil.values(VampirismRegistries.SKILLS).stream().filter(action -> action.getFaction() == faction).map(action -> (ISkill<T>)action).collect(Collectors.toList());
     }
 
     /**
@@ -50,7 +51,7 @@ public class SkillManager implements ISkillManager {
      */
     public void printSkills(IPlayableFaction<?> faction, CommandSourceStack sender) {
         for (ISkill<?> s : getSkillsForFaction(faction)) {
-            sender.sendSuccess(new TextComponent("ID: " + ModRegistries.SKILLS.getKey(s) + " Skill: ").append(s.getName()), true);
+            sender.sendSuccess(Component.literal("ID: " + RegUtil.id(s) + " Skill: ").append(s.getName()), true);
         }
     }
 

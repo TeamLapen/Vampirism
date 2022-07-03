@@ -11,7 +11,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntitySelector;
@@ -109,7 +108,7 @@ public class BloodGrinderBlockEntity extends InventoryBlockEntity {
     @Nonnull
     @Override
     protected Component getDefaultName() {
-        return new TranslatableComponent("tile.vampirism.blood_grinder");
+        return Component.translatable("tile.vampirism.blood_grinder");
     }
 
     private static boolean pullItems(BloodGrinderBlockEntity blockEntity, Level level, BlockPos pos) {

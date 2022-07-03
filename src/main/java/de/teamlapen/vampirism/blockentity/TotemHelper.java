@@ -5,24 +5,24 @@ import com.google.common.collect.Sets;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.world.FactionPointOfInterestType;
+import de.teamlapen.vampirism.core.ModTags;
 import net.minecraft.core.BlockPos;
+import net.minecraft.data.worldgen.StructureSets;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.ai.village.poi.PoiRecord;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
+import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -116,10 +116,10 @@ public class TotemHelper {
             ignoreOtherTotem = false;
         }
 
-        StructureStart structure1 = UtilLib.getStructureStartAt(world, totem, StructureFeature.VILLAGE);
-        StructureStart structure2 = UtilLib.getStructureStartAt(world, conflicting, StructureFeature.VILLAGE);
+        Optional<StructureStart> structure1 = UtilLib.getStructureStartAt(world, totem, StructureSets.VILLAGES);
+        Optional<StructureStart> structure2 = UtilLib.getStructureStartAt(world, conflicting, StructureSets.VILLAGES);
 
-        if ((structure1 == StructureStart.INVALID_START || !structure1.isValid()) && (structure2 != StructureStart.INVALID_START && structure2.isValid())) { //the first totem wins the POIs if located in natural village, other looses then
+        if ((structure1.isPresent()) && (structure2.isPresent())) { //the first totem wins the POIs if located in natural village, other looses then
             ignoreOtherTotem = false;
         }
 
@@ -215,15 +215,15 @@ public class TotemHelper {
         Map<BlockPos, BlockPos> totemPositions = TotemHelper.totemPositions.computeIfAbsent(player.getCommandSenderWorld().dimension(), key -> new HashMap<>());
         List<PoiRecord> pointOfInterests = ((ServerLevel) player.getCommandSenderWorld()).getPoiManager().getInRange(point -> true, player.blockPosition(), 25, PoiManager.Occupancy.ANY).sorted(Comparator.comparingInt(point -> (int) (point.getPos()).distSqr(player.blockPosition()))).collect(Collectors.toList());
         if (pointOfInterests.stream().noneMatch(point -> totemPositions.containsKey(point.getPos()))) {
-            return new TranslatableComponent("command.vampirism.test.village.no_village");
+            return Component.translatable("command.vampirism.test.village.no_village");
         }
         BlockEntity te = player.getCommandSenderWorld().getBlockEntity(totemPositions.get(pointOfInterests.get(0).getPos()));
         if (!(te instanceof TotemBlockEntity tile)) {
             LOGGER.warn("TileEntity at {} is no TotemTileEntity", totemPositions.get(pointOfInterests.get(0).getPos()));
-            return new TextComponent("");
+            return Component.literal("");
         }
         tile.setForcedFaction(faction);
-        return new TranslatableComponent("command.vampirism.test.village.success", faction == null ? "none" : faction.getName());
+        return Component.translatable("command.vampirism.test.village.success", faction == null ? "none" : faction.getName());
     }
 
     /**
@@ -236,9 +236,9 @@ public class TotemHelper {
     public static Set<PoiRecord> getVillagePointsOfInterest(ServerLevel world, BlockPos pos) {
         PoiManager manager = world.getPoiManager();
         Set<PoiRecord> finished = Sets.newHashSet();
-        Set<PoiRecord> points = manager.getInRange(type -> !(type instanceof FactionPointOfInterestType), pos, 50, PoiManager.Occupancy.ANY).collect(Collectors.toSet());
+        Set<PoiRecord> points = manager.getInRange(type -> !type.is(ModTags.POI_TYPES.HAS_FACTION), pos, 50, PoiManager.Occupancy.ANY).collect(Collectors.toSet());
         while (!points.isEmpty()) {
-            List<Stream<PoiRecord>> list = points.stream().map(pointOfInterest -> manager.getInRange(type -> !(type instanceof FactionPointOfInterestType), pointOfInterest.getPos(), 40, PoiManager.Occupancy.ANY)).collect(Collectors.toList());
+            List<Stream<PoiRecord>> list = points.stream().map(pointOfInterest -> manager.getInRange(type -> type.is(ModTags.POI_TYPES.HAS_FACTION), pointOfInterest.getPos(), 40, PoiManager.Occupancy.ANY)).toList();
             points.clear();
             list.forEach(stream -> stream.forEach(point -> {
                 if (!finished.contains(point)) {
@@ -310,7 +310,7 @@ public class TotemHelper {
      * @return flag which requirements are met
      */
     public static int isVillage(Set<PoiRecord> pointOfInterests, ServerLevel world, BlockPos totemPos, boolean hasInteraction) {
-        if (UtilLib.getStructureStartAt(world, totemPos, StructureFeature.VILLAGE) != StructureStart.INVALID_START) {
+        if (UtilLib.getStructureStartAt(world, totemPos, StructureSets.VILLAGES).isPresent()) {
             return 7;
         }
         return isVillage(getVillageStats(pointOfInterests, world), hasInteraction);
@@ -324,11 +324,11 @@ public class TotemHelper {
      * @return map containing village related data
      */
     public static Map<Integer, Integer> getVillageStats(Set<PoiRecord> pointOfInterests, Level world) {
-        Map<PoiType, Long> poiTCounts = pointOfInterests.stream().map(PoiRecord::getPoiType).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        Map<ResourceKey<PoiType>, Long> poiTCounts = pointOfInterests.stream().map(PoiRecord::getPoiType).flatMap(a -> ForgeRegistries.POI_TYPES.getResourceKey(a.get()).stream()).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
         AABB area = getAABBAroundPOIs(pointOfInterests);
         return new HashMap<>() {{
-            put(1, poiTCounts.getOrDefault(PoiType.HOME, 0L).intValue());
-            put(2, ((int) poiTCounts.entrySet().stream().filter(entry -> entry.getKey() != PoiType.HOME).mapToLong(Entry::getValue).sum()));
+            put(1, poiTCounts.getOrDefault(PoiTypes.HOME, 0L).intValue());
+            put(2, ((int) poiTCounts.entrySet().stream().filter(entry -> entry.getKey() != PoiTypes.HOME).mapToLong(Entry::getValue).sum()));
             put(4, area == null ? 0 : world.getEntitiesOfClass(Villager.class, area).size());
         }};
     }

@@ -12,6 +12,7 @@ import de.teamlapen.lib.util.Color;
 import de.teamlapen.lib.util.OptifineHandler;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
@@ -22,10 +23,7 @@ import de.teamlapen.vampirism.client.core.ModBlocksRender;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.config.BloodValues;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModCommands;
-import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.core.ModLootTables;
-import de.teamlapen.vampirism.core.RegistryManager;
+import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.data.*;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.ModEntityEventHandler;
@@ -54,8 +52,6 @@ import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.proxy.ServerProxy;
 import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.util.*;
-import de.teamlapen.vampirism.world.biome.OverworldModifications;
-import de.teamlapen.vampirism.world.biome.VampirismBiomes;
 import de.teamlapen.vampirism.world.gen.VampirismFeatures;
 import de.teamlapen.vampirism.world.gen.VanillaStructureModifications;
 import net.minecraft.ChatFormatting;
@@ -65,19 +61,16 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -86,6 +79,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.*;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
+import net.minecraftforge.registries.RegisterEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -166,7 +160,7 @@ public class VampirismMod {
         modbus.addListener(this::loadComplete);
         modbus.addListener(this::gatherData);
         modbus.addListener(this::registerCapabilities);
-        modbus.addGenericListener(Block.class, this::finalizeConfiguration);
+        modbus.addListener(this::finalizeConfiguration);
         VampirismFeatures.register(FMLJavaModLoadingContext.get().getModEventBus());
 
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
@@ -181,14 +175,14 @@ public class VampirismMod {
         MinecraftForge.EVENT_BUS.register(this);
         addModCompats();
         registryManager = new RegistryManager();
-        modbus.register(registryManager);
-        MinecraftForge.EVENT_BUS.register(registryManager);
         MinecraftForge.EVENT_BUS.register(Permissions.class);
-        MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, VampirismBiomes::onBiomeLoadingEventAdditions);
+
+        ModFeatures.init();
 
         prepareAPI();
-
+        VampirismRegistries.init(modbus);
         RegistryManager.setupRegistries(modbus);
+
 
         if (OptifineHandler.isOptifineLoaded()) {
             LOGGER.warn("Using Optifine. Expect visual glitches and reduces blood vision functionality if using shaders.");
@@ -275,7 +269,7 @@ public class VampirismMod {
         event.register(IVampirismWorld.class);
     }
 
-    private void finalizeConfiguration(RegistryEvent<Block> event) {
+    private void finalizeConfiguration(RegisterEvent event) {
         VampirismConfig.finalizeAndRegisterConfig();
     }
 
@@ -290,22 +284,19 @@ public class VampirismMod {
     private void gatherData(final GatherDataEvent event) {
         registryManager.onGatherData(event);
         DataGenerator gen = event.getGenerator();
-        if (event.includeServer()) {
-            TagGenerator.register(gen, event.getExistingFileHelper());
-            gen.addProvider(new LootTablesGenerator(gen));
-            gen.addProvider(new AdvancementGenerator(gen));
-            gen.addProvider(new RecipesGenerator(gen));
-            gen.addProvider(new SkillNodeGenerator(gen));
-        }
-        if (event.includeClient()) {
-            gen.addProvider(new BlockStateGenerator(event.getGenerator(), event.getExistingFileHelper()));
-            gen.addProvider(new ItemModelGenerator(event.getGenerator(), event.getExistingFileHelper()));
-        }
+        TagGenerator.register(event, gen);
+        gen.addProvider(event.includeServer(), new LootTablesGenerator(gen));
+        gen.addProvider(event.includeServer(), new AdvancementGenerator(gen));
+        gen.addProvider(event.includeServer(), new RecipesGenerator(gen));
+        gen.addProvider(event.includeServer(), new SkillNodeGenerator(gen));
+
+        gen.addProvider(event.includeClient(), new BlockStateGenerator(event.getGenerator(), event.getExistingFileHelper()));
+        gen.addProvider(event.includeClient(), new ItemModelGenerator(event.getGenerator(), event.getExistingFileHelper()));
     }
 
     private void loadComplete(final FMLLoadCompleteEvent event) {
         onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
-        event.enqueueWork(OverworldModifications::addBiomesToOverworldUnsafe);
+//        event.enqueueWork(OverworldModifications::addBiomesToOverworldUnsafe); //TODO readd
     }
 
 

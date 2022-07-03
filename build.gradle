@@ -35,7 +35,7 @@ configurations {
 
 group = "de.teamlapen.vampirism"
 archivesBaseName = "Vampirism"
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java.toolchain.languageVersion = JavaLanguageVersion.of(18)
 //These will be overridden in gradle/versioning.gradle, but have to be defined here
 ext.mod_version="Test"
 ext.type="test"
@@ -57,6 +57,10 @@ sourceSets {
         compileClasspath += sourceSets.lib.output
         compileClasspath += sourceSets.api.output
         runtimeClasspath += sourceSets.api.output
+
+        java {
+            exclude '**/jei/**'
+        }
     }
     test {
         compileClasspath += sourceSets.api.output

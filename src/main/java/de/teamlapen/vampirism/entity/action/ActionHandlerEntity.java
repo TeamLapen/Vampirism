@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.entity.actions.*;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModRegistries;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.random.WeightedRandom;
@@ -73,7 +73,7 @@ public class ActionHandlerEntity<T extends PathfinderMob & IEntityActionUser> im
 
     public void read(CompoundTag nbt) {
         if (nbt.contains("activeAction")) {
-            deactivateAction(ModRegistries.ENTITYACTIONS.getValue(new ResourceLocation(nbt.getString("activeAction"))));
+            deactivateAction(RegUtil.getEntityAction(new ResourceLocation(nbt.getString("activeAction"))));
             isPlayerTarget = true;
         }
     }
@@ -87,7 +87,7 @@ public class ActionHandlerEntity<T extends PathfinderMob & IEntityActionUser> im
 
     public void write(CompoundTag nbt) {
         if (isPlayerTarget() && action != null) {
-            nbt.putString("activeAction", action.getRegistryName().toString());
+            nbt.putString("activeAction", RegUtil.id(action).toString());
         }
     }
 

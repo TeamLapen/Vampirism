@@ -9,19 +9,16 @@ import de.teamlapen.vampirism.data.recipebuilder.FinishedSkillNode;
 import de.teamlapen.vampirism.data.recipebuilder.SkillNodeBuilder;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
+import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.HashCache;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -36,7 +33,7 @@ public class SkillNodeGenerator implements DataProvider {
     }
 
     @Override
-    public void run(@Nonnull HashCache cache) {
+    public void run(@Nonnull CachedOutput cache) {
         Path path = this.generator.getOutputFolder();
         Set<ResourceLocation> set = Sets.newHashSet();
         this.registerSkillNodes((node) -> {
@@ -119,19 +116,9 @@ public class SkillNodeGenerator implements DataProvider {
         return new ResourceLocation(REFERENCE.MODID, string);
     }
 
-    private void saveSkillNode(HashCache cache, JsonObject nodeJson, Path path) {
+    private void saveSkillNode(CachedOutput cache, JsonObject nodeJson, Path path) {
         try {
-            String s = GSON.toJson(nodeJson);
-            @SuppressWarnings("UnstableApiUsage")
-            String s1 = SHA1.hashUnencodedChars(s).toString();
-            if (!Objects.equals(cache.getHash(path), s1) || !Files.exists(path)) {
-                Files.createDirectories(path.getParent());
-
-                try (BufferedWriter bufferedWriter = Files.newBufferedWriter(path)) {
-                    bufferedWriter.write(s);
-                }
-            }
-            cache.putNew(path, s1);
+            DataProvider.saveStable(cache, nodeJson, path);
         } catch (IOException ioExeption) {
             LOGGER.error("Couldn't save skill node {}", path, ioExeption);
         }

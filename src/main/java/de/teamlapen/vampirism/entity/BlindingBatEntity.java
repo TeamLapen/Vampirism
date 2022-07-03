@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -25,14 +26,13 @@ import net.minecraft.world.phys.shapes.Shapes;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Bat which blinds non vampires for a short time.
  */
 public class BlindingBatEntity extends Bat {
 
-    public static boolean spawnPredicate(EntityType<? extends BlindingBatEntity> entityType, LevelAccessor iWorld, MobSpawnType spawnReason, BlockPos blockPos, Random random) {
+    public static boolean spawnPredicate(EntityType<? extends BlindingBatEntity> entityType, LevelAccessor iWorld, MobSpawnType spawnReason, BlockPos blockPos, RandomSource random) {
         if (iWorld.getBiome(blockPos).is(ModTags.Biomes.IS_VAMPIRE_BIOME)) {
             return true;
         }

@@ -20,7 +20,6 @@ import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.effects.SanguinareEffect;
 import de.teamlapen.vampirism.effects.SanguinareEffectInstance;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
-import de.teamlapen.vampirism.entity.FactionVillagerProfession;
 import de.teamlapen.vampirism.entity.VampirismEntity;
 import de.teamlapen.vampirism.entity.converted.ConvertedVillagerEntity;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -31,22 +30,24 @@ import de.teamlapen.vampirism.entity.hunter.HunterTrainerEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.particle.GenericParticleData;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
+import de.teamlapen.vampirism.util.RegUtil;
 import de.teamlapen.vampirism.util.VampirismEventFactory;
 import de.teamlapen.vampirism.world.ServerMultiBossEvent;
 import de.teamlapen.vampirism.world.VampirismWorld;
 import net.minecraft.core.BlockPos;
+import net.minecraft.data.worldgen.StructureSets;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.Difficulty;
@@ -55,7 +56,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.ai.village.poi.PoiRecord;
-import net.minecraft.world.entity.ai.village.poi.PoiType;
+import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
@@ -64,7 +65,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -72,6 +72,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -87,7 +88,7 @@ import static de.teamlapen.vampirism.blockentity.TotemHelper.*;
 @ParametersAreNonnullByDefault
 public class TotemBlockEntity extends BlockEntity implements ITotem {
     private static final Logger LOGGER = LogManager.getLogger();
-    private static final Random RNG = new Random();
+    private static final RandomSource RNG = RandomSource.create();
     private static final ResourceLocation nonFactionTotem = new ResourceLocation("none");
 
     public static void makeAgressive(Villager villager) {
@@ -95,7 +96,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         UtilLib.replaceEntity(villager, hunter);
     }
 
-    private final ServerMultiBossEvent captureInfo = new ServerMultiBossEvent(new TranslatableComponent("text.vampirism.village.bossinfo.raid"), BossEvent.BossBarOverlay.NOTCHED_10);
+    private final ServerMultiBossEvent captureInfo = new ServerMultiBossEvent(Component.translatable("text.vampirism.village.bossinfo.raid"), BossEvent.BossBarOverlay.NOTCHED_10);
     public long timeSinceLastRaid = 0;
     //block attributes
     private boolean isComplete;
@@ -151,7 +152,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
 
     public void abortCapture() {
         this.applyVictoryBonus(false);
-        notifyNearbyPlayers(new TranslatableComponent("text.vampirism.village.defended"));
+        notifyNearbyPlayers(Component.translatable("text.vampirism.village.defended"));
         breakCapture();
     }
 
@@ -179,19 +180,19 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
             if (this.capturingFaction == null) {
                 return true;
             } else {
-                player.displayClientMessage(new TranslatableComponent("text.vampirism.village.totem_destroy.fail_other_capturing"), true);
+                player.displayClientMessage(Component.translatable("text.vampirism.village.totem_destroy.fail_other_capturing"), true);
                 return false;
             }
         } else if (faction == this.capturingFaction) {
             if (this.controllingFaction == null) {
                 return true;
             } else {
-                player.displayClientMessage(new TranslatableComponent("text.vampirism.village.totem_destroy.fail_other_faction"), true);
+                player.displayClientMessage(Component.translatable("text.vampirism.village.totem_destroy.fail_other_faction"), true);
                 return false;
             }
         } else {
             if (!(this.capturingFaction == null && this.controllingFaction == null)) {
-                player.displayClientMessage(new TranslatableComponent("text.vampirism.village.totem_destroy.fail_other_faction"), true);
+                player.displayClientMessage(Component.translatable("text.vampirism.village.totem_destroy.fail_other_faction"), true);
                 return false;
             }
             return true;
@@ -309,10 +310,10 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
 
         if (this.controllingFaction == null) {
             this.phase = CAPTURE_PHASE.PHASE_1_NEUTRAL;
-            this.notifyNearbyPlayers(new TranslatableComponent("text.vampirism.village.neutral_village_under_attack", faction.getNamePlural()));
+            this.notifyNearbyPlayers(Component.translatable("text.vampirism.village.neutral_village_under_attack", faction.getNamePlural()));
         } else {
             this.phase = CAPTURE_PHASE.PHASE_1_OPPOSITE;
-            this.notifyNearbyPlayers(new TranslatableComponent("text.vampirism.village.faction_village_under_attack", this.controllingFaction.getNamePlural(), faction.getNamePlural()));
+            this.notifyNearbyPlayers(Component.translatable("text.vampirism.village.faction_village_under_attack", this.controllingFaction.getNamePlural(), faction.getNamePlural()));
         }
 
 
@@ -553,7 +554,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     private void serverTickSecondNonCapture(int timeInSeconds) {
         //Update/spawn entities
         if (this.controllingFaction != null && timeInSeconds % 16  == 0) {
-            int beds = (int) ((ServerLevel) level).getPoiManager().getInRange(pointOfInterestType -> pointOfInterestType.equals(PoiType.HOME), this.worldPosition, ((int) Math.sqrt(Math.pow(this.getVillageArea().getXsize(), 2) + Math.pow(this.getVillageArea().getZsize(), 2))) / 2, PoiManager.Occupancy.ANY).count();
+            int beds = (int) ((ServerLevel) level).getPoiManager().getInRange(pointOfInterestType -> pointOfInterestType.is(PoiTypes.HOME), this.worldPosition, ((int) Math.sqrt(Math.pow(this.getVillageArea().getXsize(), 2) + Math.pow(this.getVillageArea().getZsize(), 2))) / 2, PoiManager.Occupancy.ANY).count();
             boolean spawnTaskMaster = RNG.nextInt(6) == 0;
             int villager = this.level.getEntitiesOfClass(Villager.class, this.getVillageArea().inflate(20)).size();
             int max = Math.min(beds, VampirismConfig.BALANCE.viMaxVillagerRespawn.get());
@@ -564,7 +565,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
             } else {
                 spawnTaskMaster = true;
             }
-            if (spawnTaskMaster && this.level.getEntitiesOfClass(VampirismEntity.class, this.getVillageArea(), entity -> entity instanceof ITaskMasterEntity).isEmpty()) {
+            if (spawnTaskMaster && this.level.getEntitiesOfClass(VampirismEntity.class, this.getVillageArea(), ITaskMasterEntity.class::isInstance).isEmpty()) {
                 this.spawnTaskMaster();
             }
             int defenderNumMax = Math.min(6, this.village.size() / 5);
@@ -667,7 +668,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
                         captureTimer = 1;
                         this.setupPhase2();
                         this.setChanged();
-                        this.notifyNearbyPlayers(new TranslatableComponent("text.vampirism.village.almost_captured", currentDefender));
+                        this.notifyNearbyPlayers(Component.translatable("text.vampirism.village.almost_captured", currentDefender));
                     } else {
                         if (captureTimer % 2 == 0) {
                             float max = attackerStrength + defenderStrength;
@@ -838,15 +839,15 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
 
     private boolean capturePreconditions(@Nullable IFaction<?> faction, @Nonnull BiConsumer<Component, Boolean> feedback) {
         if (faction == null) {
-            feedback.accept(new TranslatableComponent("text.vampirism.village.no_faction"), true);
+            feedback.accept(Component.translatable("text.vampirism.village.no_faction"), true);
             return false;
         }
         if (capturingFaction != null) {
-            feedback.accept(new TranslatableComponent("text.vampirism.village.capturing_in_progress"), true);
+            feedback.accept(Component.translatable("text.vampirism.village.capturing_in_progress"), true);
             return false;
         }
         if (faction.equals(controllingFaction)) {
-            feedback.accept(new TranslatableComponent("text.vampirism.village.same_faction"), true);
+            feedback.accept(Component.translatable("text.vampirism.village.same_faction"), true);
             return false;
         }
         if (!isInsideVillage) {
@@ -857,20 +858,20 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
             //noinspection ConstantConditions
             Map<Integer, Integer> stats = TotemHelper.getVillageStats(TotemHelper.getVillagePointsOfInterest((ServerLevel) level, this.worldPosition), this.level);
             int status = TotemHelper.isVillage(stats, this.controllingFaction != null || this.capturingFaction != null);
-            MutableComponent text = new TranslatableComponent("text.vampirism.village.missing_components");
+            MutableComponent text = Component.translatable("text.vampirism.village.missing_components");
             if ((status & 1) == 0) {
                 text.append("\n  - ");
-                text.append(new TranslatableComponent("text.vampirism.village.missing_components.home"));
+                text.append(Component.translatable("text.vampirism.village.missing_components.home"));
                 text.append(" " + stats.get(1) + "/" + MIN_HOMES);
             }
             if ((status & 2) == 0) {
                 text.append("\n  - ");
-                text.append(new TranslatableComponent("text.vampirism.village.missing_components.workstations"));
+                text.append(Component.translatable("text.vampirism.village.missing_components.workstations"));
                 text.append(" " + stats.get(2) + "/" + MIN_WORKSTATIONS);
             }
             if ((status & 4) == 0) {
                 text.append("\n  - ");
-                text.append(new TranslatableComponent("text.vampirism.village.missing_components.villager"));
+                text.append(Component.translatable("text.vampirism.village.missing_components.villager"));
                 text.append(" " + stats.get(4) + "/" + MIN_VILLAGER);
             }
             feedback.accept(text, false);
@@ -879,13 +880,13 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
             return false;
         }
         if (isDisabled) {
-            feedback.accept(new TranslatableComponent("text.vampirism.village.othertotem"), true);
+            feedback.accept(Component.translatable("text.vampirism.village.othertotem"), true);
             return false;
         }
         VampirismVillageEvent.InitiateCapture event = new VampirismVillageEvent.InitiateCapture(this, faction);
         MinecraftForge.EVENT_BUS.post(event);
         if (event.getResult().equals(Event.Result.DENY)) {
-            feedback.accept(new TranslatableComponent(event.getMessage()), true);
+            feedback.accept(Component.translatable(event.getMessage()), true);
             return false;
         }
         return true;
@@ -904,7 +905,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
 
         if (notifyPlayer) {
             assert controllingFaction != null;
-            this.notifyNearbyPlayers(new TranslatableComponent("text.vampirism.village.village_captured_by", controllingFaction.getNamePlural()));
+            this.notifyNearbyPlayers(Component.translatable("text.vampirism.village.village_captured_by", controllingFaction.getNamePlural()));
         }
         this.updateBossinfoPlayers(null);
         this.setChanged();
@@ -984,7 +985,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
             case PHASE_1_NEUTRAL, PHASE_1_OPPOSITE -> neutralPerc = this.captureTimer / (float) VampirismConfig.BALANCE.viPhase1Duration.get();
             case PHASE_2 -> {
                 neutralPerc = 1f;
-                this.captureInfo.setName(new TranslatableComponent("text.vampirism.village.bossinfo.remaining"));
+                this.captureInfo.setName(Component.translatable("text.vampirism.village.bossinfo.remaining"));
             }
             default -> neutralPerc = 0;
         }
@@ -997,7 +998,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         this.progressColor = faction != null ? new Color(faction.getColor()).getRGBColorComponents() : DyeColor.WHITE.getTextureDiffuseColors();
         if (faction != null) {
             this.captureInfo.setColors(new Color(faction.getColor()), Color.WHITE, this.controllingFaction == null ? Color.WHITE : new Color(this.controllingFaction.getColor()));
-            this.captureInfo.setName(new TranslatableComponent("text.vampirism.village.bossinfo.raid", faction.getName().plainCopy().withStyle(style -> style.withColor((faction.getChatColor())))));
+            this.captureInfo.setName(Component.translatable("text.vampirism.village.bossinfo.raid", faction.getName().plainCopy().withStyle(style -> style.withColor((faction.getChatColor())))));
         }
     }
 
@@ -1021,7 +1022,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     private void setupPhase2() {
         if (this.phase != CAPTURE_PHASE.PHASE_2) {
             this.phase = CAPTURE_PHASE.PHASE_2;
-            this.captureInfo.setName(new TranslatableComponent("text.vampirism.village.bossinfo.remaining"));
+            this.captureInfo.setName(Component.translatable("text.vampirism.village.bossinfo.remaining"));
         }
     }
 
@@ -1048,7 +1049,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
             else
                 ((IVillageCaptureEntity) entity).attackVillage(new CaptureInfo(this));
         } else if (entity != null) {
-            LOGGER.warn("Creature registered for village capture does not implement IVillageCaptureEntity ({})", entityType.getRegistryName());
+            LOGGER.warn("Creature registered for village capture does not implement IVillageCaptureEntity ({})", RegUtil.id(entityType));
         } else {
             LOGGER.info("Failed to spawn capture creature");
         }
@@ -1204,7 +1205,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
                     villager.removeEffect(ModEffects.SANGUINARE.get());
                 if (fullConvert) {
                     if (villager instanceof ConvertedVillagerEntity) {
-                        this.spawnVillagerReplaceForced(villager, this.capturingFaction == VReference.HUNTER_FACTION);
+                        this.spawnVillagerReplaceForced(villager, this.capturingFaction == VReference.HUNTER_FACTION, false);
                     }
                 }
             }
@@ -1221,7 +1222,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         villagerEntities = this.level.getEntitiesOfClass(Villager.class, getVillageArea());
 
         for (Villager villager : villagerEntities) {
-            if (villager.getVillagerData().getProfession() instanceof FactionVillagerProfession) {
+            if (ForgeRegistries.PROFESSIONS.tags().getTag(ModTags.Professions.HAS_FACTION).contains(villager.getVillagerData().getProfession())) {
                 villager.setVillagerData(villager.getVillagerData().setProfession(VillagerProfession.NONE));
             }
         }
@@ -1238,9 +1239,9 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         if (totem == null) {
             totem = new AABB(this.worldPosition);
         }
-        StructureStart start = UtilLib.getStructureStartAt(this.level, this.worldPosition, StructureFeature.VILLAGE);
-        if (start != null && start != StructureStart.INVALID_START && start.isValid()) {
-            totem = totem.minmax(UtilLib.MBtoAABB(start.getBoundingBox()));
+        Optional<StructureStart> start = UtilLib.getStructureStartAt(this.level, this.worldPosition, StructureSets.VILLAGES);
+        if (start.isPresent()) {
+            totem = totem.minmax(UtilLib.MBtoAABB(start.get().getBoundingBox()));
         }
         this.villageArea = totem;
         this.villageAreaReduced = totem.inflate(-30, -10, -30);

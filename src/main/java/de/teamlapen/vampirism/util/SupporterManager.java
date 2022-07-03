@@ -4,6 +4,7 @@ import com.google.common.io.ByteStreams;
 import com.google.gson.*;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
+import net.minecraft.util.RandomSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -13,7 +14,6 @@ import java.io.InputStream;
 import java.net.ConnectException;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.Random;
 
 /**
  * Handles the download, parsing and access of supporter information.
@@ -40,7 +40,7 @@ public class SupporterManager {
     /**
      * Returns a randomly picked hunter
      */
-    public Supporter getRandomHunter(Random rnd) {
+    public Supporter getRandomHunter(RandomSource rnd) {
         if (supporters[1].length > 0) {
             return supporters[1][rnd.nextInt(supporters[1].length)];
         }
@@ -50,7 +50,7 @@ public class SupporterManager {
     /**
      * Returns a randomly picked vampire
      */
-    public Supporter getRandomVampire(Random rnd) {
+    public Supporter getRandomVampire(RandomSource rnd) {
         if (supporters[0].length > 0) {
             return supporters[0][rnd.nextInt(supporters[0].length)];
         }

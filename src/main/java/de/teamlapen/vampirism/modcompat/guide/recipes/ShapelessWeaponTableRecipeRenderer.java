@@ -9,8 +9,8 @@ import de.maxanier.guideapi.api.util.IngredientCycler;
 import de.maxanier.guideapi.gui.BaseScreen;
 import de.teamlapen.vampirism.inventory.recipes.ShapelessWeaponTableRecipe;
 import net.minecraft.client.gui.Font;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -45,6 +45,6 @@ public class ShapelessWeaponTableRecipeRenderer extends BasicWeaponTableRecipeRe
 
     @Override
     protected MutableComponent getRecipeName() {
-        return new TranslatableComponent("guideapi.text.crafting.shapeless");
+        return Component.translatable("guideapi.text.crafting.shapeless");
     }
 }

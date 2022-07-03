@@ -5,8 +5,8 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskRewardInstance;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
-import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.player.TaskManager;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -24,7 +24,7 @@ public class TaskInstance implements ITaskInstance {
      */
     @Nullable
     public static TaskInstance readNBT(@Nonnull CompoundTag nbt) {
-        Task task = ModRegistries.TASKS.getValue(new ResourceLocation(nbt.getString("task")));
+        Task task = RegUtil.getTask(new ResourceLocation(nbt.getString("task")));
         if (task == null) return null;
         UUID id = nbt.getUUID("id");
         UUID insId = nbt.getUUID("insId");
@@ -43,7 +43,7 @@ public class TaskInstance implements ITaskInstance {
 
     public static TaskInstance decode(FriendlyByteBuf buffer) {
         UUID id = buffer.readUUID();
-        Task task = ModRegistries.TASKS.getValue(buffer.readResourceLocation());
+        Task task = RegUtil.getTask(buffer.readResourceLocation());
         UUID insId = buffer.readUUID();
         boolean accepted = buffer.readBoolean();
         long taskTimer = buffer.readVarLong();
@@ -106,7 +106,7 @@ public class TaskInstance implements ITaskInstance {
 
     public void encode(FriendlyByteBuf buffer) {
         buffer.writeUUID(this.taskGiver);
-        buffer.writeResourceLocation(this.task.getRegistryName());
+        buffer.writeResourceLocation(RegUtil.id(this.task));
         buffer.writeUUID(this.instanceId);
         buffer.writeBoolean(this.accepted);
         buffer.writeVarLong(this.taskTimeStamp);
@@ -186,7 +186,7 @@ public class TaskInstance implements ITaskInstance {
 
     public CompoundTag writeNBT(@Nonnull CompoundTag nbt) {
         nbt.putUUID("id", this.taskGiver);
-        nbt.putString("task", this.task.getRegistryName().toString());
+        nbt.putString("task", RegUtil.id(this.task).toString());
         nbt.putUUID("insId", this.instanceId);
         nbt.putBoolean("accepted", this.accepted);
         nbt.putLong("taskTimer", this.taskTimeStamp);

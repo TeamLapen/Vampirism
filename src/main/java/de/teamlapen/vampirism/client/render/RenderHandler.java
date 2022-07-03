@@ -33,6 +33,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.material.FogType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.*;
@@ -101,7 +102,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
                     this.displayWidth = mc.getWindow().getWidth();
                     this.updateFramebufferSize(this.displayWidth, this.displayHeight);
                 }
-                adjustBloodVisionShaders(getBloodVisionProgress((float) event.getPartialTicks()));
+                adjustBloodVisionShaders(getBloodVisionProgress((float) event.getPartialTick()));
             } else {
                 MixinHooks.enforcingGlowing_bloodVision = true;
             }
@@ -177,7 +178,9 @@ public class RenderHandler implements ResourceManagerReloadListener {
         f *= vampireBiomeFogDistanceMultiplier;
         float fogStart = Math.min(event.getFarPlaneDistance() * 0.75f, 6 * f);
         float fogEnd = Math.min(event.getFarPlaneDistance(), 50 * f);
-        RenderSystem.setShaderFogStart(event.getMode() == FogRenderer.FogMode.FOG_SKY ? 0 : fogStart); //maybe invert
+        if (event.getMode() == FogType.NONE) {
+            RenderSystem.setShaderFogStart(fogStart); //TODO maybe implement a FogRenderer.MobEffectFogFunction class?
+        }
         RenderSystem.setShaderFogEnd(fogEnd);
     }
 

@@ -4,12 +4,12 @@ package de.teamlapen.vampirism.entity.minion.management;
 import de.teamlapen.lib.util.WeightedRandomItem;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.items.BloodBottleItem;
@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 
 public class MinionTasks {
-    public static final DeferredRegister<IMinionTask<?,?>> MINION_TASKS = DeferredRegister.create(ModRegistries.MINION_TASKS_ID, REFERENCE.MODID);
+    public static final DeferredRegister<IMinionTask<?,?>> MINION_TASKS = DeferredRegister.create(VampirismRegistries.MINION_TASKS_ID, REFERENCE.MODID);
 
 
     public static final RegistryObject<StayTask> STAY = MINION_TASKS.register("stay", StayTask::new);

@@ -20,7 +20,6 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -41,7 +40,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
 
 
     WeaponTableRecipeCategory(IGuiHelper guiHelper) {
-        localizedName = new TranslatableComponent(ModBlocks.WEAPON_TABLE.get().getDescriptionId());
+        localizedName = Component.translatable(ModBlocks.WEAPON_TABLE.get().getDescriptionId());
         background = guiHelper.drawableBuilder(location, 32, 14, 134, 77).addPadding(0, 33, 0, 0).build();
         icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.WEAPON_TABLE.get()));
     }
@@ -61,14 +60,14 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
             stack.popPose();
         }
         if (recipe.getRequiredLevel() > 1) {
-            Component level = new TranslatableComponent("gui.vampirism.hunter_weapon_table.level", recipe.getRequiredLevel());
+            Component level = Component.translatable("gui.vampirism.hunter_weapon_table.level", recipe.getRequiredLevel());
 
             minecraft.font.draw(stack, level, x, y, Color.GRAY.getRGB());
             y += minecraft.font.lineHeight + 2;
         }
         ISkill<?>[] requiredSkills = recipe.getRequiredSkills();
         if (requiredSkills.length > 0) {
-            MutableComponent skillText = new TranslatableComponent("gui.vampirism.hunter_weapon_table.skill", " ");
+            MutableComponent skillText = Component.translatable("gui.vampirism.hunter_weapon_table.skill", " ");
 
             for (ISkill<?> skill : recipe.getRequiredSkills()) {
                 skillText.append(skill.getName()).append(" ");
@@ -106,7 +105,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
     @Nonnull
     @Override
     public ResourceLocation getUid() {
-        return VampirismJEIPlugin.WEAPON_TABLE_RECIPE_ID;
+        return VampirismJEIPlugin.WEAPON_TABLE;
     }
 
     @Override

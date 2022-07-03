@@ -1,15 +1,15 @@
 package de.teamlapen.vampirism.api.entity.player.skills;
 
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 /**
  * Default implementation of ISkill. Handles entity modifiers and actions
  */
-public abstract class DefaultSkill<T extends IFactionPlayer<T>> extends ForgeRegistryEntry<ISkill<?>> implements ISkill<T> {
+public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkill<T> {
 
     private final Map<Attribute, LazyOptional<AttributeModifier>> attributeModifierMap = new HashMap<>();
     private int renderRow;
@@ -26,7 +26,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> extends ForgeReg
 
     @Override
     public Component getName() {
-        return name == null ? name = new TranslatableComponent(getTranslationKey()) : name;
+        return name == null ? name = Component.translatable(getTranslationKey()) : name;
     }
 
     public DefaultSkill<T> setName(Component name) {
@@ -146,6 +146,10 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> extends ForgeReg
                 attribute.removeModifier(entry.getValue().orElseThrow(IllegalStateException::new));
             }
         }
+    }
+
+    private ResourceLocation getRegistryName() {
+        return VampirismRegistries.SKILLS.get().getKey(this);
     }
 
 

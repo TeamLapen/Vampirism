@@ -15,7 +15,9 @@ import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
-import net.minecraft.network.chat.*;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -59,14 +61,14 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe> extend
 
         int y = guiTop + 120;
         if (recipe.getRequiredLevel() > 1) {
-            Component level = new TranslatableComponent("gui.vampirism.hunter_weapon_table.level", recipe.getRequiredLevel());
+            Component level = Component.translatable("gui.vampirism.hunter_weapon_table.level", recipe.getRequiredLevel());
             fontRenderer.draw(stack, level, guiLeft + 40, y, Color.GRAY.getRGB());
             y += fontRenderer.lineHeight + 2;
         }
         if (recipe.getRequiredSkills().length > 0) {
-            FormattedText newLine = new TextComponent("\n");
+            FormattedText newLine = Component.literal("\n");
             List<FormattedText> skills = new ArrayList<>();
-            skills.add(new TranslatableComponent("gui.vampirism.hunter_weapon_table.skill", "\n"));
+            skills.add(Component.translatable("gui.vampirism.hunter_weapon_table.skill", "\n"));
             for (ISkill<?> skill : recipe.getRequiredSkills()) {
                 skills.add(skill.getName().copy().withStyle(ChatFormatting.ITALIC));
                 skills.add(newLine);
@@ -76,7 +78,7 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe> extend
     }
 
     protected MutableComponent getRecipeName() {
-        return new TranslatableComponent("guideapi.text.crafting.shaped");
+        return Component.translatable("guideapi.text.crafting.shaped");
     }
 
 

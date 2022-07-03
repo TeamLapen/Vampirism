@@ -14,8 +14,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -38,14 +38,14 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
     protected final int statCount;
     @Nullable
     protected final Screen backScreen;
-    private final TranslatableComponent textLevel = new TranslatableComponent("text.vampirism.level");
+    private final MutableComponent textLevel = Component.translatable("text.vampirism.level");
     private final List<Button> statButtons = new ArrayList<>();
     protected int guiLeft;
     protected int guiTop;
     private Button reset;
 
     protected MinionStatsScreen(Q entity, int statCount, @Nullable Screen backScreen) {
-        super(new TranslatableComponent("gui.vampirism.minion_stats"));
+        super(Component.translatable("gui.vampirism.minion_stats"));
         assert statCount > 0;
         this.entity = entity;
         this.statCount = statCount;
@@ -83,17 +83,17 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
         this.statButtons.clear();
         this.guiLeft = (this.width - this.xSize) / 2;
         this.guiTop = (this.height - this.ySize) / 2;
-        this.addRenderableWidget(new Button(this.guiLeft + this.xSize - 80 - 20, this.guiTop + 152, 80, 20, new TranslatableComponent("gui.done"), (context) -> {
+        this.addRenderableWidget(new Button(this.guiLeft + this.xSize - 80 - 20, this.guiTop + 152, 80, 20, Component.translatable("gui.done"), (context) -> {
             this.onClose();
         }));
         if (backScreen != null) {
-            this.addRenderableWidget(new Button(this.guiLeft + 20, this.guiTop + 152, 80, 20, new TranslatableComponent("gui.back"), (context) -> {
+            this.addRenderableWidget(new Button(this.guiLeft + 20, this.guiTop + 152, 80, 20, Component.translatable("gui.back"), (context) -> {
                 Minecraft.getInstance().setScreen(this.backScreen);
             }));
         }
         for (int i = 0; i < statCount; i++) {
             int finalI = i;
-            Button button = this.addRenderableWidget(new Button(guiLeft + 225, guiTop + 43 + 26 * i, 20, 20, new TextComponent("+"), (b) -> VampirismMod.dispatcher.sendToServer(new UpgradeMinionStatPacket(entity.getId(), finalI))));
+            Button button = this.addRenderableWidget(new Button(guiLeft + 225, guiTop + 43 + 26 * i, 20, 20, Component.literal("+"), (b) -> VampirismMod.dispatcher.sendToServer(new UpgradeMinionStatPacket(entity.getId(), finalI))));
             statButtons.add(button);
             button.visible = false;
         }
@@ -103,7 +103,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
             getOblivionPotion().ifPresent(stack -> stack.shrink(1));//server syncs after the screen is closed
         }, (button, matrixStack, mouseX, mouseY) -> {
             MinionStatsScreen.this.renderTooltip(matrixStack, button.getMessage(), mouseX, mouseY);
-        }, new TranslatableComponent("text.vampirism.minion_screen.reset_stats", ModItems.OBLIVION_POTION.get().getDescription())) {
+        }, Component.translatable("text.vampirism.minion_screen.reset_stats", ModItems.OBLIVION_POTION.get().getDescription())) {
             @Override
             public void render(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
                 if (this.visible) {
@@ -136,7 +136,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
         this.hLine(mStack, guiLeft + 10, guiLeft + xSize - 10, guiTop + 40, 0xF0303030);
     }
 
-    protected void renderStatRow(PoseStack mStack, int i, TranslatableComponent name, TextComponent value, int currentLevel, int maxLevel) {
+    protected void renderStatRow(PoseStack mStack, int i, MutableComponent name, Component value, int currentLevel, int maxLevel) {
         this.font.draw(mStack, name.append(":"), guiLeft + 10, guiTop + 50 + 26 * i, 0x404040);
         this.font.draw(mStack, value, guiLeft + 145, guiTop + 50 + 26 * i, 0x404040);
         this.font.draw(mStack, UtilLib.translate("text.vampirism.level_short") + ": " + currentLevel + "/" + maxLevel, guiLeft + 175, guiTop + 50 + 26 * i, 0x404040);

@@ -7,11 +7,11 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
-import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Arrays;
@@ -20,7 +20,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class ActionArgument implements ArgumentType<IAction<?>> {
     public static final DynamicCommandExceptionType ACTION_NOT_FOUND = new DynamicCommandExceptionType((particle) -> {
-        return new TranslatableComponent("command.vampirism.argument.action.notfound", particle);
+        return Component.translatable("command.vampirism.argument.action.notfound", particle);
     });
     private static final Collection<String> EXAMPLES = Arrays.asList("action", "modid:action");
 
@@ -39,13 +39,13 @@ public class ActionArgument implements ArgumentType<IAction<?>> {
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        return SharedSuggestionProvider.suggestResource(ModRegistries.ACTIONS.getKeys(), builder);
+        return SharedSuggestionProvider.suggestResource(VampirismRegistries.ACTIONS.get().getKeys(), builder);
     }
 
     @Override
     public IAction<?> parse(StringReader reader) throws CommandSyntaxException {
         ResourceLocation id = ResourceLocation.read(reader);
-        IAction<?> action = ModRegistries.ACTIONS.getValue(id);
+        IAction<?> action = VampirismRegistries.ACTIONS.get().getValue(id);
         if (action == null)
             throw ACTION_NOT_FOUND.create(id);
         return action;

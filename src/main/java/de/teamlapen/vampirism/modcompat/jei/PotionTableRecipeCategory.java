@@ -17,7 +17,6 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -37,7 +36,7 @@ public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> 
 
 
     PotionTableRecipeCategory(IGuiHelper guiHelper) {
-        this.localizedName = new TranslatableComponent(ModBlocks.POTION_TABLE.get().getDescriptionId());
+        this.localizedName = Component.translatable(ModBlocks.POTION_TABLE.get().getDescriptionId());
         this.icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.POTION_TABLE.get()));
         this.background = guiHelper.drawableBuilder(backgroundLocation, 65, 6, 103, 73).addPadding(0, 33, 0, 25).build();
         this.slotDrawable = guiHelper.getSlotDrawable();
@@ -104,7 +103,7 @@ public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> 
     @Nonnull
     @Override
     public ResourceLocation getUid() {
-        return VampirismJEIPlugin.POTION_RECIPE_UID;
+        return VampirismJEIPlugin.POTION;
     }
 
     @Override

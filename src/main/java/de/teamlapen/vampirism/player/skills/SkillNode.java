@@ -5,7 +5,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import de.teamlapen.vampirism.core.ModRegistries;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -121,7 +121,7 @@ public class SkillNode {
             List<ISkill<?>> skillList = new ArrayList<>();
             for (int i = 0; i < skills.size(); i++) {
                 ResourceLocation id = new ResourceLocation(GsonHelper.convertToString(skills.get(i), "skill"));
-                ISkill<?> s = ModRegistries.SKILLS.getValue(id);
+                ISkill<?> s = RegUtil.getSkill(id);
                 if (s == null) {
                     throw new IllegalArgumentException("Skill " + id + " is not registered");
                 }
@@ -143,7 +143,7 @@ public class SkillNode {
             int count = buf.readVarInt();
             for (int i = 0; i < count; i++) {
                 ResourceLocation id = buf.readResourceLocation();
-                ISkill<?> s = ModRegistries.SKILLS.getValue(id);
+                ISkill<?> s = RegUtil.getSkill(id);
                 if (s == null) {
                     LOGGER.warn("Skill {} is not registered", id);
                 }
@@ -196,7 +196,7 @@ public class SkillNode {
 
             JsonArray skillIds = new JsonArray();
             for (ISkill<?> s : skills) {
-                skillIds.add(s.getRegistryName().toString());
+                skillIds.add(RegUtil.id(s).toString());
             }
             jsonobject.add("skills", skillIds);
 
@@ -232,7 +232,7 @@ public class SkillNode {
 
             buf.writeVarInt(this.skills.size());
             for (ISkill<?> s : skills) {
-                buf.writeResourceLocation(s.getRegistryName());
+                buf.writeResourceLocation(RegUtil.id(s));
             }
 
             buf.writeVarInt(this.lockingNodes.size());

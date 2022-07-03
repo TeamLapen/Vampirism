@@ -13,8 +13,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
@@ -103,10 +101,10 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
                         this.config.deriveFromHunter(hp);
                         return true;
                     } else {
-                        player.displayClientMessage(new TranslatableComponent("text.vampirism.potion_table.other", getOwnerName()), true);
+                        player.displayClientMessage(Component.translatable("text.vampirism.potion_table.other", getOwnerName()), true);
                     }
                 } else {
-                    player.displayClientMessage(new TranslatableComponent("text.vampirism.potion_table.cannot_use", getOwnerName()), true);
+                    player.displayClientMessage(Component.translatable("text.vampirism.potion_table.cannot_use", getOwnerName()), true);
                 }
                 return false;
 
@@ -166,12 +164,12 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
     @Nonnull
     @Override
     public Component getDisplayName() {
-        return new TranslatableComponent("tile.vampirism.potion_table.display", ownerName, new TranslatableComponent("tile.vampirism.potion_table"));
+        return Component.translatable("tile.vampirism.potion_table.display", ownerName, Component.translatable("tile.vampirism.potion_table"));
     }
 
     @Nonnull
     public Component getOwnerName() {
-        return ownerName == null ? new TextComponent("Unknown") : ownerName;
+        return ownerName == null ? Component.literal("Unknown") : ownerName;
     }
 
     @Override
@@ -323,7 +321,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
     @Nonnull
     @Override
     protected Component getDefaultName() {
-        return new TranslatableComponent("container.brewing");
+        return Component.translatable("container.brewing");
     }
 
     private void brewPotions() {

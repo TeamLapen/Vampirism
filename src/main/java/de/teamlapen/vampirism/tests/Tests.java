@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.fluids.BloodHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -24,8 +24,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidActionResult;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -137,12 +137,12 @@ public class Tests {
         block = info.world.getBlockState(info.pos);
         assert info.player.getItemInHand(info.player.getUsedItemHand()).getItem().equals(Items.BUCKET) : "Incorrect Fluid Container Handling";
         LOGGER.warn("Block lava level: {}", new Object[]{block.getValue(WeaponTableBlock.LAVA)});
-        assert (block.getValue(WeaponTableBlock.LAVA) * WeaponTableBlock.MB_PER_META) == FluidAttributes.BUCKET_VOLUME : "Incorrect Fluid Transaction";
+        assert (block.getValue(WeaponTableBlock.LAVA) * WeaponTableBlock.MB_PER_META) == FluidType.BUCKET_VOLUME : "Incorrect Fluid Transaction";
         return true;
     }
 
     private static void sendMsg(Player player, String msg) {
-        player.displayClientMessage(new TextComponent("§1[V-TEST]§r " + msg), false);
+        player.displayClientMessage(Component.literal("§1[V-TEST]§r " + msg), false);
     }
 
     private static void clearArea(Level world) {

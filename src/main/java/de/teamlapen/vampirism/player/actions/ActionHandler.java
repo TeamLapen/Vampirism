@@ -6,8 +6,8 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
-import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.util.Permissions;
+import de.teamlapen.vampirism.util.RegUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
@@ -75,7 +75,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     public void deactivateAllActions() {
         for (ResourceLocation r : activeTimers.keySet()) {
             @SuppressWarnings("unchecked")
-            ILastingAction<T> action = (ILastingAction<T>) ModRegistries.ACTIONS.getValue(r);
+            ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(r);
             assert action != null;
             int cooldown = action.getCooldown(player);
             cooldownTimers.put(r, cooldown);
@@ -86,9 +86,9 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
 
     @Override
     public void extendActionTimer(@Nonnull ILastingAction<T> action, int duration) {
-        int i = activeTimers.getOrDefault(action.getRegistryName(), -1);
+        int i = activeTimers.getOrDefault(RegUtil.id(action), -1);
         if (i > 0) {
-            activeTimers.put(action.getRegistryName(), i + duration);
+            activeTimers.put(RegUtil.id(action), i + duration);
         }
     }
 
@@ -106,11 +106,11 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
 
     @Override
     public float getPercentageForAction(@Nonnull IAction<T> action) {
-        if (activeTimers.containsKey(action.getRegistryName())) {
-            return activeTimers.get(action.getRegistryName()) / ((float) ((ILastingAction<T>) action).getDuration(player));
+        if (activeTimers.containsKey(RegUtil.id(action))) {
+            return activeTimers.get(RegUtil.id(action)) / ((float) ((ILastingAction<T>) action).getDuration(player));
         }
-        if (cooldownTimers.containsKey(action.getRegistryName())) {
-            return -cooldownTimers.get(action.getRegistryName()) / (float) action.getCooldown(player);
+        if (cooldownTimers.containsKey(RegUtil.id(action))) {
+            return -cooldownTimers.get(RegUtil.id(action)) / (float) action.getCooldown(player);
         }
         return 0f;
     }
@@ -122,7 +122,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
 
     @Override
     public boolean isActionActive(@Nonnull ILastingAction<T> action) {
-        return activeTimers.containsKey(action.getRegistryName());
+        return activeTimers.containsKey(RegUtil.id(action));
     }
 
     @Override
@@ -132,7 +132,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
 
     @Override
     public boolean isActionOnCooldown(IAction<T> action) {
-        return cooldownTimers.containsKey(action.getRegistryName());
+        return cooldownTimers.containsKey(RegUtil.id(action));
     }
 
     @Override
@@ -159,7 +159,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
         if (!player.isRemote()) {
             for (ResourceLocation id : activeTimers.keySet()) {
                 @SuppressWarnings("unchecked")
-                ILastingAction<T> action = (ILastingAction<T>) ModRegistries.ACTIONS.getValue(id);
+                ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(id);
                 assert action != null;
                 action.onReActivated(player);
             }
@@ -195,7 +195,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
                     nbt.remove(key);
                 } else {
                     @SuppressWarnings("unchecked")
-                    ILastingAction<T> action = (ILastingAction<T>) ModRegistries.ACTIONS.getValue(client_active.getKey());
+                    ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(client_active.getKey());
                     assert action != null;
                     action.onDeactivated(player);
                     it.remove();
@@ -204,7 +204,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             for (String key : active.getAllKeys()) {
                 ResourceLocation id = new ResourceLocation(key);
                 @SuppressWarnings("unchecked")
-                ILastingAction<T> action = (ILastingAction<T>) ModRegistries.ACTIONS.getValue(id);
+                ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(id);
                 if (action == null) {
                     LOGGER.error("Action {} is not available client side", key);
                 } else {
@@ -236,7 +236,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     public void resetTimers() {
         for (ResourceLocation id : activeTimers.keySet()) {
             @SuppressWarnings("unchecked")
-            ILastingAction<T> action = (ILastingAction<T>) ModRegistries.ACTIONS.getValue(id);
+            ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(id);
             assert action != null;
             action.onDeactivated(player);
         }
@@ -258,7 +258,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     @Override
     public IAction.PERM toggleAction(IAction<T> action) {
 
-        ResourceLocation id = action.getRegistryName();
+        ResourceLocation id = RegUtil.id(action);
         if (activeTimers.containsKey(id)) {
             int cooldown = action.getCooldown(player);
             int leftTime = activeTimers.getInt(id);
@@ -297,7 +297,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     @Override
     public void unlockActions(Collection<IAction<T>> actions) {
         for (IAction<T> action : actions) {
-            if (!ModRegistries.ACTIONS.containsValue(action)) {
+            if (!RegUtil.has(action)) {
                 throw new ActionNotRegisteredException(action);
             }
         }
@@ -326,7 +326,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             Object2IntMap.Entry<ResourceLocation> entry = it.next();
             int newtimer = entry.getIntValue() - 1;
             @SuppressWarnings("unchecked")
-            ILastingAction<T> action = (ILastingAction<T>) ModRegistries.ACTIONS.getValue(entry.getKey());
+            ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(entry.getKey());
             assert action != null;
             if (newtimer == 0) {
                 action.onDeactivated(player);
@@ -367,7 +367,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     private void loadTimerMapFromNBT(CompoundTag nbt, Object2IntMap<ResourceLocation> map) {
         for (String key : nbt.getAllKeys()) {
             ResourceLocation id = new ResourceLocation(key);
-            if (ModRegistries.ACTIONS.getValue(id) == null) {
+            if (RegUtil.getAction(id) == null) {
                 LOGGER.warn("Did not find action with key {}", key);
             } else {
                 map.put(id, nbt.getInt(key));

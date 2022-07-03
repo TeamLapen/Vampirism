@@ -12,7 +12,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -106,7 +106,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
                 }
             }
         } else if (world.isClientSide) {
-            player.displayClientMessage(new TranslatableComponent("text.vampirism.need_item_to_use", new TranslatableComponent((new ItemStack(ModItems.INJECTION_GARLIC.get()).getDescriptionId()))), true);
+            player.displayClientMessage(Component.translatable("text.vampirism.need_item_to_use", Component.translatable((new ItemStack(ModItems.INJECTION_GARLIC.get()).getDescriptionId()))), true);
         }
         return InteractionResult.SUCCESS;
     }
@@ -127,7 +127,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
             return true;
         } else if (currentFaction != null) {
             if (!world.isClientSide) {
-                player.sendMessage(new TranslatableComponent("text.vampirism.med_chair_other_faction", currentFaction.getName()), Util.NIL_UUID);
+                player.sendSystemMessage(Component.translatable("text.vampirism.med_chair_other_faction", currentFaction.getName()));
             }
         }
         return false;
@@ -152,7 +152,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
 
     private boolean handleSanguinareInjection(@Nonnull Player player, @Nonnull IFactionPlayerHandler handler, @Nullable IPlayableFaction<?> currentFaction) {
         if (VReference.VAMPIRE_FACTION.equals(currentFaction)) {
-            player.displayClientMessage(new TranslatableComponent("text.vampirism.already_vampire"), false);
+            player.displayClientMessage(Component.translatable("text.vampirism.already_vampire"), false);
             return false;
         }
         if (VReference.HUNTER_FACTION.equals(currentFaction)) {
@@ -164,7 +164,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
         if (currentFaction == null) {
             if (handler.canJoin(VReference.VAMPIRE_FACTION)) {
                 if (VampirismConfig.SERVER.disableFangInfection.get()) {
-                    player.displayClientMessage(new TranslatableComponent("text.vampirism.deactivated_by_serveradmin"), true);
+                    player.displayClientMessage(Component.translatable("text.vampirism.deactivated_by_serveradmin"), true);
                 } else {
                     SanguinareEffect.addRandom(player, true);
                     player.addEffect(new MobEffectInstance(ModEffects.POISON.get(), 60));

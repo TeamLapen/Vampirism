@@ -8,8 +8,9 @@ import de.teamlapen.vampirism.entity.VampirismEntity;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -28,7 +29,7 @@ import java.util.Random;
  */
 public abstract class HunterBaseEntity extends VampirismEntity implements IHunterMob, Npc/*mainly for JourneyMap*/ {
 
-    public static boolean spawnPredicateHunter(EntityType<? extends HunterBaseEntity> entityType, LevelAccessor world, MobSpawnType spawnReason, BlockPos blockPos, Random random) {
+    public static boolean spawnPredicateHunter(EntityType<? extends HunterBaseEntity> entityType, LevelAccessor world, MobSpawnType spawnReason, BlockPos blockPos, RandomSource random) {
         return world.getDifficulty() != Difficulty.PEACEFUL && Mob.checkMobSpawnRules(entityType, world, spawnReason, blockPos, random);
     }
 
@@ -80,7 +81,7 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
     protected boolean tryCureSanguinare(Player entity) {
         if (!this.level.isClientSide && entity.hasEffect(ModEffects.SANGUINARE.get())) {
             entity.removeEffect(ModEffects.SANGUINARE.get());
-            entity.sendMessage(new TranslatableComponent("text.vampirism.hunter.cured_sanguinare"), Util.NIL_UUID);
+            entity.sendSystemMessage(Component.translatable("text.vampirism.hunter.cured_sanguinare"));
             return true;
         }
         return false;

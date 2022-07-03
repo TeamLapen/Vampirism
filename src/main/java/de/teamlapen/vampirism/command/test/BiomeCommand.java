@@ -5,7 +5,7 @@ import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -21,7 +21,7 @@ public class BiomeCommand extends BasicCommand {
 
     private static int biome(CommandSourceStack commandSource, ServerPlayer asPlayer) {
         ResourceLocation res = Helper.getBiomeId(asPlayer);
-        commandSource.sendSuccess(new TextComponent(res.toString()), true);
+        commandSource.sendSuccess(Component.literal(res.toString()), true);
         return 0;
     }
 }

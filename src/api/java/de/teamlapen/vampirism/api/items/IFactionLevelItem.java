@@ -8,8 +8,6 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -54,14 +52,14 @@ public interface IFactionLevelItem<T extends IFactionPlayer<T>> extends IFaction
 
 
         if (usingFaction == null && getMinLevel(stack) == 0) return;
-        MutableComponent string = new TextComponent("").append(usingFaction == null ? new TranslatableComponent("text.vampirism.all") : usingFaction.getNamePlural()).withStyle(factionC);
+        MutableComponent string = Component.literal("").append(usingFaction == null ? Component.translatable("text.vampirism.all") : usingFaction.getNamePlural()).withStyle(factionC);
         if (getMinLevel(stack) > 0) {
-            string.append(new TextComponent("@" + getMinLevel(stack)).withStyle(levelC));
+            string.append(Component.literal("@" + getMinLevel(stack)).withStyle(levelC));
         }
         tooltip.add(string);
         ISkill<T> reqSkill = this.getRequiredSkill(stack);
         if (reqSkill != null) {
-            tooltip.add(new TranslatableComponent("text.vampirism.required_skill", reqSkill.getName()).withStyle(skillC));
+            tooltip.add(Component.translatable("text.vampirism.required_skill", reqSkill.getName()).withStyle(skillC));
         }
     }
 

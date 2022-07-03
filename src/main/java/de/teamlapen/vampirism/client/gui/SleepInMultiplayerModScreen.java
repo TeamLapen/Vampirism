@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.client.gui;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.InBedChatScreen;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 
 public class SleepInMultiplayerModScreen extends InBedChatScreen {
 
@@ -18,7 +18,7 @@ public class SleepInMultiplayerModScreen extends InBedChatScreen {
         super.init();
         GuiEventListener l = this.children().get(1);
         if (l instanceof AbstractWidget) {
-            ((AbstractWidget) l).setMessage(new TranslatableComponent(leaveText));
+            ((AbstractWidget) l).setMessage(Component.translatable(leaveText));
         }
     }
 }

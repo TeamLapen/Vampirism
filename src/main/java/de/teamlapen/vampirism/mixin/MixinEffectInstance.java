@@ -25,7 +25,7 @@ public class MixinEffectInstance implements EffectInstanceWithSource {
     }
 
     @Shadow
-    private int duration;
+    int duration;
     @Shadow
     @Nullable
     private MobEffectInstance hiddenEffect;

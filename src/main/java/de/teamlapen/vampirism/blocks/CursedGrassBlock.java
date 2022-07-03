@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.items.HolyWaterBottleItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -23,7 +24,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.IPlantable;
 
 import javax.annotation.Nonnull;
-import java.util.Random;
 
 
 public class CursedGrassBlock extends SpreadingSnowyDirtBlock implements BonemealableBlock {
@@ -38,7 +38,7 @@ public class CursedGrassBlock extends SpreadingSnowyDirtBlock implements Bonemea
     }
 
     @Override
-    public boolean isBonemealSuccess(@Nonnull Level worldIn, @Nonnull Random rand, @Nonnull BlockPos pos, @Nonnull BlockState state) {
+    public boolean isBonemealSuccess(@Nonnull Level worldIn, @Nonnull RandomSource rand, @Nonnull BlockPos pos, @Nonnull BlockState state) {
         return true;
     }
 
@@ -48,7 +48,7 @@ public class CursedGrassBlock extends SpreadingSnowyDirtBlock implements Bonemea
     }
 
     @Override
-    public void performBonemeal(@Nonnull ServerLevel worldIn, @Nonnull Random rand, BlockPos pos, @Nonnull BlockState state) {
+    public void performBonemeal(@Nonnull ServerLevel worldIn, @Nonnull RandomSource rand, BlockPos pos, @Nonnull BlockState state) {
         BlockPos blockpos = pos.above();
 
         for (int i = 0; i < 128; ++i) {
@@ -92,7 +92,7 @@ public class CursedGrassBlock extends SpreadingSnowyDirtBlock implements Bonemea
      * Copied from {@link SpreadingSnowyDirtBlock}, replacing DIRT with cursed_eart
      */
     @Override
-    public void randomTick(BlockState blockState, ServerLevel level, BlockPos pos, Random random) {
+    public void randomTick(BlockState blockState, ServerLevel level, BlockPos pos, RandomSource random) {
         if (!canBeGrass(blockState, level, pos)) {
             if (!level.isAreaLoaded(pos, 3))
                 return; // Forge: prevent loading unloaded chunks when checking neighbor's light and spreading

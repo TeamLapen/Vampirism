@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.items.VampirismVampireSword;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
@@ -38,7 +38,7 @@ public class SetSwordTrainedCommand extends BasicCommand {
                 ((VampirismVampireSword) held.getItem()).setTrained(held, player, train);
                 player.setItemInHand(InteractionHand.MAIN_HAND, held);
             } else {
-                commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.swordtrained.nosword"), false);
+                commandSource.sendSuccess(Component.translatable("command.vampirism.test.swordtrained.nosword"), false);
             }
         }
         return 0;

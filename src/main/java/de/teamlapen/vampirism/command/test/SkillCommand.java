@@ -7,9 +7,10 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.command.arguments.SkillArgument;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
 public class SkillCommand extends BasicCommand {
@@ -31,7 +32,7 @@ public class SkillCommand extends BasicCommand {
     private static int disableall(CommandSourceStack commandSource, ServerPlayer asPlayer) {
         IFactionPlayer<?> factionPlayer = asPlayer.isAlive() ? FactionPlayerHandler.getCurrentFactionPlayer(asPlayer).orElse(null) : null;
         if (factionPlayer == null) {
-            commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.skill.noinfaction"), false);
+            commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.noinfaction"), false);
             return 0;
         }
         factionPlayer.getSkillHandler().resetSkills();
@@ -42,12 +43,12 @@ public class SkillCommand extends BasicCommand {
     private static int skill(CommandSourceStack commandSource, ServerPlayer asPlayer, @SuppressWarnings("rawtypes") ISkill skill, boolean force) {
         IFactionPlayer<?> factionPlayer = asPlayer.isAlive() ? FactionPlayerHandler.getCurrentFactionPlayer(asPlayer).orElse(null) : null;
         if (factionPlayer == null) {
-            commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.skill.noinfaction"), false);
+            commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.noinfaction"), false);
             return 0;
         }
         if (factionPlayer.getSkillHandler().isSkillEnabled(skill)) {
             factionPlayer.getSkillHandler().disableSkill(skill);
-            commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.skill.disabled"), false);
+            commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.disabled"), false);
             return 0;
         }
         ISkillHandler.Result result = factionPlayer.getSkillHandler().canSkillBeEnabled(skill);
@@ -57,33 +58,33 @@ public class SkillCommand extends BasicCommand {
         switch (result) {
             case OK:
                 factionPlayer.getSkillHandler().enableSkill(skill);
-                commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.skill.enabled", skill.getRegistryName() + " (" + skill.getName().getString() + ")"), false);
+                commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.enabled", RegUtil.id(skill)  + " (" + skill.getName().getString() + ")"), false);
                 break;
             case ALREADY_ENABLED:
-                commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.skill.alreadyenabled", skill.getName()), false);
+                commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.alreadyenabled", skill.getName()), false);
                 break;
             case PARENT_NOT_ENABLED:
                 ISkill<?>[] skills = factionPlayer.getSkillHandler().getParentSkills(skill);
                 if (skills == null || skills.length == 0) return 0;
                 if (skills.length == 1)
-                    commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.skill.parent", skills[0].getRegistryName()), false);
+                    commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.parent", RegUtil.id(skills[0])), false);
                 else
-                    commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.skill.parents", skills[0].getRegistryName(), skills[1].getRegistryName()), false);
+                    commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.parents", RegUtil.id(skills[0]), RegUtil.id(skills[1])), false);
                 break;
             case NO_POINTS:
-                commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.skill.nopoints"), false);
+                commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.nopoints"), false);
                 break;
             case OTHER_NODE_SKILL:
-                commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.skill.othernode"), false);
+                commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.othernode"), false);
                 break;
             case NOT_FOUND:
-                commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.skill.otherfaction"), false);
+                commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.otherfaction"), false);
                 break;
             case LOCKED_BY_OTHER_NODE:
-                commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.skill.locked"), false);
+                commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.locked"), false);
                 break;
             case LOCKED_BY_PLAYER_STATE:
-                commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.skill.locked_player_state"), false);
+                commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.locked_player_state"), false);
                 break;
         }
         return 0;

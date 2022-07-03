@@ -14,6 +14,8 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.glfw.GLFW;
@@ -185,17 +187,12 @@ public abstract class GuiPieMenu<T> extends Screen {
     @Override
     public void tick() {
         super.tick();
-        if (this.minecraft
-                != null && this.minecraft
-                .player != null) {
-            if (!this.minecraft
-                    .player.isAlive()) {
-                this.minecraft
-                        .player.closeContainer();
+        if (this.minecraft != null && this.minecraft.player != null) {
+            if (!this.minecraft.player.isAlive()) {
+                this.minecraft.player.closeContainer();
             } else {
-                this.minecraft
-                        .player.input.tick(this.minecraft
-                                .player.isMovingSlowly()); //shouldRenderSneaking
+                float f = Mth.clamp(0.3F + EnchantmentHelper.getSneakingSpeedBonus(this.minecraft.player), 0.0F, 1.0F);
+                this.minecraft.player.input.tick(this.minecraft.player.isMovingSlowly(), f);
             }
         }
     }

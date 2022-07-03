@@ -14,7 +14,7 @@ import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -118,13 +118,13 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
         VampireLevelingConf levelingConf = VampireLevelingConf.getInstance();
         if (!levelingConf.isLevelValidForAltarInspiration(targetLevel)) {
             if (p.level.isClientSide)
-                p.displayClientMessage(new TranslatableComponent("text.vampirism.altar_infusion.ritual_level_wrong"), true);
+                p.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual_level_wrong"), true);
             return;
         }
         int neededBlood = levelingConf.getRequiredBloodForAltarInspiration(targetLevel) * VReference.FOOD_TO_FLUID_BLOOD;
         if (tank.getFluidAmount() + 99 < neededBlood) {//Since the container can only be filled in 100th steps
             if (p.level.isClientSide)
-                p.displayClientMessage(new TranslatableComponent("text.vampirism.not_enough_blood"), true);
+                p.displayClientMessage(Component.translatable("text.vampirism.not_enough_blood"), true);
             return;
         }
         if (!p.level.isClientSide) {

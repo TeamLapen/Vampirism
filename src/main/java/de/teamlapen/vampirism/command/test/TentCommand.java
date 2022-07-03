@@ -6,7 +6,7 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.blockentity.TentBlockEntity;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
@@ -30,7 +30,7 @@ public class TentCommand extends BasicCommand {
             if (tent instanceof TentBlockEntity) {
                 ((TentBlockEntity) tent).setSpawn(true);
                 if (advanced) ((TentBlockEntity) tent).setAdvanced(true);
-                commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.tent.success"), false);
+                commandSource.sendSuccess(Component.translatable("command.vampirism.test.tent.success"), false);
             }
 
         }

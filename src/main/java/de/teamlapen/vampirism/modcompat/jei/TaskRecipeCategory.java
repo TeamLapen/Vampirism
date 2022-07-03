@@ -20,8 +20,6 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -46,19 +44,19 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
         int y = 40;
         minecraft.font.draw(stack, task.getTranslation(), 1, 1, Color.GRAY.getRGB());
         IPlayableFaction<?> f = task.getFaction();
-        Component taskmasterComponent = f == null || f.getVillageData().getTaskMasterEntity() == null ? new TranslatableComponent("text.vampirism.faction_representative") : new TranslatableComponent(f.getVillageData().getTaskMasterEntity().getDescriptionId());
-        Component text = new TranslatableComponent("text.vampirism.task.reward_obtain", taskmasterComponent);
+        Component taskmasterComponent = f == null || f.getVillageData().getTaskMasterEntity() == null ? Component.translatable("text.vampirism.faction_representative") : Component.translatable(f.getVillageData().getTaskMasterEntity().getDescriptionId());
+        Component text = Component.translatable("text.vampirism.task.reward_obtain", taskmasterComponent);
         y += UtilLib.renderMultiLine(minecraft.font, stack, text, 160, x, y, Color.GRAY.getRGB());
 
-        MutableComponent prerequisites = new TranslatableComponent("text.vampirism.task.prerequisites").append(":\n");
+        MutableComponent prerequisites = Component.translatable("text.vampirism.task.prerequisites").append(":\n");
         TaskUnlocker[] unlockers = task.getUnlocker();
         if (unlockers.length > 0) {
-            TextComponent newLine = new TextComponent("\n");
+            Component newLine = Component.literal("\n");
             for (TaskUnlocker u : unlockers) {
-                prerequisites.append(new TextComponent("- ")).append(u.getDescription()).append(newLine);
+                prerequisites.append(Component.literal("- ")).append(u.getDescription()).append(newLine);
             }
         } else {
-            prerequisites.append(new TranslatableComponent("text.vampirism.task.prerequisites.none"));
+            prerequisites.append(Component.translatable("text.vampirism.task.prerequisites.none"));
         }
         y += UtilLib.renderMultiLine(minecraft.font, stack, prerequisites, 160, x, y, Color.GRAY.getRGB());
 
@@ -85,13 +83,13 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
     @Nonnull
     @Override
     public Component getTitle() {
-        return new TranslatableComponent("text.vampirism.task.reward");
+        return Component.translatable("text.vampirism.task.reward");
     }
 
     @Nonnull
     @Override
     public ResourceLocation getUid() {
-        return VampirismJEIPlugin.TASK_RECIPE_UID;
+        return VampirismJEIPlugin.TASK;
     }
 
     @Override

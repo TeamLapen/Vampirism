@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModSounds;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -35,7 +36,6 @@ import net.minecraftforge.common.Tags;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Base class for crossbows
@@ -168,7 +168,7 @@ public abstract class VampirismItemCrossbow extends Item implements IFactionLeve
      * @return If the shot arrow should do critical damage
      */
     @SuppressWarnings("unused")
-    protected boolean isCritical(Random random) {
+    protected boolean isCritical(RandomSource random) {
         return false;
     }
 
@@ -278,7 +278,7 @@ public abstract class VampirismItemCrossbow extends Item implements IFactionLeve
      * @param playerCreative If the player is creative
      * @param bowInfinite    if the bow is infinite
      */
-    protected boolean shouldConsumeArrow(Random rnd, ItemStack arrowStack, boolean playerCreative, boolean bowInfinite, int bowFrugal) {
+    protected boolean shouldConsumeArrow(RandomSource rnd, ItemStack arrowStack, boolean playerCreative, boolean bowInfinite, int bowFrugal) {
         return !(playerCreative || bowInfinite && canArrowBeInfinite(arrowStack) || (bowFrugal > 0 && rnd.nextInt(Math.max(2, 4 - bowFrugal)) == 0));
     }
 

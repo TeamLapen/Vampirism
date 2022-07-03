@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.api.items;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.api.distmarker.Dist;
@@ -21,7 +20,7 @@ public interface IItemWithTier extends ItemLike {
         TIER t = getVampirismTier();
         if (t != TIER.NORMAL) {
             ChatFormatting format = t == TIER.ENHANCED ? ChatFormatting.YELLOW : ChatFormatting.AQUA;
-            tooltip.add(new TranslatableComponent("item.vampirism.item.tier." + t.getSerializedName().toLowerCase()).withStyle(format));
+            tooltip.add(Component.translatable("item.vampirism.item.tier." + t.getSerializedName().toLowerCase()).withStyle(format));
         }
     }
 

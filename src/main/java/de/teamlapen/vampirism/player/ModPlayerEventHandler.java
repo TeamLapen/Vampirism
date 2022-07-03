@@ -30,10 +30,10 @@ import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.BatVampireAction;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.server.MinecraftServer;
@@ -74,6 +74,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -99,7 +100,7 @@ public class ModPlayerEventHandler {
         //if the blockstate does not have a POI, but another blockstate of the specific block e.g. the bed, search for the blockstate in a 3x3x3 radius
         //or the other way around
         ImmutableList<BlockState> validStates = block.getStateDefinition().getPossibleStates();
-        if (validStates.size() > 1 && PoiType.ALL_STATES.stream().anyMatch(validStates::contains)) {
+        if (validStates.size() > 1 && RegUtil.values(ForgeRegistries.POI_TYPES).stream().flatMap(poiType -> poiType.matchingStates().stream()).anyMatch(validStates::contains)) {
             for (int x = event.getPos().getX() - 1; x <= event.getPos().getX() + 1; ++x) {
                 for (int z = event.getPos().getZ() - 1; z <= event.getPos().getZ() + 1; ++z) {
                     for (double y = event.getPos().getY() - 1; y <= event.getPos().getY() + 1; ++y) {
@@ -121,7 +122,7 @@ public class ModPlayerEventHandler {
             BlockEntity totem = (event.getWorld().getBlockEntity(totemPos));
             if (totem instanceof TotemBlockEntity && ((TotemBlockEntity) totem).getControllingFaction() != null && VampirismPlayerAttributes.get(event.getPlayer()).faction != ((TotemBlockEntity) totem).getControllingFaction()) {
                 event.setCanceled(true);
-                event.getPlayer().displayClientMessage(new TranslatableComponent("text.vampirism.village.totem_destroy.fail_totem_faction"), true);
+                event.getPlayer().displayClientMessage(Component.translatable("text.vampirism.village.totem_destroy.fail_totem_faction"), true);
                 if (!positions.isEmpty() && event.getPlayer() instanceof ServerPlayer player) {
                     positions.forEach(pos -> {
                         player.connection.send(new ClientboundBlockUpdatePacket(event.getWorld(), pos));
@@ -432,7 +433,7 @@ public class ModPlayerEventHandler {
                     if (f != null) {
                         MutableComponent displayName;
                         if (fph.getLordLevel() > 0 && VampirismConfig.SERVER.lordPrefixInChat.get()) {
-                            displayName = new TextComponent("[").append(fph.getLordTitle()).append("] ").append(event.getDisplayname());
+                            displayName = Component.literal("[").append(fph.getLordTitle()).append("] ").append(event.getDisplayname());
                         } else {
                             displayName = event.getDisplayname().copy();
                         }
@@ -483,17 +484,17 @@ public class ModPlayerEventHandler {
             ISkill<?> requiredSkill = item.getRequiredSkill(stack);
             if (usingFaction != null && !handler.map(h->h.isInFaction(usingFaction)).orElse(false)) {
                 if (message)
-                    player.displayClientMessage(new TranslatableComponent("text.vampirism.can_only_be_used_by", usingFaction.getNamePlural()), true);
+                    player.displayClientMessage(Component.translatable("text.vampirism.can_only_be_used_by", usingFaction.getNamePlural()), true);
                 return false;
             } else if (handler.map(FactionPlayerHandler::getCurrentLevel).orElse(0) < item.getMinLevel(stack)) {
                 if (message)
-                    player.displayClientMessage(new TranslatableComponent("text.vampirism.can_only_be_used_by_level", usingFaction == null ? new TranslatableComponent("text.vampirism.all") : usingFaction.getNamePlural(), item.getMinLevel(stack)), true);
+                    player.displayClientMessage(Component.translatable("text.vampirism.can_only_be_used_by_level", usingFaction == null ? Component.translatable("text.vampirism.all") : usingFaction.getNamePlural(), item.getMinLevel(stack)), true);
                 return false;
             } else if (requiredSkill != null) {
                 IFactionPlayer<?> factionPlayer = handler.resolve().flatMap(FactionPlayerHandler::getCurrentFactionPlayer).orElse(null);
                 if (factionPlayer == null || !factionPlayer.getSkillHandler().isSkillEnabled(requiredSkill)) {
                     if (message)
-                        player.displayClientMessage(new TranslatableComponent("text.vampirism.can_only_be_used_with_skill", requiredSkill.getName()), true);
+                        player.displayClientMessage(Component.translatable("text.vampirism.can_only_be_used_with_skill", requiredSkill.getName()), true);
                     return false;
                 }
             }

@@ -10,9 +10,8 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringUtil;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -26,7 +25,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Random;
 
 public class VampireBookItem extends Item {
 
@@ -52,18 +50,18 @@ public class VampireBookItem extends Item {
             CompoundTag compoundnbt = stack.getTag();
             String s = compoundnbt.getString("author");
             if (!StringUtil.isNullOrEmpty(s)) {
-                tooltip.add((new TranslatableComponent("book.byAuthor", s)).withStyle(ChatFormatting.GRAY));
+                tooltip.add((Component.translatable("book.byAuthor", s)).withStyle(ChatFormatting.GRAY));
             }
 
-            tooltip.add((new TextComponent("Vampirism knowledge").withStyle(ChatFormatting.GRAY)));
+            tooltip.add((Component.literal("Vampirism knowledge").withStyle(ChatFormatting.GRAY)));
         }
 
     }
 
     @Override
     public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
-        if (allowdedIn(group)) {
-            items.add(VampireBookManager.getInstance().getRandomBook(new Random()));
+        if (this.allowedIn(group)) {
+            items.add(VampireBookManager.getInstance().getRandomBook(RandomSource.create()));
         }
     }
 
@@ -74,7 +72,7 @@ public class VampireBookItem extends Item {
             CompoundTag nbttagcompound = stack.getTag();
             String s = nbttagcompound.getString("title");
             if (!StringUtil.isNullOrEmpty(s)) {
-                return new TextComponent(s);
+                return Component.literal(s);
             }
         }
         return super.getName(stack);
@@ -112,7 +110,7 @@ public class VampireBookItem extends Item {
                             Component var11 = Component.Serializer.fromJsonLenient(s);
                             lvt_7_1_ = ComponentUtils.updateForEntity(null, var11, player, 0);
                         } catch (Exception var9) {
-                            lvt_7_1_ = new TextComponent(s);
+                            lvt_7_1_ = Component.literal(s);
                         }
 
                         nbttaglist.set(slot, StringTag.valueOf(Component.Serializer.toJson(lvt_7_1_)));

@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.api.entity.actions;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
 
@@ -11,7 +10,7 @@ import javax.annotation.Nonnull;
  * Actions that can be executed by some of vampirism's entities. Similar to the actions available to the player.
  * DON'T use this interface directly. Use either {@link IInstantAction} or {@link ILastingAction}
  */
-public interface IEntityAction extends IForgeRegistryEntry<IEntityAction> {
+public interface IEntityAction {
     /**
      * @return needed {@link EntityClassType} for usage
      */

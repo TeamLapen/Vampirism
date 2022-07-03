@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nonnull;
@@ -19,7 +18,7 @@ import java.util.function.Supplier;
  * For each class there is a {@link IMinionTaskDesc} that holds the state of the task per minion during runtime and can be serialized to NBT.
  * Minions only hold their respective {@link IMinionTaskDesc} which also includes a reference to the task instance it belongs to
  */
-public interface IMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends IMinionData> extends IForgeRegistryEntry<IMinionTask<?, ?>> {
+public interface IMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends IMinionData> {
 
     /**
      * Called when a new task should be started

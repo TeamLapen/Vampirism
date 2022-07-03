@@ -6,21 +6,22 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IRegistryDelegate;
+
+import java.util.function.Supplier;
 
 public class ExtendedPotionMix {
-    public final net.minecraftforge.registries.IRegistryDelegate<Potion> input;
+    public final Supplier<? extends Potion> input;
     public final LazyOptional<Ingredient> reagent1;
     public final int reagent1Count;
     public final LazyOptional<Ingredient> reagent2;
     public final int reagent2Count;
-    public final net.minecraftforge.registries.IRegistryDelegate<Potion> output;
+    public final Supplier<? extends Potion> output;
     public final boolean durable;
     public final boolean concentrated;
     public final boolean master;
     public final boolean efficient;
 
-    private ExtendedPotionMix(IRegistryDelegate<Potion> inputIn, LazyOptional<Ingredient> reagentIn1, int count1, LazyOptional<Ingredient> reagentIn2, int count2, IRegistryDelegate<Potion> outputIn, boolean durable, boolean concentrated, boolean master, boolean efficient) {
+    private ExtendedPotionMix(Supplier<? extends Potion> inputIn, LazyOptional<Ingredient> reagentIn1, int count1, LazyOptional<Ingredient> reagentIn2, int count2, Supplier<? extends Potion> outputIn, boolean durable, boolean concentrated, boolean master, boolean efficient) {
         this.input = inputIn;
         this.reagent1 = reagentIn1;
         this.reagent1Count = count1;
@@ -41,8 +42,8 @@ public class ExtendedPotionMix {
     public static class Builder {
         private final static NonNullSupplier<Ingredient> EMPTY_SUPPLIER = () -> Ingredient.EMPTY;
         private static final NonNullSupplier<Ingredient> VAMPIRE_BLOOD = () -> Ingredient.of(ForgeRegistries.ITEMS.getValue(new ResourceLocation("vampirism", "vampire_blood_bottle")));
-        private final net.minecraftforge.registries.IRegistryDelegate<Potion> input;
-        private final net.minecraftforge.registries.IRegistryDelegate<Potion> output;
+        private final Supplier<? extends Potion> input;
+        private final Supplier<? extends Potion> output;
         private LazyOptional<Ingredient> reagent1 = LazyOptional.of(EMPTY_SUPPLIER);
         private int reagent1Count = 0;
         private int reagent1CountReduced = -1;
@@ -53,9 +54,9 @@ public class ExtendedPotionMix {
         private boolean concentrated = false;
         private boolean master = false;
 
-        public Builder(Potion input, Potion output) {
-            this.input = input.delegate;
-            this.output = output.delegate;
+        public Builder(Supplier<? extends Potion> input, Supplier<? extends Potion> output) {
+            this.input = input;
+            this.output = output;
         }
 
         public Builder blood() {

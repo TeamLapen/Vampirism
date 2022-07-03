@@ -7,11 +7,12 @@ import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.command.arguments.BiomeArgument;
 import de.teamlapen.vampirism.command.arguments.ModSuggestionProvider;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.DimensionArgument;
 import net.minecraft.commands.arguments.EntitySummonArgument;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -23,18 +24,17 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import java.util.List;
 
 public class ConfigCommand extends BasicCommand {
 
-    private static final SimpleCommandExceptionType NO_SELECTED_ENTITY = new SimpleCommandExceptionType(new TranslatableComponent("command.vampirism.base.config.bloodvalues.blacklist.no_entity"));
-    private static final SimpleCommandExceptionType NO_CONFIG_TYPE = new SimpleCommandExceptionType(new TranslatableComponent("command.vampirism.base.config.no_config"));
-    private static final SimpleCommandExceptionType NO_BLOOD_VALUE_TYPE = new SimpleCommandExceptionType(new TranslatableComponent("command.vampirism.base.config.bloodvalues.no_type"));
-    private static final SimpleCommandExceptionType NO_BLOOD_VALUE_BLACKLIST_TYPE = new SimpleCommandExceptionType(new TranslatableComponent("command.vampirism.base.config.bloodvalues.blacklist.no_type"));
-    private static final SimpleCommandExceptionType NO_SUN_DAMAGE_TYPE = new SimpleCommandExceptionType(new TranslatableComponent("command.vampirism.base.config.sun_damage.no_type"));
-    private static final SimpleCommandExceptionType NO_SUN_DAMAGE_BLACKLIST_TYPE = new SimpleCommandExceptionType(new TranslatableComponent("command.vampirism.base.config.sun_damage.blacklist.no_type"));
+    private static final SimpleCommandExceptionType NO_SELECTED_ENTITY = new SimpleCommandExceptionType(Component.translatable("command.vampirism.base.config.bloodvalues.blacklist.no_entity"));
+    private static final SimpleCommandExceptionType NO_CONFIG_TYPE = new SimpleCommandExceptionType(Component.translatable("command.vampirism.base.config.no_config"));
+    private static final SimpleCommandExceptionType NO_BLOOD_VALUE_TYPE = new SimpleCommandExceptionType(Component.translatable("command.vampirism.base.config.bloodvalues.no_type"));
+    private static final SimpleCommandExceptionType NO_BLOOD_VALUE_BLACKLIST_TYPE = new SimpleCommandExceptionType(Component.translatable("command.vampirism.base.config.bloodvalues.blacklist.no_type"));
+    private static final SimpleCommandExceptionType NO_SUN_DAMAGE_TYPE = new SimpleCommandExceptionType(Component.translatable("command.vampirism.base.config.sun_damage.no_type"));
+    private static final SimpleCommandExceptionType NO_SUN_DAMAGE_BLACKLIST_TYPE = new SimpleCommandExceptionType(Component.translatable("command.vampirism.base.config.sun_damage.blacklist.no_type"));
 
 
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
@@ -93,7 +93,7 @@ public class ConfigCommand extends BasicCommand {
         } else {
             Entity entity = result.getEntity();
             EntityType<?> entityType = entity.getType();
-            return blacklistEntity(player, entityType.getRegistryName());
+            return blacklistEntity(player, RegUtil.id(entityType));
         }
     }
 
@@ -102,7 +102,7 @@ public class ConfigCommand extends BasicCommand {
     }
 
     private static int blacklistBiome(ServerPlayer player) {
-        return blacklistBiome(player, player.getCommandSenderWorld().getBiome(player.blockPosition()).unwrap().map(ResourceKey::location, ForgeRegistryEntry::getRegistryName));
+        return blacklistBiome(player, player.getCommandSenderWorld().getBiome(player.blockPosition()).unwrap().map(ResourceKey::location, RegUtil::id));
     }
 
     private static int blacklistBiome(ServerPlayer player, ResourceLocation biome) {
@@ -130,10 +130,10 @@ public class ConfigCommand extends BasicCommand {
         if (!list.contains(id.toString())) {
             //noinspection unchecked
             ((List<String>) list).add(id.toString());
-            player.displayClientMessage(new TranslatableComponent(blacklist, id), false);
+            player.displayClientMessage(Component.translatable(blacklist, id), false);
         } else {
             list.remove(id.toString());
-            player.displayClientMessage(new TranslatableComponent(not_blacklist, id), false);
+            player.displayClientMessage(Component.translatable(not_blacklist, id), false);
         }
         configList.set(list);
         return 0;

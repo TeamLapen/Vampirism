@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.crafting.conditions.ICondition;
 import net.minecraftforge.common.crafting.conditions.IConditionSerializer;
 
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 /**
  * Allows en/disabling recipes based on config options
@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 public class ConfigCondition implements ICondition {
 
     private static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "config");
-    private final Supplier<Boolean> tester;
+    private final Function<IContext, Boolean> tester;
     private final String option;
 
     public ConfigCondition(String option) {
@@ -30,14 +30,14 @@ public class ConfigCondition implements ICondition {
     }
 
     @Override
-    public boolean test() {
-        return tester.get();
+    public boolean test(IContext context) {
+        return tester.apply(context);
     }
 
-    private Supplier<Boolean> getTester(String option) {
+    private Function<IContext, Boolean> getTester(String option) {
         return switch (option) {
-            case "auto_convert" -> VampirismConfig.COMMON.autoConvertGlassBottles::get;
-            case "umbrella" -> VampirismConfig.COMMON.umbrella::get;
+            case "auto_convert" -> (context) -> VampirismConfig.COMMON.autoConvertGlassBottles.get();
+            case "umbrella" -> (context) -> VampirismConfig.COMMON.umbrella.get();
             default -> throw new JsonSyntaxException("Unknown config option: " + option);
         };
     }

@@ -1,12 +1,10 @@
 package de.teamlapen.vampirism.fluids;
 
-import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Blocks;
@@ -16,13 +14,13 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.fluids.FluidAttributes;
-import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fluids.FluidType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
 
-public class BloodFluid extends VampirismFluid {
+public class BloodFluid extends Fluid {
     public BloodFluid() {
         super();
     }
@@ -71,13 +69,6 @@ public class BloodFluid extends VampirismFluid {
 
     @Nonnull
     @Override
-    protected FluidAttributes createAttributes() {
-        boolean integrations = ModList.get().isLoaded(REFERENCE.INTEGRATIONS_MODID);
-        return FluidAttributes.builder(new ResourceLocation(REFERENCE.MODID, "block/blood_still"), new ResourceLocation(REFERENCE.MODID, "block/blood_flow")).translationKey(integrations ? "fluid.vampirism.blood.vampirism" : "fluid.vampirism.blood").color(0xEEFF1111).density(1300).temperature(309).viscosity(3000).rarity(Rarity.UNCOMMON).build(this);
-    }
-
-    @Nonnull
-    @Override
     protected BlockState createLegacyBlock(@Nonnull FluidState state) {
         return Blocks.AIR.defaultBlockState();
     }
@@ -91,5 +82,11 @@ public class BloodFluid extends VampirismFluid {
     @Override
     protected Vec3 getFlow(@Nonnull BlockGetter blockReader, @Nonnull BlockPos blockPos, @Nonnull FluidState fluidState) {
         return Vec3.ZERO;
+    }
+
+    @NotNull
+    @Override
+    public  FluidType getFluidType() {
+        return ModFluids.BLOOD_TYPE.get();
     }
 }

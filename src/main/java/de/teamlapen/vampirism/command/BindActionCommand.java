@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.command.arguments.ActionArgument;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
 public class BindActionCommand extends BasicCommand {
@@ -27,13 +27,13 @@ public class BindActionCommand extends BasicCommand {
     private static int bindAction(CommandContext<CommandSourceStack> context, ServerPlayer asPlayer, int number, IAction<?> action) {
         FactionPlayerHandler.getOpt(asPlayer).ifPresent(fp-> {
             fp.setBoundAction(number, action, true, true);
-            context.getSource().sendSuccess(new TranslatableComponent("command.vampirism.base.bind_action.success", action.getName(), number), false);
+            context.getSource().sendSuccess(Component.translatable("command.vampirism.base.bind_action.success", action.getName(), number), false);
         });
         return 0;
     }
 
     private static int help(CommandContext<CommandSourceStack> context) {
-        context.getSource().sendSuccess(new TranslatableComponent("command.vampirism.base.bind_action.help"), false);
+        context.getSource().sendSuccess(Component.translatable("command.vampirism.base.bind_action.help"), false);
         return 0;
     }
 

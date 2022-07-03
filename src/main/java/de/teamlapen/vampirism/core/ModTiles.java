@@ -6,10 +6,10 @@ import de.teamlapen.vampirism.blocks.TotemTopBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.registries.RegistryObject;
 
 
@@ -38,9 +38,10 @@ public class ModTiles {
         return BlockEntityType.Builder.of(factoryIn, blocks).build(null);
     }
 
-    public static void fixMappings(RegistryEvent.MissingMappings<BlockEntityType<?>> event) {
-        event.getAllMappings().forEach(missingMapping -> {
-            switch (missingMapping.key.toString()) {
+    public static void fixMappings(MissingMappingsEvent event) {
+        event.getAllMappings(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES).forEach(missingMapping -> {
+            //noinspection SwitchStatementWithTooFewBranches
+            switch (missingMapping.getKey().toString()) {
                case "vampirism:garlic_beacon": missingMapping.remap(GARLIC_DIFFUSER.get());
             }
         });

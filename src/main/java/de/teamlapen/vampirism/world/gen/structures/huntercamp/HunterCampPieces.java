@@ -10,23 +10,20 @@ import de.teamlapen.vampirism.core.ModFeatures;
 import de.teamlapen.vampirism.world.gen.VampirismFeatures;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.data.worldgen.StructureSets;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.StructureFeatureManager;
+import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
-import net.minecraft.world.level.levelgen.structure.BoundingBox;
-import net.minecraft.world.level.levelgen.structure.StructurePiece;
-import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
-import net.minecraft.world.level.levelgen.structure.StructureStart;
-import net.minecraft.world.level.levelgen.structure.pieces.PieceGenerator;
+import net.minecraft.world.level.levelgen.structure.*;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
@@ -34,12 +31,11 @@ import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilde
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
-import java.util.Random;
 
 @ParametersAreNonnullByDefault
 public abstract class HunterCampPieces extends StructurePiece {
-    public static <C extends FeatureConfiguration> void addStartPieces(StructurePiecesBuilder structurePiecesBuilder, PieceGenerator.Context<C> cContext) {
-        Random rand = cContext.random();
+    public static <C extends FeatureConfiguration> void addStartPieces(StructurePiecesBuilder structurePiecesBuilder, Structure.GenerationContext cContext) {
+        RandomSource rand = cContext.random();
         Fireplace hunterCamp = new Fireplace(rand, cContext.chunkPos().x * 16 + rand.nextInt(16), 63, cContext.chunkPos().z * 16 + rand.nextInt(16));
         structurePiecesBuilder.addPiece(hunterCamp);
         hunterCamp.addChildren(hunterCamp, structurePiecesBuilder, rand);
@@ -64,7 +60,7 @@ public abstract class HunterCampPieces extends StructurePiece {
     }
 
     @Override
-    public void postProcess(WorldGenLevel worldIn, StructureFeatureManager structureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
+    public void postProcess(WorldGenLevel worldIn, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource random, BoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
         this.y = worldIn.getHeight(Heightmap.Types.WORLD_SURFACE_WG, x, z);
         this.boundingBox = new BoundingBox(this.x - 1, this.y, this.z - 1, this.x + 1, this.y + 2, this.z + 1);
     }
@@ -76,21 +72,21 @@ public abstract class HunterCampPieces extends StructurePiece {
         tagCompound.putInt("z", z);
     }
 
-    protected boolean testPreconditions(WorldGenLevel worldIn, StructureFeatureManager manager, ChunkPos chunkPos) {
+    protected boolean testPreconditions(WorldGenLevel worldIn, StructureManager manager, ChunkPos chunkPos) {
         if (!VampirismConfig.COMMON.enableHunterTentGeneration.get()) return false;
         for (StructureStart value : worldIn.getChunk(chunkPos.x, chunkPos.z).getAllStarts().values()) {
-            if (value != StructureStart.INVALID_START && value.getFeature().feature != ModFeatures.HUNTER_CAMP.get()) {
+            if (value != StructureStart.INVALID_START && value.getStructure() != ModFeatures.HUNTER_CAMP_HOLDER.value()) {
                 return false;
             }
         }
-        return this.y >= 63 && !worldIn.getBlockState(new BlockPos(x, y - 1, z)).getMaterial().isLiquid() && !UtilLib.getStructureStartAt(worldIn.getLevel(), new BlockPos(x,y,z), StructureFeature.VILLAGE).isValid();
+        return this.y >= 63 && !worldIn.getBlockState(new BlockPos(x, y - 1, z)).getMaterial().isLiquid() && UtilLib.getStructureStartAt(worldIn.getLevel(), new BlockPos(x,y,z), StructureSets.VILLAGES).isEmpty();
     }
 
     public static class Fireplace extends HunterCampPieces {
         boolean specialComponentAdd = false;
         private boolean advanced;
 
-        public Fireplace(Random random, int x, int y, int z) {
+        public Fireplace(RandomSource random, int x, int y, int z) {
             super(VampirismFeatures.HUNTER_CAMP_FIREPLACE.get(), 0, x, y, z);
             this.setOrientation(Direction.Plane.HORIZONTAL.getRandomDirection(random));
         }
@@ -102,7 +98,7 @@ public abstract class HunterCampPieces extends StructurePiece {
         }
 
         @Override
-        public void addChildren(StructurePiece componentInt, StructurePieceAccessor listIn, Random rand) {
+        public void addChildren(StructurePiece componentInt, StructurePieceAccessor listIn, RandomSource rand) {
             //adds 1-4 tent or crafting table elements to the structure (max 1 per direction && max 1 crafting table)
             @Nonnull List<Direction> directions = Lists.newArrayList(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST);
             if (rand.nextInt(3) == 0) {
@@ -124,7 +120,7 @@ public abstract class HunterCampPieces extends StructurePiece {
         }
 
         @Override
-        public void postProcess(WorldGenLevel worldIn, StructureFeatureManager structureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
+        public void postProcess(WorldGenLevel worldIn, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource random, BoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
             super.postProcess(worldIn, structureManager, chunkGenerator, random, structureBoundingBoxIn, chunkPos, blockPos);
 
             //fail conditions
@@ -147,7 +143,7 @@ public abstract class HunterCampPieces extends StructurePiece {
         /**
          * @throws IllegalArgumentException if direction size == 0
          */
-        private StructurePiece getComponent(Random rand, List<Direction> directions, boolean advanced) {
+        private StructurePiece getComponent(RandomSource rand, List<Direction> directions, boolean advanced) {
             @Nonnull Direction direction = directions.remove(rand.nextInt(directions.size()));
             //blockpos at center of the 3x3 component
             int x = this.x + (direction.getAxis().equals(Direction.Axis.X) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? 3 : -3 : 0);
@@ -164,7 +160,7 @@ public abstract class HunterCampPieces extends StructurePiece {
         /**
          * @throws IllegalArgumentException if direction size == 0
          */
-        private StructurePiece getTentComponent(Random rand, List<Direction> directions, boolean advanced) {
+        private StructurePiece getTentComponent(RandomSource rand, List<Direction> directions, boolean advanced) {
             @Nonnull Direction direction = directions.remove(rand.nextInt(directions.size()));
             //blockpos at center of the 3x3 component
             int x = this.x + (direction.getAxis().equals(Direction.Axis.X) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? 3 : -3 : 0);
@@ -195,7 +191,7 @@ public abstract class HunterCampPieces extends StructurePiece {
         }
 
         @Override
-        public void postProcess(WorldGenLevel worldIn, StructureFeatureManager structureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
+        public void postProcess(WorldGenLevel worldIn, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource random, BoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
             //set helper variables
             if (mirror == 0 ? (mirror = random.nextInt(2) + 1) == 1 : mirror == 1) {
                 xDiff = 2;
@@ -279,7 +275,7 @@ public abstract class HunterCampPieces extends StructurePiece {
         }
 
         @Override
-        protected boolean testPreconditions(WorldGenLevel worldIn, StructureFeatureManager manager, ChunkPos chunkPos) {
+        protected boolean testPreconditions(WorldGenLevel worldIn, StructureManager manager, ChunkPos chunkPos) {
             return super.testPreconditions(worldIn, manager, chunkPos)
                     && !worldIn.getBlockState(new BlockPos(xCenter, y - 1, z - 1)).getMaterial().isLiquid()
                     && !worldIn.getBlockState(new BlockPos(x, y - 1, z - 1)).getMaterial().isLiquid()
@@ -307,7 +303,7 @@ public abstract class HunterCampPieces extends StructurePiece {
         }
 
         @Override
-        public void postProcess(WorldGenLevel worldIn, StructureFeatureManager structureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
+        public void postProcess(WorldGenLevel worldIn, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource random, BoundingBox structureBoundingBoxIn, ChunkPos chunkPos, BlockPos blockPos) {
             super.postProcess(worldIn, structureManager, chunkGenerator, random, structureBoundingBoxIn, chunkPos, blockPos);
 
             //fail conditions
@@ -336,7 +332,7 @@ public abstract class HunterCampPieces extends StructurePiece {
 
 
         @Override
-        protected boolean testPreconditions(WorldGenLevel worldIn, StructureFeatureManager manager, ChunkPos chunkPos) {
+        protected boolean testPreconditions(WorldGenLevel worldIn, StructureManager manager, ChunkPos chunkPos) {
             return super.testPreconditions(worldIn, manager, chunkPos)
                     && (Math.abs(this.y - worldIn.getHeight(Heightmap.Types.WORLD_SURFACE_WG, this.x + (direction.getAxis().equals(Direction.Axis.X) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? -3 : 3 : 0), this.z + (direction.getAxis().equals(Direction.Axis.Z) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? -3 : 3 : 0))) < 3);
         }

@@ -13,10 +13,10 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.Set;
@@ -129,18 +129,14 @@ public class ModBlocks {
         return registerWithItem(name, supplier, new Item.Properties().tab(VampirismMod.creativeTab));
     }
 
-    public static void fixMappings(RegistryEvent.MissingMappings<Block> event) {
-        event.getAllMappings().forEach(missingMapping -> {
-            if ("vampirism:blood_potion_table".equals(missingMapping.key.toString())) {
-                missingMapping.remap(ModBlocks.POTION_TABLE.get());
-            } else if ("vampirism:garlic_beacon_normal".equals(missingMapping.key.toString())) {
-                missingMapping.remap(ModBlocks.GARLIC_DIFFUSER_NORMAL.get());
-            } else if ("vampirism:garlic_beacon_weak".equals(missingMapping.key.toString())) {
-                missingMapping.remap(ModBlocks.GARLIC_DIFFUSER_WEAK.get());
-            } else if ("vampirism:garlic_beacon_improved".equals(missingMapping.key.toString())) {
-                missingMapping.remap(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get());
-            } else if ("vampirism:church_altar".equals(missingMapping.key.toString())) {
-                missingMapping.remap(ModBlocks.ALTAR_CLEANSING.get());
+    public static void fixMappings(MissingMappingsEvent event) {
+        event.getAllMappings(ForgeRegistries.Keys.BLOCKS).forEach(missingMapping -> {
+            switch (missingMapping.getKey().toString()) {
+                case "vampirism:blood_potion_table" -> missingMapping.remap(ModBlocks.POTION_TABLE.get());
+                case "vampirism:garlic_beacon_normal" -> missingMapping.remap(ModBlocks.GARLIC_DIFFUSER_NORMAL.get());
+                case "vampirism:garlic_beacon_weak" -> missingMapping.remap(ModBlocks.GARLIC_DIFFUSER_WEAK.get());
+                case "vampirism:garlic_beacon_improved" -> missingMapping.remap(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get());
+                case "vampirism:church_altar" -> missingMapping.remap(ModBlocks.ALTAR_CLEANSING.get());
             }
         });
     }

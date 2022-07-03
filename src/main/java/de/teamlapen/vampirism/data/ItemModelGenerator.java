@@ -155,8 +155,8 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
         withExistingParent(ModBlocks.BLOODY_SPRUCE_LEAVES.get(), mcLoc("block/oak_leaves"));
         withExistingParent(ModBlocks.VAMPIRE_SPRUCE_LEAVES.get(), mcLoc("block/oak_leaves"));
 
-        withExistingParent(ModBlocks.BLOODY_SPRUCE_SAPLING.get(), mcLoc("item/generated")).texture("layer0", REFERENCE.MODID + ":block/" + ModBlocks.BLOODY_SPRUCE_SAPLING.get().getRegistryName().getPath());
-        withExistingParent(ModBlocks.VAMPIRE_SPRUCE_SAPLING.get(), mcLoc("item/generated")).texture("layer0", REFERENCE.MODID + ":block/" + ModBlocks.VAMPIRE_SPRUCE_SAPLING.get().getRegistryName().getPath());
+        withExistingParent(ModBlocks.BLOODY_SPRUCE_SAPLING.get(), mcLoc("item/generated")).texture("layer0", REFERENCE.MODID + ":block/" + ModBlocks.BLOODY_SPRUCE_SAPLING.getId().getPath());
+        withExistingParent(ModBlocks.VAMPIRE_SPRUCE_SAPLING.get(), mcLoc("item/generated")).texture("layer0", REFERENCE.MODID + ":block/" + ModBlocks.VAMPIRE_SPRUCE_SAPLING.getId().getPath());
 
         withExistingParent(ModBlocks.ALCHEMICAL_FIRE.get(), modLoc("block/fire_side"));
         withExistingParent(ModBlocks.ALTAR_INSPIRATION.get(), modLoc("block/altar_inspiration/altar_inspiration"));

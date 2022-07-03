@@ -8,7 +8,6 @@ import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.items.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
@@ -19,10 +18,10 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.common.brewing.BrewingRecipe;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nonnull;
@@ -178,7 +177,7 @@ public class ModItems {
     public static final RegistryObject<Item> TECH_CROSSBOW_AMMO_PACKAGE = ITEMS.register("tech_crossbow_ammo_package", () -> new Item(new Item.Properties().tab(VampirismMod.creativeTab)) {
             @Override
             public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
-                tooltip.add(new TranslatableComponent("item.vampirism.tech_crossbow_ammo_package.tooltip", new TranslatableComponent(BASIC_TECH_CROSSBOW.get().getDescriptionId())).withStyle(ChatFormatting.GRAY));
+                tooltip.add(Component.translatable("item.vampirism.tech_crossbow_ammo_package.tooltip", Component.translatable(BASIC_TECH_CROSSBOW.get().getDescriptionId())).withStyle(ChatFormatting.GRAY));
             }
 
         });
@@ -270,9 +269,9 @@ public class ModItems {
         return new Item.Properties().tab(VampirismMod.creativeTab);
     }
 
-    public static void fixMappings(RegistryEvent.MissingMappings<Item> event) {
-        event.getAllMappings().forEach(missingMapping -> {
-            switch (missingMapping.key.toString()) {
+    public static void fixMappings(MissingMappingsEvent event) {
+        event.getAllMappings(ForgeRegistries.Keys.ITEMS).forEach(missingMapping -> {
+            switch (missingMapping.getKey().toString()) {
                 case "vampirism:blood_potion", "vampirism:blood_potion_table" -> missingMapping.ignore();
                 case "vampirism:vampire_clothing_head" -> missingMapping.remap(VAMPIRE_CLOTHING_CROWN.get());
                 case "vampirism:vampire_clothing_feet" -> missingMapping.remap(VAMPIRE_CLOTHING_BOOTS.get());

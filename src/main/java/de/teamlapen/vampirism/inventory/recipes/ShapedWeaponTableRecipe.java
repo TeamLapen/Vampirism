@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModRecipes;
-import de.teamlapen.vampirism.core.ModRegistries;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -18,7 +18,6 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.crafting.IShapedRecipe;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
@@ -172,7 +171,7 @@ public class ShapedWeaponTableRecipe implements CraftingRecipe, IWeaponTableReci
         return true;
     }
 
-    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ShapedWeaponTableRecipe> {
+    public static class Serializer implements RecipeSerializer<ShapedWeaponTableRecipe> {
         @Nonnull
         @Override
         public ShapedWeaponTableRecipe fromJson(@Nonnull ResourceLocation recipeId, @Nonnull JsonObject json) {
@@ -206,7 +205,7 @@ public class ShapedWeaponTableRecipe implements CraftingRecipe, IWeaponTableReci
             ISkill<?>[] skills = new ISkill[buffer.readVarInt()];
             if (skills.length != 0) {
                 for (int i = 0; i < skills.length; i++) {
-                    skills[i] = ModRegistries.SKILLS.getValue(new ResourceLocation(buffer.readUtf(32767)));
+                    skills[i] = RegUtil.getSkill(new ResourceLocation(buffer.readUtf(32767)));
                 }
             }
             //noinspection unchecked
@@ -227,7 +226,7 @@ public class ShapedWeaponTableRecipe implements CraftingRecipe, IWeaponTableReci
             buffer.writeVarInt(recipe.requiredSkills.length);
             if (recipe.requiredSkills.length != 0) {
                 for (ISkill<?> skill : recipe.requiredSkills) {
-                    buffer.writeUtf(skill.getRegistryName().toString());
+                    buffer.writeUtf(RegUtil.id(skill) .toString());
                 }
             }
         }

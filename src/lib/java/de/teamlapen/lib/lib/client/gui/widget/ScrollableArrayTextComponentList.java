@@ -3,8 +3,8 @@ package de.teamlapen.lib.lib.client.gui.widget;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.network.chat.BaseComponent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
@@ -26,7 +26,7 @@ public class ScrollableArrayTextComponentList extends ScrollableListWidget<Pair<
         return items;
     }
 
-    private static Supplier<Component[]> createTextArray(int amount, BaseComponent baseName) {
+    private static Supplier<Component[]> createTextArray(int amount, MutableComponent baseName) {
         Component[] array = new Component[amount];
         for (int i = 0; i < array.length; i++) {
             array[i] = baseName.plainCopy().append(" " + (i + 1));
@@ -38,12 +38,12 @@ public class ScrollableArrayTextComponentList extends ScrollableListWidget<Pair<
         super(xPos, yPos, width, height, itemHeight, () -> getItems(baseValueSupplier), (item, list) -> new TextComponentItem<>(item, list, buttonPressed));
     }
 
-    public ScrollableArrayTextComponentList(int xPos, int yPos, int width, int height, int itemHeight, int valueAmount, BaseComponent baseName, @Nonnull Consumer<Integer> buttonPressed) {
-        super(xPos, yPos, width, height, itemHeight, () -> getItems(createTextArray(valueAmount, baseName)), (item, list) -> new TextComponentItem<>(item, list, buttonPressed), baseName);
+    public ScrollableArrayTextComponentList(int xPos, int yPos, int width, int height, int itemHeight, int valueAmount, MutableComponent baseName, @Nonnull Consumer<Integer> buttonPressed) {
+        super(xPos, yPos, width, height, itemHeight, () -> getItems(createTextArray(valueAmount, baseName)), (item, list) ->  new TextComponentItem<>(item, list, buttonPressed), baseName);
     }
 
-    public ScrollableArrayTextComponentList(int xPos, int yPos, int width, int height, int itemHeight, int valueAmount, BaseComponent baseName, @Nonnull Consumer<Integer> buttonPressed, @Nullable BiConsumer<Integer, Boolean> onHover) {
-        super(xPos, yPos, width, height, itemHeight, () -> getItems(createTextArray(valueAmount, baseName)), (item, list) -> new TextComponentItem<>(item, list, buttonPressed, onHover), baseName);
+    public ScrollableArrayTextComponentList(int xPos, int yPos, int width, int height, int itemHeight, int valueAmount, MutableComponent baseName, @Nonnull Consumer<Integer> buttonPressed, @Nullable BiConsumer<Integer, Boolean> onHover) {
+        super(xPos, yPos, width, height, itemHeight, () -> getItems(createTextArray(valueAmount, baseName)), (item, list) ->  new TextComponentItem<>(item, list, buttonPressed, onHover), baseName);
     }
 
     @Override

@@ -7,7 +7,7 @@ import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 
 
@@ -19,7 +19,7 @@ public class GenderCommand extends BasicCommand {
 
     private static int setGender(CommandContext<CommandSourceStack> context, Player player, boolean female) {
         if (FactionPlayerHandler.getOpt(player).map(fph -> fph.setTitleGender(female)).orElse(false)) {
-            context.getSource().sendSuccess(new TranslatableComponent("command.vampirism.base.gender.success"), false);
+            context.getSource().sendSuccess(Component.translatable("command.vampirism.base.gender.success"), false);
 
         }
         return 0;

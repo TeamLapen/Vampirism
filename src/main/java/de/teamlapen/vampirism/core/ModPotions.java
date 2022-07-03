@@ -13,11 +13,13 @@ import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.util.NonNullSupplier;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.registries.RegistryObject;
+
+import java.util.function.Supplier;
 
 public class ModPotions {
     public static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(ForgeRegistries.POTIONS, REFERENCE.MODID);
@@ -82,92 +84,90 @@ public class ModPotions {
     }
 
     public static void registerPotionMixes() {
-        veryDurable(Potions.LUCK, LONG_LUCK.get());
-        veryDurable(Potions.LONG_SLOW_FALLING, VERY_LONG_SLOW_FALLING.get());
-        veryDurable(Potions.LONG_WEAKNESS, VERY_LONG_WEAKNESS.get());
-        veryStrong(Potions.STRONG_STRENGTH, VERY_STRONG_STRENGTH.get());
-        veryDurable(Potions.LONG_STRENGTH, VERY_LONG_STRENGTH.get());
-        veryDurable(VERY_STRONG_STRENGTH.get(), LONG_STRONG_STRENGTH.get());
-        veryStrong(VERY_LONG_STRENGTH.get(), LONG_STRONG_STRENGTH.get());
-        veryDurable(Potions.LONG_REGENERATION, VERY_LONG_REGENERATION.get());
-        veryStrong(Potions.STRONG_REGENERATION, VERY_STRONG_REGENERATION.get());
-        veryDurable(VERY_STRONG_REGENERATION.get(), LONG_STRONG_REGENERATION.get());
-        veryStrong(VERY_LONG_REGENERATION.get(), LONG_STRONG_REGENERATION.get());
-        veryDurable(Potions.LONG_POISON, VERY_LONG_POISON.get());
-        veryStrong(Potions.STRONG_POISON, VERY_STRONG_POISON.get());
-        veryDurable(VERY_STRONG_POISON.get(), LONG_STRONG_POISON.get());
-        veryStrong(VERY_LONG_POISON.get(), LONG_STRONG_POISON.get());
-        veryStrong(Potions.STRONG_HARMING, VERY_STRONG_HARMING.get());
-        veryStrong(Potions.STRONG_HEALING, VERY_STRONG_HEALING.get());
-        veryDurable(Potions.LONG_WATER_BREATHING, VERY_LONG_WATER_BREATHING.get());
-        veryDurable(Potions.LONG_SLOWNESS, VERY_LONG_SLOWNESS.get());
-        veryStrong(Potions.STRONG_SLOWNESS, VERY_STRONG_SLOWNESS.get());
-        veryDurable(VERY_STRONG_SLOWNESS.get(), LONG_STRONG_SLOWNESS.get());
-        veryStrong(VERY_LONG_SLOWNESS.get(), LONG_STRONG_SLOWNESS.get());
-        veryDurable(Potions.LONG_SWIFTNESS, VERY_LONG_SWIFTNESS.get());
-        veryStrong(Potions.STRONG_SWIFTNESS, VERY_STRONG_SWIFTNESS.get());
-        veryDurable(VERY_STRONG_SWIFTNESS.get(), LONG_STRONG_SWIFTNESS.get());
-        veryStrong(VERY_LONG_SWIFTNESS.get(), LONG_STRONG_SWIFTNESS.get());
-        veryDurable(Potions.LONG_FIRE_RESISTANCE, VERY_LONG_FIRE_RESISTANCE.get());
-        veryStrong(Potions.STRONG_LEAPING, VERY_STRONG_LEAPING.get());
-        veryDurable(Potions.LONG_LEAPING, VERY_LONG_LEAPING.get());
-        veryDurable(VERY_STRONG_LEAPING.get(), LONG_STRONG_LEAPING.get());
-        veryStrong(VERY_LONG_LEAPING.get(), LONG_STRONG_LEAPING.get());
-        veryDurable(Potions.LONG_INVISIBILITY, VERY_LONG_INVISIBILITY.get());
-        veryDurable(Potions.LONG_NIGHT_VISION, VERY_LONG_NIGHT_VISION.get());
-        master(NAUSEA.get(), () -> Ingredient.of(Tags.Items.MUSHROOMS), 32, 16);
-        durable(NAUSEA.get(), LONG_NAUSEA.get());
-        veryDurable(LONG_NAUSEA.get(), VERY_LONG_NAUSEA.get());
-        master(THIRST.get(), () -> Ingredient.of(ModItems.VAMPIRE_FANG.get()), 10, 5);
-        durable(THIRST.get(), LONG_THIRST.get());
-        strong(THIRST.get(), STRONG_THIRST.get());
-        veryDurable(LONG_THIRST.get(), VERY_LONG_THIRST.get());
-        veryStrong(STRONG_THIRST.get(), VERY_STRONG_THIRST.get());
-        veryDurable(VERY_STRONG_THIRST.get(), LONG_STRONG_THIRST.get());
-        veryStrong(VERY_LONG_THIRST.get(), LONG_STRONG_THIRST.get());
-        master(BLINDNESS.get(), () -> Ingredient.of(Items.INK_SAC), 64, 32);
-        durable(BLINDNESS.get(), LONG_BLINDNESS.get());
-        veryDurable(LONG_BLINDNESS.get(), VERY_LONG_BLINDNESS.get());
-        master(HEALTH_BOOST.get(), () -> Ingredient.of(Items.APPLE), 64, 32);
-        durable(HEALTH_BOOST.get(), LONG_HEALTH_BOOST.get());
-        strong(HEALTH_BOOST.get(), STRONG_HEALTH_BOOST.get());
-        veryDurable(LONG_HEALTH_BOOST.get(), VERY_LONG_HEALTH_BOOST.get());
-        veryStrong(STRONG_HEALTH_BOOST.get(), VERY_STRONG_HEALTH_BOOST.get());
-        veryDurable(VERY_STRONG_HEALTH_BOOST.get(), LONG_STRONG_HEALTH_BOOST.get());
-        veryStrong(VERY_LONG_HEALTH_BOOST.get(), LONG_STRONG_HEALTH_BOOST.get());
-        master(RESISTANCE.get(), () -> Ingredient.of(Items.GOLDEN_APPLE), 20, 10);
-        durable(RESISTANCE.get(), LONG_RESISTANCE.get());
-        strong(RESISTANCE.get(), STRONG_RESISTANCE.get());
+        veryDurable(() -> Potions.LUCK, LONG_LUCK);
+        veryDurable(() -> Potions.LONG_SLOW_FALLING, VERY_LONG_SLOW_FALLING);
+        veryDurable(() -> Potions.LONG_WEAKNESS, VERY_LONG_WEAKNESS);
+        veryStrong(() -> Potions.STRONG_STRENGTH, VERY_STRONG_STRENGTH);
+        veryDurable(() -> Potions.LONG_STRENGTH, VERY_LONG_STRENGTH);
+        veryDurable(VERY_STRONG_STRENGTH, LONG_STRONG_STRENGTH);
+        veryStrong(VERY_LONG_STRENGTH, LONG_STRONG_STRENGTH);
+        veryDurable(() -> Potions.LONG_REGENERATION, VERY_LONG_REGENERATION);
+        veryStrong(() -> Potions.STRONG_REGENERATION, VERY_STRONG_REGENERATION);
+        veryDurable(VERY_STRONG_REGENERATION, LONG_STRONG_REGENERATION);
+        veryStrong(VERY_LONG_REGENERATION, LONG_STRONG_REGENERATION);
+        veryDurable(() -> Potions.LONG_POISON, VERY_LONG_POISON);
+        veryStrong(() -> Potions.STRONG_POISON, VERY_STRONG_POISON);
+        veryDurable(VERY_STRONG_POISON, LONG_STRONG_POISON);
+        veryStrong(VERY_LONG_POISON, LONG_STRONG_POISON);
+        veryStrong(() -> Potions.STRONG_HARMING, VERY_STRONG_HARMING);
+        veryStrong(() -> Potions.STRONG_HEALING, VERY_STRONG_HEALING);
+        veryDurable(() -> Potions.LONG_WATER_BREATHING, VERY_LONG_WATER_BREATHING);
+        veryDurable(() -> Potions.LONG_SLOWNESS, VERY_LONG_SLOWNESS);
+        veryStrong(() -> Potions.STRONG_SLOWNESS, VERY_STRONG_SLOWNESS);
+        veryDurable(VERY_STRONG_SLOWNESS, LONG_STRONG_SLOWNESS);
+        veryStrong(VERY_LONG_SLOWNESS, LONG_STRONG_SLOWNESS);
+        veryDurable(() -> Potions.LONG_SWIFTNESS, VERY_LONG_SWIFTNESS);
+        veryStrong(() -> Potions.STRONG_SWIFTNESS, VERY_STRONG_SWIFTNESS);
+        veryDurable(VERY_STRONG_SWIFTNESS, LONG_STRONG_SWIFTNESS);
+        veryStrong(VERY_LONG_SWIFTNESS, LONG_STRONG_SWIFTNESS);
+        veryDurable(() -> Potions.LONG_FIRE_RESISTANCE, VERY_LONG_FIRE_RESISTANCE);
+        veryStrong(() -> Potions.STRONG_LEAPING, VERY_STRONG_LEAPING);
+        veryDurable(() -> Potions.LONG_LEAPING, VERY_LONG_LEAPING);
+        veryDurable(VERY_STRONG_LEAPING, LONG_STRONG_LEAPING);
+        veryStrong(VERY_LONG_LEAPING, LONG_STRONG_LEAPING);
+        veryDurable(() -> Potions.LONG_INVISIBILITY, VERY_LONG_INVISIBILITY);
+        veryDurable(() -> Potions.LONG_NIGHT_VISION, VERY_LONG_NIGHT_VISION);
+        master(NAUSEA, () -> Ingredient.of(Tags.Items.MUSHROOMS), 32, 16);
+        durable(NAUSEA, LONG_NAUSEA);
+        veryDurable(LONG_NAUSEA, VERY_LONG_NAUSEA);
+        master(THIRST, () -> Ingredient.of(ModItems.VAMPIRE_FANG.get()), 10, 5);
+        durable(THIRST, LONG_THIRST);
+        strong(THIRST, STRONG_THIRST);
+        veryDurable(LONG_THIRST, VERY_LONG_THIRST);
+        veryStrong(STRONG_THIRST, VERY_STRONG_THIRST);
+        veryDurable(VERY_STRONG_THIRST, LONG_STRONG_THIRST);
+        veryStrong(VERY_LONG_THIRST, LONG_STRONG_THIRST);
+        master(BLINDNESS, () -> Ingredient.of(Items.INK_SAC), 64, 32);
+        durable(BLINDNESS, LONG_BLINDNESS);
+        veryDurable(LONG_BLINDNESS, VERY_LONG_BLINDNESS);
+        master(HEALTH_BOOST, () -> Ingredient.of(Items.APPLE), 64, 32);
+        durable(HEALTH_BOOST, LONG_HEALTH_BOOST);
+        strong(HEALTH_BOOST, STRONG_HEALTH_BOOST);
+        veryDurable(LONG_HEALTH_BOOST, VERY_LONG_HEALTH_BOOST);
+        veryStrong(STRONG_HEALTH_BOOST, VERY_STRONG_HEALTH_BOOST);
+        veryDurable(VERY_STRONG_HEALTH_BOOST, LONG_STRONG_HEALTH_BOOST);
+        veryStrong(VERY_LONG_HEALTH_BOOST, LONG_STRONG_HEALTH_BOOST);
+        master(RESISTANCE, () -> Ingredient.of(Items.GOLDEN_APPLE), 20, 10);
+        durable(RESISTANCE, LONG_RESISTANCE);
+        strong(RESISTANCE, STRONG_RESISTANCE);
     }
 
-    private static void durable(Potion in, Potion out) {
+    private static void durable(Supplier<? extends Potion> in, Supplier<? extends Potion> out) {
         VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(() -> Ingredient.of(Items.REDSTONE), 1).blood().build());
     }
 
-    private static void strong(Potion in, Potion out) {
+    private static void strong(Supplier<? extends Potion> in, Supplier<? extends Potion> out) {
         VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(() -> Ingredient.of(Items.GLOWSTONE_DUST), 1).blood().build());
     }
 
-    private static void veryDurable(Potion in, Potion out) {
+    private static void veryDurable(Supplier<? extends Potion> in, Supplier<? extends Potion> out) {
         VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(() -> Ingredient.of(Items.REDSTONE_BLOCK), 32, 16).blood().durable().build());
     }
 
-    private static void veryStrong(Potion in, Potion out) {
+    private static void veryStrong(Supplier<? extends Potion> in, Supplier<? extends Potion> out) {
         VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(() -> Ingredient.of(Items.GLOWSTONE), 64, 32).blood().concentrated().build());
     }
 
-    private static void master(Potion out, NonNullSupplier<Ingredient> in, int count, int countReduced) {
-        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(Potions.AWKWARD, out).master().ingredient(in, count, countReduced).blood().build());
+    private static void master(Supplier<? extends Potion> out, NonNullSupplier<Ingredient> in, int count, int countReduced) {
+        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(() -> Potions.AWKWARD, out).master().ingredient(in, count, countReduced).blood().build());
     }
 
 
-    public static void fixMappings(RegistryEvent.MissingMappings<Potion> event) {
-        event.getAllMappings().forEach(missingMapping -> {
-            String key = missingMapping.key.toString();
-            if (key.equals("vampirism:long_strong_resistance") || key.equals("vampirism:very_long_resistance")) {
-                missingMapping.remap(ModPotions.LONG_RESISTANCE.get());
-            } else if (key.equals("vampirism:very_strong_resistance")) {
-                missingMapping.remap(ModPotions.STRONG_RESISTANCE.get());
+    public static void fixMappings(MissingMappingsEvent event) {
+        event.getAllMappings(ForgeRegistries.Keys.POTIONS).forEach(missingMapping -> {
+            switch (missingMapping.getKey().toString()) {
+                case "vampirism:long_strong_resistance", "vampirism:very_long_resistance" -> missingMapping.remap(ModPotions.LONG_RESISTANCE.get());
+                case "vampirism:very_strong_resistance" -> missingMapping.remap(ModPotions.STRONG_RESISTANCE.get());
             }
         });
     }

@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.client.model.armor.*;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.Model;
 import net.minecraft.network.chat.Component;
@@ -52,7 +53,7 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
             @NotNull
             @Override
             public Model getBaseArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel<?> _default) {
-                return switch (getRegistryName().getPath()) {
+                return switch (RegUtil.id(VampireClothingItem.this).getPath()) {
                     case "vampire_clothing_crown" -> ClothingCrownModel.getAdjustedInstance(_default);
                     case "vampire_clothing_legs" ->  ClothingPantsModel.getAdjustedInstance(_default);
                     case "vampire_clothing_boots" -> ClothingBootsModel.getAdjustedInstance(_default);
@@ -65,7 +66,7 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
 
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-        return String.format(REFERENCE.MODID + ":textures/models/armor/%s.png", getRegistryName().getPath());
+        return String.format(REFERENCE.MODID + ":textures/models/armor/%s.png", RegUtil.id(this).getPath());
     }
 
     @Nullable

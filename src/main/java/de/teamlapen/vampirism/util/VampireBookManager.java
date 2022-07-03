@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModItems;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,7 +14,10 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Handles loading of texts for ancient vampire books
@@ -40,14 +44,14 @@ public class VampireBookManager {
     /**
      * Return a vampire book with a randomly selected text and title
      */
-    public ItemStack getRandomBook(Random rnd) {
+    public ItemStack getRandomBook(RandomSource rnd) {
         ItemStack book = new ItemStack(ModItems.VAMPIRE_BOOK.get(), 1);
         book.setTag(getRandomBookData(rnd));
         return book;
     }
 
     @Nonnull
-    public CompoundTag getRandomBookData(Random rnd) {
+    public CompoundTag getRandomBookData(RandomSource rnd) {
         return (bookTags == null || bookTags.length == 0) ? new CompoundTag() : bookTags[rnd.nextInt(bookTags.length)];
     }
 

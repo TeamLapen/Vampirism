@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.BloodValues;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -66,7 +67,7 @@ public class BiteableEntryManager {
         if (!VampirismConfig.SERVER.autoCalculateEntityBlood.get()) return null;
         EntityType<?> type = creature.getType();
         @Nullable
-        ResourceLocation id = type.getRegistryName();
+        ResourceLocation id = RegUtil.id(type);
         if (id == null) return null;
         if (blacklist.contains(id)) return null;
         if (isEntityBlacklisted(creature)) {
@@ -166,8 +167,7 @@ public class BiteableEntryManager {
         if (type.getCategory() == MobCategory.MONSTER || type.getCategory() == MobCategory.WATER_CREATURE)
             return true;
         if (type.is(ModTags.Entities.VAMPIRE)) return true;
-        //noinspection ConstantConditions
-        return isConfigBlackListed(type.getRegistryName());
+        return isConfigBlackListed(RegUtil.id(type));
     }
 
     void setNewBiteables(Map<ResourceLocation, BiteableEntry> biteableEntries, Set<ResourceLocation> blacklist) {

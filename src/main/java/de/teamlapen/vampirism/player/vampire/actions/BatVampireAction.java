@@ -9,8 +9,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.Util;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -101,16 +100,16 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     @Override
     public boolean onUpdate(IVampirePlayer vampire) {
         if (vampire.isGettingSundamage(vampire.getRepresentingEntity().level) && !vampire.isRemote()) {
-            vampire.getRepresentingPlayer().sendMessage(new TranslatableComponent("text.vampirism.cant_fly_day"), Util.NIL_UUID);
+            vampire.getRepresentingPlayer().sendSystemMessage(Component.translatable("text.vampirism.cant_fly_day"));
             return true;
         } else if (ModItems.UMBRELLA.get() == vampire.getRepresentingEntity().getMainHandItem().getItem() && !vampire.isRemote()) {
-            vampire.getRepresentingPlayer().sendMessage(new TranslatableComponent("text.vampirism.cant_fly_umbrella"), Util.NIL_UUID);
+            vampire.getRepresentingPlayer().sendSystemMessage(Component.translatable("text.vampirism.cant_fly_umbrella"));
             return true;
         } else if (vampire.isGettingGarlicDamage(vampire.getRepresentingEntity().level) != EnumStrength.NONE && !vampire.isRemote()) {
-            vampire.getRepresentingEntity().sendMessage(new TranslatableComponent("text.vampirism.cant_fly_garlic"), Util.NIL_UUID);
+            vampire.getRepresentingEntity().sendSystemMessage(Component.translatable("text.vampirism.cant_fly_garlic"));
             return true;
         } else if (!VampirismConfig.SERVER.batModeInEnd.get() && vampire.getRepresentingPlayer().getCommandSenderWorld().dimension() == Level.END) {
-            vampire.getRepresentingPlayer().sendMessage(new TranslatableComponent("text.vampirism.cant_fly_end"), Util.NIL_UUID);
+            vampire.getRepresentingPlayer().sendSystemMessage(Component.translatable("text.vampirism.cant_fly_end"));
             return true;
         } else {
             float exhaustion = VampirismConfig.BALANCE.vaBatExhaustion.get().floatValue();

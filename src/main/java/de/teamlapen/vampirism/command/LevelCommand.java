@@ -11,7 +11,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Collection;
@@ -39,13 +39,13 @@ public class LevelCommand extends BasicCommand {
         for (ServerPlayer player : players) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             if (level == 0 && !handler.canLeaveFaction()) {
-                context.getSource().sendFailure(new TranslatableComponent("command.vampirism.base.level.cant_leave", players.size() > 1 ? player.getDisplayName() : "Player", handler.getCurrentFaction().getName()));
+                context.getSource().sendFailure(Component.translatable("command.vampirism.base.level.cant_leave", players.size() > 1 ? player.getDisplayName() : "Player", handler.getCurrentFaction().getName()));
             } else {
                 level = Math.min(level, faction.getHighestReachableLevel());
                 if (handler.setFactionAndLevel(faction, level)) {
-                    context.getSource().sendSuccess(new TranslatableComponent("command.vampirism.base.level.successful", player.getName(), faction.getName(), level), true);
+                    context.getSource().sendSuccess(Component.translatable("command.vampirism.base.level.successful", player.getName(), faction.getName(), level), true);
                 } else {
-                    context.getSource().sendFailure(players.size() > 1 ? new TranslatableComponent("command.vampirism.failed_to_execute.players", player.getDisplayName()) : new TranslatableComponent("command.vampirism.failed_to_execute"));
+                    context.getSource().sendFailure(players.size() > 1 ? Component.translatable("command.vampirism.failed_to_execute.players", player.getDisplayName()) : Component.translatable("command.vampirism.failed_to_execute"));
                 }
             }
         }

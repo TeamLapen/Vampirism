@@ -9,8 +9,6 @@ import de.teamlapen.vampirism.player.vampire.VampireLevelingConf;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -64,7 +62,7 @@ public class PureBloodItem extends Item {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
-        tooltip.add(new TranslatableComponent("item.vampirism.pure_blood.purity").append(new TextComponent(": " + (level + 1 + "/" + COUNT))).withStyle(ChatFormatting.RED));
+        tooltip.add(Component.translatable("item.vampirism.pure_blood.purity").append(Component.literal(": " + (level + 1 + "/" + COUNT))).withStyle(ChatFormatting.RED));
     }
 
     @Nonnull
@@ -86,7 +84,7 @@ public class PureBloodItem extends Item {
     }
 
     public Component getCustomName() {
-        return new TranslatableComponent(this.getOrCreateDescriptionId()).append(new TextComponent(" " + (level + 1)));
+        return Component.translatable(this.getOrCreateDescriptionId()).append(Component.literal(" " + (level + 1)));
     }
 
     @Override

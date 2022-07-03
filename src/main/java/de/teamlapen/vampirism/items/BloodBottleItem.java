@@ -65,7 +65,7 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem {
     @Override
     public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> list) {
         super.fillItemCategory(group, list);
-        if (this.allowdedIn(group)) {
+        if (this.allowedIn(group)) {
             ItemStack stack = new ItemStack(ModItems.BLOOD_BOTTLE.get());
             stack.setDamageValue(9);
             list.add(stack);

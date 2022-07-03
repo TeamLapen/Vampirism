@@ -1,20 +1,21 @@
 package de.teamlapen.vampirism.entity.minion.management;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -63,7 +64,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
     private final static Logger LOGGER = LogManager.getLogger();
 
     public static List<IMinionTask<?, ?>> getAvailableTasks(ILordPlayer player) {
-        return ModRegistries.MINION_TASKS.getValues().stream().filter(t -> t.isAvailable(player.getLordFaction(), player)).collect(Collectors.toList());
+        return RegUtil.values(VampirismRegistries.MINION_TASKS).stream().filter(t -> t.isAvailable(player.getLordFaction(), player)).collect(Collectors.toList());
     }
 
     private final Random rng = new Random();
@@ -384,7 +385,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
             CompoundTag d = i.data.serializeNBT();
             d.putInt("death_timer", i.deathCooldown);
             d.putInt("id", i.minionID);
-            if (i.minionType != null) d.putString("entity_type", i.minionType.getRegistryName().toString());
+            if (i.minionType != null) d.putString("entity_type", RegUtil.id(i.minionType).toString());
             minionTokens[i.minionID].ifPresent(t -> d.putInt("token", t));
             data.add(d);
         }
@@ -430,7 +431,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
                 i.deathCooldown--;
                 if (i.deathCooldown == 0) {
                     i.data.setHealth(i.data.getMaxHealth());
-                    getLordPlayer().ifPresent(player -> player.displayClientMessage(new TranslatableComponent("text.vampirism.minion.can_respawn", i.data.getFormattedName()), true));
+                    getLordPlayer().ifPresent(player -> player.displayClientMessage(Component.translatable("text.vampirism.minion.can_respawn", i.data.getFormattedName()), true));
                 }
             } else {
                 IMinionTask.IMinionTaskDesc<MinionData> taskDesc = i.data.getCurrentTaskDesc();
@@ -443,7 +444,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
         @Nullable
         IMinionTask.IMinionTaskDesc<MinionData> desc = task.activateTask(getLordPlayer().orElse(null), getMinionEntity(info).orElse(null), info.data);
         if (desc == null) {
-            getLordPlayer().ifPresent(player -> player.displayClientMessage(new TranslatableComponent("text.vampirism.minion.could_not_activate"), false));
+            getLordPlayer().ifPresent(player -> player.displayClientMessage(Component.translatable("text.vampirism.minion.could_not_activate"), false));
         } else {
             MinionData d = info.data;
             d.switchTask(d.getCurrentTaskDesc().getTask(), d.getCurrentTaskDesc(), desc);

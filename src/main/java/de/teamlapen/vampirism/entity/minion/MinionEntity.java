@@ -27,8 +27,6 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -178,7 +176,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     public void die(@Nonnull DamageSource cause) {
         super.die(cause);
         if (this.playerMinionController != null) {
-            this.getLordOpt().map(ILordPlayer::getPlayer).ifPresent(p -> p.displayClientMessage(new TranslatableComponent("text.vampirism.minion.died", this.getDisplayName()), true));
+            this.getLordOpt().map(ILordPlayer::getPlayer).ifPresent(p -> p.displayClientMessage(Component.translatable("text.vampirism.minion.died", this.getDisplayName()), true));
             this.playerMinionController.markDeadAndReleaseMinionSlot(minionId, token);
             this.playerMinionController = null;
         }
@@ -550,7 +548,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     protected InteractionResult mobInteract(@Nonnull Player player, @Nonnull InteractionHand hand) {
         if (isLord(player)) {
             if (player instanceof ServerPlayer) {
-                NetworkHooks.openGui((ServerPlayer) player, new SimpleMenuProvider((id, playerInventory, playerIn) -> MinionContainer.create(id, playerInventory, this), new TranslatableComponent("text.vampirism.name").append(this.getMinionData().map(MinionData::getFormattedName).orElse(new TextComponent("Minion")))), buf -> buf.writeVarInt(this.getId()));
+                NetworkHooks.openGui((ServerPlayer) player, new SimpleMenuProvider((id, playerInventory, playerIn) -> MinionContainer.create(id, playerInventory, this), Component.translatable("text.vampirism.name").append(this.getMinionData().map(MinionData::getFormattedName).orElse(Component.literal("Minion")))), buf -> buf.writeVarInt(this.getId()));
             }
             return InteractionResult.SUCCESS;
         }

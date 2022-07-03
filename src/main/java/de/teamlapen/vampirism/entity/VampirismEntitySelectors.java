@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.commands.arguments.selector.options.EntitySelectorOptions;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import org.apache.logging.log4j.LogManager;
@@ -27,7 +27,7 @@ public class VampirismEntitySelectors {
     private static final String MIN_LEVEL = "vampirism:minLevel";
     private static final String MAX_LEVEL = "vampirism:maxLevel";
 
-    private static final DynamicCommandExceptionType FACTION_NOT_FOUND = new DynamicCommandExceptionType((p_208726_0_) -> new TranslatableComponent("vampirism.argument.entity.options.faction.not_found", p_208726_0_));
+    private static final DynamicCommandExceptionType FACTION_NOT_FOUND = new DynamicCommandExceptionType((p_208726_0_) -> Component.translatable("vampirism.argument.entity.options.faction.not_found", p_208726_0_));
 
 
     public static void registerSelectors() {
@@ -53,7 +53,7 @@ public class VampirismEntitySelectors {
             throw FACTION_NOT_FOUND.createWithContext(parser.getReader(), factionID);
         }, (parser) -> {
             return true;
-        }, new TranslatableComponent("vampirism.argument.entity.options.faction.desc"));
+        }, Component.translatable("vampirism.argument.entity.options.faction.desc"));
 
         EntitySelectorOptions.register(LEVEL, (parser) -> {
             StringReader reader = parser.getReader();
@@ -70,7 +70,7 @@ public class VampirismEntitySelectors {
                 throw EntitySelectorOptions.ERROR_LEVEL_NEGATIVE.createWithContext(reader);
             }
 
-        }, (parser) -> true, new TranslatableComponent("vampirism.argument.entity.options.level.desc"));
+        }, (parser) -> true, Component.translatable("vampirism.argument.entity.options.level.desc"));
 
     }
 }

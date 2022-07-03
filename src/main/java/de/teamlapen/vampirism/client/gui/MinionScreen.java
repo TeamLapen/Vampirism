@@ -12,13 +12,10 @@ import net.minecraft.client.gui.components.LockIconButton;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.gui.GuiUtils;
 import net.minecraftforge.client.gui.widget.ExtendedButton;
 
 import javax.annotation.Nonnull;
@@ -92,18 +89,18 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
     @Override
     protected void renderLabels(@Nonnull PoseStack mStack, int mouseX, int mouseY) {
         this.font.draw(mStack, title, 5, 6.0F, 0x404040);
-        this.font.draw(mStack, new TranslatableComponent("gui.vampirism.minion.active_task"), 120, 10.0F, 0x404040);
+        this.font.draw(mStack, Component.translatable("gui.vampirism.minion.active_task"), 120, 10.0F, 0x404040);
 
     }
 
     @Override
     protected void renderTooltip(@Nonnull PoseStack mStack, int mouseX, int mouseY) {
         if (this.lockActionButton.isMouseOver(mouseX, mouseY)) {
-            drawButtonTip(mStack, new TranslatableComponent("gui.vampirism.minion.lock_action"), mouseX, mouseY);
+            drawButtonTip(mStack, Component.translatable("gui.vampirism.minion.lock_action"), mouseX, mouseY);
         } else if (this.appearanceButton.isMouseOver(mouseX, mouseY)) {
-            drawButtonTip(mStack, new TranslatableComponent("gui.vampirism.minion.appearance"), mouseX, mouseY);
+            drawButtonTip(mStack, Component.translatable("gui.vampirism.minion.appearance"), mouseX, mouseY);
         } else if (this.statButton.isMouseOver(mouseX, mouseY)) {
-            drawButtonTip(mStack, new TranslatableComponent("gui.vampirism.minion_stats"), mouseX, mouseY);
+            drawButtonTip(mStack, Component.translatable("gui.vampirism.minion_stats"), mouseX, mouseY);
         } else {
             super.renderTooltip(mStack, mouseX, mouseY);
         }

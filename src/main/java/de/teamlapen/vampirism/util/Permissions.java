@@ -17,7 +17,7 @@ public class Permissions {
     public static PermissionNode<Boolean> INFECT_PLAYER = new PermissionNode<>(REFERENCE.MODID, "infect.player", PermissionTypes.BOOLEAN, ((player, playerUUID, context) -> true));
     public static PermissionNode<Boolean> ACTION = new PermissionNode<>(REFERENCE.MODID, "action", PermissionTypes.BOOLEAN, (player, playerUUID, context) -> true);
     @SuppressWarnings("rawtypes")
-    public static PermissionDynamicContextKey<IAction> ACTION_CONTEXT = new PermissionDynamicContextKey<>(IAction.class, "action", action -> action.getRegistryName().toString());
+    public static PermissionDynamicContextKey<IAction> ACTION_CONTEXT = new PermissionDynamicContextKey<>(IAction.class, "action", action -> RegUtil.id(action).toString());
 
 
     @SubscribeEvent

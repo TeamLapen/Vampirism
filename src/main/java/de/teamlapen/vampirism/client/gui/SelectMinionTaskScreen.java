@@ -12,10 +12,10 @@ import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.network.SelectMinionTaskPacket;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -29,7 +29,7 @@ public class SelectMinionTaskScreen extends GuiPieMenu<SelectMinionTaskScreen.En
 
 
     public SelectMinionTaskScreen() {
-        super(Color.GRAY, new TranslatableComponent("text.vampirism.minion.give_order"));
+        super(Color.GRAY, Component.translatable("text.vampirism.minion.give_order"));
     }
 
     @Override
@@ -81,10 +81,10 @@ public class SelectMinionTaskScreen extends GuiPieMenu<SelectMinionTaskScreen.En
     protected void onGuiInit() {
         this.elements.clear();
         FactionPlayerHandler.getOpt(minecraft.player).ifPresent(fp -> elements.addAll(PlayerMinionController.getAvailableTasks(fp).stream().map(Entry::new).collect(Collectors.toList())));
-        this.elements.add(new Entry(new TranslatableComponent("action.vampirism.cancel"), new ResourceLocation(REFERENCE.MODID, "textures/actions/cancel.png"), (GuiPieMenu::onClose)));
-        this.elements.add(new Entry(new TranslatableComponent("text.vampirism.minion.call_single"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/recall_single.png"), (SelectMinionTaskScreen::callSingle)));
-        this.elements.add(new Entry(new TranslatableComponent("text.vampirism.minion.call_all"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/recall.png"), (SelectMinionTaskScreen::callAll)));
-        this.elements.add(new Entry(new TranslatableComponent("text.vampirism.minion.respawn"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/respawn.png"), (SelectMinionTaskScreen::callRespawn)));
+        this.elements.add(new Entry(Component.translatable("action.vampirism.cancel"), new ResourceLocation(REFERENCE.MODID, "textures/actions/cancel.png"), (GuiPieMenu::onClose)));
+        this.elements.add(new Entry(Component.translatable("text.vampirism.minion.call_single"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/recall_single.png"), (SelectMinionTaskScreen::callSingle)));
+        this.elements.add(new Entry(Component.translatable("text.vampirism.minion.call_all"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/recall.png"), (SelectMinionTaskScreen::callAll)));
+        this.elements.add(new Entry(Component.translatable("text.vampirism.minion.respawn"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/respawn.png"), (SelectMinionTaskScreen::callRespawn)));
     }
 
     private void callAll() {
@@ -102,7 +102,7 @@ public class SelectMinionTaskScreen extends GuiPieMenu<SelectMinionTaskScreen.En
     }
 
     private void sendTask(IMinionTask<?, ?> task) {
-        VampirismMod.dispatcher.sendToServer(new SelectMinionTaskPacket(-1, task.getRegistryName()));
+        VampirismMod.dispatcher.sendToServer(new SelectMinionTaskPacket(-1, RegUtil.id(task)));
     }
 
     public static class Entry {
@@ -112,7 +112,7 @@ public class SelectMinionTaskScreen extends GuiPieMenu<SelectMinionTaskScreen.En
         private final Consumer<SelectMinionTaskScreen> onSelected;
 
         public Entry(IMinionTask<?, ?> task) {
-            this(task.getName(), new ResourceLocation(task.getRegistryName().getNamespace(), "textures/minion_tasks/" + task.getRegistryName().getPath() + ".png"), (screen -> screen.sendTask(task)));
+            this(task.getName(), new ResourceLocation(RegUtil.id(task).getNamespace(), "textures/minion_tasks/" + RegUtil.id(task).getPath() + ".png"), (screen -> screen.sendTask(task)));
         }
 
         public Entry(Component text, ResourceLocation icon, Consumer<SelectMinionTaskScreen> onSelected) {

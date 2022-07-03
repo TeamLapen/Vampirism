@@ -9,11 +9,11 @@ import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.entity.hunter.AdvancedHunterEntity;
 import de.teamlapen.vampirism.entity.hunter.BasicHunterEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.data.worldgen.StructureSets;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -88,7 +88,7 @@ public class TentBlockEntity extends BlockEntity {
     public static void serverTick(Level level, BlockPos pos, BlockState state, TentBlockEntity blockEntity) {
         if (blockEntity.spawn) {
             if (level.getGameTime() % 64 == 0) {
-                if (UtilLib.isInsideStructure(level, pos, StructureFeature.VILLAGE)) {
+                if (UtilLib.isInsideStructure(level, pos, StructureSets.VILLAGES)) {
                     blockEntity.spawn = false; //Disable spawning inside villages
                 }
             }

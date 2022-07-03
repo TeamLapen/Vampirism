@@ -13,10 +13,11 @@ import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -169,12 +170,12 @@ public class ModKeys {
      **/
     private void toggleBoundAction(@Nonnull IFactionPlayer<?> player, @Nullable IAction<?> action) {
         if (action == null) {
-            player.getRepresentingPlayer().displayClientMessage(new TranslatableComponent("text.vampirism.action.not_bound", "/vampirism bind-action"), true);
+            player.getRepresentingPlayer().displayClientMessage(Component.translatable("text.vampirism.action.not_bound", "/vampirism bind-action"), true);
         } else {
             if (!action.getFaction().equals(player.getFaction())) {
-                player.getRepresentingPlayer().displayClientMessage(new TranslatableComponent("text.vampirism.action.only_faction", action.getFaction().getName()), true);
+                player.getRepresentingPlayer().displayClientMessage(Component.translatable("text.vampirism.action.only_faction", action.getFaction().getName()), true);
             } else {
-                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + action.getRegistryName()));
+                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + RegUtil.id(action)));
             }
         }
 

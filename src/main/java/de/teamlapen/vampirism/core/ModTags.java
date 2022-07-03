@@ -8,6 +8,8 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.village.poi.PoiType;
+import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
@@ -107,11 +109,36 @@ public class ModTags {
 
     public static class Biomes {
         public static final TagKey<Biome> HAS_HUNTER_TENT = tag("has_structure/hunter_tent");
-        public static final TagKey<Biome> IS_FACTION_BIOME = tag("is_faction_biome");
-        public static final TagKey<Biome> IS_VAMPIRE_BIOME = tag("is_vampire_biome");
+        public static final TagKey<Biome> HAS_VAMPIRE_DUNGEON = tag("has_structure/vampire_dungeon");
+        public static final TagKey<Biome> IS_FACTION_BIOME = tag("has_faction");
+        public static final TagKey<Biome> IS_VAMPIRE_BIOME = tag("has_faction/vampire");
+        public static final TagKey<Biome> HAS_VAMPIRE_SPAWN = tag("has_spawn/vampire");
+        public static final TagKey<Biome> HAS_ADVANCED_VAMPIRE_SPAWN = tag("has_spawn/advanced_vampire");
+        public static final TagKey<Biome> HAS_HUNTER_SPAWN = tag("has_spawn/hunter");
+        public static final TagKey<Biome> HAS_ADVANCED_HUNTER_SPAWN = tag("has_spawn/advanced_hunter");
 
         private static TagKey<Biome> tag(String name) {
             return TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(REFERENCE.MODID, name));
+        }
+    }
+
+    public static class POI_TYPES {
+        public static final TagKey<PoiType> HAS_FACTION = tag("has_faction");
+        public static final TagKey<PoiType> IS_VAMPIRE = tag("is_vampire");
+        public static final TagKey<PoiType> IS_HUNTER = tag("is_hunter");
+
+        private static TagKey<PoiType> tag(String name) {
+            return TagKey.create(Registry.POINT_OF_INTEREST_TYPE_REGISTRY, new ResourceLocation(REFERENCE.MODID, name));
+        }
+    }
+
+    public static class Professions {
+        public static final TagKey<VillagerProfession> HAS_FACTION = tag("has_faction");
+        public static final TagKey<VillagerProfession> IS_VAMPIRE = tag("is_vampire");
+        public static final TagKey<VillagerProfession> IS_HUNTER = tag("is_hunter");
+
+        private static TagKey<VillagerProfession> tag(String name) {
+            return TagKey.create(Registry.VILLAGER_PROFESSION_REGISTRY, new ResourceLocation(REFERENCE.MODID, name));
         }
     }
 }

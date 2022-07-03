@@ -10,7 +10,6 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraftforge.client.gui.GuiUtils;
@@ -54,7 +53,7 @@ public class ProgressBar extends AbstractWidget {
     @Override
     public void renderToolTip(@Nonnull PoseStack matrixStack, int mouseX, int mouseY) {
         if (this.active)
-            screen.renderTooltip(matrixStack, new TextComponent("" + ((int) (progress * 100f)) + "%"), mouseX, mouseY);
+            screen.renderTooltip(matrixStack, Component.literal("" + ((int) (progress * 100f)) + "%"), mouseX, mouseY);
 
     }
 

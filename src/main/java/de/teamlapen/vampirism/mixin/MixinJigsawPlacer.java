@@ -23,7 +23,7 @@ public abstract class MixinJigsawPlacer {
     private MixinJigsawPlacer() {
     }
 
-    @Redirect(method = "tryPlacingChildren(Lnet/minecraft/world/level/levelgen/structure/PoolElementStructurePiece;Lorg/apache/commons/lang3/mutable/MutableObject;IZLnet/minecraft/world/level/LevelHeightAccessor;)V", at = @At(value = "INVOKE", target = "Ljava/util/Iterator;next()Ljava/lang/Object;", ordinal = 1))
+    @Redirect(method = "tryPlacingChildren", at = @At(value = "INVOKE", target = "Ljava/util/Iterator;next()Ljava/lang/Object;", ordinal = 1))
     private Object inject(Iterator<StructurePoolElement> iterator) {
         while (iterator.hasNext()) {
             StructurePoolElement piece = iterator.next();

@@ -6,6 +6,7 @@ import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.CriterionTriggerInstance;
@@ -192,7 +193,7 @@ public class AlchemicalCauldronRecipeBuilder {
             }
 
             JsonObject result = new JsonObject();
-            result.addProperty("item", this.result.getItem().getRegistryName().toString());
+            result.addProperty("item", RegUtil.id(this.result.getItem()).toString());
             if (this.result.getCount() > 1) {
                 result.addProperty("count", this.result.getCount());
             }
@@ -203,13 +204,13 @@ public class AlchemicalCauldronRecipeBuilder {
             this.fluid.ifLeft(ingredient1 -> jsonObject.add("fluidItem", ingredient1.toJson()));
             this.fluid.ifRight(fluidStack -> {
                 JsonObject fluid = new JsonObject();
-                fluid.addProperty("fluid", fluidStack.getFluid().getRegistryName().toString());
+                fluid.addProperty("fluid", RegUtil.id(fluidStack.getFluid()).toString());
                 jsonObject.add("fluid", fluid);
             });
 
             JsonArray skills = new JsonArray();
             for (ISkill<?> skill : this.skills) {
-                skills.add(skill.getRegistryName().toString());
+                skills.add(RegUtil.id(skill) .toString());
             }
             jsonObject.add("skill", skills);
 

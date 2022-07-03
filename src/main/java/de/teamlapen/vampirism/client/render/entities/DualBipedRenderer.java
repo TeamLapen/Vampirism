@@ -71,7 +71,7 @@ public abstract class DualBipedRenderer<T extends Mob, M extends HumanoidModel<T
      * @return Array of texture and slim status
      */
     protected Pair<ResourceLocation, Boolean>[] gatherTextures(String dirPath, boolean required) {
-        Collection<ResourceLocation> hunterTextures = new ArrayList<>(Minecraft.getInstance().getResourceManager().listResources(dirPath, s -> s.endsWith(".png")));
+        Collection<ResourceLocation> hunterTextures = new ArrayList<>(Minecraft.getInstance().getResourceManager().listResources(dirPath, s -> s.getPath().endsWith(".png")).keySet());
         Pair<ResourceLocation, Boolean>[] textures = separateSlimTextures(hunterTextures.stream().filter(r -> REFERENCE.MODID.equals(r.getNamespace())));
         if (textures.length == 0 && required) {
             throw new IllegalStateException("Must have at least one hunter texture: " + REFERENCE.MODID + ":" + dirPath + "/texture.png");

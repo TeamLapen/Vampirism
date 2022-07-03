@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.world.biome.OverworldModifications;
 import de.teamlapen.vampirism.world.biome.VampirismBiomes;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -21,7 +20,6 @@ public class ModBiomes {
     static void registerBiomes(IEventBus bus) {
         BIOMES.register(bus);
         VampirismAPI.sundamageRegistry().addNoSundamageBiomes(VAMPIRE_FOREST.getKey().location());
-        BiomeDictionary.addTypes(VAMPIRE_FOREST.getKey(), BiomeDictionary.Type.OVERWORLD, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.DENSE, BiomeDictionary.Type.MAGICAL, BiomeDictionary.Type.SPOOKY);
     }
 
 }

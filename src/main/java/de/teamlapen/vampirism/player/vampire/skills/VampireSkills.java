@@ -2,21 +2,21 @@ package de.teamlapen.vampirism.player.vampire.skills;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAttributes;
-import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.player.skills.ActionSkill;
 import de.teamlapen.vampirism.player.skills.VampirismSkill;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.registries.RegistryObject;
 
 /**
@@ -24,7 +24,7 @@ import net.minecraftforge.registries.RegistryObject;
  */
 @SuppressWarnings("unused")
 public class VampireSkills {
-    public static final DeferredRegister<ISkill<?>> SKILLS = DeferredRegister.create(ModRegistries.SKILLS_ID, REFERENCE.MODID);
+    public static final DeferredRegister<ISkill<?>> SKILLS = DeferredRegister.create(VampirismRegistries.SKILLS_ID, REFERENCE.MODID);
 
     public static final RegistryObject<ISkill<IVampirePlayer>> ADVANCED_BITER = SKILLS.register("advanced_biter", () -> new VampirismSkill.SimpleVampireSkill(false).setToggleActions(player -> ((VampirePlayer) player).getSpecialAttributes().advanced_biter = true, player -> ((VampirePlayer) player).getSpecialAttributes().advanced_biter = false).setHasDefaultDescription());
     public static final RegistryObject<ISkill<IVampirePlayer>> BAT = SKILLS.register("bat", () -> new ActionSkill<>(VampireActions.BAT.get(), true));
@@ -43,7 +43,7 @@ public class VampireSkills {
             }, player -> player.unUnlockVision(VReference.vision_nightVision)));
     public static final RegistryObject<ISkill<IVampirePlayer>> SUNSCREEN = SKILLS.register("sunscreen", () -> new ActionSkill<>(VampireActions.SUNSCREEN.get(), true));
     public static final RegistryObject<ISkill<IVampirePlayer>> SUMMON_BATS = SKILLS.register("summon_bats", () -> new ActionSkill<>(VampireActions.SUMMON_BAT.get(), true));
-    public static final RegistryObject<ISkill<IVampirePlayer>> SWORD_FINISHER = SKILLS.register("sword_finisher", () -> new VampirismSkill.SimpleVampireSkill(true).setDescription(() -> new TranslatableComponent("skill.vampirism.sword_finisher.desc", (int) (VampirismConfig.BALANCE.vsSwordFinisherMaxHealth.get() * 100))));
+    public static final RegistryObject<ISkill<IVampirePlayer>> SWORD_FINISHER = SKILLS.register("sword_finisher", () -> new VampirismSkill.SimpleVampireSkill(true).setDescription(() -> Component.translatable("skill.vampirism.sword_finisher.desc", (int) (VampirismConfig.BALANCE.vsSwordFinisherMaxHealth.get() * 100))));
     public static final RegistryObject<ISkill<IVampirePlayer>> TELEPORT = SKILLS.register("teleport", () -> new ActionSkill<>(VampireActions.TELEPORT.get(), true));
     public static final RegistryObject<ISkill<IVampirePlayer>> VAMPIRE_DISGUISE = SKILLS.register("vampire_disguise", () -> new ActionSkill<>(VampireActions.DISGUISE_VAMPIRE.get(), true));
     public static final RegistryObject<ISkill<IVampirePlayer>> VAMPIRE_INVISIBILITY = SKILLS.register("vampire_invisibility", () -> new ActionSkill<>(VampireActions.VAMPIRE_INVISIBILITY.get()));
@@ -73,14 +73,10 @@ public class VampireSkills {
         SKILLS.register(VReference.VAMPIRE_FACTION.getID().getPath(), () -> new VampirismSkill.SimpleVampireSkill(false));
     }
 
-    public static void fixMappings(RegistryEvent.MissingMappings<ISkill<?>> event) {
-        event.getAllMappings().forEach(missingMapping -> {
-            if ("vampirism:creeper_avoided".equals(missingMapping.key.toString())) {
-                missingMapping.ignore();
-            } else if ("vampirism:enhanced_crossbow".equals(missingMapping.key.toString())) {
-                missingMapping.ignore();
-            } else if ("vampirism:vampire_forest_fog".equals(missingMapping.key.toString())) {
-                missingMapping.ignore();
+    public static void fixMappings(MissingMappingsEvent event) {
+        event.getAllMappings(VampirismRegistries.SKILLS_ID).forEach(missingMapping -> {
+            switch (missingMapping.getKey().toString()) {
+                case "vampirism:creeper_avoided", "vampirism:enhanced_crossbow", "vampirism:vampire_forest_fog" -> missingMapping.ignore();
             }
         });
     }

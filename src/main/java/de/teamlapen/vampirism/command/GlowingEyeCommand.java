@@ -7,7 +7,7 @@ import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 
 public class GlowingEyeCommand extends BasicCommand {
@@ -23,9 +23,9 @@ public class GlowingEyeCommand extends BasicCommand {
     private static int setGlowingEye(CommandContext<CommandSourceStack> context, Player player, boolean on) {
         VampirePlayer.getOpt(player).ifPresent(vampire -> vampire.setGlowingEyes(on));
         if (on) {
-            context.getSource().sendSuccess(new TranslatableComponent("command.vampirism.base.glowing_eyes.enabled", on), false);
+            context.getSource().sendSuccess(Component.translatable("command.vampirism.base.glowing_eyes.enabled", on), false);
         } else {
-            context.getSource().sendSuccess(new TranslatableComponent("command.vampirism.base.glowing_eyes.disabled", on), false);
+            context.getSource().sendSuccess(Component.translatable("command.vampirism.base.glowing_eyes.disabled", on), false);
         }
         return 0;
     }

@@ -1,13 +1,13 @@
 package de.teamlapen.vampirism.entity.goals;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
-import java.util.Random;
 
 /**
  * Basic Flee from anything AI
@@ -57,7 +57,7 @@ public abstract class FleeGoal extends Goal {
     protected abstract boolean shouldFlee();
 
     private Vec3 findPossibleShelter() {
-        Random random = this.theCreature.getRandom();
+        RandomSource random = this.theCreature.getRandom();
         BlockPos blockpos = new BlockPos(this.theCreature.getX(), this.theCreature.getBoundingBox().minY, this.theCreature.getZ());
 
         for (int i = 0; i < 10; ++i) {

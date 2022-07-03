@@ -1,20 +1,19 @@
 package de.teamlapen.vampirism.player.refinements;
 
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
 import java.util.function.BiFunction;
 
-public class Refinement extends ForgeRegistryEntry<IRefinement> implements IRefinement {
+public class Refinement implements IRefinement {
 
     private final Attribute attribute;
     private final BiFunction<UUID, Double, AttributeModifier> modifier;
@@ -52,7 +51,7 @@ public class Refinement extends ForgeRegistryEntry<IRefinement> implements IRefi
     @Override
     public Component getDescription() {
         if (description == null) {
-            description = new TranslatableComponent("refinement." + getRegistryName().getNamespace() + "." + getRegistryName().getPath() + ".desc");
+            description = Component.translatable("refinement." + RegUtil.id(this).getNamespace() + "." + RegUtil.id(this).getPath() + ".desc");
             if (detrimental) description.withStyle(ChatFormatting.RED);
         }
         return description;

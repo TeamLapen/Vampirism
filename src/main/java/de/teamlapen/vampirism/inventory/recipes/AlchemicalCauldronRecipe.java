@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.core.ModRecipes;
-import de.teamlapen.vampirism.core.ModRegistries;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -18,7 +18,6 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -92,7 +91,7 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
                 '}';
     }
 
-    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<AlchemicalCauldronRecipe> {
+    public static class Serializer implements RecipeSerializer<AlchemicalCauldronRecipe> {
         @Nonnull
         @Override
         public AlchemicalCauldronRecipe fromJson(@Nonnull ResourceLocation recipeId, @Nonnull JsonObject json) {
@@ -123,7 +122,7 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
             int level = buffer.readVarInt();
             ISkill<?>[] skills = new ISkill[buffer.readVarInt()];
             for (int i = 0; i < skills.length; i++) {
-                skills[i] = ModRegistries.SKILLS.getValue(new ResourceLocation(buffer.readUtf(32767)));
+                skills[i] = RegUtil.getSkill(buffer.readResourceLocation());
             }
             return new AlchemicalCauldronRecipe(recipeId, group, ingredient, fluid, result, skills, level, cookingtime, exp);
         }
@@ -146,7 +145,7 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
             buffer.writeVarInt(recipe.reqLevel);
             buffer.writeVarInt(recipe.skills.length);
             for (ISkill<?> skill : recipe.skills) {
-                buffer.writeUtf(skill.getRegistryName().toString());
+                buffer.writeResourceLocation(RegUtil.id(skill));
             }
         }
 

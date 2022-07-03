@@ -21,7 +21,7 @@ import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 
@@ -29,7 +29,7 @@ import java.util.Collection;
 
 
 public class MinionCommand extends BasicCommand {
-    private static final DynamicCommandExceptionType fail = new DynamicCommandExceptionType((msg) -> new TextComponent("Failed: " + msg));
+    private static final DynamicCommandExceptionType fail = new DynamicCommandExceptionType((msg) -> Component.literal("Failed: " + msg));
 
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("minion")
@@ -131,7 +131,7 @@ public class MinionCommand extends BasicCommand {
     private static int purge(CommandSourceStack ctx) throws CommandSyntaxException {
         Player p = ctx.getPlayerOrException();
         MinionWorldData.getData(ctx.getServer()).purgeController(p.getUUID());
-        p.displayClientMessage(new TextComponent("Reload world"), false);
+        p.displayClientMessage(Component.literal("Reload world"), false);
         return 0;
     }
 }

@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.api.entity;
 
 import com.google.common.collect.Maps;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 import javax.annotation.Nullable;
 import java.util.Map;
-import java.util.Random;
 
 public enum EntityClassType {
     None(0, 0, 0),
@@ -25,7 +25,7 @@ public enum EntityClassType {
         }
     }
 
-    public static EntityClassType getRandomClass(Random rand) {
+    public static EntityClassType getRandomClass(RandomSource rand) {
         return values()[rand.nextInt(values().length - 1)];
     }
 

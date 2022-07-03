@@ -10,7 +10,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -27,7 +26,7 @@ public class DBNOScreen extends Screen {
 
 
     public DBNOScreen(@Nullable Component textComponent) {
-        super(new TranslatableComponent("gui.vampirism.dbno.title"));
+        super(Component.translatable("gui.vampirism.dbno.title"));
         this.causeOfDeath = textComponent;
     }
 
@@ -82,12 +81,12 @@ public class DBNOScreen extends Screen {
 
     protected void init() {
         this.enableButtonsTimer = 0;
-        dieButton = this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 72, 200, 20, new TranslatableComponent("gui.vampirism.dbno.die"), (p_213021_1_) -> {
+        dieButton = this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 72, 200, 20, Component.translatable("gui.vampirism.dbno.die"), (p_213021_1_) -> {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.DIE, ""));
             this.minecraft.setScreen(null);
         }));
         dieButton.active = false;
-        resurrectButton = this.addRenderableWidget(new CooldownButton(this.width / 2 - 100, this.height / 4 + 96, 200, 20, new TranslatableComponent("gui.vampirism.dbno.resurrect"), (p_213020_1_) -> {
+        resurrectButton = this.addRenderableWidget(new CooldownButton(this.width / 2 - 100, this.height / 4 + 96, 200, 20, Component.translatable("gui.vampirism.dbno.resurrect"), (p_213020_1_) -> {
             if (this.minecraft.player != null)
                 VampirePlayer.getOpt(this.minecraft.player).ifPresent(VampirePlayer::tryResurrect);
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.RESURRECT, ""));

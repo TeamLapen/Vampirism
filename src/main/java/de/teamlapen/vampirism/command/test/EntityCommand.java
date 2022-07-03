@@ -2,11 +2,10 @@ package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.lib.lib.util.BasicCommand;
-import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -28,10 +27,10 @@ public class EntityCommand extends BasicCommand {
         List<Entity> l = asPlayer.getCommandSenderWorld().getEntities(asPlayer, asPlayer.getBoundingBox().inflate(3, 2, 3));
         for (Entity entity : l) {
             if (entity instanceof PathfinderMob) {
-                ResourceLocation id = Helper.getIDSafe(entity.getType());
-                commandSource.sendSuccess(new TextComponent(id.toString()), true);
+                ResourceLocation id = RegUtil.id(entity.getType());
+                commandSource.sendSuccess(Component.literal(id.toString()), true);
             } else {
-                commandSource.sendSuccess(new TranslatableComponent("Not biteable %s", entity.getClass().getName()), true);
+                commandSource.sendSuccess(Component.translatable("Not biteable %s", entity.getClass().getName()), true);
             }
         }
         return 0;

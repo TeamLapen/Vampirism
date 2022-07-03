@@ -77,6 +77,7 @@ public class VampirismConfig {
     }
 
     public static void finalizeAndRegisterConfig() {
+        if (balanceBuilder == null) return;
         /*
         Build balance configuration
          */

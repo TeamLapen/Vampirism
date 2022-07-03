@@ -1,15 +1,15 @@
 package de.teamlapen.vampirism.api.entity.player.task;
 
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraftforge.registries.ForgeRegistryEntry;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class Task extends ForgeRegistryEntry<Task> {
+public class Task {
 
     @Nonnull
     private final Variant variant;
@@ -62,7 +62,7 @@ public class Task extends ForgeRegistryEntry<Task> {
 
     @Nonnull
     public Component getDescription() {
-        return this.desc != null ? this.desc : (this.desc = new TranslatableComponent(this.getDescriptionKey()));
+        return this.desc != null ? this.desc : (this.desc = Component.translatable(this.getDescriptionKey()));
     }
 
     @Nonnull
@@ -87,7 +87,7 @@ public class Task extends ForgeRegistryEntry<Task> {
 
     @Nonnull
     public Component getTranslation() {
-        return this.translation != null ? this.translation : (this.translation = new TranslatableComponent(this.getTranslationKey()));
+        return this.translation != null ? this.translation : (this.translation = Component.translatable(this.getTranslationKey()));
     }
 
     @Nonnull
@@ -106,6 +106,10 @@ public class Task extends ForgeRegistryEntry<Task> {
 
     public boolean useDescription() {
         return useDescription;
+    }
+
+    private ResourceLocation getRegistryName() {
+        return VampirismRegistries.TASKS.get().getKey(this);
     }
 
     public enum Variant {

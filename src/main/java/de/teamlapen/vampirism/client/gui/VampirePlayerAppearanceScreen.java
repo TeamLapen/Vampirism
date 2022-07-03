@@ -16,8 +16,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -29,7 +27,7 @@ import javax.annotation.Nullable;
 @OnlyIn(Dist.CLIENT)
 public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
 
-    private static final Component NAME = new TranslatableComponent("gui.vampirism.appearance");
+    private static final Component NAME = Component.translatable("gui.vampirism.appearance");
 
     private float[] color;
 
@@ -73,15 +71,15 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
         this.eyeType = vampAtt.eyeType;
         this.glowingEyes = vampAtt.glowingEyes;
 
-        this.eyeList = this.addRenderableWidget(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 30 + 19, 99, 100, 20, REFERENCE.EYE_TYPE_COUNT, new TranslatableComponent("gui.vampirism.appearance.eye"), this::eye, this::hoverEye).scrollSpeed(2));
-        this.fangList = this.addRenderableWidget(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 50 + 19, 99, 80, 20, REFERENCE.FANG_TYPE_COUNT, new TranslatableComponent("gui.vampirism.appearance.fang"), this::fang, this::hoverFang));
-        this.eyeButton = this.addRenderableWidget(new ExtendedButton(eyeList.x, eyeList.y - 20, eyeList.getWidth() + 1, 20, new TextComponent(""), (b) -> {
+        this.eyeList = this.addRenderableWidget(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 30 + 19, 99, 100, 20, REFERENCE.EYE_TYPE_COUNT, Component.translatable("gui.vampirism.appearance.eye"), this::eye, this::hoverEye).scrollSpeed(2));
+        this.fangList = this.addRenderableWidget(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 50 + 19, 99, 80, 20, REFERENCE.FANG_TYPE_COUNT, Component.translatable("gui.vampirism.appearance.fang"), this::fang, this::hoverFang));
+        this.eyeButton = this.addRenderableWidget(new ExtendedButton(eyeList.x, eyeList.y - 20, eyeList.getWidth() + 1, 20, Component.literal(""), (b) -> {
             this.setEyeListVisibility(!eyeList.visible);
         }));
-        this.fangButton = this.addRenderableWidget(new ExtendedButton(fangList.x, fangList.y - 20, fangList.getWidth() + 1, 20, new TextComponent(""), (b) -> {
+        this.fangButton = this.addRenderableWidget(new ExtendedButton(fangList.x, fangList.y - 20, fangList.getWidth() + 1, 20, Component.literal(""), (b) -> {
             this.setFangListVisibility(!fangList.visible);
         }));
-        this.glowingEyesButton = this.addRenderableWidget(new Checkbox(this.guiLeft + 20, this.guiTop + 70, 99, 20, new TranslatableComponent("gui.vampirism.appearance.glowing_eye"), glowingEyes) {
+        this.glowingEyesButton = this.addRenderableWidget(new Checkbox(this.guiLeft + 20, this.guiTop + 70, 99, 20, Component.translatable("gui.vampirism.appearance.glowing_eye"), glowingEyes) {
             @Override
             public void onPress() {
                 super.onPress();

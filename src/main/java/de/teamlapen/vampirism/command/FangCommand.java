@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 
 public class FangCommand extends BasicCommand {
@@ -21,7 +21,7 @@ public class FangCommand extends BasicCommand {
 
     private static int setFang(CommandContext<CommandSourceStack> context, Player player, int type) {
         if (VampirePlayer.getOpt(player).map(vampire -> vampire.setFangType(type)).orElse(false)) {
-            context.getSource().sendSuccess(new TranslatableComponent("command.vampirism.base.fang.success", type), false);
+            context.getSource().sendSuccess(Component.translatable("command.vampirism.base.fang.success", type), false);
         }
         return type;
     }

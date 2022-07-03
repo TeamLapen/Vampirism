@@ -23,9 +23,6 @@ public class VampirismNightVisionPotion extends MobEffect {
 
     public VampirismNightVisionPotion() {
         super(MobEffectCategory.BENEFICIAL, 2039713);
-        LOGGER.warn("-------Please ignore the following error!------");
-        this.setRegistryName("minecraft", "night_vision");
-        LOGGER.warn("-----------------------------------------------");
     }
 
     @OnlyIn(Dist.CLIENT)

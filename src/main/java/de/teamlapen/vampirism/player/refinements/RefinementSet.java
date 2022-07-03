@@ -7,9 +7,8 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nonnull;
@@ -18,7 +17,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public abstract class RefinementSet extends ForgeRegistryEntry<IRefinementSet> implements IRefinementSet {
+public abstract class RefinementSet implements IRefinementSet {
 
     private final Set<RegistryObject<? extends IRefinement>> refinements;
     private final Rarity rarity;
@@ -48,7 +47,7 @@ public abstract class RefinementSet extends ForgeRegistryEntry<IRefinementSet> i
     @Nonnull
     @Override
     public Component getName() {
-        return this.name != null ? this.name : (this.name = new TranslatableComponent("refinement_set." + getRegistryName().getNamespace() + "." + getRegistryName().getPath()));
+        return this.name != null ? this.name : (this.name = Component.translatable("refinement_set." + RegUtil.id(this).getNamespace() + "." + RegUtil.id(this).getPath()));
     }
 
     @Nonnull

@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.advancements;
 import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -45,7 +46,7 @@ public class SkillUnlockedTrigger extends SimpleCriterionTrigger<SkillUnlockedTr
 
         Instance(@Nonnull ISkill<?> skill) {
             super(ID, EntityPredicate.Composite.ANY);
-            this.skillId = skill.getRegistryName();
+            this.skillId = RegUtil.id(skill) ;
         }
 
         Instance(@Nonnull ResourceLocation skillId) {
@@ -62,7 +63,7 @@ public class SkillUnlockedTrigger extends SimpleCriterionTrigger<SkillUnlockedTr
         }
 
         public boolean test(@Nonnull ISkill<?> skill) {
-            return this.skillId.equals(skill.getRegistryName());
+            return this.skillId.equals(RegUtil.id(skill) );
         }
     }
 }

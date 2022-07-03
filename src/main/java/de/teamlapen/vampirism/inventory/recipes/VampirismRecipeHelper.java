@@ -5,7 +5,7 @@ import com.google.common.collect.Sets;
 import com.google.gson.*;
 import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import de.teamlapen.vampirism.core.ModRegistries;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -27,7 +27,7 @@ class VampirismRecipeHelper {
         ISkill<?>[] skills = new ISkill[jsonObject.size()];
         for (int i = 0; i < skills.length; ++i) {
             String s = GsonHelper.convertToString(jsonObject.get(i), "skill[" + i + "]");
-            ISkill<?> skill = ModRegistries.SKILLS.getValue(new ResourceLocation(s));
+            ISkill<?> skill = RegUtil.getSkill(new ResourceLocation(s));
             if (skill == null) {
                 throw new JsonSyntaxException("Unknown skill '" + s + "'");
             } else {

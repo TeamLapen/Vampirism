@@ -13,7 +13,6 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
@@ -24,14 +23,13 @@ import de.teamlapen.vampirism.items.OblivionItem;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.util.RegUtil;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
@@ -126,21 +124,21 @@ public class InputEventPacket implements IMessage {
                     factionPlayerOpt.ifPresent(factionPlayer -> {
                         IActionHandler<T> actionHandler = factionPlayer.getActionHandler();
                         //noinspection unchecked
-                        IAction<T> action = (IAction<T>) ModRegistries.ACTIONS.getValue(id);
+                        IAction<T> action = (IAction<T>) RegUtil.getAction(id);
                         if (action != null) {
                             IAction.PERM r = actionHandler.toggleAction(action);
                             switch (r) {
                                 case NOT_UNLOCKED:
-                                    player.displayClientMessage(new TranslatableComponent("text.vampirism.action.not_unlocked"), true);
+                                    player.displayClientMessage(Component.translatable("text.vampirism.action.not_unlocked"), true);
                                     break;
                                 case DISABLED:
-                                    player.displayClientMessage(new TranslatableComponent("text.vampirism.action.deactivated_by_serveradmin"), false);
+                                    player.displayClientMessage(Component.translatable("text.vampirism.action.deactivated_by_serveradmin"), false);
                                     break;
                                 case COOLDOWN:
-                                    player.displayClientMessage(new TranslatableComponent("text.vampirism.action.cooldown_not_over"), true);
+                                    player.displayClientMessage(Component.translatable("text.vampirism.action.cooldown_not_over"), true);
                                     break;
                                 case DISALLOWED:
-                                    player.displayClientMessage(new TranslatableComponent("text.vampirism.action.disallowed"), true);
+                                    player.displayClientMessage(Component.translatable("text.vampirism.action.disallowed"), true);
                                 default://Everything alright
                             }
                         } else {
@@ -163,7 +161,7 @@ public class InputEventPacket implements IMessage {
                 case UNLOCKSKILL:
                     factionPlayerOpt.ifPresent(factionPlayer -> {
                         //noinspection unchecked
-                        ISkill<T> skill = (ISkill<T>) ModRegistries.SKILLS.getValue(new ResourceLocation(msg.param));
+                        ISkill<T> skill = (ISkill<T>) RegUtil.getSkill(new ResourceLocation(msg.param));
                         if (skill != null) {
                             ISkillHandler<T> skillHandler = factionPlayer.getSkillHandler();
                             ISkillHandler.Result result = skillHandler.canSkillBeEnabled(skill);
@@ -198,7 +196,7 @@ public class InputEventPacket implements IMessage {
                 case REVERTBACK:
                     FactionPlayerHandler.getOpt(player).ifPresent(handler -> {
                         handler.setFactionAndLevel(null, 0);
-                        player.displayClientMessage(new TranslatableComponent("command.vampirism.base.level.successful", player.getName(), VReference.VAMPIRE_FACTION.getName(), 0), true);
+                        player.displayClientMessage(Component.translatable("command.vampirism.base.level.successful", player.getName(), VReference.VAMPIRE_FACTION.getName(), 0), true);
                         LOGGER.debug("Player {} left faction", player);
                         if (!ServerLifecycleHooks.getCurrentServer().isHardcore()) {
                             player.hurt(DamageSource.MAGIC, 1000);
@@ -223,7 +221,7 @@ public class InputEventPacket implements IMessage {
                         }
                     } else if (!org.apache.commons.lang3.StringUtils.isBlank(name)) {
                         ItemStack stack = player.getMainHandItem();
-                        stack.setHoverName(new TextComponent(name).withStyle(ChatFormatting.AQUA));
+                        stack.setHoverName(Component.literal(name).withStyle(ChatFormatting.AQUA));
                     }
                     break;
                 case SELECT_CALL_MINION:
@@ -266,7 +264,7 @@ public class InputEventPacket implements IMessage {
                                 @Nonnull
                                 @Override
                                 public Component getDisplayName() {
-                                    return new TranslatableComponent("");
+                                    return Component.translatable("");
                                 }
                             });
                             fPlayer.getTaskManager().openVampirismMenu();

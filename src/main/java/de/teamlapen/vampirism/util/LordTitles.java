@@ -2,26 +2,24 @@ package de.teamlapen.vampirism.util;
 
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
 public class LordTitles {
-    private static final Component VAMPIRE_1M = new TranslatableComponent("text.vampirism.lord_title.vampire.male1");
-    private static final Component VAMPIRE_2M = new TranslatableComponent("text.vampirism.lord_title.vampire.male2");
-    private static final Component VAMPIRE_3M = new TranslatableComponent("text.vampirism.lord_title.vampire.male3");
-    private static final Component VAMPIRE_4M = new TranslatableComponent("text.vampirism.lord_title.vampire.male4");
-    private static final Component VAMPIRE_5M = new TranslatableComponent("text.vampirism.lord_title.vampire.male5");
-    private static final Component VAMPIRE_1F = new TranslatableComponent("text.vampirism.lord_title.vampire.female1");
-    private static final Component VAMPIRE_2F = new TranslatableComponent("text.vampirism.lord_title.vampire.female2");
-    private static final Component VAMPIRE_3F = new TranslatableComponent("text.vampirism.lord_title.vampire.female3");
-    private static final Component VAMPIRE_4F = new TranslatableComponent("text.vampirism.lord_title.vampire.female4");
-    private static final Component VAMPIRE_5F = new TranslatableComponent("text.vampirism.lord_title.vampire.female5");
-    private static final Component HUNTER_1 = new TranslatableComponent("text.vampirism.lord_title.hunter.1");
-    private static final Component HUNTER_2 = new TranslatableComponent("text.vampirism.lord_title.hunter.2");
-    private static final Component HUNTER_3 = new TranslatableComponent("text.vampirism.lord_title.hunter.3");
-    private static final Component HUNTER_4 = new TranslatableComponent("text.vampirism.lord_title.hunter.4");
-    private static final Component HUNTER_5 = new TranslatableComponent("text.vampirism.lord_title.hunter.5");
-    private static final Component EMPTY = new TextComponent("");
+    private static final Component VAMPIRE_1M = Component.translatable("text.vampirism.lord_title.vampire.male1");
+    private static final Component VAMPIRE_2M = Component.translatable("text.vampirism.lord_title.vampire.male2");
+    private static final Component VAMPIRE_3M = Component.translatable("text.vampirism.lord_title.vampire.male3");
+    private static final Component VAMPIRE_4M = Component.translatable("text.vampirism.lord_title.vampire.male4");
+    private static final Component VAMPIRE_5M = Component.translatable("text.vampirism.lord_title.vampire.male5");
+    private static final Component VAMPIRE_1F = Component.translatable("text.vampirism.lord_title.vampire.female1");
+    private static final Component VAMPIRE_2F = Component.translatable("text.vampirism.lord_title.vampire.female2");
+    private static final Component VAMPIRE_3F = Component.translatable("text.vampirism.lord_title.vampire.female3");
+    private static final Component VAMPIRE_4F = Component.translatable("text.vampirism.lord_title.vampire.female4");
+    private static final Component VAMPIRE_5F = Component.translatable("text.vampirism.lord_title.vampire.female5");
+    private static final Component HUNTER_1 = Component.translatable("text.vampirism.lord_title.hunter.1");
+    private static final Component HUNTER_2 = Component.translatable("text.vampirism.lord_title.hunter.2");
+    private static final Component HUNTER_3 = Component.translatable("text.vampirism.lord_title.hunter.3");
+    private static final Component HUNTER_4 = Component.translatable("text.vampirism.lord_title.hunter.4");
+    private static final Component HUNTER_5 = Component.translatable("text.vampirism.lord_title.hunter.5");
+    private static final Component EMPTY = Component.literal("");
 
     public static Component getVampireTitle(int level, boolean female) {
         if (female) {

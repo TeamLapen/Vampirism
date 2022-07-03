@@ -6,9 +6,8 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
 import de.teamlapen.vampirism.player.tasks.reward.ItemReward;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -43,25 +42,25 @@ public class GuideHelper {
         assert task.getReward() instanceof ItemReward;
         Ingredient ingredient = Ingredient.of(((ItemReward) task.getReward()).getAllPossibleRewards().stream());
         List<FormattedText> text = new ArrayList<>();
-        TextComponent newLine = new TextComponent("\n");
+        Component newLine = Component.literal("\n");
         IPlayableFaction<?> f = task.getFaction();
         String type = f == null ? "" : f.getName().getString() + " ";
-        text.add(new TranslatableComponent("text.vampirism.task.reward_obtain", type));
+        text.add(Component.translatable("text.vampirism.task.reward_obtain", type));
         text.add(newLine);
         text.add(newLine);
         text.add(task.getTranslation());
         text.add(newLine);
-        text.add(new TranslatableComponent("text.vampirism.task.prerequisites"));
+        text.add(Component.translatable("text.vampirism.task.prerequisites"));
         text.add(newLine);
         TaskUnlocker[] unlockers = task.getUnlocker();
         if (unlockers.length > 0) {
             for (TaskUnlocker u : unlockers) {
-                text.add(new TextComponent("- ").append(u.getDescription()).append(newLine));
+                text.add(Component.literal("- ").append(u.getDescription()).append(newLine));
             }
 
 
         } else {
-            text.add(new TranslatableComponent("text.vampirism.task.prerequisites.none"));
+            text.add(Component.translatable("text.vampirism.task.prerequisites.none"));
         }
         return new PageItemStack(FormattedText.composite(text), ingredient);
     }

@@ -27,8 +27,8 @@ import de.teamlapen.vampirism.items.VampirismItemBloodFood;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -213,10 +213,10 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
                 if (this.minionData.level + 1 >= ((MinionUpgradeItem) heldItem.getItem()).getMinLevel() && this.minionData.level + 1 <= ((MinionUpgradeItem) heldItem.getItem()).getMaxLevel()) {
                     this.minionData.level++;
                     if (!player.getAbilities().instabuild) heldItem.shrink(1);
-                    player.displayClientMessage(new TranslatableComponent("text.vampirism.vampire_minion.binding_upgrade"), false);
+                    player.displayClientMessage(Component.translatable("text.vampirism.vampire_minion.binding_upgrade"), false);
                     HelperLib.sync(this);
                 } else {
-                    player.displayClientMessage(new TranslatableComponent("text.vampirism.vampire_minion.binding_wrong"), false);
+                    player.displayClientMessage(Component.translatable("text.vampirism.vampire_minion.binding_wrong"), false);
 
                 }
                 return InteractionResult.SUCCESS;

@@ -12,7 +12,6 @@ import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -116,9 +115,9 @@ public class TentBlock extends VampirismBlock {
         offsets = offsetsBuilder.build();
 
         ImmutableMap.Builder<Player.BedSleepingProblem, Component> sleepBuilder = ImmutableMap.builder();
-        sleepBuilder.put(Player.BedSleepingProblem.NOT_POSSIBLE_NOW, new TranslatableComponent("text.vampirism.tent.no_sleep"));
-        sleepBuilder.put(Player.BedSleepingProblem.TOO_FAR_AWAY, new TranslatableComponent("text.vampirism.tent.too_far_away"));
-        sleepBuilder.put(Player.BedSleepingProblem.OBSTRUCTED, new TranslatableComponent("text.vampirism.tent.obstructed"));
+        sleepBuilder.put(Player.BedSleepingProblem.NOT_POSSIBLE_NOW, Component.translatable("text.vampirism.tent.no_sleep"));
+        sleepBuilder.put(Player.BedSleepingProblem.TOO_FAR_AWAY, Component.translatable("text.vampirism.tent.too_far_away"));
+        sleepBuilder.put(Player.BedSleepingProblem.OBSTRUCTED, Component.translatable("text.vampirism.tent.obstructed"));
         sleepResults = sleepBuilder.build();
     }
 
@@ -323,7 +322,7 @@ public class TentBlock extends VampirismBlock {
     public InteractionResult use(@Nonnull BlockState blockState, Level world, @Nonnull final BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult rayTraceResult) {
         if (world.isClientSide()) return InteractionResult.SUCCESS;
         if (VampirismPlayerAttributes.get(player).hunterLevel == 0) {
-            player.displayClientMessage(new TranslatableComponent("text.vampirism.tent.cant_use"), true);
+            player.displayClientMessage(Component.translatable("text.vampirism.tent.cant_use"), true);
             return InteractionResult.SUCCESS;
         }
 
@@ -337,7 +336,7 @@ public class TentBlock extends VampirismBlock {
             world.explode(null, DamageSource.badRespawnPointExplosion(), null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, Explosion.BlockInteraction.DESTROY);
             return InteractionResult.SUCCESS;
         } else if (blockState.getValue(OCCUPIED)) {
-            player.displayClientMessage(new TranslatableComponent("text.vampirism.tent.occupied"), true);
+            player.displayClientMessage(Component.translatable("text.vampirism.tent.occupied"), true);
             return InteractionResult.SUCCESS;
         } else {
             player.startSleepInBed(pos).ifLeft(sleepResult1 -> {

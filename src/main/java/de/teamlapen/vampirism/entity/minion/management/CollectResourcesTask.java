@@ -6,9 +6,11 @@ import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -17,7 +19,6 @@ import net.minecraftforge.server.ServerLifecycleHooks;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -30,7 +31,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
     private final Function<Q, Integer> coolDownSupplier;
     @Nonnull
     private final List<WeightedRandomItem<ItemStack>> resources;
-    private final Random rng = new Random();
+    private final RandomSource rng = RandomSource.create();
     @Nullable
     private final IFaction<?> faction;
 
@@ -51,7 +52,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
             minion.recallMinion();
         }
         if (lord != null) {
-            lord.displayClientMessage(new TranslatableComponent(Util.makeDescriptionId("minion_task", getRegistryName()) + ".start"), true);
+            lord.displayClientMessage(Component.translatable(Util.makeDescriptionId("minion_task", RegUtil.id(this)) + ".start"), true);
         }
         return new Desc<>(this, this.coolDownSupplier.apply(data), lord != null ? lord.getUUID() : null);
     }

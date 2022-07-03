@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.goals.ForceLookEntityGoal;
 import de.teamlapen.vampirism.inventory.container.TaskBoardContainer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.VillagerType;
@@ -17,8 +16,8 @@ import java.util.OptionalInt;
 
 public interface IDefaultTaskMasterEntity extends ForceLookEntityGoal.TaskOwner, ITaskMasterEntity {
 
-    Component CONTAINER_NAME = new TranslatableComponent("container.vampirism.taskmaster");
-    Component NO_TASK = new TranslatableComponent("text.vampirism.taskmaster.no_tasks");
+    Component CONTAINER_NAME = Component.translatable("container.vampirism.taskmaster");
+    Component NO_TASK = Component.translatable("text.vampirism.taskmaster.no_tasks");
 
     /**
      * @return The biome type based on where this entity was spawned

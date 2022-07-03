@@ -4,7 +4,6 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.function.Supplier;
 
@@ -19,7 +18,7 @@ public class ParentUnlocker implements TaskUnlocker {
 
     @Override
     public Component getDescription() {
-        return new TranslatableComponent("text.vampirism.task.require_parent", parent.get().getTranslation());
+        return Component.translatable("text.vampirism.task.require_parent", parent.get().getTranslation());
     }
 
     public Supplier<Task> getParent() {

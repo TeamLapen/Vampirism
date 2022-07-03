@@ -1,17 +1,17 @@
 package de.teamlapen.vampirism.api.entity.player.actions;
 
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.effect.EffectInstanceWithSource;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 /**
  * Default implementation for an action
  */
-public abstract class DefaultAction<T extends IFactionPlayer<T>> extends ForgeRegistryEntry<IAction<?>> implements IAction<T> {
+public abstract class DefaultAction<T extends IFactionPlayer<T>> implements IAction<T> {
     private Component name;
 
     public void addEffectInstance(T player, MobEffectInstance instance) {
@@ -40,7 +40,7 @@ public abstract class DefaultAction<T extends IFactionPlayer<T>> extends ForgeRe
 
     @Override
     public Component getName() {
-        return name == null ? name = new TranslatableComponent(getTranslationKey()) : name;
+        return name == null ? name = Component.translatable(getTranslationKey()) : name;
     }
 
     @Deprecated
@@ -88,4 +88,8 @@ public abstract class DefaultAction<T extends IFactionPlayer<T>> extends ForgeRe
      * @return Whether the action was successfully activated. !Does not give any feedback to the user!
      */
     protected abstract boolean activate(T player);
+
+    private ResourceLocation getRegistryName() {
+        return VampirismRegistries.ACTIONS.get().getKey(this);
+    }
 }

@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -27,7 +26,7 @@ public interface IFactionExclusiveItem extends ItemLike {
     default void addFactionPoisonousToolTip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn, @Nullable Player player) {
         IFaction<?> faction = player != null ? VampirismAPI.factionRegistry().getFaction(player) : null;
         if (faction == null ? !VReference.HUNTER_FACTION.equals(getExclusiveFaction(stack)) : faction != getExclusiveFaction(stack)) {
-            tooltip.add(new TranslatableComponent("text.vampirism.poisonous_to_non", getExclusiveFaction(stack).getNamePlural()).withStyle(ChatFormatting.DARK_RED));
+            tooltip.add(Component.translatable("text.vampirism.poisonous_to_non", getExclusiveFaction(stack).getNamePlural()).withStyle(ChatFormatting.DARK_RED));
         }
     }
 

@@ -21,8 +21,8 @@ import de.teamlapen.vampirism.items.MinionUpgradeItem;
 import de.teamlapen.vampirism.items.VampirismItemCrossbow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -195,10 +195,10 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
                 if (this.minionData.level + 1 >= ((MinionUpgradeItem) heldItem.getItem()).getMinLevel() && this.minionData.level + 1 <= ((MinionUpgradeItem) heldItem.getItem()).getMaxLevel()) {
                     this.minionData.level++;
                     if (!player.getAbilities().instabuild) heldItem.shrink(1);
-                    player.displayClientMessage(new TranslatableComponent("text.vampirism.hunter_minion.equipment_upgrade"), false);
+                    player.displayClientMessage(Component.translatable("text.vampirism.hunter_minion.equipment_upgrade"), false);
                     HelperLib.sync(this);
                 } else {
-                    player.displayClientMessage(new TranslatableComponent("text.vampirism.hunter_minion.equipment_wrong"), false);
+                    player.displayClientMessage(Component.translatable("text.vampirism.hunter_minion.equipment_wrong"), false);
 
                 }
                 return InteractionResult.SUCCESS;

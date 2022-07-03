@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -89,7 +90,7 @@ public class SkillNodeBuilder {
             json.addProperty("parent", parent.toString());
             JsonArray array = new JsonArray();
             for (ISkill<?> skill : this.skills) {
-                array.add(skill.getRegistryName().toString());
+                array.add(RegUtil.id(skill) .toString());
             }
             json.add("skills", array);
             if (lockingSkillNodes.length > 0) {

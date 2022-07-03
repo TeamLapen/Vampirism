@@ -5,8 +5,6 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -74,13 +72,13 @@ public class HunterIntelItem extends Item {
     @Override
     public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltips, @Nonnull TooltipFlag flagIn) {
         if (this.tooltip == null) {
-            this.tooltip = new TranslatableComponent("text.vampirism.for_up_to_level").append(new TextComponent(": " + (level + 5))).withStyle(ChatFormatting.RED);
+            this.tooltip = Component.translatable("text.vampirism.for_up_to_level").append(Component.literal(": " + (level + 5))).withStyle(ChatFormatting.RED);
         }
         tooltips.add(this.tooltip);
     }
 
     public Component getCustomName() {
-        return new TranslatableComponent(this.getOrCreateDescriptionId()).append(new TextComponent(" ")).append(new TranslatableComponent("text.vampirism.for_up_to_level").append(new TextComponent(" " + (level + 5))));
+        return Component.translatable(this.getOrCreateDescriptionId()).append(Component.literal(" ")).append(Component.translatable("text.vampirism.for_up_to_level").append(Component.literal(" " + (level + 5))));
     }
 
     /**

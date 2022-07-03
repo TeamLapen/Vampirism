@@ -16,7 +16,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.Collection;
 import java.util.Map;
@@ -68,12 +67,14 @@ public class BloodValueLoader extends SimplePreparableReloadListener<Collection<
     @Nullable
     protected Map<ResourceLocation, Integer> loadBloodValuesFromDataPack(ResourceLocation location, String modId, ResourceManager resourceManager) {
         if (!ModList.get().isLoaded(modId)) return null;
-        try {
-            return loadBloodValuesFromReader(new InputStreamReader(resourceManager.getResource(location).getInputStream()), modId);
-        } catch (IOException e) {
-            LOGGER.error(LogUtil.CONFIG, "[ModCompat]Could not read default blood values for mod {}, this should not happen {}", modId, e);
-            return null;
-        }
+        return resourceManager.getResource(location).map(resource -> {
+            try (Reader reader = resource.openAsReader()) {
+                return loadBloodValuesFromReader(reader, modId);
+            } catch (IOException e) {
+                LOGGER.error(LogUtil.CONFIG, "[ModCompat]Could not read default blood values for mod {}, this should not happen {}", modId, e);
+                return null;
+            }
+        }).orElse(null);
     }
 
     /**
@@ -130,6 +131,6 @@ public class BloodValueLoader extends SimplePreparableReloadListener<Collection<
     @Nonnull
     @Override
     protected Collection<ResourceLocation> prepare(ResourceManager resourceManagerIn, @Nonnull ProfilerFiller profilerIn) {
-        return resourceManagerIn.listResources(folderLocation, (file) -> file.endsWith(".txt"));
+        return resourceManagerIn.listResources(folderLocation, (file) -> file.getPath().endsWith(".txt")).keySet();
     }
 }

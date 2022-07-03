@@ -5,10 +5,10 @@ import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModAttributes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -90,7 +90,7 @@ public class ConvertedDonkeyEntity extends Donkey implements CurableConvertedCre
 
     @Override
     protected Component getTypeName() {
-        return this.getNameC(() -> new TranslatableComponent("entity.donkey"));
+        return this.getNameC(() -> Component.translatable("entity.donkey"));
     }
 
     @Override
@@ -123,7 +123,7 @@ public class ConvertedDonkeyEntity extends Donkey implements CurableConvertedCre
     }
 
     @Override
-    protected void randomizeAttributes() {
+    protected void randomizeAttributes(RandomSource random) {
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(this.getMaxHealth() * 1.5);
     }
 

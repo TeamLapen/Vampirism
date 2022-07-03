@@ -8,7 +8,6 @@ import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -47,7 +46,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 public class CoffinBlock extends VampirismBlockContainer {
     public static final EnumProperty<CoffinPart> PART = EnumProperty.create("part", CoffinPart.class);
     private static final VoxelShape shape = makeShape();
-    private static final Map<Player.BedSleepingProblem, Component> sleepResults = ImmutableMap.of(Player.BedSleepingProblem.NOT_POSSIBLE_NOW, new TranslatableComponent("text.vampirism.coffin.no_sleep"), Player.BedSleepingProblem.TOO_FAR_AWAY, new TranslatableComponent("text.vampirism.coffin.too_far_away"), Player.BedSleepingProblem.OBSTRUCTED, new TranslatableComponent("text.vampirism.coffin.obstructed"));
+    private static final Map<Player.BedSleepingProblem, Component> sleepResults = ImmutableMap.of(Player.BedSleepingProblem.NOT_POSSIBLE_NOW, Component.translatable("text.vampirism.coffin.no_sleep"), Player.BedSleepingProblem.TOO_FAR_AWAY, Component.translatable("text.vampirism.coffin.too_far_away"), Player.BedSleepingProblem.OBSTRUCTED, Component.translatable("text.vampirism.coffin.obstructed"));
 
     public static boolean isOccupied(BlockGetter world, BlockPos pos) {
         BlockState state = world.getBlockState(pos);
@@ -194,7 +193,7 @@ public class CoffinBlock extends VampirismBlockContainer {
             }
 
             if (VampirismPlayerAttributes.get(player).vampireLevel == 0) {
-                player.displayClientMessage(new TranslatableComponent("text.vampirism.coffin.cant_use"), true);
+                player.displayClientMessage(Component.translatable("text.vampirism.coffin.cant_use"), true);
                 return InteractionResult.SUCCESS;
             }
 
@@ -208,7 +207,7 @@ public class CoffinBlock extends VampirismBlockContainer {
                 worldIn.explode(null, DamageSource.badRespawnPointExplosion(), null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, Explosion.BlockInteraction.DESTROY);
                 return InteractionResult.SUCCESS;
             } else if (state.getValue(BedBlock.OCCUPIED)) {
-                player.displayClientMessage(new TranslatableComponent("text.vampirism.coffin.occupied"), true);
+                player.displayClientMessage(Component.translatable("text.vampirism.coffin.occupied"), true);
                 return InteractionResult.SUCCESS;
             } else {
                 final BlockPos finalPos = pos;

@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.network.RequestMinionSelectPacket;
 import de.teamlapen.vampirism.network.SelectMinionTaskPacket;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
@@ -24,7 +23,7 @@ public class SelectMinionScreen extends Screen {
     private ScrollableArrayTextComponentList list;
 
     public SelectMinionScreen(RequestMinionSelectPacket.Action a, List<Pair<Integer, Component>> minions) {
-        super(new TextComponent(""));
+        super(Component.literal(""));
         this.action = a;
         this.minionIds = minions.stream().map(Pair::getLeft).toArray(Integer[]::new);
         this.minionNames = minions.stream().map(Pair::getRight).toArray(Component[]::new);

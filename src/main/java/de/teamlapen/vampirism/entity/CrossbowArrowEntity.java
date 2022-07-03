@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.CrossbowArrowItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -17,7 +18,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
-import java.util.Random;
 
 
 public class CrossbowArrowEntity extends AbstractArrow implements IEntityCrossbowArrow {
@@ -78,7 +78,7 @@ public class CrossbowArrowEntity extends AbstractArrow implements IEntityCrossbo
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    public Random getRNG() {
+    public RandomSource getRNG() {
         return this.random;
     }
 

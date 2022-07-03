@@ -4,8 +4,7 @@ import de.teamlapen.lib.util.OptifineHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 
 /**
@@ -25,7 +24,7 @@ public class BloodVision implements IVampireVision {
             if (!VampirismConfig.COMMON.optifineBloodvisionWarning.get()) {
                 VampirismConfig.COMMON.optifineBloodvisionWarning.set(true);
                 VampirismConfig.COMMON.optifineBloodvisionWarning.save();
-                entity.displayClientMessage(new TranslatableComponent("text.vampirism.warning_optifine_bloodvision"), false);
+                entity.displayClientMessage(Component.translatable("text.vampirism.warning_optifine_bloodvision"), false);
             }
         }
     }

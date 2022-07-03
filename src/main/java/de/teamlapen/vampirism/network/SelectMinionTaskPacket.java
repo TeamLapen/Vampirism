@@ -3,15 +3,14 @@ package de.teamlapen.vampirism.network;
 import de.teamlapen.lib.network.IMessage;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
-import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
+import de.teamlapen.vampirism.util.RegUtil;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
@@ -46,7 +45,7 @@ public record SelectMinionTaskPacket(int minionID,
                         if (controller.recallMinion(msg.minionID)) {
                             controller.createMinionEntityAtPlayer(msg.minionID, ctx.getSender());
                         } else {
-                            ctx.getSender().displayClientMessage(new TranslatableComponent("text.vampirism.minion_is_still_recovering", controller.contactMinionData(msg.minionID, MinionData::getFormattedName).orElseGet( ()->new TextComponent("1"))), true);
+                            ctx.getSender().displayClientMessage(Component.translatable("text.vampirism.minion_is_still_recovering", controller.contactMinionData(msg.minionID, MinionData::getFormattedName).orElseGet( ()->Component.literal("1"))), true);
                         }
                     }
                 } else if (RESPAWN.equals(msg.taskID)) {
@@ -57,7 +56,8 @@ public record SelectMinionTaskPacket(int minionID,
                     printRecoveringMinions(ctx.getSender(), controller.getRecoveringMinionNames());
 
                 } else {
-                    IMinionTask<?, MinionData> task = (IMinionTask<?, MinionData>) ModRegistries.MINION_TASKS.getValue(msg.taskID);
+                    //noinspection unchecked
+                    IMinionTask<?, MinionData> task = (IMinionTask<?, MinionData>) RegUtil.getMinionTask(msg.taskID);
                     if (task == null) {
                         LOGGER.error("Cannot find action to activate {}", msg.taskID);
                     } else if (msg.minionID < -1) {
@@ -75,9 +75,9 @@ public record SelectMinionTaskPacket(int minionID,
 
     public static void printRecoveringMinions(ServerPlayer player, List<MutableComponent> recoveringMinions) {
         if (recoveringMinions.size() == 1) {
-            player.displayClientMessage(new TranslatableComponent("text.vampirism.minion_is_still_recovering", recoveringMinions.get(0)), true);
+            player.displayClientMessage(Component.translatable("text.vampirism.minion_is_still_recovering", recoveringMinions.get(0)), true);
         } else if (recoveringMinions.size() > 1) {
-            player.displayClientMessage(new TranslatableComponent("text.vampirism.n_minions_are_still_recovering", recoveringMinions.size()), true);
+            player.displayClientMessage(Component.translatable("text.vampirism.n_minions_are_still_recovering", recoveringMinions.size()), true);
         }
     }
 

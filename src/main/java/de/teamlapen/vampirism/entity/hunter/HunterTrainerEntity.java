@@ -12,7 +12,6 @@ import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
@@ -38,7 +37,7 @@ import java.util.Optional;
  * Hunter Trainer which allows Hunter players to level up
  */
 public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEntityGoal.TaskOwner, ICaptureIgnore {
-    private static final Component name = new TranslatableComponent("container.huntertrainer");
+    private static final Component name = Component.translatable("container.huntertrainer");
     private static final int MOVE_TO_RESTRICT_PRIO = 3;
 
     public static AttributeSupplier.Builder getAttributeBuilder() {
@@ -132,13 +131,13 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
                         this.trainee = player;
                         this.getNavigation().stop();
                     } else {
-                        player.sendMessage(new TranslatableComponent("text.vampirism.i_am_busy_right_now"), Util.NIL_UUID);
+                        player.sendSystemMessage(Component.translatable("text.vampirism.i_am_busy_right_now"));
                     }
 
                 } else if (levelCorrect == -1) {
-                    player.sendMessage(new TranslatableComponent("text.vampirism.hunter_trainer.trainer_level_wrong"), Util.NIL_UUID);
+                    player.sendSystemMessage(Component.translatable("text.vampirism.hunter_trainer.trainer_level_wrong"));
                 } else {
-                    player.sendMessage(new TranslatableComponent("text.vampirism.hunter_trainer.trainer_level_to_high"), Util.NIL_UUID);
+                    player.sendSystemMessage(Component.translatable("text.vampirism.hunter_trainer.trainer_level_to_high"));
                 }
 
             }

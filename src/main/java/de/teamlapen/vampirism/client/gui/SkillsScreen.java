@@ -22,6 +22,7 @@ import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.player.skills.ActionSkill;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.skills.SkillNode;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -34,8 +35,6 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -95,7 +94,7 @@ public class SkillsScreen<T extends IFactionPlayer<T>> extends Screen {
     }
 
     public SkillsScreen(@Nullable Screen backScreen) {
-        super(new TranslatableComponent("screen.vampirism.skills"));
+        super(Component.translatable("screen.vampirism.skills"));
         this.width = display_width;
         this.height = display_height;
         this.backScreen = backScreen;
@@ -106,11 +105,11 @@ public class SkillsScreen<T extends IFactionPlayer<T>> extends Screen {
         int guiLeft = (this.width - display_width) / 2;
         int guiTop = (this.height - display_height) / 2;
         if (this.backScreen != null) {
-            this.addRenderableWidget(new Button(guiLeft + 5, guiTop + 175, 80, 20, new TranslatableComponent("gui.back"), (context) -> {
+            this.addRenderableWidget(new Button(guiLeft + 5, guiTop + 175, 80, 20, Component.translatable("gui.back"), (context) -> {
                 this.minecraft.setScreen(this.backScreen);
             }));
         }
-        this.addRenderableWidget(new Button(guiLeft + 171, guiTop + 175, 80, 20, new TranslatableComponent("gui.done"), (context) -> {
+        this.addRenderableWidget(new Button(guiLeft + 171, guiTop + 175, 80, 20, Component.translatable("gui.done"), (context) -> {
             this.minecraft.setScreen(null);
         }));
         FactionPlayerHandler.getOpt(minecraft.player).ifPresent(fph -> {
@@ -134,7 +133,7 @@ public class SkillsScreen<T extends IFactionPlayer<T>> extends Screen {
 
                 boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
 
-                resetSkills = this.addRenderableWidget(new Button(guiLeft + 88, guiTop + 175, 80, 20, new TranslatableComponent("text.vampirism.skill.resetall"), (context) -> {
+                resetSkills = this.addRenderableWidget(new Button(guiLeft + 88, guiTop + 175, 80, 20, Component.translatable("text.vampirism.skill.resetall"), (context) -> {
                     VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.RESETSKILL, ""));
                     InventoryHelper.removeItemFromInventory(factionPlayer.getRepresentingPlayer().getInventory(), new ItemStack(ModItems.OBLIVION_POTION.get())); //server syncs after the screen is closed
                     if ((factionPlayer.getLevel() < 2 || minecraft.player.getInventory().countItem(ModItems.OBLIVION_POTION.get()) <= 1) && !test) {
@@ -142,9 +141,9 @@ public class SkillsScreen<T extends IFactionPlayer<T>> extends Screen {
                     }
                 }, (button, stack, mouseX, mouseY) -> {
                     if (button.active) {
-                        SkillsScreen.this.renderTooltip(stack, new TranslatableComponent("text.vampirism.skills.reset_consume", ModItems.OBLIVION_POTION.get().getDescription()), mouseX, mouseY);
+                        SkillsScreen.this.renderTooltip(stack, Component.translatable("text.vampirism.skills.reset_consume", ModItems.OBLIVION_POTION.get().getDescription()), mouseX, mouseY);
                     } else {
-                        SkillsScreen.this.renderTooltip(stack, new TranslatableComponent("text.vampirism.skills.reset_req", ModItems.OBLIVION_POTION.get().getDescription()), mouseX, mouseY);
+                        SkillsScreen.this.renderTooltip(stack, Component.translatable("text.vampirism.skills.reset_req", ModItems.OBLIVION_POTION.get().getDescription()), mouseX, mouseY);
                     }
                 }));
                 if ((factionPlayer.getLevel() < 2 || minecraft.player.getInventory().countItem(ModItems.OBLIVION_POTION.get()) <= 0) && !test) {
@@ -234,12 +233,12 @@ public class SkillsScreen<T extends IFactionPlayer<T>> extends Screen {
         if (lordTitle != null) {
             title = lordTitle.copy().append(" (" + lordLevel + ")");
         } else {
-            title = new TranslatableComponent("text.vampirism.skills.gui_title");
+            title = Component.translatable("text.vampirism.skills.gui_title");
         }
         int x = (this.width - display_width) / 2;
         int y = (this.height - display_height) / 2;
         this.font.drawShadow(stack, title.getVisualOrderText(), x + 15, y + 5, 0xFFFFFFFF);
-        MutableComponent points = new TranslatableComponent("text.vampirism.skills.points_left", skillHandler.getLeftSkillPoints());
+        MutableComponent points = Component.translatable("text.vampirism.skills.points_left", skillHandler.getLeftSkillPoints());
         if (this.minecraft.player.getEffect(ModEffects.OBLIVION.get()) != null) {
             points.withStyle(ChatFormatting.DARK_RED);
         }
@@ -296,7 +295,7 @@ public class SkillsScreen<T extends IFactionPlayer<T>> extends Screen {
         MultiBufferSource.BufferSource renderType = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
         mStack.translate(0.0D, 0.0D, zLevel);
 
-        Component f = new TranslatableComponent("text.vampirism.skill.unlock_unavailable").withStyle(ChatFormatting.WHITE);
+        Component f = Component.translatable("text.vampirism.skill.unlock_unavailable").withStyle(ChatFormatting.WHITE);
 
         FormattedCharSequence s = Language.getInstance().getVisualOrder(f);
 
@@ -549,16 +548,16 @@ public class SkillsScreen<T extends IFactionPlayer<T>> extends Screen {
                     lockingColor = result == ISkillHandler.Result.ALREADY_ENABLED ? ChatFormatting.DARK_GRAY : lockingSkills.stream().anyMatch(skill -> skillHandler.isSkillEnabled(skill)) ? ChatFormatting.DARK_RED : ChatFormatting.YELLOW;
                 }
                 if (lockingSkills != null) {
-                    tooltips.add(new TranslatableComponent("text.vampirism.skill.excluding").withStyle(lockingColor));
+                    tooltips.add(Component.translatable("text.vampirism.skill.excluding").withStyle(lockingColor));
                     for (ISkill<T> lockingSkill : lockingSkills) {
-                        tooltips.add(new TextComponent("  ").append(lockingSkill.getName().copy().withStyle(lockingColor)));
+                        tooltips.add(Component.literal("  ").append(lockingSkill.getName().copy().withStyle(lockingColor)));
                     }
                 }
 
                 if (result == ISkillHandler.Result.ALREADY_ENABLED) {
-                    tooltips.add(new TranslatableComponent("text.vampirism.skill.unlocked").withStyle(ChatFormatting.GOLD));
+                    tooltips.add(Component.translatable("text.vampirism.skill.unlocked").withStyle(ChatFormatting.GOLD));
                 } else if (result == ISkillHandler.Result.PARENT_NOT_ENABLED) {
-                    tooltips.add(new TranslatableComponent("text.vampirism.skill.unlock_parent_first").withStyle(ChatFormatting.DARK_RED));
+                    tooltips.add(Component.translatable("text.vampirism.skill.unlock_parent_first").withStyle(ChatFormatting.DARK_RED));
                 }
             }
             int width_name = Math.max(this.font.width(tooltips.get(0)), 110);
@@ -582,7 +581,7 @@ public class SkillsScreen<T extends IFactionPlayer<T>> extends Screen {
         if (skill instanceof ActionSkill) {
             return new ResourceLocation(((ActionSkill<T>) skill).getActionID().getNamespace(), "textures/actions/" + ((ActionSkill<T>) skill).getActionID().getPath() + ".png");
         } else {
-            return new ResourceLocation(skill.getRegistryName().getNamespace(), "textures/skills/" + skill.getRegistryName().getPath() + ".png");
+            return new ResourceLocation(RegUtil.id(skill) .getNamespace(), "textures/skills/" + RegUtil.id(skill) .getPath() + ".png");
         }
     }
 
@@ -601,7 +600,7 @@ public class SkillsScreen<T extends IFactionPlayer<T>> extends Screen {
 
     private void unlockSkill() {
         if (canUnlockSkill()) {
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.UNLOCKSKILL, selected.getRegistryName().toString()));
+            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.UNLOCKSKILL, RegUtil.id(selected).toString()));
             playSoundEffect(SoundEvents.PLAYER_LEVELUP, 0.7F);
         } else {
             playSoundEffect(SoundEvents.NOTE_BLOCK_BASS, 0.5F);

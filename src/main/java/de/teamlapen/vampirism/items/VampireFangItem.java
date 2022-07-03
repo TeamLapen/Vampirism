@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.effects.SanguinareEffect;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -29,16 +29,16 @@ public class VampireFangItem extends Item {
         ItemStack stack = playerIn.getItemInHand(handIn);
         if (!worldIn.isClientSide) {
             if (VampirismConfig.SERVER.disableFangInfection.get()) {
-                playerIn.displayClientMessage(new TranslatableComponent("text.vampirism.deactivated_by_serveradmin"), true);
+                playerIn.displayClientMessage(Component.translatable("text.vampirism.deactivated_by_serveradmin"), true);
             } else {
                 if (Helper.canBecomeVampire(playerIn)) {
                     SanguinareEffect.addRandom(playerIn, true);
                     playerIn.addEffect(new MobEffectInstance(ModEffects.POISON.get(), 60));
                 } else {
                     if (Helper.isVampire(playerIn)) {
-                        playerIn.displayClientMessage(new TranslatableComponent("text.vampirism.already_vampire"), true);
+                        playerIn.displayClientMessage(Component.translatable("text.vampirism.already_vampire"), true);
                     } else {
-                        playerIn.displayClientMessage(new TranslatableComponent("text.vampirism.immune_to").append(new TranslatableComponent(ModEffects.SANGUINARE.get().getDescriptionId())), true);
+                        playerIn.displayClientMessage(Component.translatable("text.vampirism.immune_to").append(Component.translatable(ModEffects.SANGUINARE.get().getDescriptionId())), true);
                     }
                 }
                 stack.shrink(1);

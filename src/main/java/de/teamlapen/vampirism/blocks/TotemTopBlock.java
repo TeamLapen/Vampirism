@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModTiles;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -138,7 +138,7 @@ public class TotemTopBlock extends BaseEntityBlock {
         }
         if (super.onDestroyedByPlayer(state, world, pos, player, willHarvest, fluid)) {
             if (tile != null && tile.getControllingFaction() != null) {
-                tile.notifyNearbyPlayers(new TranslatableComponent("text.vampirism.village.village_abandoned"));
+                tile.notifyNearbyPlayers(Component.translatable("text.vampirism.village.village_abandoned"));
             }
             return true;
         } else {

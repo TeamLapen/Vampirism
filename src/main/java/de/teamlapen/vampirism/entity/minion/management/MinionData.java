@@ -6,12 +6,12 @@ import de.teamlapen.vampirism.api.entity.minion.IMinionData;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -79,7 +79,8 @@ public class MinionData implements INBTSerializable<CompoundTag>, IMinionData {
         if (nbt.contains("task", 10)) {
             CompoundTag task = nbt.getCompound("task");
             ResourceLocation id = new ResourceLocation(task.getString("id"));
-            IMinionTask<?, MinionData> activeTask = (IMinionTask<?, MinionData>) ModRegistries.MINION_TASKS.getValue(id);
+            //noinspection unchecked
+            IMinionTask<?, MinionData> activeTask = (IMinionTask<?, MinionData>) RegUtil.getMinionTask(id);
             if (activeTask != null) {
                 activeTaskDesc = activeTask.readFromNBT(task);
             } else {
@@ -100,7 +101,7 @@ public class MinionData implements INBTSerializable<CompoundTag>, IMinionData {
 
     @Override
     public MutableComponent getFormattedName() {
-        return new TextComponent(name);
+        return Component.literal(name);
     }
 
     @Override
@@ -171,7 +172,7 @@ public class MinionData implements INBTSerializable<CompoundTag>, IMinionData {
         tag.putBoolean("locked", taskLocked);
         if (activeTaskDesc != null) {
             CompoundTag task = new CompoundTag();
-            task.putString("id", activeTaskDesc.getTask().getRegistryName().toString());
+            task.putString("id", RegUtil.id(activeTaskDesc.getTask()).toString());
             activeTaskDesc.writeToNBT(task);
             tag.put("task", task);
         }

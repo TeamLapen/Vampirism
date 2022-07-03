@@ -29,11 +29,10 @@ import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.util.HunterVillage;
 import de.teamlapen.vampirism.world.MinionWorldData;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
+import net.minecraft.data.worldgen.StructureSets;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -59,7 +58,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.phys.AABB;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -79,7 +77,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    private static final Component name = new TranslatableComponent("container.hunter");
+    private static final Component name = Component.translatable("container.hunter");
 
     public static AttributeSupplier.Builder getAttributeBuilder() {
         return VampirismEntity.getAttributeBuilder()
@@ -447,7 +445,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    protected int getExperienceReward(@Nonnull Player player) {
+    public int getExperienceReward() {
         return 6 + getEntityLevel();
     }
 
@@ -470,7 +468,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                         trainee = player;
                         this.getNavigation().stop();
                     } else {
-                        player.sendMessage(new TranslatableComponent("text.vampirism.i_am_busy_right_now"), Util.NIL_UUID);
+                        player.sendSystemMessage(Component.translatable("text.vampirism.i_am_busy_right_now"));
                     }
                     return InteractionResult.SUCCESS;
                 } else if (hunterLevel > 0) {
@@ -480,25 +478,25 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
                             if (this.getEntityLevel() > 0) {
                                 if (heldItem.getItem() == ModItems.HUNTER_MINION_EQUIPMENT.get()) {
-                                    player.displayClientMessage(new TranslatableComponent("text.vampirism.basic_hunter.minion.unavailable"), true);
+                                    player.displayClientMessage(Component.translatable("text.vampirism.basic_hunter.minion.unavailable"), true);
                                 }
                             } else {
                                 boolean freeSlot = MinionWorldData.getData(player.level).map(data -> data.getOrCreateController(fph)).map(PlayerMinionController::hasFreeMinionSlot).orElse(false);
-                                player.displayClientMessage(new TranslatableComponent("text.vampirism.basic_hunter.minion.available"), false);
+                                player.displayClientMessage(Component.translatable("text.vampirism.basic_hunter.minion.available"), false);
                                 if (heldItem.getItem() == ModItems.HUNTER_MINION_EQUIPMENT.get()) {
                                     if (!freeSlot) {
-                                        player.displayClientMessage(new TranslatableComponent("text.vampirism.basic_hunter.minion.no_free_slot"), false);
+                                        player.displayClientMessage(Component.translatable("text.vampirism.basic_hunter.minion.no_free_slot"), false);
                                     } else {
-                                        player.displayClientMessage(new TranslatableComponent("text.vampirism.basic_hunter.minion.start_serving"), false);
+                                        player.displayClientMessage(Component.translatable("text.vampirism.basic_hunter.minion.start_serving"), false);
                                         convertToMinion(player);
                                         if (!player.getAbilities().instabuild) heldItem.shrink(1);
                                     }
                                 } else if (freeSlot) {
-                                    player.displayClientMessage(new TranslatableComponent("text.vampirism.basic_hunter.minion.require_equipment", UtilLib.translate(ModItems.HUNTER_MINION_EQUIPMENT.get().getDescriptionId())), false);
+                                    player.displayClientMessage(Component.translatable("text.vampirism.basic_hunter.minion.require_equipment", UtilLib.translate(ModItems.HUNTER_MINION_EQUIPMENT.get().getDescriptionId())), false);
                                 }
                             }
                         } else {
-                            player.displayClientMessage(new TranslatableComponent("text.vampirism.basic_hunter.cannot_train_you_any_further"), false);
+                            player.displayClientMessage(Component.translatable("text.vampirism.basic_hunter.cannot_train_you_any_further"), false);
                         }
                     });
                     return InteractionResult.SUCCESS;
@@ -533,7 +531,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             }
         });
         this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, Zombie.class, true, true));
-        this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, PatrollingMonster.class, 5, true, true, (living) -> UtilLib.isInsideStructure(living, StructureFeature.VILLAGE)));        //Also check the priority of tasks that are dynamically added. See top of class
+        this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, PatrollingMonster.class, 5, true, true, (living) -> UtilLib.isInsideStructure(living, StructureSets.VILLAGES)));        //Also check the priority of tasks that are dynamically added. See top of class
     }
 
     protected void updateEntityAttributes() {

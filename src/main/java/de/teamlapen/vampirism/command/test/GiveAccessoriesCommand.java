@@ -14,7 +14,7 @@ import de.teamlapen.vampirism.entity.factions.PlayableFaction;
 import de.teamlapen.vampirism.items.RefinementItem;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -26,7 +26,7 @@ public class GiveAccessoriesCommand extends BasicCommand {
         return Commands.literal("giveAccessories")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_CHEAT))
                 .then(Commands.argument("slot", IntegerArgumentType.integer(1, 3))
-                        .then(Commands.argument("set", RefinementSetArgument.actions())
+                        .then(Commands.argument("set", RefinementSetArgument.set())
                                 .executes(context -> give(context, context.getSource().getPlayerOrException(), IntegerArgumentType.getInteger(context, "slot"), RefinementSetArgument.getSet(context, "set")))))
                 .then(Commands.literal("random")
                         .executes(context -> random(context, context.getSource().getPlayerOrException(), 1))
@@ -43,16 +43,16 @@ public class GiveAccessoriesCommand extends BasicCommand {
             ItemStack s = new ItemStack(i);
             if (i.applyRefinementSet(s, set)) {
                 asPlayer.addItem(s);
-                context.getSource().sendSuccess(new TranslatableComponent("command.vampirism.test.give_accessories.success", set.getName(), number), false);
+                context.getSource().sendSuccess(Component.translatable("command.vampirism.test.give_accessories.success", set.getName(), number), false);
             } else {
-                context.getSource().sendSuccess(new TranslatableComponent("command.vampirism.test.give_accessories.incompatible", set.getName(), number), false);
+                context.getSource().sendSuccess(Component.translatable("command.vampirism.test.give_accessories.incompatible", set.getName(), number), false);
             }
         }
         return 0;
     }
 
     private static int help(CommandContext<CommandSourceStack> context) {
-        context.getSource().sendSuccess(new TranslatableComponent("command.vampirism.test.give_accessories.help"), false);
+        context.getSource().sendSuccess(Component.translatable("command.vampirism.test.give_accessories.help"), false);
         return 0;
     }
 
@@ -65,7 +65,7 @@ public class GiveAccessoriesCommand extends BasicCommand {
                 if (!stack.isEmpty()) {
                     entity.addItem(stack);
                 } else {
-                    context.getSource().sendSuccess(new TranslatableComponent("command.vampirism.test.give_accessories.no_item"), false);
+                    context.getSource().sendSuccess(Component.translatable("command.vampirism.test.give_accessories.no_item"), false);
                     return 0;
                 }
             }

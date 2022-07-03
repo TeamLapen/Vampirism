@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.LIBREFERENCE;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraftforge.client.gui.GuiUtils;
@@ -37,7 +36,7 @@ public class ScrollableListWidget<T> extends ExtendedButton {
     private double scrollSpeed = 1D;
 
     public ScrollableListWidget(int xPos, int yPos, int width, int height, int itemHeight, @Nonnull Supplier<Collection<T>> baseValueSupplier, @Nonnull ItemCreator<T> itemSupplier) {
-        super(xPos, yPos, width, height, new TextComponent(""), (button) -> {
+        super(xPos, yPos, width, height, Component.literal(""), (button) -> {
         });
         this.itemHeight = itemHeight;
         this.itemSupplier = itemSupplier;

@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.DefaultSkill;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;
@@ -37,7 +36,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends Defaul
      * Enable description using "text.vampirism.skill."+getID()+".desc" as unloc key
      */
     public VampirismSkill<T> setHasDefaultDescription() {
-        description = () -> new TranslatableComponent(getTranslationKey() + ".desc");
+        description = () -> Component.translatable(getTranslationKey() + ".desc");
         return this;
     }
 

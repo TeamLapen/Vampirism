@@ -8,6 +8,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
@@ -94,26 +95,26 @@ public class BloodConversionRegistry {
      * @return Impure blood amount in mB or 0
      */
     public static int getImpureBloodValue(@Nonnull Item item) {
-        if (items.containsKey(item.getRegistryName()) || items_calculated.containsKey(item.getRegistryName())) {
-            return items.containsKey(item.getRegistryName()) ? items.get(item.getRegistryName()) * itemMultiplier : items_calculated.get(item.getRegistryName()) * itemMultiplier;
+        if (items.containsKey(id(item)) || items_calculated.containsKey(id(item))) {
+            return items.containsKey(id(item)) ? items.get(id(item)) * itemMultiplier : items_calculated.get(id(item)) * itemMultiplier;
         }
         return 0;
     }
 
     public static boolean canBeConverted(@Nonnull Item item) {
-        if (items.containsKey(item.getRegistryName()) || items_calculated.containsKey(item.getRegistryName())) {
+        if (items.containsKey(id(item)) || items_calculated.containsKey(id(item))) {
             return true;
-        } else if (items_blacklist.contains(item.getRegistryName())) {
+        } else if (items_blacklist.contains(id(item))) {
             return false;
         } else {
             if (item.isEdible() && item.getFoodProperties().isMeat()) {
-                int value = Mth.clamp((item.getRegistryName() != null && item.getRegistryName().getPath().contains("cooked")) ? 0 : item.getFoodProperties().getNutrition() / 2, 0, 5);
+                int value = Mth.clamp((id(item) != null && id(item).getPath().contains("cooked")) ? 0 : item.getFoodProperties().getNutrition() / 2, 0, 5);
                 if (value > 0) {
-                    items_calculated.put(item.getRegistryName(), value);
+                    items_calculated.put(id(item), value);
                     return true;
                 }
             }
-            items_blacklist.add(item.getRegistryName());
+            items_blacklist.add(id(item));
             return false;
         }
     }
@@ -125,14 +126,14 @@ public class BloodConversionRegistry {
      * @return Impure blood amount in mB or 0
      */
     public static float getBloodValue(@Nonnull FluidStack fluid) {
-        if (fluids.containsKey(fluid.getFluid().getRegistryName())) {
-            return (float) fluids.get(fluid.getFluid().getRegistryName()) / fluidDivider;
+        if (fluids.containsKey(id(fluid.getFluid()))) {
+            return (float) fluids.get(id(fluid.getFluid())) / fluidDivider;
         }
         return 0f;
     }
 
     public static boolean existsBloodValue(@Nonnull Fluid fluid) {
-        return fluids.containsKey(fluid.getRegistryName());
+        return fluids.containsKey(id(fluid));
     }
 
     /**
@@ -142,8 +143,16 @@ public class BloodConversionRegistry {
      * @return Impure blood amount in mB or 0
      */
     public static FluidStack getBloodFromFluid(@Nonnull FluidStack fluid) {
-        if (fluid.getFluid().isSame(VReference.blood_fluid_supplier.get()))
+        if (fluid.getFluid().isSame(VReference.BLOOD.get()))
             return fluid;
-        return new FluidStack(VReference.blood_fluid_supplier.get(), (int) (getBloodValue(fluid) * fluid.getAmount()));
+        return new FluidStack(VReference.BLOOD.get(), (int) (getBloodValue(fluid) * fluid.getAmount()));
+    }
+
+    public static ResourceLocation id(Item item) {
+        return ForgeRegistries.ITEMS.getKey(item);
+    }
+
+    public static ResourceLocation id(Fluid block) {
+        return ForgeRegistries.FLUIDS.getKey(block);
     }
 }

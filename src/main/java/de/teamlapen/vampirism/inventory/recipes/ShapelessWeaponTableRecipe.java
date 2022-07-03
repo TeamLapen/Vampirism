@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModRecipes;
-import de.teamlapen.vampirism.core.ModRegistries;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -19,7 +19,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -134,7 +133,7 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
 
     }
 
-    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ShapelessWeaponTableRecipe> {
+    public static class Serializer implements RecipeSerializer<ShapelessWeaponTableRecipe> {
         @Nonnull
         @Override
         public ShapelessWeaponTableRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
@@ -166,7 +165,7 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
             int lava = buffer.readVarInt();
             ISkill<?>[] skills = new ISkill[buffer.readVarInt()];
             for (int i = 0; i < skills.length; i++) {
-                skills[i] = ModRegistries.SKILLS.getValue(new ResourceLocation(buffer.readUtf(32767)));
+                skills[i] = RegUtil.getSkill(new ResourceLocation(buffer.readUtf(32767)));
             }
             //noinspection unchecked
             return new ShapelessWeaponTableRecipe(recipeId, group, ingredients, result, level, lava, (ISkill<IHunterPlayer>[]) skills);
@@ -184,7 +183,7 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
             buffer.writeVarInt(recipe.requiredLava);
             buffer.writeVarInt(recipe.requiredSkills.length);
             for (ISkill<?> skill : recipe.requiredSkills) {
-                buffer.writeUtf(skill.getRegistryName().toString());
+                buffer.writeUtf(RegUtil.id(skill) .toString());
             }
         }
 

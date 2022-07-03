@@ -10,8 +10,6 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -39,11 +37,11 @@ public class NameSwordScreen extends Screen {
     private EditBox nameField;
 
     public NameSwordScreen(ItemStack sword) {
-        super(new TranslatableComponent("gui.vampirism.name_sword.title"));
-        this.yes = new TranslatableComponent("gui.yes");
-        this.no = new TranslatableComponent("gui.no");
-        this.text1 = new TranslatableComponent("gui.vampirism.name_sword.title");
-        this.text2 = new TranslatableComponent("gui.vampirism.name_sword.text");
+        super(Component.translatable("gui.vampirism.name_sword.title"));
+        this.yes = Component.translatable("gui.yes");
+        this.no = Component.translatable("gui.no");
+        this.text1 = Component.translatable("gui.vampirism.name_sword.title");
+        this.text2 = Component.translatable("gui.vampirism.name_sword.text");
         this.sword = sword;
     }
 
@@ -52,7 +50,7 @@ public class NameSwordScreen extends Screen {
         super.init();
         this.addRenderableWidget(new Button(this.width / 2 - 155, this.height / 6 + 96, 150, 20, this.yes, (context) -> {
             if (!StringUtils.isBlank(nameField.getValue())) {
-                NameSwordScreen.this.sword.setHoverName(new TextComponent(nameField.getValue()));
+                NameSwordScreen.this.sword.setHoverName(Component.literal(nameField.getValue()));
                 VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.NAME_ITEM, nameField.getValue()));
             }
             this.minecraft.setScreen(null);
@@ -67,7 +65,7 @@ public class NameSwordScreen extends Screen {
         this.listLines.clear();
         this.listLines.addAll(this.font.split(this.text2, this.width - 50));
 
-        this.nameField = new EditBox(this.font, this.width / 2 - 155 + 77, this.height / 6 + 70, 155, 20, new TextComponent("text_sword"));
+        this.nameField = new EditBox(this.font, this.width / 2 - 155 + 77, this.height / 6 + 70, 155, 20, Component.literal("text_sword"));
         this.nameField.setTextColor(-1);
         this.nameField.setTextColorUneditable(-1);
         this.nameField.setBordered(true);

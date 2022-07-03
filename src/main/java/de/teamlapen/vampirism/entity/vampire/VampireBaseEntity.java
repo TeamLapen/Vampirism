@@ -21,7 +21,9 @@ import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.data.worldgen.StructureSets;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -33,22 +35,17 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.Npc;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
 
 import javax.annotation.Nonnull;
-import java.util.Random;
 
 /**
  * Base class for Vampirism's vampire entities
  */
 public abstract class VampireBaseEntity extends VampirismEntity implements IVampireMob, Npc/*mainly for JourneyMap*/ {
 
-    public static boolean spawnPredicateVampire(EntityType<? extends VampirismEntity> entityType, ServerLevelAccessor world, MobSpawnType spawnReason, BlockPos blockPos, Random random) {
+    public static boolean spawnPredicateVampire(EntityType<? extends VampirismEntity> entityType, ServerLevelAccessor world, MobSpawnType spawnReason, BlockPos blockPos, RandomSource random) {
         return world.getDifficulty() != Difficulty.PEACEFUL && (Monster.isDarkEnoughToSpawn(world, blockPos, random) || spawnPredicateVampireFog(world, blockPos)) && Mob.checkMobSpawnRules(entityType, world, spawnReason, blockPos, random);
     }
 
@@ -115,11 +112,11 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
             if (isGettingSundamage(worldIn, true) || isGettingGarlicDamage(worldIn, true) != EnumStrength.NONE)
                 return false;
             if (spawnRestriction.level >= SpawnRestriction.NORMAL.level) {
-                if (worldIn.getBrightness(blockPosition()) > 0.5 && random.nextInt(5) != 0) {
+                if (worldIn.getBrightness(LightLayer.SKY, blockPosition()) > 0.5 && random.nextInt(5) != 0) {
                     return false;
                 }
                 if (this.level.isLoaded(blockPosition()) && worldIn instanceof ServerLevel) { //TODO check performance
-                    if (UtilLib.getStructureStartAt((ServerLevel) level, blockPosition(), StructureFeature.VILLAGE).isValid()) {
+                    if (UtilLib.getStructureStartAt(level, blockPosition(), StructureSets.VILLAGES).isPresent()) {
                         if (getRandom().nextInt(60) != 0) {
                             return false;
                         }
@@ -276,7 +273,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
 
     /**
      * Checks if light level is low enough
-     * Only exception is the vampire biome in which it returns true if ontop of {@link ModBlocks#cursed_earth}
+     * Only exception is the vampire biome in which it returns true if ontop of {@link ModBlocks#CURSED_EARTH}
      */
     private boolean getCanSpawnHereRestricted(LevelAccessor iWorld) {
         boolean vampireBiome = iWorld.getBiome(this.blockPosition()).is(ModTags.Biomes.IS_VAMPIRE_BIOME);

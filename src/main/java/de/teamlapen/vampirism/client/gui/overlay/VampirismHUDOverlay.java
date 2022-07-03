@@ -159,7 +159,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                             int color = 0xFF0000;
                             if (entity instanceof IHunterMob || ExtendedCreature.getSafe(entity).map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false))
                                 color = 0x099022;
-                            renderBloodFangs(event.getMatrixStack(), this.mc.getWindow().getGuiScaledWidth(), this.mc.getWindow().getGuiScaledHeight(), Mth.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F), color);
+                            renderBloodFangs(event.getPoseStack(), this.mc.getWindow().getGuiScaledWidth(), this.mc.getWindow().getGuiScaledHeight(), Mth.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F), color);
                             event.setCanceled(true);
                         });
                     });
@@ -169,7 +169,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     if (entity instanceof LivingEntity && entity instanceof IVampireMob) {
                         if (StakeItem.canKillInstant((LivingEntity) entity, mc.player)) {
                             if (((LivingEntity) entity).getHealth() > 0) {
-                                this.renderStakeInstantKill(event.getMatrixStack(), this.mc.getWindow().getGuiScaledWidth(), this.mc.getWindow().getGuiScaledHeight());
+                                this.renderStakeInstantKill(event.getPoseStack(), this.mc.getWindow().getGuiScaledWidth(), this.mc.getWindow().getGuiScaledHeight());
                                 event.setCanceled(true);
                             }
                         }
@@ -185,7 +185,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     if (tile != null) {
                         tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(handler -> {
                             if (FluidLib.getFluidAmount(handler, ModFluids.BLOOD.get()) > 0) {
-                                renderBloodFangs(event.getMatrixStack(), this.mc.getWindow().getGuiScaledWidth(), this.mc.getWindow().getGuiScaledHeight(), 1, 0xFF0000);
+                                renderBloodFangs(event.getPoseStack(), this.mc.getWindow().getGuiScaledWidth(), this.mc.getWindow().getGuiScaledHeight(), 1, 0xFF0000);
                                 event.setCanceled(true);
                             }
                         });
@@ -207,8 +207,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
                     int l = (int) (progress * 14.0F) + 2;
 
-                    this.blit(event.getMatrixStack(), x, y, 0, 19, 16, 2);
-                    this.blit(event.getMatrixStack(), x, y, 16, 19, l, 2);
+                    this.blit(event.getPoseStack(), x, y, 0, 19, 16, 2);
+                    this.blit(event.getPoseStack(), x, y, 16, 19, l, 2);
                 }
 
             }
@@ -227,7 +227,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
     public void onRenderGameOverlay(RenderGameOverlayEvent.Pre event) {
         if (event.getType() != RenderGameOverlayEvent.ElementType.ALL) return;
         if ((screenPercentage > 0 || screenBottomPercentage > 0) && VampirismConfig.CLIENT.renderScreenOverlay.get()) {
-            PoseStack stack = event.getMatrixStack();
+            PoseStack stack = event.getPoseStack();
             stack.pushPose();
             int w = (this.mc.getWindow().getGuiScaledWidth());
             int h = (this.mc.getWindow().getGuiScaledHeight());
@@ -286,7 +286,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
                     hh = Math.round(h / (float) 4 * screenBottomPercentage / 100);
 
-                    this.fillGradient(event.getMatrixStack(), 0, h - hh, w, h, 0x00000000, screenBottomColor);
+                    this.fillGradient(event.getPoseStack(), 0, h - hh, w, h, 0x00000000, screenBottomColor);
                 }
 
             }

@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.modcompat.terrablender.TerraBlenderCompat;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.KeyDispatchDataCodec;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.biome.MultiNoiseBiomeSource;
@@ -134,17 +135,18 @@ public class OverworldModifications {
     }
 
     record CustomBlockRuleSource(ResourceLocation block_id) implements SurfaceRules.RuleSource {
-        static final Codec<CustomBlockRuleSource> CODEC = ResourceLocation.CODEC.xmap(CustomBlockRuleSource::new, CustomBlockRuleSource::block_id).fieldOf("block_id").codec();
+        static final KeyDispatchDataCodec<CustomBlockRuleSource> CODEC = KeyDispatchDataCodec.of(ResourceLocation.CODEC.xmap(CustomBlockRuleSource::new, CustomBlockRuleSource::block_id).fieldOf("block_id").codec());
 
         static {
-            Registry.register(Registry.RULE, new ResourceLocation(REFERENCE.MODID, "block_id"), CODEC);
+            Registry.register(Registry.RULE, new ResourceLocation(REFERENCE.MODID, "block_id"), CODEC.codec());
         }
 
         public SurfaceRules.SurfaceRule apply(SurfaceRules.Context p_189523_) {
             return (p_189774_, p_189775_, p_189776_) -> Registry.BLOCK.get(block_id).defaultBlockState();
         }
 
-        public Codec<? extends SurfaceRules.RuleSource> codec() {
+        @Override
+        public KeyDispatchDataCodec<? extends SurfaceRules.RuleSource> codec() {
             return CODEC;
         }
     }

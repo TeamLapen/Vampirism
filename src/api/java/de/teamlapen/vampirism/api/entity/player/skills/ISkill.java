@@ -3,18 +3,15 @@ package de.teamlapen.vampirism.api.entity.player.skills;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
 
 /**
  * Skill that can be unlocked
  */
-public interface ISkill<T extends IFactionPlayer<T>> extends IForgeRegistryEntry<ISkill<?>> {
+public interface ISkill<T extends IFactionPlayer<T>> {
     /**
      * The description for this skill. Can be null
      */
@@ -28,14 +25,8 @@ public interface ISkill<T extends IFactionPlayer<T>> extends IForgeRegistryEntry
     IPlayableFaction<?> getFaction();
 
     default Component getName() {
-        return new TranslatableComponent(getTranslationKey());
+        return Component.translatable(getTranslationKey());
     }
-
-    /**
-     * Can return null if not registered, but since this has to be registered, we don't want annoying null warnings everywhere
-     */
-    @Override
-    ResourceLocation getRegistryName();
 
     @OnlyIn(Dist.CLIENT)
     int getRenderColumn();

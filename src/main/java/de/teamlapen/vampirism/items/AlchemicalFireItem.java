@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
@@ -37,8 +36,8 @@ public class AlchemicalFireItem extends Item {
     @Override
     public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        tooltip.add(new TranslatableComponent("item.vampirism.item_alchemical_fire.desc1").withStyle(ChatFormatting.GRAY));
-        tooltip.add(new TranslatableComponent("item.vampirism.item_alchemical_fire.desc2").withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("item.vampirism.item_alchemical_fire.desc1").withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("item.vampirism.item_alchemical_fire.desc2").withStyle(ChatFormatting.GRAY));
     }
 
     @Nonnull

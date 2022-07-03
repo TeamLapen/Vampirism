@@ -5,12 +5,14 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.PlantType;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 /**
@@ -37,9 +39,7 @@ public class VReference {
      */
     public static final EnchantmentCategory CROSSBOW_ENCHANTMENT = EnchantmentCategory.create("VAMPIRISM_CROSSBOW", input -> input instanceof IVampirismCrossbow);
 
-    @Deprecated(forRemoval = true)
-    public static Fluid blood_fluid;
-    public static RegistryObject<Fluid> blood_fluid_supplier;
+    public static final RegistryObject<Fluid> BLOOD = RegistryObject.create(new ResourceLocation("vampirism", "blood"), ForgeRegistries.FLUIDS);
     /**
      * Hunter creatures are of this creature type. But when they are counted for spawning they belong to {@link MobCategory#MONSTER}
      */

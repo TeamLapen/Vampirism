@@ -1,0 +1,11 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": "#vampirism:has_spawn/vampire",
+  "spawners":
+  {
+    "type": "vampirism:vampire",
+    "weight": 80,
+    "minCount": 1,
+    "maxCount": 3
+  }
+}

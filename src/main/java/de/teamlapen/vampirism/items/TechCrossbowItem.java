@@ -8,7 +8,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -23,7 +23,6 @@ import net.minecraftforge.common.Tags;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Random;
 
 /**
  * A set of arrows can be loaded into this crossbow.
@@ -60,7 +59,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
      *
      * @return If there was an arrow
      */
-    private static boolean reduceArrowCount(@Nonnull ItemStack bowStack, Random rnd) {
+    private static boolean reduceArrowCount(@Nonnull ItemStack bowStack, RandomSource rnd) {
         CompoundTag nbt = bowStack.getTag();
         if (nbt == null || !nbt.contains("arrows")) return false;
         int count = nbt.getInt("arrows");
@@ -98,18 +97,18 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         int arrows = getArrowsLeft(stack);
         if (arrows == -1) {
-            tooltip.add(new TranslatableComponent(Enchantments.INFINITY_ARROWS.getDescriptionId()).withStyle(ChatFormatting.DARK_GRAY));
+            tooltip.add(Component.translatable(Enchantments.INFINITY_ARROWS.getDescriptionId()).withStyle(ChatFormatting.DARK_GRAY));
         } else if (arrows == 0) {
-            tooltip.add(new TranslatableComponent("text.vampirism.crossbow.not_loaded").withStyle(ChatFormatting.DARK_GRAY));
+            tooltip.add(Component.translatable("text.vampirism.crossbow.not_loaded").withStyle(ChatFormatting.DARK_GRAY));
 
         } else {
-            tooltip.add(new TranslatableComponent("text.vampirism.crossbow.loaded_arrow_count", arrows).withStyle(ChatFormatting.DARK_GRAY));
+            tooltip.add(Component.translatable("text.vampirism.crossbow.loaded_arrow_count", arrows).withStyle(ChatFormatting.DARK_GRAY));
         }
     }
 
     @Override
     public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
-        if (this.allowdedIn(group)) {
+        if (this.allowedIn(group)) {
             items.add(setArrowsLeft(new ItemStack(this), 0));
             items.add(setArrowsLeft(new ItemStack(this), MAX_ARROW_COUNT));
         }
@@ -163,7 +162,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
     }
 
     @Override
-    protected boolean shouldConsumeArrow(Random rnd, ItemStack arrowStack, boolean playerCreative, boolean bowInfinite, int frugal) {
+    protected boolean shouldConsumeArrow(RandomSource rnd, ItemStack arrowStack, boolean playerCreative, boolean bowInfinite, int frugal) {
         return false;
     }
 

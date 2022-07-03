@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.world.gen.VampirismFeatures;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.*;
@@ -32,7 +33,7 @@ public class RandomStructureProcessor extends RuleProcessor {
 
     @Nullable
     public StructureTemplate.StructureBlockInfo process(LevelReader worldReaderIn, @Nonnull BlockPos pos, @Nonnull BlockPos pos2, @Nonnull StructureTemplate.StructureBlockInfo blockInfo, StructureTemplate.StructureBlockInfo blockInfo1, @Nonnull StructurePlaceSettings placementSettings, @Nullable StructureTemplate template) {
-        Random random = new Random(Mth.getSeed(blockInfo1.pos));
+        RandomSource random = RandomSource.create(Mth.getSeed(blockInfo1.pos));
         BlockState blockstate = worldReaderIn.getBlockState(blockInfo1.pos);
 
         for (RandomBlockState ruleEntry : this.rules) {

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.player.tasks.TaskBuilder;
@@ -21,7 +22,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 @SuppressWarnings("unused")
 public class ModTasks {
-    public static final DeferredRegister<Task> TASKS = DeferredRegister.create(ModRegistries.TASK_ID, REFERENCE.MODID);
+    public static final DeferredRegister<Task> TASKS = DeferredRegister.create(VampirismRegistries.TASK_ID, REFERENCE.MODID);
 
     public static final RegistryObject<Task> FEEDING_ADAPTER = TASKS.register("feeding_adapter", () -> TaskBuilder.builder().withFaction(VReference.VAMPIRE_FACTION).unlockedBy(new LvlUnlocker(4)).addRequirement("advanced_hunter", ModTags.Entities.ADVANCED_HUNTER, 10).addRequirement("item", () -> new ItemStack(Items.GOLD_INGOT, 5)).setReward(() -> new ItemStack(ModItems.FEEDING_ADAPTER.get())).build());
 

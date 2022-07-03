@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.advancements.SkillUnlockedTrigger;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.CriterionTriggerInstance;
@@ -139,7 +140,7 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
             json.addProperty("lava", this.lava);
             JsonArray skills = new JsonArray();
             for (ISkill<?> skill : this.skills) {
-                skills.add(skill.getRegistryName().toString());
+                skills.add(RegUtil.id(skill) .toString());
             }
             json.add("skill", skills);
             json.addProperty("level", this.level);

@@ -10,7 +10,6 @@ import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -61,12 +60,12 @@ public class GarlicDiffuserBlock extends VampirismBlockContainer {
     @Override
     public void appendHoverText(@Nonnull ItemStack stack, @Nullable BlockGetter world, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag advanced) {
         if (type == Type.WEAK || type == Type.IMPROVED) {
-            tooltip.add(new TranslatableComponent(getDescriptionId() + "." + type.getName()).withStyle(ChatFormatting.AQUA));
+            tooltip.add(Component.translatable(getDescriptionId() + "." + type.getName()).withStyle(ChatFormatting.AQUA));
         }
 
-        tooltip.add(new TranslatableComponent("block.vampirism.garlic_diffuser.tooltip1").withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("block.vampirism.garlic_diffuser.tooltip1").withStyle(ChatFormatting.GRAY));
         int c = VampirismConfig.BALANCE.hsGarlicDiffuserEnhancedDist == null /* During game start config is not yet set*/ ? 1 : 1 + 2 * (type == Type.IMPROVED ? VampirismConfig.BALANCE.hsGarlicDiffuserEnhancedDist.get() : (type == Type.WEAK ? VampirismConfig.BALANCE.hsGarlicDiffuserWeakDist.get() : VampirismConfig.BALANCE.hsGarlicDiffuserNormalDist.get()));
-        tooltip.add(new TranslatableComponent("block.vampirism.garlic_diffuser.tooltip2", c, c).withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("block.vampirism.garlic_diffuser.tooltip2", c, c).withStyle(ChatFormatting.GRAY));
     }
 
     @Override
@@ -139,11 +138,11 @@ public class GarlicDiffuserBlock extends VampirismBlockContainer {
                 GarlicDiffuserBlockEntity t = getTile(world, pos);
                 if (t != null) {
                     if (t.getFuelTime() > 0) {
-                        player.sendMessage(new TranslatableComponent("block.vampirism.garlic_diffuser.already_fueled"), Util.NIL_UUID);
+                        player.sendSystemMessage(Component.translatable("block.vampirism.garlic_diffuser.already_fueled"));
                     } else {
                         t.onFueled();
                         if (!player.isCreative()) heldItem.shrink(1);
-                        player.sendMessage(new TranslatableComponent("block.vampirism.garlic_diffuser.successfully_fueled"), Util.NIL_UUID);
+                        player.sendSystemMessage(Component.translatable("block.vampirism.garlic_diffuser.successfully_fueled"));
                     }
 
                 }

@@ -9,7 +9,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
@@ -120,10 +120,10 @@ public class VampirismWorld implements IVampirismWorld {
 
     public void printDebug(CommandSourceStack sender) {
         for (Emitter e : emitterHashMap.values()) {
-            sender.sendSuccess(new TextComponent("E: " + e.toString()), true);
+            sender.sendSuccess(Component.literal("E: " + e.toString()), true);
         }
         for (Map.Entry<ChunkPos, EnumStrength> e : strengthHashMap.entrySet()) {
-            sender.sendSuccess(new TextComponent("S: " + e.toString()), true);
+            sender.sendSuccess(Component.literal("S: " + e.toString()), true);
         }
     }
 

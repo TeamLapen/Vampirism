@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.inventory.container.HunterTableContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
@@ -101,7 +101,7 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
     public InteractionResult use(@Nonnull BlockState state, Level worldIn, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
         if (!worldIn.isClientSide) {
             if (player instanceof ServerPlayer) {
-                NetworkHooks.openGui((ServerPlayer) player, new SimpleMenuProvider((id, playerInventory, playerIn) -> new HunterTableContainer(id, playerInventory, ContainerLevelAccess.create(playerIn.level, pos)), new TranslatableComponent("container.crafting")), pos);
+                NetworkHooks.openGui((ServerPlayer) player, new SimpleMenuProvider((id, playerInventory, playerIn) -> new HunterTableContainer(id, playerInventory, ContainerLevelAccess.create(playerIn.level, pos)), Component.translatable("container.crafting")), pos);
             }
         }
 

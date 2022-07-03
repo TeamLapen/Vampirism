@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.inventory.container.HunterTableContainer;
 import de.teamlapen.vampirism.items.PureBloodItem;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerLevelAccess;
@@ -56,13 +55,13 @@ public class HunterTableScreen extends AbstractContainerScreen<HunterTableContai
 
         Component text = null;
         if (!menu.isLevelValid(false)) {
-            text = new TranslatableComponent("container.vampirism.hunter_table.level_wrong");
+            text = Component.translatable("container.vampirism.hunter_table.level_wrong");
         } else if (!menu.isLevelValid(true)) {
-            text = new TranslatableComponent("container.vampirism.hunter_table.structure_level_wrong");
+            text = Component.translatable("container.vampirism.hunter_table.structure_level_wrong");
         } else if (!menu.getMissingItems().isEmpty()) {
             ItemStack missing = menu.getMissingItems();
-            Component item = missing.getItem() instanceof PureBloodItem ? ((PureBloodItem) missing.getItem()).getCustomName() : new TranslatableComponent(missing.getDescriptionId());
-            text = new TranslatableComponent("text.vampirism.hunter_table.ritual_missing_items", missing.getCount(), item);
+            Component item = missing.getItem() instanceof PureBloodItem ? ((PureBloodItem) missing.getItem()).getCustomName() : Component.translatable(missing.getDescriptionId());
+            text = Component.translatable("text.vampirism.hunter_table.ritual_missing_items", missing.getCount(), item);
         }
         if (text != null) this.font.drawWordWrap(text, 8, 50, this.imageWidth - 10, 0x000000);
     }

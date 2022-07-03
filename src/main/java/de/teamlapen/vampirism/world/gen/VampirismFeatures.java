@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.world.gen;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFeatures;
-import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.world.gen.features.VampireDungeonFeature;
 import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampPieces;
 import de.teamlapen.vampirism.world.gen.util.BiomeTopBlockProcessor;
@@ -19,7 +18,10 @@ import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
-import net.minecraft.world.level.levelgen.feature.*;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.LakeFeature;
+import net.minecraft.world.level.levelgen.feature.WeightedPlacedFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.*;
 import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSize;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.BlobFoliagePlacer;
@@ -41,14 +43,14 @@ public class VampirismFeatures {
     public static final DeferredRegister<ConfiguredFeature<?,?>> CONFIGURED_FEATURES = DeferredRegister.create(Registry.CONFIGURED_FEATURE_REGISTRY, REFERENCE.MODID);
     public static final DeferredRegister<StructurePieceType> STRUCTURE_PIECES = DeferredRegister.create(Registry.STRUCTURE_PIECE_REGISTRY, REFERENCE.MODID);
     public static final DeferredRegister<StructureProcessorType<?>> STRUCTURE_PROCESSOR_TYPES = DeferredRegister.create(Registry.STRUCTURE_PROCESSOR_REGISTRY, REFERENCE.MODID);
-    public static final DeferredRegister<ConfiguredStructureFeature<?,?>> CONFIGURED_STRUCTURE_FEATURES = DeferredRegister.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, REFERENCE.MODID);
+//    public static final DeferredRegister<ConfiguredStructureFeature<?,?>> CONFIGURED_STRUCTURE_FEATURES = DeferredRegister.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, REFERENCE.MODID);
 
     public static void register(IEventBus ctx){
         PLACED_FEATURES.register(ctx);
         CONFIGURED_FEATURES.register(ctx);
         STRUCTURE_PIECES.register(ctx);
         STRUCTURE_PROCESSOR_TYPES.register(ctx);
-        CONFIGURED_STRUCTURE_FEATURES.register(ctx);
+//        CONFIGURED_STRUCTURE_FEATURES.register(ctx);
     }
 
     //Configured features and their placement
@@ -76,7 +78,7 @@ public class VampirismFeatures {
 
 
     //Structure features
-    public static final RegistryObject<ConfiguredStructureFeature<?,?>> HUNTER_CAMP = CONFIGURED_STRUCTURE_FEATURES.register("hunter_camp", () -> ModFeatures.HUNTER_CAMP.get().configured(FeatureConfiguration.NONE, ModTags.Biomes.HAS_HUNTER_TENT));
+//    public static final RegistryObject<ConfiguredStructureFeature<?,?>> HUNTER_CAMP = CONFIGURED_STRUCTURE_FEATURES.register("hunter_camp", () -> ModFeatures.HUNTER_CAMP_KEY.get().configured(FeatureConfiguration.NONE, ModTags.Biomes.HAS_HUNTER_TENT));
     //Hunter camp structure set is added in data pack
     //public static final Holder<StructureSet> hunter_camp_set = registerStructureSet(createStructureSetKey("hunter_camp"), new StructureSet(hunter_camp, new RandomSpreadStructurePlacement(10, 4, RandomSpreadType.LINEAR, 14387363)));
 

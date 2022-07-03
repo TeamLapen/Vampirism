@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.inventory.container.AlchemicalCauldronContainer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
@@ -50,7 +49,7 @@ public class AlchemicalCauldronScreen extends AbstractContainerScreen<Alchemical
 
     @Override
     protected void renderLabels(@Nonnull PoseStack stack, int mouseX, int mouseY) {
-        Component name = new TranslatableComponent("tile.vampirism.alchemical_cauldron.display", minecraft.player.getDisplayName().copy().withStyle(ChatFormatting.DARK_BLUE), ModBlocks.ALCHEMICAL_CAULDRON.get().getName());
+        Component name = Component.translatable("tile.vampirism.alchemical_cauldron.display", minecraft.player.getDisplayName().copy().withStyle(ChatFormatting.DARK_BLUE), ModBlocks.ALCHEMICAL_CAULDRON.get().getName());
         this.font.draw(stack, name, 5, 6, 0x404040);
         this.font.draw(stack, this.playerInventoryTitle, (float) this.inventoryLabelX, (float) this.inventoryLabelY, 4210752);
     }

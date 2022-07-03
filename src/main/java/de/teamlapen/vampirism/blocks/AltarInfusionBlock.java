@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.blockentity.AltarInfusionBlockEntity;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -92,7 +92,7 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
         //If empty hand and can start -> StartAdvanced
         if (worldIn.isClientSide || te == null) return InteractionResult.SUCCESS;
         if (!Helper.isVampire(player)) {
-            player.displayClientMessage(new TranslatableComponent("text.vampirism.altar_infusion.ritual.wrong_faction"), true);
+            player.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual.wrong_faction"), true);
             return InteractionResult.SUCCESS;
         }
         AltarInfusionBlockEntity.Result result = te.canActivate(player, true);
@@ -106,7 +106,7 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
         //If non-empty hand or missing tileInventory -> open GUI
         if (!heldItem.isEmpty() || result == AltarInfusionBlockEntity.Result.INVMISSING) {
             if (te.getCurrentPhase() != AltarInfusionBlockEntity.PHASE.NOT_RUNNING) {
-                player.displayClientMessage(new TranslatableComponent("text.vampirism.altar_infusion.ritual_still_running"), true);
+                player.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual_still_running"), true);
                 return InteractionResult.SUCCESS;
             }
             player.openMenu(te);

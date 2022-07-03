@@ -10,8 +10,6 @@ import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -230,8 +228,8 @@ public class FactionRegistry implements IFactionRegistry {
                     this.hostileTowardsNeutral,
                     this.villageFactionData,
                     this.chatColor != null ? this.chatColor : TextColor.fromRgb(this.color),
-                    this.name == null ? new TextComponent(id.toString()) : new TranslatableComponent(this.name),
-                    this.namePlural == null ? this.name == null ? new TextComponent(id.toString()) : new TranslatableComponent(this.name) : new TranslatableComponent(this.namePlural));
+                    this.name == null ? Component.literal(id.toString()) : Component.translatable(this.name),
+                    this.namePlural == null ? this.name == null ? Component.literal(id.toString()) : Component.translatable(this.name) : Component.translatable(this.namePlural));
             addFaction(faction);
             return faction;
         }
@@ -312,7 +310,7 @@ public class FactionRegistry implements IFactionRegistry {
         @Override
         public IPlayableFaction<T> register() {
             if (this.lordTitleFunction == null) {
-                this.lordTitleFunction = (a, b) -> new TextComponent("Lord " + a);
+                this.lordTitleFunction = (a, b) -> Component.literal("Lord " + a);
             }
             PlayableFaction<T> faction = new PlayableFaction<>(
                     this.id,
@@ -326,8 +324,8 @@ public class FactionRegistry implements IFactionRegistry {
                     this.villageFactionData,
                     this.refinementItemBySlot,
                     this.chatColor != null ? this.chatColor : TextColor.fromRgb(this.color),
-                    this.name == null ? new TextComponent(id.toString()) : new TranslatableComponent(this.name),
-                    this.namePlural == null ? this.name == null ? new TextComponent(id.toString()) : new TranslatableComponent(this.name) : new TranslatableComponent(this.namePlural));
+                    this.name == null ? Component.literal(id.toString()) : Component.translatable(this.name),
+                    this.namePlural == null ? this.name == null ? Component.literal(id.toString()) : Component.translatable(this.name) : Component.translatable(this.namePlural));
             addFaction(faction);
             return faction;
         }

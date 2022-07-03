@@ -3,16 +3,14 @@ package de.teamlapen.vampirism.api.entity.player.actions;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
 
 /**
  * Interface for player actions
  */
-public interface IAction<T extends IFactionPlayer<T>> extends IForgeRegistryEntry<IAction<?>> {
+public interface IAction<T extends IFactionPlayer<T>> {
     /**
      * Checks if the player can use this action
      *
@@ -33,7 +31,7 @@ public interface IAction<T extends IFactionPlayer<T>> extends IForgeRegistryEntr
     IPlayableFaction<?> getFaction();
 
     default Component getName() {
-        return new TranslatableComponent(getTranslationKey());
+        return Component.translatable(getTranslationKey());
     }
 
     /**

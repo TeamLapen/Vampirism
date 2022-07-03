@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public class ResetActionsCommand extends BasicCommand {
                 IActionHandler<?> handler = factionPlayer.getActionHandler();
                 if (handler != null) {
                     handler.resetTimers();
-                    commandSource.sendSuccess(new TranslatableComponent("command.vampirism.test.resetactions"), false);
+                    commandSource.sendSuccess(Component.translatable("command.vampirism.test.resetactions"), false);
                 }
             });
         }

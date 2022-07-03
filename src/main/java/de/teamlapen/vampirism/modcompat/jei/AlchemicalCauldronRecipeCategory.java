@@ -13,16 +13,18 @@ import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -42,8 +44,8 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
 
 
     AlchemicalCauldronRecipeCategory(IGuiHelper guiHelper) {
-        this.localizedName = new TranslatableComponent(ModBlocks.ALCHEMICAL_CAULDRON.get().getDescriptionId());
-        this.icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.ALCHEMICAL_CAULDRON.get()));
+        this.localizedName = Component.translatable(ModBlocks.ALCHEMICAL_CAULDRON.get().getDescriptionId());
+        this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.ALCHEMICAL_CAULDRON.get()));
         background = guiHelper.drawableBuilder(location, 38, 10, 120, 70).addPadding(0, 33, 0, 0).build();
 
         IDrawableStatic flameDrawable = guiHelper.createDrawable(location, 176, 0, 14, 14);
@@ -58,7 +60,7 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
     }
 
     @Override
-    public void draw(AlchemicalCauldronRecipe recipe, @Nonnull PoseStack stack, double mouseX, double mouseY) {
+    public void draw(AlchemicalCauldronRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @Nonnull PoseStack stack, double mouseX, double mouseY) {
         flame.draw(stack, 19, 27);
         arrow.draw(stack, 41, 25);
         bubbles.draw(stack, 104, 19);
@@ -66,12 +68,12 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
         int x = 0;
         int y = 65;
         if (recipe.getRequiredLevel() > 1) {
-            Component level = new TranslatableComponent("gui.vampirism.alchemical_cauldron.level", recipe.getRequiredLevel());
+            Component level = Component.translatable("gui.vampirism.alchemical_cauldron.level", recipe.getRequiredLevel());
             minecraft.font.draw(stack, level, x, y, Color.GRAY.getRGB());
             y += minecraft.font.lineHeight + 2;
         }
         if (recipe.getRequiredSkills().length > 0) {
-            MutableComponent skillText = new TranslatableComponent("gui.vampirism.alchemical_cauldron.skill", " ");
+            MutableComponent skillText = Component.translatable("gui.vampirism.alchemical_cauldron.skill", " ");
 
             for (ISkill<?> s : recipe.getRequiredSkills()) {
                 skillText.append(s.getName()).append(" ");
@@ -93,23 +95,15 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
         return icon;
     }
 
-    @Nonnull
     @Override
-    public Class<? extends AlchemicalCauldronRecipe> getRecipeClass() {
-        return AlchemicalCauldronRecipe.class;
+    public @NotNull RecipeType<AlchemicalCauldronRecipe> getRecipeType() {
+        return VampirismJEIPlugin.ALCHEMICAL_CAULDRON;
     }
-
 
     @Nonnull
     @Override
     public Component getTitle() {
         return localizedName;
-    }
-
-    @Nonnull
-    @Override
-    public ResourceLocation getUid() {
-        return VampirismJEIPlugin.ALCHEMICAL_CAULDRON_RECIPE_UID;
     }
 
     @Override

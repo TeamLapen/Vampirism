@@ -2,27 +2,33 @@ package de.teamlapen.vampirism.data;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.*;
+import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.*;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.level.biome.Biomes;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 
 public class TagGenerator {
 
-    public static void register(DataGenerator generator, ExistingFileHelper helper) {
-        BlockTagsProvider blockTagsProvider = new ModBlockTagsProvider(generator, helper);
-        generator.addProvider(blockTagsProvider);
-        generator.addProvider(new ModItemTagsProvider(generator, blockTagsProvider, helper));
-        generator.addProvider(new ModEntityTypeTagsProvider(generator, helper));
-        generator.addProvider(new ModFluidTagsProvider(generator, helper));
-        generator.addProvider(new ModBiomeTagsProvider(generator, helper));
+    public static void register(GatherDataEvent event, DataGenerator generator) {
+        BlockTagsProvider blockTagsProvider = new ModBlockTagsProvider(generator, event.getExistingFileHelper());
+        generator.addProvider(event.includeServer(), blockTagsProvider);
+        generator.addProvider(event.includeServer(), new ModItemTagsProvider(generator, blockTagsProvider, event.getExistingFileHelper()));
+        generator.addProvider(event.includeServer(), new ModEntityTypeTagsProvider(generator, event.getExistingFileHelper()));
+        generator.addProvider(event.includeServer(), new ModFluidTagsProvider(generator, event.getExistingFileHelper()));
+        generator.addProvider(event.includeServer(), new ModBiomeTagsProvider(generator, event.getExistingFileHelper()));
+        generator.addProvider(event.includeServer(), new ModPoiTypeProvider(generator, event.getExistingFileHelper()));
+        generator.addProvider(event.includeServer(), new ModVillageProfessionProvider(generator, event.getExistingFileHelper()));
     }
 
     public static class ModBlockTagsProvider extends BlockTagsProvider {
@@ -140,6 +146,43 @@ public class TagGenerator {
             tag(ModTags.Biomes.IS_FACTION_BIOME).addTags(ModTags.Biomes.IS_VAMPIRE_BIOME);
             tag(ModTags.Biomes.IS_VAMPIRE_BIOME).add(ModBiomes.VAMPIRE_FOREST.getKey());
             tag(BiomeTags.IS_FOREST).add(ModBiomes.VAMPIRE_FOREST.getKey());
+            tag(Tags.Biomes.IS_OVERWORLD).add(ModBiomes.VAMPIRE_FOREST.getKey());
+            tag(Tags.Biomes.IS_DENSE).add(ModBiomes.VAMPIRE_FOREST.getKey());
+            tag(Tags.Biomes.IS_MAGICAL).add(ModBiomes.VAMPIRE_FOREST.getKey());
+            tag(Tags.Biomes.IS_SPOOKY).add(ModBiomes.VAMPIRE_FOREST.getKey());
+            tag(ModTags.Biomes.HAS_VAMPIRE_DUNGEON).addTags(BiomeTags.IS_OVERWORLD).remove(BiomeTags.IS_OCEAN); //TODO check
+            tag(ModTags.Biomes.HAS_VAMPIRE_SPAWN).addTags(BiomeTags.IS_OVERWORLD); //TODO check
+            tag(ModTags.Biomes.HAS_ADVANCED_VAMPIRE_SPAWN).addTags(BiomeTags.IS_OVERWORLD); //TODO check
+            tag(ModTags.Biomes.HAS_HUNTER_SPAWN).addTags(BiomeTags.IS_OVERWORLD); //TODO check
+            tag(ModTags.Biomes.HAS_ADVANCED_HUNTER_SPAWN).addTags(BiomeTags.IS_OVERWORLD); //TODO check
+        }
+    }
+
+    public static class ModPoiTypeProvider extends PoiTypeTagsProvider {
+
+        public ModPoiTypeProvider(DataGenerator p_236434_, @Nullable ExistingFileHelper existingFileHelper) {
+            super(p_236434_, REFERENCE.MODID, existingFileHelper);
+        }
+
+        @Override
+        protected void addTags() {
+            tag(ModTags.POI_TYPES.HAS_FACTION).add(ModVillage.NO_FACTION.get(), ModVillage.HUNTER_FACTION.get(), ModVillage.VAMPIRE_FACTION.get());
+            tag(ModTags.POI_TYPES.IS_HUNTER).add(ModVillage.HUNTER_FACTION.get());
+            tag(ModTags.POI_TYPES.IS_VAMPIRE).add(ModVillage.VAMPIRE_FACTION.get());
+        }
+    }
+
+    public static class ModVillageProfessionProvider extends TagsProvider<VillagerProfession> {
+
+        public ModVillageProfessionProvider(DataGenerator p_236434_, @Nullable ExistingFileHelper existingFileHelper) {
+            super(p_236434_, Registry.VILLAGER_PROFESSION, REFERENCE.MODID, existingFileHelper);
+        }
+
+        @Override
+        protected void addTags() {
+            tag(ModTags.Professions.HAS_FACTION).add(ModVillage.HUNTER_EXPERT.get(), ModVillage.VAMPIRE_EXPERT.get());
+            tag(ModTags.Professions.IS_VAMPIRE).add(ModVillage.VAMPIRE_EXPERT.get());
+            tag(ModTags.Professions.IS_HUNTER).add(ModVillage.HUNTER_EXPERT.get());
         }
     }
 }

@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.hunter.BasicHunterEntity;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -63,7 +63,7 @@ public class HunterBasicContainer extends InventoryContainer {
         int target = player.getLevel() + 1;
         inventory.removeItem(0, HunterLevelingConf.instance().getVampireBloodCountForBasicHunter(target));
         FactionPlayerHandler.getOpt(player.getRepresentingPlayer()).ifPresent(h -> h.setFactionLevel(VReference.HUNTER_FACTION, target));
-        player.getRepresentingPlayer().displayClientMessage(new TranslatableComponent("container.vampirism.basic_hunter.levelup"), false);
+        player.getRepresentingPlayer().displayClientMessage(Component.translatable("container.vampirism.basic_hunter.levelup"), false);
         player.getRepresentingPlayer().closeContainer();
 
     }

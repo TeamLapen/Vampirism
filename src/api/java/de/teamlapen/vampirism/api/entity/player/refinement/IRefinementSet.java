@@ -4,14 +4,13 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
 import java.util.Set;
 
-public interface IRefinementSet extends IForgeRegistryEntry<IRefinementSet> {
+public interface IRefinementSet {
 
     int getColor();
 

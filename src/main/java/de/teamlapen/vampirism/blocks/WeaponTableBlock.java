@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -27,8 +26,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
@@ -41,7 +40,7 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
     public static final int MAX_LAVA = 5;
     public static final int MB_PER_META = 200;
     public static final IntegerProperty LAVA = IntegerProperty.create("lava", 0, MAX_LAVA);
-    private static final Component name = new TranslatableComponent("gui.vampirism.hunter_weapon_table");
+    private static final Component name = Component.translatable("gui.vampirism.hunter_weapon_table");
 
     private static VoxelShape makeShape() {
         VoxelShape a = Block.box(3, 0, 0, 13, 2, 8);
@@ -91,7 +90,7 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
                     FluidStack missing = new FluidStack(Fluids.LAVA, (MAX_LAVA - fluid) * MB_PER_META);
                     FluidStack drainable = fluidHandler.drain(missing, IFluidHandler.FluidAction.SIMULATE);
                     if (drainable.isEmpty()) { //Buckets can only provide {@link Fluid.BUCKET_VOLUME} at a time, so try this too. Additional lava is wasted though
-                        missing.setAmount(FluidAttributes.BUCKET_VOLUME);
+                        missing.setAmount(FluidType.BUCKET_VOLUME);
                         drainable = fluidHandler.drain(missing, IFluidHandler.FluidAction.SIMULATE);
                     }
                     if (drainable.getAmount() >= MB_PER_META) {
@@ -110,7 +109,7 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
                 if (canUse(player) && player instanceof ServerPlayer) {
                     NetworkHooks.openGui((ServerPlayer) player, new SimpleMenuProvider((id, playerInventory, playerIn) -> new WeaponTableContainer(id, playerInventory, ContainerLevelAccess.create(playerIn.level, pos)), name), pos);
                 } else {
-                    player.displayClientMessage(new TranslatableComponent("text.vampirism.weapon_table.cannot_use"), true);
+                    player.displayClientMessage(Component.translatable("text.vampirism.weapon_table.cannot_use"), true);
                 }
             }
         }

@@ -12,7 +12,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Collection;
@@ -20,9 +20,9 @@ import java.util.Collection;
 
 public class LordCommand extends BasicCommand {
 
-    private static final SimpleCommandExceptionType NO_FACTION = new SimpleCommandExceptionType(new TranslatableComponent("command.vampirism.base.lord.no_faction"));
-    private static final SimpleCommandExceptionType LEVEL_UP_FAILED = new SimpleCommandExceptionType(new TranslatableComponent("command.vampirism.base.lord.level_failed"));
-    private static final SimpleCommandExceptionType LORD_FAILED = new SimpleCommandExceptionType(new TranslatableComponent("command.vampirism.base.lord.failed"));
+    private static final SimpleCommandExceptionType NO_FACTION = new SimpleCommandExceptionType(Component.translatable("command.vampirism.base.lord.no_faction"));
+    private static final SimpleCommandExceptionType LEVEL_UP_FAILED = new SimpleCommandExceptionType(Component.translatable("command.vampirism.base.lord.level_failed"));
+    private static final SimpleCommandExceptionType LORD_FAILED = new SimpleCommandExceptionType(Component.translatable("command.vampirism.base.lord.failed"));
 
 
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
@@ -52,7 +52,7 @@ public class LordCommand extends BasicCommand {
             level = Math.min(level, faction.getHighestLordLevel());
 
             if (handler.setLordLevel(level)) {
-                context.getSource().sendSuccess(new TranslatableComponent("command.vampirism.base.lord.successful", player.getName(), faction.getName(), level), true);
+                context.getSource().sendSuccess(Component.translatable("command.vampirism.base.lord.successful", player.getName(), faction.getName(), level), true);
             } else {
                 throw LORD_FAILED.create();
             }

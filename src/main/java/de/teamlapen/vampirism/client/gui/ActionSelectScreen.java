@@ -7,6 +7,7 @@ import de.teamlapen.lib.lib.client.gui.GuiPieMenu;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
@@ -14,15 +15,14 @@ import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.ActionBindingPacket;
 import de.teamlapen.vampirism.network.InputEventPacket;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -72,16 +72,16 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
      * safes the action order to client config
      */
     private static void saveActionOrder() {
-        VampirismConfig.CLIENT.actionOrder.set(ACTIONORDER.stream().filter(action -> action != fakeAction).map(action -> action.getRegistryName().toString()).collect(Collectors.toList()));
+        VampirismConfig.CLIENT.actionOrder.set(ACTIONORDER.stream().filter(action -> action != fakeAction).map(action -> RegUtil.id(action).toString()).collect(Collectors.toList()));
     }
 
     /**
      * loades action order from client config
      */
     public static void loadActionOrder() {
-        List<IAction<?>> actions = Lists.newArrayList(ModRegistries.ACTIONS.getValues());
+        List<IAction<?>> actions = Lists.newArrayList(RegUtil.values(VampirismRegistries.ACTIONS));
         //Keep in mind some previously saved actions may have been removed
-        VampirismConfig.CLIENT.actionOrder.get().stream().map(action -> ModRegistries.ACTIONS.getValue(new ResourceLocation(action))).filter(Objects::nonNull).forEachOrdered(action -> {
+        VampirismConfig.CLIENT.actionOrder.get().stream().map(action -> RegUtil.getAction(new ResourceLocation(action))).filter(Objects::nonNull).forEachOrdered(action -> {
             actions.remove(action);
             ACTIONORDER.add(action);
         });
@@ -95,7 +95,7 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
     private IActionHandler<T> actionHandler;
 
     public ActionSelectScreen(Color backgroundColor, boolean edit) {
-        super(backgroundColor, new TranslatableComponent("selectAction"));
+        super(backgroundColor, Component.translatable("selectAction"));
         editActions = edit;
     }
 
@@ -180,7 +180,7 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
     public void render(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         super.render(stack, mouseX, mouseY, partialTicks);
         if (editActions) {
-            List<Component> tooltips = Lists.newArrayList(new TranslatableComponent("gui.vampirism.action_select.action_binding")
+            List<Component> tooltips = Lists.newArrayList(Component.translatable("gui.vampirism.action_select.action_binding")
                     , ModKeys.ACTION1.getTranslatedKeyMessage().plainCopy().withStyle(ChatFormatting.AQUA)
                     , ModKeys.ACTION2.getTranslatedKeyMessage().plainCopy().withStyle(ChatFormatting.AQUA));
             this.renderTooltip(stack, tooltips.stream().flatMap(t -> this.font.split(t,this.width / 4).stream()).collect(Collectors.toList()),0, ((int) (this.height * 0.82)), this.font);
@@ -230,7 +230,7 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
     @Override
     protected ResourceLocation getIconLoc(IAction<T> item) {
         if (item == fakeAction) return new ResourceLocation(REFERENCE.MODID, "textures/actions/cancel.png");
-        return new ResourceLocation(item.getRegistryName().getNamespace(), "textures/actions/" + item.getRegistryName().getPath() + ".png");
+        return new ResourceLocation(RegUtil.id(item).getNamespace(), "textures/actions/" + RegUtil.id(item).getPath() + ".png");
     }
 
     @Override
@@ -247,7 +247,7 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
     protected void onElementSelected(IAction<T> action) {
         //noinspection unchecked
         if (action != fakeAction && action.canUse((T)FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer().orElse(null)) == IAction.PERM.ALLOWED) {
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + action.getRegistryName().toString()));
+            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + RegUtil.id(action).toString()));
         }
     }
 
@@ -281,7 +281,7 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
      * orders the given list after client preference
      */
     private ImmutableList<IAction<T>> getActionOrdered(List<IAction<T>> toSort) {
-        if (ACTIONORDER.isEmpty()) ACTIONORDER.addAll(ModRegistries.ACTIONS.getValues());
+        if (ACTIONORDER.isEmpty()) ACTIONORDER.addAll(RegUtil.values(VampirismRegistries.ACTIONS));
         @SuppressWarnings({"SuspiciousMethodCalls", "unchecked"})
         List<IAction<T>> list = (List<IAction<T>>) (Object)ACTIONORDER.stream().filter(toSort::contains).collect(Collectors.toList());
         toSort.removeAll(list);

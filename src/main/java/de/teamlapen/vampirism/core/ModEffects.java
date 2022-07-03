@@ -14,7 +14,10 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
-import net.minecraftforge.registries.*;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.RegistryObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -60,7 +63,7 @@ public class ModEffects {
     static void replaceEffects(IForgeRegistry<MobEffect> registry) {
         vanilla_night_vision = MobEffects.NIGHT_VISION;
         modded_night_vision = new VampirismNightVisionPotion();
-        registry.register(modded_night_vision);
+        registry.register(registry.getKey(vanilla_night_vision), modded_night_vision);
     }
 
     static void fixNightVisionEffectTypesUnsafe() {

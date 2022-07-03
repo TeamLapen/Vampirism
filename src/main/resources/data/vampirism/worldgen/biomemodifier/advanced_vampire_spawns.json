@@ -1,0 +1,11 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": "#vampirism:has_spawn/advanced_vampire",
+  "spawners":
+  {
+    "type": "vampirism:advanced_vampire",
+    "weight": 25,
+    "minCount": 1,
+    "maxCount": 3
+  }
+}

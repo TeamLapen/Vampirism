@@ -15,7 +15,6 @@ import de.teamlapen.vampirism.entity.SoulOrbEntity;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -92,7 +91,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
      */
     default Component getNameC(Supplier<Component> baseName) {
         if (data().name == null) {
-            this.data().name = new TranslatableComponent("entity.vampirism.vampire").append(baseName.get());
+            this.data().name = Component.translatable("entity.vampirism.vampire").append(baseName.get());
         }
         return data().name;
     }

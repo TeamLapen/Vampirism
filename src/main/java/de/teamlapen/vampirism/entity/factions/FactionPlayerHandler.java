@@ -6,6 +6,7 @@ import de.teamlapen.lib.lib.util.LogUtil;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -13,12 +14,12 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
-import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.player.IVampirismPlayer;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.tasks.reward.LordLevelReward;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.RegUtil;
 import de.teamlapen.vampirism.util.ScoreboardUtil;
 import de.teamlapen.vampirism.util.VampirismEventFactory;
 import de.teamlapen.vampirism.world.MinionWorldData;
@@ -27,7 +28,6 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -301,7 +301,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
      * @param minLevel the lord level the player now has
      */
     public void resetLordTasks(int minLevel) {
-        ModRegistries.TASKS.getValues().stream().filter(task -> task.isUnique() && task.getReward() instanceof LordLevelReward && ((LordLevelReward) task.getReward()).targetLevel > minLevel).forEach(task -> getCurrentFactionPlayer().map(IFactionPlayer::getTaskManager).ifPresent(manager -> manager.resetUniqueTask(task)));
+        RegUtil.values(VampirismRegistries.TASKS).stream().filter(task -> task.isUnique() && task.getReward() instanceof LordLevelReward && ((LordLevelReward) task.getReward()).targetLevel > minLevel).forEach(task -> getCurrentFactionPlayer().map(IFactionPlayer::getTaskManager).ifPresent(manager -> manager.resetUniqueTask(task)));
     }
 
     public void setBoundAction(int id, @Nullable IAction<?> boundAction, boolean sync, boolean notify) {
@@ -311,7 +311,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             this.boundActions.put(id, boundAction);
         }
         if (notify) {
-            player.displayClientMessage(new TranslatableComponent("text.vampirism.actions.bind_action", boundAction != null ? boundAction.getName() : "none", id), true);
+            player.displayClientMessage(Component.translatable("text.vampirism.actions.bind_action", boundAction != null ? boundAction.getName() : "none", id), true);
         }
         if (sync) {
             this.sync(false);
@@ -414,18 +414,18 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
 
     private void loadBoundActions(CompoundTag nbt) {
         if (nbt.contains("bound1")) {
-            this.boundActions.put(1, ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound1"))));
+            this.boundActions.put(1, RegUtil.getAction(new ResourceLocation(nbt.getString("bound1"))));
         }
         if (nbt.contains("bound2")) {
-            this.boundActions.put(2, ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound2"))));
+            this.boundActions.put(2, RegUtil.getAction(new ResourceLocation(nbt.getString("bound2"))));
         }
         if (nbt.contains("bound3")) {
-            this.boundActions.put(3, ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound3"))));
+            this.boundActions.put(3, RegUtil.getAction(new ResourceLocation(nbt.getString("bound3"))));
         }
         CompoundTag bounds = nbt.getCompound("bound_actions");
         for (String s : bounds.getAllKeys()) {
             int id = Integer.parseInt(s);
-            IAction<?> action = ModRegistries.ACTIONS.getValue(new ResourceLocation(bounds.getString(s)));
+            IAction<?> action = RegUtil.getAction(new ResourceLocation(bounds.getString(s)));
             this.boundActions.put(id, action);
         }
     }
@@ -523,7 +523,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     private void writeBoundActions(CompoundTag nbt) {
         CompoundTag bounds = new CompoundTag();
         for (Int2ObjectMap.Entry<IAction<?>> entry : this.boundActions.int2ObjectEntrySet()) {
-            bounds.putString(String.valueOf(entry.getIntKey()), entry.getValue().getRegistryName().toString());
+            bounds.putString(String.valueOf(entry.getIntKey()), RegUtil.id(entry.getValue()).toString());
         }
         nbt.put("bound_actions", bounds);
     }

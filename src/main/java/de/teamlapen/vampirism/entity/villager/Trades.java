@@ -6,9 +6,10 @@ import de.teamlapen.vampirism.items.BloodBottleItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.Item;
@@ -21,10 +22,10 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import org.apache.logging.log4j.LogManager;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Random;
 
 public class Trades {
     public static final VillagerTrades.ItemListing[] converted_trades = new VillagerTrades.ItemListing[]{new net.minecraft.world.entity.npc.VillagerTrades.EmeraldForItems(ModItems.HUMAN_HEART.get(), 9, 2, 2), new VillagerTrades.ItemsForEmeralds(ModItems.HUMAN_HEART.get(), 3, 9, 2), new ItemsForEmeraldsTradeWithDamage(BloodBottleItem.getStackWithDamage(9), 1, 3, 12, 2)};
@@ -61,7 +62,9 @@ public class Trades {
             this.priceMultiplier = priceMultiplier;
         }
 
-        public MerchantOffer getOffer(@Nonnull Entity entity, @Nonnull Random random) {
+        @NotNull
+        @Override
+        public MerchantOffer getOffer(@Nonnull Entity entity, @Nonnull RandomSource random) {
             ItemStack second = new ItemStack(result.getItem(), resultAmount);
             second.setDamageValue(result.getDamageValue());
             return new MerchantOffer(new ItemStack(Items.EMERALD, this.emeraldAmount), second, this.maxUses, this.givenXP, this.priceMultiplier);
@@ -101,7 +104,7 @@ public class Trades {
 
         @Nullable
         @Override
-        public MerchantOffer getOffer(@Nonnull Entity entity, @Nonnull Random random) {
+        public MerchantOffer getOffer(@Nonnull Entity entity, @Nonnull RandomSource random) {
             return new MerchantOffer(new ItemStack(ModItems.SOUL_ORB_VAMPIRE.get(), price.getPrice(random)), new ItemStack(sellingItem[random.nextInt(sellingItem.length)].getItem(), selling.getPrice(random)), maxUses, xp, 0.2F);
         }
     }
@@ -139,7 +142,7 @@ public class Trades {
 
         @Nullable
         @Override
-        public MerchantOffer getOffer(@Nonnull Entity entity, @Nonnull Random random) {
+        public MerchantOffer getOffer(@Nonnull Entity entity, @Nonnull RandomSource random) {
             return new MerchantOffer(new ItemStack(ModItems.HUMAN_HEART.get(), price.getPrice(random)), new ItemStack(sellingItem[random.nextInt(sellingItem.length)].getItem(), selling.getPrice(random)), maxUses, xp, 0.2F);
         }
     }
@@ -165,7 +168,7 @@ public class Trades {
 
         @Nullable
         @Override
-        public MerchantOffer getOffer(@Nonnull Entity entity, @Nonnull Random random) {
+        public MerchantOffer getOffer(@Nonnull Entity entity, @Nonnull RandomSource random) {
             ItemStack bottle = new ItemStack(ModItems.BLOOD_BOTTLE.get(), selling.getPrice(random));
             bottle.setDamageValue(damage);
             return new MerchantOffer(new ItemStack(ModItems.HUMAN_HEART.get(), price.getPrice(random)), bottle, maxUses, xp, 0.2F);
@@ -186,7 +189,7 @@ public class Trades {
         }
 
         @Nullable
-        public MerchantOffer getOffer(Entity pTrader, Random pRand) {
+        public MerchantOffer getOffer(Entity pTrader, RandomSource pRand) {
             if (!(pTrader.level instanceof ServerLevel serverlevel)) {
                 return null;
             } else {
@@ -195,12 +198,12 @@ public class Trades {
                     LogManager.getLogger().warn("Cannot find destination biome in registry{}",destination);
                     return null;
                 }
-                Pair<BlockPos, Holder<Biome>> blockpos = serverlevel.findNearestBiome(b -> b.is(destination), pTrader.blockPosition(), 2400, 8);
+                Pair<BlockPos, Holder<Biome>> blockpos = serverlevel.findClosestBiome3d(b -> b.is(destination), pTrader.blockPosition(), 2400, 8, 16); //TOD check
                 if (blockpos != null) {
                     ItemStack itemstack = MapItem.create(serverlevel, blockpos.getFirst().getX(), blockpos.getFirst().getZ(), (byte)3, true, true);
                     MapItem.renderBiomePreviewMap(serverlevel, itemstack);
                     MapItemSavedData.addTargetDecoration(itemstack, blockpos.getFirst(), "+", MapDecoration.Type.TARGET_POINT);
-                    itemstack.setHoverName(new TranslatableComponent("biome."+destination.location().getNamespace()+ "."+destination.location().getPath()));
+                    itemstack.setHoverName(Component.translatable("biome."+destination.location().getNamespace()+ "."+destination.location().getPath()));
                     return new MerchantOffer(new ItemStack(Items.EMERALD, this.emeraldCost), new ItemStack(Items.COMPASS), itemstack, this.maxUses, this.villagerXp, 0.2F);
                 } else {
                     return null;
@@ -218,7 +221,7 @@ public class Trades {
             this.min = minIn;
         }
 
-        int getPrice(Random rand) {
+        int getPrice(RandomSource rand) {
             if (min >= max) return min;
             else return min + rand.nextInt(max - min);
         }
