@@ -18,6 +18,7 @@ public class VampirismLogger {
     public static final Marker LEVEL = MarkerManager.getMarker("LEVEL");
     public static final Marker SKILLS = MarkerManager.getMarker("SKILLS");
     public static final Marker LORD_LEVEL = MarkerManager.getMarker("LORD LEVEL");
+    public static final Marker MINION_INVENTORY = MarkerManager.getMarker("MINION INVENTORY");
 
     private static Logger logger;
 

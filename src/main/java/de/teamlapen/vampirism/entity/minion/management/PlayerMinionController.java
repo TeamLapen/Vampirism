@@ -27,6 +27,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -514,6 +515,10 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
             task.tickBackground((Q) desc, info.data);
 
         }
+    }
+
+    public Collection<Pair<Integer,MinionData>> getAllMinionData() {
+        return Arrays.stream(minions).map(i -> Pair.of(i.minionID, i.data)).collect(Collectors.toList());
     }
 
     private static class MinionInfo {

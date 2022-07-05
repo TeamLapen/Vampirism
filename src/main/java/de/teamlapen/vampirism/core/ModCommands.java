@@ -41,6 +41,7 @@ public class ModCommands {
                             .then(BloodBarCommand.register())
                             .then(ConfigCommand.register())
                             .then(SkillCommand.register())
+                            .then(MinionInventoryCommand.register())
             );
         }
 
@@ -80,11 +81,12 @@ public class ModCommands {
      * Make sure to use deferred queue
      */
     static void registerArgumentTypesUsage() {
-        ArgumentTypes.register("vampirism_faction", FactionArgument.class, new ArgumentSerializer<>(FactionArgument::new));
-        ArgumentTypes.register("vampirism_skill", SkillArgument.class, new ArgumentSerializer<>(SkillArgument::new));
-        ArgumentTypes.register("vampirism_action", ActionArgument.class, new ArgumentSerializer<>(ActionArgument::new));
-        ArgumentTypes.register("vampirism_refinement_set", RefinementSetArgument.class, new ArgumentSerializer<>(RefinementSetArgument::new));
-        ArgumentTypes.register("vampirism_task", TaskArgument.class, new ArgumentSerializer<>(TaskArgument::new));
-        ArgumentTypes.register("vampirism_biome", BiomeArgument.class, new ArgumentSerializer<>(BiomeArgument::new));
+        ArgumentTypes.register("vampirism:faction", FactionArgument.class, new ArgumentSerializer<>(FactionArgument::new));
+        ArgumentTypes.register("vampirism:skill", SkillArgument.class, new ArgumentSerializer<>(SkillArgument::new));
+        ArgumentTypes.register("vampirism:action", ActionArgument.class, new ArgumentSerializer<>(ActionArgument::new));
+        ArgumentTypes.register("vampirism:refinement_set", RefinementSetArgument.class, new ArgumentSerializer<>(RefinementSetArgument::new));
+        ArgumentTypes.register("vampirism:task", TaskArgument.class, new ArgumentSerializer<>(TaskArgument::new));
+        ArgumentTypes.register("vampirism:biome", BiomeArgument.class, new ArgumentSerializer<>(BiomeArgument::new));
+        ArgumentTypes.register("vampirism:minion", MinionArgument.class, new MinionArgument.MinionArgumentSerializer());
     }
 }

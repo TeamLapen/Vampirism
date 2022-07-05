@@ -103,6 +103,11 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
         return inventoryHands;
     }
 
+    @Override
+    public List<NonNullList<ItemStack>> getAllInventorys() {
+        return allInventories;
+    }
+
     @Nonnull
     @Override
     public ItemStack getItem(int index) {
