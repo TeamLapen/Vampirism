@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.skills.SkillHandler;
 import de.teamlapen.vampirism.entity.player.skills.SkillNode;
+import de.teamlapen.vampirism.misc.VampirismLogger;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -24,7 +25,7 @@ import java.util.Optional;
 
 public class OblivionEffect extends VampirismEffect {
 
-    private static final Logger LOGGER = LogManager.getLogger(FactionPlayerHandler.class);
+    private static final Logger LOGGER = LogManager.getLogger();
 
     public OblivionEffect(MobEffectCategory effectType, int potionColor) {
         super(effectType, potionColor);
@@ -53,6 +54,7 @@ public class OblivionEffect extends VampirismEffect {
                         entityLivingBaseIn.removeEffect(ModEffects.OBLIVION.get());
                         ((Player) entityLivingBaseIn).displayClientMessage(Component.translatable("text.vampirism.skill.skills_reset"), true);
                         LOGGER.debug(LogUtil.FACTION, "Skills were reset for {}", entityLivingBaseIn.getName().getString());
+                        VampirismLogger.info(VampirismLogger.SKILLS, "Skills were reset for {}", entityLivingBaseIn.getName().getString());
                     }
                 });
             }

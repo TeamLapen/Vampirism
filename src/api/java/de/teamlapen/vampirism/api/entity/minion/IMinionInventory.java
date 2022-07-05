@@ -5,6 +5,8 @@ import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 /**
  * Similar to {@link net.minecraft.world.entity.player.Inventory}
  * Manages the different inventories of a minion (armor, held item, main inventory)
@@ -25,4 +27,6 @@ public interface IMinionInventory extends Container {
     NonNullList<ItemStack> getInventoryArmor();
 
     NonNullList<ItemStack> getInventoryHands();
+
+    List<NonNullList<ItemStack>> getAllInventorys();
 }

@@ -39,6 +39,7 @@ import de.teamlapen.vampirism.entity.player.vampire.BloodVision;
 import de.teamlapen.vampirism.entity.player.vampire.NightVision;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.items.VampireRefinementItem;
+import de.teamlapen.vampirism.misc.VampirismLogger;
 import de.teamlapen.vampirism.modcompat.IMCHandler;
 import de.teamlapen.vampirism.modcompat.terrablender.TerraBlenderCompat;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
@@ -158,7 +159,7 @@ public class VampirismMod {
     }
 
     public void onCommandsRegister(@NotNull RegisterCommandsEvent event) {
-        ModCommands.registerCommands(event.getDispatcher());
+        ModCommands.registerCommands(event.getDispatcher(), event.getBuildContext());
     }
 
     private void checkEnv() {
@@ -223,6 +224,7 @@ public class VampirismMod {
         event.enqueueWork(OverworldModifications::addBiomesToOverworldUnsafe);
         VampirismAPI.skillManager().registerSkillType(SkillType.LEVEL);
         VampirismAPI.skillManager().registerSkillType(SkillType.LORD);
+        DistExecutor.safeRunWhenOn(Dist.DEDICATED_SERVER, () -> VampirismLogger::init);
     }
 
 

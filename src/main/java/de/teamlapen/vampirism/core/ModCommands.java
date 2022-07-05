@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.command.*;
 import de.teamlapen.vampirism.command.arguments.*;
 import de.teamlapen.vampirism.command.test.*;
+import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
@@ -30,13 +31,14 @@ public class ModCommands {
     public static final RegistryObject<ArgumentTypeInfo<?, ?>> REFINEMENT_SET = COMMAND_ARGUMENT_TYPES.register("refinement_set", () -> ArgumentTypeInfos.registerByClass(RefinementSetArgument.class, SingletonArgumentInfo.contextFree(RefinementSetArgument::set)));
     public static final RegistryObject<ArgumentTypeInfo<?, ?>> TASK = COMMAND_ARGUMENT_TYPES.register("task", () -> ArgumentTypeInfos.registerByClass(TaskArgument.class, SingletonArgumentInfo.contextFree(TaskArgument::tasks)));
     public static final RegistryObject<ArgumentTypeInfo<?, ?>> BIOME = COMMAND_ARGUMENT_TYPES.register("biome", () -> ArgumentTypeInfos.registerByClass(BiomeArgument.class, SingletonArgumentInfo.contextFree(BiomeArgument::biome)));
+    public static final RegistryObject<ArgumentTypeInfo<?, ?>> MINION_ID = COMMAND_ARGUMENT_TYPES.register("minion_id", () -> ArgumentTypeInfos.registerByClass(MinionArgument.class, new MinionArgument.Info()));
 
     static void register(IEventBus bus) {
         COMMAND_ARGUMENT_TYPES.register(bus);
     }
 
 
-    public static void registerCommands(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
+    public static void registerCommands(@NotNull CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext buildContext) {
         List<String> vampirism = Lists.newArrayList("vampirism");
         List<String> test = Lists.newArrayList("vampirism-test");
         if (VampirismMod.inDev) {
@@ -61,6 +63,7 @@ public class ModCommands {
                             .then(BloodBarCommand.register())
                             .then(ConfigCommand.register())
                             .then(SkillCommand.register())
+                            .then(MinionInventoryCommand.register(buildContext))
             );
         }
 

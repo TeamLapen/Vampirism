@@ -16,6 +16,8 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -115,5 +117,9 @@ public class MinionWorldData extends SavedData {
         });
         compound.put("controllers", all);
         return compound;
+    }
+
+    public Map<UUID, PlayerMinionController> getControllers() {
+        return Collections.unmodifiableMap(controllers);
     }
 }

@@ -284,6 +284,7 @@ public class VampirismConfig {
         //Common server
         public final ForgeConfigSpec.BooleanValue autoConvertGlassBottles;
         public final ForgeConfigSpec.BooleanValue umbrella;
+        public final ForgeConfigSpec.BooleanValue enableFactionLogging;
 
         //World
         public final ForgeConfigSpec.BooleanValue addVampireForestToOverworld;
@@ -314,6 +315,7 @@ public class VampirismConfig {
                     .push("common-server");
             autoConvertGlassBottles = builder.comment("Whether glass bottles should be automatically be converted to blood bottles when needed").define("autoConvertGlassBottles", true);
             umbrella = builder.comment("If enabled adds a craftable umbrella that can be used to slowly walk though sunlight without taking damage").define("umbrella", false);
+            enableFactionLogging = builder.comment("Enable a custom vampirism log file that logs specific faction actions", "Requires restart").define("enableFactionLogging", false);
 
             builder.comment("Settings here require a game restart").push("world");
             addVampireForestToOverworld = builder.comment("Whether to inject the vampire forest into the default overworld generation and to replace some Taiga areas").define("addVampireForestToOverworld", true);
