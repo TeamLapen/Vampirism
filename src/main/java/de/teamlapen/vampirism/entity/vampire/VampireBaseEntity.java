@@ -21,8 +21,8 @@ import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.data.worldgen.StructureSets;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.StructureTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
@@ -116,7 +116,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
                     return false;
                 }
                 if (this.level.isLoaded(blockPosition()) && worldIn instanceof ServerLevel) { //TODO check performance
-                    if (UtilLib.getStructureStartAt(level, blockPosition(), StructureSets.VILLAGES).isPresent()) {
+                    if (UtilLib.getStructureStartAt(level, blockPosition(), StructureTags.VILLAGE).isPresent()) {
                         if (getRandom().nextInt(60) != 0) {
                             return false;
                         }

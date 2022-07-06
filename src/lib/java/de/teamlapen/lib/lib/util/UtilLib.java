@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -18,6 +18,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -33,7 +34,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.Structure;
-import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
@@ -60,7 +60,6 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * General Utility Class
@@ -578,7 +577,7 @@ public class UtilLib {
     }
 
     @Nonnull
-    public static Optional<StructureStart> getStructureStartAt(Entity entity, Holder<StructureSet> s) {
+    public static Optional<StructureStart> getStructureStartAt(Entity entity, TagKey<Structure> s) {
         return getStructureStartAt(entity.getCommandSenderWorld(), entity.blockPosition(), s);
     }
 
@@ -587,7 +586,7 @@ public class UtilLib {
         return start != null && start.isValid();
     }
 
-    public static boolean isInsideStructure(Level w, BlockPos p, Holder<StructureSet> s) {
+    public static boolean isInsideStructure(Level w, BlockPos p, TagKey<Structure> s) {
         return getStructureStartAt(w,p,s).isPresent();
     }
 
@@ -596,7 +595,7 @@ public class UtilLib {
         return start != null && start.isValid();
     }
 
-    public static boolean isInsideStructure(Entity entity, Holder<StructureSet> structures) {
+    public static boolean isInsideStructure(Entity entity, TagKey<Structure> structures) {
         return getStructureStartAt(entity, structures).isPresent();
     }
 
@@ -608,10 +607,12 @@ public class UtilLib {
         return null;
     }
 
-    public static Optional<StructureStart> getStructureStartAt(Level level, BlockPos pos, Holder<StructureSet> structureSet) {
-        if (level instanceof ServerLevel && level.isLoaded(pos)) {//TODO 1.19 Recheck
-            Set<Structure> structures = structureSet.get().structures().stream().map(a -> a.structure().get()).collect(Collectors.toSet());
-            return ((ServerLevel) level).structureManager().startsForStructure(new ChunkPos(pos), structures::contains).stream().findFirst(); //TODO 1.19 Recheck
+    public static Optional<StructureStart> getStructureStartAt(Level level, BlockPos pos, TagKey<Structure> structureTag) {
+        if (level instanceof ServerLevel && level.isLoaded(pos)) {
+            Registry<Structure> registry = level.registryAccess().registryOrThrow(Registry.STRUCTURE_REGISTRY);
+            return ((ServerLevel) level).structureManager().startsForStructure(new ChunkPos(pos), structure -> {
+                return registry.getHolder(registry.getId(structure)).map(a -> a.is(structureTag)).orElse(false);
+            }).stream().findFirst();
         }
         return Optional.empty();
     }

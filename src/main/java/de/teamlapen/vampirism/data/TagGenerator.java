@@ -8,6 +8,7 @@ import net.minecraft.data.tags.*;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.PoiTypeTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.level.biome.Biomes;
@@ -166,9 +167,11 @@ public class TagGenerator {
 
         @Override
         protected void addTags() {
-            tag(ModTags.POI_TYPES.HAS_FACTION).add(ModVillage.NO_FACTION.get(), ModVillage.HUNTER_FACTION.get(), ModVillage.VAMPIRE_FACTION.get());
-            tag(ModTags.POI_TYPES.IS_HUNTER).add(ModVillage.HUNTER_FACTION.get());
-            tag(ModTags.POI_TYPES.IS_VAMPIRE).add(ModVillage.VAMPIRE_FACTION.get());
+            tag(ModTags.POI_TYPES.HAS_FACTION).add(ModVillage.NO_FACTION_TOTEM.get(), ModVillage.HUNTER_TOTEM.get(), ModVillage.VAMPIRE_TOTEM.get());
+            tag(ModTags.POI_TYPES.IS_HUNTER).add(ModVillage.HUNTER_TOTEM.get());
+            tag(ModTags.POI_TYPES.IS_VAMPIRE).add(ModVillage.VAMPIRE_TOTEM.get());
+            tag(PoiTypeTags.ACQUIRABLE_JOB_SITE).add(ModVillage.HUNTER_TOTEM.get(), ModVillage.VAMPIRE_TOTEM.get());
+            tag(PoiTypeTags.VILLAGE).add(ModVillage.NO_FACTION_TOTEM.get(), ModVillage.HUNTER_TOTEM.get(), ModVillage.VAMPIRE_TOTEM.get());
         }
     }
 

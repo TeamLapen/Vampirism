@@ -30,12 +30,12 @@ import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.util.HunterVillage;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.core.BlockPos;
-import net.minecraft.data.worldgen.StructureSets;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.tags.StructureTags;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -531,7 +531,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             }
         });
         this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, Zombie.class, true, true));
-        this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, PatrollingMonster.class, 5, true, true, (living) -> UtilLib.isInsideStructure(living, StructureSets.VILLAGES)));        //Also check the priority of tasks that are dynamically added. See top of class
+        this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, PatrollingMonster.class, 5, true, true, (living) -> UtilLib.isInsideStructure(living, StructureTags.VILLAGE)));        //Also check the priority of tasks that are dynamically added. See top of class
     }
 
     protected void updateEntityAttributes() {

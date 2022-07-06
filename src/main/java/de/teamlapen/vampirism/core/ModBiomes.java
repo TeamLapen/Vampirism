@@ -15,6 +15,7 @@ import net.minecraftforge.registries.RegistryObject;
  */
 public class ModBiomes {
     public static final DeferredRegister<Biome> BIOMES = DeferredRegister.create(ForgeRegistries.BIOMES, REFERENCE.MODID);
+
     public static final RegistryObject<Biome> VAMPIRE_FOREST = BIOMES.register("vampire_forest", VampirismBiomes::createVampireForest);
 
     static void registerBiomes(IEventBus bus) {

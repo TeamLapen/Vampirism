@@ -23,7 +23,10 @@ import de.teamlapen.vampirism.client.core.ModBlocksRender;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.config.BloodValues;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.*;
+import de.teamlapen.vampirism.core.ModCommands;
+import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.ModLootTables;
+import de.teamlapen.vampirism.core.RegistryManager;
 import de.teamlapen.vampirism.data.*;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.ModEntityEventHandler;
@@ -52,6 +55,7 @@ import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.proxy.ServerProxy;
 import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.util.*;
+import de.teamlapen.vampirism.world.biome.OverworldModifications;
 import de.teamlapen.vampirism.world.gen.VampirismFeatures;
 import de.teamlapen.vampirism.world.gen.VanillaStructureModifications;
 import net.minecraft.ChatFormatting;
@@ -177,11 +181,9 @@ public class VampirismMod {
         registryManager = new RegistryManager();
         MinecraftForge.EVENT_BUS.register(Permissions.class);
 
-        ModFeatures.init();
-
-        prepareAPI();
-        VampirismRegistries.init(modbus);
+        prepareAPI(modbus);
         RegistryManager.setupRegistries(modbus);
+
 
 
         if (OptifineHandler.isOptifineLoaded()) {
@@ -303,7 +305,9 @@ public class VampirismMod {
     /**
      * Called during constructor to set up the API as well as VReference
      */
-    private void prepareAPI() {
+    private void prepareAPI(IEventBus modbus) {
+        VampirismRegistries.init(modbus);
+
         FactionRegistry factionRegistry = new FactionRegistry();
         SundamageRegistry sundamageRegistry = new SundamageRegistry();
         VampirismEntityRegistry biteableRegistry = new VampirismEntityRegistry();

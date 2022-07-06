@@ -10,9 +10,9 @@ import de.teamlapen.vampirism.core.ModFeatures;
 import de.teamlapen.vampirism.world.gen.VampirismFeatures;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.data.worldgen.StructureSets;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.StructureTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureManager;
@@ -79,7 +79,7 @@ public abstract class HunterCampPieces extends StructurePiece {
                 return false;
             }
         }
-        return this.y >= 63 && !worldIn.getBlockState(new BlockPos(x, y - 1, z)).getMaterial().isLiquid() && UtilLib.getStructureStartAt(worldIn.getLevel(), new BlockPos(x,y,z), StructureSets.VILLAGES).isEmpty();
+        return this.y >= 63 && !worldIn.getBlockState(new BlockPos(x, y - 1, z)).getMaterial().isLiquid() && UtilLib.getStructureStartAt(worldIn.getLevel(), new BlockPos(x,y,z), StructureTags.VILLAGE).isEmpty();
     }
 
     public static class Fireplace extends HunterCampPieces {

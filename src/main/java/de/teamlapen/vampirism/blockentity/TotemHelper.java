@@ -7,11 +7,11 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModTags;
 import net.minecraft.core.BlockPos;
-import net.minecraft.data.worldgen.StructureSets;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.StructureTags;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.ai.village.poi.PoiRecord;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
@@ -116,8 +116,8 @@ public class TotemHelper {
             ignoreOtherTotem = false;
         }
 
-        Optional<StructureStart> structure1 = UtilLib.getStructureStartAt(world, totem, StructureSets.VILLAGES);
-        Optional<StructureStart> structure2 = UtilLib.getStructureStartAt(world, conflicting, StructureSets.VILLAGES);
+        Optional<StructureStart> structure1 = UtilLib.getStructureStartAt(world, totem, StructureTags.VILLAGE);
+        Optional<StructureStart> structure2 = UtilLib.getStructureStartAt(world, conflicting, StructureTags.VILLAGE);
 
         if ((structure1.isPresent()) && (structure2.isPresent())) { //the first totem wins the POIs if located in natural village, other looses then
             ignoreOtherTotem = false;
@@ -238,7 +238,7 @@ public class TotemHelper {
         Set<PoiRecord> finished = Sets.newHashSet();
         Set<PoiRecord> points = manager.getInRange(type -> !type.is(ModTags.POI_TYPES.HAS_FACTION), pos, 50, PoiManager.Occupancy.ANY).collect(Collectors.toSet());
         while (!points.isEmpty()) {
-            List<Stream<PoiRecord>> list = points.stream().map(pointOfInterest -> manager.getInRange(type -> type.is(ModTags.POI_TYPES.HAS_FACTION), pointOfInterest.getPos(), 40, PoiManager.Occupancy.ANY)).toList();
+            List<Stream<PoiRecord>> list = points.stream().map(pointOfInterest -> manager.getInRange(type -> !type.is(ModTags.POI_TYPES.HAS_FACTION), pointOfInterest.getPos(), 40, PoiManager.Occupancy.ANY)).toList();
             points.clear();
             list.forEach(stream -> stream.forEach(point -> {
                 if (!finished.contains(point)) {
@@ -310,7 +310,7 @@ public class TotemHelper {
      * @return flag which requirements are met
      */
     public static int isVillage(Set<PoiRecord> pointOfInterests, ServerLevel world, BlockPos totemPos, boolean hasInteraction) {
-        if (UtilLib.getStructureStartAt(world, totemPos, StructureSets.VILLAGES).isPresent()) {
+        if (UtilLib.getStructureStartAt(world, totemPos, StructureTags.VILLAGE).isPresent()) {
             return 7;
         }
         return isVillage(getVillageStats(pointOfInterests, world), hasInteraction);

@@ -35,7 +35,6 @@ import de.teamlapen.vampirism.util.VampirismEventFactory;
 import de.teamlapen.vampirism.world.ServerMultiBossEvent;
 import de.teamlapen.vampirism.world.VampirismWorld;
 import net.minecraft.core.BlockPos;
-import net.minecraft.data.worldgen.StructureSets;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -46,6 +45,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.StructureTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.random.WeightedRandom;
@@ -1239,7 +1239,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         if (totem == null) {
             totem = new AABB(this.worldPosition);
         }
-        Optional<StructureStart> start = UtilLib.getStructureStartAt(this.level, this.worldPosition, StructureSets.VILLAGES);
+        Optional<StructureStart> start = UtilLib.getStructureStartAt(this.level, this.worldPosition, StructureTags.VILLAGE);
         if (start.isPresent()) {
             totem = totem.minmax(UtilLib.MBtoAABB(start.get().getBoundingBox()));
         }
