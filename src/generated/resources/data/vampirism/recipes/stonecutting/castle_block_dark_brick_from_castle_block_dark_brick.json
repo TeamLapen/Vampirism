@@ -1,8 +1,8 @@
 {
   "type": "minecraft:stonecutting",
+  "count": 1,
   "ingredient": {
     "item": "vampirism:castle_block_dark_stone"
   },
-  "result": "vampirism:castle_block_dark_brick",
-  "count": 1
+  "result": "vampirism:castle_block_dark_brick"
 }

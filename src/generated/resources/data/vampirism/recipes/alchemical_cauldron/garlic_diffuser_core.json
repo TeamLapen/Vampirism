@@ -1,18 +1,18 @@
 {
   "type": "vampirism:alchemical_cauldron",
-  "result": {
-    "item": "vampirism:garlic_diffuser_core"
+  "cookTime": 200,
+  "experience": 0.2,
+  "fluidItem": {
+    "tag": "forge:crops/garlic"
   },
   "ingredient": {
     "tag": "minecraft:wool"
   },
-  "fluidItem": {
-    "tag": "forge:crops/garlic"
+  "reqLevel": 1,
+  "result": {
+    "item": "vampirism:garlic_diffuser_core"
   },
   "skill": [
     "vampirism:garlic_diffuser"
-  ],
-  "cookTime": 200,
-  "experience": 0.2,
-  "reqLevel": 1
+  ]
 }

@@ -2,8 +2,6 @@
   "type": "minecraft:chest",
   "pools": [
     {
-      "name": "main",
-      "rolls": 1.0,
       "bonus_rolls": 0.0,
       "entries": [
         {
@@ -15,19 +13,19 @@
           ],
           "name": "vampirism:vampire_book"
         }
-      ]
+      ],
+      "name": "main",
+      "rolls": 1.0
     },
     {
-      "name": "refinement_item",
-      "rolls": 3.0,
       "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
           "functions": [
             {
-              "function": "vampirism:add_refinement_set",
-              "faction": "vampirism:vampire"
+              "faction": "vampirism:vampire",
+              "function": "vampirism:add_refinement_set"
             }
           ],
           "name": "vampirism:amulet"
@@ -36,8 +34,8 @@
           "type": "minecraft:item",
           "functions": [
             {
-              "function": "vampirism:add_refinement_set",
-              "faction": "vampirism:vampire"
+              "faction": "vampirism:vampire",
+              "function": "vampirism:add_refinement_set"
             }
           ],
           "name": "vampirism:ring"
@@ -46,13 +44,15 @@
           "type": "minecraft:item",
           "functions": [
             {
-              "function": "vampirism:add_refinement_set",
-              "faction": "vampirism:vampire"
+              "faction": "vampirism:vampire",
+              "function": "vampirism:add_refinement_set"
             }
           ],
           "name": "vampirism:obi_belt"
         }
-      ]
+      ],
+      "name": "refinement_item",
+      "rolls": 3.0
     }
   ]
 }

@@ -1,11 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "XYX",
-    "YZY",
-    "OOO"
-  ],
   "key": {
+    "O": {
+      "tag": "forge:obsidian"
+    },
     "X": {
       "tag": "minecraft:planks"
     },
@@ -14,11 +12,13 @@
     },
     "Z": {
       "item": "vampirism:garlic_diffuser_core_improved"
-    },
-    "O": {
-      "tag": "forge:obsidian"
     }
   },
+  "pattern": [
+    "XYX",
+    "YZY",
+    "OOO"
+  ],
   "result": {
     "item": "vampirism:garlic_diffuser_improved"
   }

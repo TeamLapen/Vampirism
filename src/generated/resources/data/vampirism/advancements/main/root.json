@@ -1,23 +1,6 @@
 {
-  "display": {
-    "icon": {
-      "item": "vampirism:vampire_fang"
-    },
-    "title": {
-      "translate": "advancement.vampirism"
-    },
-    "description": {
-      "translate": "advancement.vampirism.desc"
-    },
-    "frame": "task",
-    "show_toast": false,
-    "announce_to_chat": false,
-    "hidden": false,
-    "background": "vampirism:textures/block/castle_block_dark_brick.png"
-  },
   "criteria": {
     "main": {
-      "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
@@ -26,10 +9,10 @@
             ]
           }
         ]
-      }
+      },
+      "trigger": "minecraft:inventory_changed"
     },
     "second": {
-      "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
@@ -38,7 +21,24 @@
             ]
           }
         ]
-      }
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "background": "vampirism:textures/block/castle_block_dark_brick.png",
+    "description": {
+      "translate": "advancement.vampirism.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "vampirism:vampire_fang"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancement.vampirism"
     }
   },
   "requirements": [

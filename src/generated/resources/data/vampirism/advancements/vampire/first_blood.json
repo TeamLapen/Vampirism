@@ -1,27 +1,27 @@
 {
   "parent": "vampirism:vampire/become_vampire",
+  "criteria": {
+    "flower": {
+      "conditions": {
+        "action": "SUCK_BLOOD"
+      },
+      "trigger": "vampirism:vampire_action"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "vampirism:blood_bottle",
-      "nbt": "{Damage:0}"
-    },
-    "title": {
-      "translate": "advancement.vampirism.sucking_blood"
-    },
+    "announce_to_chat": true,
     "description": {
       "translate": "advancement.vampirism.sucking_blood.desc"
     },
     "frame": "task",
+    "hidden": true,
+    "icon": {
+      "item": "vampirism:blood_bottle",
+      "nbt": "{Damage:0}"
+    },
     "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": true
-  },
-  "criteria": {
-    "flower": {
-      "trigger": "vampirism:vampire_action",
-      "conditions": {
-        "action": "SUCK_BLOOD"
-      }
+    "title": {
+      "translate": "advancement.vampirism.sucking_blood"
     }
   },
   "requirements": [

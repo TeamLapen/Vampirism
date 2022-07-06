@@ -1,26 +1,26 @@
 {
   "parent": "vampirism:minion/become_lord",
+  "criteria": {
+    "task": {
+      "conditions": {
+        "action": "vampirism:collect_hunter_items"
+      },
+      "trigger": "vampirism:minion_tasks"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "minecraft:gold_nugget"
-    },
-    "title": {
-      "translate": "advancement.vampirism.collect_hunter_items"
-    },
+    "announce_to_chat": true,
     "description": {
       "translate": "advancement.vampirism.collect_hunter_items.desc"
     },
     "frame": "task",
+    "hidden": true,
+    "icon": {
+      "item": "minecraft:gold_nugget"
+    },
     "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": true
-  },
-  "criteria": {
-    "task": {
-      "trigger": "vampirism:minion_tasks",
-      "conditions": {
-        "action": "vampirism:collect_hunter_items"
-      }
+    "title": {
+      "translate": "advancement.vampirism.collect_hunter_items"
     }
   },
   "requirements": [

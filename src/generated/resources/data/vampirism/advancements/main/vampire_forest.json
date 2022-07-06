@@ -1,28 +1,36 @@
 {
   "parent": "vampirism:main/root",
+  "criteria": {
+    "main": {
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "biome": "vampirism:vampire_forest"
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:location"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "minecraft:oak_log"
-    },
-    "title": {
-      "translate": "advancement.vampirism.vampire_forest"
-    },
+    "announce_to_chat": true,
     "description": {
       "translate": "advancement.vampirism.vampire_forest.desc"
     },
     "frame": "task",
+    "hidden": true,
+    "icon": {
+      "item": "minecraft:oak_log"
+    },
     "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": true
-  },
-  "criteria": {
-    "main": {
-      "trigger": "minecraft:location",
-      "conditions": {
-        "location": {
-          "biome": "vampirism:vampire_forest"
-        }
-      }
+    "title": {
+      "translate": "advancement.vampirism.vampire_forest"
     }
   },
   "requirements": [

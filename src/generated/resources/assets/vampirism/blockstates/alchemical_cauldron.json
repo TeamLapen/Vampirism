@@ -6,27 +6,27 @@
       }
     },
     {
-      "when": {
-        "lit": "true"
-      },
       "apply": {
         "model": "vampirism:block/alchemy_cauldron_fire"
+      },
+      "when": {
+        "lit": "true"
       }
     },
     {
-      "when": {
-        "liquid": "1"
-      },
       "apply": {
         "model": "vampirism:block/alchemy_cauldron_liquid"
+      },
+      "when": {
+        "liquid": "1"
       }
     },
     {
-      "when": {
-        "liquid": "2"
-      },
       "apply": {
         "model": "vampirism:block/cauldron_boiling"
+      },
+      "when": {
+        "liquid": "2"
       }
     }
   ]

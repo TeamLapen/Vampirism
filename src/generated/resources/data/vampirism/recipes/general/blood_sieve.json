@@ -1,16 +1,11 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "XQX",
-    "YZY",
-    "YXY"
-  ],
   "key": {
-    "X": {
-      "tag": "forge:ingots/iron"
-    },
     "Q": {
       "tag": "forge:storage_blocks/quartz"
+    },
+    "X": {
+      "tag": "forge:ingots/iron"
     },
     "Y": {
       "tag": "minecraft:planks"
@@ -19,6 +14,11 @@
       "item": "minecraft:cauldron"
     }
   },
+  "pattern": [
+    "XQX",
+    "YZY",
+    "YXY"
+  ],
   "result": {
     "item": "vampirism:blood_sieve"
   }

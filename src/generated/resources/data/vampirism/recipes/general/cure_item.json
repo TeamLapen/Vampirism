@@ -1,21 +1,21 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "YXY",
-    "YZY",
-    "YYY"
-  ],
   "key": {
+    "X": {
+      "item": "vampirism:injection_zombie_blood"
+    },
     "Y": {
       "item": "minecraft:gold_nugget"
     },
     "Z": {
       "item": "minecraft:apple"
-    },
-    "X": {
-      "item": "vampirism:injection_zombie_blood"
     }
   },
+  "pattern": [
+    "YXY",
+    "YZY",
+    "YYY"
+  ],
   "result": {
     "item": "vampirism:cure_apple"
   }

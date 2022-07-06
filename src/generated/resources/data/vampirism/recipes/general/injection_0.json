@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    " X ",
-    " X ",
-    " Y "
-  ],
   "key": {
     "X": {
       "tag": "forge:glass"
@@ -13,6 +8,11 @@
       "tag": "forge:glass_panes"
     }
   },
+  "pattern": [
+    " X ",
+    " X ",
+    " Y "
+  ],
   "result": {
     "item": "vampirism:injection_empty"
   }

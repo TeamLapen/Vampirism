@@ -2,168 +2,166 @@
   "type": "minecraft:chest",
   "pools": [
     {
-      "name": "main",
-      "rolls": 7.0,
       "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
-          "weight": 35,
-          "name": "vampirism:vampire_fang"
+          "name": "vampirism:vampire_fang",
+          "weight": 35
         },
         {
           "type": "minecraft:item",
-          "weight": 20,
           "functions": [
             {
-              "function": "minecraft:set_damage",
+              "add": false,
               "damage": 1.0,
-              "add": false
+              "function": "minecraft:set_damage"
             }
           ],
-          "name": "vampirism:blood_bottle"
+          "name": "vampirism:blood_bottle",
+          "weight": 20
         }
-      ]
+      ],
+      "name": "main",
+      "rolls": 7.0
     },
     {
-      "name": "book",
-      "rolls": 1.0,
       "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
-          "weight": 70,
           "functions": [
             {
               "function": "vampirism:add_book_nbt"
             }
           ],
-          "name": "vampirism:vampire_book"
+          "name": "vampirism:vampire_book",
+          "weight": 70
         },
         {
           "type": "minecraft:empty",
           "weight": 30
         }
-      ]
+      ],
+      "name": "book",
+      "rolls": 1.0
     },
     {
-      "name": "equipment",
-      "rolls": 1.0,
       "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
-          "weight": 21,
           "functions": [
             {
-              "function": "minecraft:set_damage",
+              "add": false,
               "damage": {
                 "type": "minecraft:uniform",
-                "min": 0.6,
-                "max": 0.99
+                "max": 0.99,
+                "min": 0.6
               },
-              "add": false
+              "function": "minecraft:set_damage"
             },
             {
-              "function": "vampirism:set_item_blood_charge",
               "charge": {
                 "type": "minecraft:uniform",
-                "min": 500.0,
-                "max": 2000.0
-              }
+                "max": 2000.0,
+                "min": 500.0
+              },
+              "function": "vampirism:set_item_blood_charge"
             }
           ],
-          "name": "vampirism:heart_seeker_enhanced"
+          "name": "vampirism:heart_seeker_enhanced",
+          "weight": 21
         },
         {
           "type": "minecraft:item",
-          "weight": 9,
           "functions": [
             {
-              "function": "minecraft:set_damage",
+              "add": false,
               "damage": {
                 "type": "minecraft:uniform",
-                "min": 0.6,
-                "max": 0.99
+                "max": 0.99,
+                "min": 0.6
               },
-              "add": false
+              "function": "minecraft:set_damage"
             },
             {
-              "function": "vampirism:set_item_blood_charge",
               "charge": {
                 "type": "minecraft:uniform",
-                "min": 500.0,
-                "max": 2000.0
-              }
+                "max": 2000.0,
+                "min": 500.0
+              },
+              "function": "vampirism:set_item_blood_charge"
             }
           ],
-          "name": "vampirism:heart_seeker_ultimate"
+          "name": "vampirism:heart_seeker_ultimate",
+          "weight": 9
         },
         {
           "type": "minecraft:item",
-          "weight": 21,
           "functions": [
             {
-              "function": "minecraft:set_damage",
+              "add": false,
               "damage": {
                 "type": "minecraft:uniform",
-                "min": 0.6,
-                "max": 0.99
+                "max": 0.99,
+                "min": 0.6
               },
-              "add": false
+              "function": "minecraft:set_damage"
             },
             {
-              "function": "vampirism:set_item_blood_charge",
               "charge": {
                 "type": "minecraft:uniform",
-                "min": 500.0,
-                "max": 2000.0
-              }
+                "max": 2000.0,
+                "min": 500.0
+              },
+              "function": "vampirism:set_item_blood_charge"
             }
           ],
-          "name": "vampirism:heart_striker_enhanced"
+          "name": "vampirism:heart_striker_enhanced",
+          "weight": 21
         },
         {
           "type": "minecraft:item",
-          "weight": 9,
           "functions": [
             {
-              "function": "minecraft:set_damage",
+              "add": false,
               "damage": {
                 "type": "minecraft:uniform",
-                "min": 0.6,
-                "max": 0.99
+                "max": 0.99,
+                "min": 0.6
               },
-              "add": false
+              "function": "minecraft:set_damage"
             },
             {
-              "function": "vampirism:set_item_blood_charge",
               "charge": {
                 "type": "minecraft:uniform",
-                "min": 500.0,
-                "max": 2000.0
-              }
+                "max": 2000.0,
+                "min": 500.0
+              },
+              "function": "vampirism:set_item_blood_charge"
             }
           ],
-          "name": "vampirism:heart_striker_ultimate"
+          "name": "vampirism:heart_striker_ultimate",
+          "weight": 9
         },
         {
           "type": "minecraft:empty",
           "weight": 40
         }
-      ]
+      ],
+      "name": "equipment",
+      "rolls": 1.0
     },
     {
-      "name": "refinement_item",
-      "rolls": 3.0,
       "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
           "functions": [
             {
-              "function": "vampirism:add_refinement_set",
-              "faction": "vampirism:vampire"
+              "faction": "vampirism:vampire",
+              "function": "vampirism:add_refinement_set"
             }
           ],
           "name": "vampirism:amulet"
@@ -172,8 +170,8 @@
           "type": "minecraft:item",
           "functions": [
             {
-              "function": "vampirism:add_refinement_set",
-              "faction": "vampirism:vampire"
+              "faction": "vampirism:vampire",
+              "function": "vampirism:add_refinement_set"
             }
           ],
           "name": "vampirism:ring"
@@ -182,13 +180,15 @@
           "type": "minecraft:item",
           "functions": [
             {
-              "function": "vampirism:add_refinement_set",
-              "faction": "vampirism:vampire"
+              "faction": "vampirism:vampire",
+              "function": "vampirism:add_refinement_set"
             }
           ],
           "name": "vampirism:obi_belt"
         }
-      ]
+      ],
+      "name": "refinement_item",
+      "rolls": 3.0
     }
   ]
 }

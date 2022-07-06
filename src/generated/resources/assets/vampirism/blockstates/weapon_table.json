@@ -1,233 +1,233 @@
 {
   "multipart": [
     {
-      "when": {
-        "facing": "north"
-      },
       "apply": {
         "model": "vampirism:block/weapon_table/weapon_table"
+      },
+      "when": {
+        "facing": "north"
       }
     },
     {
+      "apply": {
+        "model": "vampirism:block/weapon_table/weapon_table",
+        "y": 90
+      },
       "when": {
         "facing": "east"
-      },
-      "apply": {
-        "model": "vampirism:block/weapon_table/weapon_table",
-        "y": 90
       }
     },
     {
+      "apply": {
+        "model": "vampirism:block/weapon_table/weapon_table",
+        "y": 180
+      },
       "when": {
         "facing": "south"
-      },
-      "apply": {
-        "model": "vampirism:block/weapon_table/weapon_table",
-        "y": 180
       }
     },
     {
+      "apply": {
+        "model": "vampirism:block/weapon_table/weapon_table",
+        "y": 270
+      },
       "when": {
         "facing": "west"
-      },
-      "apply": {
-        "model": "vampirism:block/weapon_table/weapon_table",
-        "y": 270
       }
     },
     {
-      "when": {
-        "facing": "north",
-        "lava": "1"
-      },
       "apply": {
         "model": "vampirism:block/weapon_table/weapon_table_lava1"
+      },
+      "when": {
+        "facing": "north",
+        "lava": "1"
       }
     },
     {
-      "when": {
-        "facing": "east",
-        "lava": "1"
-      },
       "apply": {
         "model": "vampirism:block/weapon_table/weapon_table_lava1",
         "y": 90
+      },
+      "when": {
+        "facing": "east",
+        "lava": "1"
       }
     },
     {
-      "when": {
-        "facing": "south",
-        "lava": "1"
-      },
       "apply": {
         "model": "vampirism:block/weapon_table/weapon_table_lava1",
         "y": 180
+      },
+      "when": {
+        "facing": "south",
+        "lava": "1"
       }
     },
     {
-      "when": {
-        "facing": "west",
-        "lava": "1"
-      },
       "apply": {
         "model": "vampirism:block/weapon_table/weapon_table_lava1",
         "y": 270
+      },
+      "when": {
+        "facing": "west",
+        "lava": "1"
       }
     },
     {
-      "when": {
-        "facing": "north",
-        "lava": "2"
-      },
       "apply": {
         "model": "vampirism:block/weapon_table/weapon_table_lava2"
+      },
+      "when": {
+        "facing": "north",
+        "lava": "2"
       }
     },
     {
-      "when": {
-        "facing": "east",
-        "lava": "2"
-      },
       "apply": {
         "model": "vampirism:block/weapon_table/weapon_table_lava2",
         "y": 90
+      },
+      "when": {
+        "facing": "east",
+        "lava": "2"
       }
     },
     {
-      "when": {
-        "facing": "south",
-        "lava": "2"
-      },
       "apply": {
         "model": "vampirism:block/weapon_table/weapon_table_lava2",
         "y": 180
+      },
+      "when": {
+        "facing": "south",
+        "lava": "2"
       }
     },
     {
-      "when": {
-        "facing": "west",
-        "lava": "2"
-      },
       "apply": {
         "model": "vampirism:block/weapon_table/weapon_table_lava2",
         "y": 270
+      },
+      "when": {
+        "facing": "west",
+        "lava": "2"
       }
     },
     {
-      "when": {
-        "facing": "north",
-        "lava": "3"
-      },
       "apply": {
         "model": "vampirism:block/weapon_table/weapon_table_lava3"
+      },
+      "when": {
+        "facing": "north",
+        "lava": "3"
       }
     },
     {
-      "when": {
-        "facing": "east",
-        "lava": "3"
-      },
       "apply": {
         "model": "vampirism:block/weapon_table/weapon_table_lava3",
         "y": 90
+      },
+      "when": {
+        "facing": "east",
+        "lava": "3"
       }
     },
     {
-      "when": {
-        "facing": "south",
-        "lava": "3"
-      },
       "apply": {
         "model": "vampirism:block/weapon_table/weapon_table_lava3",
         "y": 180
+      },
+      "when": {
+        "facing": "south",
+        "lava": "3"
       }
     },
     {
-      "when": {
-        "facing": "west",
-        "lava": "3"
-      },
       "apply": {
         "model": "vampirism:block/weapon_table/weapon_table_lava3",
         "y": 270
+      },
+      "when": {
+        "facing": "west",
+        "lava": "3"
       }
     },
     {
-      "when": {
-        "facing": "north",
-        "lava": "4"
-      },
       "apply": {
         "model": "vampirism:block/weapon_table/weapon_table_lava4"
+      },
+      "when": {
+        "facing": "north",
+        "lava": "4"
       }
     },
     {
-      "when": {
-        "facing": "east",
-        "lava": "4"
-      },
       "apply": {
         "model": "vampirism:block/weapon_table/weapon_table_lava4",
         "y": 90
+      },
+      "when": {
+        "facing": "east",
+        "lava": "4"
       }
     },
     {
-      "when": {
-        "facing": "south",
-        "lava": "4"
-      },
       "apply": {
         "model": "vampirism:block/weapon_table/weapon_table_lava4",
         "y": 180
+      },
+      "when": {
+        "facing": "south",
+        "lava": "4"
       }
     },
     {
-      "when": {
-        "facing": "west",
-        "lava": "4"
-      },
       "apply": {
         "model": "vampirism:block/weapon_table/weapon_table_lava4",
         "y": 270
+      },
+      "when": {
+        "facing": "west",
+        "lava": "4"
       }
     },
     {
+      "apply": {
+        "model": "vampirism:block/weapon_table/weapon_table_lava5"
+      },
       "when": {
         "facing": "north",
         "lava": "5"
-      },
-      "apply": {
-        "model": "vampirism:block/weapon_table/weapon_table_lava5"
       }
     },
     {
-      "when": {
-        "facing": "east",
-        "lava": "5"
-      },
       "apply": {
         "model": "vampirism:block/weapon_table/weapon_table_lava5",
         "y": 90
+      },
+      "when": {
+        "facing": "east",
+        "lava": "5"
       }
     },
     {
-      "when": {
-        "facing": "south",
-        "lava": "5"
-      },
       "apply": {
         "model": "vampirism:block/weapon_table/weapon_table_lava5",
         "y": 180
+      },
+      "when": {
+        "facing": "south",
+        "lava": "5"
       }
     },
     {
-      "when": {
-        "facing": "west",
-        "lava": "5"
-      },
       "apply": {
         "model": "vampirism:block/weapon_table/weapon_table_lava5",
         "y": 270
+      },
+      "when": {
+        "facing": "west",
+        "lava": "5"
       }
     }
   ]

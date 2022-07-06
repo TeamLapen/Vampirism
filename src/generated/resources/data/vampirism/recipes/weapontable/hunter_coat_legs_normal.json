@@ -1,26 +1,26 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
+  "key": {
+    "X": {
+      "tag": "forge:ingots/iron"
+    },
+    "Y": {
+      "item": "minecraft:leather"
+    },
+    "Z": {
+      "tag": "forge:crops/garlic"
+    }
+  },
+  "lava": 2,
+  "level": 1,
   "pattern": [
     "XYYX",
     "XZZX",
     "XZZX",
     "X  X"
   ],
-  "key": {
-    "X": {
-      "tag": "forge:ingots/iron"
-    },
-    "Z": {
-      "tag": "forge:crops/garlic"
-    },
-    "Y": {
-      "item": "minecraft:leather"
-    }
-  },
   "result": {
     "item": "vampirism:hunter_coat_legs_normal"
   },
-  "lava": 2,
-  "skill": [],
-  "level": 1
+  "skill": []
 }

@@ -1,36 +1,36 @@
 {
   "parent": "vampirism:vampire/bat",
-  "display": {
-    "icon": {
-      "item": "vampirism:vampire_fang"
-    },
-    "title": {
-      "translate": "advancement.vampirism.max_level_vampire"
-    },
-    "description": {
-      "translate": "advancement.vampirism.max_level_vampire.desc"
-    },
-    "frame": "goal",
-    "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": true
-  },
-  "rewards": {
-    "experience": 100
-  },
   "criteria": {
     "level": {
-      "trigger": "vampirism:faction",
       "conditions": {
         "type": "LEVEL",
         "faction": "vampirism:vampire",
         "level": 14
-      }
+      },
+      "trigger": "vampirism:faction"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancement.vampirism.max_level_vampire.desc"
+    },
+    "frame": "goal",
+    "hidden": true,
+    "icon": {
+      "item": "vampirism:vampire_fang"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.vampirism.max_level_vampire"
     }
   },
   "requirements": [
     [
       "level"
     ]
-  ]
+  ],
+  "rewards": {
+    "experience": 100
+  }
 }

@@ -1,28 +1,28 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
+  "key": {
+    "X": {
+      "tag": "forge:ingots/iron"
+    },
+    "Y": {
+      "tag": "forge:gems/diamond"
+    },
+    "Z": {
+      "tag": "forge:crops/garlic"
+    }
+  },
+  "lava": 5,
+  "level": 1,
   "pattern": [
     "XYYX",
     "XZZX",
     "XZZX",
     "X  X"
   ],
-  "key": {
-    "X": {
-      "tag": "forge:ingots/iron"
-    },
-    "Z": {
-      "tag": "forge:crops/garlic"
-    },
-    "Y": {
-      "tag": "forge:gems/diamond"
-    }
-  },
   "result": {
     "item": "vampirism:hunter_coat_legs_enhanced"
   },
-  "lava": 5,
   "skill": [
     "vampirism:enhanced_armor"
-  ],
-  "level": 1
+  ]
 }

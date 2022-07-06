@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    " X ",
-    "XYX",
-    "ZZZ"
-  ],
   "key": {
     "X": {
       "tag": "forge:glass"
@@ -16,6 +11,11 @@
       "tag": "forge:ingots/iron"
     }
   },
+  "pattern": [
+    " X ",
+    "XYX",
+    "ZZZ"
+  ],
   "result": {
     "item": "vampirism:altar_inspiration"
   }

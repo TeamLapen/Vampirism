@@ -1,39 +1,39 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
-  "pattern": [
-    "XWZY",
-    "XWZY",
-    "  ZY",
-    "  Z "
-  ],
   "key": {
+    "W": {
+      "tag": "forge:gems/diamond"
+    },
     "X": {
       "tag": "forge:ingots/iron"
     },
     "Y": {
       "tag": "forge:crops/garlic"
     },
-    "W": {
-      "tag": "forge:gems/diamond"
-    },
     "Z": {
       "tag": "forge:rods/wooden"
     }
   },
+  "lava": 5,
+  "level": 1,
+  "pattern": [
+    "XWZY",
+    "XWZY",
+    "  ZY",
+    "  Z "
+  ],
   "result": {
     "item": "vampirism:hunter_axe_enhanced",
     "nbt": {
       "Enchantments": [
         {
-          "lvl": 3,
-          "id": "minecraft:knockback"
+          "id": "minecraft:knockback",
+          "lvl": 3
         }
       ]
     }
   },
-  "lava": 5,
   "skill": [
     "vampirism:enhanced_weapons"
-  ],
-  "level": 1
+  ]
 }

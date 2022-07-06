@@ -1,24 +1,24 @@
 {
   "parent": "vampirism:hunter/become_hunter",
+  "criteria": {
+    "cure": {
+      "conditions": {},
+      "trigger": "vampirism:cured_vampire_villager"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "vampirism:cure_apple"
-    },
-    "title": {
-      "translate": "advancement.vampirism.cure_vampire_villager"
-    },
+    "announce_to_chat": true,
     "description": {
       "translate": "advancement.vampirism.cure_vampire_villager.desc"
     },
     "frame": "task",
+    "hidden": true,
+    "icon": {
+      "item": "vampirism:cure_apple"
+    },
     "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": true
-  },
-  "criteria": {
-    "cure": {
-      "trigger": "vampirism:cured_vampire_villager",
-      "conditions": {}
+    "title": {
+      "translate": "advancement.vampirism.cure_vampire_villager"
     }
   },
   "requirements": [

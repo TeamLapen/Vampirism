@@ -2,30 +2,34 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "rolls": 1.0,
       "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
           "name": "vampirism:altar_pillar"
         }
       ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
       "conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }
-      ]
-    },
-    {
-      "rolls": 1.0,
-      "bonus_rolls": 0.0,
+      ],
       "entries": [
         {
           "type": "minecraft:item",
           "conditions": [
             {
-              "condition": "minecraft:block_state_property",
               "block": "vampirism:altar_pillar",
+              "condition": "minecraft:block_state_property",
               "properties": {
                 "type": "stone"
               }
@@ -37,8 +41,8 @@
           "type": "minecraft:item",
           "conditions": [
             {
-              "condition": "minecraft:block_state_property",
               "block": "vampirism:altar_pillar",
+              "condition": "minecraft:block_state_property",
               "properties": {
                 "type": "iron"
               }
@@ -50,8 +54,8 @@
           "type": "minecraft:item",
           "conditions": [
             {
-              "condition": "minecraft:block_state_property",
               "block": "vampirism:altar_pillar",
+              "condition": "minecraft:block_state_property",
               "properties": {
                 "type": "gold"
               }
@@ -63,8 +67,8 @@
           "type": "minecraft:item",
           "conditions": [
             {
-              "condition": "minecraft:block_state_property",
               "block": "vampirism:altar_pillar",
+              "condition": "minecraft:block_state_property",
               "properties": {
                 "type": "bone"
               }
@@ -73,11 +77,7 @@
           "name": "minecraft:bone_block"
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ]
+      "rolls": 1.0
     }
   ]
 }

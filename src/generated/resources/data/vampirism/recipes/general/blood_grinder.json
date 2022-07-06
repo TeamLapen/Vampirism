@@ -1,24 +1,24 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    " Z ",
-    "YDY",
-    "YXY"
-  ],
   "key": {
-    "Z": {
-      "item": "minecraft:hopper"
-    },
-    "Y": {
-      "tag": "minecraft:planks"
-    },
     "D": {
       "tag": "forge:gems/diamond"
     },
     "X": {
       "tag": "forge:ingots/iron"
+    },
+    "Y": {
+      "tag": "minecraft:planks"
+    },
+    "Z": {
+      "item": "minecraft:hopper"
     }
   },
+  "pattern": [
+    " Z ",
+    "YDY",
+    "YXY"
+  ],
   "result": {
     "item": "vampirism:blood_grinder"
   }

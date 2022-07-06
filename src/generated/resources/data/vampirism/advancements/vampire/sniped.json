@@ -1,26 +1,26 @@
 {
   "parent": "vampirism:vampire/bat",
+  "criteria": {
+    "flower": {
+      "conditions": {
+        "action": "SNIPED_IN_BAT"
+      },
+      "trigger": "vampirism:vampire_action"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "minecraft:arrow"
-    },
-    "title": {
-      "translate": "advancement.vampirism.sniped"
-    },
+    "announce_to_chat": true,
     "description": {
       "translate": "advancement.vampirism.sniped.desc"
     },
     "frame": "task",
+    "hidden": true,
+    "icon": {
+      "item": "minecraft:arrow"
+    },
     "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": true
-  },
-  "criteria": {
-    "flower": {
-      "trigger": "vampirism:vampire_action",
-      "conditions": {
-        "action": "SNIPED_IN_BAT"
-      }
+    "title": {
+      "translate": "advancement.vampirism.sniped"
     }
   },
   "requirements": [

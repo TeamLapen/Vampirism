@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "X X",
-    " Y ",
-    "XZX"
-  ],
   "key": {
     "X": {
       "tag": "forge:obsidian"
@@ -16,6 +11,11 @@
       "item": "vampirism:vampire_book"
     }
   },
+  "pattern": [
+    "X X",
+    " Y ",
+    "XZX"
+  ],
   "result": {
     "item": "vampirism:totem_top_crafted"
   }

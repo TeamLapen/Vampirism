@@ -15,7 +15,7 @@
     }
   ],
   "result": {
-    "item": "vampirism:blood_infused_enhanced_iron_ingot",
-    "count": 3
+    "count": 3,
+    "item": "vampirism:blood_infused_enhanced_iron_ingot"
   }
 }

@@ -1,9 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "YZY",
-    "ZZZ"
-  ],
   "key": {
     "Y": {
       "tag": "forge:ingots/gold"
@@ -12,6 +8,10 @@
       "tag": "forge:obsidian"
     }
   },
+  "pattern": [
+    "YZY",
+    "ZZZ"
+  ],
   "result": {
     "item": "vampirism:altar_infusion"
   }

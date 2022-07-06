@@ -1,11 +1,12 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "XYX",
-    "ZYZ",
-    "BAB"
-  ],
   "key": {
+    "A": {
+      "tag": "forge:ingots/gold"
+    },
+    "B": {
+      "tag": "forge:ingots/iron"
+    },
     "X": {
       "item": "minecraft:string"
     },
@@ -14,14 +15,13 @@
     },
     "Z": {
       "item": "minecraft:honeycomb"
-    },
-    "B": {
-      "tag": "forge:ingots/iron"
-    },
-    "A": {
-      "tag": "forge:ingots/gold"
     }
   },
+  "pattern": [
+    "XYX",
+    "ZYZ",
+    "BAB"
+  ],
   "result": {
     "item": "vampirism:chandelier"
   }

@@ -1,11 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "GYG",
-    "YZY",
-    "XXX"
-  ],
   "key": {
+    "G": {
+      "tag": "forge:ingots/gold"
+    },
     "X": {
       "tag": "forge:obsidian"
     },
@@ -14,11 +12,13 @@
     },
     "Z": {
       "item": "vampirism:blood_bottle"
-    },
-    "G": {
-      "tag": "forge:ingots/gold"
     }
   },
+  "pattern": [
+    "GYG",
+    "YZY",
+    "XXX"
+  ],
   "result": {
     "item": "vampirism:blood_pedestal"
   }

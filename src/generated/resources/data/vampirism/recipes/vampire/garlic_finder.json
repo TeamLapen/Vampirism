@@ -1,11 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "XXX",
-    "XYX",
-    "ZAZ"
-  ],
   "key": {
+    "A": {
+      "tag": "forge:dusts/redstone"
+    },
     "X": {
       "item": "vampirism:blood_infused_iron_ingot"
     },
@@ -14,11 +12,13 @@
     },
     "Z": {
       "tag": "minecraft:planks"
-    },
-    "A": {
-      "tag": "forge:dusts/redstone"
     }
   },
+  "pattern": [
+    "XXX",
+    "XYX",
+    "ZAZ"
+  ],
   "result": {
     "item": "vampirism:garlic_finder"
   }

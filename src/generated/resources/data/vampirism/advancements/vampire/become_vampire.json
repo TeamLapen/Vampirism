@@ -1,28 +1,28 @@
 {
   "parent": "vampirism:main/root",
-  "display": {
-    "icon": {
-      "item": "vampirism:vampire_fang"
-    },
-    "title": {
-      "translate": "advancement.vampirism.become_vampire"
-    },
-    "description": {
-      "translate": "advancement.vampirism.become_vampire.desc"
-    },
-    "frame": "task",
-    "show_toast": true,
-    "announce_to_chat": false,
-    "hidden": false
-  },
   "criteria": {
     "main": {
-      "trigger": "vampirism:faction",
       "conditions": {
         "type": "LEVEL",
         "faction": "vampirism:vampire",
         "level": 1
-      }
+      },
+      "trigger": "vampirism:faction"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancement.vampirism.become_vampire.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "vampirism:vampire_fang"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.vampirism.become_vampire"
     }
   },
   "requirements": [

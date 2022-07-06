@@ -4,17 +4,12 @@
     {
       "conditions": [
         {
-          "option": "umbrella",
-          "type": "vampirism:config"
+          "type": "vampirism:config",
+          "option": "umbrella"
         }
       ],
       "recipe": {
         "type": "minecraft:crafting_shaped",
-        "pattern": [
-          "###",
-          "BAB",
-          " A "
-        ],
         "key": {
           "#": {
             "tag": "minecraft:wool"
@@ -26,6 +21,11 @@
             "item": "vampirism:vampire_orchid"
           }
         },
+        "pattern": [
+          "###",
+          "BAB",
+          " A "
+        ],
         "result": {
           "item": "vampirism:umbrella"
         }

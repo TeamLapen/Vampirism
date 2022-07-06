@@ -1,19 +1,19 @@
 {
   "type": "vampirism:alchemical_cauldron",
-  "result": {
-    "item": "vampirism:purified_garlic",
-    "count": 2
+  "cookTime": 200,
+  "experience": 0.2,
+  "fluidItem": {
+    "tag": "vampirism:holy_water"
   },
   "ingredient": {
     "tag": "forge:crops/garlic"
   },
-  "fluidItem": {
-    "tag": "vampirism:holy_water"
+  "reqLevel": 1,
+  "result": {
+    "count": 2,
+    "item": "vampirism:purified_garlic"
   },
   "skill": [
     "vampirism:purified_garlic"
-  ],
-  "cookTime": 200,
-  "experience": 0.2,
-  "reqLevel": 1
+  ]
 }

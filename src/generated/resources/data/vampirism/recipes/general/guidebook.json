@@ -4,8 +4,8 @@
     {
       "conditions": [
         {
-          "modid": "guideapi_vp",
-          "type": "forge:mod_loaded"
+          "type": "forge:mod_loaded",
+          "modid": "guideapi_vp"
         }
       ],
       "recipe": {

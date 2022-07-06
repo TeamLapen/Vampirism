@@ -1,9 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "XYX",
-    "XXX"
-  ],
   "key": {
     "X": {
       "item": "minecraft:gold_ingot"
@@ -17,6 +13,10 @@
       }
     ]
   },
+  "pattern": [
+    "XYX",
+    "XXX"
+  ],
   "result": {
     "item": "vampirism:vampire_clothing_crown"
   }

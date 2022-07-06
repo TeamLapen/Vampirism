@@ -1,26 +1,26 @@
 {
   "parent": "vampirism:vampire/become_vampire",
+  "criteria": {
+    "flower": {
+      "conditions": {
+        "action": "PERFORM_RITUAL_INFUSION"
+      },
+      "trigger": "vampirism:vampire_action"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "vampirism:altar_infusion"
-    },
-    "title": {
-      "translate": "advancement.vampirism.blood_cult"
-    },
+    "announce_to_chat": true,
     "description": {
       "translate": "advancement.vampirism.blood_cult.desc"
     },
     "frame": "task",
+    "hidden": true,
+    "icon": {
+      "item": "vampirism:altar_infusion"
+    },
     "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": true
-  },
-  "criteria": {
-    "flower": {
-      "trigger": "vampirism:vampire_action",
-      "conditions": {
-        "action": "PERFORM_RITUAL_INFUSION"
-      }
+    "title": {
+      "translate": "advancement.vampirism.blood_cult"
     }
   },
   "requirements": [

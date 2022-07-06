@@ -1,9 +1,5 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
-  "pattern": [
-    " YY ",
-    "XXXX"
-  ],
   "key": {
     "X": {
       "tag": "forge:ingots/iron"
@@ -12,10 +8,14 @@
       "item": "minecraft:black_wool"
     }
   },
+  "lava": 1,
+  "level": 1,
+  "pattern": [
+    " YY ",
+    "XXXX"
+  ],
   "result": {
     "item": "vampirism:hunter_hat_head_1"
   },
-  "lava": 1,
-  "skill": [],
-  "level": 1
+  "skill": []
 }

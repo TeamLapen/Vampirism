@@ -1,12 +1,9 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
-  "pattern": [
-    " X ",
-    "XYX",
-    " Z ",
-    " W "
-  ],
   "key": {
+    "W": {
+      "item": "minecraft:feather"
+    },
     "X": {
       "tag": "forge:crops/garlic"
     },
@@ -15,16 +12,19 @@
     },
     "Z": {
       "tag": "forge:rods/wooden"
-    },
-    "W": {
-      "item": "minecraft:feather"
     }
   },
-  "result": {
-    "item": "vampirism:crossbow_arrow_vampire_killer",
-    "count": 3
-  },
   "lava": 1,
-  "skill": [],
-  "level": 1
+  "level": 1,
+  "pattern": [
+    " X ",
+    "XYX",
+    " Z ",
+    " W "
+  ],
+  "result": {
+    "count": 3,
+    "item": "vampirism:crossbow_arrow_vampire_killer"
+  },
+  "skill": []
 }

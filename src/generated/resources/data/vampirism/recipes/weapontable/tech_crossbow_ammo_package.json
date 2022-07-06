@@ -1,11 +1,5 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
-  "pattern": [
-    " XZ ",
-    "YYYY",
-    "YYYY",
-    "YYYY"
-  ],
   "key": {
     "X": {
       "tag": "forge:ingots/iron"
@@ -17,10 +11,16 @@
       "tag": "minecraft:planks"
     }
   },
+  "lava": 1,
+  "level": 1,
+  "pattern": [
+    " XZ ",
+    "YYYY",
+    "YYYY",
+    "YYYY"
+  ],
   "result": {
     "item": "vampirism:tech_crossbow_ammo_package"
   },
-  "lava": 1,
-  "skill": [],
-  "level": 1
+  "skill": []
 }

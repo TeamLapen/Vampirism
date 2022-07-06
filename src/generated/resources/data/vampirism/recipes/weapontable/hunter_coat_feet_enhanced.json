@@ -1,10 +1,5 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
-  "pattern": [
-    "X  X",
-    "XZZX",
-    "XYYX"
-  ],
   "key": {
     "X": {
       "tag": "forge:ingots/iron"
@@ -16,12 +11,18 @@
       "tag": "forge:crops/garlic"
     }
   },
+  "lava": 5,
+  "level": 1,
+  "pattern": [
+    "    ",
+    "X  X",
+    "XZZX",
+    "XYYX"
+  ],
   "result": {
     "item": "vampirism:hunter_coat_feet_enhanced"
   },
-  "lava": 5,
   "skill": [
     "vampirism:enhanced_armor"
-  ],
-  "level": 1
+  ]
 }

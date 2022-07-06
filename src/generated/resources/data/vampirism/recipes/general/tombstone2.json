@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "XX ",
-    "XYX",
-    "XXX"
-  ],
   "key": {
     "X": {
       "item": "minecraft:cobblestone"
@@ -13,6 +8,11 @@
       "tag": "forge:stone"
     }
   },
+  "pattern": [
+    "XX ",
+    "XYX",
+    "XXX"
+  ],
   "result": {
     "item": "vampirism:tombstone2"
   }

@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "X",
-    "X",
-    "Y"
-  ],
   "key": {
     "X": {
       "item": "vampirism:blood_infused_iron_ingot"
@@ -13,6 +8,11 @@
       "tag": "forge:rods/wooden"
     }
   },
+  "pattern": [
+    "X",
+    "X",
+    "Y"
+  ],
   "result": {
     "item": "vampirism:heart_seeker_normal"
   }

@@ -1,12 +1,9 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
-  "pattern": [
-    "ZXXZ",
-    "DYYD",
-    "XYYX",
-    "DYYD"
-  ],
   "key": {
+    "D": {
+      "tag": "forge:gems/diamond"
+    },
     "X": {
       "tag": "forge:ingots/iron"
     },
@@ -15,17 +12,20 @@
     },
     "Z": {
       "item": "minecraft:leather"
-    },
-    "D": {
-      "tag": "forge:gems/diamond"
     }
   },
+  "lava": 5,
+  "level": 1,
+  "pattern": [
+    "ZXXZ",
+    "DYYD",
+    "XYYX",
+    "DYYD"
+  ],
   "result": {
     "item": "vampirism:obsidian_armor_chest_enhanced"
   },
-  "lava": 5,
   "skill": [
     "vampirism:enhanced_armor"
-  ],
-  "level": 1
+  ]
 }

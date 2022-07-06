@@ -1,26 +1,26 @@
 {
   "parent": "vampirism:vampire/blood_cult",
+  "criteria": {
+    "kill": {
+      "conditions": {
+        "action": "KILL_FROZEN_HUNTER"
+      },
+      "trigger": "vampirism:vampire_action"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "minecraft:clock"
-    },
-    "title": {
-      "translate": "advancement.vampirism.freeze_kill"
-    },
+    "announce_to_chat": true,
     "description": {
       "translate": "advancement.vampirism.freeze_kill.desc"
     },
     "frame": "task",
+    "hidden": true,
+    "icon": {
+      "item": "minecraft:clock"
+    },
     "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": true
-  },
-  "criteria": {
-    "kill": {
-      "trigger": "vampirism:vampire_action",
-      "conditions": {
-        "action": "KILL_FROZEN_HUNTER"
-      }
+    "title": {
+      "translate": "advancement.vampirism.freeze_kill"
     }
   },
   "requirements": [

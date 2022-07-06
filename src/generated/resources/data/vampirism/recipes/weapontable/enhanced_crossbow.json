@@ -1,10 +1,5 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
-  "pattern": [
-    "YXXY",
-    " XX ",
-    " XX "
-  ],
   "key": {
     "X": {
       "tag": "forge:ingots/iron"
@@ -13,12 +8,17 @@
       "item": "minecraft:string"
     }
   },
+  "lava": 2,
+  "level": 1,
+  "pattern": [
+    "YXXY",
+    " XX ",
+    " XX "
+  ],
   "result": {
     "item": "vampirism:enhanced_crossbow"
   },
-  "lava": 2,
   "skill": [
     "vampirism:enhanced_weapons"
-  ],
-  "level": 1
+  ]
 }

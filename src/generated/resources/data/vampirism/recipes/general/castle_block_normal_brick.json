@@ -30,7 +30,7 @@
     }
   ],
   "result": {
-    "item": "vampirism:castle_block_normal_brick",
-    "count": 8
+    "count": 8,
+    "item": "vampirism:castle_block_normal_brick"
   }
 }

@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "X  ",
-    "YYY",
-    " Z "
-  ],
   "key": {
     "X": {
       "item": "minecraft:bucket"
@@ -16,6 +11,11 @@
       "tag": "forge:storage_blocks/iron"
     }
   },
+  "pattern": [
+    "X  ",
+    "YYY",
+    " Z "
+  ],
   "result": {
     "item": "vampirism:weapon_table"
   }

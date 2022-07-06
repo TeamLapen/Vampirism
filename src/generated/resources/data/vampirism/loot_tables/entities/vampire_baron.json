@@ -2,109 +2,109 @@
   "type": "minecraft:entity",
   "pools": [
     {
-      "name": "pure_blood_0",
-      "rolls": 1.0,
       "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:killed_by_player"
+        },
+        {
+          "condition": "vampirism:adjustable_level",
+          "entity": "this",
+          "level": 0
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
           "name": "vampirism:pure_blood_0"
         }
       ],
+      "name": "pure_blood_0",
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
       "conditions": [
         {
           "condition": "minecraft:killed_by_player"
         },
         {
           "condition": "vampirism:adjustable_level",
-          "level": 0,
-          "entity": "this"
+          "entity": "this",
+          "level": 1
         }
-      ]
-    },
-    {
-      "name": "pure_blood_1",
-      "rolls": 1.0,
-      "bonus_rolls": 0.0,
+      ],
       "entries": [
         {
           "type": "minecraft:item",
           "name": "vampirism:pure_blood_1"
         }
       ],
+      "name": "pure_blood_1",
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
       "conditions": [
         {
           "condition": "minecraft:killed_by_player"
         },
         {
           "condition": "vampirism:adjustable_level",
-          "level": 1,
-          "entity": "this"
+          "entity": "this",
+          "level": 2
         }
-      ]
-    },
-    {
-      "name": "pure_blood_2",
-      "rolls": 1.0,
-      "bonus_rolls": 0.0,
+      ],
       "entries": [
         {
           "type": "minecraft:item",
           "name": "vampirism:pure_blood_2"
         }
       ],
+      "name": "pure_blood_2",
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
       "conditions": [
         {
           "condition": "minecraft:killed_by_player"
         },
         {
           "condition": "vampirism:adjustable_level",
-          "level": 2,
-          "entity": "this"
+          "entity": "this",
+          "level": 3
         }
-      ]
-    },
-    {
-      "name": "pure_blood_3",
-      "rolls": 1.0,
-      "bonus_rolls": 0.0,
+      ],
       "entries": [
         {
           "type": "minecraft:item",
           "name": "vampirism:pure_blood_3"
         }
       ],
+      "name": "pure_blood_3",
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
       "conditions": [
         {
           "condition": "minecraft:killed_by_player"
         },
         {
           "condition": "vampirism:adjustable_level",
-          "level": 3,
-          "entity": "this"
+          "entity": "this",
+          "level": 4
         }
-      ]
-    },
-    {
-      "name": "pure_blood_4",
-      "rolls": 1.0,
-      "bonus_rolls": 0.0,
+      ],
       "entries": [
         {
           "type": "minecraft:item",
           "name": "vampirism:pure_blood_4"
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:killed_by_player"
-        },
-        {
-          "condition": "vampirism:adjustable_level",
-          "level": 4,
-          "entity": "this"
-        }
-      ]
+      "name": "pure_blood_4",
+      "rolls": 1.0
     }
   ]
 }

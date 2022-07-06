@@ -1,12 +1,9 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
-  "pattern": [
-    "XWWX",
-    "XZZX",
-    "XZZX",
-    "XYYX"
-  ],
   "key": {
+    "W": {
+      "item": "vampirism:vampire_fang"
+    },
     "X": {
       "tag": "forge:ingots/iron"
     },
@@ -15,15 +12,18 @@
     },
     "Z": {
       "tag": "forge:crops/garlic"
-    },
-    "W": {
-      "item": "vampirism:vampire_fang"
     }
   },
+  "lava": 2,
+  "level": 1,
+  "pattern": [
+    "XWWX",
+    "XZZX",
+    "XZZX",
+    "XYYX"
+  ],
   "result": {
     "item": "vampirism:hunter_coat_chest_normal"
   },
-  "lava": 2,
-  "skill": [],
-  "level": 1
+  "skill": []
 }

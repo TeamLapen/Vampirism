@@ -1,28 +1,28 @@
 {
   "parent": "vampirism:main/root",
-  "display": {
-    "icon": {
-      "item": "vampirism:item_garlic"
-    },
-    "title": {
-      "translate": "advancement.vampirism.become_hunter"
-    },
-    "description": {
-      "translate": "advancement.vampirism.become_hunter.desc"
-    },
-    "frame": "task",
-    "show_toast": true,
-    "announce_to_chat": false,
-    "hidden": false
-  },
   "criteria": {
     "main": {
-      "trigger": "vampirism:faction",
       "conditions": {
         "type": "LEVEL",
         "faction": "vampirism:hunter",
         "level": 1
-      }
+      },
+      "trigger": "vampirism:faction"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancement.vampirism.become_hunter.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "vampirism:item_garlic"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.vampirism.become_hunter"
     }
   },
   "requirements": [

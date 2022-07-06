@@ -1,34 +1,34 @@
 {
   "parent": "vampirism:main/vampire_forest",
-  "display": {
-    "icon": {
-      "item": "vampirism:pure_blood_0"
-    },
-    "title": {
-      "translate": "advancement.vampirism.regicide"
-    },
-    "description": {
-      "translate": "advancement.vampirism.regicide.desc"
-    },
-    "frame": "challenge",
-    "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": true
-  },
   "criteria": {
     "main": {
-      "trigger": "minecraft:player_killed_entity",
       "conditions": {
         "entity": [
           {
             "condition": "minecraft:entity_properties",
+            "entity": "this",
             "predicate": {
               "type": "vampirism:vampire_baron"
-            },
-            "entity": "this"
+            }
           }
         ]
-      }
+      },
+      "trigger": "minecraft:player_killed_entity"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancement.vampirism.regicide.desc"
+    },
+    "frame": "challenge",
+    "hidden": true,
+    "icon": {
+      "item": "vampirism:pure_blood_0"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.vampirism.regicide"
     }
   },
   "requirements": [

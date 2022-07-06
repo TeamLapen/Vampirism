@@ -1,11 +1,5 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
-  "pattern": [
-    "X X",
-    "YYY",
-    " Y ",
-    " Y "
-  ],
   "key": {
     "X": {
       "tag": "forge:ingots/iron"
@@ -14,10 +8,16 @@
       "tag": "forge:rods/wooden"
     }
   },
+  "lava": 1,
+  "level": 1,
+  "pattern": [
+    "X X",
+    "YYY",
+    " Y ",
+    " Y "
+  ],
   "result": {
     "item": "vampirism:pitchfork"
   },
-  "lava": 1,
-  "skill": [],
-  "level": 1
+  "skill": []
 }

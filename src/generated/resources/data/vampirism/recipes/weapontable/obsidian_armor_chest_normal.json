@@ -1,11 +1,5 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
-  "pattern": [
-    "ZXXZ",
-    "XYYX",
-    "XYYX",
-    "XYYX"
-  ],
   "key": {
     "X": {
       "tag": "forge:ingots/iron"
@@ -17,10 +11,16 @@
       "item": "minecraft:leather"
     }
   },
+  "lava": 5,
+  "level": 1,
+  "pattern": [
+    "ZXXZ",
+    "XYYX",
+    "XYYX",
+    "XYYX"
+  ],
   "result": {
     "item": "vampirism:obsidian_armor_chest_normal"
   },
-  "lava": 5,
-  "skill": [],
-  "level": 1
+  "skill": []
 }

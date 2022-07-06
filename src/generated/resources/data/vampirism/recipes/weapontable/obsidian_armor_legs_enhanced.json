@@ -1,28 +1,28 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
+  "key": {
+    "D": {
+      "tag": "forge:gems/diamond"
+    },
+    "X": {
+      "tag": "forge:ingots/iron"
+    },
+    "Y": {
+      "tag": "forge:obsidian"
+    }
+  },
+  "lava": 5,
+  "level": 1,
   "pattern": [
     "XDDX",
     "XYYX",
     "XYYX",
     "XYYX"
   ],
-  "key": {
-    "X": {
-      "tag": "forge:ingots/iron"
-    },
-    "Y": {
-      "tag": "forge:obsidian"
-    },
-    "D": {
-      "tag": "forge:gems/diamond"
-    }
-  },
   "result": {
     "item": "vampirism:obsidian_armor_legs_enhanced"
   },
-  "lava": 5,
   "skill": [
     "vampirism:enhanced_armor"
-  ],
-  "level": 1
+  ]
 }

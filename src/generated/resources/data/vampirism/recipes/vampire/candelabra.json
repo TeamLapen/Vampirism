@@ -1,11 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "XXX",
-    "YYY",
-    "ZAZ"
-  ],
   "key": {
+    "A": {
+      "tag": "forge:ingots/gold"
+    },
     "X": {
       "item": "minecraft:string"
     },
@@ -14,11 +12,13 @@
     },
     "Z": {
       "tag": "forge:ingots/iron"
-    },
-    "A": {
-      "tag": "forge:ingots/gold"
     }
   },
+  "pattern": [
+    "XXX",
+    "YYY",
+    "ZAZ"
+  ],
   "result": {
     "item": "vampirism:item_candelabra"
   }

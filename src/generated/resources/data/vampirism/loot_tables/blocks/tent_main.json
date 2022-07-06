@@ -2,24 +2,27 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "rolls": 1.0,
       "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
           "name": "vampirism:item_tent"
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ]
+      "rolls": 1.0
     },
     {
-      "name": "bonus",
-      "rolls": 1.0,
       "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "vampirism:is_tent_spawner"
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
@@ -38,11 +41,8 @@
           "name": "minecraft:oak_planks"
         }
       ],
-      "conditions": [
-        {
-          "condition": "vampirism:is_tent_spawner"
-        }
-      ]
+      "name": "bonus",
+      "rolls": 1.0
     }
   ]
 }

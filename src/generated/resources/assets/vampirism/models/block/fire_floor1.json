@@ -1,7 +1,7 @@
 {
   "parent": "vampirism:block/fire_floor",
   "textures": {
-    "particle": "minecraft:block/fire_1",
-    "fire": "minecraft:block/fire_1"
+    "fire": "minecraft:block/fire_1",
+    "particle": "minecraft:block/fire_1"
   }
 }

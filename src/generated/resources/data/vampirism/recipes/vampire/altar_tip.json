@@ -1,9 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    " X ",
-    "XYX"
-  ],
   "key": {
     "X": {
       "tag": "forge:ingots/iron"
@@ -12,6 +8,10 @@
       "tag": "forge:storage_blocks/iron"
     }
   },
+  "pattern": [
+    " X ",
+    "XYX"
+  ],
   "result": {
     "item": "vampirism:altar_tip"
   }

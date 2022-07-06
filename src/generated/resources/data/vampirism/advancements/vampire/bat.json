@@ -1,26 +1,26 @@
 {
   "parent": "vampirism:vampire/become_vampire",
+  "criteria": {
+    "action": {
+      "conditions": {
+        "action": "BAT"
+      },
+      "trigger": "vampirism:vampire_action"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "minecraft:feather"
-    },
-    "title": {
-      "translate": "advancement.vampirism.bat"
-    },
+    "announce_to_chat": true,
     "description": {
       "translate": "advancement.vampirism.bat.desc"
     },
     "frame": "task",
+    "hidden": true,
+    "icon": {
+      "item": "minecraft:feather"
+    },
     "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": true
-  },
-  "criteria": {
-    "action": {
-      "trigger": "vampirism:vampire_action",
-      "conditions": {
-        "action": "BAT"
-      }
+    "title": {
+      "translate": "advancement.vampirism.bat"
     }
   },
   "requirements": [

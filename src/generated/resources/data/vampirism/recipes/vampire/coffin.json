@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "XXX",
-    "YYY",
-    "XXX"
-  ],
   "key": {
     "X": {
       "tag": "minecraft:planks"
@@ -13,6 +8,11 @@
       "tag": "minecraft:wool"
     }
   },
+  "pattern": [
+    "XXX",
+    "YYY",
+    "XXX"
+  ],
   "result": {
     "item": "vampirism:coffin"
   }

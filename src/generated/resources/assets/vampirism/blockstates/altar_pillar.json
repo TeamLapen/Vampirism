@@ -1,19 +1,19 @@
 {
   "variants": {
+    "type=bone": {
+      "model": "vampirism:block/altar_pillar_filled_bone"
+    },
+    "type=gold": {
+      "model": "vampirism:block/altar_pillar_filled_gold"
+    },
+    "type=iron": {
+      "model": "vampirism:block/altar_pillar_filled_iron"
+    },
     "type=none": {
       "model": "vampirism:block/altar_pillar"
     },
     "type=stone": {
       "model": "vampirism:block/altar_pillar_filled_stone_bricks"
-    },
-    "type=iron": {
-      "model": "vampirism:block/altar_pillar_filled_iron"
-    },
-    "type=gold": {
-      "model": "vampirism:block/altar_pillar_filled_gold"
-    },
-    "type=bone": {
-      "model": "vampirism:block/altar_pillar_filled_bone"
     }
   }
 }

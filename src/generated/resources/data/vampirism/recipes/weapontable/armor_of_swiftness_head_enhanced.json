@@ -1,10 +1,5 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
-  "pattern": [
-    "XXXX",
-    "XYYX",
-    "XZZX"
-  ],
   "key": {
     "X": {
       "item": "minecraft:leather"
@@ -16,12 +11,17 @@
       "tag": "forge:ingots/gold"
     }
   },
+  "lava": 3,
+  "level": 1,
+  "pattern": [
+    "XXXX",
+    "XYYX",
+    "XZZX"
+  ],
   "result": {
     "item": "vampirism:armor_of_swiftness_head_enhanced"
   },
-  "lava": 3,
   "skill": [
     "vampirism:enhanced_armor"
-  ],
-  "level": 1
+  ]
 }

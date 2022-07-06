@@ -1,28 +1,28 @@
 {
   "parent": "vampirism:main/root",
-  "display": {
-    "icon": {
-      "item": "minecraft:paper"
-    },
-    "title": {
-      "translate": "advancement.vampirism.become_lord"
-    },
-    "description": {
-      "translate": "advancement.vampirism.become_lord.desc"
-    },
-    "frame": "task",
-    "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": true
-  },
   "criteria": {
     "level": {
-      "trigger": "vampirism:faction",
       "conditions": {
         "type": "LORD",
         "faction": "null",
         "level": 1
-      }
+      },
+      "trigger": "vampirism:faction"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancement.vampirism.become_lord.desc"
+    },
+    "frame": "task",
+    "hidden": true,
+    "icon": {
+      "item": "minecraft:paper"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.vampirism.become_lord"
     }
   },
   "requirements": [

@@ -1,22 +1,17 @@
 {
   "parent": "minecraft:recipes/root",
-  "rewards": {
-    "recipes": [
-      "vampirism:weapontable/armor_of_swiftness_chest_enhanced"
-    ]
-  },
   "criteria": {
     "has_skill": {
-      "trigger": "vampirism:skill_unlocked",
       "conditions": {
         "skill": "vampirism:enhanced_armor"
-      }
+      },
+      "trigger": "vampirism:skill_unlocked"
     },
     "has_the_recipe": {
-      "trigger": "minecraft:recipe_unlocked",
       "conditions": {
         "recipe": "vampirism:weapontable/armor_of_swiftness_chest_enhanced"
-      }
+      },
+      "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
@@ -24,5 +19,10 @@
       "has_skill",
       "has_the_recipe"
     ]
-  ]
+  ],
+  "rewards": {
+    "recipes": [
+      "vampirism:weapontable/armor_of_swiftness_chest_enhanced"
+    ]
+  }
 }

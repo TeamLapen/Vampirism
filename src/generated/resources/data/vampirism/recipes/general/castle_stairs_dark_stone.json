@@ -1,17 +1,17 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "#  ",
-    "## ",
-    "###"
-  ],
   "key": {
     "#": {
       "item": "vampirism:castle_block_dark_stone"
     }
   },
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
   "result": {
-    "item": "vampirism:castle_stairs_dark_stone",
-    "count": 4
+    "count": 4,
+    "item": "vampirism:castle_stairs_dark_stone"
   }
 }

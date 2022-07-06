@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "XZX",
-    "YYY",
-    " Y "
-  ],
   "key": {
     "X": {
       "item": "vampirism:vampire_fang"
@@ -16,6 +11,11 @@
       "item": "minecraft:book"
     }
   },
+  "pattern": [
+    "XZX",
+    "YYY",
+    " Y "
+  ],
   "result": {
     "item": "vampirism:altar_cleansing"
   }

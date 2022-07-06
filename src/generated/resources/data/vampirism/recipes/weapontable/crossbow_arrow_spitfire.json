@@ -14,11 +14,11 @@
       "item": "vampirism:item_alchemical_fire"
     }
   ],
-  "result": {
-    "item": "vampirism:crossbow_arrow_spitfire",
-    "count": 3
-  },
   "lava": 1,
-  "skill": [],
-  "level": 1
+  "level": 1,
+  "result": {
+    "count": 3,
+    "item": "vampirism:crossbow_arrow_spitfire"
+  },
+  "skill": []
 }

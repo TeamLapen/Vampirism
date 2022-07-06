@@ -1,13 +1,7 @@
 {
   "parent": "minecraft:recipes/root",
-  "rewards": {
-    "recipes": [
-      "vampirism:weapontable/crossbow_arrow_spitfire"
-    ]
-  },
   "criteria": {
     "has_crossbow_arrow_normal": {
-      "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
@@ -16,19 +10,20 @@
             ]
           }
         ]
-      }
+      },
+      "trigger": "minecraft:inventory_changed"
     },
     "has_skill": {
-      "trigger": "vampirism:skill_unlocked",
       "conditions": {
         "skill": "vampirism:weapon_table"
-      }
+      },
+      "trigger": "vampirism:skill_unlocked"
     },
     "has_the_recipe": {
-      "trigger": "minecraft:recipe_unlocked",
       "conditions": {
         "recipe": "vampirism:weapontable/crossbow_arrow_spitfire"
-      }
+      },
+      "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
@@ -37,5 +32,10 @@
       "has_skill",
       "has_the_recipe"
     ]
-  ]
+  ],
+  "rewards": {
+    "recipes": [
+      "vampirism:weapontable/crossbow_arrow_spitfire"
+    ]
+  }
 }

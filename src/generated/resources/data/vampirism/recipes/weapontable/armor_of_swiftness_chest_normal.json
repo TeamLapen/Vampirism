@@ -1,11 +1,5 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
-  "pattern": [
-    "XZZX",
-    "XXXX",
-    "XYYX",
-    "XXXX"
-  ],
   "key": {
     "X": {
       "item": "minecraft:leather"
@@ -15,15 +9,21 @@
     },
     "Z": {
       "type": "forge:nbt",
-      "item": "minecraft:potion",
       "count": 1,
+      "item": "minecraft:potion",
       "nbt": "{Potion:\"minecraft:swiftness\"}"
     }
   },
+  "lava": 1,
+  "level": 1,
+  "pattern": [
+    "XZZX",
+    "XXXX",
+    "XYYX",
+    "XXXX"
+  ],
   "result": {
     "item": "vampirism:armor_of_swiftness_chest_normal"
   },
-  "lava": 1,
-  "skill": [],
-  "level": 1
+  "skill": []
 }

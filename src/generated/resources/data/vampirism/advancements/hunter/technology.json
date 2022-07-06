@@ -1,36 +1,7 @@
 {
   "parent": "vampirism:hunter/become_hunter",
-  "display": {
-    "icon": {
-      "item": "vampirism:basic_tech_crossbow",
-      "nbt": "{Damage:0}"
-    },
-    "title": {
-      "translate": "advancement.vampirism.technology"
-    },
-    "description": {
-      "translate": "advancement.vampirism.technology.desc"
-    },
-    "frame": "task",
-    "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": true
-  },
   "criteria": {
-    "basic": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
-          {
-            "items": [
-              "vampirism:basic_tech_crossbow"
-            ]
-          }
-        ]
-      }
-    },
     "advanced": {
-      "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
@@ -39,7 +10,36 @@
             ]
           }
         ]
-      }
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "basic": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "vampirism:basic_tech_crossbow"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancement.vampirism.technology.desc"
+    },
+    "frame": "task",
+    "hidden": true,
+    "icon": {
+      "item": "vampirism:basic_tech_crossbow",
+      "nbt": "{Damage:0}"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.vampirism.technology"
     }
   },
   "requirements": [

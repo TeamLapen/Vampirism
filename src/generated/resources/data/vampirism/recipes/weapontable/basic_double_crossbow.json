@@ -1,11 +1,5 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
-  "pattern": [
-    "YXXY",
-    "YXXY",
-    " ZZ ",
-    " ZZ "
-  ],
   "key": {
     "X": {
       "tag": "forge:ingots/iron"
@@ -17,12 +11,18 @@
       "tag": "minecraft:planks"
     }
   },
+  "lava": 1,
+  "level": 1,
+  "pattern": [
+    "YXXY",
+    "YXXY",
+    " ZZ ",
+    " ZZ "
+  ],
   "result": {
     "item": "vampirism:basic_double_crossbow"
   },
-  "lava": 1,
   "skill": [
     "vampirism:double_crossbow"
-  ],
-  "level": 1
+  ]
 }

@@ -1,9 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "XYX",
-    "X X"
-  ],
   "key": {
     "X": {
       "item": "minecraft:brown_wool"
@@ -17,6 +13,10 @@
       }
     ]
   },
+  "pattern": [
+    "XYX",
+    "X X"
+  ],
   "result": {
     "item": "vampirism:vampire_clothing_boots"
   }

@@ -1,5 +1,9 @@
 {
   "variants": {
+    "facing=east": {
+      "model": "vampirism:block/garlic_diffuser_improved",
+      "y": 90
+    },
     "facing=north": {
       "model": "vampirism:block/garlic_diffuser_improved"
     },
@@ -10,10 +14,6 @@
     "facing=west": {
       "model": "vampirism:block/garlic_diffuser_improved",
       "y": 270
-    },
-    "facing=east": {
-      "model": "vampirism:block/garlic_diffuser_improved",
-      "y": 90
     }
   }
 }

@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "XZX",
-    "XXX",
-    "Y Y"
-  ],
   "key": {
     "X": {
       "tag": "forge:ingots/iron"
@@ -16,6 +11,11 @@
       "tag": "forge:crops/garlic"
     }
   },
+  "pattern": [
+    "XZX",
+    "XXX",
+    "Y Y"
+  ],
   "result": {
     "item": "vampirism:alchemical_cauldron"
   }

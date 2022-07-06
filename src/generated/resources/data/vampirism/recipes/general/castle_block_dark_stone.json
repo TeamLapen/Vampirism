@@ -30,7 +30,7 @@
     }
   ],
   "result": {
-    "item": "vampirism:castle_block_dark_stone",
-    "count": 7
+    "count": 7,
+    "item": "vampirism:castle_block_dark_stone"
   }
 }

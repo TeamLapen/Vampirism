@@ -1,9 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "X",
-    "Y"
-  ],
   "key": {
     "X": {
       "tag": "forge:ingots/iron"
@@ -12,8 +8,12 @@
       "tag": "forge:rods/wooden"
     }
   },
+  "pattern": [
+    "X",
+    "Y"
+  ],
   "result": {
-    "item": "vampirism:crossbow_arrow_normal",
-    "count": 6
+    "count": 6,
+    "item": "vampirism:crossbow_arrow_normal"
   }
 }

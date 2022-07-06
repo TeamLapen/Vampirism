@@ -1,36 +1,36 @@
 {
   "parent": "vampirism:hunter/stake",
-  "display": {
-    "icon": {
-      "item": "vampirism:item_garlic"
-    },
-    "title": {
-      "translate": "advancement.vampirism.max_level_hunter"
-    },
-    "description": {
-      "translate": "advancement.vampirism.max_level_hunter.desc"
-    },
-    "frame": "goal",
-    "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": true
-  },
-  "rewards": {
-    "experience": 100
-  },
   "criteria": {
     "level": {
-      "trigger": "vampirism:faction",
       "conditions": {
         "type": "LEVEL",
         "faction": "vampirism:hunter",
         "level": 14
-      }
+      },
+      "trigger": "vampirism:faction"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancement.vampirism.max_level_hunter.desc"
+    },
+    "frame": "goal",
+    "hidden": true,
+    "icon": {
+      "item": "vampirism:item_garlic"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.vampirism.max_level_hunter"
     }
   },
   "requirements": [
     [
       "level"
     ]
-  ]
+  ],
+  "rewards": {
+    "experience": 100
+  }
 }

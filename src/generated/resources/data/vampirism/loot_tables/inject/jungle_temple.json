@@ -2,213 +2,211 @@
   "type": "minecraft:chest",
   "pools": [
     {
-      "name": "main",
-      "rolls": 2.0,
       "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
-          "weight": 20,
-          "name": "vampirism:item_garlic"
+          "name": "vampirism:item_garlic",
+          "weight": 20
         },
         {
           "type": "minecraft:item",
-          "weight": 20,
           "functions": [
             {
-              "function": "minecraft:set_damage",
+              "add": false,
               "damage": {
                 "type": "minecraft:uniform",
-                "min": 1.0,
-                "max": 1.0
+                "max": 1.0,
+                "min": 1.0
               },
-              "add": false
+              "function": "minecraft:set_damage"
             }
           ],
-          "name": "vampirism:blood_bottle"
+          "name": "vampirism:blood_bottle",
+          "weight": 20
         },
         {
           "type": "minecraft:item",
-          "weight": 20,
           "functions": [
             {
               "function": "vampirism:add_book_nbt"
             }
           ],
-          "name": "vampirism:vampire_book"
+          "name": "vampirism:vampire_book",
+          "weight": 20
         },
         {
           "type": "minecraft:item",
-          "weight": 20,
-          "name": "vampirism:vampire_fang"
+          "name": "vampirism:vampire_fang",
+          "weight": 20
         },
         {
           "type": "minecraft:empty",
           "weight": 30
         }
-      ]
+      ],
+      "name": "main",
+      "rolls": 2.0
     },
     {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "damage": {
+                "type": "minecraft:uniform",
+                "max": 0.9,
+                "min": 0.3
+              },
+              "function": "minecraft:set_damage"
+            }
+          ],
+          "name": "vampirism:armor_of_swiftness_head_ultimate",
+          "weight": 7
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "damage": {
+                "type": "minecraft:uniform",
+                "max": 0.9,
+                "min": 0.3
+              },
+              "function": "minecraft:set_damage"
+            }
+          ],
+          "name": "vampirism:armor_of_swiftness_chest_ultimate",
+          "weight": 7
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "damage": {
+                "type": "minecraft:uniform",
+                "max": 0.9,
+                "min": 0.3
+              },
+              "function": "minecraft:set_damage"
+            }
+          ],
+          "name": "vampirism:armor_of_swiftness_legs_ultimate",
+          "weight": 7
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "damage": {
+                "type": "minecraft:uniform",
+                "max": 0.9,
+                "min": 0.3
+              },
+              "function": "minecraft:set_damage"
+            }
+          ],
+          "name": "vampirism:armor_of_swiftness_feet_ultimate",
+          "weight": 7
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 72
+        }
+      ],
       "name": "swiftness_armor",
-      "rolls": 1.0,
+      "rolls": 1.0
+    },
+    {
       "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
-          "weight": 7,
           "functions": [
             {
-              "function": "minecraft:set_damage",
+              "add": false,
               "damage": {
                 "type": "minecraft:uniform",
-                "min": 0.3,
-                "max": 0.9
+                "max": 0.9,
+                "min": 0.3
               },
-              "add": false
+              "function": "minecraft:set_damage"
             }
           ],
-          "name": "vampirism:armor_of_swiftness_head_ultimate"
+          "name": "vampirism:hunter_coat_head_ultimate",
+          "weight": 7
         },
         {
           "type": "minecraft:item",
-          "weight": 7,
           "functions": [
             {
-              "function": "minecraft:set_damage",
+              "add": false,
               "damage": {
                 "type": "minecraft:uniform",
-                "min": 0.3,
-                "max": 0.9
+                "max": 0.9,
+                "min": 0.3
               },
-              "add": false
+              "function": "minecraft:set_damage"
             }
           ],
-          "name": "vampirism:armor_of_swiftness_chest_ultimate"
+          "name": "vampirism:hunter_coat_chest_ultimate",
+          "weight": 7
         },
         {
           "type": "minecraft:item",
-          "weight": 7,
           "functions": [
             {
-              "function": "minecraft:set_damage",
+              "add": false,
               "damage": {
                 "type": "minecraft:uniform",
-                "min": 0.3,
-                "max": 0.9
+                "max": 0.9,
+                "min": 0.3
               },
-              "add": false
+              "function": "minecraft:set_damage"
             }
           ],
-          "name": "vampirism:armor_of_swiftness_legs_ultimate"
+          "name": "vampirism:hunter_coat_legs_ultimate",
+          "weight": 7
         },
         {
           "type": "minecraft:item",
-          "weight": 7,
           "functions": [
             {
-              "function": "minecraft:set_damage",
+              "add": false,
               "damage": {
                 "type": "minecraft:uniform",
-                "min": 0.3,
-                "max": 0.9
+                "max": 0.9,
+                "min": 0.3
               },
-              "add": false
+              "function": "minecraft:set_damage"
             }
           ],
-          "name": "vampirism:armor_of_swiftness_feet_ultimate"
+          "name": "vampirism:hunter_coat_feet_ultimate",
+          "weight": 7
         },
         {
           "type": "minecraft:empty",
           "weight": 72
         }
-      ]
-    },
-    {
+      ],
       "name": "hunter_coat",
-      "rolls": 1.0,
-      "bonus_rolls": 0.0,
-      "entries": [
-        {
-          "type": "minecraft:item",
-          "weight": 7,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.3,
-                "max": 0.9
-              },
-              "add": false
-            }
-          ],
-          "name": "vampirism:hunter_coat_head_ultimate"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 7,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.3,
-                "max": 0.9
-              },
-              "add": false
-            }
-          ],
-          "name": "vampirism:hunter_coat_chest_ultimate"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 7,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.3,
-                "max": 0.9
-              },
-              "add": false
-            }
-          ],
-          "name": "vampirism:hunter_coat_legs_ultimate"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 7,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.3,
-                "max": 0.9
-              },
-              "add": false
-            }
-          ],
-          "name": "vampirism:hunter_coat_feet_ultimate"
-        },
-        {
-          "type": "minecraft:empty",
-          "weight": 72
-        }
-      ]
+      "rolls": 1.0
     },
     {
-      "name": "refinement_item",
-      "rolls": 1.0,
       "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
           "functions": [
             {
-              "function": "vampirism:add_refinement_set",
-              "faction": "vampirism:vampire"
+              "faction": "vampirism:vampire",
+              "function": "vampirism:add_refinement_set"
             }
           ],
           "name": "vampirism:amulet"
@@ -217,8 +215,8 @@
           "type": "minecraft:item",
           "functions": [
             {
-              "function": "vampirism:add_refinement_set",
-              "faction": "vampirism:vampire"
+              "faction": "vampirism:vampire",
+              "function": "vampirism:add_refinement_set"
             }
           ],
           "name": "vampirism:ring"
@@ -227,13 +225,15 @@
           "type": "minecraft:item",
           "functions": [
             {
-              "function": "vampirism:add_refinement_set",
-              "faction": "vampirism:vampire"
+              "faction": "vampirism:vampire",
+              "function": "vampirism:add_refinement_set"
             }
           ],
           "name": "vampirism:obi_belt"
         }
-      ]
+      ],
+      "name": "refinement_item",
+      "rolls": 1.0
     }
   ]
 }

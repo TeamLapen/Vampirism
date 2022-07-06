@@ -1,5 +1,9 @@
 {
   "variants": {
+    "facing=east": {
+      "model": "vampirism:block/altar_cleansing",
+      "y": 90
+    },
     "facing=north": {
       "model": "vampirism:block/altar_cleansing"
     },
@@ -10,10 +14,6 @@
     "facing=west": {
       "model": "vampirism:block/altar_cleansing",
       "y": 270
-    },
-    "facing=east": {
-      "model": "vampirism:block/altar_cleansing",
-      "y": 90
     }
   }
 }

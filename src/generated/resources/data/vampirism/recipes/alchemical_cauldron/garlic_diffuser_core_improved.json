@@ -1,18 +1,18 @@
 {
   "type": "vampirism:alchemical_cauldron",
-  "result": {
-    "item": "vampirism:garlic_diffuser_core_improved"
+  "cookTime": 200,
+  "experience": 2.0,
+  "fluidItem": {
+    "item": "vampirism:holy_water_bottle_ultimate"
   },
   "ingredient": {
     "item": "vampirism:garlic_diffuser_core"
   },
-  "fluidItem": {
-    "item": "vampirism:holy_water_bottle_ultimate"
+  "reqLevel": 1,
+  "result": {
+    "item": "vampirism:garlic_diffuser_core_improved"
   },
   "skill": [
     "vampirism:garlic_diffuser_improved"
-  ],
-  "cookTime": 200,
-  "experience": 2.0,
-  "reqLevel": 1
+  ]
 }
