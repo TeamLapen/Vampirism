@@ -136,7 +136,8 @@ public class ModVillage {
                 2, new VillagerTrades.ITrade[]{
                         new VillagerTrades.ItemsForEmeraldsTrade(ModItems.HOLY_WATER_BOTTLE_NORMAL.get(), 3, 5, 4),
                         new VillagerTrades.EmeraldForItemsTrade(ModItems.SOUL_ORB_VAMPIRE.get(), 10, 10, 4),
-                        new VillagerTrades.EmeraldForItemsTrade(ModItems.VAMPIRE_BLOOD_BOTTLE.get(), 9, 4, 5)
+                        new VillagerTrades.EmeraldForItemsTrade(ModItems.VAMPIRE_BLOOD_BOTTLE.get(), 9, 4, 5),
+                        new VillagerTrades.ItemsForEmeraldsTrade(ModItems.CRUCIFIX_NORMAL.get(), 1, 1, 1  )
                 },
                 3, new VillagerTrades.ITrade[]{
                         new VillagerTrades.ItemsForEmeraldsTrade(ModItems.HOLY_WATER_BOTTLE_ENHANCED.get(), 2, 5, 4),
