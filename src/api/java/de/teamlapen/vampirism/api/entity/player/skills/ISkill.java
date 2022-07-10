@@ -70,4 +70,11 @@ public interface ISkill extends IForgeRegistryEntry<ISkill> {
      * @param column
      */
     void setRenderPos(int row, int column);
+
+    /**
+     * @return The {@link de.teamlapen.vampirism.api.entity.player.skills.ISkillType} of this skill
+     */
+    default ISkillType getType() {
+        return SkillType.LEVEL;
+    }
 }

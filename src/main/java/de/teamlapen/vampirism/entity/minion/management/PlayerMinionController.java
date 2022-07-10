@@ -5,10 +5,12 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillPlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
+import de.teamlapen.vampirism.player.skills.MinionRecoverySkill;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -335,6 +337,13 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         if (i != null) {
             i.checkin();
             i.deathCooldown = 20 * VampirismConfig.BALANCE.miDeathRecoveryTime.get();
+            getLord().ifPresent(player -> {
+                player.getLordFaction().getPlayerCapability(player.getPlayer()).map(ISkillPlayer::getSkillHandler).ifPresent(s -> {
+                    if(ModRegistries.SKILLS.getValues().stream().filter(MinionRecoverySkill.class::isInstance).anyMatch(s::isSkillEnabled)){
+                        i.deathCooldown *= 0.8;
+                    }
+                });
+            });
             if (id < minionTokens.length) {
                 minionTokens[id] = Optional.empty();
             }

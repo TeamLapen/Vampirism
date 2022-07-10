@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "vampirism:item/oil_bottle",
+    "layer1": "vampirism:item/oil_bottle_overlay"
+  }
+}

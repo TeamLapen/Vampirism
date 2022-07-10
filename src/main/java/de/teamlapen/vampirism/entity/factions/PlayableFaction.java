@@ -30,14 +30,16 @@ public class PlayableFaction<T extends IFactionPlayer<?>> extends Faction<T> imp
     private final LordTitles lordTitles;
     private final Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot;
     private boolean renderLevel = true;
+    private boolean hasLordSkills;
 
-    PlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel, int highestLordLevel, @Nonnull LordTitles lordTitles, @Nonnull IVillageFactionData villageFactionData, @Nullable Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot, TextFormatting chatColor, ITextComponent name, ITextComponent namePlural) {
+    PlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel, int highestLordLevel, @Nonnull LordTitles lordTitles, @Nonnull IVillageFactionData villageFactionData, @Nullable Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot, TextFormatting chatColor, ITextComponent name, ITextComponent namePlural, boolean hasLordSkills) {
         super(id, entityInterface, color, hostileTowardsNeutral, villageFactionData, chatColor, name, namePlural);
         this.highestLevel = highestLevel;
         this.playerCapabilitySupplier = playerCapabilitySupplier;
         this.highestLordLevel = highestLordLevel;
         this.lordTitles = lordTitles;
         this.refinementItemBySlot = refinementItemBySlot;
+        this.hasLordSkills = hasLordSkills;
     }
 
     @Override
@@ -53,6 +55,11 @@ public class PlayableFaction<T extends IFactionPlayer<?>> extends Faction<T> imp
     @Override
     public int getHighestReachableLevel() {
         return highestLevel;
+    }
+
+    @Override
+    public boolean hasLordSkills() {
+        return this.hasLordSkills;
     }
 
     @Nonnull

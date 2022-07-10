@@ -34,6 +34,7 @@ public class ModTiles {
     public static final RegistryObject<TileEntityType<SieveTileEntity>> SIEVE = BLOCK_ENTITIES.register("sieve", () -> create(SieveTileEntity::new, ModBlocks.BLOOD_SIEVE.get()));
     public static final RegistryObject<TileEntityType<TotemTileEntity>> TOTEM = BLOCK_ENTITIES.register("totem", () -> create(TotemTileEntity::new, TotemTopBlock.getBlocks().toArray(new TotemTopBlock[0])));
     public static final RegistryObject<TileEntityType<PotionTableTileEntity>> POTION_TABLE = BLOCK_ENTITIES.register("potion_table", () -> create(PotionTableTileEntity::new, ModBlocks.POTION_TABLE.get()));
+    public static final RegistryObject<TileEntityType<AlchemyTableTileEntity>> ALCHEMICAL_TABLE = BLOCK_ENTITIES.register("alchemical_table", () -> create(AlchemyTableTileEntity::new, ModBlocks.ALCHEMY_TABLE.get()));
 
     static void registerTiles(IEventBus bus) {
         BLOCK_ENTITIES.register(bus);

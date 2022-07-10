@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.player.vampire;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAttributes;
+import de.teamlapen.vampirism.core.ModBiomes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -87,8 +88,9 @@ public class BloodStats implements IBloodStats {
         foodStats.exhaustionLevel = 0;
         addExhaustion(exhaustion);
         this.prevBloodLevel = bloodLevel;
-        if (this.bloodExhaustionLevel > 4.0F) {
-            this.bloodExhaustionLevel -= 4.0F;
+        float bloodExhaustionGate = player.getCommandSenderWorld().getBiomeName(player.blockPosition()).filter(key -> key == ModBiomes.VAMPIRE_FOREST_KEY).map(key -> 6f).orElse(4f); //TODO 1.18 use biome tag
+        if (this.bloodExhaustionLevel > bloodExhaustionGate) {
+            this.bloodExhaustionLevel -= bloodExhaustionGate;
             if (bloodSaturationLevel > 0) {
                 bloodSaturationLevel = Math.max(bloodSaturationLevel - 1F, 0F);
             } else if (enumDifficulty != Difficulty.PEACEFUL || VampirismConfig.BALANCE.vpBloodUsagePeaceful.get()) {
@@ -160,7 +162,7 @@ public class BloodStats implements IBloodStats {
     }
 
     /**
-     * Add exhaustion. Value is multiplied with the EntityAttribute {@link de.teamlapen.vampirism.core.ModAttributes#blood_exhaustion}
+     * Add exhaustion. Value is multiplied with the EntityAttribute {@link de.teamlapen.vampirism.core.ModAttributes#BLOOD_EXHAUSTION}
      *
      * @param amount
      */
@@ -172,20 +174,14 @@ public class BloodStats implements IBloodStats {
      * Add exhaustion
      *
      * @param amount
-     * @param ignoreModifier If the entity exhaustion attribute {@link de.teamlapen.vampirism.core.ModAttributes#blood_exhaustion} should be ignored
+     * @param ignoreModifier If the entity exhaustion attribute {@link de.teamlapen.vampirism.core.ModAttributes#BLOOD_EXHAUSTION} should be ignored
      */
     void addExhaustion(float amount, boolean ignoreModifier) {
-        ModifiableAttributeInstance attribute = player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get());
-        float mult;
-        if (ignoreModifier) {
-            mult = 1F;
-        } else {
-
-            mult = (float) attribute.getValue();
-
+        if  (!ignoreModifier) {
+            ModifiableAttributeInstance attribute = player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get());
+            amount *= attribute.getValue();
         }
-
-        this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount * mult, 40F);
+        this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount, 40F);
     }
 
     void loadUpdate(CompoundNBT nbt) {

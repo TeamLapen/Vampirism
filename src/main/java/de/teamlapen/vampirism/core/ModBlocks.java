@@ -28,6 +28,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static de.teamlapen.lib.lib.util.UtilLib.getNull;
+
 /**
  * Handles all block registrations and reference.
  */
@@ -143,6 +145,7 @@ public class ModBlocks {
     public static final RegistryObject<FenceBlock> CURSED_SPRUCE_FENCE = registerWithItem("cursed_spruce_fence", () -> new FenceBlock(AbstractBlock.Properties.of(Material.WOOD, MaterialColor.CRIMSON_HYPHAE).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
     public static final RegistryObject<VampirismBlock> VAMPIRE_RACK = registerWithItem("vampire_rack", () -> new VampirismHorizontalBlock(AbstractBlock.Properties.of(Material.WOOD).strength(2, 3), BlockVoxelshapes.vampire_rack).markDecorativeBlock());
     public static final RegistryObject<VampirismBlock> THRONE = registerWithItem("throne", ThroneBlock::new);
+    public static final RegistryObject<AlchemyTableBlock> ALCHEMY_TABLE = registerWithItem("alchemy_table", AlchemyTableBlock::new);
 
     /**
      * TUTORIAL:

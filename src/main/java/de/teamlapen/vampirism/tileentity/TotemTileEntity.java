@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.entity.IAggressiveVillager;
 import de.teamlapen.vampirism.api.entity.ICaptureIgnore;
 import de.teamlapen.vampirism.api.entity.ITaskMasterEntity;
 import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
+import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -702,11 +703,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                     int max = Math.min(beds, VampirismConfig.BALANCE.viMaxVillagerRespawn.get());
                     if (villager < max) {
                         boolean isConverted = this.controllingFaction == VReference.VAMPIRE_FACTION && RNG.nextBoolean();
-                        if (isConverted) {
-                            this.spawnVillagerVampire();
-                        } else {
-                            this.spawnVillagerDefault(this.controllingFaction == VReference.HUNTER_FACTION);
-                        }
+                        this.spawnVillagerDefault(this.controllingFaction == VReference.HUNTER_FACTION, isConverted);
                     } else {
                         spawnTaskMaster = true;
                     }
@@ -1095,42 +1092,40 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         }
     }
 
-    private void spawnVillagerDefault(boolean poisonousBlood) {
+    private void spawnVillagerDefault(boolean poisonousBlood, boolean vampire) {
+        assert poisonousBlood != vampire;
         //noinspection ConstantConditions
-        VillagerEntity newVillager = EntityType.VILLAGER.create(this.level);
+        VillagerEntity newVillager = (vampire ? ModEntities.VILLAGER_CONVERTED.get() : EntityType.VILLAGER).create(this.level);
         //noinspection ConstantConditions
-        ExtendedCreature.getSafe(newVillager).ifPresent(e -> e.setPoisonousBlood(poisonousBlood));
         newVillager = VampirismEventFactory.fireSpawnNewVillagerEvent(this, null, newVillager, false, poisonousBlood);
+        ExtendedCreature.getSafe(newVillager).ifPresent(e -> e.setPoisonousBlood(poisonousBlood));
         spawnEntity(newVillager);
     }
 
     @SuppressWarnings("ConstantConditions")
-    private void spawnVillagerReplace(MobEntity oldEntity, boolean poisonousBlood) {
-        VillagerEntity newVillager = EntityType.VILLAGER.create(this.level);
-        ExtendedCreature.getSafe(newVillager).ifPresent(e -> e.setPoisonousBlood(poisonousBlood));
+    private void spawnVillagerReplace(MobEntity oldEntity, boolean poisonousBlood, boolean vampire) {
+        assert poisonousBlood != vampire;
+        VillagerEntity newVillager = (vampire ? ModEntities.VILLAGER_CONVERTED.get() : EntityType.VILLAGER).create(this.level);
         if (oldEntity instanceof VillagerEntity)
             newVillager.restrictTo(oldEntity.getRestrictCenter(), (int) oldEntity.getRestrictRadius());
         newVillager = VampirismEventFactory.fireSpawnNewVillagerEvent(this, oldEntity, newVillager, true, poisonousBlood);
+        ExtendedCreature.getSafe(newVillager).ifPresent(e -> e.setPoisonousBlood(poisonousBlood));
         spawnEntity(newVillager, oldEntity, true, true);
     }
 
     //client------------------------------------------------------------------------------------------------------------
 
     @SuppressWarnings("ConstantConditions")
-    private void spawnVillagerReplaceForced(MobEntity oldEntity, boolean poisonousBlood) {
-        VillagerEntity newVillager = EntityType.VILLAGER.create(this.level);
-        ExtendedCreature.getSafe(newVillager).ifPresent(e -> e.setPoisonousBlood(poisonousBlood));
+    private void spawnVillagerReplaceForced(MobEntity oldEntity, boolean poisonousBlood, boolean vampire) {
+        assert poisonousBlood != vampire;
+        VillagerEntity newVillager = (vampire ? ModEntities.VILLAGER_CONVERTED.get() : EntityType.VILLAGER).create(this.level);
         newVillager.copyPosition(oldEntity);
         if (oldEntity instanceof VillagerEntity) {
             newVillager.restrictTo(oldEntity.getRestrictCenter(), (int) oldEntity.getRestrictRadius());
         }
         newVillager = VampirismEventFactory.fireSpawnNewVillagerEvent(this, oldEntity, newVillager, true, poisonousBlood);
+        ExtendedCreature.getSafe(newVillager).ifPresent(e -> e.setPoisonousBlood(poisonousBlood));
         UtilLib.replaceEntity(oldEntity, newVillager);
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    private void spawnVillagerVampire() {
-        this.spawnEntity(ModEntities.VILLAGER_CONVERTED.get().create(this.level));
     }
 
     /**
@@ -1168,11 +1163,11 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                 if (hunter instanceof ICaptureIgnore)
                     continue;
                 if (i-- > 0) {
-                    this.spawnVillagerReplace(hunter, true);
+                    this.spawnVillagerReplace(hunter, true, false);
                 }
             }
             for (int o = i; o > 0; o--) {
-                this.spawnVillagerDefault(true);
+                this.spawnVillagerDefault(true, false);
             }
             for (VillagerEntity villager : villagerEntities) {
                 ExtendedCreature.getSafe(villager).ifPresent(e -> e.setPoisonousBlood(true));
@@ -1213,8 +1208,8 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                 if (villager.hasEffect(ModEffects.SANGUINARE.get()))
                     villager.removeEffect(ModEffects.SANGUINARE.get());
                 if (fullConvert) {
-                    if (villager instanceof ConvertedVillagerEntity) {
-                        this.spawnVillagerReplaceForced(villager, this.capturingFaction == VReference.HUNTER_FACTION);
+                    if (villager instanceof IConvertedCreature) {
+                        this.spawnVillagerReplaceForced(villager, this.capturingFaction == VReference.HUNTER_FACTION, false);
                     }
                 }
             }

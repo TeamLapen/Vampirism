@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.util.SRGNAMES;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.potion.*;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -23,7 +24,6 @@ import org.apache.logging.log4j.Logger;
 public class ModEffects {
     public static final DeferredRegister<Effect> EFFECTS = DeferredRegister.create(ForgeRegistries.POTIONS, REFERENCE.MODID);
 
-    public static final RegistryObject<ThirstEffect> THIRST = EFFECTS.register("thirst", () -> new ThirstEffect(EffectType.HARMFUL, 859494));
     public static final RegistryObject<SanguinareEffect> SANGUINARE = EFFECTS.register("sanguinare", () -> new SanguinareEffect(EffectType.NEUTRAL, 0x6A0888));
     public static final RegistryObject<VampirismEffect> SATURATION = EFFECTS.register("saturation", () -> new VampirismEffect(EffectType.BENEFICIAL, 0xDCFF00));
     public static final RegistryObject<VampirismEffect> SUNSCREEN = EFFECTS.register("sunscreen", () -> (VampirismEffect) new VampirismEffect(EffectType.BENEFICIAL, 0xFFF100).addAttributeModifier(ModAttributes.SUNDAMAGE.get(), "9dc9420c-3e5e-41c7-9ba4-ff70e9dc69fc", -0.5, AttributeModifier.Operation.MULTIPLY_TOTAL));
@@ -35,6 +35,8 @@ public class ModEffects {
     public static final RegistryObject<VampirismEffect> NEONATAL = EFFECTS.register("neonatal", () -> (VampirismEffect) new VampirismEffect(EffectType.NEUTRAL, 0xFFBBBB).addAttributeModifier(Attributes.ATTACK_DAMAGE, "377d132d-d091-43b2-8a8f-b940f9bc894c", -0.15, AttributeModifier.Operation.MULTIPLY_TOTAL).addAttributeModifier(Attributes.MOVEMENT_SPEED, "ad6d7def-46e2-485f-afba-39252767f114", -0.15, AttributeModifier.Operation.MULTIPLY_TOTAL));
     public static final RegistryObject<OblivionEffect> OBLIVION = EFFECTS.register("oblivion", () -> new OblivionEffect(EffectType.NEUTRAL, 0x4E9331));
     public static final RegistryObject<VampirismEffect> ARMOR_REGENERATION = EFFECTS.register("armor_regeneration", () -> new VampirismEffect(EffectType.NEUTRAL, 0xD17642));
+    public static final RegistryObject<Effect> LORD_SPEED = EFFECTS.register("lord_speed", () -> new VampirismEffect(EffectType.BENEFICIAL, 0xffffff).addAttributeModifier(Attributes.MOVEMENT_SPEED, "efe607d8-db8a-4156-b9d0-6a0640593057", 0.07F, AttributeModifier.Operation.MULTIPLY_TOTAL));
+    public static final RegistryObject<Effect> LORD_ATTACK_SPEED = EFFECTS.register("lord_attack_speed", () -> new VampirismEffect(EffectType.BENEFICIAL, 0xffffff).addAttributeModifier(Attributes.ATTACK_SPEED, "a2ca9534-3baf-404f-b159-bc835bf963e6", 0.05F, AttributeModifier.Operation.MULTIPLY_TOTAL));
 
     public static final RegistryObject<BadOmenEffect> BAD_OMEN_HUNTER = EFFECTS.register("bad_omen_" + REFERENCE.HUNTER_PLAYER_KEY.getPath(), () -> new BadOmenEffect() {
                 @Override
@@ -100,5 +102,15 @@ public class ModEffects {
             return false;
         }
         return true;
+    }
+
+    public static void fixMappings(RegistryEvent.MissingMappings<Effect> event) {
+        event.getAllMappings().forEach(missingMapping -> {
+            switch (missingMapping.key.toString()) {
+                case "vampirism:thirst":
+                    missingMapping.remap(Effects.HUNGER);
+                    break;
+            }
+        });
     }
 }

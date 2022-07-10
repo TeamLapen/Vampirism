@@ -387,6 +387,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         if (currentLordLevel != newLordLevel) {
             this.setLordLevel(newLordLevel, false);
         }
+        this.updateSkillTypes();
         updateCache();
         notifyFaction(old, oldLevel);
         if(old != currentFaction || oldLevel != currentLevel){
@@ -491,6 +492,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             } else {
                 currentLevel = Math.min(nbt.getInt("level"), this.currentFaction.getHighestReachableLevel());
                 currentLordLevel = Math.min(nbt.getInt("lord_level"), this.currentFaction.getHighestLordLevel());
+                this.updateSkillTypes();
                 updateCache();
                 notifyFaction(null, 0);
             }
@@ -500,6 +502,10 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         }
         loadBoundActions(nbt);
         updateCache();
+    }
+
+    private void updateSkillTypes() {
+        this.getCurrentFactionPlayer().ifPresent(a -> a.getSkillHandler().enableRootSkills());
     }
 
     /**
@@ -544,6 +550,9 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         }
 
         this.currentLordLevel = level;
+        if (this.currentLordLevel > 0) {
+            this.updateSkillTypes();
+        }
         this.updateCache();
         MinionWorldData.getData(player.level).ifPresent(data -> {
             PlayerMinionController c = data.getController(this.player.getUUID());
@@ -552,9 +561,9 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             }
         });
         if (level == 0) {
-            LOGGER.debug(LogUtil.FACTION, "Resetting lord level for {}", this.player.getName());
+            LOGGER.debug(LogUtil.FACTION, "Resetting lord level for {}", this.player.getName().getString());
         } else {
-            LOGGER.debug(LogUtil.FACTION, "{} has now lord level {}", this.player.getName(), level);
+            LOGGER.debug(LogUtil.FACTION, "{} has now lord level {}", this.player.getName().getString(), level);
         }
         if (player instanceof ServerPlayerEntity) {
             ModAdvancements.TRIGGER_FACTION.trigger((ServerPlayerEntity) player, currentFaction, currentLevel, currentLordLevel);

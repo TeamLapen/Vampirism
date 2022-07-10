@@ -66,6 +66,7 @@ public class ModItems {
     public static final RegistryObject<CrossbowArrowItem> CROSSBOW_ARROW_NORMAL = ITEMS.register("crossbow_arrow_normal", () -> new CrossbowArrowItem(CrossbowArrowItem.EnumArrowType.NORMAL));
     public static final RegistryObject<CrossbowArrowItem> CROSSBOW_ARROW_SPITFIRE = ITEMS.register("crossbow_arrow_spitfire", () -> new CrossbowArrowItem(CrossbowArrowItem.EnumArrowType.SPITFIRE));
     public static final RegistryObject<CrossbowArrowItem> CROSSBOW_ARROW_VAMPIRE_KILLER = ITEMS.register("crossbow_arrow_vampire_killer", () -> new CrossbowArrowItem(CrossbowArrowItem.EnumArrowType.VAMPIRE_KILLER));
+    public static final RegistryObject<CrossbowArrowItem> CROSSBOW_ARROW_TELEPORT = ITEMS.register("crossbow_arrow_teleport", () -> new CrossbowArrowItem(CrossbowArrowItem.EnumArrowType.TELEPORT));
 
     public static final RegistryObject<SimpleCrossbowItem> ENHANCED_CROSSBOW = ITEMS.register("enhanced_crossbow", () -> new SimpleCrossbowItem(1.5F, 15, 250, ItemTier.IRON));
     public static final RegistryObject<DoubleCrossbowItem> ENHANCED_DOUBLE_CROSSBOW = ITEMS.register("enhanced_double_crossbow", () -> new DoubleCrossbowItem(1.5F, 15, 350, ItemTier.IRON));
@@ -223,6 +224,7 @@ public class ModItems {
     public static final RegistryObject<VampirismBoatItem> DARK_SPRUCE_BOAT = ITEMS.register("dark_spruce_boat", () -> new VampirismBoatItem(VampirismBoatItem.BoatType.DARK_SPRUCE, creativeTabProps().stacksTo(1)));
     public static final RegistryObject<VampirismBoatItem> CURSED_SPRUCE_BOAT = ITEMS.register("cursed_spruce_boat", () -> new VampirismBoatItem(VampirismBoatItem.BoatType.CURSED_SPRUCE, creativeTabProps().stacksTo(1)));
 
+    public static final RegistryObject<OilBottle> OIL_BOTTLE = ITEMS.register("oil_bottle", () -> new OilBottle(creativeTabProps().stacksTo(1)));
     static void registerCraftingRecipes() {
         // Brewing
         BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER)), Ingredient.of(new ItemStack(PURE_SALT.get())), new ItemStack(PURE_SALT_WATER.get()));
@@ -247,7 +249,6 @@ public class ModItems {
                 return HOLY_WATER_BOTTLE_ULTIMATE.get().equals(stack.getItem());
             }
         });
-
     }
 
 

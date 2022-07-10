@@ -10,6 +10,7 @@ import de.teamlapen.lib.util.OptifineHandler;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
+import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.client.core.ClientEventHandler;
 import de.teamlapen.vampirism.config.BloodValues;
@@ -182,9 +183,7 @@ public class VampirismMod {
     public void onAddReloadListenerEvent(AddReloadListenerEvent event) {
         SkillTreeManager.getInstance().getSkillTree().initRootSkills();//Load root skills here, so even if data pack reload fail, the root skills are available #622
         event.addListener(SkillTreeManager.getInstance());
-        event.addListener(BloodValues.ENTITIES);
-        event.addListener(BloodValues.ITEMS);
-        event.addListener(BloodValues.FLUIDS);
+        event.addListener(new BloodValues());
 
     }
 
@@ -277,6 +276,8 @@ public class VampirismMod {
         registryManager.onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
         proxy.onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
         modCompatLoader.onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
+        VampirismAPI.skillManager().registerSkillType(SkillType.LEVEL);
+        VampirismAPI.skillManager().registerSkillType(SkillType.LORD);
     }
 
     /**
@@ -309,6 +310,7 @@ public class VampirismMod {
                 .lordTitle(LordTitles::getVampireTitle)
                 .village(VampireVillageData::vampireVillage)
                 .refinementItems(VampireRefinementItem::getItemForType)
+                .enableLordSkills()
                 .register();
         VReference.HUNTER_FACTION = VampirismAPI.factionRegistry()
                 .createPlayableFaction(REFERENCE.HUNTER_PLAYER_KEY, IHunterPlayer.class, () -> HunterPlayer.CAP)
@@ -320,6 +322,7 @@ public class VampirismMod {
                 .lordLevel(REFERENCE.HIGHEST_HUNTER_LORD)
                 .lordTitle(LordTitles::getHunterTitle)
                 .village(HunterVillageData::hunterVillage)
+                .enableLordSkills()
                 .register();
         VReference.HUNTER_CREATURE_TYPE = HUNTER_CREATURE_TYPE;
         VReference.VAMPIRE_CREATURE_TYPE = VAMPIRE_CREATURE_TYPE;

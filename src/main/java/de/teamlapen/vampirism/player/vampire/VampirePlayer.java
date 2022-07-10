@@ -764,10 +764,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 bloodStats.setMaxBlood(20);
             }
             if (newLevel > 0) {
-                if (oldLevel == 0) {
-                    skillHandler.enableRootSkill();
-                }
-
             } else {
                 actionHandler.resetTimers();
                 skillHandler.disableAllSkills();
@@ -888,11 +884,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                     EffectInstance fireResistance = player.getEffect(Effects.FIRE_RESISTANCE);
                     player.addEffect(new EffectInstance(ModEffects.FIRE_PROTECTION.get(), fireResistance.getDuration(), fireResistance.getAmplifier()));
                     player.removeEffect(Effects.FIRE_RESISTANCE);
-                }
-                if (player.tickCount % 9 == 3 && player.hasEffect(Effects.HUNGER)) {
-                    EffectInstance hunterEffect = player.getEffect(Effects.HUNGER);
-                    player.addEffect(new EffectInstance(ModEffects.THIRST.get(), hunterEffect.getDuration(), hunterEffect.getAmplifier()));
-                    player.removeEffect(Effects.HUNGER);
                 }
                 if (actionHandler.updateActions()) {
                     sync = true;
@@ -1271,7 +1262,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     private void applyEntityAttributes() {
         player.getAttribute(ModAttributes.SUNDAMAGE.get()).setBaseValue(VampirismConfig.BALANCE.vpSundamage.get());
-        player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get()).setBaseValue(VampirismConfig.BALANCE.vpBasicBloodExhaustionMod.get());
+        player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get()).setBaseValue(VampirismConfig.BALANCE.vpBloodExhaustionFactor.get());
         player.getAttribute(ModAttributes.BITE_DAMAGE.get()).setBaseValue(0);
     }
 

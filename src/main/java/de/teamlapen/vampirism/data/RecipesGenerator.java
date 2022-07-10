@@ -3,16 +3,13 @@ package de.teamlapen.vampirism.data;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.core.ModTags;
-import de.teamlapen.vampirism.data.recipebuilder.AlchemicalCauldronRecipeBuilder;
-import de.teamlapen.vampirism.data.recipebuilder.IItemWIthTierRecipeBuilder;
-import de.teamlapen.vampirism.data.recipebuilder.ShapedWeaponTableRecipeBuilder;
-import de.teamlapen.vampirism.data.recipebuilder.ShapelessWeaponTableRecipeBuilder;
+import de.teamlapen.vampirism.core.*;
+import de.teamlapen.vampirism.data.recipebuilder.*;
 import de.teamlapen.vampirism.inventory.recipes.ConfigCondition;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.NBTIngredient;
+import de.teamlapen.vampirism.util.OilUtils;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.IRequirementsStrategy;
@@ -41,6 +38,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -206,6 +204,7 @@ public class RecipesGenerator extends RecipeProvider {
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.BASIC_TECH_CROSSBOW.get()).lava(5).skills(HunterSkills.TECH_WEAPONS.get()).pattern("YXXY").pattern("XZZX").pattern(" XX ").pattern(" XX ").define('X', iron_ingot).define('Y', string).define('Z', diamond).save(consumer);
         ShapelessWeaponTableRecipeBuilder.shapelessWeaponTable(ModItems.CROSSBOW_ARROW_SPITFIRE.get(), 3).lava(1).requires(crossbow_arrow_normal, 3).requires(alchemical_fire).unlockedBy("has_crossbow_arrow_normal", has(crossbow_arrow_normal)).save(consumer);
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get(), 3).lava(1).pattern(" X ").pattern("XYX").pattern(" Z ").pattern(" W ").define('X', garlic).define('Y', gold_ingot).define('Z', stick).define('W', feather).unlockedBy("has_crossbow_arrow_normal", has(crossbow_arrow_normal)).save(consumer);
+        ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.CROSSBOW_ARROW_TELEPORT.get(), 8).lava(2).pattern("XXX").pattern("XYX").pattern("XXX").define('X', crossbow_arrow_normal).define('Y', new de.teamlapen.vampirism.util.NBTIngredient(OilUtils.createOilItem(ModOils.TELEPORT.get()))).unlockedBy("has_crossbow_arrow_normal", has(crossbow_arrow_normal)).save(consumer);
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.ENHANCED_CROSSBOW.get()).lava(2).skills(HunterSkills.ENHANCED_WEAPONS.get()).pattern("YXXY").pattern(" XX ").pattern(" XX ").define('X', iron_ingot).define('Y', string).save(consumer);
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.ENHANCED_DOUBLE_CROSSBOW.get()).lava(3).skills(HunterSkills.DOUBLE_CROSSBOW.get(), HunterSkills.ENHANCED_WEAPONS.get()).pattern("YXXY").pattern("YXXY").pattern(" XX ").pattern(" XX ").define('X', iron_ingot).define('Y', string).save(consumer);
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.ENHANCED_TECH_CROSSBOW.get()).lava(5).skills(HunterSkills.TECH_WEAPONS.get()).pattern("YXXY").pattern("XZZX").pattern("XZZX").pattern(" XX ").define('X', iron_ingot).define('Y', string).define('Z', diamond).save(consumer);
@@ -314,6 +313,104 @@ public class RecipesGenerator extends RecipeProvider {
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.CRUCIFIX_ENHANCED.get()).pattern("XYYX").pattern("YZAY").pattern("XYYX").pattern("XYYX").define('X', ModItems.HOLY_WATER_BOTTLE_NORMAL.get()).define('Y', iron_ingot).define('Z', ModItems.HOLY_WATER_BOTTLE_ENHANCED.get()).define('A', ModItems.STAKE.get()).unlockedBy("iron", has(iron_ingot)).unlockedBy("has_holy_water", has(ModItems.HOLY_WATER_BOTTLE_NORMAL.get())).unlockedBy("has_holy_water_enhanced", has(ModItems.HOLY_WATER_BOTTLE_ENHANCED.get())).unlockedBy("stake", has(ModItems.STAKE.get())).skills(HunterSkills.CRUCIFIX_WIELDER.get()).save(consumer, hunter("crucifix_enhanced"));
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.CRUCIFIX_ULTIMATE.get()).pattern("XYYX").pattern("YZAY").pattern("XYYX").pattern("XYYX").define('X', ModItems.ITEM_ALCHEMICAL_FIRE.get()).define('Y', Tags.Items.STORAGE_BLOCKS_GOLD).define('Z', ModItems.HOLY_WATER_BOTTLE_ENHANCED.get()).define('A', ModItems.STAKE.get()).unlockedBy("fire", has(ModItems.ITEM_ALCHEMICAL_FIRE.get())).unlockedBy("gold", has(Tags.Items.STORAGE_BLOCKS_GOLD)).unlockedBy("holy_water", has(ModItems.HOLY_WATER_BOTTLE_ENHANCED.get())).unlockedBy("stake", has(ModItems.STAKE.get())).skills(HunterSkills.ULTIMATE_CRUCIFIX.get()).save(consumer, hunter("crucifix_ultimate"));
 
+        CustomRecipeBuilder.special(ModRecipes.APPLICABLE_OIL.get()).save(consumer, REFERENCE.MODID+":applicable_oil");
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.PLANT)
+                .ingredient(Ingredient.of(new ItemStack(Items.GLASS_BOTTLE)))
+                .input(Ingredient.of(new ItemStack(Items.WHEAT_SEEDS)))
+                .withCriterion("has_bottles", has(Items.GLASS_BOTTLE)).withCriterion("has_wheat_seeds", has(Items.WHEAT_SEEDS))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "plant_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.VAMPIRE_BLOOD)
+                .plantOilIngredient()
+                .input(Ingredient.of(ModItems.VAMPIRE_BLOOD_BOTTLE.get())).withCriterion("has_wheat_seeds", has(ModItems.VAMPIRE_BLOOD_BOTTLE.get()))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "vampire_blood_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.HEALING)
+                .bloodOilIngredient()
+                .input(potion(Potions.HEALING, Potions.STRONG_HEALING))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "healing_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.POISON)
+                .bloodOilIngredient()
+                .input(potion(Potions.POISON,Potions.LONG_POISON, Potions.STRONG_POISON))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "poison_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.WEAKNESS)
+                .bloodOilIngredient()
+                .input(potion(Potions.WEAKNESS, Potions.LONG_WEAKNESS))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "weakness_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.SLOWNESS)
+                .bloodOilIngredient()
+                .input(potion(Potions.SLOWNESS, Potions.STRONG_SLOWNESS, Potions.LONG_SLOWNESS))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "slowness_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.FIRE_RESISTANCE)
+                .bloodOilIngredient()
+                .input(potion(Potions.FIRE_RESISTANCE, Potions.LONG_FIRE_RESISTANCE))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "fire_resistance_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.SWIFTNESS)
+                .bloodOilIngredient()
+                .input(potion(Potions.SWIFTNESS, Potions.LONG_SWIFTNESS, Potions.STRONG_SWIFTNESS))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "swiftness_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.REGENERATION)
+                .bloodOilIngredient()
+                .input(potion(Potions.REGENERATION, Potions.LONG_REGENERATION, Potions.STRONG_REGENERATION))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "regeneration_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.NIGHT_VISION)
+                .bloodOilIngredient()
+                .input(potion(Potions.NIGHT_VISION, Potions.LONG_NIGHT_VISION))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "night_vision_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.STRENGTH)
+                .bloodOilIngredient()
+                .input(potion(Potions.STRENGTH, Potions.STRONG_STRENGTH, Potions.LONG_STRENGTH))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "strength_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.JUMP)
+                .bloodOilIngredient()
+                .input(potion(Potions.LEAPING, Potions.LONG_LEAPING, Potions.STRONG_LEAPING))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "jump_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.WATER_BREATHING)
+                .bloodOilIngredient()
+                .input(potion(Potions.WATER_BREATHING, Potions.LONG_WATER_BREATHING))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "water_breathing_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.INVISIBILITY)
+                .bloodOilIngredient()
+                .input(potion(Potions.INVISIBILITY, Potions.LONG_INVISIBILITY))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "invisibility_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.SLOW_FALLING)
+                .bloodOilIngredient()
+                .input(potion(Potions.SLOW_FALLING, Potions.LONG_SLOW_FALLING))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "slow_falling_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.LUCK)
+                .bloodOilIngredient()
+                .input(potion(Potions.LUCK))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "luck_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.SMELT)
+                .bloodOilIngredient()
+                .input(new de.teamlapen.vampirism.util.NBTIngredient(new ItemStack(ModItems.ITEM_ALCHEMICAL_FIRE.get())))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "smelt_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.TELEPORT)
+                .bloodOilIngredient()
+                .input(new de.teamlapen.vampirism.util.NBTIngredient(new ItemStack(Items.ENDER_PEARL)))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "teleport_oil"));
+        AlchemyTableRecipeBuilder
+                .builder(ModOils.EVASION)
+                .bloodOilIngredient()
+                .input(Ingredient.of(new ItemStack(Items.HONEY_BOTTLE)))
+                .build(consumer, new ResourceLocation(REFERENCE.MODID, "evasion_oil"));
+
         CookingRecipeBuilder.smelting(Ingredient.of(amulet, ring), Items.GOLD_NUGGET, 0.1f,200).unlockedBy("has_amulet", has(amulet)).unlockedBy("has_ring", has(ring)).save(consumer, new ResourceLocation(REFERENCE.MODID, "gold_nugget_from_accessory_smelting"));
         CookingRecipeBuilder.blasting(Ingredient.of(amulet, ring), Items.GOLD_NUGGET, 0.1f,100).unlockedBy("has_amulet", has(amulet)).unlockedBy("has_ring", has(ring)).save(consumer, new ResourceLocation(REFERENCE.MODID, "gold_nugget_from_accessory_blasting"));
         ShapelessRecipeBuilder.shapeless(leather).requires(obi_belt).unlockedBy("has_obi_belt", has(obi_belt)).save(consumer, new ResourceLocation(REFERENCE.MODID, "leather_from_obi_belt"));
@@ -342,6 +439,9 @@ public class RecipesGenerator extends RecipeProvider {
         return new ResourceLocation(REFERENCE.MODID, path);
     }
 
+    private Ingredient potion(Potion... potion) {
+        return new NBTIngredient(Arrays.stream(potion).map(p -> PotionUtils.setPotion(new ItemStack(Items.POTION, 1),p)).toArray(ItemStack[]::new));
+    }
     private Ingredient potion(Potion potion) {
         ItemStack stack = new ItemStack(Items.POTION, 1);
         PotionUtils.setPotion(stack, potion);
@@ -350,12 +450,6 @@ public class RecipesGenerator extends RecipeProvider {
 
     private ResourceLocation vampire(String path) {
         return modId("vampire/" + path);
-    }
-
-    private static class NBTIngredient extends net.minecraftforge.common.crafting.NBTIngredient {
-        public NBTIngredient(ItemStack stack) {
-            super(stack);
-        }
     }
 
     private static class Shapeless extends ShapelessRecipeBuilder {
