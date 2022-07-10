@@ -8,6 +8,8 @@
     "AssemblerMixin",
     "DimensionStructureSettingsAccessor",
     "FlatGenerationSettingsAccessor",
+    "IngredientAccessor",
+    "ItemMixin",
     "LivingEntityAccessor",
     "MixinBellBlock",
     "MixinEffectInstance",
@@ -21,7 +23,8 @@
   ],
   "client": [
     "client.AgeableModelAccessor",
-    "client.BossOverlayGuiAccessor"
+    "client.BossOverlayGuiAccessor",
+    "client.ModelBakeryMixin"
   ],
   "injectors": {
     "defaultRequire": 1

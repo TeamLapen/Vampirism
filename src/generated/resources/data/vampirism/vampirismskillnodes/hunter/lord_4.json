@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:hunter_lord",
+  "skills": [
+    "vampirism:hunter_minion_collect"
+  ]
+}

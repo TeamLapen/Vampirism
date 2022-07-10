@@ -156,3 +156,17 @@ task modrinth (type: TaskModrinthUpload){
     addGameVersion(project.minecraft_version)
     addLoader('forge')
 }
+
+
+
+task checkIfPublicVersion{
+    doFirst {
+        if (project.classification != "public") {
+            throw new PublishException("Trying to publish a version that is not intended for public release")
+        }
+    }
+}
+
+tasks.curseforge.dependsOn(checkIfPublicVersion)
+tasks.modrinth.dependsOn(checkIfPublicVersion)
+tasks.publish.dependsOn(checkIfPublicVersion)

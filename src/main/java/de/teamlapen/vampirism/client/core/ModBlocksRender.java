@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.blocks.TotemTopBlock;
 import de.teamlapen.vampirism.client.render.tiles.*;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -36,7 +37,7 @@ public class ModBlocksRender {
                 return 0x9966FF;
             }
             return 0x8855FF;
-        }, ModBlocks.alchemical_fire);
+        }, ModBlocks.ALCHEMICAL_FIRE.get());
         colors.register((state, worldIn, pos, tintIndex) -> {
             if (tintIndex == 255) {
                 TileEntity tile = (worldIn == null || pos == null) ? null : worldIn.getBlockEntity(pos);
@@ -45,7 +46,7 @@ public class ModBlocksRender {
                 }
             }
             return 0xFFFFFF;
-        }, ModBlocks.alchemical_cauldron);
+        }, ModBlocks.ALCHEMICAL_CAULDRON.get());
         colors.register((state, worldIn, pos, tintIndex) -> {
             if (tintIndex == 255) {
                 TileEntity tile = (worldIn == null || pos == null) ? null : worldIn.getBlockEntity(pos);
@@ -58,70 +59,71 @@ public class ModBlocksRender {
         }, TotemTopBlock.getBlocks().toArray(new TotemTopBlock[0]));
         colors.register((state, worldIn, pos, tintIndex) -> {
             return 0x1E1F1F;
-        }, ModBlocks.dark_spruce_leaves);
+        }, ModBlocks.DARK_SPRUCE_LEAVES.get());
     }
 
     private static void registerTileRenderer() {
-        ClientRegistry.bindTileEntityRenderer(ModTiles.coffin, CoffinTESR::new);
-        ClientRegistry.bindTileEntityRenderer(ModTiles.altar_infusion, AltarInfusionTESR::new);
-        ClientRegistry.bindTileEntityRenderer(ModTiles.blood_pedestal, PedestalTESR::new);
-        ClientRegistry.bindTileEntityRenderer(ModTiles.totem, TotemTESR::new);
-        ClientRegistry.bindTileEntityRenderer(ModTiles.garlic_beacon, GarlicBeaconTESR::new);
+        ClientRegistry.bindTileEntityRenderer(ModTiles.COFFIN.get(), CoffinTESR::new);
+        ClientRegistry.bindTileEntityRenderer(ModTiles.ALTAR_INFUSION.get(), AltarInfusionTESR::new);
+        ClientRegistry.bindTileEntityRenderer(ModTiles.BLOOD_PEDESTAL.get(), PedestalTESR::new);
+        ClientRegistry.bindTileEntityRenderer(ModTiles.TOTEM.get(), TotemTESR::new);
+        ClientRegistry.bindTileEntityRenderer(ModTiles.GARLIC_BEACON.get(), GarlicBeaconTESR::new);
     }
 
     private static void registerRenderType() {
         RenderType cutout = RenderType.cutout();
-        RenderTypeLookup.setRenderLayer(ModBlocks.garlic_beacon_weak, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.garlic_beacon_improved, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.garlic_beacon_normal, cutout);
-        RenderTypeLookup.setRenderLayer(ModFluids.impure_blood, RenderType.translucent());
-        RenderTypeLookup.setRenderLayer(ModFluids.blood, RenderType.translucent());
-        RenderTypeLookup.setRenderLayer(ModBlocks.alchemical_cauldron, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.alchemical_fire, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.altar_infusion, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.altar_inspiration, RenderType.translucent());
-        RenderTypeLookup.setRenderLayer(ModBlocks.altar_pillar, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.altar_tip, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.blood_container, RenderType.translucent());
-        RenderTypeLookup.setRenderLayer(ModBlocks.blood_pedestal, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.potion_table, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.blood_sieve, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.church_altar, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.fire_place, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.sunscreen_beacon, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.tent, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.tent_main, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.totem_base, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.totem_top, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.totem_top_vampirism_hunter, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.totem_top_vampirism_vampire, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.blood_grinder, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.coffin, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.hunter_table, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.med_chair, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.weapon_table, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.vampire_orchid, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.garlic, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.potted_vampire_orchid, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.dark_spruce_leaves, RenderType.cutoutMipped());
-        RenderTypeLookup.setRenderLayer(ModBlocks.dark_spruce_sapling, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.chandelier, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.candelabra, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.candelabra_wall, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.cross, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.tombstone1, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.tombstone2, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.tombstone3, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.grave_cage, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.cursed_roots, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.cursed_spruce_sapling, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.cursed_bark, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.dark_spruce_door, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.cursed_spruce_door, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.dark_spruce_trapdoor, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.cursed_spruce_trapdoor, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.vampire_rack, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.throne, cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.GARLIC_BEACON_WEAK.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.GARLIC_BEACON_IMPROVED.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.GARLIC_BEACON_NORMAL.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModFluids.IMPURE_BLOOD.get(), RenderType.translucent());
+        RenderTypeLookup.setRenderLayer(ModFluids.BLOOD.get(), RenderType.translucent());
+        RenderTypeLookup.setRenderLayer(ModBlocks.ALCHEMICAL_CAULDRON.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.ALCHEMICAL_FIRE.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.ALTAR_INFUSION.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.ALTAR_INSPIRATION.get(), RenderType.translucent());
+        RenderTypeLookup.setRenderLayer(ModBlocks.ALTAR_PILLAR.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.ALTAR_TIP.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.BLOOD_CONTAINER.get(), RenderType.translucent());
+        RenderTypeLookup.setRenderLayer(ModBlocks.BLOOD_PEDESTAL.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.POTION_TABLE.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.BLOOD_SIEVE.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.CHURCH_ALTAR.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.FIRE_PLACE.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.SUNSCREEN_BEACON.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.TENT.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.TENT_MAIN.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.TOTEM_BASE.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.TOTEM_TOP.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.BLOOD_GRINDER.get(), cutout);
+        CoffinBlock.COFFIN_BLOCKS.values().forEach(coffin -> RenderTypeLookup.setRenderLayer(coffin, cutout));
+        RenderTypeLookup.setRenderLayer(ModBlocks.HUNTER_TABLE.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.MED_CHAIR.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.WEAPON_TABLE.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.VAMPIRE_ORCHID.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.GARLIC.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.POTTED_VAMPIRE_ORCHID.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.DARK_SPRUCE_LEAVES.get(), RenderType.cutoutMipped());
+        RenderTypeLookup.setRenderLayer(ModBlocks.DARK_SPRUCE_SAPLING.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.CHANDELIER.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.CANDELABRA.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.CANDELABRA_WALL.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.CROSS.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.TOMBSTONE1.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.TOMBSTONE2.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.TOMBSTONE3.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.GRAVE_CAGE.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.CURSED_ROOTS.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.CURSED_SPRUCE_SAPLING.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.CURSED_BARK.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.DARK_SPRUCE_DOOR.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.CURSED_SPRUCE_DOOR.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.DARK_SPRUCE_TRAPDOOR.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.CURSED_SPRUCE_TRAPDOOR.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.VAMPIRE_RACK.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.THRONE.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ModBlocks.ALCHEMY_TABLE.get(), cutout);
     }
 
 

@@ -6,9 +6,11 @@ import net.minecraft.loot.LootConditionType;
 import net.minecraft.loot.LootFunctionType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
+import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
+import net.minecraftforge.registries.IForgeRegistry;
 
 
-//@ObjectHolder(REFERENCE.MODID) TODO 1.17 adapt if ForgeRegistries for LootFunctionType and LootConditionType have been implemented
+//TODO 1.17 adapt if ForgeRegistries for LootFunctionType and LootConditionType have been implemented
 public class ModLoot {
 
     public static LootFunctionType add_book_nbt;
@@ -19,6 +21,9 @@ public class ModLoot {
     public static LootConditionType with_stake;
     public static LootConditionType adjustable_level;
     public static LootConditionType is_tent_spawner;
+    public static LootConditionType with_oil_item;
+
+    public static GlobalLootModifierSerializer<?> smelting;
 
     static void registerLootFunctionType() {
         add_book_nbt = Registry.register(Registry.LOOT_FUNCTION_TYPE, new ResourceLocation(REFERENCE.MODID, "add_book_nbt"), new LootFunctionType(new AddBookNbt.Serializer()));
@@ -31,5 +36,10 @@ public class ModLoot {
         with_stake = Registry.register(Registry.LOOT_CONDITION_TYPE, new ResourceLocation(REFERENCE.MODID, "with_stake"), new LootConditionType(new StakeCondition.Serializer()));
         adjustable_level = Registry.register(Registry.LOOT_CONDITION_TYPE, new ResourceLocation(REFERENCE.MODID, "adjustable_level"), new LootConditionType(new AdjustableLevelCondition.Serializer()));
         is_tent_spawner = Registry.register(Registry.LOOT_CONDITION_TYPE, new ResourceLocation(REFERENCE.MODID, "is_tent_spawner"), new LootConditionType(new TentSpawnerCondition.Serializer()));
+        with_oil_item = Registry.register(Registry.LOOT_CONDITION_TYPE, new ResourceLocation(REFERENCE.MODID, "with_oil_item"), new LootConditionType(new OilItemCondition.Serializer()));
+    }
+
+    static void registerLootModifier(IForgeRegistry<GlobalLootModifierSerializer<?>> event) {
+        event.register(smelting = new SmeltItemLootModifier.Serializer().setRegistryName(REFERENCE.MODID, "smelting"));
     }
 }

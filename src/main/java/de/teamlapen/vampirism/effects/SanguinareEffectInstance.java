@@ -8,7 +8,7 @@ import net.minecraft.potion.EffectInstance;
 
 public class SanguinareEffectInstance extends EffectInstance {
     public SanguinareEffectInstance(int effectDuration) {
-        super(ModEffects.sanguinare, effectDuration, 0, false, true);
+        super(ModEffects.SANGUINARE.get(), effectDuration, 0, false, true);
     }
 
     @Override

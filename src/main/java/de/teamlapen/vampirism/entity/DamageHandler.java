@@ -58,7 +58,7 @@ public class DamageHandler {
     private static void affectVampireGarlic(IVampire vampire, EnumStrength strength, float multiplier, boolean ambient) {
         if (strength == EnumStrength.NONE) return;
         LivingEntity entity = vampire.getRepresentingEntity();
-        entity.addEffect(new EffectInstance(ModEffects.garlic, (int) (multiplier * 20), strength.getStrength() - 1, ambient, true));
+        entity.addEffect(new EffectInstance(ModEffects.GARLIC.get(), (int) (multiplier * 20), strength.getStrength() - 1, ambient, true));
         if (entity instanceof PlayerEntity && ((PlayerEntity) entity).abilities.instabuild) return;
         entity.addEffect(new EffectInstance(Effects.WEAKNESS, (int) (multiplier * 20), 1, ambient, false));
         if (strength == EnumStrength.MEDIUM || strength == EnumStrength.STRONG) {
@@ -69,9 +69,7 @@ public class DamageHandler {
         }
         if (vampire instanceof IVampirePlayer) {
             IActionHandler<IVampirePlayer> actionHandler = ((IVampirePlayer) vampire).getActionHandler();
-            if (actionHandler.isActionActive(VampireActions.disguise_vampire)) {
-                actionHandler.toggleAction(VampireActions.disguise_vampire);
-            }
+            actionHandler.deactivateAction(VampireActions.DISGUISE_VAMPIRE.get());
         }
     }
 
@@ -140,16 +138,12 @@ public class DamageHandler {
         }
         if (vampire && entity instanceof PlayerEntity) {
             VampirePlayer.getOpt((PlayerEntity) entity).map(VampirePlayer::getActionHandler).ifPresent(actionHandler -> {
-                if (actionHandler.isActionActive(VampireActions.disguise_vampire)) {
-                    actionHandler.toggleAction(VampireActions.disguise_vampire);
-                }
-                if (actionHandler.isActionActive(VampireActions.vampire_invisibility)) {
-                    actionHandler.toggleAction(VampireActions.vampire_invisibility);
-                }
+                actionHandler.deactivateAction(VampireActions.DISGUISE_VAMPIRE.get());
+                actionHandler.deactivateAction(VampireActions.VAMPIRE_INVISIBILITY.get());
             });
         } else if (vampire && entity instanceof IEntityActionUser) {
             IActionHandlerEntity h = ((IEntityActionUser) entity).getActionHandler();
-            if (h.isActionActive(EntityActions.entity_invisible)) {
+            if (h.isActionActive(EntityActions.ENTITY_INVISIBLE.get())) {
                 h.deactivateAction();
             }
         }
@@ -172,7 +166,7 @@ public class DamageHandler {
      * @param maxDamage
      * @return
      */
-    private static double scaleDamageWithLevel(int level, int maxLevel, double minDamage, double maxDamage) {
+    public static double scaleDamageWithLevel(int level, int maxLevel, double minDamage, double maxDamage) {
         return minDamage + level / (double) maxLevel * (maxDamage - minDamage);
     }
 

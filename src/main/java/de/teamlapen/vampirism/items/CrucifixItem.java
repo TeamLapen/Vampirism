@@ -30,6 +30,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import net.minecraft.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -41,9 +42,8 @@ import java.util.List;
 import java.util.Set;
 
 
-public class CrucifixItem extends VampirismItem implements IItemWithTier, IFactionExclusiveItem, IFactionLevelItem<IHunterPlayer> {
+public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusiveItem, IFactionLevelItem<IHunterPlayer> {
 
-    private final static String baseRegName = "crucifix";
     private final TIER tier;
     /**
      * All crucifix items are added to this set. This is used to add cooldown for all existing crucifix items at once.
@@ -52,14 +52,9 @@ public class CrucifixItem extends VampirismItem implements IItemWithTier, IFacti
     private static final Set<CrucifixItem> all_crucifix = Collections.synchronizedSet(new HashSet<>());
 
     public CrucifixItem(IItemWithTier.TIER tier) {
-        super(baseRegName + "_" + tier.getName(), new Properties().tab(VampirismMod.creativeTab).stacksTo(1));
+        super(new Properties().tab(VampirismMod.creativeTab).stacksTo(1));
         this.tier = tier;
         all_crucifix.add(this);
-    }
-
-    @Override
-    public String getBaseRegName() {
-        return baseRegName;
     }
 
     @Override
@@ -70,8 +65,8 @@ public class CrucifixItem extends VampirismItem implements IItemWithTier, IFacti
     @Nullable
     @Override
     public ISkill getRequiredSkill(@Nonnull ItemStack stack) {
-        if (tier == TIER.ULTIMATE) return HunterSkills.ultimate_crucifix;
-        return HunterSkills.crucifix_wielder;
+        if (tier == TIER.ULTIMATE) return HunterSkills.ULTIMATE_CRUCIFIX.get();
+        return HunterSkills.CRUCIFIX_WIELDER.get();
     }
 
     @Nullable
@@ -117,7 +112,7 @@ public class CrucifixItem extends VampirismItem implements IItemWithTier, IFacti
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean held) {
         if (held && entity instanceof LivingEntity && entity.tickCount % 16 == 8) {
             if (Helper.isVampire(entity)) {
-                ((LivingEntity) entity).addEffect(new EffectInstance(ModEffects.poison, 20, 1));
+                ((LivingEntity) entity).addEffect(new EffectInstance(ModEffects.POISON.get(), 20, 1));
             }
         }
     }
@@ -161,7 +156,7 @@ public class CrucifixItem extends VampirismItem implements IItemWithTier, IFacti
             } else if (level >= 8) {
                 tier = 2;
             }
-            if (VampirePlayer.getOpt((PlayerEntity) e).map(VampirePlayer::getSkillHandler).map(h -> h.isRefinementEquipped(ModRefinements.crucifix_resistant)).orElse(false)) {
+            if (VampirePlayer.getOpt((PlayerEntity) e).map(VampirePlayer::getSkillHandler).map(h -> h.isRefinementEquipped(ModRefinements.CRUCIFIX_RESISTANT.get())).orElse(false)) {
                 tier++;
             }
             return tier;

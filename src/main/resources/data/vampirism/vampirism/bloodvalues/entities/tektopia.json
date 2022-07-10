@@ -1,0 +1,25 @@
+{
+  "author": "Kefka",
+  "replace": false,
+  "values": {
+    "tektopia:architect": 150,
+    "tektopia:bard": 150,
+    "tektopia:blacksmith": 150,
+    "tektopia:butcher": 150,
+    "tektopia:chef": 150,
+    "tektopia:child": 80,
+    "tektopia:cleric": 150,
+    "tektopia:druid": 150,
+    "tektopia:enchanter": 150,
+    "tektopia:farmer": 150,
+    "tektopia:guard": 150,
+    "tektopia:lumberjack": 150,
+    "tektopia:miner": 150,
+    "tektopia:nitwit": 150,
+    "tektopia:rancher": 150,
+    "tektopia:teacher": 150,
+    "tektopia:tradesman": 150,
+    "tektopia:nomad": 150,
+    "tektopia:merchant": 150
+  }
+}

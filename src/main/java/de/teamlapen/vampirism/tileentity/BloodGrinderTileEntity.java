@@ -53,7 +53,7 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
     private int cooldownProcess = 0;
 
     public BloodGrinderTileEntity() {
-        super(ModTiles.grinder, 1, BloodGrinderContainer.SELECTOR_INFOS);
+        super(ModTiles.GRINDER.get(), 1, BloodGrinderContainer.SELECTOR_INFOS);
         this.itemHandler = createWrapper();
         this.itemHandlerOptional = LazyOptional.of(() -> itemHandler);
     }
@@ -161,13 +161,13 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
                 ItemStack stack = itemHandler.extractItem(i, 1, true);
                 int blood = BloodConversionRegistry.getImpureBloodValue(stack.getItem());
                 if (blood > 0) {
-                    FluidStack fluid = new FluidStack(ModFluids.impure_blood, blood);
+                    FluidStack fluid = new FluidStack(ModFluids.IMPURE_BLOOD.get(), blood);
                     FluidUtil.getFluidHandler(this.level, this.worldPosition.below(), Direction.UP).ifPresent(handler -> {
                         int filled = handler.fill(fluid, IFluidHandler.FluidAction.SIMULATE);
                         if (filled >= 0.9f * blood) {
                             ItemStack extractedStack = itemHandler.extractItem(slot, 1, false);
                             handler.fill(fluid, IFluidHandler.FluidAction.EXECUTE);
-                            this.level.playSound(null, this.getBlockPos(), ModSounds.grinder, SoundCategory.BLOCKS, 0.5f, 0.7f);
+                            this.level.playSound(null, this.getBlockPos(), ModSounds.GRINDER.get(), SoundCategory.BLOCKS, 0.5f, 0.7f);
                             this.cooldownProcess = MathHelper.clamp(20 * filled / VReference.FOOD_TO_FLUID_BLOOD, 20, 100);
                         }
                     });

@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class PotionResistanceHunterAction extends DefaultHunterAction implements ILastingAction<IHunterPlayer> {
 
     public static boolean shouldRemove(Effect effect) {
-        return effect == Effects.BLINDNESS || effect == Effects.CONFUSION || effect == Effects.HUNGER || effect == Effects.POISON || effect == ModEffects.freeze;
+        return effect == Effects.BLINDNESS || effect == Effects.CONFUSION || effect == Effects.HUNGER || effect == Effects.POISON || effect == ModEffects.FREEZE.get();
     }
 
     @Override

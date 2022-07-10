@@ -13,11 +13,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandom;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class RefinementItemReward extends ItemReward {
@@ -34,11 +36,11 @@ public class RefinementItemReward extends ItemReward {
     }
 
     public RefinementItemReward(@Nullable IFaction<?> faction, @Nullable IRefinementSet.Rarity refinementRarity) {
-        this(faction, null, refinementRarity);
+        this(faction, () -> null, refinementRarity);
     }
 
-    public RefinementItemReward(@Nullable IFaction<?> faction, @Nullable IRefinementItem item, @Nullable IRefinementSet.Rarity refinementRarity) {
-        super(new ItemStack((Item) item));
+    public RefinementItemReward(@Nullable IFaction<?> faction, @Nonnull Supplier<IRefinementItem> item, @Nullable IRefinementSet.Rarity refinementRarity) {
+        super(() -> new ItemStack(item.get()));
         this.faction = faction;
         this.rarity = refinementRarity;
     }
@@ -50,7 +52,7 @@ public class RefinementItemReward extends ItemReward {
 
     @Override
     public List<ItemStack> getAllPossibleRewards() {
-        return (!this.reward.isEmpty() ? Collections.singletonList(new ItemStack(this.reward.getItem())) : getAllRefinementItems());
+        return (!this.reward.get().isEmpty() ? Collections.singletonList(new ItemStack(this.reward.get().getItem())) : getAllRefinementItems());
     }
 
     protected <Z extends Item & IRefinementItem> ItemStack createItem() {
@@ -65,7 +67,7 @@ public class RefinementItemReward extends ItemReward {
         Z item = faction.getRefinementItem(IRefinementItem.AccessorySlotType.values()[RANDOM.nextInt(IRefinementItem.AccessorySlotType.values().length)]);
         IRefinementItem.AccessorySlotType slot = (item).getSlotType();
         List<WeightedRandomItem<IRefinementSet>> sets = ModRegistries.REFINEMENT_SETS.getValues().stream()
-                .filter(set -> finalFaction == null || set.getFaction() == finalFaction)
+                .filter(set -> set.getFaction() == finalFaction)
                 .filter(set -> this.rarity == null || set.getRarity().ordinal() >= this.rarity.ordinal())
                 .filter(set -> set.getSlotType().map(slot1 -> slot1 == slot).orElse(true))
                 .map(set -> ((RefinementSet) set).getWeightedRandom()).collect(Collectors.toList());

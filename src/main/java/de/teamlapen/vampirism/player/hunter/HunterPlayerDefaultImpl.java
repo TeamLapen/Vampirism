@@ -74,6 +74,7 @@ class HunterPlayerDefaultImpl implements IHunterPlayer {
         return null;
     }
 
+    @Nonnull
     @Override
     public ISkillHandler<IHunterPlayer> getSkillHandler() {
         return null;

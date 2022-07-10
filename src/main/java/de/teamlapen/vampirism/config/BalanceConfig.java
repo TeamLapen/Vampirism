@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.config;
 
 import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.core.ModTags;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModList;
 import org.apache.logging.log4j.LogManager;
@@ -40,6 +41,7 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue taskDurationSinglePlayer;
     public final ForgeConfigSpec.IntValue taskDurationDedicatedServer;
     public final ForgeConfigSpec.DoubleValue skillPointsPerLevel;
+    public final ForgeConfigSpec.DoubleValue skillPointsPerLordLevel;
     public final ForgeConfigSpec.BooleanValue allowInfiniteSpecialArrows;
     public final ForgeConfigSpec.IntValue garlicDiffusorStartupTime;
 
@@ -114,7 +116,7 @@ public class BalanceConfig {
     public final ForgeConfigSpec.DoubleValue vpAttackSpeedMaxMod;
     public final ForgeConfigSpec.DoubleValue vpSpeedMaxMod;
     public final ForgeConfigSpec.DoubleValue vpExhaustionMaxMod;
-    public final ForgeConfigSpec.DoubleValue vpBasicBloodExhaustionMod;
+    public final ForgeConfigSpec.DoubleValue vpBloodExhaustionFactor;
     public final ForgeConfigSpec.BooleanValue vpBloodUsagePeaceful;
     public final ForgeConfigSpec.DoubleValue vpPlayerBloodSaturation;
     public final ForgeConfigSpec.IntValue vpSanguinareAverageDuration;
@@ -125,6 +127,7 @@ public class BalanceConfig {
     public final ForgeConfigSpec.DoubleValue vpSundamage;
     public final ForgeConfigSpec.IntValue vpSundamageWaterblocks;
     public final ForgeConfigSpec.BooleanValue vpSundamageInstantDeath;
+    public final ForgeConfigSpec.BooleanValue vpSunscreenBuff;
     public final ForgeConfigSpec.DoubleValue vpFireVulnerabilityMod;
     public final ForgeConfigSpec.BooleanValue vpFireResistanceReplace;
     public final ForgeConfigSpec.IntValue vpMaxYellowBorderPercentage;
@@ -199,6 +202,18 @@ public class BalanceConfig {
     public final ForgeConfigSpec.DoubleValue vrHalfInvulnerableThresholdMod;
     public final ForgeConfigSpec.DoubleValue vrSwordFinisherThresholdMod;
 
+    public final ForgeConfigSpec.BooleanValue itApplicableOilArmorReverse;
+    public final ForgeConfigSpec.BooleanValue itApplicableOilPickaxeReverse;
+    public final ForgeConfigSpec.BooleanValue itApplicableOilSwordReverse;
+
+    public final ForgeConfigSpec.BooleanValue laLordSpeedEnabled;
+    public final ForgeConfigSpec.IntValue laLordSpeedCooldown;
+    public final ForgeConfigSpec.IntValue laLordSpeedDuration;
+
+    public final ForgeConfigSpec.BooleanValue laLordAttackSpeedEnabled;
+    public final ForgeConfigSpec.IntValue laLordAttackSpeedCooldown;
+    public final ForgeConfigSpec.IntValue laLordAttackSpeedDuration;
+
     BalanceConfig(BalanceBuilder builder) {
         boolean iceAndFire = ModList.get().isLoaded("iceandfire");
         if (iceAndFire) {
@@ -231,7 +246,8 @@ public class BalanceConfig {
         taskMasterMaxTaskAmount = builder.comment("Maximum amount of task shown at a taskmaster, except unique tasks").defineInRange("taskMasterMaxTaskAmount", 3, 1, Integer.MAX_VALUE);
         taskDurationSinglePlayer = builder.comment("Duration a task can be completed in a singleplayer world. In Minutes").defineInRange("taskDurationSinglePlayer", 120, 1, Integer.MAX_VALUE);
         taskDurationDedicatedServer = builder.comment("Duration a task can be completed on a dedicated server. In Minutes").defineInRange("taskDurationDedicatedServer", 1440, 1, Integer.MAX_VALUE);
-        skillPointsPerLevel = builder.comment("Players receive n skill points for each leve-up. Anything except 1 is unbalanced, but to unlock all skills on maxlevel this value should be set to skill-amount/(max-level - 1)").defineInRange("skillPointsPerLevel", 1D, 1D, 20D);
+        skillPointsPerLevel = builder.comment("Players receive n skill points for each level-up. Anything except 1 is unbalanced, but to unlock all skills on maxlevel this value should be set to skill-amount/(max-level - 1)").defineInRange("skillPointsPerLevel", 1D, 1D, 20D);
+        skillPointsPerLordLevel = builder.comment("Players receive n skill points for each lord level-up. Anything except 1 is unbalanced, but to unlock all skills on max lord level this value should be set to skill-amount/(max-level - 1)").defineInRange("skillPointsPerLordLevel", 1D, 1D, 20D);
         allowInfiniteSpecialArrows = builder.comment("Whether special crossbow arrows (e.g. spitfire) can be used with infinity enchantment").define("allowInfiniteSpecialArrows", false);
         garlicDiffusorStartupTime = builder.comment("Delay in seconds before a newly placed garlic diffusor becomes active. *0.25 in Singleplayer").defineInRange("garlicDiffusorStartupTime", 5 * 20, 1, 10000);
 
@@ -316,13 +332,13 @@ public class BalanceConfig {
         vsDbnoReduction = builder.comment("Reduced percentage of the downed timer required to resurrect").defineInRange("dbnoReduction", 0.5, 0, 1);
 
 
-        //Vampire Player
+        //Vampire Player TODO 1.19 rename *MaxMod to *MaxLevelMod and clarify whether it is a multiplicative or additive modifier
         builder.category("vampirePlayer", "vp");
         vpHealthMaxMod = builder.defineInRange("healthMaxMod", 16, 0.5, 40);
         vpAttackSpeedMaxMod = builder.defineInRange("attackSpeedMaxMod", 0.15, 0, 2);
         vpSpeedMaxMod = builder.defineInRange("speedMaxMod", 0.3, 0, 5);
         vpExhaustionMaxMod = builder.defineInRange("exhaustionMaxMod", 1.0, 0, 10);
-        vpBasicBloodExhaustionMod = builder.comment("Blood exhaustion is multiplied with this value").defineInRange("basicBloodExhaustionMod", 0.7, 0, 5);
+        vpBloodExhaustionFactor = builder.comment("Blood exhaustion is multiplied with this value").defineInRange("bloodExhaustionFactor", 0.7, 0, 5);
         vpBloodUsagePeaceful = builder.comment("Whether blood is consumed in peaceful gamemode").define("bloodUsagePeaceful", false);
         vpPlayerBloodSaturation = builder.defineInRange("playerBloodSaturation", 1.5, 0.3, 10);
         vpSanguinareAverageDuration = builder.comment("Average duration of the Sanguinare Vampiris Effect. The final duration is random between 0.5 x avgDuration - 1.5 x avgDuration. In Seconds.").defineInRange("sanguinareAverageDuration", 900, 1, 10000);
@@ -333,10 +349,11 @@ public class BalanceConfig {
         vpSundamageWeaknessMinLevel = builder.defineInRange("sundamageWeaknessMinLevel", 2, 1, Integer.MAX_VALUE);
         vpSundamageWaterblocks = builder.defineInRange("sundamageWaterblocks", 4, 1, 10);
         vpSundamageInstantDeath = builder.comment("Whether vampires are instantly turned into ash when being in the sun").define("sundamageInstantDeath", false);
+        vpSunscreenBuff = builder.comment("Buff sunscreen potion to prevent negative effects at any level").define("sunscreenBuff",false);
         vpFireVulnerabilityMod = builder.comment("Multiply fire damage with this for vampires" + (iceAndFire ? " - Changed due to IceAndFire" : "")).defineInRange("fireVulnerabilityMod", iceAndFire ? 1.5d : 3d, 0.1, Double.MAX_VALUE);
         vpFireResistanceReplace = builder.comment("Whether to replace the vanilla fire resistance potion for vampires with a custom one that only reduces damage but does not remove it" + (iceAndFire ? " - Changed due to IceAndFire" : "")).define("fireResistanceReplace", !iceAndFire);
         vpMaxYellowBorderPercentage = builder.comment("Defines the maximum extend the yellow border covers when the player is in the sun. 100 is default. 0 to disable completely").defineInRange("maxYellowBorderPercentage", 100, 0, 100);
-        vpImmortalFromDamageSources = builder.comment("List of damage source types that the player does not die from (immediately)").defineList("immortalFromDamageSources", Lists.asList("player", "mob", new String[]{"drown", "lightningBolt", "onFire", "cramming", "fall", "flyIntoWall", "magic", "wither", "anvil", "falling_block", "dragon_breath", "sweetBerryBush", "trident", "arrow", "fireworks", "fireBall", "witherSkull", "explosion", "explosion.player", "thrown", "indirectMagic", "vampire_on_fire"}), s -> s instanceof String);
+        vpImmortalFromDamageSources = builder.comment("List of damage source types that the player does not die from (immediately)").defineList("immortalFromDamageSources", Lists.asList("player", "mob", new String[]{"drown", "lightningBolt", "onFire", "cramming", "fall", "flyIntoWall", "magic", "wither", "anvil", "falling_block", "dragon_breath", "sweetBerryBush", "trident", "arrow", "fireworks", "fireBall", "witherSkull", "explosion", "explosion.player", "thrown", "indirectMagic", "vampire_on_fire", "sting"}), s -> s instanceof String);
         vpDbnoDuration = builder.comment("Base cooldown before a downed vampire can resurrect. In sec.").defineInRange("dbnoDuration", 60, 1, 1000);
         vpNeonatalDuration = builder.comment("Base duration of neonatal effect after resurrection. In sec.").defineInRange("neonatalDuration", 120, 1, Integer.MAX_VALUE);
         vpNaturalArmorRegenDuration = builder.comment("The duration it takes for the vampire natural armor to fully regenerate after respawn. In seconds").defineInRange("naturalArmorRegenDuration", 240, 1, 2400);
@@ -395,7 +412,7 @@ public class BalanceConfig {
         builder.category("minions", "mi");
         miResourceCooldown = builder.comment("Cooldown in ticks,before new resources are added in collect resource task types").defineInRange("resourceCooldown", 1500, 20, Integer.MAX_VALUE);
         miResourceCooldownOfflineMult = builder.comment("Cooldown multiplier for collect resource task types while player is offline").defineInRange("resourceCooldownOfflineMult", 20D, 1D, 100000D);
-        miDeathRecoveryTime = builder.comment("Time in seconds a minion needs to recover from death.").defineInRange("deathRecoveryTime", 180, 1, Integer.MAX_VALUE / 100);
+        miDeathRecoveryTime = builder.comment("Time in seconds a minion needs to recover from death.").defineInRange("deathRecoveryTime", 220, 1, Integer.MAX_VALUE / 100);
         miMinionPerLordLevel = builder.comment("How many minions a player can have per lord level. Probably don't want to go very high").defineInRange("minionPerLordLevel", 1, 0, 100);
 
         builder.category("vampire_refinements", "vr");
@@ -411,5 +428,19 @@ public class BalanceConfig {
         vrTeleportDistanceMod = builder.defineInRange("teleportDistanceMod", 1.5, 1, Double.MAX_VALUE);
         vrHalfInvulnerableThresholdMod = builder.comment("Threshold for attacks that are considered high damage is multiplied by this value").defineInRange("halfInvulnerableThresholdMod", 0.7, 0, 2);
         vrSwordFinisherThresholdMod = builder.comment("Threshold for instant kill is modified by this amount").defineInRange("swordFinisherThresholdMod", 1.25, 1, Double.MAX_VALUE);
+
+        builder.category("items", "it");
+        itApplicableOilArmorReverse = builder.comment(String.format("Determines if the '%s' item tag should work as blacklist (false) or whitelist (true)" ,ModTags.Items.APPLICABLE_OIL_ARMOR.getName())).define("applicableOilArmorReverse", false);
+        itApplicableOilPickaxeReverse = builder.comment(String.format("Determines if the '%s' item tag should work as blacklist (false) or whitelist (true)" ,ModTags.Items.APPLICABLE_OIL_PICKAXE.getName())).define("applicableOilPickaxeReverse", false);
+        itApplicableOilSwordReverse = builder.comment(String.format("Determines if the '%s' item tag should work as blacklist (false) or whitelist (true)" ,ModTags.Items.APPLICABLE_OIL_SWORD.getName())).define("applicableOilSwordReverse", false);
+
+        builder.category("lord actions", "la");
+        laLordSpeedEnabled = builder.define("lordSpeedEnabled", true);
+        laLordSpeedDuration = builder.comment("In seconds").defineInRange("lordSpeedDuration", 30, 0, Integer.MAX_VALUE);
+        laLordSpeedCooldown = builder.comment("In seconds").defineInRange("lordSpeedCooldown", 120, 0, Integer.MAX_VALUE);
+        laLordAttackSpeedEnabled = builder.define("lordAttackSpeedEnabled", true);
+        laLordAttackSpeedDuration = builder.comment("In seconds").defineInRange("lordAttackSpeedDuration", 30, 0, Integer.MAX_VALUE);
+        laLordAttackSpeedCooldown = builder.comment("In seconds").defineInRange("lordAttackSpeedCooldown", 120, 0, Integer.MAX_VALUE);
+
     }
 }

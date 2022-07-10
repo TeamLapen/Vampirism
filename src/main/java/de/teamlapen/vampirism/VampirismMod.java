@@ -10,6 +10,7 @@ import de.teamlapen.lib.util.OptifineHandler;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
+import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.client.core.ClientEventHandler;
 import de.teamlapen.vampirism.config.BloodValues;
@@ -45,6 +46,7 @@ import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.VampirismWorld;
 import de.teamlapen.vampirism.world.WorldGenManager;
+import de.teamlapen.vampirism.world.biome.VampireForestBiome;
 import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
@@ -59,6 +61,7 @@ import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
@@ -87,7 +90,7 @@ public class VampirismMod {
         @Override
         public ItemStack makeIcon() {
 
-            return new ItemStack(ModItems.vampire_fang);
+            return new ItemStack(ModItems.VAMPIRE_FANG.get());
         }
 //
 //        @Override
@@ -139,26 +142,32 @@ public class VampirismMod {
             LOGGER.warn("Cannot get version from mod info");
         }
 
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::loadComplete);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::gatherData);
-        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, this::finalizeConfiguration);
+        IEventBus modbus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        modbus.addListener(this::setup);
+        modbus.addListener(this::enqueueIMC);
+        modbus.addListener(this::processIMC);
+        modbus.addListener(this::loadComplete);
+        modbus.addListener(this::gatherData);
+        modbus.addGenericListener(Block.class, this::finalizeConfiguration);
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-            FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientEventHandler::onModelBakeEvent);
-            FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
+            modbus.addListener(ClientEventHandler::onModelBakeEvent);
+            modbus.addListener(this::setupClient);
+            modbus.addListener(ClientEventHandler::onModelRegistry);
         });
         VampirismConfig.init();
         MinecraftForge.EVENT_BUS.register(this);
         addModCompats();
         registryManager = new RegistryManager();
-        FMLJavaModLoadingContext.get().getModEventBus().register(registryManager);
+        modbus.register(registryManager);
         MinecraftForge.EVENT_BUS.register(registryManager);
         MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, ModBiomes::onBiomeLoadingEventAdditions);
+        MinecraftForge.EVENT_BUS.addListener(VampireForestBiome::addFeatures);
         MinecraftForge.EVENT_BUS.register(SitHandler.class);
 
         prepareAPI();
+        
+        RegistryManager.setupRegistries(modbus);
 
         if (OptifineHandler.isOptifineLoaded()) {
             LOGGER.warn("Using Optifine. Expect visual glitches and reduces blood vision functionality if using shaders.");
@@ -174,9 +183,7 @@ public class VampirismMod {
     public void onAddReloadListenerEvent(AddReloadListenerEvent event) {
         SkillTreeManager.getInstance().getSkillTree().initRootSkills();//Load root skills here, so even if data pack reload fail, the root skills are available #622
         event.addListener(SkillTreeManager.getInstance());
-        event.addListener(BloodValues.ENTITIES);
-        event.addListener(BloodValues.ITEMS);
-        event.addListener(BloodValues.FLUIDS);
+        event.addListener(new BloodValues());
 
     }
 
@@ -269,6 +276,8 @@ public class VampirismMod {
         registryManager.onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
         proxy.onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
         modCompatLoader.onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
+        VampirismAPI.skillManager().registerSkillType(SkillType.LEVEL);
+        VampirismAPI.skillManager().registerSkillType(SkillType.LORD);
     }
 
     /**
@@ -301,6 +310,7 @@ public class VampirismMod {
                 .lordTitle(LordTitles::getVampireTitle)
                 .village(VampireVillageData::vampireVillage)
                 .refinementItems(VampireRefinementItem::getItemForType)
+                .enableLordSkills()
                 .register();
         VReference.HUNTER_FACTION = VampirismAPI.factionRegistry()
                 .createPlayableFaction(REFERENCE.HUNTER_PLAYER_KEY, IHunterPlayer.class, () -> HunterPlayer.CAP)
@@ -312,6 +322,7 @@ public class VampirismMod {
                 .lordLevel(REFERENCE.HIGHEST_HUNTER_LORD)
                 .lordTitle(LordTitles::getHunterTitle)
                 .village(HunterVillageData::hunterVillage)
+                .enableLordSkills()
                 .register();
         VReference.HUNTER_CREATURE_TYPE = HUNTER_CREATURE_TYPE;
         VReference.VAMPIRE_CREATURE_TYPE = VAMPIRE_CREATURE_TYPE;

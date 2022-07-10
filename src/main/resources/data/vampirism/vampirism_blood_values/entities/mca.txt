@@ -1,3 +1,0 @@
-#MCA
-mca:EntityHuman=15
-mca:entityvillagermca=15

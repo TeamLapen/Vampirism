@@ -74,7 +74,7 @@ public class DefaultConvertingHandler<T extends CreatureEntity> implements IConv
     @Nullable
     @Override
     public IConvertedCreature<T> createFrom(T entity) {
-        return Helper.createEntity(ModEntities.converted_creature, entity.getCommandSenderWorld()).map(convertedCreature -> {
+        return Helper.createEntity(ModEntities.CONVERTED_CREATURE.get(), entity.getCommandSenderWorld()).map(convertedCreature -> {
             copyImportantStuff(convertedCreature, entity);
             convertedCreature.setUUID(MathHelper.createInsecureUUID(convertedCreature.getRandom()));
             convertedCreature.addEffect(new EffectInstance(Effects.WEAKNESS, 200, 2));

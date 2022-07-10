@@ -115,9 +115,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
 
     @Override
     public void breakDisguise() {
-        if (actionHandler.isActionActive(HunterActions.disguise_hunter)) {
-            actionHandler.toggleAction(HunterActions.disguise_hunter);
-        }
+        actionHandler.deactivateAction(HunterActions.DISGUISE_HUNTER.get());
     }
 
     @Override
@@ -137,7 +135,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
 
     @Override
     public IFaction getDisguisedAs() {
-        return player.hasEffect(ModEffects.disguise_as_vampire) ? VReference.VAMPIRE_FACTION : getFaction();
+        return player.hasEffect(ModEffects.DISGUISE_AS_VAMPIRE.get()) ? VReference.VAMPIRE_FACTION : getFaction();
     }
 
     @Override
@@ -180,7 +178,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
 
     @Override
     public boolean isDisguised() {
-        return player.hasEffect(ModEffects.disguise_as_vampire);
+        return player.hasEffect(ModEffects.DISGUISE_AS_VAMPIRE.get());
     }
 
     public void loadData(CompoundNBT compound) {
@@ -198,7 +196,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     public void onDeath(DamageSource src) {
         super.onDeath(src);
         actionHandler.deactivateAllActions();
-        if (src.getEntity() instanceof ServerPlayerEntity && Helper.isVampire(((PlayerEntity) src.getEntity())) && this.getRepresentingPlayer().getEffect(ModEffects.freeze) != null) {
+        if (src.getEntity() instanceof ServerPlayerEntity && Helper.isVampire(((PlayerEntity) src.getEntity())) && this.getRepresentingPlayer().getEffect(ModEffects.FREEZE.get()) != null) {
             ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger(((ServerPlayerEntity) src.getEntity()), VampireActionTrigger.Action.KILL_FROZEN_HUNTER);
         }
     }
@@ -221,10 +219,6 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
             ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.HUNTER_LEVEL_CRITERIA, level);
             LevelAttributeModifier.applyModifier(player, Attributes.ATTACK_DAMAGE, "Hunter", level, getMaxLevel(), VampirismConfig.BALANCE.hpStrengthMaxMod.get(), VampirismConfig.BALANCE.hpStrengthType.get(), AttributeModifier.Operation.MULTIPLY_BASE, false);
             if (level > 0) {
-                if (oldLevel == 0) {
-                    skillHandler.enableRootSkill();
-
-                }
             } else {
                 skillHandler.disableAllSkills();
                 actionHandler.resetTimers();
@@ -273,6 +267,11 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
                     sync(syncPacket, syncToAll);
                 }
             } else {
+                if (getSpecialAttributes().blessingSoundReference != null && !player.isUsingItem()) {
+                    //Make sure the blessing sound is stopped when player is not using {@link BlessableItem}. This is necessary because onReleaseUsing is not called for other client players.
+                    getSpecialAttributes().blessingSoundReference.stopPlaying();
+                    getSpecialAttributes().blessingSoundReference = null;
+                }
                 actionHandler.updateActions();
                 VampirismMod.proxy.handleSleepClient(player);
 

@@ -80,7 +80,7 @@ public class ChandelierBlock extends VampirismBlock {
     ).reduce((v1, v2) -> VoxelShapes.join(v1, v2, IBooleanFunction.OR)).orElseGet(VoxelShapes::empty);
 
     public ChandelierBlock() {
-        super("chandelier", AbstractBlock.Properties.of(Material.METAL).strength(2).lightLevel(s -> 14).noOcclusion());
+        super(AbstractBlock.Properties.of(Material.METAL).strength(2).lightLevel(s -> 14).noOcclusion());
     }
 
     @Override

@@ -8,13 +8,13 @@
   ],
   "key": {
     "X": {
-      "item": "vampirism:holy_salt"
+      "item": "vampirism:holy_water_bottle_normal"
     },
     "Y": {
       "tag": "forge:ingots/iron"
     },
     "Z": {
-      "item": "vampirism:holy_water_bottle_normal"
+      "item": "vampirism:holy_water_bottle_enhanced"
     },
     "A": {
       "item": "vampirism:stake"

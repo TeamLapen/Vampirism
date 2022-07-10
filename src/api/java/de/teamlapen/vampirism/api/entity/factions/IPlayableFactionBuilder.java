@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.api.entity.factions;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nonnull;
@@ -76,6 +75,13 @@ public interface IPlayableFactionBuilder<T extends IFactionPlayer<?>> extends IF
 
     @Override
     IPlayableFactionBuilder<T> namePlural(@Nonnull String namePluralKey);
+
+    /**
+     * Enables this faction to have lord skills
+     *
+     * @return the builder
+     */
+    IPlayableFactionBuilder<T> enableLordSkills();
 
     @Override
     IPlayableFaction<T> register();

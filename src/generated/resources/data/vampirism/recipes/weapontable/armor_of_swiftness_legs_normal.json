@@ -14,10 +14,12 @@
       "tag": "forge:crops/garlic"
     },
     "Z": {
-      "type": "forge:nbt",
+      "type": "vampirism:item",
       "item": "minecraft:potion",
       "count": 1,
-      "nbt": "{Potion:\"minecraft:swiftness\"}"
+      "nbt": {
+        "Potion": "minecraft:swiftness"
+      }
     }
   },
   "result": {

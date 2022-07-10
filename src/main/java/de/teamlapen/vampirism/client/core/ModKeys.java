@@ -129,7 +129,7 @@ public class ModKeys { //TODO 1.17 revamp to skip using the KEY enum for getting
             RayTraceResult mouseOver = Minecraft.getInstance().hitResult;
             suckKeyDown = true;
             PlayerEntity player = Minecraft.getInstance().player;
-            if (mouseOver != null && !player.isSpectator() && VampirePlayer.getOpt(player).map(vp -> vp.getLevel() > 0 && !vp.getActionHandler().isActionActive(VampireActions.bat)).orElse(false)) {
+            if (mouseOver != null && !player.isSpectator() && VampirePlayer.getOpt(player).map(vp -> vp.getLevel() > 0 && !vp.getActionHandler().isActionActive(VampireActions.BAT.get())).orElse(false)) {
                 if (mouseOver instanceof EntityRayTraceResult) {
                     VampirismMod.dispatcher.sendToServer(new CStartFeedingPacket(((EntityRayTraceResult) mouseOver).getEntity().getId()));
                 } else if (mouseOver instanceof BlockRayTraceResult) {
@@ -225,7 +225,7 @@ public class ModKeys { //TODO 1.17 revamp to skip using the KEY enum for getting
             if (!action.getFaction().equals(player.getFaction())) {
                 player.getRepresentingPlayer().displayClientMessage(new TranslationTextComponent("text.vampirism.action.only_faction", action.getFaction().getName()), true);
             } else {
-                VampirismMod.dispatcher.sendToServer(new CToggleActionPacket(action.getRegistryName()));
+                VampirismMod.dispatcher.sendToServer(CToggleActionPacket.createFromRaytrace(action.getRegistryName(), Minecraft.getInstance().hitResult));
             }
         }
 

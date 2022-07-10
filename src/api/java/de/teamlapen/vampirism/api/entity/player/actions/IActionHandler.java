@@ -77,12 +77,40 @@ public interface IActionHandler<T extends IActionPlayer> {
     void resetTimers();
 
     /**
-     * toggle the action (server side)
-     *
-     * @param action
-     * @return
+     * Set cooldown to 0
+     * <br>
+     * Set active timer to 0 if {@link ILastingAction}
+     * @param action the action that should be effected
      */
+    void resetTimer(@Nonnull IAction action);
+
+    /**
+     * Deprecated. Use context-sensitive version below
+     *
+     * TODO 1.19 remove
+     */
+    @Deprecated
     IAction.PERM toggleAction(IAction action);
+
+    /**
+     * Toggle the action (server side).
+     * If you just want to make sure it is deactivated, call {@link #deactivateAction(ILastingAction)}
+     * @param action Action
+     * @param context Context holding Block/Entity the player was looking at when activating if any
+     * @return result
+     */
+    default IAction.PERM toggleAction(IAction action, IAction.ActivationContext context){
+        return toggleAction(action);
+    }
+
+    /**
+     * Deactivate a lasting action, if it was active.
+     */
+    default void deactivateAction(ILastingAction<?> action){
+        if(isActionActive(action)){
+            toggleAction(action);
+        }
+    }
 
     /**
      * Unlock the given actions. The given action have to belong to the players faction and have to be registered

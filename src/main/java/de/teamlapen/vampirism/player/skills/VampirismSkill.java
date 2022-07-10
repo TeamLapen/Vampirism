@@ -1,13 +1,13 @@
 package de.teamlapen.vampirism.player.skills;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.DefaultSkill;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillType;
+import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -67,17 +67,10 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
     public static class SimpleHunterSkill extends VampirismSkill<IHunterPlayer> {
 
         /**
-         * @param id   Registry name
          * @param desc Enable description using the default unlocalized key
          */
-        public SimpleHunterSkill(ResourceLocation id, boolean desc) {
-            this.setRegistryName(id);
+        public SimpleHunterSkill(boolean desc) {
             if (desc) this.setHasDefaultDescription();
-        }
-
-        @Deprecated
-        public SimpleHunterSkill(String id, boolean desc) {
-            this(new ResourceLocation(REFERENCE.MODID, id), desc);
         }
 
         @Nonnull
@@ -85,24 +78,34 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
         public IPlayableFaction getFaction() {
             return VReference.HUNTER_FACTION;
         }
+
+        @Override
+        public ISkillType getType() {
+            return SkillType.LEVEL;
+        }
     }
 
+    public static class LordHunterSkill extends SimpleHunterSkill {
+
+        public LordHunterSkill(boolean desc) {
+            super(desc);
+        }
+
+        @Override
+        public ISkillType getType() {
+            return SkillType.LORD;
+        }
+    }
 
     /**
      * Simple vampire skill implementation. Does nothing by itself
      */
     public static class SimpleVampireSkill extends VampirismSkill<IVampirePlayer> {
-        @Deprecated
-        public SimpleVampireSkill(String id, boolean desc) {
-            this(new ResourceLocation(REFERENCE.MODID, id), desc);
-        }
 
         /**
-         * @param id   Registry name
          * @param desc Enable description using the default unlocalized key
          */
-        public SimpleVampireSkill(ResourceLocation id, boolean desc) {
-            this.setRegistryName(id);
+        public SimpleVampireSkill(boolean desc) {
             if (desc) setHasDefaultDescription();
         }
 
@@ -110,6 +113,23 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
         @Override
         public IPlayableFaction getFaction() {
             return VReference.VAMPIRE_FACTION;
+        }
+
+        @Override
+        public ISkillType getType() {
+            return SkillType.LEVEL;
+        }
+    }
+
+    public static class LordVampireSkill extends SimpleVampireSkill {
+
+        public LordVampireSkill(boolean desc) {
+            super(desc);
+        }
+
+        @Override
+        public ISkillType getType() {
+            return SkillType.LORD;
         }
     }
 }

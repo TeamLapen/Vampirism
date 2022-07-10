@@ -180,7 +180,7 @@ public class VampirismWorldGen {
      */
     private static void addTotem(DynamicRegistries reg, Map<ResourceLocation, BiomeType> pools) {
         // create totem piece
-        StructureProcessor factionProcessor = new RandomStructureProcessor(ImmutableList.of(new RandomBlockState(new RandomBlockMatchRuleTest(ModBlocks.totem_top, VampirismConfig.COMMON.villageTotemFactionChance.get().floatValue()), AlwaysTrueRuleTest.INSTANCE, ModBlocks.totem_top.defaultBlockState(), TotemTopBlock.getBlocks().stream().filter(totem -> totem != ModBlocks.totem_top && !totem.isCrafted()).map(Block::defaultBlockState).collect(Collectors.toList()))));
+        StructureProcessor factionProcessor = new RandomStructureProcessor(ImmutableList.of(new RandomBlockState(new RandomBlockMatchRuleTest(ModBlocks.TOTEM_TOP.get(), VampirismConfig.COMMON.villageTotemFactionChance.get().floatValue()), AlwaysTrueRuleTest.INSTANCE, ModBlocks.TOTEM_TOP.get().defaultBlockState(), TotemTopBlock.getBlocks().stream().filter(totem -> totem != ModBlocks.TOTEM_TOP.get() && !totem.isCrafted()).map(Block::defaultBlockState).collect(Collectors.toList()))));
         StructureProcessor biomeTopBlockProcessor = new BiomeTopBlockProcessor(Blocks.DIRT.defaultBlockState());
         JigsawPiece totem = singleJigsawPiece("village/totem", new StructureProcessorList(Lists.newArrayList(factionProcessor, biomeTopBlockProcessor)));
 

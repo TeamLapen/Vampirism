@@ -19,13 +19,14 @@ repositories {
     }
     maven {
         url "https://nexus.resourcefulbees.com/repository/maven-public/"
+        content {
+            includeGroup "com.telepathicgrunt"
+        }
     }
-    repositories {
-        maven {
-            url "https://www.cursemaven.com"
-            content {
-                includeGroup "curse.maven"
-            }
+    maven {
+        url "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
         }
     }
     //3rd party library repos
@@ -153,11 +154,11 @@ task downloadCrowdin() {
     }
     outputs.upToDateWhen { false }
     onlyIf {
-        project.hasProperty('CROWDIN_KEY') && !project.gradle.startParameter.isOffline()
+        project.hasProperty('VAMPIRISM_CROWDIN_KEY') && !project.gradle.startParameter.isOffline()
     }
     doLast {
         download {
-            src "https://api.crowdin.com/api/project/${id}/export?key=${project.CROWDIN_KEY}&export_translated_only&json"
+            src "https://api.crowdin.com/api/project/${id}/export?key=${project.VAMPIRISM_CROWDIN_KEY}&export_translated_only&json"
             dest update
             overwrite true
         }
@@ -165,7 +166,7 @@ task downloadCrowdin() {
             throw new RuntimeException("Crowdin export failed, see ${update} for more info")
         }
         download {
-            src "https://api.crowdin.com/api/project/${id}/download/all.zip?key=${project.CROWDIN_KEY}"
+            src "https://api.crowdin.com/api/project/${id}/download/all.zip?key=${project.VAMPIRISM_CROWDIN_KEY}"
             dest output
             overwrite true
         }

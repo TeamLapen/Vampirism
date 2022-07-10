@@ -1,0 +1,23 @@
+{
+  "type": "vampirism:alchemical_table",
+  "result": {
+    "item": "vampirism:oil_bottle",
+    "nbt": {
+      "oil": "vampirism:smelt"
+    }
+  },
+  "ingredient": {
+    "type": "vampirism:item",
+    "item": "vampirism:oil_bottle",
+    "count": 1,
+    "nbt": {
+      "oil": "vampirism:vampire_blood"
+    }
+  },
+  "input": {
+    "type": "vampirism:item",
+    "item": "vampirism:item_alchemical_fire",
+    "count": 1
+  },
+  "skill": []
+}

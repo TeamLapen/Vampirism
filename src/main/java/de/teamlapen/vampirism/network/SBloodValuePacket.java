@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.network;
 
 import com.google.common.collect.Maps;
-import com.mojang.datafixers.util.Pair;
 import de.teamlapen.lib.network.IMessage;
 import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.network.PacketBuffer;
@@ -15,26 +14,25 @@ import java.util.function.Supplier;
 public class SBloodValuePacket implements IMessage {
 
     static void encode(SBloodValuePacket msg, PacketBuffer buf) {
-        for (Pair<Map<ResourceLocation, Integer>, Integer> e : msg.values) {
-            buf.writeVarInt(e.getFirst().size());
-            for (Map.Entry<ResourceLocation, Integer> f : e.getFirst().entrySet()) {
+        for (Map<ResourceLocation, Float> e : msg.values) {
+            buf.writeVarInt(e.size());
+            for (Map.Entry<ResourceLocation, Float> f : e.entrySet()) {
                 buf.writeResourceLocation(f.getKey());
-                buf.writeVarInt(f.getValue());
+                buf.writeFloat(f.getValue());
             }
-            buf.writeVarInt(e.getSecond());
         }
     }
 
     static SBloodValuePacket decode(PacketBuffer buf) {
         @SuppressWarnings("unchecked")
-        Pair<Map<ResourceLocation, Integer>, Integer>[] values = (Pair<Map<ResourceLocation, Integer>, Integer>[]) Array.newInstance(Pair.class, 3);
+        Map<ResourceLocation, Float>[] values = (Map<ResourceLocation, Float>[]) Array.newInstance(Map.class, 3);
         for (int i = 0; i < 3; i++) {
-            Map<ResourceLocation, Integer> map = Maps.newConcurrentMap();
+            Map<ResourceLocation, Float> map = Maps.newConcurrentMap();
             int z = buf.readVarInt();
             for (int u = 0; u < z; u++) {
-                map.put(buf.readResourceLocation(), buf.readVarInt());
+                map.put(buf.readResourceLocation(), buf.readFloat());
             }
-            values[i] = new Pair<>(map, buf.readVarInt());
+            values[i] = map;
         }
         return new SBloodValuePacket(values);
     }
@@ -45,13 +43,13 @@ public class SBloodValuePacket implements IMessage {
         ctx.setPacketHandled(true);
     }
 
-    private final Pair<Map<ResourceLocation, Integer>, Integer>[] values;
+    private final Map<ResourceLocation, Float>[] values;
 
-    public SBloodValuePacket(Pair<Map<ResourceLocation, Integer>, Integer>[] values) {
+    public SBloodValuePacket(Map<ResourceLocation, Float>[] values) {
         this.values = values;
     }
 
-    public Pair<Map<ResourceLocation, Integer>, Integer>[] getValues() {
+    public Map<ResourceLocation, Float>[] getValues() {
         return values;
     }
 }

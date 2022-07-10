@@ -42,15 +42,15 @@ public class SanguinareEffect extends VampirismEffect {
 
     }
 
-    public SanguinareEffect(String name, EffectType effectType, int potionColor) {
-        super(name, effectType, potionColor);
+    public SanguinareEffect(EffectType effectType, int potionColor) {
+        super(effectType, potionColor);
         addAttributeModifier(Attributes.ATTACK_DAMAGE, "22663B89-116E-49DC-9B6B-9971489B5BE5", 2.0D, AttributeModifier.Operation.ADDITION);
     }
 
     @Override
     public List<ItemStack> getCurativeItems() {
         List<ItemStack> l = super.getCurativeItems();
-        l.add(new ItemStack(ModItems.garlic_bread));
+        l.add(new ItemStack(ModItems.GARLIC_BREAD.get()));
         return l;
     }
 

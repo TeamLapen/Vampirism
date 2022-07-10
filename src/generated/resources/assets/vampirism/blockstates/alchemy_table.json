@@ -1,0 +1,195 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "facing": "north"
+      },
+      "apply": {
+        "model": "vampirism:block/alchemy_table/alchemy_table"
+      }
+    },
+    {
+      "when": {
+        "facing": "east"
+      },
+      "apply": {
+        "model": "vampirism:block/alchemy_table/alchemy_table",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south"
+      },
+      "apply": {
+        "model": "vampirism:block/alchemy_table/alchemy_table",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west"
+      },
+      "apply": {
+        "model": "vampirism:block/alchemy_table/alchemy_table",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "has_bottle_input_0": "true"
+      },
+      "apply": {
+        "model": "vampirism:block/alchemy_table/alchemy_table_input_0"
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "has_bottle_input_0": "true"
+      },
+      "apply": {
+        "model": "vampirism:block/alchemy_table/alchemy_table_input_0",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "has_bottle_input_0": "true"
+      },
+      "apply": {
+        "model": "vampirism:block/alchemy_table/alchemy_table_input_0",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "has_bottle_input_0": "true"
+      },
+      "apply": {
+        "model": "vampirism:block/alchemy_table/alchemy_table_input_0",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "has_bottle_input_1": "true"
+      },
+      "apply": {
+        "model": "vampirism:block/alchemy_table/alchemy_table_input_1"
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "has_bottle_input_1": "true"
+      },
+      "apply": {
+        "model": "vampirism:block/alchemy_table/alchemy_table_input_1",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "has_bottle_input_1": "true"
+      },
+      "apply": {
+        "model": "vampirism:block/alchemy_table/alchemy_table_input_1",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "has_bottle_input_1": "true"
+      },
+      "apply": {
+        "model": "vampirism:block/alchemy_table/alchemy_table_input_1",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "has_bottle_output_0": "true"
+      },
+      "apply": {
+        "model": "vampirism:block/alchemy_table/alchemy_table_output_0"
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "has_bottle_output_0": "true"
+      },
+      "apply": {
+        "model": "vampirism:block/alchemy_table/alchemy_table_output_0",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "has_bottle_output_0": "true"
+      },
+      "apply": {
+        "model": "vampirism:block/alchemy_table/alchemy_table_output_0",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "has_bottle_output_0": "true"
+      },
+      "apply": {
+        "model": "vampirism:block/alchemy_table/alchemy_table_output_0",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "has_bottle_output_1": "true"
+      },
+      "apply": {
+        "model": "vampirism:block/alchemy_table/alchemy_table_output_1"
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "has_bottle_output_1": "true"
+      },
+      "apply": {
+        "model": "vampirism:block/alchemy_table/alchemy_table_output_1",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "has_bottle_output_1": "true"
+      },
+      "apply": {
+        "model": "vampirism:block/alchemy_table/alchemy_table_output_1",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "has_bottle_output_1": "true"
+      },
+      "apply": {
+        "model": "vampirism:block/alchemy_table/alchemy_table_output_1",
+        "y": 270
+      }
+    }
+  ]
+}

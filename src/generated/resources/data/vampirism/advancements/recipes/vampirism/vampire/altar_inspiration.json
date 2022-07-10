@@ -6,12 +6,22 @@
     ]
   },
   "criteria": {
-    "has_iron": {
+    "has_planks": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "tag": "forge:ingots/iron"
+            "tag": "minecraft:planks"
+          }
+        ]
+      }
+    },
+    "has_blood_container": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "vampirism:blood_container"
           }
         ]
       }
@@ -25,7 +35,8 @@
   },
   "requirements": [
     [
-      "has_iron",
+      "has_planks",
+      "has_blood_container",
       "has_the_recipe"
     ]
   ]

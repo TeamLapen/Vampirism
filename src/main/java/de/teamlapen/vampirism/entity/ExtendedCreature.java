@@ -9,12 +9,9 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
-import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.BalanceMobProps;
-import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.effects.SanguinareEffect;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
@@ -120,6 +117,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         return getBlood() > 0;
     }
 
+    @Override
     public boolean canBecomeVampire() {
         return canBecomeVampire;
     }
@@ -211,6 +209,20 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     }
 
     @Override
+    public boolean canBeInfected(IVampire vampire) {
+        return canBecomeVampire && !hasPoisonousBlood();
+    }
+
+    @Override
+    public boolean tryInfect(IVampire vampire) {
+        if (canBeInfected(vampire)) {
+            SanguinareEffect.addRandom(entity, false);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public int onBite(IVampire biter) {
         if (getBlood() <= 0) return 0;
         int amt = Math.max(1, (getMaxBlood() / (biter instanceof VampirePlayer ? 6 : 2)));
@@ -222,21 +234,8 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
             }
         }
         blood -= amt;
-        boolean killed = false;
-        boolean converted = false;
         if (blood == 0) {
-            if (canBecomeVampire && entity.getRandom().nextBoolean()) {
-                if (VampirismConfig.SERVER.infectCreaturesSanguinare.get()) {
-                    SanguinareEffect.addRandom(entity, false);
-                } else {
-                    makeVampire();
-                }
-                converted = true;
-
-            } else {
-                entity.hurt(VReference.NO_BLOOD, 1000);
-                killed = true;
-            }
+            entity.hurt(VReference.NO_BLOOD, 1000);
         }
 
         this.sync();
@@ -254,9 +253,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
                 amt = 2 * amt;
             }
         }
-        if (converted && biter instanceof IVampirePlayer) {
-            ((IVampirePlayer) biter).getRepresentingPlayer().awardStat(ModStats.infected_creatures);
-        }
+
         return amt;
     }
 
@@ -283,7 +280,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
              * Make sure all entities with no blood die
              * check for sanguinare as the entity might converted instead of dying
              */
-            if (blood == 0 && entity.tickCount % 20 == 10 && entity.getEffect(ModEffects.sanguinare) == null) {
+            if (blood == 0 && entity.tickCount % 20 == 10 && entity.getEffect(ModEffects.SANGUINARE.get()) == null) {
                 entity.hurt(VReference.NO_BLOOD, 1000);
             }
             if (blood > 0 && blood < getMaxBlood() && entity.tickCount % 40 == 8) {

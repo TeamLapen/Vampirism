@@ -66,7 +66,7 @@ public class VampireBookManager {
     }
 
     public ItemStack getRandomBookItem(Random rng) {
-        ItemStack book = new ItemStack(ModItems.vampire_book, 1);
+        ItemStack book = new ItemStack(ModItems.VAMPIRE_BOOK.get(), 1);
         book.setTag(VampireBookItem.createTagFromContext(getRandomBook(rng)));
         return book;
     }

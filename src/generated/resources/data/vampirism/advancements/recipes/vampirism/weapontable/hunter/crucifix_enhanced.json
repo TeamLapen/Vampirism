@@ -16,22 +16,22 @@
         ]
       }
     },
-    "blessed_salt": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
-          {
-            "item": "vampirism:holy_salt"
-          }
-        ]
-      }
-    },
-    "holy_water": {
+    "has_holy_water": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
             "item": "vampirism:holy_water_bottle_normal"
+          }
+        ]
+      }
+    },
+    "has_holy_water_enhanced": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "vampirism:holy_water_bottle_enhanced"
           }
         ]
       }
@@ -62,8 +62,8 @@
   "requirements": [
     [
       "iron",
-      "blessed_salt",
-      "holy_water",
+      "has_holy_water",
+      "has_holy_water_enhanced",
       "stake",
       "has_skill",
       "has_the_recipe"

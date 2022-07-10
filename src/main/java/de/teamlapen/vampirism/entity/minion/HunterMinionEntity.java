@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
+import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.client.gui.HunterMinionAppearanceScreen;
@@ -19,6 +20,7 @@ import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.items.MinionUpgradeItem;
 import de.teamlapen.vampirism.items.VampirismItemCrossbow;
+import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -81,12 +83,12 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     @Nonnull
     @Override
     public ItemStack getArrowStackForAttack(LivingEntity target) {
-        return new ItemStack(ModItems.crossbow_arrow_normal);
+        return new ItemStack(ModItems.CROSSBOW_ARROW_NORMAL.get());
     }
 
     @Override
     public List<IMinionTask<?, ?>> getAvailableTasks() {
-        return Lists.newArrayList(MinionTasks.follow_lord, MinionTasks.defend_area, MinionTasks.stay, MinionTasks.collect_hunter_items, MinionTasks.protect_lord);
+        return Lists.newArrayList(MinionTasks.FOLLOW_LORD.get(), MinionTasks.DEFEND_AREA.get(), MinionTasks.STAY.get(), MinionTasks.COLLECT_HUNTER_ITEMS.get(), MinionTasks.PROTECT_LORD.get());
     }
 
     @Override
@@ -238,9 +240,10 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     }
 
     private void updateAttributes() {
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.MINION_MAX_HEALTH + BalanceMobProps.mobProps.MINION_MAX_HEALTH_PL * getMinionData().map(HunterMinionData::getHealthLevel).orElse(0));
-        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE + BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE_PL * getMinionData().map(HunterMinionData::getStrengthLevel).orElse(0));
-        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_SPEED);
+        float statsMultiplier = getLordOpt().flatMap(lord -> ((IFactionPlayerHandler) lord).getCurrentFactionPlayer()).map(player -> player.getSkillHandler().isSkillEnabled(HunterSkills.HUNTER_MINION_STATS_INCREASE.get())).orElse(false)?1.2f:1f;
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.MINION_MAX_HEALTH + BalanceMobProps.mobProps.MINION_MAX_HEALTH_PL * getMinionData().map(HunterMinionData::getHealthLevel).orElse(0) * statsMultiplier);
+        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE + BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE_PL * getMinionData().map(HunterMinionData::getStrengthLevel).orElse(0) * statsMultiplier);
+        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_SPEED * statsMultiplier);
     }
 
     public static class HunterMinionData extends MinionData {

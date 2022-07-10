@@ -6,6 +6,7 @@ import net.minecraft.client.resources.ReloadListener;
 import net.minecraft.profiler.IProfiler;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.ResourceLocationException;
 import net.minecraftforge.fml.ModList;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -45,7 +46,7 @@ public class BloodValueLoader extends ReloadListener<Collection<ResourceLocation
     }
 
     @Override
-    protected void apply(@Nonnull Collection<ResourceLocation> splashList, @Nonnull IResourceManager resourceManagerIn, @Nonnull IProfiler profilerIn) {
+    public void apply(@Nonnull Collection<ResourceLocation> splashList, @Nonnull IResourceManager resourceManagerIn, @Nonnull IProfiler profilerIn) {
         Map<ResourceLocation, Integer> values = Maps.newConcurrentMap();
         for (ResourceLocation location : splashList) {
             String modId = location.getPath().substring(folderLocation.length() + 1, location.getPath().length() - 4);
@@ -65,7 +66,7 @@ public class BloodValueLoader extends ReloadListener<Collection<ResourceLocation
      * @param modId should be equals to the file name of location
      */
     @Nullable
-    protected Map<ResourceLocation, Integer> loadBloodValuesFromDataPack(ResourceLocation location, String modId, IResourceManager resourceManager) {
+    public Map<ResourceLocation, Integer> loadBloodValuesFromDataPack(ResourceLocation location, String modId, IResourceManager resourceManager) {
         if (!ModList.get().isLoaded(modId)) return null;
         try {
             return loadBloodValuesFromReader(new InputStreamReader(resourceManager.getResource(location).getInputStream()), modId);
@@ -103,16 +104,21 @@ public class BloodValueLoader extends ReloadListener<Collection<ResourceLocation
                     LOGGER.warn(LogUtil.CONFIG, "Line {}  in {} is not formatted properly", line, modId + ".txt");
                     continue;
                 }
-                ResourceLocation resourceLocation = new ResourceLocation(p[0]);
-                if (!resourceLocation.getNamespace().equals(modId)) {
-                    LOGGER.warn(LogUtil.CONFIG, "Wrong namespace for entry {} in {}", p[0], modId + ".txt");
-                } else {
-                    if (resourceLocation.equals(multiplierName)) {
-                        multiplier = val;
-                    } else if (bloodValues.put(resourceLocation, val) != null) {
-                        LOGGER.warn(LogUtil.CONFIG, "Duplicated entry for {} is being overridden in {}", modId + ".txt", p[0]);
+                try {
+                    ResourceLocation resourceLocation = new ResourceLocation(p[0]);
+                    if (!resourceLocation.getNamespace().equals(modId)) {
+                        LOGGER.warn(LogUtil.CONFIG, "Wrong namespace for entry {} in {}", p[0], modId + ".txt");
+                    } else {
+                        if (resourceLocation.equals(multiplierName)) {
+                            multiplier = val;
+                        } else if (bloodValues.put(resourceLocation, val) != null) {
+                            LOGGER.warn(LogUtil.CONFIG, "Duplicated entry for {} is being overridden in {}", modId + ".txt", p[0]);
+                        }
                     }
+                } catch (ResourceLocationException e) {
+                    LOGGER.error(LogUtil.CONFIG,"Id is not valid in file "+modId +".txt"+": " + line , e);
                 }
+
             }
         } catch (IOException e) {
             throw e;
@@ -130,7 +136,7 @@ public class BloodValueLoader extends ReloadListener<Collection<ResourceLocation
 
     @Nonnull
     @Override
-    protected Collection<ResourceLocation> prepare(IResourceManager resourceManagerIn, @Nonnull IProfiler profilerIn) {
+    public Collection<ResourceLocation> prepare(IResourceManager resourceManagerIn, @Nonnull IProfiler profilerIn) {
         return resourceManagerIn.listResources(folderLocation, (file) -> file.endsWith(".txt"));
     }
 }

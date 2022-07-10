@@ -3,6 +3,8 @@ package de.teamlapen.vampirism.player.skills;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillType;
+import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -15,30 +17,23 @@ import java.util.Collection;
  */
 public class ActionSkill<T extends IFactionPlayer> extends VampirismSkill<T> {
     private final IAction action;
+    private final ISkillType type;
 
-    @Deprecated
-    public ActionSkill(String id, IAction action) {
-        this(new ResourceLocation("vampirism", id), action, false);
-
+    public ActionSkill(IAction action) {
+        this(action, false);
     }
 
-    @Deprecated
-    public ActionSkill(String id, IAction action, boolean customDescription) {
-        this(new ResourceLocation("vampirism", id), action, customDescription);
-    }
-
-    public ActionSkill(ResourceLocation id, IAction action) {
-        this(id, action, false);
+    public ActionSkill(IAction action, boolean customDescription) {
+        this(action, SkillType.LEVEL, false);
     }
 
     /**
-     * @param id                Registry id
      * @param action            The corresponding action
      * @param customDescription If false a generic "unlocks action" string is used
      */
-    public ActionSkill(ResourceLocation id, IAction action, boolean customDescription) {
+    public ActionSkill(IAction action, ISkillType type, boolean customDescription) {
         this.action = action;
-        this.setRegistryName(id);
+        this.type = type;
         if (customDescription) {
             this.setHasDefaultDescription();
         } else {
@@ -71,5 +66,10 @@ public class ActionSkill<T extends IFactionPlayer> extends VampirismSkill<T> {
     @Override
     protected void getActions(Collection<IAction> list) {
         list.add(action);
+    }
+
+    @Override
+    public ISkillType getType() {
+        return this.type;
     }
 }

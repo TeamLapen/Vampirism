@@ -28,7 +28,7 @@ public class GarlicBeaconTESR extends VampirismTESR<GarlicBeaconTileEntity> {
     @Override
     public void render(GarlicBeaconTileEntity tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferInOld, int combinedLightIn, int combinedOverlayIn) {
         Entity e = Minecraft.getInstance().getCameraEntity();
-        if (e != null && Streams.stream(e.getHandSlots()).map(ItemStack::getItem).anyMatch(i -> i == ModItems.garlic_finder) && tileEntityIn.isInRange(e.blockPosition())) {
+        if (e != null && Streams.stream(e.getHandSlots()).map(ItemStack::getItem).anyMatch(i -> i == ModItems.GARLIC_FINDER.get()) && tileEntityIn.isInRange(e.blockPosition())) {
             long totalWorldTime = tileEntityIn.getLevel() != null ? tileEntityIn.getLevel().getGameTime() : 0;
             float scale = (float) MathHelper.clamp(Math.sqrt(tileEntityIn.getBlockPos().distSqr(e.blockPosition())) / 16, 1, 3);
             IVertexBuilder bufferIn = bufferInOld.getBuffer(Accessor.CUTOUT_NODEPTH);
@@ -48,7 +48,7 @@ public class GarlicBeaconTESR extends VampirismTESR<GarlicBeaconTileEntity> {
 //        });
 
 
-            Minecraft.getInstance().getItemRenderer().renderModelLists(Minecraft.getInstance().getItemRenderer().getModel(new ItemStack(ModItems.item_garlic), null, null), new ItemStack(ModItems.item_garlic), combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn);
+            Minecraft.getInstance().getItemRenderer().renderModelLists(Minecraft.getInstance().getItemRenderer().getModel(new ItemStack(ModItems.ITEM_GARLIC.get()), null, null), new ItemStack(ModItems.ITEM_GARLIC.get()), combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn);
             matrixStackIn.popPose();
             matrixStackIn.popPose();
         }

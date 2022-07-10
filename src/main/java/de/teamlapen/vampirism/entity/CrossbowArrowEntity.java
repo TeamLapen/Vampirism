@@ -44,7 +44,7 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
 
     private
     @Nonnull
-    ItemStack arrowStack = new ItemStack(ModItems.crossbow_arrow_normal);
+    ItemStack arrowStack = new ItemStack(ModItems.CROSSBOW_ARROW_NORMAL.get());
     private boolean ignoreHurtTimer = false;
 
     public CrossbowArrowEntity(EntityType<? extends CrossbowArrowEntity> type, World world) {
@@ -56,7 +56,7 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
      * @param arrow ItemStack of the represented arrow. Is copied.
      */
     public CrossbowArrowEntity(World worldIn, double x, double y, double z, ItemStack arrow) {
-        this(ModEntities.crossbow_arrow, worldIn);
+        this(ModEntities.CROSSBOW_ARROW.get(), worldIn);
         this.setPos(x, y, z);
         this.arrowStack = arrow.copy();
         arrowStack.setCount(1);

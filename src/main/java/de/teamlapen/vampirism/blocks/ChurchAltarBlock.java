@@ -3,9 +3,8 @@ package de.teamlapen.vampirism.blocks;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
@@ -30,8 +29,6 @@ import javax.annotation.Nullable;
  * Placed in some churches
  */
 public class ChurchAltarBlock extends VampirismHorizontalBlock {
-
-    private final static String regName = "church_altar";
     private static final VoxelShape SHAPEX = makeShape();
     private static final VoxelShape SHAPEZ = UtilLib.rotateShape(SHAPEX, UtilLib.RotationAmount.NINETY);
 
@@ -45,7 +42,7 @@ public class ChurchAltarBlock extends VampirismHorizontalBlock {
 
 
     public ChurchAltarBlock() {
-        super(regName, Properties.of(Material.WOOD).strength(0.5f).noOcclusion());
+        super(Properties.of(Material.WOOD).strength(0.5f).noOcclusion());
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
     }
 
@@ -68,22 +65,10 @@ public class ChurchAltarBlock extends VampirismHorizontalBlock {
     @Override
     public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (!player.isAlive()) return ActionResultType.PASS;
-        ItemStack heldItem = player.getItemInHand(hand);
         return FactionPlayerHandler.getOpt(player).map(handler -> {
             if (handler.isInFaction(VReference.VAMPIRE_FACTION)) {
                 VampirismMod.proxy.displayRevertBackScreen();
                 return ActionResultType.SUCCESS;
-            } else if (!heldItem.isEmpty()) {
-                if (ModItems.holy_salt_water.equals(heldItem.getItem())) {
-                    if (world.isClientSide) return ActionResultType.SUCCESS;
-                    boolean enhanced = handler.isInFaction(VReference.HUNTER_FACTION) && handler.getCurrentFactionPlayer().map(s -> s.getSkillHandler()).map(s -> s.isSkillEnabled(HunterSkills.holy_water_enhanced)).orElse(false);
-                    ItemStack newStack = new ItemStack(enhanced ? ModItems.holy_water_bottle_enhanced : ModItems.holy_water_bottle_normal, heldItem.getCount());
-                    player.setItemInHand(hand, newStack);
-                    return ActionResultType.SUCCESS;
-                } else if (ModItems.pure_salt.equals(heldItem.getItem())) {
-                    if (world.isClientSide) return ActionResultType.SUCCESS;
-                    player.setItemInHand(hand, new ItemStack(ModItems.holy_salt, heldItem.getCount()));
-                }
             }
             return ActionResultType.PASS;
         }).orElse(ActionResultType.PASS);

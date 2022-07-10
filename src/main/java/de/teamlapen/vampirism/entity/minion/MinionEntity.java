@@ -551,7 +551,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     protected ActionResultType mobInteract(PlayerEntity player, Hand hand) {
         if (isLord(player)) {
             if (player instanceof ServerPlayerEntity) {
-                NetworkHooks.openGui((ServerPlayerEntity) player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> MinionContainer.create(id, playerInventory, this), new TranslationTextComponent("text.vampirism.name").append(this.getMinionData().map(MinionData::getFormattedName).orElseGet(() -> new StringTextComponent("Minion")))), buf -> buf.writeVarInt(this.getId()));
+                NetworkHooks.openGui((ServerPlayerEntity) player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> MinionContainer.create(id, playerInventory, this, getLord()), new TranslationTextComponent("text.vampirism.name").append(this.getMinionData().map(MinionData::getFormattedName).orElseGet(() -> new StringTextComponent("Minion")))), buf -> buf.writeVarInt(this.getId()));
             }
             return ActionResultType.SUCCESS;
         }
@@ -572,7 +572,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         this.goalSelector.addGoal(10, new LookRandomlyGoal(this){
             @Override
             public boolean canUse() {
-                return super.canUse() && !MinionEntity.this.getCurrentTask().filter(t -> t.getTask()== MinionTasks.stay).isPresent();
+                return super.canUse() && !MinionEntity.this.getCurrentTask().filter(t -> t.getTask()== MinionTasks.STAY.get()).isPresent();
             }
         });
 

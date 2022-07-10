@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "vampirism:gold_nugget_from_accessory_blasting"
+    ]
+  },
+  "criteria": {
+    "has_amulet": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "vampirism:amulet"
+          }
+        ]
+      }
+    },
+    "has_ring": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "vampirism:ring"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "vampirism:gold_nugget_from_accessory_blasting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_amulet",
+      "has_ring",
+      "has_the_recipe"
+    ]
+  ]
+}

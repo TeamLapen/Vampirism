@@ -13,6 +13,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
@@ -23,6 +24,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -32,22 +34,27 @@ import java.util.List;
 /**
  * Ammo for the crossbows. Has different subtypes with different base damage/names/special effects.
  */
-public class CrossbowArrowItem extends VampirismItem implements IVampirismCrossbowArrow<CrossbowArrowEntity> {
+public class CrossbowArrowItem extends Item implements IVampirismCrossbowArrow<CrossbowArrowEntity> {
 
-    private static final String regName = "crossbow_arrow";
     private final EnumArrowType type;
 
 
     public CrossbowArrowItem(EnumArrowType type) {
-        super(regName + "_" + type.getName(), new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties().tab(VampirismMod.creativeTab));
         this.type = type;
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack itemStack, @Nullable World world, List<ITextComponent> textComponents, ITooltipFlag tooltipFlag) {
-        if (type != EnumArrowType.NORMAL) {
-            textComponents.add(new TranslationTextComponent(type == EnumArrowType.VAMPIRE_KILLER ? "item.vampirism.crossbow_arrow_vampire_killer.tooltip" : "item.vampirism.crossbow_arrow_spitfire.tooltip").withStyle(TextFormatting.GRAY));
+        switch (type) {
+            case SPITFIRE:
+                textComponents.add(new TranslationTextComponent("item.vampirism.crossbow_arrow_spitfire.tooltip").withStyle(TextFormatting.GRAY));
+            case VAMPIRE_KILLER:
+                textComponents.add(new TranslationTextComponent("item.vampirism.crossbow_arrow_vampire_killer.tooltip").withStyle(TextFormatting.GRAY));
+            case TELEPORT:
+                textComponents.add(new TranslationTextComponent("item.vampirism.crossbow_arrow_teleport.tooltip").withStyle(TextFormatting.GRAY));
+                break;
         }
     }
 
@@ -75,7 +82,7 @@ public class CrossbowArrowItem extends VampirismItem implements IVampirismCrossb
      */
     @Override
     public boolean isCanBeInfinite() {
-        return (type != EnumArrowType.VAMPIRE_KILLER && type != EnumArrowType.SPITFIRE) || VampirismConfig.BALANCE.allowInfiniteSpecialArrows.get();
+        return type == EnumArrowType.NORMAL || VampirismConfig.BALANCE.allowInfiniteSpecialArrows.get();
     }
 
     /**
@@ -89,19 +96,41 @@ public class CrossbowArrowItem extends VampirismItem implements IVampirismCrossb
     @Override
     public void onHitBlock(ItemStack arrow, BlockPos blockPos, IEntityCrossbowArrow arrowEntity, Entity shootingEntity) {
         CrossbowArrowEntity entity = (CrossbowArrowEntity) arrowEntity;
-        if (type == EnumArrowType.SPITFIRE) {
-            for (int dx = -1; dx < 2; dx++) {
-                for (int dy = -2; dy < 2; dy++) {
-                    for (int dz = -1; dz < 2; dz++) {
-                        BlockPos pos = blockPos.offset(dx, dy, dz);
-                        BlockState blockState = entity.getCommandSenderWorld().getBlockState(pos);
-                        if (blockState.getMaterial().isReplaceable()
-                                && entity.getCommandSenderWorld().getBlockState(pos.below()).isFaceSturdy(entity.getCommandSenderWorld(), pos.below(), Direction.UP) && (entity).getRNG().nextInt(4) != 0) {
-                            entity.getCommandSenderWorld().setBlockAndUpdate(pos, ModBlocks.alchemical_fire.defaultBlockState());
+        switch (type){
+            case SPITFIRE:
+                for (int dx = -1; dx < 2; dx++) {
+                    for (int dy = -2; dy < 2; dy++) {
+                        for (int dz = -1; dz < 2; dz++) {
+                            BlockPos pos = blockPos.offset(dx, dy, dz);
+                            BlockState blockState = entity.getCommandSenderWorld().getBlockState(pos);
+                            if (blockState.getMaterial().isReplaceable()
+                                    && entity.getCommandSenderWorld().getBlockState(pos.below()).isFaceSturdy(entity.getCommandSenderWorld(), pos.below(), Direction.UP) && (entity).getRNG().nextInt(4) != 0) {
+                                entity.getCommandSenderWorld().setBlockAndUpdate(pos, ModBlocks.ALCHEMICAL_FIRE.get().defaultBlockState());
+                            }
                         }
                     }
                 }
-            }
+                break;
+            case TELEPORT:
+                if (!shootingEntity.level.isClientSide && shootingEntity.isAlive()) {
+                    if (shootingEntity instanceof ServerPlayerEntity) {
+                        ServerPlayerEntity player = ((ServerPlayerEntity) shootingEntity);
+                        if (player.connection.getConnection().isConnected() && player.level == entity.level && !player.isSleeping()) {
+
+                            if (player.isPassenger()) {
+                                player.stopRiding();
+                            }
+
+                            player.teleportTo(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+                            player.fallDistance = 0.0F;
+                            player.hurt(DamageSource.FALL, 1);
+                        }
+                    } else if (shootingEntity != null) {
+                        shootingEntity.teleportTo(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+                        shootingEntity.fallDistance = 0.0F;
+                    }
+                }
+                break;
         }
     }
 
@@ -127,7 +156,11 @@ public class CrossbowArrowItem extends VampirismItem implements IVampirismCrossb
 
 
     public enum EnumArrowType implements IStringSerializable {
-        NORMAL("normal", 2.0, 0xFFFFFF), VAMPIRE_KILLER("vampire_killer", 0.5, 0x7A0073), SPITFIRE("spitfire", 0.5, 0xFF2211);
+        NORMAL("normal", 2.0, 0xFFFFFF),
+        VAMPIRE_KILLER("vampire_killer", 0.5, 0x7A0073),
+        SPITFIRE("spitfire", 0.5, 0xFF2211),
+        TELEPORT("teleport", 0.5, 0x0b4d42);
+
         public final int color;
         final String name;
         final double baseDamage;

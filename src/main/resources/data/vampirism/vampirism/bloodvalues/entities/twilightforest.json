@@ -1,0 +1,10 @@
+{
+  "author": "iamtpage",
+  "replace": false,
+  "values": {
+    "twilightforest:bighorn_sheep": 50,
+    "twilightforest:wild_boar": 50,
+    "twilightforest:deer": 50,
+    "twilightforest:bunny": 20
+  }
+}

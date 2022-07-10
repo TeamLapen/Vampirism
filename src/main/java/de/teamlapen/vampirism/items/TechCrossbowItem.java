@@ -8,6 +8,7 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemTier;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
@@ -87,8 +88,8 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
     }
 
 
-    public TechCrossbowItem(String regName, float speed, int cooldown, int maxDamage) {
-        super(regName, speed, cooldown, maxDamage);
+    public TechCrossbowItem(float speed, int cooldown, int maxDamage, ItemTier enchatability) {
+        super(speed, cooldown, maxDamage, enchatability);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -122,7 +123,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
     @Nullable
     @Override
     public ISkill getRequiredSkill(@Nonnull ItemStack stack) {
-        return HunterSkills.tech_weapons;
+        return HunterSkills.TECH_WEAPONS.get();
     }
 
     @Nonnull
@@ -143,7 +144,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
             }
             return ItemStack.EMPTY;
         }
-        return new ItemStack(ModItems.crossbow_arrow_normal);
+        return new ItemStack(ModItems.CROSSBOW_ARROW_NORMAL.get());
     }
 
     @Override
@@ -171,7 +172,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
     }
 
     private boolean isArrowPackage(@Nonnull ItemStack stack) {
-        return ModItems.tech_crossbow_ammo_package.equals(stack.getItem());
+        return ModItems.TECH_CROSSBOW_AMMO_PACKAGE.get().equals(stack.getItem());
     }
 
 
