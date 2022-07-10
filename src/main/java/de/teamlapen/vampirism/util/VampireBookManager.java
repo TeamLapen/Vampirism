@@ -76,7 +76,7 @@ public class VampireBookManager {
         try {
             inputStream = VampirismMod.class.getResourceAsStream("/vampireBooks.json");
             if (inputStream == null) {
-                throw new IOException("Could not find 'vampireBooks.txt' in resources");
+                throw new IOException("Could not find 'vampireBooks.json' in resources");
             }
             Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
             BookContext[] books = GSON.fromJson(reader, BookContext[].class);
