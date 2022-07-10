@@ -60,9 +60,9 @@ public class SkillNodeGenerator implements DataProvider {
 
             ResourceLocation alchemy1 = SkillNodeBuilder.hunter(skill4, HunterSkills.BASIC_ALCHEMY.get()).build(consumer, modId("alchemy1"));
             ResourceLocation alchemy2 = SkillNodeBuilder.hunter(alchemy1, HunterSkills.GARLIC_DIFFUSER.get()).build(consumer, modId("alchemy2"));
-            ResourceLocation alchemy3 = SkillNodeBuilder.hunter(alchemy2, HunterSkills.crucifix_wielder.get()).build(consumer, modId("alchemy3"));
-            ResourceLocation alchemy4 = SkillNodeBuilder.hunter(alchemy3, HunterSkills.PURIFIED_GARLIC.get(), HunterSkills.HOLY_WATER_ENHANCED.get()).build(consumer, modId("alchemy4"));
-            ResourceLocation alchemy5 = SkillNodeBuilder.hunter(alchemy4, HunterSkills.GARLIC_DIFFUSER_IMPROVED.get(), HunterSkills.ultimate_crucifix.get()).build(consumer, modId("alchemy5"));
+            ResourceLocation alchemy3 = SkillNodeBuilder.hunter(alchemy2, HunterSkills.CRUCIFIX_WIELDER.get()).build(consumer, modId("alchemy3"));
+            ResourceLocation alchemy4 = SkillNodeBuilder.hunter(alchemy3, HunterSkills.PURIFIED_GARLIC.get(), HunterSkills.ENHANCED_BLESSING.get()).build(consumer, modId("alchemy4"));
+            ResourceLocation alchemy5 = SkillNodeBuilder.hunter(alchemy4, HunterSkills.GARLIC_DIFFUSER_IMPROVED.get(), HunterSkills.ULTIMATE_CRUCIFIX.get()).build(consumer, modId("alchemy5"));
             ResourceLocation alchemy6 = SkillNodeBuilder.hunter(alchemy5, HunterSkills.HUNTER_AWARENESS.get()).build(consumer, modId("alchemy6"));
 
             ResourceLocation potion1 = SkillNodeBuilder.hunter(skill4, HunterSkills.MULTITASK_BREWING.get()).build(consumer, modId("potion1"));
@@ -134,6 +134,5 @@ public class SkillNodeGenerator implements DataProvider {
             LOGGER.error("Couldn't save skill node {}", path, ioExeption);
         }
     }
-
 
 }

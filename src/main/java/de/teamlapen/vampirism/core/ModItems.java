@@ -80,27 +80,19 @@ public class ModItems {
     public static final RegistryObject<HeartStrikerItem> HEART_STRIKER_NORMAL = ITEMS.register("heart_striker_normal", () -> new HeartStrikerItem(IItemWithTier.TIER.NORMAL));
     public static final RegistryObject<HeartStrikerItem> HEART_STRIKER_ULTIMATE = ITEMS.register("heart_striker_ultimate", () -> new HeartStrikerItem(IItemWithTier.TIER.ULTIMATE));
 
-    public static final RegistryObject<Item> HOLY_SALT = ITEMS.register("holy_salt", () -> new Item(creativeTabProps()) {
-            @Override
-            public boolean isFoil(@Nonnull ItemStack stack) {
-
-                return true;
-            }
-        });
-    public static final RegistryObject<Item> HOLY_SALT_WATER = ITEMS.register("holy_salt_water", () -> new Item(creativeTabProps()) {
-            @Override
-            public boolean isFoil(@Nonnull ItemStack stack) {
-
-                return true;
-            }
-        });
-
     public static final RegistryObject<HolyWaterBottleItem> HOLY_WATER_BOTTLE_ENHANCED = ITEMS.register("holy_water_bottle_enhanced", () -> new HolyWaterBottleItem(IItemWithTier.TIER.ENHANCED));
     public static final RegistryObject<HolyWaterBottleItem> HOLY_WATER_BOTTLE_NORMAL = ITEMS.register("holy_water_bottle_normal", () -> new HolyWaterBottleItem(IItemWithTier.TIER.NORMAL));
     public static final RegistryObject<HolyWaterBottleItem> HOLY_WATER_BOTTLE_ULTIMATE = ITEMS.register("holy_water_bottle_ultimate", () -> new HolyWaterBottleItem(IItemWithTier.TIER.ULTIMATE));
     public static final RegistryObject<HolyWaterSplashBottleItem> HOLY_WATER_SPLASH_BOTTLE_ENHANCED = ITEMS.register("holy_water_splash_bottle_enhanced", () -> new HolyWaterSplashBottleItem(IItemWithTier.TIER.ENHANCED));
     public static final RegistryObject<HolyWaterSplashBottleItem> HOLY_WATER_SPLASH_BOTTLE_NORMAL = ITEMS.register("holy_water_splash_bottle_normal", () -> new HolyWaterSplashBottleItem(IItemWithTier.TIER.NORMAL));
     public static final RegistryObject<HolyWaterSplashBottleItem> HOLY_WATER_SPLASH_BOTTLE_ULTIMATE = ITEMS.register("holy_water_splash_bottle_ultimate", () -> new HolyWaterSplashBottleItem(IItemWithTier.TIER.ULTIMATE));
+
+    public static final RegistryObject<BlessableItem> PURE_SALT_WATER = ITEMS.register("pure_salt_water", () -> new BlessableItem(new Item.Properties().stacksTo(1), HOLY_WATER_BOTTLE_NORMAL::get, HOLY_WATER_BOTTLE_ENHANCED::get) {
+        @Override
+        public boolean isFoil(ItemStack stack) {
+            return true;
+        }
+    });
 
     public static final RegistryObject<HunterAxeItem> HUNTER_AXE_ENHANCED = ITEMS.register("hunter_axe_enhanced", () -> new HunterAxeItem(IItemWithTier.TIER.ENHANCED));
     public static final RegistryObject<HunterAxeItem> HUNTER_AXE_NORMAL = ITEMS.register("hunter_axe_normal", () -> new HunterAxeItem(IItemWithTier.TIER.NORMAL));
@@ -228,7 +220,7 @@ public class ModItems {
     public static final RegistryObject<OilBottle> OIL_BOTTLE = ITEMS.register("oil_bottle", () -> new OilBottle(creativeTabProps().stacksTo(1)));
     static void registerCraftingRecipes() {
         // Brewing
-        BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER)), Ingredient.of(new ItemStack(HOLY_SALT.get())), new ItemStack(HOLY_SALT_WATER.get()));
+        BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER)), Ingredient.of(new ItemStack(PURE_SALT.get())), new ItemStack(PURE_SALT_WATER.get()));
 
         BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(HOLY_WATER_BOTTLE_NORMAL.get()), Ingredient.of(Items.GUNPOWDER), new ItemStack(HOLY_WATER_SPLASH_BOTTLE_NORMAL.get())) {
             @Override
@@ -282,6 +274,8 @@ public class ModItems {
                 case "vampirism:bloody_spruce_log" -> missingMapping.remap(ModBlocks.CURSED_SPRUCE_LOG.get().asItem());
                 case "vampirism:bloody_spruce_leaves" -> missingMapping.remap(ModBlocks.DARK_SPRUCE_LEAVES.get().asItem());
                 case "vampirism:coffin" -> missingMapping.remap(ModBlocks.coffin_red.get().asItem());
+                case "vampirism:holy_salt_water" -> missingMapping.remap(PURE_SALT_WATER.get());
+                case "vampirism:holy_salt" -> missingMapping.remap(PURE_SALT.get());
             }
             if(missingMapping.getKey().toString().startsWith("vampirism:obsidian_armor")){
                 Item hunterArmorReplacement = (Item) event.getRegistry().getValue(new ResourceLocation(missingMapping.getKey().toString().replace("obsidian_armor","hunter_coat")));

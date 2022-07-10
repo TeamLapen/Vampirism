@@ -262,6 +262,11 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
                     sync(syncPacket, syncToAll);
                 }
             } else {
+                if (getSpecialAttributes().blessingSoundReference != null && !player.isUsingItem()) {
+                    //Make sure the blessing sound is stopped when player is not using {@link BlessableItem}. This is necessary because onReleaseUsing is not called for other client players.
+                    getSpecialAttributes().blessingSoundReference.stopPlaying();
+                    getSpecialAttributes().blessingSoundReference = null;
+                }
                 actionHandler.updateActions();
                 VampirismMod.proxy.handleSleepClient(player);
 

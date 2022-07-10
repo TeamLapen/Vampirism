@@ -97,8 +97,8 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             add(ModItems.IMPURE_BLOOD_BUCKET.get());
             add(ModItems.BLOOD_INFUSED_ENHANCED_IRON_INGOT.get());
             add(ModItems.BLOOD_INFUSED_IRON_INGOT.get());
-            add(ModItems.HOLY_SALT.get());
-            add(ModItems.HOLY_SALT_WATER.get());
+            add(ModItems.PURE_SALT.get());
+            add(ModItems.PURE_SALT_WATER.get());
             add(ModItems.HUMAN_HEART.get());
             add(ModItems.INJECTION_EMPTY.get());
             add(ModItems.INJECTION_GARLIC.get());
@@ -153,7 +153,6 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             put(ModItems.ITEM_GARLIC.get(), modLoc("item/garlic"));
             put(ModBlocks.MED_CHAIR.get().asItem(), modLoc("item/med_chair"));
             put(ModItems.ITEM_TENT_SPAWNER.get(), modLoc("item/item_tent"));
-            put(ModItems.PURE_SALT.get(), modLoc("item/holy_salt"));
             put(ModItems.VAMPIRE_BOOK.get(), modLoc("item/vampire_book"));
             put(ModBlocks.CURSED_BARK.get().asItem(), modLoc("block/cursed_bark"));
             put(ModItems.dark_spruce_sign.get(), modLoc("item/dark_spruce_sign"));

@@ -71,7 +71,7 @@
               "function": "minecraft:set_count"
             }
           ],
-          "name": "vampirism:holy_salt",
+          "name": "vampirism:pure_salt_water",
           "weight": 4
         }
       ],

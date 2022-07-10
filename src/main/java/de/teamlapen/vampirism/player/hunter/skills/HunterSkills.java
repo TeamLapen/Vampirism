@@ -37,7 +37,7 @@ public class HunterSkills {
     public static final RegistryObject<ISkill<IHunterPlayer>> ENHANCED_WEAPONS = SKILLS.register("enhanced_weapons", () -> new VampirismSkill.SimpleHunterSkill(true));
     public static final RegistryObject<ISkill<IHunterPlayer>> GARLIC_DIFFUSER = SKILLS.register("garlic_diffuser", () -> new VampirismSkill.SimpleHunterSkill(true));
     public static final RegistryObject<ISkill<IHunterPlayer>> GARLIC_DIFFUSER_IMPROVED = SKILLS.register("garlic_diffuser_improved", () -> new VampirismSkill.SimpleHunterSkill(true));
-    public static final RegistryObject<ISkill<IHunterPlayer>> HOLY_WATER_ENHANCED = SKILLS.register("holy_water_enhanced", () -> new VampirismSkill.SimpleHunterSkill(true));
+    public static final RegistryObject<ISkill<IHunterPlayer>> ENHANCED_BLESSING = SKILLS.register("enhanced_blessing", () -> new VampirismSkill.SimpleHunterSkill(true));
     //Config null, so cannot get method ref
     @SuppressWarnings({"Convert2MethodRef", "FunctionalExpressionCanBeFolded"})
     public static final RegistryObject<ISkill<IHunterPlayer>> HUNTER_ATTACK_SPEED = SKILLS.register("hunter_attack_speed", () -> new VampirismSkill.SimpleHunterSkill(false).registerAttributeModifier(Attributes.ATTACK_SPEED, "8dd2f8cc-6ae1-4db1-9e14-96b4c74d7bf2", () -> VampirismConfig.BALANCE.hsSmallAttackSpeedModifier.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
@@ -80,8 +80,8 @@ public class HunterSkills {
     public static final RegistryObject<ISkill<IHunterPlayer>> SWIFT_BREWING = SKILLS.register("swift_brewing", () -> new VampirismSkill.SimpleHunterSkill(true));
     public static final RegistryObject<ISkill<IHunterPlayer>> CONCENTRATED_DURABLE_BREWING = SKILLS.register("concentrated_durable_brewing", () -> new VampirismSkill.SimpleHunterSkill(true));
     public static final RegistryObject<ISkill<IHunterPlayer>> POTION_RESISTANCE = SKILLS.register("potion_resistance", () -> new ActionSkill<>(HunterActions.POTION_RESISTANCE_HUNTER.get(), true));
-    public static final RegistryObject<ISkill<IHunterPlayer>> crucifix_wielder = SKILLS.register("crucifix_wielder",() ->new VampirismSkill.SimpleHunterSkill(true));
-    public static final RegistryObject<ISkill<IHunterPlayer>> ultimate_crucifix = SKILLS.register("ultimate_crucifix", () -> new VampirismSkill.SimpleHunterSkill(true));
+    public static final RegistryObject<ISkill<IHunterPlayer>> CRUCIFIX_WIELDER = SKILLS.register("crucifix_wielder",() ->new VampirismSkill.SimpleHunterSkill(true));
+    public static final RegistryObject<ISkill<IHunterPlayer>> ULTIMATE_CRUCIFIX = SKILLS.register("ultimate_crucifix", () -> new VampirismSkill.SimpleHunterSkill(true));
     public static final RegistryObject<ISkill<IHunterPlayer>> HUNTER_MINION_STATS_INCREASE = SKILLS.register("hunter_minion_stats_increase", () -> new VampirismSkill.LordHunterSkill(true));
     public static final RegistryObject<ISkill<IHunterPlayer>> HUNTER_LORD_SPEED = SKILLS.register("hunter_lord_speed", () -> new ActionSkill<>(HunterActions.HUNTER_LORD_SPEED.get(), SkillType.LORD, true));
     public static final RegistryObject<ISkill<IHunterPlayer>> HUNTER_LORD_ATTACK_SPEED = SKILLS.register("hunter_lord_attack_speed", () -> new ActionSkill<>(HunterActions.HUNTER_LORD_ATTACK_SPEED.get(), SkillType.LORD, true));
@@ -108,6 +108,7 @@ public class HunterSkills {
             switch (missingMapping.getKey().toString()) {
                 case "vampirism:garlic_beacon_improved" -> missingMapping.remap(GARLIC_DIFFUSER_IMPROVED.get());
                 case "vampirism:garlic_beacon" -> missingMapping.remap(GARLIC_DIFFUSER.get());
+                case "vampirism:holy_water_enhanced" -> missingMapping.remap(ENHANCED_BLESSING.get());
                 default -> {
                     if (missingMapping.getKey().toString().startsWith("vampirism:blood_potion_")) {
                         missingMapping.ignore();

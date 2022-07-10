@@ -35,6 +35,7 @@ public class ModVillage {
     public static final RegistryObject<PoiType> HUNTER_TOTEM = POI_TYPES.register("hunter_totem", () -> new PoiType(getAllStates(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER.get(), ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED.get()), 1, 1));
     public static final RegistryObject<PoiType> VAMPIRE_TOTEM = POI_TYPES.register("vampire_totem", () -> new PoiType(getAllStates(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE.get(), ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED.get()), 1, 1));
     public static final RegistryObject<PoiType> NO_FACTION_TOTEM = POI_TYPES.register("no_faction_totem", () -> new PoiType(getAllStates(ModBlocks.TOTEM_TOP.get(), ModBlocks.TOTEM_TOP_CRAFTED.get()), 1, 1));
+    public static final RegistryObject<PoiType> ALTAR_CLEANSING = POI_TYPES.register("church_altar", () -> new PoiType(getAllStates(ModBlocks.ALTAR_CLEANSING.get()), 1, 1));
 
     public static final RegistryObject<SensorType<VampireVillagerHostilesSensor>> VAMPIRE_VILLAGER_HOSTILES = SENSOR_TYPES.register("vampire_villager_hostiles", () -> new SensorType<>(VampireVillagerHostilesSensor::new));
 
@@ -44,6 +45,7 @@ public class ModVillage {
 
     public static final RegistryObject<VillagerProfession> VAMPIRE_EXPERT = PROFESSIONS.register("vampire_expert", () -> new VillagerProfession("vampire_expert", (holder) -> holder.is(ModTags.PoiTypes.IS_VAMPIRE),(holder) -> holder.is(ModTags.PoiTypes.IS_VAMPIRE), ImmutableSet.of(), ImmutableSet.of(), null));
     public static final RegistryObject<VillagerProfession> HUNTER_EXPERT = PROFESSIONS.register("hunter_expert", () -> new VillagerProfession("hunter_expert", (holder) -> holder.is(ModTags.PoiTypes.IS_HUNTER),(holder) -> holder.is(ModTags.PoiTypes.IS_HUNTER), ImmutableSet.of(), ImmutableSet.of(), null));
+    public static final RegistryObject<VillagerProfession> PRIEST = PROFESSIONS.register("priest", () -> new VillagerProfession("priest", holder -> holder.is(ALTAR_CLEANSING.getKey()), holder -> holder.is(ALTAR_CLEANSING.getKey()) , ImmutableSet.of(), ImmutableSet.of(), ModSounds.BLESSING_MUSIC.get()));
 
     static void registerVillageObjects(IEventBus bus) {
         POI_TYPES.register(bus);
@@ -55,6 +57,8 @@ public class ModVillage {
     public static void villagerTradeSetup() {
         VillagerTrades.TRADES.computeIfAbsent(VAMPIRE_EXPERT.get(), trades -> new Int2ObjectOpenHashMap<>()).putAll(getVampireTrades());
         VillagerTrades.TRADES.computeIfAbsent(HUNTER_EXPERT.get(), trades -> new Int2ObjectOpenHashMap<>()).putAll(getHunterTrades());
+        VillagerTrades.TRADES.computeIfAbsent(PRIEST.get(), trades -> new Int2ObjectOpenHashMap<>()).putAll(getPriestTrades());
+
     }
 
     private static Set<BlockState> getAllStates(Block... blocks) {
@@ -86,7 +90,6 @@ public class ModVillage {
                 },
                 3, new VillagerTrades.ItemListing[]{
                         new Trades.ItemsForSouls(new Trades.Price(40, 64), ModItems.VAMPIRE_BOOK.get(), new Trades.Price(1, 1), 10, 1),
-                        new Trades.ItemsForSouls(new Trades.Price(10, 20), ModItems.HOLY_WATER_BOTTLE_ENHANCED.get(), new Trades.Price(1, 3)),
                         new Trades.ItemsForSouls(new Trades.Price(30, 40), ModItems.HUNTER_COAT_CHEST_ENHANCED.get(), new Trades.Price(1, 1), 8, 1),
                         new Trades.ItemsForSouls(new Trades.Price(25, 35), ModItems.HUNTER_COAT_LEGS_ENHANCED.get(), new Trades.Price(1, 1), 7, 1),
                         new Trades.ItemsForSouls(new Trades.Price(10, 15), ModItems.HUNTER_COAT_FEET_ENHANCED.get(), new Trades.Price(1, 1), 5, 1),
@@ -100,11 +103,39 @@ public class ModVillage {
                         new Trades.ItemsForSouls(new Trades.Price(20, 32), Items.DIAMOND, new Trades.Price(1, 2)),
                 },
                 5, new VillagerTrades.ItemListing[]{
-                        new Trades.ItemsForSouls(new Trades.Price(15, 25), ModItems.HOLY_WATER_BOTTLE_ULTIMATE.get(), new Trades.Price(1, 2)),
                         new Trades.ItemsForSouls(new Trades.Price(30, 55), ModItems.HUNTER_COAT_CHEST_ULTIMATE.get(), new Trades.Price(1, 1), 8, 1),
                         new Trades.ItemsForSouls(new Trades.Price(25, 55), ModItems.HUNTER_COAT_LEGS_ULTIMATE.get(), new Trades.Price(1, 1), 7, 1),
                         new Trades.ItemsForSouls(new Trades.Price(20, 35), ModItems.HUNTER_COAT_FEET_ULTIMATE.get(), new Trades.Price(1, 1), 5, 1),
                         new Trades.ItemsForSouls(new Trades.Price(20, 35), ModItems.HUNTER_COAT_HEAD_ULTIMATE.get(), new Trades.Price(1, 1), 6, 1)
+                });
+    }
+
+    private static Map<Integer, VillagerTrades.ItemListing[]> getPriestTrades() {
+        return ImmutableMap.of(
+                1, new VillagerTrades.ItemListing[]{
+                        new VillagerTrades.EmeraldForItems(ModItems.PURE_SALT.get(), 25, 1, 4),
+                        new VillagerTrades.EmeraldForItems(ModItems.PURE_SALT_WATER.get(), 25, 1, 4),
+                        new VillagerTrades.EmeraldForItems(ModItems.ITEM_GARLIC.get(), 30, 4, 2),
+
+                },
+                2, new VillagerTrades.ItemListing[]{
+                        new VillagerTrades.ItemsForEmeralds(ModItems.HOLY_WATER_BOTTLE_NORMAL.get(), 3, 5, 4),
+                        new VillagerTrades.EmeraldForItems(ModItems.SOUL_ORB_VAMPIRE.get(), 10, 10, 4),
+                        new VillagerTrades.EmeraldForItems(ModItems.VAMPIRE_BLOOD_BOTTLE.get(), 9, 4, 5),
+                        new VillagerTrades.ItemsForEmeralds(ModItems.CRUCIFIX_NORMAL.get(), 1, 1, 1  )
+                },
+                3, new VillagerTrades.ItemListing[]{
+                        new VillagerTrades.ItemsForEmeralds(ModItems.HOLY_WATER_BOTTLE_ENHANCED.get(), 2, 5, 4),
+
+
+                },
+                4, new VillagerTrades.ItemListing[]{
+                        new VillagerTrades.ItemsForEmeralds(ModItems.HOLY_WATER_BOTTLE_ULTIMATE.get(), 1, 4, 4),
+
+                },
+                5, new VillagerTrades.ItemListing[]{
+                        new VillagerTrades.ItemsForEmeralds(ModItems.HOLY_WATER_BOTTLE_ENHANCED.get(), 3, 4, 4),
+
                 });
     }
 

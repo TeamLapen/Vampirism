@@ -83,5 +83,11 @@
     "sounds": [
       "vampirism:fx/task_complete"
     ]
+  },
+  "blessing_music": {
+    "category": "player",
+    "sounds": [
+      "vampirism:fx/church_organ"
+    ]
   }
 }
