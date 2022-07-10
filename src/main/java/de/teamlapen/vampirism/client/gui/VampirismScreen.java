@@ -42,6 +42,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
+/**
+ * TODO 1.19 refactor VampirismContainerScreen
+ */
 public class VampirismScreen extends AbstractContainerScreen<VampirismContainer> implements ExtendedScreen {
 
     private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/vampirism_menu.png");

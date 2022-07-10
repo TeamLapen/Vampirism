@@ -17,7 +17,7 @@ public class VampireBookCommand extends BasicCommand {
 
     @SuppressWarnings("SameReturnValue")
     private static int vampireBook(ServerPlayer asPlayer) {
-        asPlayer.getInventory().add(VampireBookManager.getInstance().getRandomBook(asPlayer.getRandom()));
+        asPlayer.getInventory().add(VampireBookManager.getInstance().getRandomBookItem(asPlayer.getRandom()));
         return 0;
     }
 }

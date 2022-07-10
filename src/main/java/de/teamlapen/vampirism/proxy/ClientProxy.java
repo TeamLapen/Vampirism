@@ -16,9 +16,9 @@ import de.teamlapen.vampirism.inventory.container.VampirismContainer;
 import de.teamlapen.vampirism.network.*;
 import de.teamlapen.vampirism.player.skills.ClientSkillTreeManager;
 import de.teamlapen.vampirism.player.skills.SkillTree;
+import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.InBedChatScreen;
-import net.minecraft.client.gui.screens.inventory.BookViewScreen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.TerrainParticle;
 import net.minecraft.core.BlockPos;
@@ -177,8 +177,8 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void handleVampireBookPacket(SOpenVampireBookPacket msg) {
-        Minecraft.getInstance().setScreen(new BookViewScreen(new BookViewScreen.WrittenBookAccess(msg.itemStack())));
+    public void handleVampireBookPacket(VampireBookManager.BookInfo bookInfo) {
+        Minecraft.getInstance().setScreen(new VampireBookScreen(bookInfo));
     }
 
     @Override
