@@ -1,69 +1,100 @@
 package de.teamlapen.vampirism.util;
 
-import com.google.common.io.ByteStreams;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.items.VampireBookItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.JsonToNBT;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-/**
- * Handles loading of texts for ancient vampire books
- */
 public class VampireBookManager {
-    private final static Logger LOGGER = LogManager.getLogger();
-    private static final VampireBookManager ourInstance = new VampireBookManager();
+    private static final Gson GSON = new GsonBuilder().create();
+    private static final Logger LOGGER = LogManager.getLogger();
+
+    private static VampireBookManager instance;
 
     public static VampireBookManager getInstance() {
-        return ourInstance;
+        if (instance == null) {
+            instance = new VampireBookManager();
+        }
+        return instance;
     }
-    private final Map<String, CompoundNBT> booksById = new HashMap<>();
-    private CompoundNBT[] bookTags = null;
 
     private VampireBookManager() {
+
     }
 
-    public Optional<CompoundNBT> getBookData(String id) {
-        CompoundNBT nbt = booksById.get(id);
-        return Optional.ofNullable(nbt);
+    public static class BookContext {
+        public final BookInfo book;
+        public final String id;
+        public final boolean unique;
+
+        public BookContext(BookInfo book, String id, boolean unique) {
+            this.book = book;
+            this.id = id;
+            this.unique = unique;
+        }
     }
 
-    /**
-     * Return a vampire book with a randomly selected text and title
-     */
-    public ItemStack getRandomBook(Random rnd) {
+    private final Map<String, BookContext> idToBook = new HashMap<>();
+    private final List<BookContext> nonUnique = new ArrayList<>();
+    private final BookContext DUMMY = new BookContext(new BookInfo("Unknown", "Unknown", "Failed to load"), "error", false);
+    private final BookContext OLD = new BookContext(new BookInfo("Unknown", "Unknown", "☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰"), OLD_ID, false);
+    public final static String OLD_ID = "old";
+
+    public BookInfo getBookById(String id) {
+        return idToBook.getOrDefault(id, DUMMY).book;
+    }
+
+    public BookContext getBookContextById(String id) {
+        return idToBook.getOrDefault(id, DUMMY);
+    }
+
+    public BookContext getRandomBook(Random rng) {
+        return nonUnique.size() > 0 ? nonUnique.get(rng.nextInt(nonUnique.size())) : DUMMY;
+    }
+
+    public ItemStack getRandomBookItem(Random rng) {
         ItemStack book = new ItemStack(ModItems.VAMPIRE_BOOK.get(), 1);
-        book.setTag(getRandomBookData(rnd));
+        book.setTag(VampireBookItem.createTagFromContext(getRandomBook(rng)));
         return book;
-    }
-
-    @Nonnull
-    public CompoundNBT getRandomBookData(Random rnd) {
-        return (bookTags == null || bookTags.length == 0) ? new CompoundNBT() : bookTags[rnd.nextInt(bookTags.length)];
     }
 
     public void init() {
         InputStream inputStream = null;
         try {
-            inputStream = VampirismMod.class.getResourceAsStream("/vampireBooks.txt");
+            inputStream = VampirismMod.class.getResourceAsStream("/vampireBooks.json");
             if (inputStream == null) {
-                throw new IOException("Could not find 'vampireBooks.txt' in resources");
+                throw new IOException("Could not find 'vampireBooks.json' in resources");
             }
-            String data = new String(ByteStreams.toByteArray(inputStream));
-
-            parseBooks(data);
-        } catch (CommandSyntaxException e) {
+            Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+            BookContext[] books = GSON.fromJson(reader, BookContext[].class);
+            idToBook.clear();
+            idToBook.put(OLD_ID, OLD);
+            for (BookContext b : books) {
+                idToBook.put(b.id, b);
+                if (!b.unique) {
+                    nonUnique.add(b);
+                }
+            }
+        } catch (JsonParseException e) {
             LOGGER.warn("----------------------------------------");
-            LOGGER.error("Failed to convert vampire books to NBT", e);
+            LOGGER.error("Failed to load vampire books from JSON", e);
             LOGGER.warn("----------------------------------------");
+            if (VampirismMod.inDev) {
+                throw e;
+            }
         } catch (IOException e) {
             LOGGER.error("Failed to read vampire books from resources", e);
         } finally {
@@ -77,24 +108,30 @@ public class VampireBookManager {
         }
     }
 
-    private void parseBooks(String data) throws CommandSyntaxException {
-        ArrayList<CompoundNBT> books = new ArrayList<>();
-        String[] lines = data.split("\n");
-        for (String line : lines) {
-            String id = null;
-            if (line.startsWith("id")) {
-                int pos = line.indexOf(':');
-                if (pos != -1) {
-                    id = line.substring(2, pos);
-                    line = line.substring(pos + 1);
-                }
-            }
-            CompoundNBT nbt = JsonToNBT.parseTag(line);
-            books.add(nbt);
-            if (id != null) {
-                booksById.put(id, nbt);
-            }
+    public static class BookInfo {
+
+
+        public BookInfo(String title, String author, String... content) {
+            this.title = title;
+            this.author = author;
+            this.content = content;
         }
-        bookTags = books.toArray(new CompoundNBT[0]);
+
+        private final String title;
+        private final String author;
+        private final String[] content;
+
+
+        public String getAuthor() {
+            return author;
+        }
+
+        public String[] getContent() {
+            return content;
+        }
+
+        public String getTitle() {
+            return title;
+        }
     }
 }

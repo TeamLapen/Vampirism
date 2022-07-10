@@ -11,10 +11,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Rarity;
 import net.minecraft.item.WritableBookItem;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.StringNBT;
 import net.minecraft.util.*;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
@@ -59,7 +60,7 @@ public class VampireBookItem extends Item {
     @Override
     public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
         if (allowdedIn(group)) {
-            items.add(VampireBookManager.getInstance().getRandomBook(new Random()));
+            items.add(VampireBookManager.getInstance().getRandomBookItem(new Random()));
         }
     }
 
@@ -84,38 +85,20 @@ public class VampireBookItem extends Item {
     public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         if (!worldIn.isClientSide && playerIn instanceof ServerPlayerEntity) {
-            this.resolveContents(stack, playerIn);
-            VampirismMod.dispatcher.sendTo(new SOpenVampireBookPacket(stack), (ServerPlayerEntity) playerIn);
+            String id = VampireBookManager.OLD_ID;
+            if (stack.hasTag()) {
+                id = stack.getTag().getString("id");
+            }
+            VampirismMod.dispatcher.sendTo(new SOpenVampireBookPacket(id), (ServerPlayerEntity) playerIn);
         }
         return new ActionResult(ActionResultType.SUCCESS, stack);
     }
 
-    private void resolveContents(ItemStack stack, PlayerEntity player) {
-        if (!stack.isEmpty() && stack.getTag() != null) {
-            CompoundNBT nbttagcompound = stack.getTag();
-            if (!nbttagcompound.getBoolean("resolved")) {
-                nbttagcompound.putBoolean("resolved", true);
-                if (validBookTagContents(nbttagcompound)) {
-                    ListNBT nbttaglist = nbttagcompound.getList("pages", 8);
-
-                    for (int slot = 0; slot < nbttaglist.size(); ++slot) {
-                        String s = nbttaglist.getString(slot);
-
-                        ITextComponent lvt_7_1_;
-                        try {
-                            ITextComponent var11 = ITextComponent.Serializer.fromJsonLenient(s);
-                            lvt_7_1_ = TextComponentUtils.updateForEntity(null, var11, player, 0);
-                        } catch (Exception var9) {
-                            lvt_7_1_ = new StringTextComponent(s);
-                        }
-
-                        nbttaglist.set(slot, StringNBT.valueOf(ITextComponent.Serializer.toJson(lvt_7_1_)));
-                    }
-
-                    nbttagcompound.put("pages", nbttaglist);
-                }
-            }
-        }
-
+    public static CompoundNBT createTagFromContext(VampireBookManager.BookContext context) {
+        CompoundNBT nbt = new CompoundNBT();
+        nbt.putString("id", context.id);
+        nbt.putString("author", context.book.getAuthor());
+        nbt.putString("title", context.book.getTitle());
+        return nbt;
     }
 }

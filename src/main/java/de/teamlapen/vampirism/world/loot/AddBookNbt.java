@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.core.ModLoot;
 import de.teamlapen.vampirism.entity.hunter.AdvancedHunterEntity;
 import de.teamlapen.vampirism.entity.vampire.AdvancedVampireEntity;
+import de.teamlapen.vampirism.items.VampireBookItem;
 import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
@@ -13,7 +14,6 @@ import net.minecraft.loot.LootFunction;
 import net.minecraft.loot.LootFunctionType;
 import net.minecraft.loot.LootParameters;
 import net.minecraft.loot.conditions.ILootCondition;
-import net.minecraft.nbt.CompoundNBT;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -47,8 +47,8 @@ public class AddBookNbt extends LootFunction {
         } else if (victim instanceof AdvancedVampireEntity) {
             id = ((AdvancedVampireEntity) victim).getBookLootId();
         }
-        CompoundNBT data = id.flatMap(str -> VampireBookManager.getInstance().getBookData(str)).orElseGet(() -> VampireBookManager.getInstance().getRandomBookData(lootContext.getRandom()));
-        itemStack.setTag(data);
+        VampireBookManager.BookContext bookContext = id.map(VampireBookManager.getInstance()::getBookContextById).orElseGet(() -> VampireBookManager.getInstance().getRandomBook(lootContext.getRandom()));
+        itemStack.setTag(VampireBookItem.createTagFromContext(bookContext));
         return itemStack;
     }
 
