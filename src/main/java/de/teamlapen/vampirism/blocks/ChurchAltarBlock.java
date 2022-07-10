@@ -3,9 +3,8 @@ package de.teamlapen.vampirism.blocks;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
@@ -66,22 +65,10 @@ public class ChurchAltarBlock extends VampirismHorizontalBlock {
     @Override
     public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (!player.isAlive()) return ActionResultType.PASS;
-        ItemStack heldItem = player.getItemInHand(hand);
         return FactionPlayerHandler.getOpt(player).map(handler -> {
             if (handler.isInFaction(VReference.VAMPIRE_FACTION)) {
                 VampirismMod.proxy.displayRevertBackScreen();
                 return ActionResultType.SUCCESS;
-            } else if (!heldItem.isEmpty()) {
-                if (ModItems.HOLY_SALT_WATER.get().equals(heldItem.getItem())) {
-                    if (world.isClientSide) return ActionResultType.SUCCESS;
-                    boolean enhanced = handler.isInFaction(VReference.HUNTER_FACTION) && handler.getCurrentFactionPlayer().map(s -> s.getSkillHandler()).map(s -> s.isSkillEnabled(HunterSkills.HOLY_WATER_ENHANCED.get())).orElse(false);
-                    ItemStack newStack = new ItemStack(enhanced ? ModItems.HOLY_WATER_BOTTLE_ENHANCED.get() : ModItems.HOLY_WATER_BOTTLE_NORMAL.get(), heldItem.getCount());
-                    player.setItemInHand(hand, newStack);
-                    return ActionResultType.SUCCESS;
-                } else if (ModItems.PURE_SALT.get().equals(heldItem.getItem())) {
-                    if (world.isClientSide) return ActionResultType.SUCCESS;
-                    player.setItemInHand(hand, new ItemStack(ModItems.HOLY_SALT.get(), heldItem.getCount()));
-                }
             }
             return ActionResultType.PASS;
         }).orElse(ActionResultType.PASS);

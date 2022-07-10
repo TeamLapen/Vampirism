@@ -24,6 +24,7 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> GRINDER = create("grinder");
     public static final RegistryObject<SoundEvent> TASK_COMPLETE = create("task_complete");
     public static final RegistryObject<SoundEvent> PLAYER_FEEDING = create("player.feeding");
+    public static final RegistryObject<SoundEvent> BLESSING_MUSIC = create("blessing_music");
 
     static void registerSounds(IEventBus bus) {
         SOUNDS.register(bus);

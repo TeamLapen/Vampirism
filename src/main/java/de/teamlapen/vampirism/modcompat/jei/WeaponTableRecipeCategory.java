@@ -66,7 +66,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
         }
         ISkill[] requiredSkills = recipe.getRequiredSkills();
         if (requiredSkills.length > 0) {
-            IFormattableTextComponent skillText = new TranslationTextComponent("gui.vampirism.hunter_weapon_table.skill", " ");
+            IFormattableTextComponent skillText = new TranslationTextComponent("gui.vampirism.skill_required", " ");
 
             for (ISkill skill : recipe.getRequiredSkills()) {
                 skillText.append(skill.getName()).append(" ");

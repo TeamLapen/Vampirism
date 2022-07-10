@@ -38,7 +38,7 @@ public class HunterSkills {
     public static final RegistryObject<ISkill> ENHANCED_WEAPONS = SKILLS.register("enhanced_weapons", () -> new VampirismSkill.SimpleHunterSkill(true));
     public static final RegistryObject<ISkill> GARLIC_BEACON = SKILLS.register("garlic_beacon", () -> new VampirismSkill.SimpleHunterSkill(true));
     public static final RegistryObject<ISkill> GARLIC_BEACON_IMPROVED = SKILLS.register("garlic_beacon_improved", () -> new VampirismSkill.SimpleHunterSkill(true));
-    public static final RegistryObject<ISkill> HOLY_WATER_ENHANCED = SKILLS.register("holy_water_enhanced", () -> new VampirismSkill.SimpleHunterSkill(true));
+    public static final RegistryObject<ISkill> ENHANCED_BLESSING = SKILLS.register("enhanced_blessing", () -> new VampirismSkill.SimpleHunterSkill(true));
     //Config null, so cannot get method ref
     //noinspection Convert2MethodRef
     public static final RegistryObject<ISkill> HUNTER_ATTACK_SPEED = SKILLS.register("hunter_attack_speed", () -> new VampirismSkill.SimpleHunterSkill(false).registerAttributeModifier(Attributes.ATTACK_SPEED, "8dd2f8cc-6ae1-4db1-9e14-96b4c74d7bf2", () -> VampirismConfig.BALANCE.hsSmallAttackSpeedModifier.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
@@ -110,6 +110,8 @@ public class HunterSkills {
         event.getAllMappings().forEach(missingMapping -> {
             if (missingMapping.key.toString().startsWith("vampirism:blood_potion_")) {
                 missingMapping.ignore();
+            } else if (missingMapping.key.toString().equals("vampirism:holy_water_enhanced")) {
+                missingMapping.remap(ENHANCED_BLESSING.get());
             }
         });
     }

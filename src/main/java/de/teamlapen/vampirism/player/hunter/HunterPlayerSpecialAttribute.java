@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.player.hunter;
 
+import de.teamlapen.lib.util.ISoundReference;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.player.hunter.actions.DisguiseHunterAction;
@@ -23,6 +24,11 @@ public class HunterPlayerSpecialAttribute {
     private int disguiseTicks = 0;
 
     private double vampireDistanceRel = 0;
+    /**
+     * Set while blessing an item.
+     */
+    @Nullable
+    public ISoundReference blessingSoundReference;
 
     public void activateDisguise() {
         disguised = true;

@@ -175,14 +175,9 @@
       ]
     },
     {
-      "name": "holy_Water",
+      "name": "holy_water",
       "rolls": 2,
       "entries": [
-        {
-          "type": "minecraft:item",
-          "weight": 50,
-          "name": "vampirism:holy_salt"
-        },
         {
           "type": "minecraft:item",
           "weight": 20,
