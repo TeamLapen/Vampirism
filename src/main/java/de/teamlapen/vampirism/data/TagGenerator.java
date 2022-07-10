@@ -150,11 +150,11 @@ public class TagGenerator {
             tag(Tags.Biomes.IS_DENSE).add(ModBiomes.VAMPIRE_FOREST.getKey());
             tag(Tags.Biomes.IS_MAGICAL).add(ModBiomes.VAMPIRE_FOREST.getKey());
             tag(Tags.Biomes.IS_SPOOKY).add(ModBiomes.VAMPIRE_FOREST.getKey());
-            tag(ModTags.Biomes.HAS_VAMPIRE_DUNGEON).addTags(BiomeTags.IS_OVERWORLD).remove(BiomeTags.IS_OCEAN); //TODO check
-            tag(ModTags.Biomes.HAS_VAMPIRE_SPAWN).addTags(BiomeTags.IS_OVERWORLD); //TODO check
-            tag(ModTags.Biomes.HAS_ADVANCED_VAMPIRE_SPAWN).addTags(BiomeTags.IS_OVERWORLD); //TODO check
-            tag(ModTags.Biomes.HAS_HUNTER_SPAWN).addTags(BiomeTags.IS_OVERWORLD); //TODO check
-            tag(ModTags.Biomes.HAS_ADVANCED_HUNTER_SPAWN).addTags(BiomeTags.IS_OVERWORLD); //TODO check
+            tag(ModTags.Biomes.HAS_VAMPIRE_DUNGEON).addTags(BiomeTags.IS_OVERWORLD).remove(BiomeTags.IS_OCEAN); //TODO 1.19 check
+            tag(ModTags.Biomes.HAS_VAMPIRE_SPAWN).addTags(BiomeTags.IS_OVERWORLD); //TODO 1.19 check
+            tag(ModTags.Biomes.HAS_ADVANCED_VAMPIRE_SPAWN).addTags(BiomeTags.IS_OVERWORLD); //TODO 1.19 check
+            tag(ModTags.Biomes.HAS_HUNTER_SPAWN).addTags(BiomeTags.IS_OVERWORLD); //TODO 1.19 check
+            tag(ModTags.Biomes.HAS_ADVANCED_HUNTER_SPAWN).addTags(BiomeTags.IS_OVERWORLD); //TODO 1.19 check
         }
     }
 

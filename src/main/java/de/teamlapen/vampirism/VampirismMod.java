@@ -296,7 +296,7 @@ public class VampirismMod {
 
     private void loadComplete(final FMLLoadCompleteEvent event) {
         onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
-//        event.enqueueWork(OverworldModifications::addBiomesToOverworldUnsafe); //TODO readd
+//        event.enqueueWork(OverworldModifications::addBiomesToOverworldUnsafe); //TODO 1.19 readd
     }
 
 

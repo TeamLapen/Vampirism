@@ -609,9 +609,9 @@ public class UtilLib {
     }
 
     public static Optional<StructureStart> getStructureStartAt(Level level, BlockPos pos, Holder<StructureSet> structureSet) {
-        if (level instanceof ServerLevel && level.isLoaded(pos)) {//TODO Recheck
+        if (level instanceof ServerLevel && level.isLoaded(pos)) {//TODO 1.19 Recheck
             Set<Structure> structures = structureSet.get().structures().stream().map(a -> a.structure().get()).collect(Collectors.toSet());
-            return ((ServerLevel) level).structureManager().startsForStructure(new ChunkPos(pos), structures::contains).stream().findFirst(); //TODO Recheck
+            return ((ServerLevel) level).structureManager().startsForStructure(new ChunkPos(pos), structures::contains).stream().findFirst(); //TODO 1.19 Recheck
         }
         return Optional.empty();
     }

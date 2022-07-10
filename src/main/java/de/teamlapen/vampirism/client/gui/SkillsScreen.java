@@ -562,7 +562,7 @@ public class SkillsScreen<T extends IFactionPlayer<T>> extends Screen {
             }
             int width_name = Math.max(this.font.width(tooltips.get(0)), 110);
             //GuiUtils.drawHoveringText(stack, tooltips, mouseX, mouseY, width, height, width_name, -1073741824, -1073741824, -1073741824, this.font);
-            this.renderTooltip(stack, tooltips.stream().flatMap(t -> this.font.split(t, width_name).stream()).collect(Collectors.toList()), mouseX, mouseY, this.font); // TODO 1.18 1.19 check if Forge introduced a way to modify background or a better one to specifiy width. See RenderToolTipEvent#Color or wait for vampirism 1.9's new skill screen
+            this.renderTooltip(stack, tooltips.stream().flatMap(t -> this.font.split(t, width_name).stream()).collect(Collectors.toList()), mouseX, mouseY, this.font);
 
 
             stack.popPose();

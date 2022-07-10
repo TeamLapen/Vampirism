@@ -16,7 +16,7 @@ public class VampirismBiomes {
         MobSpawnSettings.Builder mobSpawnBuilder = new MobSpawnSettings.Builder();
         mobSpawnBuilder.creatureGenerationProbability(0.25f);
         mobSpawnBuilder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.VAMPIRE.get(), 35, 1, 3));
-        mobSpawnBuilder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.VAMPIRE_BARON.get(), VampirismConfig.COMMON.baronSpawnChance.getDefault(), 1, 1)); //TODO config option
+        mobSpawnBuilder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.VAMPIRE_BARON.get(), VampirismConfig.COMMON.baronSpawnChance.getDefault(), 1, 1)); //TODO 1.19 config option
         mobSpawnBuilder.addSpawn(MobCategory.AMBIENT, new MobSpawnSettings.SpawnerData(ModEntities.BLINDING_BAT.get(), 60, 2, 4));
         mobSpawnBuilder.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(ModEntities.DUMMY_CREATURE.get(), 80, 3, 6));
 

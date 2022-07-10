@@ -23,16 +23,8 @@ public interface IRefinementSet {
     @Nonnull
     Rarity getRarity();
 
-    /**
-     * TODO 1.19 remove and rename the new method
-     * Use {@link #getRefinementRegistryObjects()}
-     */
-    @Deprecated
     @Nonnull
-    Set<IRefinement> getRefinements();
-
-    @Nonnull
-    Set<RegistryObject<? extends IRefinement>> getRefinementRegistryObjects();
+    Set<RegistryObject<? extends IRefinement>> getRefinements();
 
     /**
      * @return The accessory type this can be on, or empty if all

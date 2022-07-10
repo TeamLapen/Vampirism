@@ -72,7 +72,7 @@ public abstract class RefinementItem extends Item implements IRefinementItem {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         IRefinementSet set = getRefinementSet(stack);
         if (set != null) {
-            set.getRefinementRegistryObjects().stream().map(RegistryObject::get).forEach(refinement -> {
+            set.getRefinements().stream().map(RegistryObject::get).forEach(refinement -> {
                 tooltip.add(Component.literal(" - ").append(refinement.getDescription()).withStyle(ChatFormatting.GRAY));
             });
         }

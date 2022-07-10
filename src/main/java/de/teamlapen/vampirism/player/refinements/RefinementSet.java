@@ -58,13 +58,7 @@ public abstract class RefinementSet implements IRefinementSet {
 
     @Nonnull
     @Override
-    public Set<IRefinement> getRefinements() {
-        return this.refinements.stream().map(RegistryObject::get).collect(Collectors.toUnmodifiableSet());
-    }
-
-    @Nonnull
-    @Override
-    public Set<RegistryObject<? extends IRefinement>> getRefinementRegistryObjects() {
+    public Set<RegistryObject<? extends IRefinement>> getRefinements() {
         return this.refinements;
     }
 

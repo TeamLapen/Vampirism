@@ -140,7 +140,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
 
     @Override
     public float getBloodSaturation() {
-        return 1.0F;//TODO adjust
+        return 1.0F;
     }
 
     @Override

@@ -68,7 +68,7 @@ public class GeneralEventHandler {
             }
         }
         if (isAdminLikePlayer) {
-            //TODO 1.18
+            //TODO 1.19
 //            List<String> mods = IntegrationsNotifier.shouldNotifyAboutIntegrations();
 //            if (!mods.isEmpty()) {
 //                player.sendMessage(Component.translatable("text.vampirism.integrations_available.first"), Util.NIL_UUID);
