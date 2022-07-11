@@ -13,6 +13,8 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 
 import javax.annotation.Nonnull;
 
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition.Builder;
+
 public class TentSpawnerCondition implements LootItemCondition {
 
     private final static TentSpawnerCondition INSTANCE = new TentSpawnerCondition();

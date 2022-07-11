@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.VReference;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -101,20 +102,29 @@ public class BloodConversionRegistry {
         return 0;
     }
 
+    /**
+     * @deprecated use {@link #canBeConverted(net.minecraft.world.item.ItemStack)}
+     */
+    @Deprecated
     public static boolean canBeConverted(@Nonnull Item item) {
-        if (items.containsKey(id(item)) || items_calculated.containsKey(id(item))) {
+        return canBeConverted(new ItemStack(item));
+    }
+
+    public static boolean canBeConverted(@Nonnull ItemStack stack) {
+        ResourceLocation id = id(stack.getItem());
+        if (items.containsKey(id) || items_calculated.containsKey(id)) {
             return true;
-        } else if (items_blacklist.contains(id(item))) {
+        } else if (items_blacklist.contains(id)) {
             return false;
         } else {
-            if (item.isEdible() && item.getFoodProperties().isMeat()) {
-                int value = Mth.clamp((id(item) != null && id(item).getPath().contains("cooked")) ? 0 : item.getFoodProperties().getNutrition() / 2, 0, 5);
+            if (stack.isEdible() && stack.getFoodProperties(null).isMeat()) {
+                int value = Mth.clamp((id != null && id.getPath().contains("cooked")) ? 0 : stack.getFoodProperties(null).getNutrition() / 2, 0, 5);
                 if (value > 0) {
-                    items_calculated.put(id(item), value);
+                    items_calculated.put(id, value);
                     return true;
                 }
             }
-            items_blacklist.add(id(item));
+            items_blacklist.add(id);
             return false;
         }
     }

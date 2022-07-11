@@ -33,6 +33,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import java.util.Map.Entry;
+
 public class TotemHelper {
     public static final int MIN_HOMES = 4;
     public static final int MIN_WORKSTATIONS = 2;

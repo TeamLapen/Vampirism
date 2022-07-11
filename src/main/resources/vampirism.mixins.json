@@ -1,7 +1,7 @@
 {
   "required": true,
   "package": "de.teamlapen.vampirism.mixin",
-  "compatibilityLevel": "JAVA_18",
+  "compatibilityLevel": "JAVA_17",
   "refmap": "vampirism.refmap.json",
   "mixins": [
     "AbstractFurnaceBlockEntityAccessor",

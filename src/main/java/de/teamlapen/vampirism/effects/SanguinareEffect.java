@@ -2,14 +2,13 @@ package de.teamlapen.vampirism.effects;
 
 import com.google.common.base.Preconditions;
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -21,7 +20,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.EffectRenderer;
+import net.minecraftforge.client.extensions.common.IClientMobEffectExtensions;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -76,24 +75,28 @@ public class SanguinareEffect extends VampirismEffect {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void initializeClient(Consumer<EffectRenderer> consumer) {
-        consumer.accept(new EffectRenderer() {
-            @OnlyIn(Dist.CLIENT)
+    public void initializeClient(Consumer<IClientMobEffectExtensions> consumer) {
+        consumer.accept(new IClientMobEffectExtensions() {
+//            @OnlyIn(Dist.CLIENT) //TODO check
+//            @Override
+//            public void renderInventoryEffect(MobEffectInstance effect, EffectRenderingInventoryScreen<?> gui, PoseStack mStack, int x, int y, float z) {
+//                String s = UtilLib.translate(effect.getEffect().getDescriptionId());
+//                gui.font.drawShadow
+//                        (mStack, s, (float) (x + 10 + 18), (float) (y + 6), 16777215);
+//            }
+
             @Override
-            public void renderInventoryEffect(MobEffectInstance effect, EffectRenderingInventoryScreen<?> gui, PoseStack mStack, int x, int y, float z) {
-                String s = UtilLib.translate(effect.getEffect().getDescriptionId());
-                gui.font.drawShadow
-                        (mStack, s, (float) (x + 10 + 18), (float) (y + 6), 16777215);
+            public boolean renderGuiIcon(MobEffectInstance instance, Gui gui, PoseStack poseStack, int x, int y, float z, float alpha) {
+                return true;
             }
 
             @Override
-            public void renderHUDEffect(MobEffectInstance effect, GuiComponent gui, PoseStack mStack, int x, int y, float z, float alpha) {
-
+            public boolean renderInventoryText(MobEffectInstance instance, EffectRenderingInventoryScreen<?> screen, PoseStack poseStack, int x, int y, int blitOffset) {
+                return true;
             }
 
-            @OnlyIn(Dist.CLIENT)
             @Override
-            public boolean shouldRenderInvText(MobEffectInstance effect) {
+            public boolean isVisibleInGui(MobEffectInstance instance) {
                 return false;
             }
         });

@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.blockentity.BloodContainerBlockEntity;
 import de.teamlapen.vampirism.client.core.ClientEventHandler;
 import de.teamlapen.vampirism.core.ModFluids;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -17,13 +18,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.client.model.data.IDynamicBakedModel;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.IDynamicBakedModel;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.fluids.FluidStack;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -79,20 +79,19 @@ public class BakedBloodContainerModel implements IDynamicBakedModel {
         return baseModel.getTransforms();
     }
 
-    @Nonnull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull IModelData extraData) {
+    public @NotNull List<BakedQuad> getQuads(@org.jetbrains.annotations.Nullable BlockState state, @org.jetbrains.annotations.Nullable Direction side, @NotNull RandomSource rand, @NotNull ModelData extraData, @org.jetbrains.annotations.Nullable RenderType renderType) {
         List<BakedQuad> quads = new LinkedList<>(baseModel.getQuads(state, side, rand));
 
         if (!item) {
-            Integer level = extraData.getData(BloodContainerBlockEntity.FLUID_LEVEL_PROP);
-            Boolean impure = extraData.getData(BloodContainerBlockEntity.FLUID_IMPURE);
+            Integer level = extraData.get(BloodContainerBlockEntity.FLUID_LEVEL_PROP);
+            Boolean impure = extraData.get(BloodContainerBlockEntity.FLUID_IMPURE);
             if (impure != null && level != null && level > 0 && level <= FLUID_LEVELS) {
-                quads.addAll((impure ? IMPURE_BLOOD_FLUID_MODELS[level - 1] : BLOOD_FLUID_MODELS[level - 1]).getQuads(state, side, rand));
+                quads.addAll((impure ? IMPURE_BLOOD_FLUID_MODELS[level - 1] : BLOOD_FLUID_MODELS[level - 1]).getQuads(state, side, rand, ModelData.EMPTY, renderType));
             }
         } else {
             {
-                quads.addAll((impure ? IMPURE_BLOOD_FLUID_MODELS[fluidLevel] : BLOOD_FLUID_MODELS[fluidLevel]).getQuads(state, side, rand));
+                quads.addAll((impure ? IMPURE_BLOOD_FLUID_MODELS[fluidLevel] : BLOOD_FLUID_MODELS[fluidLevel]).getQuads(state, side, rand, ModelData.EMPTY, renderType));
             }
         }
         return quads;

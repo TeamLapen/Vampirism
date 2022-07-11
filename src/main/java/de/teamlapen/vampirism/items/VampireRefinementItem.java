@@ -7,6 +7,9 @@ import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
+import de.teamlapen.vampirism.api.items.IRefinementItem.AccessorySlotType;
+import net.minecraft.world.item.Item.Properties;
+
 public class VampireRefinementItem extends RefinementItem {
 
     public VampireRefinementItem(Properties properties, AccessorySlotType type) {

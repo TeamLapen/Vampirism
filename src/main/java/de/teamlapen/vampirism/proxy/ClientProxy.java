@@ -41,8 +41,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
 import org.apache.commons.lang3.tuple.Pair;
@@ -201,15 +199,9 @@ public class ClientProxy extends CommonProxy {
                 registerSubscriptions();
                 ActionSelectScreen.loadActionOrder();
                 ModBlocksRender.register();
-                OverlayRegistry.registerOverlayAbove(ForgeIngameGui.EXPERIENCE_BAR_ELEMENT, "vampirism_faction_level", VIngameOverlays.FACTION_LEVEL_ELEMENT);
-                OverlayRegistry.registerOverlayAbove(ForgeIngameGui.BOSS_HEALTH_ELEMENT, "vampirism_raid_bar", VIngameOverlays.FACTION_RAID_BAR_ELEMENT);
-                OverlayRegistry.registerOverlayAbove(ForgeIngameGui.FOOD_LEVEL_ELEMENT, "vampirism_blood_bar", VIngameOverlays.BLOOD_BAR_ELEMENT);
                 break;
             case LOAD_COMPLETE:
-                event.enqueueWork(ModBlocksRender::registerColorsUnsafe);
-                event.enqueueWork(ModItemsRender::registerColorsUnsafe);
                 event.enqueueWork(ModItemsRender::registerItemModelPropertyUnsafe);
-                event.enqueueWork(ModParticleFactories::registerFactoriesUnsafe);
                 event.enqueueWork(ModScreens::registerScreensUnsafe);
                 skillTreeManager.init();
                 itemStackBESR = new VampirismBlockEntityWitoutLevelRenderer(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());

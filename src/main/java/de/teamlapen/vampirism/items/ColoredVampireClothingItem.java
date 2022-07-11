@@ -11,7 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.IItemRenderProperties;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -32,15 +32,13 @@ public class ColoredVampireClothingItem extends VampireClothingItem {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void initializeClient(Consumer<IItemRenderProperties> consumer) {
-        consumer.accept(new IItemRenderProperties() {
-                            @SuppressWarnings({"DuplicateBranchesInSwitch", "SwitchStatementWithTooFewBranches", "UnnecessaryDefault"})
-                            @NotNull
-                            @Override
-                            public Model getBaseArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel<?> _default) {
+    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+        consumer.accept(new IClientItemExtensions() {
+                            @SuppressWarnings({"UnnecessaryDefault", "DuplicateBranchesInSwitch", "SwitchStatementWithTooFewBranches"})
+                            public @NotNull Model getGenericArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<?> original) {
                                 return switch (model) {
-                                    case CLOAK -> CloakModel.getAdjustedCloak(_default);
-                                    default -> CloakModel.getAdjustedCloak(_default);
+                                    case CLOAK -> CloakModel.getAdjustedCloak(original);
+                                    default -> CloakModel.getAdjustedCloak(original);
                                 };
                             }
                         }

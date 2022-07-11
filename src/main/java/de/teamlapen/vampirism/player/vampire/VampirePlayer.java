@@ -87,6 +87,8 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 
+import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer.BITE_TYPE;
+
 /**
  * Main class for Vampire Players.
  */

@@ -46,8 +46,11 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.event.CustomizeGuiOverlayEvent;
+import net.minecraftforge.client.event.RenderGuiEvent;
+import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -133,9 +136,14 @@ public class VampirismHUDOverlay extends ExtendedGui {
     }
 
     @SubscribeEvent
-    public void onRenderCrosshair(RenderGameOverlayEvent.PreLayer event) {
+    public void onC(CustomizeGuiOverlayEvent event) {
 
-        if (event.getOverlay() != ForgeIngameGui.CROSSHAIR_ELEMENT || mc.player == null || !mc.player.isAlive()) {
+    }
+
+    @SubscribeEvent
+    public void onRenderCrosshair(RenderGuiOverlayEvent.Pre event) {
+
+        if (event.getOverlay().id() != VanillaGuiOverlay.CROSSHAIR.id() || mc.player == null || !mc.player.isAlive()) {
             return;
         }
 
@@ -216,16 +224,15 @@ public class VampirismHUDOverlay extends ExtendedGui {
     }
 
     @SubscribeEvent
-    public void onRenderFoodBar(RenderGameOverlayEvent.PreLayer event) {
+    public void onRenderFoodBar(RenderGuiOverlayEvent.Pre event) {
         //disable foodbar if bloodbar is rendered
-        if (event.getOverlay() == ForgeIngameGui.FOOD_LEVEL_ELEMENT && mc.player != null && Helper.isVampire(mc.player) && !IMCHandler.requestedToDisableBloodbar && mc.gameMode.hasExperience() && mc.player.isAlive()) {
+        if (event.getOverlay().id() == VanillaGuiOverlay.FOOD_LEVEL.id() && mc.player != null && Helper.isVampire(mc.player) && !IMCHandler.requestedToDisableBloodbar && mc.gameMode.hasExperience() && mc.player.isAlive()) {
             event.setCanceled(true);
         }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onRenderGameOverlay(RenderGameOverlayEvent.Pre event) {
-        if (event.getType() != RenderGameOverlayEvent.ElementType.ALL) return;
+    public void onRenderGameOverlay(RenderGuiEvent.Pre event) {
         if ((screenPercentage > 0 || screenBottomPercentage > 0) && VampirismConfig.CLIENT.renderScreenOverlay.get()) {
             PoseStack stack = event.getPoseStack();
             stack.pushPose();
@@ -295,8 +302,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
     }
 
     @SubscribeEvent
-    public void onRenderHealthBarPost(RenderGameOverlayEvent.PostLayer event) {
-        if (event.getOverlay() != ForgeIngameGui.PLAYER_HEALTH_ELEMENT) {
+    public void onRenderHealthBarPost(RenderGuiOverlayEvent.Post event) {
+        if (event.getOverlay().id() != VanillaGuiOverlay.PLAYER_HEALTH.id()) {
             return;
         }
         if (addTempPoison) {
@@ -307,8 +314,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
     }
 
     @SubscribeEvent
-    public void onRenderHealthBarPre(RenderGameOverlayEvent.PreLayer event) {
-        if (event.getOverlay() != ForgeIngameGui.PLAYER_HEALTH_ELEMENT) {
+    public void onRenderHealthBarPre(RenderGuiOverlayEvent.Pre event) {
+        if (event.getOverlay().id() != VanillaGuiOverlay.PLAYER_HEALTH.id()) {
             return;
         }
         addTempPoison = mc.player.hasEffect(ModEffects.POISON.get()) && !mc.player.activeEffects.containsKey(MobEffects.POISON);

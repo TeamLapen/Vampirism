@@ -36,6 +36,8 @@ import net.minecraftforge.network.NetworkHooks;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class WeaponTableBlock extends VampirismHorizontalBlock {
     public static final int MAX_LAVA = 5;
     public static final int MB_PER_META = 200;

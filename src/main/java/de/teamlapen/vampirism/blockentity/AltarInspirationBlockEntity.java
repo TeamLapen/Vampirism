@@ -28,9 +28,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.ModelDataManager;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -61,7 +59,7 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
      */
     private int targetLevel;
     private Player ritualPlayer;
-    private IModelData modelData;
+    private ModelData modelData;
 
     public AltarInspirationBlockEntity(BlockPos pos, BlockState state) {
         super(ModTiles.ALTAR_INSPIRATION.get(), pos, state);
@@ -70,7 +68,7 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
 
     @Nonnull
     @Override
-    public IModelData getModelData() {
+    public ModelData getModelData() {
         if (modelData == null) updateModelData(false);
         return modelData;
     }
@@ -168,9 +166,9 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
             float i = (fluid.getAmount() / (float) AltarInspirationBlockEntity.CAPACITY * 10);
             l = (i > 0 && i < 1) ? 1 : (int) i;
         }
-        modelData = new ModelDataMap.Builder().withInitial(FLUID_LEVEL_PROP, l).build();
+        modelData = ModelData.builder().with(FLUID_LEVEL_PROP, l).build();
         if (refresh) {
-            ModelDataManager.requestModelDataRefresh(this);
+//            ModelDataManager.requestModelDataRefresh(this); //TODO check
         }
     }
 

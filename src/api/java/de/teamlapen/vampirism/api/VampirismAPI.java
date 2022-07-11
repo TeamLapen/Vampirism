@@ -20,6 +20,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.LazyOptional;
+import org.jetbrains.annotations.ApiStatus;
 
 /**
  * Class for core api methods
@@ -92,6 +93,7 @@ public class VampirismAPI {
      *
      * @throws IllegalStateException if the API was already setup
      */
+    @ApiStatus.Internal
     public static void setUpRegistries(IFactionRegistry factionRegistryIn, ISundamageRegistry sundamageRegistryIn, IVampirismEntityRegistry entityRegistryIn, IActionManager actionManagerIn, ISkillManager skillManagerIn,
                                        IVampireVisionRegistry vampireVisionRegistryIn, IEntityActionManager entityActionManagerIn, IExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistryIn) {
         if (INIT) throw new IllegalStateException("Vampirism API can only be setup once");
@@ -110,7 +112,7 @@ public class VampirismAPI {
      * FOR FUTURE INTERNAL USE ONLY
      * Called once Vampirism has finished preparing the API, and it is ready to use.
      */
-    @Deprecated
+    @ApiStatus.Internal
     public static void onSetupComplete() {
 
     }

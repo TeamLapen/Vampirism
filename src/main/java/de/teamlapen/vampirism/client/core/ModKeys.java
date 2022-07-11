@@ -24,8 +24,8 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.common.MinecraftForge;
@@ -70,16 +70,18 @@ public class ModKeys {
     public static final KeyMapping ACTION3 = new KeyMapping(ACTIVATE_ACTION3, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_3, CATEGORY);
     public static final KeyMapping MINION = new KeyMapping(MINION_TASK, KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
 
+    public static void registerKeyMapping(RegisterKeyMappingsEvent event) {
+        event.register(ACTION);
+        event.register(SUCK);
+        event.register(VAMPIRISM_MENU);
+        event.register(VISION);
+        event.register(ACTION1);
+        event.register(ACTION2);
+        event.register(ACTION3);
+        event.register(MINION);
+    }
     public static void register() {
         MinecraftForge.EVENT_BUS.register(new ModKeys());
-        ClientRegistry.registerKeyBinding(ACTION);
-        ClientRegistry.registerKeyBinding(SUCK);
-        ClientRegistry.registerKeyBinding(VAMPIRISM_MENU);
-        ClientRegistry.registerKeyBinding(VISION);
-        ClientRegistry.registerKeyBinding(ACTION1);
-        ClientRegistry.registerKeyBinding(ACTION2);
-        ClientRegistry.registerKeyBinding(ACTION3);
-        ClientRegistry.registerKeyBinding(MINION);
     }
 
     private boolean suckKeyDown = false;

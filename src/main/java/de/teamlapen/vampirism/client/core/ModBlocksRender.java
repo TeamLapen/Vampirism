@@ -8,8 +8,6 @@ import de.teamlapen.vampirism.client.render.tiles.*;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModTiles;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -18,6 +16,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 
 /**
  * Handles all block render registration including TileEntities
@@ -30,15 +29,14 @@ public class ModBlocksRender {
         registerRenderType();
     }
 
-    public static void registerColorsUnsafe() {
-        BlockColors colors = Minecraft.getInstance().getBlockColors();
-        colors.register((state, worldIn, pos, tintIndex) -> {
+    public static void registerBlockColors(RegisterColorHandlersEvent.Block event) {
+        event.register((state, worldIn, pos, tintIndex) -> {
             if (tintIndex == 1) {
                 return 0x9966FF;
             }
             return 0x8855FF;
         }, ModBlocks.ALCHEMICAL_FIRE.get());
-        colors.register((state, worldIn, pos, tintIndex) -> {
+        event.register((state, worldIn, pos, tintIndex) -> {
             if (tintIndex == 255) {
                 BlockEntity tile = (worldIn == null || pos == null) ? null : worldIn.getBlockEntity(pos);
                 if (tile instanceof AlchemicalCauldronBlockEntity) {
@@ -47,7 +45,7 @@ public class ModBlocksRender {
             }
             return 0xFFFFFF;
         }, ModBlocks.ALCHEMICAL_CAULDRON.get());
-        colors.register((state, worldIn, pos, tintIndex) -> {
+        event.register((state, worldIn, pos, tintIndex) -> {
             if (tintIndex == 255) {
                 BlockEntity tile = (worldIn == null || pos == null) ? null : worldIn.getBlockEntity(pos);
                 if (tile instanceof TotemBlockEntity) {
@@ -57,9 +55,9 @@ public class ModBlocksRender {
             }
             return 0xFFFFFF;
         }, TotemTopBlock.getBlocks().toArray(new TotemTopBlock[0]));
-        colors.register((state, worldIn, pos, tintIndex) -> 0x1E1F1F, ModBlocks.VAMPIRE_SPRUCE_LEAVES.get());
-        colors.register((state, worldIn, pos, tintIndex) -> 0x2e0606, ModBlocks.BLOODY_SPRUCE_LEAVES.get());
-        colors.register((state, worldIn, pos, tintIndex) -> worldIn != null && pos != null ? BiomeColors.getAverageGrassColor(worldIn, pos) : GrassColor.get(0.5D, 1.0D), ModBlocks.CURSED_GRASS_BLOCK.get());
+        event.register((state, worldIn, pos, tintIndex) -> 0x1E1F1F, ModBlocks.VAMPIRE_SPRUCE_LEAVES.get());
+        event.register((state, worldIn, pos, tintIndex) -> 0x2e0606, ModBlocks.BLOODY_SPRUCE_LEAVES.get());
+        event.register((state, worldIn, pos, tintIndex) -> worldIn != null && pos != null ? BiomeColors.getAverageGrassColor(worldIn, pos) : GrassColor.get(0.5D, 1.0D), ModBlocks.CURSED_GRASS_BLOCK.get());
     }
 
     public static void registerBlockEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {

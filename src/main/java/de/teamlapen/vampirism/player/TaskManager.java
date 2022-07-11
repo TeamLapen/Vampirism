@@ -18,8 +18,6 @@ import de.teamlapen.vampirism.player.tasks.reward.LordLevelReward;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -29,6 +27,7 @@ import net.minecraft.stats.Stats;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -341,8 +340,8 @@ public class TaskManager implements ITaskManager {
             }
             case ENTITY_TAG -> {
                 //noinspection unchecked
-                for (Holder<EntityType<?>> type : Registry.ENTITY_TYPE.getTagOrEmpty((TagKey<EntityType<?>>) requirement.getStat(this.factionPlayer))) {
-                    actualStat += this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type.value()));
+                for (EntityType<?> type : Objects.requireNonNull(ForgeRegistries.ENTITIES.tags()).getTag((TagKey<EntityType<?>>) requirement.getStat(this.factionPlayer))) {
+                    actualStat += this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type));
                 }
                 neededStat = stats.get(requirement.getId()) + requirement.getAmount(this.factionPlayer);
             }
@@ -455,21 +454,18 @@ public class TaskManager implements ITaskManager {
         Map<ResourceLocation, Integer> reqStats = taskInstance.getStats();
         for (TaskRequirement.Requirement<?> requirement : taskInstance.getTask().getRequirement().getAll()) {
             switch (requirement.getType()) {
-                case STATS:
-                    reqStats.putIfAbsent(requirement.getId(), this.player.getStats().getValue(Stats.CUSTOM.get((ResourceLocation) requirement.getStat(this.factionPlayer))));
-                    break;
-                case ENTITY:
-                    reqStats.putIfAbsent(requirement.getId(), this.player.getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) requirement.getStat(this.factionPlayer))));
-                    break;
-                case ENTITY_TAG:
+                case STATS -> reqStats.putIfAbsent(requirement.getId(), this.player.getStats().getValue(Stats.CUSTOM.get((ResourceLocation) requirement.getStat(this.factionPlayer))));
+                case ENTITY -> reqStats.putIfAbsent(requirement.getId(), this.player.getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) requirement.getStat(this.factionPlayer))));
+                case ENTITY_TAG -> {
                     int amount = 0;
-                    //noinspection unchecked
-                    for (Holder<EntityType<?>> type : Registry.ENTITY_TYPE.getTagOrEmpty((TagKey<EntityType<?>>) requirement.getStat(this.factionPlayer))) {
-                        amount += this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type.value()));
+                    //noinspection unchecked,ConstantConditions
+                    for (EntityType<?> type : ForgeRegistries.ENTITIES.tags().getTag((TagKey<EntityType<?>>) requirement.getStat(this.factionPlayer))) {
+                        amount += this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type));
                     }
                     reqStats.putIfAbsent(requirement.getId(), amount);
-                    break;
-                default:
+                }
+                default -> {
+                }
             }
         }
     }

@@ -25,6 +25,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
@@ -131,7 +132,7 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
         this.yo = this.getY();
         this.zo = this.getZ();
 
-        if (this.isEyeInFluid(FluidTags.WATER)) {
+        if (this.isEyeInFluidType(ForgeMod.WATER_TYPE.get())) {
             Vec3 vec3d = this.getDeltaMovement();
             this.setDeltaMovement(vec3d.x * (double) 0.99F, Math.min(vec3d.y + (double) 5.0E-4F, 0.06F), vec3d.z * (double) 0.99F);
         } else if (!this.isNoGravity()) {

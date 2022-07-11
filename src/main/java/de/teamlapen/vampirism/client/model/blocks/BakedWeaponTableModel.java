@@ -12,7 +12,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ModelBakeEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -22,7 +21,6 @@ import java.util.List;
 /**
  * Extends the basic weapon table model, by a variable lava fluid level
  */
-@SuppressWarnings("ClassCanBeRecord")
 @OnlyIn(Dist.CLIENT)
 public class BakedWeaponTableModel implements BakedModel {
 

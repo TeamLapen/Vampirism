@@ -16,6 +16,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nonnull;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class TotemBaseBlock extends VampirismBlock {
     private static final VoxelShape shape = makeShape();
 

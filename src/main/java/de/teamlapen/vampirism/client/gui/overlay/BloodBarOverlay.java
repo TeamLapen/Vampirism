@@ -10,15 +10,15 @@ import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.IIngameOverlay;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
-public class BloodBarOverlay extends GuiComponent implements IIngameOverlay {
+public class BloodBarOverlay extends GuiComponent implements IGuiOverlay {
     private final ResourceLocation icons = new ResourceLocation(REFERENCE.MODID + ":textures/gui/icons.png");
     private final Minecraft mc = Minecraft.getInstance();
 
     @Override
-    public void render(ForgeIngameGui gui, PoseStack stack, float partialTicks, int width, int height) {
+    public void render(ForgeGui gui, PoseStack stack, float partialTicks, int width, int height) {
         if (this.mc.player != null && Helper.isVampire(this.mc.player) && !IMCHandler.requestedToDisableBloodbar) {
             if (this.mc.gameMode.hasExperience() && this.mc.player.isAlive()) {
                 VampirePlayer.getOpt(this.mc.player).map(VampirePlayer::getBloodStats).ifPresent(stats -> {
@@ -26,8 +26,8 @@ public class BloodBarOverlay extends GuiComponent implements IIngameOverlay {
 
                             RenderSystem.setShaderTexture(0, icons);
                             int left = this.mc.getWindow().getGuiScaledWidth() / 2 + 91;
-                            int top = this.mc.getWindow().getGuiScaledHeight() - ((ForgeIngameGui) this.mc.gui).right_height;
-                            ((ForgeIngameGui) this.mc.gui).right_height += 10;
+                            int top = this.mc.getWindow().getGuiScaledHeight() - ((ForgeGui) this.mc.gui).rightHeight;
+                            ((ForgeGui) this.mc.gui).rightHeight += 10;
                             int blood = stats.getBloodLevel();
                             int maxBlood = stats.getMaxBlood();
                             int blood2 = blood - 20;

@@ -17,7 +17,6 @@ import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.MixinHooks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
-import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.client.renderer.OutlineBufferSource;
 import net.minecraft.client.renderer.PostChain;
 import net.minecraft.client.renderer.PostPass;
@@ -93,7 +92,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
     }
 
     @SubscribeEvent
-    public void onCameraSetup(EntityViewRenderEvent.CameraSetup event) {
+    public void onCameraSetup(ViewportEvent.ComputeCameraAngles event) {
         if (shouldRenderBloodVision()) {
             reducedBloodVision = OptifineHandler.isShaders();
             if (!reducedBloodVision) {
@@ -172,7 +171,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
     }
 
     @SubscribeEvent
-    public void onRenderFog(EntityViewRenderEvent.RenderFogEvent event) {
+    public void onRenderFog(ViewportEvent.RenderFog event) {
         if (vampireBiomeTicks == 0) return;
         float f = ((float) VAMPIRE_BIOME_FADE_TICKS) / (float) vampireBiomeTicks / 1.5f;
         f *= vampireBiomeFogDistanceMultiplier;

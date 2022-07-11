@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.fluids.ImpureBloodFluid;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.client.IFluidTypeRenderProperties;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fml.ModList;
@@ -28,8 +28,8 @@ public class ModFluids {
             .descriptionId(ModList.get().isLoaded(REFERENCE.INTEGRATIONS_MODID) ? "fluid.vampirism.blood.vampirism" : "fluid.vampirism.blood")) {
 
         @Override
-        public void initializeClient(Consumer<IFluidTypeRenderProperties> consumer) {
-            consumer.accept(new IFluidTypeRenderProperties() {
+        public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
+            consumer.accept(new IClientFluidTypeExtensions() {
 
                 @Override
                 public ResourceLocation getStillTexture() {
@@ -42,7 +42,7 @@ public class ModFluids {
                 }
 
                 @Override
-                public int getColorTint() {
+                public int getTintColor() {
                     return 0xEEFF1111;
                 }
             });
@@ -57,8 +57,8 @@ public class ModFluids {
             .descriptionId(ModList.get().isLoaded(REFERENCE.INTEGRATIONS_MODID) ? "fluid.vampirism.blood.vampirism" : "fluid.vampirism.blood")) {
 
         @Override
-        public void initializeClient(Consumer<IFluidTypeRenderProperties> consumer) {
-            consumer.accept(new IFluidTypeRenderProperties() {
+        public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
+            consumer.accept(new IClientFluidTypeExtensions() {
 
                 @Override
                 public ResourceLocation getStillTexture() {
@@ -71,7 +71,7 @@ public class ModFluids {
                 }
 
                 @Override
-                public int getColorTint() {
+                public int getTintColor() {
                     return 0xEEFF1111;
                 }
             });

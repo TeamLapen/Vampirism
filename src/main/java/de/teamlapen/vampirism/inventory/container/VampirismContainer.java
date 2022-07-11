@@ -30,6 +30,9 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import de.teamlapen.lib.lib.inventory.InventoryContainer.SelectorInfo;
+import de.teamlapen.lib.lib.inventory.InventoryContainer.SelectorSlot;
+
 public class VampirismContainer extends InventoryContainer implements TaskContainer {
 
     private static final Function<Player, SelectorInfo[]> SELECTOR_INFOS = player -> {

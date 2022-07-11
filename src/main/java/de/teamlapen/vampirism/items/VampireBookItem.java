@@ -26,6 +26,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class VampireBookItem extends Item {
 
     public static boolean validBookTagContents(CompoundTag nbt) {

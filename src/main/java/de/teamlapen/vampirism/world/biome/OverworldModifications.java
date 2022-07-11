@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.world.biome;
 
 import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBiomes;
@@ -15,6 +14,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.biome.MultiNoiseBiomeSource;
 import net.minecraft.world.level.levelgen.SurfaceRules;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -142,7 +142,7 @@ public class OverworldModifications {
         }
 
         public SurfaceRules.SurfaceRule apply(SurfaceRules.Context p_189523_) {
-            return (p_189774_, p_189775_, p_189776_) -> Registry.BLOCK.get(block_id).defaultBlockState();
+            return (p_189774_, p_189775_, p_189776_) -> ForgeRegistries.BLOCKS.getValue(block_id).defaultBlockState();
         }
 
         @Override

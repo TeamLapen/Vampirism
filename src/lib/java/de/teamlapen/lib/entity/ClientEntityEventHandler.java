@@ -12,14 +12,14 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class ClientEntityEventHandler {
 
     @SubscribeEvent
-    public void onPlayerLoggedInClient(ClientPlayerNetworkEvent.LoggedInEvent event) {
+    public void onPlayerLoggedInClient(ClientPlayerNetworkEvent.LoggingIn event) {
         if (HelperRegistry.getSyncablePlayerCaps().size() > 0) {
             VampLib.dispatcher.sendToServer(new RequestPlayerUpdatePacket());
         }
     }
 
     @SubscribeEvent
-    public void onPlayerRespawnedClient(ClientPlayerNetworkEvent.RespawnEvent event) {
+    public void onPlayerRespawnedClient(ClientPlayerNetworkEvent.Clone event) {
         if (HelperRegistry.getSyncablePlayerCaps().size() > 0) {
             VampLib.dispatcher.sendToServer(new RequestPlayerUpdatePacket());
         }

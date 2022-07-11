@@ -169,7 +169,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     protected boolean canConsume(ItemStack stack) {
         if (!super.canConsume(stack)) return false;
         boolean fullHealth = this.getHealth() == this.getMaxHealth();
-        return !stack.isEdible() || !fullHealth || stack.getItem().getFoodProperties().canAlwaysEat();
+        return !stack.isEdible() || !fullHealth || stack.getItem().getFoodProperties(stack, this).canAlwaysEat();
     }
 
     @Override

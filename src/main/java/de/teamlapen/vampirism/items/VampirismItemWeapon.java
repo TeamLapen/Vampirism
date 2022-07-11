@@ -19,6 +19,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class VampirismItemWeapon extends SwordItem {
     private final float attackDamage;
     private final float attackSpeed;

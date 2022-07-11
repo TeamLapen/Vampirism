@@ -9,6 +9,8 @@ import net.minecraft.world.level.material.Material;
 
 import javax.annotation.Nonnull;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 /**
  * Vampirism's flowers. To add one add it to {@link TYPE}
  */

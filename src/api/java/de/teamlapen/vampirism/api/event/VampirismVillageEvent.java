@@ -13,6 +13,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import net.minecraftforge.eventbus.api.Event.HasResult;
+
 @SuppressWarnings("unused")
 public abstract class VampirismVillageEvent extends Event {
 

@@ -32,7 +32,7 @@ import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.RenderProperties;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.FluidUtil;
@@ -104,8 +104,9 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
 
     @OnlyIn(Dist.CLIENT)
     public int getLiquidColorClient() {
+
         ItemStack liquidItem = this.items.get(0);
-        return FluidUtil.getFluidContained(liquidItem).map(fluidStack -> RenderProperties.get(fluidStack.getFluid()).getColorTint(fluidStack)).orElseGet(()->ModRecipes.getLiquidColor(liquidItem.getItem()));
+        return FluidUtil.getFluidContained(liquidItem).map(fluidStack -> IClientFluidTypeExtensions.of(fluidStack.getFluid()).getTintColor(fluidStack)).orElseGet(()->ModRecipes.getLiquidColor(liquidItem.getItem()));
     }
 
     public Component getOwnerName() {

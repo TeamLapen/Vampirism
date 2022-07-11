@@ -230,7 +230,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     @Override
     public ItemStack eat(@Nonnull Level world, @Nonnull ItemStack stack) {
         if (stack.isEdible()) {
-            float healAmount = stack.getItem().getFoodProperties().getNutrition() / 2f;
+            float healAmount = stack.getItem().getFoodProperties(stack, this).getNutrition() / 2f;
             this.heal(healAmount);
         }
         return super.eat(world, stack);

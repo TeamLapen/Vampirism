@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraftforge.client.gui.GuiUtils;
+import net.minecraftforge.client.gui.ScreenUtils;
 
 import javax.annotation.Nonnull;
 
@@ -36,7 +36,7 @@ public class ProgressBar extends AbstractWidget {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        GuiUtils.drawContinuousTexturedBox(matrixStack, WIDGETS, x, y, 0, 46 + i * 20, this.width, 20, 200, 20, 3, 0);
+        ScreenUtils.blitWithBorder(matrixStack, WIDGETS, x, y, 0, 46 + i * 20, this.width, 20, 200, 20, 3, 0);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor((color >> 16) / 256f, ((color >> 8) & 0xFF) / 256f, (color & 0xFF) / 256f, this.alpha);
         RenderSystem.setShaderTexture(0, WIDGETS);

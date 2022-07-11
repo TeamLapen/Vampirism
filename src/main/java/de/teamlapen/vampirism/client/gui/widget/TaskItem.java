@@ -32,7 +32,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.client.gui.GuiUtils;
+import net.minecraftforge.client.gui.ScreenUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -92,7 +92,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
     public void renderDummy(PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel) {
         //render background
         RenderSystem.enableDepthTest();
-        GuiUtils.drawContinuousTexturedBox(matrixStack, TASKMASTER_GUI_TEXTURE, x, y, 17, 208, listWidth, itemHeight, 136, 21, 3, 3, 3, 3, zLevel);
+        ScreenUtils.blitWithBorder(matrixStack, TASKMASTER_GUI_TEXTURE, x, y, 17, 208, listWidth, itemHeight, 136, 21, 3, 3, 3, 3, zLevel);
         RenderSystem.disableDepthTest();
 
         //render content

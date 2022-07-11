@@ -248,7 +248,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
         ItemStack actualDrop = stack;
         Item item = stack.getItem();
         if (item.isEdible()) {
-            if (item.getFoodProperties().isMeat()) {
+            if (item.getFoodProperties(stack, this).isMeat()) {
                 actualDrop = new ItemStack(Items.ROTTEN_FLESH, stack.getCount()); //Replace all meat with rotten flesh
             }
         }

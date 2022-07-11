@@ -15,9 +15,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.ModelDataManager;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
@@ -44,7 +42,7 @@ public class BloodContainerBlockEntity extends net.minecraftforge.fluids.capabil
     }
 
     private int lastSyncedAmount = Integer.MIN_VALUE;
-    private IModelData modelData;
+    private ModelData modelData;
 
     public BloodContainerBlockEntity(BlockPos pos, BlockState state) {
         super(ModTiles.BLOOD_CONTAINER.get(), pos, state);
@@ -59,7 +57,7 @@ public class BloodContainerBlockEntity extends net.minecraftforge.fluids.capabil
 
     @Nonnull
     @Override
-    public IModelData getModelData() {
+    public ModelData getModelData() {
         if (modelData == null) updateModelData(false);
         return modelData;
     }
@@ -123,7 +121,7 @@ public class BloodContainerBlockEntity extends net.minecraftforge.fluids.capabil
             float amount = fluid.getAmount() / (float) BloodContainerBlockEntity.LEVEL_AMOUNT;
             l = (amount > 0 && amount < 1) ? 1 : (int) amount;
         }
-        modelData = new ModelDataMap.Builder().withInitial(FLUID_LEVEL_PROP, l).withInitial(FLUID_IMPURE, fluid.getFluid().equals(ModFluids.IMPURE_BLOOD.get())).build();
-        if (refresh) ModelDataManager.requestModelDataRefresh(this);
+        modelData = ModelData.builder().with(FLUID_LEVEL_PROP, l).with(FLUID_IMPURE, fluid.getFluid().equals(ModFluids.IMPURE_BLOOD.get())).build();
+        //if (refresh) ModelDataManager.requestModelDataRefresh(this); //TODO check
     }
 }

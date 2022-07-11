@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.lib.util.ThreadSafeLibAPI;
-import io.netty.util.internal.ConcurrentSet;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
@@ -23,7 +22,7 @@ public class HelperRegistry {
 
     private static Map<ResourceLocation, Capability<ISyncable.ISyncableEntityCapabilityInst>> syncablePlayerCaps = new ConcurrentHashMap<>();
     private static Map<ResourceLocation, Capability<ISyncable.ISyncableEntityCapabilityInst>> syncableEntityCaps = new ConcurrentHashMap<>();
-    private static Set<Capability<IPlayerEventListener>> playerEventListenerCaps = new ConcurrentSet<>();
+    private static Set<Capability<IPlayerEventListener>> playerEventListenerCaps = ConcurrentHashMap.newKeySet();
     private static Capability<IPlayerEventListener>[] playerEventListenerCapsFinal;
     /**
      * Stores syncable capabilities for {@link net.minecraft.world.entity.player.Player}

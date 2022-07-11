@@ -26,6 +26,7 @@ apply plugin: 'idea'
 apply plugin: 'eclipse'
 apply plugin: 'org.spongepowered.mixin'
 apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle'
+apply from: 'https://raw.githubusercontent.com/SizableShrimp/ForgeUpdatesRemapper/main/remapper.gradle'
 
 
 configurations {
@@ -35,7 +36,7 @@ configurations {
 
 group = "de.teamlapen.vampirism"
 archivesBaseName = "Vampirism"
-java.toolchain.languageVersion = JavaLanguageVersion.of(18)
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 //These will be overridden in gradle/versioning.gradle, but have to be defined here
 ext.mod_version="Test"
 ext.type="test"
@@ -60,6 +61,7 @@ sourceSets {
 
         java {
             exclude '**/jei/**'
+            exclude '**/guide/**'
         }
     }
     test {
