@@ -1090,7 +1090,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     }
 
     private void spawnVillagerDefault(boolean poisonousBlood, boolean vampire) {
-        assert poisonousBlood != vampire;
+        assert !(poisonousBlood && vampire);
         //noinspection ConstantConditions
         Villager newVillager = (vampire ? ModEntities.VILLAGER_CONVERTED.get() : EntityType.VILLAGER).create(this.level);
         //noinspection ConstantConditions
@@ -1101,7 +1101,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
 
     @SuppressWarnings("ConstantConditions")
     private void spawnVillagerReplace(Mob oldEntity, boolean poisonousBlood, boolean vampire) {
-        assert poisonousBlood != vampire;
+        assert !(poisonousBlood && vampire);
         Villager newVillager = (vampire ? ModEntities.VILLAGER_CONVERTED.get() : EntityType.VILLAGER).create(this.level);
         if (oldEntity instanceof Villager)
             newVillager.restrictTo(oldEntity.getRestrictCenter(), (int) oldEntity.getRestrictRadius());
@@ -1114,7 +1114,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
 
     @SuppressWarnings("ConstantConditions")
     private void spawnVillagerReplaceForced(Mob oldEntity, boolean poisonousBlood, boolean vampire) {
-        assert poisonousBlood != vampire;
+        assert !(poisonousBlood && vampire);
         Villager newVillager = (vampire ? ModEntities.VILLAGER_CONVERTED.get() : EntityType.VILLAGER).create(this.level);
         newVillager.copyPosition(oldEntity);
         if (oldEntity instanceof Villager) {

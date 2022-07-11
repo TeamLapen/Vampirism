@@ -121,7 +121,9 @@ public class BloodContainerBlockEntity extends net.minecraftforge.fluids.capabil
             float amount = fluid.getAmount() / (float) BloodContainerBlockEntity.LEVEL_AMOUNT;
             l = (amount > 0 && amount < 1) ? 1 : (int) amount;
         }
-        modelData = ModelData.builder().with(FLUID_LEVEL_PROP, l).with(FLUID_IMPURE, fluid.getFluid().equals(ModFluids.IMPURE_BLOOD.get())).build();
-        //if (refresh) ModelDataManager.requestModelDataRefresh(this); //TODO check
+        this.modelData = ModelData.builder().with(FLUID_LEVEL_PROP, l).with(FLUID_IMPURE, fluid.getFluid().equals(ModFluids.IMPURE_BLOOD.get())).build();
+        if (refresh) {
+            this.requestModelDataUpdate();
+        }
     }
 }

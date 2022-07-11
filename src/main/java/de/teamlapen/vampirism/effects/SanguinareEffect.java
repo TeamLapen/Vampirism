@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -77,14 +78,6 @@ public class SanguinareEffect extends VampirismEffect {
     @Override
     public void initializeClient(Consumer<IClientMobEffectExtensions> consumer) {
         consumer.accept(new IClientMobEffectExtensions() {
-//            @OnlyIn(Dist.CLIENT) //TODO check
-//            @Override
-//            public void renderInventoryEffect(MobEffectInstance effect, EffectRenderingInventoryScreen<?> gui, PoseStack mStack, int x, int y, float z) {
-//                String s = UtilLib.translate(effect.getEffect().getDescriptionId());
-//                gui.font.drawShadow
-//                        (mStack, s, (float) (x + 10 + 18), (float) (y + 6), 16777215);
-//            }
-
             @Override
             public boolean renderGuiIcon(MobEffectInstance instance, Gui gui, PoseStack poseStack, int x, int y, float z, float alpha) {
                 return true;
@@ -92,12 +85,15 @@ public class SanguinareEffect extends VampirismEffect {
 
             @Override
             public boolean renderInventoryText(MobEffectInstance instance, EffectRenderingInventoryScreen<?> screen, PoseStack poseStack, int x, int y, int blitOffset) {
+                Component name = screen.getEffectName(instance);
+                screen.font.draw(poseStack, name, x + 10 + 18, y + 6, 16777215);
+                screen.font.draw(poseStack, "?", x + 10 + 18, y + 6 + 10, 8355711);
                 return true;
             }
 
             @Override
             public boolean isVisibleInGui(MobEffectInstance instance) {
-                return false;
+                return true;
             }
         });
     }

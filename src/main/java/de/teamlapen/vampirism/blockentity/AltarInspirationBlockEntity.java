@@ -166,9 +166,9 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
             float i = (fluid.getAmount() / (float) AltarInspirationBlockEntity.CAPACITY * 10);
             l = (i > 0 && i < 1) ? 1 : (int) i;
         }
-        modelData = ModelData.builder().with(FLUID_LEVEL_PROP, l).build();
+        this.modelData = ModelData.builder().with(FLUID_LEVEL_PROP, l).build();
         if (refresh) {
-//            ModelDataManager.requestModelDataRefresh(this); //TODO check
+            requestModelDataUpdate();
         }
     }
 

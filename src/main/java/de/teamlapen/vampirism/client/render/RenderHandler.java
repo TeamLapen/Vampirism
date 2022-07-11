@@ -178,7 +178,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
         float fogStart = Math.min(event.getFarPlaneDistance() * 0.75f, 6 * f);
         float fogEnd = Math.min(event.getFarPlaneDistance(), 50 * f);
         if (event.getMode() == FogType.NONE) {
-            RenderSystem.setShaderFogStart(fogStart); //TODO maybe implement a FogRenderer.MobEffectFogFunction class?
+            RenderSystem.setShaderFogStart(fogStart); //TODO 1.19 check if for is rendered correctly. maybe implement a FogRenderer.MobEffectFogFunction class?
         }
         RenderSystem.setShaderFogEnd(fogEnd);
     }

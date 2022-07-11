@@ -1,8 +1,6 @@
 package de.teamlapen.vampirism.entity.converted;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Dynamic;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
@@ -40,18 +38,11 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.Brain;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.behavior.VillagerGoalPackages;
-import net.minecraft.world.entity.ai.memory.MemoryModuleType;
-import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.ai.village.ReputationEventType;
 import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.schedule.Activity;
-import net.minecraft.world.entity.schedule.Schedule;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -226,29 +217,11 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
 
     @Override
     public void registerBrainGoals(@Nonnull Brain<Villager> brain) {
-        VillagerProfession villagerprofession = this.getVillagerData().getProfession();
-        float f = (float) this.getAttribute(Attributes.MOVEMENT_SPEED).getValue();
-        if (this.isBaby()) {
-            brain.setSchedule(Schedule.VILLAGER_BABY);
-            brain.addActivity(Activity.PLAY, VillagerGoalPackages.getPlayPackage(f));
-        } else {
+        super.registerBrainGoals(brain);
+        if (!this.isBaby()) {
             brain.setSchedule(ModVillage.CONVERTED_DEFAULT.get());
-            brain.addActivityWithConditions(Activity.WORK, VillagerGoalPackages.getWorkPackage(villagerprofession, 0.5F), ImmutableSet.of(Pair.of(MemoryModuleType.JOB_SITE, MemoryStatus.VALUE_PRESENT)));
+            brain.updateActivityFromSchedule(this.level.getDayTime(), this.level.getGameTime());
         }
-
-        brain.addActivity(Activity.CORE, VillagerGoalPackages.getCorePackage(villagerprofession, f));
-        brain.addActivityWithConditions(Activity.MEET, VillagerGoalPackages.getMeetPackage(villagerprofession, 0.5F), ImmutableSet.of(Pair.of(MemoryModuleType.MEETING_POINT, MemoryStatus.VALUE_PRESENT)));
-        brain.addActivity(Activity.REST, VillagerGoalPackages.getRestPackage(villagerprofession, f));
-        brain.addActivity(Activity.IDLE, VillagerGoalPackages.getIdlePackage(villagerprofession, f));
-        brain.addActivity(Activity.PANIC, VillagerGoalPackages.getPanicPackage(villagerprofession, f));
-        brain.addActivity(Activity.PRE_RAID, VillagerGoalPackages.getPreRaidPackage(villagerprofession, f));
-        brain.addActivity(Activity.RAID, VillagerGoalPackages.getRaidPackage(villagerprofession, f));
-        brain.addActivity(Activity.HIDE, VillagerGoalPackages.getHidePackage(villagerprofession, f));
-        brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
-        brain.setDefaultActivity(Activity.IDLE);
-        brain.setActiveActivityIfPossible(Activity.IDLE);
-        brain.updateActivityFromSchedule(this.level.getDayTime(), this.level.getGameTime());
-        //TODO can't we just use super function and overwrite schedule and refresh activity afterwards?
     }
 
     @Override
