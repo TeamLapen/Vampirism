@@ -7,7 +7,6 @@ import de.teamlapen.lib.lib.client.gui.GuiPieMenu;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
@@ -15,6 +14,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.ActionBindingPacket;
 import de.teamlapen.vampirism.network.InputEventPacket;
@@ -79,7 +79,7 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
      * loades action order from client config
      */
     public static void loadActionOrder() {
-        List<IAction<?>> actions = Lists.newArrayList(RegUtil.values(VampirismRegistries.ACTIONS));
+        List<IAction<?>> actions = Lists.newArrayList(RegUtil.values(ModRegistries.ACTIONS));
         //Keep in mind some previously saved actions may have been removed
         VampirismConfig.CLIENT.actionOrder.get().stream().map(action -> RegUtil.getAction(new ResourceLocation(action))).filter(Objects::nonNull).forEachOrdered(action -> {
             actions.remove(action);
@@ -281,7 +281,7 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
      * orders the given list after client preference
      */
     private ImmutableList<IAction<T>> getActionOrdered(List<IAction<T>> toSort) {
-        if (ACTIONORDER.isEmpty()) ACTIONORDER.addAll(RegUtil.values(VampirismRegistries.ACTIONS));
+        if (ACTIONORDER.isEmpty()) ACTIONORDER.addAll(RegUtil.values(ModRegistries.ACTIONS));
         @SuppressWarnings({"SuspiciousMethodCalls", "unchecked"})
         List<IAction<T>> list = (List<IAction<T>>) (Object)ACTIONORDER.stream().filter(toSort::contains).collect(Collectors.toList());
         toSort.removeAll(list);

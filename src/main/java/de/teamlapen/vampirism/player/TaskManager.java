@@ -2,11 +2,11 @@ package de.teamlapen.vampirism.player;
 
 import com.google.common.collect.Maps;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.*;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.inventory.container.TaskBoardContainer;
 import de.teamlapen.vampirism.inventory.container.TaskContainer;
 import de.teamlapen.vampirism.network.TaskPacket;
@@ -374,7 +374,7 @@ public class TaskManager implements ITaskManager {
         }
         wrapper.taskAmount = wrapper.taskAmount < 0 ? player.getRandom().nextInt(VampirismConfig.BALANCE.taskMasterMaxTaskAmount.get()) + 1 - wrapper.lessTasks : wrapper.taskAmount;
         if (wrapper.tasks.size() < wrapper.taskAmount) {
-            List<Task> tasks = new ArrayList<>(RegUtil.values(VampirismRegistries.TASKS));
+            List<Task> tasks = new ArrayList<>(RegUtil.values(ModRegistries.TASKS));
             Collections.shuffle(tasks);
             wrapper.tasks.putAll(tasks.stream().filter(this::matchesFaction).filter(task -> !task.isUnique()).filter(this::isTaskUnlocked).limit(wrapper.taskAmount - wrapper.tasks.size()).map(task -> new TaskInstance(task, taskBoardId, this.factionPlayer, this.getTaskTimeConfig() * 1200L)).collect(Collectors.toMap(TaskInstance::getId, t -> t)));
         }
@@ -396,7 +396,7 @@ public class TaskManager implements ITaskManager {
             this.removeLockedTasks(uniqueTasks.values());
         }
         Collection<Task> tasks = uniqueTasks.values().stream().map(ITaskInstance::getTask).collect(Collectors.toSet());
-        uniqueTasks.putAll(RegUtil.values(VampirismRegistries.TASKS).stream().filter(this::matchesFaction).filter(Task::isUnique).filter(task -> !tasks.contains(task)).filter(task -> !this.completedTasks.contains(task)).filter(this::isTaskUnlocked).map(task -> new TaskInstance(task, UNIQUE_TASKS, this.factionPlayer, 0)).collect(Collectors.toMap(TaskInstance::getId, a -> a)));
+        uniqueTasks.putAll(RegUtil.values(ModRegistries.TASKS).stream().filter(this::matchesFaction).filter(Task::isUnique).filter(task -> !tasks.contains(task)).filter(task -> !this.completedTasks.contains(task)).filter(this::isTaskUnlocked).map(task -> new TaskInstance(task, UNIQUE_TASKS, this.factionPlayer, 0)).collect(Collectors.toMap(TaskInstance::getId, a -> a)));
         wrapper.tasks.putAll(uniqueTasks);
         this.updateStats(uniqueTasks.values());
         return uniqueTasks.values();

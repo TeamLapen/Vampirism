@@ -14,11 +14,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.*;
+import org.jetbrains.annotations.ApiStatus;
 
 /**
  * Handles registrations of all registrable things as well as a few additional
  * dependent things
  */
+@ApiStatus.Internal
 public class RegistryManager implements IInitListener {
 
     public RegistryManager() {
@@ -27,6 +29,7 @@ public class RegistryManager implements IInitListener {
     }
 
     public static void setupRegistries(IEventBus modbus) {
+        ModRegistries.init(modbus);
         ModAttributes.registerAttributes(modbus);
         ModBiomes.registerBiomes(modbus);
         ModBlocks.registerBlocks(modbus);

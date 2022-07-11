@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.util.WeightedRandomItem;
-import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.refinements.RefinementSet;
 import de.teamlapen.vampirism.util.RegUtil;
@@ -36,7 +36,7 @@ public abstract class RefinementItem extends Item implements IRefinementItem {
     private static final RandomSource RANDOM = RandomSource.create();
 
     public static ItemStack getRandomRefinementItem(IPlayableFaction<?> faction) {
-        List<WeightedRandomItem<IRefinementSet>> sets = RegUtil.values(VampirismRegistries.REFINEMENT_SETS).stream().filter(set -> set.getFaction() == faction).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
+        List<WeightedRandomItem<IRefinementSet>> sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream().filter(set -> set.getFaction() == faction).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
         if (sets.isEmpty()) return ItemStack.EMPTY;
         IRefinementSet s = WeightedRandom.getRandomItem(RANDOM, sets).map(WeightedRandomItem::getItem).orElseGet(()->sets.get(0).getItem());
         AccessorySlotType t = s.getSlotType().orElseGet(() -> {
@@ -55,7 +55,7 @@ public abstract class RefinementItem extends Item implements IRefinementItem {
     }
 
     public static IRefinementSet getRandomRefinementForItem(@Nullable IFaction<?> faction, IRefinementItem stack) {
-        List<WeightedRandomItem<IRefinementSet>> sets = RegUtil.values(VampirismRegistries.REFINEMENT_SETS).stream().filter(set -> faction == null || set.getFaction() == faction).filter(set -> set.getSlotType().map(s -> s == stack.getSlotType()).orElse(true)).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
+        List<WeightedRandomItem<IRefinementSet>> sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream().filter(set -> faction == null || set.getFaction() == faction).filter(set -> set.getSlotType().map(s -> s == stack.getSlotType()).orElse(true)).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
         if (sets.isEmpty()) return null;
         return WeightedRandom.getRandomItem(RANDOM, sets).map(WeightedRandomItem::getItem).orElse(null);
     }

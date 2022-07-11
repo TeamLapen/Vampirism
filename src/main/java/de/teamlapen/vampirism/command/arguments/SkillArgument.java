@@ -7,8 +7,8 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
@@ -40,7 +40,7 @@ public class SkillArgument implements ArgumentType<ISkill<?>> {
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        return SharedSuggestionProvider.suggestResource(RegUtil.keys(VampirismRegistries.SKILLS), builder);
+        return SharedSuggestionProvider.suggestResource(RegUtil.keys(ModRegistries.SKILLS), builder);
     }
 
     @Override

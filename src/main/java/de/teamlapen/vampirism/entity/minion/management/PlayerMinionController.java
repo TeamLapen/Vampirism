@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.entity.minion.management;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.util.Helper;
@@ -64,7 +64,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
     private final static Logger LOGGER = LogManager.getLogger();
 
     public static List<IMinionTask<?, ?>> getAvailableTasks(ILordPlayer player) {
-        return RegUtil.values(VampirismRegistries.MINION_TASKS).stream().filter(t -> t.isAvailable(player.getLordFaction(), player)).collect(Collectors.toList());
+        return RegUtil.values(ModRegistries.MINION_TASKS).stream().filter(t -> t.isAvailable(player.getLordFaction(), player)).collect(Collectors.toList());
     }
 
     private final Random rng = new Random();

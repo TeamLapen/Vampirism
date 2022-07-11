@@ -7,8 +7,8 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
@@ -40,7 +40,7 @@ public class RefinementSetArgument implements ArgumentType<IRefinementSet> {
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        return SharedSuggestionProvider.suggestResource(RegUtil.keys(VampirismRegistries.REFINEMENT_SETS), builder);
+        return SharedSuggestionProvider.suggestResource(RegUtil.keys(ModRegistries.REFINEMENT_SETS), builder);
     }
 
     @Override

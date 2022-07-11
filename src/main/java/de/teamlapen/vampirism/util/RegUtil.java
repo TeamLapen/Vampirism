@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.util;
 
-import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
@@ -8,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
+import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.VillagerProfession;
@@ -25,28 +25,28 @@ import java.util.function.Supplier;
 public class RegUtil {
 
     public static ResourceLocation id(IAction<?> action) {
-        return VampirismRegistries.ACTIONS.get().getKey(action);
+        return ModRegistries.ACTIONS.get().getKey(action);
     }
     public static ResourceLocation id(ISkill<?> skill) {
-        return VampirismRegistries.SKILLS.get().getKey(skill);
+        return ModRegistries.SKILLS.get().getKey(skill);
     }
 
     public static ResourceLocation id(IMinionTask<?,?> minionTask) {
-        return VampirismRegistries.MINION_TASKS.get().getKey(minionTask);
+        return ModRegistries.MINION_TASKS.get().getKey(minionTask);
     }
     public static ResourceLocation id(IEntityAction entityAction) {
-        return VampirismRegistries.ENTITY_ACTIONS.get().getKey(entityAction);
+        return ModRegistries.ENTITY_ACTIONS.get().getKey(entityAction);
     }
     public static ResourceLocation id(Task skill) {
-        return VampirismRegistries.TASKS.get().getKey(skill);
+        return ModRegistries.TASKS.get().getKey(skill);
     }
 
     public static ResourceLocation id(IRefinement refinement) {
-        return VampirismRegistries.REFINEMENTS.get().getKey(refinement);
+        return ModRegistries.REFINEMENTS.get().getKey(refinement);
     }
 
     public static ResourceLocation id(IRefinementSet refinementSet) {
-        return VampirismRegistries.REFINEMENT_SETS.get().getKey(refinementSet);
+        return ModRegistries.REFINEMENT_SETS.get().getKey(refinementSet);
     }
 
     public static ResourceLocation id(Item item) {
@@ -76,28 +76,28 @@ public class RegUtil {
 
 
     public static boolean has(IAction<?> action) {
-        return VampirismRegistries.ACTIONS.get().containsValue(action);
+        return ModRegistries.ACTIONS.get().containsValue(action);
     }
     public static boolean has(ISkill<?> skill) {
-        return VampirismRegistries.SKILLS.get().containsValue(skill);
+        return ModRegistries.SKILLS.get().containsValue(skill);
     }
 
     public static boolean has(IMinionTask<?,?> minionTask) {
-        return VampirismRegistries.MINION_TASKS.get().containsValue(minionTask);
+        return ModRegistries.MINION_TASKS.get().containsValue(minionTask);
     }
     public static boolean has(IEntityAction entityAction) {
-        return VampirismRegistries.ENTITY_ACTIONS.get().containsValue(entityAction);
+        return ModRegistries.ENTITY_ACTIONS.get().containsValue(entityAction);
     }
     public static boolean has(Task skill) {
-        return VampirismRegistries.TASKS.get().containsValue(skill);
+        return ModRegistries.TASKS.get().containsValue(skill);
     }
 
     public static boolean has(IRefinement refinement) {
-        return VampirismRegistries.REFINEMENTS.get().containsValue(refinement);
+        return ModRegistries.REFINEMENTS.get().containsValue(refinement);
     }
 
     public static boolean has(IRefinementSet refinementSet) {
-        return VampirismRegistries.REFINEMENT_SETS.get().containsValue(refinementSet);
+        return ModRegistries.REFINEMENT_SETS.get().containsValue(refinementSet);
     }
 
     public static boolean has(Item item) {
@@ -109,31 +109,31 @@ public class RegUtil {
     }
 
     public static IAction<?> getAction(ResourceLocation id) {
-        return get(VampirismRegistries.ACTIONS.get(), id);
+        return get(ModRegistries.ACTIONS.get(), id);
     }
 
     public static ISkill<?> getSkill(ResourceLocation id) {
-        return get(VampirismRegistries.SKILLS.get(), id);
+        return get(ModRegistries.SKILLS.get(), id);
     }
 
     public static IMinionTask<?,?> getMinionTask(ResourceLocation id) {
-        return get(VampirismRegistries.MINION_TASKS.get(), id);
+        return get(ModRegistries.MINION_TASKS.get(), id);
     }
 
     public static IEntityAction getEntityAction(ResourceLocation id) {
-        return get(VampirismRegistries.ENTITY_ACTIONS.get(), id);
+        return get(ModRegistries.ENTITY_ACTIONS.get(), id);
     }
 
     public static Task getTask(ResourceLocation id) {
-        return get(VampirismRegistries.TASKS.get(), id);
+        return get(ModRegistries.TASKS.get(), id);
     }
 
     public static IRefinement getRefinement(ResourceLocation id) {
-        return get(VampirismRegistries.REFINEMENTS.get(), id);
+        return get(ModRegistries.REFINEMENTS.get(), id);
     }
 
     public static IRefinementSet getRefinementSet(ResourceLocation id) {
-        return get(VampirismRegistries.REFINEMENT_SETS.get(), id);
+        return get(ModRegistries.REFINEMENT_SETS.get(), id);
     }
 
 

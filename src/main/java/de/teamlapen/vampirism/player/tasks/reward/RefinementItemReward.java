@@ -2,12 +2,12 @@ package de.teamlapen.vampirism.player.tasks.reward;
 
 import de.teamlapen.lib.util.WeightedRandomItem;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.player.refinements.RefinementSet;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.util.RandomSource;
@@ -68,7 +68,7 @@ public class RefinementItemReward extends ItemReward {
 
         Z item = faction.getRefinementItem(IRefinementItem.AccessorySlotType.values()[RANDOM.nextInt(IRefinementItem.AccessorySlotType.values().length)]);
         IRefinementItem.AccessorySlotType slot = (item).getSlotType();
-        List<WeightedRandomItem<IRefinementSet>> sets = RegUtil.values(VampirismRegistries.REFINEMENT_SETS).stream()
+        List<WeightedRandomItem<IRefinementSet>> sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream()
                 .filter(set -> finalFaction == null || set.getFaction() == finalFaction)
                 .filter(set -> this.rarity == null || set.getRarity().ordinal() >= this.rarity.ordinal())
                 .filter(set -> set.getSlotType().map(slot1 -> slot1 == slot).orElse(true))

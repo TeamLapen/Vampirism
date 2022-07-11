@@ -12,7 +12,6 @@ import de.teamlapen.lib.util.Color;
 import de.teamlapen.lib.util.OptifineHandler;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
@@ -21,7 +20,10 @@ import de.teamlapen.vampirism.api.world.IVampirismWorld;
 import de.teamlapen.vampirism.client.core.*;
 import de.teamlapen.vampirism.config.BloodValues;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.*;
+import de.teamlapen.vampirism.core.ModCommands;
+import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.ModLootTables;
+import de.teamlapen.vampirism.core.RegistryManager;
 import de.teamlapen.vampirism.data.*;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.ModEntityEventHandler;
@@ -50,7 +52,6 @@ import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.proxy.ServerProxy;
 import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.util.*;
-import de.teamlapen.vampirism.world.biome.OverworldModifications;
 import de.teamlapen.vampirism.world.gen.VampirismFeatures;
 import de.teamlapen.vampirism.world.gen.VanillaStructureModifications;
 import net.minecraft.ChatFormatting;
@@ -181,7 +182,7 @@ public class VampirismMod {
         registryManager = new RegistryManager();
         MinecraftForge.EVENT_BUS.register(Permissions.class);
 
-        prepareAPI(modbus);
+        prepareAPI();
         RegistryManager.setupRegistries(modbus);
 
 
@@ -305,9 +306,7 @@ public class VampirismMod {
     /**
      * Called during constructor to set up the API as well as VReference
      */
-    private void prepareAPI(IEventBus modbus) {
-        VampirismRegistries.init(modbus);
-
+    private void prepareAPI() {
         FactionRegistry factionRegistry = new FactionRegistry();
         SundamageRegistry sundamageRegistry = new SundamageRegistry();
         VampirismEntityRegistry biteableRegistry = new VampirismEntityRegistry();
