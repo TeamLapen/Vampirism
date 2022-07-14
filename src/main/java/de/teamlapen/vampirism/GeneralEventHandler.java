@@ -23,7 +23,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.server.ServerLifecycleHooks;
@@ -51,7 +51,7 @@ public class GeneralEventHandler {
         VersionChecker.VersionInfo versionInfo = VampirismMod.instance.getVersionInfo();
         if (!versionInfo.isChecked()) LOGGER.warn("Version check is not finished yet");
 
-        Player player = event.getPlayer();
+        Player player = event.getEntity();
         boolean isAdminLikePlayer = !ServerLifecycleHooks.getCurrentServer().isDedicatedServer() || UtilLib.isPlayerOp(player);
 
         if (VampirismConfig.COMMON.versionCheck.get() && versionInfo.isNewVersionAvailable()) {
@@ -113,9 +113,9 @@ public class GeneralEventHandler {
 
 
     @SubscribeEvent
-    public void onWorldUnload(WorldEvent.Unload event) {
-        if (event.getWorld() instanceof Level) {
-            VampirismWorld.getOpt((Level) event.getWorld()).ifPresent(VampirismWorld::clearCaches);
+    public void onWorldUnload(LevelEvent.Unload event) {
+        if (event.getLevel() instanceof Level level) {
+            VampirismWorld.getOpt(level).ifPresent(VampirismWorld::clearCaches);
         }
     }
 }

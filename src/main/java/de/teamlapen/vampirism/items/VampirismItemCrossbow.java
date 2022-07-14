@@ -37,8 +37,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import net.minecraft.world.item.Item.Properties;
-
 /**
  * Base class for crossbows
  */
@@ -81,7 +79,7 @@ public abstract class VampirismItemCrossbow extends Item implements IFactionLeve
     }
 
     @Override
-    public int getItemEnchantability(ItemStack stack) {
+    public int getEnchantmentValue(ItemStack stack) {
         return enchantability;
     }
 

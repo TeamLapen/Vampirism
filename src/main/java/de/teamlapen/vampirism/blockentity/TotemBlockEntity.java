@@ -1222,7 +1222,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         villagerEntities = this.level.getEntitiesOfClass(Villager.class, getVillageArea());
 
         for (Villager villager : villagerEntities) {
-            if (ForgeRegistries.PROFESSIONS.tags().getTag(ModTags.Professions.HAS_FACTION).contains(villager.getVillagerData().getProfession())) {
+            if (ForgeRegistries.VILLAGER_PROFESSIONS.tags().getTag(ModTags.Professions.HAS_FACTION).contains(villager.getVillagerData().getProfession())) {
                 villager.setVillagerData(villager.getVillagerData().setProfession(VillagerProfession.NONE));
             }
         }

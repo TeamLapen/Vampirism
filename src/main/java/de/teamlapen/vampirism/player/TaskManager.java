@@ -340,7 +340,7 @@ public class TaskManager implements ITaskManager {
             }
             case ENTITY_TAG -> {
                 //noinspection unchecked
-                for (EntityType<?> type : Objects.requireNonNull(ForgeRegistries.ENTITIES.tags()).getTag((TagKey<EntityType<?>>) requirement.getStat(this.factionPlayer))) {
+                for (EntityType<?> type : Objects.requireNonNull(ForgeRegistries.ENTITY_TYPES.tags()).getTag((TagKey<EntityType<?>>) requirement.getStat(this.factionPlayer))) {
                     actualStat += this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type));
                 }
                 neededStat = stats.get(requirement.getId()) + requirement.getAmount(this.factionPlayer);
@@ -459,7 +459,7 @@ public class TaskManager implements ITaskManager {
                 case ENTITY_TAG -> {
                     int amount = 0;
                     //noinspection unchecked,ConstantConditions
-                    for (EntityType<?> type : ForgeRegistries.ENTITIES.tags().getTag((TagKey<EntityType<?>>) requirement.getStat(this.factionPlayer))) {
+                    for (EntityType<?> type : ForgeRegistries.ENTITY_TYPES.tags().getTag((TagKey<EntityType<?>>) requirement.getStat(this.factionPlayer))) {
                         amount += this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type));
                     }
                     reqStats.putIfAbsent(requirement.getId(), amount);

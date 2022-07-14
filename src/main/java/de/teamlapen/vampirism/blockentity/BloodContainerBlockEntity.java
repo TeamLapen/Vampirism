@@ -27,7 +27,7 @@ import java.util.Random;
  * Stores blood and other liquids in a {@link FluidTank}
  * Tank is synced if the block is marked for update
  */
-public class BloodContainerBlockEntity extends net.minecraftforge.fluids.capability.TileFluidHandler implements FluidTankWithListener.IFluidTankListener {
+public class BloodContainerBlockEntity extends net.minecraftforge.fluids.capability.FluidHandlerBlockEntity implements FluidTankWithListener.IFluidTankListener {
 
     public static final int LEVEL_AMOUNT = BloodBottleItem.AMOUNT * VReference.FOOD_TO_FLUID_BLOOD;
     public static final int CAPACITY = LEVEL_AMOUNT * 14;

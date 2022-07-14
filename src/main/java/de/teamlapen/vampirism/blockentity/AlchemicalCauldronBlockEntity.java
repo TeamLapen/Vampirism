@@ -233,13 +233,13 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
                 blockEntity.dataAccess.set(1, blockEntity.dataAccess.get(0));
                 if (blockEntity.isBurning()) {
                     dirty = true;
-                    if (itemstackFuel.hasContainerItem())
-                        blockEntity.items.set(3, itemstackFuel.getContainerItem());
+                    if (itemstackFuel.hasCraftingRemainingItem())
+                        blockEntity.items.set(3, itemstackFuel.getCraftingRemainingItem());
                     else if (!itemstackFuel.isEmpty()) {
                         Item item = itemstackFuel.getItem();
                         itemstackFuel.shrink(1);
                         if (itemstackFuel.isEmpty()) {
-                            blockEntity.items.set(3, itemstackFuel.getContainerItem());
+                            blockEntity.items.set(3, itemstackFuel.getCraftingRemainingItem());
                         }
                     }
                 }

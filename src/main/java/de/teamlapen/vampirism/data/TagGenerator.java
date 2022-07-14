@@ -14,7 +14,7 @@ import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
+import net.minecraftforge.data.event.GatherDataEvent;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
@@ -147,8 +147,8 @@ public class TagGenerator {
             tag(ModTags.Biomes.IS_FACTION_BIOME).addTags(ModTags.Biomes.IS_VAMPIRE_BIOME);
             tag(ModTags.Biomes.IS_VAMPIRE_BIOME).add(ModBiomes.VAMPIRE_FOREST.getKey());
             tag(BiomeTags.IS_FOREST).add(ModBiomes.VAMPIRE_FOREST.getKey());
-            tag(Tags.Biomes.IS_OVERWORLD).add(ModBiomes.VAMPIRE_FOREST.getKey());
-            tag(Tags.Biomes.IS_DENSE).add(ModBiomes.VAMPIRE_FOREST.getKey());
+//            tag(Tags.Biomes.OVERWORLD).add(ModBiomes.VAMPIRE_FOREST.getKey());
+            tag(Tags.Biomes.IS_DENSE_OVERWORLD).add(ModBiomes.VAMPIRE_FOREST.getKey());
             tag(Tags.Biomes.IS_MAGICAL).add(ModBiomes.VAMPIRE_FOREST.getKey());
             tag(Tags.Biomes.IS_SPOOKY).add(ModBiomes.VAMPIRE_FOREST.getKey());
             tag(ModTags.Biomes.HAS_VAMPIRE_DUNGEON).addTags(BiomeTags.IS_OVERWORLD).remove(BiomeTags.IS_OCEAN); //TODO 1.19 check

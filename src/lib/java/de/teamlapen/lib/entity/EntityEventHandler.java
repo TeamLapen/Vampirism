@@ -10,7 +10,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -21,7 +21,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 /**
  * Library's entity event handler to do stuff
  */
-@SuppressWarnings("ClassCanBeRecord")
 public class EntityEventHandler {
 
     private final Capability<IPlayerEventListener>[] listeners;
@@ -33,12 +32,12 @@ public class EntityEventHandler {
     @SubscribeEvent
     public void onChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
         for (Capability<IPlayerEventListener> listener : listeners) {
-            event.getPlayer().getCapability(listener, null).ifPresent(cap -> cap.onChangedDimension(event.getFrom(), event.getTo()));
+            event.getEntity().getCapability(listener, null).ifPresent(cap -> cap.onChangedDimension(event.getFrom(), event.getTo()));
         }
     }
 
     @SubscribeEvent
-    public void onEntityJoinWorld(EntityJoinWorldEvent event) {
+    public void onEntityJoinWorld(EntityJoinLevelEvent event) {
         if (event.getEntity() instanceof Player) {
             for (Capability<IPlayerEventListener> listener : listeners) {
                 (event.getEntity().getCapability(listener, null)).ifPresent(IPlayerEventListener::onJoinWorld);
@@ -68,13 +67,13 @@ public class EntityEventHandler {
         }
         if (event.getSource().getEntity() instanceof Player) {
             for (Capability<IPlayerEventListener> listener : listeners) {
-                (event.getSource().getEntity().getCapability(listener, null)).ifPresent(cap -> cap.onEntityKilled(event.getEntityLiving(), event.getSource()));
+                (event.getSource().getEntity().getCapability(listener, null)).ifPresent(cap -> cap.onEntityKilled(event.getEntity(), event.getSource()));
             }
         }
     }
 
     @SubscribeEvent
-    public void onLivingUpdate(LivingEvent.LivingUpdateEvent event) {
+    public void onLivingUpdate(LivingEvent.LivingTickEvent event) {
         if (event.getEntity() instanceof Player) {
             for (Capability<IPlayerEventListener> listener : listeners) {
                 event.getEntity().getCapability(listener, null).ifPresent(IPlayerEventListener::onUpdate);
@@ -93,14 +92,14 @@ public class EntityEventHandler {
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         for (Capability<IPlayerEventListener> listener : listeners) {
-            (event.getPlayer().getCapability(listener, null)).ifPresent(IPlayerEventListener::onPlayerLoggedIn);
+            (event.getEntity().getCapability(listener, null)).ifPresent(IPlayerEventListener::onPlayerLoggedIn);
         }
     }
 
     @SubscribeEvent
     public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
         for (Capability<IPlayerEventListener> listener : listeners) {
-            (event.getPlayer().getCapability(listener, null)).ifPresent(IPlayerEventListener::onPlayerLoggedOut);
+            (event.getEntity().getCapability(listener, null)).ifPresent(IPlayerEventListener::onPlayerLoggedOut);
         }
     }
 
@@ -116,7 +115,7 @@ public class EntityEventHandler {
         if ((event.getTarget() instanceof PathfinderMob && HelperRegistry.getSyncableEntityCaps().size() > 0) || event.getTarget() instanceof ISyncable || (event.getTarget() instanceof Player && HelperRegistry.getSyncablePlayerCaps().size() > 0)) {
             UpdateEntityPacket packet = UpdateEntityPacket.createJoinWorldPacket(event.getTarget());
             if (packet != null) {
-                VampLib.dispatcher.sendTo(packet, (ServerPlayer) event.getPlayer());
+                VampLib.dispatcher.sendTo(packet, (ServerPlayer) event.getEntity());
             }
         }
     }

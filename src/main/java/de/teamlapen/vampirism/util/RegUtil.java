@@ -60,7 +60,7 @@ public class RegUtil {
         return ForgeRegistries.FLUIDS.getKey(block);
     }
     public static ResourceLocation id(EntityType<?> type) {
-        return ForgeRegistries.ENTITIES.getKey(type);
+        return ForgeRegistries.ENTITY_TYPES.getKey(type);
     }
 
     public static ResourceLocation id(Biome type) {
@@ -70,7 +70,7 @@ public class RegUtil {
         return ForgeRegistries.ENCHANTMENTS.getKey(type);
     }
     public static ResourceLocation id(VillagerProfession profession) {
-        return ForgeRegistries.PROFESSIONS.getKey(profession);
+        return ForgeRegistries.VILLAGER_PROFESSIONS.getKey(profession);
     }
 
 

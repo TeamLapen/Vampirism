@@ -352,16 +352,16 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
 
 
         BlockPos blockpos = this.getBlockPos();
-        if (ingredientStack.hasContainerItem()) {
-            ItemStack itemstack1 = ingredientStack.getContainerItem();
+        if (ingredientStack.hasCraftingRemainingItem()) {
+            ItemStack itemstack1 = ingredientStack.getCraftingRemainingItem();
             if (ingredientStack.isEmpty()) {
                 ingredientStack = itemstack1;
             } else if (!this.level.isClientSide) {
                 Containers.dropItemStack(this.level, blockpos.getX(), blockpos.getY(), blockpos.getZ(), itemstack1);
             }
         }
-        if (extraIngredient.hasContainerItem()) {
-            ItemStack itemstack1 = extraIngredient.getContainerItem();
+        if (extraIngredient.hasCraftingRemainingItem()) {
+            ItemStack itemstack1 = extraIngredient.getCraftingRemainingItem();
             if (extraIngredient.isEmpty()) {
                 extraIngredient = itemstack1;
             } else if (!this.level.isClientSide) {

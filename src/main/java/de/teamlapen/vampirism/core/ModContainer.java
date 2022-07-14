@@ -5,10 +5,12 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.inventory.container.*;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.*;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class ModContainer {
-    public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(ForgeRegistries.CONTAINERS, REFERENCE.MODID);
+    public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(ForgeRegistries.MENU_TYPES, REFERENCE.MODID);
 
     public static final RegistryObject<MenuType<HunterTrainerContainer>> HUNTER_TRAINER = MENUS.register("hunter_trainer", () -> new MenuType<>(HunterTrainerContainer::new));
     public static final RegistryObject<MenuType<AlchemicalCauldronContainer>> ALCHEMICAL_CAULDRON = MENUS.register("alchemical_cauldron", () -> new MenuType<>(AlchemicalCauldronContainer::new));

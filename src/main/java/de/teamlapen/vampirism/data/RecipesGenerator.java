@@ -305,7 +305,7 @@ public class RecipesGenerator extends RecipeProvider {
         return modId("vampire/" + path);
     }
 
-    private static class NBTIngredient extends net.minecraftforge.common.crafting.NBTIngredient {
+    private static class NBTIngredient extends net.minecraftforge.common.crafting.StrictNBTIngredient {
         public NBTIngredient(ItemStack stack) {
             super(stack);
         }

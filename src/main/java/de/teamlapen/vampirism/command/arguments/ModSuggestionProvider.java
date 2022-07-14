@@ -12,8 +12,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class ModSuggestionProvider {
     public static final SuggestionProvider<CommandSourceStack> ENTITIES = SuggestionProviders.register(new ResourceLocation(REFERENCE.MODID, "entities"), (context, builder) -> {
-        return SharedSuggestionProvider.suggestResource(ForgeRegistries.ENTITIES.getValues().stream(), builder, ForgeRegistries.ENTITIES::getKey, (c) -> {
-            return Component.translatable(Util.makeDescriptionId("entity", ForgeRegistries.ENTITIES.getKey(c)));
+        return SharedSuggestionProvider.suggestResource(ForgeRegistries.ENTITY_TYPES.getValues().stream(), builder, ForgeRegistries.ENTITY_TYPES::getKey, (c) -> {
+            return Component.translatable(Util.makeDescriptionId("entity", ForgeRegistries.ENTITY_TYPES.getKey(c)));
         });
     });
     public static final SuggestionProvider<CommandSourceStack> BIOMES = SuggestionProviders.register(new ResourceLocation(REFERENCE.MODID, "biomes"), (context, builder) -> {

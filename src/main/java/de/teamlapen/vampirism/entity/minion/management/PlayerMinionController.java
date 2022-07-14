@@ -250,7 +250,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
             int id = tag.getInt("id");
             MinionData d = MinionData.fromNBT(tag);
             ResourceLocation entityTypeID = new ResourceLocation(tag.getString("entity_type"));
-            if (!ForgeRegistries.ENTITIES.containsKey(entityTypeID)) {
+            if (!ForgeRegistries.ENTITY_TYPES.containsKey(entityTypeID)) {
                 LOGGER.warn("Cannot find saved minion type {}. Aborting controller load", entityTypeID);
                 this.minions = new MinionInfo[0];
                 //noinspection unchecked
@@ -259,7 +259,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
             }
 
             //noinspection unchecked
-            EntityType<? extends MinionEntity<?>> type = (EntityType<? extends MinionEntity<?>>) ForgeRegistries.ENTITIES.getValue(entityTypeID);
+            EntityType<? extends MinionEntity<?>> type = (EntityType<? extends MinionEntity<?>>) ForgeRegistries.ENTITY_TYPES.getValue(entityTypeID);
 
             MinionInfo i = new MinionInfo(id, d, type);
             i.deathCooldown = tag.getInt("death_timer");

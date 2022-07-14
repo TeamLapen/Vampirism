@@ -47,7 +47,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -125,7 +125,7 @@ public class ModEntityEventHandler {
                     } else {
                         skipAttackDamageOnceServer = true;
                     }
-                    boolean result = event.getEntityLiving().hurt(event.getSource(), amt);
+                    boolean result = event.getEntity().hurt(event.getSource(), amt);
                     if (client) {
                         skipAttackDamageOnceClient = false;
                     } else {
@@ -140,8 +140,8 @@ public class ModEntityEventHandler {
     @SubscribeEvent
     public void onEntityCheckSpawn(LivingSpawnEvent.CheckSpawn event) {
         BlockPos pos = new BlockPos(event.getX() - 0.4F, event.getY(), event.getZ() - 0.4F).below();
-        if (!event.getWorld().hasChunkAt(pos)) return;
-        BlockState blockState = event.getWorld().getBlockState(pos);
+        if (!event.getLevel().hasChunkAt(pos)) return;
+        BlockState blockState = event.getLevel().getBlockState(pos);
         Block b = blockState.getBlock();
         boolean deny = false;
         CastleBricksBlock.EnumVariant v = null;
@@ -169,11 +169,11 @@ public class ModEntityEventHandler {
     }
 
     @SubscribeEvent
-    public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-        if (!event.getWorld().isClientSide()) {
+    public void onEntityJoinWorld(EntityJoinLevelEvent event) {
+        if (!event.getLevel().isClientSide()) {
             if (event.getEntity() instanceof IAdjustableLevel entity) {
                 if (entity.getEntityLevel() == -1) {
-                    Difficulty d = DifficultyCalculator.findDifficultyForPos(event.getWorld(), event.getEntity().blockPosition(), 30);
+                    Difficulty d = DifficultyCalculator.findDifficultyForPos(event.getLevel(), event.getEntity().blockPosition(), 30);
                     int l = entity.suggestEntityLevel(d);
                     if (l > entity.getMaxEntityLevel()) {
                         l = entity.getMaxEntityLevel();
@@ -244,7 +244,7 @@ public class ModEntityEventHandler {
             }
 
             if (event.getEntity() instanceof Villager) {
-                Optional<TotemBlockEntity> tile = TotemHelper.getTotemNearPos(((ServerLevel) event.getWorld()), event.getEntity().blockPosition(), true);
+                Optional<TotemBlockEntity> tile = TotemHelper.getTotemNearPos(((ServerLevel) event.getLevel()), event.getEntity().blockPosition(), true);
                 if (tile.filter(t -> VReference.HUNTER_FACTION.equals(t.getControllingFaction())).isPresent()) {
                     ExtendedCreature.getSafe(event.getEntity()).ifPresent(e -> e.setPoisonousBlood(true));
                 }
@@ -298,12 +298,12 @@ public class ModEntityEventHandler {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onLivingEquipmentChange(LivingEquipmentChangeEvent event) {
         if (event.getTo().getItem() instanceof VampirismVampireSword) {
-            ((VampirismVampireSword) event.getTo().getItem()).updateTrainedCached(event.getTo(), event.getEntityLiving());
+            ((VampirismVampireSword) event.getTo().getItem()).updateTrainedCached(event.getTo(), event.getEntity());
         }
     }
 
     @SubscribeEvent
-    public void onLivingUpdate(LivingEvent.LivingUpdateEvent event) {
+    public void onLivingUpdate(LivingEvent.LivingTickEvent event) {
         if (event.getEntity() instanceof PathfinderMob) {
             event.getEntity().getCommandSenderWorld().getProfiler().push("vampirism_extended_creature");
             ExtendedCreature.getSafe(event.getEntity()).ifPresent(IExtendedCreatureVampirism::tick);
