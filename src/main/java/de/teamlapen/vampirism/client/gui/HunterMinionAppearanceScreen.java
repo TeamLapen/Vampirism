@@ -80,12 +80,8 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
         this.useLordSkin = this.entity.shouldRenderLordSkin();
         this.skinList = this.addRenderableWidget(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 43 + 19, 99, 80, 20, this.normalSkinCount + this.minionSkinCount, Component.translatable("gui.vampirism.minion_appearance.skin"), this::skin, this::previewSkin));
         this.hatList = this.addRenderableWidget(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 64 + 19, 99, 60, 20, 3, Component.translatable("gui.vampirism.minion_appearance.hat"), this::hat, this::previewHat));
-        this.skinButton = this.addRenderableWidget(new ExtendedButton(skinList.x, skinList.y - 20, skinList.getWidth() + 1, 20, Component.literal(""), (b) -> {
-            setSkinListVisibility(!skinList.visible);
-        }));
-        this.hatButton = this.addRenderableWidget(new ExtendedButton(hatList.x, hatList.y - 20, hatList.getWidth() + 1, 20, Component.literal(""), (b) -> {
-            setHatListVisibility(!hatList.visible);
-        }));
+        this.skinButton = this.addRenderableWidget(new ExtendedButton(skinList.x, skinList.y - 20, skinList.getWidth() + 1, 20, Component.literal(""), (b) -> setSkinListVisibility(!skinList.visible)));
+        this.hatButton = this.addRenderableWidget(new ExtendedButton(hatList.x, hatList.y - 20, hatList.getWidth() + 1, 20, Component.literal(""), (b) -> setHatListVisibility(!hatList.visible)));
 
         this.useLordSkinButton = this.addRenderableWidget(new Checkbox(this.guiLeft + 20, this.guiTop + 86, 99, 20, Component.translatable("gui.vampirism.minion_appearance.use_lord_skin"), useLordSkin) {
             @Override

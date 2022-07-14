@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.VampirismEntity;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,7 +21,6 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.AABB;
 
 import javax.annotation.Nonnull;
-import java.util.Random;
 
 /**
  * Base class for all vampire hunter

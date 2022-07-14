@@ -39,6 +39,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientBlockExtensions;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -272,24 +273,18 @@ public class TentBlock extends VampirismBlock {
 
 
     @Override
-    public void playerWillDestroy(Level worldIn, @Nonnull BlockPos pos, BlockState state, @Nonnull Player player) {
+    public void playerWillDestroy(Level worldIn, @Nonnull BlockPos pos, @NotNull BlockState state, @Nonnull Player player) {
         //If in creative mode, also destroy the main block. Otherwise, it will be destroyed due to updateShape and an item will drop
         if (!worldIn.isClientSide && player.isCreative()) {
             Direction thisFacing = state.getValue(FACING);
             int thisPos = state.getValue(POSITION);
             if(thisPos != 0){
-                BlockPos main = null;
-                switch (thisPos){
-                    case 1:
-                        main = pos.relative(thisFacing.getClockWise());
-                        break;
-                    case 2:
-                        main = pos.relative(thisFacing.getOpposite()).relative(thisFacing.getClockWise());
-                        break;
-                    case 3:
-                        main = pos.relative(thisFacing);
-                        break;
-                }
+                BlockPos main = switch (thisPos) {
+                    case 1 -> pos.relative(thisFacing.getClockWise());
+                    case 2 -> pos.relative(thisFacing.getOpposite()).relative(thisFacing.getClockWise());
+                    case 3 -> pos.relative(thisFacing);
+                    default -> null;
+                };
                 if(main!=null){
                     BlockState blockstate = worldIn.getBlockState(main);
                     if (blockstate.getBlock() == ModBlocks.TENT_MAIN.get()) {

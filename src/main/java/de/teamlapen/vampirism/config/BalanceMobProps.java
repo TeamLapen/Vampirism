@@ -6,7 +6,7 @@ package de.teamlapen.vampirism.config;
 public class BalanceMobProps {
 
 
-    public static BalanceMobProps mobProps = new BalanceMobProps();
+    public static final BalanceMobProps mobProps = new BalanceMobProps();
     public final int BLINDING_BAT_LIVE_SPAWN = 600;
     //    @DefaultInt(value = 40, name = "blinding_bat_effect_duration", minValue = 1, comment = "Blinding duration in ticks")
     public final int BLINDING_BAT_EFFECT_DURATION = 80;

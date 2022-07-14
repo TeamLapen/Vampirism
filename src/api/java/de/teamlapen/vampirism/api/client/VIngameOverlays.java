@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.api.client;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
 /**
@@ -15,7 +14,7 @@ public class VIngameOverlays {
      * Is rendered above {@link net.minecraftforge.client.gui.overlay.VanillaGuiOverlay#FOOD_LEVEL}, but the food rendering is canceled
      */
     public static IGuiOverlay BLOOD_BAR_ELEMENT;
-    public static ResourceLocation BLOOD_BAR_ID = new ResourceLocation("vampirism", "blood_bar");
+    public static final ResourceLocation BLOOD_BAR_ID = new ResourceLocation("vampirism", "blood_bar");
 
 
     /**
@@ -24,7 +23,7 @@ public class VIngameOverlays {
      * Is rendered above {@link net.minecraftforge.client.gui.overlay.VanillaGuiOverlay#BOSS_EVENT_PROGRESS}
      */
     public static IGuiOverlay FACTION_RAID_BAR_ELEMENT;
-    public static ResourceLocation FACTION_RAID_BAR_ID = new ResourceLocation("vampirism", "raid_bar");
+    public static final ResourceLocation FACTION_RAID_BAR_ID = new ResourceLocation("vampirism", "raid_bar");
 
 
     /**
@@ -33,5 +32,5 @@ public class VIngameOverlays {
      * Is rendered above {@link net.minecraftforge.client.gui.overlay.VanillaGuiOverlay#EXPERIENCE_BAR}
      */
     public static IGuiOverlay FACTION_LEVEL_ELEMENT;
-    public static ResourceLocation FACTION_LEVEL_ID = new ResourceLocation("vampirism", "faction_level");
+    public static final ResourceLocation FACTION_LEVEL_ID = new ResourceLocation("vampirism", "faction_level");
 }

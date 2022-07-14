@@ -24,6 +24,7 @@ public class BindActionCommand extends BasicCommand {
                         .executes(BindActionCommand::help));
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int bindAction(CommandContext<CommandSourceStack> context, ServerPlayer asPlayer, int number, IAction<?> action) {
         FactionPlayerHandler.getOpt(asPlayer).ifPresent(fp-> {
             fp.setBoundAction(number, action, true, true);
@@ -32,6 +33,7 @@ public class BindActionCommand extends BasicCommand {
         return 0;
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int help(CommandContext<CommandSourceStack> context) {
         context.getSource().sendSuccess(Component.translatable("command.vampirism.base.bind_action.help"), false);
         return 0;

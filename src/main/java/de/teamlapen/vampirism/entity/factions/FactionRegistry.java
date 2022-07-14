@@ -163,7 +163,7 @@ public class FactionRegistry implements IFactionRegistry {
         protected final Class<T> entityInterface;
         protected int color = Color.WHITE.getRGB();
         protected boolean hostileTowardsNeutral;
-        protected FactionVillageBuilder villageFactionData = new FactionVillageBuilder();
+        protected final FactionVillageBuilder villageFactionData = new FactionVillageBuilder();
         protected TextColor chatColor;
         protected String name;
         protected String namePlural;

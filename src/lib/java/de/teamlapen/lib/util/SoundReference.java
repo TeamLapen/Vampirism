@@ -10,7 +10,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  *
  * @author maxanier
  */
-@SuppressWarnings("ClassCanBeRecord")
 @OnlyIn(Dist.CLIENT)
 public class SoundReference implements ISoundReference {
 

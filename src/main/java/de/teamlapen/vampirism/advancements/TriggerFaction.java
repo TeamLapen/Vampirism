@@ -43,22 +43,22 @@ public class TriggerFaction extends SimpleCriterionTrigger<TriggerFaction.Instan
     @Nonnull
     @Override
     protected Instance createInstance(JsonObject json, @Nonnull EntityPredicate.Composite entityPredicate, @Nonnull DeserializationContext conditionsParser) {
-        IPlayableFaction<?> faction = null;
+        IPlayableFaction<?> playableFaction = null;
         Type type = json.has("type") ? Type.valueOf(json.get("type").getAsString()) : Type.LEVEL;
         if (json.has("faction")) {
             String idStr = json.get("faction").getAsString();
             if (!"null".equals(idStr)) {
                 ResourceLocation id = new ResourceLocation(json.get("faction").getAsString());
-                IFaction<?> faction1 = VampirismAPI.factionRegistry().getFactionByID(id);
-                if (!(faction1 instanceof IPlayableFaction)) {
-                    LOGGER.warn("Given faction name does not exist or is not a playable faction: {}", id);
+                IFaction<?> faction = VampirismAPI.factionRegistry().getFactionByID(id);
+                if (faction instanceof IPlayableFaction<?> playableFaction1) {
+                    playableFaction = playableFaction1;
                 } else {
-                    faction = (IPlayableFaction<?>) faction1;
+                    LOGGER.warn("Given faction name does not exist or is not a playable faction: {}", id);
                 }
             }
         }
         int level = json.has("level") ? json.get("level").getAsInt() : 1;
-        return new Instance(type, faction, level);
+        return new Instance(type, playableFaction, level);
     }
 
     public enum Type {

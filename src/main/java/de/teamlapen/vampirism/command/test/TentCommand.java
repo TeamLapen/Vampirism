@@ -22,6 +22,7 @@ public class TentCommand extends BasicCommand {
                         .executes(context -> tent(context.getSource(), context.getSource().getPlayerOrException(), true)));
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int tent(CommandSourceStack commandSource, ServerPlayer asPlayer, boolean advanced) {
         HitResult result = UtilLib.getPlayerLookingSpot(asPlayer, 5);
         if (result.getType() == HitResult.Type.BLOCK) {

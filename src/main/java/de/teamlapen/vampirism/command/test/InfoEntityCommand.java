@@ -18,11 +18,10 @@ public class InfoEntityCommand extends BasicCommand {
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("printEntityNBT")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
-                .executes(context -> {
-                    return infoEntity(context.getSource(), context.getSource().getPlayerOrException());
-                });
+                .executes(context -> infoEntity(context.getSource(), context.getSource().getPlayerOrException()));
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int infoEntity(CommandSourceStack commandSource, ServerPlayer asPlayer) {
         List<Entity> l = asPlayer.getCommandSenderWorld().getEntities(asPlayer, asPlayer.getBoundingBox().inflate(3, 2, 3));
         for (Entity o : l) {

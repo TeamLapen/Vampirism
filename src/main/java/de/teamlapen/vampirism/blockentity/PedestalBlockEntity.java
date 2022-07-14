@@ -230,7 +230,7 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
      */
     @Nullable
     private static IBloodChargeable getChargeItem(@Nonnull ItemStack stack) {
-        return stack.isEmpty() ? null : (stack.getItem() instanceof IBloodChargeable ? (IBloodChargeable) stack.getItem() : null);
+        return stack.isEmpty() ? null : (stack.getItem() instanceof IBloodChargeable chargeable ? chargeable : null);
     }
 
     private void markDirtyAndUpdateClient() {

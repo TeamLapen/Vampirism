@@ -13,7 +13,7 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.UUID;
 
 public class ModRefinements {
-    public static DeferredRegister<IRefinement> REFINEMENTS = DeferredRegister.create(VampirismRegistries.REFINEMENT_ID, REFERENCE.MODID);
+    public static final DeferredRegister<IRefinement> REFINEMENTS = DeferredRegister.create(VampirismRegistries.REFINEMENT_ID, REFERENCE.MODID);
 
 
     public static final RegistryObject<Refinement> ARMOR1 = REFINEMENTS.register("armor1", () -> new Refinement(Attributes.ARMOR, UUID.fromString("fe88a321-acba-4275-af04-e0e2a13bfeb0"), 0.3, (uuid, value) -> new AttributeModifier(uuid, "refinement_armor", value, AttributeModifier.Operation.ADDITION)));

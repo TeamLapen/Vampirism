@@ -37,7 +37,7 @@ public class VReference {
     /**
      * Enchantment type for crossbows
      */
-    public static final EnchantmentCategory CROSSBOW_ENCHANTMENT = EnchantmentCategory.create("VAMPIRISM_CROSSBOW", input -> input instanceof IVampirismCrossbow);
+    public static final EnchantmentCategory CROSSBOW_ENCHANTMENT = EnchantmentCategory.create("VAMPIRISM_CROSSBOW", IVampirismCrossbow.class::isInstance);
 
     public static final RegistryObject<Fluid> BLOOD = RegistryObject.create(new ResourceLocation("vampirism", "blood"), ForgeRegistries.FLUIDS);
     /**

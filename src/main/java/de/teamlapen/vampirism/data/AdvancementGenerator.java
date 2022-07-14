@@ -35,6 +35,7 @@ public class AdvancementGenerator extends AdvancementProvider {
             this.root = root;
         }
 
+        @SuppressWarnings("unused")
         @Override
         public void accept(Consumer<Advancement> consumer) {
             Advancement become_hunter = Advancement.Builder.advancement()
@@ -83,6 +84,7 @@ public class AdvancementGenerator extends AdvancementProvider {
     private static class MainAdvancements implements Consumer<Consumer<Advancement>> {
         Advancement root;
 
+        @SuppressWarnings("unused")
         @Override
         public void accept(Consumer<Advancement> consumer) {
             root = Advancement.Builder.advancement()
@@ -124,6 +126,7 @@ public class AdvancementGenerator extends AdvancementProvider {
             this.root = root;
         }
 
+        @SuppressWarnings("unused")
         @Override
         public void accept(Consumer<Advancement> consumer) {
             Advancement become_vampire = Advancement.Builder.advancement()

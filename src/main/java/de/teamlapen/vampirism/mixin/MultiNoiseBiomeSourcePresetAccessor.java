@@ -11,7 +11,6 @@ import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 @Mixin(MultiNoiseBiomeSource.Preset.class)
 public interface MultiNoiseBiomeSourcePresetAccessor {

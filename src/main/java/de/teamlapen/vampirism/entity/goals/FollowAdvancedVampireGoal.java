@@ -46,7 +46,7 @@ public class FollowAdvancedVampireGoal extends Goal {
             return leader.getRepresentingEntity().isAlive() && this.entity.distanceToSqr(leader.getRepresentingEntity()) > DIST;
         }
 
-        List<VampireBaseEntity> list = this.entity.getCommandSenderWorld().getEntitiesOfClass(VampireBaseEntity.class, this.entity.getBoundingBox().inflate(8, 4, 8), entity -> entity instanceof IEntityLeader);
+        List<VampireBaseEntity> list = this.entity.getCommandSenderWorld().getEntitiesOfClass(VampireBaseEntity.class, this.entity.getBoundingBox().inflate(8, 4, 8), IEntityLeader.class::isInstance);
 
 
         double d0 = Double.MAX_VALUE;

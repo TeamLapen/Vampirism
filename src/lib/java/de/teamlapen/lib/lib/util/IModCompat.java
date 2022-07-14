@@ -17,6 +17,7 @@ public interface IModCompat extends IInitListener {
      * Can be null if all versions are accepted
      * {@link org.apache.maven.artifact.versioning.VersionRange} String
      */
+    @SuppressWarnings("SameReturnValue")
     @Nullable
     default String getAcceptedVersionRange() {
         return null;

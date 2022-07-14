@@ -35,9 +35,9 @@ public class BloodContainerBlockEntity extends net.minecraftforge.fluids.capabil
     public static final ModelProperty<Boolean> FLUID_IMPURE = new ModelProperty<>();
 
     public static void setBloodValue(BlockGetter worldIn, Random randomIn, BlockPos blockPosIn) {
-        BlockEntity tileEntity = worldIn.getBlockEntity(blockPosIn);
-        if (tileEntity instanceof BloodContainerBlockEntity) {
-            ((BloodContainerBlockEntity) tileEntity).setFluidStack(new FluidStack(ModFluids.BLOOD.get(), BloodBottleFluidHandler.getAdjustedAmount((int) (CAPACITY * randomIn.nextFloat()))));
+        BlockEntity blockEntity = worldIn.getBlockEntity(blockPosIn);
+        if (blockEntity instanceof BloodContainerBlockEntity bloodContainer) {
+            bloodContainer.setFluidStack(new FluidStack(ModFluids.BLOOD.get(), BloodBottleFluidHandler.getAdjustedAmount((int) (CAPACITY * randomIn.nextFloat()))));
         }
     }
 

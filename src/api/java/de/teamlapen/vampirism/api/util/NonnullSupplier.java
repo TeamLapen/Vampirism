@@ -14,5 +14,5 @@ public interface NonnullSupplier<T> extends Supplier<T> {
     @Nonnull
     default T get() {
         return getNonnull();
-    };
+    }
 }

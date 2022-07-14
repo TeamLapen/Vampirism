@@ -86,7 +86,7 @@ public class RefinementItemReward extends ItemReward {
 
     @Nullable
     private static IPlayableFaction<?> getRandomFactionWithAccessories() {
-        List<IPlayableFaction<?>> factions = Arrays.stream(VampirismAPI.factionRegistry().getPlayableFactions()).filter(IPlayableFaction::hasRefinements).collect(Collectors.toList());
+        List<IPlayableFaction<?>> factions = Arrays.stream(VampirismAPI.factionRegistry().getPlayableFactions()).filter(IPlayableFaction::hasRefinements).toList();
         if (factions.isEmpty()) return null;
         return factions.get(RANDOM.nextInt(factions.size()) - 1);
     }

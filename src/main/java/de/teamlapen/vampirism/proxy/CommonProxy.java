@@ -37,9 +37,7 @@ public abstract class CommonProxy implements IProxy {
     public void handleAppearancePacket(Player player, AppearancePacket msg) {
         Entity entity = player.level.getEntity(msg.entityId);
         if (entity instanceof Player) {
-            VampirePlayer.getOpt(player).ifPresent(vampire -> {
-                vampire.setSkinData(msg.data);
-            });
+            VampirePlayer.getOpt(player).ifPresent(vampire -> vampire.setSkinData(msg.data));
         } else if (entity instanceof MinionEntity<?>) {
             ((MinionEntity<?>) entity).getMinionData().ifPresent(minionData -> minionData.handleMinionAppearanceConfig(msg.name, msg.data));
             HelperLib.sync((MinionEntity<?>) entity);

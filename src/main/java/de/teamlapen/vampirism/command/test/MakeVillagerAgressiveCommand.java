@@ -16,11 +16,10 @@ public class MakeVillagerAgressiveCommand extends BasicCommand {
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("makeVillagerAgressive")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
-                .executes(context -> {
-                    return makeVillagerAgressive(context.getSource().getPlayerOrException());
-                });
+                .executes(context -> makeVillagerAgressive(context.getSource().getPlayerOrException()));
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int makeVillagerAgressive(ServerPlayer asPlayer) {
         List<Villager> l = asPlayer.getCommandSenderWorld().getEntitiesOfClass(Villager.class, asPlayer.getBoundingBox().inflate(3, 2, 3));
         for (Villager v : l) {

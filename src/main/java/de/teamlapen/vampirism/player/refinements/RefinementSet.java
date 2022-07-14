@@ -15,7 +15,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public abstract class RefinementSet implements IRefinementSet {
 
@@ -35,6 +34,7 @@ public abstract class RefinementSet implements IRefinementSet {
         this.color = color;
     }
 
+    @SafeVarargs
     public RefinementSet(Rarity rarity, int color, RegistryObject<? extends IRefinement>... refinements) {
         this(rarity, color, UtilLib.newSortedSet(refinements));
     }

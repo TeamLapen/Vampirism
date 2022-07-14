@@ -28,6 +28,7 @@ public interface IFactionPlayer<T extends IFactionPlayer<T>> extends IFactionEnt
      * Vampirism's factions always return true here.
      * Can be used if another mod does not want that a player leaves its faction via the command
      */
+    @SuppressWarnings("SameReturnValue")
     boolean canLeaveFaction();
 
     /**

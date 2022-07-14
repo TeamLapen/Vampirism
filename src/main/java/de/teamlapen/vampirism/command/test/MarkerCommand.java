@@ -12,15 +12,12 @@ public class MarkerCommand extends BasicCommand {
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("marker")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
-                .executes(context -> {
-                    return marker(null);
-                }).then(Commands.argument("args", StringArgumentType.greedyString())
-                        .executes(context -> {
-                                    return marker(StringArgumentType.getString(context, "args"));
-                                }
+                .executes(context -> marker(null)).then(Commands.argument("args", StringArgumentType.greedyString())
+                        .executes(context -> marker(StringArgumentType.getString(context, "args"))
                         ));
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int marker(String args) {
         LogManager.getLogger().debug("************************************************************");
         LogManager.getLogger().debug("");

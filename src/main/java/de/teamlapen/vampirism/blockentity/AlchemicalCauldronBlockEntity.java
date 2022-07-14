@@ -219,8 +219,8 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
         if (blockEntity.isBurning() || !itemstackFuel.isEmpty() && !blockEntity.items.get(0).isEmpty() && !blockEntity.items.get(1).isEmpty()) {
             AlchemicalCauldronRecipe cauldronRecipe = null;
             Optional<? extends AbstractCookingRecipe> irecipe = level.getRecipeManager().getRecipeFor(ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get(), blockEntity, level);
-            if (irecipe.isPresent() && irecipe.get() instanceof AlchemicalCauldronRecipe) {
-                cauldronRecipe = (AlchemicalCauldronRecipe) irecipe.get();
+            if (irecipe.isPresent() && irecipe.get() instanceof AlchemicalCauldronRecipe recipe) {
+                cauldronRecipe = recipe;
             } else {
                 if (!warnedRecipeType) {
                     LOGGER.error("Got an unexpected/illegal recipe for recipe type {}. This might break the AlchemicalCauldron and is caused by another mod", ModRecipes.ALCHEMICAL_CAULDRON_TYPE);
@@ -322,15 +322,13 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
 
             Either<Ingredient, FluidStack> fluid = recipe.getFluid();
             fluid.ifLeft(ingredient -> itemstackfluid.shrink(1));
-            fluid.ifRight(fluidStack -> {
-                this.items.set(0, FluidUtil.getFluidHandler(itemstackfluid).map(handler -> {
-                    FluidStack drained = handler.drain(fluidStack, IFluidHandler.FluidAction.EXECUTE);
-                    if (drained.getAmount() < fluidStack.getAmount()) {
-                        handler.drain(new FluidStack(fluidStack.getFluid(), FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.EXECUTE); //For bucket containers we need to draw at least one bucket size
-                    }
-                    return handler.getContainer();
-                }).orElse(ItemStack.EMPTY));
-            });
+            fluid.ifRight(fluidStack -> this.items.set(0, FluidUtil.getFluidHandler(itemstackfluid).map(handler -> {
+                FluidStack drained = handler.drain(fluidStack, IFluidHandler.FluidAction.EXECUTE);
+                if (drained.getAmount() < fluidStack.getAmount()) {
+                    handler.drain(new FluidStack(fluidStack.getFluid(), FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.EXECUTE); //For bucket containers we need to draw at least one bucket size
+                }
+                return handler.getContainer();
+            }).orElse(ItemStack.EMPTY)));
             itemstackingredient.shrink(1);
             recipeChecked = null;
         }

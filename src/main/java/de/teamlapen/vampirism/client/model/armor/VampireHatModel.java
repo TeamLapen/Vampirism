@@ -26,8 +26,8 @@ public class VampireHatModel extends VampirismArmorModel {
         return instance;
     }
 
-    public ModelPart base;
-    public ModelPart top;
+    public final ModelPart base;
+    public final ModelPart top;
 
     public static LayerDefinition createLayer() {
         MeshDefinition mesh = new MeshDefinition();

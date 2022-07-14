@@ -180,7 +180,7 @@ public class UtilLib {
     public static @Nonnull
     Vec3 getItemPosition(LivingEntity entity, boolean mainHand) {
         boolean left = (mainHand ? entity.getMainArm() : entity.getMainArm().getOpposite()) == HumanoidArm.LEFT;
-        boolean firstPerson = entity instanceof Player && ((Player) entity).isLocalPlayer() && Minecraft.getInstance().options.getCameraType().isFirstPerson();
+        boolean firstPerson = entity instanceof Player player && player.isLocalPlayer() && Minecraft.getInstance().options.getCameraType().isFirstPerson();
         Vec3 dir = firstPerson ? entity.getForward() : Vec3.directionFromRotation(new Vec2(entity.getXRot(), entity.yBodyRot));
         dir = dir.yRot((float) (Math.PI / 5f) * (left ? 1f : -1f)).scale(0.75f);
         return dir.add(entity.getX(), entity.getY() + entity.getEyeHeight(), entity.getZ());
@@ -192,18 +192,18 @@ public class UtilLib {
         BlockPos behind = getPositionBehindEntity(entity, 2);
         Mob e = toSpawn.create(entity.getCommandSenderWorld());
         if (e == null) return null;
-        Level world = entity.getCommandSenderWorld();
+        Level level = entity.getCommandSenderWorld();
         e.setPos(behind.getX(), entity.getY(), behind.getZ());
 
-        if (e.checkSpawnRules(world, reason) && e.checkSpawnObstruction(world)) {
+        if (e.checkSpawnRules(level, reason) && e.checkSpawnObstruction(level)) {
             entity.getCommandSenderWorld().addFreshEntity(e);
             return e;
         } else {
-            int y = world.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, behind).getY();
+            int y = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, behind).getY();
             e.setPos(behind.getX(), y, behind.getZ());
-            if (e.checkSpawnRules(world, reason) && e.checkSpawnObstruction(world)) {
-                world.addFreshEntity(e);
-                if (world instanceof ServerLevel) onInitialSpawn((ServerLevel) world, e, reason);
+            if (e.checkSpawnRules(level, reason) && e.checkSpawnObstruction(level)) {
+                level.addFreshEntity(e);
+                if (level instanceof ServerLevel serverLevel) onInitialSpawn(serverLevel, e, reason);
                 return e;
             }
         }
@@ -214,9 +214,9 @@ public class UtilLib {
     /**
      * Call {@link Mob#finalizeSpawn(ServerLevelAccessor, DifficultyInstance, MobSpawnType, SpawnGroupData, CompoundTag)} if applicable
      */
-    private static void onInitialSpawn(ServerLevel world, Entity e, MobSpawnType reason) {
-        if (e instanceof Mob) {
-            ((Mob) e).finalizeSpawn(world, e.getCommandSenderWorld().getCurrentDifficultyAt(e.blockPosition()), reason, null, null);
+    private static void onInitialSpawn(ServerLevel level, Entity e, MobSpawnType reason) {
+        if (e instanceof Mob mob) {
+            mob.finalizeSpawn(level, e.getCommandSenderWorld().getCurrentDifficultyAt(e.blockPosition()), reason, null, null);
         }
     }
 
@@ -431,22 +431,6 @@ public class UtilLib {
     }
 
     /**
-     * Returns null, but makes it look like non-null
-     * <p>
-     * If this causes issues when compiling with IntelliJ check the following link and rebuild the entire project afterwards
-     * <p>
-     * https://github.com/TeamLapen/Vampirism#intellij
-     * <p>
-     * Make sure Settings -> Build, Execution, Deployment -> Compiler -> 'Add runtime assertions for not-null-annotated methods and parameters' is disabled (Unfortunately required)
-     */
-    @Deprecated
-    @SuppressWarnings("ConstantConditions")
-    public static @Nonnull
-    <T> T getNull() {
-        return null;
-    }
-
-    /**
      * Stores the given pos with in the compoundtag using base.
      * Can be retrieved again with {@link UtilLib#readPos(CompoundTag, String)}
      */
@@ -512,7 +496,7 @@ public class UtilLib {
         } else {
             try {
                 pattern = replaceDeprecatedFormatter(pattern);
-                return ForgeI18n.parseFormat(pattern, Arrays.stream(format).map(o -> o instanceof Component ? ((Component) o).getString() : o).toArray());
+                return ForgeI18n.parseFormat(pattern, Arrays.stream(format).map(o -> o instanceof Component component ? component.getString() : o).toArray());
             } catch (IllegalArgumentException e) {
                 LOGGER.error("Illegal format found `{}`", pattern);
                 return pattern;
@@ -600,17 +584,17 @@ public class UtilLib {
     }
 
     @Nullable
-    public static StructureStart getStructureStartAt(Level w, BlockPos pos, Structure s) {
-        if (w instanceof ServerLevel && w.isLoaded(pos)) {
-            return getStructureStartAt((ServerLevel) w, pos, s);
+    public static StructureStart getStructureStartAt(Level level, BlockPos pos, Structure s) {
+        if (level instanceof ServerLevel serverLevel && serverLevel.isLoaded(pos)) {
+            return getStructureStartAt(serverLevel, pos, s);
         }
         return null;
     }
 
     public static Optional<StructureStart> getStructureStartAt(Level level, BlockPos pos, TagKey<Structure> structureTag) {
-        if (level instanceof ServerLevel && level.isLoaded(pos)) {
-            Registry<Structure> registry = level.registryAccess().registryOrThrow(Registry.STRUCTURE_REGISTRY);
-            return ((ServerLevel) level).structureManager().startsForStructure(new ChunkPos(pos), structure -> {
+        if (level instanceof ServerLevel serverLevel && serverLevel.isLoaded(pos)) {
+            Registry<Structure> registry = serverLevel.registryAccess().registryOrThrow(Registry.STRUCTURE_REGISTRY);
+            return serverLevel.structureManager().startsForStructure(new ChunkPos(pos), structure -> {
                 return registry.getHolder(registry.getId(structure)).map(a -> a.is(structureTag)).orElse(false);
             }).stream().findFirst();
         }

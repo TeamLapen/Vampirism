@@ -20,9 +20,7 @@ import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
 public class RefinementSetArgument implements ArgumentType<IRefinementSet> {
-    public static final DynamicCommandExceptionType REFINEMENT_NOT_FOUND = new DynamicCommandExceptionType((particle) -> {
-        return Component.translatable("command.vampirism.argument.refinement_set.notfound", particle);
-    });
+    public static final DynamicCommandExceptionType REFINEMENT_NOT_FOUND = new DynamicCommandExceptionType((particle) -> Component.translatable("command.vampirism.argument.refinement_set.notfound", particle));
     private static final Collection<String> EXAMPLES = Arrays.asList("refinement_set", "modid:refinement_set");
 
     public static RefinementSetArgument set() {

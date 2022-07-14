@@ -29,6 +29,7 @@ public interface IEntityAction {
     /**
      * @return activation time in ticks before the action is activated once ready to start
      */
+    @SuppressWarnings("SameReturnValue")
     default int getPreActivationTime() {
         return 10;
     }

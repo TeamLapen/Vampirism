@@ -294,19 +294,21 @@ public class RenderHandler implements ResourceManagerReloadListener {
     }
 
     @SubscribeEvent
-    public void onRenderWorldLast(RenderLevelLastEvent event) {
-        MixinHooks.enforcingGlowing_bloodVision = false;
-        if (mc.level == null) return;
+    public void onRenderWorldLast(RenderLevelStageEvent event) {
+        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_WEATHER) {
+            MixinHooks.enforcingGlowing_bloodVision = false;
+            if (mc.level == null) return;
 
-        /*
-         * DO NOT USE partial ticks from event. They are bugged: https://github.com/MinecraftForge/MinecraftForge/issues/6380
-         */
-        float partialTicks = mc.getFrameTime();
+            /*
+             * DO NOT USE partial ticks from event. They are bugged: https://github.com/MinecraftForge/MinecraftForge/issues/6380
+             */
+            float partialTicks = mc.getFrameTime();
 
 
-        if (shouldRenderBloodVision() && !reducedBloodVision) {
-            this.blurShader.process(partialTicks);
-            if (this.bloodVisionBuffer != null) this.bloodVisionBuffer.endOutlineBatch();
+            if (shouldRenderBloodVision() && !reducedBloodVision) {
+                this.blurShader.process(partialTicks);
+                if (this.bloodVisionBuffer != null) this.bloodVisionBuffer.endOutlineBatch();
+            }
         }
     }
 

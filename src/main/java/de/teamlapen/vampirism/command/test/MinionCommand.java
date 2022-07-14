@@ -65,6 +65,7 @@ public class MinionCommand extends BasicCommand {
         return spawnNewMinion(ctx, VReference.HUNTER_FACTION, data, ModEntities.HUNTER_MINION.get());
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static <T extends MinionData> int spawnNewMinion(CommandSourceStack ctx, IPlayableFaction<?> faction, T data, EntityType<? extends MinionEntity<T>> type) throws CommandSyntaxException {
         Player p = ctx.getPlayerOrException();
         FactionPlayerHandler fph = FactionPlayerHandler.get(p);
@@ -94,6 +95,7 @@ public class MinionCommand extends BasicCommand {
         return 0;
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int recall(CommandSourceStack ctx) throws CommandSyntaxException {
         Player p = ctx.getPlayerOrException();
         FactionPlayerHandler fph = FactionPlayerHandler.get(p);
@@ -111,6 +113,7 @@ public class MinionCommand extends BasicCommand {
     }
 
 
+    @SuppressWarnings("SameReturnValue")
     private static int respawn(CommandSourceStack ctx) throws CommandSyntaxException {
         Player p = ctx.getPlayerOrException();
         FactionPlayerHandler fph = FactionPlayerHandler.get(p);
@@ -128,6 +131,7 @@ public class MinionCommand extends BasicCommand {
         return 0;
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int purge(CommandSourceStack ctx) throws CommandSyntaxException {
         Player p = ctx.getPlayerOrException();
         MinionWorldData.getData(ctx.getServer()).purgeController(p.getUUID());

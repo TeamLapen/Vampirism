@@ -10,7 +10,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 
 public class PotionResistanceHunterAction extends DefaultHunterAction implements ILastingAction<IHunterPlayer> {
@@ -52,7 +51,7 @@ public class PotionResistanceHunterAction extends DefaultHunterAction implements
     public boolean onUpdate(IHunterPlayer player) {
         if (!(player.getRepresentingEntity().tickCount % 3 == 0)) {
             Collection<MobEffectInstance> effects = player.getRepresentingEntity().getActiveEffects();
-            effects.stream().filter(instance -> shouldRemove(instance.getEffect())).collect(Collectors.toList()).forEach(s -> player.getRepresentingPlayer().removeEffect(s.getEffect()));
+            effects.stream().filter(instance -> shouldRemove(instance.getEffect())).toList().forEach(s -> player.getRepresentingPlayer().removeEffect(s.getEffect()));
         }
         return false;
     }

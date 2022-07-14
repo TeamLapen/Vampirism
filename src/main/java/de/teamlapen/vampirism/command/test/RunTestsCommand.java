@@ -12,11 +12,10 @@ public class RunTestsCommand extends BasicCommand { //TODO "unit test" can poten
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("runTests")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
-                .executes(context -> {
-                    return runTests(context.getSource().getPlayerOrException());
-                });
+                .executes(context -> runTests(context.getSource().getPlayerOrException()));
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int runTests(ServerPlayer asPlayer) {
         Tests.runTests(asPlayer.getCommandSenderWorld(), asPlayer);
         return 0;

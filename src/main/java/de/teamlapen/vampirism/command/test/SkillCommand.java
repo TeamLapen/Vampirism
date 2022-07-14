@@ -29,6 +29,7 @@ public class SkillCommand extends BasicCommand {
                         .executes(context -> disableall(context.getSource(), context.getSource().getPlayerOrException())));
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int disableall(CommandSourceStack commandSource, ServerPlayer asPlayer) {
         IFactionPlayer<?> factionPlayer = asPlayer.isAlive() ? FactionPlayerHandler.getCurrentFactionPlayer(asPlayer).orElse(null) : null;
         if (factionPlayer == null) {
@@ -39,7 +40,7 @@ public class SkillCommand extends BasicCommand {
         return 0;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "SameReturnValue"})
     private static int skill(CommandSourceStack commandSource, ServerPlayer asPlayer, @SuppressWarnings("rawtypes") ISkill skill, boolean force) {
         IFactionPlayer<?> factionPlayer = asPlayer.isAlive() ? FactionPlayerHandler.getCurrentFactionPlayer(asPlayer).orElse(null) : null;
         if (factionPlayer == null) {
@@ -56,36 +57,25 @@ public class SkillCommand extends BasicCommand {
             result = ISkillHandler.Result.OK;
         }
         switch (result) {
-            case OK:
+            case OK -> {
                 factionPlayer.getSkillHandler().enableSkill(skill);
-                commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.enabled", RegUtil.id(skill)  + " (" + skill.getName().getString() + ")"), false);
-                break;
-            case ALREADY_ENABLED:
-                commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.alreadyenabled", skill.getName()), false);
-                break;
-            case PARENT_NOT_ENABLED:
+                commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.enabled", RegUtil.id(skill) + " (" + skill.getName().getString() + ")"), false);
+            }
+            case ALREADY_ENABLED -> commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.alreadyenabled", skill.getName()), false);
+            case PARENT_NOT_ENABLED -> {
                 ISkill<?>[] skills = factionPlayer.getSkillHandler().getParentSkills(skill);
                 if (skills == null || skills.length == 0) return 0;
-                if (skills.length == 1)
+                if (skills.length == 1) {
                     commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.parent", RegUtil.id(skills[0])), false);
-                else
+                } else {
                     commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.parents", RegUtil.id(skills[0]), RegUtil.id(skills[1])), false);
-                break;
-            case NO_POINTS:
-                commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.nopoints"), false);
-                break;
-            case OTHER_NODE_SKILL:
-                commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.othernode"), false);
-                break;
-            case NOT_FOUND:
-                commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.otherfaction"), false);
-                break;
-            case LOCKED_BY_OTHER_NODE:
-                commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.locked"), false);
-                break;
-            case LOCKED_BY_PLAYER_STATE:
-                commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.locked_player_state"), false);
-                break;
+                }
+            }
+            case NO_POINTS -> commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.nopoints"), false);
+            case OTHER_NODE_SKILL -> commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.othernode"), false);
+            case NOT_FOUND -> commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.otherfaction"), false);
+            case LOCKED_BY_OTHER_NODE -> commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.locked"), false);
+            case LOCKED_BY_PLAYER_STATE -> commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.locked_player_state"), false);
         }
         return 0;
     }

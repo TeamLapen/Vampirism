@@ -69,11 +69,6 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
         this.addDataSlot(missingLava);
     }
 
-    @Override
-    public void broadcastChanges() {
-        super.broadcastChanges();
-    }
-
     /**
      * Called to determine if the current slot is valid for the stack merging (double-click) code. The stack passed in
      * is null for the initial slot that was double-clicked.
@@ -212,9 +207,7 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
 
     @Override
     public void slotsChanged(@Nonnull Container inventoryIn) {
-        this.worldPos.execute((world, pos) -> {
-            slotChangedCraftingGrid(world, this.player, this.hunterPlayer, this.craftMatrix, this.craftResult);
-        });
+        this.worldPos.execute((world, pos) -> slotChangedCraftingGrid(world, this.player, this.hunterPlayer, this.craftMatrix, this.craftResult));
     }
 
     @Override

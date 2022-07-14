@@ -17,7 +17,6 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 /**
  * works the same as a {@link RuleProcessor} but for {@link RandomBlockState} instead of {@link ProcessorRule}

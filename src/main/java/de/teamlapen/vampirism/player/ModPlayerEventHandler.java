@@ -228,7 +228,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
-        if (VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().isCannotInteract()) {
+        if (VampirismPlayerAttributes.get(event.getEntity()).getVampSpecial().isCannotInteract()) {
             event.setCanceled(true);
         } else if ((ModBlocks.GARLIC_DIFFUSER_NORMAL.get() == event.getState().getBlock() || ModBlocks.GARLIC_DIFFUSER_WEAK.get() == event.getState().getBlock() || ModBlocks.GARLIC_DIFFUSER_IMPROVED.get() == event.getState().getBlock()) && VampirismPlayerAttributes.get(event.getEntity()).vampireLevel > 0) {
             event.setNewSpeed(event.getOriginalSpeed() * 0.1F);
@@ -237,7 +237,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void onItemPickupPre(EntityItemPickupEvent event) {
-        if (VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().isDBNO) {
+        if (VampirismPlayerAttributes.get(event.getEntity()).getVampSpecial().isDBNO) {
             event.setCanceled(true);
         }
     }
@@ -249,7 +249,7 @@ public class ModPlayerEventHandler {
         }
 
         if ((event.getItemStack().getItem() instanceof ThrowablePotionItem || event.getItemStack().getItem() instanceof CrossbowItem)) {
-            if (VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().isCannotInteract()) {
+            if (VampirismPlayerAttributes.get(event.getEntity()).getVampSpecial().isCannotInteract()) {
                 event.setCancellationResult(InteractionResult.sidedSuccess(event.getLevel().isClientSide()));
                 event.setCanceled(true);
             }
@@ -277,9 +277,7 @@ public class ModPlayerEventHandler {
                     if (event.getEntity() instanceof IVampire) {
                         DamageHandler.affectVampireGarlicDirect((IVampire) event.getEntity(), EnumStrength.MEDIUM);
                     } else if (event.getEntity() instanceof Player) {
-                        VampirePlayer.getOpt((Player) event.getEntity()).ifPresent(vampire -> {
-                            DamageHandler.affectVampireGarlicDirect(vampire, EnumStrength.MEDIUM);
-                        });
+                        VampirePlayer.getOpt((Player) event.getEntity()).ifPresent(vampire -> DamageHandler.affectVampireGarlicDirect(vampire, EnumStrength.MEDIUM));
                     }
                 }
             }
@@ -426,20 +424,18 @@ public class ModPlayerEventHandler {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onPlayerName(PlayerEvent.NameFormat event) {
         if (event.getEntity() != null && VampirismConfig.SERVER.factionColorInChat.get()) {
-            FactionPlayerHandler.getOpt(event.getEntity()).ifPresent(fph -> {
-                fph.getCurrentFactionPlayer().ifPresent(fp -> {
-                    IFaction<?> f = fp.getDisguisedAs();
-                    if (f != null) {
-                        MutableComponent displayName;
-                        if (fph.getLordLevel() > 0 && VampirismConfig.SERVER.lordPrefixInChat.get()) {
-                            displayName = Component.literal("[").append(fph.getLordTitle()).append("] ").append(event.getDisplayname());
-                        } else {
-                            displayName = event.getDisplayname().copy();
-                        }
-                        event.setDisplayname(displayName.withStyle(style -> style.withColor((f.getChatColor()))));
+            FactionPlayerHandler.getOpt(event.getEntity()).ifPresent(fph -> fph.getCurrentFactionPlayer().ifPresent(fp -> {
+                IFaction<?> f = fp.getDisguisedAs();
+                if (f != null) {
+                    MutableComponent displayName;
+                    if (fph.getLordLevel() > 0 && VampirismConfig.SERVER.lordPrefixInChat.get()) {
+                        displayName = Component.literal("[").append(fph.getLordTitle()).append("] ").append(event.getDisplayname());
+                    } else {
+                        displayName = event.getDisplayname().copy();
                     }
-                });
-            });
+                    event.setDisplayname(displayName.withStyle(style -> style.withColor((f.getChatColor()))));
+                }
+            }));
         }
     }
 
@@ -476,7 +472,7 @@ public class ModPlayerEventHandler {
     private boolean checkItemUsePerm(ItemStack stack, Player player) {
 
         boolean message = !player.getCommandSenderWorld().isClientSide;
-        if (!stack.isEmpty() && stack.getItem() instanceof IFactionLevelItem item) {
+        if (!stack.isEmpty() && stack.getItem() instanceof IFactionLevelItem<?> item) {
             if (!player.isAlive()) return false;
             LazyOptional<FactionPlayerHandler> handler = FactionPlayerHandler.getOpt(player);
             IFaction<?> usingFaction = item.getExclusiveFaction(stack);

@@ -302,7 +302,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
          */
         SPECIAL(3);
 
-        int level;
+        final int level;
 
         SpawnRestriction(int level) {
             this.level = level;

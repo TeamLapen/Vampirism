@@ -36,6 +36,7 @@ public class GiveAccessoriesCommand extends BasicCommand {
                         .executes(GiveAccessoriesCommand::help));
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static <Z extends Item & IRefinementItem> int give(CommandContext<CommandSourceStack> context, ServerPlayer asPlayer, int number, IRefinementSet set) {
         IFaction<?> faction = set.getFaction();
         if (faction instanceof PlayableFaction<?>) { // should always be true
@@ -51,11 +52,13 @@ public class GiveAccessoriesCommand extends BasicCommand {
         return 0;
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int help(CommandContext<CommandSourceStack> context) {
         context.getSource().sendSuccess(Component.translatable("command.vampirism.test.give_accessories.help"), false);
         return 0;
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static <T extends IFactionPlayer<T>> int random(CommandContext<CommandSourceStack> context, ServerPlayer entity, int amount) {
         IFaction<?> faction = VampirismAPI.factionRegistry().getFaction(entity);
         if (faction instanceof PlayableFaction<?>) {

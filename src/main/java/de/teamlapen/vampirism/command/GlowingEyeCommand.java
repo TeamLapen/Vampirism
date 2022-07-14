@@ -15,11 +15,10 @@ public class GlowingEyeCommand extends BasicCommand {
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("glowingEye")
                 .then(Commands.argument("on", BoolArgumentType.bool())
-                        .executes(context -> {
-                            return setGlowingEye(context, context.getSource().getPlayerOrException(), BoolArgumentType.getBool(context, "on"));
-                        }));
+                        .executes(context -> setGlowingEye(context, context.getSource().getPlayerOrException(), BoolArgumentType.getBool(context, "on"))));
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int setGlowingEye(CommandContext<CommandSourceStack> context, Player player, boolean on) {
         VampirePlayer.getOpt(player).ifPresent(vampire -> vampire.setGlowingEyes(on));
         if (on) {

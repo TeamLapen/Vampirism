@@ -193,21 +193,21 @@ public class ClientProxy extends CommonProxy {
     public void onInitStep(Step step, ParallelDispatchEvent event) {
         super.onInitStep(step, event);
         switch (step) {
-            case CLIENT_SETUP:
+            case CLIENT_SETUP -> {
                 this.overlay = new VampirismHUDOverlay(Minecraft.getInstance());
                 ModKeys.register();
                 registerSubscriptions();
                 ActionSelectScreen.loadActionOrder();
                 ModBlocksRender.register();
-                break;
-            case LOAD_COMPLETE:
+            }
+            case LOAD_COMPLETE -> {
                 event.enqueueWork(ModItemsRender::registerItemModelPropertyUnsafe);
                 event.enqueueWork(ModScreens::registerScreensUnsafe);
                 skillTreeManager.init();
                 itemStackBESR = new VampirismBlockEntityWitoutLevelRenderer(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
-                break;
-            default:
-                break;
+            }
+            default -> {
+            }
         }
     }
 

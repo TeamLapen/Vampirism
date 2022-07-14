@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
 
 public class VampirismPoisonEffect extends VampirismEffect {
 
-    public static int DEADLY_AMPLIFIER = 4;
+    public static final int DEADLY_AMPLIFIER = 4;
 
     public VampirismPoisonEffect(int potionColor) {
         super(MobEffectCategory.HARMFUL, potionColor);

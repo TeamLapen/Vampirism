@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 @OnlyIn(Dist.CLIENT)
 public class BipedCloakedModel<T extends LivingEntity> extends PlayerModel<T> {
     private static final String CLOAK = "cloak";
-    protected ModelPart bipedCloak;
+    protected final ModelPart bipedCloak;
 
     public static MeshDefinition createMesh(boolean smallArms) {
         MeshDefinition var2 = PlayerModel.createMesh(CubeDeformation.NONE, smallArms);

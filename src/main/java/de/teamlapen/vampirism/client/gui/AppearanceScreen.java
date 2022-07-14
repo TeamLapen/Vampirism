@@ -71,9 +71,7 @@ public class AppearanceScreen<T extends LivingEntity> extends Screen {
         this.guiLeft = (this.width - this.xSize) / 2;
         this.guiTop = (this.height - this.ySize) / 2;
 
-        this.addRenderableWidget(new Button(this.guiLeft + this.xSize - 80 - 10, this.guiTop + 152, 80, 20, Component.translatable("gui.done"), (context) -> {
-            this.onClose();
-        }));
+        this.addRenderableWidget(new Button(this.guiLeft + this.xSize - 80 - 10, this.guiTop + 152, 80, 20, Component.translatable("gui.done"), (context) -> this.onClose()));
         if (this.backScreen != null) {
             this.addRenderableWidget(new Button(this.guiLeft + 10, this.guiTop + 152, 80, 20, Component.translatable("gui.back"), (context) -> {
                 if (this.minecraft != null) this.minecraft.setScreen(this.backScreen);

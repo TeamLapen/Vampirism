@@ -22,7 +22,7 @@ import java.util.Set;
 /**
  * Handles loading mod loot tables as well as injecting pools into vanilla tables
  * Inspired (or almost copied) from @williewillus LootHandler for vazkii's Botania
- * https://github.com/williewillus/Botania/blob/07f68b37da9ad3a246b95c042cd6c10bd91698d1/src/main/java/vazkii/botania/common/core/loot/LootHandler.java
+ * <a href="https://github.com/williewillus/Botania/blob/07f68b37da9ad3a246b95c042cd6c10bd91698d1/src/main/java/vazkii/botania/common/core/loot/LootHandler.java">reference</a>
  */
 public class ModLootTables {
     private final static Logger LOGGER = LogManager.getLogger();

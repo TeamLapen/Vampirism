@@ -46,9 +46,10 @@ public class HelperLib {
     public static void sync(ISyncable.ISyncableEntityCapabilityInst cap, Entity entity, boolean all) {
         if (!entity.getCommandSenderWorld().isClientSide) {
             IMessage m = UpdateEntityPacket.create(cap);
-            if (entity instanceof ServerPlayer && !all) {
-                if (((ServerPlayer) entity).connection != null) {
-                    VampLib.dispatcher.sendTo(m, (ServerPlayer) entity);
+            if (entity instanceof ServerPlayer player && !all) {
+                //noinspection ConstantConditions
+                if (player.connection != null) {
+                    VampLib.dispatcher.sendTo(m, player);
                 }
 
             } else {
@@ -68,9 +69,10 @@ public class HelperLib {
     public static void sync(ISyncable.ISyncableEntityCapabilityInst cap, CompoundTag data, Entity entity, boolean all) {
         if (!entity.getCommandSenderWorld().isClientSide) {
             IMessage m = UpdateEntityPacket.create(cap, data);
-            if (entity instanceof ServerPlayer && !all) {
-                if (((ServerPlayer) entity).connection != null) {
-                    VampLib.dispatcher.sendTo(m, (ServerPlayer) entity);
+            if (entity instanceof ServerPlayer player && !all) {
+                //noinspection ConstantConditions
+                if (player.connection != null) {
+                    VampLib.dispatcher.sendTo(m, player);
                 }
             } else {
                 VampLib.dispatcher.sendToAllTrackingPlayers(m, entity);

@@ -30,9 +30,7 @@ public class ScrollableListWithDummyWidget<T> extends ScrollableListWidget<T> {
     public void refresh() {
         super.refresh();
         if (this.dummyItem != null) {
-            this.listItems.stream().filter(l -> l.item.equals(this.dummyItem.item)).findAny().ifPresent(a -> {
-                this.addItem(this.dummyItem, a);
-            });
+            this.listItems.stream().filter(l -> l.item.equals(this.dummyItem.item)).findAny().ifPresent(a -> this.addItem(this.dummyItem, a));
         }
     }
 

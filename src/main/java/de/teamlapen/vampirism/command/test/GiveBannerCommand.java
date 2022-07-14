@@ -20,6 +20,7 @@ public class GiveBannerCommand extends BasicCommand {
                 );
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int giveBannerItem(@Nonnull IFaction<?> faction, @Nonnull ServerPlayer player) {
         player.addItem(faction.getVillageData().getBanner());
         return 0;

@@ -29,6 +29,7 @@ public class HunterBasicContainer extends InventoryContainer {
     @Nullable
     private final BasicHunterEntity entity;
 
+    @SuppressWarnings("DeprecatedIsStillUsed")
     @Deprecated
     public HunterBasicContainer(int id, Inventory playerInventory) {
         this(id, playerInventory, null);

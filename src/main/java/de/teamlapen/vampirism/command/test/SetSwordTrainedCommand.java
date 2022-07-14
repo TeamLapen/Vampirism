@@ -21,15 +21,12 @@ public class SetSwordTrainedCommand extends BasicCommand {
         return Commands.literal("setSwordTrained")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_CHEAT))
                 .then(Commands.argument("train", FloatArgumentType.floatArg(0))
-                        .executes(context -> {
-                            return setSwordCharged(context.getSource(), Collections.singleton(context.getSource().getPlayerOrException()), FloatArgumentType.getFloat(context, "train"));
-                        })
+                        .executes(context -> setSwordCharged(context.getSource(), Collections.singleton(context.getSource().getPlayerOrException()), FloatArgumentType.getFloat(context, "train")))
                         .then(Commands.argument("players", EntityArgument.players())
-                                .executes(context -> {
-                                    return setSwordCharged(context.getSource(), EntityArgument.getPlayers(context, "players"), FloatArgumentType.getFloat(context, "charge"));
-                                })));
+                                .executes(context -> setSwordCharged(context.getSource(), EntityArgument.getPlayers(context, "players"), FloatArgumentType.getFloat(context, "charge")))));
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int setSwordCharged(CommandSourceStack commandSource, Collection<ServerPlayer> players, float train) {
         for (ServerPlayer player : players) {
             ItemStack held = player.getMainHandItem();

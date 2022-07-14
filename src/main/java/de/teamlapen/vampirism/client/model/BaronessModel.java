@@ -38,23 +38,23 @@ public class BaronessModel extends AgeableListModel<VampireBaronEntity> implemen
     private static final String CLAWS_RIGHT = "claws_right";
     private static final String CLAWS_LEFT = "claws_left";
 
-    public ModelPart body;
-    public ModelPart headOverlay;
-    public ModelPart legRightOverlay;
-    public ModelPart legLeftOverlay;
-    public ModelPart armRightOverlay;
-    public ModelPart bodyOverlay;
-    public ModelPart armLeftOverlay;
-    public ModelPart head;
-    public ModelPart armRight;
-    public ModelPart armLeft;
-    public ModelPart legRight;
-    public ModelPart legLeft;
-    public ModelPart clawsRight;
-    public ModelPart clawsLeft;
+    public final ModelPart body;
+    public final ModelPart headOverlay;
+    public final ModelPart legRightOverlay;
+    public final ModelPart legLeftOverlay;
+    public final ModelPart armRightOverlay;
+    public final ModelPart bodyOverlay;
+    public final ModelPart armLeftOverlay;
+    public final ModelPart head;
+    public final ModelPart armRight;
+    public final ModelPart armLeft;
+    public final ModelPart legRight;
+    public final ModelPart legLeft;
+    public final ModelPart clawsRight;
+    public final ModelPart clawsLeft;
 
-    protected HumanoidModel.ArmPose leftArmPose = HumanoidModel.ArmPose.EMPTY;
-    protected HumanoidModel.ArmPose rightArmPose = HumanoidModel.ArmPose.EMPTY;
+    protected final HumanoidModel.ArmPose leftArmPose = HumanoidModel.ArmPose.EMPTY;
+    protected final HumanoidModel.ArmPose rightArmPose = HumanoidModel.ArmPose.EMPTY;
 
     public static LayerDefinition createLayer() {
         MeshDefinition mesh = new MeshDefinition();

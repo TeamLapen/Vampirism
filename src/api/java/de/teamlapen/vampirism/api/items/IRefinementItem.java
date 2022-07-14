@@ -1,11 +1,7 @@
 package de.teamlapen.vampirism.api.items;
 
-import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import net.minecraft.world.item.ItemStack;
-
-import javax.annotation.Nonnull;
 
 /**
  * represents an accessory item

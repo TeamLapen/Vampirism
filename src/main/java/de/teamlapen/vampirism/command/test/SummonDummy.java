@@ -20,6 +20,7 @@ public class SummonDummy extends BasicCommand {
                 .then(Commands.literal("hunter").executes(context -> summon(context.getSource().getPlayerOrException(), false)));
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int summon(ServerPlayer p, boolean b) {
         VampirismEntity t = b ? new TrainingDummyVampireEntity(ModEntities.VAMPIRE.get(), p.level) : new TrainingDummyHunterEntity(ModEntities.HUNTER.get(), p.level);
         t.copyPosition(p);

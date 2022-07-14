@@ -15,8 +15,7 @@ import java.util.Objects;
  * Handles packet registration and provides utility methods.
  * Subclass has to register packets.
  * <p>
- * Inspired by @coolAlias tutorial
- * http://www.minecraftforum.net/forums/mapping-and-modding/mapping-and-modding-tutorials/2137055-1-7-x-1-8-customizing-packet-handling-with
+ * Inspired by @coolAlias <a href="http://www.minecraftforum.net/forums/mapping-and-modding/mapping-and-modding-tutorials/2137055-1-7-x-1-8-customizing-packet-handling-with">tutorial</a>
  */
 public abstract class AbstractPacketDispatcher {
     protected final SimpleChannel dispatcher;

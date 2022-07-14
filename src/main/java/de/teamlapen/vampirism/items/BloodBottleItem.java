@@ -85,9 +85,7 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem {
             int blood = BloodHelper.getBlood(stack);
             int drink = Math.min(blood, MULTIPLIER);
             ItemStack[] result = new ItemStack[1];
-            int amt = BloodHelper.drain(stack, drink, IFluidHandler.FluidAction.EXECUTE, true, containerStack -> {
-                result[0] = containerStack;
-            });
+            int amt = BloodHelper.drain(stack, drink, IFluidHandler.FluidAction.EXECUTE, true, containerStack -> result[0] = containerStack);
             ((IVampire) entityLiving).drinkBlood(amt / MULTIPLIER, 0, false);
             return result[0];
         }
@@ -128,9 +126,7 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem {
         if (blood > 0 && count == 1) {
             InteractionHand activeHand = player.getUsedItemHand();
             int drink = Math.min(blood, 3 * MULTIPLIER);
-            if (BloodHelper.drain(stack, drink, IFluidHandler.FluidAction.EXECUTE, true, containerStack -> {
-                player.setItemInHand(activeHand, containerStack);
-            }) > 0) {
+            if (BloodHelper.drain(stack, drink, IFluidHandler.FluidAction.EXECUTE, true, containerStack -> player.setItemInHand(activeHand, containerStack)) > 0) {
                 vampire.drinkBlood(Math.round(((float) drink) / VReference.FOOD_TO_FLUID_BLOOD), 0.3F, false);
             }
 

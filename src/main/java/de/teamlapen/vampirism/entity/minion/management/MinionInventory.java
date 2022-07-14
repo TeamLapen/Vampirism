@@ -67,9 +67,7 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
                 ItemStack itemstack = this.inventoryArmor.get(i);
                 if (itemstack.getItem() instanceof ArmorItem) {
                     final int i_final = i;
-                    itemstack.hurtAndBreak((int) damage, entity, (e) -> {
-                        e.broadcastBreakEvent(EquipmentSlot.byTypeAndIndex(EquipmentSlot.Type.ARMOR, i_final));
-                    });
+                    itemstack.hurtAndBreak((int) damage, entity, (e) -> e.broadcastBreakEvent(EquipmentSlot.byTypeAndIndex(EquipmentSlot.Type.ARMOR, i_final)));
                 }
             }
 

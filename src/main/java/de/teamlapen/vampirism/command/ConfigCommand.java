@@ -125,6 +125,7 @@ public class ConfigCommand extends BasicCommand {
         return modifyList(player, dimension.dimension().location(), VampirismConfig.SERVER.sundamageDimensionsOverridePositive, "command.vampirism.base.config.dimension.enforced", "command.vampirism.base.config.dimension.not_enforced");
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int modifyList(ServerPlayer player, ResourceLocation id, ForgeConfigSpec.ConfigValue<List<? extends String>> configList, String blacklist, String not_blacklist) {
         List<? extends String> list = configList.get();
         if (!list.contains(id.toString())) {

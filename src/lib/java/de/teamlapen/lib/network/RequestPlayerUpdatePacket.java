@@ -13,6 +13,7 @@ import java.util.function.Supplier;
  */
 public class RequestPlayerUpdatePacket implements IMessage {
 
+    @SuppressWarnings("EmptyMethod")
     static void encode(RequestPlayerUpdatePacket msg, FriendlyByteBuf buf) {
 
     }

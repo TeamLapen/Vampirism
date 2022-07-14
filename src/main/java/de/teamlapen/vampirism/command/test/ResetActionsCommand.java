@@ -19,15 +19,12 @@ public class ResetActionsCommand extends BasicCommand {
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("resetActions")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
-                .executes(context -> {
-                    return resetActions(context.getSource(), Lists.newArrayList(context.getSource().getPlayerOrException()));
-                })
+                .executes(context -> resetActions(context.getSource(), Lists.newArrayList(context.getSource().getPlayerOrException())))
                 .then(Commands.argument("players", EntityArgument.entities())
-                        .executes(context -> {
-                            return resetActions(context.getSource(), Lists.newArrayList(EntityArgument.getPlayers(context, "players")));
-                        }));
+                        .executes(context -> resetActions(context.getSource(), Lists.newArrayList(EntityArgument.getPlayers(context, "players")))));
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int resetActions(CommandSourceStack commandSource, List<ServerPlayer> players) {
         for (ServerPlayer player : players) {
             if (!player.isAlive()) continue;

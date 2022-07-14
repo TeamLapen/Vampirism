@@ -213,8 +213,8 @@ public class SimpleSpawnerLogic<T extends Entity> {
     }
 
     protected void onSpawned(T e) {
-        if (e instanceof Mob) {
-            ((Mob) e).spawnAnim();
+        if (e instanceof Mob mob) {
+            mob.spawnAnim();
         }
         if (this.onSpawned != null) {
             this.onSpawned.accept(e);

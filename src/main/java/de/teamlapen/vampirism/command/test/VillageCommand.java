@@ -24,11 +24,13 @@ public class VillageCommand extends BasicCommand {
 
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int capture(CommandSourceStack source, ServerPlayer player, IFaction<?> faction) {
         source.sendSuccess(TotemHelper.forceFactionCommand(faction, player), true);
         return 0;
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int abort(CommandSourceStack source) {
         TotemHelper.getTotemNearPos(source.getLevel(), new BlockPos(source.getPosition()), true).ifPresent(TotemBlockEntity::breakCapture);
         return 0;

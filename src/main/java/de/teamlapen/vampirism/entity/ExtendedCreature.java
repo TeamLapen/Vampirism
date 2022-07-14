@@ -33,8 +33,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Function;
 
-import static de.teamlapen.lib.lib.util.UtilLib.getNull;
-
 /**
  * Extended entity property which every {@link PathfinderMob} has
  */

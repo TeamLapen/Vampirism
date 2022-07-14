@@ -25,7 +25,7 @@ public class VampLib {
 
     public static final AbstractPacketDispatcher dispatcher = new LibraryPacketDispatcher();
     public static boolean inDev = false;
-    public static IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
+    public static final IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
 
     public VampLib() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::preInit);
@@ -40,6 +40,7 @@ public class VampLib {
         }
     }
 
+    @SuppressWarnings("EmptyMethod")
     private void enqueueIMC(final InterModEnqueueEvent event) {
 
     }

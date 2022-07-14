@@ -53,7 +53,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
 
     /**
      * Must check Entity#isAlive before
-     *
+     * <br>
      * Always prefer using #getOpt
      */
     @Deprecated

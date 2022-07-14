@@ -2,29 +2,21 @@ package de.teamlapen.vampirism.util;
 
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.LazyLoadedValue;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nonnull;
 import java.util.function.Supplier;
 
 
 public enum VampirismArmorMaterials implements ArmorMaterial {
-    OBSIDIAN("obsidian", 37, new int[]{2, 5, 6, 2}, 10, SoundEvents.ARMOR_EQUIP_DIAMOND, 3.0F, 0.1f, () -> {
-        return Ingredient.of(Items.OBSIDIAN);
-    }),
-
-    MASTERLY_IRON("masterly_iron", 30, new int[]{2, 5, 6, 2}, 10, SoundEvents.ARMOR_EQUIP_IRON, 0, 0, () -> {
-        return Ingredient.of(Items.IRON_INGOT);
-    }),
-    MASTERLY_LEATHER("masterly_leather", 20, new int[]{1, 2, 3, 1}, 12, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> {
-        return Ingredient.of(Items.LEATHER);
-    });
+    OBSIDIAN("obsidian", 37, new int[]{2, 5, 6, 2}, 10, SoundEvents.ARMOR_EQUIP_DIAMOND, 3.0F, 0.1f, () -> Ingredient.of(Tags.Items.OBSIDIAN)),
+    MASTERLY_IRON("masterly_iron", 30, new int[]{2, 5, 6, 2}, 10, SoundEvents.ARMOR_EQUIP_IRON, 0, 0, () -> Ingredient.of(Tags.Items.INGOTS_IRON)),
+    MASTERLY_LEATHER("masterly_leather", 20, new int[]{1, 2, 3, 1}, 12, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> Ingredient.of(Tags.Items.LEATHER));
 
     private static final int[] MAX_DAMAGE_ARRAY = new int[]{13, 15, 16, 11};
     private final String name;
@@ -34,7 +26,7 @@ public enum VampirismArmorMaterials implements ArmorMaterial {
     private final SoundEvent soundEvent;
     private final float toughness;
     private final float knockbackResistance;
-    private final LazyLoadedValue<Ingredient> repairMaterial;
+    private final Supplier<Ingredient> repairMaterial;
 
     VampirismArmorMaterials(String name, int maxDamageFactor, int[] damageReductionArray, int enchantability, SoundEvent sound, float toughness, float knockbackResistance, Supplier<Ingredient> repairMaterial) {
         this.name = name;
@@ -44,7 +36,7 @@ public enum VampirismArmorMaterials implements ArmorMaterial {
         this.soundEvent = sound;
         this.toughness = toughness;
         this.knockbackResistance = knockbackResistance;
-        this.repairMaterial = new LazyLoadedValue<>(repairMaterial);
+        this.repairMaterial = repairMaterial;
     }
 
     public int getDefenseForSlot(EquipmentSlot slotIn) {

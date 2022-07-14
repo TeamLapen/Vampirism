@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * When TerraBlender is installed we use it to add our biomes to the overworld, instead of hacking it into the overworld preset. This is more compatible with other mods.
- *
+ * <br>
  * #registerBiomeProviderIfPresentUnsafe() is called during common setup.
  * The hack code in VampirismWorldGen is called during LoadComplete and can therefore check #arreBiomesAddedViaTerraBlender
  */

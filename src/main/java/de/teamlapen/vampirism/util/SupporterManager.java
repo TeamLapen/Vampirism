@@ -19,7 +19,7 @@ import java.util.Arrays;
  * Handles the download, parsing and access of supporter information.
  * <p>
  * Can check skins here
- * http://skins.minecraft.net/MinecraftSkins/%s.png
+ * <a href="http://skins.minecraft.net/MinecraftSkins/%s.png">skins.minecraft.net</a>
  */
 public class SupporterManager {
     private final static Logger LOGGER = LogManager.getLogger();
@@ -72,7 +72,6 @@ public class SupporterManager {
         return "Vampires: " + Arrays.toString(supporters[0]) + " Hunters: " + Arrays.toString(supporters[1]);
     }
 
-    @SuppressWarnings("UnstableApiUsage")
     private void init() {
         Supporter[][] supporters = null;
         InputStream inputStream = null;

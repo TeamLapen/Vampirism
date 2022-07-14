@@ -20,9 +20,7 @@ import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
 public class SkillArgument implements ArgumentType<ISkill<?>> {
-    public static final DynamicCommandExceptionType SKILL_NOT_FOUND = new DynamicCommandExceptionType((particle) -> {
-        return Component.translatable("command.vampirism.argument.skill.notfound", particle);
-    });
+    public static final DynamicCommandExceptionType SKILL_NOT_FOUND = new DynamicCommandExceptionType((particle) -> Component.translatable("command.vampirism.argument.skill.notfound", particle));
     private static final Collection<String> EXAMPLES = Arrays.asList("skill", "modid:skill");
 
     public static SkillArgument skills() {

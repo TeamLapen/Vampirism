@@ -21,30 +21,26 @@ public class WeaponTableRecipeBookGui extends RecipeBookComponent {
     @Override
     public void updateCollections(boolean forceFirstPage) { //nearly copied from super method. Only added additional filter using faction player
         List<RecipeCollection> recipeLists = this.book.getCollection(this.selectedTab.getCategory());
-        recipeLists.forEach((p_193944_1_) -> {
-            p_193944_1_.canCraft(this.stackedContents, this.menu.getGridWidth(), this.menu.getGridHeight(), this.book);
-        });
+        recipeLists.forEach((p_193944_1_) -> p_193944_1_.canCraft(this.stackedContents, this.menu.getGridWidth(), this.menu.getGridHeight(), this.book));
 
         List<RecipeCollection> list1 = Lists.newArrayList(recipeLists);
-        FactionPlayerHandler.getOpt(this.minecraft.player).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).ifPresent(player -> {
-            list1.removeIf(recipeList -> {
-                if (recipeList.getRecipes().stream().anyMatch(recipe -> recipe.getType() != ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get())) {
-                    return true;
-                }
-                return recipeList.getRecipes().stream().anyMatch(recipe -> {
-                    if (recipe instanceof IWeaponTableRecipe) {
-                        ISkill<IHunterPlayer>[] skills = ((IWeaponTableRecipe) recipe).getRequiredSkills();
-                        for (ISkill<IHunterPlayer> skill : skills) {
-                            if (!player.getSkillHandler().isSkillEnabled(skill)) {
-                                return true;
-                            }
+        FactionPlayerHandler.getOpt(this.minecraft.player).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).ifPresent(player -> list1.removeIf(recipeList -> {
+            if (recipeList.getRecipes().stream().anyMatch(recipe -> recipe.getType() != ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get())) {
+                return true;
+            }
+            return recipeList.getRecipes().stream().anyMatch(recipe -> {
+                if (recipe instanceof IWeaponTableRecipe) {
+                    ISkill<IHunterPlayer>[] skills = ((IWeaponTableRecipe) recipe).getRequiredSkills();
+                    for (ISkill<IHunterPlayer> skill : skills) {
+                        if (!player.getSkillHandler().isSkillEnabled(skill)) {
+                            return true;
                         }
-                        return false;
                     }
-                    return true;
-                });
+                    return false;
+                }
+                return true;
             });
-        });
+        }));
         list1.removeIf((recipeList) -> !recipeList.hasKnownRecipes());
         list1.removeIf((p_193953_0_) -> !p_193953_0_.hasFitting());
         String s = this.searchBox.getValue();

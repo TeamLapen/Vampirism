@@ -216,6 +216,7 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
         }
         if (!minecraft.player.isAlive()) return Color.RED;
         return FactionPlayerHandler.getCurrentFactionPlayer(minecraft.player).map(factionPlayer -> {
+            //noinspection unchecked
             if (!(s.canUse((T) factionPlayer) == IAction.PERM.ALLOWED) || actionHandler.getPercentageForAction(s) < 0) {
                 return Color.RED;
             } else if (actionHandler.getPercentageForAction(s) > 0) {

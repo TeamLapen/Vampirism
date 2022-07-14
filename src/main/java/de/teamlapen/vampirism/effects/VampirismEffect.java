@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.effects;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.world.effect.MobEffect;

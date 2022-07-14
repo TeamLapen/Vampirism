@@ -296,8 +296,8 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
                 }
                 handler.ifPresent(h->h.setFactionLevel(VReference.VAMPIRE_FACTION, h.getCurrentLevel(VReference.VAMPIRE_FACTION) + 1));
                 VampirePlayer.getOpt(player).ifPresent(v -> v.drinkBlood(Integer.MAX_VALUE, 0, false));
-                if (player instanceof ServerPlayer) {
-                    ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((ServerPlayer) player, VampireActionTrigger.Action.PERFORM_RITUAL_INFUSION);
+                if (player instanceof ServerPlayer serverPlayer) {
+                    ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger(serverPlayer, VampireActionTrigger.Action.PERFORM_RITUAL_INFUSION);
                 }
             } else {
                 this.level.playLocalSound(player.getX(), player.getY(), player.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 4.0F, (1.0F + (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.2F) * 0.7F, true);
@@ -349,10 +349,14 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     private boolean checkItemRequirements(Player player, boolean messagePlayer) {
         int newLevel = targetLevel;
         VampireLevelingConf.AltarInfusionRequirements requirements = VampireLevelingConf.getInstance().getAltarInfusionRequirements(newLevel);
-        ItemStack missing = InventoryHelper.checkItems(this, new Item[]{PureBloodItem.getBloodItemForLevel(requirements.pureBloodLevel()), ModItems.HUMAN_HEART.get(), ModItems.VAMPIRE_BOOK.get()}, new int[]{requirements.blood(), requirements.heart(), requirements.vampireBook()}, (supplied, required) -> supplied.equals(required) || (supplied instanceof PureBloodItem && required instanceof PureBloodItem && ((PureBloodItem) supplied).getLevel() >= ((PureBloodItem) required).getLevel()));
+        ItemStack missing = InventoryHelper.checkItems(this, new Item[] {
+                PureBloodItem.getBloodItemForLevel(requirements.pureBloodLevel()), ModItems.HUMAN_HEART.get(), ModItems.VAMPIRE_BOOK.get() },
+                new int[]{ requirements.blood(), requirements.heart(), requirements.vampireBook() },
+                (supplied, required) -> supplied.equals(required) || (supplied instanceof PureBloodItem suppliedBlood && required instanceof PureBloodItem requiredBlood && suppliedBlood.getLevel() >= requiredBlood.getLevel()));
+
         if (!missing.isEmpty()) {
             if (messagePlayer) {
-                Component item = missing.getItem() instanceof PureBloodItem ? ((PureBloodItem) missing.getItem()).getCustomName() : Component.translatable(missing.getDescriptionId());
+                Component item = missing.getItem() instanceof PureBloodItem pureBloodItem? pureBloodItem.getCustomName() : Component.translatable(missing.getDescriptionId());
                 Component main = Component.translatable("text.vampirism.altar_infusion.ritual_missing_items", missing.getCount(), item);
                 player.sendSystemMessage(main);
             }

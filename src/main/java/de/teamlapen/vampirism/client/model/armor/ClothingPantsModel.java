@@ -37,9 +37,9 @@ public class ClothingPantsModel extends VampirismArmorModel {
         return LayerDefinition.create(mesh, 32, 32);
     }
 
-    public ModelPart rightLeg;
-    public ModelPart leftLeg;
-    public ModelPart belt;
+    public final ModelPart rightLeg;
+    public final ModelPart leftLeg;
+    public final ModelPart belt;
 
     public ClothingPantsModel(ModelPart part) {
         super();

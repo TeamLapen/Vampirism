@@ -8,13 +8,11 @@ import java.util.List;
  */
 public interface IVampireVisionRegistry {
     /**
-     * @param vision
      * @return Return the id of the given vision, -1 if not registered
      */
     int getIdOfVision(IVampireVision vision);
 
     /**
-     * @param id
      * @return the vision belonging to the given id. Null if not found
      */
     @Nullable

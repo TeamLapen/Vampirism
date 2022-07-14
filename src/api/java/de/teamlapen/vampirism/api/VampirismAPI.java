@@ -112,6 +112,7 @@ public class VampirismAPI {
      * FOR FUTURE INTERNAL USE ONLY
      * Called once Vampirism has finished preparing the API, and it is ready to use.
      */
+    @SuppressWarnings("EmptyMethod")
     @ApiStatus.Internal
     public static void onSetupComplete() {
 

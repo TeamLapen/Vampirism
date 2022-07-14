@@ -36,6 +36,7 @@ public class HunterTrainerContainer extends InventoryContainer implements Contai
     private boolean changed = false;
     private ItemStack missing = ItemStack.EMPTY;
 
+    @SuppressWarnings("DeprecatedIsStillUsed")
     @Deprecated
     public HunterTrainerContainer(int id, Inventory playerInventory) {
         this(id, playerInventory, null);

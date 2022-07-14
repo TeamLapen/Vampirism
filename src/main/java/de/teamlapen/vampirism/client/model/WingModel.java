@@ -23,10 +23,10 @@ public class WingModel<T extends LivingEntity> extends AgeableListModel<T> {
     private static final String WING_LEFT = "wing_left";
     private static final String WING_LEFT2 = "wing_left2";
 
-    public ModelPart wingRight;
-    public ModelPart wingLeft;
-    public ModelPart wingRight2;
-    public ModelPart wingLeft2;
+    public final ModelPart wingRight;
+    public final ModelPart wingLeft;
+    public final ModelPart wingRight2;
+    public final ModelPart wingLeft2;
 
     public static LayerDefinition createLayer() {
         MeshDefinition mesh = new MeshDefinition();

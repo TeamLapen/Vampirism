@@ -47,6 +47,7 @@ public class ModFeatures {
         STRUCTURE_TYPES.register(bus);
     }
 
+    @SuppressWarnings("EmptyMethod")
     public static void init() {
     }
 

@@ -92,8 +92,8 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
             }
         } else {
             BlockEntity tileEntity = worldIn.getBlockEntity(pos);
-            if (tileEntity instanceof AltarInspirationBlockEntity) {
-                ((AltarInspirationBlockEntity) tileEntity).startRitual(player);
+            if (tileEntity instanceof AltarInspirationBlockEntity altar) {
+                altar.startRitual(player);
             }
         }
 

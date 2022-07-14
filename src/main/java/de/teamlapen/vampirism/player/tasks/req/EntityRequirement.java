@@ -7,7 +7,6 @@ import net.minecraft.world.entity.EntityType;
 
 import javax.annotation.Nonnull;
 
-@SuppressWarnings("ClassCanBeRecord")
 public class EntityRequirement implements TaskRequirement.Requirement<EntityType<?>> {
     @Nonnull
     private final EntityType<?> entityType;

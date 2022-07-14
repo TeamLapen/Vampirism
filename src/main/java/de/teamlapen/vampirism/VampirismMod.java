@@ -129,7 +129,7 @@ public class VampirismMod {
     private static final MobType VAMPIRE_CREATURE_ATTRIBUTE = new MobType();
 
     public static VampirismMod instance;
-    public static IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
+    public static final IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
     public static boolean inDev = false;
     public static boolean inDataGen = false;
 
@@ -214,6 +214,7 @@ public class VampirismMod {
         ModCommands.registerCommands(event.getDispatcher());
     }
 
+    @SuppressWarnings("EmptyMethod")
     @SubscribeEvent
     public void onServerAboutToStart(ServerAboutToStartEvent event) {
     }
@@ -240,6 +241,7 @@ public class VampirismMod {
         }
     }
 
+    @SuppressWarnings("EmptyMethod")
     private void addModCompats() {
     }
 

@@ -33,6 +33,7 @@ public class BloodBarCommand extends BasicCommand {
                                         .executes(context -> setBloodBar(IntegerArgumentType.getInteger(context, "amount"), EntityArgument.getPlayers(context, "player"))))));
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int setBloodBar(int amount, Collection<ServerPlayer> player) {
         player.stream().map(VampirePlayer::getOpt).filter(player1 -> player1.map(FactionBasePlayer::getLevel).orElse(0) > 0).forEach(player1 -> player1.ifPresent(vampire -> {
             vampire.useBlood(Integer.MAX_VALUE, true);

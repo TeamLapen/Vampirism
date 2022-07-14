@@ -78,8 +78,10 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
     int getTicksInSun();
 
     /**
+     * TODO should this method be used somewhere?
      * @return Whether automatically filling blood into bottles is enabled or not.
      */
+    @SuppressWarnings("SameReturnValue")
     boolean isAutoFillEnabled();
 
     /**

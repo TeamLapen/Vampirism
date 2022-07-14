@@ -36,6 +36,7 @@ public class LordCommand extends BasicCommand {
 
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int setLevel(CommandContext<CommandSourceStack> context, int level, Collection<ServerPlayer> players) throws CommandSyntaxException {
         for (ServerPlayer player : players) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);

@@ -29,16 +29,16 @@ public class BaronessAttireModel extends EntityModel<VampireBaronEntity> {
     private static final String DRESS_TORSO = "dress_torso";
     private static final String CLOAK = "cloak";
 
-    public ModelPart dressTorso;
-    public ModelPart dressArmBandRight;
-    public ModelPart dressArmBandLeft;
-    public ModelPart hat;
-    public ModelPart hood;
+    public final ModelPart dressTorso;
+    public final ModelPart dressArmBandRight;
+    public final ModelPart dressArmBandLeft;
+    public final ModelPart hat;
+    public final ModelPart hood;
 
-    public ModelPart dressCurtain;
-    public ModelPart hat2;
-    public ModelPart veil;
-    public ModelPart cloak;
+    public final ModelPart dressCurtain;
+    public final ModelPart hat2;
+    public final ModelPart veil;
+    public final ModelPart cloak;
 
     private float enragedProgress = 0;
 

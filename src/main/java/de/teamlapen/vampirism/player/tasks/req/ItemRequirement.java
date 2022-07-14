@@ -9,7 +9,6 @@ import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-@SuppressWarnings("ClassCanBeRecord")
 public class ItemRequirement implements TaskRequirement.Requirement<Item> {
 
     private final NonnullSupplier<ItemStack> itemRequirement;

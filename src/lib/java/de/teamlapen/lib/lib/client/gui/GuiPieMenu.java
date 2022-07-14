@@ -78,11 +78,6 @@ public abstract class GuiPieMenu<T> extends Screen {
     }
 
     @Override
-    public void onClose() {
-        super.onClose();
-    }
-
-    @Override
     public boolean isPauseScreen() { //isPauseScreen
         return false;
     }

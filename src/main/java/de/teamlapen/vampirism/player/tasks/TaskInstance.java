@@ -32,9 +32,7 @@ public class TaskInstance implements ITaskInstance {
         long taskTimer = nbt.getLong("taskTimer");
         CompoundTag statsNBT = nbt.getCompound("stats");
         Map<ResourceLocation, Integer> stats = new HashMap<>();
-        statsNBT.getAllKeys().forEach(name -> {
-            stats.put(new ResourceLocation(name), statsNBT.getInt(name));
-        });
+        statsNBT.getAllKeys().forEach(name -> stats.put(new ResourceLocation(name), statsNBT.getInt(name)));
         ResourceLocation rewardId = new ResourceLocation(nbt.getString("rewardId"));
         ITaskRewardInstance reward = TaskManager.createReward(rewardId, nbt);
         long taskDuration = nbt.getLong("taskDuration");
@@ -191,9 +189,7 @@ public class TaskInstance implements ITaskInstance {
         nbt.putBoolean("accepted", this.accepted);
         nbt.putLong("taskTimer", this.taskTimeStamp);
         CompoundTag stats = new CompoundTag();
-        this.stats.forEach((loc, amount) -> {
-            stats.putInt(loc.toString(), amount);
-        });
+        this.stats.forEach((loc, amount) -> stats.putInt(loc.toString(), amount));
         nbt.put("stats", stats);
         nbt.putString("rewardId", this.reward.getId().toString());
         this.reward.writeNBT(nbt);

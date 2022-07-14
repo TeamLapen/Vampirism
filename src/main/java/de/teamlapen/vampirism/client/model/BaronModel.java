@@ -38,23 +38,23 @@ public class BaronModel extends AgeableListModel<VampireBaronEntity> implements 
     private static final String CLAWS_RIGHT = "claws_right";
     private static final String CLAWS_LEFT = "claws_left";
 
-    protected ModelPart body;
-    protected ModelPart headOverlay;
-    protected ModelPart legRightOverlay;
-    protected ModelPart legLeftOverlay;
-    protected ModelPart armRightOverlay;
-    protected ModelPart armLeftOverlay;
-    protected ModelPart bodyOverlay;
-    protected ModelPart head;
-    protected ModelPart armRight;
-    protected ModelPart armLeft;
-    protected ModelPart legRight;
-    protected ModelPart legLeft;
-    protected ModelPart clawsRight;
-    protected ModelPart clawsLeft;
+    protected final ModelPart body;
+    protected final ModelPart headOverlay;
+    protected final ModelPart legRightOverlay;
+    protected final ModelPart legLeftOverlay;
+    protected final ModelPart armRightOverlay;
+    protected final ModelPart armLeftOverlay;
+    protected final ModelPart bodyOverlay;
+    protected final ModelPart head;
+    protected final ModelPart armRight;
+    protected final ModelPart armLeft;
+    protected final ModelPart legRight;
+    protected final ModelPart legLeft;
+    protected final ModelPart clawsRight;
+    protected final ModelPart clawsLeft;
 
-    protected HumanoidModel.ArmPose leftArmPose = HumanoidModel.ArmPose.EMPTY;
-    protected HumanoidModel.ArmPose rightArmPose = HumanoidModel.ArmPose.EMPTY;
+    protected final HumanoidModel.ArmPose leftArmPose = HumanoidModel.ArmPose.EMPTY;
+    protected final HumanoidModel.ArmPose rightArmPose = HumanoidModel.ArmPose.EMPTY;
 
     public static LayerDefinition createLayer() {
         MeshDefinition mesh = new MeshDefinition();

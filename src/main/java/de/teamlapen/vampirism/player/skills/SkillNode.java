@@ -111,7 +111,6 @@ public class SkillNode {
                 '}';
     }
 
-    @SuppressWarnings("ClassCanBeRecord")
     public static class Builder {
         public static Builder deserialize(JsonObject json, @SuppressWarnings("unused") JsonDeserializationContext context) {
             if (json.has("remove") && GsonHelper.getAsBoolean(json, "remove")) return null;

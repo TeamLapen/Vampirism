@@ -26,8 +26,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableRecipe {
-    protected static int MAX_WIDTH = 4;
-    protected static int MAX_HEIGHT = 4;
+    protected static final int MAX_WIDTH = 4;
+    protected static final int MAX_HEIGHT = 4;
 
     private final ResourceLocation id;
     private final String group;
@@ -157,9 +157,7 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
         public ShapelessWeaponTableRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
             String group = buffer.readUtf(32767);
             NonNullList<Ingredient> ingredients = NonNullList.withSize(buffer.readVarInt(), Ingredient.EMPTY);
-            for (int j = 0; j < ingredients.size(); ++j) {
-                ingredients.set(j, Ingredient.fromNetwork(buffer));
-            }
+            ingredients.replaceAll(ignored -> Ingredient.fromNetwork(buffer));
             ItemStack result = buffer.readItem();
             int level = buffer.readVarInt();
             int lava = buffer.readVarInt();

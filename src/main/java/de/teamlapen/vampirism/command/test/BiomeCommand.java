@@ -14,11 +14,10 @@ public class BiomeCommand extends BasicCommand {
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("biome")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_ALL))
-                .executes(context -> {
-                    return biome(context.getSource(), context.getSource().getPlayerOrException());
-                });
+                .executes(context -> biome(context.getSource(), context.getSource().getPlayerOrException()));
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int biome(CommandSourceStack commandSource, ServerPlayer asPlayer) {
         ResourceLocation res = Helper.getBiomeId(asPlayer);
         commandSource.sendSuccess(Component.literal(res.toString()), true);

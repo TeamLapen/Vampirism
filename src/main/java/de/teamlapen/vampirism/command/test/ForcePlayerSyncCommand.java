@@ -13,9 +13,7 @@ public class ForcePlayerSyncCommand extends BasicCommand {
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("forcePlayerSync")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_ALL))
-                .executes(context -> {
-                    return triggerSync(context.getSource(), context.getSource().getPlayerOrException());
-                });
+                .executes(context -> triggerSync(context.getSource(), context.getSource().getPlayerOrException()));
     }
 
     private static int triggerSync(CommandSourceStack commandSource, ServerPlayer asPlayer) {

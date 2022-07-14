@@ -26,7 +26,7 @@ public abstract class InventoryBlockEntity extends BaseContainerBlockEntity impl
      * Maximal squared distance from which the player can access the inventory
      */
     protected final int MAX_DIST_SQRT = 64;
-    protected NonNullList<ItemStack> inventorySlots;
+    protected final NonNullList<ItemStack> inventorySlots;
     protected InventoryContainer.SelectorInfo[] selectors;
 
 

@@ -55,7 +55,6 @@ public class VampireBookManager {
         return (bookTags == null || bookTags.length == 0) ? new CompoundTag() : bookTags[rnd.nextInt(bookTags.length)];
     }
 
-    @SuppressWarnings("UnstableApiUsage")
     public void init() {
         InputStream inputStream = null;
         try {

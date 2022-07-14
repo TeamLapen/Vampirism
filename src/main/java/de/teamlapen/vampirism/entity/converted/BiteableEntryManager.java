@@ -147,7 +147,7 @@ public class BiteableEntryManager {
      * checks if the entity type is blacklisted through the server config
      *
      * @param id registryname of the entity type
-     * @returns weather the entity type is blacklisted by the server config or not
+     * @return weather the entity type is blacklisted by the server config or not
      */
     private boolean isConfigBlackListed(ResourceLocation id) {
         List<? extends String> list = VampirismConfig.SERVER.blacklistedBloodEntity.get();
@@ -158,7 +158,7 @@ public class BiteableEntryManager {
      * checks if the creature entity is blacklisted
      *
      * @param creature the entity to check
-     * @returns weather the entity is blacklisted or not
+     * @return weather the entity is blacklisted or not
      */
     private boolean isEntityBlacklisted(PathfinderMob creature) {
         if (!(creature instanceof Animal)) return true;

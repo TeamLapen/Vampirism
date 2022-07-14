@@ -85,8 +85,8 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
     public void setPlacedBy(@Nonnull Level world, @Nonnull BlockPos blockPos, @Nonnull BlockState blockState, @Nonnull LivingEntity entity, @Nonnull ItemStack stack) {
         super.setPlacedBy(world, blockPos, blockState, entity, stack);
         BlockEntity tile = world.getBlockEntity(blockPos);
-        if (entity instanceof Player && tile instanceof AlchemicalCauldronBlockEntity) {
-            ((AlchemicalCauldronBlockEntity) tile).setOwnerID((Player) entity);
+        if (entity instanceof Player && tile instanceof AlchemicalCauldronBlockEntity cauldronBlockEntity) {
+            cauldronBlockEntity.setOwnerID((Player) entity);
         }
     }
 

@@ -48,6 +48,7 @@ public interface IAction<T extends IFactionPlayer<T>> {
      */
     boolean onActivated(T player);
 
+    @SuppressWarnings("SameReturnValue")
     default boolean showInSelectAction(Player player) {
         return true;
     }

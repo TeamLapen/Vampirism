@@ -617,8 +617,8 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
                 attackerMaxHealth += entity.getMaxHealth();
                 attackerHealth += entity.getHealth();
                 if (entity instanceof Player) attackerPlayer++;
-                if (entity instanceof IVillageCaptureEntity) {
-                    ((IVillageCaptureEntity) entity).attackVillage(captureInfo);
+                if (entity instanceof IVillageCaptureEntity captureEntity) {
+                    captureEntity.attackVillage(captureInfo);
                 }
             } else if (faction.equals(this.controllingFaction)) {
                 currentDefender++;
@@ -626,8 +626,8 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
                 defenderMaxHealth += entity.getMaxHealth();
                 defenderHealth += entity.getHealth();
                 if (entity instanceof Player) defenderPlayer++;
-                if (entity instanceof IVillageCaptureEntity) {
-                    ((IVillageCaptureEntity) entity).defendVillage(captureInfo);
+                if (entity instanceof IVillageCaptureEntity captureEntity) {
+                    captureEntity.defendVillage(captureInfo);
                 }
             } else {
                 neutral++;
@@ -767,35 +767,36 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
      * this includes checking if the totem is placed in a village, the totem is complete, if there is another totem and forces a faction
      */
     public void updateTileStatus() {
-        if (!(this.level instanceof ServerLevel)) return;
+        if (this.level instanceof ServerLevel serverLevel) {
 
-        Block b = this.level.getBlockState(this.worldPosition).getBlock();
-        if (!(this.isComplete = b instanceof TotemTopBlock && this.level.getBlockState(this.worldPosition.below()).getBlock().equals(ModBlocks.TOTEM_BASE.get())))
-            return;
-        ResourceLocation blockFaction = ((TotemTopBlock) b).faction;
-        if (!(blockFaction.equals(this.controllingFaction == null ? nonFactionTotem : this.controllingFaction.getID()))) { //If block faction does not match tile faction, force the tile to update to the block faction
-            this.forcedFaction = VampirismAPI.factionRegistry().getFactionByID(blockFaction);
-        }
-        Set<PoiRecord> points = TotemHelper.getVillagePointsOfInterest((ServerLevel) level, this.worldPosition);
-        if (!(this.isInsideVillage = !points.isEmpty())) {
-            this.village = Collections.emptySet();
-            if (this.controllingFaction != null) {
-                this.setControllingFaction(null);
+            Block b = this.level.getBlockState(this.worldPosition).getBlock();
+            if (!(this.isComplete = b instanceof TotemTopBlock && serverLevel.getBlockState(this.worldPosition.below()).getBlock().equals(ModBlocks.TOTEM_BASE.get())))
+                return;
+            ResourceLocation blockFaction = ((TotemTopBlock) b).faction;
+            if (!(blockFaction.equals(this.controllingFaction == null ? nonFactionTotem : this.controllingFaction.getID()))) { //If block faction does not match tile faction, force the tile to update to the block faction
+                this.forcedFaction = VampirismAPI.factionRegistry().getFactionByID(blockFaction);
             }
-        } else if (!(7 == TotemHelper.isVillage(points, (ServerLevel) this.level, this.worldPosition, this.controllingFaction != null || this.capturingFaction != null))) {
-            this.isInsideVillage = false;
-            this.village = Collections.emptySet();
-            if (this.controllingFaction != null) {
-                this.setControllingFaction(null);
+            Set<PoiRecord> points = TotemHelper.getVillagePointsOfInterest(serverLevel, this.worldPosition);
+            if (!(this.isInsideVillage = !points.isEmpty())) {
+                this.village = Collections.emptySet();
+                if (this.controllingFaction != null) {
+                    this.setControllingFaction(null);
+                }
+            } else if (!(7 == TotemHelper.isVillage(points, serverLevel, this.worldPosition, this.controllingFaction != null || this.capturingFaction != null))) {
+                this.isInsideVillage = false;
+                this.village = Collections.emptySet();
+                if (this.controllingFaction != null) {
+                    this.setControllingFaction(null);
+                }
+            } else if (!(this.isDisabled = !TotemHelper.addTotem(serverLevel, points, this.worldPosition))) {
+                this.village.removeIf(points::contains);
+                TotemHelper.removeTotem(serverLevel.dimension(), this.village, this.worldPosition, false);
+                this.village = points;
+            } else {
+                this.village = Collections.emptySet();
             }
-        } else if (!(this.isDisabled = !TotemHelper.addTotem((ServerLevel) this.level, points, this.worldPosition))) {
-            this.village.removeIf(points::contains);
-            TotemHelper.removeTotem(this.level.dimension(), this.village, this.worldPosition, false);
-            this.village = points;
-        } else {
-            this.village = Collections.emptySet();
+            this.setChanged();
         }
-        this.setChanged();
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -938,8 +939,8 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         if (this.level.isClientSide) return;
         List<PathfinderMob> list = this.level.getEntitiesOfClass(PathfinderMob.class, this.getVillageArea());
         for (PathfinderMob e : list) {
-            if (e instanceof IVillageCaptureEntity) {
-                ((IVillageCaptureEntity) e).stopVillageAttackDefense();
+            if (e instanceof IVillageCaptureEntity captureEntity) {
+                captureEntity.stopVillageAttackDefense();
             }
         }
     }
@@ -968,8 +969,8 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     }
 
     private float getStrength(LivingEntity entity) {
-        if (entity instanceof Player)
-            return FactionPlayerHandler.getOpt((Player) entity).map(FactionPlayerHandler::getCurrentLevelRelative).orElse(0f);
+        if (entity instanceof Player player)
+            return FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentLevelRelative).orElse(0f);
         if (entity instanceof ConvertedVillagerEntity)
             return 0.5f;
         if (entity instanceof IAggressiveVillager)
@@ -1008,7 +1009,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         if (this.level != null) {
             BlockState oldBlockState = this.getBlockState();
             Block b = oldBlockState.getBlock();
-            boolean crafted = b instanceof TotemTopBlock && ((TotemTopBlock) b).isCrafted();
+            boolean crafted = b instanceof TotemTopBlock totem && totem.isCrafted();
             BlockState newBlockState = (faction == null ? crafted ? ModBlocks.TOTEM_TOP_CRAFTED.get() : ModBlocks.TOTEM_TOP.get() : faction.getVillageData().getTotemTopBlock(crafted)).defaultBlockState();
             try { //https://github.com/TeamLapen/Vampirism/issues/793 no idea what might cause this
                 this.level.setBlock(this.worldPosition, newBlockState, 55);
@@ -1035,19 +1036,21 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
             return;
         }
         Mob entity = entityType.create(this.level);
-        if (entity instanceof VampireBaseEntity)
-            ((VampireBaseEntity) entity).setSpawnRestriction(VampireBaseEntity.SpawnRestriction.SIMPLE);
+        if (entity instanceof VampireBaseEntity vampire) {
+            vampire.setSpawnRestriction(VampireBaseEntity.SpawnRestriction.SIMPLE);
+        }
         List<? extends Player> players = this.level.players();
         players.removeIf(Player::isSpectator);
         if (entity != null && !UtilLib.spawnEntityInWorld((ServerLevel) this.level, this.getVillageAreaReduced(), entity, 50, players, MobSpawnType.EVENT)) {
             entity.discard();
             entity = null;
         }
-        if (entity instanceof IVillageCaptureEntity) {
-            if (faction == this.controllingFaction)
-                ((IVillageCaptureEntity) entity).defendVillage(new CaptureInfo(this));
-            else
-                ((IVillageCaptureEntity) entity).attackVillage(new CaptureInfo(this));
+        if (entity instanceof IVillageCaptureEntity captureEntity) {
+            if (faction == this.controllingFaction) {
+                captureEntity.defendVillage(new CaptureInfo(this));
+            } else {
+                captureEntity.attackVillage(new CaptureInfo(this));
+            }
         } else if (entity != null) {
             LOGGER.warn("Creature registered for village capture does not implement IVillageCaptureEntity ({})", RegUtil.id(entityType));
         } else {
@@ -1135,9 +1138,9 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         Set<ServerPlayer> oldList = new HashSet<>(captureInfo.getPlayers());
         if (includedPlayerEntities != null) {
             for (LivingEntity entity : includedPlayerEntities) {
-                if (entity instanceof ServerPlayer) {
+                if (entity instanceof ServerPlayer serverPlayer) {
                     if (!oldList.remove(entity)) {
-                        captureInfo.addPlayer(((ServerPlayer) entity));
+                        captureInfo.addPlayer(serverPlayer);
                     }
                 }
             }

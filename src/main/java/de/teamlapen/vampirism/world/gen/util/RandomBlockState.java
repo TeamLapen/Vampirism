@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * @see ProcessorRule
  */
 public class RandomBlockState extends ProcessorRule {
-    @SuppressWarnings("Convert2MethodRef")
+    @SuppressWarnings({"Convert2MethodRef", "CodeBlock2Expr"})
     public static final Codec<Pair<BlockState, Optional<CompoundTag>>> PAIR_CODEC = RecordCodecBuilder.create((instance) -> {
         return instance.group(BlockState.CODEC.fieldOf("state").forGetter(entry -> {
             return entry.getLeft();

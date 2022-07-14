@@ -59,10 +59,10 @@ public class ClothingCrownModel extends VampirismArmorModel {
         return instance;
     }
 
-    public ModelPart front;
-    public ModelPart back;
-    public ModelPart left;
-    public ModelPart right;
+    public final ModelPart front;
+    public final ModelPart back;
+    public final ModelPart left;
+    public final ModelPart right;
 
     public ClothingCrownModel(ModelPart part) {
         super();

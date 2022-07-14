@@ -87,8 +87,6 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 
-import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer.BITE_TYPE;
-
 /**
  * Main class for Vampire Players.
  */
@@ -117,7 +115,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     /**
      * Don't call before the construction event of the player entity is finished
      * Must check Entity#isAlive before
-     *
+     * <br>
      * Always prefer using #getOpt instead
      */
     @Deprecated

@@ -105,13 +105,9 @@ public class SkillsScreen<T extends IFactionPlayer<T>> extends Screen {
         int guiLeft = (this.width - display_width) / 2;
         int guiTop = (this.height - display_height) / 2;
         if (this.backScreen != null) {
-            this.addRenderableWidget(new Button(guiLeft + 5, guiTop + 175, 80, 20, Component.translatable("gui.back"), (context) -> {
-                this.minecraft.setScreen(this.backScreen);
-            }));
+            this.addRenderableWidget(new Button(guiLeft + 5, guiTop + 175, 80, 20, Component.translatable("gui.back"), (context) -> this.minecraft.setScreen(this.backScreen)));
         }
-        this.addRenderableWidget(new Button(guiLeft + 171, guiTop + 175, 80, 20, Component.translatable("gui.done"), (context) -> {
-            this.minecraft.setScreen(null);
-        }));
+        this.addRenderableWidget(new Button(guiLeft + 171, guiTop + 175, 80, 20, Component.translatable("gui.done"), (context) -> this.minecraft.setScreen(null)));
         FactionPlayerHandler.getOpt(minecraft.player).ifPresent(fph -> {
             lordTitle = fph.getLordTitle();
             lordLevel = fph.getLordLevel();

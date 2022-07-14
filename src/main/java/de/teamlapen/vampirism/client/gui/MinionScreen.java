@@ -67,9 +67,7 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
 
         this.taskList = this.addRenderableWidget(new ScrollableArrayTextComponentList(this.leftPos + 120, this.topPos + 19 + 19, 86, Math.min(3 * 20, taskNames.length * 20), 20, () -> taskNames, this::selectTask).scrollSpeed(2D));
         this.taskList.visible = false;
-        this.taskButton = this.addRenderableWidget(new ExtendedButton(this.leftPos + 119, this.topPos + 19, 88, 20, getActiveTaskName(), (button -> {
-            this.taskList.visible = !this.taskList.visible;
-        })));
+        this.taskButton = this.addRenderableWidget(new ExtendedButton(this.leftPos + 119, this.topPos + 19, 88, 20, getActiveTaskName(), (button -> this.taskList.visible = !this.taskList.visible)));
     }
 
     @Override

@@ -37,6 +37,7 @@ public class TaskCommand extends BasicCommand {
 
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int refreshTasksList(Collection<ServerPlayer> players) {
         for (ServerPlayer player : players) {
             FactionPlayerHandler.getOpt(player).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> factionPlayer.getTaskManager().updateTaskLists()));
@@ -44,6 +45,7 @@ public class TaskCommand extends BasicCommand {
         return 0;
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int resetTasksList(Collection<ServerPlayer> players) {
         for (ServerPlayer player : players) {
             FactionPlayerHandler.getOpt(player).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> factionPlayer.getTaskManager().resetTaskLists()));
@@ -51,6 +53,7 @@ public class TaskCommand extends BasicCommand {
         return 0;
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int clearTasks(Collection<ServerPlayer> players) {
         for (ServerPlayer player : players) {
             FactionPlayerHandler.getOpt(player).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> factionPlayer.getTaskManager().reset()));
@@ -59,6 +62,7 @@ public class TaskCommand extends BasicCommand {
         return 0;
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int resetLordTasks(Collection<ServerPlayer> players) {
         for (ServerPlayer player : players) {
             FactionPlayerHandler.getOpt(player).ifPresent(fph -> fph.resetLordTasks(fph.getLordLevel()));

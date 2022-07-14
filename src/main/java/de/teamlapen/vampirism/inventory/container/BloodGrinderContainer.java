@@ -12,9 +12,10 @@ import net.minecraft.world.item.ItemStack;
 import java.util.function.Predicate;
 
 public class BloodGrinderContainer extends InventoryContainer {
-    private static final Predicate<ItemStack> canProcess = stack -> BloodConversionRegistry.canBeConverted(stack);
+    private static final Predicate<ItemStack> canProcess = BloodConversionRegistry::canBeConverted;
     public static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(canProcess, 80, 34)};
 
+    @SuppressWarnings("DeprecatedIsStillUsed")
     @Deprecated
     public BloodGrinderContainer(int id, Inventory playerInventory) {
         this(id, playerInventory, new SimpleContainer(1), ContainerLevelAccess.NULL);

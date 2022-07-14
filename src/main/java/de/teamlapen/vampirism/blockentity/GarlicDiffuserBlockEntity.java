@@ -108,9 +108,7 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
 
     public void onTouched(Player player) {
         if (VampirismPlayerAttributes.get(player).vampireLevel > 0) {
-            VampirePlayer.getOpt(player).ifPresent(vampirePlayer -> {
-                DamageHandler.affectVampireGarlicDirect(vampirePlayer, strength);
-            });
+            VampirePlayer.getOpt(player).ifPresent(vampirePlayer -> DamageHandler.affectVampireGarlicDirect(vampirePlayer, strength));
         }
 
     }
@@ -179,8 +177,8 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
         if (blockEntity.initiateBootTimer) {
             blockEntity.initiateBootTimer = false;
             int bootTime = VampirismConfig.BALANCE.garlicDiffuserStartupTime.get() * 20;
-            if (level instanceof ServerLevel) {
-                if (((ServerLevel) level).players().size() <= 1) {
+            if (level instanceof ServerLevel serverLevel) {
+                if (serverLevel.players().size() <= 1) {
                     bootTime >>= 2; // /4
                 }
             }

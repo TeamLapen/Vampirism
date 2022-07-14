@@ -29,7 +29,6 @@ public class GarlicDiffuserBESR extends VampirismBESR<GarlicDiffuserBlockEntity>
 
     }
 
-    @SuppressWarnings("UnstableApiUsage")
     @Override
     public void render(@Nonnull GarlicDiffuserBlockEntity tileEntityIn, float partialTicks, @Nonnull PoseStack matrixStackIn, @Nonnull MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         Entity e = Minecraft.getInstance().getCameraEntity();

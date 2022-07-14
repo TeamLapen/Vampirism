@@ -65,6 +65,7 @@ public class VampirismConfig {
         BALANCE = new BalanceConfig(balanceBuilder);
     }
 
+    @SuppressWarnings("EmptyMethod")
     public static void init() {
 
     }

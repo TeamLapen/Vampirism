@@ -22,6 +22,7 @@ public class LevelUpCommand extends BasicCommand {
                         .executes(context -> levelUp(context, EntityArgument.getPlayers(context, "player"))));
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int levelUp(CommandContext<CommandSourceStack> context, Collection<ServerPlayer> players) {
         for (ServerPlayer player : players) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);

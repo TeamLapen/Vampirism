@@ -178,23 +178,21 @@ public class VanillaStructureModifications {
 
         StructurePoolElement totem = singleJigsawPiece("village/totem", TOTEM_FACTION_PROCESSOR);
 
-        reg.registry(BuiltinRegistries.TEMPLATE_POOL.key()).ifPresent((patternRegistry) -> {
-            pools.forEach((pool, type) -> {
-                // get the pool if present
-                patternRegistry.getOptional(pool).ifPresent((pattern) -> {
-                    // add totem with weight
-                    for (int i = 0; i < VampirismConfig.COMMON.villageTotemWeight.get(); ++i) {
-                        pattern.templates.add(totem);
-                    }
+        reg.registry(BuiltinRegistries.TEMPLATE_POOL.key()).ifPresent((patternRegistry) -> pools.forEach((pool, type) -> {
+            // get the pool if present
+            patternRegistry.getOptional(pool).ifPresent((pattern) -> {
+                // add totem with weight
+                for (int i = 0; i < VampirismConfig.COMMON.villageTotemWeight.get(); ++i) {
+                    pattern.templates.add(totem);
+                }
 
-                    // Add totem house to the weighted list for better mod compat if other mods read this field instead of templates
-                    // (ex: Repurposed Structures)
-                    List<Pair<StructurePoolElement, Integer>> weightedElementList = new ArrayList<>(pattern.rawTemplates);
-                    weightedElementList.add(new Pair<>(totem, VampirismConfig.COMMON.villageTotemWeight.get()));
-                    pattern.rawTemplates = weightedElementList;
-                });
+                // Add totem house to the weighted list for better mod compat if other mods read this field instead of templates
+                // (ex: Repurposed Structures)
+                List<Pair<StructurePoolElement, Integer>> weightedElementList = new ArrayList<>(pattern.rawTemplates);
+                weightedElementList.add(new Pair<>(totem, VampirismConfig.COMMON.villageTotemWeight.get()));
+                pattern.rawTemplates = weightedElementList;
             });
-        });
+        }));
     }
 
     private static Holder<StructureProcessorList> registerStructureProcessor(String pId, ImmutableList<StructureProcessor> pProcessors) {

@@ -12,6 +12,7 @@ public interface IInstantAction<T extends PathfinderMob & IEntityActionUser> ext
      *
      * @param entity for which the action should be activated
      */
+    @SuppressWarnings("SameReturnValue")
     boolean activate(T entity);
 
     /**

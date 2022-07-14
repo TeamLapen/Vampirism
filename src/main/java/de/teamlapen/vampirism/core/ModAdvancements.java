@@ -26,6 +26,7 @@ public class ModAdvancements {
     /**
      * Does nothing itself, but static initializer perform registration
      */
+    @SuppressWarnings("EmptyMethod")
     static void registerAdvancementTrigger() {
 
     }

@@ -18,11 +18,10 @@ public class EntityCommand extends BasicCommand {
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("entity")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_ALL))
-                .executes(context -> {
-                    return entity(context.getSource(), context.getSource().getPlayerOrException());
-                });
+                .executes(context -> entity(context.getSource(), context.getSource().getPlayerOrException()));
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int entity(CommandSourceStack commandSource, ServerPlayer asPlayer) {
         List<Entity> l = asPlayer.getCommandSenderWorld().getEntities(asPlayer, asPlayer.getBoundingBox().inflate(3, 2, 3));
         for (Entity entity : l) {

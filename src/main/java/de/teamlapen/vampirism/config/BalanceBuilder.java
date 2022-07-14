@@ -142,6 +142,7 @@ public class BalanceBuilder {
     /**
      * @return null, for drop-in replacement
      */
+    @SuppressWarnings("SameReturnValue")
     public ForgeConfigSpec.BooleanValue define(String name, boolean defaultValue) {
         add(new BalanceBuilder.BoolConf(name, defaultValue));
         return null;
@@ -150,6 +151,7 @@ public class BalanceBuilder {
     /**
      * @return null, for drop-in replacement
      */
+    @SuppressWarnings("SameReturnValue")
     public ForgeConfigSpec.IntValue defineInRange(String name, int def, int min, int max) {
         add(new BalanceBuilder.IntConf(name, def, min, max));
         return null;
@@ -158,6 +160,7 @@ public class BalanceBuilder {
     /**
      * @return null, for drop-in replacement
      */
+    @SuppressWarnings("SameReturnValue")
     public ForgeConfigSpec.DoubleValue defineInRange(String name, double def, double min, double max) {
         add(new BalanceBuilder.DoubleConf(name, def, min, max));
         return null;
@@ -166,6 +169,7 @@ public class BalanceBuilder {
     /**
      * @return null, for drop-in replacement
      */
+    @SuppressWarnings("SameReturnValue")
     public ForgeConfigSpec.ConfigValue<List<? extends String>> defineList(String name, List<String> defaultValues, Predicate<Object> validator) {
         add(new BalanceBuilder.StringList(name, defaultValues, validator));
         return null;

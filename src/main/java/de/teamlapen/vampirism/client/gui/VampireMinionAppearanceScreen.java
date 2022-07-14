@@ -75,9 +75,7 @@ public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinio
         }
         this.useLordSkin = this.entity.shouldRenderLordSkin();
         this.typeList = this.addRenderableWidget(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 43 + 19, 99, 80, 20, this.normalSkinCount + this.minionSkinCount, Component.translatable("gui.vampirism.minion_appearance.skin"), this::skin, this::previewSkin));
-        this.typeButton = this.addRenderableWidget(new ExtendedButton(this.typeList.x, this.typeList.y - 20, this.typeList.getWidth() + 1, 20, Component.literal(""), (button1 -> {
-            setListVisibility(!typeList.visible);
-        })));
+        this.typeButton = this.addRenderableWidget(new ExtendedButton(this.typeList.x, this.typeList.y - 20, this.typeList.getWidth() + 1, 20, Component.literal(""), (button1 -> setListVisibility(!typeList.visible))));
 
         this.lordSkinButton = this.addRenderableWidget(new Checkbox(this.guiLeft + 20, this.guiTop + 64, 99, 20, Component.translatable("gui.vampirism.minion_appearance.use_lord_skin"), useLordSkin) {
             @Override

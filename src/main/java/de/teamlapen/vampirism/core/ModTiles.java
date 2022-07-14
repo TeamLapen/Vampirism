@@ -42,7 +42,7 @@ public class ModTiles {
         event.getAllMappings(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES).forEach(missingMapping -> {
             //noinspection SwitchStatementWithTooFewBranches
             switch (missingMapping.getKey().toString()) {
-               case "vampirism:garlic_beacon": missingMapping.remap(GARLIC_DIFFUSER.get());
+                case "vampirism:garlic_beacon" -> missingMapping.remap(GARLIC_DIFFUSER.get());
             }
         });
     }

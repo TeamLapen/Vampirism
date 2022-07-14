@@ -39,10 +39,10 @@ public class ClothingBootsModel extends VampirismArmorModel {
         return instance;
     }
 
-    public ModelPart rightBoot;
-    public ModelPart leftBoot;
-    public ModelPart leftToes;
-    public ModelPart rightToes;
+    public final ModelPart rightBoot;
+    public final ModelPart leftBoot;
+    public final ModelPart leftToes;
+    public final ModelPart rightToes;
 
 
     public ClothingBootsModel(ModelPart part) {

@@ -13,11 +13,10 @@ public class SpawnTestAnimalCommand extends BasicCommand {
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("spawnTestAnimal")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
-                .executes(context -> {
-                    return spawnTestAnimal(context.getSource().getPlayerOrException());
-                });
+                .executes(context -> spawnTestAnimal(context.getSource().getPlayerOrException()));
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int spawnTestAnimal(ServerPlayer asPlayer) {
         Cow cow = EntityType.COW.create(asPlayer.getCommandSenderWorld());
         cow.setHealth(cow.getMaxHealth() / 4.2f);

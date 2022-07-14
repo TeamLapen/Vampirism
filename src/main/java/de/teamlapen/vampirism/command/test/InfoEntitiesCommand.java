@@ -17,11 +17,10 @@ public class InfoEntitiesCommand extends BasicCommand {
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("info-entities")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
-                .executes(context -> {
-                    return infoEntities(context.getSource(), context.getSource().getPlayerOrException());
-                });
+                .executes(context -> infoEntities(context.getSource(), context.getSource().getPlayerOrException()));
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int infoEntities(CommandSourceStack commandSource, ServerPlayer asPlayer) {
         NaturalSpawner.SpawnState densityManager = asPlayer.getLevel().getChunkSource().getLastSpawnState();
         Object2IntMap<MobCategory> object2intmap = densityManager.getMobCategoryCounts();

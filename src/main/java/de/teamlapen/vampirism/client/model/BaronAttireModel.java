@@ -26,8 +26,8 @@ public class BaronAttireModel extends EntityModel<VampireBaronEntity> {
     private static final String HOOD = "hood";
     private static final String CLOAK = "cloak";
 
-    public ModelPart hood;
-    public ModelPart cloak;
+    public final ModelPart hood;
+    public final ModelPart cloak;
     private float enragedProgress = 0;
 
     public static LayerDefinition createLayer() {

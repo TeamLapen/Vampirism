@@ -176,6 +176,7 @@ public class VampirismWorld implements IVampirismWorld {
 
     //----
 
+    @SuppressWarnings("EmptyMethod")
     private void loadNBTData(CompoundTag nbt) {
     }
 
@@ -192,6 +193,7 @@ public class VampirismWorld implements IVampirismWorld {
         }
     }
 
+    @SuppressWarnings("EmptyMethod")
     private void saveNBTData(CompoundTag nbt) {
 
     }

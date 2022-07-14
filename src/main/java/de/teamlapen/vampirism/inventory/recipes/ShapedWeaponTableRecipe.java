@@ -26,8 +26,8 @@ import java.util.Map;
  * @author Cheaterpaul
  */
 public class ShapedWeaponTableRecipe implements CraftingRecipe, IWeaponTableRecipe, IShapedRecipe<CraftingContainer> {
-    protected static int MAX_WIDTH = 4;
-    protected static int MAX_HEIGHT = 4;
+    protected final static int MAX_WIDTH = 4;
+    protected final static int MAX_HEIGHT = 4;
 
     private final ResourceLocation id;
     private final String group;
@@ -196,9 +196,7 @@ public class ShapedWeaponTableRecipe implements CraftingRecipe, IWeaponTableReci
             int height = buffer.readVarInt();
             String group = buffer.readUtf(32767);
             NonNullList<Ingredient> ingredients = NonNullList.withSize(height * width, Ingredient.EMPTY);
-            for (int k = 0; k < ingredients.size(); ++k) {
-                ingredients.set(k, Ingredient.fromNetwork(buffer));
-            }
+            ingredients.replaceAll(ignored -> Ingredient.fromNetwork(buffer));
             ItemStack itemstack = buffer.readItem();
             int level = buffer.readVarInt();
             int lava = buffer.readVarInt();

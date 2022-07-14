@@ -20,7 +20,6 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
         super(generator, REFERENCE.MODID, existingFileHelper);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     protected void registerModels() {
         Set<Block> blocks = new HashSet<>() {{

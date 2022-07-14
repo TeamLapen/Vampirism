@@ -105,7 +105,8 @@ public class RegistryManager implements IInitListener {
     @SubscribeEvent
     public void onRegisterEffects(RegisterEvent event) {
         if (event.getRegistryKey().equals(ForgeRegistries.Keys.MOB_EFFECTS)) {
-            ModEffects.replaceEffects(((IForgeRegistry<MobEffect>) (Object)event.getForgeRegistry())); //TODO 1.19 check
+            //noinspection ConstantConditions,unchecked
+            ModEffects.replaceEffects((IForgeRegistry<MobEffect>) (Object) event.getForgeRegistry()); //TODO 1.19 check
         }
     }
 }

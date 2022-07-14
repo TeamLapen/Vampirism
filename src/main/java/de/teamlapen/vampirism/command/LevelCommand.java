@@ -35,6 +35,7 @@ public class LevelCommand extends BasicCommand {
                                 .executes(context -> leaveFaction(EntityArgument.getPlayers(context, "player")))));
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int setLevel(CommandContext<CommandSourceStack> context, IPlayableFaction<?> faction, int level, Collection<ServerPlayer> players) {
         for (ServerPlayer player : players) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
@@ -52,6 +53,7 @@ public class LevelCommand extends BasicCommand {
         return 0;
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int leaveFaction(Collection<ServerPlayer> players) {
         for (ServerPlayer player : players) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);

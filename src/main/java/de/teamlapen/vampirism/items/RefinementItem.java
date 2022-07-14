@@ -39,15 +39,13 @@ public abstract class RefinementItem extends Item implements IRefinementItem {
         List<WeightedRandomItem<IRefinementSet>> sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream().filter(set -> set.getFaction() == faction).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
         if (sets.isEmpty()) return ItemStack.EMPTY;
         IRefinementSet s = WeightedRandom.getRandomItem(RANDOM, sets).map(WeightedRandomItem::getItem).orElseGet(()->sets.get(0).getItem());
-        AccessorySlotType t = s.getSlotType().orElseGet(() -> {
-            return switch (RANDOM.nextInt(3)) {
-                case 0 -> AccessorySlotType.OBI_BELT;
-                case 1 -> AccessorySlotType.RING;
-                default -> AccessorySlotType.AMULET;
-            };
+        AccessorySlotType t = s.getSlotType().orElseGet(() -> switch (RANDOM.nextInt(3)) {
+            case 0 -> AccessorySlotType.OBI_BELT;
+            case 1 -> AccessorySlotType.RING;
+            default -> AccessorySlotType.AMULET;
         });
         IRefinementItem i = faction.getRefinementItem(t);
-        ItemStack stack = new ItemStack(((Item) i));
+        ItemStack stack = new ItemStack(i);
         if (i.applyRefinementSet(stack, s)) {
             return stack;
         }
@@ -72,9 +70,7 @@ public abstract class RefinementItem extends Item implements IRefinementItem {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         IRefinementSet set = getRefinementSet(stack);
         if (set != null) {
-            set.getRefinements().stream().map(RegistryObject::get).forEach(refinement -> {
-                tooltip.add(Component.literal(" - ").append(refinement.getDescription()).withStyle(ChatFormatting.GRAY));
-            });
+            set.getRefinements().stream().map(RegistryObject::get).forEach(refinement -> tooltip.add(Component.literal(" - ").append(refinement.getDescription()).withStyle(ChatFormatting.GRAY)));
         }
     }
 

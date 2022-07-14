@@ -264,6 +264,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
     /**
      * Called every 70 to 120 ticks during {@link Mob#customServerAiStep()}
      */
+    @SuppressWarnings("EmptyMethod")
     protected void onRandomTick() {
 
     }

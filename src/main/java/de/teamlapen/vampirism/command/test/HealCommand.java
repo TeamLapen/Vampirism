@@ -11,11 +11,10 @@ public class HealCommand extends BasicCommand {
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("heal")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_CHEAT))
-                .executes(context -> {
-                    return heal(context.getSource().getPlayerOrException());
-                });
+                .executes(context -> heal(context.getSource().getPlayerOrException()));
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int heal(ServerPlayer asPlayer) {
         asPlayer.heal(10000);
         return 0;

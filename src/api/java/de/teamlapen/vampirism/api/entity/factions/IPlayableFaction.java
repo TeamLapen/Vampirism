@@ -47,7 +47,6 @@ public interface IPlayableFaction<T extends IFactionPlayer<T>> extends IFaction<
     /**
      * Gets the corresponding item for the slot
      *
-     * @param type
      * @throws NullPointerException if there are no accessories available
      */
     <Z extends Item & IRefinementItem> Z getRefinementItem(IRefinementItem.AccessorySlotType type);

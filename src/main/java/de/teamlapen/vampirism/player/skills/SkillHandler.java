@@ -57,7 +57,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         queue.add(rootNode);
 
         for (SkillNode skillNode = queue.poll(); skillNode != null; skillNode = queue.poll()) {
-            List<SkillNode> child = skillNode.getChildren().stream().filter(this::isNodeEnabled).collect(Collectors.toList());
+            List<SkillNode> child = skillNode.getChildren().stream().filter(this::isNodeEnabled).toList();
             if (child.isEmpty()) {
                 if (skillNode == rootNode) {
                     skillNode = null;

@@ -18,8 +18,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class PotionTableContainer extends InventoryContainer {
-    public static SelectorInfo[] SELECTOR_INFOS;
-    public static SelectorInfo[] SELECTOR_INFOS_EXTENDED;
+    public static final SelectorInfo[] SELECTOR_INFOS;
+    public static final SelectorInfo[] SELECTOR_INFOS_EXTENDED;
 
     static {
         SELECTOR_INFOS = new SelectorInfo[6];

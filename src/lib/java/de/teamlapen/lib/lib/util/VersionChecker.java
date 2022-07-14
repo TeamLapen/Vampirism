@@ -89,7 +89,6 @@ public class VersionChecker implements Runnable {
         versionInfo.checked = true;
     }
 
-    @SuppressWarnings("UnstableApiUsage")
     private void check(URL url) throws IOException, JsonSyntaxException {
 
         InputStream con = openUrlStream(url);

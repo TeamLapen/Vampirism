@@ -51,9 +51,7 @@ public class VampirismEntitySelectors {
                 }
             }
             throw FACTION_NOT_FOUND.createWithContext(parser.getReader(), factionID);
-        }, (parser) -> {
-            return true;
-        }, Component.translatable("vampirism.argument.entity.options.faction.desc"));
+        }, (parser) -> true, Component.translatable("vampirism.argument.entity.options.faction.desc"));
 
         EntitySelectorOptions.register(LEVEL, (parser) -> {
             StringReader reader = parser.getReader();

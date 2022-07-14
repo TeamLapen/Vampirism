@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.core;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.*;
-import de.teamlapen.vampirism.client.core.ModBlocksRender;
 import de.teamlapen.vampirism.items.CoffinItem;
 import de.teamlapen.vampirism.util.BlockVoxelshapes;
 import net.minecraft.resources.ResourceLocation;
@@ -104,15 +103,15 @@ public class ModBlocks {
      * TUTORIAL:
      * - Register blocks here.
      * - To register itemblock, use {@link ModBlocks#registerWithItem}
-     * - Maybe set render layer in {@link ModBlocksRender#registerRenderType()}
      * - Register blockstate in {@link de.teamlapen.vampirism.data.BlockStateGenerator#registerStatesAndModels()} (pass existent model if desired)
+     * - Maybe set render layer in the json model or blockstate generator.
      * - Register itemrender in {@link de.teamlapen.vampirism.data.ItemModelGenerator#registerModels()}
      * - Register loot table in {@link de.teamlapen.vampirism.data.LootTablesGenerator.ModBlockLootTables#addTables()}
      * - Add lang keys
      * - Consider adding tool type in {@link de.teamlapen.vampirism.data.TagGenerator.ModBlockTagsProvider}
      * - Run genData (twice?)
      */
-
+    @SuppressWarnings("JavadocReference")
     private static <T extends Block> RegistryObject<T> registerWithItem(String name, Supplier<T> supplier, Item.Properties properties) {
         RegistryObject<T> block = BLOCKS.register(name, supplier);
         ModItems.ITEMS.register(name, ()->new BlockItem(block.get(), properties));

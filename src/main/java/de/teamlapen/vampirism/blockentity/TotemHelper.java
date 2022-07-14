@@ -33,8 +33,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import java.util.Map.Entry;
-
 public class TotemHelper {
     public static final int MIN_HOMES = 4;
     public static final int MIN_WORKSTATIONS = 2;
@@ -198,8 +196,8 @@ public class TotemHelper {
         }
         return posOpt.map(pos -> {
             BlockEntity tile = world.getBlockEntity(pos);
-            if (tile instanceof TotemBlockEntity) {
-                return ((TotemBlockEntity) tile);
+            if (tile instanceof TotemBlockEntity totem) {
+                return (totem);
             } else {
                 return null;
             }
@@ -215,7 +213,7 @@ public class TotemHelper {
      */
     public static Component forceFactionCommand(IFaction<?> faction, ServerPlayer player) {
         Map<BlockPos, BlockPos> totemPositions = TotemHelper.totemPositions.computeIfAbsent(player.getCommandSenderWorld().dimension(), key -> new HashMap<>());
-        List<PoiRecord> pointOfInterests = ((ServerLevel) player.getCommandSenderWorld()).getPoiManager().getInRange(point -> true, player.blockPosition(), 25, PoiManager.Occupancy.ANY).sorted(Comparator.comparingInt(point -> (int) (point.getPos()).distSqr(player.blockPosition()))).collect(Collectors.toList());
+        List<PoiRecord> pointOfInterests = ((ServerLevel) player.getCommandSenderWorld()).getPoiManager().getInRange(point -> true, player.blockPosition(), 25, PoiManager.Occupancy.ANY).sorted(Comparator.comparingInt(point -> (int) (point.getPos()).distSqr(player.blockPosition()))).toList();
         if (pointOfInterests.stream().noneMatch(point -> totemPositions.containsKey(point.getPos()))) {
             return Component.translatable("command.vampirism.test.village.no_village");
         }

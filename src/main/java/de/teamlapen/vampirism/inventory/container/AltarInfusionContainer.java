@@ -16,6 +16,7 @@ import javax.annotation.Nonnull;
 public class AltarInfusionContainer extends InventoryContainer {
     public static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(ModTags.Items.PURE_BLOOD, 44, 34), new SelectorInfo(ModItems.HUMAN_HEART.get(), 80, 34), new SelectorInfo(ModItems.VAMPIRE_BOOK.get(), 116, 34)};
 
+    @SuppressWarnings("DeprecatedIsStillUsed")
     @Deprecated
     public AltarInfusionContainer(int id, Inventory playerInventory) {
         this(id, playerInventory, new SimpleContainer(3), ContainerLevelAccess.NULL);

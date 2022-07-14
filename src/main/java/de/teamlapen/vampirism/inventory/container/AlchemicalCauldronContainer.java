@@ -14,6 +14,7 @@ import javax.annotation.Nonnull;
 
 public class AlchemicalCauldronContainer extends AbstractFurnaceMenu {
 
+    @SuppressWarnings("DeprecatedIsStillUsed")
     @Deprecated
     public AlchemicalCauldronContainer(int id, Inventory playerInventory) {
         this(id, playerInventory, new SimpleContainer(4), new SimpleContainerData(4), ContainerLevelAccess.NULL);

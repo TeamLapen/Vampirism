@@ -55,7 +55,7 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
     /**
      * Don't call before the construction event of the player entity is finished
      * Must check Entity#isAlive before
-     *
+     * <br>
      * Always prefer calling #getOpt instead
      */
     @Deprecated

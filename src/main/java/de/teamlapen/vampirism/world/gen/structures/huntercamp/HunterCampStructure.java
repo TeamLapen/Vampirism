@@ -23,9 +23,7 @@ public class HunterCampStructure extends Structure {
     @NotNull
     @Override
     public Optional<GenerationStub> findGenerationPoint(GenerationContext context) {
-        return onTopOfChunkCenter(context, Heightmap.Types.WORLD_SURFACE_WG, (builder) -> {
-            generatePieces(builder, context);
-        });
+        return onTopOfChunkCenter(context, Heightmap.Types.WORLD_SURFACE_WG, (builder) -> generatePieces(builder, context));
     }
 
     @NotNull
