@@ -14,50 +14,51 @@ import net.minecraft.world.level.block.Block;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class FactionVillage implements IFactionVillage {
 
-    private final MobEffect badOmenEffect;
-    private final ItemStack bannerStack;
-    private final ImmutableList<CaptureEntityEntry> captureEntities;
-    private final VillagerProfession factionVillageProfession;
+    private final Supplier<MobEffect> badOmenEffect;
+    private final Supplier<ItemStack> bannerStack;
+    private final ImmutableList<CaptureEntityEntry<?>> captureEntities;
+    private final Supplier<VillagerProfession> factionVillageProfession;
     private final Class<? extends Mob> guardSuperClass;
-    private final EntityType<? extends ITaskMasterEntity> taskMasterEntity;
-    private final Block fragileTotem;
-    private final Block craftedTotem;
+    private final Supplier<EntityType<? extends ITaskMasterEntity>> taskMasterEntity;
+    private final Supplier<? extends Block> fragileTotem;
+    private final Supplier<? extends Block> craftedTotem;
 
-    public FactionVillage(@Nullable MobEffect badOmenEffect, @Nonnull ItemStack bannerStack, @Nonnull ImmutableList<CaptureEntityEntry> captureEntities, @Nonnull VillagerProfession factionVillageProfession, @Nonnull Class<? extends Mob> guardSuperClass, @Nullable EntityType<? extends ITaskMasterEntity> taskMasterEntity, @Nonnull Block fragileTotem, @Nonnull Block craftedTotem) {
-        this.badOmenEffect = badOmenEffect;
-        this.bannerStack = bannerStack;
-        this.captureEntities = captureEntities;
-        this.factionVillageProfession = factionVillageProfession;
-        this.guardSuperClass = guardSuperClass;
-        this.taskMasterEntity = taskMasterEntity;
-        this.fragileTotem = fragileTotem;
-        this.craftedTotem = craftedTotem;
+    public FactionVillage(FactionVillageBuilder builder) {
+        this.badOmenEffect = builder.badOmenEffect;
+        this.bannerStack = builder.bannerStack;
+        this.captureEntities = ImmutableList.copyOf(builder.captureEntities);
+        this.factionVillageProfession = builder.factionVillageProfession;
+        this.guardSuperClass = builder.guardSuperClass;
+        this.taskMasterEntity = builder.taskMasterEntity;
+        this.fragileTotem = builder.fragileTotem;
+        this.craftedTotem = builder.craftedTotem;
     }
 
     @Nullable
     @Override
     public MobEffect getBadOmenEffect() {
-        return this.badOmenEffect;
+        return this.badOmenEffect.get();
     }
 
     @Nonnull
     @Override
     public ItemStack getBanner() {
-        return this.bannerStack.copy();
+        return this.bannerStack.get().copy();
     }
 
     @Override
-    public List<CaptureEntityEntry> getCaptureEntries() {
+    public List<CaptureEntityEntry<?>> getCaptureEntries() {
         return this.captureEntities;
     }
 
     @Nonnull
     @Override
     public VillagerProfession getFactionVillageProfession() {
-        return this.factionVillageProfession;
+        return this.factionVillageProfession.get();
     }
 
     @Nonnull
@@ -69,17 +70,17 @@ public class FactionVillage implements IFactionVillage {
     @Nullable
     @Override
     public EntityType<? extends ITaskMasterEntity> getTaskMasterEntity() {
-        return this.taskMasterEntity;
+        return this.taskMasterEntity.get();
     }
 
     @Nonnull
     @Override
     public Block getTotemTopBlock(boolean crafted) {
-        return crafted ? this.craftedTotem : this.fragileTotem;
+        return crafted ? this.craftedTotem.get() : this.fragileTotem.get();
     }
 
     @Override
     public boolean isBanner(@Nonnull ItemStack stack) {
-        return ItemStack.matches(this.bannerStack, stack);
+        return ItemStack.matches(this.bannerStack.get(), stack);
     }
 }

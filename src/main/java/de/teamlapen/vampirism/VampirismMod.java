@@ -329,8 +329,7 @@ public class VampirismMod {
                 .namePlural("text.vampirism.vampires")
                 .hostileTowardsNeutral()
                 .highestLevel(REFERENCE.HIGHEST_VAMPIRE_LEVEL)
-                .lordLevel(REFERENCE.HIGHEST_VAMPIRE_LORD)
-                .lordTitle(LordTitles::getVampireTitle)
+                .lord().lordLevel(REFERENCE.HIGHEST_VAMPIRE_LORD).lordTitle(LordTitles::getVampireTitle).build()
                 .village(VampireVillage::vampireVillage)
                 .refinementItems(VampireRefinementItem::getItemForType)
                 .register();
@@ -341,8 +340,7 @@ public class VampirismMod {
                 .name("text.vampirism.hunter")
                 .namePlural("text.vampirism.hunters")
                 .highestLevel(REFERENCE.HIGHEST_HUNTER_LEVEL)
-                .lordLevel(REFERENCE.HIGHEST_HUNTER_LORD)
-                .lordTitle(LordTitles::getHunterTitle)
+                .lord().lordLevel(REFERENCE.HIGHEST_HUNTER_LORD).lordTitle(LordTitles::getHunterTitle).build()
                 .village(HunterVillage::hunterVillage)
                 .register();
         VReference.HUNTER_CREATURE_TYPE = HUNTER_CREATURE_TYPE;

@@ -47,7 +47,6 @@ public class FactionRegistry implements IFactionRegistry {
         temp = null;
         List<PlayableFaction<?>> temp2 = new ArrayList<>();
         for (Faction<?> allFaction : allFactions) {
-            allFaction.finish();
             if (allFaction instanceof PlayableFaction) {
                 temp2.add((PlayableFaction<?>) allFaction);
             }
@@ -158,7 +157,7 @@ public class FactionRegistry implements IFactionRegistry {
         return new PlayableFactionBuilder<>(id, entityInterface, playerCapabilitySupplier);
     }
 
-    private class FactionBuilder<T extends IFactionEntity> implements IFactionBuilder<T> {
+    public class FactionBuilder<T extends IFactionEntity> implements IFactionBuilder<T> {
 
         protected final ResourceLocation id;
         protected final Class<T> entityInterface;
@@ -169,7 +168,7 @@ public class FactionRegistry implements IFactionRegistry {
         protected String name;
         protected String namePlural;
 
-        public FactionBuilder(ResourceLocation id, Class<T> entityInterface) {
+        FactionBuilder(ResourceLocation id, Class<T> entityInterface) {
             this.id = id;
             this.entityInterface = entityInterface;
         }
@@ -221,21 +220,13 @@ public class FactionRegistry implements IFactionRegistry {
 
         @Override
         public IFaction<T> register() {
-            Faction<T> faction = new Faction<>(
-                    this.id,
-                    this.entityInterface,
-                    this.color,
-                    this.hostileTowardsNeutral,
-                    this.villageFactionData,
-                    this.chatColor != null ? this.chatColor : TextColor.fromRgb(this.color),
-                    this.name == null ? Component.literal(id.toString()) : Component.translatable(this.name),
-                    this.namePlural == null ? this.name == null ? Component.literal(id.toString()) : Component.translatable(this.name) : Component.translatable(this.namePlural));
+            Faction<T> faction = new Faction<>(this);
             addFaction(faction);
             return faction;
         }
     }
 
-    private class PlayableFactionBuilder<T extends IFactionPlayer<T>> extends FactionBuilder<T> implements IPlayableFactionBuilder<T> {
+    public class PlayableFactionBuilder<T extends IFactionPlayer<T>> extends FactionBuilder<T> implements IPlayableFactionBuilder<T> {
 
         protected final NonNullSupplier<Capability<T>> playerCapabilitySupplier;
         protected int highestLevel = 1;
@@ -264,14 +255,12 @@ public class FactionRegistry implements IFactionRegistry {
             return this;
         }
 
-        @Override
-        public IPlayableFactionBuilder<T> lordLevel(int highestLordLevel) {
+        public PlayableFactionBuilder<T> lordLevel(int highestLordLevel) {
             this.highestLordLevel = highestLordLevel;
             return this;
         }
 
-        @Override
-        public IPlayableFactionBuilder<T> lordTitle(@Nonnull BiFunction<Integer, Boolean, Component> lordTitleFunction) {
+        public PlayableFactionBuilder<T> lordTitle(@Nonnull BiFunction<Integer, Boolean, Component> lordTitleFunction) {
             this.lordTitleFunction = lordTitleFunction;
             return this;
         }
@@ -308,26 +297,45 @@ public class FactionRegistry implements IFactionRegistry {
         }
 
         @Override
+        public ILordPlayerBuilder<T> lord(){
+            return new LordPlayerBuilder<>(this);
+        }
+
+        @Override
         public IPlayableFaction<T> register() {
+            PlayableFaction<T> faction = new PlayableFaction<>(this);
+            addFaction(faction);
+            return faction;
+        }
+    }
+
+    public static class LordPlayerBuilder<T extends IFactionPlayer<T>> implements ILordPlayerBuilder<T> {
+
+        protected final PlayableFactionBuilder<T> factionBuilder;
+        protected int maxLevel = 0;
+        protected BiFunction<Integer, Boolean, Component> lordTitleFunction;
+
+        public LordPlayerBuilder(PlayableFactionBuilder<T> factionBuilder) {
+            this.factionBuilder = factionBuilder;
+        }
+
+        @Override
+        public LordPlayerBuilder<T> lordLevel(int level) {
+            this.maxLevel = level;
+            return this;
+        }
+
+        @Override
+        public LordPlayerBuilder<T> lordTitle(@Nonnull BiFunction<Integer, Boolean, Component> lordTitleFunction) {
+            this.lordTitleFunction = lordTitleFunction;
+            return this;
+        }
+
+        public IPlayableFactionBuilder<T> build() {
             if (this.lordTitleFunction == null) {
                 this.lordTitleFunction = (a, b) -> Component.literal("Lord " + a);
             }
-            PlayableFaction<T> faction = new PlayableFaction<>(
-                    this.id,
-                    this.entityInterface,
-                    this.color,
-                    this.hostileTowardsNeutral,
-                    this.playerCapabilitySupplier,
-                    this.highestLevel,
-                    this.highestLordLevel,
-                    this.lordTitleFunction,
-                    this.villageFactionData,
-                    this.refinementItemBySlot,
-                    this.chatColor != null ? this.chatColor : TextColor.fromRgb(this.color),
-                    this.name == null ? Component.literal(id.toString()) : Component.translatable(this.name),
-                    this.namePlural == null ? this.name == null ? Component.literal(id.toString()) : Component.translatable(this.name) : Component.translatable(this.namePlural));
-            addFaction(faction);
-            return faction;
+            return this.factionBuilder.lordTitle(this.lordTitleFunction).lordLevel(this.maxLevel);
         }
     }
 

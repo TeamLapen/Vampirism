@@ -19,7 +19,7 @@ public class FactionLevelOverlay extends GuiComponent implements IGuiOverlay {
 
             FactionPlayerHandler.getOpt(this.mc.player).ifPresent(handler -> {
                 IPlayableFaction<?> faction = handler.getCurrentFaction();
-                if (this.mc.gameMode.hasExperience() && faction != null && faction.renderLevel()) {
+                if (this.mc.gameMode.hasExperience() && faction != null) {
                     // boolean flag1 = false;
                     int color = faction.getColor();
                     int lord = handler.getLordLevel();

@@ -23,7 +23,7 @@ public interface IFactionVillage {
     @Nonnull
     ItemStack getBanner();
 
-    List<CaptureEntityEntry> getCaptureEntries();
+    List<CaptureEntityEntry<?>> getCaptureEntries();
 
     @Nonnull
     VillagerProfession getFactionVillageProfession();

@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.api.entity.factions;
 import de.teamlapen.vampirism.api.entity.CaptureEntityEntry;
 import de.teamlapen.vampirism.api.entity.ITaskMasterEntity;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.npc.VillagerProfession;
@@ -44,7 +45,7 @@ public interface IFactionVillageBuilder {
      *
      * @apiNote the entries should only contain entities of this faction
      */
-    IFactionVillageBuilder captureEntities(Supplier<List<CaptureEntityEntry>> captureEntities);
+    IFactionVillageBuilder captureEntities(List<CaptureEntityEntry<?>> captureEntities);
 
     /**
      * Supply a faction village profession that should have the totem top as working station
@@ -70,7 +71,7 @@ public interface IFactionVillageBuilder {
      * @param taskmaster taskmaster entity type
      * @return this builder
      */
-    IFactionVillageBuilder taskMaster(Supplier<EntityType<? extends ITaskMasterEntity>> taskmaster);
+    <Z extends Entity & ITaskMasterEntity> IFactionVillageBuilder taskMaster(Supplier<EntityType<Z>> taskmaster);
 
     /**
      * Supply totem top blocks for this faction
@@ -79,5 +80,7 @@ public interface IFactionVillageBuilder {
      * @param crafted the totem top for crafting
      * @return this builder
      */
-    IFactionVillageBuilder totem(Supplier<Block> fragile, Supplier<Block> crafted);
+    IFactionVillageBuilder totem(Supplier<? extends Block> fragile, Supplier<? extends Block> crafted);
+
+    IFactionVillage build();
 }

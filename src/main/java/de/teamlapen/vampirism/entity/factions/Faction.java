@@ -24,7 +24,7 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
      */
     private final int integerId;
     @Nonnull
-    private IFactionVillage villageFactionData;
+    private final IFactionVillage villageFactionData;
     @Nonnull
     private final Component name;
     @Nonnull
@@ -32,20 +32,16 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     @Nonnull
     private final TextColor chatColor;
 
-    Faction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral, @Nonnull IFactionVillage villageFactionData, @Nonnull TextColor chatColor, @Nonnull Component name, @Nonnull Component namePlural) {
-        this.id = id;
-        this.entityInterface = entityInterface;
-        this.color = color;
-        this.hostileTowardsNeutral = hostileTowardsNeutral;
-        this.villageFactionData = villageFactionData;
-        this.chatColor = chatColor;
-        this.name = name;
-        this.namePlural = namePlural;
+    Faction(FactionRegistry.FactionBuilder<T> builder) {
+        this.id = builder.id;
+        this.entityInterface = builder.entityInterface;
+        this.color = builder.color;
+        this.hostileTowardsNeutral = builder.hostileTowardsNeutral;
+        this.villageFactionData = builder.villageFactionData.build();
+        this.chatColor = builder.chatColor == null ? TextColor.fromRgb(this.color) : builder.chatColor;
+        this.name = builder.name == null ? Component.literal(id.toString()) : Component.translatable(builder.name);
+        this.namePlural = builder.namePlural == null ? this.name : Component.translatable(builder.namePlural);
         integerId = nextId++;
-    }
-
-    void finish(){
-        this.villageFactionData = this.villageFactionData.build();
     }
 
     @Override

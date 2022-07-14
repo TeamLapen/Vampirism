@@ -4,15 +4,18 @@ import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 
-public class CaptureEntityEntry extends WeightedEntry.IntrusiveBase {
-    private final EntityType<? extends Mob> entity;
+import java.util.function.Supplier;
 
-    public CaptureEntityEntry(EntityType<? extends Mob> entity, int itemWeightIn) {
+public class CaptureEntityEntry<T extends Mob> extends WeightedEntry.IntrusiveBase {
+
+    private final Supplier<EntityType<T>> entity;
+
+    public CaptureEntityEntry(Supplier<EntityType<T>> entity, int itemWeightIn) {
         super(itemWeightIn);
         this.entity = entity;
     }
 
-    public EntityType<? extends Mob> getEntity() {
-        return entity;
+    public EntityType<T> getEntity() {
+        return entity.get();
     }
 }

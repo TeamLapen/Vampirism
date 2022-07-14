@@ -1,12 +1,9 @@
 package de.teamlapen.vampirism.entity.factions;
 
-import de.teamlapen.vampirism.api.entity.factions.IFactionVillage;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextColor;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.capabilities.Capability;
@@ -14,7 +11,6 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -29,15 +25,13 @@ public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> imp
     private final BiFunction<Integer, Boolean, Component> lordTitleFunction;
     private final Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot;
 
-    private boolean renderLevel = true;
-
-    PlayableFaction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel, int highestLordLevel, @Nonnull BiFunction<Integer, Boolean, Component> lordTitleFunction, @Nonnull IFactionVillage villageFactionData, @Nullable Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot, TextColor chatColor, Component name, Component namePlural) {
-        super(id, entityInterface, color, hostileTowardsNeutral, villageFactionData, chatColor, name, namePlural);
-        this.highestLevel = highestLevel;
-        this.playerCapabilitySupplier = playerCapabilitySupplier;
-        this.highestLordLevel = highestLordLevel;
-        this.lordTitleFunction = lordTitleFunction;
-        this.refinementItemBySlot = refinementItemBySlot;
+    PlayableFaction(FactionRegistry.PlayableFactionBuilder<T> builder) {
+        super(builder);
+        this.highestLevel = builder.highestLevel;
+        this.highestLordLevel = builder.highestLordLevel;
+        this.playerCapabilitySupplier = builder.playerCapabilitySupplier;
+        this.lordTitleFunction = builder.lordTitleFunction;
+        this.refinementItemBySlot = builder.refinementItemBySlot;
     }
 
     @Override
@@ -65,17 +59,6 @@ public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> imp
     @Override
     public LazyOptional<T> getPlayerCapability(Player player) {
         return player.getCapability(playerCapabilitySupplier.get(), null);
-    }
-
-    @Override
-    public boolean renderLevel() {
-        return renderLevel;
-    }
-
-    @Override
-    public PlayableFaction<T> setRenderLevel(boolean render) {
-        renderLevel = render;
-        return this;
     }
 
     @Override

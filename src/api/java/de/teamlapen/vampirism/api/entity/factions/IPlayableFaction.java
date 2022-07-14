@@ -40,16 +40,6 @@ public interface IPlayableFaction<T extends IFactionPlayer<T>> extends IFaction<
     LazyOptional<T> getPlayerCapability(Player player);
 
     /**
-     * @return If the level should be rendered
-     */
-    boolean renderLevel();
-
-    /**
-     * Set if the level should be rendered, default is true
-     */
-    IPlayableFaction<T> setRenderLevel(boolean render);
-
-    /**
      * @return If this faction is allowed to have accessories
      */
     boolean hasRefinements();
