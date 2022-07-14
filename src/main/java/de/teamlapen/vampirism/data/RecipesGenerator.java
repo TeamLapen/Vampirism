@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.data.recipebuilder.ShapedWeaponTableRecipeBuilder;
 import de.teamlapen.vampirism.data.recipebuilder.ShapelessWeaponTableRecipeBuilder;
 import de.teamlapen.vampirism.inventory.recipes.ConfigCondition;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.util.NBTIngredient;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
@@ -303,12 +304,6 @@ public class RecipesGenerator extends RecipeProvider {
 
     private ResourceLocation vampire(String path) {
         return modId("vampire/" + path);
-    }
-
-    private static class NBTIngredient extends net.minecraftforge.common.crafting.StrictNBTIngredient {
-        public NBTIngredient(ItemStack stack) {
-            super(stack);
-        }
     }
 
     private static class Shapeless extends ShapelessRecipeBuilder {
