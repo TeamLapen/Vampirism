@@ -13,6 +13,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.ChunkRenderTypeSet;
 import net.minecraftforge.client.model.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +33,7 @@ public class BakedAltarInspirationModel implements IDynamicBakedModel {
 
     /**
      * Stores a fluid level -> fluid model array
-     * Filled when the fluid json model is loaded (in {@link ClientEventHandler#onModelBakeEvent(ModelBakeEvent)})
+     * Filled when the fluid json model is loaded (in {@link ClientEventHandler#onModelBakeEvent(net.minecraftforge.client.event.ModelEvent.BakingCompleted)})
      */
     public static final BakedModel[] FLUID_MODELS = new BakedModel[FLUID_LEVELS];
 
@@ -91,4 +92,9 @@ public class BakedAltarInspirationModel implements IDynamicBakedModel {
         return baseModel.usesBlockLight();
     }
 
+    @NotNull
+    @Override
+    public ChunkRenderTypeSet getRenderTypes(@NotNull BlockState state, @NotNull RandomSource rand, @NotNull ModelData data) {
+        return baseModel.getRenderTypes(state, rand, data);
+    }
 }

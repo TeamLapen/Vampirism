@@ -1,6 +1,6 @@
 {
   "type": "forge:add_spawns",
-  "biomes": "#vampirism:can_hunter_spawns",
+  "biomes": "#vampirism:has_spawn/advanced_hunter",
   "spawners":
   {
     "type": "vampirism:advanced_hunter",

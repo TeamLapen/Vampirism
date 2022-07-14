@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.core.Direction;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
@@ -23,22 +24,25 @@ public class BlockStateGenerator extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
+        ResourceLocation cutout = new ResourceLocation("cutout");
+        ResourceLocation cutout_mipped = new ResourceLocation("cutout_mipped");
+        ResourceLocation translucent = new ResourceLocation("translucent");
         //models
-        models().getBuilder("coffin").texture("particle", mcLoc("block/spruce_planks"));
+        models().getBuilder("coffin").texture("particle", mcLoc("block/spruce_planks")).renderType(cutout);
         models().withExistingParent("fire_side_alt0", modLoc("block/fire_side_alt")).texture("particle", mcLoc("block/fire_0")).texture("fire", mcLoc("block/fire_0"));
         models().withExistingParent("fire_side_alt1", modLoc("block/fire_side_alt")).texture("particle", mcLoc("block/fire_1")).texture("fire", mcLoc("block/fire_1"));
         models().withExistingParent("fire_side0", modLoc("block/fire_side")).texture("particle", mcLoc("block/fire_0")).texture("fire", mcLoc("block/fire_0"));
         models().withExistingParent("fire_side1", modLoc("block/fire_side")).texture("particle", mcLoc("block/fire_1")).texture("fire", mcLoc("block/fire_1"));
         models().withExistingParent("fire_floor0", modLoc("block/fire_floor")).texture("particle", mcLoc("block/fire_0")).texture("fire", mcLoc("block/fire_0"));
         models().withExistingParent("fire_floor1", modLoc("block/fire_floor")).texture("particle", mcLoc("block/fire_1")).texture("fire", mcLoc("block/fire_1"));
-        ModelFile bloody_spruce_sapling = models().cross("bloody_spruce_sapling", modLoc("block/bloody_spruce_sapling"));
-        ModelFile vampire_spruce_sapling = models().cross("vampire_spruce_sapling", modLoc("block/vampire_spruce_sapling"));
+        ModelFile bloody_spruce_sapling = models().cross("bloody_spruce_sapling", modLoc("block/bloody_spruce_sapling")).renderType(cutout);
+        ModelFile vampire_spruce_sapling = models().cross("vampire_spruce_sapling", modLoc("block/vampire_spruce_sapling")).renderType(cutout);
         ModelFile bloody_spruce_log = models().cubeColumn("bloody_spruce_log", modLoc("block/bloody_spruce_log"), modLoc("block/bloody_spruce_log_top"));
 
         //default blocks
-        horizontalBlock(ModBlocks.GARLIC_DIFFUSER_NORMAL.get(), models().withExistingParent("garlic_diffuser_normal", modLoc("block/garlic_diffuser")));
-        horizontalBlock(ModBlocks.GARLIC_DIFFUSER_WEAK.get(), models().withExistingParent("garlic_diffuser_weak", modLoc("block/garlic_diffuser")));
-        horizontalBlock(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get(), models().withExistingParent("garlic_diffuser_improved", modLoc("block/garlic_diffuser")));
+        horizontalBlock(ModBlocks.GARLIC_DIFFUSER_NORMAL.get(), models().withExistingParent("garlic_diffuser_normal", modLoc("block/garlic_diffuser")).renderType(cutout));
+        horizontalBlock(ModBlocks.GARLIC_DIFFUSER_WEAK.get(), models().withExistingParent("garlic_diffuser_weak", modLoc("block/garlic_diffuser")).renderType(cutout));
+        horizontalBlock(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get(), models().withExistingParent("garlic_diffuser_improved", modLoc("block/garlic_diffuser")).renderType(cutout));
         horizontalBlock(ModBlocks.ALTAR_CLEANSING.get(), models().getExistingFile(modLoc("block/altar_cleansing")));
         horizontalBlock(ModBlocks.BLOOD_GRINDER.get(), models().getExistingFile(modLoc("block/blood_grinder")));
 
@@ -48,9 +52,9 @@ public class BlockStateGenerator extends BlockStateProvider {
         simpleBlock(ModBlocks.CASTLE_BLOCK_NORMAL_BRICK.get());
         simpleBlock(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK.get());
         simpleBlock(ModBlocks.CURSED_EARTH.get());
-        simpleBlock(ModBlocks.SUNSCREEN_BEACON.get(), models().withExistingParent("vampirism:block/sunscreen_beacon", "minecraft:block/beacon").texture("beacon", "vampirism:block/cursed_earth"));
+        simpleBlock(ModBlocks.SUNSCREEN_BEACON.get(), models().withExistingParent("vampirism:block/sunscreen_beacon", "minecraft:block/beacon").texture("beacon", "vampirism:block/cursed_earth").renderType(cutout));
         simpleBlock(ModBlocks.COFFIN.get(), models().getExistingFile(modLoc("block/coffin")));
-        simpleBlock(ModBlocks.VAMPIRE_ORCHID.get(), models().cross("vampire_orchid", modLoc("block/vampire_orchid")));
+        simpleBlock(ModBlocks.VAMPIRE_ORCHID.get(), models().cross("vampire_orchid", modLoc("block/vampire_orchid")).renderType(cutout));
         simpleBlock(ModBlocks.TOTEM_TOP.get(), models().getExistingFile(modLoc("block/totem_top")));
         simpleBlock(ModBlocks.TOTEM_TOP_CRAFTED.get(), models().getExistingFile(modLoc("block/totem_top_crafted")));
         simpleBlock(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER.get(), models().withExistingParent("totem_top_vampirism_hunter", modLoc("block/totem_top")));
@@ -65,7 +69,7 @@ public class BlockStateGenerator extends BlockStateProvider {
         simpleBlock(ModBlocks.BLOOD_PEDESTAL.get(), models().getExistingFile(modLoc("block/blood_pedestal")));
         simpleBlock(ModBlocks.POTION_TABLE.get(), models().getExistingFile(modLoc("block/potion_table")));
         simpleBlock(ModBlocks.FIRE_PLACE.get(), models().getExistingFile(modLoc("block/fire_place")));
-        simpleBlock(ModBlocks.POTTED_VAMPIRE_ORCHID.get(), models().withExistingParent("vampirism:block/potted_vampire_orchid", "minecraft:block/flower_pot_cross").texture("plant", "vampirism:block/vampire_orchid"));
+        simpleBlock(ModBlocks.POTTED_VAMPIRE_ORCHID.get(), models().withExistingParent("vampirism:block/potted_vampire_orchid", "minecraft:block/flower_pot_cross").texture("plant", "vampirism:block/vampire_orchid").renderType(cutout));
         simpleBlock(ModBlocks.VAMPIRE_SPRUCE_LEAVES.get(), models().getExistingFile(mcLoc("block/oak_leaves")));
         simpleBlock(ModBlocks.BLOODY_SPRUCE_LEAVES.get(), models().getExistingFile(mcLoc("block/oak_leaves")));
         simpleBlock(ModBlocks.BLOODY_SPRUCE_SAPLING.get(), bloody_spruce_sapling);

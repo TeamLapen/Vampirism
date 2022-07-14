@@ -7,6 +7,7 @@
     "bottom": "vampirism:block/blood_sieve_bottom",
     "filter": "vampirism:block/blood_sieve_filter"
   },
+  "render_type": "minecraft:cutout",
   "elements": [
     {
       "__comment": "Box1",

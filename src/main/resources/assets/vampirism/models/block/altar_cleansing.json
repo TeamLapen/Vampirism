@@ -4,6 +4,7 @@
     "wood": "block/spruce_planks",
     "book": "vampirism:block/altar_cleansing_book"
   },
+  "render_type": "minecraft:cutout",
   "elements": [
     {
       "__comment": "Base",

@@ -5,6 +5,7 @@
     "texture": "block/dark_oak_planks",
     "glass": "vampirism:block/glass"
   },
+  "render_type": "minecraft:translucent",
   "elements": [
     {
       "from": [

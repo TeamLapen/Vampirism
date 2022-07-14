@@ -7,6 +7,7 @@
 		"8": "vampirism:block/dark_steel",
 		"particle": "vampirism:block/dark_steel"
 	},
+	"render_type": "minecraft:cutout",
 	"elements": [
 		{
 			"from": [4, 5, 5],

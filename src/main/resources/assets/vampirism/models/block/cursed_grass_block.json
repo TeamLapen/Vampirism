@@ -7,6 +7,7 @@
         "side": "vampirism:block/cursed_earth",
         "overlay": "block/grass_block_side_overlay"
     },
+    "render_type": "minecraft:cutout_mipped",
     "elements": [
         {
             "from": [

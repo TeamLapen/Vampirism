@@ -6,6 +6,7 @@
     "fire": "block/fire_0",
     "coal": "block/coal_block"
   },
+  "render_type": "minecraft:cutout",
   "elements": [
     {
       "from": [

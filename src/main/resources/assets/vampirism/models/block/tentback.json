@@ -3,6 +3,7 @@
   "textures": {
     "tent_back": "vampirism:block/tent_back"
   },
+  "render_type": "minecraft:cutout",
   "elements": [
     {
       "from": [

@@ -4,6 +4,7 @@
     "0": "minecraft:block/cauldron_inner",
     "particle": "minecraft:block/cauldron_inner"
   },
+  "render_type": "minecraft:cutout",
   "elements": [
     {
       "from": [

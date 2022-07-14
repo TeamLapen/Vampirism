@@ -6,6 +6,7 @@
     "obsidian": "block/obsidian",
     "wood": "block/oak_planks"
   },
+  "render_type": "minecraft:cutout",
   "elements": [
     {
       "__comment": "Box1",

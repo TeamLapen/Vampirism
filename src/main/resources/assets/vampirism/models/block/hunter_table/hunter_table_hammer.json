@@ -3,6 +3,7 @@
   "textures": {
     "hammer": "vampirism:block/weapon_table_hammer"
   },
+  "render_type": "minecraft:cutout",
   "elements": [
     {
       "__comment": "Element",

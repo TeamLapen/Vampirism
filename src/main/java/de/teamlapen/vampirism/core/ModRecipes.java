@@ -78,12 +78,13 @@ public class ModRecipes {
         Integer c = liquidColors.get(stack);
         if (c != null) return c;
         for (Map.Entry<TagKey<Item>, Integer> entry : liquidColorsTags.entrySet()) {
-            if (stack.builtInRegistryHolder().is(entry.getKey())) {
+            //noinspection ConstantConditions
+            if(ForgeRegistries.ITEMS.tags().getTag(entry.getKey()).contains(stack)) {
                 return entry.getValue();
             }
         }
 
-        return 0x505050;
+        return 0x00003B;
     }
 
 }

@@ -4,6 +4,7 @@
     "texture": "block/stone_bricks",
     "particle": "block/stone_bricks"
   },
+  "render_type": "minecraft:cutout",
   "elements": [
     {
       "__comment": "Top",

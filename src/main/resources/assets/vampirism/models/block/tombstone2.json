@@ -4,6 +4,7 @@
     "0": "minecraft:block/cracked_stone_bricks",
     "particle": "minecraft:block/cracked_stone_bricks"
   },
+  "render_type": "minecraft:cutout",
   "elements": [
     {
       "from": [

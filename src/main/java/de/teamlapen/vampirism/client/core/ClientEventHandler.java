@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.model.blocks.BakedAltarInspirationModel;
 import de.teamlapen.vampirism.client.model.blocks.BakedBloodContainerModel;
-import de.teamlapen.vampirism.client.model.blocks.BakedWeaponTableModel;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFluids;
@@ -117,38 +116,6 @@ public class ClientEventHandler {
             }
         } catch (Exception e) {
             LOGGER.error("Failed to load fluid models for altar inspiration", e);
-        }
-
-        try {
-            for (int x = 0; x < BakedWeaponTableModel.FLUID_LEVELS; x++) {
-                ResourceLocation loc = new ResourceLocation(REFERENCE.MODID, "block/weapon_table/weapon_table_lava" + (x + 1));
-                UnbakedModel model = event.getModelBakery().getModel(loc);
-                BakedWeaponTableModel.FLUID_MODELS[x][0] = model.bake(event.getModelBakery(), event.getModelBakery().getAtlasSet()::getSprite, BlockModelRotation.X0_Y180, loc);
-                BakedWeaponTableModel.FLUID_MODELS[x][1] = model.bake(event.getModelBakery(), event.getModelBakery().getAtlasSet()::getSprite, BlockModelRotation.X0_Y270, loc);
-                BakedWeaponTableModel.FLUID_MODELS[x][2] = model.bake(event.getModelBakery(), event.getModelBakery().getAtlasSet()::getSprite, BlockModelRotation.X0_Y0, loc);
-                BakedWeaponTableModel.FLUID_MODELS[x][3] = model.bake(event.getModelBakery(), event.getModelBakery().getAtlasSet()::getSprite, BlockModelRotation.X0_Y90, loc);
-            }
-            Map<ResourceLocation, BakedModel> registry = event.getModels();
-            ArrayList<ResourceLocation> modelLocations = Lists.newArrayList();
-
-            for (ResourceLocation modelLoc : registry.keySet()) {
-                if (modelLoc.getNamespace().equals(REFERENCE.MODID) && modelLoc.getPath().equals(ModBlocks.WEAPON_TABLE.getId().getPath())) {
-                    modelLocations.add(modelLoc);
-                }
-            }
-
-            // replace the registered tank block variants with TankModelFactories
-
-            BakedModel registeredModel;
-            BakedModel newModel;
-            for (ResourceLocation loc : modelLocations) {
-                registeredModel = event.getModels().get(loc);
-                newModel = new BakedWeaponTableModel(registeredModel);
-                event.getModels().put(loc, newModel);
-            }
-        } catch (Exception e) {
-            LOGGER.error("Failed to load fluid models for weapon crafting table", e);
-
         }
     }
 

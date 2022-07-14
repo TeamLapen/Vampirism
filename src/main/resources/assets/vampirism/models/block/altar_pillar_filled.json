@@ -5,6 +5,7 @@
     "particle": "block/stone_bricks",
     "filler": "block/bone_block_side"
   },
+  "render_type": "minecraft:cutout",
   "elements": [
     {
       "__comment": "Top",

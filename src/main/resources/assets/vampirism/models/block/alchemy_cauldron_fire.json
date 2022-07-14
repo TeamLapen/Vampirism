@@ -5,6 +5,7 @@
     "fire": "block/fire_0",
     "fire1": "block/fire_1"
   },
+  "render_type": "minecraft:cutout",
   "elements": [
     {
       "__comment": "Fire",

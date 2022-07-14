@@ -3,6 +3,7 @@
   "textures": {
     "texture": "vampirism:block/blood_still"
   },
+  "render_type": "minecraft:translucent",
   "elements": [
     {
       "from": [

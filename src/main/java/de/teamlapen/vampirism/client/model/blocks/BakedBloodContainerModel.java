@@ -18,6 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.ChunkRenderTypeSet;
 import net.minecraftforge.client.model.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.fluids.FluidStack;
@@ -37,7 +38,7 @@ public class BakedBloodContainerModel implements IDynamicBakedModel {
 
     /**
      * Stores a fluid level -> fluid model array
-     * Filled when the fluid json model is loaded (in {@link ClientEventHandler#onModelBakeEvent(ModelBakeEvent)})
+     * Filled when the fluid json model is loaded (in {@link ClientEventHandler#onModelBakeEvent(net.minecraftforge.client.event.ModelEvent.BakingCompleted)})
      */
     public static final BakedModel[] BLOOD_FLUID_MODELS = new BakedModel[FLUID_LEVELS];
     public static final BakedModel[] IMPURE_BLOOD_FLUID_MODELS = new BakedModel[FLUID_LEVELS];
@@ -115,6 +116,12 @@ public class BakedBloodContainerModel implements IDynamicBakedModel {
     @Override
     public boolean usesBlockLight() {
         return baseModel.usesBlockLight();
+    }
+
+    @NotNull
+    @Override
+    public ChunkRenderTypeSet getRenderTypes(@NotNull BlockState state, @NotNull RandomSource rand, @NotNull ModelData data) {
+        return baseModel.getRenderTypes(state, rand, data);
     }
 
     private static class CustomItemOverride extends ItemOverrides {

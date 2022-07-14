@@ -7,6 +7,7 @@
     "feet": "block/birch_log",
     "hunterbook": "vampirism:item/hunter_table_book"
   },
+  "render_type": "minecraft:cutout",
   "elements": [
     {
       "__comment": "Element",

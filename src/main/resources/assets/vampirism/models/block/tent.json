@@ -6,6 +6,7 @@
     "particle": "block/white_wool",
     "floor": "vampirism:block/tent/floor_bl"
   },
+  "render_type": "minecraft:cutout",
   "elements": [
     {
       "from": [

@@ -6,6 +6,7 @@
     "obsidian": "block/obsidian",
     "particle": "block/iron_block"
   },
+  "render_type": "minecraft:translucent",
   "elements": [
     {
       "from": [

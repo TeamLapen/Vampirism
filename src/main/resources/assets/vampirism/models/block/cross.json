@@ -4,6 +4,7 @@
 		"0": "block/stripped_spruce_log",
 		"particle": "block/stripped_spruce_log"
 	},
+	"render_type": "minecraft:cutout",
 	"elements": [
 		{
 			"from": [1, 0, 1],

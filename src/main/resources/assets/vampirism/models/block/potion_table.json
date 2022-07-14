@@ -8,6 +8,7 @@
     "bottle": "vampirism:item/vampire_blood_bottle",
     "blaze": "item/blaze_rod"
   },
+  "render_type": "minecraft:cutout",
   "elements": [
     {
       "__comment": "Element",

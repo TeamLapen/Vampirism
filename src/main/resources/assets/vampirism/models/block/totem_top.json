@@ -6,6 +6,7 @@
     "iron": "block/iron_block",
     "outer": "block/glowstone"
   },
+  "render_type": "minecraft:cutout",
   "elements": [
     {
       "__comment": "core",

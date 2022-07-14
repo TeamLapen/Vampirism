@@ -7,6 +7,7 @@
     "wood": "block/oak_log",
     "stone": "block/stone_bricks"
   },
+  "render_type": "minecraft:cutout",
   "elements": [
     {
       "__comment": "FireWood",

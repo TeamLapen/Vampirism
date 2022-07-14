@@ -106,7 +106,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
     public int getLiquidColorClient() {
 
         ItemStack liquidItem = this.items.get(0);
-        return FluidUtil.getFluidContained(liquidItem).map(fluidStack -> IClientFluidTypeExtensions.of(fluidStack.getFluid()).getTintColor(fluidStack)).orElseGet(()->ModRecipes.getLiquidColor(liquidItem.getItem()));
+        return FluidUtil.getFluidContained(liquidItem).map(fluidStack -> IClientFluidTypeExtensions.of(fluidStack.getFluid()).getTintColor(fluidStack)).orElseGet(()-> ModRecipes.getLiquidColor(liquidItem.getItem()));
     }
 
     public Component getOwnerName() {

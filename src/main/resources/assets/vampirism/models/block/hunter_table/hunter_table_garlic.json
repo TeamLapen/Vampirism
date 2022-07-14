@@ -3,6 +3,7 @@
   "textures": {
     "garlic": "vampirism:item/garlic"
   },
+  "render_type": "minecraft:cutout",
   "elements": [
     {
       "__comment": "Element",

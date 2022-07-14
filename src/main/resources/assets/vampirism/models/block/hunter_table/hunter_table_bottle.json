@@ -3,6 +3,7 @@
   "textures": {
     "potion": "vampirism:item/blood_bottle_9"
   },
+  "render_type": "minecraft:cutout",
   "elements": [
     {
       "__comment": "Element",

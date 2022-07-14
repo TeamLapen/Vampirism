@@ -4,6 +4,7 @@
     "particle": "block/iron_block",
     "texture": "block/iron_block"
   },
+  "render_type": "minecraft:cutout",
   "elements": [
     {
       "from": [

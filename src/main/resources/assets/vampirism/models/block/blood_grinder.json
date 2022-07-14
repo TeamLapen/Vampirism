@@ -8,6 +8,7 @@
     "center": "vampirism:block/grinder_center",
     "base": "vampirism:block/grinder_base"
   },
+  "render_type": "minecraft:cutout",
   "elements": [
     {
       "__comment": "Box1",

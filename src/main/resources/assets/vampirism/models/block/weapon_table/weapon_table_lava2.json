@@ -3,6 +3,7 @@
   "textures": {
     "lava": "block/lava_still"
   },
+  "render_type": "minecraft:cutout",
   "elements": [
     {
       "from": [

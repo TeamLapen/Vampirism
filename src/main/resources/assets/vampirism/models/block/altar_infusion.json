@@ -6,6 +6,7 @@
     "gold_block": "block/gold_block",
     "extra": "vampirism:block/altar_infusion_extra"
   },
+  "render_type": "minecraft:cutout",
   "elements": [
     {
       "__comment": "Base",

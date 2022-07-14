@@ -3,6 +3,7 @@
   "textures": {
     "liquid": "vampirism:block/blank_liquid_still"
   },
+  "render_type": "minecraft:cutout",
   "elements": [
     {
       "__comment": "Cube1",
