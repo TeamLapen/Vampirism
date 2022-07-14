@@ -4,7 +4,9 @@ import com.google.common.collect.Maps;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.inventory.recipes.*;
+import de.teamlapen.vampirism.util.NBTIngredient;
 import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -15,6 +17,7 @@ import net.minecraftforge.common.crafting.conditions.IConditionSerializer;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegisterEvent;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.Map;
@@ -60,6 +63,7 @@ public class ModRecipes {
     static void registerRecipeTypesAndSerializers(IEventBus bus) {
         RECIPE_TYPES.register(bus);
         RECIPE_SERIALIZERS.register(bus);
+        bus.addListener(ModRecipes::registerRecipeSerializers);
     }
 
     public static void registerLiquidColor(Item item, int color) {
@@ -70,6 +74,11 @@ public class ModRecipes {
         liquidColorsTags.put(items, color);
     }
 
+    static void registerRecipeSerializers(RegisterEvent event) {
+        if (event.getRegistryKey() == ForgeRegistries.Keys.RECIPE_SERIALIZERS) {
+            CraftingHelper.register(new ResourceLocation(REFERENCE.MODID, "nbt"), NBTIngredient.Serializer.INSTANCE);
+        }
+    }
 
     /**
      * gets liquid color for item

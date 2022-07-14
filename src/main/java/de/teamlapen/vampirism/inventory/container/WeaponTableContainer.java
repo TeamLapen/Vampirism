@@ -117,7 +117,7 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
     @SuppressWarnings("unchecked")
     @Override
     public void handlePlacement(boolean shouldPlaceAll, @Nonnull Recipe<?> recipe, @Nonnull ServerPlayer serverPlayer) {
-        new ServerPlaceRecipe<>(this).recipeClicked(serverPlayer, (Recipe<CraftingContainer>) recipe, shouldPlaceAll);
+        new NBTServerPlaceRecipe<>(this).recipeClicked(serverPlayer, (Recipe<CraftingContainer>) recipe, shouldPlaceAll);
     }
 
     @Nonnull
@@ -243,6 +243,59 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
         public WeaponTableContainer create(int windowId, Inventory inv, FriendlyByteBuf data) {
             BlockPos pos = data.readBlockPos();
             return new WeaponTableContainer(windowId, inv, ContainerLevelAccess.create(inv.player.level, pos));
+        }
+    }
+
+    /**
+     * no good implementation but since it's usage is limited a functional fix for ignoring the nbt data for itemstacks
+     * TODO 1.19 recheck
+     */
+    static class NBTServerPlaceRecipe<C extends Container> extends ServerPlaceRecipe<C> {
+
+        public NBTServerPlaceRecipe(RecipeBookMenu<C> p_135431_) {
+            super(p_135431_);
+        }
+
+        /**
+         * same as super method but {@link #findSlotMatchingUnusedItem(net.minecraft.world.item.ItemStack)} is called instead of {@link net.minecraft.world.entity.player.Inventory#findSlotMatchingUnusedItem(net.minecraft.world.item.ItemStack)}
+         */
+        @Override
+        protected void moveItemToGrid(Slot p_135439_, ItemStack p_135440_) {
+            int i = findSlotMatchingUnusedItem(p_135440_);
+            if (i != -1) {
+                ItemStack itemstack = this.inventory.getItem(i).copy();
+                if (!itemstack.isEmpty()) {
+                    if (itemstack.getCount() > 1) {
+                        this.inventory.removeItem(i, 1);
+                    } else {
+                        this.inventory.removeItemNoUpdate(i);
+                    }
+
+                    itemstack.setCount(1);
+                    if (p_135439_.getItem().isEmpty()) {
+                        p_135439_.set(itemstack);
+                    } else {
+                        p_135439_.getItem().grow(1);
+                    }
+
+                }
+            }
+        }
+
+        /**
+         * Copied from {@link net.minecraft.world.entity.player.Inventory#findSlotMatchingUnusedItem(net.minecraft.world.item.ItemStack)}
+         * but nbt check removed
+         */
+        public int findSlotMatchingUnusedItem(ItemStack p_36044_) {
+            for(int i = 0; i < this.inventory.items.size(); ++i) {
+                ItemStack itemstack = this.inventory.items.get(i);
+                //    do not check for nbt tag here    //
+                if (!this.inventory.items.get(i).isEmpty() && p_36044_.is(itemstack.getItem()) && !this.inventory.items.get(i).isDamaged() && !itemstack.isEnchanted() && !itemstack.hasCustomHoverName()) {
+                    return i;
+                }
+            }
+
+            return -1;
         }
     }
 }
