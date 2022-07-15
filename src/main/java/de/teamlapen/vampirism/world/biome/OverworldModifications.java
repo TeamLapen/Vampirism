@@ -108,7 +108,7 @@ public class OverworldModifications {
 
             LOGGER.info("Adding biome {} to ParameterPoints {} in Preset.OVERWORLD", ModBiomes.VAMPIRE_FOREST.getKey().location(), Arrays.toString(forestPoints));
             for (Climate.ParameterPoint forestPoint : forestPoints) {
-                biomes.add(Pair.of(forestPoint, registry.getHolderOrThrow(ModBiomes.VAMPIRE_FOREST.getKey())));
+                biomes.add(Pair.of(forestPoint, registry.getOrCreateHolderOrThrow(ModBiomes.VAMPIRE_FOREST.getKey())));
             }
 
             return new Climate.ParameterList<>(biomes);
