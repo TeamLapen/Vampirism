@@ -42,8 +42,8 @@ public class ModVillage {
             new ScheduleBuilder(new Schedule()).changeActivityAt(12000, Activity.IDLE).changeActivityAt(10, Activity.REST).changeActivityAt(14000, Activity.WORK).changeActivityAt(21000, Activity.MEET).changeActivityAt(23000, Activity.IDLE).build());
 
 
-    public static final RegistryObject<VillagerProfession> VAMPIRE_EXPERT = PROFESSIONS.register("vampire_expert", () -> new VillagerProfession("vampire_expert", (holder) -> holder.is(ModTags.POI_TYPES.IS_VAMPIRE),(holder) -> holder.is(ModTags.POI_TYPES.IS_VAMPIRE), ImmutableSet.of(), ImmutableSet.of(), null));
-    public static final RegistryObject<VillagerProfession> HUNTER_EXPERT = PROFESSIONS.register("hunter_expert", () -> new VillagerProfession("hunter_expert", (holder) -> holder.is(ModTags.POI_TYPES.IS_HUNTER),(holder) -> holder.is(ModTags.POI_TYPES.IS_HUNTER), ImmutableSet.of(), ImmutableSet.of(), null));
+    public static final RegistryObject<VillagerProfession> VAMPIRE_EXPERT = PROFESSIONS.register("vampire_expert", () -> new VillagerProfession("vampire_expert", (holder) -> holder.is(ModTags.PoiTypes.IS_VAMPIRE),(holder) -> holder.is(ModTags.PoiTypes.IS_VAMPIRE), ImmutableSet.of(), ImmutableSet.of(), null));
+    public static final RegistryObject<VillagerProfession> HUNTER_EXPERT = PROFESSIONS.register("hunter_expert", () -> new VillagerProfession("hunter_expert", (holder) -> holder.is(ModTags.PoiTypes.IS_HUNTER),(holder) -> holder.is(ModTags.PoiTypes.IS_HUNTER), ImmutableSet.of(), ImmutableSet.of(), null));
 
     static void registerVillageObjects(IEventBus bus) {
         POI_TYPES.register(bus);

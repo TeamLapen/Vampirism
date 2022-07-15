@@ -275,13 +275,6 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue autoConvertGlassBottles;
         public final ForgeConfigSpec.BooleanValue umbrella;
 
-        //Mobs
-        public final ForgeConfigSpec.IntValue vampireSpawnChance;
-        public final ForgeConfigSpec.IntValue advancedVampireSpawnChance;
-        public final ForgeConfigSpec.IntValue hunterSpawnChance;
-        public final ForgeConfigSpec.IntValue advancedHunterSpawnChance;
-        public final ForgeConfigSpec.IntValue baronSpawnChance;
-
         //World
         public final ForgeConfigSpec.BooleanValue addVampireForestToOverworld;
         public final ForgeConfigSpec.IntValue vampireForestWeight_terrablender;
@@ -312,13 +305,7 @@ public class VampirismConfig {
                     .push("common-server");
             autoConvertGlassBottles = builder.comment("Whether glass bottles should be automatically be converted to blood bottles when needed").define("autoConvertGlassBottles", true);
             umbrella = builder.comment("If enabled adds a craftable umbrella that can be used to slowly walk though sunlight without taking damage").define("umbrella", false);
-            builder.push("mobspawn");
-            vampireSpawnChance = builder.comment("Vampire spawn chance/weight (e.g. Zombie: 100). Does not affect vampire forest.").defineInRange("vampireSpawnChance", 80, 0, 100000);
-            advancedVampireSpawnChance = builder.comment("Advanced vampire spawn chance/weight (e.g. Zombie: 100). Does not affect vampire forest.").defineInRange("advancedVampireSpawnChance", 26, 0, 100000);
-            hunterSpawnChance = builder.comment("Hunter spawn chance. By default they only spawn in tent camps, but you can enable global spawn here.").defineInRange("hunterSpawnChance", 0, 0, 10000);
-            advancedHunterSpawnChance = builder.comment("Advanced hunter spawn chance. By default they only spawn in large tent camps, but you can enable global spawn here.").defineInRange("advancedHunterSpawnChance", 0, 0, 100000);
-            baronSpawnChance = builder.comment("Vampire baron spawn chance in vampire forest (reference vampire in forest: 35)").defineInRange("baronSpawnChance", 10, 0, 10000);
-            builder.pop();
+
             builder.comment("Settings here require a game restart").push("world");
             addVampireForestToOverworld = builder.comment("Whether to inject the vampire forest into the default overworld generation and to replace some Taiga areas").define("addVampireForestToOverworld", true);
             vampireForestWeight_terrablender = builder.comment("Only considered if terrablender installed. Heigher values increase Vampirism region weight (likelyhood to appear)").defineInRange("vampireForestWeight_terrablender", 2,1, 1000);

@@ -108,21 +108,36 @@ public class ModTags {
     }
 
     public static class Biomes {
-        public static final TagKey<Biome> HAS_HUNTER_TENT = tag("has_structure/hunter_tent");
-        public static final TagKey<Biome> HAS_VAMPIRE_DUNGEON = tag("has_structure/vampire_dungeon");
+
         public static final TagKey<Biome> IS_FACTION_BIOME = tag("has_faction");
         public static final TagKey<Biome> IS_VAMPIRE_BIOME = tag("has_faction/vampire");
-        public static final TagKey<Biome> HAS_VAMPIRE_SPAWN = tag("has_spawn/vampire");
-        public static final TagKey<Biome> HAS_ADVANCED_VAMPIRE_SPAWN = tag("has_spawn/advanced_vampire");
-        public static final TagKey<Biome> HAS_HUNTER_SPAWN = tag("has_spawn/hunter");
-        public static final TagKey<Biome> HAS_ADVANCED_HUNTER_SPAWN = tag("has_spawn/advanced_hunter");
+        public static final TagKey<Biome> IS_HUNTER_BIOME = tag("has_faction/hunter");
+
+        public static class HasStructure {
+            public static final TagKey<Biome> HUNTER_TENT = tag("has_structure/hunter_tent");
+            public static final TagKey<Biome> VAMPIRE_DUNGEON = tag("has_structure/vampire_dungeon");
+        }
+
+        public static class HasSpawn {
+            public static final TagKey<Biome> VAMPIRE = tag("has_spawn/vampire");
+            public static final TagKey<Biome> ADVANCED_VAMPIRE = tag("has_spawn/advanced_vampire");
+            public static final TagKey<Biome> HUNTER = tag("has_spawn/hunter");
+            public static final TagKey<Biome> ADVANCED_HUNTER = tag("has_spawn/advanced_hunter");
+        }
+
+        public static class NoSpawn {
+            public static final TagKey<Biome> VAMPIRE = tag("no_spawn/vampire");
+            public static final TagKey<Biome> ADVANCED_VAMPIRE = tag("no_spawn/advanced_vampire");
+            public static final TagKey<Biome> HUNTER = tag("no_spawn/hunter");
+            public static final TagKey<Biome> ADVANCED_HUNTER = tag("no_spawn/advanced_hunter");
+        }
 
         private static TagKey<Biome> tag(String name) {
             return TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(REFERENCE.MODID, name));
         }
     }
 
-    public static class POI_TYPES {
+    public static class PoiTypes {
         public static final TagKey<PoiType> HAS_FACTION = tag("has_faction");
         public static final TagKey<PoiType> IS_VAMPIRE = tag("is_vampire");
         public static final TagKey<PoiType> IS_HUNTER = tag("is_hunter");

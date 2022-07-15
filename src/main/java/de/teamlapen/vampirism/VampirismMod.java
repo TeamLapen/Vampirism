@@ -295,6 +295,7 @@ public class VampirismMod {
         gen.addProvider(event.includeServer(), new AdvancementGenerator(gen));
         gen.addProvider(event.includeServer(), new RecipesGenerator(gen));
         gen.addProvider(event.includeServer(), new SkillNodeGenerator(gen));
+        BiomeGenerator.register(event, gen);
 
         gen.addProvider(event.includeClient(), new BlockStateGenerator(event.getGenerator(), event.getExistingFileHelper()));
         gen.addProvider(event.includeClient(), new ItemModelGenerator(event.getGenerator(), event.getExistingFileHelper()));

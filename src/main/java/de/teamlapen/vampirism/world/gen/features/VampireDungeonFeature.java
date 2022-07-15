@@ -6,11 +6,15 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModLootTables;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.MonsterRoomFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
@@ -19,7 +23,7 @@ import net.minecraft.world.level.material.Material;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Random;
+import java.util.function.Predicate;
 
 public class VampireDungeonFeature extends MonsterRoomFeature {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -32,30 +36,37 @@ public class VampireDungeonFeature extends MonsterRoomFeature {
 
 
     /**
-     * Last update 1.16.5
-     * copied from {@link MonsterRoomFeature#place(FeaturePlaceContext)}
+     * TODO 1.20 recheck
+     * copied from {@link MonsterRoomFeature#pldddddace(FeaturePlaceContext)}
      * <p>
-     * - changed {@link Blocks#MOSSY_COBBLESTONE} to {@link ModBlocks#castle_block_dark_brick} and {@link ModBlocks#castle_block_dark_brick_bloody}
+     * - changed {@link Blocks#MOSSY_COBBLESTONE} to {@link ModBlocks#CASTLE_BLOCK_DARK_BRICK} and {@link ModBlocks#CASTLE_BLOCK_DARK_BRICK_BLOODY}
      * - changed {@link Blocks#COBBLESTONE} to {@link Blocks#SPRUCE_PLANKS}
      * - changed {@link net.minecraft.world.level.storage.loot.BuiltInLootTables#SIMPLE_DUNGEON} to {@link ModLootTables#chest_vampire_dungeon}
-     * - changed {@link MonsterRoomFeature#randomEntityId(Random)} to {@link ModEntities#vampire}
+     * - changed {@link MonsterRoomFeature#randomEntityId(net.minecraft.util.RandomSource)} to {@link ModEntities#VAMPIRE}
      */
     @SuppressWarnings("JavadocReference")
     @Override
-    public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
-        int j = context.random().nextInt(2) + 2;
+    public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> p_160066_) {
+        Predicate<BlockState> predicate = Feature.isReplaceable(BlockTags.FEATURES_CANNOT_REPLACE);
+        BlockPos blockpos = p_160066_.origin();
+        RandomSource randomsource = p_160066_.random();
+        WorldGenLevel worldgenlevel = p_160066_.level();
+        int i = 3;
+        int j = randomsource.nextInt(2) + 2;
         int k = -j - 1;
         int l = j + 1;
-        int k1 = context.random().nextInt(2) + 2;
+        int i1 = -1;
+        int j1 = 4;
+        int k1 = randomsource.nextInt(2) + 2;
         int l1 = -k1 - 1;
         int i2 = k1 + 1;
         int j2 = 0;
 
-        for (int k2 = k; k2 <= l; ++k2) {
-            for (int l2 = -1; l2 <= 4; ++l2) {
-                for (int i3 = l1; i3 <= i2; ++i3) {
-                    BlockPos blockpos = context.origin().offset(k2, l2, i3);
-                    Material material = context.level().getBlockState(blockpos).getMaterial();
+        for(int k2 = k; k2 <= l; ++k2) {
+            for(int l2 = -1; l2 <= 4; ++l2) {
+                for(int i3 = l1; i3 <= i2; ++i3) {
+                    BlockPos blockpos1 = blockpos.offset(k2, l2, i3);
+                    Material material = worldgenlevel.getBlockState(blockpos1).getMaterial();
                     boolean flag = material.isSolid();
                     if (l2 == -1 && !flag) {
                         return false;
@@ -65,7 +76,7 @@ public class VampireDungeonFeature extends MonsterRoomFeature {
                         return false;
                     }
 
-                    if ((k2 == k || k2 == l || i3 == l1 || i3 == i2) && l2 == 0 && context.level().isEmptyBlock(blockpos) && context.level().isEmptyBlock(blockpos.above())) {
+                    if ((k2 == k || k2 == l || i3 == l1 || i3 == i2) && l2 == 0 && worldgenlevel.isEmptyBlock(blockpos1) && worldgenlevel.isEmptyBlock(blockpos1.above())) {
                         ++j2;
                     }
                 }
@@ -73,71 +84,63 @@ public class VampireDungeonFeature extends MonsterRoomFeature {
         }
 
         if (j2 >= 1 && j2 <= 5) {
-            for (int k3 = k; k3 <= l; ++k3) {
-                for (int i4 = 3; i4 >= -1; --i4) {
-                    for (int k4 = l1; k4 <= i2; ++k4) {
-                        BlockPos blockpos1 = context.origin().offset(k3, i4, k4);
-                        BlockState blockstate = context.level().getBlockState(blockpos1);
+            for(int k3 = k; k3 <= l; ++k3) {
+                for(int i4 = 3; i4 >= -1; --i4) {
+                    for(int k4 = l1; k4 <= i2; ++k4) {
+                        BlockPos blockpos2 = blockpos.offset(k3, i4, k4);
+                        BlockState blockstate = worldgenlevel.getBlockState(blockpos2);
                         if (k3 != k && i4 != -1 && k4 != l1 && k3 != l && i4 != 4 && k4 != i2) {
                             if (!blockstate.is(Blocks.CHEST) && !blockstate.is(Blocks.SPAWNER)) {
-                                context.level().setBlock(blockpos1, CAVE_AIR, 2);
+                                this.safeSetBlock(worldgenlevel, blockpos2, CAVE_AIR, predicate);
                             }
-                        } else if (blockpos1.getY() >= 0 && !context.level().getBlockState(blockpos1.below()).getMaterial().isSolid()) {
-                            context.level().setBlock(blockpos1, CAVE_AIR, 2);
+                        } else if (blockpos2.getY() >= worldgenlevel.getMinBuildHeight() && !worldgenlevel.getBlockState(blockpos2.below()).getMaterial().isSolid()) {
+                            worldgenlevel.setBlock(blockpos2, CAVE_AIR, 2);
                         } else if (blockstate.getMaterial().isSolid() && !blockstate.is(Blocks.CHEST)) {
-                            if (i4 == -1 && context.random().nextInt(4) != 0) {
-                                if (context.random().nextInt(20) == 0) // changed to castle bricks
-                                    context.level().setBlock(blockpos1, ModBlocks.CASTLE_BLOCK_DARK_BRICK_BLOODY.get().defaultBlockState(), 2);
-                                else
-                                    context.level().setBlock(blockpos1, ModBlocks.CASTLE_BLOCK_DARK_BRICK.get().defaultBlockState(), 2);
+                            if (i4 == -1 && randomsource.nextInt(4) != 0) {
+                                this.safeSetBlock(worldgenlevel, blockpos2, (p_160066_.random().nextInt(20) == 0 ? ModBlocks.CASTLE_BLOCK_DARK_BRICK_BLOODY.get() : ModBlocks.CASTLE_BLOCK_DARK_BRICK.get()).defaultBlockState(), predicate);
                             } else {
-                                context.level().setBlock(blockpos1, Blocks.SPRUCE_PLANKS.defaultBlockState(), 2);
+                                this.safeSetBlock(worldgenlevel, blockpos2, Blocks.SPRUCE_PLANKS.defaultBlockState(), predicate);
                             }
                         }
                     }
                 }
             }
 
-            for (int l3 = 0; l3 < 2; ++l3) {
-                for (int j4 = 0; j4 < 3; ++j4) {
-                    int l4 = context.origin().getX() + context.random().nextInt(j * 2 + 1) - j;
-                    int i5 = context.origin().getY();
-                    int j5 = context.origin().getZ() + context.random().nextInt(k1 * 2 + 1) - k1;
-                    BlockPos blockpos2 = new BlockPos(l4, i5, j5);
-                    if (context.level().isEmptyBlock(blockpos2)) {
+            for(int l3 = 0; l3 < 2; ++l3) {
+                for(int j4 = 0; j4 < 3; ++j4) {
+                    int l4 = blockpos.getX() + randomsource.nextInt(j * 2 + 1) - j;
+                    int i5 = blockpos.getY();
+                    int j5 = blockpos.getZ() + randomsource.nextInt(k1 * 2 + 1) - k1;
+                    BlockPos blockpos3 = new BlockPos(l4, i5, j5);
+                    if (worldgenlevel.isEmptyBlock(blockpos3)) {
                         int j3 = 0;
 
-                        for (Direction direction : Direction.Plane.HORIZONTAL) {
-                            if (context.level().getBlockState(blockpos2.relative(direction)).getMaterial().isSolid()) {
+                        for(Direction direction : Direction.Plane.HORIZONTAL) {
+                            if (worldgenlevel.getBlockState(blockpos3.relative(direction)).getMaterial().isSolid()) {
                                 ++j3;
                             }
                         }
 
                         if (j3 == 1) {
-                            context.level().setBlock(blockpos2, StructurePiece.reorient(context.level(), blockpos2, Blocks.CHEST.defaultBlockState()), 2);
-                            RandomizableContainerBlockEntity.setLootTable(context.level(), context.random(), blockpos2, ModLootTables.chest_vampire_dungeon);
+                            this.safeSetBlock(worldgenlevel, blockpos3, StructurePiece.reorient(worldgenlevel, blockpos3, Blocks.CHEST.defaultBlockState()), predicate);
+                            RandomizableContainerBlockEntity.setLootTable(worldgenlevel, randomsource, blockpos3, ModLootTables.chest_vampire_dungeon);
                             break;
                         }
                     }
                 }
             }
 
-            context.level().setBlock(context.origin(), Blocks.SPAWNER.defaultBlockState(), 2);
-            BlockEntity tileentity = context.level().getBlockEntity(context.origin());
-            if (tileentity instanceof SpawnerBlockEntity) {
-                ((SpawnerBlockEntity) tileentity).getSpawner().setEntityId(ModEntities.VAMPIRE.get());
+            this.safeSetBlock(worldgenlevel, blockpos, Blocks.SPAWNER.defaultBlockState(), predicate);
+            BlockEntity blockentity = worldgenlevel.getBlockEntity(blockpos);
+            if (blockentity instanceof SpawnerBlockEntity) {
+                ((SpawnerBlockEntity)blockentity).getSpawner().setEntityId(ModEntities.VAMPIRE.get());
             } else {
-                LOGGER.error("Failed to fetch mob spawner entity at ({}, {}, {})", context.origin().getX(), context.origin().getY(), context.origin().getZ());
+                LOGGER.error("Failed to fetch mob spawner entity at ({}, {}, {})", blockpos.getX(), blockpos.getY(), blockpos.getZ());
             }
-//            if (VampirismWorldGen.debug) {
-//                LOGGER.info("Generated dungeon at {}", context.origin());
-//            }
+
             return true;
         } else {
             return false;
         }
-
     }
-
-
 }

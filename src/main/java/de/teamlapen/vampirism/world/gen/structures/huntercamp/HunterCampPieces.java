@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.blockentity.TentBlockEntity;
 import de.teamlapen.vampirism.blocks.TentBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModFeatures;
 import de.teamlapen.vampirism.world.gen.VampirismFeatures;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,7 +22,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
-import net.minecraft.world.level.levelgen.structure.*;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.StructurePiece;
+import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
@@ -74,11 +76,6 @@ public abstract class HunterCampPieces extends StructurePiece {
 
     protected boolean testPreconditions(WorldGenLevel worldIn, StructureManager manager, ChunkPos chunkPos) {
         if (!VampirismConfig.COMMON.enableHunterTentGeneration.get()) return false;
-        for (StructureStart value : worldIn.getChunk(chunkPos.x, chunkPos.z).getAllStarts().values()) {
-            if (value != StructureStart.INVALID_START && value.getStructure() != ModFeatures.HUNTER_CAMP_HOLDER.value()) {
-                return false;
-            }
-        }
         return this.y >= 63 && !worldIn.getBlockState(new BlockPos(x, y - 1, z)).getMaterial().isLiquid() && UtilLib.getStructureStartAt(worldIn.getLevel(), new BlockPos(x,y,z), StructureTags.VILLAGE).isEmpty();
     }
 
@@ -279,9 +276,7 @@ public abstract class HunterCampPieces extends StructurePiece {
             return super.testPreconditions(worldIn, manager, chunkPos)
                     && !worldIn.getBlockState(new BlockPos(xCenter, y - 1, z - 1)).getMaterial().isLiquid()
                     && !worldIn.getBlockState(new BlockPos(x, y - 1, z - 1)).getMaterial().isLiquid()
-                    && !worldIn.getBlockState(new BlockPos(xCenter, y - 1, z)).getMaterial().isLiquid()
-                    //distance to campfire block
-                    && (Math.abs(this.y - worldIn.getHeight(Heightmap.Types.WORLD_SURFACE_WG, this.x + (direction.getAxis().equals(Direction.Axis.X) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? -3 : 3 : 0), this.z + (direction.getAxis().equals(Direction.Axis.Z) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? -3 : 3 : 0))) < 2);
+                    && !worldIn.getBlockState(new BlockPos(xCenter, y - 1, z)).getMaterial().isLiquid();
         }
     }
 
@@ -328,13 +323,6 @@ public abstract class HunterCampPieces extends StructurePiece {
             super.addAdditionalSaveData(context, tagCompound);
             tagCompound.putInt("dir", this.direction.get2DDataValue());
             tagCompound.putBoolean("advanced", this.advanced);
-        }
-
-
-        @Override
-        protected boolean testPreconditions(WorldGenLevel worldIn, StructureManager manager, ChunkPos chunkPos) {
-            return super.testPreconditions(worldIn, manager, chunkPos)
-                    && (Math.abs(this.y - worldIn.getHeight(Heightmap.Types.WORLD_SURFACE_WG, this.x + (direction.getAxis().equals(Direction.Axis.X) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? -3 : 3 : 0), this.z + (direction.getAxis().equals(Direction.Axis.Z) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? -3 : 3 : 0))) < 3);
         }
     }
 }

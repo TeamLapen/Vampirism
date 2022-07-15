@@ -34,7 +34,7 @@ public class ModFeatures {
     public static final RegistryObject<StructureType<HunterCampStructure>> HUNTER_CAMP = STRUCTURE_TYPES.register( "hunter_camp", () -> () -> HunterCampStructure.CODEC);
     //features
     public static final RegistryObject<VampireDungeonFeature> VAMPIRE_DUNGEON = FEATURES.register("vampire_dungeon", () -> new VampireDungeonFeature(NoneFeatureConfiguration.CODEC));
-    public static final Holder<Structure> HUNTER_CAMP_HOLDER = BuiltinRegistries.register(BuiltinRegistries.STRUCTURES, HUNTER_CAMP_KEY, new HunterCampStructure(structure(ModTags.Biomes.HAS_HUNTER_TENT, TerrainAdjustment.NONE)));
+    public static final Holder<Structure> HUNTER_CAMP_HOLDER = BuiltinRegistries.register(BuiltinRegistries.STRUCTURES, HUNTER_CAMP_KEY, new HunterCampStructure(structure(ModTags.Biomes.HasStructure.HUNTER_TENT, TerrainAdjustment.NONE)));
     //structures
 //    public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> HUNTER_CAMP = STRUCTURE_FEATURES.register("hunter_camp", () -> {
 //                StructureFeature<NoneFeatureConfiguration> feature = new HunterCampStructure(NoneFeatureConfiguration.CODEC);

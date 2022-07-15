@@ -17,7 +17,7 @@ public class HunterCampStructure extends Structure {
     public static final Codec<HunterCampStructure> CODEC = simpleCodec(HunterCampStructure::new);
 
     public HunterCampStructure(Structure.StructureSettings settings) {
-        super(settings);//, PieceGeneratorSupplier.simple(HunterCampStructure::checkLocation, HunterCampStructure::generatePieces));
+        super(settings);
     }
 
     @NotNull
@@ -31,14 +31,6 @@ public class HunterCampStructure extends Structure {
     public StructureType<?> type() {
         return ModFeatures.HUNTER_CAMP.get();
     }
-
-//    private static <C extends FeatureConfiguration> boolean checkLocation(PieceGeneratorSupplier.Context<C> cContext) {
-//        if (!cContext.validBiomeOnTop(Heightmap.Types.WORLD_SURFACE_WG)) {
-//            return false;
-//        } else {
-//            return cContext.getLowestY(12, 15) >= cContext.chunkGenerator().getSeaLevel();
-//        }
-//    }
 
     private static <C extends FeatureConfiguration> void generatePieces(StructurePiecesBuilder structurePiecesBuilder, GenerationContext cContext) {
         HunterCampPieces.addStartPieces(structurePiecesBuilder, cContext);

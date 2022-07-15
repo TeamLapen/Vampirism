@@ -15,7 +15,6 @@ import net.minecraft.tags.StructureTags;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.ai.village.poi.PoiRecord;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
-import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -236,9 +235,9 @@ public class TotemHelper {
     public static Set<PoiRecord> getVillagePointsOfInterest(ServerLevel world, BlockPos pos) {
         PoiManager manager = world.getPoiManager();
         Set<PoiRecord> finished = Sets.newHashSet();
-        Set<PoiRecord> points = manager.getInRange(type -> !type.is(ModTags.POI_TYPES.HAS_FACTION), pos, 50, PoiManager.Occupancy.ANY).collect(Collectors.toSet());
+        Set<PoiRecord> points = manager.getInRange(type -> !type.is(ModTags.PoiTypes.HAS_FACTION), pos, 50, PoiManager.Occupancy.ANY).collect(Collectors.toSet());
         while (!points.isEmpty()) {
-            List<Stream<PoiRecord>> list = points.stream().map(pointOfInterest -> manager.getInRange(type -> !type.is(ModTags.POI_TYPES.HAS_FACTION), pointOfInterest.getPos(), 40, PoiManager.Occupancy.ANY)).toList();
+            List<Stream<PoiRecord>> list = points.stream().map(pointOfInterest -> manager.getInRange(type -> !type.is(ModTags.PoiTypes.HAS_FACTION), pointOfInterest.getPos(), 40, PoiManager.Occupancy.ANY)).toList();
             points.clear();
             list.forEach(stream -> stream.forEach(point -> {
                 if (!finished.contains(point)) {
@@ -327,8 +326,8 @@ public class TotemHelper {
         Map<ResourceKey<PoiType>, Long> poiTCounts = pointOfInterests.stream().map(PoiRecord::getPoiType).flatMap(a -> ForgeRegistries.POI_TYPES.getResourceKey(a.get()).stream()).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
         AABB area = getAABBAroundPOIs(pointOfInterests);
         return new HashMap<>() {{
-            put(1, poiTCounts.getOrDefault(PoiTypes.HOME, 0L).intValue());
-            put(2, ((int) poiTCounts.entrySet().stream().filter(entry -> entry.getKey() != PoiTypes.HOME).mapToLong(Entry::getValue).sum()));
+            put(1, poiTCounts.getOrDefault(net.minecraft.world.entity.ai.village.poi.PoiTypes.HOME, 0L).intValue());
+            put(2, ((int) poiTCounts.entrySet().stream().filter(entry -> entry.getKey() != net.minecraft.world.entity.ai.village.poi.PoiTypes.HOME).mapToLong(Entry::getValue).sum()));
             put(4, area == null ? 0 : world.getEntitiesOfClass(Villager.class, area).size());
         }};
     }

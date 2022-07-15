@@ -143,19 +143,24 @@ public class TagGenerator {
         @SuppressWarnings("unchecked")
         @Override
         protected void addTags() {
-            tag(ModTags.Biomes.HAS_HUNTER_TENT).addTags(BiomeTags.IS_BADLANDS, BiomeTags.IS_FOREST, BiomeTags.IS_TAIGA).add(Biomes.PLAINS, Biomes.DESERT, Biomes.MEADOW, Biomes.SNOWY_PLAINS, Biomes.SPARSE_JUNGLE);
+            tag(ModTags.Biomes.HasStructure.HUNTER_TENT).addTags(BiomeTags.IS_BADLANDS, BiomeTags.IS_FOREST, BiomeTags.IS_TAIGA).add(Biomes.PLAINS, Biomes.DESERT, Biomes.MEADOW, Biomes.SNOWY_PLAINS, Biomes.SPARSE_JUNGLE);
             tag(ModTags.Biomes.IS_FACTION_BIOME).addTags(ModTags.Biomes.IS_VAMPIRE_BIOME);
             tag(ModTags.Biomes.IS_VAMPIRE_BIOME).add(ModBiomes.VAMPIRE_FOREST.getKey());
+            tag(ModTags.Biomes.IS_HUNTER_BIOME);
             tag(BiomeTags.IS_FOREST).add(ModBiomes.VAMPIRE_FOREST.getKey());
-//            tag(Tags.Biomes.OVERWORLD).add(ModBiomes.VAMPIRE_FOREST.getKey());
+            tag(BiomeTags.IS_OVERWORLD).add(ModBiomes.VAMPIRE_FOREST.getKey());
             tag(Tags.Biomes.IS_DENSE_OVERWORLD).add(ModBiomes.VAMPIRE_FOREST.getKey());
             tag(Tags.Biomes.IS_MAGICAL).add(ModBiomes.VAMPIRE_FOREST.getKey());
             tag(Tags.Biomes.IS_SPOOKY).add(ModBiomes.VAMPIRE_FOREST.getKey());
-            tag(ModTags.Biomes.HAS_VAMPIRE_DUNGEON).addTags(BiomeTags.IS_OVERWORLD).remove(BiomeTags.IS_OCEAN); //TODO 1.19 check
-            tag(ModTags.Biomes.HAS_VAMPIRE_SPAWN).addTags(BiomeTags.IS_OVERWORLD); //TODO 1.19 check
-            tag(ModTags.Biomes.HAS_ADVANCED_VAMPIRE_SPAWN).addTags(BiomeTags.IS_OVERWORLD); //TODO 1.19 check
-            tag(ModTags.Biomes.HAS_HUNTER_SPAWN).addTags(BiomeTags.IS_OVERWORLD); //TODO 1.19 check
-            tag(ModTags.Biomes.HAS_ADVANCED_HUNTER_SPAWN).addTags(BiomeTags.IS_OVERWORLD); //TODO 1.19 check
+            tag(ModTags.Biomes.HasStructure.VAMPIRE_DUNGEON).addTags(BiomeTags.IS_OVERWORLD);
+            tag(ModTags.Biomes.HasSpawn.VAMPIRE).addTags(BiomeTags.IS_OVERWORLD); //TODO 1.19 determine spawn-able biomes
+            tag(ModTags.Biomes.NoSpawn.VAMPIRE).addTags(ModTags.Biomes.IS_VAMPIRE_BIOME);
+            tag(ModTags.Biomes.HasSpawn.ADVANCED_VAMPIRE).addTags(BiomeTags.IS_OVERWORLD); //TODO 1.19 determine spawn-able biomes
+            tag(ModTags.Biomes.NoSpawn.ADVANCED_VAMPIRE).addTags(ModTags.Biomes.IS_VAMPIRE_BIOME);
+            tag(ModTags.Biomes.HasSpawn.HUNTER).addTags(BiomeTags.IS_OVERWORLD); //TODO 1.19 determine spawn-able biomes
+            tag(ModTags.Biomes.NoSpawn.HUNTER).addTags(ModTags.Biomes.IS_HUNTER_BIOME);
+            tag(ModTags.Biomes.HasSpawn.ADVANCED_HUNTER).addTags(BiomeTags.IS_OVERWORLD); //TODO 1.19 determine spawn-able biomes
+            tag(ModTags.Biomes.NoSpawn.ADVANCED_HUNTER).addTags(ModTags.Biomes.IS_HUNTER_BIOME);
         }
     }
 
@@ -167,9 +172,9 @@ public class TagGenerator {
 
         @Override
         protected void addTags() {
-            tag(ModTags.POI_TYPES.HAS_FACTION).add(ModVillage.NO_FACTION_TOTEM.get(), ModVillage.HUNTER_TOTEM.get(), ModVillage.VAMPIRE_TOTEM.get());
-            tag(ModTags.POI_TYPES.IS_HUNTER).add(ModVillage.HUNTER_TOTEM.get());
-            tag(ModTags.POI_TYPES.IS_VAMPIRE).add(ModVillage.VAMPIRE_TOTEM.get());
+            tag(ModTags.PoiTypes.HAS_FACTION).add(ModVillage.NO_FACTION_TOTEM.get(), ModVillage.HUNTER_TOTEM.get(), ModVillage.VAMPIRE_TOTEM.get());
+            tag(ModTags.PoiTypes.IS_HUNTER).add(ModVillage.HUNTER_TOTEM.get());
+            tag(ModTags.PoiTypes.IS_VAMPIRE).add(ModVillage.VAMPIRE_TOTEM.get());
             tag(PoiTypeTags.ACQUIRABLE_JOB_SITE).add(ModVillage.HUNTER_TOTEM.get(), ModVillage.VAMPIRE_TOTEM.get());
             tag(PoiTypeTags.VILLAGE).add(ModVillage.NO_FACTION_TOTEM.get(), ModVillage.HUNTER_TOTEM.get(), ModVillage.VAMPIRE_TOTEM.get());
         }

@@ -2,5 +2,5 @@
   "type": "forge:add_features",
   "biomes": "#vampirism:has_structure/vampire_dungeon",
   "features": "vampirism:vampire_dungeon",
-  "step": "underground_ores"
+  "step": "underground_structures"
 }
