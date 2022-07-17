@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -64,7 +65,7 @@ public class BlessableItem extends Item {
     }
 
     public BlessableItem(Properties properties, Supplier<Item> blessedItem, @Nullable Supplier<Item> enhancedBlessedItem) {
-        super(properties);
+        super(properties.tab(VampirismMod.creativeTab));
         this.blessedItem = blessedItem;
         this.enhancedBlessedItem = enhancedBlessedItem;
         BLESSABLE_ITEMS.add(this);
