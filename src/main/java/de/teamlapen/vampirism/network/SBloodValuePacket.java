@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.network;
 
-import com.google.common.collect.Maps;
+import com.google.common.collect.ImmutableMap;
 import de.teamlapen.lib.network.IMessage;
 import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.network.PacketBuffer;
@@ -27,12 +27,12 @@ public class SBloodValuePacket implements IMessage {
         @SuppressWarnings("unchecked")
         Map<ResourceLocation, Float>[] values = (Map<ResourceLocation, Float>[]) Array.newInstance(Map.class, 3);
         for (int i = 0; i < 3; i++) {
-            Map<ResourceLocation, Float> map = Maps.newConcurrentMap();
+            ImmutableMap.Builder<ResourceLocation, Float> builder = ImmutableMap.builder();
             int z = buf.readVarInt();
             for (int u = 0; u < z; u++) {
-                map.put(buf.readResourceLocation(), buf.readFloat());
+                builder.put(buf.readResourceLocation(), buf.readFloat());
             }
-            values[i] = map;
+            values[i] = builder.build();
         }
         return new SBloodValuePacket(values);
     }

@@ -17,6 +17,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -84,6 +85,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     }
 
     public void applyNewResources(Map<ResourceLocation, Float> valuesIn) {
+        Map<ResourceLocation, Float> values = Maps.newHashMap(valuesIn);
         Map<ResourceLocation, BiteableEntry> biteables = Maps.newHashMap();
         Set<ResourceLocation> blacklist = Sets.newHashSet();
         final IConvertingHandler defaultHandler = defaultConvertingHandlerCreator.apply(null);
@@ -93,7 +95,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
                 LOGGER.warn("Cannot register convertible {} since there is no EntityString for it", entry.getKey());
                 continue;
             }
-            Float bloodF = valuesIn.get(id);
+            Float bloodF = values.remove(id);
             if (bloodF == null) {
                 LOGGER.warn("Missing blood value for convertible creature {} ({})", entry.getKey().getDescription(), id);
                 continue;
@@ -104,7 +106,8 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
             biteables.put(id, biteEntry);
         }
         LOGGER.info("Registered {} convertibles", biteables.size());
-        for (Map.Entry<ResourceLocation, Float> entry : valuesIn.entrySet()) {
+        for (Map.Entry<ResourceLocation, Float> entry : values.entrySet()) {
+            if (!ForgeRegistries.ENTITIES.containsKey(entry.getKey())) continue;
             int blood = Math.abs(Math.round(entry.getValue()));
             if (blood == 0) {
                 blacklist.add(entry.getKey());
