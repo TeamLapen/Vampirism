@@ -61,7 +61,6 @@ sourceSets {
 
         java {
             exclude '**/jei/**'
-            exclude '**/guide/**'
         }
     }
     test {
