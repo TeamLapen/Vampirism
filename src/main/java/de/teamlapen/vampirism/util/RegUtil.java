@@ -112,6 +112,8 @@ public class RegUtil {
         return ForgeRegistries.BLOCKS.containsValue(block);
     }
 
+
+
     public static IAction<?> getAction(ResourceLocation id) {
         return get(ModRegistries.ACTIONS.get(), id);
     }
@@ -156,8 +158,12 @@ public class RegUtil {
 
 
 
-    public static <T> T has(Supplier<IForgeRegistry<T>> registrySupplier, ResourceLocation id) {
-        return registrySupplier.get().getValue(id);
+    public static <T> boolean has(Supplier<IForgeRegistry<T>> registrySupplier, ResourceLocation id) {
+        return registrySupplier.get().containsKey(id);
+    }
+
+    public static <T> boolean has(IForgeRegistry<T> registry, ResourceLocation id) {
+        return registry.containsKey(id);
     }
 
     public static <T> Collection<T> values(Supplier<IForgeRegistry<T>> registrySupplier) {

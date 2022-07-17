@@ -23,6 +23,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.TerrainParticle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -45,6 +46,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static de.teamlapen.vampirism.blocks.TentBlock.FACING;
@@ -114,7 +116,9 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void handleBloodValuePacket(SBloodValuePacket msg) {
-        ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).applyNewResources(msg.getValues()[0]);
+        Map<ResourceLocation, Float> entities = msg.getValues()[0];
+        ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).applyNewResources(entities);
+        BloodConversionRegistry.applyNewEntitiesResources(entities);
         BloodConversionRegistry.applyNewItemResources(msg.getValues()[1]);
         BloodConversionRegistry.applyNewFluidResources(msg.getValues()[2]);
     }
