@@ -58,10 +58,6 @@ sourceSets {
         compileClasspath += sourceSets.lib.output
         compileClasspath += sourceSets.api.output
         runtimeClasspath += sourceSets.api.output
-
-        java {
-            exclude '**/jei/**'
-        }
     }
     test {
         compileClasspath += sourceSets.api.output

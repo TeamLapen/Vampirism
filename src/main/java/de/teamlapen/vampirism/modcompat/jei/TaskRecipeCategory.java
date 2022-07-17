@@ -11,34 +11,35 @@ import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.player.tasks.reward.ItemReward;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class TaskRecipeCategory implements IRecipeCategory<Task> {
     private final IDrawable background;
     private final IDrawable icon;
 
     public TaskRecipeCategory(IGuiHelper guiHelper) {
-        background = guiHelper.drawableBuilder(new ResourceLocation("jei", "textures/gui/slot.png"), 0, 0, 18, 18).setTextureSize(18, 18).addPadding(14, 90, 75, 75).build();
-        icon = guiHelper.createDrawableIngredient(new ItemStack(ModItems.VAMPIRE_FANG.get()));
+        this.background = guiHelper.drawableBuilder(new ResourceLocation("jei", "textures/gui/slot.png"), 0, 0, 18, 18).setTextureSize(18, 18).addPadding(14, 90, 75, 75).build();
+        this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModItems.VAMPIRE_FANG.get()));
     }
 
     @Override
-    public void draw(Task task, @Nonnull PoseStack stack, double mouseX, double mouseY) {
+    public void draw(Task task, @NotNull IRecipeSlotsView recipeSlotsView, @Nonnull PoseStack stack, double mouseX, double mouseY) {
         Minecraft minecraft = Minecraft.getInstance();
         int x = 4;
         int y = 40;
@@ -76,36 +77,21 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
 
     @Nonnull
     @Override
-    public Class<? extends Task> getRecipeClass() {
-        return Task.class;
-    }
-
-    @Nonnull
-    @Override
     public Component getTitle() {
         return Component.translatable("text.vampirism.task.reward");
     }
 
-    @Nonnull
     @Override
-    public ResourceLocation getUid() {
+    public @NotNull RecipeType<Task> getRecipeType() {
         return VampirismJEIPlugin.TASK;
     }
 
     @Override
-    public void setIngredients(Task recipe, @Nonnull IIngredients ingredients) {
+    public void setRecipe(@NotNull IRecipeLayoutBuilder builder, Task recipe, @NotNull IFocusGroup focuses) {
         TaskReward reward = recipe.getReward();
-        if (reward instanceof ItemReward) {
-            ingredients.setOutputs(VanillaTypes.ITEM, ((ItemReward) reward).getAllPossibleRewards());
+        if (reward instanceof ItemReward itemReward) {
+            IRecipeSlotBuilder output = builder.addSlot(RecipeIngredientRole.OUTPUT, 76, 15);
+            output.addItemStacks(itemReward.getAllPossibleRewards());
         }
-    }
-
-    @Override
-    public void setRecipe(IRecipeLayout recipeLayout, @Nonnull Task recipe, IIngredients ingredients) {
-        int craftOutputSlot = 0;
-        IGuiItemStackGroup guiItemStackGroup = recipeLayout.getItemStacks();
-        guiItemStackGroup.init(craftOutputSlot, false, 75, 14);
-        List<List<ItemStack>> outputs = ingredients.getOutputs(VanillaTypes.ITEM);
-        guiItemStackGroup.set(craftOutputSlot, outputs.stream().flatMap(Collection::stream).collect(Collectors.toList()));
     }
 }

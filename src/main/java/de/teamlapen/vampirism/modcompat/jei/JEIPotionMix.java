@@ -10,10 +10,12 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.crafting.Ingredient;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("ClassCanBeRecord")
 public class JEIPotionMix {
     public static Collection<JEIPotionMix> createFromMix(ExtendedPotionMix mix) {
         List<ItemStack> in1 = mix.reagent1.map(Ingredient::getItems).stream().flatMap(Arrays::stream).map(ItemStack::copy).peek(s -> s.setCount(mix.reagent1Count)).filter(s -> !s.isEmpty()).collect(Collectors.toList());
@@ -28,34 +30,39 @@ public class JEIPotionMix {
     }
 
     private static JEIPotionMix build(ExtendedPotionMix mix, Item base, Potion in, Potion out, List<ItemStack> in1, List<ItemStack> in2) {
-        List<List<ItemStack>> ingredientList = new ArrayList<>();
         ItemStack potionIn = PotionUtils.setPotion(new ItemStack(base), in);
         ItemStack potionOut = PotionUtils.setPotion(new ItemStack(base), out);
-        List<ItemStack> potionInList = Collections.singletonList(potionIn);
-        ingredientList.add(potionInList);
-        ingredientList.add(potionInList);
-        ingredientList.add(potionInList);
-        ingredientList.add(in1);
-        ingredientList.add(in2);
-        return new JEIPotionMix(mix, ingredientList, potionOut);
+        return new JEIPotionMix(mix, potionIn, in1, in2, potionOut);
     }
 
-    private final List<List<ItemStack>> inputs;
+    private final ItemStack potionInput;
     private final ItemStack potionOutput;
+    private final List<ItemStack> mix1;
+    private final List<ItemStack> mix2;
     private final ExtendedPotionMix original;
 
-    private JEIPotionMix(ExtendedPotionMix original, List<List<ItemStack>> inputs, ItemStack potionOutput) {
-        this.inputs = inputs;
-        this.potionOutput = potionOutput;
+    private JEIPotionMix(ExtendedPotionMix original, ItemStack potionInput, List<ItemStack> mix1, List<ItemStack> mix2, ItemStack potionOutput) {
         this.original = original;
-    }
-
-    public List<List<ItemStack>> getInputs() {
-        return inputs;
+        this.potionInput = potionInput;
+        this.mix1 = mix1;
+        this.mix2 = mix2;
+        this.potionOutput = potionOutput;
     }
 
     public ExtendedPotionMix getOriginal() {
         return original;
+    }
+
+    public ItemStack getPotionInput() {
+        return potionInput;
+    }
+
+    public List<ItemStack> getMix1() {
+        return mix1;
+    }
+
+    public List<ItemStack> getMix2() {
+        return mix2;
     }
 
     public ItemStack getPotionOutput() {

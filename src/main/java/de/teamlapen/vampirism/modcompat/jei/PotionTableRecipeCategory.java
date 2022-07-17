@@ -6,19 +6,22 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ITickTimer;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
@@ -37,7 +40,7 @@ public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> 
 
     PotionTableRecipeCategory(IGuiHelper guiHelper) {
         this.localizedName = Component.translatable(ModBlocks.POTION_TABLE.get().getDescriptionId());
-        this.icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.POTION_TABLE.get()));
+        this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.POTION_TABLE.get()));
         this.background = guiHelper.drawableBuilder(backgroundLocation, 65, 6, 103, 73).addPadding(0, 33, 0, 25).build();
         this.slotDrawable = guiHelper.getSlotDrawable();
         ITickTimer bubblesTickTimer = new BrewingBubblesTickTimer(guiHelper);
@@ -48,7 +51,7 @@ public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> 
     }
 
     @Override
-    public void draw(JEIPotionMix recipe, @Nonnull PoseStack stack, double mouseX, double mouseY) {
+    public void draw(JEIPotionMix recipe, @NotNull IRecipeSlotsView recipeSlotsView, @Nonnull PoseStack stack, double mouseX, double mouseY) {
         this.blazeHeat.draw(stack, 1, 35);
         this.bubbles.draw(stack, 3, 4);
         this.arrow.draw(stack, 80, 10);
@@ -90,40 +93,23 @@ public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> 
 
     @Nonnull
     @Override
-    public Class<? extends JEIPotionMix> getRecipeClass() {
-        return JEIPotionMix.class;
-    }
-
-    @Nonnull
-    @Override
     public Component getTitle() {
         return localizedName;
     }
 
-    @Nonnull
     @Override
-    public ResourceLocation getUid() {
+    public @NotNull RecipeType<JEIPotionMix> getRecipeType() {
         return VampirismJEIPlugin.POTION;
     }
 
     @Override
-    public void setIngredients(JEIPotionMix extendedPotionMix, IIngredients iIngredients) {
-
-        iIngredients.setInputLists(VanillaTypes.ITEM, extendedPotionMix.getInputs());
-        iIngredients.setOutput(VanillaTypes.ITEM, extendedPotionMix.getPotionOutput());
-    }
-
-    @Override
-    public void setRecipe(IRecipeLayout recipeLayout, @Nonnull JEIPotionMix extendedPotionMix, @Nonnull IIngredients iIngredients) {
-        IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
-        itemStacks.init(0, true, 38, 52);
-        itemStacks.init(1, true, 60, 52);
-        itemStacks.init(2, true, 82, 52);
-        itemStacks.init(3, true, 60, 1);
-        itemStacks.init(4, true, 35, 9);
-        itemStacks.init(5, false, 103, 13);
-        itemStacks.setBackground(5, this.slotDrawable);
-        itemStacks.set(iIngredients);
+    public void setRecipe(IRecipeLayoutBuilder builder, JEIPotionMix recipe, @NotNull IFocusGroup focuses) {
+        builder.addSlot(RecipeIngredientRole.INPUT, 39, 53).addItemStack(recipe.getPotionInput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 61, 53).addItemStack(recipe.getPotionInput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 83, 53).addItemStack(recipe.getPotionInput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 61, 2).addItemStacks(recipe.getMix1());
+        builder.addSlot(RecipeIngredientRole.INPUT, 36, 10).addItemStacks(recipe.getMix2());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 105, 15).addItemStack(recipe.getPotionOutput()).setBackground(this.slotDrawable, -1, -1);
     }
 
     private static class BrewingBubblesTickTimer implements ITickTimer {

@@ -50,6 +50,10 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
         return fluid;
     }
 
+    public Ingredient getIngredient() {
+        return ingredient;
+    }
+
     public int getRequiredLevel() {
         return reqLevel;
     }

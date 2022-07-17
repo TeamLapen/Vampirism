@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.inventory.container.AlchemicalCauldronContainer;
 import de.teamlapen.vampirism.inventory.container.WeaponTableContainer;
 import de.teamlapen.vampirism.inventory.recipes.AlchemicalCauldronRecipe;
+import de.teamlapen.vampirism.mixin.RecipeManagerAccessor;
 import de.teamlapen.vampirism.player.tasks.TaskUtil;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -43,10 +44,10 @@ import java.util.stream.Collectors;
 @JeiPlugin
 //Currently, core mod is required for this to not crash the game Forge https://github.com/MinecraftForge/MinecraftForge/pull/6254
 public class VampirismJEIPlugin implements IModPlugin {
-    static final RecipeType<IWeaponTableRecipe> WEAPON_TABLE = RecipeType.create("vampirism", "hunter_weapon", IWeaponTableRecipe.class);
-    static final RecipeType<AlchemicalCauldronRecipe> ALCHEMICAL_CAULDRON = RecipeType.create("vampirism", "alchemical_cauldron", AlchemicalCauldronRecipe.class);
-    static final RecipeType<Task> TASK = RecipeType.create("vampirism", "task", Task.class);
-    static final RecipeType<JEIPotionMix> POTION = RecipeType.create("vampirism", "potion", JEIPotionMix.class);
+    public static final RecipeType<IWeaponTableRecipe> WEAPON_TABLE = RecipeType.create("vampirism", "hunter_weapon", IWeaponTableRecipe.class);
+    public static final RecipeType<AlchemicalCauldronRecipe> ALCHEMICAL_CAULDRON = RecipeType.create("vampirism", "alchemical_cauldron", AlchemicalCauldronRecipe.class);
+    public static final RecipeType<Task> TASK = RecipeType.create("vampirism", "task", Task.class);
+    public static final RecipeType<JEIPotionMix> POTION = RecipeType.create("vampirism", "potion", JEIPotionMix.class);
     private static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "plugin");
 
     @Nonnull
@@ -79,8 +80,8 @@ public class VampirismJEIPlugin implements IModPlugin {
     public void registerRecipes(IRecipeRegistration registration) {
         ClientLevel world = Minecraft.getInstance().level;
         RecipeManager recipeManager = world.getRecipeManager();
-        registration.addRecipes(ALCHEMICAL_CAULDRON, recipeManager.byType(ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get()).values().stream().toList());
-        registration.addRecipes(WEAPON_TABLE, recipeManager.byType(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get()).values().stream().toList());
+        registration.addRecipes(ALCHEMICAL_CAULDRON, ((RecipeManagerAccessor)recipeManager).getByType(ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get()).values().stream().toList());
+        registration.addRecipes(WEAPON_TABLE, ((RecipeManagerAccessor) recipeManager).getByType(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get()).values().stream().toList());
         registration.addRecipes(TASK, TaskUtil.getItemRewardTasks());
         registration.addRecipes(POTION, VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().map(JEIPotionMix::createFromMix).flatMap(Collection::stream).collect(Collectors.toList()));
         registration.addRecipes(RecipeTypes.ANVIL, getRepairRecipes(registration.getVanillaRecipeFactory()));

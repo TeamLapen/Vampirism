@@ -8,14 +8,14 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.inventory.recipes.AlchemicalCauldronRecipe;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
@@ -27,14 +27,10 @@ import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<AlchemicalCauldronRecipe> {
-
-
-    private static final ResourceLocation location = new ResourceLocation(REFERENCE.MODID, "textures/gui/alchemical_cauldron.png");
+    private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/alchemical_cauldron.png");
     private final Component localizedName;
     private final IDrawable background;
     private final IDrawable icon;
@@ -46,24 +42,24 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
     AlchemicalCauldronRecipeCategory(IGuiHelper guiHelper) {
         this.localizedName = Component.translatable(ModBlocks.ALCHEMICAL_CAULDRON.get().getDescriptionId());
         this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.ALCHEMICAL_CAULDRON.get()));
-        background = guiHelper.drawableBuilder(location, 38, 10, 120, 70).addPadding(0, 33, 0, 0).build();
+        this.background = guiHelper.drawableBuilder(BACKGROUND, 38, 10, 120, 70).addPadding(0, 33, 0, 0).build();
 
-        IDrawableStatic flameDrawable = guiHelper.createDrawable(location, 176, 0, 14, 14);
-        flame = guiHelper.createAnimatedDrawable(flameDrawable, 300, IDrawableAnimated.StartDirection.TOP, true);
+        IDrawableStatic flameDrawable = guiHelper.createDrawable(BACKGROUND, 176, 0, 14, 14);
+        this.flame = guiHelper.createAnimatedDrawable(flameDrawable, 300, IDrawableAnimated.StartDirection.TOP, true);
 
-        IDrawableStatic arrowDrawable = guiHelper.createDrawable(location, 176, 14, 24, 17);
+        IDrawableStatic arrowDrawable = guiHelper.createDrawable(BACKGROUND, 176, 14, 24, 17);
         this.arrow = guiHelper.createAnimatedDrawable(arrowDrawable, 200, IDrawableAnimated.StartDirection.LEFT, false);
 
-        IDrawableStatic bubblesDrawable = guiHelper.createDrawable(location, 176, 31, 12, 29);
+        IDrawableStatic bubblesDrawable = guiHelper.createDrawable(BACKGROUND, 176, 31, 12, 29);
         this.bubbles = guiHelper.createAnimatedDrawable(bubblesDrawable, 200, IDrawableAnimated.StartDirection.BOTTOM, false);
 
     }
 
     @Override
     public void draw(AlchemicalCauldronRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @Nonnull PoseStack stack, double mouseX, double mouseY) {
-        flame.draw(stack, 19, 27);
-        arrow.draw(stack, 41, 25);
-        bubbles.draw(stack, 104, 19);
+        this.flame.draw(stack, 19, 27);
+        this.arrow.draw(stack, 41, 25);
+        this.bubbles.draw(stack, 104, 19);
         Minecraft minecraft = Minecraft.getInstance();
         int x = 0;
         int y = 65;
@@ -86,13 +82,13 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
     @Nonnull
     @Override
     public IDrawable getBackground() {
-        return background;
+        return this.background;
     }
 
     @Nonnull
     @Override
     public IDrawable getIcon() {
-        return icon;
+        return this.icon;
     }
 
     @Override
@@ -103,30 +99,13 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
     @Nonnull
     @Override
     public Component getTitle() {
-        return localizedName;
+        return this.localizedName;
     }
 
     @Override
-    public void setIngredients(AlchemicalCauldronRecipe recipe, IIngredients iIngredients) {
-        List<Ingredient> ingredients = new ArrayList<>();
-
-        recipe.getFluid().ifRight(fluidStack -> ingredients.add(Ingredient.of(fluidStack.getFluid().getBucket())));
-        recipe.getFluid().ifLeft(ingredients::add);
-        ingredients.addAll(recipe.getIngredients());
-        iIngredients.setInputIngredients(ingredients);
-
-        iIngredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
+    public void setRecipe(IRecipeLayoutBuilder builder, AlchemicalCauldronRecipe recipe, @NotNull IFocusGroup focuses) {
+        builder.addSlot(RecipeIngredientRole.INPUT, 6, 7).addIngredients(recipe.getFluid().map(in -> in, fl -> Ingredient.of(fl.getFluid().getBucket())));
+        builder.addSlot(RecipeIngredientRole.INPUT, 30, 7).addIngredients(recipe.getIngredient());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 78, 25).addItemStack(recipe.getResultItem());
     }
-
-    @Override
-    public void setRecipe(IRecipeLayout recipeLayout, @Nonnull AlchemicalCauldronRecipe recipeWrapper, @Nonnull IIngredients ingredients) {
-        IGuiItemStackGroup guiItemStackGroup = recipeLayout.getItemStacks();
-        guiItemStackGroup.init(0, false, 77, 23);
-        guiItemStackGroup.init(1, true, 5, 6);
-        guiItemStackGroup.init(2, true, 29, 6);
-        guiItemStackGroup.set(ingredients);
-
-    }
-
-
 }
