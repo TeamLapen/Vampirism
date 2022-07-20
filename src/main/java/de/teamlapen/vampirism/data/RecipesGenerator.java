@@ -103,6 +103,7 @@ public class RecipesGenerator extends RecipeProvider {
         ItemLike ring = ModItems.RING.get();
         ItemLike obi_belt = ModItems.OBI_BELT.get();
         ItemLike blood_container = ModBlocks.BLOOD_CONTAINER.get();
+        ItemLike basalt = Blocks.BASALT;
         TagKey<Item> planks = ItemTags.PLANKS;
         TagKey<Item> glass = Tags.Items.GLASS;
         TagKey<Item> glass_pane = Tags.Items.GLASS_PANES;
@@ -401,6 +402,7 @@ public class RecipesGenerator extends RecipeProvider {
         SimpleCookingRecipeBuilder.smelting(Ingredient.of(amulet, ring), Items.GOLD_NUGGET, 0.1f,200).unlockedBy("has_amulet", has(amulet)).unlockedBy("has_ring", has(ring)).save(consumer, new ResourceLocation(REFERENCE.MODID, "gold_nugget_from_accessory_smelting"));
         SimpleCookingRecipeBuilder.blasting(Ingredient.of(amulet, ring), Items.GOLD_NUGGET, 0.1f,100).unlockedBy("has_amulet", has(amulet)).unlockedBy("has_ring", has(ring)).save(consumer, new ResourceLocation(REFERENCE.MODID, "gold_nugget_from_accessory_blasting"));
         ShapelessRecipeBuilder.shapeless(leather).requires(obi_belt).unlockedBy("has_obi_belt", has(obi_belt)).save(consumer, new ResourceLocation(REFERENCE.MODID, "leather_from_obi_belt"));
+        ShapedRecipeBuilder.shaped(ModBlocks.ALCHEMY_TABLE.get()).pattern("B  ").pattern("BBB").pattern("P P").define('B', basalt).define('P', planks).unlockedBy("has_basalt", has(basalt)).unlockedBy("has_planks", has(planks)).save(consumer);
     }
 
     private JsonObject enchantment(int level, Enchantment enchantment) {

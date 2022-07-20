@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": {
+      "item": "minecraft:basalt"
+    },
+    "P": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "pattern": [
+    "B  ",
+    "BBB",
+    "P P"
+  ],
+  "result": {
+    "item": "vampirism:alchemy_table"
+  }
+}
