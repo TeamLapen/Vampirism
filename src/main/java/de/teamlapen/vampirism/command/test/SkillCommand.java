@@ -55,11 +55,13 @@ public class SkillCommand extends BasicCommand {
     }
 
     private static int enableAll(CommandSource commandSource, ServerPlayerEntity asPlayer) throws CommandSyntaxException {
-        IFactionPlayer<?> factionPlayer = FactionPlayerHandler.getCurrentFactionPlayer(asPlayer).orElseThrow(NO_FACTION::create);
+        FactionPlayerHandler playerHandler = FactionPlayerHandler.getOpt(asPlayer).orElseThrow(NO_FACTION::create);
+        IFactionPlayer<?> factionPlayer = playerHandler.getCurrentFactionPlayer().orElseThrow(NO_FACTION::create);
         ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
         for (ISkill skill : ModRegistries.SKILLS.getValues()) {
-            if (skill.getFaction() != factionPlayer.getFaction()) continue;
-            skillHandler.enableSkill(skill);
+            if (skill.getType().isUnlocked(playerHandler) && skill.getFaction() == factionPlayer.getFaction()) {
+                skillHandler.enableSkill(skill);
+            }
         }
         commandSource.sendSuccess(new TranslationTextComponent("command.vampirism.test.skill.all_unlocked"), false);
         return 0;
