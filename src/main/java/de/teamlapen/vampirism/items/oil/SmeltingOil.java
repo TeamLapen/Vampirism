@@ -4,8 +4,8 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.PickaxeItem;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public class SmeltingOil extends ApplicableOil {
 
     @Override
     public boolean canBeApplied(ItemStack stack) {
-        return stack.getItem() instanceof ArmorItem && stack.is(ModTags.Items.APPLICABLE_OIL_PICKAXE) == VampirismConfig.BALANCE.itApplicableOilPickaxeReverse.get();
+        return stack.getItem() instanceof PickaxeItem && stack.is(ModTags.Items.APPLICABLE_OIL_PICKAXE) == VampirismConfig.BALANCE.itApplicableOilPickaxeReverse.get();
     }
 
     @Override
