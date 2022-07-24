@@ -16,12 +16,12 @@
   "lava": 2,
   "level": 1,
   "pattern": [
-    "XXX",
+    " X ",
     "XYX",
-    "XXX"
+    " X "
   ],
   "result": {
-    "count": 8,
+    "count": 4,
     "item": "vampirism:crossbow_arrow_teleport"
   },
   "skill": []
