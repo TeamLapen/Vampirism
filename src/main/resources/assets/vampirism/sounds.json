@@ -15,7 +15,10 @@
   "player.feeding": {
     "category": "player",
     "sounds": [
-      "vampirism:entity/vampire/feeding"
+      {
+        "stream": true,
+        "name": "vampirism:entity/vampire/feeding"
+      }
     ]
   },
   "ambient.scary": {
