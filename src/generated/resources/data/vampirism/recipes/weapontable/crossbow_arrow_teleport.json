@@ -1,9 +1,9 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
   "pattern": [
-    "XXX",
+    " X ",
     "XYX",
-    "XXX"
+    " X "
   ],
   "key": {
     "X": {
@@ -20,7 +20,7 @@
   },
   "result": {
     "item": "vampirism:crossbow_arrow_teleport",
-    "count": 8
+    "count": 4
   },
   "lava": 2,
   "skill": [],
