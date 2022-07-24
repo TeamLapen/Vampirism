@@ -115,7 +115,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
             if (isGettingSundamage(worldIn, true) || isGettingGarlicDamage(worldIn, true) != EnumStrength.NONE)
                 return false;
             if (spawnRestriction.level >= SpawnRestriction.NORMAL.level) {
-                if (-worldIn.getPathfindingCostFromLightLevels(blockPosition()) < 0.5 && random.nextInt(5) != 0) {
+                if (-worldIn.getPathfindingCostFromLightLevels(blockPosition()) < 0.0 && random.nextInt(5) != 0) {
                     return false;
                 }
                 if (this.level.isLoaded(blockPosition()) && worldIn instanceof ServerLevel) { //TODO check performance
