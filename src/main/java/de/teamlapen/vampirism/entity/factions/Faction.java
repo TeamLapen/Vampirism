@@ -3,11 +3,18 @@ package de.teamlapen.vampirism.entity.factions;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFactionVillage;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Represents an entity faction (e.g. Vampires)
@@ -30,6 +37,7 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     private final Component namePlural;
     @NotNull
     private final TextColor chatColor;
+    private final Map<ResourceKey<? extends Registry<?>>, TagKey<?>> factionTags;
 
     Faction(FactionRegistry.@NotNull FactionBuilder<T> builder) {
         this.id = builder.id;
@@ -40,6 +48,7 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
         this.chatColor = builder.chatColor == null ? TextColor.fromRgb(this.color) : builder.chatColor;
         this.name = builder.name == null ? Component.literal(id.toString()) : Component.translatable(builder.name);
         this.namePlural = builder.namePlural == null ? this.name : Component.translatable(builder.namePlural);
+        this.factionTags = Collections.unmodifiableMap(builder.factionTags);
         integerId = nextId++;
     }
 
@@ -100,6 +109,12 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     @Override
     public boolean isHostileTowardsNeutral() {
         return hostileTowardsNeutral;
+    }
+
+    @Override
+    public <Z> Optional<TagKey<Z>> getTag(ResourceKey<? extends Registry<Z>> registryKey) {
+        //noinspection unchecked
+        return (Optional<TagKey<Z>>) (Object) Optional.ofNullable(factionTags.get(registryKey));
     }
 
     @Override

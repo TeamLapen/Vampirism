@@ -69,6 +69,7 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.*;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -245,6 +246,10 @@ public class VampirismMod {
                 .lord().lordLevel(REFERENCE.HIGHEST_VAMPIRE_LORD).lordTitle(LordTitles::getVampireTitle).enableLordSkills().build()
                 .village(VampireVillage::vampireVillage)
                 .refinementItems(VampireRefinementItem::getItemForType)
+                .addTag(ForgeRegistries.Keys.BIOMES, ModTags.Biomes.IS_VAMPIRE_BIOME)
+                .addTag(ForgeRegistries.Keys.POI_TYPES, ModTags.PoiTypes.IS_VAMPIRE)
+                .addTag(ForgeRegistries.Keys.VILLAGER_PROFESSIONS, ModTags.Professions.IS_VAMPIRE)
+                .addTag(ForgeRegistries.Keys.ENTITY_TYPES, ModTags.Entities.VAMPIRE)
                 .register();
         VReference.HUNTER_FACTION = VampirismAPI.factionRegistry()
                 .createPlayableFaction(REFERENCE.HUNTER_PLAYER_KEY, IHunterPlayer.class, () -> HunterPlayer.CAP)
@@ -255,6 +260,10 @@ public class VampirismMod {
                 .highestLevel(REFERENCE.HIGHEST_HUNTER_LEVEL)
                 .lord().lordLevel(REFERENCE.HIGHEST_HUNTER_LORD).lordTitle(LordTitles::getHunterTitle).enableLordSkills().build()
                 .village(HunterVillage::hunterVillage)
+                .addTag(ForgeRegistries.Keys.BIOMES, ModTags.Biomes.IS_HUNTER_BIOME)
+                .addTag(ForgeRegistries.Keys.POI_TYPES, ModTags.PoiTypes.IS_HUNTER)
+                .addTag(ForgeRegistries.Keys.VILLAGER_PROFESSIONS, ModTags.Professions.IS_HUNTER)
+                .addTag(ForgeRegistries.Keys.ENTITY_TYPES, ModTags.Entities.HUNTER)
                 .register();
 
         VReference.vision_nightVision = VampirismAPI.vampireVisionRegistry().registerVision("nightVision", new NightVision());

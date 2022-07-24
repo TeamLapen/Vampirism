@@ -3,8 +3,11 @@ package de.teamlapen.vampirism.api.entity.factions;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TextColor;
 import org.jetbrains.annotations.NotNull;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -49,6 +52,9 @@ public interface IPlayableFactionBuilder<T extends IFactionPlayer<T>> extends IF
     IPlayableFactionBuilder<T> namePlural(@NotNull String namePluralKey);
 
     ILordPlayerBuilder<T> lord();
+
+    @Override
+    <Z> IPlayableFactionBuilder<T> addTag(ResourceKey<? extends Registry<Z>> registryKey, TagKey<Z> tag);
 
     @Override
     IPlayableFaction<T> register();

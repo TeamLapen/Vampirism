@@ -8,9 +8,12 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -167,6 +170,7 @@ public class FactionRegistry implements IFactionRegistry {
         protected @Nullable TextColor chatColor;
         protected String name;
         protected String namePlural;
+        protected Map<ResourceKey<? extends Registry<?>>, TagKey<?>> factionTags = new HashMap<>();
 
         FactionBuilder(ResourceLocation id, Class<T> entityInterface) {
             this.id = id;
@@ -223,6 +227,12 @@ public class FactionRegistry implements IFactionRegistry {
             Faction<T> faction = new Faction<>(this);
             addFaction(faction);
             return faction;
+        }
+
+        @Override
+        public <Z> IFactionBuilder<T> addTag(ResourceKey<? extends Registry<Z>> registryKey, TagKey<Z> tag) {
+            this.factionTags.put(registryKey, tag);
+            return this;
         }
     }
 
@@ -305,6 +315,11 @@ public class FactionRegistry implements IFactionRegistry {
         @Override
         public @NotNull ILordPlayerBuilder<T> lord() {
             return new LordPlayerBuilder<>(this);
+        }
+
+        @Override
+        public <Z> IPlayableFactionBuilder<T> addTag(ResourceKey<? extends Registry<Z>> registryKey, TagKey<Z> tag) {
+            return (IPlayableFactionBuilder<T>) super.addTag(registryKey, tag);
         }
 
         @Override

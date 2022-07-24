@@ -1,10 +1,15 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
 
 /**
  * Represents an entity faction (e.g. Vampires)
@@ -53,5 +58,7 @@ public interface IFaction<T extends IFactionEntity> {
      * @return Whether entities of this faction are hostile towards neutral entities
      */
     boolean isHostileTowardsNeutral();
+
+    <Z> Optional<TagKey<Z>> getTag(ResourceKey<? extends Registry<Z>> registryKey);
 
 }
