@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.core;
 
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.blocks.TotemTopBlock;
@@ -13,10 +14,17 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.color.BlockColors;
+import net.minecraft.client.renderer.model.RenderMaterial;
+import net.minecraft.inventory.container.PlayerContainer;
+import net.minecraft.item.DyeColor;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+
+import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * Handles all block render registration including TileEntities
@@ -24,6 +32,9 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 @OnlyIn(Dist.CLIENT)
 public class ModBlocksRender {
 
+    public static final RenderMaterial[] COFFIN_TEXTURES = Arrays.stream(DyeColor.values()).sorted(Comparator.comparingInt(DyeColor::getId)).map((dye) -> {
+        return new RenderMaterial(PlayerContainer.BLOCK_ATLAS, new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_" + dye.getName()));
+    }).toArray(RenderMaterial[]::new);
 
     public static void register() {
         registerTileRenderer();

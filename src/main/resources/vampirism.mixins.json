@@ -23,8 +23,8 @@
   ],
   "client": [
     "client.AgeableModelAccessor",
-    "client.BossOverlayGuiAccessor",
-    "client.ModelBakeryMixin"
+    "client.AtlasesMixin",
+    "client.BossOverlayGuiAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
