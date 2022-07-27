@@ -30,10 +30,10 @@ public abstract class DefaultAction<T extends IFactionPlayer<T>> implements IAct
     public IAction.PERM canUse(T player) {
         if (!isEnabled())
             return IAction.PERM.DISABLED;
-        if (this.getFaction().getFactionPlayerInterface().isInstance(player)) {
+        if (this.getFaction().map(f -> f.getFactionPlayerInterface().isInstance(player)).orElse(true)) {
             return (canBeUsedBy(player) ? IAction.PERM.ALLOWED : IAction.PERM.DISALLOWED);
         } else {
-            throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + this.getFaction().getFactionPlayerInterface());
+            throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + this.getFaction().get().getFactionPlayerInterface());
         }
 
     }
@@ -56,10 +56,10 @@ public abstract class DefaultAction<T extends IFactionPlayer<T>> implements IAct
 
     @Override
     public boolean onActivated(T player) {
-        if (this.getFaction().getFactionPlayerInterface().isInstance(player)) {
+        if (this.getFaction().map(f -> f.getFactionPlayerInterface().isInstance(player)).orElse(true)) {
             return activate(player);
         } else {
-            throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + this.getFaction().getFactionPlayerInterface());
+            throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + this.getFaction().get().getFactionPlayerInterface());
         }
     }
 

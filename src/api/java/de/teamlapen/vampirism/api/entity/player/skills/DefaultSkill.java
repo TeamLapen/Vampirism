@@ -54,10 +54,10 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
     public final void onDisable(T player) {
         removeAttributesModifiersFromEntity(player.getRepresentingPlayer());
         player.getActionHandler().relockActions(getActions());
-        if (this.getFaction().getFactionPlayerInterface().isInstance(player)) {
+        if (this.getFaction().map(f -> f.getFactionPlayerInterface().isInstance(player)).orElse(true)) {
             onDisabled(player);
         } else {
-            throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + this.getFaction().getFactionPlayerInterface());
+            throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + this.getFaction().get().getFactionPlayerInterface());
         }
     }
 
@@ -66,10 +66,10 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
         applyAttributesModifiersToEntity(player.getRepresentingPlayer());
 
         player.getActionHandler().unlockActions(getActions());
-        if (this.getFaction().getFactionPlayerInterface().isInstance(player)) {
+        if (this.getFaction().map(f -> f.getFactionPlayerInterface().isInstance(player)).orElse(true)) {
             onEnabled(player);
         } else {
-            throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + this.getFaction().getFactionPlayerInterface());
+            throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + this.getFaction().get().getFactionPlayerInterface());
         }
     }
 
@@ -131,10 +131,9 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
         Collection<IAction<T>> collection = new ArrayList<>();
         getActions(collection);
         collection.forEach((iAction -> {
-            if (!iAction.getFaction().equals(this.getFaction())) {
-                throw new IllegalArgumentException("Can't register action of faction " + iAction.getFaction() + " for skill of faction" + this.getFaction());
-            }
-        }));
+            if (iAction.getFaction().isPresent() && iAction.getFaction().get() != this.getFaction().orElse(null))
+                throw new IllegalArgumentException("Can't register action of faction " + iAction.getFaction().map(Object::toString).orElse(null) + " for skill of faction" + this.getFaction().map(Object::toString).orElse("all"));
+            }));
         return collection;
     }
 

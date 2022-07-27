@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.DefaultAction;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 /**
  * Basic implementation of IAction<IVampirePlayer>. It is recommended to extend this
@@ -12,7 +13,7 @@ import javax.annotation.Nonnull;
 public abstract class DefaultVampireAction extends DefaultAction<IVampirePlayer> {
     @Nonnull
     @Override
-    public IPlayableFaction<?> getFaction() {
-        return VReference.VAMPIRE_FACTION;
+    public Optional<IPlayableFaction<?>> getFaction() {
+        return Optional.of(VReference.VAMPIRE_FACTION);
     }
 }

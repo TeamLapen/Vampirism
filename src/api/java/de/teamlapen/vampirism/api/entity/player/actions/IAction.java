@@ -6,6 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 /**
  * Interface for player actions
@@ -28,7 +29,7 @@ public interface IAction<T extends IFactionPlayer<T>> {
      * @return the faction, which players can use this action
      */
     @Nonnull
-    IPlayableFaction<?> getFaction();
+    Optional<IPlayableFaction<?>> getFaction();
 
     default Component getName() {
         return Component.translatable(getTranslationKey());

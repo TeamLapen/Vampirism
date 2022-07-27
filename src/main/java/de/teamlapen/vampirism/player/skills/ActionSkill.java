@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * Simple skill that unlocks one action
@@ -40,7 +41,7 @@ public class ActionSkill<T extends IFactionPlayer<T>> extends VampirismSkill<T> 
 
     @Nonnull
     @Override
-    public IPlayableFaction<?> getFaction() {
+    public Optional<IPlayableFaction<?>> getFaction() {
         return action.getFaction();
     }
 
