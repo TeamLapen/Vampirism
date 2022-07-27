@@ -151,6 +151,8 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
         block(ModBlocks.GARLIC_DIFFUSER_NORMAL.get(), "garlic_diffuser_normal");
         block(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get(), "garlic_diffuser_improved");
 
+        block(ModBlocks.HUNTER_TABLE.get(), "hunter_table/hunter_table");
+
         withExistingParent(ModBlocks.BLOODY_SPRUCE_LEAVES.get(), mcLoc("block/oak_leaves"));
         withExistingParent(ModBlocks.VAMPIRE_SPRUCE_LEAVES.get(), mcLoc("block/oak_leaves"));
 
