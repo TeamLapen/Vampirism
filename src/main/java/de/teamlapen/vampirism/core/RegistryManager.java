@@ -53,9 +53,10 @@ public class RegistryManager implements IInitListener {
         VampireActions.registerDefaultActions(modbus);
         HunterActions.registerDefaultActions(modbus);
         EntityActions.registerDefaultActions(modbus);
-        MinionTasks.register(modbus);
+        MinionTasks.registerMinionTasks(modbus);
         VampireSkills.registerVampireSkills(modbus);
         HunterSkills.registerHunterSkills(modbus);
+        ModCommands.registerArgumentTypes(modbus);
     }
 
     @SubscribeEvent
@@ -77,7 +78,7 @@ public class RegistryManager implements IInitListener {
                 event.enqueueWork(() -> {
                     ModEntities.initializeEntities();
                     ModStats.registerCustomStats();
-                    ModCommands.registerArgumentTypesUsage();
+                    ModCommands.registerArgumentTypesUsageUnsafe();
                     ModVillage.villagerTradeSetup();
                 });
             case LOAD_COMPLETE:

@@ -3,20 +3,37 @@ package de.teamlapen.vampirism.core;
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.command.*;
 import de.teamlapen.vampirism.command.arguments.*;
 import de.teamlapen.vampirism.command.arguments.serializer.FactionArgumentSerializer;
 import de.teamlapen.vampirism.command.test.*;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
-import net.minecraft.core.Registry;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.List;
 
 public class ModCommands {
 
+    public static final DeferredRegister<ArgumentTypeInfo<?, ?>> COMMAND_ARGUMENT_TYPES = DeferredRegister.create(ForgeRegistries.COMMAND_ARGUMENT_TYPES, REFERENCE.MODID);
+
+    public static final RegistryObject<ArgumentTypeInfo<?, ?>> FACTION_ARGUMENT_TYPE = COMMAND_ARGUMENT_TYPES.register("faction", FactionArgumentSerializer::new);
+    public static final RegistryObject<ArgumentTypeInfo<?, ?>> SKILL = COMMAND_ARGUMENT_TYPES.register("skill", () -> SingletonArgumentInfo.contextFree(SkillArgument::skills));
+    public static final RegistryObject<ArgumentTypeInfo<?, ?>> ACTION = COMMAND_ARGUMENT_TYPES.register("action", () -> SingletonArgumentInfo.contextFree(ActionArgument::actions));
+    public static final RegistryObject<ArgumentTypeInfo<?, ?>> REFINEMENT_SET = COMMAND_ARGUMENT_TYPES.register("refinement_set", () -> SingletonArgumentInfo.contextFree(RefinementSetArgument::set));
+    public static final RegistryObject<ArgumentTypeInfo<?, ?>> TASK = COMMAND_ARGUMENT_TYPES.register("task", () -> SingletonArgumentInfo.contextFree(TaskArgument::tasks));
+    public static final RegistryObject<ArgumentTypeInfo<?, ?>> BIOME = COMMAND_ARGUMENT_TYPES.register("biome", () -> SingletonArgumentInfo.contextFree(BiomeArgument::biome));
+
+    static void registerArgumentTypes(IEventBus bus) {
+        COMMAND_ARGUMENT_TYPES.register(bus);
+    }
 
 
     public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher) {
@@ -80,12 +97,12 @@ public class ModCommands {
     /**
      * Make sure to use deferred queue
      */
-    static void registerArgumentTypesUsage() {
-        ArgumentTypeInfos.register(Registry.COMMAND_ARGUMENT_TYPE, "vampirism_faction", FactionArgument.class, new FactionArgumentSerializer());
-        ArgumentTypeInfos.register(Registry.COMMAND_ARGUMENT_TYPE,"vampirism_skill", SkillArgument.class, SingletonArgumentInfo.contextFree(SkillArgument::skills));
-        ArgumentTypeInfos.register(Registry.COMMAND_ARGUMENT_TYPE,"vampirism_action", ActionArgument.class, SingletonArgumentInfo.contextFree(ActionArgument::actions));
-        ArgumentTypeInfos.register(Registry.COMMAND_ARGUMENT_TYPE,"vampirism_refinement_set", RefinementSetArgument.class, SingletonArgumentInfo.contextFree(RefinementSetArgument::set));
-        ArgumentTypeInfos.register(Registry.COMMAND_ARGUMENT_TYPE,"vampirism_task", TaskArgument.class, SingletonArgumentInfo.contextFree(TaskArgument::tasks));
-        ArgumentTypeInfos.register(Registry.COMMAND_ARGUMENT_TYPE,"vampirism_biome", BiomeArgument.class, SingletonArgumentInfo.contextFree(BiomeArgument::biome));
+    static void registerArgumentTypesUsageUnsafe() {
+        ArgumentTypeInfos.registerByClass(FactionArgument.class, new FactionArgumentSerializer());
+        ArgumentTypeInfos.registerByClass(SkillArgument.class, SingletonArgumentInfo.contextFree(SkillArgument::skills));
+        ArgumentTypeInfos.registerByClass(ActionArgument.class, SingletonArgumentInfo.contextFree(ActionArgument::actions));
+        ArgumentTypeInfos.registerByClass(RefinementSetArgument.class, SingletonArgumentInfo.contextFree(RefinementSetArgument::set));
+        ArgumentTypeInfos.registerByClass(TaskArgument.class, SingletonArgumentInfo.contextFree(TaskArgument::tasks));
+        ArgumentTypeInfos.registerByClass(BiomeArgument.class, SingletonArgumentInfo.contextFree(BiomeArgument::biome));
     }
 }

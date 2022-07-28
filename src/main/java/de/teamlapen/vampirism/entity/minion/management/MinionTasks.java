@@ -39,7 +39,7 @@ public class MinionTasks {
     });
     public static final RegistryObject<SimpleMinionTask> PROTECT_LORD = MINION_TASKS.register("protect_lord", SimpleMinionTask::new);
 
-    public static void register(IEventBus bus) {
+    public static void registerMinionTasks(IEventBus bus) {
         MINION_TASKS.register(bus);
     }
 }
