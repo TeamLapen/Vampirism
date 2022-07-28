@@ -68,5 +68,12 @@ public class ModItemsRender {
             }
             return 0xFFFFFF;
         }, ModItems.AMULET.get(), ModItems.RING.get(), ModItems.OBI_BELT.get());
+        event.register((stack, tintIndex) -> {
+            if (tintIndex == 0) {
+                return 0x2c2132;
+            } else {
+                return 0xFFFFFF;
+            }
+        }, ModBlocks.CURSED_GRASS_BLOCK.get());
     }
 }
