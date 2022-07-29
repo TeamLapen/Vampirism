@@ -4,7 +4,10 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.HolyWaterBottleItem;
-import net.minecraft.block.*;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.IGrowable;
+import net.minecraft.block.SpreadableSnowyDirtBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -78,46 +81,46 @@ public class CursedGrass extends SpreadableSnowyDirtBlock implements IGrowable {
     }
 
     /**
-     * copied and renamed from {@link net.minecraft.block.GrassBlock#performBonemeal(ServerWorld, Random, BlockPos, BlockState)}
+     * copied and {@link net.minecraft.block.GrassBlock#performBonemeal(ServerWorld, Random, BlockPos, BlockState)}
      */
     @Override
-    public void performBonemeal(@Nonnull ServerWorld serverWorld, @Nonnull Random random, @Nonnull BlockPos blockPos, @Nonnull BlockState blockState) {
-        BlockPos targetPos = blockPos.above();
-        BlockState grassState = this.defaultBlockState(); // only the state is changed
+    public void performBonemeal(ServerWorld p_225535_1_, Random p_225535_2_, BlockPos p_225535_3_, BlockState p_225535_4_) {
+        BlockPos blockpos = p_225535_3_.above();
+        BlockState blockstate = Blocks.GRASS.defaultBlockState();
 
         label48:
-        for (int i = 0; i < 128; ++i) {
-            BlockPos currentPos = targetPos;
+        for(int i = 0; i < 128; ++i) {
+            BlockPos blockpos1 = blockpos;
 
-            for (int j = 0; j < i / 16; ++j) {
-                currentPos = currentPos.offset(random.nextInt(3) - 1, (random.nextInt(3) - 1) * random.nextInt(3) / 2, random.nextInt(3) - 1);
-                if (!serverWorld.getBlockState(currentPos.below()).is(this) || serverWorld.getBlockState(currentPos).isCollisionShapeFullBlock(serverWorld, currentPos)) {
+            for(int j = 0; j < i / 16; ++j) {
+                blockpos1 = blockpos1.offset(p_225535_2_.nextInt(3) - 1, (p_225535_2_.nextInt(3) - 1) * p_225535_2_.nextInt(3) / 2, p_225535_2_.nextInt(3) - 1);
+                if (!p_225535_1_.getBlockState(blockpos1.below()).is(this) || p_225535_1_.getBlockState(blockpos1).isCollisionShapeFullBlock(p_225535_1_, blockpos1)) {
                     continue label48;
                 }
             }
 
-            BlockState currentState = serverWorld.getBlockState(currentPos);
-            if (currentState.is(grassState.getBlock()) && random.nextInt(10) == 0) {
-                ((IGrowable) grassState.getBlock()).performBonemeal(serverWorld, random, currentPos, currentState);
+            BlockState blockstate2 = p_225535_1_.getBlockState(blockpos1);
+            if (blockstate2.is(blockstate.getBlock()) && p_225535_2_.nextInt(10) == 0) {
+                ((IGrowable)blockstate.getBlock()).performBonemeal(p_225535_1_, p_225535_2_, blockpos1, blockstate2);
             }
 
-            if (currentState.isAir()) {
-                BlockState flowerState;
-                if (random.nextInt(8) == 0) {
-                    List<ConfiguredFeature<?, ?>> flowerFeatures = serverWorld.getBiome(currentPos).getGenerationSettings().getFlowerFeatures();
-                    if (flowerFeatures.isEmpty()) {
+            if (blockstate2.isAir()) {
+                BlockState blockstate1;
+                if (p_225535_2_.nextInt(8) == 0) {
+                    List<ConfiguredFeature<?, ?>> list = p_225535_1_.getBiome(blockpos1).getGenerationSettings().getFlowerFeatures();
+                    if (list.isEmpty()) {
                         continue;
                     }
 
-                    ConfiguredFeature<?, ?> configuredFlowerFeature = flowerFeatures.get(0);
-                    FlowersFeature flowersFeature = (FlowersFeature) configuredFlowerFeature.feature;
-                    flowerState = flowersFeature.getRandomFlower(random, currentPos, configuredFlowerFeature.config());
+                    ConfiguredFeature<?, ?> configuredfeature = list.get(0);
+                    FlowersFeature flowersfeature = (FlowersFeature)configuredfeature.feature;
+                    blockstate1 = flowersfeature.getRandomFlower(p_225535_2_, blockpos1, configuredfeature.config());
                 } else {
-                    flowerState = grassState;
+                    blockstate1 = blockstate;
                 }
 
-                if (flowerState.canSurvive(serverWorld, currentPos)) {
-                    serverWorld.setBlock(currentPos, flowerState, 3);
+                if (blockstate1.canSurvive(p_225535_1_, blockpos1)) {
+                    p_225535_1_.setBlock(blockpos1, blockstate1, 3);
                 }
             }
         }
