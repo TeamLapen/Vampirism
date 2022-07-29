@@ -174,8 +174,8 @@ public class ModKeys {
         if (action == null) {
             player.getRepresentingPlayer().displayClientMessage(Component.translatable("text.vampirism.action.not_bound", "/vampirism bind-action"), true);
         } else {
-            if (!action.getFaction().equals(player.getFaction())) {
-                player.getRepresentingPlayer().displayClientMessage(Component.translatable("text.vampirism.action.only_faction", action.getFaction().getName()), true);
+            if (action.getFaction().map(faction -> !faction.equals(player.getFaction())).orElse(false)) {
+                player.getRepresentingPlayer().displayClientMessage(Component.translatable("text.vampirism.action.only_faction", action.getFaction().get().getName()), true);
             } else {
                 VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + RegUtil.id(action)));
             }

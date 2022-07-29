@@ -177,7 +177,7 @@ public class SkillNode {
 
         public boolean checkSkillFaction(IPlayableFaction<?> faction) {
             for (ISkill<?> s : skills) {
-                if (!faction.getID().equals(s.getFaction().getID())) {
+                if (s.getFaction().map(f -> f != faction).orElse(false)) {
                     return false;
                 }
             }

@@ -7,6 +7,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 /**
  * Skill that can be unlocked
@@ -22,7 +23,7 @@ public interface ISkill<T extends IFactionPlayer<T>> {
      * @return The faction this skill belongs to
      */
     @Nonnull
-    IPlayableFaction<?> getFaction();
+    Optional<IPlayableFaction<?>> getFaction();
 
     default Component getName() {
         return Component.translatable(getTranslationKey());

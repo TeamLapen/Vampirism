@@ -42,7 +42,7 @@ public class SkillManager implements ISkillManager {
     @SuppressWarnings("unchecked")
     @Override
     public <T extends IFactionPlayer<T>> List<ISkill<T>> getSkillsForFaction(IPlayableFaction<T> faction) {
-        return RegUtil.values(ModRegistries.SKILLS).stream().filter(action -> action.getFaction() == faction).map(action -> (ISkill<T>)action).collect(Collectors.toList());
+        return RegUtil.values(ModRegistries.SKILLS).stream().filter(action -> action.getFaction().map(f -> f == faction).orElse(true)).map(action -> (ISkill<T>)action).collect(Collectors.toList());
     }
 
     /**
