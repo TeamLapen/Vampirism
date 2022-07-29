@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.command.*;
 import de.teamlapen.vampirism.command.arguments.*;
-import de.teamlapen.vampirism.command.arguments.serializer.FactionArgumentSerializer;
 import de.teamlapen.vampirism.command.test.*;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
@@ -24,12 +23,12 @@ public class ModCommands {
 
     public static final DeferredRegister<ArgumentTypeInfo<?, ?>> COMMAND_ARGUMENT_TYPES = DeferredRegister.create(ForgeRegistries.COMMAND_ARGUMENT_TYPES, REFERENCE.MODID);
 
-    public static final RegistryObject<ArgumentTypeInfo<?, ?>> FACTION_ARGUMENT_TYPE = COMMAND_ARGUMENT_TYPES.register("faction", FactionArgumentSerializer::new);
-    public static final RegistryObject<ArgumentTypeInfo<?, ?>> SKILL = COMMAND_ARGUMENT_TYPES.register("skill", () -> SingletonArgumentInfo.contextFree(SkillArgument::skills));
-    public static final RegistryObject<ArgumentTypeInfo<?, ?>> ACTION = COMMAND_ARGUMENT_TYPES.register("action", () -> SingletonArgumentInfo.contextFree(ActionArgument::actions));
-    public static final RegistryObject<ArgumentTypeInfo<?, ?>> REFINEMENT_SET = COMMAND_ARGUMENT_TYPES.register("refinement_set", () -> SingletonArgumentInfo.contextFree(RefinementSetArgument::set));
-    public static final RegistryObject<ArgumentTypeInfo<?, ?>> TASK = COMMAND_ARGUMENT_TYPES.register("task", () -> SingletonArgumentInfo.contextFree(TaskArgument::tasks));
-    public static final RegistryObject<ArgumentTypeInfo<?, ?>> BIOME = COMMAND_ARGUMENT_TYPES.register("biome", () -> SingletonArgumentInfo.contextFree(BiomeArgument::biome));
+    public static final RegistryObject<ArgumentTypeInfo<?, ?>> FACTION_ARGUMENT_TYPE = COMMAND_ARGUMENT_TYPES.register("faction", () -> ArgumentTypeInfos.registerByClass(FactionArgument.class, new FactionArgument.Info()));
+    public static final RegistryObject<ArgumentTypeInfo<?, ?>> SKILL = COMMAND_ARGUMENT_TYPES.register("skill", () -> ArgumentTypeInfos.registerByClass(SkillArgument.class, SingletonArgumentInfo.contextFree(SkillArgument::skills)));
+    public static final RegistryObject<ArgumentTypeInfo<?, ?>> ACTION = COMMAND_ARGUMENT_TYPES.register("action", () -> ArgumentTypeInfos.registerByClass(ActionArgument.class, SingletonArgumentInfo.contextFree(ActionArgument::actions)));
+    public static final RegistryObject<ArgumentTypeInfo<?, ?>> REFINEMENT_SET = COMMAND_ARGUMENT_TYPES.register("refinement_set", () -> ArgumentTypeInfos.registerByClass(RefinementSetArgument.class, SingletonArgumentInfo.contextFree(RefinementSetArgument::set)));
+    public static final RegistryObject<ArgumentTypeInfo<?, ?>> TASK = COMMAND_ARGUMENT_TYPES.register("task", () -> ArgumentTypeInfos.registerByClass(TaskArgument.class, SingletonArgumentInfo.contextFree(TaskArgument::tasks)));
+    public static final RegistryObject<ArgumentTypeInfo<?, ?>> BIOME = COMMAND_ARGUMENT_TYPES.register("biome", () -> ArgumentTypeInfos.registerByClass(BiomeArgument.class, SingletonArgumentInfo.contextFree(BiomeArgument::biome)));
 
     static void registerArgumentTypes(IEventBus bus) {
         COMMAND_ARGUMENT_TYPES.register(bus);
@@ -94,15 +93,4 @@ public class ModCommands {
         }
     }
 
-    /**
-     * Make sure to use deferred queue
-     */
-    static void registerArgumentTypesUsageUnsafe() {
-        ArgumentTypeInfos.registerByClass(FactionArgument.class, new FactionArgumentSerializer());
-        ArgumentTypeInfos.registerByClass(SkillArgument.class, SingletonArgumentInfo.contextFree(SkillArgument::skills));
-        ArgumentTypeInfos.registerByClass(ActionArgument.class, SingletonArgumentInfo.contextFree(ActionArgument::actions));
-        ArgumentTypeInfos.registerByClass(RefinementSetArgument.class, SingletonArgumentInfo.contextFree(RefinementSetArgument::set));
-        ArgumentTypeInfos.registerByClass(TaskArgument.class, SingletonArgumentInfo.contextFree(TaskArgument::tasks));
-        ArgumentTypeInfos.registerByClass(BiomeArgument.class, SingletonArgumentInfo.contextFree(BiomeArgument::biome));
-    }
 }

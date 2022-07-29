@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.command.arguments;
 
+import com.google.gson.JsonObject;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -10,10 +11,14 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.synchronization.ArgumentTypeInfo;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -66,5 +71,50 @@ public class FactionArgument implements ArgumentType<IFaction<?>> {
         if (faction == null) throw FACTION_NOT_FOUND.create(id);
         if (this.onlyPlayableFactions & !(faction instanceof IPlayableFaction)) throw FACTION_NOT_PLAYABLE.create(id);
         return faction;
+    }
+
+    public static class Info implements ArgumentTypeInfo<FactionArgument, Info.Template> {
+        @Override
+        public void serializeToNetwork(Template template, FriendlyByteBuf buffer) {
+            buffer.writeBoolean(template.onlyPlayableFaction);
+        }
+
+        @NotNull
+        @Override
+        public  Template deserializeFromNetwork(FriendlyByteBuf buffer) {
+            return new Template(buffer.readBoolean());
+        }
+
+        @Override
+        public void serializeToJson(@NotNull Template template, @NotNull JsonObject json) {
+            json.addProperty("onlyPlayableFactions", template.onlyPlayableFaction);
+        }
+
+        @NotNull
+        @Override
+        public Template unpack(@NotNull FactionArgument argument) {
+            return new Template(argument.onlyPlayableFactions);
+        }
+
+        public class Template implements ArgumentTypeInfo.Template<FactionArgument> {
+
+            final boolean onlyPlayableFaction;
+
+            Template(boolean onlyPlayableFaction) {
+                this.onlyPlayableFaction = onlyPlayableFaction;
+            }
+
+            @NotNull
+            @Override
+            public  FactionArgument instantiate(@NotNull CommandBuildContext context) {
+                return new FactionArgument(this.onlyPlayableFaction);
+            }
+
+            @NotNull
+            @Override
+            public ArgumentTypeInfo<FactionArgument, ?> type() {
+                return Info.this;
+            }
+        }
     }
 }

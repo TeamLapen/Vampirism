@@ -78,7 +78,6 @@ public class RegistryManager implements IInitListener {
                 event.enqueueWork(() -> {
                     ModEntities.initializeEntities();
                     ModStats.registerCustomStats();
-                    ModCommands.registerArgumentTypesUsageUnsafe();
                     ModVillage.villagerTradeSetup();
                 });
             case LOAD_COMPLETE:
