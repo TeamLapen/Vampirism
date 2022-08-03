@@ -24,6 +24,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -717,4 +718,18 @@ public class UtilLib {
         HUNDRED_EIGHTY,
         TWO_HUNDRED_SEVENTY
     }
+
+    public static int countItemWithNBT(Inventory inventory, ItemStack stack) {
+        int i = 0;
+
+        for (int j = 0; j < inventory.getContainerSize(); ++j) {
+            ItemStack itemstack = inventory.getItem(j);
+            if (ItemStack.matches(itemstack, stack)) {
+                i += itemstack.getCount();
+            }
+        }
+
+        return i;
+    }
+
 }
