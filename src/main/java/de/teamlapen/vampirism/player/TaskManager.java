@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.player;
 
 import com.google.common.collect.Maps;
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -455,7 +456,7 @@ public class TaskManager implements ITaskManager {
             case ITEMS:
                 ItemStack stack = ((ItemRequirement) requirement).getItemStack();
                 neededStat = stack.getCount();
-                actualStat = this.player.inventory.countItem(stack.getItem());
+                actualStat = UtilLib.countItemWithNBT(this.player.inventory, stack);
                 break;
             case BOOLEAN:
                 if (!(Boolean) requirement.getStat(this.factionPlayer)) return 0;

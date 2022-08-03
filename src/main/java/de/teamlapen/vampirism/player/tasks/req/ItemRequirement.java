@@ -59,7 +59,7 @@ public class ItemRequirement implements TaskRequirement.Requirement<Item> {
     @Override
     public void removeRequirement(IFactionPlayer<?> player) {
         final ItemStack stack = itemRequirement.get();
-        player.getRepresentingPlayer().inventory.clearOrCountMatchingItems(itemStack -> itemStack.getItem() == stack.getItem(), getAmount(player), player.getRepresentingPlayer().inventoryMenu.getCraftSlots() /*Not sure if the crafting container is correct here*/);
+        player.getRepresentingPlayer().inventory.clearOrCountMatchingItems(itemStack -> ItemStack.matches(itemStack, stack), getAmount(player), player.getRepresentingPlayer().inventoryMenu.getCraftSlots() /*Not sure if the crafting container is correct here*/);
     }
 
 }

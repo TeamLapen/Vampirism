@@ -15,6 +15,7 @@ import net.minecraft.entity.ai.goal.GoalSelector;
 import net.minecraft.entity.ai.goal.PrioritizedGoal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -849,5 +850,18 @@ public class UtilLib {
 
     public static ResourceLocation amend(ResourceLocation original, String amendment) {
         return new ResourceLocation(original.getNamespace(), original.getPath() + amendment);
+    }
+
+    public static int countItemWithNBT(IInventory inventory, ItemStack stack) {
+        int i = 0;
+
+        for(int j = 0; j < inventory.getContainerSize(); ++j) {
+            ItemStack itemstack = inventory.getItem(j);
+            if (ItemStack.matches(itemstack, stack)) {
+                i += itemstack.getCount();
+            }
+        }
+
+        return i;
     }
 }
