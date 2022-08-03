@@ -51,6 +51,12 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
         super(type, world);
     }
 
+    public CrossbowArrowEntity(World level, LivingEntity entity, ItemStack stack) {
+        super(ModEntities.CROSSBOW_ARROW.get(), entity, level);
+        this.arrowStack = stack.copy();
+        this.arrowStack.setCount(1);
+    }
+
 
     /**
      * @param arrow ItemStack of the represented arrow. Is copied.
@@ -119,5 +125,8 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
             ((IVampirismCrossbowArrow) item).onHitBlock(arrowStack, (blockRayTraceResult).getBlockPos(), this, getOwner());
         }
         super.onHitBlock(blockRayTraceResult);
+    }
+
+    public void setEffectsFromItem(ItemStack p_200887_2_) {
     }
 }

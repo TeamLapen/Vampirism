@@ -4,16 +4,13 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.api.items.oil.IOil;
-import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.CrossbowArrowItem;
-import de.teamlapen.vampirism.items.VampirismItemCrossbow;
-import de.teamlapen.vampirism.util.OilUtils;
 import de.teamlapen.vampirism.util.OilUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.ItemColors;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.CrossbowItem;
 import net.minecraft.item.IDyeableArmorItem;
 import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.util.ResourceLocation;
@@ -29,17 +26,9 @@ import java.util.stream.Stream;
 public class ModItemsRender {
 
     public static void registerItemModelPropertyUnsafe() {
-        Stream.of(ModItems.BASIC_CROSSBOW.get(), ModItems.BASIC_DOUBLE_CROSSBOW.get(), ModItems.ENHANCED_CROSSBOW.get(), ModItems.ENHANCED_DOUBLE_CROSSBOW.get(), ModItems.BASIC_TECH_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get()).forEach(item -> {
+        Stream.of(ModItems.BASIC_CROSSBOW.get(),ModItems.BASIC_DOUBLE_CROSSBOW.get(),ModItems.ENHANCED_CROSSBOW.get(), ModItems.ENHANCED_DOUBLE_CROSSBOW.get(),ModItems.BASIC_TECH_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get()).forEach(item -> {
             ItemModelsProperties.register(item, new ResourceLocation(REFERENCE.MODID, "charged"), (stack, world, entity) -> {
-                if (entity instanceof PlayerEntity && entity.getUseItem() != stack) {
-                    float cooldown = ((PlayerEntity) entity).getCooldowns().getCooldownPercent(stack.getItem(), Minecraft.getInstance().getFrameTime());
-                    if (cooldown > 0) {
-                        return cooldown;
-                    }
-                    return VampirismItemCrossbow.hasAmmo((PlayerEntity) entity, stack) ? 0.0f : 1.0f;
-                } else {
-                    return 0.0f;
-                }
+                return CrossbowItem.isCharged(stack) ? 0.0f : 1.0f;
             });
         });
     }
