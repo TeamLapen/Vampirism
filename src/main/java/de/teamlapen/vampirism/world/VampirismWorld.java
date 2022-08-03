@@ -27,6 +27,7 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
@@ -37,8 +38,8 @@ public class VampirismWorld implements IVampirismWorld {
     /**
      * stores all BoundingBoxes of vampire controlled villages per dimension, mapped from origin block positions
      */
-    private static final Map<BlockPos, MutableBoundingBox> fogAreas = Maps.newHashMap();
-    private static final Map<BlockPos, MutableBoundingBox> tmpFogAreas = Maps.newHashMap();
+    private static final Map<BlockPos, MutableBoundingBox> fogAreas = new ConcurrentHashMap<>();
+    private static final Map<BlockPos, MutableBoundingBox> tmpFogAreas = new ConcurrentHashMap<>();
     @CapabilityInject(IVampirismWorld.class)
     public static Capability<IVampirismWorld> CAP = getNull();
 
