@@ -2,9 +2,12 @@ package de.teamlapen.vampirism.world;
 
 
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import com.google.common.collect.Streams;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.world.IVampirismWorld;
+import it.unimi.dsi.fastutil.Hash;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,9 +26,8 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
 public class VampirismWorld implements IVampirismWorld {
@@ -34,8 +36,8 @@ public class VampirismWorld implements IVampirismWorld {
     /**
      * stores all BoundingBoxes of vampire controlled villages per dimension, mapped from origin block positions
      */
-    private static final Map<BlockPos, BoundingBox> fogAreas = Maps.newHashMap();
-    private static final Map<BlockPos, BoundingBox> tmpFogAreas = Maps.newHashMap();
+    private static final Map<BlockPos, BoundingBox> fogAreas = new ConcurrentHashMap<>();
+    private static final Map<BlockPos, BoundingBox> tmpFogAreas = new ConcurrentHashMap<>();
     public static final Capability<IVampirismWorld> CAP = CapabilityManager.get(new CapabilityToken<>(){});
 
     /**
