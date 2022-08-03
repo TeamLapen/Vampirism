@@ -20,6 +20,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
+import net.minecraft.world.Container;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
@@ -794,5 +795,18 @@ public class UtilLib {
         NINETY,
         HUNDRED_EIGHTY,
         TWO_HUNDRED_SEVENTY
+    }
+
+    public static int countItemWithNBT(Container inventory, ItemStack stack) {
+        int i = 0;
+
+        for(int j = 0; j < inventory.getContainerSize(); ++j) {
+            ItemStack itemstack = inventory.getItem(j);
+            if (ItemStack.matches(itemstack, stack)) {
+                i += itemstack.getCount();
+            }
+        }
+
+        return i;
     }
 }
