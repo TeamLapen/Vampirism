@@ -403,7 +403,8 @@ public class ModPlayerEventHandler {
         if (!(event.getTarget().getType() == EntityType.ZOMBIE)) return;
         ItemStack stack = event.getPlayer().getItemInHand(event.getHand());
         if (stack.getItem() != ModItems.INJECTION_EMPTY.get()) return;
-        event.getPlayer().setItemInHand(event.getHand(), new ItemStack(ModItems.INJECTION_ZOMBIE_BLOOD.get()));
+        stack.split(1);
+        event.getPlayer().addItem(new ItemStack(ModItems.INJECTION_ZOMBIE_BLOOD.get()));
         event.setCanceled(true);
     }
 
