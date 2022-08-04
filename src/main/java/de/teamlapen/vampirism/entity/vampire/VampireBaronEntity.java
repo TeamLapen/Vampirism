@@ -281,7 +281,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     @Override
     public void readAdditionalSaveData(CompoundNBT nbt) {
         super.readAdditionalSaveData(nbt);
-        setLevel(MathHelper.clamp(nbt.getInt("level"), 0, MAX_LEVEL));
+        setLevel(nbt.contains("level") ? MathHelper.clamp(nbt.getInt("level"), 0, MAX_LEVEL) : -1);
         this.getEntityData().set(LADY, nbt.getBoolean("lady"));
     }
 
