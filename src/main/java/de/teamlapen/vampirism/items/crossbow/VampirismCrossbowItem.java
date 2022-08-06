@@ -4,10 +4,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
-import de.teamlapen.vampirism.api.items.IEntityCrossbowArrow;
-import de.teamlapen.vampirism.api.items.IFactionLevelItem;
-import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
-import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
+import de.teamlapen.vampirism.api.items.*;
 import de.teamlapen.vampirism.core.ModEnchantments;
 import de.teamlapen.vampirism.core.ModItems;
 import net.minecraft.client.util.ITooltipFlag;
@@ -18,10 +15,7 @@ import net.minecraft.entity.ICrossbowUser;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.item.CrossbowItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemTier;
+import net.minecraft.item.*;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
@@ -263,6 +257,36 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
             projectile = projectile.copy(); // do not consume arrow if infinite
         }
 
-        return loadProjectile(entity, crossbow, projectile, false, flag);
+        return loadProjectileMod(entity, crossbow, projectile, false, flag);
+    }
+
+    /**
+     * from {@link net.minecraft.item.CrossbowItem#loadProjectile(net.minecraft.entity.LivingEntity, net.minecraft.item.ItemStack, net.minecraft.item.ItemStack, boolean, boolean)}<br>
+     * changes at comments
+     */
+    protected boolean loadProjectileMod(LivingEntity p_220023_0_, ItemStack p_220023_1_, ItemStack p_220023_2_, boolean p_220023_3_, boolean p_220023_4_) {
+        if (p_220023_2_.isEmpty()) {
+            return false;
+        } else {
+            boolean flag = p_220023_4_ && p_220023_2_.getItem() instanceof ArrowItem;
+            ItemStack itemstack;
+            if (!flag && !p_220023_4_ && !p_220023_3_) {
+                itemstack = p_220023_2_.split(1);
+                if (p_220023_2_.isEmpty() && p_220023_0_ instanceof PlayerEntity) {
+                    ((PlayerEntity)p_220023_0_).inventory.removeItem(p_220023_2_);
+                }
+            } else {
+                itemstack = p_220023_2_.copy();
+            }
+
+            if (itemstack.getItem() instanceof IArrowContainer) { // if arrow container use contents
+                for (ItemStack arrow : ((IArrowContainer) itemstack.getItem()).getArrows(itemstack)) {
+                    addChargedProjectile(p_220023_1_, arrow);
+                }
+            } else {
+                addChargedProjectile(p_220023_1_, itemstack);
+            }
+            return true;
+        }
     }
 }

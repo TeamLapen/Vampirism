@@ -6,7 +6,6 @@
   "mixins": [
     "ArmorItemAccessor",
     "AssemblerMixin",
-    "CrossbowItemMixin",
     "DimensionStructureSettingsAccessor",
     "FlatGenerationSettingsAccessor",
     "IngredientAccessor",

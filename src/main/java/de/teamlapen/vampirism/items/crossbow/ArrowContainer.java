@@ -1,14 +1,16 @@
 package de.teamlapen.vampirism.items.crossbow;
 
+import de.teamlapen.vampirism.api.items.IArrowContainer;
 import net.minecraft.item.ArrowItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class ArrowContainer extends Item {
+public class ArrowContainer extends Item implements IArrowContainer {
 
     private final Supplier<?extends ArrowItem> item;
     private final int count;
@@ -19,10 +21,11 @@ public class ArrowContainer extends Item {
         this.count = count;
     }
 
-    public Collection<ArrowItem> getArrows() {
-        List<ArrowItem> arrows = new ArrayList<>();
+    @Override
+    public Collection<ItemStack> getArrows(ItemStack stack) {
+        List<ItemStack> arrows = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            arrows.add(item.get());
+            arrows.add(new ItemStack(item.get()));
         }
         return arrows;
     }
