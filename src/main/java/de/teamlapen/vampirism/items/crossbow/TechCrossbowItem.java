@@ -3,6 +3,8 @@ package de.teamlapen.vampirism.items.crossbow;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -44,14 +46,15 @@ public class TechCrossbowItem extends VampirismCrossbowItem {
      * check comments
      * TODO 1.19 recheck
      */
+    @Nonnull
     @Override
-    public ActionResult<ItemStack> use(World p_77659_1_, PlayerEntity p_77659_2_, Hand p_77659_3_) {
+    public ActionResult<ItemStack> use(@Nonnull World p_77659_1_, PlayerEntity p_77659_2_, @Nonnull Hand p_77659_3_) {
         ItemStack itemstack = p_77659_2_.getItemInHand(p_77659_3_);
         if (isCharged(itemstack)) {
             if(performShootingMod2(p_77659_1_, p_77659_2_, p_77659_3_, itemstack, getShootingPowerMod(itemstack), 1.0F)) { // do not set uncharged if projectiles left | get shooting power from crossbow
                 setCharged(itemstack, false);
             } else {
-                p_77659_2_.getCooldowns().addCooldown(this, 8); // add cooldown if projectiles left
+                p_77659_2_.getCooldowns().addCooldown(this, 10); // add cooldown if projectiles left
             }
             return ActionResult.consume(itemstack);
         } else if (!p_77659_2_.getProjectile(itemstack).isEmpty()) {
@@ -75,11 +78,10 @@ public class TechCrossbowItem extends VampirismCrossbowItem {
         List<ItemStack> list = getChargedProjectiles(p_220014_3_);
         float[] afloat = getShotPitches(p_220014_1_.getRandom());
 
-        ItemStack itemstack = list.remove(0); //remove for easy usage
+        ItemStack itemstack = getProjectile(p_220014_1_, p_220014_3_, list); //delegate for easy usage and frugality
         boolean flag = p_220014_1_ instanceof PlayerEntity && ((PlayerEntity) p_220014_1_).abilities.instabuild;
         if (!itemstack.isEmpty()) {
-            shootProjectile(p_220014_0_, p_220014_1_, p_220014_2_, p_220014_3_, itemstack, afloat[0], flag, p_220014_4_, p_220014_5_, 0.0F);
-            // do not shoot more than one projectile
+            shootProjectileMod(p_220014_0_, p_220014_1_, p_220014_2_, p_220014_3_, itemstack, afloat[0], flag, p_220014_4_, p_220014_5_, 0.0F); // do not shoot more than one projectile
         }
 
         onCrossbowShot(p_220014_0_, p_220014_1_, p_220014_3_);
@@ -99,7 +101,30 @@ public class TechCrossbowItem extends VampirismCrossbowItem {
     }
 
     @Override
-    public boolean isValidRepairItem(ItemStack crossbow, ItemStack repairItem) {
+    public boolean isValidRepairItem(@Nonnull ItemStack crossbow, ItemStack repairItem) {
         return Tags.Items.INGOTS_IRON.contains(repairItem.getItem());
+    }
+
+    private ItemStack getProjectile(LivingEntity entity, ItemStack crossbow, List<ItemStack> projectiles) {
+        int frugal = isFrugal(crossbow);
+        if (frugal > 0 && random.nextInt(Math.max(2, 4 - frugal)) == 0) {
+            return projectiles.get(0).copy();
+        }
+        return projectiles.remove(0);
+    }
+
+    @Override
+    protected boolean canBeInfinit(ItemStack crossbow) {
+        return false;
+    }
+
+    @Override
+    public int getChargeDurationMod(ItemStack crossbow) {
+        return this.chargeTime;
+    }
+
+    @Override
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+        return enchantment != Enchantments.QUICK_CHARGE && enchantment != Enchantments.INFINITY_ARROWS && super.canApplyAtEnchantingTable(stack, enchantment);
     }
 }

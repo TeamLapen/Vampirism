@@ -41,12 +41,12 @@ public class DoubleCrossbowItem extends VampirismCrossbowItem {
      * TODO 1.19 recheck
      */
     @Override
-    public void releaseUsing(ItemStack p_77615_1_, World p_77615_2_, LivingEntity p_77615_3_, int p_77615_4_) {
+    public void releaseUsing(@Nonnull ItemStack p_77615_1_, @Nonnull World p_77615_2_, @Nonnull LivingEntity p_77615_3_, int p_77615_4_) {
         int i = this.getUseDuration(p_77615_1_) - p_77615_4_;
         float f = getPowerForTimeMod(i, p_77615_1_); // get mod power
         if (f >= 1.0F && !isCharged(p_77615_1_)) {
-            boolean first = tryLoadProjectiles(p_77615_3_, p_77615_1_);
-            boolean second = tryLoadProjectiles(p_77615_3_, p_77615_1_);
+            boolean first = tryLoadProjectilesMod(p_77615_3_, p_77615_1_);
+            boolean second = tryLoadProjectilesMod(p_77615_3_, p_77615_1_);
             if (first || second) { //load two projectiles or only one
                 setCharged(p_77615_1_, true);
                 SoundCategory soundcategory = p_77615_3_ instanceof PlayerEntity ? SoundCategory.PLAYERS : SoundCategory.HOSTILE;
@@ -68,7 +68,7 @@ public class DoubleCrossbowItem extends VampirismCrossbowItem {
             ItemStack itemstack = list.get(i);
             boolean flag = p_220014_1_ instanceof PlayerEntity && ((PlayerEntity)p_220014_1_).abilities.instabuild;
             if (!itemstack.isEmpty()) {
-                shootProjectile(p_220014_0_, p_220014_1_, p_220014_2_, p_220014_3_, itemstack, afloat[i], flag, p_220014_4_, p_220014_5_, 0.0F); // only one arrow per projectile
+                shootProjectileMod(p_220014_0_, p_220014_1_, p_220014_2_, p_220014_3_, itemstack, afloat[i], flag, p_220014_4_, p_220014_5_, 0.0F); // only one arrow per projectile
             }
         }
 
