@@ -128,20 +128,20 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
      * same as {@link net.minecraft.item.CrossbowItem#performShooting(net.minecraft.world.World, net.minecraft.entity.LivingEntity, net.minecraft.util.Hand, net.minecraft.item.ItemStack, float, float)}
      * check comments for changes
      */
-    public void performShootingMod(World p_220014_0_, LivingEntity p_220014_1_, Hand p_220014_2_, ItemStack p_220014_3_, float p_220014_4_, float p_220014_5_) {
-        List<ItemStack> list = getChargedProjectiles(p_220014_3_);
-        float[] afloat = getShotPitches(p_220014_1_.getRandom());
+    public void performShootingMod(World level, LivingEntity shooter, Hand hand, ItemStack stack, float speed, float angle) {
+        List<ItemStack> list = getChargedProjectiles(stack);
+        float[] afloat = getShotPitches(shooter.getRandom());
 
         for(int i = 0; i < list.size(); ++i) {
             ItemStack itemstack = list.get(i);
-            boolean flag = p_220014_1_ instanceof PlayerEntity && ((PlayerEntity)p_220014_1_).abilities.instabuild;
+            boolean flag = shooter instanceof PlayerEntity && ((PlayerEntity) shooter).abilities.instabuild;
             if (!itemstack.isEmpty()) {
-                shootProjectileMod(p_220014_0_, p_220014_1_, p_220014_2_, p_220014_3_, itemstack, afloat[i], flag, p_220014_4_, p_220014_5_, 0.0F);
+                shootProjectileMod(level, shooter, hand, stack, itemstack, afloat[i], flag, speed, angle, 0.0F);
                 break; // only shoot one projectile
             }
         }
 
-        onCrossbowShot(p_220014_0_, p_220014_1_, p_220014_3_);
+        onCrossbowShot(level, shooter, stack);
     }
 
     /**

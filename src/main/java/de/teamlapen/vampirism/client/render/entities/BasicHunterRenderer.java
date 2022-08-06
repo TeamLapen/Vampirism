@@ -24,7 +24,7 @@ public class BasicHunterRenderer extends DualBipedRenderer<BasicHunterEntity, Ba
 
     public BasicHunterRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new BasicHunterModel<>(false), new BasicHunterModel<>(true), 0.5F);
-        this.addLayer(new HunterEquipmentLayer<>(this, entity -> (entity.getLevel() < 2 || entity.isCrossbowInMainhand()) ? HunterEquipmentModel.StakeType.ONLY : HunterEquipmentModel.StakeType.FULL, entity -> entity.getLevel() == 0 ? entity.getEntityTextureType() % 4 : -1));
+        this.addLayer(new HunterEquipmentLayer<>(this, entity -> (entity.getLevel() < 2 || entity.isHoldingCrossbow()) ? HunterEquipmentModel.StakeType.ONLY : HunterEquipmentModel.StakeType.FULL, entity -> entity.getLevel() == 0 ? entity.getEntityTextureType() % 4 : -1));
         this.addLayer(new CloakLayer<>(this, textureCloak, entity -> entity.getLevel() > 0));
         textures = gatherTextures("textures/entity/hunter", true);
     }

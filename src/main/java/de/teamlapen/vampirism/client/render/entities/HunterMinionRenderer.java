@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.render.entities;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import de.teamlapen.vampirism.client.model.HunterMinionModel;
 import de.teamlapen.vampirism.client.render.layers.HunterEquipmentLayer;
 import de.teamlapen.vampirism.client.render.layers.PlayerBodyOverlayLayer;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
@@ -27,7 +28,7 @@ public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, 
 
 
     public HunterMinionRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new PlayerModel<>(0.5f, false), new PlayerModel<>(0.5f, true), 0.5F);
+        super(renderManagerIn, new HunterMinionModel<>(0.5f, false), new HunterMinionModel<>(0.5f, true), 0.5F);
         textures = gatherTextures("textures/entity/hunter", true);
         minionSpecificTextures = gatherTextures("textures/entity/minion/hunter", false);
         this.addLayer(new PlayerBodyOverlayLayer<>(this));
