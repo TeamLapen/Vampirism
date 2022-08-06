@@ -77,12 +77,6 @@
       "bookId": "pyropik"
     },
     {
-      "name": "James the Hunter",
-      "texture": "JaberC",
-      "type": 1,
-      "status": 2
-    },
-    {
       "name": "Pendragon Helsing",
       "texture": "xXvPendragonvXx",
       "type": 1,
@@ -109,7 +103,7 @@
     {
       "name": "Teri the Brave",
       "texture": "teri_berry",
-      "type": 2,
+      "type": 1,
       "status": 2
     }
   ]
