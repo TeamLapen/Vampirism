@@ -4,12 +4,14 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
+import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
 import de.teamlapen.vampirism.blocks.AltarInspirationBlock;
 import de.teamlapen.vampirism.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
@@ -504,5 +506,19 @@ public class ModPlayerEventHandler {
 
         }
         return true;
+    }
+
+
+    @SubscribeEvent
+    public void onPlayerAttackCritical(CriticalHitEvent event){
+        ItemStack stack = event.getPlayer().getMainHandItem();
+        if (!stack.isEmpty() && stack.getItem() instanceof IFactionSlayerItem) {
+            IFactionSlayerItem item = (IFactionSlayerItem) stack.getItem();
+            IFaction<?> faction = VampirismAPI.factionRegistry().getFaction(event.getTarget());
+            if (faction != null && faction.equals(item.getSlayedFaction())) {
+                event.setResult(Event.Result.ALLOW);
+                event.setDamageModifier(event.getDamageModifier() + (event.getOldDamageModifier() * (item.getDamageMultiplierForFaction(stack)-1)));
+            }
+        }
     }
 }
