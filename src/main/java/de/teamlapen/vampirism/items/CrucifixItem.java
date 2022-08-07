@@ -22,6 +22,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -115,7 +116,7 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
     }
 
     protected boolean affectsEntity(LivingEntity e) {
-        return Helper.isVampire(e);
+        return e.getMobType() == MobType.UNDEAD || Helper.isVampire(e);
     }
 
 
