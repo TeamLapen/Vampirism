@@ -11,13 +11,16 @@ import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRefinements;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
+import de.teamlapen.vampirism.items.CrucifixItem;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayerSpecialAttributes;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.MixinHooks;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.client.renderer.OutlineBufferSource;
 import net.minecraft.client.renderer.PostChain;
@@ -28,10 +31,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
@@ -40,6 +41,7 @@ import net.minecraftforge.client.event.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.level.LevelEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -256,7 +258,75 @@ public class RenderHandler implements ResourceManagerReloadListener {
     }
 
     @SubscribeEvent
+    public void onRenderFirstPersonHand(RenderHandEvent event){
+        LocalPlayer player = Minecraft.getInstance().player;
+        if(player!=null&&event.getHand() == InteractionHand.MAIN_HAND && player.isUsingItem() && player.getUseItemRemainingTicks() >0 ){
+            if(player.getMainHandItem().getItem() instanceof CrucifixItem){
+                int i = player.getMainArm() == HumanoidArm.RIGHT ? 1 : -1;
+                event.getPoseStack().translate(((float)-i * 0.56F), -0.0, -0.2F);
+            }
+        }
+    }
+
+    @SubscribeEvent
     public void onRenderPlayer(RenderPlayerEvent.Pre event) {
+        Player player = event.getEntity();
+        VampirePlayerSpecialAttributes vAtt = VampirismPlayerAttributes.get(player).getVampSpecial();
+       if (vAtt.isDBNO) {
+            event.getPoseStack().translate(1.2, 0, 0);
+            PlayerModel<?> m = event.getRenderer().getModel();
+            m.rightArm.visible = false;
+            m.rightSleeve.visible = false;
+            m.leftArm.visible = false;
+            m.leftSleeve.visible = false;
+            m.rightLeg.visible = false;
+            m.leftLeg.visible = false;
+            m.rightPants.visible = false;
+            m.leftPants.visible = false;
+        }
+        else if(player.getSleepingPos().map(pos -> player.level.getBlockState(pos)).map(state -> state.getBlock() instanceof CoffinBlock).orElse(false)){
+            //Shrink player, so they fit into the coffin model
+            event.getPoseStack().scale(0.8f,0.95f,0.8f);
+        } else if(event.getEntity().isUsingItem() && event.getEntity().getUseItemRemainingTicks() > 0 && event.getEntity().getMainHandItem().getItem() instanceof CrucifixItem){
+           if (event.getEntity().getMainArm() == HumanoidArm.RIGHT) {
+               event.getRenderer().getModel().rightArmPose = HumanoidModel.ArmPose.BLOCK;
+           } else {
+               event.getRenderer().getModel().leftArmPose = HumanoidModel.ArmPose.BLOCK;
+           }
+       }
+    }
+
+    @SubscribeEvent
+    public void onRenderWorldLast(RenderLevelStageEvent event) {
+        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_WEATHER) {
+            MixinHooks.enforcingGlowing_bloodVision = false;
+            if (mc.level == null) return;
+
+            /*
+             * DO NOT USE partial ticks from event. They are bugged: https://github.com/MinecraftForge/MinecraftForge/issues/6380
+             */
+            float partialTicks = mc.getFrameTime();
+
+
+            if (shouldRenderBloodVision() && !reducedBloodVision) {
+                this.blurShader.process(partialTicks);
+                if (this.bloodVisionBuffer != null) this.bloodVisionBuffer.endOutlineBatch();
+            }
+        }
+    }
+
+    @Override
+    public void onResourceManagerReload(@Nonnull ResourceManager resourceManager) {
+        this.reMakeBloodVisionShader();
+    }
+
+    @SubscribeEvent
+    public void onWorldLoad(LevelEvent.Load event) {
+        this.bloodVisionTicks = 0;//Reset blood vision on world load
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public void onRenderPlayerPreHigh(RenderPlayerEvent.Pre event){
         Player player = event.getEntity();
         VampirePlayerSpecialAttributes vAtt = VampirismPlayerAttributes.get(player).getVampSpecial();
         if (vAtt.invisible) {
@@ -289,51 +359,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
             float f = Mth.lerp(partialTicks, entityBat.yRotO, entityBat.getYRot());
             mc.getEntityRenderDispatcher().render(entityBat, d0, d1, d2, f, partialTicks, event.getPoseStack(), mc.renderBuffers().bufferSource(), mc.getEntityRenderDispatcher().getPackedLightCoords(entityBat, partialTicks));
 
-        } else if (vAtt.isDBNO) {
-            event.getPoseStack().translate(1.2, 0, 0);
-            PlayerModel<?> m = event.getRenderer().getModel();
-            m.rightArm.visible = false;
-            m.rightSleeve.visible = false;
-            m.leftArm.visible = false;
-            m.leftSleeve.visible = false;
-            m.rightLeg.visible = false;
-            m.leftLeg.visible = false;
-            m.rightPants.visible = false;
-            m.leftPants.visible = false;
         }
-        if(player.getSleepingPos().map(pos -> player.level.getBlockState(pos)).map(state -> state.getBlock() instanceof CoffinBlock).orElse(false)){
-            //Shrink player, so they fit into the coffin model
-            event.getPoseStack().scale(0.8f,0.95f,0.8f);
-        }
-    }
-
-    @SubscribeEvent
-    public void onRenderWorldLast(RenderLevelStageEvent event) {
-        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_WEATHER) {
-            MixinHooks.enforcingGlowing_bloodVision = false;
-            if (mc.level == null) return;
-
-            /*
-             * DO NOT USE partial ticks from event. They are bugged: https://github.com/MinecraftForge/MinecraftForge/issues/6380
-             */
-            float partialTicks = mc.getFrameTime();
-
-
-            if (shouldRenderBloodVision() && !reducedBloodVision) {
-                this.blurShader.process(partialTicks);
-                if (this.bloodVisionBuffer != null) this.bloodVisionBuffer.endOutlineBatch();
-            }
-        }
-    }
-
-    @Override
-    public void onResourceManagerReload(@Nonnull ResourceManager resourceManager) {
-        this.reMakeBloodVisionShader();
-    }
-
-    @SubscribeEvent
-    public void onWorldLoad(LevelEvent.Load event) {
-        this.bloodVisionTicks = 0;//Reset blood vision on world load
     }
 
     public boolean shouldRenderBloodVision() {
