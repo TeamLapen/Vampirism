@@ -2,13 +2,10 @@ package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
-import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.api.items.oil.IWeaponOil;
 import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
@@ -56,7 +53,6 @@ import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.util.thread.EffectiveSide;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -103,42 +99,13 @@ public class ModEntityEventHandler {
     }
 
     private final Set<ResourceLocation> unknownZombies = new HashSet<>();
-    private boolean skipAttackDamageOnceServer = false;
-    private boolean skipAttackDamageOnceClient = false;
+
     private boolean warnAboutGolem = true;
 
     @SubscribeEvent
     public void onAttachCapabilityEntity(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof PathfinderMob) {
             event.addCapability(REFERENCE.EXTENDED_CREATURE_KEY, ExtendedCreature.createNewCapability((PathfinderMob) event.getObject()));
-        }
-    }
-
-    @SubscribeEvent
-    public void onEntityAttacked(LivingAttackEvent event) {
-        //Probably not a very "clean" solution, but the only one I found
-        boolean client = EffectiveSide.get().isClient();
-        if (!(client ? skipAttackDamageOnceClient : skipAttackDamageOnceServer) && "player".equals(event.getSource().getMsgId()) && event.getSource().getEntity() instanceof Player) {
-            ItemStack stack = ((Player) event.getSource().getEntity()).getMainHandItem();
-            if (!stack.isEmpty() && stack.getItem() instanceof IFactionSlayerItem item) {
-                IFaction<?> faction = VampirismAPI.factionRegistry().getFaction(event.getEntity());
-
-                if (faction != null && faction.equals(item.getSlayedFaction())) {
-                    float amt = event.getAmount() * item.getDamageMultiplierForFaction(stack);
-                    if (client) {
-                        skipAttackDamageOnceClient = true;
-                    } else {
-                        skipAttackDamageOnceServer = true;
-                    }
-                    boolean result = event.getEntity().hurt(event.getSource(), amt);
-                    if (client) {
-                        skipAttackDamageOnceClient = false;
-                    } else {
-                        skipAttackDamageOnceServer = false;
-                    }
-                    event.setCanceled(true);
-                }
-            }
         }
     }
 

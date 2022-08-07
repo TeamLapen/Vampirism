@@ -7,7 +7,7 @@ import net.minecraft.world.level.ItemLike;
 import javax.annotation.Nonnull;
 
 /**
- * Item deals extra damage to a specific faction
+ * Item deals extra damage to a specific faction. Currently only has an effect if wielded by a player
  */
 public interface IFactionSlayerItem extends ItemLike {
 
