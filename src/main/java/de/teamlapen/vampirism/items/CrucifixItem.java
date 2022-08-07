@@ -89,7 +89,7 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
 
     @Override
     public UseAction getUseAnimation(ItemStack p_77661_1_) {
-        return UseAction.BLOCK;
+        return UseAction.NONE;
     }
 
     @Override
