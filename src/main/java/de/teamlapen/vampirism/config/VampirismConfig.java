@@ -1,13 +1,11 @@
 package de.teamlapen.vampirism.config;
 
 
-import com.google.common.collect.ImmutableList;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -16,7 +14,6 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
@@ -291,6 +288,7 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue autoConvertGlassBottles;
         public final ForgeConfigSpec.BooleanValue umbrella;
         public final ForgeConfigSpec.BooleanValue enforceTentGeneration;
+        public final ForgeConfigSpec.BooleanValue enableFactionLogging;
 
         //Mobs
         public final ForgeConfigSpec.IntValue vampireSpawnChance;
@@ -339,6 +337,7 @@ public class VampirismConfig {
             autoConvertGlassBottles = builder.comment("Whether glass bottles should be automatically be converted to blood bottles when needed").define("autoConvertGlassBottles", true);
             umbrella = builder.comment("If enabled adds a craftable umbrella that can be used to slowly walk though sunlight without taking damage").define("umbrella", false);
             enforceTentGeneration = builder.comment("Enforce tent generation in any overworld world, even if they were not included in modded or datapack world-types on purpose. Does not affect Server#disableTentGeneration or disable tent generation itself.").define("enforceOverworldTentGeneration", true);
+            enableFactionLogging = builder.comment("Enable a custom vampirism log file that logs specific faction actions", "Requires restart").define("enableFactionLogging", false);
             builder.push("mobspawn");
             vampireSpawnChance = builder.comment("Vampire spawn chance/weight (e.g. Zombie: 100). Does not affect vampire forest.").defineInRange("vampireSpawnChance", 80, 0, 100000);
             advancedVampireSpawnChance = builder.comment("Advanced vampire spawn chance/weight (e.g. Zombie: 100). Does not affect vampire forest.").defineInRange("advancedVampireSpawnChance", 26, 0, 100000);

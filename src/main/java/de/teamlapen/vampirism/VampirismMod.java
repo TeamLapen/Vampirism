@@ -135,7 +135,6 @@ public class VampirismMod {
     public VampirismMod() {
         instance = this;
         checkEnv();
-        DistExecutor.safeRunWhenOn(Dist.DEDICATED_SERVER, () -> VampirismLogger::init);
 
         Optional<? extends net.minecraftforge.fml.ModContainer> opt = ModList.get().getModContainerById(REFERENCE.MODID);
         if (opt.isPresent()) {
@@ -280,6 +279,7 @@ public class VampirismMod {
         modCompatLoader.onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
         VampirismAPI.skillManager().registerSkillType(SkillType.LEVEL);
         VampirismAPI.skillManager().registerSkillType(SkillType.LORD);
+        DistExecutor.safeRunWhenOn(Dist.DEDICATED_SERVER, () -> VampirismLogger::init);
     }
 
     /**

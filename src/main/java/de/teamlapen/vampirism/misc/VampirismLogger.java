@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.misc;
 
+import de.teamlapen.vampirism.config.VampirismConfig;
 import org.apache.logging.log4j.*;
 import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -9,6 +10,10 @@ import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.layout.PatternLayout;
 
+/**
+ * logger for vampirism faction stuff that is only initialized for dedicated server and only woorking if {@link de.teamlapen.vampirism.config.VampirismConfig.Common#enableFactionLogging} is true<br>
+ * otherwise the logger does nothing
+ */
 public class VampirismLogger {
 
     private static final String LOG_FILE_NAME = "logs/vampirism.log";
@@ -22,7 +27,11 @@ public class VampirismLogger {
 
     private static Logger logger;
 
+    /**
+     * requires common config to be loaded
+     */
     public static void init() {
+        if (!VampirismConfig.COMMON.enableFactionLogging.get() || logger != null) return;
         final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
         Configuration configuration = ctx.getConfiguration();
 
@@ -45,7 +54,7 @@ public class VampirismLogger {
 
         configuration.addLogger(LOGGER_NAME, loggerConfig);
         ctx.updateLoggers();
-        logger = LogManager.getLogger(LOGGER_NAME);
+        logger  = LogManager.getLogger(LOGGER_NAME);
     }
 
     public static void info(Marker marker, String msg, Object... args) {
