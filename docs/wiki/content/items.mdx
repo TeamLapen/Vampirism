@@ -3,52 +3,20 @@ sidebar_position: 6
 title: Items
 ---
 
+import {Item, Items} from '@site/src/components/Items.mdx'
+import {accessoryImages, alchemicalFireImage} from "../assets/images/_images.mdx";
+import {accessoriesRecipes, alchemicalFireBrewingRecipes} from "./_recipes.mdx";
+
 Recipes may be outdated. Just Enough items is recommend
-### Accessories
-<img src="https://i.ibb.co/37H78r5/vampire-amulet-3.png" alt="vampire-amulet-3" border="0" width="100"/>
-<img src="https://i.ibb.co/H41H3Xx/vampire-ring.png" alt="vampire-ring" border="0" width="100"/>
-<img src="https://i.ibb.co/vqdzpQv/vampire-obi-belt.png" alt="vampire-obi-belt" border="0" width="100"/>
-<p>
+<Item title="Accessories" img={accessoryImages} source={assessoryRecipes}>
 
 Accessories are unique equipment for vampire player which can be equipped in the Vampirism Menu. They each have a special effect (see [Refinements](https://github.com/TeamLapen/Vampirism/wiki/Refinements) for more information about these effects)
+</Item>
 
-<details><summary>how to acquire</summary>
-
-All accessories receive random refinements.
-
-
-##### Entity Loot
-- Vampire
-- Advanced Vampire
-- Hunter
-
-##### Chest Loot
-- Vampire Dungeon
-- Abandoned Mineshaft
-- Desert Pyramid
-- Jungle Temple
-- Stronghold Corridor
-- Stronghold Library
-</details>
-
-### Alchemical Fire
-<img src="https://i.ibb.co/fGB5b8Y/alchemical-fire.png" alt="alchemical-fire" border="0" width="100"/>
-<p>
+<Item title="Alchemical Fire" img={alchemicalFireImage} source={alchemicalFireBrewingRecipes}>
 
 Used in recipes or for placing Alchemical Fire.
-
-<details><summary>how to acquire</summary>
-
-#### Alchemical Cauldron
-
-1 (Normal/Enhanced/Ultimate) Holy Water + 1 Gunpowder
-
-Requires `Basic Alchemy` Skill
-
-<img src="https://i.ibb.co/56dFfb6/alchemical-fire-1-recipe.png" alt="alchemical-fire-1-recipe" border="0" width="500"/>
-<img src="https://i.ibb.co/phD5Cwx/alchemical-fire-2-recipe.png" alt="alchemical-fire-2-recipe" border="0" width="500"/>
-<img src="https://i.ibb.co/1byCNhM/alchemical-fire-3-recipe.png" alt="alchemical-fire-3-recipe" border="0"  width="500"/>
-</details>
+</Item>
 
 ### Armor of Swiftness
 ##### Normal

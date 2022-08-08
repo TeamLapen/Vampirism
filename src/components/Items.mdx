@@ -1,0 +1,51 @@
+export const ItemImg = ({src, alt}) => (
+    <img src={src} alt={alt} style={{height: 100, imageRendering: "pixelated"}}/>
+);
+
+export const Items = ({children, title, img, source}) => (
+    <div style={{marginBottom: '50px'}} id={title.toLowerCase().replaceAll(' ', '-')}>
+        <div>
+            <h1 style={{fontSize: 'xx-large'}}>{title}</h1>
+        </div>
+        <div className="image" style={{marginLeft: '10px', marginBottom: '20px'}}>
+            {img.map(imagePair => (
+                <ItemImg src={imagePair.src} alt={imagePair.alt}/>
+            ))}
+        </div>
+        <span>
+            {children}
+        </span>
+        <div>
+        {source != null && <div style={{marginTop: '20px'}}>
+            <details>
+                <summary>How to Acquire</summary>
+                {source.map(item => {
+                    switch (item.type) {
+                        case "list":
+                            return (
+                                <span>
+                           <h4>{item.title}</h4>
+                       <ul>
+                           {item.source.map(source => (
+                               <li>{source}</li>
+                           ))}
+                       </ul></span>
+                            );
+                        case "recipe":
+                            return (<span>
+                               <h4>{item.title}</h4>
+                                {item.recipes.map(recipe => (
+                                    <img src={recipe} alt="" style={{width: 500, imageRendering: "pixelated"}}/>
+                                ))}
+                           </span>);
+                    }
+                })}
+            </details>
+        </div>}
+        </div>
+    </div>
+);
+
+export const Item = ({children, title, img, source}) => (
+    <Items children={children} title={title} source={source} img={[{src: img, alt: title}]}></Items>
+);

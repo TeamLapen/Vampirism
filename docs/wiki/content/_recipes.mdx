@@ -1,0 +1,15 @@
+import {alchemicalFire1Recipe, alchemicalFire2Recipe, alchemicalFire3Recipe} from "../assets/recipes/_recipes.mdx";
+import {craftingRecipes} from "@site/src/components/Recipes";
+export const accessoriesRecipes = [
+    {
+        type: "list",
+        title: "Entity Drops",
+        source: ["Vampire", "Advanced Vampire", "Hunter", "Advanced Hunter"]
+    },
+    {
+        type: "list",
+        title: "Chest Loot",
+        source: ["Vampire Dungeon", "Abandoned Mineshaft", "Desert Pyramid", "Jungle Temple", "Stronghold Corridor", "Stronghold Library"]
+    }
+]
+export const alchemicalFireBrewingRecipes = craftingRecipes([alchemicalFire1Recipe,alchemicalFire2Recipe,alchemicalFire3Recipe], "Brewing")
