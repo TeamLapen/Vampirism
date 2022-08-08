@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillPlayer;
+import de.teamlapen.vampirism.command.arguments.MinionArgument;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -27,7 +28,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -517,8 +517,15 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         }
     }
 
-    public Collection<Pair<Integer,MinionData>> getAllMinionData() {
-        return Arrays.stream(minions).map(i -> Pair.of(i.minionID, i.data)).collect(Collectors.toList());
+    /**
+     * creates a collection of id for all minions that are unique identifier to be used safely in commands
+     * <br>
+     * since the player is not necessarily available because the player might not be connected the players name is needed as parameter
+     * @param playerName the players name
+     * @return collection of minion ids
+     */
+    public Collection<MinionArgument.MinionId> getMinionIdForName(String playerName) {
+        return Arrays.stream(minions).map(i -> new MinionArgument.MinionId(playerName, i.minionID, i.data.getFormattedName().getString())).collect(Collectors.toList());
     }
 
     private static class MinionInfo {
