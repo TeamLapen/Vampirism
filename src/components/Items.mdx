@@ -2,10 +2,11 @@ export const ItemImg = ({src, alt}) => (
     <img src={src} alt={alt} style={{height: 100, imageRendering: "pixelated"}}/>
 );
 
-export const Items = ({children, title, img, source}) => (
+export const Items = ({children, title, img, source, subHeading = false}) => (
     <div style={{marginBottom: '50px'}} id={title.toLowerCase().replaceAll(' ', '-')}>
         <div>
-            <h1 style={{fontSize: 'xx-large'}}>{title}</h1>
+            {!subHeading && <h1 style={{fontSize: 'xx-large'}}>{title}</h1>}
+            {subHeading && <h2 style={{fontSize: 'x-large'}}>{title}</h2>}
         </div>
         <div className="image" style={{marginLeft: '10px', marginBottom: '20px'}}>
             {img.map(imagePair => (
@@ -24,17 +25,18 @@ export const Items = ({children, title, img, source}) => (
                         case "list":
                             return (
                                 <span>
-                           <h4>{item.title}</h4>
-                       <ul>
-                           {item.source.map(source => (
-                               <li>{source}</li>
-                           ))}
-                       </ul></span>
+                                    <h4>{item.title}</h4>
+                                    <ul>
+                                        {item.source.map(source => (
+                                            <li>{source}</li>
+                                        ))}
+                                    </ul>
+                                </span>
                             );
                         case "recipe":
                             return (<span>
                                <h4>{item.title}</h4>
-                                {item.recipes.map(recipe => (
+                                {item.source.map(recipe => (
                                     <img src={recipe} alt="" style={{width: 500, imageRendering: "pixelated"}}/>
                                 ))}
                            </span>);
@@ -48,4 +50,16 @@ export const Items = ({children, title, img, source}) => (
 
 export const Item = ({children, title, img, source}) => (
     <Items children={children} title={title} source={source} img={[{src: img, alt: title}]}></Items>
+);
+
+export const TieredItem = ({title, tiers}) => (
+    <div style={{marginBottom: '50px'}} id={title.toLowerCase().replaceAll(' ', '-')}>
+        <div>
+            <h1 style={{fontSize: 'xx-large'}}>{title}</h1>
+        </div>
+        {tiers.map(tier => (
+            <div>
+                <Items children={tier.children} title={tier.title} source={tier.source} img={tier.img} subHeading={true}></Items>
+            </div>))}
+    </div>
 );

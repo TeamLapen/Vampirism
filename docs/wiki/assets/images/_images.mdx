@@ -1,3 +1,38 @@
+import garlicCore from './garlic-beacon-core.png'
+import garlicCoreEnhanced from './garlic-beacon-core-enhanced.png'
+import crossbow from './crossbow.png'
+import doubleCrossbow from './double-crossbow.png'
+import enhancedCrossbow from './enhanced-crossbow.png'
+import enhancedDoubleCrossbow from './double-enhanced-crossbow.png'
+import techCrossbow from './tech-crossbow.png'
+import enhancedTechCrossbow from './tech-crossbow-enhanced.png'
+import armorOfSwiftnessHeadNormal from './swiftness-head-normal.png'
+import armorOfSwiftnessChestNormal from './swiftness-chest-normal.png'
+import armorOfSwiftnessLegsNormal from './swiftness-legs-normal.png'
+import armorOfSwiftnessFeetNormal from './swiftness-feet-normal.png'
+import armorOfSwiftnessHeadEnhanced from './swiftness-head-enhanced.png'
+import armorOfSwiftnessChestEnhanced from './swiftness-chest-enhanced.png'
+import armorOfSwiftnessLegsEnhanced from './swiftness-legs-enhanced.png'
+import armorOfSwiftnessFeetEnhanced from './swiftness-feet-enhanced.png'
+import armorOfSwiftnessHeadUltimate from './swiftness-head-ultimate.png'
+import armorOfSwiftnessChestUltimate from './swiftness-chest-ultimate.png'
+import armorOfSwiftnessLegsUltimate from './swiftness-legs-ultimate.png'
+import armorOfSwiftnessFeetUltimate from './swiftness-feet-ultimate.png'
+import crossbowArrow from './crossbow-arrow.png'
+import crossbowSpitfire from './crossbow-arrow-spitfire.png'
+import crossbowVampireKiller from './crossbow-arrow-vampire-killer.png'
+import heartSeekerNormal from './heart-seeker-normal.png'
+import heartSeekerEnhanced from './heart-seeker-enhanced.png'
+import heartSeekerUltimate from './heart-seeker-ultimate.png'
+import heartStrikerNormal from './heart-striker-normal.png'
+import heartStrikerEnhanced from './heart-striker-enhanced.png'
+import heartStrikerUltimate from './heart-striker-ultimate.png'
+import hunterBook from './hunter-book.png'
+import hunterAxe from './hunter-axe.png'
+import umbrella from './umbrella.png'
+import stake from './stake.png'
+import pitchfork from './pitchfork.png'
+
 export const baseUrl = "https://raw.githubusercontent.com/TeamLapen/Vampirism/4bf2c73fb860a23de225edbae9c0b1c1ead3dd1a/src/main/resources/assets/vampirism/textures/item/"
 
 export function image(imageName) {
@@ -10,32 +45,96 @@ export const beltImage = image("vampire_obi_belt_layer0.png")
 export const accessoryImages = [
     {
         src: amuletImage,
-        alt: "amulet"
+        alt: "amulet",
     },
     {
         src: ringImage,
-        alt: "ring"
+        alt: "ring",
     },
     {
         src: beltImage,
-        alt: "belt"
+        alt: "belt",
     }
 ]
 export const alchemicalFireImage = image("alchemical_fire.png")
-export const armorOfSwiftnessHeadImage = image()
-export const armorOfSwiftnessChestImage = image()
-export const armorOfSwiftnessLegsImage = image()
-export const armorOfSwiftnessFeetImage = image()
-export const armorOfSwiftnessHeadEnhancedImage = image()
-export const armorOfSwiftnessChestEnhancedImage = image()
-export const armorOfSwiftnessLegsEnhancedImage = image()
-export const armorOfSwiftnessFeetEnhancedImage = image()
-export const armorOfSwiftnessHeadUltimateImage = image()
-export const armorOfSwiftnessChestUltimateImage = image()
-export const armorOfSwiftnessLegsUltimateImage = image()
-export const armorOfSwiftnessFeetUltimateImage = image()
-export const beaconCoreImage = image()
-export const beaconCoreEnhancedImage = image()
+export const armorOfSwiftnessHeadImage = armorOfSwiftnessHeadNormal
+export const armorOfSwiftnessChestImage = armorOfSwiftnessChestNormal
+export const armorOfSwiftnessLegsImage = armorOfSwiftnessLegsNormal
+export const armorOfSwiftnessFeetImage = armorOfSwiftnessFeetNormal
+export const armorOfSwiftnessNormalImages = [
+    {
+        src: armorOfSwiftnessHeadImage,
+        alt: "armor of swiftness head",
+    },
+    {
+        src: armorOfSwiftnessChestImage,
+        alt: "armor of swiftness chest",
+    },
+    {
+        src: armorOfSwiftnessLegsImage,
+        alt: "armor of swiftness legs",
+    },
+    {
+        src: armorOfSwiftnessFeetImage,
+        alt: "armor of swiftness feet",
+    }
+]
+export const armorOfSwiftnessHeadEnhancedImage = armorOfSwiftnessHeadEnhanced
+export const armorOfSwiftnessChestEnhancedImage = armorOfSwiftnessChestEnhanced
+export const armorOfSwiftnessLegsEnhancedImage = armorOfSwiftnessLegsEnhanced
+export const armorOfSwiftnessFeetEnhancedImage = armorOfSwiftnessFeetEnhanced
+export const armorOfSwiftnessEnhancedImages = [
+    {
+        src: armorOfSwiftnessHeadEnhancedImage,
+        alt: "armor of swiftness head",
+    },
+    {
+        src: armorOfSwiftnessChestEnhancedImage,
+        alt: "armor of swiftness chest",
+    },
+    {
+        src: armorOfSwiftnessLegsEnhancedImage,
+        alt: "armor of swiftness legs",
+    },
+    {
+        src: armorOfSwiftnessFeetEnhancedImage,
+        alt: "armor of swiftness feet",
+    }
+]
+export const armorOfSwiftnessHeadUltimateImage = armorOfSwiftnessHeadUltimate
+export const armorOfSwiftnessChestUltimateImage = armorOfSwiftnessChestUltimate
+export const armorOfSwiftnessLegsUltimateImage = armorOfSwiftnessLegsUltimate
+export const armorOfSwiftnessFeetUltimateImage = armorOfSwiftnessFeetUltimate
+export const armorOfSwiftnessUltimateImages = [
+    {
+        src: armorOfSwiftnessHeadUltimateImage,
+        alt: "armor of swiftness head ultimate",
+    },
+    {
+        src: armorOfSwiftnessChestUltimateImage,
+        alt: "armor of swiftness chest ultimate",
+    },
+    {
+        src: armorOfSwiftnessLegsUltimateImage,
+        alt: "armor of swiftness legs ultimate",
+    },
+    {
+        src: armorOfSwiftnessFeetUltimateImage,
+        alt: "armor of swiftness feet ultimate",
+    }
+    ]
+export const beaconCoreImage = garlicCore
+export const beaconCoreEnhancedImage = garlicCoreEnhanced
+export const beaconImages = [
+{
+        src: beaconCoreImage,
+        alt: "beacon core",
+    },
+    {
+        src: beaconCoreEnhancedImage,
+        alt: "beacon core enhanced",
+    }
+]
 export const bloodBottleImage = image("blood_bottle_0.png")
 export const bloodBottle1Image = image("blood_bottle_1.png")
 export const bloodBottle2Image = image("blood_bottle_2.png")
@@ -46,83 +145,367 @@ export const bloodBottle6Image = image("blood_bottle_6.png")
 export const bloodBottle7Image = image("blood_bottle_7.png")
 export const bloodBottle8Image = image("blood_bottle_8.png")
 export const bloodBottle9Image = image("blood_bottle_9.png")
+export const bloodBottleImages = [
+    {
+        src: bloodBottleImage,
+        alt: "blood bottle",
+    },
+    {
+        src: bloodBottle1Image,
+        alt: "blood bottle 1",
+    },
+    {
+        src: bloodBottle2Image,
+        alt: "blood bottle 2",
+    },
+    {
+        src: bloodBottle3Image,
+        alt: "blood bottle 3",
+    },
+    {
+        src: bloodBottle4Image,
+        alt: "blood bottle 4",
+    },
+    {
+        src: bloodBottle5Image,
+        alt: "blood bottle 5",
+    },
+    {
+        src: bloodBottle6Image,
+        alt: "blood bottle 6",
+    },
+    {
+        src: bloodBottle7Image,
+        alt: "blood bottle 7",
+    },
+    {
+        src: bloodBottle8Image,
+        alt: "blood bottle 8",
+    },
+    {
+        src: bloodBottle9Image,
+        alt: "blood bottle 9",
+    }
+]
 export const bloodInfusedIronIngotImage = image("blood_infused_iron_ingot.png")
 export const bloodInfusedEnhancedIronIngotImage = image("blood_infused_enhanced_iron_ingot.png")
-export const crossbowImage = image()
-export const doubleCrossbowImage = image()
-export const enhancedCrossbowImage = image()
-export const enhancedDoubleCrossbowImage = image()
-export const techCrossbowImage = image()
-export const enhancedTechCrossbowImage = image()
-export const crossbowArrowImage = image()
-export const crossbowArrowSpitfireImage = image()
-export const crossbowArrowVampireKillerImage = image()
+export const bloodInfusedIronIngotImages = [
+    {
+        src: bloodInfusedIronIngotImage,
+        alt: "blood infused iron ingot",
+    },
+    {
+        src: bloodInfusedEnhancedIronIngotImage,
+        alt: "blood infused enhanced iron ingot",
+    }
+]
+export const crossbowImage = crossbow
+export const doubleCrossbowImage = doubleCrossbow
+export const enhancedCrossbowImage = enhancedCrossbow
+export const enhancedDoubleCrossbowImage = enhancedDoubleCrossbow
+export const techCrossbowImage = techCrossbow
+export const enhancedTechCrossbowImage = enhancedTechCrossbow
+export const crossbowImages = [
+    {
+        src: crossbowImage,
+        alt: "crossbow",
+    },
+    {
+        src: doubleCrossbowImage,
+        alt: "double crossbow",
+    },
+    {
+        src: enhancedCrossbowImage,
+        alt: "enhanced crossbow",
+    },
+    {
+        src: enhancedDoubleCrossbowImage,
+        alt: "enhanced double crossbow",
+    },
+    {
+        src: techCrossbowImage,
+        alt: "tech crossbow",
+    },
+    {
+        src: enhancedTechCrossbowImage,
+        alt: "enhanced tech crossbow",
+    }
+]
+export const crossbowArrowImage = crossbowArrow
+export const crossbowArrowSpitfireImage = crossbowSpitfire
+export const crossbowArrowVampireKillerImage = crossbowVampireKiller
+export const crossbowArrowImages = [
+    {
+        src: crossbowArrowImage,
+        alt: "crossbow arrow",
+    },
+    {
+        src: crossbowArrowSpitfireImage,
+        alt: "crossbow arrow spitfire",
+    },
+    {
+        src: crossbowArrowVampireKillerImage,
+        alt: "crossbow arrow vampire killer",
+    }
+]
 export const crossbowClipImage = image("tech_crossbow_ammo_package.png")
 export const feedingAdapterImage = image("feeding_adapter.png")
 export const garlicImage = image("garlic.png")
 export const garlicBreadImage = image("garlic_bread.png")
 export const garlicFinderImage = image("garlic_finder.png")
 export const guideBookImage = image("guidebook.png")
-export const heartSeekerImage = image()
-export const heartSeekerEnhancedImage = image()
-export const heartSeekerUltimateImage = image()
-export const heartStrikerImage = image()
-export const heartStrikerEnhancedImage = image()
-export const heartStrikerUltimateImage = image()
+export const heartSeekerNormalImage = heartSeekerNormal
+export const heartSeekerEnhancedImage = heartSeekerEnhanced
+export const heartSeekerUltimateImage = heartSeekerUltimate
+export const heartStrikerNormalImage = heartStrikerNormal
+export const heartStrikerEnhancedImage = heartStrikerEnhanced
+export const heartStrikerUltimateImage = heartStrikerUltimate
 export const holyWaterImage = image("holy_water_normal.png")
 export const holyWaterEnhancedImage = image("holy_water_enhanced.png")
 export const holyWaterUltimateImage = image("holy_water_ultimate.png")
+export const holyWaterImages = [
+    {
+        src: holyWaterImage,
+        alt: "holy water",
+    },
+    {
+        src: holyWaterEnhancedImage,
+        alt: "holy water enhanced",
+    },
+    {
+        src: holyWaterUltimateImage,
+        alt: "holy water ultimate",
+    }
+]
 export const splashHolyWaterImage = image("holy_water_splash_normal.png")
 export const splashHolyWaterEnhancedImage = image("holy_water_splash_enhanced.png")
 export const splashHolyWaterUltimateImage = image("holy_water_splash_ultimate.png")
+export const splashHolyWaterImages = [
+    {
+        src: splashHolyWaterImage,
+        alt: "splash holy water",
+    },
+    {
+        src: splashHolyWaterEnhancedImage,
+        alt: "splash holy water enhanced",
+    },
+    {
+        src: splashHolyWaterUltimateImage,
+        alt: "splash holy water ultimate",
+    }
+]
 export const holySaltImage = image("holy_salt.png")
 export const holySaltWaterImage = image("holy_salt_water.png")
 export const humanHeartImage = image("human_heart.png")
 export const weakHumanHeartImage = image("weak_human_heart.png")
-export const hunterAxeImage = image()
-export const hunterAxeEnhancedImage = image()
-export const hunterAxeUltimateImage = image()
+export const hunterAxeNormalImage = hunterAxe
+export const hunterAxeEnhancedImage = hunterAxe
+export const hunterAxeUltimateImage = hunterAxe
 export const hunterCoatHeadImage = image("hunter_coat_head_normal.png")
 export const hunterCoatChestImage = image("hunter_coat_chest_normal.png")
 export const hunterCoatLegsImage = image("hunter_coat_legs_normal.png")
 export const hunterCoatFeetImage = image("hunter_coat_feet_normal.png")
+export const hunterCoatNormalImages = [
+    {
+        src: hunterCoatHeadImage,
+        alt: "hunter coat head",
+    },
+    {
+        src: hunterCoatChestImage,
+        alt: "hunter coat chest",
+    },
+    {
+        src: hunterCoatLegsImage,
+        alt: "hunter coat legs",
+    },
+    {
+        src: hunterCoatFeetImage,
+        alt: "hunter coat feet",
+    }
+]
 export const hunterCoatHeadEnhancedImage = image("hunter_coat_head_enhanced.png")
 export const hunterCoatChestEnhancedImage = image("hunter_coat_chest_enhanced.png")
 export const hunterCoatLegsEnhancedImage = image("hunter_coat_legs_enhanced.png")
 export const hunterCoatFeetEnhancedImage = image("hunter_coat_feet_enhanced.png")
+export const hunterCoatEnhancedImages = [
+    {
+        src: hunterCoatHeadEnhancedImage,
+        alt: "hunter coat head enhanced",
+    },
+    {
+        src: hunterCoatChestEnhancedImage,
+        alt: "hunter coat chest enhanced",
+    },
+    {
+        src: hunterCoatLegsEnhancedImage,
+        alt: "hunter coat legs enhanced",
+    },
+    {
+        src: hunterCoatFeetEnhancedImage,
+        alt: "hunter coat feet enhanced",
+    }
+]
 export const hunterCoatHeadUltimateImage = image("hunter_coat_head_ultimate.png")
 export const hunterCoatChestUltimateImage = image("hunter_coat_chest_ultimate.png")
 export const hunterCoatLegsUltimateImage = image("hunter_coat_legs_ultimate.png")
 export const hunterCoatFeetUltimateImage = image("hunter_coat_feet_ultimate.png")
+export const hunterCoatUltimateImages = [
+    {
+        src: hunterCoatHeadUltimateImage,
+        alt: "hunter coat head ultimate",
+    },
+    {
+        src: hunterCoatChestUltimateImage,
+        alt: "hunter coat chest ultimate",
+    },
+    {
+        src: hunterCoatLegsUltimateImage,
+        alt: "hunter coat legs ultimate",
+    },
+    {
+        src: hunterCoatFeetUltimateImage,
+        alt: "hunter coat feet ultimate",
+    }
+]
 export const hunterHead0Image = image("hunter_hat_0.png")
 export const hunterHead1Image = image("hunter_hat_1.png")
-export const hunterIntelImage = image()
+export const hunterHeadImages = [
+    {
+        src: hunterHead0Image,
+        alt: "hunter hat 0",
+    },
+    {
+        src: hunterHead1Image,
+        alt: "hunter hat 1",
+    }
+]
+export const hunterIntelImage = hunterBook
 export const infectedAppleImage = image("cure_apple.png")
 export const injectionEmptyImage = image("injection_empty.png")
 export const injectionGarlicImage = image("injection_garlic.png")
 export const injectionSanguinemImage = image("injection_sanguinare.png")
 export const injectionZombieBloodImage = image("injection_zombie_blood.png")
+export const injectionImages = [
+    {
+        src: injectionEmptyImage,
+        alt: "injection empty",
+    },
+    {
+        src: injectionGarlicImage,
+        alt: "injection garlic",
+    },
+    {
+        src: injectionSanguinemImage,
+        alt: "injection sanguinem",
+    },
+    {
+        src: injectionZombieBloodImage,
+        alt: "injection zombie blood",
+    }
+]
 export const vampireMinionBindingImage = image("vampire_minion_binding.png")
-export const hunterMinionBindingImage = image("hunter_minion_binding.png")
+export const hunterMinionBindingImage = image("hunter_minion_equipment.png")
 export const vampireMinionUpgradeSimpleImage = image("vampire_minion_upgrade_simple.png")
 export const vampireMinionUpgradeEnhancedImage = image("vampire_minion_upgrade_enhanced.png")
 export const vampireMinionUpgradeSpecialImage = image("vampire_minion_upgrade_special.png")
+export const vampireMinionUpgradeImages = [
+    {
+        src: vampireMinionUpgradeSimpleImage,
+        alt: "vampire minion upgrade simple",
+    },
+    {
+        src: vampireMinionUpgradeEnhancedImage,
+        alt: "vampire minion upgrade enhanced",
+    },
+    {
+        src: vampireMinionUpgradeSpecialImage,
+        alt: "vampire minion upgrade special",
+    }
+]
 export const hunterMinionUpgradeSimpleImage = image("hunter_minion_upgrade_simple.png")
 export const hunterMinionUpgradeEnhancedImage = image("hunter_minion_upgrade_enhanced.png")
 export const hunterMinionUpgradeSpecialImage = image("hunter_minion_upgrade_special.png")
+export const hunterMinionUpgradeImages = [
+    {
+        src: hunterMinionUpgradeSimpleImage,
+        alt: "hunter minion upgrade simple",
+    },
+    {
+        src: hunterMinionUpgradeEnhancedImage,
+        alt: "hunter minion upgrade enhanced",
+    },
+    {
+        src: hunterMinionUpgradeSpecialImage,
+        alt: "hunter minion upgrade special",
+    }
+]
 export const obsidianArmorHeadImage = image("obsidian_armor_head_normal.png")
 export const obsidianArmorChestImage = image("obsidian_armor_chest_normal.png")
 export const obsidianArmorLegsImage = image("obsidian_armor_legs_normal.png")
 export const obsidianArmorFeetImage = image("obsidian_armor_feet_normal.png")
+export const obsidianArmorNormalImages = [
+    {
+        src: obsidianArmorHeadImage,
+        alt: "obsidian armor head",
+    },
+    {
+        src: obsidianArmorChestImage,
+        alt: "obsidian armor chest",
+    },
+    {
+        src: obsidianArmorLegsImage,
+        alt: "obsidian armor legs",
+    },
+    {
+        src: obsidianArmorFeetImage,
+        alt: "obsidian armor feet",
+    }
+]
 export const obsidianArmorHeadEnhancedImage = image("obsidian_armor_head_enhanced.png")
 export const obsidianArmorChestEnhancedImage = image("obsidian_armor_chest_enhanced.png")
 export const obsidianArmorLegsEnhancedImage = image("obsidian_armor_legs_enhanced.png")
 export const obsidianArmorFeetEnhancedImage = image("obsidian_armor_feet_enhanced.png")
+export const obsidianArmorEnhancedImages = [
+    {
+        src: obsidianArmorHeadEnhancedImage,
+        alt: "obsidian armor head enhanced",
+    },
+    {
+        src: obsidianArmorChestEnhancedImage,
+        alt: "obsidian armor chest enhanced",
+    },
+    {
+        src: obsidianArmorLegsEnhancedImage,
+        alt: "obsidian armor legs enhanced",
+    },
+    {
+        src: obsidianArmorFeetEnhancedImage,
+        alt: "obsidian armor feet enhanced",
+    }
+]
 export const obsidianArmorHeadUltimateImage = image("obsidian_armor_head_ultimate.png")
 export const obsidianArmorChestUltimateImage = image("obsidian_armor_chest_ultimate.png")
 export const obsidianArmorLegsUltimateImage = image("obsidian_armor_legs_ultimate.png")
 export const obsidianArmorFeetUltimateImage = image("obsidian_armor_feet_ultimate.png")
-export const pitchforkImage = image()
+export const obsidianArmorUltimateImages = [
+    {
+        src: obsidianArmorHeadUltimateImage,
+        alt: "obsidian armor head ultimate",
+    },
+    {
+        src: obsidianArmorChestUltimateImage,
+        alt: "obsidian armor chest ultimate",
+    },
+    {
+        src: obsidianArmorLegsUltimateImage,
+        alt: "obsidian armor legs ultimate",
+    },
+    {
+        src: obsidianArmorFeetUltimateImage,
+        alt: "obsidian armor feet ultimate",
+    }
+]
+export const pitchforkImage = pitchfork
 export const potionOfOblivionImage = image("oblivion_potion.png")
 export const pureSaltImage = image("holy_salt.png")
 export const pureBlood0Image = image("pure_blood_0.png")
@@ -130,18 +513,72 @@ export const pureBlood1Image = image("pure_blood_1.png")
 export const pureBlood2Image = image("pure_blood_2.png")
 export const pureBlood3Image = image("pure_blood_3.png")
 export const pureBlood4Image = image("pure_blood_4.png")
+export const pureBloodImages = [
+    {
+        src: pureBlood0Image,
+        alt: "pure blood 0",
+    },
+    {
+        src: pureBlood1Image,
+        alt: "pure blood 1",
+    },
+    {
+        src: pureBlood2Image,
+        alt: "pure blood 2",
+    },
+    {
+        src: pureBlood3Image,
+        alt: "pure blood 3",
+    },
+    {
+        src: pureBlood4Image,
+        alt: "pure blood 4",
+    }
+]
 export const purifiedGarlicImage = image("purified_garlic.png")
 export const soulOrbImage = image("soul_orb_vampire.png")
-export const stakeImage = image()
-export const umbrellaImage = image()
+export const stakeImage = stake
+export const umbrellaImage = umbrella
 export const vampireHatImage = image("vampire_clothing_hat.png")
 export const vampireCrownImage = image("vampire_clothing_crown.png")
+export const vampireClothHeadImages = [
+    {
+        src: vampireHatImage,
+        alt: "vampire hat",
+    },
+    {
+        src: vampireCrownImage,
+        alt: "vampire crown",
+    }
+]
 export const vampireCloak1Image = image("vampire_cloak_black_blue.png")
 export const vampireCloak2Image = image("vampire_cloak_black_red.png")
 export const vampireCloak3Image = image("vampire_cloak_black_white.png")
 export const vampireCloak4Image = image("vampire_cloak_red_black.png")
 export const vampireCloak5Image = image("vampire_cloak_white_black.png")
-export const vampireLegsImage = image("vampire_clothing_legs.png")
-export const vampireFeetImage = image("vampire_clothing_boots.png")
+export const vampireClothChestImages = [
+    {
+        src: vampireCloak1Image,
+        alt: "vampire cloak 1",
+    },
+    {
+        src: vampireCloak2Image,
+        alt: "vampire cloak 2",
+    },
+    {
+        src: vampireCloak3Image,
+        alt: "vampire cloak 3",
+    },
+    {
+        src: vampireCloak4Image,
+        alt: "vampire cloak 4",
+    },
+    {
+        src: vampireCloak5Image,
+        alt: "vampire cloak 5",
+    }
+]
+export const vampireClothLegsImage = image("vampire_clothing_legs.png")
+export const vampireClothFeetImage = image("vampire_clothing_boots.png")
 export const vampireBloodImage = image("vampire_blood_bottle.png")
 export const vampireBookImage = image("vampire_book.png")

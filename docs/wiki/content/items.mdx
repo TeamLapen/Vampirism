@@ -1,151 +1,113 @@
----
-sidebar_position: 6
-title: Items
----
+import {Item, Items, TieredItem} from '@site/src/components/Items.mdx'
+import {
+    accessoryImages,
+    alchemicalFireImage,
+    armorOfSwiftnessEnhancedImages,
+    armorOfSwiftnessNormalImages,
+    armorOfSwiftnessUltimateImages,
+    beaconImages,
+    bloodBottleImages,
+    bloodInfusedIronIngotImages,
+    crossbowArrowImages,
+    crossbowClipImage,
+    crossbowImages,
+    feedingAdapterImage,
+    garlicBreadImage,
+    garlicFinderImage,
+    garlicImage,
+    guideBookImage,
+    heartSeekerEnhancedImage,
+    heartSeekerNormalImage,
+    heartSeekerUltimateImage,
+    heartStrikerEnhancedImage,
+    heartStrikerNormalImage,
+    heartStrikerUltimateImage,
+    holySaltImage,
+    holySaltWaterImage,
+    holyWaterImages,
+    humanHeartImage,
+    hunterAxeEnhancedImage,
+    hunterAxeNormalImage,
+    hunterAxeUltimateImage, hunterCoatEnhancedImages,
+    hunterCoatNormalImages, hunterCoatUltimateImages,
+    hunterHeadImages,
+    hunterIntelImage,
+    hunterMinionBindingImage,
+    hunterMinionUpgradeImages,
+    infectedAppleImage,
+    injectionImages, obsidianArmorEnhancedImages,
+    obsidianArmorNormalImages, obsidianArmorUltimateImages,
+    pitchforkImage,
+    potionOfOblivionImage,
+    pureBloodImages,
+    pureSaltImage,
+    purifiedGarlicImage,
+    soulOrbImage,
+    splashHolyWaterImages,
+    stakeImage,
+    umbrellaImage,
+    vampireBloodImage,
+    vampireBookImage, vampireClothChestImages, vampireClothFeetImage, vampireClothHeadImages,
+    vampireClothLegsImage,
+    vampireMinionBindingImage,
+    vampireMinionUpgradeImages,
+    weakHumanHeartImage
+} from "../assets/images/_images.mdx";
+import {
+    accessoriesRecipes,
+    alchemicalFireBrewingRecipes,
+    armorOfSwiftnessEnhancedRecipes,
+    armorOfSwiftnessNormalRecipes,
+    armorOfSwiftnessUltimateRecipes,
+    beaconCoreRecipes,
+    bloodInfusedIronIngotRecipes,
+    crossbowArrowClipRecipes,
+    crossbowArrowRecipes,
+    crossbowRecipes,
+    feedingAdapterRecipes,
+    garlicBreadRecipes,
+    garlicFinderRecipes,
+    garlicRecipes, heartSeekerEnhancedRecipes, heartSeekerNormalRecipes,
+    heartStrikerEnhancedRecipes, heartStrikerNormalRecipes,
+    hunterAxeEnhancedRecipes, hunterAxeNormalRecipes,
+    hunterCoatEnhancedRecipes, hunterCoatNormalRecipes,
+    hunterHatRecipes,
+    infestedAppleRecipes,
+    injectionRecipes, obsidianArmorEnhancedRecipes, obsidianArmorNormalRecipes,
+    pitchforkRecipes,
+    potionOfOblivionRecipes,
+    purifiedGarlicRecipes,
+    stakeRecipes, vampireClothBootsRecipes, vampireClothChestRecipes, vampireClothHeadRecipes, vampireClothLegsRecipes
+} from "./_recipes.mdx";
 
-import {Item, Items} from '@site/src/components/Items.mdx'
-import {accessoryImages, alchemicalFireImage} from "../assets/images/_images.mdx";
-import {accessoriesRecipes, alchemicalFireBrewingRecipes} from "./_recipes.mdx";
-
-Recipes may be outdated. Just Enough items is recommend
-<Item title="Accessories" img={accessoryImages} source={assessoryRecipes}>
+Recipes may be outdated. Just Enough items is recommended
+<Items title="Accessories" img={accessoryImages} source={accessoriesRecipes}>
 
 Accessories are unique equipment for vampire player which can be equipped in the Vampirism Menu. They each have a special effect (see [Refinements](https://github.com/TeamLapen/Vampirism/wiki/Refinements) for more information about these effects)
-</Item>
-
+</Items>
 <Item title="Alchemical Fire" img={alchemicalFireImage} source={alchemicalFireBrewingRecipes}>
 
 Used in recipes or for placing Alchemical Fire.
 </Item>
-
-### Armor of Swiftness
-##### Normal
-<img src="https://i.ibb.co/V9hXHMy/swiftness-head-normal.png" alt="swiftness-head-normal" border="0" width="100"/>
-<img src="https://i.ibb.co/YRk761D/swiftness-chest-normal.png" alt="swiftness-chest-normal" border="0" width="100"/>
-<img src="https://i.ibb.co/wzJVdsG/swiftness-legs-normal.png" alt="swiftness-legs-normal" border="0" width="100"/>
-<img src="https://i.ibb.co/zFqcWww/swiftness-feet-normal.png" alt="swiftness-feet-normal" border="0" width="100"/>
-
-<details><summary>how to acquire</summary>
-
-##### Weapon Table
-###### Helmet
-8 Leather + 2 Swiftness Potion + 2 Garlic
-
-<img src="https://i.ibb.co/zn6k0ZS/armor-of-swiftness-helmet-normal-recipe.png" alt="armor-of-swiftness-helmet-normal-recipe" border="0" width="500"/>
-
-###### Chestplate
-12 Leather + 2 Swiftness Potion + 2 Garlic
-
-<img src="https://i.ibb.co/BPrxdNx/armor-of-swiftness-chestplate-normal-recipe.png" alt="armor-of-swiftness-chestplate-normal-recipe" border="0" width="500"/>
-
-###### Leggings
-10 Leather + 2 Swiftness Potion + 2 Garlic
-
-<img src="https://i.ibb.co/J2QgSyw/armor-of-swiftness-legs-normal-recipe.png" alt="armor-of-swiftness-legs-normal-recipe" border="0" width="500"/>
-
-###### Boots
-8 Leather + 2 Swiftness Potion + 2 Garlic
-
-<img src="https://i.ibb.co/7tJGg0Y/armor-of-swiftness-boots-normal-recipe.png" alt="armor-of-swiftness-boots-normal-recipe" border="0" width="500"/>
-
-##### Trading
-- trading with Hunter Expert villager
-</details>
-
-##### Enhanced
-<img src="https://i.ibb.co/196vxr2/swiftness-head-enhanced.png" alt="swiftness-head-enhanced" border="0" width="100"/>
-<img src="https://i.ibb.co/BgWjyfr/swiftness-chest-enhanced.png" alt="swiftness-chest-enhanced" border="0" width="100"/>
-<img src="https://i.ibb.co/ScM78Qs/swiftness-legs-enhanced.png" alt="swiftness-legs-enhanced" border="0" width="100"/>
-<img src="https://i.ibb.co/dGyxw97/swiftness-feet-enhanced.png" alt="swiftness-feet-enhanced" border="0" width="100"/>
-
-<details><summary>how to acquire</summary>
-
-##### Weapon Table
-###### Helmet
-8 Leather + 2 Gold Ingot + 2 Garlic
-
-Requires `Enhanced Armor` skill
-
-<img src="https://i.ibb.co/xDLXw1M/armor-of-swiftness-helmet-enhanced-recipe.png" alt="armor-of-swiftness-helmet-enhanced-recipe" border="0" width="500"/>
-
-###### Chestplate
-12 Leather + 2 Gold Ingot + 2 Garlic
-
-Requires `Enhanced Armor` skill
-
-<img src="https://i.ibb.co/N2QJqxP/armor-of-swiftness-chestplate-enhanced-recipe.png" alt="armor-of-swiftness-chestplate-enhanced-recipe" border="0" width="500"/>
-
-###### Leggings
-10 Leather + 2 Gold Ingot + 2 Garlic
-
-Requires `Enhanced Armor` skill
-
-<img src="https://i.ibb.co/NChfKQL/armor-of-swiftness-legs-enhanced-recipe.png" alt="armor-of-swiftness-legs-enhanced-recipe" border="0" width="500"/>
-
-###### Boots
-8 Leather + 2 Gold Ingot + 2 Garlic
-
-Requires `Enhanced Armor` skill
-
-<img src="https://i.ibb.co/4Z4r4WD/armor-of-swiftness-boots-enhanced-recipe.png" alt="armor-of-swiftness-boots-enhanced-recipe" border="0" width="500"/>
-
-##### Trading
-- trading with Hunter Expert villager
-</details>
-
-##### Ultimate
-<img src="https://i.ibb.co/JjGJqJt/swiftness-head-ultimate.png" alt="swiftness-head-ultimate" border="0" width="100"/>
-<img src="https://i.ibb.co/NNXrGY2/swiftness-chest-ultimate.png" alt="swiftness-chest-ultimate" border="0" width="100"/>
-<img src="https://i.ibb.co/K7jHV07/swiftness-legs-ultimate.png" alt="swiftness-legs-ultimate" border="0" width="100"/>
-<img src="https://i.ibb.co/0VtGQ58/swiftness-feet-ultimate.png" alt="swiftness-feet-ultimate" border="0" width="100"/>
-
-<details><summary>how to acquire</summary>
-
-##### Trading
-- trading with Hunter Expert villager
-
-##### Chest Loot
-- Hunter Trainer chest
-- Abandoned Mineshaft
-- Jungle Temple
-- Stronghold Corridor
-</details>
-
-### Beacon Core
-<img src="https://i.ibb.co/TB67xgh/garlic-beacon-core.png" alt="garlic-beacon-core" border="0" height="100"/>
-<img src="https://i.ibb.co/nM6fHxR/garlic-beacon-core-enhanced.png" alt="garlic-beacon-core-enhanced" border="0" height="100"/>
-<p>
-
-<details><summary>how to acquire</summary>
-
-##### Alchemical Cauldron
-###### Normal
-1 Garlic + 1 Wool
-
-Requires `Vampire Repelling` skill
-
-<img src="https://i.ibb.co/N6v6rr2/garlic-beacon-core-recipe.png" alt="garlic-beacon-core-recipe" border="0" width="500"/>
-
-###### Enhanced
-1 Holy Water + 1 Garlic Beacon
-
-Requires `Improved Difuser` skill
-
-<img src="https://i.ibb.co/sCY372s/improved-garlic-beacon-core-recipe.png" alt="improved-garlic-beacon-core-recipe" border="0" width="500"/>
-</details>
-
-### Blood Bottle
-<img src="https://i.ibb.co/StJhXK4/blood-bottle-0.png" alt="blood-bottle-0" border="0" width="100"/>
-<img src="https://i.ibb.co/DCwrFLt/blood-bottle-1.png" alt="blood-bottle-1" border="0" width="100"/>
-<img src="https://i.ibb.co/8sF5Jv5/blood-bottle-2.png" alt="blood-bottle-2" border="0" width="100"/>
-<img src="https://i.ibb.co/K5yPrqm/blood-bottle-3.png" alt="blood-bottle-3" border="0" width="100"/>
-<img src="https://i.ibb.co/zVnJYVM/blood-bottle-4.png" alt="blood-bottle-4" border="0" width="100"/>
-<img src="https://i.ibb.co/6gBcytZ/blood-bottle-5.png" alt="blood-bottle-5" border="0" width="100"/>
-<img src="https://i.ibb.co/qdFK20j/blood-bottle-6.png" alt="blood-bottle-6" border="0" width="100"/>
-<img src="https://i.ibb.co/Xb0jt0S/blood-bottle-7.png" alt="blood-bottle-7" border="0" width="100"/>
-<img src="https://i.ibb.co/C7fVhT1/blood-bottle-8.png" alt="blood-bottle-8" border="0" width="100"/>
-<img src="https://i.ibb.co/sCCyLv9/blood-bottle-9.png" alt="blood-bottle-9" border="0" width="100"/>
-<p>
+<TieredItem title="Armor of Swiftness" tiers={ [
+    {
+        title: "Normal",
+        img: armorOfSwiftnessNormalImages,
+        source: armorOfSwiftnessNormalRecipes
+    },
+    {
+        title: "Enhanced",
+        img: armorOfSwiftnessEnhancedImages,
+        source: armorOfSwiftnessEnhancedRecipes
+    },
+    {
+        title: "Ultimate",
+        img: armorOfSwiftnessUltimateImages,
+        source: armorOfSwiftnessUltimateRecipes
+    }
+]}/>
+<Items title="Beacon Core" img={beaconImages} source={beaconCoreRecipes}/>
+<Items title="Blood Bottle" img={bloodBottleImages}>
 
 Blood Bottle are used to store blood to drink or transport.
 
@@ -155,671 +117,185 @@ Glass Bottles are automatically transformed into Blood Bottles and back when the
 
 You can disable the automatic conversion of Glass Bottles to Blood Bottles by setting `autoConvertGlassBottles` in the common config to `false`. Then you must craft the bottles.
 
-
 </details>
-
-### Blood Infused Iron Ingot
-<img src="https://i.ibb.co/YQ2FXvM/blood-infused-iron-ingot.png" alt="blood-infused-iron-ingot" border="0" width="100"/>
-<img src="https://i.ibb.co/rsWB4ns/blood-infused-enhanced-iron-ingot.png" alt="blood-infused-enhanced-iron-ingot" border="0" width="100"/>
-<p>
+</Items>
+<Items title="Blood Infused Iron Ingot" img={bloodInfusedIronIngotImages} source={bloodInfusedIronIngotRecipes}>
 
 Blood Infused Iron Ingots are used to craft Vampire Swords
 
-<details><summary>how to acquire</summary>
-
-##### Crafting
-###### Blood Iron
-3 Iron Ingots + 1 Pure Blood 1-4
-
-<img src="https://i.ibb.co/GQ72Zw3/blood-iron-recipe.png" alt="blood-iron-recipe" border="0" width="500"/>
-
-###### Enhanced Blood Iron
-3 Iron Ingots + 1 Pure Blood 5
-
-<img src="https://i.ibb.co/QJGrzLv/enhanced-blood-iron-recipe.png" alt="enhanced-blood-iron-recipe" border="0" width="500"/>
-
-##### Trading
-- with vampire expert villager
-</details>
-
-### Crossbow
-<img src="https://i.ibb.co/j5Ybqmq/crossbow.png" alt="crossbow" border="0" width="100"/>
-<img src="https://i.ibb.co/0Zn0Zck/double-crossbow.png" alt="double-crossbow" border="0" width="100"/>
-<img src="https://i.ibb.co/yNZggMD/enhanced-crossbow.png" alt="enhanced-crossbow" border="0" width="100"/>
-<img src="https://i.ibb.co/fqf6K5C/double-enhanced-crossbow.png" alt="double-enhanced-crossbow" border="0" width="100"/>
-<img src="https://i.ibb.co/X7Dq1JX/tech-crossbow.png" alt="tech-crossbow" border="0" width="100"/>
-<img src="https://i.ibb.co/2WjtgTH/tech-crossbow-enhanced.png" alt="tech-crossbow-enhanced" border="0" width="100"/>
-<p>
-
-<details><summary>how to acquire</summary>
-
-##### Weapon Table
-###### Crossbow
-2 Iron Ingots + 4 Wood Planks + 2 Strings
-
-<img src="https://i.ibb.co/JKgBQgs/crossbow-recipe.png" alt="crossbow-recipe" border="0" width="500"/>
-
-###### Double Crossbow
-4 Iron Ingots + 4 Wood Planks + 4 Strings
-
-Requires `Double It` skill
-
-<img src="https://i.ibb.co/brQrtWW/double-crossbow-recipe.png" alt="double-crossbow-recipe" border="0" width="500"/>
-
-###### Enhanced Crossbow
-6 Iron Ingots + 2 Strings
-
-Requires `Double It` and `Enhanced Weapons` skill
-
-<img src="https://i.ibb.co/f2XgJ2v/enhanced-crossbow-recipe.png" alt="enhanced-crossbow-recipe" border="0" width="500"/>
-
-
-###### Enhanced Double Crossbow
-8 Iron Ingots + 4 Strings
-
-Requires `Double It` and `Enhanced Weapons` skill
-
-<img src="https://i.ibb.co/VvZcb7Z/double-enhanced-crossbow-recipe.png" alt="double-enhanced-crossbow-recipe" border="0" width="500"/>
-
-###### Tech Crossbow
-8 Iron Ingots + 2 Strings + 2 Diamonds
-
-Requires `Technology` skill
-
-<img src="https://i.ibb.co/km0jQSj/tech-crossbow-recipe.png" alt="tech-crossbow-recipe" border="0" width="500"/>
-
-###### Enhanced Tech Crossbow
-8 Iron Ingots + 2 Strings + 4 Diamonds
-
-Requires `Technology` skill
-
-<img src="https://i.ibb.co/jh6rhz1/enhanced-tech-crossbow-recipe.png" alt="enhanced-tech-crossbow-recipe" border="0" width="500"/>
-
-</details>
-
-### Crossbow Arrow
-<img src="https://i.ibb.co/hV411Vk/crossbow-arrow.png" alt="crossbow-arrow" border="0" width="100"/>
-<img src="https://i.ibb.co/dQ4MBBp/crossbow-arrow-vampire-killer.png" alt="crossbow-arrow-vampire-killer" border="0" width="100"/>
-<img src="https://i.ibb.co/tzqG0Fj/crossbow-arrow-spitfire.png" alt="crossbow-arrow-spitfire" border="0" width="100"/>
-<p>
-<details><summary>how to acquire</summary>
-
-##### Crafting
-
-###### Crossbow Arrows
-
-1 Iron Ingot + 1 Stick
-
-<img src="https://i.ibb.co/hcWZZJD/crossbow-arrow-1-recipe.png" alt="crossbow-arrow-1-recipe" border="0" width="500"/>
-
-1 Normal Arrow
-
-<img src="https://i.ibb.co/f96D9bC/crossbow-arrow-2-recipe.png" alt="crossbow-arrow-2-recipe" border="0" width="500"/>
-
-###### Vampire Killer Arrows
-
-3 Garlic + 1 Gold + 1 Stick + 1 Feather
-
-<img src="https://i.ibb.co/LzTjQtg/vampire-killer-arrow-recipe.png" alt="vampire-killer-arrow-recipe" border="0" width="500"/>
-
-###### Spitfire Arrows
-3 Crossbow Arrows + 1 Alchemical Fire
-
-<img src="https://i.ibb.co/RYgSKB6/spitfire-arrow-recipe.png" alt="spitfire-arrow-recipe" border="0" width="500"/>
-
-
-</details>
-
-### Crossbow Clip
-<img src="https://i.ibb.co/VqNF0m9/tech-crossbow-ammo-package.png" alt="tech-crossbow-ammo-package" border="0" width="100"/>
-<p>
-<details><summary>how to acquire</summary>
-
-##### Weapon Table
-12 Crossbow Arrows + 1 Iron Ingot + 1 Wood Plank
-
-<img src="https://i.ibb.co/cktTzSF/arrow-clip-recipe.png" alt="arrow-clip-recipe" border="0" width="500"/>
-</details>
-
-### Feeding Adapter
-<img src="https://i.ibb.co/fMx5T6R/feeding-adapter.png" alt="feeding-adapter" border="0" width="100"/>
-<p>
-<details><summary>how to acquire</summary>
-
-##### Tasks
-the Feeding Adapter can be acquired by completing a task for a vampire village representative
-
-</details>
-
-### Garlic
-<img src="https://i.ibb.co/FsPxr2t/garlic.png" alt="garlic" border="0" width="100"/>
-<p>
-<details><summary>how to acquire</summary>
-
-##### World
-Garlic can be found at hunter trainer houses in villages
-
-</details>
-
-### Garlic Bread
-<img src="https://i.ibb.co/ThPf1h3/garlic-bread.png" alt="garlic-bread" border="0" width="100" />
-<p>
+</Items>
+<Items title="Crossbow" img={crossbowImages} source={crossbowRecipes}/>
+<Items title="Crossbow Arrow" img={crossbowArrowImages} source={crossbowArrowRecipes}></Items>
+<Item title="Crossbow Clip" img={crossbowClipImage} source={crossbowArrowClipRecipes}></Item>
+<Item title="Feeding Adapter" img={feedingAdapterImage} source={feedingAdapterRecipes} ></Item>
+<Item title="Garlic" img={garlicImage} source={garlicRecipes}></Item>
+<Item title="Garlic Bread" img={garlicBreadImage} source={garlicBreadRecipes}>
 
 Delicious bread
 
-<details><summary>how to acquire</summary>
-
-##### Crafing
-1 Bread + 1 Garlic
-
-<img src="https://i.ibb.co/rvSDx8n/garlic-bread-recipe.png" alt="garlic-bread-recipe" border="0" width="500"/>
-</details>
-
-### Garlic Finder
-<img src="https://i.ibb.co/CP4TzLC/garlic-finder.png" alt="garlic-finder" border="0" width="100"/>
-<p>
+</Item>
+<Item title="Garlic Finder" img={garlicFinderImage} source={garlicFinderRecipes}>
 
 Detects Garlic Beacons when held in hand
 
-<details><summary>how to acquire</summary>
-
-##### Crafting
-2 Wood Planks + 1 Garlic + 1 Redstone + 5 Blood Infused Iron Ingots
-
-<img src="https://i.ibb.co/C8vzv8d/garlic-finder-recipe.png" alt="garlic-finder-recipe" border="0" />
-</details>
-
-### Guide Book
-<img src="https://i.ibb.co/x3b9Mvf/guidebook.png" alt="guidebook" border="0" width="100"/>
-<p>
+</Item>
+<Item title="Guide Book" img={guideBookImage}>
 
 Vampirism's guide book if [GuideAPI](https://www.curseforge.com/minecraft/mc-mods/guide-api-village-and-pillage) is installed
-### Heart Seeker
-<img src="https://i.ibb.co/G0T1MGv/heart-seeker-normal.png" alt="heart-seeker-normal" border="0" height="100"/>
-<img src="https://i.ibb.co/NWPgQ7S/heart-seeker-enhanced.png" alt="heart-seeker-enhanced" border="0" height="100"/>
-<img src="https://i.ibb.co/GTzNrDx/heart-seeker-ultimate.png" alt="heart-seeker-ultimate" border="0" height="100"/>
 
-<details><summary>how to acquire</summary>
-
-##### Crafting
-###### Normal
-2 Blood Infused Iron Ingots + 1 Stick
-
-<img src="https://i.ibb.co/hWtDnN0/normal-heart-seeker-recipe.png" alt="normal-heart-seeker-recipe" border="0" width="500"/>
-
-###### Enhanced
-2 Enhanced Blood Infused Iron Ingots + 1 Stick
-
-<img src="https://i.ibb.co/drYrCV0/enhanced-heart-seeker-recipe.png" alt="enhanced-heart-seeker-recipe" border="0" width="500"/>
-</details>
-
-### Heart Striker
-<img src="https://i.ibb.co/nmK73jS/heart-striker-normal.png" alt="heart-striker-normal" border="0" height="100"/>
-<img src="https://i.ibb.co/pzfX7JR/heart-striker-enhanced.png" alt="heart-striker-enhanced" border="0" height="100"/>
-<img src="https://i.ibb.co/n1mjRwp/heart-striker-ultimate.png" alt="heart-striker-ultimate" border="0" height="100"/>
-
-<details><summary>how to acquire</summary>
-
-##### Crafting
-###### Normal
-4 Blood Infused Iron Ingots + 2 Sticks
-
-<img src="https://i.ibb.co/mczNYqg/normal-heart-striker-recipe.png" alt="normal-heart-striker-recipe" border="0" width="500"/>
-
-###### Enhanced
-4 Enhanced Blood Infused Iron Ingots + 2 Sticks
-
-<img src="https://i.ibb.co/4WHTjRH/enhanced-heart-striker-recipe.png" alt="enhanced-heart-striker-recipe" border="0" width="500"/>
-</details>
-
-### Holy Water
-<img src="https://i.ibb.co/V91f1Rn/holy-water-normal.png" alt="holy-water-normal" border="0" width="100"/>
-<img src="https://i.ibb.co/7Y2cgWM/holy-water-enhanced.png" alt="holy-water-enhanced" border="0" width="100"/>
-<img src="https://i.ibb.co/vYGnFXc/holy-water-ultimate.png" alt="holy-water-ultimate" border="0" width="100"/>
-
-<img src="https://i.ibb.co/8PwxCj0/holy-water-splash-normal.png" alt="holy-water-splash-normal" border="0" width="100"/>
-<img src="https://i.ibb.co/RBBnJyx/holy-water-splash-enhanced.png" alt="holy-water-splash-enhanced" border="0" width="100"/>
-<img src="https://i.ibb.co/8YqDZTM/holy-water-splash-ultimate.png" alt="holy-water-splash-ultimate" border="0" width="100"/>
-
-<details><summary>how to acquire</summary>
-
-##### Brewing
-###### Normal Holy Water Splash Potion
-1 Gunpowder + 1(-3) Normal Holy Water
-
-<img src="https://i.ibb.co/DL4Kx6w/normal-holy-water-recipe.png" alt="normal-holy-water-recipe" border="0" width="500"/>
-
-###### Enhanced Holy Water Splash Potion
-1 Gunpowder + 1(-3) Enhanced Holy Water
-
-<img src="https://i.ibb.co/xsYB6jX/enhanced-holy-water-recipe-png.png" alt="enhanced-holy-water-recipe-png" border="0" width="500" />
-
-###### Ultimate Holy Water Splash Potion
-1 Gunpowder + 1(-3) Ultimate Holy Water
-
-<img src="https://i.ibb.co/jzF8s1H/ultimate-holy-water-recipe-png.png" alt="ultimate-holy-water-recipe-png" border="0" width="500" />
-
-
-</details>
-
-### Holy Salt
-<img src="https://i.ibb.co/nbDDB6d/holy-salt.png" alt="holy-salt" border="0" width="100"/>
-
-### Holy Salt Water
-<img src="https://i.ibb.co/WfqmB7q/holy-salt-water.png" alt="holy-salt-water" border="0" width="100"/>
-
-### Human Heart
-<img src="https://i.ibb.co/GRJf16R/human-heart.png" alt="human-heart" border="0" width="100"/>
-
-### Hunter Axe
-<img src="https://i.ibb.co/syWLnN0/hunter-axe.png" alt="hunter-axe" border="0" height="100"/>
-<p>
-<details><summary>how to acquire</summary>
-
-##### Weapon Table
-###### Normal Hunter Axe
-4 Iron Ingots + 4 Sticks + 3 Garlic
-
-<img src="https://i.ibb.co/jVz963L/hunter-axe-normal-recipe.png" alt="hunter-axe-normal-recipe" border="0" width="500"/>
-
-###### Enhanced Hunter Axe
-2 Iron Ingots + 2 Diamonds + 4 Sticks + 3 Garlic
-
-Requires `Enhanced Weapons` skill
-
-<img src="https://i.ibb.co/vBNLKKM/hunter-axe-enhanced-recipe.png" alt="hunter-axe-enhanced-recipe" border="0" width="500"/>
-</details>
-
-### Hunter Coat
-##### Normal
-<img src="https://i.ibb.co/gDnJnd0/hunter-coat-head-normal.png" alt="hunter-coat-head-normal" border="0" width="100"/>
-<img src="https://i.ibb.co/SN7fw2x/hunter-coat-chest-normal.png" alt="hunter-coat-chest-normal" border="0" width="100"/>
-<img src="https://i.ibb.co/612xdT5/hunter-coat-legs-normal.png" alt="hunter-coat-legs-normal" border="0" width="100"/>
-<img src="https://i.ibb.co/7z42V19/hunter-coat-feet-normal.png" alt="hunter-coat-feet-normal" border="0" width="100"/>
-
-<details><summary>how to acquire</summary>
-
-##### Weapon Table
-###### Helmet
-2 Leather + 6 Iron Ingots + 4 Garlic
-
-<img src="https://i.ibb.co/gPT7KW4/hunter-armor-helmet-normal-recipe.png" alt="hunter-armor-helmet-normal-recipe" border="0" width="500"/>
-
-###### Chestplate
-2 Leather + 8 Iron Ingots + 4 Garlic + 2 Vampire Fangs
-
-<img src="https://i.ibb.co/QjLL8jy/hunter-armor-chestplate-normal-recipe.png" alt="hunter-armor-chestplate-normal-recipe" border="0" width="500"/>
-
-###### Leggings
-
-2 Leather + 8 Iron Ingots + 4 Garlic
-
-<img src="https://i.ibb.co/16MD9p8/hunter-armor-legs-normal-recipe.png" alt="hunter-armor-legs-normal-recipe" border="0" width="500"/>
-
-###### Boots
-2 Leather + 6 Iron Ingots + 2 Garlic
-
-<img src="https://i.ibb.co/Rbd8XjB/hunter-armor-boots-normal-recipe.png" alt="hunter-armor-boots-normal-recipe" border="0" width="500"/>
-</details>
-
-##### Enhanced
-<img src="https://i.ibb.co/rFyHpxh/hunter-coat-head-enhanced.png" alt="hunter-coat-head-enhanced" border="0" width="100"/>
-<img src="https://i.ibb.co/DPFSstJ/hunter-coat-chest-enhanced.png" alt="hunter-coat-chest-enhanced" border="0" width="100"/>
-<img src="https://i.ibb.co/QJS64bX/hunter-coat-legs-enhanced.png" alt="hunter-coat-legs-enhanced" border="0" width="100"/>
-<img src="https://i.ibb.co/bvpDccH/hunter-coat-feet-enhanced.png" alt="hunter-coat-feet-enhanced" border="0" width="100"/>
-
-<details><summary>how to acquire</summary>
-
-##### Weapon Table
-###### Helmet
-2 Diamonds + 6 Iron Ingots + 4 Garlic
-
-Requires `Enhanced Armor` Skill
-
-<img src="https://i.ibb.co/7K0nw6v/hunter-armor-helmet-enhanced-recipe.png" alt="hunter-armor-helmet-enhanced-recipe" border="0" width="500"/>
-
-###### Chestplate
-2 Diamonds + 8 Iron Ingots + 4 Garlic + 2 Vampire Fangs
-
-Requires `Enhanced Armor` Skill
-
-<img src="https://i.ibb.co/XXgcdXx/hunter-armor-chestplate-enhanced-recipe.png" alt="hunter-armor-chestplate-enhanced-recipe" border="0" width="500"/>
-
-###### Leggings
-
-2 Diamonds + 8 Iron Ingots + 4 Garlic
-
-Requires `Enhanced Armor` Skill
-
-<img src="https://i.ibb.co/3BRmthg/hunter-armor-legs-enhanced-recipe.png" alt="hunter-armor-legs-enhanced-recipe" border="0" width="500"/>
-
-###### Boots
-2 Diamonds + 6 Iron Ingots + 2 Garlic
-
-Requires `Enhanced Armor` Skill
-
-<img src="https://i.ibb.co/KmfVRwg/hunter-armor-boots-enhanced-recipe.png" alt="hunter-armor-boots-enhanced-recipe" border="0" width="500"/>
-</details>
-
-##### Ultimate
-<img src="https://i.ibb.co/61XW0wY/hunter-coat-head-ultimate.png" alt="hunter-coat-head-ultimate" border="0" width="100"/>
-<img src="https://i.ibb.co/P1WQwzw/hunter-coat-chest-ultimate.png" alt="hunter-coat-chest-ultimate" border="0" width="100"/>
-<img src="https://i.ibb.co/t8FFSLh/hunter-coat-legs-ultimate.png" alt="hunter-coat-legs-ultimate" border="0" width="100"/>
-<img src="https://i.ibb.co/xHcpvRY/hunter-coat-feet-ultimate.png" alt="hunter-coat-feet-ultimate" border="0" width="100"/>
-
-<details><summary>how to acquire</summary>
-</details>
-
-### Hunter Hat
-<img src="https://i.ibb.co/f299GzF/hunter-hat-0.png" alt="hunter-hat-0" border="0" width="100"/>
-<img src="https://i.ibb.co/W31yL1F/hunter-hat-1.png" alt="hunter-hat-1" border="0" width="100"/>
-
-<details><summary>how to acquire</summary>
-
-##### Weapon Table
-###### Hat 1
-4 Black Wool + 4 Iron Ingots
-
-<img src="https://i.ibb.co/mhVWs3H/hunter-hat-1-recipe.png" alt="hunter-hat-1-recipe" border="0" width="500"/>
-
-###### Hat 2
-2 Black Wool + 4 Iron Ingots
-
-<img src="https://i.ibb.co/py1hCb5/hunter-hat-2-recipe.png" alt="hunter-hat-2-recipe" border="0" width="500"/>
-</details>
-
-### Hunter Intel
-<img src="https://i.ibb.co/PGfSpmy/hunter-book.png" alt="hunter-book" border="0" height="100"/>
-
-### Infected Apple
-<img src="https://i.ibb.co/nRGy1DW/cure-apple.png" alt="cure-apple" border="0" width="100"/>
-<p>
+</Item>
+<TieredItem title="Heart Seeker" tiers={ [
+    {
+        title: "Normal",
+        img: [{ src: heartSeekerNormalImage}],
+        source: heartSeekerNormalRecipes
+    },
+    {
+        title: "Enhanced",
+        img: [{ src: heartSeekerEnhancedImage}],
+        source: heartSeekerEnhancedRecipes
+    },
+    {
+        title: "Ultimate",
+        img: [{ src: heartSeekerUltimateImage}]
+    }
+]}/>
+
+<TieredItem title="Heart Striker" tiers={ [
+    {
+        title: "Normal",
+        img: [{src:heartStrikerNormalImage}],
+        source: heartStrikerNormalRecipes
+    },
+    {
+        title: "Enhanced",
+        img: [{src: heartStrikerEnhancedImage}],
+        source: heartStrikerEnhancedRecipes
+    },
+    {
+        title: "Ultimate",
+        img: [{src: heartStrikerUltimateImage}]
+    }
+]}/>
+
+<Items title="Holy Water" img={holyWaterImages}></Items>
+<Items title="Splash Holy Water" img={splashHolyWaterImages}></Items>
+<Item title="Holy Salt" img={holySaltImage}></Item>
+<Item title="Holy Salt Water" img={holySaltWaterImage}></Item>
+<Item title="Human Heart" img={humanHeartImage}></Item>
+<Item title="Weak Human Heart" img={weakHumanHeartImage}></Item>
+<TieredItem title="Hunter Axe" tiers={ [
+    {
+        title: "Normal",
+        img: [{src: hunterAxeNormalImage}],
+        source: hunterAxeNormalRecipes
+    },
+    {
+        title: "Enhanced",
+        img: [{src: hunterAxeEnhancedImage}],
+        source: hunterAxeEnhancedRecipes
+    },
+    {
+        title: "Ultimate",
+        img: [{src: hunterAxeUltimateImage}]
+    }
+]}/>
+<TieredItem title="Hunter Coat" tiers={ [
+    {
+        title: "Normal",
+        img: hunterCoatNormalImages,
+        source: hunterCoatNormalRecipes
+    },
+    {
+        title: "Enhanced",
+        img: hunterCoatEnhancedImages,
+        source: hunterCoatEnhancedRecipes
+    },
+    {
+        title: "Ultimate",
+        img: hunterCoatUltimateImages
+    }
+]}/>
+<Items title="Hunter Hat" img={hunterHeadImages} source={hunterHatRecipes}></Items>
+<Item title="Hunter Intel" img={hunterIntelImage}></Item>
+<Item title="Infested Apple" img={infectedAppleImage} source={infestedAppleRecipes}>
 
 Cure vampiric creatures. For details see [here](https://github.com/TeamLapen/Vampirism/wiki/Vampiric-Creatures#curing-creatures).
+</Item>
+<Items title="Injection" img={injectionImages} source={injectionRecipes()}/>
+<Item title="Vampire Minion Binding" img={vampireMinionBindingImage}>
 
-<details><summary>how to acquire</summary>
+With a Minion Equipment you can hire weak Vampire entities as your minions.
+</Item>
+<Item title="Hunter Minion Binding" img={hunterMinionBindingImage}>
 
-##### Crafting
-7 Gold Nuggets + 1 Apple + 1 Zombie Blood Injection
+With a Minion Equipment you can hire weak Hunter entities as your minions.
+</Item>
+<Items title="Vampire Minion Upgrade" img={vampireMinionUpgradeImages}>
 
-<img src="https://i.ibb.co/HzKP0X1/infected-apple-recipe.png" alt="infected-apple-recipe" border="0" />
-</details>
-
-### Injection
-<img src="https://i.ibb.co/7QMrb8W/injection-empty.png" alt="injection-empty" border="0" width="100"/>
-<img src="https://i.ibb.co/nfQLypc/injection-garlic.png" alt="injection-garlic" border="0" width="100"/>
-<img src="https://i.ibb.co/xXXtT3t/injection-sanguinare.png" alt="injection-sanguinare" border="0" width="100"/>
-<img src="https://i.ibb.co/wYf3tCR/injection-zombie-blood.png" alt="injection-zombie-blood" border="0" width="100" />
-<p>
-<details><summary>how to acquire</summary>
-
-##### Crafting
-###### Syringe
-2 Glass + 1 Glass Pane
-
-<img src="https://i.ibb.co/ygg6QRD/syringe-recipe.png" alt="syringe-recipe" border="0" />
-
-###### Sanguinare Injection
-1 Syringe + 8 Vampire Fangs
-
-<img src="https://i.ibb.co/3h31pDY/sanguinare-injection-recipe.png" alt="sanguinare-injection-recipe" border="0" />
-
-###### Garlic Injection
-1 Syringe + 1 Garlic
-
-<img src="https://i.ibb.co/Swv7mrR/garlic-injection.png" alt="garlic-injection" border="0" />
-
-##### World
-###### Zombie Injection
-
-Interact with a zombie while holding a Syringe
-</details>
-
-### Minion Equipment
-
-With a Minion Equipment you can hire weak Vampire/Hunter entities as your minions.
-##### Vampire
-<img src="https://i.ibb.co/XZshYBD/vampire-minion-binding.png" alt="vampire-minion-binding" border="0" width="100"/>
-
-##### Hunter
-<img src="https://i.ibb.co/WfcR2PB/hunter-minion-equipment.png" alt="hunter-minion-equipment" border="0" width="100"/>
-
-### Minion Upgrade
 Increase minion level by 1. While you need better Minion Upgrades to reach higher minion levels, each Minion Upgrade is eligible for two level.
-##### Vampire
-<img src="https://i.ibb.co/cc5kB2n/vampire-minion-upgrade-simple.png" alt="vampire-minion-upgrade-simple" border="0" width="100"/>
-<img src="https://i.ibb.co/Yt9c2Lj/vampire-minion-upgrade-enhanced.png" alt="vampire-minion-upgrade-enhanced" border="0" width="100"/>
-<img src="https://i.ibb.co/N2pwGhC/vampire-minion-upgrade-special.png" alt="vampire-minion-upgrade-special" border="0" width="100"/>
+</Items>
+<Items title="Hunter Minion Upgrade" img={hunterMinionUpgradeImages}>
 
-##### Hunter
-<img src="https://i.ibb.co/4t60cjt/hunter-minion-upgrade-simple.png" alt="hunter-minion-upgrade-simple" border="0" width="100"/>
-<img src="https://i.ibb.co/QFkMpqj/hunter-minion-upgrade-enhanced.png" alt="hunter-minion-upgrade-enhanced" border="0" width="100"/>
-<img src="https://i.ibb.co/dLPRkb6/hunter-minion-upgrade-special.png" alt="hunter-minion-upgrade-special" border="0" width="100"/>
+Increase minion level by 1. While you need better Minion Upgrades to reach higher minion levels, each Minion Upgrade is eligible for two level.
+</Items>
 
-### Obsidian Armor of Hell
-##### Normal
-<img src="https://i.ibb.co/D8znVK8/obsidian-armor-head-normal.png" alt="obsidian-armor-head-normal" border="0" width="100"/>
-<img src="https://i.ibb.co/fvMKvGg/obsidian-armor-chest-normal.png" alt="obsidian-armor-chest-normal" border="0" width="100"/>
-<img src="https://i.ibb.co/8YFRx0M/obsidian-armor-legs-normal.png" alt="obsidian-armor-legs-normal" border="0" width="100"/>
-<img src="https://i.ibb.co/93DrJ67/obsidian-armor-feet-normal.png" alt="obsidian-armor-feet-normal" border="0" width="100"/>
-<p>
-<details><summary>how to acquire</summary>
-
-##### Weapon Table
-###### Helmet
-8 Iron Ingots + 4 Obsidian
-
-<img src="https://i.ibb.co/0DH6CN9/obsidian-armor-helmet-normal-recipe.png" alt="obsidian-armor-helmet-normal-recipe" border="0" />
-
-###### Chestplate
-8 Iron Ingots + 6 Obsidian + 2 Leather
-
-<img src="https://i.ibb.co/5rtyPDx/obsidian-armor-chestplate-normal-recipe.png" alt="obsidian-armor-chestplate-normal-recipe" border="0" />
-
-###### Leggings
-10 Iron Ingots + 6 Obsidian
-
-<img src="https://i.ibb.co/PQJ0hCv/obsidian-armor-leg-normal-recipe.png" alt="obsidian-armor-leg-normal-recipe" border="0" />
-
-###### Boots
-6 Iron Ingots + 4 Obsidian
-
-<img src="https://i.ibb.co/Zd51qTx/obsidian-armor-boots-normal-recipe.png" alt="obsidian-armor-boots-normal-recipe" border="0" />
-</details>
-
-##### Enhanced
-<img src="https://i.ibb.co/JRbRTVm/obsidian-armor-head-enhanced.png" alt="obsidian-armor-head-enhanced" border="0" width="100"/>
-<img src="https://i.ibb.co/pJ6qY6s/obsidian-armor-chest-enhanced.png" alt="obsidian-armor-chest-enhanced" border="0" width="100"/>
-<img src="https://i.ibb.co/Y08H3zr/obsidian-armor-legs-enhanced.png" alt="obsidian-armor-legs-enhanced" border="0" width="100"/>
-<img src="https://i.ibb.co/0cbkvb6/obsidian-armor-feet-enhanced.png" alt="obsidian-armor-feet-enhanced" border="0" width="100"/>
-<p>
-<details><summary>how to acquire</summary>
-
-##### Weapon Table
-###### Helmet
-6 Iron Ingots + 2 Diamonds + 4 Obsidian
-
-Requires `Enhanced Armor` Skill
-
-<img src="https://i.ibb.co/F868Zmj/obsidian-armor-helmet-enhanced-recipe.png" alt="obsidian-armor-helmet-enhanced-recipe" border="0" />
-
-###### Chestplate
-4 Iron Ingots + 4 Diamonds + 6 Obsidian + 2 Leather
-
-Requires `Enhanced Armor` Skill
-
-<img src="https://i.ibb.co/dDGWFxH/obsidian-armor-chestplate-enhanced-recipe.png" alt="obsidian-armor-chestplate-enhanced-recipe" border="0" />
-
-###### Leggings
-8 Iron Ingots + 2 Diamonds + 6 Obsidian
-
-Requires `Enhanced Armor` Skill
-
-<img src="https://i.ibb.co/56y2bPs/obsidian-armor-legs-enhanced-recipe.png" alt="obsidian-armor-legs-enhanced-recipe" border="0" />
-
-###### Boots
-6 Iron Ingots + 2 Diamonds + 4 Obsidian
-
-Requires `Enhanced Armor` Skill
-
-<img src="https://i.ibb.co/hHbJTGv/obsidian-armor-boots-enhanced-recipe.png" alt="obsidian-armor-boots-enhanced-recipe" border="0" />
-</details>
-
-##### Ultimate
-<img src="https://i.ibb.co/jwtT5fY/obsidian-armor-head-ultimate.png" alt="obsidian-armor-head-ultimate" border="0" width="100"/>
-<img src="https://i.ibb.co/VmQSJZj/obsidian-armor-chest-ultimate.png" alt="obsidian-armor-chest-ultimate" border="0" width="100"/>
-<img src="https://i.ibb.co/0czYVwq/obsidian-armor-legs-ultimate.png" alt="obsidian-armor-legs-ultimate" border="0" width="100"/>
-<img src="https://i.ibb.co/mqkvzV3/obsidian-armor-feet-ultimate.png" alt="obsidian-armor-feet-ultimate" border="0" width="100"/>
-
-### Pitchfork
-<img src="https://i.ibb.co/gRtp6bG/pitch-fork.png" alt="pitch-fork" border="0" height="100"/>
-<p>
-<details><summary>how to acquire</summary>
-
-##### Weapon Table
-2 Iron Ingots + 5 Sticks
-
-<img src="https://i.ibb.co/Smm3gjp/pitchfork-recipe.png" alt="pitchfork-recipe" border="0" width="500"/>
-</details>
-
-### Potion of Oblivion
-<img src="https://i.ibb.co/JppzmHX/oblivion-potion.png" alt="oblivion-potion" border="0" width="100"/>
-<p>
+<TieredItem title="Obsidian Armor of Hell"  tiers={[
+    {
+        title: "Normal",
+        img: obsidianArmorNormalImages,
+        source: obsidianArmorNormalRecipes
+    },
+    {
+        title: "Enhanced",
+        img: obsidianArmorEnhancedImages,
+        source: obsidianArmorEnhancedRecipes
+    },
+    {
+        title: "Ultimate",
+        img: obsidianArmorUltimateImages
+    }
+]}></TieredItem>
+<Item title="Pitchfork" img={pitchforkImage} source={pitchforkRecipes}></Item>
+<Item title="Potion of Oblivion" img={potionOfOblivionImage} source={potionOfOblivionRecipes}>
 
 On consumption reset all learned skills over time.
-
-<details><summary>how to acquire</summary>
-
-##### Tasks
-Can be acquired through several Tasks for village representatives
-</details>
-
-### Pure Salt
-<img src="https://i.ibb.co/nbDDB6d/holy-salt.png" alt="holy-salt" border="0" width="100"/>
-
-### Pure Blood
-<img src="https://i.ibb.co/k6PcTZq/pure-blood-0.png" alt="pure-blood-0" border="0" width="100"/>
-<img src="https://i.ibb.co/gF0n6TS/pure-blood-1.png" alt="pure-blood-1" border="0" width="100"/>
-<img src="https://i.ibb.co/BB08Bn2/pure-blood-2.png" alt="pure-blood-2" border="0" width="100"/>
-<img src="https://i.ibb.co/QQyFgY5/pure-blood-3.png" alt="pure-blood-3" border="0" width="100"/>
-<img src="https://i.ibb.co/YyLcV0v/pure-blood-4.png" alt="pure-blood-4" border="0" width="100"/>
-
-### Purified Garlic
-<img src="https://i.ibb.co/r4fj165/purified-garlic.png" alt="purified-garlic" border="0" width="100"/>
-
-<p>
-<details><summary>recipes</summary>
-
-#### Alchemical Cauldron
-1 Holy Water + 1 Garlic
-
-Requires `Purified Garlic` Skill
-
-<img src="https://i.ibb.co/2sK9MZZ/purified-garlic-recipe.png" alt="purified-garlic-recipe" border="0" width="500"/>
-</details>
-
-### Soul Orb
-<img src="https://i.ibb.co/RBwqcfQ/soul-orb-vampire.png" alt="soul-orb-vampire" border="0" width="100"/>
-
-### Stake
-<img src="https://i.ibb.co/74Ljbsp/stake.png" alt="stake" border="0" height="100"/>
-<p>
-<details><summary>how to acquire</summary>
-
-##### Crafting
-2 Sticks + 1 Wood Plank
-
-<img src="https://i.ibb.co/VTKjPpD/stake-recipe.png" alt="stake-recipe" border="0" width="500"/>
-</details>
-
-### Umbrella
-<img src="https://i.ibb.co/xjdXGCR/umbrella.png" alt="umbrella" border="0" width="100"/>
-<p>
+</Item>
+<Item title="Pure Salt" img={pureSaltImage}></Item>
+<Items title="Pure Blood" img={pureBloodImages}></Items>
+<Item title="Purified Garlic" img={purifiedGarlicImage} source={purifiedGarlicRecipes}></Item>
+<Item title="Soul Orb" img={soulOrbImage}></Item>
+<Item title="Stake" img={stakeImage} source={stakeRecipes}></Item>
+<Item title="Umbrella" img={umbrellaImage}>
 
 Protects from the sun when held in hand. Config option `umbrella` must be enabled in common [config](https://github.com/TeamLapen/Vampirism/wiki/Configuration).
-### Vampire Cloth
+</Item>
+<TieredItem title="Vampire Cloth" tiers={
+    [
+        {
+            title: "Head",
+            img: vampireClothHeadImages,
+            source: vampireClothHeadRecipes
+        },
+        {
+            title: "Chest",
+            img: vampireClothChestImages,
+            source: vampireClothChestRecipes
+        },
+        {
+            title: "Legs",
+            img: [{ src: vampireClothLegsImage}],
+            source: vampireClothLegsRecipes
+        },
+        {
+            title: "Boots",
+            img: [{ src: vampireClothFeetImage}],
+            source: vampireClothBootsRecipes
+        }
+    ]
+}>
+
 Stylish vampire clothing that provides minimal protection but can be fully enchanted.
-##### Hat
-<img src="https://i.ibb.co/G5wwc1N/vampire-clothing-hat.png" alt="vampire-clothing-hat" border="0" width="100"/>
-<img src="https://i.ibb.co/tJgLQtz/vampire-clothing-crown.png" alt="vampire-clothing-crown" border="0" width="100"/>
-<p>
-<details><summary>how to acquire</summary>
-
-##### Crafting
-###### Hat
-5 Black Wool + 1 Red Wool + 1 Human Heart
-
-<img src="https://i.ibb.co/PZ3y63s/vampire-hat-recipe.png" alt="vampire-hat-recipe" border="0" width="500" />
-
-###### Crown
-5 Gold Ingots + 1 Human Heart
-
-<img src="https://i.ibb.co/MDhnR0Y/vampire-crown-recipe.png" alt="vampire-crown-recipe" border="0" width="500"/>
-</details>
-
-##### Chest
-<img src="https://i.ibb.co/10FH1pm/vampire-cloak-white-black.png" alt="vampire-cloak-white-black" border="0" width="100"/>
-<img src="https://i.ibb.co/gyscyRB/vampire-cloak-red-black.png" alt="vampire-cloak-red-black" border="0" width="100"/>
-<img src="https://i.ibb.co/Q9nsktp/vampire-cloak-black-white.png" alt="vampire-cloak-black-white" border="0" width="100"/>
-<img src="https://i.ibb.co/wWPyXWD/vampire-cloak-black-red.png" alt="vampire-cloak-black-red" border="0" width="100"/>
-<img src="https://i.ibb.co/5Wh5Zv4/vampire-cloak-black-blue.png" alt="vampire-cloak-black-blue" border="0" width="100"/>
-<p>
-<details><summary>how to acquire</summary>
-
-##### Crafting
-###### White Cloak
-4 White Wool + 2 Black Wool + 1 Diamond + 1 Pure Blood 1(-5)
-
-<img src="https://i.ibb.co/52k0tDJ/vampire-cloak-white-black-recipe.png" alt="vampire-cloak-white-black-recipe" border="0" />
-
-###### Red Cloak
-4 Red Wool + 2 Black Wool + 1 Diamond + 1 Pure Blood 1(-5)
-
-<img src="https://i.ibb.co/LrMMKr2/vampire-cloak-red-black-recipe.png" alt="vampire-cloak-red-black-recipe" border="0" />
-
-###### Black White Cloak
-4 Black Wool + 2 White Wool + 1 Diamond + 1 Pure Blood 1(-5)
-
-<img src="https://i.ibb.co/F7ZhgDN/vampire-cloak-black-white-recipe.png" alt="vampire-cloak-black-white-recipe" border="0" />
-
-###### White Cloak
-4 Black Wool + 2 Red Wool + 1 Diamond + 1 Pure Blood 1(-5)
-
-<img src="https://i.ibb.co/p1w4rg4/vampire-cloak-black-red-recipe.png" alt="vampire-cloak-black-red-recipe" border="0" />
-
-###### Blue Cloak
-4 Black Wool + 2 Blue Wool + 1 Diamond + 1 Pure Blood 1(-5)
-
-<img src="https://i.ibb.co/yN6vpcV/vampire-cloak-black-blue-recipe.png" alt="vampire-cloak-black-blue-recipe" border="0" />
-</details>
-
-##### Legs
-<img src="https://i.ibb.co/kxnmRTG/vampire-clothing-legs.png" alt="vampire-clothing-legs" border="0" width="100"/>
-
-<details><summary>how to acquire</summary>
-
-##### Crafting
-7 Grey Wool + 1 (Weak) Human Heart
-
-<img src="https://i.ibb.co/TWDqWrQ/vampire-pants-recipe.png" alt="vampire-pants-recipe" border="0" width="500"/>
-</details>
-
-##### Feet
-<img src="https://i.ibb.co/KFwNTT2/vampire-clothing-boots.png" alt="vampire-clothing-boots" border="0" width="100"/>
-
-<details><summary>how to acquire</summary>
-
-##### Crafting
-4 Brown Wool + 1 (Weak) Human Heart
-
-<img src="https://i.ibb.co/Y3C2Kph/vampire-boots-recipe.png" alt="vampire-boots-recipe" border="0" width="100"/>
-</details>
-
-### Vampire Blood
-<img src="https://i.ibb.co/Dr2fnLk/vampire-blood-bottle.png" alt="vampire-blood-bottle" border="0" width="100"/>
-
-### Vampire Book
-<img src="https://i.ibb.co/swtJWWM/vampire-book.png" alt="vampire-book" border="0" width="100"/>
-
-### Weak Human Heart
-<img src="https://i.ibb.co/8P9Dq6w/weak-human-heart.png" alt="weak-human-heart" border="0" width="100"/>
+</TieredItem>
+<Item title="Vampire Blook" img={vampireBloodImage}/>
+<Item title="Vampire Book" img={vampireBookImage}/>

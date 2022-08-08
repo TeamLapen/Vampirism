@@ -5,13 +5,13 @@ export function sumSource(sources) {
         if (type != null) {
             let name = type[a['title']];
             if (name != null) {
-                a['recipes'].forEach(l => name.push(l))
+                a['source'].forEach(l => name.push(l))
             } else {
-                type[a['title']] = [...a['recipes']];
+                type[a['title']] = [...a['source']];
             }
         } else {
             type = {};
-            type[a['title']] = [...a['recipes']];
+            type[a['title']] = [...a['source']];
             source[a['type']] = type;
         }
     })
@@ -21,7 +21,7 @@ export function sumSource(sources) {
             let entry = {};
             entry["type"] = key;
             entry["title"] = title;
-            entry["recipes"] = source[key][title];
+            entry["source"] = source[key][title];
             result.push(entry)
         }
     }
@@ -36,7 +36,7 @@ export function craftingRecipes(sources, title = "Crafting") {
         {
             type: 'recipe',
             title: title,
-            recipes: sources
+            source: sources
         },
     ];
 }
