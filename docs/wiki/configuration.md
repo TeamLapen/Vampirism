@@ -3,14 +3,9 @@ sidebar_position: 3
 title: Configuration
 ---
 
-# 1.12 or older
-See [here](https://github.com/TeamLapen/Vampirism/wiki/Configuration---1.12).
-# 1.14 and newer
-Vampirism has a lot of configuration and balance options.  
-
 ## Configuration files
-Since MC 1.14 the configuration is divided in general (`client` and `common`) and world specific (`server`).
-Vampirism's configuration is split across several files:
+In Minecraft Forge configuration is divided in general (`client` and `common`) and world specific (`server`) config types.  
+Following that Vampirism's configuration is split across several files:
 - *vampirism-client.toml* (located in `.minecraft/config/`) for client specific options
 - *vampirism-common.toml* (located in `.minecraft/config/`) for common options
 - *vampirism-server.toml* (located in `<world-dir>/serverconfig/`) for gameplay options per world
@@ -19,10 +14,9 @@ Vampirism's configuration is split across several files:
 If you want to change the world specific options before creating a world, either to change world-generation or to change it for all created worlds, you can use the `defaultconfigs` folder.
 It is located in your `.minecraft` or server directory. Copy a server or balance config from an existing world to this folder and change the values as desired. It will be used for new worlds.
 
-[Video](https://youtu.be/JyfdM_sv2WQ)
+Additionally, Here is a video description of Vampirism's config system [Description](https://youtu.be/JyfdM_sv2WQ)
 
-Even more detailed customization can be done via [datapacks](https://github.com/TeamLapen/Vampirism/wiki/Datapacks).
-
+Even more detailed customization can be done via [datapacks](../api/datapacks.md).
 
 ### Noticeable configuration options
 #### Mob type compatibility/IMob
@@ -39,7 +33,7 @@ Add dimension ids to this list to make sure no sundamage can be dealt in them.
   
 To find out the id of the current dimension use `/vampirism currentDimensions`.
 #### Sundamage biome configuration
-By default sundamage is dealt in all biomes except for the Vampire Forest. Additional biomes can be added to  
+By default, sundamage is dealt in all biomes except for the Vampire Forest. Additional biomes can be added to  
 `sundamageDisabledBiomes` in *server*
 
 To find out the id of the current biome use the F3 debug overlay.
