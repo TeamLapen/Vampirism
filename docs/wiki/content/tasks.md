@@ -3,7 +3,7 @@ sidebar_position: 6
 title: Tasks
 ---
 
-Tasks can be accepted and submitted at faction representatives in villages that are controlled by your faction.
+Tasks can be accepted and submitted at [Village Representatives](./entities/village_representative) in villages that are controlled by your faction.
 
 For more in depth description of all tasks install JEI.
 
