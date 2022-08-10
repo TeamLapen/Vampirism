@@ -15,10 +15,10 @@ If you are more interested in a general powerup for vampires you can install the
 3) Make sure to hold down the feed button
 
 #### Fire damage is too high
-This can be configured in the *balance* configuration. See https://github.com/TeamLapen/Vampirism/wiki/Configuration
+This can be configured in the *balance* configuration. See [Configuration](configuration.md)
 
 #### I want werewolves etc.
-Go write an addon mod for Vampirism (see https://github.com/TeamLapen/VampirismAddonExample) or wait for https://github.com/TeamLapen/Werewolves
+Go write an addon mod for Vampirism (see [Addon Example](https://github.com/TeamLapen/VampirismAddonExample)) or checkout for [Werewolves Mod](https://github.com/TeamLapen/Werewolves)
 
 #### How do I get vampire blood
 Killing a Vampire NPC with a Stake is the traditional method of getting Vampire Blood. Only the final hit has to be with a Stake so the first few hits may be done with a sword. Advanced Vampires (named Vampires) have a passive chance of dropping Vampire Blood without the need of a Stake. Hunter Expert villagers may offer Vampire Blood as a trade. 
@@ -36,5 +36,4 @@ Vampire books can be found around the world (e.g. in mineshafts or vampire dunge
 1) Checkout this wiki
 2) Make sure you have [Guide-API](https://www.curseforge.com/minecraft/mc-mods/guide-api) (1.12) or [Guide-API-VP](https://www.curseforge.com/minecraft/mc-mods/guide-api-village-and-pillage/) (1.14+) 
 installed and read the guide book
-3) Have a look at https://dhe.estate/coverage/how-to/
-4) Checkout our [Discord](https://discord.gg/wuamm4P)
+3) Checkout our [Discord](https://discord.gg/wuamm4P)

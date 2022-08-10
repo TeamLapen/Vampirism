@@ -53,6 +53,11 @@ You can bind a specific action to one of these keys with this command.
 E.g. use `/vampirism bind-action 1 vampirism:bat` to bind the bat action to the first key.
 Use autocomplete to see all available action ids.
 
+### Changelog
+`/vampirism changelog`
+
+Print changes in newer versions and links.
+
 ## Usefully commands
 
 ### Get Current Dimension
@@ -95,10 +100,10 @@ Only works for player who are max level and their faction allows lord player.
 This command can be used to set the lord level of a player. The player is optional, if not specified the command uses the executing player.
 
 ### Blood Bar
-`/vampirism bloodBar <empty/fill> [players]`  
-`/vampirism bloodBar set <amount> [players]`
+`/vampirism bloodBar <status> [<players>]`  
+`/vampirism bloodBar set <amount> [<players>]`
 
-- `<empty/fill>`: `empty` or `fill`
+- `<status>`: `empty` or `fill`
 - `<amount>`: the amount of blood to set
 - `<players>`: the players to set the blood for (optional)
 
@@ -111,7 +116,7 @@ Following commands requires the player to be admin
 :::
 ### Skill
 
-`/vampirism skill <skill> [force]`  
+`/vampirism skill <skill> [<force>]`  
 `/vampirism skill disableall`
 
 - `<skill>`: the skill id
@@ -144,110 +149,225 @@ Dimensions and Biomes can be blacklisted for vampire sundamage.
 - `<dimension>`: the dimension id to enforce (optional). If not given the current dimension is used.
 Dimensions can be enforced to deliver sundamage to vampires.
 
-## `/vampirism-test <subcommand>`
+## Test Commands
 
-### usefull Commands
-(most are admin-only)
->#### `setSwordCharged <amount> [players]`
->Charges held vampire sword to the given amount.
->
->#### `setSwordTrained <amount> [players]`
->Trains held vampire sword to the given amount.
->
->#### `village`
->>##### `capture <faction>`
->>Captures the nearby village for the given faction.
->>##### `abort`
->>Aborts a running capture process.
->
->#### `minion`
->>##### `spawnNew <faction> [<name> [<type> [<use_lord_skin>]]]`
->>spawns a new minion of the faction with optional attributes. This requires the player to be a lord of the same faction with remaining minion space.
->>
->>##### `recall`
->>Calls all minion to the player.
->>##### `respawnAll`
->>Respawns all minions
->>##### `purge`
->>**Do not use**. Purges Minion handler and requires a world reload.
->
->#### `task`
->>##### `clear [players]`
->>Purges all players active tasks/completed tasks/visible tasks.
->>##### `refreshTaskList [players]`
->>Refreshes all non accepted tasks.
->>##### `resetTaskList [players]`
->>Like `refreshTaskList` but also removes non unique tasks
->>##### `resetLordTasks [players]`
->>Resets active lord tasks.
->
->#### `entity`
->Prints ids of nearby creature entities that can be used to define bloodvalues.
->
->#### `biome`
->Prints current biome.
->
->#### `resetActions [players]`
->Resets action duration and cooldown for the executing player or given players.
->
->#### `garlicCheck [print]`
->Shows garlic strength at current location. If print is true send all world data about garlic.
->
->#### `giveAccessories`
->>##### `slot <set>`
->>Creates an accessory for the accessory slot with the given refinement set
->>##### `random [amount]`
->>Creates random accessories
->>##### `help`
->>Prints help message
->
->#### `banner <faction>`
->Creates faction banner
+the test commands are prefixed with `/vampirism-test`
 
-<details><summary>other test commands</summary>
+:::caution
 
->#### `info-entities`
->Prints entity counts of EntityClassifications (Creatures/Monsters/Hunter/Vampire).
->
->#### `marker [name]`
->Prints a marker into the logfile.
->
->#### `info-entity`/`printEntityNBT`
->Writes nearby entities to nbt and print the saved data.
->
->#### `makeVillagerAgressive`
->Arms nearby villager.
->
->#### `tent [advanced]`
->Turns a tent into a (advanced) spawner
->
->#### `vampireBook`
->Adds a random vampire book to the players inventory.
->
->#### `debugGen`
->Enables/Disables vampirism's debug gen mode
->
->####  `runTests`
->Runs tests
->
->#### `spawnTestAnimal`
->Spawn a cow with low health.
->
->#### `heal`
->Heals the player.
->
->#### `forcePlayerSync`
->Forces a client sync from the server.
->
->#### `summonDummy <hunter/vampire>`
->Summons dummy hunter/vampire without ai, but a damage tracker on right click.
+Test commands are cheat only
 
+:::
 
-</details>
+### Charge Sword
+`/vampirism-test setSwordCharged <amount> [<players>]`
 
----
+- `<amount>`: the charged amount for the sword
+- `<players>`: the players to set the charged amount for (optional). Default is the executing player.
 
-# Entity selectors
+Charges the held vampire sword to the given amount.
+
+### Train Sword
+`/vampirism-test setSwordTrained <amount> [<players>]`
+
+- `<amount>`: the trained amount for the sword
+- `<players>`: the players to set the trained amount for (optional). Default is the executing player.
+
+Trains the held vampire sword to the given amount.
+
+### Village
+#### Capture
+`/vampirism-test village capture <faction>`
+
+- `<faction>`: the faction id of the faction that should control the village
+
+Captures the nearby village for the given faction.
+
+#### Abort ongoing capture
+`/vampirism-test village abort`
+
+Aborts a running capture process in the nearby village.
+
+### Minions
+#### Spawn new minion
+`/vampirism-test minion spawnNew <faction> [<name> [<type> [<use_lord_skin>]]]`
+
+*This commands not necessarily supports all factions*
+
+- `<faction>`: the faction of the minion.
+- `<name>`: the name of the minion (optional). Custom name for the minion
+- `<type>`: the type of the minion (optional). Skin type of the minion.
+- `<use_lord_skin>`: `true` or `false` (optional). Lets the minion uses the lord player's skin.
+
+spawns a new minion of the faction with optional attributes. This requires the player to be a lord of the same faction with remaining minion space.
+
+#### Recall Minions
+`/vampirism-test minion recall`
+
+Calls all minion to the player.
+
+#### Recall Minions
+`/vampirism-test minion recall`
+
+Calls all minion to the player.
+
+#### Respawn Minions
+`/vampirism-test minion respawnAll`
+
+Respawns all minions
+
+#### Purge Minions
+`/vampirism-test minion purge`
+
+**Do not use**
+
+Purges Minion handler and requires a world reload.
+
+### Task Handling
+#### Clear Tasks
+`/vampirism-test task clear [<players>]`
+
+- `<players>`: the players to clear the tasks for (optional). Default is the executing player.
+
+Purges all players active tasks/completed tasks/visible tasks.
+
+#### Refresh Tasks
+`/vampirism-test task refreshTaskList [<players>]`
+
+- `<players>`: the players to refresh the tasks for (optional). Default is the executing player.
+
+Refreshes all non-accepted tasks.
+#### Reset Task List
+`/vampirism-test task resetTaskList [<players>]`
+
+- `<players>`: the players to reset the tasks for (optional). Default is the executing player.
+
+Like `refreshTaskList` but also removes non unique tasks
+
+#### Reset Lord Tasks
+`/vampirism-test task resetLordTasks [<players>]`
+
+- `<players>`: the players to reset the tasks for (optional). Default is the executing player.
+
+Resets active lord tasks.
+
+### Nearby Entities
+`/vampirism-test entity`
+
+Prints ids of nearby creature entities that can be used to define bloodvalues.
+
+### Current Biome
+`/vampirism-test biome`
+
+Prints current biome.
+
+### Reset Actions
+`/vampirism-test resetActions [<players>]`
+
+- `<players>`: the players to reset the actions for (optional). Default is the executing player.
+
+Resets action duration and cooldown for the executing player or given players.
+
+### Garlic Check
+`/vampirism-test garlicCheck [<print>]`
+
+- `<print>`: `true` or `false` (optional). If set the garlic check will use print more data.
+
+Shows garlic strength at current location..
+
+### Give Accessories
+#### For Slot
+`/vampirism-test giveAccessories <slot> <set>`
+
+- `<slot>`: the slot to give the accessories to (1-3)
+- `<set>`: the refinement set that should be applied to the accessory
+
+Creates an accessory for the accessory slot with the given refinement set
+#### Random Refinements
+`/vampirism-test giveAccessories random [<amount>]`
+
+- `<amount>`: the amount of random accessories to give (optional). Default is 1.
+
+Creates random accessories
+
+#### Help
+`/vampirism-test giveAccessories help`
+
+Prints help message
+
+### Faction Banner
+`/vampirism-test factionBanner <faction>`
+
+- `<faction>`: the faction id of the faction
+
+Creates faction banner item for the given faction.
+
+### Entity Classification
+`/vampirism-test info-entities`
+
+Prints entity counts of EntityClassifications (Creatures/Monsters/Hunter/Vampire).
+
+### Marker
+`/vampirism-test marker [<name>]`
+
+- `<name>`: the name of the marker (optional). If not given the marker is named "Marker"
+
+Prints a marker into the logfile.
+
+### Debug Entity Data
+`/vampirism-test printEntityNBT`
+Writes nearby entities to nbt and print the saved data.
+
+### Aggressive Villager
+`/vampirism-test makeVillagerAgressive`
+
+Arms nearby villager.
+
+### Spawning Tent
+`/vampirism-test tent [<advanced>]` 
+
+- `<advanced>`: `true` or `false` (optional). If set the tent can spawn advanced hunter.
+
+Turns a tent into a (advanced) spawner
+
+### Vampire Book
+`/vampirism-test vampireBook`
+
+Adds a random vampire book to the players inventory.
+
+### Debug Generation
+`/vampirism-test debugGen`
+
+Enables/Disables vampirism's debug gen mode
+
+### Tun Tests
+`/vampirism-test runTests`  
+
+Runs tests
+
+### Spawn Test Animal
+`/vampirism-test spawnTestAnimal`
+
+Spawn a cow with low health.
+
+### Healing
+`/vampirism-test heal`
+
+Heals the player.
+
+### Force Sync for Player
+`/vampirism-test forcePlayerSync`
+
+Forces a client sync from the server.
+
+### Summon Dummy Entity
+`/vampirism-test summonDummy <type>`
+
+- `<type>`: `hunter` or `vampire` the type of the dummy entity (optional).
+
+Summons dummy hunter/vampire without AI, but a damage tracker on right click.
+
+## Entity selectors
 Vampirism adds a few custom entity selectors, which can be used together with the vanilla ones in commands ("@e[...]").  
 Example: `/kill @e["vampirism:faction"="vampirism:vampire"]`
 

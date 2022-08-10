@@ -7,20 +7,24 @@ When leveling up you will get some skill points which you can use to unlock some
 
 How to open the Skill menu:
 
-* **pre Vampirism 1.8:** press 'P' (Check your key-bindings)
-* **Vampirism 1.8+:** press 'P' (Check your key-bindings) to open the Vampirism menu and then press the Skill menu button
+Press 'P' (Check your key-bindings) to open the Vampirism menu and then press the Skill menu button
 
-### Skillpoints
-If you want more skill points there are two ways:
+### Skill points
 
-#### Unlock all skills on max level
+Skill points are awarded each level. Without modification, you will get 14 skill points (-1 for the initial skill)  
+
+##### More Skill points
+More skill points can only be gained by changing the configurations.
+
+There are tree ways of doing this:
+###### Unlock all skills on max level
 Therefor you must edit the `allSkillsAtMaxLevel` option in the server config to true.
 
-#### Get multiple skill points on levelup
+###### Get multiple skill points on levelup
 Here you can increase the `skillPointsPerLevel` value in the balance config.
 
-#### Install Vampirism Godly
-You can install https://www.curseforge.com/minecraft/mc-mods/godly-vampirism, it automatically increases the `skillPointsPerLevel`.
+###### Install Vampirism Godly
+You can install https://www.curseforge.com/minecraft/mc-mods/godly-vampirism, it automatically increases the `skillPointsPerLevel` value.
  
 ### _Vampire Skills:_
 

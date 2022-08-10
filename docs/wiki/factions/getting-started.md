@@ -5,9 +5,9 @@ title: Getting Started
 
 ## Overview
 Vampirism is a mod that adds a whole new way of playing Minecraft. You may have previously spent a lot of time avoiding mobs, but as a Vampire, you will develop a thirst for killing :)   
-There are currently two ways you can go: You can become one of these powerful and blood-thirsty vampires or join the other side, train yourself in defeating those cruel vampires and maybe learn to take advantage of their powers.  
+There are currently two ways you can go: You can become one of these powerful and bloodthirsty vampires or join the other side, train yourself in defeating those cruel vampires and maybe learn to take advantage of their powers.  
   
-Don't forget to checkout the guide book (if you have installed [Guide-API](https://www.curseforge.com/minecraft/mc-mods/guide-api)(1.12) or [Guide-API-VP](https://www.curseforge.com/minecraft/mc-mods/guide-api-village-and-pillage)(1.14+)). If you lost your initial one, you can get a new one by combining a normal book with a vampire fang or a human heart.  
+Don't forget to check out the guide book (if you have installed [Guide-API](https://www.curseforge.com/minecraft/mc-mods/guide-api)(1.12) or [Guide-API-VP](https://www.curseforge.com/minecraft/mc-mods/guide-api-village-and-pillage)(1.14+)). If you lost your initial one, you can get a new one by combining a normal book with a vampire fang or a human heart.  
 
 ## First steps - Vampire
 To become a vampire you have to be bitten by a vampire. So either let them hit you on purpose or just wait until it happens by accident. When they hit you there is a chance, you receive a potion effect called "Sanguinare Vampiris" which lasts about a Minecraft day. After the potion has ended, you become a vampire.  
@@ -23,7 +23,7 @@ You might even be able to suck blood from other players, as long as you are comi
 In the beginning you will be a level 1 vampire (the level is displayed above your XP-level) and have improved speed, health and strength.  
 To get to higher vampire levels you have to perform different rituals. As you advance through levels your abilities improve, but some disadvantages like sun damage might appear.
 
-#### [More Information](https://github.com/TeamLapen/Vampirism/wiki/Vampire-Player)
+#### [More Information](./vampire/vampire-player.md)
 
 ## First steps - Hunter
 To become a vampire hunter you will have to find a village, in which a "Vampire Hunter Trainer" lives. You will find some garlic plant behind his house. Use them to craft a "Garlic Injection". (You might want to replant the garlic since it will be useful in the future.)  
@@ -31,7 +31,7 @@ Go inside the trainers house and use the special chair inside to inject your tha
 
 This is more or less the only advantage that you will have at that level. But you can train yourself to become stronger and learn some useful skills.
 
-#### [More Information](https://github.com/TeamLapen/Vampirism/wiki/Hunter-Player)
+#### [More Information](./hunter/hunter-player.md)
 
 ***
 Happy hunting!

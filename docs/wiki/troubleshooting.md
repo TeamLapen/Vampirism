@@ -14,7 +14,7 @@ title: Troubleshooting
 ### Game crashes on player death
 Some mod is likely messing with Forge capabilities/player entities.
 #### Mohist (1.16)
-Certain version of Mohist 1.16#700-740 are bugged.
+Certain version of Mohist `1.16#700-740` are bugged.
 
 ### No vampires are spawning
 #### General
