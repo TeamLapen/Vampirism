@@ -21,7 +21,7 @@ Just like the Poison Effect.
 When you get this effect you wear armor that is not wearable by your faction
 ### Saturation
 A saturation effect.
-
+~~~~
 Will get applied at a few interactions.
 ### Fire Protection
 Vampire version of Fire Resistance.

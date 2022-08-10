@@ -1,69 +1,151 @@
 ---
 sidebar_position: 3
-title: Skills
+title: Vampire Skills
+sidebar_label: Skills
 ---
 
 import { Skill, Action, UnlockAction } from "@site/src/components/Skills"; import {
-    SkillBranch
+    SkillBranch, UnlocksVision, UpgradesSkill
 } from "../../../../src/components/Skills";
 
-<Skill title="Night Vision" icon="night_vision.png"/>
+Main article [here](../skills)
+
+<Skill title="Night Vision" icon="night_vision.png">
+
+<UnlocksVision vision="Night Vision"/>
+
+</Skill>
 <Action title="Regeneration" icon="regen.png">
-    <UnlockAction>Regeneration</UnlockAction>
+
+<UnlockAction/>
+
+Temporarily regenerate health faster but use more blood
+
 </Action>
 <Action title="Bat Mode" icon="bat.png">
-    <UnlockAction>Bat Mode</UnlockAction>
+
+<UnlockAction/>
+
+Turn into a bat and fly away
+
 </Action>
 
 <SkillBranch title="Offensive">
 <Action title="Rage" icon="vampire_rage.png">
-    <UnlockAction>Rage</UnlockAction>
+
+<UnlockAction/>
+
+In rage mode you are much faster and deal more damage but consume more blood
+
 </Action>
-<Skill title="Advanced Biter" icon="advanced_biter.png"/>
-<Skill title="Finisher" icon="sword_finisher.png"/>
+<Skill title="Advanced Biter" icon="advanced_biter.png">
+    Allows you to suck blood more efficiently and stop at the right moment.
+</Skill>
+<Skill title="Finisher" icon="sword_finisher.png">
+    Instantly kill any non-vampire that has below %s percent of their max health using a vampire sword
+</Skill>
 <Action title="Dark Projectile" icon="dark_blood_projectile.png">
-    <UnlockAction>Dark Projectile</UnlockAction>
+
+<UnlockAction/>
+
+Fire a blood projectile that deals damage
+
 </Action>
-<Skill title="Blood Charge" icon="blood_charge.png"/>
+<Skill title="Blood Charge" icon="blood_charge.png">
+    Charge your blood using tools on the go by sneak right clicking.
+</Skill>
 <Action title="Freeze" icon="freeze.png">
-    <UnlockAction>Freeze</UnlockAction>
+
+<UnlockAction/>
+
+Temporarily freeze all nearby entities
+
 </Action>
 </SkillBranch>
 
 <SkillBranch title="Defensive">
 <Action title="Summon Bats" icon="summon_bat.png">
-    <UnlockAction>Summon Bats</UnlockAction>
+
+<UnlockAction/>
+
+Summon a bat swarm around you that blinds any player that touches it
+
 </Action>
 <Action title="Hissing" icon="hissing.png">
-    <UnlockAction>Hissing</UnlockAction>
+
+<UnlockAction/>
+
+Disorients nearby entities
+
 </Action>
-<Skill title="Water Resistance" icon="water_resistance.png"/>
-<Skill title="Tough Skin" icon="less_sundamage.png"/>
-<Skill title="Frugal Vampire" icon="less_blood_thirst.png"/>
+<Skill title="Water Resistance" icon="water_resistance.png">
+    Your body will not be weakened by water anymore
+</Skill>
+<Skill title="Tough Skin" icon="less_sundamage.png">
+    Take reduced direct sundamage
+</Skill>
+<Skill title="Frugal Vampire" icon="less_blood_thirst.png">
+    Decreases your thirst for blood
+</Skill>
 <Action title="Disguise" icon="disguise_vampire.png">
-    <UnlockAction>Disguise</UnlockAction>
+
+<UnlockAction/>
+
+Temporarily disguise as a non vampire to trick mobs and players
+
 </Action>
 <Action title="Damage Limiter" icon="half_invulnerable.png">
-    <UnlockAction>Damage Limiter</UnlockAction>
+
+<UnlockAction/>
+
+Action which blocks large damages but slows you down
+
 </Action>
 <Action title="Invisibility" icon="vampire_invisibility.png">
-    <UnlockAction>Invisibility</UnlockAction>
+
+<UnlockAction/>
+
 </Action>
 </SkillBranch>
 
 <SkillBranch title="Utility">
 <Action title="Sunscreen" icon="sunscreen.png">
-    <UnlockAction>Sunscreen</UnlockAction>
+
+<UnlockAction/>
+
+Grants temporary immunity from direct sundamage with long cooldown.
+
 </Action>
 <Skill title="Attack Speed Boost" icon="vampire_attack_speed.png"/>
 <Skill title="Speed Boost" icon="vampire_speed.png"/>
-<Skill title="Garlic Vision" icon="blood_vision.png"/>
-<Skill title="Garlic Blood Vision" icon="blood_vision_garlic.png"/>
+<Skill title="Blood Vision" icon="blood_vision.png">
+
+<UnlocksVision vision="Blood Vision"/>
+
+
+Allows you to see entities through walls in the dark. Toggle with key.
+
+</Skill>
+<Skill title="Garlic Blood Vision" icon="blood_vision_garlic.png">
+
+<UpgradesSkill skill="Blood Vision"/>
+
+Additionally identify entities with poisonous blood
+
+</Skill>
 <Skill title="Attack Damage Boost" icon="vampire_attack_damage.png"/>
 <Skill title="Jump Boost" icon="vampire_jump.png"/>
-<Skill title="Fast Recovery" icon="neonatal_decrease.png"/>
-<Skill title="Swift Resurrection" icon="dbno_duration.png"/>
+<Skill title="Fast Recovery" icon="neonatal_decrease.png">
+    Decreases the time in your neonatal form
+</Skill>
+<Skill title="Swift Resurrection" icon="dbno_duration.png">
+    Decreases the resurrection timer
+</Skill>
 <Action title="Teleport" icon="teleport.png">
-    <UnlockAction>Teleport</UnlockAction>
+
+<UnlockAction/>
+
+Quickly teleport to the spot you are looking at
+
 </Action>
 </SkillBranch>

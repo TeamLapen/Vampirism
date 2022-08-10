@@ -11,10 +11,11 @@ title: Hunter Player
 * Normal vampire NPCs killed with a stake will drop "Vampire Blood" which can be used for leveling or in the Blood Potion table (see below)
 
 ## Leveling
-More information [here](https://github.com/TeamLapen/Vampirism/wiki/Leveling-as-a-Hunter-Player) 
+More information [here](./leveling) 
 
 ## Skills
-Hunter Players can unlock skills. More information [here](https://github.com/TeamLapen/Vampirism/wiki/Skills).
+Hunter Players can unlock skills. More information [here](./skills).
+
 ### Selection of skills
 #### Blood Potion
 Using a Blood Potion Table you will be able to use some Vampire abilities for you.  

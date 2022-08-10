@@ -17,7 +17,7 @@ The gender used is determined based on your skin type (steve -> male, alex -> fe
 
 ### Minions
 Minions have an inventory that can be used to store items but also to equip the minion with weapons and armor. 
-Furthermore, their appearance can be changed and you can assign them a new name.
+Furthermore, their appearance can be changed, and you can assign them a new name.
 Obviously, you can give them commands. Either individually by interacting with the minion and selecting the desired task or by using the minion task menu. The menu can be accessed either by a dedicated keybinding (unbound by default) or by pressing space while your action menu is displayed.
 Since hunter players might not use their action menu frequently, it might be better to remove the action menu keybinding and instead assign the key to the minion task menu. You can still access the actions by hitting space in the minion task menu (or by using the action 1/2 keybinding directly).
 
@@ -25,7 +25,7 @@ Minions will stay in the world even when you disconnect from the server or chang
 If a minion is hurt severely, it will teleport to safety and recover. Once recovered you can retrieve it using the minion task menu.
 
 #### Vampire
-As a lord you can bind a vampire NPC to you by right-clicking it with a vampire minion binding item. However, many vampires are to strong to be controlled by you, so you have to look for a weak one.
+As a lord you can bind a vampire NPC to you by right-clicking it with a vampire minion binding item. However, many vampires are too strong to be controlled by you, so you have to look for a weak one.
 You can improve the capabilities of your minion using vampire minion upgrades.
 #### Hunter
 As a hunter lord you can recruit hunter NPCs by giving them basic hunter minion equipment. However, not all hunters are willing to serve somebody, so you have to look for weaker ones.

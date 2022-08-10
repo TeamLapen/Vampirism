@@ -10,26 +10,35 @@ export const SkillImg = ({src, alt}) => (
     <img src={src} alt={alt} style={{height: 70, imageRendering: "pixelated"}}/>
 );
 
-export const UnlockAction = ({children}) => (
+export const UnlockAction = ({action}) => (
     <span style={{
         color: '#0e9c2f',
         fontStyle: 'italic'
     }}>
-        {children}
+        Unlocks {action} Action
     </span>
 );
 
-export const UpgradesSkill = ({children}) => (
+export const UpgradesSkill = ({skill}) => (
     <span style={{
         color: '#10a8b3',
         fontStyle: 'italic'
     }}>
-        {children}
+        Upgrades Skill: {skill}
+    </span>
+);
+
+export const UnlocksVision = ({vision}) => (
+    <span style={{
+        color: '#b31072',
+        fontStyle: 'italic'
+    }}>
+        Unlocks Vision: {vision}
     </span>
 );
 
 export const SkillOrAction = ({children, title, iconPath}) => (
-    <div style={{ marginBottom: '15px'}} id={title.toLowerCase().replaceAll(' ','-')}>
+    <div style={{ marginTop: '15px'}} id={title.toLowerCase().replaceAll(' ','-')}>
         <div className="container" style={{ display: 'flex', alignItems: 'center', marginLeft: '-20px'}}>
             <div className="image">
                 <SkillImg src={iconPath} alt={title}/>
