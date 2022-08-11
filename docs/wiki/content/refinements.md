@@ -5,7 +5,7 @@ title: Refinements
 
 Refinements are skill/action/general de-/buffs that can be equipped using accessories. They always come as set of multiple refinements that contains a buff and a debuff.
 
----
+
 ## Skill/Action Refinements
 
 ### Damage Limiter
