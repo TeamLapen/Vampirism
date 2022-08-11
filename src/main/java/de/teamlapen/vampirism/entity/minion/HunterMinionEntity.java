@@ -75,10 +75,6 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         return BasicHunterEntity.getAttributeBuilder();
     }
 
-    private boolean crossbowTask = false;
-    private AttackRangedCrossbowGoal<HunterMinionEntity> crossbowGoal;
-    private MeleeAttackGoal meleeGoal;
-
     public HunterMinionEntity(EntityType<? extends VampirismEntity> type, World world) {
         super(type, world, VampirismAPI.factionRegistry().getPredicate(VReference.HUNTER_FACTION, true, true, false, false, null).or(e -> !(e instanceof IFactionEntity) && (e instanceof IMob) && !(e instanceof CreeperEntity)));
     }
@@ -86,14 +82,6 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     @Override
     public List<IMinionTask<?, ?>> getAvailableTasks() {
         return Lists.newArrayList(MinionTasks.FOLLOW_LORD.get(), MinionTasks.DEFEND_AREA.get(), MinionTasks.STAY.get(), MinionTasks.COLLECT_HUNTER_ITEMS.get(), MinionTasks.PROTECT_LORD.get());
-    }
-
-    @Override
-    public void aiStep() {
-        super.aiStep();
-        if (this.tickCount % 100 == 0) {
-            this.updateAttackGoal();
-        }
     }
 
     public void setHatType(int type) {
@@ -201,25 +189,12 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        meleeGoal = new MeleeAttackGoal(this, 1.0D, false);
-        crossbowGoal = new AttackRangedCrossbowGoal<>(this, 0.8, 60);
-        this.goalSelector.addGoal(1, meleeGoal);
-
-
+        this.goalSelector.addGoal(1, new AttackRangedCrossbowGoal<>(this, 0.8, 60));
+        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, false));
     }
 
     private void updateAttackGoal() {
         if (this.level.isClientSide()) return;
-        boolean usingCrossbow = isHoldingCrossbow();
-        if (crossbowTask && !usingCrossbow) {
-            this.goalSelector.removeGoal(crossbowGoal);
-            this.goalSelector.addGoal(1, meleeGoal);
-            crossbowTask = false;
-        } else if (!crossbowTask && usingCrossbow) {
-            this.goalSelector.removeGoal(meleeGoal);
-            this.goalSelector.addGoal(1, crossbowGoal);
-            crossbowTask = true;
-        }
     }
 
     private void updateAttributes() {

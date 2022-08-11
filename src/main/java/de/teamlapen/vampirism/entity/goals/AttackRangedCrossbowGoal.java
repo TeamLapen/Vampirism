@@ -50,7 +50,7 @@ public class AttackRangedCrossbowGoal<T extends CreatureEntity & IRangedAttackMo
     }
 
     private boolean isValidTarget() {
-        return this.mob.getTarget() != null && this.mob.getTarget().isAlive();
+        return this.mob.getTarget() != null && this.mob.getTarget().isAlive() && this.mob.distanceToSqr(this.mob.getTarget()) >= 3;
     }
 
     @Override

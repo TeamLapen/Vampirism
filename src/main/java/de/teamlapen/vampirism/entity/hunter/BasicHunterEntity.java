@@ -91,7 +91,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
 
     private final int MAX_LEVEL = 3;
-    private final MeleeAttackGoal attackMelee;
     /**
      * available actions for AI task & task
      */
@@ -119,8 +118,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
         this.setDontDropEquipment();
 
-        this.attackMelee = new MeleeAttackGoal(this, 1.0, false);
-        this.updateCombatTask();
         entitytier = EntityActionTier.Medium;
         entityclass = EntityClassType.getRandomClass(this.getRandom());
         IEntityActionUser.applyAttributes(this);
@@ -289,7 +286,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             this.setLeftHanded(false);
         }
 
-        this.updateCombatTask();
         return livingData;
     }
 
@@ -388,7 +384,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             this.setLeftHanded(false);
             this.setItemSlot(EquipmentSlotType.MAINHAND, ItemStack.EMPTY);
         }
-        this.updateCombatTask();
         if (tagCompund.contains("attack")) {
             this.attack = tagCompund.getBoolean("attack");
         }
@@ -544,9 +539,9 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         super.registerGoals();
 
         this.goalSelector.addGoal(1, new OpenDoorGoal(this, true));
-        //Attack task is added in #updateCombatTasks which is e.g. called at end of constructor
         this.goalSelector.addGoal(3, new ForceLookEntityGoal<>(this));
         this.goalSelector.addGoal(3, new AttackRangedCrossbowGoal<>(this, 0.6, 60));
+        this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0, false));
         this.goalSelector.addGoal(5, new MoveThroughVillageGoal(this, 0.7F, false, 300, () -> false));
         this.goalSelector.addGoal(6, new RandomWalkingGoal(this, 0.7, 50));
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 13F));
@@ -576,16 +571,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     private int getWatchedId() {
         return getEntityData().get(WATCHED_ID);
-    }
-
-    private void updateCombatTask() {
-        if (true) return;
-        this.goalSelector.removeGoal(attackMelee);
-        ItemStack stack = this.getMainHandItem();
-        if (!stack.isEmpty() && stack.getItem() instanceof IVampirismCrossbow) {
-        } else {
-            this.goalSelector.addGoal(2, this.attackMelee);
-        }
     }
 
     private void updateWatchedId(int id) {

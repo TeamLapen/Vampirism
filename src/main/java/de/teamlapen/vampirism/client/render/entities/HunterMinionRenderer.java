@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.layers.BipedArmorLayer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -22,7 +21,7 @@ import org.apache.commons.lang3.tuple.Pair;
  * Hunter as of level 1 look all the same, but have different weapons
  */
 @OnlyIn(Dist.CLIENT)
-public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, PlayerModel<HunterMinionEntity>> {
+public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, HunterMinionModel<HunterMinionEntity>> {
     private final Pair<ResourceLocation, Boolean>[] textures;
     private final Pair<ResourceLocation, Boolean>[] minionSpecificTextures;
 
@@ -55,11 +54,6 @@ public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, 
 
     @Override
     protected void renderSelected(HunterMinionEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
-        if (entityIn.isSwingingArms()) {
-            this.model.rightArmPose = BipedModel.ArmPose.CROSSBOW_HOLD;
-        } else {
-            this.model.rightArmPose = BipedModel.ArmPose.ITEM;
-        }
         super.renderSelected(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
 

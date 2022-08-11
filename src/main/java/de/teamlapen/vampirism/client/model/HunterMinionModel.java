@@ -11,14 +11,14 @@ public class HunterMinionModel<T extends HunterMinionEntity> extends PlayerModel
     }
 
     @Override
-    public void setupAnim(T p_225597_1_, float p_225597_2_, float p_225597_3_, float p_225597_4_, float p_225597_5_, float p_225597_6_) {
-        super.setupAnim(p_225597_1_, p_225597_2_, p_225597_3_, p_225597_4_, p_225597_5_, p_225597_6_);
-        switch (p_225597_1_.getArmPose()) {
+    public void setupAnim(T entity, float p_225597_2_, float p_225597_3_, float p_225597_4_, float p_225597_5_, float p_225597_6_) {
+        super.setupAnim(entity, p_225597_2_, p_225597_3_, p_225597_4_, p_225597_5_, p_225597_6_);
+        switch (entity.getArmPose()) {
             case CROSSBOW_HOLD:
-                ModelHelper.animateCrossbowHold(this.rightSleeve, this.leftSleeve, this.head, true);
+                ModelHelper.animateCrossbowHold(this.rightArm, this.leftArm, this.head, true);
                 break;
             case CROSSBOW_CHARGE:
-                ModelHelper.animateCrossbowCharge(this.rightSleeve, this.leftSleeve, p_225597_1_, true);
+                ModelHelper.animateCrossbowCharge(this.rightArm, this.leftArm, entity, true);
                 break;
             default:
                 break;
