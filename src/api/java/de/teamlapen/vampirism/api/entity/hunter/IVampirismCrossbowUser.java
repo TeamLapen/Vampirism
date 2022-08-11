@@ -19,6 +19,9 @@ public interface IVampirismCrossbowUser extends ICrossbowUser {
 
     boolean isChargingCrossbow();
 
+    /**
+     * current crossbow arm pose to use for rendering
+     */
     default ArmPose getArmPose() {
         if (isHoldingCrossbow()) {
             if (isChargingCrossbow()) {

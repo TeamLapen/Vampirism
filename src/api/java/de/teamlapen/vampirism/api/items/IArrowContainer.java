@@ -4,6 +4,9 @@ import net.minecraft.item.ItemStack;
 
 import java.util.Collection;
 
+/**
+ * This item is not an arrow itself, but holds arrows
+ */
 public interface IArrowContainer {
 
     /**
