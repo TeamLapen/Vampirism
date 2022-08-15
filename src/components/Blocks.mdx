@@ -1,0 +1,113 @@
+
+export const BlockImg = ({src, alt}) => (
+    <img src={src} alt={alt} style={{height: 100, imageRendering: "pixelated"}} />
+);
+
+export const Blocks = ({children, title, img, source = null, usage = null}) => (
+    <BlocksInternal children={children} title={title} img={img} source={source} usage={usage} />
+);
+
+export const Block = ({children , title, img, source = null, usage = null}) => (
+    <BlocksInternal children={children} title={title} img={[img]} source={source} usage={usage} />
+);
+
+export const BlocksInternal = ({children, title, img, source, usage}) => (
+        <div style={{marginBottom: '50px'}} id={title.toLowerCase().replace(' ', '-')}>
+            <div>
+                <h1 style={{fontSize: 'xx-large'}}>{title}</h1>
+            </div>
+            <div className="image" style={{marginLeft: '10px', marginBottom: '20px'}}>
+                {img.map((imagePair) => (
+                    <BlockImg src={imagePair} alt=""/>
+                ))}
+            </div>
+            <span>
+                {children}
+            </span>
+            <div>
+                {source != null && <div style={{marginTop: '20px'}}>
+                    <details>
+                        <summary>How to Acquire</summary>
+                        {source.map((item) => {
+                            switch (item.type) {
+                                case "list":
+                                    return (
+                                        <span>
+                                            <h4>{item.title}</h4>
+                                            <ul>
+                                                {item.source.map(source => (
+                                                    <li>{source}</li>
+                                                ))}
+                                            </ul>
+                                        </span>
+                                    );
+                                case "recipe":
+                                    return (
+                                        <span>
+                                            <h4>{item.title}</h4>
+                                            {item.source.map(recipe => (
+                                                <img src={recipe} alt="" style={{
+                                                    width: 500,
+                                                    imageRendering: "pixelated"
+                                                }}/>
+                                            ))}
+                                        </span>
+                                    );
+                            }
+                        })}
+                    </details>
+                </div>}
+            </div>
+            <div>
+                {usage != null && <div style={{marginTop: '20px'}}>
+                    <details>
+                        <summary>Usage</summary>
+                        {usage.map((item) => {
+                            switch (item.type) {
+                                case "list":
+                                    return (
+                                        <span>
+                                            <h4>{item.title}</h4>
+                                            <ul>
+                                                {item.usage.map(usage => (
+                                                    <li>{usage}</li>
+                                                ))}
+                                            </ul>
+                                        </span>
+                                    );
+                                case "recipe":
+                                    return (
+                                        <span>
+                                            <h4>{item.title}</h4>
+                                            {item.usage.map(recipe => (
+                                                <img src={recipe} alt="" style={{
+                                                    width: 500,
+                                                    imageRendering: "pixelated"
+                                                }}/>
+                                            ))}
+                                        </span>);
+                            }
+                        })}
+                    </details>
+                </div>}
+            </div>
+        </div>
+);
+
+export const Decorative = ({}) => (
+    <span style={{
+        color: '#13a3e5',
+        fontStyle: 'italic'
+    }}>
+        Decorative
+    </span>
+);
+
+export const CreativeOnly = ({}) => (
+    <span style={{
+        color: '#b93ae0',
+        fontStyle: 'italic'
+    }}>
+        Creative Only
+    </span>
+);

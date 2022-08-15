@@ -1,0 +1,124 @@
+---
+sidebar_position: 2
+title: Blocks
+---
+import {Block, Blocks, CreativeOnly, Decorative} from "@site/src/components/Blocks.mdx";
+
+import {
+    alchemicalCauldronImages,
+    altarInfusionImage,
+    altarInspirationImage,
+    altarPillarImages,
+    altarTipImage,
+    bloodContainerImages,
+    bloodGrinderImage,
+    bloodPedestralImage,
+    bloodSieveImages,
+    bloodySpruceLeavesImage,
+    candelabraImages,
+    chandelierImage,
+    churchAltarImage,
+    coffinImage,
+    crossImage,
+    cursedDirtImage,
+    darkSpruceLeavesImage,
+    darkSpruceSaplingImage, firePlaceImage,
+    garlicDiffuserImage,
+    garlicImages,
+    hunterTableImages,
+    injectionChairImage,
+    potionTableImage, spruceLeavesImages, stoneBrickImages, stoneSlapImages, stoneStairImages,
+    sunscreenBeaconImage,
+    totemImages,
+    vampireOrchidImage, weaponTableImages
+} from "../assets/blocks/_blocks.mdx";
+import {
+    alchemicalTableRecipes, altarOfCleansingRecipes, altarOfInfusionRecipes, altarOfInspirationRecipes,
+    altarPillarRecipes,
+    altarTipRecipes,
+    bloodContainerRecipes,
+    bloodGrinderRecipes,
+    bloodPedestalRecipes,
+    bloodSieveRecipes,
+    bloodySpruceSaplingRecipes,
+    candelabraRecipes,
+    chandelierRecipes,
+    coffinRecipes,
+    crossRecipes,
+    cursedEarthRecipes,
+    firePlaceRecipes,
+    garlicBlockRecipes,
+    garlicDiffuserRecipes,
+    hunterTableRecipes,
+    injectionChairRecipes,
+    potionTableRecipes,
+    spruceLeavesRecipes,
+    stoneBricksRecipes,
+    stoneSlapsRecipes,
+    stoneStairsRecipes,
+    vampireOrchidRecipes,
+    villageTotemRecipes,
+    weaponTableRecipes
+} from "./_recipes.mdx";
+
+<Blocks img={alchemicalCauldronImages} title="Alchemical Cauldron" source={alchemicalTableRecipes}></Blocks>
+<Block img={churchAltarImage} title="Altar of Cleansing" source={altarOfCleansingRecipes}>
+
+</Block>
+<Block img={altarInfusionImage} title="Altar of Infusion" source={altarOfInfusionRecipes}>
+    The main leveling block for vampire for level 4 to 14
+</Block>
+<Block img={altarInspirationImage} title="Altar of Inspiration" source={altarOfInspirationRecipes}>
+    The leveling block for vampires until level 4
+</Block>
+<Blocks img={altarPillarImages} title="Altar Pillar"source={altarPillarRecipes}>
+    Structure block for the Infusion Altar. To insert a block right click the Altar Pillar with the block you want to insert or right with an empty hand to extract the block.
+</Blocks>
+<Block img={altarTipImage} title="Altar Tip" source={altarTipRecipes}>
+    Structure block for the Infusion Altar. The Tip must be placed on top of the Altar Pillars.
+</Block>
+<Blocks img={bloodContainerImages} title="Blood Container" source={bloodContainerRecipes}>
+    Blood Container can be used to store blood.
+    Use Blood Bottles to fill or empty the container. Or drink directly from the container.
+</Blocks>
+<Block img={bloodGrinderImage} title="Blood Grinder" source={bloodGrinderRecipes} >
+    Blood Grinder extract Impure Blood from items. Combine The Grinder with a Blood Sieve to create drinkable Blood.
+</Block>
+<Block img={bloodPedestralImage} title="Blood Pedestal" source={bloodPedestalRecipes}></Block>
+<Blocks img={bloodSieveImages} title="Blood Sieve" source={bloodSieveRecipes} >
+    The Blood Sieve produces drinkable Blood from Impure Blood.
+</Blocks>
+<Block img={darkSpruceSaplingImage} title="Bloody Spruce Sapling" source={bloodySpruceSaplingRecipes}>
+
+</Block>
+<Blocks img={candelabraImages} title="Candelabra" source={candelabraRecipes} >
+    <Decorative></Decorative>
+</Blocks>
+<Block img={chandelierImage} title="Chandelier" source={chandelierRecipes}>
+    <Decorative></Decorative>
+</Block>
+<Block img={coffinImage} title="Coffin" source={coffinRecipes}>
+    Vampires can sleep in Coffins to skip the day.
+</Block>
+<Block img={crossImage} title="Cross" source={crossRecipes}>
+    <Decorative></Decorative>
+</Block>
+<Block img={cursedDirtImage} title="Cursed Earth" source={cursedEarthRecipes}></Block>
+<Block img={firePlaceImage} title="Fire Place" source={firePlaceRecipes}>
+    <Decorative></Decorative>
+</Block>
+<Blocks img={garlicImages} title="Garlic" source={garlicBlockRecipes}></Blocks>
+<Block img={garlicDiffuserImage} title="Garlic Diffuser" source={garlicDiffuserRecipes}></Block>
+<Blocks img={hunterTableImages} title="Hunter Table" source={hunterTableRecipes}></Blocks>
+<Block img={injectionChairImage} title="Injection Chair" source={injectionChairRecipes}></Block>
+<Blocks img={spruceLeavesImages} title="Spruce Leaves" source={spruceLeavesRecipes}></Blocks>
+<Block img={potionTableImage} title="Potion Table" source={potionTableRecipes}></Block>
+<Blocks img={stoneBrickImages} title="Stone Bricks" source={stoneBricksRecipes}></Blocks>
+<Blocks img={stoneSlapImages} title="Stone Slaps" source={stoneSlapsRecipes}></Blocks>
+<Blocks img={stoneStairImages} title="Stone Stairs" source={stoneStairsRecipes}></Blocks>
+<Block img={sunscreenBeaconImage} title="Sunscreen Beacon">
+    <CreativeOnly></CreativeOnly>
+</Block>
+<Block img={vampireOrchidImage} title="Vampire Orchid" source={vampireOrchidRecipes}></Block>
+<Blocks img={totemImages} title="Village Totem Top/Base" source={villageTotemRecipes}></Blocks>
+<Blocks img={weaponTableImages} title="Weapon Table" source={weaponTableRecipes}></Blocks>

@@ -23,7 +23,5 @@ There is also a scoreboard entry that can be used to find out the vampire/hunter
 #### Sundamage
 For common places (e.g. spawn) you can place (cheat only) sunscreen beacons, so vampires can visit them during the day without taking sun damage.
 
-#### Sleep
-There also is a Morpheus like config option, where you can specify which percentage of players have to be in a coffin to make it night.
 #### Infection
 Also interesting might be the config option to allow/deny players from infecting other human players with vampirism (hunters are immune anyway due to their garlic injection).
