@@ -138,6 +138,8 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             add(ModItems.GARLIC_FINDER.get());
             add(ModItems.dark_spruce_boat.get());
             add(ModItems.cursed_spruce_boat.get());
+            add(ModItems.dark_spruce_chest_boat.get());
+            add(ModItems.cursed_spruce_chest_boat.get());
         }};
         Map<Item, ResourceLocation> itemsWithTexture = new HashMap<>() {{
             put(ModItems.HOLY_WATER_BOTTLE_NORMAL.get(), modLoc("item/holy_water_normal"));

@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.misc;
 
+import de.teamlapen.vampirism.entity.IVampirismBoat;
 import de.teamlapen.vampirism.entity.VampirismBoatEntity;
-import de.teamlapen.vampirism.items.VampirismBoatItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
@@ -14,14 +14,14 @@ import javax.annotation.Nonnull;
 
 public class VampirismDispenseBoatBehavior extends DefaultDispenseItemBehavior {
     private final DefaultDispenseItemBehavior defaultDispenseItemBehavior = new DefaultDispenseItemBehavior();
-    private final VampirismBoatItem.BoatType type;
+    private final IVampirismBoat.BoatType type;
     private final boolean isChestBoat;
 
-    public VampirismDispenseBoatBehavior(VampirismBoatItem.BoatType type) {
+    public VampirismDispenseBoatBehavior(IVampirismBoat.BoatType type) {
         this(type, false);
     }
 
-    public VampirismDispenseBoatBehavior(VampirismBoatItem.BoatType type, boolean isChestBoat) {
+    public VampirismDispenseBoatBehavior(IVampirismBoat.BoatType type, boolean isChestBoat) {
         this.type = type;
         this.isChestBoat = isChestBoat;
     }

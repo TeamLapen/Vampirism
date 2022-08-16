@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.vampirism.entity.IVampirismBoat;
 import de.teamlapen.vampirism.entity.VampirismBoatEntity;
+import de.teamlapen.vampirism.entity.VampirismChestBoatEntity;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -23,14 +25,16 @@ import java.util.function.Predicate;
 public class VampirismBoatItem extends Item {
     private static final Predicate<Entity> ENTITY_PREDICATE = EntitySelector.NO_SPECTATORS.and(Entity::isPickable);
 
-    private  final BoatType type;
+    private final IVampirismBoat.BoatType type;
+    private final boolean hasChest;
 
-    public VampirismBoatItem(BoatType type, Properties properties) {
+    public VampirismBoatItem(IVampirismBoat.BoatType type, boolean hasChest, Properties properties) {
         super(properties);
         this.type = type;
+        this.hasChest = hasChest;
     }
 
-    public BoatType getType() {
+    public IVampirismBoat.BoatType getType() {
         return type;
     }
 
@@ -60,14 +64,15 @@ public class VampirismBoatItem extends Item {
             }
 
             if (hitresult.getType() == HitResult.Type.BLOCK) {
-                VampirismBoatEntity boat = new VampirismBoatEntity(p_77659_1_, hitresult.getLocation().x, hitresult.getLocation().y, hitresult.getLocation().z);
+                IVampirismBoat boat = getBoat(p_77659_1_, hitresult);
+                Entity botEntity = (Entity)boat;
                 boat.setType(this.type);
-                boat.setYRot(p_77659_2_.getYRot());
-                if (!p_77659_1_.noCollision(boat, boat.getBoundingBox())) {
+                botEntity.setYRot(p_77659_2_.getYRot());
+                if (!p_77659_1_.noCollision(botEntity, botEntity.getBoundingBox())) {
                     return InteractionResultHolder.fail(itemstack);
                 } else {
                     if (!p_77659_1_.isClientSide) {
-                        p_77659_1_.addFreshEntity(boat);
+                        p_77659_1_.addFreshEntity(botEntity);
                         p_77659_1_.gameEvent(p_77659_2_, GameEvent.ENTITY_PLACE, hitresult.getLocation());
                         if (!p_77659_2_.getAbilities().instabuild) {
                             itemstack.shrink(1);
@@ -83,15 +88,7 @@ public class VampirismBoatItem extends Item {
         }
     }
 
-    public enum BoatType {
-        DARK_SPRUCE, CURSED_SPRUCE;
-
-        public static BoatType byId(int id) {
-            if (id >= values().length) {
-                return DARK_SPRUCE;
-            } else {
-                return values()[id];
-            }
-        }
+    private IVampirismBoat getBoat(Level level, HitResult hitResult){
+        return hasChest ? new VampirismChestBoatEntity(level, hitResult.getLocation().x, hitResult.getLocation().y, hitResult.getLocation().z) : new VampirismBoatEntity(level, hitResult.getLocation().x, hitResult.getLocation().y, hitResult.getLocation().z);
     }
 }

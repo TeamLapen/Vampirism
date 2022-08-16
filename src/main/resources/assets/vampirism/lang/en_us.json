@@ -802,6 +802,8 @@
   "item.vampirism.crucifix_ultimate": "Golden crucifix",
   "item.vampirism.dark_spruce_boat": "Dark Spruce Boat",
   "item.vampirism.cursed_spruce_boat": "Cursed Spruce Boat",
+  "item.vampirism.dark_spruce_chest_boat": "Dark Spruce Boat with Chest",
+  "item.vampirism.cursed_spruce_chest_boat": "Cursed Spruce Boat with Chest",
   "item.vampirism.oil_bottle": "Oil",
   "__comment": "Potion items",
   "item.minecraft.potion.effect.blindness": "Potion of Blindness",

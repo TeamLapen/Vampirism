@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
+import de.teamlapen.vampirism.entity.IVampirismBoat;
 import de.teamlapen.vampirism.items.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -214,8 +215,10 @@ public class ModItems {
     public static final RegistryObject<CrucifixItem> CRUCIFIX_ENHANCED = ITEMS.register("crucifix_enhanced", () -> new CrucifixItem(IItemWithTier.TIER.ENHANCED));
     public static final RegistryObject<CrucifixItem> CRUCIFIX_ULTIMATE = ITEMS.register("crucifix_ultimate", () -> new CrucifixItem(IItemWithTier.TIER.ULTIMATE));
 
-    public static final RegistryObject<VampirismBoatItem> dark_spruce_boat = ITEMS.register("dark_spruce_boat", () -> new VampirismBoatItem(VampirismBoatItem.BoatType.DARK_SPRUCE, creativeTabProps().stacksTo(1)));
-    public static final RegistryObject<VampirismBoatItem> cursed_spruce_boat = ITEMS.register("cursed_spruce_boat", () -> new VampirismBoatItem(VampirismBoatItem.BoatType.CURSED_SPRUCE, creativeTabProps().stacksTo(1)));
+    public static final RegistryObject<VampirismBoatItem> dark_spruce_boat = ITEMS.register("dark_spruce_boat", () -> new VampirismBoatItem(IVampirismBoat.BoatType.DARK_SPRUCE, false, creativeTabProps().stacksTo(1)));
+    public static final RegistryObject<VampirismBoatItem> cursed_spruce_boat = ITEMS.register("cursed_spruce_boat", () -> new VampirismBoatItem(IVampirismBoat.BoatType.CURSED_SPRUCE, false, creativeTabProps().stacksTo(1)));
+    public static final RegistryObject<VampirismBoatItem> dark_spruce_chest_boat = ITEMS.register("dark_spruce_chest_boat", () -> new VampirismBoatItem(IVampirismBoat.BoatType.DARK_SPRUCE, true, creativeTabProps().stacksTo(1)));
+    public static final RegistryObject<VampirismBoatItem> cursed_spruce_chest_boat = ITEMS.register("cursed_spruce_chest_boat", () -> new VampirismBoatItem(IVampirismBoat.BoatType.CURSED_SPRUCE, true, creativeTabProps().stacksTo(1)));
 
     public static final RegistryObject<OilBottle> OIL_BOTTLE = ITEMS.register("oil_bottle", () -> new OilBottle(creativeTabProps().stacksTo(1)));
     static void registerCraftingRecipes() {

@@ -10,6 +10,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.vehicle.Boat;
+import net.minecraft.world.entity.vehicle.ChestBoat;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -18,17 +19,16 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
-public class VampirismBoatEntity extends Boat implements IVampirismBoat{
+public class VampirismChestBoatEntity extends ChestBoat implements IVampirismBoat {
 
-    private static final EntityDataAccessor<Integer> DATA_ID_TYPE = SynchedEntityData.defineId(VampirismBoatEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> DATA_ID_TYPE = SynchedEntityData.defineId(VampirismChestBoatEntity.class, EntityDataSerializers.INT);
 
-
-    public VampirismBoatEntity(EntityType<? extends VampirismBoatEntity> type, Level level) {
+    public VampirismChestBoatEntity(EntityType<? extends Boat> type, Level level) {
         super(type, level);
     }
 
-    public VampirismBoatEntity(Level level, double x, double y, double z) {
-        this(ModEntities.BOAT.get(), level);
+    public VampirismChestBoatEntity(Level level, double x, double y, double z) {
+        super(ModEntities.CHEST_BOAT.get(), level);
         this.setPos(x,y,z);
         this.setDeltaMovement(Vec3.ZERO);
         this.xo = x;
@@ -83,6 +83,7 @@ public class VampirismBoatEntity extends Boat implements IVampirismBoat{
     @Override
     protected void addAdditionalSaveData(CompoundTag tag) {
         tag.putString("Type", this.getBType().getName());
+        this.addChestVehicleSaveData(tag);
     }
 
     @Override
@@ -90,12 +91,13 @@ public class VampirismBoatEntity extends Boat implements IVampirismBoat{
         if (tag.contains("Type", 8)) {
             this.setType(BoatType.byName(tag.getString("Type")));
         }
+        this.readChestVehicleSaveData(tag);
     }
 
     @NotNull
     @Override
     protected Component getTypeName() {
-        return EntityType.BOAT.getDescription();
+        return EntityType.CHEST_BOAT.getDescription();
     }
 
     @Override

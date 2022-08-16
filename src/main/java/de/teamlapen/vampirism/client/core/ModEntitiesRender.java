@@ -10,12 +10,10 @@ import de.teamlapen.vampirism.client.render.layers.VampireEntityLayer;
 import de.teamlapen.vampirism.client.render.layers.VampirePlayerHeadLayer;
 import de.teamlapen.vampirism.client.render.layers.WingsLayer;
 import de.teamlapen.vampirism.core.ModEntities;
+import de.teamlapen.vampirism.entity.IVampirismBoat;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.PlayerModel;
-import net.minecraft.client.model.VillagerModel;
+import net.minecraft.client.model.*;
 import net.minecraft.client.model.geom.LayerDefinitions;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -106,8 +104,7 @@ public class ModEntitiesRender {
         event.registerEntityRenderer(ModEntities.TASK_MASTER_HUNTER.get(), (HunterTaskMasterRenderer::new));
         event.registerEntityRenderer(ModEntities.dummy_sit_entity.get(), DummyRenderer::new);
         event.registerEntityRenderer(ModEntities.BOAT.get(), context -> new VampirismBoatRenderer(context, false));
-
-
+        event.registerEntityRenderer(ModEntities.CHEST_BOAT.get(), context -> new VampirismBoatRenderer(context, true));
     }
 
     public static void onRegisterLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
@@ -133,6 +130,14 @@ public class ModEntitiesRender {
         event.registerLayerDefinition(GENERIC_BIPED_ARMOR_INNER, () -> LayerDefinition.create(HumanoidModel.createMesh(LayerDefinitions.INNER_ARMOR_DEFORMATION, 0.0F), 64, 32));
         event.registerLayerDefinition(GENERIC_BIPED_ARMOR_OUTER, () -> LayerDefinition.create(HumanoidModel.createMesh(LayerDefinitions.OUTER_ARMOR_DEFORMATION, 0.0F), 64, 32));
         event.registerLayerDefinition(TASK_MASTER, () -> LayerDefinition.create(VillagerModel.createBodyModel(), 64, 64));
+
+        LayerDefinition boatDefinition = BoatModel.createBodyModel(false);
+        LayerDefinition chestBoatDefinition = BoatModel.createBodyModel(true);
+        for(IVampirismBoat.BoatType type : IVampirismBoat.BoatType.values()) {
+            event.registerLayerDefinition(createBoatModelName(type), () -> boatDefinition);
+            event.registerLayerDefinition(createChestBoatModelName(type), () -> chestBoatDefinition);
+        }
+
     }
 
     public static void onAddLayers(EntityRenderersEvent.AddLayers event) {
@@ -159,6 +164,14 @@ public class ModEntitiesRender {
             }
             render.addLayer(new VampireEntityLayer<>(render, entry.getValue(), true));
         }
+    }
+
+    public static ModelLayerLocation createBoatModelName(IVampirismBoat.BoatType type) {
+        return new ModelLayerLocation(new ResourceLocation(REFERENCE.MODID, "boat/" + type.getName()), "main");
+    }
+
+    public static ModelLayerLocation createChestBoatModelName(IVampirismBoat.BoatType type) {
+        return new ModelLayerLocation(new ResourceLocation(REFERENCE.MODID, "chest_boat/" + type.getName()), "main");
     }
 
 }

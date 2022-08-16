@@ -1,24 +1,43 @@
 package de.teamlapen.vampirism.client.render.entities;
 
+import com.google.common.collect.ImmutableMap;
+import com.mojang.datafixers.util.Pair;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.entity.VampirismBoatEntity;
+import de.teamlapen.vampirism.client.core.ModEntitiesRender;
+import de.teamlapen.vampirism.entity.IVampirismBoat;
+import net.minecraft.client.model.BoatModel;
+import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.entity.BoatRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.vehicle.Boat;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
+import java.util.Map;
+import java.util.stream.Stream;
 
 public class VampirismBoatRenderer extends BoatRenderer {
-    private static final ResourceLocation[] BOAT_TEXTURE_LOCATIONS = new ResourceLocation[]{new ResourceLocation(REFERENCE.MODID,"textures/entity/boat/dark_spruce.png"), new ResourceLocation(REFERENCE.MODID, "textures/entity/boat/cursed_spruce.png")};
+    private final Map<IVampirismBoat.BoatType, Pair<ResourceLocation, BoatModel>> boatResources;
 
     public VampirismBoatRenderer(EntityRendererProvider.Context context, boolean hasChest) {
         super(context, hasChest);
+        this.boatResources = Stream.of(IVampirismBoat.BoatType.values()).collect(ImmutableMap.toImmutableMap((type) -> type, (type) -> {
+            return Pair.of(new ResourceLocation(getTextureLocation(type, hasChest)), this.createBoatModel(context, type, hasChest));
+        }));
     }
 
-    @Nonnull
+    private BoatModel createBoatModel(EntityRendererProvider.Context context, IVampirismBoat.BoatType type, boolean hasChest) {
+        ModelLayerLocation modellayerlocation = hasChest ? ModEntitiesRender.createChestBoatModelName(type) : ModEntitiesRender.createBoatModelName(type);
+        return new BoatModel(context.bakeLayer(modellayerlocation), hasChest);
+    }
+
+    public String getTextureLocation(IVampirismBoat.BoatType type, boolean hasChest) {
+        return hasChest ? REFERENCE.MODID + ":textures/entity/chest_boat/" + type.getName() + ".png" : REFERENCE.MODID + ":textures/entity/boat/" + type.getName() + ".png";
+    }
+
+    @NotNull
     @Override
-    public ResourceLocation getTextureLocation(@Nonnull Boat p_110775_1_) {
-        return BOAT_TEXTURE_LOCATIONS[((VampirismBoatEntity) p_110775_1_).getBType().ordinal()];
+    public Pair<ResourceLocation, BoatModel> getModelWithLocation(@NotNull Boat boat) {
+        return this.boatResources.get(((IVampirismBoat) boat).getBType());
     }
 }
