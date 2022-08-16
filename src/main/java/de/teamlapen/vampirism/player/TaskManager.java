@@ -11,9 +11,9 @@ import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.inventory.container.TaskBoardContainer;
 import de.teamlapen.vampirism.inventory.container.TaskContainer;
 import de.teamlapen.vampirism.inventory.container.VampirismContainer;
-import de.teamlapen.vampirism.network.CTaskActionPacket;
-import de.teamlapen.vampirism.network.STaskPacket;
-import de.teamlapen.vampirism.network.STaskStatusPacket;
+import de.teamlapen.vampirism.network.ClientboundTaskPacket;
+import de.teamlapen.vampirism.network.ClientboundTaskStatusPacket;
+import de.teamlapen.vampirism.network.ServerboundTaskActionPacket;
 import de.teamlapen.vampirism.player.tasks.TaskInstance;
 import de.teamlapen.vampirism.player.tasks.req.ItemRequirement;
 import de.teamlapen.vampirism.player.tasks.reward.ItemRewardInstance;
@@ -97,7 +97,7 @@ public class TaskManager implements ITaskManager {
     /**
      * Handle a task action message that was sent from client to server
      */
-    public void handleTaskActionMessage(CTaskActionPacket msg){
+    public void handleTaskActionMessage(ServerboundTaskActionPacket msg){
         switch (msg.action()) {
             case COMPLETE:
                 completeTask(msg.entityId(), msg.task());
@@ -199,7 +199,7 @@ public class TaskManager implements ITaskManager {
             TaskWrapper wrapper = this.taskWrapperMap.computeIfAbsent(taskBoardId, TaskWrapper::new);
             Set<ITaskInstance> selectedTasks = new HashSet<>(getTasks(taskBoardId));
             selectedTasks.addAll(getUniqueTasks());
-            VampirismMod.dispatcher.sendTo(new STaskStatusPacket(selectedTasks, this.getCompletableTasks(selectedTasks), getCompletedRequirements(selectedTasks), player.containerMenu.containerId, taskBoardId), player);
+            VampirismMod.dispatcher.sendTo(new ClientboundTaskStatusPacket(selectedTasks, this.getCompletableTasks(selectedTasks), getCompletedRequirements(selectedTasks), player.containerMenu.containerId, taskBoardId), player);
             wrapper.lastSeenPos = this.player.blockPosition();
         }
     }
@@ -209,7 +209,7 @@ public class TaskManager implements ITaskManager {
         if(!player.isAlive())return;
         player.openMenu(new SimpleMenuProvider((i, inventory, player) -> new VampirismContainer(i, inventory), Component.empty()));
         if (player.containerMenu instanceof TaskContainer) {
-            VampirismMod.dispatcher.sendTo(new STaskPacket(player.containerMenu.containerId, this.taskWrapperMap, this.taskWrapperMap.entrySet().stream().map(entry -> Pair.of(entry.getKey(), getCompletableTasks(entry.getValue().getAcceptedTasks()))).collect(Collectors.toMap(Pair::getKey, Pair::getValue)), this.taskWrapperMap.values().stream().map(wrapper -> Pair.of(wrapper.id, getCompletedRequirements(wrapper.tasks.values()))).collect(Collectors.toMap(Pair::getKey, Pair::getValue))), player);
+            VampirismMod.dispatcher.sendTo(new ClientboundTaskPacket(player.containerMenu.containerId, this.taskWrapperMap, this.taskWrapperMap.entrySet().stream().map(entry -> Pair.of(entry.getKey(), getCompletableTasks(entry.getValue().getAcceptedTasks()))).collect(Collectors.toMap(Pair::getKey, Pair::getValue)), this.taskWrapperMap.values().stream().map(wrapper -> Pair.of(wrapper.id, getCompletedRequirements(wrapper.tasks.values()))).collect(Collectors.toMap(Pair::getKey, Pair::getValue))), player);
         }
     }
 

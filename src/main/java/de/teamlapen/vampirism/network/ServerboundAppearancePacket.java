@@ -12,9 +12,9 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class CAppearancePacket implements IMessage {
+public record ServerboundAppearancePacket(int entityId, String name, int... data) implements IMessage {
 
-    static void encode(CAppearancePacket msg, FriendlyByteBuf buf) {
+    static void encode(ServerboundAppearancePacket msg, FriendlyByteBuf buf) {
         buf.writeVarInt(msg.entityId);
         buf.writeUtf(msg.name);
         buf.writeVarInt(msg.data.length);
@@ -23,17 +23,17 @@ public class CAppearancePacket implements IMessage {
         }
     }
 
-    static CAppearancePacket decode(FriendlyByteBuf buf) {
+    static ServerboundAppearancePacket decode(FriendlyByteBuf buf) {
         int entityId = buf.readVarInt();
         String newName = buf.readUtf(MinionData.MAX_NAME_LENGTH);
         int[] data = new int[buf.readVarInt()];
         for (int i = 0; i < data.length; i++) {
             data[i] = buf.readVarInt();
         }
-        return new CAppearancePacket(entityId, newName, data);
+        return new ServerboundAppearancePacket(entityId, newName, data);
     }
 
-    public static void handle(final CAppearancePacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final ServerboundAppearancePacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> {
             Entity entity = ctx.getSender().level.getEntity(msg.entityId);
@@ -45,15 +45,5 @@ public class CAppearancePacket implements IMessage {
             }
         });
         ctx.setPacketHandled(true);
-    }
-
-    public final int entityId;
-    public final String name;
-    public final int[] data;
-
-    public CAppearancePacket(int entityId, String newName, int... data) {
-        this.entityId = entityId;
-        this.name = newName;
-        this.data = data;
     }
 }

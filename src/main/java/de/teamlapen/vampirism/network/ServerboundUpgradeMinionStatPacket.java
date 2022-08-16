@@ -11,9 +11,9 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 
-public record CUpgradeMinionStatPacket(int entityId, int statId) implements IMessage {
+public record ServerboundUpgradeMinionStatPacket(int entityId, int statId) implements IMessage {
 
-    public static void handle(final CUpgradeMinionStatPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final ServerboundUpgradeMinionStatPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> {
             Player player = ctx.getSender();
@@ -30,13 +30,13 @@ public record CUpgradeMinionStatPacket(int entityId, int statId) implements IMes
         ctx.setPacketHandled(true);
     }
 
-    static void encode(CUpgradeMinionStatPacket msg, FriendlyByteBuf buf) {
+    static void encode(ServerboundUpgradeMinionStatPacket msg, FriendlyByteBuf buf) {
         buf.writeVarInt(msg.entityId);
         buf.writeVarInt(msg.statId);
     }
 
-    static CUpgradeMinionStatPacket decode(FriendlyByteBuf buf) {
-        return new CUpgradeMinionStatPacket(buf.readVarInt(), buf.readVarInt());
+    static ServerboundUpgradeMinionStatPacket decode(FriendlyByteBuf buf) {
+        return new ServerboundUpgradeMinionStatPacket(buf.readVarInt(), buf.readVarInt());
     }
 
 }

@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.world;
 
 import com.google.common.collect.Lists;
 import de.teamlapen.lib.util.Color;
-import de.teamlapen.vampirism.network.SUpdateMultiBossEventPacket;
+import de.teamlapen.vampirism.network.ClientboundUpdateMultiBossEventPacket;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.BossEvent;
 
@@ -26,12 +26,12 @@ public class MultiBossEvent {
         this.entries = new HashMap<>();
     }
 
-    public MultiBossEvent(SUpdateMultiBossEventPacket packet) {
-        this.uniqueId = packet.getUniqueId();
-        this.name = packet.getName();
-        this.colors = packet.getColors();
-        this.entries = packet.getEntries();
-        this.overlay = packet.getOverlay();
+    public MultiBossEvent(ClientboundUpdateMultiBossEventPacket packet) {
+        this.uniqueId = packet.uniqueId();
+        this.name = packet.name();
+        this.colors = packet.colors();
+        this.entries = packet.entries();
+        this.overlay = packet.overlay();
     }
 
     public void clear() {
@@ -85,11 +85,11 @@ public class MultiBossEvent {
         }
     }
 
-    public void updateFromPackage(SUpdateMultiBossEventPacket packet) {
-        switch (packet.getOperation()) {
-            case UPDATE_NAME -> this.name = packet.getName();
-            case UPDATE_PROGRESS -> this.entries = packet.getEntries();
-            case UPDATE_STYLE -> this.overlay = packet.getOverlay();
+    public void updateFromPackage(ClientboundUpdateMultiBossEventPacket packet) {
+        switch (packet.operation()) {
+            case UPDATE_NAME -> this.name = packet.name();
+            case UPDATE_PROGRESS -> this.entries = packet.entries();
+            case UPDATE_STYLE -> this.overlay = packet.overlay();
         }
     }
 }

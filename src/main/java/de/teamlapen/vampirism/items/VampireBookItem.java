@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.network.SOpenVampireBookPacket;
+import de.teamlapen.vampirism.network.ClientboundOpenVampireBookPacket;
 import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
@@ -89,7 +89,7 @@ public class VampireBookItem extends Item {
             if (stack.hasTag()) {
                 id = stack.getTag().getString("id");
             }
-            VampirismMod.dispatcher.sendTo(new SOpenVampireBookPacket(id), (ServerPlayer) playerIn);
+            VampirismMod.dispatcher.sendTo(new ClientboundOpenVampireBookPacket(id), (ServerPlayer) playerIn);
         }
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
     }

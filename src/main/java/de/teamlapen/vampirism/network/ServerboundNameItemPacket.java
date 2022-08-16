@@ -13,16 +13,16 @@ import org.apache.commons.lang3.Validate;
 import java.util.function.Supplier;
 
 
-public class CNameItemPacket implements IMessage {
-    static void encode(CNameItemPacket msg, FriendlyByteBuf buf) {
+public record ServerboundNameItemPacket(String name) implements IMessage {
+    static void encode(ServerboundNameItemPacket msg, FriendlyByteBuf buf) {
         buf.writeUtf(msg.name);
     }
 
-    static CNameItemPacket decode(FriendlyByteBuf buf) {
-        return new CNameItemPacket(buf.readUtf(35));
+    static ServerboundNameItemPacket decode(FriendlyByteBuf buf) {
+        return new ServerboundNameItemPacket(buf.readUtf(35));
     }
 
-    static void handle(CNameItemPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    static void handle(ServerboundNameItemPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ServerPlayer player = ctx.getSender();
         Validate.notNull(player);
@@ -38,11 +38,5 @@ public class CNameItemPacket implements IMessage {
             }
         });
         ctx.setPacketHandled(true);
-    }
-
-    private final String name;
-
-    public CNameItemPacket(String name) {
-        this.name = name;
     }
 }

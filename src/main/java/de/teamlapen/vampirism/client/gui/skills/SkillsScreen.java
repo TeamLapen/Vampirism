@@ -12,8 +12,8 @@ import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.network.CSimpleInputEvent;
-import de.teamlapen.vampirism.network.CUnlockSkillPacket;
+import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
+import de.teamlapen.vampirism.network.ServerboundUnlockSkillPacket;
 import de.teamlapen.vampirism.player.skills.SkillNode;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.client.GameNarrator;
@@ -114,7 +114,7 @@ public class SkillsScreen extends Screen {
                 boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
 
                 resetSkills = this.addRenderableWidget(new Button(guiLeft + 85, guiTop + 194, 80, 20, Component.translatable("text.vampirism.skill.resetall"), (context) -> {
-                    VampirismMod.dispatcher.sendToServer(new CSimpleInputEvent(CSimpleInputEvent.Type.RESET_SKILLS));
+                    VampirismMod.dispatcher.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.RESET_SKILLS));
                     InventoryHelper.removeItemFromInventory(factionPlayer.getRepresentingPlayer().getInventory(), new ItemStack(ModItems.OBLIVION_POTION.get())); //server syncs after the screen is closed
                     if ((factionPlayer.getLevel() < 2 || minecraft.player.getInventory().countItem(ModItems.OBLIVION_POTION.get()) <= 1) && !test) {
                         context.active = false;
@@ -266,7 +266,7 @@ public class SkillsScreen extends Screen {
         ISkill selected = selectedTab != null ? selectedTab.getSelected(mouseX, mouseY, guiLeft, guiTop) : null;
         if (selected != null) {
             if (canUnlockSkill(selected)) {
-                VampirismMod.dispatcher.sendToServer(new CUnlockSkillPacket(RegUtil.id(selected)));
+                VampirismMod.dispatcher.sendToServer(new ServerboundUnlockSkillPacket(RegUtil.id(selected)));
                 playSoundEffect(SoundEvents.PLAYER_LEVELUP, 0.7F);
             } else {
                 playSoundEffect(SoundEvents.NOTE_BLOCK_BASS, 0.5F);

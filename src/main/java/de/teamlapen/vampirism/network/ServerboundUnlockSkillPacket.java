@@ -22,18 +22,18 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 
-public class CUnlockSkillPacket implements IMessage {
+public record ServerboundUnlockSkillPacket(ResourceLocation skillId) implements IMessage {
     private static final Logger LOGGER = LogManager.getLogger();
 
-    static void encode(CUnlockSkillPacket msg, FriendlyByteBuf buf) {
+    static void encode(ServerboundUnlockSkillPacket msg, FriendlyByteBuf buf) {
         buf.writeResourceLocation(msg.skillId);
     }
 
-    static CUnlockSkillPacket decode(FriendlyByteBuf buf) {
-        return new CUnlockSkillPacket(buf.readResourceLocation());
+    static ServerboundUnlockSkillPacket decode(FriendlyByteBuf buf) {
+        return new ServerboundUnlockSkillPacket(buf.readResourceLocation());
     }
 
-    static void handle(CUnlockSkillPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    static void handle(ServerboundUnlockSkillPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ServerPlayer player = ctx.getSender();
         Validate.notNull(player);
@@ -63,11 +63,5 @@ public class CUnlockSkillPacket implements IMessage {
         });
         ctx.setPacketHandled(true);
 
-    }
-
-    private final ResourceLocation skillId;
-
-    public CUnlockSkillPacket(ResourceLocation skillId) {
-        this.skillId = skillId;
     }
 }

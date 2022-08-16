@@ -16,8 +16,8 @@ import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.network.CActionBindingPacket;
-import de.teamlapen.vampirism.network.CToggleActionPacket;
+import de.teamlapen.vampirism.network.ServerboundActionBindingPacket;
+import de.teamlapen.vampirism.network.ServerboundToggleActionPacket;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
@@ -249,7 +249,7 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
     protected void onElementSelected(IAction<T> action) {
         //noinspection unchecked
         if (action != fakeAction && action.canUse((T)FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer().orElse(null)) == IAction.PERM.ALLOWED) {
-            VampirismMod.dispatcher.sendToServer(CToggleActionPacket.createFromRaytrace(RegUtil.id(action), Minecraft.getInstance().hitResult));
+            VampirismMod.dispatcher.sendToServer(ServerboundToggleActionPacket.createFromRaytrace(RegUtil.id(action), Minecraft.getInstance().hitResult));
         }
     }
 
@@ -294,7 +294,7 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
     private void setBinding(int id) {
         IAction<T> action = elements.get(getSelectedElement());
         FactionPlayerHandler.get(minecraft.player).setBoundAction(id, action, false, true);
-        VampirismMod.dispatcher.sendToServer(new CActionBindingPacket(id, action));
+        VampirismMod.dispatcher.sendToServer(new ServerboundActionBindingPacket(id, action));
         if (!editActions) {
             GLFW.glfwSetCursorPos(this.minecraft.getWindow().getWindow(), this.minecraft.getWindow().getScreenWidth() / 2f, this.minecraft.getWindow().getScreenHeight() / 2f);
             onClose();

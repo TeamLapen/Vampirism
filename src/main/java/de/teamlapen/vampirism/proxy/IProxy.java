@@ -46,16 +46,16 @@ public interface IProxy extends IInitListener {
      */
     SkillTree getSkillTree(boolean client);
 
-    default void handleBloodValuePacket(SBloodValuePacket msg) {
+    default void handleBloodValuePacket(ClientboundBloodValuePacket msg) {
     }
 
-    default void handlePlayEventPacket(SPlayEventPacket msg) {
+    default void handlePlayEventPacket(ClientboundPlayEventPacket msg) {
     }
 
-    default void handleRequestMinionSelect(SRequestMinionSelectPacket.Action action, List<Pair<Integer, Component>> minions) {
+    default void handleRequestMinionSelect(ClientboundRequestMinionSelectPacket.Action action, List<Pair<Integer, Component>> minions) {
     }
 
-    default void handleSkillTreePacket(SSkillTreePacket msg) {
+    default void handleSkillTreePacket(ClientboundSkillTreePacket msg) {
     }
 
     /**
@@ -63,13 +63,13 @@ public interface IProxy extends IInitListener {
      */
     void handleSleepClient(Player player);
 
-    default void handleTaskPacket(STaskPacket msg) {
+    default void handleTaskPacket(ClientboundTaskPacket msg) {
     }
 
-    default void handleTaskStatusPacket(STaskStatusPacket msg) {
+    default void handleTaskStatusPacket(ClientboundTaskStatusPacket msg) {
     }
 
-    default void handleUpdateMultiBossInfoPacket(SUpdateMultiBossEventPacket msg) {
+    default void handleUpdateMultiBossInfoPacket(ClientboundUpdateMultiBossEventPacket msg) {
     }
 
     default void handleVampireBookPacket(VampireBookManager.BookInfo msg) {

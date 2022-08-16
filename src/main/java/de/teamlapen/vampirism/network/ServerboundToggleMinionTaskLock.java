@@ -13,16 +13,16 @@ import org.apache.commons.lang3.Validate;
 import java.util.function.Supplier;
 
 
-public class CToggleMinionTaskLock implements IMessage {
-    static void encode(CToggleMinionTaskLock msg, FriendlyByteBuf buf) {
+public record ServerboundToggleMinionTaskLock(int minionID) implements IMessage {
+    static void encode(ServerboundToggleMinionTaskLock msg, FriendlyByteBuf buf) {
         buf.writeVarInt(msg.minionID);
     }
 
-    static CToggleMinionTaskLock decode(FriendlyByteBuf buf) {
-        return new CToggleMinionTaskLock(buf.readVarInt());
+    static ServerboundToggleMinionTaskLock decode(FriendlyByteBuf buf) {
+        return new ServerboundToggleMinionTaskLock(buf.readVarInt());
     }
 
-    static void handle(CToggleMinionTaskLock msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    static void handle(ServerboundToggleMinionTaskLock msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ServerPlayer player = ctx.getSender();
         Validate.notNull(player);
@@ -35,11 +35,5 @@ public class CToggleMinionTaskLock implements IMessage {
             });
         });
         ctx.setPacketHandled(true);
-    }
-
-    private final int minionID;
-
-    public CToggleMinionTaskLock(int minionID) {
-        this.minionID = minionID;
     }
 }

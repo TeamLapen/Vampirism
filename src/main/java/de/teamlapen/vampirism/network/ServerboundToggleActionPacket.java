@@ -26,22 +26,25 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public class CToggleActionPacket implements IMessage {
+/**
+ * @param actionId the id of the action that was toggled
+ * @param target The target the player was looking at when activating the action.
+ */
+public record ServerboundToggleActionPacket(ResourceLocation actionId, @Nullable Either<Integer, BlockPos> target) implements IMessage {
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public static CToggleActionPacket createFromRaytrace(ResourceLocation action, HitResult traceResult) {
-        Either<Integer, BlockPos> target = null;
+    public static ServerboundToggleActionPacket createFromRaytrace(ResourceLocation action, HitResult traceResult) {
         if (traceResult != null) {
             if (traceResult.getType() == HitResult.Type.ENTITY) {
-                target = Either.left(((EntityHitResult) traceResult).getEntity().getId());
+                return new ServerboundToggleActionPacket(action, ((EntityHitResult) traceResult).getEntity().getId());
             } else if (traceResult.getType() == HitResult.Type.BLOCK) {
-                target = Either.right(((BlockHitResult) traceResult).getBlockPos());
+                return new ServerboundToggleActionPacket(action, ((BlockHitResult) traceResult).getBlockPos());
             }
         }
-        return new CToggleActionPacket(action, target);
+        return new ServerboundToggleActionPacket(action);
     }
 
-    static void encode(CToggleActionPacket msg, FriendlyByteBuf buf) {
+    static void encode(ServerboundToggleActionPacket msg, FriendlyByteBuf buf) {
         buf.writeResourceLocation(msg.actionId);
         if (msg.target != null) {
             buf.writeBoolean(true);
@@ -58,7 +61,7 @@ public class CToggleActionPacket implements IMessage {
         }
     }
 
-    static CToggleActionPacket decode(FriendlyByteBuf buf) {
+    static ServerboundToggleActionPacket decode(FriendlyByteBuf buf) {
         ResourceLocation id = buf.readResourceLocation();
         Either<Integer, BlockPos> target = null;
         if (buf.readBoolean()) {
@@ -69,10 +72,10 @@ public class CToggleActionPacket implements IMessage {
             }
         }
 
-        return new CToggleActionPacket(id, target);
+        return new ServerboundToggleActionPacket(id, target);
     }
 
-    static void handle(CToggleActionPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    static void handle(ServerboundToggleActionPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ServerPlayer player = ctx.getSender();
         Validate.notNull(player);
@@ -113,16 +116,15 @@ public class CToggleActionPacket implements IMessage {
         ctx.setPacketHandled(true);
     }
 
-    private final ResourceLocation actionId;
+    public ServerboundToggleActionPacket(ResourceLocation actionId, @Nullable Integer target) {
+        this(actionId, Either.left(target));
+    }
 
-    /**
-     * The target the player was looking at when activating the action.
-     */
-    @Nullable
-    private final Either<Integer, BlockPos> target;
+    public ServerboundToggleActionPacket(ResourceLocation actionId, @Nullable BlockPos target) {
+        this(actionId, Either.right(target));
+    }
 
-    public CToggleActionPacket(ResourceLocation actionId, @Nullable Either<Integer, BlockPos> target) {
-        this.actionId = actionId;
-        this.target = target;
+    public ServerboundToggleActionPacket(ResourceLocation actionId) {
+        this(actionId, (Either<Integer, BlockPos>)null);
     }
 }

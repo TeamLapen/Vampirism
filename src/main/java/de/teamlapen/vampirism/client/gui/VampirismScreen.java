@@ -16,7 +16,7 @@ import de.teamlapen.vampirism.client.gui.skills.SkillsScreen;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.inventory.container.TaskContainer;
 import de.teamlapen.vampirism.inventory.container.VampirismContainer;
-import de.teamlapen.vampirism.network.CDeleteRefinementPacket;
+import de.teamlapen.vampirism.network.ServerboundDeleteRefinementPacket;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.util.Helper;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -179,7 +179,7 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
         for (Slot slot : this.menu.slots) {
             if (slot instanceof VampirismContainer.RemovingSelectorSlot) {
                 Button xButton = this.addRenderableWidget(new ImageButton(this.getGuiLeft() + slot.x + 16 - 5, this.getGuiTop() + slot.y + 16 - 5, 5, 5, 60, 205, 0, BACKGROUND_REFINEMENTS, 256, 256, (button) -> {
-                    VampirismMod.dispatcher.sendToServer(new CDeleteRefinementPacket(IRefinementItem.AccessorySlotType.values()[slot.index]));
+                    VampirismMod.dispatcher.sendToServer(new ServerboundDeleteRefinementPacket(IRefinementItem.AccessorySlotType.values()[slot.index]));
                     refinementList.set(slot.index, ItemStack.EMPTY);
                 }, (button12, matrixStack, xPos, yPos) -> {
                     VampirismScreen.this.renderTooltip(matrixStack, Component.translatable("gui.vampirism.vampirism_menu.destroy_item").withStyle(ChatFormatting.RED), xPos, yPos);

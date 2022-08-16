@@ -13,17 +13,17 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 
-public class CDeleteRefinementPacket implements IMessage {
+public record ServerboundDeleteRefinementPacket(IRefinementItem.AccessorySlotType slot) implements IMessage {
 
-    static void encode(CDeleteRefinementPacket msg, FriendlyByteBuf buf) {
+    static void encode(ServerboundDeleteRefinementPacket msg, FriendlyByteBuf buf) {
         buf.writeEnum(msg.slot);
     }
 
-    static CDeleteRefinementPacket decode(FriendlyByteBuf buf) {
-        return new CDeleteRefinementPacket(buf.readEnum(IRefinementItem.AccessorySlotType.class));
+    static ServerboundDeleteRefinementPacket decode(FriendlyByteBuf buf) {
+        return new ServerboundDeleteRefinementPacket(buf.readEnum(IRefinementItem.AccessorySlotType.class));
     }
 
-    static void handle(CDeleteRefinementPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    static void handle(ServerboundDeleteRefinementPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ServerPlayer player = ctx.getSender();
         Validate.notNull(player);
@@ -32,11 +32,5 @@ public class CDeleteRefinementPacket implements IMessage {
             factionPlayerOpt.ifPresent(fp -> fp.getSkillHandler().removeRefinementItem(msg.slot));
         });
         ctx.setPacketHandled(true);
-    }
-
-    private final IRefinementItem.AccessorySlotType slot;
-
-    public CDeleteRefinementPacket(IRefinementItem.AccessorySlotType slot) {
-        this.slot = slot;
     }
 }

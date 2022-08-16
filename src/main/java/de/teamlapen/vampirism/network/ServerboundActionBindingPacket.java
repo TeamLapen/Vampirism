@@ -9,18 +9,18 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public record CActionBindingPacket(int actionBindingId, IAction<?> action) implements IMessage {
+public record ServerboundActionBindingPacket(int actionBindingId, IAction<?> action) implements IMessage {
 
-    static void encode(final CActionBindingPacket msg, FriendlyByteBuf buf) {
+    static void encode(final ServerboundActionBindingPacket msg, FriendlyByteBuf buf) {
         buf.writeVarInt(msg.actionBindingId);
         buf.writeResourceLocation(RegUtil.id(msg.action));
     }
 
-    static CActionBindingPacket decode(FriendlyByteBuf buf) {
-        return new CActionBindingPacket(buf.readVarInt(), RegUtil.getAction(buf.readResourceLocation()));
+    static ServerboundActionBindingPacket decode(FriendlyByteBuf buf) {
+        return new ServerboundActionBindingPacket(buf.readVarInt(), RegUtil.getAction(buf.readResourceLocation()));
     }
 
-    public static void handle(final CActionBindingPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final ServerboundActionBindingPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> {
             FactionPlayerHandler.getOpt(ctx.getSender()).ifPresent(factionPlayerHandler -> factionPlayerHandler.setBoundAction(msg.actionBindingId, msg.action, false, false));

@@ -10,12 +10,12 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.*;
 import java.util.function.Supplier;
 
-public record STaskPacket(int containerId,
-                         Map<UUID, TaskManager.TaskWrapper> taskWrappers,
-                         Map<UUID, Set<UUID>> completableTasks,
-                         Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements) implements IMessage {
+public record ClientboundTaskPacket(int containerId,
+                                    Map<UUID, TaskManager.TaskWrapper> taskWrappers,
+                                    Map<UUID, Set<UUID>> completableTasks,
+                                    Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements) implements IMessage {
 
-    public static void encode(STaskPacket msg, FriendlyByteBuf buffer) {
+    public static void encode(ClientboundTaskPacket msg, FriendlyByteBuf buffer) {
         buffer.writeVarInt(msg.containerId);
         buffer.writeVarInt(msg.completableTasks.size());
         buffer.writeVarInt(msg.completedRequirements.size());
@@ -40,7 +40,7 @@ public record STaskPacket(int containerId,
         msg.taskWrappers.forEach((id, taskWrapper) -> taskWrapper.encode(buffer));
     }
 
-    public static STaskPacket decode(FriendlyByteBuf buffer) {
+    public static ClientboundTaskPacket decode(FriendlyByteBuf buffer) {
         int containerId = buffer.readVarInt();
         int completableSize = buffer.readVarInt();
         int statSize = buffer.readVarInt();
@@ -76,10 +76,10 @@ public record STaskPacket(int containerId,
             TaskManager.TaskWrapper wrapper = TaskManager.TaskWrapper.decode(buffer);
             taskWrapper.put(wrapper.getId(), wrapper);
         }
-        return new STaskPacket(containerId, taskWrapper, completableTasks, completedRequirements);
+        return new ClientboundTaskPacket(containerId, taskWrapper, completableTasks, completedRequirements);
     }
 
-    public static void handle(final STaskPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final ClientboundTaskPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> VampirismMod.proxy.handleTaskPacket(msg));
         ctx.setPacketHandled(true);

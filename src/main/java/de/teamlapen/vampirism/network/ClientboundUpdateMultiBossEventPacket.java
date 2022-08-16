@@ -12,8 +12,8 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.*;
 import java.util.function.Supplier;
 
-public class SUpdateMultiBossEventPacket implements IMessage {
-    static void encode(SUpdateMultiBossEventPacket msg, FriendlyByteBuf buf) {
+public record ClientboundUpdateMultiBossEventPacket(UUID uniqueId, OperationType operation, List<Color> colors, Map<Color, Float> entries, Component name, BossEvent.BossBarOverlay overlay) implements IMessage {
+    static void encode(ClientboundUpdateMultiBossEventPacket msg, FriendlyByteBuf buf) {
         buf.writeUUID(msg.uniqueId);
         buf.writeEnum(msg.operation);
         switch (msg.operation) {
@@ -38,90 +38,52 @@ public class SUpdateMultiBossEventPacket implements IMessage {
         }
     }
 
-    static SUpdateMultiBossEventPacket decode(FriendlyByteBuf buf) {
+    static ClientboundUpdateMultiBossEventPacket decode(FriendlyByteBuf buf) {
         UUID uuid = buf.readUUID();
         OperationType operation = buf.readEnum(OperationType.class);
-        SUpdateMultiBossEventPacket packet = new SUpdateMultiBossEventPacket(operation, uuid);
+        Component name = null;
+        List<Color> colors = null;
+        Map<Color, Float> entries = null;
+        BossEvent.BossBarOverlay overlay = null;
         switch (operation) {
             case ADD:
-                packet.name = buf.readComponent();
+                name = buf.readComponent();
                 int size = buf.readVarInt();
-                List<Color> colors = new LinkedList<>();
+                List<Color> colorsList = new LinkedList<>();
                 for (int i = 0; i < size; i++) {
-                    colors.add(new Color(buf.readVarInt(), true));
+                    colorsList.add(new Color(buf.readVarInt(), true));
                 }
-                packet.colors = colors;
-                packet.overlay = buf.readEnum(BossEvent.BossBarOverlay.class);
+                colors = Collections.unmodifiableList(colorsList);
+                overlay = buf.readEnum(BossEvent.BossBarOverlay.class);
             case UPDATE_PROGRESS:
-                Map<Color, Float> entries = new LinkedHashMap<>();
+                Map<Color, Float> entriesMap = new LinkedHashMap<>();
                 int size2 = buf.readVarInt();
                 for (int i = 0; i < size2; i++) {
                     Color color = new Color(buf.readVarInt(), true);
                     float perc = buf.readFloat();
-                    entries.put(color, perc);
+                    entriesMap.put(color, perc);
                 }
-                packet.entries = entries;
+                entries = Collections.unmodifiableMap(entriesMap);
                 break;
             case UPDATE_NAME:
-                packet.name = buf.readComponent();
+                name = buf.readComponent();
                 break;
             case UPDATE_STYLE:
-                packet.overlay = buf.readEnum(BossEvent.BossBarOverlay.class);
+                overlay = buf.readEnum(BossEvent.BossBarOverlay.class);
                 break;
         }
-        return packet;
+        return new ClientboundUpdateMultiBossEventPacket(uuid, operation , colors, entries, name, overlay);
     }
 
-    public static void handle(final SUpdateMultiBossEventPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final ClientboundUpdateMultiBossEventPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> VampirismMod.proxy.handleUpdateMultiBossInfoPacket(msg));
         ctx.setPacketHandled(true);
     }
 
-    private final UUID uniqueId;
-    private final OperationType operation;
-    protected List<Color> colors;
-    protected Map<Color, Float> entries;
-    private Component name;
-    private BossEvent.BossBarOverlay overlay;
 
-    public SUpdateMultiBossEventPacket(OperationType operation, MultiBossEvent data) {
-        this.uniqueId = data.getUniqueId();
-        this.operation = operation;
-        this.name = data.getName();
-        this.colors = data.getColors();
-        this.entries = data.getEntries();
-        this.overlay = data.getOverlay();
-    }
-
-    private SUpdateMultiBossEventPacket(OperationType operation, UUID uuid) {
-        this.uniqueId = uuid;
-        this.operation = operation;
-        this.entries = new LinkedHashMap<>();
-    }
-
-    public List<Color> getColors() {
-        return colors;
-    }
-
-    public Map<Color, Float> getEntries() {
-        return entries;
-    }
-
-    public Component getName() {
-        return name;
-    }
-
-    public OperationType getOperation() {
-        return operation;
-    }
-
-    public BossEvent.BossBarOverlay getOverlay() {
-        return overlay;
-    }
-
-    public UUID getUniqueId() {
-        return uniqueId;
+    public ClientboundUpdateMultiBossEventPacket(OperationType operation, MultiBossEvent data) {
+        this(data.getUniqueId(), operation, data.getColors(), data.getEntries(), data.getName() , data.getOverlay());
     }
 
     public enum OperationType {

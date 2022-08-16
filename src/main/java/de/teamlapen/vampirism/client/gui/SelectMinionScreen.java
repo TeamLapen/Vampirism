@@ -3,8 +3,8 @@ package de.teamlapen.vampirism.client.gui;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.lib.client.gui.widget.ScrollableArrayTextComponentList;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.network.CSelectMinionTaskPacket;
-import de.teamlapen.vampirism.network.SRequestMinionSelectPacket;
+import de.teamlapen.vampirism.network.ClientboundRequestMinionSelectPacket;
+import de.teamlapen.vampirism.network.ServerboundSelectMinionTaskPacket;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
@@ -19,10 +19,10 @@ import java.util.List;
 public class SelectMinionScreen extends Screen {
     private final Integer[] minionIds;
     private final Component[] minionNames;
-    private final SRequestMinionSelectPacket.Action action;
+    private final ClientboundRequestMinionSelectPacket.Action action;
     private ScrollableArrayTextComponentList list;
 
-    public SelectMinionScreen(SRequestMinionSelectPacket.Action a, List<Pair<Integer, Component>> minions) {
+    public SelectMinionScreen(ClientboundRequestMinionSelectPacket.Action a, List<Pair<Integer, Component>> minions) {
         super(Component.literal(""));
         this.action = a;
         this.minionIds = minions.stream().map(Pair::getLeft).toArray(Integer[]::new);
@@ -54,8 +54,8 @@ public class SelectMinionScreen extends Screen {
 
     private void onMinionSelected(int id) {
         int selectedMinion = minionIds[id];
-        if (action == SRequestMinionSelectPacket.Action.CALL) {
-            VampirismMod.dispatcher.sendToServer(new CSelectMinionTaskPacket(selectedMinion, CSelectMinionTaskPacket.RECALL));
+        if (action == ClientboundRequestMinionSelectPacket.Action.CALL) {
+            VampirismMod.dispatcher.sendToServer(new ServerboundSelectMinionTaskPacket(selectedMinion, ServerboundSelectMinionTaskPacket.RECALL));
         }
         this.onClose();
     }

@@ -15,8 +15,8 @@ import java.util.function.Supplier;
  * Client -> Server
  * Player has initiate feeding on an entity
  */
-public class CStartFeedingPacket implements IMessage {
-    static void encode(CStartFeedingPacket msg, FriendlyByteBuf buffer) {
+public record ServerboundStartFeedingPacket(Either<Integer, BlockPos> target) implements IMessage {
+    static void encode(ServerboundStartFeedingPacket msg, FriendlyByteBuf buffer) {
         msg.target.ifLeft(entityID -> {
             buffer.writeBoolean(false);
             buffer.writeVarInt(entityID);
@@ -27,15 +27,15 @@ public class CStartFeedingPacket implements IMessage {
         });
     }
 
-    static CStartFeedingPacket decode(FriendlyByteBuf buffer) {
+    static ServerboundStartFeedingPacket decode(FriendlyByteBuf buffer) {
         if (buffer.readBoolean()) {
-            return new CStartFeedingPacket(buffer.readBlockPos());
+            return new ServerboundStartFeedingPacket(buffer.readBlockPos());
         } else {
-            return new CStartFeedingPacket(buffer.readVarInt());
+            return new ServerboundStartFeedingPacket(buffer.readVarInt());
         }
     }
 
-    static void handle(final CStartFeedingPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    static void handle(final ServerboundStartFeedingPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ServerPlayer player = ctx.getSender();
         Validate.notNull(player);
@@ -48,13 +48,11 @@ public class CStartFeedingPacket implements IMessage {
         ctx.setPacketHandled(true);
     }
 
-    private final Either<Integer, BlockPos> target;
-
-    public CStartFeedingPacket(int entityID) {
-        this.target = Either.left(entityID);
+    public ServerboundStartFeedingPacket(int entityID) {
+        this(Either.left(entityID));
     }
 
-    public CStartFeedingPacket(BlockPos targetPosition) {
-        this.target = Either.right(targetPosition);
+    public ServerboundStartFeedingPacket(BlockPos targetPosition) {
+        this(Either.right(targetPosition));
     }
 }

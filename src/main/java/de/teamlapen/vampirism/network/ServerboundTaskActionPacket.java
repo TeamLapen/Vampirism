@@ -11,20 +11,20 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public record CTaskActionPacket(UUID task, UUID entityId,
-                               TaskContainer.TaskAction action) implements IMessage {
+public record ServerboundTaskActionPacket(UUID task, UUID entityId,
+                                          TaskContainer.TaskAction action) implements IMessage {
 
-    static void encode(CTaskActionPacket msg, FriendlyByteBuf buf) {
+    static void encode(ServerboundTaskActionPacket msg, FriendlyByteBuf buf) {
         buf.writeUUID(msg.task);
         buf.writeUUID(msg.entityId);
         buf.writeVarInt(msg.action.ordinal());
     }
 
-    static CTaskActionPacket decode(FriendlyByteBuf buf) {
-        return new CTaskActionPacket(buf.readUUID(), buf.readUUID(), TaskContainer.TaskAction.values()[buf.readVarInt()]);
+    static ServerboundTaskActionPacket decode(FriendlyByteBuf buf) {
+        return new ServerboundTaskActionPacket(buf.readUUID(), buf.readUUID(), TaskContainer.TaskAction.values()[buf.readVarInt()]);
     }
 
-    public static void handle(final CTaskActionPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final ServerboundTaskActionPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> FactionPlayerHandler.getCurrentFactionPlayer(ctx.getSender()).map(IFactionPlayer::getTaskManager).ifPresent(m -> ((TaskManager)m).handleTaskActionMessage(msg)));
         ctx.setPacketHandled(true);

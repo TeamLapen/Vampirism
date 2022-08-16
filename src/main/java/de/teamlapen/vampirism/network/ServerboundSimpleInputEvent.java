@@ -22,18 +22,18 @@ import java.util.function.Supplier;
 /**
  * Collection of simple input events that do not need any additional information
  */
-public class CSimpleInputEvent implements IMessage {
+public record ServerboundSimpleInputEvent(Type type) implements IMessage {
 
-    static void encode(CSimpleInputEvent msg, FriendlyByteBuf buf) {
+    static void encode(ServerboundSimpleInputEvent msg, FriendlyByteBuf buf) {
         buf.writeEnum(msg.type);
     }
 
-    static CSimpleInputEvent decode(FriendlyByteBuf buf) {
+    static ServerboundSimpleInputEvent decode(FriendlyByteBuf buf) {
         Type t = buf.readEnum(Type.class);
-        return new CSimpleInputEvent(t);
+        return new ServerboundSimpleInputEvent(t);
     }
 
-    static void handle(final CSimpleInputEvent msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    static void handle(final ServerboundSimpleInputEvent msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ServerPlayer player = ctx.getSender();
         Validate.notNull(player);
@@ -67,7 +67,7 @@ public class CSimpleInputEvent implements IMessage {
                     }
                     break;
                 case SHOW_MINION_CALL_SELECTION:
-                    SRequestMinionSelectPacket.createRequestForPlayer(player, SRequestMinionSelectPacket.Action.CALL).ifPresent(VampirismMod.dispatcher::sendToServer);
+                    ClientboundRequestMinionSelectPacket.createRequestForPlayer(player, ClientboundRequestMinionSelectPacket.Action.CALL).ifPresent(VampirismMod.dispatcher::sendToServer);
                     break;
                 case VAMPIRISM_MENU:
                     factionPlayerOpt.ifPresent(fPlayer -> fPlayer.getTaskManager().openVampirismMenu());
@@ -81,11 +81,6 @@ public class CSimpleInputEvent implements IMessage {
             }
         });
         ctx.setPacketHandled(true);
-    }
-    private final Type type;
-
-    public CSimpleInputEvent(Type type) {
-        this.type = type;
     }
 
     public enum Type {

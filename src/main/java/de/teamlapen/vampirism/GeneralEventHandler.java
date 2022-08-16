@@ -5,8 +5,8 @@ import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.network.SBloodValuePacket;
-import de.teamlapen.vampirism.network.SSkillTreePacket;
+import de.teamlapen.vampirism.network.ClientboundBloodValuePacket;
+import de.teamlapen.vampirism.network.ClientboundSkillTreePacket;
 import de.teamlapen.vampirism.util.Permissions;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import de.teamlapen.vampirism.world.VampirismWorld;
@@ -86,7 +86,7 @@ public class GeneralEventHandler {
 //        }
 
         if (player instanceof ServerPlayer serverPlayer){
-            VampirismMod.dispatcher.sendTo(new SSkillTreePacket(VampirismMod.proxy.getSkillTree(false).getCopy()), serverPlayer);
+            VampirismMod.dispatcher.sendTo(new ClientboundSkillTreePacket(VampirismMod.proxy.getSkillTree(false).getCopy()), serverPlayer);
         }
 
         @SuppressWarnings("unchecked")
@@ -96,7 +96,7 @@ public class GeneralEventHandler {
         bloodValues[2] = BloodConversionRegistry.getFluidConversions();
 
         if(player instanceof ServerPlayer serverPlayer) {
-            VampirismMod.dispatcher.sendTo(new SBloodValuePacket(bloodValues), serverPlayer);
+            VampirismMod.dispatcher.sendTo(new ClientboundBloodValuePacket(bloodValues), serverPlayer);
         }
         FactionPlayerHandler.getOpt(player).ifPresent(FactionPlayerHandler::onPlayerLoggedIn);
 

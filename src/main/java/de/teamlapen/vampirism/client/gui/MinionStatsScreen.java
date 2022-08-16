@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
-import de.teamlapen.vampirism.network.CUpgradeMinionStatPacket;
+import de.teamlapen.vampirism.network.ServerboundUpgradeMinionStatPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
@@ -93,13 +93,13 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
         }
         for (int i = 0; i < statCount; i++) {
             int finalI = i;
-            Button button = this.addRenderableWidget(new Button(guiLeft + 225, guiTop + 43 + 26 * i, 20, 20, Component.literal("+"), (b) -> VampirismMod.dispatcher.sendToServer(new CUpgradeMinionStatPacket(entity.getId(), finalI))));
+            Button button = this.addRenderableWidget(new Button(guiLeft + 225, guiTop + 43 + 26 * i, 20, 20, Component.literal("+"), (b) -> VampirismMod.dispatcher.sendToServer(new ServerboundUpgradeMinionStatPacket(entity.getId(), finalI))));
             statButtons.add(button);
             button.visible = false;
         }
 
         reset = this.addRenderableWidget(new ImageButton(this.guiLeft + 225, this.guiTop + 8, 20, 20, 0, 0, 20, RESET, 20, 40, (context) -> {
-            VampirismMod.dispatcher.sendToServer(new CUpgradeMinionStatPacket(entity.getId(), -1));
+            VampirismMod.dispatcher.sendToServer(new ServerboundUpgradeMinionStatPacket(entity.getId(), -1));
             getOblivionPotion().ifPresent(stack -> stack.shrink(1));//server syncs after the screen is closed
         }, (button, matrixStack, mouseX, mouseY) -> {
             MinionStatsScreen.this.renderTooltip(matrixStack, button.getMessage(), mouseX, mouseY);

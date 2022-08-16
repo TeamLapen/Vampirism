@@ -9,9 +9,9 @@ import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.client.gui.ActionSelectScreen;
 import de.teamlapen.vampirism.client.gui.SelectMinionTaskScreen;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.network.CSimpleInputEvent;
-import de.teamlapen.vampirism.network.CStartFeedingPacket;
-import de.teamlapen.vampirism.network.CToggleActionPacket;
+import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
+import de.teamlapen.vampirism.network.ServerboundStartFeedingPacket;
+import de.teamlapen.vampirism.network.ServerboundToggleActionPacket;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
@@ -105,10 +105,10 @@ public class ModKeys {
                 Player player = Minecraft.getInstance().player;
                 if (mouseOver != null && !player.isSpectator() && VampirePlayer.getOpt(player).map(vp -> vp.getLevel() > 0 && !vp.getActionHandler().isActionActive(VampireActions.BAT.get())).orElse(false)) {
                     if (mouseOver instanceof EntityHitResult) {
-                        VampirismMod.dispatcher.sendToServer(new CStartFeedingPacket(((EntityHitResult) mouseOver).getEntity().getId()));
+                        VampirismMod.dispatcher.sendToServer(new ServerboundStartFeedingPacket(((EntityHitResult) mouseOver).getEntity().getId()));
                     } else if (mouseOver instanceof BlockHitResult) {
                         BlockPos pos = ((BlockHitResult) mouseOver).getBlockPos();
-                        VampirismMod.dispatcher.sendToServer(new CStartFeedingPacket(pos));
+                        VampirismMod.dispatcher.sendToServer(new ServerboundStartFeedingPacket(pos));
                     } else {
                         LOGGER.warn("Unknown mouse over type while trying to feed");
                     }
@@ -117,7 +117,7 @@ public class ModKeys {
         } else {
             if (suckKeyDown) {
                 suckKeyDown = false;
-                VampirismMod.dispatcher.sendToServer(new CSimpleInputEvent(CSimpleInputEvent.Type.FINISH_SUCK_BLOOD));
+                VampirismMod.dispatcher.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.FINISH_SUCK_BLOOD));
             }
 
             if (ACTION.isDown()) {
@@ -128,9 +128,9 @@ public class ModKeys {
                     }
                 }
             } else if (VAMPIRISM_MENU.isDown()) {
-                VampirismMod.dispatcher.sendToServer(new CSimpleInputEvent(CSimpleInputEvent.Type.VAMPIRISM_MENU));
+                VampirismMod.dispatcher.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.VAMPIRISM_MENU));
             } else if (VISION.isDown()) {
-                VampirismMod.dispatcher.sendToServer(new CSimpleInputEvent(CSimpleInputEvent.Type.TOGGLE_VAMPIRE_VISION));
+                VampirismMod.dispatcher.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.TOGGLE_VAMPIRE_VISION));
             } else if (ACTION1.isDown()) {
                 long t = System.currentTimeMillis();
                 if (t - lastAction1Trigger > ACTION_BUTTON_COOLDOWN) {
@@ -179,7 +179,7 @@ public class ModKeys {
             if (action.getFaction().map(faction -> !faction.equals(player.getFaction())).orElse(false)) {
                 player.getRepresentingPlayer().displayClientMessage(Component.translatable("text.vampirism.action.only_faction", action.getFaction().get().getName()), true);
             } else {
-                VampirismMod.dispatcher.sendToServer(CToggleActionPacket.createFromRaytrace(RegUtil.id(action), Minecraft.getInstance().hitResult));
+                VampirismMod.dispatcher.sendToServer(ServerboundToggleActionPacket.createFromRaytrace(RegUtil.id(action), Minecraft.getInstance().hitResult));
             }
         }
 
