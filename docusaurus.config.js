@@ -53,7 +53,7 @@ const config = {
         title: 'Vampirism',
         logo: {
           alt: 'Vampirism Logo',
-          src: 'img/logo.png',
+          src: 'img/logo2.png',
         },
         items: [
           {
