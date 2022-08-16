@@ -9,14 +9,14 @@ Villages are either controlled by a faction through world generation, raided by 
 
 ### Benefits
 #### Village Profession
-Every faction has a villager profession that has faction specific trades. The Job site block for these professions is always the Totem Top Block of the controlling faction.
+Every faction has a villager profession that has faction specific trades. The Job site block for these professions is always the [Totem Top](../content/blocks#village-totem-top-base) Block of the controlling faction.
 
 #### Faction Representative
 Every Faction has a Faction Representative where you can accept and submit tasks.
 
 If you can't find a Representative or the Representative is killed they re-/spawn after some time. (The more Villager the village has the faster)
 
-Noteworthy is that all non unique tasks are bound the the faction Representative. That means the if the Representative is killed you can not hand in the completed tasks of this Representative.
+Noteworthy is that all non-unique tasks are bound the faction Representative. That means the if the Representative is killed you can not hand in the completed tasks of this Representative.
 
 ## Faction Raids
 

@@ -8,12 +8,12 @@ To level up you have performed more rituals at different altars, **but always at
 _The declared blood/item amounts might not be up-to-date._
 
 ## Altar of Inspiration (To reach level 2-4)
-Craft Altar of Inspiration  and place it somewhere.
+Craft [Altar of Inspiration](../../content/blocks#altar-of-inspiration)  and place it somewhere.
 To use this one you have to fill it with blood (right-click with filled blood bottles). If there is enough blood inside you can sneak - right-click with an empty hand and the blood will be infused into you, making you even stronger.  
 _Required blood amount 1:40,2:70,3:100_  
 
 ## Altar of Infusion (To reach level 5+)
-This altar requires a multiblock structure. First the main block (Altar of Infusion) this block and place it down, then you have to build "Altar Pillars" around it and fill them with special blocks (right click it while holding them). The pillar filling type and height varies depending on the level, on top has to be a Altar Tip each. Make sure there are no other blocks (e.g. grass) in the area. After the structure is complete, put the required amount of items into the altar, sneak right click and wait for the magic to happen.  
+This altar requires a multi-block structure. First the main block ([Altar of Infusion](../../content/blocks#altar-of-infusion)) this block and place it down, then you have to build [Altar Pillars](../../content/blocks#altar-pillar) around it and fill them with special blocks (right click it while holding them). The pillar filling type and height varies depending on the level, on top has to be an [Altar Tip](../../content/blocks#altar-tip) each. Make sure there are no other blocks (e.g. grass) in the area. After the structure is complete, put the required amount of items into the altar, sneak right click and wait for the magic to happen.  
 
 #### Structure Points
 The required structure depends on the level, you need a specific amount of "structure points".

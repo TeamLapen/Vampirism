@@ -10,7 +10,7 @@ title: Vampire Player
 * Enough blood or blood shortage is treated similar to the food level effects
 * Players with level > 0 can suck blood from a mob, depending on the mob, the player gets blood added or deals damage to the other mob
 * Mobs that were bitten and gave blood are converted to a vampire version or die
-* Blood can be stored in blood bottles and blood containers and be consumed later 
+* Blood can be stored in [Blood Bottles](../../content/items#blood-bottle) and [Blood Containers](../../content/blocks#blood-container) and be consumed later 
 * The skin is modified slightly if the player is a vampire 
 
 ## Appearance

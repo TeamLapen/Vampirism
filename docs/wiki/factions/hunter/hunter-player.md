@@ -4,11 +4,11 @@ title: Hunter Player
 ---
 
 ## Traits 
-* Players are immune to the vampires poisonous "Sanguinare Vampiris" bite
+* Players are immune to the vampires poisonous [Sanguinare Vampiris](../../content/effects#sanguinare-vampiris) bite
 * Player can have different Hunter levels
 * With higher levels the hunters become stronger
 * Can use stakes to e.g. instant kill vampires with below 30% health
-* Normal vampire NPCs killed with a stake will drop "Vampire Blood" which can be used for leveling or in the Blood Potion table (see below)
+* Normal vampire NPCs killed with a stake will drop [Vampire Blood](../../content/items#pure-blood) which can be used for leveling or in the [Potion table](../../content/blocks#potion-table) (see below)
 
 ## Leveling
 More information [here](./leveling) 

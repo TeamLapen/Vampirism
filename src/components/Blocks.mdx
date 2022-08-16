@@ -12,7 +12,7 @@ export const Block = ({children , title, img, source = null, usage = null}) => (
 );
 
 export const BlocksInternal = ({children, title, img, source, usage}) => (
-        <div style={{marginBottom: '50px'}} id={title.toLowerCase().replace(' ', '-')}>
+        <div style={{marginBottom: '50px'}} id={title.toLowerCase().replaceAll(' ', '-').replaceAll('/', '-')}>
             <div>
                 <h1 style={{fontSize: 'xx-large'}}>{title}</h1>
             </div>
