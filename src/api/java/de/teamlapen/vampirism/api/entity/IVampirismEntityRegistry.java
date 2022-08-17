@@ -70,8 +70,7 @@ public interface IVampirismEntityRegistry {
     /**
      * @return The custom constructor registered for the given entity's class. Can be null if none is registered
      */
-    @Nullable
-    <T extends PathfinderMob> Function<T, IExtendedCreatureVampirism> getCustomExtendedCreatureConstructor(T entity);
+    @Nullable <T extends PathfinderMob> Function<T, IExtendedCreatureVampirism> getCustomExtendedCreatureConstructor(T entity);
 
     /**
      * Check the biteable entry for the given creature.

@@ -28,7 +28,7 @@ public interface IApplicableOil extends IOil {
     /**
      * Reduced the duration of the applied oil for the given itemstack.
      *
-     * @param stack itemStack which oil duration should be reduced
+     * @param stack  itemStack which oil duration should be reduced
      * @param amount the amount by which the duration should be reduced
      * @return true if the oil is worn off
      */

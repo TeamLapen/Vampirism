@@ -34,7 +34,7 @@ public class ModScreens {
 
     public static void registerScreenOverlays(@NotNull RegisterGuiOverlaysEvent event) {
         event.registerAbove(VanillaGuiOverlay.EXPERIENCE_BAR.id(), VIngameOverlays.FACTION_LEVEL_ID.getPath(), VIngameOverlays.FACTION_LEVEL_ELEMENT);
-        event.registerAbove(VanillaGuiOverlay.BOSS_EVENT_PROGRESS.id(),VIngameOverlays.FACTION_RAID_BAR_ID.getPath(), VIngameOverlays.FACTION_RAID_BAR_ELEMENT);
+        event.registerAbove(VanillaGuiOverlay.BOSS_EVENT_PROGRESS.id(), VIngameOverlays.FACTION_RAID_BAR_ID.getPath(), VIngameOverlays.FACTION_RAID_BAR_ELEMENT);
         event.registerAbove(VanillaGuiOverlay.FOOD_LEVEL.id(), VIngameOverlays.BLOOD_BAR_ID.getPath(), VIngameOverlays.BLOOD_BAR_ELEMENT);
         event.registerAboveAll(VIngameOverlays.ACTION_COOLDOWN_ID.getPath(), VIngameOverlays.ACTION_COOLDOWN_ELEMENT);
         event.registerAboveAll(VIngameOverlays.ACTION_DURATION_ID.getPath(), VIngameOverlays.ACTION_DURATION_ELEMENT);

@@ -19,7 +19,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(
@@ -70,8 +69,9 @@ public class ThrowableItemEntity extends ThrowableProjectile implements ItemSupp
      * @param stack Corresponding item has to be instance of {@link IVampirismThrowableItem}
      */
     public void setItem(@NotNull ItemStack stack) {
-        if (!stack.isEmpty() && !(stack.getItem() instanceof IVampirismThrowableItem))
+        if (!stack.isEmpty() && !(stack.getItem() instanceof IVampirismThrowableItem)) {
             throw new IllegalArgumentException("EntityThrowable only accepts IVampirismThrowableItem, but not " + stack);
+        }
         this.getEntityData().set(ITEM, stack);
     }
 

@@ -85,8 +85,8 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegisterEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.jetbrains.annotations.NotNull;
+
 import java.util.Optional;
 
 /**
@@ -189,7 +189,6 @@ public class VampirismMod {
 
         prepareAPI();
         RegistryManager.setupRegistries(modbus);
-
 
 
         if (OptifineHandler.isOptifineLoaded()) {

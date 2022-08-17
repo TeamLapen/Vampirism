@@ -40,7 +40,7 @@ public class InfectAction extends DefaultVampireAction {
             }
             if (deriveBiteableEntry(target).map(e -> e.tryInfect(vampire)).orElse(false)) {
                 player.awardStat(ModStats.infected_creatures);
-                player.level.playSound(null, target.getX(), target.getY() + 1.5d, target.getZ(), ModSounds.PLAYER_BITE.get(), SoundSource.PLAYERS, 1, 1 );
+                player.level.playSound(null, target.getX(), target.getY() + 1.5d, target.getZ(), ModSounds.PLAYER_BITE.get(), SoundSource.PLAYERS, 1, 1);
                 return true;
             }
             return false;
@@ -50,17 +50,17 @@ public class InfectAction extends DefaultVampireAction {
 
     @Override
     public boolean canBeUsedBy(@NotNull IVampirePlayer player) {
-        if(player.isRemote()){
+        if (player.isRemote()) {
             Entity target = VampirismMod.proxy.getMouseOverEntity();
-            if(target != null){
-                return deriveBiteableEntry(target).map(b->b.canBeInfected(player)).orElse(false);
+            if (target != null) {
+                return deriveBiteableEntry(target).map(b -> b.canBeInfected(player)).orElse(false);
             }
             return false;
         }
         return true;
     }
 
-    private @NotNull Optional<? extends IBiteableEntity> deriveBiteableEntry(Entity target){
+    private @NotNull Optional<? extends IBiteableEntity> deriveBiteableEntry(Entity target) {
         if (target instanceof IBiteableEntity) {
             return Optional.of((IBiteableEntity) target);
         } else if (target instanceof PathfinderMob) {

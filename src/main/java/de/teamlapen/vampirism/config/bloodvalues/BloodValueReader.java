@@ -35,7 +35,7 @@ public class BloodValueReader<T> {
         this.name = name;
     }
 
-    public @NotNull CompletableFuture<Map<String, BloodValueBuilder>> prepare(@NotNull ResourceManager manager, Executor executor){
+    public @NotNull CompletableFuture<Map<String, BloodValueBuilder>> prepare(@NotNull ResourceManager manager, Executor executor) {
         return CompletableFuture.supplyAsync(() -> load(manager), executor);
     }
 
@@ -44,16 +44,16 @@ public class BloodValueReader<T> {
         for (Map.Entry<ResourceLocation, List<Resource>> entry : manager.listResourceStacks(this.directory, (file) -> file.getPath().endsWith(".json")).entrySet()) {
             ResourceLocation resourcelocation = entry.getKey();
             String s = resourcelocation.getPath();
-            ResourceLocation resourceName = new ResourceLocation(resourcelocation.getNamespace(), s.substring(this.directory.length() +1, s.length() - PATH_SUFFIX_LENGTH));
-                for (Resource resource : entry.getValue()) {
-                    try(Reader reader = resource.openAsReader()){
-                        JsonElement jsonElement = JsonParser.parseReader(reader);
-                        BloodValueFile file = BloodValueFile.CODEC.parse(new Dynamic<>(JsonOps.INSTANCE, jsonElement)).getOrThrow(false, LOGGER::error);
-                        values.computeIfAbsent(resourceName.getPath(), (id) -> new BloodValueBuilder()).addFromFile(new BloodValueBuilder.BuilderEntries(file.values().stream().map(a -> new BloodValueBuilder.Proxy(a,resource.sourcePackId())).toList(), file.replace()));
-                    } catch (Exception e) {
-                        LOGGER.error("Couldn't read {} blood values {} from {}", this.name, resourceName, resource.sourcePackId() , e);
-                    }
+            ResourceLocation resourceName = new ResourceLocation(resourcelocation.getNamespace(), s.substring(this.directory.length() + 1, s.length() - PATH_SUFFIX_LENGTH));
+            for (Resource resource : entry.getValue()) {
+                try (Reader reader = resource.openAsReader()) {
+                    JsonElement jsonElement = JsonParser.parseReader(reader);
+                    BloodValueFile file = BloodValueFile.CODEC.parse(new Dynamic<>(JsonOps.INSTANCE, jsonElement)).getOrThrow(false, LOGGER::error);
+                    values.computeIfAbsent(resourceName.getPath(), (id) -> new BloodValueBuilder()).addFromFile(new BloodValueBuilder.BuilderEntries(file.values().stream().map(a -> new BloodValueBuilder.Proxy(a, resource.sourcePackId())).toList(), file.replace()));
+                } catch (Exception e) {
+                    LOGGER.error("Couldn't read {} blood values {} from {}", this.name, resourceName, resource.sourcePackId(), e);
                 }
+            }
         }
         return values;
     }

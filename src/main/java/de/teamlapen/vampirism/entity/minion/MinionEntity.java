@@ -58,9 +58,9 @@ import net.minecraftforge.network.NetworkHooks;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -122,16 +122,16 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
             return !flag1 && !flag2;
         };
         setDontDropEquipment();
-        this.peaceful=true;
+        this.peaceful = true;
     }
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
 //        if (isValid()) {
-            this.getLordID().ifPresent(id -> nbt.putUUID("lord", id));
-            nbt.putInt("minion_id", minionId);
-            nbt.putInt("minion_token", token);
+        this.getLordID().ifPresent(id -> nbt.putUUID("lord", id));
+        nbt.putInt("minion_id", minionId);
+        nbt.putInt("minion_token", token);
 //        }
     }
 
@@ -465,8 +465,9 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
 
     @Override
     public void setTarget(@Nullable LivingEntity entitylivingbaseIn) {
-        if (entitylivingbaseIn == null || hardAttackPredicate.test(entitylivingbaseIn))
+        if (entitylivingbaseIn == null || hardAttackPredicate.test(entitylivingbaseIn)) {
             super.setTarget(entitylivingbaseIn);
+        }
     }
 
     public abstract boolean shouldRenderLordSkin();
@@ -515,7 +516,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
 
     @Nullable
     protected ILordPlayer getLord() {
-        return this.getLordID().map(this.level::getPlayerByUUID).filter(Player::isAlive).flatMap(p->FactionPlayerHandler.getOpt(p).resolve()).orElse(null);
+        return this.getLordID().map(this.level::getPlayerByUUID).filter(Player::isAlive).flatMap(p -> FactionPlayerHandler.getOpt(p).resolve()).orElse(null);
     }
 
     protected @NotNull Optional<UUID> getLordID() {
@@ -569,7 +570,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         this.goalSelector.addGoal(10, new RandomLookAroundGoal(this) {
             @Override
             public boolean canUse() {
-                return super.canUse() && MinionEntity.this.getCurrentTask().filter(t -> t.getTask()== MinionTasks.STAY.get()).isEmpty();
+                return super.canUse() && MinionEntity.this.getCurrentTask().filter(t -> t.getTask() == MinionTasks.STAY.get()).isEmpty();
             }
         });
 

@@ -45,9 +45,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Optional;
@@ -218,7 +218,7 @@ public class Helper {
     }
 
     public static ResourceLocation getBiomeId(@NotNull CommonLevelAccessor world, @NotNull Holder<Biome> biome) {
-        return biome.unwrap().map(ResourceKey::location, b-> world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getKey(b));
+        return biome.unwrap().map(ResourceKey::location, b -> world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getKey(b));
     }
 
     /**

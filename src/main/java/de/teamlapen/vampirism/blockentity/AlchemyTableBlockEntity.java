@@ -81,7 +81,7 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
     }
 
     public boolean isEmpty() {
-        for(ItemStack itemstack : this.items) {
+        for (ItemStack itemstack : this.items) {
             if (!itemstack.isEmpty()) {
                 return false;
             }
@@ -93,7 +93,7 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
     public boolean[] getPotionBits() {
         boolean[] aboolean = new boolean[4];
 
-        for(int i = 0; i < 4; ++i) {
+        for (int i = 0; i < 4; ++i) {
             if (!this.items.get(i).isEmpty()) {
                 aboolean[i] = true;
             }
@@ -134,7 +134,7 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
         if (this.level.getBlockEntity(this.worldPosition) != this) {
             return false;
         } else {
-            return !(player.distanceToSqr((double)this.worldPosition.getX() + 0.5D, (double)this.worldPosition.getY() + 0.5D, (double)this.worldPosition.getZ() + 0.5D) > 64.0D);
+            return !(player.distanceToSqr((double) this.worldPosition.getX() + 0.5D, (double) this.worldPosition.getY() + 0.5D, (double) this.worldPosition.getZ() + 0.5D) > 64.0D);
         }
     }
 
@@ -198,7 +198,7 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
         } else if (!isValidInput(level, itemstack)) {
             return false;
         } else {
-            for(int i = 0; i < 2; ++i) {
+            for (int i = 0; i < 2; ++i) {
                 if (!this.items.get(i + 2).isEmpty()) {
                     continue;
                 }
@@ -216,7 +216,7 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
         ItemStack itemstack = this.items.get(4);
 
         for (int i = 0; i < 2; i++) {
-            if (this.items.get(i+2).isEmpty()) {
+            if (this.items.get(i + 2).isEmpty()) {
                 ItemStack stack = getOutput(level, itemstack, this.items.get(i));
                 this.items.set(i, ItemStack.EMPTY);
                 this.items.set(i + 2, stack);
@@ -231,8 +231,9 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
             } else if (!level.isClientSide) {
                 Containers.dropItemStack(level, blockpos.getX(), blockpos.getY(), blockpos.getZ(), itemstack1);
             }
+        } else {
+            itemstack.shrink(1);
         }
-        else itemstack.shrink(1);
 
         this.items.set(4, itemstack);
         level.levelEvent(1035, blockpos, 0);
@@ -279,9 +280,9 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
     @Override
     public void saveAdditional(@NotNull CompoundTag tag) {
         super.saveAdditional(tag);
-        tag.putShort("BrewTime", (short)this.brewTime);
+        tag.putShort("BrewTime", (short) this.brewTime);
         ContainerHelper.saveAllItems(tag, this.items);
-        tag.putByte("Fuel", (byte)this.fuel);
+        tag.putByte("Fuel", (byte) this.fuel);
     }
 
     @NotNull

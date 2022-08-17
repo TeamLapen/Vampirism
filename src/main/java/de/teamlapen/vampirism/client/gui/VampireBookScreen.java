@@ -59,7 +59,7 @@ public class VampireBookScreen extends Screen {
             List<FormattedCharSequence> cutLines = fontRenderer.split(toDraw, 170);
             int y = guiTop + 12 + 5;
             for (FormattedCharSequence cut : cutLines) {
-                fontRenderer.draw(stack, cut, guiLeft + 44,  y , 0);
+                fontRenderer.draw(stack, cut, guiLeft + 44, y, 0);
                 y += 10;
             }
         }
@@ -80,7 +80,7 @@ public class VampireBookScreen extends Screen {
         guiLeft = (this.width - this.xSize) / 2;
         guiTop = (this.height - this.ySize) / 2;
 
-        this.addRenderableWidget(buttonNext = new PageButton(guiLeft + 4 * xSize / 6, guiTop + 5 * ySize / 6, true,(btn) -> {
+        this.addRenderableWidget(buttonNext = new PageButton(guiLeft + 4 * xSize / 6, guiTop + 5 * ySize / 6, true, (btn) -> {
             if (pageNumber + 1 < content.size()) {
                 nextPage();
             }
@@ -118,10 +118,11 @@ public class VampireBookScreen extends Screen {
     @Override
     public boolean mouseScrolled(double p_mouseScrolled_1_, double p_mouseScrolled_3_, double movement) {
 
-        if (movement < 0)
+        if (movement < 0) {
             nextPage();
-        else if (movement > 0)
+        } else if (movement > 0) {
             prevPage();
+        }
 
 
         return movement != 0 || super.mouseScrolled(p_mouseScrolled_1_, p_mouseScrolled_3_, movement);
@@ -129,13 +130,15 @@ public class VampireBookScreen extends Screen {
     }
 
     public void nextPage() {
-        if (pageNumber != content.size() - 1 && !content.isEmpty())
+        if (pageNumber != content.size() - 1 && !content.isEmpty()) {
             pageNumber++;
+        }
     }
 
     public void prevPage() {
-        if (pageNumber != 0)
+        if (pageNumber != 0) {
             pageNumber--;
+        }
     }
 
     /**
@@ -170,6 +173,7 @@ public class VampireBookScreen extends Screen {
 
     /**
      * Copied from {@link de.maxanier.guideapi.api.util.PageHelper}
+     *
      * @param elements The list ist not used itself, but the elements are passed to the new ITextProperties
      * @return a new ITextProperties that combines the given elements with a newline in between
      */

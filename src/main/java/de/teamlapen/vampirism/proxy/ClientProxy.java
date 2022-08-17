@@ -43,9 +43,9 @@ import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -68,8 +68,9 @@ public class ClientProxy extends CommonProxy {
         MinecraftForge.EVENT_BUS.register(renderHandler);
         //Minecraft.instance is null during runData.
         //noinspection ConstantConditions
-        if (Minecraft.getInstance() != null)
+        if (Minecraft.getInstance() != null) {
             ((ReloadableResourceManager) Minecraft.getInstance().getResourceManager()).registerReloadListener(renderHandler); // Must be added before initial resource manager load
+        }
     }
 
     public void clearBossBarOverlay() {
@@ -154,7 +155,7 @@ public class ClientProxy extends CommonProxy {
                     if (Minecraft.getInstance().screen instanceof InBedChatScreen && !(Minecraft.getInstance().screen instanceof SleepInMultiplayerModScreen)) {
                         Minecraft.getInstance().setScreen(new SleepInMultiplayerModScreen("text.vampirism.coffin.stop_sleeping"));
                     }
-                    CoffinBlock.setCoffinSleepPosition(player,pos, player.level.getBlockState(pos));
+                    CoffinBlock.setCoffinSleepPosition(player, pos, player.level.getBlockState(pos));
                 }
             });
         }

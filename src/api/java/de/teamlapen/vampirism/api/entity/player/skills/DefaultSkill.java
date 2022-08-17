@@ -133,9 +133,10 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
         Collection<IAction<T>> collection = new ArrayList<>();
         getActions(collection);
         collection.forEach((iAction -> {
-            if (iAction.getFaction().isPresent() && iAction.getFaction().get() != this.getFaction().orElse(null))
+            if (iAction.getFaction().isPresent() && iAction.getFaction().get() != this.getFaction().orElse(null)) {
                 throw new IllegalArgumentException("Can't register action of faction " + iAction.getFaction().map(Object::toString).orElse(null) + " for skill of faction" + this.getFaction().map(Object::toString).orElse("all"));
-            }));
+            }
+        }));
         return collection;
     }
 

@@ -69,6 +69,7 @@ public interface IActionHandler<T extends IFactionPlayer<T>> {
      * Set cooldown to 0
      * <br>
      * Set active timer to 0 if {@link ILastingAction}
+     *
      * @param action the action that should be effected
      */
     void resetTimer(@NotNull IAction action);
@@ -76,7 +77,8 @@ public interface IActionHandler<T extends IFactionPlayer<T>> {
     /**
      * Toggle the action (server side).
      * If you just want to make sure it is deactivated, call {@link #deactivateAction(ILastingAction)}
-     * @param action Action
+     *
+     * @param action  Action
      * @param context Context holding Block/Entity the player was looking at when activating if any
      * @return result
      */

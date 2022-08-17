@@ -35,7 +35,7 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
     private final int requiredLava;
     private final boolean isSimple;
 
-    public ShapelessWeaponTableRecipe(@NotNull ResourceLocation recipeId,@NotNull String group,@NotNull NonNullList<Ingredient> ingredients,@NotNull ItemStack result, int level, int lava, @NotNull ISkill<IHunterPlayer>[] skills) {
+    public ShapelessWeaponTableRecipe(@NotNull ResourceLocation recipeId, @NotNull String group, @NotNull NonNullList<Ingredient> ingredients, @NotNull ItemStack result, int level, int lava, @NotNull ISkill<IHunterPlayer>[] skills) {
         this.id = recipeId;
         this.group = group;
         this.recipeItems = ingredients;
@@ -108,7 +108,7 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
     }
 
     @Override
-    public boolean matches(@NotNull CraftingContainer inv,@NotNull Level worldIn) {
+    public boolean matches(@NotNull CraftingContainer inv, @NotNull Level worldIn) {
         StackedContents recipeitemhelper = new StackedContents();
         java.util.List<ItemStack> inputs = new java.util.ArrayList<>();
         int i = 0;
@@ -118,10 +118,11 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
                 ItemStack itemstack = inv.getItem(k + j * inv.getWidth());
                 if (!itemstack.isEmpty()) {
                     ++i;
-                    if (isSimple)
+                    if (isSimple) {
                         recipeitemhelper.accountStack(new ItemStack(itemstack.getItem()));
-                    else
+                    } else {
                         inputs.add(itemstack);
+                    }
                 }
             }
         }
@@ -151,7 +152,7 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
         }
 
         @Override
-        public ShapelessWeaponTableRecipe fromNetwork(@NotNull ResourceLocation recipeId,@NotNull FriendlyByteBuf buffer) {
+        public ShapelessWeaponTableRecipe fromNetwork(@NotNull ResourceLocation recipeId, @NotNull FriendlyByteBuf buffer) {
             String group = buffer.readUtf(32767);
             NonNullList<Ingredient> ingredients = NonNullList.withSize(buffer.readVarInt(), Ingredient.EMPTY);
             ingredients.replaceAll(ignored -> Ingredient.fromNetwork(buffer));
@@ -167,7 +168,7 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
         }
 
         @Override
-        public void toNetwork(@NotNull FriendlyByteBuf buffer,@NotNull  ShapelessWeaponTableRecipe recipe) {
+        public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull ShapelessWeaponTableRecipe recipe) {
             buffer.writeUtf(recipe.group);
             buffer.writeVarInt(recipe.recipeItems.size());
             for (Ingredient ingredient : recipe.recipeItems) {
@@ -178,7 +179,7 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
             buffer.writeVarInt(recipe.requiredLava);
             buffer.writeVarInt(recipe.requiredSkills.length);
             for (ISkill<?> skill : recipe.requiredSkills) {
-                buffer.writeUtf(RegUtil.id(skill) .toString());
+                buffer.writeUtf(RegUtil.id(skill).toString());
             }
         }
 

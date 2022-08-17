@@ -8,7 +8,6 @@ import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import net.minecraft.world.entity.PathfinderMob;
-
 import org.jetbrains.annotations.NotNull;
 
 public abstract class VampireEntityAction<T extends PathfinderMob & IEntityActionUser> extends DefaultEntityAction implements IEntityAction {

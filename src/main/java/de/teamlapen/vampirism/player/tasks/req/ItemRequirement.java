@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.api.util.NonnullSupplier;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-
 import org.jetbrains.annotations.NotNull;
 
 public class ItemRequirement implements TaskRequirement.Requirement<Item> {

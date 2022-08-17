@@ -43,7 +43,7 @@ public class SkillUnlockedTrigger extends SimpleCriterionTrigger<SkillUnlockedTr
 
         Instance(@NotNull ISkill<?> skill) {
             super(ID, EntityPredicate.Composite.ANY);
-            this.skillId = RegUtil.id(skill) ;
+            this.skillId = RegUtil.id(skill);
         }
 
         Instance(@NotNull ResourceLocation skillId) {
@@ -60,7 +60,7 @@ public class SkillUnlockedTrigger extends SimpleCriterionTrigger<SkillUnlockedTr
         }
 
         public boolean test(@NotNull ISkill<?> skill) {
-            return this.skillId.equals(RegUtil.id(skill) );
+            return this.skillId.equals(RegUtil.id(skill));
         }
     }
 }

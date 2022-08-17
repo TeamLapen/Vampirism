@@ -105,8 +105,9 @@ public class VampirismHUDOverlay extends ExtendedGui {
             screenPercentage = 0;
             return;
         }
-        if (event.phase == TickEvent.Phase.END)
+        if (event.phase == TickEvent.Phase.END) {
             return;
+        }
 
         @Nullable IFactionPlayer<?> player = FactionPlayerHandler.getOpt(mc.player).resolve().flatMap(FactionPlayerHandler::getCurrentFactionPlayer).orElse(null);
         if (player instanceof VampirePlayer) {
@@ -158,8 +159,9 @@ public class VampirismHUDOverlay extends ExtendedGui {
                         }
                         biteableOpt.filter(iBiteableEntity -> iBiteableEntity.canBeBitten(player)).ifPresent(biteable -> {
                             int color = 0xFF0000;
-                            if (entity instanceof IHunterMob || ExtendedCreature.getSafe(entity).map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false))
+                            if (entity instanceof IHunterMob || ExtendedCreature.getSafe(entity).map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false)) {
                                 color = 0x099022;
+                            }
                             renderBloodFangs(event.getPoseStack(), this.mc.getWindow().getGuiScaledWidth(), this.mc.getWindow().getGuiScaledHeight(), Mth.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F), color);
                             event.setCanceled(true);
                         });
@@ -274,8 +276,9 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     bw = Math.round(w / (float) 8 * screenPercentage / 100);
 
                     this.fillGradient(stack, 0, 0, w, bh, screenColor, 0x000);
-                    if (!OptifineHandler.isShaders())
+                    if (!OptifineHandler.isShaders()) {
                         this.fillGradient(stack, 0, h - bh, w, h, 0x00000000, screenColor);
+                    }
                     this.fillGradient2(stack, 0, 0, bw, h, 0x000000, screenColor);
                     this.fillGradient2(stack, w - bw, 0, w, h, screenColor, 0x00);
                 } else { //If here screenBottomPercentage has to be >0

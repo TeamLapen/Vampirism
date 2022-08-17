@@ -13,7 +13,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,8 +23,9 @@ class VampirismRecipeHelper {
 
     @NotNull
     static ISkill<?> @NotNull [] deserializeSkills(@Nullable JsonArray jsonObject) {
-        if (jsonObject == null || jsonObject.size() == 0)
+        if (jsonObject == null || jsonObject.size() == 0) {
             return new ISkill[0];
+        }
         ISkill<?>[] skills = new ISkill[jsonObject.size()];
         for (int i = 0; i < skills.length; ++i) {
             String s = GsonHelper.convertToString(jsonObject.get(i), "skill[" + i + "]");

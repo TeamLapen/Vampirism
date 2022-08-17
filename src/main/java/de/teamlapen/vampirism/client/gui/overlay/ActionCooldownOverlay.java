@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 public class ActionCooldownOverlay extends GuiComponent implements IGuiOverlay {
 
     private final Minecraft mc = Minecraft.getInstance();
+
     @Override
     public void render(ForgeGui gui, @NotNull PoseStack poseStack, float partialTick, int screenWidth, int screenHeight) {
         if (VampirismAPI.factionRegistry().getFaction(this.mc.player) != null) {

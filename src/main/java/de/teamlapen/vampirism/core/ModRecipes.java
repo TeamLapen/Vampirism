@@ -33,15 +33,15 @@ public class ModRecipes {
     public static @NotNull DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, REFERENCE.MODID);
 
     public static final RegistryObject<RecipeType<IWeaponTableRecipe>> WEAPONTABLE_CRAFTING_TYPE = RECIPE_TYPES.register("weapontable_crafting", () -> new RecipeType<>() {
-                public @NotNull String toString() {
-                    return "weapontable_crafting";
-                }
-            });
+        public @NotNull String toString() {
+            return "weapontable_crafting";
+        }
+    });
     public static final RegistryObject<RecipeType<AlchemicalCauldronRecipe>> ALCHEMICAL_CAULDRON_TYPE = RECIPE_TYPES.register("alchemical_cauldron", () -> new RecipeType<>() {
-                public @NotNull String toString() {
-                    return "alchemical_cauldron";
-                }
-            });
+        public @NotNull String toString() {
+            return "alchemical_cauldron";
+        }
+    });
     public static final RegistryObject<RecipeType<AlchemyTableRecipe>> ALCHEMICAL_TABLE_TYPE = RECIPE_TYPES.register("alchemical_table", () -> new RecipeType<>() {
         public @NotNull String toString() {
             return "alchemical_table";
@@ -97,7 +97,7 @@ public class ModRecipes {
         if (c != null) return c;
         for (Map.Entry<TagKey<Item>, Integer> entry : liquidColorsTags.entrySet()) {
             //noinspection ConstantConditions
-            if(ForgeRegistries.ITEMS.tags().getTag(entry.getKey()).contains(stack)) {
+            if (ForgeRegistries.ITEMS.tags().getTag(entry.getKey()).contains(stack)) {
                 return entry.getValue();
             }
         }

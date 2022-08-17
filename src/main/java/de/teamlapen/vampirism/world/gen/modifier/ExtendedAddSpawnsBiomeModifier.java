@@ -17,20 +17,17 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public record ExtendedAddSpawnsBiomeModifier(HolderSet<Biome> biomes, HolderSet<Biome> excludedBiomes, List<ExtendedSpawnData> spawners ) implements BiomeModifier {
+public record ExtendedAddSpawnsBiomeModifier(HolderSet<Biome> biomes, HolderSet<Biome> excludedBiomes, List<ExtendedSpawnData> spawners) implements BiomeModifier {
 
-    public static @NotNull ExtendedAddSpawnsBiomeModifier singleSpawn(HolderSet<Biome> biomes, HolderSet<Biome> excludedBiomes, @NotNull ExtendedSpawnData spawner)
-    {
+    public static @NotNull ExtendedAddSpawnsBiomeModifier singleSpawn(HolderSet<Biome> biomes, HolderSet<Biome> excludedBiomes, @NotNull ExtendedSpawnData spawner) {
         return new ExtendedAddSpawnsBiomeModifier(biomes, excludedBiomes, List.of(spawner));
     }
 
     @Override
     public void modify(@NotNull Holder<Biome> biome, Phase phase, ModifiableBiomeInfo.BiomeInfo.@NotNull Builder builder) {
-        if (phase == Phase.ADD && this.biomes.contains(biome) && !this.excludedBiomes.contains(biome))
-        {
+        if (phase == Phase.ADD && this.biomes.contains(biome) && !this.excludedBiomes.contains(biome)) {
             MobSpawnSettingsBuilder spawns = builder.getMobSpawnSettings();
-            for (ExtendedSpawnData spawner : this.spawners)
-            {
+            for (ExtendedSpawnData spawner : this.spawners) {
                 spawns.addSpawn(spawner.category, spawner);
             }
         }

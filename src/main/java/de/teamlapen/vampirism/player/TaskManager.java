@@ -35,9 +35,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.apache.commons.lang3.tuple.Pair;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -50,8 +50,9 @@ public class TaskManager implements ITaskManager {
     }};
 
     public static void registerTaskReward(ResourceLocation id, Pair<Function<CompoundTag, ITaskRewardInstance>, Function<FriendlyByteBuf, ITaskRewardInstance>> functions) {
-        if (TASK_REWARD_SUPPLIER.containsKey(id))
+        if (TASK_REWARD_SUPPLIER.containsKey(id)) {
             throw new IllegalStateException("This id is already registered: " + id);
+        }
         TASK_REWARD_SUPPLIER.put(id, functions);
     }
 
@@ -97,7 +98,7 @@ public class TaskManager implements ITaskManager {
     /**
      * Handle a task action message that was sent from client to server
      */
-    public void handleTaskActionMessage(@NotNull ServerboundTaskActionPacket msg){
+    public void handleTaskActionMessage(@NotNull ServerboundTaskActionPacket msg) {
         switch (msg.action()) {
             case COMPLETE:
                 completeTask(msg.entityId(), msg.task());
@@ -106,7 +107,7 @@ public class TaskManager implements ITaskManager {
                 acceptTask(msg.entityId(), msg.task());
                 break;
             default:
-               abortTask(msg.entityId(), msg.task(), msg.action() == TaskContainer.TaskAction.REMOVE);
+                abortTask(msg.entityId(), msg.task(), msg.action() == TaskContainer.TaskAction.REMOVE);
                 break;
         }
     }
@@ -206,7 +207,7 @@ public class TaskManager implements ITaskManager {
 
     @Override
     public void openVampirismMenu() {
-        if(!player.isAlive())return;
+        if (!player.isAlive()) return;
         player.openMenu(new SimpleMenuProvider((i, inventory, player) -> new VampirismContainer(i, inventory), Component.empty()));
         if (player.containerMenu instanceof TaskContainer) {
             VampirismMod.dispatcher.sendTo(new ClientboundTaskPacket(player.containerMenu.containerId, this.taskWrapperMap, this.taskWrapperMap.entrySet().stream().map(entry -> Pair.of(entry.getKey(), getCompletableTasks(entry.getValue().getAcceptedTasks()))).collect(Collectors.toMap(Pair::getKey, Pair::getValue)), this.taskWrapperMap.values().stream().map(wrapper -> Pair.of(wrapper.id, getCompletedRequirements(wrapper.tasks.values()))).collect(Collectors.toMap(Pair::getKey, Pair::getValue))), player);

@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.effects;
 
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
-
 import org.jetbrains.annotations.NotNull;
 
 public class FreezeEffect extends VampirismEffect {

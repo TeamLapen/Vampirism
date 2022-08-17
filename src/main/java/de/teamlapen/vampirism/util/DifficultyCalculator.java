@@ -11,9 +11,9 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.util.thread.EffectiveSide;
 import net.minecraftforge.server.ServerLifecycleHooks;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 /**
@@ -37,7 +37,7 @@ public class DifficultyCalculator {
             if (!p.isAlive()) continue;
             LazyOptional<FactionPlayerHandler> handler = FactionPlayerHandler.getOpt(p);
             int pLevel = handler.map(FactionPlayerHandler::getCurrentLevel).orElse(0);
-            if ( pLevel == 0) {
+            if (pLevel == 0) {
                 min = 0;
                 continue;
             }

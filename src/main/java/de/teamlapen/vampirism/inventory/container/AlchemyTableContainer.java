@@ -13,7 +13,6 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-
 import org.jetbrains.annotations.NotNull;
 
 public class AlchemyTableContainer extends AbstractContainerMenu {
@@ -34,19 +33,19 @@ public class AlchemyTableContainer extends AbstractContainerMenu {
         this.alchemyTableData = data;
         this.addSlot(new OilSlot(level, inventory, 0, 55, 16));
         this.addSlot(new OilSlot(level, inventory, 1, 79, 16));
-        this.addSlot(new ResultSlot(inventory, 2, 112,72));
-        this.addSlot(new ResultSlot(inventory, 3, 140,44));
+        this.addSlot(new ResultSlot(inventory, 2, 112, 72));
+        this.addSlot(new ResultSlot(inventory, 3, 140, 44));
         this.ingredientSlot = this.addSlot(new IngredientSlot(level, inventory, 4, 15, 25));
         this.addSlot(new FuelSlot(inventory, 5, 34, 69));
         this.addDataSlots(data);
 
-        for(int i = 0; i < 3; ++i) {
-            for(int j = 0; j < 9; ++j) {
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 9; ++j) {
                 this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + 17 + i * 18));
             }
         }
 
-        for(int k = 0; k < 9; ++k) {
+        for (int k = 0; k < 9; ++k) {
             this.addSlot(new Slot(playerInventory, k, 8 + k * 18, 142 + 17));
         }
 

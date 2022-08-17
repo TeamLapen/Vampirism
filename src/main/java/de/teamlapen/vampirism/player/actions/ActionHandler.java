@@ -20,7 +20,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -375,7 +374,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     }
 
     private boolean isActionAllowedPermission(IAction<T> action) {
-        if(player.getRepresentingPlayer() instanceof ServerPlayer serverPlayer){
+        if (player.getRepresentingPlayer() instanceof ServerPlayer serverPlayer) {
             return PermissionAPI.getPermission(serverPlayer, Permissions.ACTION, Permissions.ACTION_CONTEXT.createContext(action));
         }
         return true;
@@ -413,24 +412,24 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
         }
     }
 
-    public static class ActivationContext implements IAction.ActivationContext{
+    public static class ActivationContext implements IAction.ActivationContext {
 
         private final @Nullable Entity entity;
         private final @Nullable BlockPos blockPos;
 
-        public ActivationContext(Entity entity){
+        public ActivationContext(Entity entity) {
             this.entity = entity;
             this.blockPos = null;
         }
 
-        public ActivationContext(BlockPos pos){
-            this.entity=null;
+        public ActivationContext(BlockPos pos) {
+            this.entity = null;
             this.blockPos = pos;
         }
 
-        public ActivationContext(){
-            this.entity=null;
-            this.blockPos=null;
+        public ActivationContext() {
+            this.entity = null;
+            this.blockPos = null;
         }
 
         @Override

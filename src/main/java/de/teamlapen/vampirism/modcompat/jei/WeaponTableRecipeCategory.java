@@ -27,7 +27,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
-
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -105,7 +104,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, IWeaponTableRecipe recipe, IFocusGroup focuses) {
-        if (recipe instanceof ShapelessWeaponTableRecipe){
+        if (recipe instanceof ShapelessWeaponTableRecipe) {
             builder.setShapeless();
         }
         IRecipeSlotBuilder output = builder.addSlot(RecipeIngredientRole.OUTPUT, 112, 32);

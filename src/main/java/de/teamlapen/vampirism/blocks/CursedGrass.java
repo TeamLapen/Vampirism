@@ -38,7 +38,6 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
     }
 
     /**
-     *
      * copied from {@link net.minecraft.world.level.block.SpreadingSnowyDirtBlock#randomTick(net.minecraft.world.level.block.state.BlockState, net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos, net.minecraft.util.RandomSource)} changing dirt to cursed earth
      */
     @Override
@@ -51,7 +50,7 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
             if (p_222509_.getMaxLocalRawBrightness(p_222510_.above()) >= 9) {
                 BlockState blockstate = this.defaultBlockState();
 
-                for(int i = 0; i < 4; ++i) {
+                for (int i = 0; i < 4; ++i) {
                     BlockPos blockpos = p_222510_.offset(p_222511_.nextInt(3) - 1, p_222511_.nextInt(5) - 3, p_222511_.nextInt(3) - 1);
                     if (p_222509_.getBlockState(blockpos).is(ModBlocks.CURSED_EARTH.get()) && canPropagate(blockstate, p_222509_, blockpos)) {
                         p_222509_.setBlockAndUpdate(blockpos, blockstate.setValue(SNOWY, Boolean.valueOf(p_222509_.getBlockState(blockpos.above()).is(Blocks.SNOW))));
@@ -86,10 +85,10 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
         BlockState blockstate = Blocks.GRASS.defaultBlockState();
 
         label46:
-        for(int i = 0; i < 128; ++i) {
+        for (int i = 0; i < 128; ++i) {
             BlockPos blockpos1 = blockpos;
 
-            for(int j = 0; j < i / 16; ++j) {
+            for (int j = 0; j < i / 16; ++j) {
                 blockpos1 = blockpos1.offset(p_221271_.nextInt(3) - 1, (p_221271_.nextInt(3) - 1) * p_221271_.nextInt(3) / 2, p_221271_.nextInt(3) - 1);
                 if (!p_221270_.getBlockState(blockpos1.below()).is(this) || p_221270_.getBlockState(blockpos1).isCollisionShapeFullBlock(p_221270_, blockpos1)) {
                     continue label46;
@@ -98,7 +97,7 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
 
             BlockState blockstate1 = p_221270_.getBlockState(blockpos1);
             if (blockstate1.is(blockstate.getBlock()) && p_221271_.nextInt(10) == 0) {
-                ((BonemealableBlock)blockstate.getBlock()).performBonemeal(p_221270_, p_221271_, blockpos1, blockstate1);
+                ((BonemealableBlock) blockstate.getBlock()).performBonemeal(p_221270_, p_221271_, blockpos1, blockstate1);
             }
 
             if (blockstate1.isAir()) {
@@ -109,7 +108,7 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
                         continue;
                     }
 
-                    holder = ((RandomPatchConfiguration)list.get(0).config()).feature();
+                    holder = ((RandomPatchConfiguration) list.get(0).config()).feature();
                 } else {
                     holder = VegetationPlacements.GRASS_BONEMEAL;
                 }

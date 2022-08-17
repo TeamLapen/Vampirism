@@ -3,9 +3,9 @@ package de.teamlapen.vampirism.util;
 import com.google.common.collect.ImmutableList;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVisionRegistry;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 

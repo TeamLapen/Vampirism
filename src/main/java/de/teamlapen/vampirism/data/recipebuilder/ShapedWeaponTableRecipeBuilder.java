@@ -52,19 +52,19 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
 
     @NotNull
     @Override
-    public ShapedWeaponTableRecipeBuilder define(@NotNull Character symbol,@NotNull  ItemLike itemIn) {
+    public ShapedWeaponTableRecipeBuilder define(@NotNull Character symbol, @NotNull ItemLike itemIn) {
         return (ShapedWeaponTableRecipeBuilder) super.define(symbol, itemIn);
     }
 
     @NotNull
     @Override
-    public ShapedWeaponTableRecipeBuilder define(@NotNull Character symbol,@NotNull  Ingredient ingredientIn) {
+    public ShapedWeaponTableRecipeBuilder define(@NotNull Character symbol, @NotNull Ingredient ingredientIn) {
         return (ShapedWeaponTableRecipeBuilder) super.define(symbol, ingredientIn);
     }
 
     @NotNull
     @Override
-    public ShapedWeaponTableRecipeBuilder define(@NotNull Character symbol,@NotNull TagKey<Item> tagIn) {
+    public ShapedWeaponTableRecipeBuilder define(@NotNull Character symbol, @NotNull TagKey<Item> tagIn) {
         return (ShapedWeaponTableRecipeBuilder) super.define(symbol, tagIn);
     }
 
@@ -91,7 +91,7 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
     }
 
     @Override
-    public void save(@NotNull Consumer<FinishedRecipe> consumer,@NotNull ResourceLocation id) {
+    public void save(@NotNull Consumer<FinishedRecipe> consumer, @NotNull ResourceLocation id) {
         id = new ResourceLocation(id.getNamespace(), "weapontable/" + id.getPath());
         this.advancement.addCriterion("has_skill", SkillUnlockedTrigger.builder(this.skills != null && this.skills.length >= 1 ? this.skills[0] : HunterSkills.WEAPON_TABLE.get()));
         this.ensureValid(id);
@@ -105,7 +105,7 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
 
     @NotNull
     @Override
-    public ShapedWeaponTableRecipeBuilder unlockedBy(@NotNull String name,@NotNull  CriterionTriggerInstance criterionIn) {
+    public ShapedWeaponTableRecipeBuilder unlockedBy(@NotNull String name, @NotNull CriterionTriggerInstance criterionIn) {
         return (ShapedWeaponTableRecipeBuilder) super.unlockedBy(name, criterionIn);
     }
 
@@ -120,7 +120,7 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
         private final int level;
         private final @NotNull JsonObject extraNbt;
 
-        public Result(@NotNull ResourceLocation id,@NotNull Item item, int count, @NotNull String group,@NotNull List<String> pattern,@NotNull Map<Character, Ingredient> ingredients,@NotNull Advancement.Builder advancementBuilder,@NotNull ResourceLocation advancementId, int lava,@NotNull ISkill<?>[] skills, int level,@NotNull JsonObject extraNbt) {
+        public Result(@NotNull ResourceLocation id, @NotNull Item item, int count, @NotNull String group, @NotNull List<String> pattern, @NotNull Map<Character, Ingredient> ingredients, @NotNull Advancement.Builder advancementBuilder, @NotNull ResourceLocation advancementId, int lava, @NotNull ISkill<?>[] skills, int level, @NotNull JsonObject extraNbt) {
             super(id, item, count, group, pattern, ingredients, advancementBuilder, advancementId);
             this.lava = lava;
             this.skills = skills;
@@ -140,7 +140,7 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
             jsonObject.addProperty("lava", this.lava);
             JsonArray skills = new JsonArray();
             for (ISkill<?> skill : this.skills) {
-                skills.add(RegUtil.id(skill) .toString());
+                skills.add(RegUtil.id(skill).toString());
             }
             jsonObject.add("skill", skills);
             jsonObject.addProperty("level", this.level);

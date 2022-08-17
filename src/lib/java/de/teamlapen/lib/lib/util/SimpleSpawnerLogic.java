@@ -151,8 +151,9 @@ public class SimpleSpawnerLogic<T extends Entity> {
                 } else if (this.spawnedToday >= dailyLimit) {
                     this.flag = false;
                 }
-                if (!this.flag)
+                if (!this.flag) {
                     return;
+                }
 
                 boolean flag1 = false;
 

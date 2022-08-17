@@ -14,7 +14,6 @@ import net.minecraft.world.entity.npc.VillagerType;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-
 import org.jetbrains.annotations.NotNull;
 
 /**

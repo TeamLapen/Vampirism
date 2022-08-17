@@ -20,12 +20,12 @@ import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Arrays;
 
 public class MinionTasks {
-    public static final DeferredRegister<IMinionTask<?,?>> MINION_TASKS = DeferredRegister.create(VampirismRegistries.MINION_TASKS_ID, REFERENCE.MODID);
+    public static final DeferredRegister<IMinionTask<?, ?>> MINION_TASKS = DeferredRegister.create(VampirismRegistries.MINION_TASKS_ID, REFERENCE.MODID);
 
 
     public static final RegistryObject<StayTask> STAY = MINION_TASKS.register("stay", StayTask::new);

@@ -58,7 +58,7 @@ public class SkillCommand extends BasicCommand {
         ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
         for (ISkill<?> skill : RegUtil.values(ModRegistries.SKILLS)) {
             if (skill.getType().isUnlocked(playerHandler) && skill.getFaction().map(f -> f != factionPlayer.getFaction()).orElse(false)) {
-                skillHandler.enableSkill((ISkill)skill);
+                skillHandler.enableSkill((ISkill) skill);
             }
         }
         commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.all_unlocked"), false);
@@ -85,10 +85,11 @@ public class SkillCommand extends BasicCommand {
             case PARENT_NOT_ENABLED -> {
                 ISkill<?>[] skills = factionPlayer.getSkillHandler().getParentSkills(skill);
                 if (skills == null || skills.length == 0) return 0;
-                if (skills.length == 1)
+                if (skills.length == 1) {
                     commandSource.sendFailure(Component.translatable("command.vampirism.test.skill.parent", RegUtil.id(skills[0])));
-                else
+                } else {
                     commandSource.sendFailure(Component.translatable("command.vampirism.test.skill.parents", RegUtil.id(skills[0]), RegUtil.id(skills[1])));
+                }
             }
             case NO_POINTS -> commandSource.sendFailure(Component.translatable("command.vampirism.test.skill.nopoints"));
             case OTHER_NODE_SKILL -> commandSource.sendFailure(Component.translatable("command.vampirism.test.skill.othernode"));

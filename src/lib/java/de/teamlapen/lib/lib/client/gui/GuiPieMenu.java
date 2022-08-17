@@ -122,8 +122,9 @@ public abstract class GuiPieMenu<T> extends Screen {
         // Check if the mouse is in bounds and whether its in the center or not
         double mouseRad = updateMouse(mouseX, mouseY, cX, cY, radius / 2);
         boolean center = (mouseX - cX) * (mouseX - cX) + (mouseY - cY) * (mouseY - cY) < (radius / 4) * (radius / 4);
-        if (center)
+        if (center) {
             selectedElement = -1;
+        }
         // Draw each skill
         for (int i = 0; i < elementCount; i++) {
             T element = elements.get(i);

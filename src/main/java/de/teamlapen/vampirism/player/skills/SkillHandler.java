@@ -28,9 +28,9 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.registries.RegistryObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -59,7 +59,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     public @NotNull Optional<SkillNode> anyLastNode() {
         Queue<SkillNode> queue = new ArrayDeque<>();
         for (ISkillType skillType : VampirismAPI.skillManager().getSkillTypes()) {
-            if(skillType.isForFaction(faction)) {
+            if (skillType.isForFaction(faction)) {
                 queue.add(getRootNode(skillType));
             }
         }
@@ -383,7 +383,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     public void saveToNbt(@NotNull CompoundTag nbt) {
         CompoundTag skills = new CompoundTag();
         for (ISkill<T> skill : enabledSkills) {
-            skills.putBoolean(RegUtil.id(skill) .toString(), true);
+            skills.putBoolean(RegUtil.id(skill).toString(), true);
         }
         nbt.put("skills", skills);
         CompoundTag refinements = new CompoundTag();
@@ -402,7 +402,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     public void writeUpdateForClient(@NotNull CompoundTag nbt) {
         CompoundTag skills = new CompoundTag();
         for (ISkill<T> skill : enabledSkills) {
-            skills.putBoolean(RegUtil.id(skill) .toString(), true);
+            skills.putBoolean(RegUtil.id(skill).toString(), true);
         }
         nbt.put("skills", skills);
         CompoundTag refinements = new CompoundTag();

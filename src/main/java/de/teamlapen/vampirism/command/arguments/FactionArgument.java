@@ -61,7 +61,7 @@ public class FactionArgument implements ArgumentType<IFaction<?>> {
 
     @Override
     public <S> @NotNull CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, @NotNull SuggestionsBuilder builder) {
-        return SharedSuggestionProvider.suggest(Arrays.stream(this.onlyPlayableFactions ? VampirismAPI.factionRegistry().getPlayableFactions(): VampirismAPI.factionRegistry().getFactions()).map(i -> i.getID().toString()), builder);
+        return SharedSuggestionProvider.suggest(Arrays.stream(this.onlyPlayableFactions ? VampirismAPI.factionRegistry().getPlayableFactions() : VampirismAPI.factionRegistry().getFactions()).map(i -> i.getID().toString()), builder);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class FactionArgument implements ArgumentType<IFaction<?>> {
 
         @NotNull
         @Override
-        public  Template deserializeFromNetwork(@NotNull FriendlyByteBuf buffer) {
+        public Template deserializeFromNetwork(@NotNull FriendlyByteBuf buffer) {
             return new Template(buffer.readBoolean());
         }
 
@@ -106,7 +106,7 @@ public class FactionArgument implements ArgumentType<IFaction<?>> {
 
             @NotNull
             @Override
-            public  FactionArgument instantiate(@NotNull CommandBuildContext context) {
+            public FactionArgument instantiate(@NotNull CommandBuildContext context) {
                 return new FactionArgument(this.onlyPlayableFaction);
             }
 

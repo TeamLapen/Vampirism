@@ -39,7 +39,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
-
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -130,8 +129,9 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     @Override
     public boolean checkSpawnRules(@NotNull LevelAccessor worldIn, @NotNull MobSpawnType spawnReasonIn) {
         if (spawnRestriction.level >= SpawnRestriction.SIMPLE.level) {
-            if (isGettingSundamage(worldIn, true) || isGettingGarlicDamage(worldIn, true) != EnumStrength.NONE)
+            if (isGettingSundamage(worldIn, true) || isGettingGarlicDamage(worldIn, true) != EnumStrength.NONE) {
                 return false;
+            }
             if (spawnRestriction.level >= SpawnRestriction.NORMAL.level) {
                 if (-worldIn.getPathfindingCostFromLightLevels(blockPosition()) < 0.0 && random.nextInt(5) != 0) {
                     return false;
@@ -184,12 +184,14 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
         for (ItemStack e : entity.getArmorSlots()) {
             if (e != null && e.getItem() instanceof HunterCoatItem) {
                 int j = 1;
-                if (((HunterCoatItem) e.getItem()).getVampirismTier().equals(IItemWithTier.TIER.ENHANCED))
+                if (((HunterCoatItem) e.getItem()).getVampirismTier().equals(IItemWithTier.TIER.ENHANCED)) {
                     j = 2;
-                else if (((HunterCoatItem) e.getItem()).getVampirismTier().equals(IItemWithTier.TIER.ULTIMATE))
+                } else if (((HunterCoatItem) e.getItem()).getVampirismTier().equals(IItemWithTier.TIER.ULTIMATE)) {
                     j = 3;
-                if (getRandom().nextInt((4 - j) * 2) == 0)
+                }
+                if (getRandom().nextInt((4 - j) * 2) == 0) {
                     addEffect(new MobEffectInstance(ModEffects.POISON.get(), (int) (20 * Math.sqrt(j)), j));
+                }
             }
         }
         return super.doHurtTarget(entity);
@@ -299,8 +301,8 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     private boolean getCanSpawnHereRestricted(@NotNull LevelAccessor iWorld) {
         boolean vampireBiome = iWorld.getBiome(this.blockPosition()).is(ModTags.Biomes.IS_VAMPIRE_BIOME);
         boolean lowLightLevel = isLowLightLevel(iWorld);
-        if(lowLightLevel) return true;
-        if(!vampireBiome) return false;
+        if (lowLightLevel) return true;
+        if (!vampireBiome) return false;
         BlockState iblockstate = iWorld.getBlockState((this.blockPosition()).below());
         return iblockstate.is(ModTags.Blocks.CURSED_EARTH);
     }

@@ -22,9 +22,9 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -69,7 +69,7 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        if(slot == this.slot){
+        if (slot == this.slot) {
             return modifierMultimap;
         }
         return ImmutableMultimap.of();
@@ -96,6 +96,7 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
     }
 
     private String descriptionId;
+
     @NotNull
     @Override
     protected String getOrCreateDescriptionId() {

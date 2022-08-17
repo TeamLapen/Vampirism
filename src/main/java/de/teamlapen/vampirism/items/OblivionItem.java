@@ -18,9 +18,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -31,8 +31,9 @@ public class OblivionItem extends Item {
         Player player = factionPlayer.getRepresentingPlayer();
         FactionPlayerHandler.getOpt(player).ifPresent(fph -> {
             ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
-            if (((SkillHandler<?>) skillHandler).getRootNodes().stream().flatMap(a -> a.getChildren().stream()).flatMap(a -> Arrays.stream(a.getElements())).noneMatch(skillHandler::isSkillEnabled))
+            if (((SkillHandler<?>) skillHandler).getRootNodes().stream().flatMap(a -> a.getChildren().stream()).flatMap(a -> Arrays.stream(a.getElements())).noneMatch(skillHandler::isSkillEnabled)) {
                 return;
+            }
             boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
             player.addEffect(new MobEffectInstance(ModEffects.OBLIVION.get(), Integer.MAX_VALUE, test ? 100 : 4));
             if (factionPlayer instanceof ISyncable.ISyncableEntityCapabilityInst) {

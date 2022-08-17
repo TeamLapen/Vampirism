@@ -30,8 +30,9 @@ public abstract class DefaultAction<T extends IFactionPlayer<T>> implements IAct
 
     @Override
     public final IAction.@NotNull PERM canUse(@NotNull T player) {
-        if (!isEnabled())
+        if (!isEnabled()) {
             return IAction.PERM.DISABLED;
+        }
         if (this.getFaction().map(f -> f.getFactionPlayerInterface().isInstance(player)).orElse(true)) {
             return (canBeUsedBy(player) ? IAction.PERM.ALLOWED : IAction.PERM.DISALLOWED);
         } else {

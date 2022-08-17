@@ -12,7 +12,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-
 import org.jetbrains.annotations.NotNull;
 
 public class ConvertedCowEntity extends ConvertedCreatureEntity<Cow> {

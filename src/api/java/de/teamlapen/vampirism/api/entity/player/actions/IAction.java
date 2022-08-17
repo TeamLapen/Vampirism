@@ -46,7 +46,7 @@ public interface IAction<T extends IFactionPlayer<T>> {
     /**
      * Called when the action is activated. Only called server side
      *
-     * @param player Must be instance of class that belongs to {@link IAction#getFaction()}
+     * @param player  Must be instance of class that belongs to {@link IAction#getFaction()}
      * @param context Holds Block/Entity the player was looking at when activating if any
      * @return Whether the action was successfully activated. !Does not give any feedback to the user!
      */
@@ -74,7 +74,7 @@ public interface IAction<T extends IFactionPlayer<T>> {
     /**
      * Provide some context of the activation instant sent from client
      */
-    interface ActivationContext{
+    interface ActivationContext {
         /**
          * @return The block the player is looking at, if any
          */

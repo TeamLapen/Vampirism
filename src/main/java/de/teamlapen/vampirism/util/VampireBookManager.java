@@ -65,11 +65,11 @@ public class VampireBookManager {
     }
 
     public void init() {
-        try(InputStream inputStream = VampirismMod.class.getResourceAsStream("/vampireBooks.json")) {
+        try (InputStream inputStream = VampirismMod.class.getResourceAsStream("/vampireBooks.json")) {
             if (inputStream == null) {
                 throw new IOException("Could not find 'vampireBooks.json' in resources");
             }
-            try(Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
+            try (Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
                 JsonElement jsonElement = JsonParser.parseReader(reader);
                 List<BookContext> books = Lists.newArrayList(BookContext.CODEC.listOf().parse(new Dynamic<>(JsonOps.INSTANCE, jsonElement)).getOrThrow(false, LOGGER::error));
                 idToBook.clear();

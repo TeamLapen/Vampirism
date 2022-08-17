@@ -86,7 +86,7 @@ public class GeneralEventHandler {
 //            event.getPlayer().sendStatusMessage(new StringTextComponent("You are playing an alpha version of Vampirism for 1.16, some things might not work yet. Please report any issues except for:").mergeStyle(TextFormatting.RED), false);
 //        }
 
-        if (player instanceof ServerPlayer serverPlayer){
+        if (player instanceof ServerPlayer serverPlayer) {
             VampirismMod.dispatcher.sendTo(new ClientboundSkillTreePacket(VampirismMod.proxy.getSkillTree(false).getCopy()), serverPlayer);
         }
 
@@ -96,7 +96,7 @@ public class GeneralEventHandler {
         bloodValues[1] = BloodConversionRegistry.getItemConversions();
         bloodValues[2] = BloodConversionRegistry.getFluidConversions();
 
-        if(player instanceof ServerPlayer serverPlayer) {
+        if (player instanceof ServerPlayer serverPlayer) {
             VampirismMod.dispatcher.sendTo(new ClientboundBloodValuePacket(bloodValues), serverPlayer);
         }
         FactionPlayerHandler.getOpt(player).ifPresent(FactionPlayerHandler::onPlayerLoggedIn);

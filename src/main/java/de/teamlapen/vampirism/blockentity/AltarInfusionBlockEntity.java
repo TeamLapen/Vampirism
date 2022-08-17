@@ -90,8 +90,9 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
      */
     public @NotNull Result canActivate(@NotNull Player player, boolean messagePlayer) {
         if (runningTick > 0) {
-            if (messagePlayer)
+            if (messagePlayer) {
                 player.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual_still_running"), true);
+            }
 
             return Result.ISRUNNING;
         }
@@ -100,16 +101,19 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
         targetLevel = VampirismPlayerAttributes.get(player).vampireLevel + 1;
         int requiredLevel = checkRequiredLevel();
         if (requiredLevel == -1) {
-            if (messagePlayer)
+            if (messagePlayer) {
                 player.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual_level_wrong"), true);
+            }
             return Result.WRONGLEVEL;
         } else if (player.getCommandSenderWorld().isDay()) {
-            if (messagePlayer)
+            if (messagePlayer) {
                 player.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual_night_only"), true);
+            }
             return Result.NIGHTONLY;
         } else if (!checkStructureLevel(requiredLevel)) {
-            if (messagePlayer)
+            if (messagePlayer) {
                 player.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual_structure_wrong"), true);
+            }
             tips = null;
             return Result.STRUCTUREWRONG;
         } else if (!checkItemRequirements(player, messagePlayer)) {
@@ -161,8 +165,9 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
      * Returns the affected player. If the ritual isn't running it returns null
      */
     public @Nullable Player getPlayer() {
-        if (this.runningTick <= 1)
+        if (this.runningTick <= 1) {
             return null;
+        }
         return this.player;
     }
 
@@ -180,8 +185,9 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
      * Returns the position of the tips. If the ritual isn't running it returns null
      */
     public BlockPos @Nullable [] getTips() {
-        if (this.runningTick <= 1)
+        if (this.runningTick <= 1) {
             return null;
+        }
         return this.tips;
     }
 
@@ -290,11 +296,11 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
             if (!level.isClientSide) {
                 assert player.isAlive();
                 LazyOptional<FactionPlayerHandler> handler = FactionPlayerHandler.getOpt(player);
-                if (handler.map(h->h.getCurrentLevel(VReference.VAMPIRE_FACTION) != targetLevel - 1).orElse(false)) {
+                if (handler.map(h -> h.getCurrentLevel(VReference.VAMPIRE_FACTION) != targetLevel - 1).orElse(false)) {
                     LOGGER.warn("Player {} changed level while the ritual was running. Cannot levelup.", player);
                     return;
                 }
-                handler.ifPresent(h->h.setFactionLevel(VReference.VAMPIRE_FACTION, h.getCurrentLevel(VReference.VAMPIRE_FACTION) + 1));
+                handler.ifPresent(h -> h.setFactionLevel(VReference.VAMPIRE_FACTION, h.getCurrentLevel(VReference.VAMPIRE_FACTION) + 1));
                 VampirePlayer.getOpt(player).ifPresent(v -> v.drinkBlood(Integer.MAX_VALUE, 0, false));
                 if (player instanceof ServerPlayer serverPlayer) {
                     ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger(serverPlayer, VampireActionTrigger.Action.PERFORM_RITUAL_INFUSION);
@@ -349,14 +355,14 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     private boolean checkItemRequirements(@NotNull Player player, boolean messagePlayer) {
         int newLevel = targetLevel;
         VampireLevelingConf.AltarInfusionRequirements requirements = VampireLevelingConf.getInstance().getAltarInfusionRequirements(newLevel);
-        ItemStack missing = InventoryHelper.checkItems(this, new Item[] {
-                PureBloodItem.getBloodItemForLevel(requirements.pureBloodLevel()), ModItems.HUMAN_HEART.get(), ModItems.VAMPIRE_BOOK.get() },
-                new int[]{ requirements.blood(), requirements.heart(), requirements.vampireBook() },
+        ItemStack missing = InventoryHelper.checkItems(this, new Item[]{
+                        PureBloodItem.getBloodItemForLevel(requirements.pureBloodLevel()), ModItems.HUMAN_HEART.get(), ModItems.VAMPIRE_BOOK.get()},
+                new int[]{requirements.blood(), requirements.heart(), requirements.vampireBook()},
                 (supplied, required) -> supplied.equals(required) || (supplied instanceof PureBloodItem suppliedBlood && required instanceof PureBloodItem requiredBlood && suppliedBlood.getLevel() >= requiredBlood.getLevel()));
 
         if (!missing.isEmpty()) {
             if (messagePlayer) {
-                Component item = missing.getItem() instanceof PureBloodItem pureBloodItem? pureBloodItem.getCustomName() : Component.translatable(missing.getDescriptionId());
+                Component item = missing.getItem() instanceof PureBloodItem pureBloodItem ? pureBloodItem.getCustomName() : Component.translatable(missing.getDescriptionId());
                 Component main = Component.translatable("text.vampirism.altar_infusion.ritual_missing_items", missing.getCount(), item);
                 player.sendSystemMessage(main);
             }

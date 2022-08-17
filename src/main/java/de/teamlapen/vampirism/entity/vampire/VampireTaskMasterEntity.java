@@ -35,9 +35,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Optional;
 
 public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefaultTaskMasterEntity {
@@ -112,8 +112,9 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefau
     @NotNull
     @Override
     protected InteractionResult mobInteract(@NotNull Player playerEntity, @NotNull InteractionHand hand) {
-        if (this.level.isClientSide)
+        if (this.level.isClientSide) {
             return Helper.isVampire(playerEntity) ? InteractionResult.SUCCESS : InteractionResult.PASS;
+        }
         if (Helper.isVampire(playerEntity) && interactor == null) {
             if (this.processInteraction(playerEntity, this)) {
                 this.getNavigation().stop();

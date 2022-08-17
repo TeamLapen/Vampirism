@@ -43,11 +43,11 @@ public class SkillNodeScreen extends GuiComponent {
     private final List<FormattedCharSequence>[] descriptions;
     private final int[] width;
 
-    public SkillNodeScreen(@NotNull Minecraft minecraft,@NotNull SkillsScreen screen,@NotNull SkillsTabScreen tab,@NotNull SkillNode skillNode,@NotNull SkillHandler<?> skillHandler) {
+    public SkillNodeScreen(@NotNull Minecraft minecraft, @NotNull SkillsScreen screen, @NotNull SkillsTabScreen tab, @NotNull SkillNode skillNode, @NotNull SkillHandler<?> skillHandler) {
         this(minecraft, screen, tab, skillNode, skillHandler, null, 0, 0);
     }
 
-    public SkillNodeScreen(@NotNull Minecraft minecraft,@NotNull SkillsScreen screen,@NotNull SkillsTabScreen tab,@NotNull SkillNode skillNode,@NotNull SkillHandler<?> skillHandler, @Nullable SkillNodeScreen parent, int x, int y) {
+    public SkillNodeScreen(@NotNull Minecraft minecraft, @NotNull SkillsScreen screen, @NotNull SkillsTabScreen tab, @NotNull SkillNode skillNode, @NotNull SkillHandler<?> skillHandler, @Nullable SkillNodeScreen parent, int x, int y) {
         this.minecraft = minecraft;
         this.tab = tab;
         this.screen = screen;
@@ -103,7 +103,7 @@ public class SkillNodeScreen extends GuiComponent {
         } else if (this.skillNode.getParent() == null || Arrays.stream(this.skillNode.getParent().getElements()).anyMatch(this.skillHandler::isSkillEnabled)) {
             return SkillNodeState.AVAILABLE;
         } else {
-            return this.skillNode.isHidden() ? SkillNodeState.HIDDEN :SkillNodeState.VISIBLE;
+            return this.skillNode.isHidden() ? SkillNodeState.HIDDEN : SkillNodeState.VISIBLE;
         }
     }
 
@@ -121,7 +121,7 @@ public class SkillNodeScreen extends GuiComponent {
 
     public void draw(@NotNull PoseStack stack, int i, int j) {
         stack.pushPose();
-        stack.translate(0,0,50);
+        stack.translate(0, 0, 50);
         SkillNodeState state = getState();
         if (state == SkillNodeState.HIDDEN) return;
         int width = 26 * this.skillNode.getElements().length + (this.skillNode.getElements().length - 1) * 10;
@@ -143,7 +143,7 @@ public class SkillNodeScreen extends GuiComponent {
             }
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
-            this.blit(stack, i + x, j + this.y,  skillNode.isRoot() ?226:200, 0, 26, 26);
+            this.blit(stack, i + x, j + this.y, skillNode.isRoot() ? 226 : 200, 0, 26, 26);
 
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, getSkillIconLocation(this.skillNode.getElements()[i1]));
@@ -171,7 +171,7 @@ public class SkillNodeScreen extends GuiComponent {
 
             stack.pushPose();
             if (state == SkillNodeState.UNLOCKED) {
-                stack.translate(0,0,10);
+                stack.translate(0, 0, 10);
             }
             int i = startX + x + 13;
             int i1 = startX + this.parent.x + 13;
@@ -236,10 +236,10 @@ public class SkillNodeScreen extends GuiComponent {
                 int width = text.stream().mapToInt(this.minecraft.font::width).max().getAsInt();
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
-                ScreenUtils.blitWithBorder(stack, scrollX + x -3, scrollY + this.y -3 - text.size() * 9, 0, 81, width+8, 10 + text.size() * 10, 200, 20, 3, this.getBlitOffset());
-                int fontY = scrollY + this.y +1 - text.size() * 9;
+                ScreenUtils.blitWithBorder(stack, scrollX + x - 3, scrollY + this.y - 3 - text.size() * 9, 0, 81, width + 8, 10 + text.size() * 10, 200, 20, 3, this.getBlitOffset());
+                int fontY = scrollY + this.y + 1 - text.size() * 9;
                 for (int i = 0; i < text.size(); i++) {
-                    this.minecraft.font.drawShadow(stack, text.get(i),  scrollX + x +2 ,  fontY+ i * 9, -1);
+                    this.minecraft.font.drawShadow(stack, text.get(i), scrollX + x + 2, fontY + i * 9, -1);
                 }
             }
 
@@ -253,11 +253,11 @@ public class SkillNodeScreen extends GuiComponent {
 
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
-                int yOffset = description.isEmpty() ? 15:24;
-                ScreenUtils.blitWithBorder(stack, scrollX + x - 3, scrollY + this.y +3 + 7 + description.size() * 9 , 0, 81, width+8, text.size() * 10 + yOffset, 200, 20, 3, this.getBlitOffset());
-                int fontY = scrollY + this.y +3 + yOffset +8 + description.size() * 9;
+                int yOffset = description.isEmpty() ? 15 : 24;
+                ScreenUtils.blitWithBorder(stack, scrollX + x - 3, scrollY + this.y + 3 + 7 + description.size() * 9, 0, 81, width + 8, text.size() * 10 + yOffset, 200, 20, 3, this.getBlitOffset());
+                int fontY = scrollY + this.y + 3 + yOffset + 8 + description.size() * 9;
                 for (int i = 0; i < text.size(); i++) {
-                    this.minecraft.font.drawShadow(stack, text.get(i),  scrollX + x + 2  ,  fontY+ i * 9, -1);
+                    this.minecraft.font.drawShadow(stack, text.get(i), scrollX + x + 2, fontY + i * 9, -1);
                 }
             }
 
@@ -287,7 +287,7 @@ public class SkillNodeScreen extends GuiComponent {
             RenderSystem.setShaderColor(1f, 1f, 1f, 1);
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
-            this.blit(stack, scrollX + x, scrollY + this.y, skillNode.isRoot() ?226:200, 0, 26, 26);
+            this.blit(stack, scrollX + x, scrollY + this.y, skillNode.isRoot() ? 226 : 200, 0, 26, 26);
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, getSkillIconLocation(elements[hoveredSkill]));
 
@@ -307,7 +307,7 @@ public class SkillNodeScreen extends GuiComponent {
      */
     private List<FormattedCharSequence> getSkillDescription(int skill) {
         List<FormattedCharSequence> description = this.descriptions[skill];
-        ISkillHandler.Result result = skillHandler.canSkillBeEnabled((ISkill)this.skillNode.getElements()[skill]);
+        ISkillHandler.Result result = skillHandler.canSkillBeEnabled((ISkill) this.skillNode.getElements()[skill]);
 
         List<? extends ISkill<?>> lockingSkills = null;
         ChatFormatting lockingColor = ChatFormatting.BLACK;

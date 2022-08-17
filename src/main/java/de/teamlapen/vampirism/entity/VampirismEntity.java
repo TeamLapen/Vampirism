@@ -35,9 +35,9 @@ import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.server.ServerLifecycleHooks;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Arrays;
 
 /**
@@ -247,8 +247,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
         BlockPos blockpos = new BlockPos(this.getX(), this.getBoundingBox().minY, this.getZ());
         if (iWorld.getBrightness(LightLayer.SKY, blockpos) > this.random.nextInt(32)) {
             return false;
-        }
-        else if(iWorld.getBrightness(LightLayer.BLOCK, blockpos) > 0){
+        } else if (iWorld.getBrightness(LightLayer.BLOCK, blockpos) > 0) {
             return false;
         } else {
             int i = iWorld.getMaxLocalRawBrightness(blockpos);
@@ -284,8 +283,9 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
      */
     protected void setMoveTowardsRestriction(int prio, boolean active) {
         if (moveTowardsRestrictionAdded) {
-            if (active && moveTowardsRestrictionPrio == prio)
+            if (active && moveTowardsRestrictionPrio == prio) {
                 return;
+            }
             this.goalSelector.removeGoal(moveTowardsRestriction);
             moveTowardsRestrictionAdded = false;
         }

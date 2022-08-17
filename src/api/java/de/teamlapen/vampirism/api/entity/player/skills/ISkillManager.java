@@ -38,6 +38,7 @@ public interface ISkillManager {
 
     /**
      * registers the {@link de.teamlapen.vampirism.api.entity.player.skills.ISkillType}
+     *
      * @param type the skill type to register
      * @return the input skill type
      */

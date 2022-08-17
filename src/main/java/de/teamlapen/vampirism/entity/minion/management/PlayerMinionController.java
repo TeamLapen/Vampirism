@@ -30,9 +30,9 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -342,7 +342,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
             i.deathCooldown = 20 * VampirismConfig.BALANCE.miDeathRecoveryTime.get();
             getLord().ifPresent(player -> {
                 player.getLordFaction().getPlayerCapability(player.getPlayer()).map(IFactionPlayer::getSkillHandler).ifPresent(s -> {
-                    if(RegUtil.values(ModRegistries.SKILLS).stream().filter(MinionRecoverySkill.class::isInstance).anyMatch(s::isSkillEnabled)){
+                    if (RegUtil.values(ModRegistries.SKILLS).stream().filter(MinionRecoverySkill.class::isInstance).anyMatch(s::isSkillEnabled)) {
                         i.deathCooldown *= 0.8;
                     }
                 });
@@ -489,8 +489,9 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
     private MinionInfo getMinionInfo(int id, int token) {
         assert minions.length == minionTokens.length;
         if (id < minions.length) {
-            if (minionTokens[id].map(t -> t == token).orElse(false))
+            if (minionTokens[id].map(t -> t == token).orElse(false)) {
                 return minions[id];
+            }
         }
         return null;
     }

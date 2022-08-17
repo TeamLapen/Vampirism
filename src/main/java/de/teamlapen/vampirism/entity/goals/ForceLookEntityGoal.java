@@ -3,8 +3,8 @@ package de.teamlapen.vampirism.entity.goals;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.player.Player;
-
 import org.jetbrains.annotations.NotNull;
+
 import java.util.EnumSet;
 import java.util.Optional;
 

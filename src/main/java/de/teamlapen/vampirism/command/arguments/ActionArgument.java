@@ -45,8 +45,9 @@ public class ActionArgument implements ArgumentType<IAction<?>> {
     public @NotNull IAction<?> parse(@NotNull StringReader reader) throws CommandSyntaxException {
         ResourceLocation id = ResourceLocation.read(reader);
         IAction<?> action = ModRegistries.ACTIONS.get().getValue(id);
-        if (action == null)
+        if (action == null) {
             throw ACTION_NOT_FOUND.create(id);
+        }
         return action;
     }
 }

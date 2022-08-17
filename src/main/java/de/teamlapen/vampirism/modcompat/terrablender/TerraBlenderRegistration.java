@@ -24,15 +24,15 @@ import java.util.function.Consumer;
 
 public class TerraBlenderRegistration {
 
-    public static void registerRegions(){
+    public static void registerRegions() {
         Regions.register(new ForestRegion());
     }
 
-    public static void registerSurfaceRules(){
+    public static void registerSurfaceRules() {
         SurfaceRuleManager.addSurfaceRules(SurfaceRuleManager.RuleCategory.OVERWORLD, REFERENCE.MODID, OverworldModifications.buildOverworldSurfaceRules());
     }
 
-    static class ForestRegion extends Region{
+    static class ForestRegion extends Region {
 
         public ForestRegion() {
             super(new ResourceLocation(REFERENCE.MODID, "overworld"), RegionType.OVERWORLD, VampirismConfig.COMMON.vampireForestWeight_terrablender.get());

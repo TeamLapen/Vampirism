@@ -18,9 +18,9 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.NonNullSupplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -303,7 +303,7 @@ public class FactionRegistry implements IFactionRegistry {
         }
 
         @Override
-        public @NotNull ILordPlayerBuilder<T> lord(){
+        public @NotNull ILordPlayerBuilder<T> lord() {
             return new LordPlayerBuilder<>(this);
         }
 

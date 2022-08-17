@@ -29,8 +29,9 @@ public class FollowLordGoal extends MoveToPositionGoal<MinionEntity<?>> {
 
     @Override
     public boolean canUse() {
-        if (this.entity.getCurrentTask().filter(task -> task.getTask() == MinionTasks.FOLLOW_LORD.get() || task.getTask() == MinionTasks.PROTECT_LORD.get()).isEmpty())
+        if (this.entity.getCurrentTask().filter(task -> task.getTask() == MinionTasks.FOLLOW_LORD.get() || task.getTask() == MinionTasks.PROTECT_LORD.get()).isEmpty()) {
             return false;
+        }
         Optional<ILordPlayer> lord = this.entity.getLordOpt();
         if (lord.isEmpty()) {
             return false;

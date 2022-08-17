@@ -185,14 +185,15 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
             List<Component> tooltips = Lists.newArrayList(Component.translatable("gui.vampirism.action_select.action_binding")
                     , ModKeys.ACTION1.getTranslatedKeyMessage().plainCopy().withStyle(ChatFormatting.AQUA)
                     , ModKeys.ACTION2.getTranslatedKeyMessage().plainCopy().withStyle(ChatFormatting.AQUA));
-            this.renderTooltip(stack, tooltips.stream().flatMap(t -> this.font.split(t,this.width / 4).stream()).collect(Collectors.toList()),0, ((int) (this.height * 0.82)), this.font);
+            this.renderTooltip(stack, tooltips.stream().flatMap(t -> this.font.split(t, this.width / 4).stream()).collect(Collectors.toList()), 0, ((int) (this.height * 0.82)), this.font);
         }
     }
 
     @Override
     protected void afterIconDraw(@NotNull PoseStack stack, @NotNull IAction<T> p, int x, int y) {
-        if (p == fakeAction || editActions)
+        if (p == fakeAction || editActions) {
             return;
+        }
         // Draw usage indicator
 
         float active = actionHandler.getPercentageForAction(p);
@@ -212,9 +213,11 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
     protected Color getColor(@NotNull IAction<T> s) {
         if (s == fakeAction) return super.getColor(s);
         if (editActions) {
-            if (SELECTEDACTION != null && (s == SELECTEDACTION || (getSelectedElement() >= 0 && elements.get(getSelectedElement()) == s)))
+            if (SELECTEDACTION != null && (s == SELECTEDACTION || (getSelectedElement() >= 0 && elements.get(getSelectedElement()) == s))) {
                 return Color.GREEN;
-            else return Color.WHITE;
+            } else {
+                return Color.WHITE;
+            }
         }
         if (!minecraft.player.isAlive()) return Color.RED;
         return FactionPlayerHandler.getCurrentFactionPlayer(minecraft.player).map(factionPlayer -> {
@@ -249,7 +252,7 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
     @Override
     protected void onElementSelected(@NotNull IAction<T> action) {
         //noinspection unchecked
-        if (action != fakeAction && action.canUse((T)FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer().orElse(null)) == IAction.PERM.ALLOWED) {
+        if (action != fakeAction && action.canUse((T) FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer().orElse(null)) == IAction.PERM.ALLOWED) {
             VampirismMod.dispatcher.sendToServer(ServerboundToggleActionPacket.createFromRaytrace(RegUtil.id(action), Minecraft.getInstance().hitResult));
         }
     }
@@ -257,7 +260,7 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
     @Override
     protected void onGuiInit() {
         //noinspection unchecked
-        T player = (T)FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer().orElseThrow(() -> new NullPointerException("Player can not be null"));
+        T player = (T) FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer().orElseThrow(() -> new NullPointerException("Player can not be null"));
         actionHandler = player.getActionHandler();
         updateElements();
 
@@ -286,7 +289,7 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
     private @NotNull ImmutableList<IAction<T>> getActionOrdered(@NotNull List<IAction<T>> toSort) {
         if (ACTIONORDER.isEmpty()) ACTIONORDER.addAll(RegUtil.values(ModRegistries.ACTIONS));
         @SuppressWarnings({"SuspiciousMethodCalls", "unchecked"})
-        List<IAction<T>> list = (List<IAction<T>>) (Object)ACTIONORDER.stream().filter(toSort::contains).collect(Collectors.toList());
+        List<IAction<T>> list = (List<IAction<T>>) (Object) ACTIONORDER.stream().filter(toSort::contains).collect(Collectors.toList());
         toSort.removeAll(list);
         list.addAll(toSort);
         return ImmutableList.copyOf(list);

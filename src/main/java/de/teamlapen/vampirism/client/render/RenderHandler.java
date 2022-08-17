@@ -45,7 +45,6 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -112,12 +111,11 @@ public class RenderHandler implements ResourceManagerReloadListener {
         if (VampirismConfig.SERVER.preventRenderingDebugBoundingBoxes.get()) {
             Minecraft.getInstance().getEntityRenderDispatcher().setRenderHitBoxes(false);
         }
-        if(event.getCamera().getEntity() instanceof LivingEntity && ((LivingEntity) event.getCamera().getEntity()).isSleeping()){
+        if (event.getCamera().getEntity() instanceof LivingEntity && ((LivingEntity) event.getCamera().getEntity()).isSleeping()) {
             ((LivingEntity) event.getCamera().getEntity()).getSleepingPos().map(pos -> event.getCamera().getEntity().level.getBlockState(pos)).filter(blockState -> blockState.getBlock() instanceof CoffinBlock).ifPresent(blockState -> {
-                if(blockState.getValue(CoffinBlock.VERTICAL)){
+                if (blockState.getValue(CoffinBlock.VERTICAL)) {
                     event.getCamera().move(0.2, -0.2, 0);
-                }
-                else{
+                } else {
                     event.getCamera().move(0, -0.2, 0);
                 }
             });
@@ -131,7 +129,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
         lastBloodVisionTicks = bloodVisionTicks;
         @Nullable
         VampirePlayer vampire = VampirePlayer.getOpt(mc.player).resolve().orElse(null);
-        if(vampire != null){
+        if (vampire != null) {
             if (vampire.getSpecialAttributes().blood_vision && !VampirismConfig.CLIENT.disableBloodVisionRendering.get() && !vampire.isGettingSundamage(mc.player.level)) {
                 if (bloodVisionTicks < BLOOD_VISION_FADE_TICKS) {
                     bloodVisionTicks++;
@@ -202,7 +200,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
     }
 
     @SubscribeEvent
-    public void onRenderLivingPost(RenderLivingEvent.@NotNull Post<?,?> event) {
+    public void onRenderLivingPost(RenderLivingEvent.@NotNull Post<?, ?> event) {
         if (!isInsideBloodVisionRendering && shouldRenderBloodVision() && !reducedBloodVision) {
             Entity entity = event.getEntity();
 
@@ -258,12 +256,12 @@ public class RenderHandler implements ResourceManagerReloadListener {
     }
 
     @SubscribeEvent
-    public void onRenderFirstPersonHand(@NotNull RenderHandEvent event){
+    public void onRenderFirstPersonHand(@NotNull RenderHandEvent event) {
         LocalPlayer player = Minecraft.getInstance().player;
-        if(player!=null&&event.getHand() == InteractionHand.MAIN_HAND && player.isUsingItem() && player.getUseItemRemainingTicks() >0 ){
-            if(player.getMainHandItem().getItem() instanceof CrucifixItem){
+        if (player != null && event.getHand() == InteractionHand.MAIN_HAND && player.isUsingItem() && player.getUseItemRemainingTicks() > 0) {
+            if (player.getMainHandItem().getItem() instanceof CrucifixItem) {
                 int i = player.getMainArm() == HumanoidArm.RIGHT ? 1 : -1;
-                event.getPoseStack().translate(((float)-i * 0.56F), -0.0, -0.2F);
+                event.getPoseStack().translate(((float) -i * 0.56F), -0.0, -0.2F);
             }
         }
     }
@@ -272,7 +270,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
     public void onRenderPlayer(RenderPlayerEvent.@NotNull Pre event) {
         Player player = event.getEntity();
         VampirePlayerSpecialAttributes vAtt = VampirismPlayerAttributes.get(player).getVampSpecial();
-       if (vAtt.isDBNO) {
+        if (vAtt.isDBNO) {
             event.getPoseStack().translate(1.2, 0, 0);
             PlayerModel<?> m = event.getRenderer().getModel();
             m.rightArm.visible = false;
@@ -283,17 +281,16 @@ public class RenderHandler implements ResourceManagerReloadListener {
             m.leftLeg.visible = false;
             m.rightPants.visible = false;
             m.leftPants.visible = false;
-        }
-        else if(player.getSleepingPos().map(pos -> player.level.getBlockState(pos)).map(state -> state.getBlock() instanceof CoffinBlock).orElse(false)){
+        } else if (player.getSleepingPos().map(pos -> player.level.getBlockState(pos)).map(state -> state.getBlock() instanceof CoffinBlock).orElse(false)) {
             //Shrink player, so they fit into the coffin model
-            event.getPoseStack().scale(0.8f,0.95f,0.8f);
-        } else if(event.getEntity().isUsingItem() && event.getEntity().getUseItemRemainingTicks() > 0 && event.getEntity().getMainHandItem().getItem() instanceof CrucifixItem){
-           if (event.getEntity().getMainArm() == HumanoidArm.RIGHT) {
-               event.getRenderer().getModel().rightArmPose = HumanoidModel.ArmPose.BLOCK;
-           } else {
-               event.getRenderer().getModel().leftArmPose = HumanoidModel.ArmPose.BLOCK;
-           }
-       }
+            event.getPoseStack().scale(0.8f, 0.95f, 0.8f);
+        } else if (event.getEntity().isUsingItem() && event.getEntity().getUseItemRemainingTicks() > 0 && event.getEntity().getMainHandItem().getItem() instanceof CrucifixItem) {
+            if (event.getEntity().getMainArm() == HumanoidArm.RIGHT) {
+                event.getRenderer().getModel().rightArmPose = HumanoidModel.ArmPose.BLOCK;
+            } else {
+                event.getRenderer().getModel().leftArmPose = HumanoidModel.ArmPose.BLOCK;
+            }
+        }
     }
 
     @SubscribeEvent
@@ -326,7 +323,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onRenderPlayerPreHigh(RenderPlayerEvent.@NotNull Pre event){
+    public void onRenderPlayerPreHigh(RenderPlayerEvent.@NotNull Pre event) {
         Player player = event.getEntity();
         VampirePlayerSpecialAttributes vAtt = VampirismPlayerAttributes.get(player).getVampSpecial();
         if (vAtt.invisible) {

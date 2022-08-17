@@ -78,6 +78,7 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
 
     /**
      * TODO should this method be used somewhere?
+     *
      * @return Whether automatically filling blood into bottles is enabled or not.
      */
     @SuppressWarnings("SameReturnValue")

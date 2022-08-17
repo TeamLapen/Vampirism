@@ -24,7 +24,7 @@ public class IItemWIthTierRecipeBuilder extends ShapedRecipeBuilder {
     }
 
     @Override
-    public void save(@NotNull Consumer<FinishedRecipe> consumerIn,@NotNull ResourceLocation id) {
+    public void save(@NotNull Consumer<FinishedRecipe> consumerIn, @NotNull ResourceLocation id) {
         this.ensureValid(id);
         this.advancement.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id)).rewards(AdvancementRewards.Builder.recipe(id)).requirements(RequirementsStrategy.OR);
         consumerIn.accept(new Result(id, this.result, this.count, this.group == null ? "" : this.group, this.rows, this.key, this.advancement, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getItemCategory().getRecipeFolderName() + "/" + id.getPath())));
@@ -32,7 +32,7 @@ public class IItemWIthTierRecipeBuilder extends ShapedRecipeBuilder {
     }
 
     private static class Result extends ShapedRecipeBuilder.Result {
-        public Result(@NotNull ResourceLocation idIn,@NotNull Item resultIn, int countIn,@NotNull String groupIn,@NotNull List<String> patternIn,@NotNull Map<Character, Ingredient> keyIn,@NotNull Advancement.Builder advancementBuilderIn,@NotNull ResourceLocation advancementIdIn) {
+        public Result(@NotNull ResourceLocation idIn, @NotNull Item resultIn, int countIn, @NotNull String groupIn, @NotNull List<String> patternIn, @NotNull Map<Character, Ingredient> keyIn, @NotNull Advancement.Builder advancementBuilderIn, @NotNull ResourceLocation advancementIdIn) {
             super(idIn, resultIn, countIn, groupIn, patternIn, keyIn, advancementBuilderIn, advancementIdIn);
         }
 

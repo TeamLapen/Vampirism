@@ -49,7 +49,7 @@ public class AlchemicalCauldronRecipeBuilder {
         this.result = new ItemStack(result, count);
     }
 
-    public void build(@NotNull Consumer<FinishedRecipe> consumer,@NotNull ResourceLocation id) {
+    public void build(@NotNull Consumer<FinishedRecipe> consumer, @NotNull ResourceLocation id) {
         id = new ResourceLocation(id.getNamespace(), "alchemical_cauldron/" + id.getPath());
         this.validate(id);
         this.advancementBuilder
@@ -146,7 +146,7 @@ public class AlchemicalCauldronRecipeBuilder {
         private final Advancement.@NotNull Builder advancementBuilder;
         private final @NotNull ResourceLocation advancementId;
 
-        public Result(@NotNull ResourceLocation idIn, @NotNull String groupIn, @NotNull Ingredient ingredientIn, @NotNull Either<Ingredient, FluidStack> fluidIn, @NotNull ItemStack resultIn, @NotNull ISkill<?>[] skillsIn, int reqLevelIn, int cookTimeIn, float exp, @NotNull Advancement.Builder advancementBuilderIn,@NotNull ResourceLocation advancementId) {
+        public Result(@NotNull ResourceLocation idIn, @NotNull String groupIn, @NotNull Ingredient ingredientIn, @NotNull Either<Ingredient, FluidStack> fluidIn, @NotNull ItemStack resultIn, @NotNull ISkill<?>[] skillsIn, int reqLevelIn, int cookTimeIn, float exp, @NotNull Advancement.Builder advancementBuilderIn, @NotNull ResourceLocation advancementId) {
             this.id = idIn;
             this.group = groupIn;
             this.ingredient = ingredientIn;
@@ -208,7 +208,7 @@ public class AlchemicalCauldronRecipeBuilder {
 
             JsonArray skills = new JsonArray();
             for (ISkill<?> skill : this.skills) {
-                skills.add(RegUtil.id(skill) .toString());
+                skills.add(RegUtil.id(skill).toString());
             }
             jsonObject.add("skill", skills);
 

@@ -27,9 +27,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.IContainerFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Optional;
 
 public class MinionContainer extends InventoryContainer {
@@ -38,7 +38,7 @@ public class MinionContainer extends InventoryContainer {
     @Nullable
     public static MinionContainer create(int id, @NotNull Inventory playerInventory, @NotNull MinionEntity<?> minionEntity, @NotNull ILordPlayer lord) {
         Optional<IMinionInventory> minionInv = minionEntity.getInventory();
-        return minionInv.map(inv -> new MinionContainer(id, playerInventory, lord , minionEntity, inv, inv.getAvailableSize(), createSelectors(minionEntity, inv.getAvailableSize()))).orElse(null);
+        return minionInv.map(inv -> new MinionContainer(id, playerInventory, lord, minionEntity, inv, inv.getAvailableSize(), createSelectors(minionEntity, inv.getAvailableSize()))).orElse(null);
     }
 
     private static SelectorInfo @NotNull [] createSelectors(@NotNull MinionEntity<?> minionEntity, int extraSlots) {

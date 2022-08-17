@@ -21,15 +21,15 @@ import net.minecraftforge.network.NetworkEvent;
 import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
  * @param actionId the id of the action that was toggled
- * @param target The target the player was looking at when activating the action.
+ * @param target   The target the player was looking at when activating the action.
  */
 public record ServerboundToggleActionPacket(ResourceLocation actionId, @Nullable Either<Integer, BlockPos> target) implements IMessage {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -126,6 +126,6 @@ public record ServerboundToggleActionPacket(ResourceLocation actionId, @Nullable
     }
 
     public ServerboundToggleActionPacket(ResourceLocation actionId) {
-        this(actionId, (Either<Integer, BlockPos>)null);
+        this(actionId, (Either<Integer, BlockPos>) null);
     }
 }

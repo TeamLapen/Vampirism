@@ -22,8 +22,8 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.registries.RegistryObject;
-
 import org.jetbrains.annotations.NotNull;
+
 import java.util.Collection;
 import java.util.Optional;
 
@@ -80,8 +80,8 @@ public class VampireSkills {
     public static final RegistryObject<ISkill<IVampirePlayer>> DBNO_DURATION = SKILLS.register("dbno_duration", () -> new VampirismSkill.SimpleVampireSkill(true));
     public static final RegistryObject<ISkill<IVampirePlayer>> HISSING = SKILLS.register("hissing", () -> new ActionSkill<>(VampireActions.HISSING.get(), true));
     public static final RegistryObject<ISkill<IVampirePlayer>> VAMPIRE_MINION_STATS_INCREASE = SKILLS.register("vampire_minion_stats_increase", () -> new VampirismSkill.LordVampireSkill(true));
-    public static final RegistryObject<ISkill<IVampirePlayer>> VAMPIRE_LORD_SPEED = SKILLS.register("vampire_lord_speed", () -> new ActionSkill<>(VampireActions.VAMPIRE_LORD_SPEED.get(), SkillType.LORD,true));
-    public static final RegistryObject<ISkill<IVampirePlayer>> VAMPIRE_LORD_ATTACK_SPEED = SKILLS.register("vampire_lord_attack_speed", () -> new ActionSkill<>(VampireActions.VAMPIRE_LORD_ATTACK_SPEED.get(), SkillType.LORD,true));
+    public static final RegistryObject<ISkill<IVampirePlayer>> VAMPIRE_LORD_SPEED = SKILLS.register("vampire_lord_speed", () -> new ActionSkill<>(VampireActions.VAMPIRE_LORD_SPEED.get(), SkillType.LORD, true));
+    public static final RegistryObject<ISkill<IVampirePlayer>> VAMPIRE_LORD_ATTACK_SPEED = SKILLS.register("vampire_lord_attack_speed", () -> new ActionSkill<>(VampireActions.VAMPIRE_LORD_ATTACK_SPEED.get(), SkillType.LORD, true));
     public static final RegistryObject<ISkill<IVampirePlayer>> VAMPIRE_MINION_COLLECT = SKILLS.register("vampire_minion_collect", () -> new VampirismSkill.LordVampireSkill(true));
     public static final RegistryObject<ISkill<IVampirePlayer>> VAMPIRE_MINION_RECOVERY = SKILLS.register("vampire_minion_recovery", () -> new MinionRecoverySkill<IVampirePlayer>() {
         @NotNull

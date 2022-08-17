@@ -281,12 +281,12 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
         for (DyeColor dye : DyeColor.values()) {
             getBuilder("coffin_" + dye.getName()).parent(new ModelFile.UncheckedModelFile(REFERENCE.MODID + ":block/coffin/coffin_bottom_" + dye.getName()))
                     .transforms()
-                    .transform(ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND).rotation(30,160,0).translation(-1,0,1).scale(0.23f,0.23f,0.23f).end()
-                    .transform(ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND).rotation(30,160,0).translation(0,0,3).scale(0.375f,0.375f,0.375f).end()
-                    .transform(ItemTransforms.TransformType.GUI).rotation(30,160,0).translation(-1,-1,-4).scale(0.5325f,0.5325f,0.5325f).end()
-                    .transform(ItemTransforms.TransformType.GROUND).rotation(0,0,0).translation(0,2,-2).scale(0.25f,0.25f,0.25f).end()
-                    .transform(ItemTransforms.TransformType.HEAD).rotation(0,180,0).translation(0,2,-8).scale(1,1,1).end()
-                    .transform(ItemTransforms.TransformType.FIXED).rotation(270,0,0).translation(0,-4,-4).scale(0.5f,0.5f,0.5f).end()
+                    .transform(ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND).rotation(30, 160, 0).translation(-1, 0, 1).scale(0.23f, 0.23f, 0.23f).end()
+                    .transform(ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND).rotation(30, 160, 0).translation(0, 0, 3).scale(0.375f, 0.375f, 0.375f).end()
+                    .transform(ItemTransforms.TransformType.GUI).rotation(30, 160, 0).translation(-1, -1, -4).scale(0.5325f, 0.5325f, 0.5325f).end()
+                    .transform(ItemTransforms.TransformType.GROUND).rotation(0, 0, 0).translation(0, 2, -2).scale(0.25f, 0.25f, 0.25f).end()
+                    .transform(ItemTransforms.TransformType.HEAD).rotation(0, 180, 0).translation(0, 2, -8).scale(1, 1, 1).end()
+                    .transform(ItemTransforms.TransformType.FIXED).rotation(270, 0, 0).translation(0, -4, -4).scale(0.5f, 0.5f, 0.5f).end()
                     .end();
         }
         this.item(ModItems.OIL_BOTTLE.get(), modLoc("item/oil_bottle"), modLoc("item/oil_bottle_overlay"));

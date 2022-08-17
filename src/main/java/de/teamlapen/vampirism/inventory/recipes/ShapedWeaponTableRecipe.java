@@ -18,8 +18,8 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.crafting.IShapedRecipe;
-
 import org.jetbrains.annotations.NotNull;
+
 import java.util.Map;
 
 /**
@@ -224,7 +224,7 @@ public class ShapedWeaponTableRecipe implements CraftingRecipe, IWeaponTableReci
             buffer.writeVarInt(recipe.requiredSkills.length);
             if (recipe.requiredSkills.length != 0) {
                 for (ISkill<?> skill : recipe.requiredSkills) {
-                    buffer.writeUtf(RegUtil.id(skill) .toString());
+                    buffer.writeUtf(RegUtil.id(skill).toString());
                 }
             }
         }

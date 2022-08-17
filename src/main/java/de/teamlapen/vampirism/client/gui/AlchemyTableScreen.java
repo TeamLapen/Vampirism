@@ -51,12 +51,12 @@ public class AlchemyTableScreen extends AbstractContainerScreen<AlchemyTableCont
 
         int i1 = this.menu.getBrewingTicks();
         if (i1 > 0) {
-            float j1 = 1.0F - ((float)i1 / 600.0F);
+            float j1 = 1.0F - ((float) i1 / 600.0F);
             if (j1 > 0) {
-                this.blit(stack, i + 73, j + 57, 176, 1, (int)(j1 * 28), 8);
+                this.blit(stack, i + 73, j + 57, 176, 1, (int) (j1 * 28), 8);
                 int color = this.menu.getColor();
-                RenderSystem.setShaderColor(((color>> 16) & 0xFF) / 255f,((color >> 8) & 0xFF) / 255f,((color) & 0xFF) / 255f,1F);
-                this.blit(stack, i + 104, j+36, 176, 13, (int)(j1 * 32), 32);
+                RenderSystem.setShaderColor(((color >> 16) & 0xFF) / 255f, ((color >> 8) & 0xFF) / 255f, ((color) & 0xFF) / 255f, 1F);
+                this.blit(stack, i + 104, j + 36, 176, 13, (int) (j1 * 32), 32);
             }
         }
 

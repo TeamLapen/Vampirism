@@ -12,9 +12,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 /**
@@ -63,6 +62,7 @@ public class HolyWaterBottleItem extends Item implements IItemWithTier, IFaction
 
 
     private String descriptionId;
+
     @Override
     @NotNull
     protected String getOrCreateDescriptionId() {

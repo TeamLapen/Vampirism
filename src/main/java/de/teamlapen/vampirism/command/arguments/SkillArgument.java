@@ -46,8 +46,9 @@ public class SkillArgument implements ArgumentType<ISkill<?>> {
     public @NotNull ISkill<?> parse(@NotNull StringReader reader) throws CommandSyntaxException {
         ResourceLocation id = ResourceLocation.read(reader);
         ISkill<?> skill = RegUtil.getSkill(id);
-        if (skill == null)
+        if (skill == null) {
             throw SKILL_NOT_FOUND.create(id);
+        }
         return skill;
     }
 }

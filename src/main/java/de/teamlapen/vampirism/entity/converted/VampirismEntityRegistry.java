@@ -21,9 +21,9 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -47,7 +47,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     /**
      * Stores custom extended creature constructors after {@link InterModEnqueueEvent}
      */
-    private final Map<Class<? extends PathfinderMob>, Function<? extends PathfinderMob,IExtendedCreatureVampirism>> extendedCreatureConstructors = new ConcurrentHashMap<>();
+    private final Map<Class<? extends PathfinderMob>, Function<? extends PathfinderMob, IExtendedCreatureVampirism>> extendedCreatureConstructors = new ConcurrentHashMap<>();
     private Function<IConvertingHandler.IDefaultHelper, IConvertingHandler<?>> defaultConvertingHandlerCreator;
 
     /**

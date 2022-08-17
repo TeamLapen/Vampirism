@@ -9,8 +9,8 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.commons.lang3.ArrayUtils;
-
 import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 public class ActionManagerEntity implements IEntityActionManager {

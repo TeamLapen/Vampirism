@@ -64,9 +64,9 @@ public interface IFactionRegistry {
     /**
      * Creates a faction builder.
      *
-     * @param id                       Faction id e.g. for level command
-     * @param entityInterface          Interface all entities implement
-     * @param <T>                      Interface all entities implement
+     * @param id              Faction id e.g. for level command
+     * @param entityInterface Interface all entities implement
+     * @param <T>             Interface all entities implement
      * @return a faction builder
      */
     @ThreadSafeAPI

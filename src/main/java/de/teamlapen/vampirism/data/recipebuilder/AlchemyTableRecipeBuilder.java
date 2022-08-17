@@ -36,6 +36,7 @@ public class AlchemyTableRecipeBuilder {
     public static @NotNull AlchemyTableRecipeBuilder builder(@NotNull ItemStack stack) {
         return new AlchemyTableRecipeBuilder(stack);
     }
+
     public static @NotNull AlchemyTableRecipeBuilder builder(@NotNull IOil oilStack) {
         return new AlchemyTableRecipeBuilder(OilUtils.createOilItem(oilStack));
     }
@@ -49,7 +50,7 @@ public class AlchemyTableRecipeBuilder {
     private final Advancement.Builder advancementBuilder = Advancement.Builder.advancement();
     private String group;
     private Ingredient ingredient;
-    private @NotNull IOil ingredientOil = ModOils.EMPTY.get();
+    private final @NotNull IOil ingredientOil = ModOils.EMPTY.get();
     private Ingredient input;
     private ISkill[] skills;
 
@@ -64,12 +65,12 @@ public class AlchemyTableRecipeBuilder {
         this.resultOil = resultOil;
     }
 
-    public @NotNull AlchemyTableRecipeBuilder group(@NotNull String group){
+    public @NotNull AlchemyTableRecipeBuilder group(@NotNull String group) {
         this.group = group;
         return this;
     }
 
-    public @NotNull AlchemyTableRecipeBuilder ingredient(@NotNull Ingredient ingredient){
+    public @NotNull AlchemyTableRecipeBuilder ingredient(@NotNull Ingredient ingredient) {
         this.ingredient = ingredient;
         return this;
     }
@@ -82,11 +83,12 @@ public class AlchemyTableRecipeBuilder {
     public AlchemyTableRecipeBuilder plantOilIngredient() {
         return ingredient(new NBTIngredient(ModItems.OIL_BOTTLE.get().withOil(ModOils.PLANT.get()))).withCriterion("has_bottles", has(ModItems.OIL_BOTTLE.get()));
     }
+
     public AlchemyTableRecipeBuilder bloodOilIngredient() {
         return ingredient(new NBTIngredient(ModItems.OIL_BOTTLE.get().withOil(ModOils.VAMPIRE_BLOOD.get()))).withCriterion("has_bottles", has(ModItems.OIL_BOTTLE.get()));
     }
 
-    public @NotNull AlchemyTableRecipeBuilder input(@NotNull Ingredient input){
+    public @NotNull AlchemyTableRecipeBuilder input(@NotNull Ingredient input) {
         this.input = input;
         return this;
     }
@@ -101,7 +103,7 @@ public class AlchemyTableRecipeBuilder {
         return this;
     }
 
-    public void build(@NotNull Consumer<FinishedRecipe> consumer,@NotNull ResourceLocation id){
+    public void build(@NotNull Consumer<FinishedRecipe> consumer, @NotNull ResourceLocation id) {
         id = new ResourceLocation(id.getNamespace(), "alchemy_table/" + id.getPath());
         this.validate(id);
         this.advancementBuilder.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id)).rewards(AdvancementRewards.Builder.recipe(id)).requirements(RequirementsStrategy.OR);
@@ -140,7 +142,7 @@ public class AlchemyTableRecipeBuilder {
         private final ISkill[] skills;
         private final @NotNull ResourceLocation advancementId;
 
-        public Result(@NotNull ResourceLocation id,@NotNull String group,@NotNull Ingredient ingredient,@NotNull IOil ingredientOil,@NotNull Ingredient input,@NotNull ItemStack result,@NotNull IOil resultOil,@NotNull ISkill[] skills,@NotNull ResourceLocation advancementId,@NotNull Advancement.Builder advancementBuilder) {
+        public Result(@NotNull ResourceLocation id, @NotNull String group, @NotNull Ingredient ingredient, @NotNull IOil ingredientOil, @NotNull Ingredient input, @NotNull ItemStack result, @NotNull IOil resultOil, @NotNull ISkill[] skills, @NotNull ResourceLocation advancementId, @NotNull Advancement.Builder advancementBuilder) {
             this.id = id;
             this.result = result;
             this.resultOil = resultOil;

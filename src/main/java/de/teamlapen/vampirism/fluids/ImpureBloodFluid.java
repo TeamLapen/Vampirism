@@ -17,8 +17,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
 
-import org.jetbrains.annotations.NotNull;
-
 public class ImpureBloodFluid extends Fluid {
 
     public ImpureBloodFluid() {

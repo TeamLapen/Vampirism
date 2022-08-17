@@ -9,8 +9,8 @@ import de.teamlapen.vampirism.player.tasks.TaskInstance;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkEvent;
-
 import org.jetbrains.annotations.NotNull;
+
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;

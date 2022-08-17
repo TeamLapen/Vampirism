@@ -30,7 +30,7 @@ public class HunterCampStructure extends Structure {
         return ModFeatures.HUNTER_CAMP.get();
     }
 
-    private static <C extends FeatureConfiguration> void generatePieces(@NotNull StructurePiecesBuilder structurePiecesBuilder,@NotNull GenerationContext cContext) {
+    private static <C extends FeatureConfiguration> void generatePieces(@NotNull StructurePiecesBuilder structurePiecesBuilder, @NotNull GenerationContext cContext) {
         HunterCampPieces.addStartPieces(structurePiecesBuilder, cContext);
 
     }

@@ -52,7 +52,7 @@ public abstract class HunterCampPieces extends StructurePiece {
         this.z = z;
     }
 
-    public HunterCampPieces(@NotNull StructurePieceType structurePieceType,@NotNull CompoundTag nbt) {
+    public HunterCampPieces(@NotNull StructurePieceType structurePieceType, @NotNull CompoundTag nbt) {
         super(structurePieceType, nbt);
         this.x = nbt.getInt("x");
         this.y = nbt.getInt("y");
@@ -60,7 +60,7 @@ public abstract class HunterCampPieces extends StructurePiece {
     }
 
     @Override
-    public void postProcess(@NotNull WorldGenLevel worldIn,@NotNull StructureManager structureManager,@NotNull ChunkGenerator chunkGenerator, @NotNull RandomSource random, @NotNull BoundingBox structureBoundingBoxIn, @NotNull ChunkPos chunkPos, @NotNull BlockPos blockPos) {
+    public void postProcess(@NotNull WorldGenLevel worldIn, @NotNull StructureManager structureManager, @NotNull ChunkGenerator chunkGenerator, @NotNull RandomSource random, @NotNull BoundingBox structureBoundingBoxIn, @NotNull ChunkPos chunkPos, @NotNull BlockPos blockPos) {
         this.y = worldIn.getHeight(Heightmap.Types.WORLD_SURFACE_WG, x, z);
         this.boundingBox = new BoundingBox(this.x - 1, this.y, this.z - 1, this.x + 1, this.y + 2, this.z + 1);
     }
@@ -72,9 +72,9 @@ public abstract class HunterCampPieces extends StructurePiece {
         tagCompound.putInt("z", z);
     }
 
-    protected boolean testPreconditions(@NotNull WorldGenLevel worldIn,@NotNull StructureManager manager,@NotNull ChunkPos chunkPos) {
+    protected boolean testPreconditions(@NotNull WorldGenLevel worldIn, @NotNull StructureManager manager, @NotNull ChunkPos chunkPos) {
         if (!VampirismConfig.COMMON.enableHunterTentGeneration.get()) return false;
-        return this.y >= 63 && !worldIn.getBlockState(new BlockPos(x, y - 1, z)).getMaterial().isLiquid() && UtilLib.getStructureStartAt(worldIn.getLevel(), new BlockPos(x,y,z), StructureTags.VILLAGE).isEmpty();
+        return this.y >= 63 && !worldIn.getBlockState(new BlockPos(x, y - 1, z)).getMaterial().isLiquid() && UtilLib.getStructureStartAt(worldIn.getLevel(), new BlockPos(x, y, z), StructureTags.VILLAGE).isEmpty();
     }
 
     public static class Fireplace extends HunterCampPieces {
@@ -93,7 +93,7 @@ public abstract class HunterCampPieces extends StructurePiece {
         }
 
         @Override
-        public void addChildren(@NotNull StructurePiece componentInt,@NotNull StructurePieceAccessor listIn,@NotNull RandomSource rand) {
+        public void addChildren(@NotNull StructurePiece componentInt, @NotNull StructurePieceAccessor listIn, @NotNull RandomSource rand) {
             //adds 1-4 tent or crafting table elements to the structure (max 1 per direction && max 1 crafting table)
             @NotNull List<Direction> directions = Lists.newArrayList(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST);
             if (rand.nextInt(3) == 0) {
@@ -102,15 +102,18 @@ public abstract class HunterCampPieces extends StructurePiece {
                 listIn.addPiece(getTentComponent(rand, directions, true));
                 listIn.addPiece(getTentComponent(rand, directions, false));
                 int i = rand.nextInt(4);
-                if (i < 2)
+                if (i < 2) {
                     listIn.addPiece(getComponent(rand, directions, true));
-                if (i < 1)
+                }
+                if (i < 1) {
                     listIn.addPiece(getComponent(rand, directions, true));
+                }
             } else {
                 //normal
                 listIn.addPiece(getTentComponent(rand, directions, false));
-                if (rand.nextInt(2) == 0)
+                if (rand.nextInt(2) == 0) {
                     listIn.addPiece(getComponent(rand, directions, false));
+                }
             }
         }
 
@@ -171,7 +174,7 @@ public abstract class HunterCampPieces extends StructurePiece {
         int xCenter;
         private int mirror;
 
-        public Tent(int x, int y, int z,@NotNull Direction direction, boolean advanced) {
+        public Tent(int x, int y, int z, @NotNull Direction direction, boolean advanced) {
             super(VampirismFeatures.HUNTER_CAMP_TENT.get(), 1, x, y, z);
             this.setOrientation(direction);
             this.direction = direction;
@@ -306,14 +309,15 @@ public abstract class HunterCampPieces extends StructurePiece {
 
             //generation
             if (advanced) {
-                if (!worldIn.getBlockState(new BlockPos(this.x + 1, worldIn.getHeight(Heightmap.Types.WORLD_SURFACE_WG, this.x + 1, this.z) - 1, z)).getMaterial().isReplaceable())
+                if (!worldIn.getBlockState(new BlockPos(this.x + 1, worldIn.getHeight(Heightmap.Types.WORLD_SURFACE_WG, this.x + 1, this.z) - 1, z)).getMaterial().isReplaceable()) {
                     this.placeBlock(worldIn, ModBlocks.WEAPON_TABLE.get().defaultBlockState(), 2, worldIn.getHeight(Heightmap.Types.WORLD_SURFACE_WG, this.x + 1, this.z) - y, 1, structureBoundingBoxIn);
-                if (!worldIn.getBlockState(new BlockPos(this.x - 1, worldIn.getHeight(Heightmap.Types.WORLD_SURFACE_WG, this.x - 1, this.z) - 1, z)).getMaterial().isReplaceable())
+                }
+                if (!worldIn.getBlockState(new BlockPos(this.x - 1, worldIn.getHeight(Heightmap.Types.WORLD_SURFACE_WG, this.x - 1, this.z) - 1, z)).getMaterial().isReplaceable()) {
                     this.placeBlock(worldIn, Blocks.CRAFTING_TABLE.defaultBlockState(), 0, worldIn.getHeight(Heightmap.Types.WORLD_SURFACE_WG, this.x - 1, this.z) - y, 1, structureBoundingBoxIn);
+                }
             } else {
                 this.placeBlock(worldIn, Blocks.CRAFTING_TABLE.defaultBlockState(), 1, 0, 1, structureBoundingBoxIn);
             }
-            return;
         }
 
         @Override

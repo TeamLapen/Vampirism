@@ -73,7 +73,7 @@ public record ClientboundUpdateMultiBossEventPacket(UUID uniqueId, OperationType
                 overlay = buf.readEnum(BossEvent.BossBarOverlay.class);
                 break;
         }
-        return new ClientboundUpdateMultiBossEventPacket(uuid, operation , colors, entries, name, overlay);
+        return new ClientboundUpdateMultiBossEventPacket(uuid, operation, colors, entries, name, overlay);
     }
 
     public static void handle(final ClientboundUpdateMultiBossEventPacket msg, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
@@ -84,7 +84,7 @@ public record ClientboundUpdateMultiBossEventPacket(UUID uniqueId, OperationType
 
 
     public ClientboundUpdateMultiBossEventPacket(OperationType operation, @NotNull MultiBossEvent data) {
-        this(data.getUniqueId(), operation, data.getColors(), data.getEntries(), data.getName() , data.getOverlay());
+        this(data.getUniqueId(), operation, data.getColors(), data.getEntries(), data.getName(), data.getOverlay());
     }
 
     public enum OperationType {

@@ -9,8 +9,8 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-
 import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -28,7 +28,7 @@ public class EffectWeaponOil extends WeaponOil {
     }
 
     public EffectWeaponOil(@NotNull MobEffect effect, int effectDuration, int maxDuration) {
-        this(effect, ()-> effectDuration, maxDuration);
+        this(effect, () -> effectDuration, maxDuration);
     }
 
     @NotNull

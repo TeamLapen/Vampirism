@@ -37,17 +37,17 @@ public class ModEffects {
     public static final RegistryObject<MobEffect> OBLIVION = EFFECTS.register("oblivion", () -> new OblivionEffect(MobEffectCategory.NEUTRAL, 0x4E9331));
     public static final RegistryObject<MobEffect> ARMOR_REGENERATION = EFFECTS.register("armor_regeneration", () -> new VampirismEffect(MobEffectCategory.NEUTRAL, 0xD17642));
     public static final RegistryObject<MobEffect> BAD_OMEN_HUNTER = EFFECTS.register("bad_omen_hunter", () -> new BadOmenEffect() {
-                @Override
-                public IFaction<?> getFaction() {
-                    return VReference.HUNTER_FACTION;
-                }
-            });
+        @Override
+        public IFaction<?> getFaction() {
+            return VReference.HUNTER_FACTION;
+        }
+    });
     public static final RegistryObject<MobEffect> BAD_OMEN_VAMPIRE = EFFECTS.register("bad_omen_vampire", () -> new BadOmenEffect() {
-                @Override
-                public IFaction<?> getFaction() {
-                    return VReference.VAMPIRE_FACTION;
-                }
-            });
+        @Override
+        public IFaction<?> getFaction() {
+            return VReference.VAMPIRE_FACTION;
+        }
+    });
     public static final RegistryObject<MobEffect> LORD_SPEED = EFFECTS.register("lord_speed", () -> new VampirismEffect(MobEffectCategory.BENEFICIAL, 0xffffff).addAttributeModifier(Attributes.MOVEMENT_SPEED, "efe607d8-db8a-4156-b9d0-6a0640593057", 0.07F, AttributeModifier.Operation.MULTIPLY_TOTAL));
     public static final RegistryObject<MobEffect> LORD_ATTACK_SPEED = EFFECTS.register("lord_attack_speed", () -> new VampirismEffect(MobEffectCategory.BENEFICIAL, 0xffffff).addAttributeModifier(Attributes.ATTACK_SPEED, "a2ca9534-3baf-404f-b159-bc835bf963e6", 0.05F, AttributeModifier.Operation.MULTIPLY_TOTAL));
 
@@ -105,8 +105,8 @@ public class ModEffects {
 
     public static void fixMappings(@NotNull MissingMappingsEvent event) {
         event.getAllMappings(ForgeRegistries.Keys.MOB_EFFECTS).forEach(missingMapping -> {
-            switch (missingMapping.getKey().toString()) {
-                case "vampirism:thirst" ->  missingMapping.remap(MobEffects.HUNGER);
+            if ("vampirism:thirst".equals(missingMapping.getKey().toString())) {
+                missingMapping.remap(MobEffects.HUNGER);
             }
         });
     }

@@ -252,7 +252,7 @@ public class UtilLib {
             if (world.noCollision(new AABB(c))) {
                 if (world.isAreaLoaded(c, 5) && NaturalSpawner.isSpawnPositionOk(SpawnPlacements.getPlacementType(e.getType()), world, c, e.getType())) {//I see no other way
                     e.setPos(c.getX(), c.getY() + 0.2, c.getZ());
-                    if (SpawnPlacements.checkSpawnRules(e.getType(), world, reason, c, world.getRandom())  && !(e instanceof Mob) || (((Mob) e).checkSpawnRules(world, reason) && ((Mob) e).checkSpawnObstruction(e.getCommandSenderWorld()))) {
+                    if (SpawnPlacements.checkSpawnRules(e.getType(), world, reason, c, world.getRandom()) && !(e instanceof Mob) || (((Mob) e).checkSpawnRules(world, reason) && ((Mob) e).checkSpawnObstruction(e.getCommandSenderWorld()))) {
                         backupPos = c; //Store the location in case we do not find a better one
                         for (LivingEntity p : avoidedEntities) {
 
@@ -321,9 +321,9 @@ public class UtilLib {
 
             while (!flag1 && blockPos.getY() > 0) {
                 BlockState blockState = entity.getCommandSenderWorld().getBlockState(blockPos.below());
-                if (blockState.getMaterial().blocksMotion())
+                if (blockState.getMaterial().blocksMotion()) {
                     flag1 = true;
-                else {
+                } else {
                     entity.setPosRaw(x, --ty, z);
                     blockPos = blockPos.below();
                 }
@@ -332,8 +332,9 @@ public class UtilLib {
             if (flag1) {
                 entity.setPos(entity.getX(), entity.getY(), entity.getZ());
 
-                if (entity.getCommandSenderWorld().noCollision(entity) && !entity.getCommandSenderWorld().containsAnyLiquid(entity.getBoundingBox()))
+                if (entity.getCommandSenderWorld().noCollision(entity) && !entity.getCommandSenderWorld().containsAnyLiquid(entity.getBoundingBox())) {
                     flag = true;
+                }
             }
         }
 
@@ -542,12 +543,13 @@ public class UtilLib {
             z1 = (z1 * 16) - 8;
             z2 = (z2 * 16) - 8;
 
-            if (rotation == RotationAmount.NINETY)
+            if (rotation == RotationAmount.NINETY) {
                 rotatedShapes.add(blockBox(8 - z1, y1 * 16, 8 + x1, 8 - z2, y2 * 16, 8 + x2));
-            else if (rotation == RotationAmount.HUNDRED_EIGHTY)
+            } else if (rotation == RotationAmount.HUNDRED_EIGHTY) {
                 rotatedShapes.add(blockBox(8 - x1, y1 * 16, 8 - z1, 8 - x2, y2 * 16, 8 - z2));
-            else if (rotation == RotationAmount.TWO_HUNDRED_SEVENTY)
+            } else if (rotation == RotationAmount.TWO_HUNDRED_SEVENTY) {
                 rotatedShapes.add(blockBox(8 + z1, y1 * 16, 8 - x1, 8 + z2, y2 * 16, 8 - x2));
+            }
         });
 
         return rotatedShapes.stream().reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElseGet(() -> Block.box(0, 0, 0, 16, 16, 16));
@@ -616,7 +618,7 @@ public class UtilLib {
     }
 
     public static boolean isInsideStructure(Level w, @NotNull BlockPos p, @NotNull TagKey<Structure> s) {
-        return getStructureStartAt(w,p,s).isPresent();
+        return getStructureStartAt(w, p, s).isPresent();
     }
 
     public static boolean isInsideStructure(@NotNull Entity entity, @NotNull Structure s) {
@@ -646,9 +648,9 @@ public class UtilLib {
         return Optional.empty();
     }
 
-    public static @NotNull StructureStart getStructureStartAt(@NotNull ServerLevel w, @NotNull BlockPos pos, @NotNull Structure structure){
-        for(StructureStart structurestart : w.structureManager().startsForStructure(SectionPos.of(pos), structure)){
-            if(structurestart.getBoundingBox().isInside(pos)){
+    public static @NotNull StructureStart getStructureStartAt(@NotNull ServerLevel w, @NotNull BlockPos pos, @NotNull Structure structure) {
+        for (StructureStart structurestart : w.structureManager().startsForStructure(SectionPos.of(pos), structure)) {
+            if (structurestart.getBoundingBox().isInside(pos)) {
                 return structurestart;
             }
         }
@@ -722,7 +724,7 @@ public class UtilLib {
 
     @Nullable
     public static DyeColor getColorForItem(@NotNull Item item) {
-        if (!item.builtInRegistryHolder().is(Tags.Items.DYES) ) return null;
+        if (!item.builtInRegistryHolder().is(Tags.Items.DYES)) return null;
         Optional<DyeColor> color = Arrays.stream(DyeColor.values()).filter(dye -> item.builtInRegistryHolder().is(dye.getTag())).findFirst();
         if (color.isPresent()) return color.get();
         LOGGER.warn("Could not determine color of {}", ForgeRegistries.ITEMS.getKey(item));
@@ -765,7 +767,7 @@ public class UtilLib {
             }
             return true;
         });
-}
+    }
 
     public enum RotationAmount {
         NINETY,

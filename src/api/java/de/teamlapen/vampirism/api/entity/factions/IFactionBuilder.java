@@ -62,6 +62,7 @@ public interface IFactionBuilder<T extends IFactionEntity> {
 
     /**
      * Sets the plural name for a entity of this faction
+     *
      * @param namePluralKey the translation key of the name
      * @return the builder
      */

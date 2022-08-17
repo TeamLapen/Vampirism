@@ -134,7 +134,7 @@ public class ModEntitiesRender {
 
         LayerDefinition boatDefinition = BoatModel.createBodyModel(false);
         LayerDefinition chestBoatDefinition = BoatModel.createBodyModel(true);
-        for(IVampirismBoat.BoatType type : IVampirismBoat.BoatType.values()) {
+        for (IVampirismBoat.BoatType type : IVampirismBoat.BoatType.values()) {
             event.registerLayerDefinition(createBoatModelName(type), () -> boatDefinition);
             event.registerLayerDefinition(createChestBoatModelName(type), () -> chestBoatDefinition);
         }
@@ -149,7 +149,7 @@ public class ModEntitiesRender {
     private static <T extends Player, Q extends EntityModel<T>, Z extends HumanoidModel<T>, I extends LivingEntity, U extends EntityModel<I>> void _onAddLayers(EntityRenderersEvent.@NotNull AddLayers event) {
 
         for (String s : event.getSkins()) {
-            LivingEntityRenderer<T,Q> renderPlayer = event.getSkin(s);
+            LivingEntityRenderer<T, Q> renderPlayer = event.getSkin(s);
             if (renderPlayer != null && renderPlayer.getModel() instanceof HumanoidModel) {
                 LivingEntityRenderer<T, Z> renderPlayer2 = (LivingEntityRenderer<T, Z>) renderPlayer;
                 renderPlayer2.addLayer(new VampirePlayerHeadLayer<>(renderPlayer2));
@@ -158,7 +158,7 @@ public class ModEntitiesRender {
         }
         for (Map.Entry<EntityType<? extends PathfinderMob>, ResourceLocation> entry : VampirismAPI.entityRegistry().getConvertibleOverlay().entrySet()) {
             EntityType<? extends PathfinderMob> type = entry.getKey();
-            LivingEntityRenderer<I, U> render = (LivingEntityRenderer<I, U>)event.getRenderer(type);
+            LivingEntityRenderer<I, U> render = (LivingEntityRenderer<I, U>) event.getRenderer(type);
             if (render == null) {
                 LOGGER.error("Did not find renderer for {}", type);
                 continue;

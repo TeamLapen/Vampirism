@@ -37,8 +37,8 @@ import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 import net.minecraftforge.common.crafting.conditions.NotCondition;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
-
 import org.jetbrains.annotations.NotNull;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -285,12 +285,12 @@ public class RecipesGenerator extends RecipeProvider {
         ShapelessRecipeBuilder.shapeless(ModBlocks.TOMBSTONE3.get()).requires(ModBlocks.TOMBSTONE2.get()).requires(Blocks.COBBLESTONE).unlockedBy("has_tomb", has(ModBlocks.TOMBSTONE2.get())).save(consumer, general("tombstone3"));
         ShapedRecipeBuilder.shaped(ModBlocks.GRAVE_CAGE.get()).pattern(" X ").pattern("XYX").pattern("XYX").define('X', iron_ingot).define('Y', Items.COAL).unlockedBy("has_iron", has(iron_ingot)).unlockedBy("has_coal", has(Items.COAL)).save(consumer, general("grave_cage"));
 
-        planksFromLog(consumer,ModBlocks.DARK_SPRUCE_PLANKS.get(), ModTags.Items.DARK_SPRUCE_LOG);
-        planksFromLog(consumer,ModBlocks.CURSED_SPRUCE_PLANKS.get(), ModTags.Items.CURSED_SPRUCE_LOG);
-        woodFromLogs(consumer,ModBlocks.DARK_SPRUCE_WOOD.get(), ModBlocks.DARK_SPRUCE_LOG.get());
-        woodFromLogs(consumer,ModBlocks.CURSED_SPRUCE_WOOD.get(), ModBlocks.CURSED_SPRUCE_LOG.get());
-        woodFromLogs(consumer,ModBlocks.STRIPPED_DARK_SPRUCE_WOOD.get(), ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get());
-        woodFromLogs(consumer,ModBlocks.STRIPPED_CURSED_SPRUCE_WOOD.get(), ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get());
+        planksFromLog(consumer, ModBlocks.DARK_SPRUCE_PLANKS.get(), ModTags.Items.DARK_SPRUCE_LOG);
+        planksFromLog(consumer, ModBlocks.CURSED_SPRUCE_PLANKS.get(), ModTags.Items.CURSED_SPRUCE_LOG);
+        woodFromLogs(consumer, ModBlocks.DARK_SPRUCE_WOOD.get(), ModBlocks.DARK_SPRUCE_LOG.get());
+        woodFromLogs(consumer, ModBlocks.CURSED_SPRUCE_WOOD.get(), ModBlocks.CURSED_SPRUCE_LOG.get());
+        woodFromLogs(consumer, ModBlocks.STRIPPED_DARK_SPRUCE_WOOD.get(), ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get());
+        woodFromLogs(consumer, ModBlocks.STRIPPED_CURSED_SPRUCE_WOOD.get(), ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get());
         woodenBoat(consumer, ModItems.dark_spruce_boat.get(), ModBlocks.DARK_SPRUCE_PLANKS.get());
         woodenBoat(consumer, ModItems.cursed_spruce_boat.get(), ModBlocks.CURSED_SPRUCE_BUTTON.get());
 
@@ -301,7 +301,7 @@ public class RecipesGenerator extends RecipeProvider {
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.CRUCIFIX_ENHANCED.get()).pattern("XYYX").pattern("YZAY").pattern("XYYX").pattern("XYYX").define('X', ModItems.HOLY_WATER_BOTTLE_NORMAL.get()).define('Y', iron_ingot).define('Z', ModItems.HOLY_WATER_BOTTLE_ENHANCED.get()).define('A', ModItems.STAKE.get()).unlockedBy("iron", has(iron_ingot)).unlockedBy("has_holy_water", has(ModItems.HOLY_WATER_BOTTLE_NORMAL.get())).unlockedBy("has_holy_water_enhanced", has(ModItems.HOLY_WATER_BOTTLE_ENHANCED.get())).unlockedBy("stake", has(ModItems.STAKE.get())).skills(HunterSkills.CRUCIFIX_WIELDER.get()).save(consumer, hunter("crucifix_enhanced"));
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.CRUCIFIX_ULTIMATE.get()).pattern("XYYX").pattern("YZAY").pattern("XYYX").pattern("XYYX").define('X', ModItems.ITEM_ALCHEMICAL_FIRE.get()).define('Y', Tags.Items.STORAGE_BLOCKS_GOLD).define('Z', ModItems.HOLY_WATER_BOTTLE_ENHANCED.get()).define('A', ModItems.STAKE.get()).unlockedBy("fire", has(ModItems.ITEM_ALCHEMICAL_FIRE.get())).unlockedBy("gold", has(Tags.Items.STORAGE_BLOCKS_GOLD)).unlockedBy("holy_water", has(ModItems.HOLY_WATER_BOTTLE_ENHANCED.get())).unlockedBy("stake", has(ModItems.STAKE.get())).skills(HunterSkills.ULTIMATE_CRUCIFIX.get()).save(consumer, hunter("crucifix_ultimate"));
 
-        SpecialRecipeBuilder.special(ModRecipes.APPLICABLE_OIL.get()).save(consumer, REFERENCE.MODID+":applicable_oil");
+        SpecialRecipeBuilder.special(ModRecipes.APPLICABLE_OIL.get()).save(consumer, REFERENCE.MODID + ":applicable_oil");
         AlchemyTableRecipeBuilder
                 .builder(ModOils.PLANT)
                 .ingredient(Ingredient.of(new ItemStack(Items.GLASS_BOTTLE)))
@@ -321,7 +321,7 @@ public class RecipesGenerator extends RecipeProvider {
         AlchemyTableRecipeBuilder
                 .builder(ModOils.POISON)
                 .bloodOilIngredient()
-                .input(potion(Potions.POISON,Potions.LONG_POISON, Potions.STRONG_POISON))
+                .input(potion(Potions.POISON, Potions.LONG_POISON, Potions.STRONG_POISON))
                 .build(consumer, new ResourceLocation(REFERENCE.MODID, "poison_oil"));
         AlchemyTableRecipeBuilder
                 .builder(ModOils.WEAKNESS)
@@ -399,8 +399,8 @@ public class RecipesGenerator extends RecipeProvider {
                 .input(Ingredient.of(new ItemStack(Items.HONEY_BOTTLE)))
                 .build(consumer, new ResourceLocation(REFERENCE.MODID, "evasion_oil"));
 
-        SimpleCookingRecipeBuilder.smelting(Ingredient.of(amulet, ring), Items.GOLD_NUGGET, 0.1f,200).unlockedBy("has_amulet", has(amulet)).unlockedBy("has_ring", has(ring)).save(consumer, new ResourceLocation(REFERENCE.MODID, "gold_nugget_from_accessory_smelting"));
-        SimpleCookingRecipeBuilder.blasting(Ingredient.of(amulet, ring), Items.GOLD_NUGGET, 0.1f,100).unlockedBy("has_amulet", has(amulet)).unlockedBy("has_ring", has(ring)).save(consumer, new ResourceLocation(REFERENCE.MODID, "gold_nugget_from_accessory_blasting"));
+        SimpleCookingRecipeBuilder.smelting(Ingredient.of(amulet, ring), Items.GOLD_NUGGET, 0.1f, 200).unlockedBy("has_amulet", has(amulet)).unlockedBy("has_ring", has(ring)).save(consumer, new ResourceLocation(REFERENCE.MODID, "gold_nugget_from_accessory_smelting"));
+        SimpleCookingRecipeBuilder.blasting(Ingredient.of(amulet, ring), Items.GOLD_NUGGET, 0.1f, 100).unlockedBy("has_amulet", has(amulet)).unlockedBy("has_ring", has(ring)).save(consumer, new ResourceLocation(REFERENCE.MODID, "gold_nugget_from_accessory_blasting"));
         ShapelessRecipeBuilder.shapeless(leather).requires(obi_belt).unlockedBy("has_obi_belt", has(obi_belt)).save(consumer, new ResourceLocation(REFERENCE.MODID, "leather_from_obi_belt"));
         ShapedRecipeBuilder.shaped(ModBlocks.ALCHEMY_TABLE.get()).pattern("B  ").pattern("BBB").pattern("P P").define('B', basalt).define('P', planks).unlockedBy("has_basalt", has(basalt)).unlockedBy("has_planks", has(planks)).save(consumer);
     }
@@ -429,8 +429,9 @@ public class RecipesGenerator extends RecipeProvider {
     }
 
     private @NotNull Ingredient potion(Potion @NotNull ... potion) {
-        return new NBTIngredient(Arrays.stream(potion).map(p -> PotionUtils.setPotion(new ItemStack(Items.POTION, 1),p)).toArray(ItemStack[]::new));
+        return new NBTIngredient(Arrays.stream(potion).map(p -> PotionUtils.setPotion(new ItemStack(Items.POTION, 1), p)).toArray(ItemStack[]::new));
     }
+
     private @NotNull Ingredient potion(@NotNull Potion potion) {
         ItemStack stack = new ItemStack(Items.POTION, 1);
         PotionUtils.setPotion(stack, potion);
@@ -482,8 +483,9 @@ public class RecipesGenerator extends RecipeProvider {
                 result.entrySet().clear();
                 result.addProperty("item", RegUtil.id(this.stack.getItem()).toString());
                 result.addProperty("count", this.stack.getCount());
-                if (stack.hasTag())
+                if (stack.hasTag()) {
                     result.addProperty("nbt", this.stack.getTag().toString());
+                }
             }
         }
     }

@@ -46,8 +46,9 @@ public class RefinementSetArgument implements ArgumentType<IRefinementSet> {
     public @NotNull IRefinementSet parse(@NotNull StringReader reader) throws CommandSyntaxException {
         ResourceLocation id = ResourceLocation.read(reader);
         IRefinementSet set = RegUtil.getRefinementSet(id);
-        if (set == null)
+        if (set == null) {
             throw REFINEMENT_NOT_FOUND.create(id);
+        }
         return set;
     }
 }

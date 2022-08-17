@@ -16,9 +16,9 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.phys.AABB;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -164,8 +164,9 @@ public class BiteableEntryManager {
         if (!(creature instanceof Animal)) return true;
         if (creature instanceof IVampire) return true;
         EntityType<?> type = creature.getType();
-        if (type.getCategory() == MobCategory.MONSTER || type.getCategory() == MobCategory.WATER_CREATURE)
+        if (type.getCategory() == MobCategory.MONSTER || type.getCategory() == MobCategory.WATER_CREATURE) {
             return true;
+        }
         if (type.is(ModTags.Entities.VAMPIRE)) return true;
         return isConfigBlackListed(RegUtil.id(type));
     }

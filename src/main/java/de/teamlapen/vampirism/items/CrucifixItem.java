@@ -34,9 +34,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
-
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -86,7 +85,6 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
     public @NotNull UseAnim getUseAnimation(ItemStack p_77661_1_) {
         return UseAnim.NONE;
     }
-
 
 
     @Override

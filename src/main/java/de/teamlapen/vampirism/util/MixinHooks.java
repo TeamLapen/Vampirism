@@ -47,7 +47,7 @@ public class MixinHooks {
     }
 
     private static @NotNull String singleJigsawString(@NotNull ResourceLocation resourceLocation) {
-        return "Single[Left[" + resourceLocation.toString() + "]]";
+        return "Single[Left[" + resourceLocation + "]]";
     }
 
 }

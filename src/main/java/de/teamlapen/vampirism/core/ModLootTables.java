@@ -14,8 +14,8 @@ import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.jetbrains.annotations.NotNull;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -87,6 +87,6 @@ public class ModLootTables {
     public static int checkAndResetInsertedAll() {
         int i = injected;
         injected = 0;
-        return Math.max(0, INJECTION_TABLES.size()-i); //Sponge loads the loot tables for all worlds at start. Which makes this test not work anyway.
+        return Math.max(0, INJECTION_TABLES.size() - i); //Sponge loads the loot tables for all worlds at start. Which makes this test not work anyway.
     }
 }

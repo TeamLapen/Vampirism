@@ -75,8 +75,9 @@ public class VampirismConfig {
 
     @ThreadSafeAPI
     public static <T extends BalanceBuilder.Conf> void addBalanceModification(@NotNull String key, @NotNull Consumer<T> modifier) {
-        if (balanceBuilder == null)
+        if (balanceBuilder == null) {
             throw new IllegalStateException("Must add balance modifications during mod construction");
+        }
         balanceBuilder.addBalanceModifier(key, modifier);
     }
 
@@ -166,7 +167,7 @@ public class VampirismConfig {
                     .push("server");
 
             enforceRenderForestFog = builder.comment("Prevent clients from disabling the vampire forest fog").define("enforceForestFog", true);
-            batModeInEnd = builder.comment("Deprecated! Use 'batDimensionBlacklist'","If vampires can convert to a bat in the End").define("batModeInEnd", false);
+            batModeInEnd = builder.comment("Deprecated! Use 'batDimensionBlacklist'", "If vampires can convert to a bat in the End").define("batModeInEnd", false);
             pvpOnlyBetweenFactions = builder.comment("If PVP should only be allowed between factions. PVP has to be enabled in the server properties for this. Not guaranteed to always protect player from teammates").define("pvpOnlyBetweenFactions", false);
             pvpOnlyBetweenFactionsIncludeHumans = builder.comment("If pvpOnlyBetweenFactions is enabled, this decides whether human players can be attacked and attack others").define("pvpOnlyBetweenFactionsIncludeHumans", false);
             sunscreenBeaconDistance = builder.comment("Block radius the sunscreen beacon affects").defineInRange("sunscreenBeaconDistance", 32, 1, 40000);
@@ -298,7 +299,6 @@ public class VampirismConfig {
         public final ForgeConfigSpec.IntValue villageHunterTrainerWeight;
 
 
-
         Common(ForgeConfigSpec.@NotNull Builder builder) {
             builder.comment("Common configuration settings. Most other configuration can be found in the world (server)configuration folder")
                     .push("common");
@@ -318,7 +318,7 @@ public class VampirismConfig {
 
             builder.comment("Settings here require a game restart").push("world");
             addVampireForestToOverworld = builder.comment("Whether to inject the vampire forest into the default overworld generation and to replace some Taiga areas").define("addVampireForestToOverworld", true);
-            vampireForestWeight_terrablender = builder.comment("Only considered if terrablender installed. Heigher values increase Vampirism region weight (likelyhood to appear)").defineInRange("vampireForestWeight_terrablender", 2,1, 1000);
+            vampireForestWeight_terrablender = builder.comment("Only considered if terrablender installed. Heigher values increase Vampirism region weight (likelyhood to appear)").defineInRange("vampireForestWeight_terrablender", 2, 1, 1000);
             enableHunterTentGeneration = builder.comment("Control hunter camp generation. If disabled you should set hunterSpawnChance to 75.").define("enableHunterTentGeneration", true);
             useVanillaCampfire = builder.comment("Use the vanilla campfire block instead of Vampirism's much cooler one").define("useVanillaCampfire", false);
 

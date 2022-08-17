@@ -248,7 +248,7 @@ public class ScrollableListWidget<T> extends ExtendedButton {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1f);
         RenderSystem.setShaderTexture(0, MISC);
-        int yMaxSize = Mth.clamp(this.itemHeight * this.listItems.size()-2,0,27);
+        int yMaxSize = Mth.clamp(this.itemHeight * this.listItems.size() - 2, 0, 27);
         blit(matrixStack, this.x + this.width - this.scrollerWidth + 1, this.y + yOffset + 1, this.canScroll ? 9 : 16, 0, 7, yMaxSize);
     }
 

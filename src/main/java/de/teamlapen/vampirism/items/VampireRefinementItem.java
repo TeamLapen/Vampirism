@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.core.ModItems;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-
 import org.jetbrains.annotations.NotNull;
 
 public class VampireRefinementItem extends RefinementItem {

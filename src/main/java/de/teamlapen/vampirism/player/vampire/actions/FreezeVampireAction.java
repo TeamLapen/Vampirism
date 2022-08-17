@@ -33,8 +33,9 @@ public class FreezeVampireAction extends DefaultVampireAction {
         for (LivingEntity e : l) {
             if (player.equals(e)) continue;
             if (e instanceof BlindingBatEntity) continue;
-            if (e instanceof Player && VampirismPlayerAttributes.get((Player) e).getHuntSpecial().fullHunterCoat != null)
+            if (e instanceof Player && VampirismPlayerAttributes.get((Player) e).getHuntSpecial().fullHunterCoat != null) {
                 continue;
+            }
             int dur = VampirismConfig.BALANCE.vaFreezeDuration.get() * 20;
             if (vampire.getSkillHandler().isRefinementEquipped(ModRefinements.FREEZE_DURATION.get())) {
                 dur *= VampirismConfig.BALANCE.vrFreezeDurationMod.get();

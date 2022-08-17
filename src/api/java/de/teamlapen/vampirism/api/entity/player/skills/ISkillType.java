@@ -32,8 +32,9 @@ public interface ISkillType {
 
     /**
      * Checks if the player can use this skill type
+     *
      * @param handler the faction player handler of the player
-     * @return  {@code true} fit the player can use this skill type
+     * @return {@code true} fit the player can use this skill type
      */
     boolean isUnlocked(IFactionPlayerHandler handler);
 }

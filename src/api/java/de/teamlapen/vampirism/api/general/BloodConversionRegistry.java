@@ -56,7 +56,7 @@ public class BloodConversionRegistry {
      */
     @Deprecated //TODO remove
     public static void applyNewFluidResources(@NotNull Map<ResourceLocation, Integer> values, int divider) {
-        applyNewFluidResources(values.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() / (float)divider)));
+        applyNewFluidResources(values.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() / (float) divider)));
     }
 
     /**
@@ -64,7 +64,7 @@ public class BloodConversionRegistry {
      */
     @Deprecated //TODO remove
     public static void applyNewItemResources(@NotNull Map<ResourceLocation, Integer> values, int multiplier) {
-        applyNewItemResources(values.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() * (float)multiplier)));
+        applyNewItemResources(values.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() * (float) multiplier)));
     }
 
     /**
@@ -210,8 +210,9 @@ public class BloodConversionRegistry {
      * @return Impure blood amount in mB or 0
      */
     public static @NotNull FluidStack getBloodFromFluid(@NotNull FluidStack fluid) {
-        if (fluid.getFluid().isSame(VReference.BLOOD.get()))
+        if (fluid.getFluid().isSame(VReference.BLOOD.get())) {
             return fluid;
+        }
         return new FluidStack(VReference.BLOOD.get(), (int) (getBloodValue(fluid) * fluid.getAmount()));
     }
 

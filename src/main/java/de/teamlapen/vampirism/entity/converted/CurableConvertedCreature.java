@@ -32,9 +32,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.LevelAccessor;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -121,8 +121,9 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
 
     @Override
     default boolean isGettingSundamage(LevelAccessor iWorld, boolean forceRefresh) {
-        if (!forceRefresh)
+        if (!forceRefresh) {
             return data().sundamageCache;
+        }
         return (data().sundamageCache = Helper.gettingSundamge(((PathfinderMob) this), iWorld, ((PathfinderMob) this).level.getProfiler()));
     }
 

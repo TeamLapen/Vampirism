@@ -21,9 +21,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 /**
@@ -87,8 +87,9 @@ public class TentItem extends Item {
     @NotNull
     @Override
     public InteractionResult useOn(@NotNull UseOnContext ctx) {
-        if (ctx.getClickedFace() != Direction.UP)
+        if (ctx.getClickedFace() != Direction.UP) {
             return InteractionResult.PASS;
+        }
         if (ctx.getLevel().isClientSide) return InteractionResult.PASS;
 
         ItemStack stack = ctx.getItemInHand();

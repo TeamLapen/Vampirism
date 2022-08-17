@@ -39,6 +39,7 @@ public class Task {
     public Task(@NotNull Variant variant, @Nullable IPlayableFaction<?> faction, @NotNull TaskRequirement requirements, @NotNull TaskReward rewards, @NotNull TaskUnlocker[] unlocker, boolean useDescription) {
         this(variant, () -> faction, requirements, rewards, unlocker, useDescription);
     }
+
     /**
      * translation keys used for a task are
      * <p>

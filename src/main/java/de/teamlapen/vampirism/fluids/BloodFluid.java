@@ -17,8 +17,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
 
-import org.jetbrains.annotations.NotNull;
-
 
 public class BloodFluid extends Fluid {
     public BloodFluid() {
@@ -86,7 +84,7 @@ public class BloodFluid extends Fluid {
 
     @NotNull
     @Override
-    public  FluidType getFluidType() {
+    public FluidType getFluidType() {
         return ModFluids.BLOOD_TYPE.get();
     }
 }

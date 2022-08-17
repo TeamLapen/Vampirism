@@ -123,7 +123,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
 
     protected void renderGuiBackground(@NotNull PoseStack mStack) {
         RenderSystem.setShaderTexture(0, BACKGROUND);
-        blit(mStack, this.guiLeft, this.guiTop, this.getBlitOffset(), 0, 0, this.xSize, this.ySize, 300,256);
+        blit(mStack, this.guiLeft, this.guiTop, this.getBlitOffset(), 0, 0, this.xSize, this.ySize, 300, 256);
     }
 
     protected void renderLevelRow(@NotNull PoseStack mStack, int current, int max) {

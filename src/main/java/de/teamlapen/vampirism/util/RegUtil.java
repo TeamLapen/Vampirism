@@ -30,16 +30,19 @@ public class RegUtil {
     public static @Nullable ResourceLocation id(IAction<?> action) {
         return ModRegistries.ACTIONS.get().getKey(action);
     }
+
     public static @Nullable ResourceLocation id(ISkill<?> skill) {
         return ModRegistries.SKILLS.get().getKey(skill);
     }
 
-    public static @Nullable ResourceLocation id(IMinionTask<?,?> minionTask) {
+    public static @Nullable ResourceLocation id(IMinionTask<?, ?> minionTask) {
         return ModRegistries.MINION_TASKS.get().getKey(minionTask);
     }
+
     public static @Nullable ResourceLocation id(IEntityAction entityAction) {
         return ModRegistries.ENTITY_ACTIONS.get().getKey(entityAction);
     }
+
     public static @Nullable ResourceLocation id(Task skill) {
         return ModRegistries.TASKS.get().getKey(skill);
     }
@@ -59,9 +62,11 @@ public class RegUtil {
     public static @Nullable ResourceLocation id(Block block) {
         return ForgeRegistries.BLOCKS.getKey(block);
     }
+
     public static @Nullable ResourceLocation id(Fluid block) {
         return ForgeRegistries.FLUIDS.getKey(block);
     }
+
     public static @Nullable ResourceLocation id(EntityType<?> type) {
         return ForgeRegistries.ENTITY_TYPES.getKey(type);
     }
@@ -69,31 +74,36 @@ public class RegUtil {
     public static @Nullable ResourceLocation id(Biome type) {
         return ForgeRegistries.BIOMES.getKey(type);
     }
+
     public static @Nullable ResourceLocation id(Enchantment type) {
         return ForgeRegistries.ENCHANTMENTS.getKey(type);
     }
+
     public static @Nullable ResourceLocation id(VillagerProfession profession) {
         return ForgeRegistries.VILLAGER_PROFESSIONS.getKey(profession);
     }
+
     public static @Nullable ResourceLocation id(IOil oil) {
         return ModRegistries.OILS.get().getKey(oil);
     }
 
 
-
     public static boolean has(IAction<?> action) {
         return ModRegistries.ACTIONS.get().containsValue(action);
     }
+
     public static boolean has(ISkill<?> skill) {
         return ModRegistries.SKILLS.get().containsValue(skill);
     }
 
-    public static boolean has(IMinionTask<?,?> minionTask) {
+    public static boolean has(IMinionTask<?, ?> minionTask) {
         return ModRegistries.MINION_TASKS.get().containsValue(minionTask);
     }
+
     public static boolean has(IEntityAction entityAction) {
         return ModRegistries.ENTITY_ACTIONS.get().containsValue(entityAction);
     }
+
     public static boolean has(Task skill) {
         return ModRegistries.TASKS.get().containsValue(skill);
     }
@@ -115,7 +125,6 @@ public class RegUtil {
     }
 
 
-
     public static IAction<?> getAction(ResourceLocation id) {
         return get(ModRegistries.ACTIONS.get(), id);
     }
@@ -124,7 +133,7 @@ public class RegUtil {
         return get(ModRegistries.SKILLS.get(), id);
     }
 
-    public static IMinionTask<?,?> getMinionTask(ResourceLocation id) {
+    public static IMinionTask<?, ?> getMinionTask(ResourceLocation id) {
         return get(ModRegistries.MINION_TASKS.get(), id);
     }
 
@@ -149,7 +158,6 @@ public class RegUtil {
     }
 
 
-
     public static <T> @Nullable T get(@NotNull Supplier<IForgeRegistry<T>> registrySupplier, ResourceLocation id) {
         return registrySupplier.get().getValue(id);
     }
@@ -157,7 +165,6 @@ public class RegUtil {
     public static <T> @Nullable T get(@NotNull IForgeRegistry<T> registry, ResourceLocation id) {
         return registry.getValue(id);
     }
-
 
 
     public static <T> boolean has(@NotNull Supplier<IForgeRegistry<T>> registrySupplier, ResourceLocation id) {

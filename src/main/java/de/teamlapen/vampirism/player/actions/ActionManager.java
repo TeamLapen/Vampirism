@@ -18,7 +18,7 @@ public class ActionManager implements IActionManager {
     @SuppressWarnings("unchecked")
     @Override
     public <T extends IFactionPlayer<T>> @NotNull List<IAction<T>> getActionsForFaction(IPlayableFaction<T> faction) {
-        return RegUtil.values(ModRegistries.ACTIONS).stream().filter(action -> action.getFaction().map(f -> f == faction).orElse(true)).map(action -> (IAction<T>)action).collect(Collectors.toList());
+        return RegUtil.values(ModRegistries.ACTIONS).stream().filter(action -> action.getFaction().map(f -> f == faction).orElse(true)).map(action -> (IAction<T>) action).collect(Collectors.toList());
     }
 
     @Override

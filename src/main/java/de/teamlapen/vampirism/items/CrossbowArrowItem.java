@@ -26,9 +26,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 /**
@@ -95,7 +95,7 @@ public class CrossbowArrowItem extends Item implements IVampirismCrossbowArrow<C
     @Override
     public void onHitBlock(ItemStack arrow, @NotNull BlockPos blockPos, IEntityCrossbowArrow arrowEntity, @NotNull Entity shootingEntity) {
         CrossbowArrowEntity entity = (CrossbowArrowEntity) arrowEntity;
-        switch (type){
+        switch (type) {
             case SPITFIRE:
                 for (int dx = -1; dx < 2; dx++) {
                     for (int dy = -2; dy < 2; dy++) {

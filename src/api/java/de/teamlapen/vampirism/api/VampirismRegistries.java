@@ -42,8 +42,7 @@ public class VampirismRegistries {
     public static final Supplier<IForgeRegistry<IRefinementSet>> REFINEMENT_SETS = () -> RegistryManager.ACTIVE.getRegistry(REFINEMENT_SET_ID);
     public static final Supplier<IForgeRegistry<IOil>> OILS = () -> RegistryManager.ACTIVE.getRegistry(OILS_ID);
 
-    private static <T> @NotNull ResourceKey<Registry<T>> key(@NotNull String name)
-    {
+    private static <T> @NotNull ResourceKey<Registry<T>> key(@NotNull String name) {
         return ResourceKey.createRegistryKey(new ResourceLocation(name));
     }
 

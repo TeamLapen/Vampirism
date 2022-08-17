@@ -9,8 +9,8 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkillType;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import net.minecraft.network.chat.Component;
-
 import org.jetbrains.annotations.NotNull;
+
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;

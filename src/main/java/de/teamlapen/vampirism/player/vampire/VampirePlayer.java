@@ -84,9 +84,9 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -339,7 +339,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
     @NotNull
     public BITE_TYPE determineBiteType(LivingEntity entity) {
-        if(player instanceof ServerPlayer && !PermissionAPI.getPermission((ServerPlayer) player, Permissions.FEED)){
+        if (player instanceof ServerPlayer && !PermissionAPI.getPermission((ServerPlayer) player, Permissions.FEED)) {
             return BITE_TYPE.NONE;
         }
         if (entity instanceof IBiteableEntity) {
@@ -361,7 +361,9 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                 if (!(entity.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof VampirismHunterArmor)) {
                     return BITE_TYPE.SUCK_BLOOD_PLAYER;
                 }
-            } else return BITE_TYPE.NONE;
+            } else {
+                return BITE_TYPE.NONE;
+            }
         }
         return BITE_TYPE.NONE;
     }
@@ -990,8 +992,9 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         nbt.putBoolean(KEY_GLOWING_EYES, getGlowingEyes());
         actionHandler.saveToNbt(nbt);
         skillHandler.saveToNbt(nbt);
-        if (activatedVision != null)
+        if (activatedVision != null) {
             nbt.putInt(KEY_VISION, (VampirismAPI.vampireVisionRegistry()).getIdOfVision(activatedVision));
+        }
         if (isDBNO()) nbt.putBoolean(KEY_WAS_DBNO, true);
     }
 
@@ -1093,7 +1096,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         }
     }
 
-    public void giveUpDBNO(){
+    public void giveUpDBNO() {
         if (this.isDBNO()) {
             //Reset dbno state before killing the player in case something is canceling the death event
             this.setDBNOTimer(-1);
@@ -1198,14 +1201,13 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         }
         if (nbt.contains(KEY_FEED_VICTIM_ID)) {
             feed_victim = nbt.getInt(KEY_FEED_VICTIM_ID);
-            if(feed_victim != -1){
-                if(feedingSoundReference == null || !feedingSoundReference.isPlaying()){
-                    feedingSoundReference = VampLib.proxy.createSoundReference(ModSounds.PLAYER_FEEDING.get(), SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(),1,1);
+            if (feed_victim != -1) {
+                if (feedingSoundReference == null || !feedingSoundReference.isPlaying()) {
+                    feedingSoundReference = VampLib.proxy.createSoundReference(ModSounds.PLAYER_FEEDING.get(), SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 1, 1);
                     feedingSoundReference.startPlaying();
                 }
-            }
-            else{
-                if(feedingSoundReference != null){
+            } else {
+                if (feedingSoundReference != null) {
                     feedingSoundReference.stopPlaying();
                     feedingSoundReference = null;
                 }
@@ -1375,7 +1377,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         if (ticksInSun < 100) {
             ticksInSun++;
         }
-        if (ticksInSun > 50 && (sunscreen >= 4 || (VampirismConfig.BALANCE.vpSunscreenBuff.get() && sunscreen>=0)) ) {
+        if (ticksInSun > 50 && (sunscreen >= 4 || (VampirismConfig.BALANCE.vpSunscreenBuff.get() && sunscreen >= 0))) {
             ticksInSun = 50;
         }
         if (!player.isAlive() || isRemote || player.getAbilities().instabuild || player.getAbilities().invulnerable) return;
@@ -1475,7 +1477,8 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             endFeeding(true);
         }
 
-        if (!(e.distanceTo(player) <= player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue() + 1) || e.getHealth() == 0f)
+        if (!(e.distanceTo(player) <= player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue() + 1) || e.getHealth() == 0f) {
             endFeeding(true);
+        }
     }
 }

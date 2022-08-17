@@ -4,7 +4,6 @@ import de.teamlapen.lib.util.ISoundReference;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.player.hunter.actions.DisguiseHunterAction;
-
 import org.jetbrains.annotations.Nullable;
 
 /**

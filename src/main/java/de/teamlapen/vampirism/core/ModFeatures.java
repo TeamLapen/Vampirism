@@ -34,7 +34,7 @@ public class ModFeatures {
     public static final DeferredRegister<TreeDecoratorType<?>> TREE_DECORATOR = DeferredRegister.create(ForgeRegistries.TREE_DECORATOR_TYPES, REFERENCE.MODID);
 
     public static final ResourceKey<Structure> HUNTER_CAMP_KEY = ResourceKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(REFERENCE.MODID, "hunter_camp"));
-    public static final RegistryObject<StructureType<HunterCampStructure>> HUNTER_CAMP = STRUCTURE_TYPES.register( "hunter_camp", () -> () -> HunterCampStructure.CODEC);
+    public static final RegistryObject<StructureType<HunterCampStructure>> HUNTER_CAMP = STRUCTURE_TYPES.register("hunter_camp", () -> () -> HunterCampStructure.CODEC);
     //features
     public static final RegistryObject<VampireDungeonFeature> VAMPIRE_DUNGEON = FEATURES.register("vampire_dungeon", () -> new VampireDungeonFeature(NoneFeatureConfiguration.CODEC));
     public static final Holder<Structure> HUNTER_CAMP_HOLDER = BuiltinRegistries.register(BuiltinRegistries.STRUCTURES, HUNTER_CAMP_KEY, new HunterCampStructure(structure(ModTags.Biomes.HasStructure.HUNTER_TENT, TerrainAdjustment.NONE)));

@@ -8,8 +8,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Predicate;
 
 public enum SkillType implements ISkillType {
-    LEVEL(new ResourceLocation("vampirism", "level"),"", faction -> true, faction -> true),
-    LORD(new ResourceLocation("vampirism", "lord"),"_lord", IPlayableFaction::hasLordSkills , handler -> handler.getLordLevel() > 0);
+    LEVEL(new ResourceLocation("vampirism", "level"), "", faction -> true, faction -> true),
+    LORD(new ResourceLocation("vampirism", "lord"), "_lord", IPlayableFaction::hasLordSkills, handler -> handler.getLordLevel() > 0);
 
     public final ResourceLocation id;
     public final String nameSuffix;

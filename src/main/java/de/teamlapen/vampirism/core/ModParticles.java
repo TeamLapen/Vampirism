@@ -14,7 +14,6 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-
 import org.jetbrains.annotations.NotNull;
 
 public class ModParticles {
@@ -22,28 +21,28 @@ public class ModParticles {
 
     public static final RegistryObject<ParticleType<FlyingBloodParticleData>> FLYING_BLOOD = PARTICLE_TYPES.register("flying_blood", () -> new ParticleType<>(false, FlyingBloodParticleData.DESERIALIZER) {
 
-                @NotNull
-                @Override
-                public Codec<FlyingBloodParticleData> codec() {
-                    return FlyingBloodParticleData.CODEC;
-                }
-            });
+        @NotNull
+        @Override
+        public Codec<FlyingBloodParticleData> codec() {
+            return FlyingBloodParticleData.CODEC;
+        }
+    });
     public static final RegistryObject<ParticleType<FlyingBloodEntityParticleData>> FLYING_BLOOD_ENTITY = PARTICLE_TYPES.register("flying_blood_entity", () -> new ParticleType<>(false, FlyingBloodEntityParticleData.DESERIALIZER) {
 
-                @NotNull
-                @Override
-                public Codec<FlyingBloodEntityParticleData> codec() {
-                    return FlyingBloodEntityParticleData.CODEC;
-                }
-            });
+        @NotNull
+        @Override
+        public Codec<FlyingBloodEntityParticleData> codec() {
+            return FlyingBloodEntityParticleData.CODEC;
+        }
+    });
     public static final RegistryObject<ParticleType<GenericParticleData>> GENERIC = PARTICLE_TYPES.register("generic", () -> new ParticleType<>(false, GenericParticleData.DESERIALIZER) {
 
-                @NotNull
-                @Override
-                public Codec<GenericParticleData> codec() {
-                    return GenericParticleData.CODEC;
-                }
-            });
+        @NotNull
+        @Override
+        public Codec<GenericParticleData> codec() {
+            return GenericParticleData.CODEC;
+        }
+    });
 
     static void registerParticles(IEventBus bus) {
         PARTICLE_TYPES.register(bus);

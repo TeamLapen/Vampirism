@@ -10,9 +10,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -54,16 +54,18 @@ public class SkillTree {
 
     @NotNull
     public SkillNode getRootNodeForFaction(ResourceLocation id) {
-        if (!rootNodes.containsKey(id))
+        if (!rootNodes.containsKey(id)) {
             throw new IllegalStateException("Faction " + id + " does not have a root skill");
+        }
         return rootNodes.get(id);
     }
 
     @NotNull
     public SkillNode getRootNodeForFaction(@NotNull ResourceLocation id, @NotNull ISkillType type) {
         ResourceLocation skillId = type.createIdForFaction(id);
-        if (!rootNodes.containsKey(skillId))
+        if (!rootNodes.containsKey(skillId)) {
             throw new IllegalStateException("Faction " + skillId + " does not have a root skill");
+        }
         return rootNodes.get(skillId);
     }
 
@@ -76,9 +78,9 @@ public class SkillTree {
     }
 
     public static int getTreeWidth(@NotNull SkillNode node) {
-        int max = node.getElements().length * 26 + ((node.getElements().length-1) * 10);
+        int max = node.getElements().length * 26 + ((node.getElements().length - 1) * 10);
 
-        int children = node.getChildren().size() > 0 ?(node.getChildren().size()-1) * 30:0;
+        int children = node.getChildren().size() > 0 ? (node.getChildren().size() - 1) * 30 : 0;
         for (SkillNode child : node.getChildren()) {
             children += getTreeWidth(child);
         }

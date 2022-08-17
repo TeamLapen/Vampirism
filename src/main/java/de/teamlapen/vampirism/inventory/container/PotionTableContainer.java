@@ -13,7 +13,6 @@ import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.network.IContainerFactory;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -68,8 +67,9 @@ public class PotionTableContainer extends InventoryContainer {
         @Nullable
         @Override
         public PotionTableContainer create(int windowId, @NotNull Inventory inv, @Nullable FriendlyByteBuf data) {
-            if (data == null)
+            if (data == null) {
                 return new PotionTableContainer(windowId, inv, ContainerLevelAccess.NULL, new SimpleContainer(6), false, null);
+            }
             boolean extraSlots = data.readBoolean(); //Anything read here has to be written to buffer in open method (in ExtendedPotionTableTileEntity)
             return new PotionTableContainer(windowId, inv, ContainerLevelAccess.NULL, new SimpleContainer(extraSlots ? 8 : 6), extraSlots, null);
         }

@@ -16,9 +16,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 
-import org.jetbrains.annotations.NotNull;
-
-public class VampirismBoatEntity extends Boat implements IVampirismBoat{
+public class VampirismBoatEntity extends Boat implements IVampirismBoat {
 
     private static final EntityDataAccessor<Integer> DATA_ID_TYPE = SynchedEntityData.defineId(VampirismBoatEntity.class, EntityDataSerializers.INT);
 
@@ -29,7 +27,7 @@ public class VampirismBoatEntity extends Boat implements IVampirismBoat{
 
     public VampirismBoatEntity(@NotNull Level level, double x, double y, double z) {
         this(ModEntities.BOAT.get(), level);
-        this.setPos(x,y,z);
+        this.setPos(x, y, z);
         this.setDeltaMovement(Vec3.ZERO);
         this.xo = x;
         this.yo = y;
@@ -37,7 +35,7 @@ public class VampirismBoatEntity extends Boat implements IVampirismBoat{
     }
 
     /**
-     * @deprecated  use {@link #setType(de.teamlapen.vampirism.entity.IVampirismBoat.BoatType)}
+     * @deprecated use {@link #setType(de.teamlapen.vampirism.entity.IVampirismBoat.BoatType)}
      */
     @Deprecated
     @Override

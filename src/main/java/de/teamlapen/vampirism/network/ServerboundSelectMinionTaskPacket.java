@@ -45,7 +45,7 @@ public record ServerboundSelectMinionTaskPacket(int minionID, ResourceLocation t
                         if (controller.recallMinion(msg.minionID)) {
                             controller.createMinionEntityAtPlayer(msg.minionID, ctx.getSender());
                         } else {
-                            ctx.getSender().displayClientMessage(Component.translatable("text.vampirism.minion_is_still_recovering", controller.contactMinionData(msg.minionID, MinionData::getFormattedName).orElseGet( ()->Component.literal("1"))), true);
+                            ctx.getSender().displayClientMessage(Component.translatable("text.vampirism.minion_is_still_recovering", controller.contactMinionData(msg.minionID, MinionData::getFormattedName).orElseGet(() -> Component.literal("1"))), true);
                         }
                     }
                 } else if (RESPAWN.equals(msg.taskID)) {

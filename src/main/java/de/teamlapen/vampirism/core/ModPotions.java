@@ -156,7 +156,7 @@ public class ModPotions {
             switch (missingMapping.getKey().toString()) {
                 case "vampirism:long_strong_resistance", "vampirism:very_long_resistance" -> missingMapping.remap(ModPotions.LONG_RESISTANCE.get());
                 case "vampirism:very_strong_resistance" -> missingMapping.remap(ModPotions.STRONG_RESISTANCE.get());
-                case "vampirism:thirst", "vampirism:long_thirst", "vampirism:strong_thirst","vampirism:very_long_thirst", "vampirism:very_strong_thirst", "vampirism:long_strong_thirst" -> missingMapping.ignore();
+                case "vampirism:thirst", "vampirism:long_thirst", "vampirism:strong_thirst", "vampirism:very_long_thirst", "vampirism:very_strong_thirst", "vampirism:long_strong_thirst" -> missingMapping.ignore();
             }
         });
     }

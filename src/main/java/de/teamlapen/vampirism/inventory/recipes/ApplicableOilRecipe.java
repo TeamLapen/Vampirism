@@ -11,7 +11,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
-
 import org.jetbrains.annotations.NotNull;
 
 public class ApplicableOilRecipe extends CustomRecipe {
@@ -68,7 +67,7 @@ public class ApplicableOilRecipe extends CustomRecipe {
 
     @Override
     public boolean canCraftInDimensions(int x, int y) {
-        return x*y >= 2;
+        return x * y >= 2;
     }
 
     @NotNull

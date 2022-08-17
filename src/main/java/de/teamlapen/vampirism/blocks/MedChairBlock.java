@@ -95,7 +95,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
         //If in creative mode, also destroy the top block. Otherwise, it will be destroyed due to updateShape and an item will drop
         if (!worldIn.isClientSide && player.isCreative()) {
             EnumPart part = state.getValue(PART);
-            if(part == EnumPart.BOTTOM){
+            if (part == EnumPart.BOTTOM) {
                 BlockPos other = pos.relative(getDirectionToOther(state.getValue(PART), state.getValue(FACING)));
                 BlockState otherState = worldIn.getBlockState(other);
                 if (otherState.getBlock() == this && otherState.getValue(PART) == EnumPart.TOP) {

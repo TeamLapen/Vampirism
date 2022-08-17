@@ -4,7 +4,6 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
-
 import org.jetbrains.annotations.NotNull;
 
 public class EntityRequirement implements TaskRequirement.Requirement<EntityType<?>> {

@@ -39,8 +39,9 @@ public class SitUtil {
         if (!level.isClientSide) {
             ResourceLocation id = getDimensionTypeId(level);
 
-            if (!OCCUPIED.containsKey(id))
+            if (!OCCUPIED.containsKey(id)) {
                 OCCUPIED.put(id, new HashMap<>());
+            }
 
             OCCUPIED.get(id).put(blockPos, Pair.of(entity, playerPos));
             return true;
@@ -80,8 +81,9 @@ public class SitUtil {
         if (!level.isClientSide) {
             ResourceLocation id = getDimensionTypeId(level);
 
-            if (OCCUPIED.containsKey(id) && OCCUPIED.get(id).containsKey(pos))
+            if (OCCUPIED.containsKey(id) && OCCUPIED.get(id).containsKey(pos)) {
                 return OCCUPIED.get(id).get(pos).getLeft();
+            }
         }
 
         return null;
@@ -100,8 +102,9 @@ public class SitUtil {
 
             if (OCCUPIED.containsKey(id)) {
                 for (Pair<SitEntity, BlockPos> pair : OCCUPIED.get(id).values()) {
-                    if (pair.getLeft() == sitEntity)
+                    if (pair.getLeft() == sitEntity) {
                         return pair.getRight();
+                    }
                 }
             }
         }
@@ -131,8 +134,9 @@ public class SitUtil {
     public static boolean isPlayerSitting(@NotNull Player player) {
         for (ResourceLocation i : OCCUPIED.keySet()) {
             for (Pair<SitEntity, BlockPos> pair : OCCUPIED.get(i).values()) {
-                if (pair.getLeft().hasPassenger(player))
+                if (pair.getLeft().hasPassenger(player)) {
                     return true;
+                }
             }
         }
 

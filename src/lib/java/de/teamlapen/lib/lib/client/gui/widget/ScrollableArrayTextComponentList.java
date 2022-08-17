@@ -39,11 +39,11 @@ public class ScrollableArrayTextComponentList extends ScrollableListWidget<Pair<
     }
 
     public ScrollableArrayTextComponentList(int xPos, int yPos, int width, int height, int itemHeight, int valueAmount, @NotNull MutableComponent baseName, @NotNull Consumer<Integer> buttonPressed) {
-        super(xPos, yPos, width, height, itemHeight, () -> getItems(createTextArray(valueAmount, baseName)), (item, list) ->  new TextComponentItem<>(item, list, buttonPressed), baseName);
+        super(xPos, yPos, width, height, itemHeight, () -> getItems(createTextArray(valueAmount, baseName)), (item, list) -> new TextComponentItem<>(item, list, buttonPressed), baseName);
     }
 
     public ScrollableArrayTextComponentList(int xPos, int yPos, int width, int height, int itemHeight, int valueAmount, @NotNull MutableComponent baseName, @NotNull Consumer<Integer> buttonPressed, @Nullable BiConsumer<Integer, Boolean> onHover) {
-        super(xPos, yPos, width, height, itemHeight, () -> getItems(createTextArray(valueAmount, baseName)), (item, list) ->  new TextComponentItem<>(item, list, buttonPressed, onHover), baseName);
+        super(xPos, yPos, width, height, itemHeight, () -> getItems(createTextArray(valueAmount, baseName)), (item, list) -> new TextComponentItem<>(item, list, buttonPressed, onHover), baseName);
     }
 
     @Override

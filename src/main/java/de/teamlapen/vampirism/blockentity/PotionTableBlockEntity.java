@@ -151,12 +151,13 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
     @Override
     public <T> net.minecraftforge.common.util.LazyOptional<T> getCapability(@NotNull net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
         if (!this.remove && facing != null && capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            if (facing == Direction.UP)
+            if (facing == Direction.UP) {
                 return handlers[0].cast();
-            else if (facing == Direction.DOWN)
+            } else if (facing == Direction.DOWN) {
                 return handlers[1].cast();
-            else
+            } else {
                 return handlers[2].cast();
+            }
         }
         return super.getCapability(capability, facing);
     }
@@ -377,8 +378,9 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
     private boolean canBrew() {
         ItemStack extraStack = this.brewingItemStacks.get(1);
         ItemStack ingredientStack = this.brewingItemStacks.get(2);
-        if (!ingredientStack.isEmpty())
+        if (!ingredientStack.isEmpty()) {
             return VampirismAPI.extendedBrewingRecipeRegistry().canBrew(brewingItemStacks, ingredientStack, extraStack, this.config, config.multiTaskBrewing ? OUTPUT_SLOTS_EXTENDED : OUTPUT_SLOTS); // divert to VanillaBrewingRegistry
+        }
 
         return false;
     }

@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.command.arguments.FactionArgument;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
-
 import org.jetbrains.annotations.NotNull;
 
 public class GiveBannerCommand extends BasicCommand {

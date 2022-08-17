@@ -115,7 +115,7 @@ public class BloodValueLoader extends SimplePreparableReloadListener<Collection<
                         }
                     }
                 } catch (ResourceLocationException e) {
-                    LOGGER.error(LogUtil.CONFIG,"Id is not valid in file "+modId +".txt"+": " + line , e);
+                    LOGGER.error(LogUtil.CONFIG, "Id is not valid in file " + modId + ".txt" + ": " + line, e);
                 }
 
             }

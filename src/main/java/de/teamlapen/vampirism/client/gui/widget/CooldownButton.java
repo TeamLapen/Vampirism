@@ -29,7 +29,7 @@ public class CooldownButton extends Button {
         ScreenUtils.blitWithBorder(matrixStack, WIDGETS_LOCATION, x, y, 0, 46, this.width, this.height, 200, 20, 3, 0);
         int width = (int) ((1f - progress) * this.width);
         int s = Mth.clamp(width / 2, 0, 3);
-        ScreenUtils.blitWithBorder(matrixStack, WIDGETS_LOCATION, x, y, 0, this.active && this.isHovered? 86 : 66, width, this.height, 200, 20, s, 0);
+        ScreenUtils.blitWithBorder(matrixStack, WIDGETS_LOCATION, x, y, 0, this.active && this.isHovered ? 86 : 66, width, this.height, 200, 20, s, 0);
 //        this.blit(matrixStack, this.x, this.y, 0, 46 + i * 20, this.width / 2, this.height);
 //        this.blit(matrixStack, this.x + this.width / 2, this.y, 200 - this.width / 2, 46 + i * 20, this.width / 2, this.height);
         this.renderBg(matrixStack, minecraft, mouseX, mouseY);

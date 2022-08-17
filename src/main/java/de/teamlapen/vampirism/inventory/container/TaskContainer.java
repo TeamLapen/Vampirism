@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.inventory.container;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import net.minecraft.network.chat.TextColor;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

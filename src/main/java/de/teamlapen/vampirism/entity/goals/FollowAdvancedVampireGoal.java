@@ -63,8 +63,9 @@ public class FollowAdvancedVampireGoal extends Goal {
             }
         }
 
-        if (leader == null) return false;
-        else {
+        if (leader == null) {
+            return false;
+        } else {
             entity.setAdvancedLeader(leader);
             leader.increaseFollowerCount();
             return this.entity.distanceToSqr(leader.getRepresentingEntity()) > DIST;

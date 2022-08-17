@@ -86,8 +86,9 @@ public class DBNOScreen extends Screen {
         }));
         dieButton.active = false;
         resurrectButton = this.addRenderableWidget(new CooldownButton(this.width / 2 - 100, this.height / 4 + 96, 200, 20, Component.translatable("gui.vampirism.dbno.resurrect"), (p_213020_1_) -> {
-            if (this.minecraft.player != null)
+            if (this.minecraft.player != null) {
                 VampirePlayer.getOpt(this.minecraft.player).ifPresent(VampirePlayer::tryResurrect);
+            }
             VampirismMod.dispatcher.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.RESURRECT));
             this.minecraft.setScreen(null);
         }));

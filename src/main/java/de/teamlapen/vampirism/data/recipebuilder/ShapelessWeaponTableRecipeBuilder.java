@@ -81,7 +81,7 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
     }
 
     @Override
-    public void save(@NotNull Consumer<FinishedRecipe> consumerIn,@NotNull ResourceLocation id) {
+    public void save(@NotNull Consumer<FinishedRecipe> consumerIn, @NotNull ResourceLocation id) {
         id = new ResourceLocation(id.getNamespace(), "weapontable/" + id.getPath());
         this.advancement.addCriterion("has_skill", SkillUnlockedTrigger.builder(this.skills != null && this.skills.length >= 1 ? this.skills[0] : HunterSkills.WEAPON_TABLE.get()));
         this.ensureValid(id);
@@ -105,7 +105,7 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
 
     @NotNull
     @Override
-    public ShapelessWeaponTableRecipeBuilder unlockedBy(@NotNull String name,@NotNull CriterionTriggerInstance criterionIn) {
+    public ShapelessWeaponTableRecipeBuilder unlockedBy(@NotNull String name, @NotNull CriterionTriggerInstance criterionIn) {
         return (ShapelessWeaponTableRecipeBuilder) super.unlockedBy(name, criterionIn);
     }
 
@@ -119,7 +119,7 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
         private final ISkill<?>[] skills;
         private final int level;
 
-        public Result(@NotNull ResourceLocation idIn,@NotNull Item resultIn, int countIn,@NotNull String groupIn,@NotNull List<Ingredient> ingredientsIn,@NotNull Advancement.Builder advancementBuilderIn,@NotNull ResourceLocation advancementIdIn, int lavaIn,@NotNull ISkill<?>[] skillsIn, int levelIn) {
+        public Result(@NotNull ResourceLocation idIn, @NotNull Item resultIn, int countIn, @NotNull String groupIn, @NotNull List<Ingredient> ingredientsIn, @NotNull Advancement.Builder advancementBuilderIn, @NotNull ResourceLocation advancementIdIn, int lavaIn, @NotNull ISkill<?>[] skillsIn, int levelIn) {
             super(idIn, resultIn, countIn, groupIn, ingredientsIn, advancementBuilderIn, advancementIdIn);
             this.lava = lavaIn;
             this.skills = skillsIn;
@@ -138,7 +138,7 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
             json.addProperty("lava", this.lava);
             JsonArray skills = new JsonArray();
             for (ISkill<?> skill : this.skills) {
-                skills.add(RegUtil.id(skill) .toString());
+                skills.add(RegUtil.id(skill).toString());
             }
             json.add("skill", skills);
             json.addProperty("level", this.level);

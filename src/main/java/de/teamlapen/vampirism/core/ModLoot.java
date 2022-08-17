@@ -20,7 +20,7 @@ public class ModLoot {
 
     public static final RegistryObject<LootItemFunctionType> add_book_nbt = LOOT_FUNCTION_TYPES.register("add_book_nbt", () -> new LootItemFunctionType(new AddBookNbt.Serializer()));
     public static final RegistryObject<LootItemFunctionType> set_item_blood_charge = LOOT_FUNCTION_TYPES.register("set_item_blood_charge", () -> new LootItemFunctionType(new SetItemBloodCharge.Serializer()));
-    public static final RegistryObject<LootItemFunctionType> add_refinement_set = LOOT_FUNCTION_TYPES.register( "add_refinement_set", () -> new LootItemFunctionType(new RefinementSetFunction.Serializer()));
+    public static final RegistryObject<LootItemFunctionType> add_refinement_set = LOOT_FUNCTION_TYPES.register("add_refinement_set", () -> new LootItemFunctionType(new RefinementSetFunction.Serializer()));
 
     public static final RegistryObject<LootItemConditionType> with_stake = LOOT_CONDITION_TYPES.register("with_stake", () -> new LootItemConditionType(new StakeCondition.Serializer()));
     public static final RegistryObject<LootItemConditionType> adjustable_level = LOOT_CONDITION_TYPES.register("adjustable_level", () -> new LootItemConditionType(new AdjustableLevelCondition.Serializer()));

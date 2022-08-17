@@ -17,8 +17,8 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-
 import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -55,8 +55,8 @@ public class VampirismBoatItem extends Item {
             if (!list.isEmpty()) {
                 Vec3 vec31 = p_77659_2_.getEyePosition();
 
-                for(Entity entity : list) {
-                    AABB aabb = entity.getBoundingBox().inflate((double)entity.getPickRadius());
+                for (Entity entity : list) {
+                    AABB aabb = entity.getBoundingBox().inflate(entity.getPickRadius());
                     if (aabb.contains(vec31)) {
                         return InteractionResultHolder.pass(itemstack);
                     }
@@ -65,7 +65,7 @@ public class VampirismBoatItem extends Item {
 
             if (hitresult.getType() == HitResult.Type.BLOCK) {
                 IVampirismBoat boat = getBoat(p_77659_1_, hitresult);
-                Entity botEntity = (Entity)boat;
+                Entity botEntity = (Entity) boat;
                 boat.setType(this.type);
                 botEntity.setYRot(p_77659_2_.getYRot());
                 if (!p_77659_1_.noCollision(botEntity, botEntity.getBoundingBox())) {
@@ -88,7 +88,7 @@ public class VampirismBoatItem extends Item {
         }
     }
 
-    private @NotNull IVampirismBoat getBoat(Level level, @NotNull HitResult hitResult){
+    private @NotNull IVampirismBoat getBoat(Level level, @NotNull HitResult hitResult) {
         return hasChest ? new VampirismChestBoatEntity(level, hitResult.getLocation().x, hitResult.getLocation().y, hitResult.getLocation().z) : new VampirismBoatEntity(level, hitResult.getLocation().x, hitResult.getLocation().y, hitResult.getLocation().z);
     }
 }

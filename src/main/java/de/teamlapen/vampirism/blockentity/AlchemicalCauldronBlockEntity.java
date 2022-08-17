@@ -106,7 +106,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
     public int getLiquidColorClient() {
 
         ItemStack liquidItem = this.items.get(0);
-        return FluidUtil.getFluidContained(liquidItem).map(fluidStack -> IClientFluidTypeExtensions.of(fluidStack.getFluid()).getTintColor(fluidStack)).orElseGet(()-> ModRecipes.getLiquidColor(liquidItem.getItem()));
+        return FluidUtil.getFluidContained(liquidItem).map(fluidStack -> IClientFluidTypeExtensions.of(fluidStack.getFluid()).getTintColor(fluidStack)).orElseGet(() -> ModRecipes.getLiquidColor(liquidItem.getItem()));
     }
 
     public @NotNull Component getOwnerName() {
@@ -116,10 +116,11 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
     @NotNull
     @Override
     public int[] getSlotsForFace(@NotNull Direction side) {
-        if (side == Direction.DOWN)
+        if (side == Direction.DOWN) {
             return SLOTS_DOWN;
-        else
+        } else {
             return side == Direction.UP ? SLOTS_UP : side == Direction.WEST ? SLOTS_WEST : SLOTS_FUEL;
+        }
     }
 
     @Nullable
@@ -233,9 +234,9 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
                 blockEntity.dataAccess.set(1, blockEntity.dataAccess.get(0));
                 if (blockEntity.isBurning()) {
                     dirty = true;
-                    if (itemstackFuel.hasCraftingRemainingItem())
+                    if (itemstackFuel.hasCraftingRemainingItem()) {
                         blockEntity.items.set(3, itemstackFuel.getCraftingRemainingItem());
-                    else if (!itemstackFuel.isEmpty()) {
+                    } else if (!itemstackFuel.isEmpty()) {
                         Item item = itemstackFuel.getItem();
                         itemstackFuel.shrink(1);
                         if (itemstackFuel.isEmpty()) {

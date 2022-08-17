@@ -28,10 +28,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class AlchemyTableBlock extends HorizontalContainerBlock {
-    public static final BooleanProperty HAS_BOTTLE_INPUT_0 = BooleanProperty.create("has_bottle_input_0");;
-    public static final BooleanProperty HAS_BOTTLE_INPUT_1 = BooleanProperty.create("has_bottle_input_1");;
-    public static final BooleanProperty HAS_BOTTLE_OUTPUT_0 = BooleanProperty.create("has_bottle_output_0");;
-    public static final BooleanProperty HAS_BOTTLE_OUTPUT_1 = BooleanProperty.create("has_bottle_output_1");;
+    public static final BooleanProperty HAS_BOTTLE_INPUT_0 = BooleanProperty.create("has_bottle_input_0");
+    public static final BooleanProperty HAS_BOTTLE_INPUT_1 = BooleanProperty.create("has_bottle_input_1");
+    public static final BooleanProperty HAS_BOTTLE_OUTPUT_0 = BooleanProperty.create("has_bottle_output_0");
+    public static final BooleanProperty HAS_BOTTLE_OUTPUT_1 = BooleanProperty.create("has_bottle_output_1");
     private static final VoxelShape shape = makeShape();
 
     public AlchemyTableBlock() {
@@ -65,7 +65,7 @@ public class AlchemyTableBlock extends HorizontalContainerBlock {
         } else {
             BlockEntity tileentity = level.getBlockEntity(pos);
             if (tileentity instanceof AlchemyTableBlockEntity) {
-                player.openMenu((AlchemyTableBlockEntity)tileentity);
+                player.openMenu((AlchemyTableBlockEntity) tileentity);
                 player.awardStat(ModStats.interact_with_alchemy_table);
             }
 
@@ -78,7 +78,7 @@ public class AlchemyTableBlock extends HorizontalContainerBlock {
         if (stack.hasCustomHoverName()) {
             BlockEntity tileentity = level.getBlockEntity(pos);
             if (tileentity instanceof AlchemyTableBlockEntity) {
-                ((AlchemyTableBlockEntity)tileentity).setCustomName(stack.getHoverName());
+                ((AlchemyTableBlockEntity) tileentity).setCustomName(stack.getHoverName());
             }
         }
     }
@@ -87,7 +87,7 @@ public class AlchemyTableBlock extends HorizontalContainerBlock {
     public void onRemove(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state1, boolean p_196243_5_) {
         if (!state.is(state1.getBlock())) {
             BlockEntity tileEntity = level.getBlockEntity(pos);
-            if (tileEntity instanceof AlchemyTableBlockEntity){
+            if (tileEntity instanceof AlchemyTableBlockEntity) {
                 Containers.dropContents(level, pos, ((AlchemyTableBlockEntity) tileEntity));
             }
             super.onRemove(state, level, pos, state1, p_196243_5_);

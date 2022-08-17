@@ -23,8 +23,6 @@ import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.NotNull;
-
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class Trades {
@@ -194,16 +192,16 @@ public class Trades {
                 return null;
             } else {
                 Biome biome = serverlevel.getServer().registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getOptional(destination).orElse(null);
-                if(biome==null){
-                    LogManager.getLogger().warn("Cannot find destination biome in registry{}",destination);
+                if (biome == null) {
+                    LogManager.getLogger().warn("Cannot find destination biome in registry{}", destination);
                     return null;
                 }
                 Pair<BlockPos, Holder<Biome>> blockpos = serverlevel.findClosestBiome3d(b -> b.is(destination), pTrader.blockPosition(), 2400, 8, 16); //TOD check
                 if (blockpos != null) {
-                    ItemStack itemstack = MapItem.create(serverlevel, blockpos.getFirst().getX(), blockpos.getFirst().getZ(), (byte)3, true, true);
+                    ItemStack itemstack = MapItem.create(serverlevel, blockpos.getFirst().getX(), blockpos.getFirst().getZ(), (byte) 3, true, true);
                     MapItem.renderBiomePreviewMap(serverlevel, itemstack);
                     MapItemSavedData.addTargetDecoration(itemstack, blockpos.getFirst(), "+", MapDecoration.Type.TARGET_POINT);
-                    itemstack.setHoverName(Component.translatable("biome."+destination.location().getNamespace()+ "."+destination.location().getPath()));
+                    itemstack.setHoverName(Component.translatable("biome." + destination.location().getNamespace() + "." + destination.location().getPath()));
                     return new MerchantOffer(new ItemStack(Items.EMERALD, this.emeraldCost), new ItemStack(Items.COMPASS), itemstack, this.maxUses, this.villagerXp, 0.2F);
                 } else {
                     return null;
@@ -222,8 +220,11 @@ public class Trades {
         }
 
         int getPrice(@NotNull RandomSource rand) {
-            if (min >= max) return min;
-            else return min + rand.nextInt(max - min);
+            if (min >= max) {
+                return min;
+            } else {
+                return min + rand.nextInt(max - min);
+            }
         }
     }
 }

@@ -260,7 +260,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
                         case STATS -> Component.translatable("stat." + requirement.getStat(this.factionPlayer).toString().replace(':', '.')).append(" " + completedAmount + "/" + requirement.getAmount(this.factionPlayer));
                         case ENTITY -> (((EntityType<?>) requirement.getStat(this.factionPlayer)).getDescription().plainCopy().append(" " + completedAmount + "/" + requirement.getAmount(this.factionPlayer)));
                         case ENTITY_TAG ->
-                                //noinspection unchecked
+                            //noinspection unchecked
                                 Component.translatable("tasks.vampirism." + ((TagKey<EntityType<?>>) requirement.getStat(this.factionPlayer)).location()).append(" " + completedAmount + "/" + requirement.getAmount(this.factionPlayer));
                         default -> Component.translatable(task.getTranslationKey() + ".req." + requirement.getId().toString().replace(':', '.'));
                     };
@@ -316,11 +316,13 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
         int completedAmount = this.screen.getTaskContainer().getRequirementStatus(this.item, requirement);
         switch (requirement.getType()) {
             case ITEMS -> this.renderItemTooltip(mStack, ((ItemRequirement) requirement).getItemStack(), x, y, (completed ? REQUIREMENT_STRIKE : REQUIREMENT), completed, notAccepted ? null : (completedAmount + "/"));
-            case ENTITY -> this.renderGenericRequirementTooltip(mStack, TaskRequirement.Type.ENTITY, x, y, ((EntityType<?>) requirement.getStat(this.factionPlayer)).getDescription().plainCopy().append((notAccepted ? " " : (" " + (completedAmount + "/"))) + requirement.getAmount(this.factionPlayer)), completed);
+            case ENTITY ->
+                    this.renderGenericRequirementTooltip(mStack, TaskRequirement.Type.ENTITY, x, y, ((EntityType<?>) requirement.getStat(this.factionPlayer)).getDescription().plainCopy().append((notAccepted ? " " : (" " + (completedAmount + "/"))) + requirement.getAmount(this.factionPlayer)), completed);
             case ENTITY_TAG ->
-                    //noinspection unchecked
+                //noinspection unchecked
                     this.renderGenericRequirementTooltip(mStack, TaskRequirement.Type.ENTITY_TAG, x, y, Component.translatable("tasks.vampirism." + ((TagKey<EntityType<?>>) requirement.getStat(this.factionPlayer)).location()).append((notAccepted ? " " : (" " + (completedAmount + "/"))) + requirement.getAmount(this.factionPlayer)), completed);
-            case STATS -> this.renderGenericRequirementTooltip(mStack, TaskRequirement.Type.STATS, x, y, Component.translatable("stat." + requirement.getStat(this.factionPlayer).toString().replace(':', '.')).append((notAccepted ? " " : (" " + (completedAmount + "/"))) + requirement.getAmount(this.factionPlayer)), completed);
+            case STATS ->
+                    this.renderGenericRequirementTooltip(mStack, TaskRequirement.Type.STATS, x, y, Component.translatable("stat." + requirement.getStat(this.factionPlayer).toString().replace(':', '.')).append((notAccepted ? " " : (" " + (completedAmount + "/"))) + requirement.getAmount(this.factionPlayer)), completed);
             default -> this.renderDefaultRequirementToolTip(mStack, task, requirement, x, y, completed);
         }
     }

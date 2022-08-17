@@ -9,9 +9,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.stream.Stream;
 
 public class NBTIngredient extends Ingredient {
@@ -24,13 +24,12 @@ public class NBTIngredient extends Ingredient {
     }
 
     @Override
-    public boolean test(@Nullable ItemStack input)
-    {
+    public boolean test(@Nullable ItemStack input) {
         if (input == null) {
             return false;
         }
         for (ItemStack stack : stacks) {
-            if(stack.getItem() == input.getItem() && stack.getDamageValue() == input.getDamageValue() && stack.areShareTagsEqual(input)) {
+            if (stack.getItem() == input.getItem() && stack.getDamageValue() == input.getDamageValue() && stack.areShareTagsEqual(input)) {
                 return true;
             }
         }
@@ -38,8 +37,7 @@ public class NBTIngredient extends Ingredient {
     }
 
     @Override
-    public boolean isSimple()
-    {
+    public boolean isSimple() {
         return false;
     }
 

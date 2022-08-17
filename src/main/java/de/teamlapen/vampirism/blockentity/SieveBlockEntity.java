@@ -45,8 +45,9 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
     @Override
     @NotNull
     public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction facing) {
-        if ((facing != Direction.DOWN) && capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+        if ((facing != Direction.DOWN) && capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
             return cap.cast();
+        }
         return super.getCapability(capability, facing);
     }
 
@@ -81,8 +82,9 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
     public void onDataPacket(Connection net, @NotNull ClientboundBlockEntityDataPacket pkt) {
         boolean old = active;
         active = pkt.getTag().getBoolean("active");
-        if (active != old && level != null)
+        if (active != old && level != null) {
             this.level.sendBlockUpdated(getBlockPos(), level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
+        }
 
     }
 
@@ -130,8 +132,9 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
     private void setActive(boolean active, @NotNull BlockState blockState) {
         if (this.active != active) {
             this.active = active;
-            if (this.level != null && blockState.getBlock() == ModBlocks.BLOOD_SIEVE.get())
+            if (this.level != null && blockState.getBlock() == ModBlocks.BLOOD_SIEVE.get()) {
                 this.level.setBlockAndUpdate(getBlockPos(), blockState.setValue(SieveBlock.PROPERTY_ACTIVE, active));
+            }
         }
     }
 
@@ -143,8 +146,9 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
 
         @Override
         public int fill(@NotNull FluidStack resource, @NotNull FluidAction action) {
-            if (!BloodConversionRegistry.existsBloodValue(resource.getFluid()))
+            if (!BloodConversionRegistry.existsBloodValue(resource.getFluid())) {
                 return 0;
+            }
             FluidStack converted = BloodConversionRegistry.getBloodFromFluid(resource);
             int filled = super.fill(converted, action);
             if (action.execute()) SieveBlockEntity.this.cooldownPull = 10;

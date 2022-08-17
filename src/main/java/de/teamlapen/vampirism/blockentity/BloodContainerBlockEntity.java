@@ -102,8 +102,9 @@ public class BloodContainerBlockEntity extends net.minecraftforge.fluids.capabil
     @Override
     public void setChanged() {
         if (level != null) {
-            if (level.isClientSide)
+            if (level.isClientSide) {
                 updateModelData(true);
+            }
             level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
             super.setChanged();
         }

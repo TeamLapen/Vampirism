@@ -27,8 +27,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import org.jetbrains.annotations.NotNull;
-
 public class TaskRecipeCategory implements IRecipeCategory<Task> {
     private final @NotNull IDrawable background;
     private final @NotNull IDrawable icon;

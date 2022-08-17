@@ -38,9 +38,9 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.api.Event;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Objects;
 import java.util.Optional;
 
@@ -49,7 +49,8 @@ import java.util.Optional;
  */
 public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapabilityInst, IFactionPlayerHandler {
     private final static Logger LOGGER = LogManager.getLogger(FactionPlayerHandler.class);
-    public static final Capability<IFactionPlayerHandler> CAP = CapabilityManager.get(new CapabilityToken<>(){});
+    public static final Capability<IFactionPlayerHandler> CAP = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
     /**
      * Must check Entity#isAlive before
@@ -75,14 +76,13 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     /**
      * Resolves the FactionPlayerHandler capability (prints a warning message if not present) and returns an Optional of the current IFactionPlayer instance
      */
-    public static @NotNull Optional<? extends IFactionPlayer<?>> getCurrentFactionPlayer(@NotNull Player player){
+    public static @NotNull Optional<? extends IFactionPlayer<?>> getCurrentFactionPlayer(@NotNull Player player) {
         LazyOptional<FactionPlayerHandler> opt = player.getCapability(CAP, null).cast();
         if (!opt.isPresent()) {
             LOGGER.warn("Cannot get Faction player capability. This might break mod functionality.", new Throwable().fillInStackTrace());
         }
         return opt.resolve().flatMap(FactionPlayerHandler::getCurrentFactionPlayer);
     }
-
 
 
     public static @NotNull ICapabilityProvider createNewCapability(final Player player) {
@@ -407,7 +407,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     @Override
     public void leaveFaction(boolean die) {
         IFaction<?> oldFaction = currentFaction;
-        if(oldFaction==null)return;
+        if (oldFaction == null) return;
         setFactionAndLevel(null, 0);
         player.displayClientMessage(Component.translatable("command.vampirism.base.level.successful", player.getName(), oldFaction.getName(), 0), true);
         if (die) {
@@ -428,25 +428,24 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         // Read bound actions from legacy format
         if (nbt.contains("bound1")) {
             IAction<?> i = RegUtil.getAction(new ResourceLocation(nbt.getString("bound1")));
-            if(i!=null)this.boundActions.put(1,i);
+            if (i != null) this.boundActions.put(1, i);
         }
         if (nbt.contains("bound2")) {
             IAction<?> i = RegUtil.getAction(new ResourceLocation(nbt.getString("bound2")));
-            if(i!=null)this.boundActions.put(2,i);
+            if (i != null) this.boundActions.put(2, i);
         }
         if (nbt.contains("bound3")) {
             IAction<?> i = RegUtil.getAction(new ResourceLocation(nbt.getString("bound3")));
-            if(i!=null)this.boundActions.put(3,i);
+            if (i != null) this.boundActions.put(3, i);
         }
         // Read bound actions from new format
         CompoundTag bounds = nbt.getCompound("bound_actions");
         for (String s : bounds.getAllKeys()) {
             int id = Integer.parseInt(s);
             IAction<?> action = RegUtil.getAction(new ResourceLocation(bounds.getString(s)));
-            if(action == null){
+            if (action == null) {
                 LOGGER.warn("Cannot find bound action {}", bounds.getString(s));
-            }
-            else{
+            } else {
                 this.boundActions.put(id, action);
             }
         }

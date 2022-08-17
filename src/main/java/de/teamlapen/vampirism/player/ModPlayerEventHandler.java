@@ -157,7 +157,7 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void onTryMount(@NotNull EntityMountEvent event){
+    public void onTryMount(@NotNull EntityMountEvent event) {
         if (event.getEntity() instanceof Player && VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().isCannotInteract()) {
             event.setCanceled(true);
         }
@@ -202,23 +202,23 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void onBlockPlaced(BlockEvent.@NotNull EntityPlaceEvent event) {
         if (!(event.getEntity() instanceof Player) || !event.getEntity().isAlive()) return;
-        if(event.getPlacedBlock().isAir()) return; //If for some reason, cough Create cough, a block is removed (so air is placed) we don't want to prevent that.
+        if (event.getPlacedBlock().isAir()) return; //If for some reason, cough Create cough, a block is removed (so air is placed) we don't want to prevent that.
         try {
             if (VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().isCannotInteract()) {
                 event.setCanceled(true);
 
                 //Workaround for https://github.com/MinecraftForge/MinecraftForge/issues/7609 or https://github.com/TeamLapen/Vampirism/issues/1021
                 //Chest drops content when restoring snapshot
-                if(event.getPlacedBlock().hasBlockEntity()){
-                    BlockEntity t =  event.getLevel().getBlockEntity(event.getPos());
-                    if(t instanceof Container){
+                if (event.getPlacedBlock().hasBlockEntity()) {
+                    BlockEntity t = event.getLevel().getBlockEntity(event.getPos());
+                    if (t instanceof Container) {
                         ((Container) t).clearContent();
                     }
                 }
 
-                if(event.getEntity() instanceof ServerPlayer){ //For some reason this event is only run serverside. Therefore, we have to make sure the client is notified about the not-placed block.
+                if (event.getEntity() instanceof ServerPlayer) { //For some reason this event is only run serverside. Therefore, we have to make sure the client is notified about the not-placed block.
                     MinecraftServer server = event.getEntity().level.getServer();
-                    if(server!=null){
+                    if (server != null) {
                         server.getPlayerList().sendAllPlayerInfo((ServerPlayer) event.getEntity()); //Would probably suffice to just sent a SHeldItemChangePacket
                     }
                 }
@@ -311,8 +311,9 @@ public class ModPlayerEventHandler {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onLivingDeathFirst(@NotNull LivingDeathEvent event) {
         if (event.getEntity() instanceof Player) {
-            if (VampirePlayer.getOpt((Player) event.getEntity()).map(v -> v.onDeadlyHit(event.getSource())).orElse(false))
+            if (VampirePlayer.getOpt((Player) event.getEntity()).map(v -> v.onDeadlyHit(event.getSource())).orElse(false)) {
                 event.setCanceled(true);
+            }
         }
     }
 
@@ -481,19 +482,22 @@ public class ModPlayerEventHandler {
             LazyOptional<FactionPlayerHandler> handler = FactionPlayerHandler.getOpt(player);
             IFaction<?> usingFaction = item.getExclusiveFaction(stack);
             ISkill<?> requiredSkill = item.getRequiredSkill(stack);
-            if (usingFaction != null && !handler.map(h->h.isInFaction(usingFaction)).orElse(false)) {
-                if (message)
+            if (usingFaction != null && !handler.map(h -> h.isInFaction(usingFaction)).orElse(false)) {
+                if (message) {
                     player.displayClientMessage(Component.translatable("text.vampirism.can_only_be_used_by", usingFaction.getNamePlural()), true);
+                }
                 return false;
             } else if (handler.map(FactionPlayerHandler::getCurrentLevel).orElse(0) < item.getMinLevel(stack)) {
-                if (message)
+                if (message) {
                     player.displayClientMessage(Component.translatable("text.vampirism.can_only_be_used_by_level", usingFaction == null ? Component.translatable("text.vampirism.all") : usingFaction.getNamePlural(), item.getMinLevel(stack)), true);
+                }
                 return false;
             } else if (requiredSkill != null) {
                 IFactionPlayer<?> factionPlayer = handler.resolve().flatMap(FactionPlayerHandler::getCurrentFactionPlayer).orElse(null);
                 if (factionPlayer == null || !factionPlayer.getSkillHandler().isSkillEnabled(requiredSkill)) {
-                    if (message)
+                    if (message) {
                         player.displayClientMessage(Component.translatable("text.vampirism.can_only_be_used_with_skill", requiredSkill.getName()), true);
+                    }
                     return false;
                 }
             }
@@ -504,13 +508,13 @@ public class ModPlayerEventHandler {
 
 
     @SubscribeEvent
-    public void onPlayerAttackCritical(@NotNull CriticalHitEvent event){
+    public void onPlayerAttackCritical(@NotNull CriticalHitEvent event) {
         ItemStack stack = event.getEntity().getMainHandItem();
         if (!stack.isEmpty() && stack.getItem() instanceof IFactionSlayerItem item) {
             IFaction<?> faction = VampirismAPI.factionRegistry().getFaction(event.getTarget());
             if (faction != null && faction.equals(item.getSlayedFaction())) {
                 event.setResult(Event.Result.ALLOW);
-                event.setDamageModifier(event.getDamageModifier() + (event.getOldDamageModifier() * (item.getDamageMultiplierForFaction(stack)-1)));
+                event.setDamageModifier(event.getDamageModifier() + (event.getOldDamageModifier() * (item.getDamageMultiplierForFaction(stack) - 1)));
             }
         }
     }

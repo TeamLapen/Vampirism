@@ -173,7 +173,7 @@ public class BloodStats implements IBloodStats {
      * @param ignoreModifier If the entity exhaustion attribute {@link de.teamlapen.vampirism.core.ModAttributes#BLOOD_EXHAUSTION} should be ignored
      */
     void addExhaustion(float amount, boolean ignoreModifier) {
-        if  (!ignoreModifier) {
+        if (!ignoreModifier) {
             AttributeInstance attribute = player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get());
             amount *= attribute.getValue();
         }

@@ -27,9 +27,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
-
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -55,7 +54,7 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
             public @NotNull Model getGenericArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<?> original) {
                 return switch (RegUtil.id(VampireClothingItem.this).getPath()) {
                     case "vampire_clothing_crown" -> ClothingCrownModel.getAdjustedInstance(original);
-                    case "vampire_clothing_legs" ->  ClothingPantsModel.getAdjustedInstance(original);
+                    case "vampire_clothing_legs" -> ClothingPantsModel.getAdjustedInstance(original);
                     case "vampire_clothing_boots" -> ClothingBootsModel.getAdjustedInstance(original);
                     case "vampire_clothing_hat" -> VampireHatModel.getAdjustedInstance(original);
                     default -> DummyClothingModel.getAdjustedInstance(original);

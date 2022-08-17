@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-
 import org.jetbrains.annotations.NotNull;
 
 public class SanguinareEffectInstance extends MobEffectInstance {

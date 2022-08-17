@@ -19,8 +19,8 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.common.loot.LootModifier;
-
 import org.jetbrains.annotations.NotNull;
+
 import java.util.stream.Collector;
 
 public class SmeltItemLootModifier extends LootModifier {

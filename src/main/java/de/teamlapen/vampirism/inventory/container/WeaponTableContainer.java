@@ -26,8 +26,8 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.network.IContainerFactory;
-
 import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -287,7 +287,7 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
          * but nbt check removed
          */
         public int findSlotMatchingUnusedItem(@NotNull ItemStack p_36044_) {
-            for(int i = 0; i < this.inventory.items.size(); ++i) {
+            for (int i = 0; i < this.inventory.items.size(); ++i) {
                 ItemStack itemstack = this.inventory.items.get(i);
                 //    do not check for nbt tag here    //
                 if (!this.inventory.items.get(i).isEmpty() && p_36044_.is(itemstack.getItem()) && !this.inventory.items.get(i).isDamaged() && !itemstack.isEnchanted() && !itemstack.hasCustomHoverName()) {

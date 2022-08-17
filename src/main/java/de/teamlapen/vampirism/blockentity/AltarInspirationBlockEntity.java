@@ -103,8 +103,9 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
     @Override
     public void setChanged() {
         if (level != null) {
-            if (level.isClientSide)
+            if (level.isClientSide) {
                 updateModelData(true);
+            }
             level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
             super.setChanged();
         }
@@ -115,14 +116,16 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
         targetLevel = VampirismPlayerAttributes.get(p).vampireLevel + 1;
         VampireLevelingConf levelingConf = VampireLevelingConf.getInstance();
         if (!levelingConf.isLevelValidForAltarInspiration(targetLevel)) {
-            if (p.level.isClientSide)
+            if (p.level.isClientSide) {
                 p.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual_level_wrong"), true);
+            }
             return;
         }
         int neededBlood = levelingConf.getRequiredBloodForAltarInspiration(targetLevel) * VReference.FOOD_TO_FLUID_BLOOD;
         if (tank.getFluidAmount() + 99 < neededBlood) {//Since the container can only be filled in 100th steps
-            if (p.level.isClientSide)
+            if (p.level.isClientSide) {
                 p.displayClientMessage(Component.translatable("text.vampirism.not_enough_blood"), true);
+            }
             return;
         }
         if (!p.level.isClientSide) {
@@ -135,8 +138,9 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
     }
 
     public static void serverTick(@NotNull Level level, @NotNull BlockPos pos, BlockState state, @NotNull AltarInspirationBlockEntity blockEntity) {
-        if (blockEntity.ritualTicksLeft == 0 || blockEntity.ritualPlayer == null || !blockEntity.ritualPlayer.isAlive())
+        if (blockEntity.ritualTicksLeft == 0 || blockEntity.ritualPlayer == null || !blockEntity.ritualPlayer.isAlive()) {
             return;
+        }
 
         switch (blockEntity.ritualTicksLeft) {
             case 5 -> {
@@ -151,7 +155,7 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
                 int blood = levelingConf.getRequiredBloodForAltarInspiration(blockEntity.targetLevel) * VReference.FOOD_TO_FLUID_BLOOD;
                 ((InternalTank) blockEntity.tank).doDrain(blood, IFluidHandler.FluidAction.EXECUTE);
                 blockEntity.ritualPlayer.addEffect(new MobEffectInstance(MobEffects.REGENERATION, blockEntity.targetLevel * 10 * 20));
-                FactionPlayerHandler.getOpt(blockEntity.ritualPlayer).ifPresent(h->h.setFactionLevel(VReference.VAMPIRE_FACTION, blockEntity.targetLevel));
+                FactionPlayerHandler.getOpt(blockEntity.ritualPlayer).ifPresent(h -> h.setFactionLevel(VReference.VAMPIRE_FACTION, blockEntity.targetLevel));
                 VampirePlayer.getOpt(blockEntity.ritualPlayer).ifPresent(v -> v.drinkBlood(Integer.MAX_VALUE, 0, false));
             }
         }

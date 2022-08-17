@@ -42,7 +42,7 @@ public class AlchemicalCauldronScreen extends AbstractContainerScreen<Alchemical
 
         int l = menu.getBurnProgress();
         this.blit(stack, i + 79, j + 34, 176, 14, l + 1, 16);
-        l = (int)(l / 24F * 30F);
+        l = (int) (l / 24F * 30F);
         this.blit(stack, i + 142, j + 28 + 30 - l, 176, 60 - l, 12, l);
     }
 

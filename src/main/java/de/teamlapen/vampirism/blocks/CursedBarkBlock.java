@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class CursedBarkBlock extends Block {
 
-    private static final VoxelShape shape =  Shapes.empty();
+    private static final VoxelShape shape = Shapes.empty();
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final DirectionProperty FACING2 = DirectionProperty.create("facing_2", Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.UP, Direction.DOWN);
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
@@ -97,7 +97,7 @@ public class CursedBarkBlock extends Block {
     public boolean canSurvive(@NotNull BlockState state, @NotNull LevelReader worldReader, @NotNull BlockPos blockPos) {
         Direction mainDirection = state.getValue(FACING);
         Direction secondaryDirection = state.getValue(FACING2);
-        BlockPos pos =  blockPos.relative(secondaryDirection);
+        BlockPos pos = blockPos.relative(secondaryDirection);
         if (mainDirection != secondaryDirection) {
             pos = pos.relative(mainDirection);
         }

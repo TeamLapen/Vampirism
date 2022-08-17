@@ -9,8 +9,8 @@ import net.minecraft.world.item.Item;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
-
 import org.jetbrains.annotations.NotNull;
+
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -24,7 +24,7 @@ public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> imp
     private final NonNullSupplier<Capability<T>> playerCapabilitySupplier;
     private final BiFunction<Integer, Boolean, Component> lordTitleFunction;
     private final Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot;
-    private boolean hasLordSkills;
+    private final boolean hasLordSkills;
 
     PlayableFaction(FactionRegistry.@NotNull PlayableFactionBuilder<T> builder) {
         super(builder);

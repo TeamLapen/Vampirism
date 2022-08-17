@@ -30,9 +30,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Optional;
 
 public class HunterTaskMasterEntity extends HunterBaseEntity implements IDefaultTaskMasterEntity {
@@ -107,8 +107,9 @@ public class HunterTaskMasterEntity extends HunterBaseEntity implements IDefault
     @NotNull
     @Override
     protected InteractionResult mobInteract(@NotNull Player playerEntity, @NotNull InteractionHand hand) {
-        if (this.level.isClientSide)
+        if (this.level.isClientSide) {
             return Helper.isHunter(playerEntity) ? InteractionResult.SUCCESS : InteractionResult.PASS;
+        }
         if (Helper.isHunter(playerEntity) && interactor == null) {
             if (this.processInteraction(playerEntity, this)) {
                 this.getNavigation().stop();

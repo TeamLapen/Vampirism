@@ -8,7 +8,6 @@ import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,8 +24,9 @@ abstract class VampirismBESR<T extends BlockEntity> implements BlockEntityRender
     protected void adjustRotatePivotViaState(@Nullable BlockEntity tile, @NotNull PoseStack matrixStack) {
         if (tile == null) return;
         Direction dir = Direction.NORTH;
-        if (tile.getLevel() != null)
+        if (tile.getLevel() != null) {
             dir = tile.getLevel().getBlockState(tile.getBlockPos()).getValue(HorizontalDirectionalBlock.FACING);
+        }
         matrixStack.mulPose(Vector3f.YP.rotationDegrees((dir.get2DDataValue() - 2) * -90));
     }
 }

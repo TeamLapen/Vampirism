@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.player.vampire;
 
 import com.google.common.collect.Maps;
-
 import org.jetbrains.annotations.NotNull;
+
 import java.util.Map;
 
 /**

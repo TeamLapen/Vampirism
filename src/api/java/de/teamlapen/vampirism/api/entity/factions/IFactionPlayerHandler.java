@@ -112,6 +112,7 @@ public interface IFactionPlayerHandler extends ILordPlayer {
 
     /**
      * Leave the current faction (if in any) by setting current faction to null and level to 0.
+     *
      * @param die Whether to attack the player with deadly damage
      */
     void leaveFaction(boolean die);

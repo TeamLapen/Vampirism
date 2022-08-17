@@ -38,8 +38,8 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.jetbrains.annotations.NotNull;
+
 import java.util.function.Predicate;
 
 /**
@@ -49,7 +49,8 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
 
     private static final Logger LOGGER = LogManager.getLogger(HunterPlayer.class);
 
-    public static final Capability<IHunterPlayer> CAP = CapabilityManager.get(new CapabilityToken<>(){});
+    public static final Capability<IHunterPlayer> CAP = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
     /**
      * Don't call before the construction event of the player entity is finished

@@ -182,8 +182,9 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         //Eye height is set in {@link ModPlayerEventHandler} on {@link EyeHeight} event
         //Entity size is hacked in via {@link ASMHooks}
         player.refreshDimensions();
-        if (bat)
+        if (bat) {
             player.setPos(player.getX(), player.getY() + (PLAYER_HEIGHT - BAT_SIZE.height), player.getZ());
+        }
     }
 
     @Override

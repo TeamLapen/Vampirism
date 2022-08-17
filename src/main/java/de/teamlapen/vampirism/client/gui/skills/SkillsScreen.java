@@ -80,7 +80,7 @@ public class SkillsScreen extends Screen {
 
     @Override
     protected void init() {
-        assert this.minecraft!=null;
+        assert this.minecraft != null;
         this.tabs.clear();
         this.guiLeft = (this.width - SCREEN_WIDTH) / 2;
         this.guiTop = (this.height - SCREEN_HEIGHT) / 2;
@@ -95,7 +95,7 @@ public class SkillsScreen extends Screen {
         }
 
         if (this.tabs.size() > 0) {
-            this.selectedTab = this.tabs.get(this.selectedTab == null ?0: this.selectedTab.getIndex());
+            this.selectedTab = this.tabs.get(this.selectedTab == null ? 0 : this.selectedTab.getIndex());
         }
 
         if (this.backScreen != null) {
@@ -152,7 +152,7 @@ public class SkillsScreen extends Screen {
             RenderSystem.disableDepthTest();
         } else {
             stack.pushPose();
-            stack.translate(x + 9,y + 18,0);
+            stack.translate(x + 9, y + 18, 0);
             fill(stack, 0, 0, SCREEN_WIDTH - 18, SCREEN_HEIGHT - 27, -16777216);
             int i = 117;
             drawCenteredString(stack, this.font, NO_TABS_LABEL, i, 56 - 9 / 2, -1);
@@ -218,7 +218,7 @@ public class SkillsScreen extends Screen {
         }
         if (button == 0) {
             this.clicked = true;
-            this.mousePos = new Vec3( mouseX, mouseY, 0);
+            this.mousePos = new Vec3(mouseX, mouseY, 0);
             for (SkillsTabScreen tab : this.tabs) {
                 if (tab != this.selectedTab && tab.isMouseOver(this.guiLeft, this.guiTop, mouseX, mouseY)) {
                     this.selectedTab = tab;

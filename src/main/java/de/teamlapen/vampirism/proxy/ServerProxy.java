@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.blocks.TentBlock;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,7 +37,7 @@ public class ServerProxy extends CommonProxy {
                 if (state.getBlock() instanceof TentBlock) {
                     TentBlock.setTentSleepPosition(player, pos, player.level.getBlockState(pos).getValue(POSITION), player.level.getBlockState(pos).getValue(FACING));
                 } else if (state.getBlock() instanceof CoffinBlock) {
-                    CoffinBlock.setCoffinSleepPosition(player,pos, state);
+                    CoffinBlock.setCoffinSleepPosition(player, pos, state);
                 }
             });
         }

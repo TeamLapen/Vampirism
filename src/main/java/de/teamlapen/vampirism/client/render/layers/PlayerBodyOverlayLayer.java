@@ -15,7 +15,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
-
 import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
@@ -35,12 +34,12 @@ public class PlayerBodyOverlayLayer<T extends MinionEntity<?> & IPlayerOverlay, 
         ((AgeableModelAccessor) this.getParentModel()).getBodyParts_vampirism().forEach(
                 b -> b.visible = true
         );
-        (this.getParentModel()).hat.visible=false; //For some reason the hat is part of the body parts and not head parts
+        (this.getParentModel()).hat.visible = false; //For some reason the hat is part of the body parts and not head parts
         ((AgeableModelAccessor) this.getParentModel()).getBodyParts_vampirism().forEach(b -> b.render(matrixStackIn, vertexBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1));
         ((AgeableModelAccessor) this.getParentModel()).getBodyParts_vampirism().forEach(
                 b -> b.visible = false
         );
-        (this.getParentModel()).hat.visible=true;
+        (this.getParentModel()).hat.visible = true;
 
     }
 }

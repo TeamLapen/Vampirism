@@ -3,8 +3,8 @@ package de.teamlapen.vampirism.player.tasks.req;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import net.minecraft.resources.ResourceLocation;
-
 import org.jetbrains.annotations.NotNull;
+
 import java.util.function.Function;
 
 public class BooleanRequirement implements TaskRequirement.Requirement<Boolean> {

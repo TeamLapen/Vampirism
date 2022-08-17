@@ -51,8 +51,9 @@ public class ProgressBar extends AbstractWidget {
 
     @Override
     public void renderToolTip(@NotNull PoseStack matrixStack, int mouseX, int mouseY) {
-        if (this.active)
+        if (this.active) {
             screen.renderTooltip(matrixStack, Component.literal("" + ((int) (progress * 100f)) + "%"), mouseX, mouseY);
+        }
 
     }
 

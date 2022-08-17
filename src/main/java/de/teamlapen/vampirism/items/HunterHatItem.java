@@ -44,6 +44,7 @@ public class HunterHatItem extends VampirismHunterArmor {
     }
 
     private String descriptionId;
+
     @Override
     @NotNull
     protected String getOrCreateDescriptionId() {

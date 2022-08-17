@@ -11,8 +11,8 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
-
 import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -47,7 +47,7 @@ public abstract class LordRangeEffectAction<T extends IFactionPlayer<T>> extends
         return getEffectDuration(player);
     }
 
-    protected int getEffectAmplifier(@NotNull T player){
+    protected int getEffectAmplifier(@NotNull T player) {
         return ((IVampirismPlayer) player.getRepresentingPlayer()).getVampAtts().lordLevel - 1;
     }
 

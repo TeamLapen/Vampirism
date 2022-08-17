@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.effects;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
-
 import org.jetbrains.annotations.NotNull;
 
 
@@ -25,9 +24,10 @@ public class VampirismPoisonEffect extends VampirismEffect {
     @Override
     public boolean isDurationEffectTick(int duration, int amplifier) {
         int j = 25 >> amplifier;
-        if (j > 0)
+        if (j > 0) {
             return duration % j == 0;
-        else
+        } else {
             return true;
+        }
     }
 }

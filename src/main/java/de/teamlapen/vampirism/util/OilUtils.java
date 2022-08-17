@@ -8,8 +8,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.tuple.Pair;
-
 import org.jetbrains.annotations.NotNull;
+
 import java.util.Optional;
 
 public class OilUtils {
@@ -45,7 +45,7 @@ public class OilUtils {
     public static boolean reduceAppliedOilDuration(@NotNull ItemStack stack, IApplicableOil oil, int durationReduction) {
         CompoundTag compound = stack.getOrCreateTag().getCompound("applied_oil");
         if (compound.getString("oil").equals(RegUtil.id(oil).toString())) {
-            int duration = compound.getInt("duration") -durationReduction;
+            int duration = compound.getInt("duration") - durationReduction;
             if (duration <= 0) {
                 removeAppliedOil(stack);
                 return true;

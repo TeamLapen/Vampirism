@@ -81,6 +81,7 @@ public class ModKeys {
         event.register(ACTION3);
         event.register(MINION);
     }
+
     public static void register() {
         MinecraftForge.EVENT_BUS.register(new ModKeys());
     }

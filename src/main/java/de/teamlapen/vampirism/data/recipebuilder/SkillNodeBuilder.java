@@ -20,12 +20,12 @@ public class SkillNodeBuilder {
     }
 
     @SafeVarargs
-    public static SkillNodeBuilder hunter(@NotNull ResourceLocation parent,@NotNull ISkill<IHunterPlayer>... skills) {
+    public static SkillNodeBuilder hunter(@NotNull ResourceLocation parent, @NotNull ISkill<IHunterPlayer>... skills) {
         return skill(parent, skills).faction(VReference.HUNTER_FACTION);
     }
 
     @SafeVarargs
-    public static SkillNodeBuilder vampire(@NotNull ResourceLocation parent,@NotNull  ISkill<IVampirePlayer>... skills) {
+    public static SkillNodeBuilder vampire(@NotNull ResourceLocation parent, @NotNull ISkill<IVampirePlayer>... skills) {
         return skill(parent, skills).faction(VReference.VAMPIRE_FACTION);
     }
 
@@ -34,7 +34,7 @@ public class SkillNodeBuilder {
     private ResourceLocation faction;
     private ResourceLocation[] lockingSkillNodes;
 
-    public SkillNodeBuilder(@NotNull ResourceLocation parent,@NotNull ISkill<?>... skills) {
+    public SkillNodeBuilder(@NotNull ResourceLocation parent, @NotNull ISkill<?>... skills) {
         this.parent = parent;
         this.skills = skills;
         this.lockingSkillNodes = new ResourceLocation[0];
@@ -72,7 +72,7 @@ public class SkillNodeBuilder {
         private final @NotNull ResourceLocation id;
         private final ResourceLocation[] lockingSkillNodes;
 
-        public Result(@NotNull ResourceLocation id,@NotNull ResourceLocation parent,@NotNull ISkill<?>[] skills,@NotNull ResourceLocation[] lockingSkillNodes) {
+        public Result(@NotNull ResourceLocation id, @NotNull ResourceLocation parent, @NotNull ISkill<?>[] skills, @NotNull ResourceLocation[] lockingSkillNodes) {
             this.id = id;
             this.parent = parent;
             this.skills = skills;
@@ -89,7 +89,7 @@ public class SkillNodeBuilder {
             json.addProperty("parent", parent.toString());
             JsonArray array = new JsonArray();
             for (ISkill<?> skill : this.skills) {
-                array.add(RegUtil.id(skill) .toString());
+                array.add(RegUtil.id(skill).toString());
             }
             json.add("skills", array);
             if (lockingSkillNodes.length > 0) {

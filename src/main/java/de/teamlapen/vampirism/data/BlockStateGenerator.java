@@ -232,8 +232,8 @@ public class BlockStateGenerator extends BlockStateProvider {
         horizontalBlock(ModBlocks.GRAVE_CAGE.get(), models().getExistingFile(modLoc("block/grave_cage")));
 
         getMultipartBuilder(ModBlocks.CURSED_GRASS.get())
-                .part().modelFile(models().cubeBottomTop("vampirism:cursed_grass", modLoc("block/cursed_grass_side"), modLoc("block/cursed_earth"),modLoc("block/cursed_grass_top"))).addModel().end()
-                .part().modelFile(models().cubeBottomTop("vampirism:cursed_grass_snowy", modLoc("block/cursed_grass_side_snowy"), modLoc("block/cursed_earth"),modLoc("block/cursed_grass_top"))).addModel().condition(BlockStateProperties.SNOWY, true).end();
+                .part().modelFile(models().cubeBottomTop("vampirism:cursed_grass", modLoc("block/cursed_grass_side"), modLoc("block/cursed_earth"), modLoc("block/cursed_grass_top"))).addModel().end()
+                .part().modelFile(models().cubeBottomTop("vampirism:cursed_grass_snowy", modLoc("block/cursed_grass_side_snowy"), modLoc("block/cursed_earth"), modLoc("block/cursed_grass_top"))).addModel().condition(BlockStateProperties.SNOWY, true).end();
 
         simpleBlock(ModBlocks.CURSED_ROOTS.get(), models().cross("cursed_roots", modLoc("block/cursed_roots")).renderType(cutout));
         simpleBlock(ModBlocks.POTTED_CURSED_ROOTS.get(), models().withExistingParent("vampirism:block/potted_cursed_roots", "minecraft:block/flower_pot_cross").texture("plant", "vampirism:block/cursed_roots"));
@@ -241,8 +241,8 @@ public class BlockStateGenerator extends BlockStateProvider {
         trapdoorBlock(ModBlocks.DARK_SPRUCE_TRAPDOOR.get(), new ResourceLocation(REFERENCE.MODID, "block/dark_spruce_trapdoor"), true);
         trapdoorBlock(ModBlocks.CURSED_SPRUCE_TRAPDOOR.get(), new ResourceLocation(REFERENCE.MODID, "block/cursed_spruce_trapdoor"), true);
 
-        doorBlock(ModBlocks.DARK_SPRUCE_DOOR.get(), new ResourceLocation(REFERENCE.MODID, "block/dark_spruce_door_bottom"),  new ResourceLocation(REFERENCE.MODID, "block/dark_spruce_door_top"));
-        doorBlock(ModBlocks.CURSED_SPRUCE_DOOR.get(), new ResourceLocation(REFERENCE.MODID, "block/cursed_spruce_door_bottom"),  new ResourceLocation(REFERENCE.MODID, "block/cursed_spruce_door_top"));
+        doorBlock(ModBlocks.DARK_SPRUCE_DOOR.get(), new ResourceLocation(REFERENCE.MODID, "block/dark_spruce_door_bottom"), new ResourceLocation(REFERENCE.MODID, "block/dark_spruce_door_top"));
+        doorBlock(ModBlocks.CURSED_SPRUCE_DOOR.get(), new ResourceLocation(REFERENCE.MODID, "block/cursed_spruce_door_bottom"), new ResourceLocation(REFERENCE.MODID, "block/cursed_spruce_door_top"));
 
         createWoodStates();
         createCursedBark();
@@ -251,9 +251,9 @@ public class BlockStateGenerator extends BlockStateProvider {
         horizontalBlock(ModBlocks.THRONE.get(), models().getExistingFile(modLoc("block/throne")));
 
         for (DyeColor dye : DyeColor.values()) {
-            models().withExistingParent(REFERENCE.MODID + ":block/coffin/coffin_" + dye.getName(),"vampirism:block/coffin").texture("0", "vampirism:block/coffin/coffin_" + dye.getName());
-            models().withExistingParent(REFERENCE.MODID + ":block/coffin/coffin_bottom_" + dye.getName(),"vampirism:block/coffin_bottom").texture("0", "vampirism:block/coffin/coffin_" + dye.getName());
-            models().withExistingParent(REFERENCE.MODID + ":block/coffin/coffin_top_" + dye.getName(),"vampirism:block/coffin_top").texture("0", "vampirism:block/coffin/coffin_" + dye.getName());
+            models().withExistingParent(REFERENCE.MODID + ":block/coffin/coffin_" + dye.getName(), "vampirism:block/coffin").texture("0", "vampirism:block/coffin/coffin_" + dye.getName());
+            models().withExistingParent(REFERENCE.MODID + ":block/coffin/coffin_bottom_" + dye.getName(), "vampirism:block/coffin_bottom").texture("0", "vampirism:block/coffin/coffin_" + dye.getName());
+            models().withExistingParent(REFERENCE.MODID + ":block/coffin/coffin_top_" + dye.getName(), "vampirism:block/coffin_top").texture("0", "vampirism:block/coffin/coffin_" + dye.getName());
         }
 
         MultiPartBlockStateBuilder alchemy_table = getMultipartBuilder(ModBlocks.ALCHEMY_TABLE.get());
@@ -278,7 +278,7 @@ public class BlockStateGenerator extends BlockStateProvider {
         models().withExistingParent("dark_spruce_fence_inventory", new ResourceLocation("block/fence_inventory")).texture("texture", "block/dark_spruce_planks");
         models().withExistingParent("cursed_spruce_fence_inventory", new ResourceLocation("block/fence_inventory")).texture("texture", "block/cursed_spruce_planks");
         fenceGateBlock(ModBlocks.DARK_SPRUCE_FENCE_GATE.get(), blockTexture(ModBlocks.DARK_SPRUCE_PLANKS.get()));
-        fenceGateBlock(ModBlocks.CURSED_SPRUCE_FENCE_GATE.get(),blockTexture(ModBlocks.CURSED_SPRUCE_PLANKS.get()));
+        fenceGateBlock(ModBlocks.CURSED_SPRUCE_FENCE_GATE.get(), blockTexture(ModBlocks.CURSED_SPRUCE_PLANKS.get()));
 
         logBlock(ModBlocks.DARK_SPRUCE_LOG.get());
         logBlock(ModBlocks.CURSED_SPRUCE_LOG.get());
@@ -286,7 +286,7 @@ public class BlockStateGenerator extends BlockStateProvider {
         axisBlock(ModBlocks.CURSED_SPRUCE_WOOD.get(), blockTexture(ModBlocks.CURSED_SPRUCE_LOG.get()), blockTexture(ModBlocks.CURSED_SPRUCE_LOG.get()));
         logBlock(ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get());
         logBlock(ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get());
-        axisBlock(ModBlocks.STRIPPED_DARK_SPRUCE_WOOD.get(), blockTexture(ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get()),blockTexture(ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get()));
+        axisBlock(ModBlocks.STRIPPED_DARK_SPRUCE_WOOD.get(), blockTexture(ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get()), blockTexture(ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get()));
         axisBlock(ModBlocks.STRIPPED_CURSED_SPRUCE_WOOD.get(), blockTexture(ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get()), blockTexture(ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get()));
 
         button(ModBlocks.DARK_SPRUCE_BUTTON.get(), blockTexture(ModBlocks.DARK_SPRUCE_PLANKS.get()));
@@ -338,7 +338,7 @@ public class BlockStateGenerator extends BlockStateProvider {
         ResourceLocation id = RegUtil.id(block);
         ModelFile button = models().withExistingParent("block/" + id.getPath(), new ResourceLocation("block/button")).texture("texture", texture.getPath());
         ModelFile button_pressed = models().withExistingParent("block/" + id.getPath() + "_pressed", new ResourceLocation("block/button_pressed")).texture("texture", texture.getPath());
-        ModelFile button_inventory  = models().withExistingParent("block/" + id.getPath() + "_inventory", new ResourceLocation("block/button_inventory")).texture("texture", texture.getPath());
+        ModelFile button_inventory = models().withExistingParent("block/" + id.getPath() + "_inventory", new ResourceLocation("block/button_inventory")).texture("texture", texture.getPath());
         getVariantBuilder(block)
                 .partialState().with(WoodButtonBlock.FACE, AttachFace.CEILING).with(WoodButtonBlock.FACING, Direction.EAST).with(WoodButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(270).rotationX(180).addModel()
                 .partialState().with(WoodButtonBlock.FACE, AttachFace.CEILING).with(WoodButtonBlock.FACING, Direction.EAST).with(WoodButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationY(270).rotationX(180).addModel()
@@ -380,7 +380,8 @@ public class BlockStateGenerator extends BlockStateProvider {
     }
 
     private @NotNull MultiPartBlockStateBuilder applyHorizontalModel(@NotNull MultiPartBlockStateBuilder builder, ModelFile file) {
-        return applyHorizontalModel(builder, file, partBuilder -> {});
+        return applyHorizontalModel(builder, file, partBuilder -> {
+        });
     }
 
     private @NotNull MultiPartBlockStateBuilder applyHorizontalModel(@NotNull MultiPartBlockStateBuilder builder, ModelFile file, @NotNull Consumer<MultiPartBlockStateBuilder.PartBuilder> conditions) {
@@ -401,8 +402,7 @@ public class BlockStateGenerator extends BlockStateProvider {
     }
 
 
-
-        private @NotNull MultiPartBlockStateBuilder getHorizontalMultiPartBlockStateBuilder(Block block, ModelFile file, @NotNull Consumer<MultiPartBlockStateBuilder.PartBuilder> conditions) {
+    private @NotNull MultiPartBlockStateBuilder getHorizontalMultiPartBlockStateBuilder(Block block, ModelFile file, @NotNull Consumer<MultiPartBlockStateBuilder.PartBuilder> conditions) {
         MultiPartBlockStateBuilder builder = getMultipartBuilder(block);
         MultiPartBlockStateBuilder.PartBuilder partBuilder = builder.part().modelFile(file).rotationY(0).addModel().condition(HunterTableBlock.FACING, Direction.NORTH);
         conditions.accept(partBuilder);

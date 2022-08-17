@@ -232,7 +232,7 @@ public abstract class InventoryContainer extends AbstractContainerMenu {
 
 
         public SelectorInfo(@NotNull TagKey<Item> tag, int x, int y, boolean inverted, int stackLimit, @Nullable Pair<ResourceLocation, ResourceLocation> background) {
-            this(itemStack -> itemStack.is(tag) , x, y, inverted, stackLimit, background);
+            this(itemStack -> itemStack.is(tag), x, y, inverted, stackLimit, background);
         }
 
 

@@ -46,8 +46,9 @@ public class TaskArgument implements ArgumentType<Task> {
     public @NotNull Task parse(@NotNull StringReader reader) throws CommandSyntaxException {
         ResourceLocation id = ResourceLocation.read(reader);
         Task task = RegUtil.getTask(id);
-        if (task == null)
+        if (task == null) {
             throw TASK_NOT_FOUND.create(id);
+        }
         return task;
     }
 }

@@ -24,7 +24,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
-
 import org.jetbrains.annotations.NotNull;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
@@ -54,59 +53,59 @@ public class CoffinBESR extends VampirismBESR<CoffinBlockEntity> {
 
         matrixStack.pushPose();
         boolean vertical = state.getValue(CoffinBlock.VERTICAL);
-        switch (direction){
+        switch (direction) {
             case EAST:
                 if (vertical) {
                     matrixStack.mulPose(new Quaternion(new Vector3f(0, 0, 1), 90, true));
                     matrixStack.translate(0, -1, 0);
                 }
-                matrixStack.mulPose(new Quaternion(new Vector3f(0,1,0), 90, true));
-                matrixStack.translate(-1,0,-1);
+                matrixStack.mulPose(new Quaternion(new Vector3f(0, 1, 0), 90, true));
+                matrixStack.translate(-1, 0, -1);
                 break;
             case WEST:
                 if (vertical) {
                     matrixStack.mulPose(new Quaternion(new Vector3f(0, 0, 1), -90, true));
                     matrixStack.translate(-1, 0, 0);
                 }
-                matrixStack.mulPose(new Quaternion(new Vector3f(0,1,0), -90, true));
-                matrixStack.translate(0,0,-2);
+                matrixStack.mulPose(new Quaternion(new Vector3f(0, 1, 0), -90, true));
+                matrixStack.translate(0, 0, -2);
                 break;
             case SOUTH:
                 if (vertical) {
                     matrixStack.mulPose(new Quaternion(new Vector3f(1, 0, 0), -90, true));
                     matrixStack.translate(0, -1, 0);
                 }
-                matrixStack.translate(0,0,-1);
+                matrixStack.translate(0, 0, -1);
                 break;
             case NORTH:
                 if (vertical) {
                     matrixStack.mulPose(new Quaternion(new Vector3f(1, 0, 0), 90, true));
                     matrixStack.translate(0, 0, -1);
                 }
-                matrixStack.mulPose(new Quaternion(new Vector3f(0,1,0), 180, true));
-                matrixStack.translate(-1,0,-2);
+                matrixStack.mulPose(new Quaternion(new Vector3f(0, 1, 0), 180, true));
+                matrixStack.translate(-1, 0, -2);
                 break;
         }
 
         BakedModel baseModel = Minecraft.getInstance().getModelManager().getModel(new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_bottom_" + tile.color.getName()));
         ModelData modelData = baseModel.getModelData(tile.getLevel(), tile.getBlockPos(), state, ModelData.EMPTY);
         for (RenderType renderType : baseModel.getRenderTypes(state, RandomSource.create(42), modelData)) {
-            Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(matrixStack.last(), iRenderTypeBuffer.getBuffer(net.minecraftforge.client.RenderTypeHelper.getEntityRenderType(renderType, false)), state, baseModel, 1,1,1,i, i1, modelData, renderType);
+            Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(matrixStack.last(), iRenderTypeBuffer.getBuffer(net.minecraftforge.client.RenderTypeHelper.getEntityRenderType(renderType, false)), state, baseModel, 1, 1, 1, i, i1, modelData, renderType);
         }
 
         matrixStack.pushPose();
         if (vertical) {
-            matrixStack.mulPose(new Quaternion(new Vector3f(0,0,1), 80 * tile.lidPos, true));
-            matrixStack.translate(0,-0.5 * tile.lidPos,0);
+            matrixStack.mulPose(new Quaternion(new Vector3f(0, 0, 1), 80 * tile.lidPos, true));
+            matrixStack.translate(0, -0.5 * tile.lidPos, 0);
         } else {
             matrixStack.mulPose(new Quaternion(new Vector3f(0, 1, 0), -35 * tile.lidPos, true));
             matrixStack.translate(0, 0, -0.5 * tile.lidPos);
         }
 
-        BakedModel lidModel = Minecraft.getInstance().getModelManager().getModel( new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_top_" + tile.color.getName()));
+        BakedModel lidModel = Minecraft.getInstance().getModelManager().getModel(new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_top_" + tile.color.getName()));
         modelData = lidModel.getModelData(tile.getLevel(), tile.getBlockPos(), state, ModelData.EMPTY);
         for (RenderType renderType : lidModel.getRenderTypes(state, RandomSource.create(42), modelData)) {
-            Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(matrixStack.last(), iRenderTypeBuffer.getBuffer(net.minecraftforge.client.RenderTypeHelper.getEntityRenderType(renderType,false)), state, lidModel, 1,1,1,i, i1, modelData, renderType);
+            Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(matrixStack.last(), iRenderTypeBuffer.getBuffer(net.minecraftforge.client.RenderTypeHelper.getEntityRenderType(renderType, false)), state, lidModel, 1, 1, 1, i, i1, modelData, renderType);
         }
         matrixStack.popPose();
         matrixStack.popPose();
@@ -121,7 +120,7 @@ public class CoffinBESR extends VampirismBESR<CoffinBlockEntity> {
         } catch (IllegalArgumentException e) {
             LOGGER.error(COFFIN, "Failed to check coffin head at {} caused by wrong blockstate. Block at that pos: {}", pos, world.getBlockState(pos));
         } catch (Exception e) {
-            LOGGER.error(COFFIN, "Failed to check coffin head at "+pos+".", e);
+            LOGGER.error(COFFIN, "Failed to check coffin head at " + pos + ".", e);
         }
         return false;
     }

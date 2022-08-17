@@ -152,7 +152,7 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
 
         this.addRenderableWidget(new ImageButton(this.leftPos + 5, this.topPos + 90, 20, 20, 40, 205, 20, BACKGROUND, 256, 256, context -> {
             if (this.minecraft.player.isAlive() && VampirismPlayerAttributes.get(this.minecraft.player).faction != null) {
-                Minecraft.getInstance().setScreen(new SkillsScreen(FactionPlayerHandler.getCurrentFactionPlayer(this.minecraft.player).orElse(null),this));
+                Minecraft.getInstance().setScreen(new SkillsScreen(FactionPlayerHandler.getCurrentFactionPlayer(this.minecraft.player).orElse(null), this));
             }
         }, (button, matrixStack, mouseX, mouseY) -> {
             this.renderTooltip(matrixStack, Component.translatable("gui.vampirism.vampirism_menu.skill_screen"), mouseX, mouseY);
@@ -206,7 +206,7 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
     protected void renderLabels(@NotNull PoseStack stack, int mouseX, int mouseY) {
         super.renderLabels(stack, mouseX, mouseY);
         int width = this.font.width(this.level);
-        this.font.draw(stack, this.level,Math.max(5, 31 - (float)width /2), 81, -1);
+        this.font.draw(stack, this.level, Math.max(5, 31 - (float) width / 2), 81, -1);
     }
 
     @Override

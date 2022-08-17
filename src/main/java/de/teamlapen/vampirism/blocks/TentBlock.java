@@ -56,9 +56,8 @@ public class TentBlock extends VampirismBlock {
     public static final DirectionProperty FACING = HORIZONTAL_FACING;
     /**
      * Arrangement
-     *   23
-     *   10
-     *
+     * 23
+     * 10
      */
     public static final IntegerProperty POSITION = IntegerProperty.create("position", 0, 3);
     private static final @NotNull Table<Direction, Integer, VoxelShape> shapes;
@@ -269,22 +268,20 @@ public class TentBlock extends VampirismBlock {
     }
 
 
-
-
     @Override
     public void playerWillDestroy(@NotNull Level worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
         //If in creative mode, also destroy the main block. Otherwise, it will be destroyed due to updateShape and an item will drop
         if (!worldIn.isClientSide && player.isCreative()) {
             Direction thisFacing = state.getValue(FACING);
             int thisPos = state.getValue(POSITION);
-            if(thisPos != 0){
+            if (thisPos != 0) {
                 BlockPos main = switch (thisPos) {
                     case 1 -> pos.relative(thisFacing.getClockWise());
                     case 2 -> pos.relative(thisFacing.getOpposite()).relative(thisFacing.getClockWise());
                     case 3 -> pos.relative(thisFacing);
                     default -> null;
                 };
-                if(main!=null){
+                if (main != null) {
                     BlockState blockstate = worldIn.getBlockState(main);
                     if (blockstate.getBlock() == ModBlocks.TENT_MAIN.get()) {
                         worldIn.setBlock(main, Blocks.AIR.defaultBlockState(), 35);

@@ -60,7 +60,7 @@ public class SkillsTabScreen extends GuiComponent {
     private float fade;
 
 
-    public SkillsTabScreen(@NotNull Minecraft minecraft,@NotNull SkillsScreen screen, int index,@NotNull ItemStack icon,@NotNull SkillNode rootNode,@NotNull ISkillHandler<?> skillHandler,@NotNull Component title) {
+    public SkillsTabScreen(@NotNull Minecraft minecraft, @NotNull SkillsScreen screen, int index, @NotNull ItemStack icon, @NotNull SkillNode rootNode, @NotNull ISkillHandler<?> skillHandler, @NotNull Component title) {
         this.minecraft = minecraft;
         this.screen = screen;
         this.skillHandler = skillHandler;
@@ -75,13 +75,13 @@ public class SkillsTabScreen extends GuiComponent {
         addNode(this.root);
 
         recalculateBorders();
-        this.scrollX = (SkillsScreen.SCREEN_WIDTH - 18) / (float)2 - 13;
+        this.scrollX = (SkillsScreen.SCREEN_WIDTH - 18) / (float) 2 - 13;
         this.scrollY = 20;
     }
 
     private void recalculateBorders() {
         this.maxY = 20;
-        this.minY = (int) (-(this.treeHeight-40) * this.zoom);
+        this.minY = (int) (-(this.treeHeight - 40) * this.zoom);
 
         this.minX = 0;
         this.maxX = this.treeWidth;
@@ -202,8 +202,8 @@ public class SkillsTabScreen extends GuiComponent {
     }
 
     public void mouseDragged(double mouseX, double mouseY, int mouseButton, double xDragged, double yDragged) {
-        this.scrollX += xDragged/this.zoom;
-        this.scrollY += yDragged/this.zoom;
+        this.scrollX += xDragged / this.zoom;
+        this.scrollY += yDragged / this.zoom;
         this.centered = false;
     }
 
@@ -231,14 +231,14 @@ public class SkillsTabScreen extends GuiComponent {
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         double scrollXP = this.scrollX * this.zoom;
         double scrollYP = this.scrollY * this.zoom;
-        this.zoom = (float) (this.zoom + (amount/25));
+        this.zoom = (float) (this.zoom + (amount / 25));
         float heightZoom = this.zoom;
         float widthZoom = this.zoom;
         if (this.zoom * (this.treeHeight) < (SCREEN_HEIGHT)) {
             heightZoom = Math.max(this.zoom, (float) (SCREEN_HEIGHT) / (this.treeHeight));
         }
         if (this.zoom * this.treeWidth < (SCREEN_WIDTH - 20)) {
-            widthZoom = Math.max(this.zoom, (float) (SCREEN_WIDTH - 20) /(Math.max(60,this.treeWidth)));
+            widthZoom = Math.max(this.zoom, (float) (SCREEN_WIDTH - 20) / (Math.max(60, this.treeWidth)));
         }
 
         this.zoom = Math.min(heightZoom, widthZoom);
