@@ -86,7 +86,7 @@ import net.minecraftforge.registries.RegisterEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 /**
@@ -98,7 +98,7 @@ public class VampirismMod {
     public static final AbstractPacketDispatcher dispatcher = new ModPacketDispatcher();
     public static final CreativeModeTab creativeTab = new CreativeModeTab(REFERENCE.MODID) {
 
-        @Nonnull
+        @NotNull
         @Override
         public ItemStack makeIcon() {
 

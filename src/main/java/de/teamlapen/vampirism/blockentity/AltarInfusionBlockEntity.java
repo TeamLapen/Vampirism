@@ -46,9 +46,9 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -120,9 +120,9 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
 
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return itemHandlerOptional.cast();
         }
@@ -191,14 +191,14 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public CompoundTag getUpdateTag() {
         return this.saveWithoutMetadata();
     }
 
     @Override
-    public void load(@Nonnull CompoundTag tagCompound) {
+    public void load(@NotNull CompoundTag tagCompound) {
         super.load(tagCompound);
         int tick = tagCompound.getInt("tick");
         //This is used on both client and server side and has to be prepared for the world not being available yet
@@ -219,7 +219,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     }
 
     @Override
-    public void saveAdditional(@Nonnull CompoundTag compound) {
+    public void saveAdditional(@NotNull CompoundTag compound) {
         super.saveAdditional(compound);
         compound.putInt("tick", runningTick);
         if (player != null) {
@@ -329,13 +329,13 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    protected AbstractContainerMenu createMenu(int id, @Nonnull Inventory player) {
+    protected AbstractContainerMenu createMenu(int id, @NotNull Inventory player) {
         return new AltarInfusionContainer(id, player, this, level == null ? ContainerLevelAccess.NULL : ContainerLevelAccess.create(level, worldPosition));
     }
 
-    @Nonnull
+    @NotNull
     @Override
     protected Component getDefaultName() {
         return Component.translatable("tile.vampirism.altar_infusion");

@@ -15,7 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class TotemBESR extends VampirismBESR<TotemBlockEntity> {
@@ -29,7 +29,7 @@ public class TotemBESR extends VampirismBESR<TotemBlockEntity> {
     }
 
     @Override
-    public void render(TotemBlockEntity te, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource iRenderTypeBuffer, int i, int i1) {
+    public void render(TotemBlockEntity te, float partialTicks, @NotNull PoseStack matrixStack, @NotNull MultiBufferSource iRenderTypeBuffer, int i, int i1) {
         float textureScale = te.shouldRenderBeam();
         if (textureScale > 0.0f) {
             long totalWorldTime = te.getLevel().getGameTime();
@@ -51,7 +51,7 @@ public class TotemBESR extends VampirismBESR<TotemBlockEntity> {
     }
 
     @Override
-    public boolean shouldRenderOffScreen(@Nonnull TotemBlockEntity te) {
+    public boolean shouldRenderOffScreen(@NotNull TotemBlockEntity te) {
         return true;
     }
 

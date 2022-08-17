@@ -21,7 +21,7 @@ import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.IPlantable;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class CursedEarthBlock extends VampirismBlock {
 
@@ -31,12 +31,12 @@ public class CursedEarthBlock extends VampirismBlock {
     }
 
     @Override
-    public boolean canSustainPlant(@Nonnull BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nonnull Direction direction, @Nonnull IPlantable plantable) {
+    public boolean canSustainPlant(@NotNull BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos, @NotNull Direction direction, @NotNull IPlantable plantable) {
         return plantable instanceof BushBlock || plantable.getPlantType(world, pos).equals(VReference.VAMPIRE_PLANT_TYPE);
     }
 
     @Override
-    public InteractionResult use(@Nonnull BlockState state,@Nonnull Level worldIn,@Nonnull BlockPos pos, Player player,@Nonnull InteractionHand handIn,@Nonnull BlockHitResult hit) {
+    public InteractionResult use(@NotNull BlockState state,@NotNull Level worldIn,@NotNull BlockPos pos, Player player,@NotNull InteractionHand handIn,@NotNull BlockHitResult hit) {
         ItemStack heldItemStack = player.getItemInHand(handIn);
         Item heldItem = heldItemStack.getItem();
         if (heldItem instanceof HolyWaterBottleItem) {

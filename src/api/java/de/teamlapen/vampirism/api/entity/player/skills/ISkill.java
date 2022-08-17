@@ -5,8 +5,8 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Optional;
 
 /**
@@ -22,7 +22,7 @@ public interface ISkill<T extends IFactionPlayer<T>> {
     /**
      * @return The faction this skill belongs to
      */
-    @Nonnull
+    @NotNull
     Optional<IPlayableFaction<?>> getFaction();
 
     default Component getName() {

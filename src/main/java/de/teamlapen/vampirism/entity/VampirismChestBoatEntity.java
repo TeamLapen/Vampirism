@@ -17,7 +17,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class VampirismChestBoatEntity extends ChestBoat implements IVampirismBoat {
 
@@ -41,13 +41,13 @@ public class VampirismChestBoatEntity extends ChestBoat implements IVampirismBoa
      */
     @Deprecated
     @Override
-    public void setType(@Nonnull Type type) {
+    public void setType(@NotNull Type type) {
     }
 
     /**
      * @deprecated use {@link #getBType()}
      */
-    @Nonnull
+    @NotNull
     @Deprecated
     @Override
     public Type getBoatType() {
@@ -55,7 +55,7 @@ public class VampirismChestBoatEntity extends ChestBoat implements IVampirismBoa
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public BoatType getBType() {
         return IVampirismBoat.BoatType.byId(this.entityData.get(DATA_ID_TYPE));
     }
@@ -65,13 +65,13 @@ public class VampirismChestBoatEntity extends ChestBoat implements IVampirismBoa
         this.entityData.set(DATA_ID_TYPE, type.ordinal());
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Item getDropItem() {
         return switch (this.getBType()) {

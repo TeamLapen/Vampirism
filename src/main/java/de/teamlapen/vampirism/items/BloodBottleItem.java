@@ -29,8 +29,8 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Stores blood
@@ -63,7 +63,7 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem {
     }
 
     @Override
-    public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> list) {
+    public void fillItemCategory(@NotNull CreativeModeTab group, @NotNull NonNullList<ItemStack> list) {
         super.fillItemCategory(group, list);
         if (this.allowedIn(group)) {
             ItemStack stack = new ItemStack(ModItems.BLOOD_BOTTLE.get());
@@ -74,13 +74,13 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem {
 
     @Nullable
     @Override
-    public IFaction<?> getExclusiveFaction(@Nonnull ItemStack stack) {
+    public IFaction<?> getExclusiveFaction(@NotNull ItemStack stack) {
         return VReference.VAMPIRE_FACTION;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public ItemStack finishUsingItem(@Nonnull ItemStack stack, @Nonnull Level worldIn, @Nonnull LivingEntity entityLiving) {
+    public ItemStack finishUsingItem(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull LivingEntity entityLiving) {
         if (entityLiving instanceof IVampire) {
             int blood = BloodHelper.getBlood(stack);
             int drink = Math.min(blood, MULTIPLIER);
@@ -93,7 +93,7 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem {
     }
 
     @Override
-    public int getUseDuration(@Nonnull ItemStack stack) {
+    public int getUseDuration(@NotNull ItemStack stack) {
         return 15;
     }
 
@@ -103,9 +103,9 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem {
         return new BloodBottleFluidHandler(stack, capacity);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public UseAnim getUseAnimation(@Nonnull ItemStack stack) {
+    public UseAnim getUseAnimation(@NotNull ItemStack stack) {
         return UseAnim.DRINK;
     }
 
@@ -137,9 +137,9 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem {
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public InteractionResultHolder<ItemStack> use(@Nonnull Level worldIn, Player playerIn, @Nonnull InteractionHand handIn) {
+    public InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         return VampirePlayer.getOpt(playerIn).map(vampire -> {
             if (vampire.getLevel() == 0) return new InteractionResultHolder<>(InteractionResult.PASS, stack);
@@ -153,7 +153,7 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem {
     }
 
     @Override
-    public boolean isBarVisible(@Nonnull ItemStack stack) {
+    public boolean isBarVisible(@NotNull ItemStack stack) {
         return false;
     }
 }

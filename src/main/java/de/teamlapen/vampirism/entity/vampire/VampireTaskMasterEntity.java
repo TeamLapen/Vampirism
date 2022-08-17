@@ -36,8 +36,8 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefaultTaskMasterEntity {
@@ -69,7 +69,7 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefau
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(@Nonnull ServerLevelAccessor worldIn, @Nonnull DifficultyInstance difficultyIn, @Nonnull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
         SpawnGroupData data = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
         this.setBiomeType(VillagerType.byBiome(worldIn.getBiome(this.blockPosition())));
         return data;
@@ -86,7 +86,7 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefau
         this.entityData.set(BIOME_TYPE, Registry.VILLAGER_TYPE.getKey(type).toString());
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Optional<Player> getForceLookTarget() {
         return Optional.ofNullable(this.interactor);
@@ -109,9 +109,9 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefau
         this.entityData.define(BIOME_TYPE, Registry.VILLAGER_TYPE.getDefaultKey().toString());
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    protected InteractionResult mobInteract(@Nonnull Player playerEntity, @Nonnull InteractionHand hand) {
+    protected InteractionResult mobInteract(@NotNull Player playerEntity, @NotNull InteractionHand hand) {
         if (this.level.isClientSide)
             return Helper.isVampire(playerEntity) ? InteractionResult.SUCCESS : InteractionResult.PASS;
         if (Helper.isVampire(playerEntity) && interactor == null) {

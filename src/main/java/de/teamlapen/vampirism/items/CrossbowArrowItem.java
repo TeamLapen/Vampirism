@@ -27,8 +27,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -173,7 +173,7 @@ public class CrossbowArrowItem extends Item implements IVampirismCrossbowArrow<C
             return this.getSerializedName();
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public String getSerializedName() {
             return name;

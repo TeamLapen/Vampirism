@@ -1,8 +1,7 @@
 package de.teamlapen.vampirism.api.entity.actions;
 
 import de.teamlapen.vampirism.api.entity.EntityClassType;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Default implementation of {@link IEntityAction}
@@ -11,7 +10,7 @@ public abstract class DefaultEntityAction implements IEntityAction {
     private final EntityClassType[] entityClassTypes;
     private final EntityActionTier entityActionTier;
 
-    public DefaultEntityAction(@Nonnull EntityActionTier tier, EntityClassType... param) {
+    public DefaultEntityAction(@NotNull EntityActionTier tier, EntityClassType... param) {
         entityActionTier = tier;
         entityClassTypes = param;
     }
@@ -27,7 +26,7 @@ public abstract class DefaultEntityAction implements IEntityAction {
     /**
      * @return the actions {@link EntityActionTier}
      */
-    @Nonnull
+    @NotNull
     @Override
     public EntityActionTier getTier() {
         return entityActionTier;

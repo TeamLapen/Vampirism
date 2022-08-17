@@ -15,7 +15,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * VampirismBaronLady - RebelT
@@ -97,14 +97,14 @@ public class BaronessModel extends AgeableListModel<VampireBaronEntity> implemen
 
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ModelPart getHead() {
         return head;
     }
 
     @Override
-    public void setupAnim(@Nonnull VampireBaronEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(@NotNull VampireBaronEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.head.yRot = netHeadYaw * ((float) Math.PI / 180f);
 
         this.body.yRot = 0.0F;
@@ -201,7 +201,7 @@ public class BaronessModel extends AgeableListModel<VampireBaronEntity> implemen
     }
 
     @Override
-    public void translateToHand(@Nonnull HumanoidArm sideIn, @Nonnull PoseStack matrixStackIn) {
+    public void translateToHand(@NotNull HumanoidArm sideIn, @NotNull PoseStack matrixStackIn) {
         this.getArmForSide(sideIn).translateAndRotate(matrixStackIn);
     }
 
@@ -209,7 +209,7 @@ public class BaronessModel extends AgeableListModel<VampireBaronEntity> implemen
         return side == HumanoidArm.LEFT ? this.armLeft : this.armRight;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     protected Iterable<ModelPart> bodyParts() {
         return ImmutableList.of(this.body, this.headOverlay, this.bodyOverlay, this.armLeftOverlay, this.armRightOverlay, this.legLeftOverlay, this.legRightOverlay);
@@ -220,7 +220,7 @@ public class BaronessModel extends AgeableListModel<VampireBaronEntity> implemen
         return entity.swingingArm == InteractionHand.MAIN_HAND ? handside : handside.getOpposite();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     protected Iterable<ModelPart> headParts() {
         return ImmutableList.of(head);

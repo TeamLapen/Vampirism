@@ -7,15 +7,15 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class ItemRequirement implements TaskRequirement.Requirement<Item> {
 
     private final NonnullSupplier<ItemStack> itemRequirement;
-    @Nonnull
+    @NotNull
     private final ResourceLocation id;
 
-    public ItemRequirement(@Nonnull ResourceLocation id, NonnullSupplier<ItemStack> itemRequirement) {
+    public ItemRequirement(@NotNull ResourceLocation id, NonnullSupplier<ItemStack> itemRequirement) {
         this.id = id;
         this.itemRequirement = itemRequirement;
     }
@@ -26,7 +26,7 @@ public class ItemRequirement implements TaskRequirement.Requirement<Item> {
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public ResourceLocation getId() {
         return id;
     }
@@ -34,18 +34,18 @@ public class ItemRequirement implements TaskRequirement.Requirement<Item> {
     /**
      * @return a copy of the required itemStack
      */
-    @Nonnull
+    @NotNull
     public ItemStack getItemStack() {
         return itemRequirement.get();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Item getStat(IFactionPlayer<?> player) {
         return itemRequirement.get().getItem();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public TaskRequirement.Type getType() {
         return TaskRequirement.Type.ITEMS;

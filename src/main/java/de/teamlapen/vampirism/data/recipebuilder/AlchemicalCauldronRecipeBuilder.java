@@ -21,19 +21,17 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.fluids.FluidStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Consumer;
 
-@ParametersAreNonnullByDefault
 public class AlchemicalCauldronRecipeBuilder {
-    public static AlchemicalCauldronRecipeBuilder cauldronRecipe(Item item) {
+    public static AlchemicalCauldronRecipeBuilder cauldronRecipe(@NotNull Item item) {
         return AlchemicalCauldronRecipeBuilder.cauldronRecipe(item, 1);
     }
 
-    public static AlchemicalCauldronRecipeBuilder cauldronRecipe(Item item, int count) {
+    public static AlchemicalCauldronRecipeBuilder cauldronRecipe(@NotNull Item item, int count) {
         return new AlchemicalCauldronRecipeBuilder(item, count);
     }
 
@@ -47,11 +45,11 @@ public class AlchemicalCauldronRecipeBuilder {
     private int cookTime = 200;
     private float exp = 0.2f;
 
-    public AlchemicalCauldronRecipeBuilder(Item result, int count) {
+    public AlchemicalCauldronRecipeBuilder(@NotNull Item result, int count) {
         this.result = new ItemStack(result, count);
     }
 
-    public void build(Consumer<FinishedRecipe> consumer, ResourceLocation id) {
+    public void build(@NotNull Consumer<FinishedRecipe> consumer,@NotNull ResourceLocation id) {
         id = new ResourceLocation(id.getNamespace(), "alchemical_cauldron/" + id.getPath());
         this.validate(id);
         this.advancementBuilder
@@ -72,7 +70,7 @@ public class AlchemicalCauldronRecipeBuilder {
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder group(String group) {
+    public AlchemicalCauldronRecipeBuilder group(@NotNull String group) {
         this.group = group;
         return this;
     }
@@ -82,52 +80,52 @@ public class AlchemicalCauldronRecipeBuilder {
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder withCriterion(String name, CriterionTriggerInstance criterion) {
+    public AlchemicalCauldronRecipeBuilder withCriterion(@NotNull String name,@NotNull CriterionTriggerInstance criterion) {
         this.advancementBuilder.addCriterion(name, criterion);
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder withFluid(TagKey<Item> tag) {
+    public AlchemicalCauldronRecipeBuilder withFluid(@NotNull TagKey<Item> tag) {
         this.fluid = Either.left(Ingredient.of(tag));
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder withFluid(FluidStack fluid) {
+    public AlchemicalCauldronRecipeBuilder withFluid(@NotNull FluidStack fluid) {
         this.fluid = Either.right(fluid);
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder withFluid(ItemLike... item) {
+    public AlchemicalCauldronRecipeBuilder withFluid(@NotNull ItemLike... item) {
         this.fluid = Either.left(Ingredient.of(item));
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder withFluid(ItemStack... stacks) {
+    public AlchemicalCauldronRecipeBuilder withFluid(@NotNull ItemStack... stacks) {
         this.fluid = Either.left(Ingredient.of(stacks));
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder withIngredient(ItemLike... items) {
+    public AlchemicalCauldronRecipeBuilder withIngredient(@NotNull ItemLike... items) {
         this.ingredient = Ingredient.of(items);
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder withIngredient(ItemStack... stacks) {
+    public AlchemicalCauldronRecipeBuilder withIngredient(@NotNull ItemStack... stacks) {
         this.ingredient = Ingredient.of(stacks);
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder withIngredient(TagKey<Item> tag) {
+    public AlchemicalCauldronRecipeBuilder withIngredient(@NotNull TagKey<Item> tag) {
         this.ingredient = Ingredient.of(tag);
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder withSkills(ISkill<?>... skills) {
+    public AlchemicalCauldronRecipeBuilder withSkills(@NotNull ISkill<?>... skills) {
         this.skills = skills;
         return this;
     }
 
-    private void validate(ResourceLocation id) {
+    private void validate(@NotNull ResourceLocation id) {
         if (this.ingredient == null) {
             throw new IllegalStateException("No ingredients defined for alchemical cauldron recipe " + id + "!");
         } else if (this.fluid == null) {
@@ -148,7 +146,7 @@ public class AlchemicalCauldronRecipeBuilder {
         private final Advancement.Builder advancementBuilder;
         private final ResourceLocation advancementId;
 
-        public Result(@Nonnull ResourceLocation idIn, @Nonnull String groupIn, @Nonnull Ingredient ingredientIn, @Nonnull Either<Ingredient, FluidStack> fluidIn, @Nonnull ItemStack resultIn, @Nonnull ISkill<?>[] skillsIn, int reqLevelIn, int cookTimeIn, float exp, Advancement.Builder advancementBuilderIn, ResourceLocation advancementId) {
+        public Result(@NotNull ResourceLocation idIn, @NotNull String groupIn, @NotNull Ingredient ingredientIn, @NotNull Either<Ingredient, FluidStack> fluidIn, @NotNull ItemStack resultIn, @NotNull ISkill<?>[] skillsIn, int reqLevelIn, int cookTimeIn, float exp, @NotNull Advancement.Builder advancementBuilderIn,@NotNull ResourceLocation advancementId) {
             this.id = idIn;
             this.group = groupIn;
             this.ingredient = ingredientIn;
@@ -168,13 +166,13 @@ public class AlchemicalCauldronRecipeBuilder {
             return this.advancementId;
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public ResourceLocation getId() {
             return id;
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public RecipeSerializer<?> getType() {
             return ModRecipes.ALCHEMICAL_CAULDRON.get();
@@ -187,7 +185,7 @@ public class AlchemicalCauldronRecipeBuilder {
         }
 
         @Override
-        public void serializeRecipeData(JsonObject jsonObject) {
+        public void serializeRecipeData(@NotNull JsonObject jsonObject) {
             if (!this.group.isEmpty()) {
                 jsonObject.addProperty("group", this.group);
             }

@@ -16,7 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Render the advanced vampire with overlays
@@ -33,14 +33,14 @@ public class HunterTaskMasterRenderer extends MobRenderer<HunterTaskMasterEntity
         this.addLayer(new HunterEquipmentLayer<>(this, context.getModelSet(), h -> HunterEquipmentModel.StakeType.NONE, h -> HunterEquipmentModel.HatType.HAT2));
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public ResourceLocation getTextureLocation(@Nonnull HunterTaskMasterEntity entity) {
+    public ResourceLocation getTextureLocation(@NotNull HunterTaskMasterEntity entity) {
         return texture;
     }
 
     @Override
-    protected void renderNameTag(@Nonnull HunterTaskMasterEntity entityIn, @Nonnull Component displayNameIn, @Nonnull PoseStack matrixStackIn, @Nonnull MultiBufferSource bufferIn, int packedLightIn) {
+    protected void renderNameTag(@NotNull HunterTaskMasterEntity entityIn, @NotNull Component displayNameIn, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
         double dist = this.entityRenderDispatcher.distanceToSqr(entityIn);
         if (dist <= 128) {
             super.renderNameTag(entityIn, displayNameIn, matrixStackIn, bufferIn, packedLightIn);

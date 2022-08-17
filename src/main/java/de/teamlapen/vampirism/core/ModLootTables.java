@@ -15,7 +15,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 import java.util.Set;
 
@@ -49,7 +49,7 @@ public class ModLootTables {
         return register(new ResourceLocation(REFERENCE.MODID, resourceName));
     }
 
-    static ResourceLocation register(@Nonnull ResourceLocation resourceLocation) {
+    static ResourceLocation register(@NotNull ResourceLocation resourceLocation) {
         LOOT_TABLES.add(resourceLocation);
         return resourceLocation;
     }

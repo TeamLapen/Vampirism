@@ -6,19 +6,19 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * the entity tag needs a translation key with format {@code tasks.vampirism.<tagid>}
  */
 public class EntityTypeRequirement implements TaskRequirement.Requirement<TagKey<EntityType<?>>> {
-    @Nonnull
+    @NotNull
     private final TagKey<EntityType<?>> entityType;
     private final int amount;
-    @Nonnull
+    @NotNull
     private final ResourceLocation id;
 
-    public EntityTypeRequirement(@Nonnull ResourceLocation id, @Nonnull TagKey<EntityType<?>> entityType, int amount) {
+    public EntityTypeRequirement(@NotNull ResourceLocation id, @NotNull TagKey<EntityType<?>> entityType, int amount) {
         this.id = id;
         this.entityType = entityType;
         this.amount = amount;
@@ -29,19 +29,19 @@ public class EntityTypeRequirement implements TaskRequirement.Requirement<TagKey
         return amount;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ResourceLocation getId() {
         return id;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public TagKey<EntityType<?>> getStat(IFactionPlayer<?> player) {
         return entityType;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public TaskRequirement.Type getType() {
         return TaskRequirement.Type.ENTITY_TAG;

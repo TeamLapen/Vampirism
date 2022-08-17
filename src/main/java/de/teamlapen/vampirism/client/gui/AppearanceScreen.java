@@ -14,8 +14,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
@@ -49,7 +49,7 @@ public class AppearanceScreen<T extends LivingEntity> extends Screen {
     }
 
     @Override
-    public void render(@Nonnull PoseStack mStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull PoseStack mStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(mStack);
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);

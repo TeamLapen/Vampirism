@@ -10,7 +10,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.function.Supplier;
 
 
@@ -57,18 +57,18 @@ public enum VampirismArmorMaterials implements ArmorMaterial {
         return this.knockbackResistance;
     }
 
-    @Nonnull
+    @NotNull
     @OnlyIn(Dist.CLIENT)
     public String getName() {
         return this.name;
     }
 
-    @Nonnull
+    @NotNull
     public SoundEvent getEquipSound() {
         return this.soundEvent;
     }
 
-    @Nonnull
+    @NotNull
     public Ingredient getRepairIngredient() {
         return this.repairMaterial.get();
     }

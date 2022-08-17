@@ -35,7 +35,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
@@ -73,9 +73,9 @@ public class MedChairBlock extends VampirismHorizontalBlock {
 
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public VoxelShape getShape(BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
+    public VoxelShape getShape(BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         return state.getValue(PART) == EnumPart.BOTTOM ? SHAPE_BOTTOM : SHAPE_TOP;
     }
 
@@ -93,7 +93,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
     }
 
     @Override
-    public void playerWillDestroy(@Nonnull Level worldIn, @Nonnull BlockPos pos, BlockState state, @Nonnull Player player) {
+    public void playerWillDestroy(@NotNull Level worldIn, @NotNull BlockPos pos, BlockState state, @NotNull Player player) {
         //If in creative mode, also destroy the top block. Otherwise, it will be destroyed due to updateShape and an item will drop
         if (!worldIn.isClientSide && player.isCreative()) {
             EnumPart part = state.getValue(PART);
@@ -109,9 +109,9 @@ public class MedChairBlock extends VampirismHorizontalBlock {
         super.playerWillDestroy(worldIn, pos, state, player);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public InteractionResult use(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
+    public InteractionResult use(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         if (player.isAlive()) {
             ItemStack stack = player.getItemInHand(hand);
             if (handleInjections(player, world, stack)) {
@@ -131,7 +131,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
         builder.add(FACING, PART);
     }
 
-    private boolean handleGarlicInjection(@Nonnull Player player, @Nonnull Level world, @Nonnull IFactionPlayerHandler handler, @Nullable IPlayableFaction<?> currentFaction) {
+    private boolean handleGarlicInjection(@NotNull Player player, @NotNull Level world, @NotNull IFactionPlayerHandler handler, @Nullable IPlayableFaction<?> currentFaction) {
         if (handler.canJoin(VReference.HUNTER_FACTION)) {
             if (world.isClientSide) {
                 VampirismMod.proxy.renderScreenFullColor(4, 30, 0xBBBBBBFF);
@@ -165,7 +165,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
 
     }
 
-    private boolean handleSanguinareInjection(@Nonnull Player player, @Nonnull IFactionPlayerHandler handler, @Nullable IPlayableFaction<?> currentFaction) {
+    private boolean handleSanguinareInjection(@NotNull Player player, @NotNull IFactionPlayerHandler handler, @Nullable IPlayableFaction<?> currentFaction) {
         if (VReference.VAMPIRE_FACTION.equals(currentFaction)) {
             player.displayClientMessage(Component.translatable("text.vampirism.already_vampire"), false);
             return false;
@@ -190,7 +190,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
         return false;
     }
 
-    private boolean handleZombieBloodInjection(@Nonnull Player player) {
+    private boolean handleZombieBloodInjection(@NotNull Player player) {
         player.addEffect(new MobEffectInstance(ModEffects.POISON.get(), 200));
         return true;
     }
@@ -214,7 +214,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
             this.meta = meta;
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public String getSerializedName() {
             return name;

@@ -13,7 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Basic class for all of Vampirism's players.
@@ -24,7 +24,7 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
     private static final Logger LOGGER = LogManager.getLogger(FactionBasePlayer.class);
     protected final Player player;
     /**
-     * {@code @Nonnull} on server, otherwise {@code null}
+     * {@code @NotNull} on server, otherwise {@code null}
      */
     private final TaskManager taskManager;
 
@@ -58,9 +58,9 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
     }
 
     /**
-     * null on client and @Nonnull on server
+     * null on client and @NotNull on server
      */
-    @Nonnull
+    @NotNull
     @Override
     public TaskManager getTaskManager() {
         return taskManager;

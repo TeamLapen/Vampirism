@@ -12,7 +12,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Item with different injection types
@@ -26,9 +26,9 @@ public class InjectionItem extends Item {
     }
 
 
-    @Nonnull
+    @NotNull
     @Override
-    public InteractionResultHolder<ItemStack> use(@Nonnull Level worldIn, Player playerIn, @Nonnull InteractionHand handIn) {
+    public InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         if (type == TYPE.SANGUINARE) {
             playerIn.displayClientMessage(Component.literal("Please use a ").append(Component.translatable(ModBlocks.MED_CHAIR.get().getDescriptionId())), true);
@@ -51,7 +51,7 @@ public class InjectionItem extends Item {
         }
 
         @Override
-        @Nonnull
+        @NotNull
         public String getSerializedName() {
             return name;
         }

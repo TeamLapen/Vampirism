@@ -25,15 +25,14 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.gui.ScreenUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.system.NonnullDefault;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashMap;
 import java.util.Map;
 
 @NonnullDefault
-@ParametersAreNonnullByDefault
 public class SkillsTabScreen extends GuiComponent {
 
     public static final int SCREEN_WIDTH = SkillsScreen.SCREEN_WIDTH - 18;
@@ -61,7 +60,7 @@ public class SkillsTabScreen extends GuiComponent {
     private float fade;
 
 
-    public SkillsTabScreen(Minecraft minecraft, SkillsScreen screen, int index, ItemStack icon, SkillNode rootNode, ISkillHandler<?> skillHandler, Component title) {
+    public SkillsTabScreen(@NotNull Minecraft minecraft,@NotNull SkillsScreen screen, int index,@NotNull ItemStack icon,@NotNull SkillNode rootNode,@NotNull ISkillHandler<?> skillHandler,@NotNull Component title) {
         this.minecraft = minecraft;
         this.screen = screen;
         this.skillHandler = skillHandler;
@@ -90,7 +89,7 @@ public class SkillsTabScreen extends GuiComponent {
         this.centered = false;
     }
 
-    private void addNode(SkillNodeScreen screen) {
+    private void addNode(@NotNull SkillNodeScreen screen) {
         this.nodes.put(screen.getSkillNode(), screen);
         for (SkillNodeScreen child : screen.getChildren()) {
             addNode(child);
@@ -101,7 +100,7 @@ public class SkillsTabScreen extends GuiComponent {
         return index;
     }
 
-    public void drawTab(PoseStack stack, int x, int y, boolean selected) {
+    public void drawTab(@NotNull PoseStack stack, int x, int y, boolean selected) {
         this.position.draw(stack, this, x, y, selected, this.index);
     }
 
@@ -113,7 +112,7 @@ public class SkillsTabScreen extends GuiComponent {
         return this.position.isMouseOver(guiLeft, guiTop, this.index, mouseX, mouseY);
     }
 
-    public void drawContents(PoseStack stack) {
+    public void drawContents(@NotNull PoseStack stack) {
         if (!this.centered) {
             this.scrollX = Mth.clamp(this.scrollX, this.minX, this.maxX);
             this.scrollY = Mth.clamp(this.scrollY, this.minY, this.maxY);
@@ -174,7 +173,7 @@ public class SkillsTabScreen extends GuiComponent {
 
     }
 
-    public void drawTooltips(PoseStack stack, int mouseX, int mouseY) {
+    public void drawTooltips(@NotNull PoseStack stack, int mouseX, int mouseY) {
         stack.pushPose();
         stack.translate(0.0F, 0.0F, 200.0F);
         fill(stack, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Mth.floor(this.fade * 255.0F) << 24);
@@ -252,7 +251,7 @@ public class SkillsTabScreen extends GuiComponent {
         return true;
     }
 
-    public void drawDisableText(PoseStack mStack) {
+    public void drawDisableText(@NotNull PoseStack mStack) {
         if (this.minecraft.player.getEffect(ModEffects.OBLIVION.get()) == null) return;
 
         Component f = Component.translatable("text.vampirism.skill.unlock_unavailable").withStyle(ChatFormatting.WHITE);

@@ -20,8 +20,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Pillar for Altar of Infusion structure
@@ -54,15 +56,15 @@ public class AltarPillarBlock extends VampirismBlock {
     }
 
 
-    @Nonnull
+    @NotNull
     @Override
-    public VoxelShape getShape(BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
+    public VoxelShape getShape(BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         return state.getValue(TYPE_PROPERTY) != EnumPillarType.NONE ? pillarShapeFilled : pillarShape;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public InteractionResult use(BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, Player playerIn, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
+    public InteractionResult use(BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, Player playerIn, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         EnumPillarType type = state.getValue(TYPE_PROPERTY);
         ItemStack heldItem = playerIn.getItemInHand(hand);
         if (type != EnumPillarType.NONE && heldItem.isEmpty()) {
@@ -113,7 +115,7 @@ public class AltarPillarBlock extends VampirismBlock {
             return getSerializedName();
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public String getSerializedName() {
             return name;

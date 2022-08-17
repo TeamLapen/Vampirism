@@ -12,7 +12,7 @@ import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class ApplicableOilRecipe extends CustomRecipe {
 
@@ -21,7 +21,7 @@ public class ApplicableOilRecipe extends CustomRecipe {
     }
 
     @Override
-    public boolean matches(CraftingContainer inventory, @Nonnull Level world) {
+    public boolean matches(CraftingContainer inventory, @NotNull Level world) {
         IApplicableOil oil = null;
         ItemStack tool = null;
         for (int i = 0; i < inventory.getContainerSize(); i++) {
@@ -42,9 +42,9 @@ public class ApplicableOilRecipe extends CustomRecipe {
         return oil != null && tool != null && oil.canBeApplied(tool);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public ItemStack assemble(@Nonnull CraftingContainer inventory) {
+    public ItemStack assemble(@NotNull CraftingContainer inventory) {
         ItemStack oilStack = ItemStack.EMPTY;
         ItemStack toolStack = ItemStack.EMPTY;
         for (int i = 0; i < inventory.getContainerSize(); i++) {
@@ -71,7 +71,7 @@ public class ApplicableOilRecipe extends CustomRecipe {
         return x*y >= 2;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public RecipeSerializer<?> getSerializer() {
         return ModRecipes.APPLICABLE_OIL.get();

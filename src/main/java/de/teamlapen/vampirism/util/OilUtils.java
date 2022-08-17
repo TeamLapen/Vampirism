@@ -9,13 +9,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.tuple.Pair;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 public class OilUtils {
 
-    @Nonnull
-    public static IOil getOil(@Nonnull ItemStack stack) {
+    @NotNull
+    public static IOil getOil(@NotNull ItemStack stack) {
         CompoundTag tag = stack.getTag();
         IOil oil = null;
         if (tag != null && tag.contains("oil")) {
@@ -25,7 +25,7 @@ public class OilUtils {
         return oil != null ? oil : ModOils.EMPTY.get();
     }
 
-    public static ItemStack setOil(@Nonnull ItemStack stack, @Nonnull IOil oil) {
+    public static ItemStack setOil(@NotNull ItemStack stack, @NotNull IOil oil) {
         stack.getOrCreateTag().putString("oil", RegUtil.id(oil).toString());
         return stack;
     }
@@ -34,7 +34,7 @@ public class OilUtils {
         return ModItems.OIL_BOTTLE.get().withOil(oil);
     }
 
-    public static Optional<IApplicableOil> getAppliedOil(@Nonnull ItemStack stack) {
+    public static Optional<IApplicableOil> getAppliedOil(@NotNull ItemStack stack) {
         return getAppliedOilStatus(stack).map(Pair::getLeft);
     }
 
@@ -42,7 +42,7 @@ public class OilUtils {
         return OilUtils.getAppliedOil(stack).map(oil -> reduceAppliedOilDuration(stack, oil, oil.getDurationReduction())).orElse(true);
     }
 
-    public static boolean reduceAppliedOilDuration(@Nonnull ItemStack stack, IApplicableOil oil, int durationReduction) {
+    public static boolean reduceAppliedOilDuration(@NotNull ItemStack stack, IApplicableOil oil, int durationReduction) {
         CompoundTag compound = stack.getOrCreateTag().getCompound("applied_oil");
         if (compound.getString("oil").equals(RegUtil.id(oil).toString())) {
             int duration = compound.getInt("duration") -durationReduction;
@@ -57,12 +57,12 @@ public class OilUtils {
         return true;
     }
 
-    public static boolean hasAppliedOil(@Nonnull ItemStack stack) {
+    public static boolean hasAppliedOil(@NotNull ItemStack stack) {
         CompoundTag applied_oil = stack.getOrCreateTag().getCompound("applied_oil");
         return stack.getOrCreateTag().getCompound("applied_oil").contains("oil");
     }
 
-    public static Optional<Pair<IApplicableOil, Integer>> getAppliedOilStatus(@Nonnull ItemStack stack) {
+    public static Optional<Pair<IApplicableOil, Integer>> getAppliedOilStatus(@NotNull ItemStack stack) {
         CompoundTag compound = stack.getOrCreateTag().getCompound("applied_oil");
         if (compound.contains("oil")) {
             IOil oil = RegUtil.getOil(new ResourceLocation(compound.getString("oil")));
@@ -78,17 +78,17 @@ public class OilUtils {
         }
     }
 
-    public static ItemStack removeAppliedOil(@Nonnull ItemStack stack) {
+    public static ItemStack removeAppliedOil(@NotNull ItemStack stack) {
         stack.getOrCreateTag().remove("applied_oil");
         return stack;
     }
 
 
-    public static ItemStack setAppliedOil(@Nonnull ItemStack stack, IApplicableOil oil) {
+    public static ItemStack setAppliedOil(@NotNull ItemStack stack, IApplicableOil oil) {
         return setAppliedOil(stack, oil, oil.getMaxDuration(stack));
     }
 
-    public static ItemStack setAppliedOil(@Nonnull ItemStack stack, IApplicableOil oil, int duration) {
+    public static ItemStack setAppliedOil(@NotNull ItemStack stack, IApplicableOil oil, int duration) {
         if (duration <= 0) {
             return removeAppliedOil(stack);
         }

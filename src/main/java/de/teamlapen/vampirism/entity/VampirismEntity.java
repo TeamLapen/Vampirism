@@ -36,8 +36,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 
 /**
@@ -76,7 +76,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
     }
 
     @Override
-    public void addAdditionalSaveData(@Nonnull CompoundTag nbt) {
+    public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         if (saveHome && home != null) {
             int[] h = {(int) home.minX, (int) home.minY, (int) home.minZ, (int) home.maxX, (int) home.maxY, (int) home.maxZ};
@@ -102,7 +102,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
     }
 
     @Override
-    public boolean checkSpawnRules(@Nonnull LevelAccessor worldIn, @Nonnull MobSpawnType spawnReasonIn) {
+    public boolean checkSpawnRules(@NotNull LevelAccessor worldIn, @NotNull MobSpawnType spawnReasonIn) {
         return (peaceful || worldIn.getDifficulty() != Difficulty.PEACEFUL) && super.checkSpawnRules(worldIn, spawnReasonIn);
     }
 
@@ -125,12 +125,12 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
     }
 
     @Override
-    public boolean isWithinRestriction(@Nonnull BlockPos pos) {
+    public boolean isWithinRestriction(@NotNull BlockPos pos) {
         return this.isWithinHomeDistance(pos);
     }
 
     @Override
-    public void readAdditionalSaveData(@Nonnull CompoundTag nbt) {
+    public void readAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
         if (nbt.contains("home")) {
             saveHome = true;
@@ -143,7 +143,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
     }
 
     @Override
-    public void restrictTo(@Nonnull BlockPos pos, int distance) {
+    public void restrictTo(@NotNull BlockPos pos, int distance) {
         this.setHomeArea(pos, distance);
     }
 
@@ -210,7 +210,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
         return SoundEvents.HOSTILE_DEATH;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public LivingEntity.Fallsounds getFallSounds() {
         return new LivingEntity.Fallsounds(SoundEvents.HOSTILE_SMALL_FALL, SoundEvents.HOSTILE_BIG_FALL);
@@ -230,13 +230,13 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
         return this.getType();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     protected SoundEvent getSwimSound() {
         return SoundEvents.HOSTILE_SWIM;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     protected SoundEvent getSwimSplashSound() {
         return SoundEvents.HOSTILE_SPLASH;
@@ -352,7 +352,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
     }
 
     @Override
-    public boolean canBeLeashed(@Nonnull Player player) {
+    public boolean canBeLeashed(@NotNull Player player) {
         return false;
     }
 }

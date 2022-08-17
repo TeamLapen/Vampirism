@@ -33,8 +33,8 @@ import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Random;
 
 /**
@@ -66,7 +66,7 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
         this.tank = new InternalTank(CAPACITY).setListener(this);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ModelData getModelData() {
         if (modelData == null) updateModelData(false);
@@ -78,7 +78,7 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public CompoundTag getUpdateTag() {
         return this.saveWithoutMetadata();

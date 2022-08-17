@@ -17,8 +17,8 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 /**
@@ -43,7 +43,7 @@ public class WeaponTableCraftingSlot extends Slot {
     }
 
     @Override
-    public void onTake(@Nonnull Player playerIn, @Nonnull ItemStack stack) {
+    public void onTake(@NotNull Player playerIn, @NotNull ItemStack stack) {
         this.checkTakeAchievements(stack);
         final int lava = worldPos.evaluate(((world, blockPos) -> {
             if (world.getBlockState(blockPos).getBlock() instanceof WeaponTableBlock) {
@@ -92,7 +92,7 @@ public class WeaponTableCraftingSlot extends Slot {
         playerIn.awardStat(ModStats.weapon_table);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ItemStack remove(int amount) {
         if (this.hasItem()) {
@@ -103,7 +103,7 @@ public class WeaponTableCraftingSlot extends Slot {
     }
 
     @Override
-    protected void checkTakeAchievements(@Nonnull ItemStack stack) {
+    protected void checkTakeAchievements(@NotNull ItemStack stack) {
         if (this.amountCrafted > 0) {
             stack.onCraftedBy(this.player.getCommandSenderWorld(), this.player, this.amountCrafted);
         }
@@ -123,7 +123,7 @@ public class WeaponTableCraftingSlot extends Slot {
     }
 
     @Override
-    protected void onQuickCraft(@Nonnull ItemStack stack, int amount) {
+    protected void onQuickCraft(@NotNull ItemStack stack, int amount) {
         this.amountCrafted += amount;
         this.checkTakeAchievements(stack);
     }

@@ -15,8 +15,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class OilBottle extends Item implements IOilItem {
@@ -25,7 +25,7 @@ public class OilBottle extends Item implements IOilItem {
         super(properties);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ItemStack getDefaultInstance() {
         return OilUtils.setOil(super.getDefaultInstance(), ModOils.EMPTY.get());
@@ -36,20 +36,20 @@ public class OilBottle extends Item implements IOilItem {
         return OilUtils.setOil(getDefaultInstance(), oil);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public Component getName(@Nonnull ItemStack stack) {
+    public Component getName(@NotNull ItemStack stack) {
         ResourceLocation oil = RegUtil.id(OilUtils.getOil(stack));
         return Component.translatable("oil." + oil.getNamespace() + "." + oil.getPath()).append(" ").append(Component.translatable(this.getDescriptionId(stack)));
     }
 
     @Override
-    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level level, @Nonnull List<Component> tooltips, @Nonnull TooltipFlag flag) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> tooltips, @NotNull TooltipFlag flag) {
         OilUtils.getOil(stack).getDescription(stack, tooltips);
     }
 
     @Override
-    public void fillItemCategory(@Nonnull CreativeModeTab itemGroup, @Nonnull NonNullList<ItemStack> items) {
+    public void fillItemCategory(@NotNull CreativeModeTab itemGroup, @NotNull NonNullList<ItemStack> items) {
         if (this.allowedIn(itemGroup)) {
             for (IOil value : RegUtil.values(ModRegistries.OILS)) {
                 if (value == ModOils.EMPTY.get()) continue;
@@ -58,7 +58,7 @@ public class OilBottle extends Item implements IOilItem {
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IOil getOil(ItemStack stack) {
         return OilUtils.getOil(stack);

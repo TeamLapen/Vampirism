@@ -40,7 +40,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Base class for Vampirism's vampire entities
@@ -128,7 +128,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     @Override
-    public boolean checkSpawnRules(@Nonnull LevelAccessor worldIn, @Nonnull MobSpawnType spawnReasonIn) {
+    public boolean checkSpawnRules(@NotNull LevelAccessor worldIn, @NotNull MobSpawnType spawnReasonIn) {
         if (spawnRestriction.level >= SpawnRestriction.SIMPLE.level) {
             if (isGettingSundamage(worldIn, true) || isGettingGarlicDamage(worldIn, true) != EnumStrength.NONE)
                 return false;
@@ -155,7 +155,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     @Override
-    public void die(@Nonnull DamageSource cause) {
+    public void die(@NotNull DamageSource cause) {
         super.die(cause);
         if (cause.getDirectEntity() instanceof CrossbowArrowEntity && Helper.isHunter(cause.getEntity())) {
             dropSoul = true;
@@ -175,7 +175,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     @Override
-    public boolean doHurtTarget(@Nonnull Entity entity) {
+    public boolean doHurtTarget(@NotNull Entity entity) {
         if (canSuckBloodFromPlayer && !level.isClientSide && wantsBlood() && entity instanceof Player && !Helper.isHunter(entity) && !UtilLib.canReallySee((LivingEntity) entity, this, true)) {
             int amt = VampirePlayer.getOpt((Player) entity).map(v -> v.onBite(this)).orElse(0);
             drinkBlood(amt, IBloodStats.MEDIUM_SATURATION);
@@ -213,7 +213,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
         return this;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public EnumStrength isGettingGarlicDamage(LevelAccessor iWorld, boolean forcerefresh) {
         if (forcerefresh) {
@@ -222,14 +222,14 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
         return garlicCache;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public MobType getMobType() {
         return VReference.VAMPIRE_CREATURE_ATTRIBUTE;
     }
 
     @Override
-    public boolean hurt(@Nonnull DamageSource damageSource, float amount) {
+    public boolean hurt(@NotNull DamageSource damageSource, float amount) {
         if (vulnerableToFire) {
             if (DamageSource.IN_FIRE.equals(damageSource)) {
                 return this.hurt(VReference.VAMPIRE_IN_FIRE, calculateFireDamage(amount));

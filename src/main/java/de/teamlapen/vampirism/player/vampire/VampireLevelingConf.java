@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.player.vampire;
 
 import com.google.common.collect.Maps;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 /**
@@ -51,7 +51,7 @@ public class VampireLevelingConf {
         assert altarInfusionRequirementsHashMap.size() == INFUSION_MAX_LEVEL - INFUSION_MIN_LEVEL + 1;
     }
 
-    @Nonnull
+    @NotNull
     public AltarInfusionRequirements getAltarInfusionRequirements(int targetLevel) {
         if (!altarInfusionRequirementsHashMap.containsKey(targetLevel)) {
             throw new IllegalArgumentException("Level " + targetLevel + " cannot be reached with an altar of infusion");

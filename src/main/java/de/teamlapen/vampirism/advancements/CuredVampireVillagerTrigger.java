@@ -8,13 +8,12 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.level.storage.loot.LootContext;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class CuredVampireVillagerTrigger extends SimpleCriterionTrigger<CuredVampireVillagerTrigger.Instance> {
     private static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "cured_vampire_villager");
 
-    @Nonnull
+    @NotNull
     @Override
     public ResourceLocation getId() {
         return ID;
@@ -26,9 +25,9 @@ public class CuredVampireVillagerTrigger extends SimpleCriterionTrigger<CuredVam
         this.trigger(player, (instance) -> instance.test(lootcontext, lootcontext1));
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    protected Instance createInstance(@Nonnull JsonObject json, @Nonnull EntityPredicate.Composite entityPredicate, @Nonnull DeserializationContext conditionsParser) {
+    protected Instance createInstance(@NotNull JsonObject json, @NotNull EntityPredicate.Composite entityPredicate, @NotNull DeserializationContext conditionsParser) {
         EntityPredicate.Composite vampire = EntityPredicate.Composite.fromJson(json, "vampire", conditionsParser);
         EntityPredicate.Composite villager = EntityPredicate.Composite.fromJson(json, "villager", conditionsParser);
         return new Instance(entityPredicate, vampire, villager);
@@ -48,9 +47,9 @@ public class CuredVampireVillagerTrigger extends SimpleCriterionTrigger<CuredVam
             this.villager = villager;
         }
 
-        @Nonnull
+        @NotNull
         @Override
-        public JsonObject serializeToJson(@Nonnull SerializationContext conditions) {
+        public JsonObject serializeToJson(@NotNull SerializationContext conditions) {
             JsonObject json = super.serializeToJson(conditions);
             json.add("vampire", this.vampire.toJson(conditions));
             json.add("villager", this.villager.toJson(conditions));

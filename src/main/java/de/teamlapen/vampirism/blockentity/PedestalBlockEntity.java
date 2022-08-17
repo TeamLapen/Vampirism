@@ -26,9 +26,9 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Random;
 
 public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
@@ -44,7 +44,7 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
      */
     private int chargingTicks;
     private int bloodStored = 0;
-    @Nonnull
+    @NotNull
     private ItemStack internalStack;
 
     public PedestalBlockEntity(BlockPos pos, BlockState state) {
@@ -52,7 +52,7 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
         this.internalStack = ItemStack.EMPTY;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
         ItemStack stack = this.internalStack;
@@ -67,9 +67,9 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
     }
 
 
-    @Nonnull
+    @NotNull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing) {
+    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && (facing != Direction.DOWN)) {
             return opt.cast();
         }
@@ -86,12 +86,12 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
         return 1;
     }
 
-    @Nonnull
+    @NotNull
     public ItemStack getStackForRender() {
         return internalStack;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ItemStack getStackInSlot(int slot) {
         return slot == 0 ? internalStack : ItemStack.EMPTY;
@@ -108,7 +108,7 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public CompoundTag getUpdateTag() {
         return this.saveWithoutMetadata();
@@ -118,9 +118,9 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
         return !this.internalStack.isEmpty();
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+    public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
         if (slot == 0) {
             if (this.internalStack.isEmpty()) {
                 if (!simulate) {
@@ -134,12 +134,12 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
     }
 
     @Override
-    public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+    public boolean isItemValid(int slot, @NotNull ItemStack stack) {
         return true;
     }
 
     @Override
-    public void load(@Nonnull CompoundTag compound) {
+    public void load(@NotNull CompoundTag compound) {
         super.load(compound);
         if (compound.contains("item")) {
             this.internalStack = ItemStack.of(compound.getCompound("item"));
@@ -155,7 +155,7 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
         if (hasLevel()) handleUpdateTag(pkt.getTag());
     }
 
-    @Nonnull
+    @NotNull
     public ItemStack removeStack() {
         ItemStack stack = this.internalStack;
         this.internalStack = ItemStack.EMPTY;
@@ -163,7 +163,7 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
     }
 
     @Override
-    public void saveAdditional(@Nonnull CompoundTag compound) {
+    public void saveAdditional(@NotNull CompoundTag compound) {
         super.saveAdditional(compound);
         if (hasStack()) {
             compound.put("item", this.internalStack.serializeNBT());
@@ -229,7 +229,7 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
      * @return May be null
      */
     @Nullable
-    private static IBloodChargeable getChargeItem(@Nonnull ItemStack stack) {
+    private static IBloodChargeable getChargeItem(@NotNull ItemStack stack) {
         return stack.isEmpty() ? null : (stack.getItem() instanceof IBloodChargeable chargeable ? chargeable : null);
     }
 
@@ -244,7 +244,7 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
     /**
      * Set the held stack.
      */
-    private void setStack(@Nonnull ItemStack stack) {
+    private void setStack(@NotNull ItemStack stack) {
         this.chargingTicks = 0;
         if (this.internalStack.isEmpty()) {
             this.internalStack = stack;

@@ -27,8 +27,7 @@ import net.minecraftforge.fml.util.thread.EffectiveSide;
 import net.minecraftforge.network.NetworkEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class ClientProxy extends CommonProxy {
@@ -50,19 +49,19 @@ public class ClientProxy extends CommonProxy {
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ISoundReference createMasterSoundReference(SoundEvent event, float volume, float pinch) {
         return new SoundReference(SimpleSoundInstance.forUI(event, volume, pinch));
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ISoundReference createSoundReference(SoundEvent event, SoundSource category, BlockPos pos, float volume, float pinch) {
         return new SoundReference(new SimpleSoundInstance(event, category, volume, pinch, RandomSource.create(), pos));
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ISoundReference createSoundReference(SoundEvent event, SoundSource category, double x, double y, double z, float volume, float pinch) {
         return new SoundReference(new SimpleSoundInstance(event, category, volume, pinch, RandomSource.create(), (float) x, (float) y, (float) z));

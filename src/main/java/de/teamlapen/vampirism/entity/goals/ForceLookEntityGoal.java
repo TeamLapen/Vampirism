@@ -4,7 +4,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.player.Player;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.EnumSet;
 import java.util.Optional;
 
@@ -38,7 +38,7 @@ public class ForceLookEntityGoal<T extends Mob & ForceLookEntityGoal.TaskOwner> 
         /**
          * @return The player currently being trained or null
          */
-        @Nonnull
+        @NotNull
         Optional<Player> getForceLookTarget();
     }
 }

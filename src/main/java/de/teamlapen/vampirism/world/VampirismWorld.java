@@ -21,8 +21,8 @@ import net.minecraftforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,7 +51,7 @@ public class VampirismWorld implements IVampirismWorld {
     /**
      * Return a LazyOptional, but print a warning message if not present.
      */
-    public static LazyOptional<VampirismWorld> getOpt(@Nonnull Level world) {
+    public static LazyOptional<VampirismWorld> getOpt(@NotNull Level world) {
         LazyOptional<VampirismWorld> opt = world.getCapability(CAP, null).cast();
         if (!opt.isPresent()) {
             LOGGER.warn("Cannot get world capability. This might break mod functionality.", new Throwable().fillInStackTrace());
@@ -70,9 +70,9 @@ public class VampirismWorld implements IVampirismWorld {
                 inst.loadNBTData(nbt);
             }
 
-            @Nonnull
+            @NotNull
             @Override
-            public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, Direction facing) {
+            public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, Direction facing) {
 
                 return CAP.orEmpty(capability, opt);
             }
@@ -92,13 +92,13 @@ public class VampirismWorld implements IVampirismWorld {
 
     // VampireFog
     @SuppressWarnings("FieldCanBeLocal")
-    @Nonnull
+    @NotNull
     private final Level world;
     // Garlic Handler ------------
     private final HashMap<ChunkPos, EnumStrength> strengthHashMap = Maps.newHashMap();
     private final HashMap<Integer, Emitter> emitterHashMap = Maps.newHashMap();
 
-    public VampirismWorld(@Nonnull Level world) {
+    public VampirismWorld(@NotNull Level world) {
         this.world = world;
     }
 
@@ -108,7 +108,7 @@ public class VampirismWorld implements IVampirismWorld {
         emitterHashMap.clear();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public EnumStrength getStrengthAtChunk(ChunkPos pos) {
         EnumStrength s = strengthHashMap.get(pos);
@@ -157,7 +157,7 @@ public class VampirismWorld implements IVampirismWorld {
     }
 
     @Override
-    public void updateArtificialFogBoundingBox(@Nonnull BlockPos totemPos, @Nullable AABB box) {
+    public void updateArtificialFogBoundingBox(@NotNull BlockPos totemPos, @Nullable AABB box) {
         if (box == null) {
             fogAreas.remove(totemPos);
             updateTemporaryArtificialFog(totemPos, null);
@@ -167,7 +167,7 @@ public class VampirismWorld implements IVampirismWorld {
     }
 
     @Override
-    public void updateTemporaryArtificialFog(@Nonnull BlockPos totemPos, @Nullable AABB box) {
+    public void updateTemporaryArtificialFog(@NotNull BlockPos totemPos, @Nullable AABB box) {
         if (box == null) {
             tmpFogAreas.remove(totemPos);
         } else {

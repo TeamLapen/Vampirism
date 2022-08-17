@@ -31,8 +31,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -70,20 +70,20 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
     }
 
     private final Random rng = new Random();
-    @Nonnull
+    @NotNull
     private final MinecraftServer server;
-    @Nonnull
+    @NotNull
     private final UUID lordID;
     private int maxMinions;
     @Nullable
     private IPlayableFaction<?> faction;
-    @Nonnull
+    @NotNull
     private MinionInfo[] minions = new MinionInfo[0];
     @SuppressWarnings("unchecked")
-    @Nonnull
+    @NotNull
     private Optional<Integer>[] minionTokens = new Optional[0];
 
-    public PlayerMinionController(@Nonnull MinecraftServer server, @Nonnull UUID lordID) {
+    public PlayerMinionController(@NotNull MinecraftServer server, @NotNull UUID lordID) {
         this.server = server;
         this.lordID = lordID;
     }
@@ -523,7 +523,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
 
     private static class MinionInfo {
         final int minionID;
-        @Nonnull
+        @NotNull
         final MinionData data;
         @Nullable
         final EntityType<? extends MinionEntity<?>> minionType;
@@ -532,7 +532,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
         @Nullable
         ResourceKey<Level> dimension;
 
-        private MinionInfo(int id, @Nonnull MinionData data, @Nullable EntityType<? extends MinionEntity<?>> minionType) {
+        private MinionInfo(int id, @NotNull MinionData data, @Nullable EntityType<? extends MinionEntity<?>> minionType) {
             this.minionID = id;
             this.data = data;
             this.minionType = minionType;

@@ -12,8 +12,8 @@ import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.util.thread.EffectiveSide;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -91,7 +91,7 @@ public class DifficultyCalculator {
      * ONLY CALLED SERVER SIDE
      */
     public static
-    @Nonnull
+    @NotNull
     Difficulty findDifficultyForPos(Level world, BlockPos pos, int radius) {
         Difficulty d = getLocalDifficulty(world, pos, radius);
         if (d == null) {

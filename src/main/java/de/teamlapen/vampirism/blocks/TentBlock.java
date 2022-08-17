@@ -41,8 +41,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientBlockExtensions;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -225,7 +225,7 @@ public class TentBlock extends VampirismBlock {
 
 
     @Override
-    public boolean canSurvive(@Nonnull BlockState blockState, LevelReader worldReader, @Nonnull BlockPos blockPos) {
+    public boolean canSurvive(@NotNull BlockState blockState, LevelReader worldReader, @NotNull BlockPos blockPos) {
         return worldReader.getBlockState(blockPos).isAir();
     }
 
@@ -235,7 +235,7 @@ public class TentBlock extends VampirismBlock {
     }
 
     @Override
-    public void fallOn(@Nonnull Level worldIn, @Nonnull BlockState state, @Nonnull BlockPos pos, @Nonnull Entity entityIn, float fallDistance) {
+    public void fallOn(@NotNull Level worldIn, @NotNull BlockState state, @NotNull BlockPos pos, @NotNull Entity entityIn, float fallDistance) {
         super.fallOn(worldIn, state, pos, entityIn, fallDistance * 0.7F);
     }
 
@@ -252,9 +252,9 @@ public class TentBlock extends VampirismBlock {
         };
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public VoxelShape getShape(BlockState blockState, @Nonnull BlockGetter blockReader, @Nonnull BlockPos blockPos, @Nonnull CollisionContext context) {
+    public VoxelShape getShape(BlockState blockState, @NotNull BlockGetter blockReader, @NotNull BlockPos blockPos, @NotNull CollisionContext context) {
         return shapes.get(blockState.getValue(FACING), blockState.getValue(POSITION));
     }
 
@@ -273,7 +273,7 @@ public class TentBlock extends VampirismBlock {
 
 
     @Override
-    public void playerWillDestroy(Level worldIn, @Nonnull BlockPos pos, @NotNull BlockState state, @Nonnull Player player) {
+    public void playerWillDestroy(Level worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
         //If in creative mode, also destroy the main block. Otherwise, it will be destroyed due to updateShape and an item will drop
         if (!worldIn.isClientSide && player.isCreative()) {
             Direction thisFacing = state.getValue(FACING);
@@ -298,7 +298,7 @@ public class TentBlock extends VampirismBlock {
 
 
     @Override
-    public void updateEntityAfterFallOn(@Nonnull BlockGetter worldIn, Entity entityIn) {
+    public void updateEntityAfterFallOn(@NotNull BlockGetter worldIn, Entity entityIn) {
         if (entityIn.isShiftKeyDown()) {
             super.updateEntityAfterFallOn(worldIn, entityIn);
         } else {
@@ -311,9 +311,9 @@ public class TentBlock extends VampirismBlock {
 
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public InteractionResult use(@Nonnull BlockState blockState, Level world, @Nonnull final BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult rayTraceResult) {
+    public InteractionResult use(@NotNull BlockState blockState, Level world, @NotNull final BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult rayTraceResult) {
         if (world.isClientSide()) return InteractionResult.SUCCESS;
         if (VampirismPlayerAttributes.get(player).hunterLevel == 0) {
             player.displayClientMessage(Component.translatable("text.vampirism.tent.cant_use"), true);

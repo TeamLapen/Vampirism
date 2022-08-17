@@ -23,8 +23,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -48,7 +48,7 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
     private Runnable listener;
     private final boolean refinementsAvailable;
 
-    public VampirismContainer(int id, @Nonnull Inventory playerInventory) {
+    public VampirismContainer(int id, @NotNull Inventory playerInventory) {
         super(ModContainer.VAMPIRISM.get(), id, playerInventory, ContainerLevelAccess.NULL, new SimpleContainer(3), RemovingSelectorSlot::new, SELECTOR_INFOS.apply(playerInventory.player));
         this.factionPlayer = FactionPlayerHandler.get(playerInventory.player).getCurrentFactionPlayer().orElseThrow(() -> new IllegalStateException("Opening vampirism container without faction"));
         this.factionColor = factionPlayer.getFaction().getChatColor();
@@ -63,7 +63,7 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
     }
 
     @Override
-    public boolean areRequirementsCompleted(@Nonnull ITaskInstance taskInfo, @Nonnull TaskRequirement.Type type) {
+    public boolean areRequirementsCompleted(@NotNull ITaskInstance taskInfo, @NotNull TaskRequirement.Type type) {
         if (this.completedRequirements != null) {
             if (this.completedRequirements.containsKey(taskInfo.getTaskBoard()) && this.completedRequirements.get(taskInfo.getTaskBoard()).containsKey(taskInfo.getId())) {
                 Map<ResourceLocation, Integer> data = this.completedRequirements.get(taskInfo.getTaskBoard()).get(taskInfo.getId());
@@ -79,12 +79,12 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
     }
 
     @Override
-    public TaskAction buttonAction(@Nonnull ITaskInstance taskInfo) {
+    public TaskAction buttonAction(@NotNull ITaskInstance taskInfo) {
         return taskInfo.isUnique() || this.factionPlayer.getRepresentingPlayer().level.getGameTime() < taskInfo.getTaskTimeStamp() ? TaskContainer.TaskAction.ABORT : TaskAction.REMOVE;
     }
 
     @Override
-    public boolean canCompleteTask(@Nonnull ITaskInstance taskInfo) {
+    public boolean canCompleteTask(@NotNull ITaskInstance taskInfo) {
         return this.completableTasks.containsKey(taskInfo.getTaskBoard()) && this.completableTasks.get(taskInfo.getTaskBoard()).contains(taskInfo.getId()) && (taskInfo.isUnique() || this.factionPlayer.getRepresentingPlayer().level.getGameTime() < taskInfo.getTaskTimeStamp());
     }
 
@@ -107,7 +107,7 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
     }
 
     @Override
-    public int getRequirementStatus(@Nonnull ITaskInstance taskInfo, @Nonnull TaskRequirement.Requirement<?> requirement) {
+    public int getRequirementStatus(@NotNull ITaskInstance taskInfo, @NotNull TaskRequirement.Requirement<?> requirement) {
         assert this.completedRequirements != null;
         if (this.completedRequirements.containsKey(taskInfo.getTaskBoard())) {
             return this.completedRequirements.get(taskInfo.getTaskBoard()).get(taskInfo.getId()).get(requirement.getId());
@@ -121,7 +121,7 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
     }
 
     @OnlyIn(Dist.CLIENT)
-    public void init(@Nonnull Map<UUID, TaskManager.TaskWrapper> taskWrapper, @Nonnull Map<UUID, Set<UUID>> completableTasks, @Nonnull Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements) {
+    public void init(@NotNull Map<UUID, TaskManager.TaskWrapper> taskWrapper, @NotNull Map<UUID, Set<UUID>> completableTasks, @NotNull Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements) {
         this.taskWrapper = taskWrapper;
         this.completedRequirements = completedRequirements;
         this.completableTasks = completableTasks;
@@ -131,12 +131,12 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
     }
 
     @Override
-    public boolean isCompleted(@Nonnull ITaskInstance item) {
+    public boolean isCompleted(@NotNull ITaskInstance item) {
         return false;
     }
 
     @Override
-    public boolean isRequirementCompleted(@Nonnull ITaskInstance taskInfo, @Nonnull TaskRequirement.Requirement<?> requirement) {
+    public boolean isRequirementCompleted(@NotNull ITaskInstance taskInfo, @NotNull TaskRequirement.Requirement<?> requirement) {
         if (this.completedRequirements != null) {
             if (this.completedRequirements.containsKey(taskInfo.getTaskBoard()) && this.completedRequirements.get(taskInfo.getTaskBoard()).containsKey(taskInfo.getId())) {
                 Map<ResourceLocation, Integer> data = this.completedRequirements.get(taskInfo.getTaskBoard()).get(taskInfo.getId());
@@ -147,12 +147,12 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
     }
 
     @Override
-    public boolean isTaskNotAccepted(@Nonnull ITaskInstance taskInfo) {
+    public boolean isTaskNotAccepted(@NotNull ITaskInstance taskInfo) {
         return false;
     }
 
     @Override
-    public void pressButton(@Nonnull ITaskInstance taskInfo) {
+    public void pressButton(@NotNull ITaskInstance taskInfo) {
         VampirismMod.dispatcher.sendToServer(new ServerboundTaskActionPacket(taskInfo.getId(), taskInfo.getTaskBoard(), buttonAction(taskInfo)));
         this.taskWrapper.get(taskInfo.getTaskBoard()).removeTask(taskInfo, true);
         if (this.listener != null) {
@@ -160,7 +160,7 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
         }
     }
 
-    public void setRefinement(int slot, @Nonnull ItemStack stack) {
+    public void setRefinement(int slot, @NotNull ItemStack stack) {
         this.factionPlayer.getSkillHandler().equipRefinementItem(stack);
         this.refinementStacks.set(slot, stack);
     }
@@ -177,7 +177,7 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
         }
 
         @Override
-        public void set(@Nonnull ItemStack stack) {
+        public void set(@NotNull ItemStack stack) {
             if (!stack.isEmpty()) {
                 ((VampirismContainer) this.getContainer()).setRefinement(this.getSlotIndex(), stack);
             }

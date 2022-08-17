@@ -15,8 +15,8 @@ import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -40,7 +40,7 @@ public class RefinementItemReward extends ItemReward {
         this(faction, () -> null, refinementRarity);
     }
 
-    public RefinementItemReward(@Nullable IFaction<?> faction, @Nonnull Supplier<IRefinementItem> item, @Nullable IRefinementSet.Rarity refinementRarity) {
+    public RefinementItemReward(@Nullable IFaction<?> faction, @NotNull Supplier<IRefinementItem> item, @Nullable IRefinementSet.Rarity refinementRarity) {
         super(() -> new ItemStack(item.get()));
         this.faction = faction;
         this.rarity = refinementRarity;

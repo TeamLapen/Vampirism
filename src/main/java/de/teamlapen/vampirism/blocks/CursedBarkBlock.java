@@ -31,8 +31,8 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class CursedBarkBlock extends Block {
 
@@ -48,7 +48,7 @@ public class CursedBarkBlock extends Block {
     }
 
     @Override
-    public void entityInside(@Nonnull BlockState state, @Nonnull Level level, @Nonnull BlockPos pos, @Nonnull Entity entity) {
+    public void entityInside(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Entity entity) {
         if (Helper.isVampire(entity) || (entity instanceof Player && ((Player) entity).getAbilities().invulnerable)) return;
         Direction mainDirection = state.getValue(FACING);
         Direction secondaryDirection = state.getValue(FACING2);
@@ -83,9 +83,9 @@ public class CursedBarkBlock extends Block {
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter blockReader, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
+    public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter blockReader, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         return shape;
     }
 
@@ -96,7 +96,7 @@ public class CursedBarkBlock extends Block {
     }
 
     @Override
-    public boolean canSurvive(BlockState state, @Nonnull LevelReader worldReader, BlockPos blockPos) {
+    public boolean canSurvive(BlockState state, @NotNull LevelReader worldReader, BlockPos blockPos) {
         Direction mainDirection = state.getValue(FACING);
         Direction secondaryDirection = state.getValue(FACING2);
         BlockPos pos =  blockPos.relative(secondaryDirection);
@@ -106,9 +106,9 @@ public class CursedBarkBlock extends Block {
         return this.canAttachTo(worldReader, pos, mainDirection);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public BlockState updateShape(BlockState blockState, @Nonnull Direction direction, @Nonnull BlockState otherState, @Nonnull LevelAccessor level, @Nonnull BlockPos pos, @Nonnull BlockPos otherPos) {
+    public BlockState updateShape(BlockState blockState, @NotNull Direction direction, @NotNull BlockState otherState, @NotNull LevelAccessor level, @NotNull BlockPos pos, @NotNull BlockPos otherPos) {
         boolean facing = blockState.getValue(FACING) == direction;
         if (!facing && blockState.getValue(FACING) != blockState.getValue(FACING2)) {
             pos = pos.relative(blockState.getValue(FACING));

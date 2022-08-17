@@ -10,7 +10,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import net.minecraft.network.chat.Component;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -73,7 +73,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends Defaul
             if (desc) this.setHasDefaultDescription();
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public Optional<IPlayableFaction<?>> getFaction() {
             return Optional.of(VReference.HUNTER_FACTION);
@@ -108,7 +108,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends Defaul
             if (desc) setHasDefaultDescription();
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public Optional<IPlayableFaction<?>> getFaction() {
             return Optional.of(VReference.VAMPIRE_FACTION);

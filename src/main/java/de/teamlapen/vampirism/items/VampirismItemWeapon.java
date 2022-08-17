@@ -19,8 +19,8 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class VampirismItemWeapon extends SwordItem {
@@ -37,7 +37,7 @@ public class VampirismItemWeapon extends SwordItem {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if (flagIn.isAdvanced()) {
             tooltip.add(Component.literal("ModDamage: " + getAttackDamage(stack)).withStyle(ChatFormatting.GRAY));
@@ -75,7 +75,7 @@ public class VampirismItemWeapon extends SwordItem {
         return attackSpeed;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     protected String getOrCreateDescriptionId() {
         if (this.translation_key == null) {

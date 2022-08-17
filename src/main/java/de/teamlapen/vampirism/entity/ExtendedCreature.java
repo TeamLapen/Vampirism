@@ -26,8 +26,8 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.function.Function;
 
 /**
@@ -58,9 +58,9 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
                 inst.loadData(nbt);
             }
 
-            @Nonnull
+            @NotNull
             @Override
-            public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, Direction facing) {
+            public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, Direction facing) {
                 return CAP.orEmpty(capability, opt);
             }
 

@@ -14,8 +14,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.network.IContainerFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class PotionTableContainer extends InventoryContainer {
     public static final SelectorInfo[] SELECTOR_INFOS;
@@ -37,7 +37,7 @@ public class PotionTableContainer extends InventoryContainer {
     private final boolean extended;
     private final ContainerData syncedProperties;
 
-    public PotionTableContainer(int id, Inventory playerInventory, ContainerLevelAccess worldPos, @Nonnull Container inventory, boolean extended, @Nullable ContainerData syncedProperties) {
+    public PotionTableContainer(int id, Inventory playerInventory, ContainerLevelAccess worldPos, @NotNull Container inventory, boolean extended, @Nullable ContainerData syncedProperties) {
         super(ModContainer.EXTENDED_POTION_TABLE.get(), id, playerInventory, worldPos, inventory, extended ? SELECTOR_INFOS_EXTENDED : SELECTOR_INFOS);
         assert inventory.getContainerSize() >= (extended ? 8 : 6);
         this.syncedProperties = syncedProperties == null ? new SimpleContainerData(2) : syncedProperties;

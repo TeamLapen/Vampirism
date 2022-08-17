@@ -14,7 +14,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Villager Model with usable arms
@@ -45,7 +45,7 @@ public class VillagerWithArmsModel<T extends Mob> extends VillagerModel<T> imple
 
 
     @Override
-    public void setupAnim(@Nonnull T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(@NotNull T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         super.setupAnim(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
         this.leftArm.setPos(4, 3, -1);
         this.rightArm.setPos(-4, 3, -1);
@@ -67,7 +67,7 @@ public class VillagerWithArmsModel<T extends Mob> extends VillagerModel<T> imple
     }
 
     @Override
-    public void translateToHand(@Nonnull HumanoidArm handSide, @Nonnull PoseStack matrixStack) {
+    public void translateToHand(@NotNull HumanoidArm handSide, @NotNull PoseStack matrixStack) {
         float f = handSide == HumanoidArm.RIGHT ? 1.0F : -1.0F;
         ModelPart arm = getArmForSide(handSide);
         arm.x += f;

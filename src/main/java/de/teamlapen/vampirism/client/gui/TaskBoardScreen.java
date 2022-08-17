@@ -19,7 +19,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 
 @OnlyIn(Dist.CLIENT)
@@ -58,7 +58,7 @@ public class TaskBoardScreen extends AbstractContainerScreen<TaskBoardContainer>
     }
 
     @Override
-    public void render(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         this.list.renderToolTip(matrixStack, mouseX, mouseY);
     }
@@ -74,7 +74,7 @@ public class TaskBoardScreen extends AbstractContainerScreen<TaskBoardContainer>
     }
 
     @Override
-    protected void renderBg(@Nonnull PoseStack mStack, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(@NotNull PoseStack mStack, float partialTicks, int mouseX, int mouseY) {
         this.renderBackground(mStack);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, TASKMASTER_GUI_TEXTURE);
@@ -82,7 +82,7 @@ public class TaskBoardScreen extends AbstractContainerScreen<TaskBoardContainer>
     }
 
     @Override
-    protected void renderLabels(@Nonnull PoseStack mStack, int mouseX, int mouseY) {
+    protected void renderLabels(@NotNull PoseStack mStack, int mouseX, int mouseY) {
         this.font.draw(mStack, this.title, (float) (this.imageWidth / 2 - this.font.width(this.title) / 2), 5.0F, 4210752);
     }
 

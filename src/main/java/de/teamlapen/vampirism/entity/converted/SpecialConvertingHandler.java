@@ -9,7 +9,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class SpecialConvertingHandler<T extends PathfinderMob, Z extends PathfinderMob & IConvertedCreature<T>> extends DefaultConvertingHandler<T> {
 

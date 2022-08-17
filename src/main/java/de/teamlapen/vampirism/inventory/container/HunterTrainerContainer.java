@@ -22,8 +22,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Container which handles hunter levelup at a hunter trainer
@@ -51,7 +51,7 @@ public class HunterTrainerContainer extends InventoryContainer implements Contai
     }
 
     @Override
-    public void containerChanged(@Nonnull Container iInventory) {
+    public void containerChanged(@NotNull Container iInventory) {
         changed = true;
     }
 
@@ -101,7 +101,7 @@ public class HunterTrainerContainer extends InventoryContainer implements Contai
     }
 
     @Override
-    public void removed(@Nonnull Player playerIn) {
+    public void removed(@NotNull Player playerIn) {
         super.removed(playerIn);
         if (!playerIn.getCommandSenderWorld().isClientSide) {
             clearContainer(playerIn, inventory);
@@ -109,7 +109,7 @@ public class HunterTrainerContainer extends InventoryContainer implements Contai
     }
 
     @Override
-    public boolean stillValid(@Nonnull Player player) {
+    public boolean stillValid(@NotNull Player player) {
         if (entity == null) return false;
         return new Vec3(player.getX(), player.getY(), player.getZ()).distanceTo(new Vec3(entity.getX(), entity.getY(), entity.getZ())) < 5;
     }

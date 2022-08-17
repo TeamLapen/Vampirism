@@ -13,7 +13,7 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class HunterVillagerRenderer extends MobRenderer<Villager, VillagerWithArmsModel<Villager>> {
@@ -27,9 +27,9 @@ public class HunterVillagerRenderer extends MobRenderer<Villager, VillagerWithAr
         this.addLayer(new ItemInHandLayer<>(this, context.getItemInHandRenderer()));
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public ResourceLocation getTextureLocation(@Nonnull Villager villagerEntity) {
+    public ResourceLocation getTextureLocation(@NotNull Villager villagerEntity) {
         return texture;
     }
 
@@ -37,7 +37,7 @@ public class HunterVillagerRenderer extends MobRenderer<Villager, VillagerWithAr
      * Copied from VillagerRenderer
      */
     @Override
-    protected void scale(Villager entity, @Nonnull PoseStack matrixStack, float partialTickTime) {
+    protected void scale(Villager entity, @NotNull PoseStack matrixStack, float partialTickTime) {
         float s = 0.9375F;
         if (entity.isBaby()) {
             s = (float) ((double) s * 0.5D);

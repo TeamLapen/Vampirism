@@ -18,15 +18,14 @@ import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraftforge.client.gui.ScreenUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.system.NonnullDefault;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @NonnullDefault
-@ParametersAreNonnullByDefault
 public class SkillNodeScreen extends GuiComponent {
     private static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation(REFERENCE.MODID, "textures/gui/skills/widgets.png");
     private static final int[] TEST_SPLIT_OFFSETS = new int[]{0, 10, -10, 25, -25};
@@ -44,11 +43,11 @@ public class SkillNodeScreen extends GuiComponent {
     private final List<FormattedCharSequence>[] descriptions;
     private final int[] width;
 
-    public SkillNodeScreen(Minecraft minecraft, SkillsScreen screen, SkillsTabScreen tab, SkillNode skillNode, SkillHandler<?> skillHandler) {
+    public SkillNodeScreen(@NotNull Minecraft minecraft,@NotNull SkillsScreen screen,@NotNull SkillsTabScreen tab,@NotNull SkillNode skillNode,@NotNull SkillHandler<?> skillHandler) {
         this(minecraft, screen, tab, skillNode, skillHandler, null, 0, 0);
     }
 
-    public SkillNodeScreen(Minecraft minecraft, SkillsScreen screen, SkillsTabScreen tab, SkillNode skillNode, SkillHandler<?> skillHandler, @Nullable SkillNodeScreen parent, int x, int y) {
+    public SkillNodeScreen(@NotNull Minecraft minecraft,@NotNull SkillsScreen screen,@NotNull SkillsTabScreen tab,@NotNull SkillNode skillNode,@NotNull SkillHandler<?> skillHandler, @Nullable SkillNodeScreen parent, int x, int y) {
         this.minecraft = minecraft;
         this.tab = tab;
         this.screen = screen;
@@ -92,7 +91,7 @@ public class SkillNodeScreen extends GuiComponent {
         }
     }
 
-    private static float getMaxWidth(StringSplitter p_238693_0_, List<FormattedText> p_238693_1_) {
+    private static float getMaxWidth(@NotNull StringSplitter p_238693_0_, @NotNull List<FormattedText> p_238693_1_) {
         return (float) p_238693_1_.stream().mapToDouble(p_238693_0_::stringWidth).max().orElse(0.0D);
     }
 
@@ -108,7 +107,7 @@ public class SkillNodeScreen extends GuiComponent {
         }
     }
 
-    private Collection<ISkill> getLockingSkills(SkillNode node) {
+    private Collection<ISkill> getLockingSkills(@NotNull SkillNode node) {
         return Arrays.stream(node.getLockingNodes()).map(id -> SkillTreeManager.getInstance().getSkillTree().getNodeFromId(id)).filter(Objects::nonNull).flatMap(node2 -> Arrays.stream(node2.getElements())).filter(skillHandler::isSkillEnabled).collect(Collectors.toList());
     }
 
@@ -120,7 +119,7 @@ public class SkillNodeScreen extends GuiComponent {
         return skillNode;
     }
 
-    public void draw(PoseStack stack, int i, int j) {
+    public void draw(@NotNull PoseStack stack, int i, int j) {
         stack.pushPose();
         stack.translate(0,0,50);
         SkillNodeState state = getState();
@@ -164,7 +163,7 @@ public class SkillNodeScreen extends GuiComponent {
         stack.popPose();
     }
 
-    public void drawConnectivity(PoseStack stack, int startX, int startY, boolean outerLine) {
+    public void drawConnectivity(@NotNull PoseStack stack, int startX, int startY, boolean outerLine) {
         SkillNodeState state = getState();
         if (state == SkillNodeState.HIDDEN) return;
         if (this.parent != null) {
@@ -204,7 +203,7 @@ public class SkillNodeScreen extends GuiComponent {
         }
     }
 
-    public void drawHover(PoseStack stack, double mouseX, double mouseY, float fade, int scrollX, int scrollY) {
+    public void drawHover(@NotNull PoseStack stack, double mouseX, double mouseY, float fade, int scrollX, int scrollY) {
         SkillNodeState state = getState();
         if (state == SkillNodeState.HIDDEN) return;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -328,7 +327,7 @@ public class SkillNodeScreen extends GuiComponent {
         return description;
     }
 
-    private ResourceLocation getSkillIconLocation(ISkill skill) {
+    private ResourceLocation getSkillIconLocation(@NotNull ISkill skill) {
         if (skill instanceof ActionSkill) {
             return new ResourceLocation(((ActionSkill<?>) skill).getActionID().getNamespace(), "textures/actions/" + ((ActionSkill<?>) skill).getActionID().getPath() + ".png");
         } else {
@@ -382,7 +381,7 @@ public class SkillNodeScreen extends GuiComponent {
     /**
      * from net.minecraft.client.gui.advancements.AdvancementEntryGui#findOptimalLines(ITextComponent, int)
      */
-    private List<FormattedText> findOptimalLines(Component p_238694_1_, int p_238694_2_) {
+    private List<FormattedText> findOptimalLines(@NotNull Component p_238694_1_, int p_238694_2_) {
         StringSplitter charactermanager = this.minecraft.font.getSplitter();
         List<FormattedText> list = Collections.emptyList();
         float f = Float.MAX_VALUE;

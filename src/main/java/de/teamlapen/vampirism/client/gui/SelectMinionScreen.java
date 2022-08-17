@@ -11,7 +11,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 
@@ -38,7 +38,7 @@ public class SelectMinionScreen extends Screen {
     }
 
     @Override
-    public void render(@Nonnull PoseStack mStack, int p_render_1_, int p_render_2_, float p_render_3_) {
+    public void render(@NotNull PoseStack mStack, int p_render_1_, int p_render_2_, float p_render_3_) {
         renderBackground(mStack);
         super.render(mStack, p_render_1_, p_render_2_, p_render_3_);
     }

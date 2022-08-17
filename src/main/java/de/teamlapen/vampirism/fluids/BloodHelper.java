@@ -16,7 +16,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.function.Consumer;
 
 /**
@@ -29,7 +29,7 @@ public class BloodHelper {
     /**
      * Checks if the given stack can store blood
      */
-    public static boolean canStoreBlood(@Nonnull ItemStack stack) {
+    public static boolean canStoreBlood(@NotNull ItemStack stack) {
         return fill(stack, 1000, IFluidHandler.FluidAction.SIMULATE) > 0;
     }
 
@@ -50,17 +50,17 @@ public class BloodHelper {
     /**
      * Returns the amount of blood stored in the given stack
      */
-    public static int getBlood(@Nonnull ItemStack stack) {
+    public static int getBlood(@NotNull ItemStack stack) {
         return FluidUtil.getFluidContained(stack).map(FluidStack::getAmount).orElse(0);
 
     }
 
-    public static int getBlood(@Nonnull IFluidHandler cap) {
+    public static int getBlood(@NotNull IFluidHandler cap) {
         FluidStack stack = cap.drain(new FluidStack(ModFluids.BLOOD.get(), Integer.MAX_VALUE), IFluidHandler.FluidAction.SIMULATE);
         return stack.getAmount();
     }
 
-    public static int getBlood(@Nonnull LazyOptional<IFluidHandler> opt) {
+    public static int getBlood(@NotNull LazyOptional<IFluidHandler> opt) {
         return opt.map(handler -> {
             FluidStack stack = handler.drain(new FluidStack(ModFluids.BLOOD.get(), Integer.MAX_VALUE), IFluidHandler.FluidAction.SIMULATE);
             return stack.getAmount();
@@ -75,7 +75,7 @@ public class BloodHelper {
      * @param updateContainer Is called with the (new) container item after draining
      * @return Drained amount
      */
-    public static int drain(@Nonnull ItemStack stack, int amount, IFluidHandler.FluidAction action, boolean exact, Consumer<ItemStack> updateContainer) {
+    public static int drain(@NotNull ItemStack stack, int amount, IFluidHandler.FluidAction action, boolean exact, Consumer<ItemStack> updateContainer) {
         if (exact && action.execute()) {
             if (drain(stack, amount, IFluidHandler.FluidAction.SIMULATE, false, updateContainer) != amount) return 0;
         }
@@ -86,7 +86,7 @@ public class BloodHelper {
         }).orElse(0);
     }
 
-    public static int fill(@Nonnull ItemStack stack, int amount, IFluidHandler.FluidAction action) {
+    public static int fill(@NotNull ItemStack stack, int amount, IFluidHandler.FluidAction action) {
         return FluidUtil.getFluidHandler(stack).map(handler -> handler.fill(new FluidStack(ModFluids.BLOOD.get(), amount), action)).orElse(0);
     }
 

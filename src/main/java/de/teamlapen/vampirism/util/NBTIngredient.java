@@ -10,8 +10,8 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.stream.Stream;
 
 public class NBTIngredient extends Ingredient {
@@ -43,13 +43,13 @@ public class NBTIngredient extends Ingredient {
         return false;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IIngredientSerializer<? extends Ingredient> getSerializer() {
         return Serializer.INSTANCE;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public JsonElement toJson() {
         JsonObject json = new JsonObject();
@@ -80,7 +80,7 @@ public class NBTIngredient extends Ingredient {
     public static class Serializer implements IIngredientSerializer<NBTIngredient> {
         public static final Serializer INSTANCE = new Serializer();
 
-        @Nonnull
+        @NotNull
         @Override
         public NBTIngredient parse(FriendlyByteBuf buffer) {
             int length = buffer.readVarInt();
@@ -91,9 +91,9 @@ public class NBTIngredient extends Ingredient {
             return new NBTIngredient(stacks);
         }
 
-        @Nonnull
+        @NotNull
         @Override
-        public NBTIngredient parse(@Nonnull JsonObject json) {
+        public NBTIngredient parse(@NotNull JsonObject json) {
             if (json.has("items")) {
                 JsonArray items = json.get("items").getAsJsonArray();
                 ItemStack[] stacks = new ItemStack[items.size()];

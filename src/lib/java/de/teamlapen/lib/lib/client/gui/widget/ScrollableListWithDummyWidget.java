@@ -1,9 +1,9 @@
 package de.teamlapen.lib.lib.client.gui.widget;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.function.Supplier;
 
@@ -16,12 +16,12 @@ import java.util.function.Supplier;
  */
 public class ScrollableListWithDummyWidget<T> extends ScrollableListWidget<T> {
 
-    @Nonnull
+    @NotNull
     private final ItemCreator<T> itemCreator;
     @Nullable
     private ListItem<T> dummyItem;
 
-    public ScrollableListWithDummyWidget(int xPos, int yPos, int width, int height, int itemHeight, Supplier<Collection<T>> baseValueSupplier, @Nonnull ItemCreator<T> itemSupplier) {
+    public ScrollableListWithDummyWidget(int xPos, int yPos, int width, int height, int itemHeight, Supplier<Collection<T>> baseValueSupplier, @NotNull ItemCreator<T> itemSupplier) {
         super(xPos, yPos, width, height, itemHeight, baseValueSupplier, (item, list) -> itemSupplier.apply(item, (ScrollableListWithDummyWidget<T>) list, false));
         this.itemCreator = itemSupplier;
     }
@@ -34,7 +34,7 @@ public class ScrollableListWithDummyWidget<T> extends ScrollableListWidget<T> {
         }
     }
 
-    protected void clickItem(@Nonnull ListItem<T> listItem) {
+    protected void clickItem(@NotNull ListItem<T> listItem) {
         boolean flag = false;
         if (this.dummyItem != null) {
             flag = listItem.item.equals(this.dummyItem.item);

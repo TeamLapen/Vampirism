@@ -13,7 +13,7 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class StakeCondition implements LootItemCondition {
     public static Builder builder(LootContext.EntityTarget target) {
@@ -26,7 +26,7 @@ public class StakeCondition implements LootItemCondition {
         this.target = targetIn;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public LootItemConditionType getType() {
         return ModLoot.with_stake.get();
@@ -45,9 +45,9 @@ public class StakeCondition implements LootItemCondition {
     public static class Serializer implements net.minecraft.world.level.storage.loot.Serializer<StakeCondition> {
 
 
-        @Nonnull
+        @NotNull
         @Override
-        public StakeCondition deserialize(@Nonnull JsonObject json, @Nonnull JsonDeserializationContext context) {
+        public StakeCondition deserialize(@NotNull JsonObject json, @NotNull JsonDeserializationContext context) {
             return new StakeCondition(GsonHelper.getAsObject(json, "entity", context, LootContext.EntityTarget.class));
         }
 

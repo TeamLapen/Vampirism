@@ -3,8 +3,7 @@ package de.teamlapen.vampirism.api.entity.actions;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import net.minecraft.world.entity.PathfinderMob;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Actions that can be executed by some of vampirism's entities. Similar to the actions available to the player.
@@ -37,7 +36,7 @@ public interface IEntityAction {
     /**
      * @return actions minimum {@link EntityActionTier} for usage
      */
-    @Nonnull
+    @NotNull
     EntityActionTier getTier();
 
     /**

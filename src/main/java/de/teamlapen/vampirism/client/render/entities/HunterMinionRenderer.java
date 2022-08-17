@@ -18,7 +18,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * There are differently looking level 0 hunters.
@@ -75,7 +75,7 @@ public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, 
     }
 
     @Override
-    protected void renderNameTag(@Nonnull HunterMinionEntity pEntity, @Nonnull Component pDisplayName, PoseStack pMatrixStack, @Nonnull MultiBufferSource pBuffer, int pPackedLight) {
+    protected void renderNameTag(@NotNull HunterMinionEntity pEntity, @NotNull Component pDisplayName, PoseStack pMatrixStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
         pMatrixStack.pushPose();
         pMatrixStack.translate(0,0.4f,0);
         super.renderNameTag(pEntity, pDisplayName, pMatrixStack, pBuffer, pPackedLight);

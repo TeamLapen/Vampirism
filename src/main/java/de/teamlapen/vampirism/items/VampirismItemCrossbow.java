@@ -33,8 +33,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.Tags;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -63,7 +63,7 @@ public abstract class VampirismItemCrossbow extends Item implements IFactionLeve
     }
 
     @Override
-    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         this.addFactionLevelToolTip(stack, worldIn, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());
     }
@@ -74,7 +74,7 @@ public abstract class VampirismItemCrossbow extends Item implements IFactionLeve
     }
 
     @Override
-    public boolean isValidRepairItem(@Nonnull ItemStack toRepair, ItemStack repair) {
+    public boolean isValidRepairItem(@NotNull ItemStack toRepair, ItemStack repair) {
         return repair.is(Tags.Items.STRING) || super.isValidRepairItem(toRepair, repair);
     }
 
@@ -84,19 +84,19 @@ public abstract class VampirismItemCrossbow extends Item implements IFactionLeve
     }
 
     @Override
-    public int getMinLevel(@Nonnull ItemStack stack) {
+    public int getMinLevel(@NotNull ItemStack stack) {
         return 0;
     }
 
     @Nullable
     @Override
-    public ISkill<IHunterPlayer> getRequiredSkill(@Nonnull ItemStack stack) {
+    public ISkill<IHunterPlayer> getRequiredSkill(@NotNull ItemStack stack) {
         return null;
     }
 
     @Nullable
     @Override
-    public IFaction<?> getExclusiveFaction(@Nonnull ItemStack stack) {
+    public IFaction<?> getExclusiveFaction(@NotNull ItemStack stack) {
         return VReference.HUNTER_FACTION;
     }
 
@@ -104,9 +104,9 @@ public abstract class VampirismItemCrossbow extends Item implements IFactionLeve
         this.enchantability = material.getEnchantmentValue();
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public InteractionResultHolder<ItemStack> use(@Nonnull Level worldIn, Player playerIn, @Nonnull InteractionHand handIn) {
+    public InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         shoot(playerIn, 0, 0, worldIn, stack, handIn);
         return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
@@ -120,7 +120,7 @@ public abstract class VampirismItemCrossbow extends Item implements IFactionLeve
      * @return The itemstack of the arrows or null
      */
     protected
-    @Nonnull
+    @NotNull
     ItemStack findAmmo(Player player, ItemStack bowStack) {
         if (this.isArrow(player.getItemInHand(InteractionHand.OFF_HAND))) {
             return player.getItemInHand(InteractionHand.OFF_HAND);
@@ -169,7 +169,7 @@ public abstract class VampirismItemCrossbow extends Item implements IFactionLeve
     /**
      * Can be overridden to use other tileInventory as arrows. Could cause problems though.
      */
-    protected boolean isArrow(@Nonnull ItemStack stack) {
+    protected boolean isArrow(@NotNull ItemStack stack) {
         return !stack.isEmpty() && stack.getItem() instanceof IVampirismCrossbowArrow;
     }
 

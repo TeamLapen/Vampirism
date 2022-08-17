@@ -27,7 +27,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class TaskRecipeCategory implements IRecipeCategory<Task> {
     private final IDrawable background;
@@ -39,7 +39,7 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
     }
 
     @Override
-    public void draw(Task task, @NotNull IRecipeSlotsView recipeSlotsView, @Nonnull PoseStack stack, double mouseX, double mouseY) {
+    public void draw(Task task, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull PoseStack stack, double mouseX, double mouseY) {
         Minecraft minecraft = Minecraft.getInstance();
         int x = 4;
         int y = 40;
@@ -63,19 +63,19 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
 
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IDrawable getBackground() {
         return background;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IDrawable getIcon() {
         return icon;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Component getTitle() {
         return Component.translatable("text.vampirism.task.reward");

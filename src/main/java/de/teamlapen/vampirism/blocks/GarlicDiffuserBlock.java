@@ -33,8 +33,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class GarlicDiffuserBlock extends VampirismBlockContainer {
@@ -57,7 +57,7 @@ public class GarlicDiffuserBlock extends VampirismBlockContainer {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(@Nonnull ItemStack stack, @Nullable BlockGetter world, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag advanced) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable BlockGetter world, @NotNull List<Component> tooltip, @NotNull TooltipFlag advanced) {
         if (type == Type.WEAK || type == Type.IMPROVED) {
             tooltip.add(Component.translatable(getDescriptionId() + "." + type.getName()).withStyle(ChatFormatting.AQUA));
         }
@@ -68,28 +68,28 @@ public class GarlicDiffuserBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public void attack(@Nonnull BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull Player playerIn) {
+    public void attack(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player playerIn) {
         GarlicDiffuserBlockEntity tile = getTile(worldIn, pos);
         if (tile != null) {
             tile.onTouched(playerIn);
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String getDescriptionId() {
         return "block.vampirism.garlic_diffuser";
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
+    public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         return shape;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public RenderShape getRenderShape(@Nonnull BlockState state) {
+    public RenderShape getRenderShape(@NotNull BlockState state) {
         return RenderShape.MODEL;
     }
 
@@ -99,7 +99,7 @@ public class GarlicDiffuserBlock extends VampirismBlockContainer {
         return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection());
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
@@ -107,7 +107,7 @@ public class GarlicDiffuserBlock extends VampirismBlockContainer {
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
+    public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         GarlicDiffuserBlockEntity tile = new GarlicDiffuserBlockEntity(pos, state);
         tile.setType(type);
         tile.initiateBootTimer();
@@ -115,22 +115,22 @@ public class GarlicDiffuserBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public void playerDestroy(@Nonnull Level worldIn, @Nonnull Player player, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nullable BlockEntity te, @Nonnull ItemStack stack) {
+    public void playerDestroy(@NotNull Level worldIn, @NotNull Player player, @NotNull BlockPos pos, @NotNull BlockState state, @Nullable BlockEntity te, @NotNull ItemStack stack) {
         super.playerDestroy(worldIn, player, pos, state, te, stack);
         if (te instanceof GarlicDiffuserBlockEntity) {
             ((GarlicDiffuserBlockEntity) te).onTouched(player);
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {
         return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public InteractionResult use(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
+    public InteractionResult use(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         ItemStack heldItem = player.getItemInHand(hand);
         if (!heldItem.isEmpty() && ModItems.PURIFIED_GARLIC.get() == heldItem.getItem()) {
             if (!world.isClientSide) {
@@ -174,7 +174,7 @@ public class GarlicDiffuserBlock extends VampirismBlockContainer {
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
         return createTickerHelper(type, ModTiles.GARLIC_DIFFUSER.get(), GarlicDiffuserBlockEntity::tick);
     }
 
@@ -192,7 +192,7 @@ public class GarlicDiffuserBlock extends VampirismBlockContainer {
             return this.getSerializedName();
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public String getSerializedName() {
             return name;

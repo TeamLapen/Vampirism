@@ -17,7 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Render the advanced vampire with overlays
@@ -35,15 +35,15 @@ public class AdvancedVampireRenderer extends HumanoidMobRenderer<AdvancedVampire
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public ResourceLocation getTextureLocation(@Nonnull AdvancedVampireEntity entity) {
+    public ResourceLocation getTextureLocation(@NotNull AdvancedVampireEntity entity) {
         return texture;
     }
 
 
     @Override
-    protected void renderNameTag(@Nonnull AdvancedVampireEntity entityIn, @Nonnull Component displayNameIn, @Nonnull PoseStack matrixStackIn, @Nonnull MultiBufferSource bufferIn, int packedLightIn) {
+    protected void renderNameTag(@NotNull AdvancedVampireEntity entityIn, @NotNull Component displayNameIn, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
         double dist = this.entityRenderDispatcher.distanceToSqr(entityIn);
         if (dist <= 256) {
             super.renderNameTag(entityIn, displayNameIn, matrixStackIn, bufferIn, packedLightIn);

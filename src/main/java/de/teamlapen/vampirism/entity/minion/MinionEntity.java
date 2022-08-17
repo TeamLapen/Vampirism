@@ -59,8 +59,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -113,7 +113,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     @Nullable
     private Player interactingPlayer;
 
-    protected MinionEntity(EntityType<? extends VampirismEntity> type, Level world, @Nonnull Predicate<LivingEntity> attackPredicate) {
+    protected MinionEntity(EntityType<? extends VampirismEntity> type, Level world, @NotNull Predicate<LivingEntity> attackPredicate) {
         super(type, world);
         this.softAttackPredicate = attackPredicate;
         this.hardAttackPredicate = livingEntity -> {
@@ -126,7 +126,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
     @Override
-    public void addAdditionalSaveData(@Nonnull CompoundTag nbt) {
+    public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
 //        if (isValid()) {
             this.getLordID().ifPresent(id -> nbt.putUUID("lord", id));
@@ -162,7 +162,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         }
     }
 
-    public void claimMinionSlot(int id, @Nonnull PlayerMinionController controller) {
+    public void claimMinionSlot(int id, @NotNull PlayerMinionController controller) {
         assert minionId == 0;
         controller.claimMinionSlot(id).ifPresent(token -> {
             playerMinionController = controller;
@@ -173,7 +173,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
     @Override
-    public void die(@Nonnull DamageSource cause) {
+    public void die(@NotNull DamageSource cause) {
         super.die(cause);
         if (this.playerMinionController != null) {
             this.getLordOpt().map(ILordPlayer::getPlayer).ifPresent(p -> p.displayClientMessage(Component.translatable("text.vampirism.minion.died", this.getDisplayName()), true));
@@ -188,7 +188,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
      * TODO 1.20
      */
     @Override
-    public boolean doHurtTarget(@Nonnull Entity entityIn) {
+    public boolean doHurtTarget(@NotNull Entity entityIn) {
         float f = (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE);
         float f1 = (float) this.getAttributeValue(Attributes.ATTACK_KNOCKBACK);
         if (entityIn instanceof LivingEntity) {
@@ -226,9 +226,9 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         return flag;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public ItemStack eat(@Nonnull Level world, @Nonnull ItemStack stack) {
+    public ItemStack eat(@NotNull Level world, @NotNull ItemStack stack) {
         if (stack.isEdible()) {
             float healAmount = stack.getItem().getFoodProperties(stack, this).getNutrition() / 2f;
             this.heal(healAmount);
@@ -256,12 +256,12 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     /**
      * @return Return player (lord) if they are currently interacting with this minion
      */
-    @Nonnull
+    @NotNull
     public Optional<Player> getForceLookTarget() {
         return Optional.ofNullable(interactingPlayer);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
@@ -275,14 +275,14 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         return Optional.empty();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Iterable<ItemStack> getArmorSlots() {
         return getInventory().map(IMinionInventory::getInventoryArmor).orElse(EMPTY_LIST);
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public Optional<ILordPlayer> getLordOpt() {
         return Optional.ofNullable(getLord());
     }
@@ -315,9 +315,9 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         return 0.8f + convertCounter / (float) CONVERT_DURATION * 0.2f;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public EntityDimensions getDimensions(@Nonnull Pose poseIn) {
+    public EntityDimensions getDimensions(@NotNull Pose poseIn) {
         return super.getDimensions(poseIn).scale(getScale());
     }
 
@@ -325,7 +325,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         return minionData != null && minionData.isTaskLocked();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Iterable<ItemStack> getHandSlots() {
         return getInventory().map(IMinionInventory::getInventoryHands).orElse(EMPTY_LIST);
@@ -375,9 +375,9 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
 
-    @Nonnull
+    @NotNull
     @Override
-    public ItemStack getItemBySlot(@Nonnull EquipmentSlot slotIn) {
+    public ItemStack getItemBySlot(@NotNull EquipmentSlot slotIn) {
         return switch (slotIn.getType()) {
             case HAND -> getInventory().map(IMinionInventory::getInventoryHands).map(i -> i.get(slotIn.getIndex())).orElse(ItemStack.EMPTY);
             case ARMOR -> getInventory().map(IMinionInventory::getInventoryArmor).map(i -> i.get(slotIn.getIndex())).orElse(ItemStack.EMPTY);
@@ -385,7 +385,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
     @Override
-    public void readAdditionalSaveData(@Nonnull CompoundTag nbt) {
+    public void readAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
         UUID id = nbt.hasUUID("lord") ? nbt.getUUID("lord") : null;
         if (id != null && level instanceof ServerLevel) {
@@ -430,7 +430,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
     @Override
-    public void setItemSlot(@Nonnull EquipmentSlot slotIn, @Nonnull ItemStack stack) {
+    public void setItemSlot(@NotNull EquipmentSlot slotIn, @NotNull ItemStack stack) {
         if (minionData == null) return;
         switch (slotIn.getType()) {
             case HAND -> getInventory().map(IMinionInventory::getInventoryHands).ifPresent(i -> i.set(slotIn.getIndex(), stack));
@@ -523,7 +523,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
     @Override
-    protected void hurtArmor(@Nonnull DamageSource damageSource, float damage) {
+    protected void hurtArmor(@NotNull DamageSource damageSource, float damage) {
         if (this.minionData != null) this.minionData.getInventory().damageArmor(damageSource, damage, this);
     }
 
@@ -540,12 +540,12 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
      * {@link MinionEntity#minionData} is already set
      * Can be called client and server side
      */
-    protected void onMinionDataReceived(@Nonnull T data) {
+    protected void onMinionDataReceived(@NotNull T data) {
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    protected InteractionResult mobInteract(@Nonnull Player player, @Nonnull InteractionHand hand) {
+    protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (isLord(player)) {
             if (player instanceof ServerPlayer) {
                 NetworkHooks.openScreen((ServerPlayer) player, new SimpleMenuProvider((id, playerInventory, playerIn) -> MinionContainer.create(id, playerInventory, this, getLord()), Component.translatable("text.vampirism.name").append(this.getMinionData().map(MinionData::getFormattedName).orElse(Component.literal("Minion")))), buf -> buf.writeVarInt(this.getId()));
@@ -596,7 +596,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         }
     }
 
-    private void handleLoadedMinionData(@Nonnull T data) {
+    private void handleLoadedMinionData(@NotNull T data) {
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(data.getMaxHealth());
         super.setHealth(data.getHealth());
         super.setCustomName(data.getFormattedName());

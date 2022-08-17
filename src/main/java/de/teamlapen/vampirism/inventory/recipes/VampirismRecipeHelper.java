@@ -14,13 +14,13 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 import java.util.Set;
 
 class VampirismRecipeHelper {
 
-    @Nonnull
+    @NotNull
     static ISkill<?>[] deserializeSkills(JsonArray jsonObject) {
         if (jsonObject == null || jsonObject.size() == 0)
             return new ISkill[0];

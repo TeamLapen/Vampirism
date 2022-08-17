@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class GarlicDiffuserScreen extends Screen {
@@ -36,7 +36,7 @@ public class GarlicDiffuserScreen extends Screen {
     }
 
     @Override
-    public void render(@Nonnull PoseStack mStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull PoseStack mStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(mStack);
 
         this.renderGuiBackground(mStack);

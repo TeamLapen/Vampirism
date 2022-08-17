@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.FlowerBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.Material;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
@@ -41,7 +41,7 @@ public class VampirismFlowerBlock extends FlowerBlock {
             return this.getSerializedName();
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public String getSerializedName() {
             return name;

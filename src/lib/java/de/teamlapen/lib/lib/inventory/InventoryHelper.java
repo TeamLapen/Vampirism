@@ -17,9 +17,9 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 
@@ -66,7 +66,7 @@ public class InventoryHelper {
         }
     }
 
-    @Nonnull
+    @NotNull
     public static Optional<Pair<IItemHandler, BlockEntity>> tryGetItemHandler(BlockGetter world, BlockPos pos, @Nullable Direction side) {
         BlockState state = world.getBlockState(pos);
         if (state.hasBlockEntity()) {

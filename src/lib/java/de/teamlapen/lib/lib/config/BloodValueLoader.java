@@ -11,9 +11,9 @@ import net.minecraftforge.fml.ModList;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -37,7 +37,7 @@ public class BloodValueLoader extends SimplePreparableReloadListener<Collection<
      * @param consumerIn       the consumer which gets the ResourceLocation to Integer Map from the files
      * @param multiplierNameIn the ResourceLocation which declares a multiplier in data pack
      */
-    public BloodValueLoader(@Nonnull String nameIn, @Nonnull BiConsumer<Map<ResourceLocation, Integer>, Integer> consumerIn, @Nullable ResourceLocation multiplierNameIn) {
+    public BloodValueLoader(@NotNull String nameIn, @NotNull BiConsumer<Map<ResourceLocation, Integer>, Integer> consumerIn, @Nullable ResourceLocation multiplierNameIn) {
         this.folderLocation = BLOOD_VALUE_DIRECTORY + nameIn;
         this.consumer = consumerIn;
         this.multiplierName = multiplierNameIn;
@@ -45,7 +45,7 @@ public class BloodValueLoader extends SimplePreparableReloadListener<Collection<
     }
 
     @Override
-    public void apply(@Nonnull Collection<ResourceLocation> splashList, @Nonnull ResourceManager resourceManagerIn, @Nonnull ProfilerFiller profilerIn) {
+    public void apply(@NotNull Collection<ResourceLocation> splashList, @NotNull ResourceManager resourceManagerIn, @NotNull ProfilerFiller profilerIn) {
         Map<ResourceLocation, Integer> values = Maps.newConcurrentMap();
         for (ResourceLocation location : splashList) {
             String modId = location.getPath().substring(folderLocation.length() + 1, location.getPath().length() - 4);
@@ -128,9 +128,9 @@ public class BloodValueLoader extends SimplePreparableReloadListener<Collection<
 
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public Collection<ResourceLocation> prepare(ResourceManager resourceManagerIn, @Nonnull ProfilerFiller profilerIn) {
+    public Collection<ResourceLocation> prepare(ResourceManager resourceManagerIn, @NotNull ProfilerFiller profilerIn) {
         return resourceManagerIn.listResources(folderLocation, (file) -> file.getPath().endsWith(".txt")).keySet();
     }
 }

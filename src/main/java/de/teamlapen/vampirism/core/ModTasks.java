@@ -20,7 +20,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
 public class ModTasks {
@@ -97,12 +97,12 @@ public class ModTasks {
 
     }
 
-    @Nonnull
+    @NotNull
     private static TaskBuilder vampire() {
         return TaskBuilder.builder().withFaction(() -> VReference.VAMPIRE_FACTION);
     }
 
-    @Nonnull
+    @NotNull
     private static TaskBuilder hunter() {
         return TaskBuilder.builder().withFaction(() -> VReference.HUNTER_FACTION);
     }

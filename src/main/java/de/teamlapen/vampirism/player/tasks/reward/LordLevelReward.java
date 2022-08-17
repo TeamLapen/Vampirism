@@ -9,7 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 
 /**
@@ -58,7 +58,7 @@ public class LordLevelReward implements TaskReward, ITaskRewardInstance {
     }
 
     @Override
-    public CompoundTag writeNBT(@Nonnull CompoundTag nbt) {
+    public CompoundTag writeNBT(@NotNull CompoundTag nbt) {
         nbt.putInt("targetLevel", this.targetLevel);
         return nbt;
     }

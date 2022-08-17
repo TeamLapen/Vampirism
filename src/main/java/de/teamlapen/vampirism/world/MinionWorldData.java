@@ -13,8 +13,8 @@ import net.minecraft.world.level.saveddata.SavedData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,18 +23,18 @@ public class MinionWorldData extends SavedData {
     private final static Logger LOGGER = LogManager.getLogger();
     private final static String ID = "vampirism-minion-data";
 
-    @Nonnull
+    @NotNull
     public static MinionWorldData getData(ServerLevel world) {
         return getData(world.getServer());
     }
 
-    @Nonnull
+    @NotNull
     public static MinionWorldData getData(final MinecraftServer server) {
         return server.getLevel(Level.OVERWORLD).getDataStorage().computeIfAbsent((data) -> MinionWorldData.load(server, data), () -> new MinionWorldData(server), ID);
     }
 
 
-    @Nonnull
+    @NotNull
     public static Optional<MinionWorldData> getData(Level world) {
         if (world instanceof ServerLevel) {
             return Optional.of(getData(((ServerLevel) world).getServer()));
@@ -55,7 +55,7 @@ public class MinionWorldData extends SavedData {
         return controllers.get(lordID);
     }
 
-    @Nonnull
+    @NotNull
     public PlayerMinionController getOrCreateController(FactionPlayerHandler lord) {
         UUID id = lord.getPlayer().getUUID();
         if (controllers.containsKey(id)) {
@@ -101,7 +101,7 @@ public class MinionWorldData extends SavedData {
         controllers.object2ObjectEntrySet().fastForEach(entry -> entry.getValue().tick());
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public CompoundTag save(CompoundTag compound) {
         ListTag all = new ListTag();

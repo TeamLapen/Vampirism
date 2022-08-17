@@ -11,7 +11,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition.Builder;
 
@@ -23,7 +23,7 @@ public class TentSpawnerCondition implements LootItemCondition {
         return () -> INSTANCE;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public LootItemConditionType getType() {
         return ModLoot.is_tent_spawner.get();
@@ -41,14 +41,14 @@ public class TentSpawnerCondition implements LootItemCondition {
     public static class Serializer implements net.minecraft.world.level.storage.loot.Serializer<TentSpawnerCondition> {
 
 
-        @Nonnull
+        @NotNull
         @Override
-        public TentSpawnerCondition deserialize(@Nonnull JsonObject json, @Nonnull JsonDeserializationContext context) {
+        public TentSpawnerCondition deserialize(@NotNull JsonObject json, @NotNull JsonDeserializationContext context) {
             return INSTANCE;
         }
 
         @Override
-        public void serialize(@Nonnull JsonObject json, @Nonnull TentSpawnerCondition value, @Nonnull JsonSerializationContext context) {
+        public void serialize(@NotNull JsonObject json, @NotNull TentSpawnerCondition value, @NotNull JsonSerializationContext context) {
 
         }
 

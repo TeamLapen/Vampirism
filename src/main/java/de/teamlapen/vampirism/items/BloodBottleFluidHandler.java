@@ -14,8 +14,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Fluid handler capability for blood bottles.
@@ -34,15 +34,15 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
 
     private final LazyOptional<IFluidHandlerItem> holder = LazyOptional.of(() -> this);
     private final int capacity;
-    @Nonnull
+    @NotNull
     protected ItemStack container;
 
-    public BloodBottleFluidHandler(@Nonnull ItemStack container, int capacity) {
+    public BloodBottleFluidHandler(@NotNull ItemStack container, int capacity) {
         this.container = container;
         this.capacity = capacity;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public FluidStack drain(FluidStack resource, FluidAction action) {
         if (container.getCount() != 1 || resource == null || resource.getAmount() <= 0 || ModFluids.BLOOD.get() != resource.getFluid()) {
@@ -51,7 +51,7 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
         return drain(resource.getAmount(), action);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public FluidStack drain(int maxDrain, FluidAction action) {
         int currentAmt = getBlood(container);
@@ -88,20 +88,20 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
         return stack.getItem() == ModItems.BLOOD_BOTTLE.get() ? stack.getDamageValue() * MULTIPLIER : 0;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         return CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY.orEmpty(cap, holder);
 
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ItemStack getContainer() {
         return container;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public FluidStack getFluidInTank(int tank) {
         return new FluidStack(ModFluids.BLOOD.get(), getBlood(container));
@@ -118,7 +118,7 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
     }
 
     @Override
-    public boolean isFluidValid(int tank, @Nonnull FluidStack stack) {
+    public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
         return ModFluids.BLOOD.get().isSame(stack.getFluid());
     }
 

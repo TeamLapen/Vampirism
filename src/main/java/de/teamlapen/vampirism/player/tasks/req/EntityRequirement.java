@@ -5,16 +5,16 @@ import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class EntityRequirement implements TaskRequirement.Requirement<EntityType<?>> {
-    @Nonnull
+    @NotNull
     private final EntityType<?> entityType;
     private final int amount;
-    @Nonnull
+    @NotNull
     private final ResourceLocation id;
 
-    public EntityRequirement(@Nonnull ResourceLocation id, @Nonnull EntityType<?> entityType, int amount) {
+    public EntityRequirement(@NotNull ResourceLocation id, @NotNull EntityType<?> entityType, int amount) {
         this.id = id;
         this.entityType = entityType;
         this.amount = amount;
@@ -25,19 +25,19 @@ public class EntityRequirement implements TaskRequirement.Requirement<EntityType
         return amount;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ResourceLocation getId() {
         return id;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public EntityType<?> getStat(IFactionPlayer<?> player) {
         return entityType;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public TaskRequirement.Type getType() {
         return TaskRequirement.Type.ENTITY;

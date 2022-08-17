@@ -1,12 +1,11 @@
 package de.teamlapen.vampirism.api.entity.minion;
 
 import net.minecraft.network.chat.Component;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 
 public interface IMinionData {
-    @Nonnull
+    @NotNull
     IMinionTask.IMinionTaskDesc<?> getCurrentTaskDesc();
 
     Component getFormattedName();

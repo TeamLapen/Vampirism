@@ -24,7 +24,6 @@ import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Arrays;
 
 public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
@@ -64,14 +63,14 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
     }
 
     @Override
-    @Nonnull
+    @NotNull
     protected Component getDefaultName() {
         return Component.translatable("container.vampirism.alchemy_table");
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    protected AbstractContainerMenu createMenu(int menuId, @Nonnull Inventory playerInventory) {
+    protected AbstractContainerMenu createMenu(int menuId, @NotNull Inventory playerInventory) {
         return new AlchemyTableContainer(menuId, this.level, playerInventory, this, this.dataAccess);
     }
 
@@ -102,20 +101,20 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
         return aboolean;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ItemStack getItem(int p_70301_1_) {
         return p_70301_1_ >= 0 && p_70301_1_ < this.items.size() ? this.items.get(p_70301_1_) : ItemStack.EMPTY;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ItemStack removeItem(int p_70298_1_, int p_70298_2_) {
         return ContainerHelper.removeItem(this.items, p_70298_1_, p_70298_2_);
 
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ItemStack removeItemNoUpdate(int p_70304_1_) {
         return ContainerHelper.takeItem(this.items, p_70304_1_);
@@ -123,14 +122,14 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
     }
 
     @Override
-    public void setItem(int p_70299_1_, @Nonnull ItemStack stack) {
+    public void setItem(int p_70299_1_, @NotNull ItemStack stack) {
         if (p_70299_1_ >= 0 && p_70299_1_ < this.items.size()) {
             this.items.set(p_70299_1_, stack);
         }
     }
 
     @Override
-    public boolean stillValid(@Nonnull Player player) {
+    public boolean stillValid(@NotNull Player player) {
         if (this.level.getBlockEntity(this.worldPosition) != this) {
             return false;
         } else {
@@ -238,7 +237,7 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
         level.levelEvent(1035, blockpos, 0);
     }
 
-    public boolean canPlaceItem(int p_94041_1_, @Nonnull ItemStack stack) {
+    public boolean canPlaceItem(int p_94041_1_, @NotNull ItemStack stack) {
         if (p_94041_1_ == 3) {
             return isValidIngredient(this.level, stack);
         } else {
@@ -277,7 +276,7 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
     }
 
     @Override
-    public void saveAdditional(@Nonnull CompoundTag tag) {
+    public void saveAdditional(@NotNull CompoundTag tag) {
         super.saveAdditional(tag);
         tag.putShort("BrewTime", (short)this.brewTime);
         ContainerHelper.saveAllItems(tag, this.items);

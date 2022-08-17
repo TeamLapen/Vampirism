@@ -20,7 +20,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.common.loot.LootModifier;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.stream.Collector;
 
 public class SmeltItemLootModifier extends LootModifier {
@@ -36,7 +36,7 @@ public class SmeltItemLootModifier extends LootModifier {
         super(conditionsIn);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     protected ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
         ItemStack stack = context.getParamOrNull(LootContextParams.TOOL);

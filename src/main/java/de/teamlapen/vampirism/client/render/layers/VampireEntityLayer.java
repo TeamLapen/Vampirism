@@ -11,7 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Render the vampire overlay
@@ -32,7 +32,7 @@ public class VampireEntityLayer<T extends LivingEntity, U extends EntityModel<T>
     }
 
     @Override
-    public void render(@Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource iRenderTypeBuffer, int i, T entity, float v, float v1, float v2, float v3, float v4, float v5) {
+    public void render(@NotNull PoseStack matrixStack, @NotNull MultiBufferSource iRenderTypeBuffer, int i, T entity, float v, float v1, float v2, float v3, float v4, float v5) {
         if (!entity.isInvisible() && (!checkIfRender || ConvertedCreatureRenderer.renderOverlay)) {
             renderColoredCutoutModel(this.getParentModel(), overlay, matrixStack, iRenderTypeBuffer, i, entity, 1, 1, 1);
         }

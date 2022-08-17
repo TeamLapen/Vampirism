@@ -26,7 +26,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 
 public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<AlchemicalCauldronRecipe> {
@@ -56,7 +56,7 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
     }
 
     @Override
-    public void draw(AlchemicalCauldronRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @Nonnull PoseStack stack, double mouseX, double mouseY) {
+    public void draw(AlchemicalCauldronRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull PoseStack stack, double mouseX, double mouseY) {
         this.flame.draw(stack, 19, 27);
         this.arrow.draw(stack, 41, 25);
         this.bubbles.draw(stack, 104, 19);
@@ -79,13 +79,13 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
     }
 
 
-    @Nonnull
+    @NotNull
     @Override
     public IDrawable getBackground() {
         return this.background;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IDrawable getIcon() {
         return this.icon;
@@ -96,7 +96,7 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
         return VampirismJEIPlugin.ALCHEMICAL_CAULDRON;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Component getTitle() {
         return this.localizedName;

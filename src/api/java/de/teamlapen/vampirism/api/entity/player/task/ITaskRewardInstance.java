@@ -4,8 +4,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public interface ITaskRewardInstance {
     /**
@@ -19,6 +18,6 @@ public interface ITaskRewardInstance {
 
     ResourceLocation getId();
 
-    CompoundTag writeNBT(@Nonnull CompoundTag nbt);
+    CompoundTag writeNBT(@NotNull CompoundTag nbt);
 
 }

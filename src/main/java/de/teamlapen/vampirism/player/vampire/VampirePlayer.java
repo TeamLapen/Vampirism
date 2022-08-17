@@ -85,8 +85,8 @@ import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -122,7 +122,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
      * Always prefer using #getOpt instead
      */
     @Deprecated
-    public static VampirePlayer get(@Nonnull Player player) {
+    public static VampirePlayer get(@NotNull Player player) {
         return (VampirePlayer) player.getCapability(CAP).orElseThrow(() -> new IllegalStateException("Cannot get Vampire player capability from player " + player));
     }
 
@@ -130,7 +130,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     /**
      * Return a LazyOptional, but print a warning message if not present.
      */
-    public static LazyOptional<VampirePlayer> getOpt(@Nonnull Player player) {
+    public static LazyOptional<VampirePlayer> getOpt(@NotNull Player player) {
         LazyOptional<VampirePlayer> opt = player.getCapability(CAP).cast();
         if (!opt.isPresent()) {
             LOGGER.warn("Cannot get Vampire player capability. This might break mod functionality.", new Throwable().fillInStackTrace());
@@ -149,9 +149,9 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                 inst.loadData(nbt);
             }
 
-            @Nonnull
+            @NotNull
             @Override
-            public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, Direction facing) {
+            public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, Direction facing) {
                 return CAP.orEmpty(capability, opt);
             }
 
@@ -337,7 +337,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         return true;
     }
 
-    @Nonnull
+    @NotNull
     public BITE_TYPE determineBiteType(LivingEntity entity) {
         if(player instanceof ServerPlayer && !PermissionAPI.getPermission((ServerPlayer) player, Permissions.FEED)){
             return BITE_TYPE.NONE;
@@ -395,7 +395,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IActionHandler<IVampirePlayer> getActionHandler() {
         return actionHandler;
@@ -425,7 +425,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         return VampirismConfig.BALANCE.vpPlayerBloodSaturation.get().floatValue();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IBloodStats getBloodStats() {
         return bloodStats;
@@ -524,7 +524,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ISkillHandler<IVampirePlayer> getSkillHandler() {
         return skillHandler;
@@ -533,7 +533,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     /**
      * You can use {@link VampirismPlayerAttributes#getVampSpecial()} instead if you don't have the vampire player already
      */
-    @Nonnull
+    @NotNull
     public VampirePlayerSpecialAttributes getSpecialAttributes() {
         return ((IVampirismPlayer) player).getVampAtts().getVampSpecial();
     }
@@ -567,7 +567,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         return getSpecialAttributes().disguised;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public EnumStrength isGettingGarlicDamage(LevelAccessor iWorld, boolean forcerefresh) {
         if (forcerefresh) {
@@ -1106,7 +1106,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     @Override
-    public void unUnlockVision(@Nonnull IVampireVision vision) {
+    public void unUnlockVision(@NotNull IVampireVision vision) {
         if (vision.equals(activatedVision)) {
             activateVision(null);
         }
@@ -1114,7 +1114,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     @Override
-    public void unlockVision(@Nonnull IVampireVision vision) {
+    public void unlockVision(@NotNull IVampireVision vision) {
         if ((VampirismAPI.vampireVisionRegistry()).getIdOfVision(vision) == -1) {
             throw new IllegalArgumentException("You have to register the vision first: " + vision);
         }
@@ -1285,7 +1285,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         LevelAttributeModifier.applyModifier(player, Attributes.ATTACK_SPEED, "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpAttackSpeedMaxMod.get() * (heavyArmor ? 0.5f : 1), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
     }
 
-    private void biteBlock(@Nonnull BlockPos pos, @Nonnull BlockState blockState, @Nullable BlockEntity tileEntity) {
+    private void biteBlock(@NotNull BlockPos pos, @NotNull BlockState blockState, @Nullable BlockEntity tileEntity) {
         if (isRemote()) return;
         if (getLevel() == 0) return;
         if (!bloodStats.needsBlood()) return;

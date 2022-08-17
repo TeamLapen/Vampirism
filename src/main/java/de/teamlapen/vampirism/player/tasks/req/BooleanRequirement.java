@@ -4,28 +4,28 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import net.minecraft.resources.ResourceLocation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.function.Function;
 
 public class BooleanRequirement implements TaskRequirement.Requirement<Boolean> {
 
-    @Nonnull
+    @NotNull
     private final ResourceLocation id;
-    @Nonnull
+    @NotNull
     private final BooleanSupplier function;
 
-    public BooleanRequirement(@Nonnull ResourceLocation id, @Nonnull BooleanSupplier function) {
+    public BooleanRequirement(@NotNull ResourceLocation id, @NotNull BooleanSupplier function) {
         this.id = id;
         this.function = function;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ResourceLocation getId() {
         return this.id;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Boolean getStat(IFactionPlayer<?> player) {
         return this.function.apply(player);

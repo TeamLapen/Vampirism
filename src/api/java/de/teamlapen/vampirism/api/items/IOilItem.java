@@ -2,15 +2,14 @@ package de.teamlapen.vampirism.api.items;
 
 import de.teamlapen.vampirism.api.items.oil.IOil;
 import net.minecraft.world.item.ItemStack;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public interface IOilItem {
 
     /**
      * @return the applied oil or empty oil
      */
-    @Nonnull
+    @NotNull
     IOil getOil(ItemStack stack);
 
     /**

@@ -13,7 +13,7 @@ import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Function to set the charge of any {@link de.teamlapen.vampirism.api.items.IBloodChargeable}
@@ -37,29 +37,29 @@ public class SetItemBloodCharge extends LootItemConditionalFunction {
         this.charge = charge;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public LootItemFunctionType getType() {
         return ModLoot.set_item_blood_charge.get();
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public ItemStack run(@Nonnull ItemStack stack, @Nonnull LootContext context) {
+    public ItemStack run(@NotNull ItemStack stack, @NotNull LootContext context) {
         ((IBloodChargeable) stack.getItem()).charge(stack, charge.getInt(context));
         return stack;
     }
 
     public static class Serializer extends LootItemConditionalFunction.Serializer<SetItemBloodCharge> {
-        @Nonnull
+        @NotNull
         @Override
-        public SetItemBloodCharge deserialize(@Nonnull JsonObject jsonObject, @Nonnull JsonDeserializationContext jsonDeserializationContext, @Nonnull LootItemCondition[] iLootConditions) {
+        public SetItemBloodCharge deserialize(@NotNull JsonObject jsonObject, @NotNull JsonDeserializationContext jsonDeserializationContext, @NotNull LootItemCondition[] iLootConditions) {
             NumberProvider charge = GsonHelper.getAsObject(jsonObject, "charge", jsonDeserializationContext, NumberProvider.class);
             return new SetItemBloodCharge(iLootConditions, charge);
         }
 
         @Override
-        public void serialize(@Nonnull JsonObject object, @Nonnull SetItemBloodCharge lootFunction, @Nonnull JsonSerializationContext context) {
+        public void serialize(@NotNull JsonObject object, @NotNull SetItemBloodCharge lootFunction, @NotNull JsonSerializationContext context) {
             super.serialize(object, lootFunction, context);
             object.add("charge", context.serialize(lootFunction.charge));
 

@@ -18,8 +18,8 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 import net.minecraft.world.item.Item.Properties;
@@ -37,7 +37,7 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         if (getExclusiveFaction(stack) != null || getMinLevel(stack) > 0 || getRequiredSkill(stack) != null) {
             Player player = VampirismMod.proxy.getClientPlayer();
             addFactionLevelToolTip(stack, worldIn, tooltip, flagIn, player);
@@ -47,13 +47,13 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
 
     @Nullable
     @Override
-    public IFaction<?> getExclusiveFaction(@Nonnull ItemStack stack) {
+    public IFaction<?> getExclusiveFaction(@NotNull ItemStack stack) {
         return VReference.HUNTER_FACTION;
     }
 
     @Nullable
     @Override
-    public ISkill<IHunterPlayer> getRequiredSkill(@Nonnull ItemStack stack) {
+    public ISkill<IHunterPlayer> getRequiredSkill(@NotNull ItemStack stack) {
         return null;
     }
 

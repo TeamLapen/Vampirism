@@ -18,9 +18,9 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
 
@@ -112,7 +112,7 @@ public abstract class GuiPieMenu<T> extends Screen {
     }
 
     @Override
-    public void render(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         // Calculate center and radius of the skill cycle
         int cX = this.width / 2;
         int cY = this.height / 2;
@@ -218,7 +218,7 @@ public abstract class GuiPieMenu<T> extends Screen {
      *
      * @return Color
      */
-    @Nonnull
+    @NotNull
     protected Color getColor(T s) {
         return Color.WHITE;
     }

@@ -22,8 +22,8 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -61,7 +61,7 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
     }
 
     @Override
-    public void addAdditionalSaveData(@Nonnull CompoundTag compound) {
+    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putFloat("direct_damage", directDamage);
         compound.putFloat("indirect_damage", indirectDamage);
@@ -102,7 +102,7 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
         this.excludeShooter = true;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
@@ -114,7 +114,7 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
     }
 
     @Override
-    public boolean hurt(@Nonnull DamageSource source, float amount) {
+    public boolean hurt(@NotNull DamageSource source, float amount) {
         return false;
     }
 
@@ -144,7 +144,7 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
     }
 
     @Override
-    public void readAdditionalSaveData(@Nonnull CompoundTag compound) {
+    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         this.directDamage = compound.getFloat("direct_damage");
         this.indirectDamage = compound.getFloat("indirect_damage");
@@ -187,14 +187,14 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
         this.motionFactor = factor;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     protected ParticleOptions getTrailParticle() {
         return ParticleTypes.UNDERWATER;
     }
 
     @Override
-    protected void onHit(@Nonnull HitResult result) {
+    protected void onHit(@NotNull HitResult result) {
         if (!this.level.isClientSide) {
             if (initialNoClip && this.tickCount > 20) {
                 if (result.getType() == HitResult.Type.BLOCK) {

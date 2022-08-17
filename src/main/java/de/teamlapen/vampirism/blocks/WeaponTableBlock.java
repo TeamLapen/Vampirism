@@ -33,8 +33,8 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.network.NetworkHooks;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class WeaponTableBlock extends VampirismHorizontalBlock {
     public static final int MAX_LAVA = 5;
@@ -73,13 +73,13 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
 
     @Nullable
     @Override
-    public MenuProvider getMenuProvider(@Nonnull BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos) {
+    public MenuProvider getMenuProvider(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos) {
         return new SimpleMenuProvider((id, playerInventory, playerEntity) -> new WeaponTableContainer(id, playerInventory, ContainerLevelAccess.create(worldIn, pos)), name);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public InteractionResult use(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
+    public InteractionResult use(@NotNull BlockState state, Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         if (!world.isClientSide) {
             int fluid = world.getBlockState(pos).getValue(LAVA);
             boolean flag = false;

@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecorator;
 import net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecoratorType;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +21,7 @@ public class TrunkCursedVineDecorator extends TreeDecorator {
     public static final TrunkCursedVineDecorator INSTANCE = new TrunkCursedVineDecorator();
     public static final Codec<TrunkCursedVineDecorator> CODEC = Codec.unit(() -> INSTANCE);
 
-    @Nonnull
+    @NotNull
     @Override
     protected TreeDecoratorType<?> type() {
         return ModFeatures.trunk_cursed_vine.get();

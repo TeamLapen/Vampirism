@@ -35,7 +35,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceWit
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -54,7 +54,7 @@ public class LootTablesGenerator extends LootTableProvider {
         super(dataGeneratorIn);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     protected List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootContextParamSet>> getTables() {
 
@@ -62,7 +62,7 @@ public class LootTablesGenerator extends LootTableProvider {
     }
 
     @Override
-    protected void validate(Map<ResourceLocation, LootTable> map, @Nonnull ValidationContext validationtracker) {
+    protected void validate(Map<ResourceLocation, LootTable> map, @NotNull ValidationContext validationtracker) {
         for (ResourceLocation resourcelocation : Sets.difference(ModLootTables.getLootTables(), map.keySet())) {
             validationtracker.reportProblem("Missing built-in table: " + resourcelocation);
         }
@@ -147,7 +147,7 @@ public class LootTablesGenerator extends LootTableProvider {
             this.add(ModEntities.HUNTER_MINION.get(), LootTable.lootTable());
         }
 
-        @Nonnull
+        @NotNull
         @Override
         protected Iterable<EntityType<?>> getKnownEntities() {
             return ModEntities.getAllEntities();
@@ -318,7 +318,7 @@ public class LootTablesGenerator extends LootTableProvider {
             this.dropSelf(ModBlocks.ALCHEMY_TABLE.get());
         }
 
-        @Nonnull
+        @NotNull
         @Override
         protected Iterable<Block> getKnownBlocks() {
             return ModBlocks.getAllBlocks();

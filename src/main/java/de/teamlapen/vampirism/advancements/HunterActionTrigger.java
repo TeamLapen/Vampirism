@@ -7,8 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Collection of several hunter related triggers
@@ -22,7 +21,7 @@ public class HunterActionTrigger extends SimpleCriterionTrigger<HunterActionTrig
         return new Instance(action);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ResourceLocation getId() {
         return ID;
@@ -32,9 +31,9 @@ public class HunterActionTrigger extends SimpleCriterionTrigger<HunterActionTrig
         this.trigger(player, (instance) -> instance.test(action));
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    protected Instance createInstance(JsonObject json, @Nonnull EntityPredicate.Composite entityPredicate, @Nonnull DeserializationContext conditionsParser) {
+    protected Instance createInstance(JsonObject json, @NotNull EntityPredicate.Composite entityPredicate, @NotNull DeserializationContext conditionsParser) {
         Action action = Action.NONE;
         if (json.has("action")) {
             String name = json.get("action").getAsString();
@@ -55,17 +54,17 @@ public class HunterActionTrigger extends SimpleCriterionTrigger<HunterActionTrig
     }
 
     static class Instance extends AbstractCriterionTriggerInstance {
-        @Nonnull
+        @NotNull
         private final Action action;
 
-        Instance(@Nonnull Action action) {
+        Instance(@NotNull Action action) {
             super(ID, EntityPredicate.Composite.ANY);
             this.action = action;
         }
 
-        @Nonnull
+        @NotNull
         @Override
-        public JsonObject serializeToJson(@Nonnull SerializationContext serializer) {
+        public JsonObject serializeToJson(@NotNull SerializationContext serializer) {
             JsonObject json = super.serializeToJson(serializer);
             json.addProperty("action", action.name());
             return json;

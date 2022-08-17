@@ -46,7 +46,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 
@@ -73,7 +73,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         super(type, world, VampirismAPI.factionRegistry().getPredicate(VReference.HUNTER_FACTION, true, true, false, false, null).or(e -> !(e instanceof IFactionEntity) && (e instanceof Enemy) && !(e instanceof Creeper)));
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ItemStack getArrowStackForAttack(LivingEntity target) {
         return new ItemStack(ModItems.CROSSBOW_ARROW_NORMAL.get());
@@ -182,15 +182,15 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     }
 
     @Override
-    protected void onMinionDataReceived(@Nonnull HunterMinionData data) {
+    protected void onMinionDataReceived(@NotNull HunterMinionData data) {
         super.onMinionDataReceived(data);
         this.updateAttackGoal();
         this.updateAttributes();
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    protected InteractionResult mobInteract(@Nonnull Player player, @Nonnull InteractionHand hand) {
+    protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (!this.level.isClientSide() && isLord(player) && minionData != null) {
             ItemStack heldItem = player.getItemInHand(hand);
             if (heldItem.getItem() instanceof MinionUpgradeItem && ((MinionUpgradeItem) heldItem.getItem()).getFaction() == this.getFaction()) {

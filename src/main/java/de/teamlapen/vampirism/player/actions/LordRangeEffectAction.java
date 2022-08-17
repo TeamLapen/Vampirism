@@ -12,7 +12,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -51,7 +51,7 @@ public abstract class LordRangeEffectAction<T extends IFactionPlayer<T>> extends
         return ((IVampirismPlayer) player.getRepresentingPlayer()).getVampAtts().lordLevel - 1;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Optional<IPlayableFaction<?>> getFaction() {
         return Optional.of(this.faction);

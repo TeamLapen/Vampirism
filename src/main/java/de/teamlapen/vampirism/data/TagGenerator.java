@@ -18,7 +18,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class TagGenerator {
 
@@ -38,7 +38,7 @@ public class TagGenerator {
             super(dataGenerator, REFERENCE.MODID, helper);
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public String getName() {
             return REFERENCE.MODID + " " + super.getName();
@@ -87,7 +87,7 @@ public class TagGenerator {
             super(dataGenerator, blockTagsProvider, REFERENCE.MODID, helper);
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public String getName() {
             return REFERENCE.MODID + " " + super.getName();
@@ -153,7 +153,7 @@ public class TagGenerator {
             super(generatorIn, REFERENCE.MODID, helper);
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public String getName() {
             return REFERENCE.MODID + " " + super.getName();

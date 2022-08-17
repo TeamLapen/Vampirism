@@ -13,8 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraftforge.client.gui.ScreenUtils;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class ProgressBar extends AbstractWidget {
 
@@ -29,7 +28,7 @@ public class ProgressBar extends AbstractWidget {
     }
 
     @Override
-    public void renderButton(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderButton(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         Minecraft minecraft = Minecraft.getInstance();
         Font font = minecraft.font;
         int i = this.getYImage(this.isHovered);
@@ -51,7 +50,7 @@ public class ProgressBar extends AbstractWidget {
     }
 
     @Override
-    public void renderToolTip(@Nonnull PoseStack matrixStack, int mouseX, int mouseY) {
+    public void renderToolTip(@NotNull PoseStack matrixStack, int mouseX, int mouseY) {
         if (this.active)
             screen.renderTooltip(matrixStack, Component.literal("" + ((int) (progress * 100f)) + "%"), mouseX, mouseY);
 
@@ -66,7 +65,7 @@ public class ProgressBar extends AbstractWidget {
     }
 
     @Override
-    public void updateNarration(@Nonnull NarrationElementOutput p_169152_) {
+    public void updateNarration(@NotNull NarrationElementOutput p_169152_) {
 
     }
 }

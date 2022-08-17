@@ -17,8 +17,8 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -29,95 +29,95 @@ public class TaskBuilder {
         return new TaskBuilder();
     }
 
-    @Nonnull
+    @NotNull
     private final Map<TaskRequirement.Type, List<TaskRequirement.Requirement<?>>> requirement = Maps.newHashMapWithExpectedSize(TaskRequirement.Type.values().length);
-    @Nonnull
+    @NotNull
     private final List<TaskUnlocker> unlocker = Lists.newArrayList();
     @Nullable
     private TaskReward reward;
-    @Nonnull
+    @NotNull
     private Supplier<IPlayableFaction<?>> faction = () -> null;
-    @Nonnull
+    @NotNull
     private Task.Variant variant = Task.Variant.REPEATABLE;
     private boolean useDescription = false;
 
     private TaskBuilder() {
     }
 
-    @Nonnull
-    public TaskBuilder addRequirement(String name, @Nonnull EntityType<?> entityType, int amount) {
+    @NotNull
+    public TaskBuilder addRequirement(String name, @NotNull EntityType<?> entityType, int amount) {
         return this.addRequirement(new EntityRequirement(new ResourceLocation(modId(), name), entityType, amount));
     }
 
-    @Nonnull
-    public TaskBuilder addRequirement(String name, @Nonnull TagKey<EntityType<?>> entityType, int amount) {
+    @NotNull
+    public TaskBuilder addRequirement(String name, @NotNull TagKey<EntityType<?>> entityType, int amount) {
         return this.addRequirement(new EntityTypeRequirement(new ResourceLocation(modId(), name), entityType, amount));
     }
 
-    @Nonnull
-    public TaskBuilder addRequirement(String name, @Nonnull ResourceLocation stat, int amount) {
+    @NotNull
+    public TaskBuilder addRequirement(String name, @NotNull ResourceLocation stat, int amount) {
         return this.addRequirement(new StatRequirement(new ResourceLocation(modId(), name), stat, amount));
     }
 
-    @Nonnull
+    @NotNull
     public TaskBuilder addRequirement(String name, NonnullSupplier<ItemStack> itemStack) {
         return this.addRequirement(new ItemRequirement(new ResourceLocation(modId(), name), itemStack));
     }
 
-    @Nonnull
-    public TaskBuilder addRequirement(String name, @Nonnull BooleanRequirement.BooleanSupplier function) {
+    @NotNull
+    public TaskBuilder addRequirement(String name, @NotNull BooleanRequirement.BooleanSupplier function) {
         return this.addRequirement(new BooleanRequirement(new ResourceLocation(modId(), name), function));
     }
 
-    @Nonnull
-    public TaskBuilder addRequirement(@Nonnull TaskRequirement.Requirement<?> requirement) {
+    @NotNull
+    public TaskBuilder addRequirement(@NotNull TaskRequirement.Requirement<?> requirement) {
         this.requirement.computeIfAbsent(requirement.getType(), type -> Lists.newArrayListWithExpectedSize(3)).add(requirement);
         return this;
     }
 
-    @Nonnull
+    @NotNull
     public Task build() {
         if (requirement.isEmpty()) throw new IllegalStateException("Task needs requirements");
         if (reward == null) throw new IllegalStateException("Task needs a reward");
         return new Task(this.variant, this.faction, new TaskRequirement(this.requirement), this.reward, this.unlocker.toArray(new TaskUnlocker[]{}), this.useDescription);
     }
 
-    @Nonnull
+    @NotNull
     public TaskBuilder enableDescription() {
         this.useDescription = true;
         return this;
     }
 
-    @Nonnull
-    public TaskBuilder requireParent(@Nonnull Task parentTask) {
+    @NotNull
+    public TaskBuilder requireParent(@NotNull Task parentTask) {
         return this.requireParent(() -> parentTask);
     }
 
-    @Nonnull
+    @NotNull
     public TaskBuilder requireParent(@Nullable Supplier<Task> parentTask) {
         this.unlocker.add(new ParentUnlocker(parentTask));
         return this;
     }
 
-    @Nonnull
+    @NotNull
     public TaskBuilder setReward(NonnullSupplier<ItemStack> reward) {
         this.reward = new ItemReward(reward);
         return this;
     }
 
-    @Nonnull
+    @NotNull
     public TaskBuilder setReward(TaskReward reward) {
         this.reward = reward;
         return this;
     }
 
-    @Nonnull
+    @NotNull
     public TaskBuilder setUnique() {
         this.variant = Task.Variant.UNIQUE;
         return this;
     }
 
-    @Nonnull
+    @NotNull
     public TaskBuilder unlockedBy(TaskUnlocker unlocker) {
         this.unlocker.add(unlocker);
         return this;
@@ -127,13 +127,13 @@ public class TaskBuilder {
      * @deprecated use {@link #withFaction(Supplier)}
      */
     @Deprecated
-    @Nonnull
+    @NotNull
     public TaskBuilder withFaction(@Nullable IPlayableFaction<?> faction) {
         this.faction = () -> faction;
         return this;
     }
 
-    @Nonnull
+    @NotNull
     public TaskBuilder withFaction(@Nullable Supplier<IPlayableFaction<?>> faction) {
         this.faction = faction;
         return this;

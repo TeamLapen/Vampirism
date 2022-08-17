@@ -16,7 +16,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -76,7 +76,7 @@ public class NameSwordScreen extends Screen {
     }
 
     @Override
-    public void render(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(stack);
         drawCenteredString(stack, this.font, this.text1, this.width / 2, 70, 16777215);
         int i = 90;
@@ -92,7 +92,7 @@ public class NameSwordScreen extends Screen {
     }
 
     @Override
-    public void resize(@Nonnull Minecraft p_resize_1_, int p_resize_2_, int p_resize_3_) {
+    public void resize(@NotNull Minecraft p_resize_1_, int p_resize_2_, int p_resize_3_) {
         String text = nameField.getValue();
         super.resize(p_resize_1_, p_resize_2_, p_resize_3_); //Text gets deleted as this calls init again
         nameField.setValue(text);

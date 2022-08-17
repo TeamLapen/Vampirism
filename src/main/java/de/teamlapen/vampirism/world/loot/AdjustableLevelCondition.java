@@ -11,7 +11,7 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class AdjustableLevelCondition implements LootItemCondition {
     public static Builder builder(int level, LootContext.EntityTarget target) {
@@ -26,7 +26,7 @@ public class AdjustableLevelCondition implements LootItemCondition {
         this.target = targetIn;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public LootItemConditionType getType() {
         return ModLoot.adjustable_level.get();
@@ -47,9 +47,9 @@ public class AdjustableLevelCondition implements LootItemCondition {
     public static class Serializer implements net.minecraft.world.level.storage.loot.Serializer<AdjustableLevelCondition> {
 
 
-        @Nonnull
+        @NotNull
         @Override
-        public AdjustableLevelCondition deserialize(JsonObject json, @Nonnull JsonDeserializationContext context) {
+        public AdjustableLevelCondition deserialize(JsonObject json, @NotNull JsonDeserializationContext context) {
             return new AdjustableLevelCondition(json.has("level") ? GsonHelper.getAsInt(json, "level") : -1, GsonHelper.getAsObject(json, "entity", context, LootContext.EntityTarget.class));
         }
 

@@ -19,8 +19,8 @@ import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Random;
 
 /**
@@ -50,12 +50,12 @@ public class BloodContainerBlockEntity extends net.minecraftforge.fluids.capabil
 
     }
 
-    @Nonnull
+    @NotNull
     public FluidStack getFluid() {
         return tank.getFluid();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ModelData getModelData() {
         if (modelData == null) updateModelData(false);
@@ -69,7 +69,7 @@ public class BloodContainerBlockEntity extends net.minecraftforge.fluids.capabil
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public CompoundTag getUpdateTag() {
         CompoundTag tag = this.saveWithoutMetadata();

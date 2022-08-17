@@ -18,7 +18,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -34,7 +34,7 @@ public class MinionData implements INBTSerializable<CompoundTag>, IMinionData {
         constructors.put(id, supplier);
     }
 
-    @Nonnull
+    @NotNull
     public static MinionData fromNBT(CompoundTag nbt) {
         ResourceLocation dataType = new ResourceLocation(nbt.getString("data_type"));
         Supplier<? extends MinionData> c = constructors.get(dataType);
@@ -53,7 +53,7 @@ public class MinionData implements INBTSerializable<CompoundTag>, IMinionData {
     private String name;
 
 
-    @Nonnull
+    @NotNull
     private IMinionTask.IMinionTaskDesc<MinionData> activeTaskDesc;
     private boolean taskLocked;
 
@@ -90,7 +90,7 @@ public class MinionData implements INBTSerializable<CompoundTag>, IMinionData {
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public IMinionTask.IMinionTaskDesc<MinionData> getCurrentTaskDesc() {
         return activeTaskDesc;
     }

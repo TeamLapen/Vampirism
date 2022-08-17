@@ -5,8 +5,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.sensing.VillagerHostilesSensor;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 
 /**
@@ -25,7 +25,7 @@ public class VampireVillagerHostilesSensor extends VillagerHostilesSensor {
     }
 
     @Override
-    public boolean isClose(@Nonnull LivingEntity villager, LivingEntity hostile) {
+    public boolean isClose(@NotNull LivingEntity villager, LivingEntity hostile) {
         //hasPresence is not checked first, so values may not be present
         @Nullable Float f = hostiles.get(hostile.getType()); //Careful about unboxing nullpointer
         if (f == null) return false;

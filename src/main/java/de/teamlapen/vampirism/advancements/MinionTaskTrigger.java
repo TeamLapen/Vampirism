@@ -7,8 +7,7 @@ import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class MinionTaskTrigger extends SimpleCriterionTrigger<MinionTaskTrigger.Instance> {
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "minion_tasks");
@@ -17,7 +16,7 @@ public class MinionTaskTrigger extends SimpleCriterionTrigger<MinionTaskTrigger.
         return new Instance(task);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ResourceLocation getId() {
         return ID;
@@ -27,9 +26,9 @@ public class MinionTaskTrigger extends SimpleCriterionTrigger<MinionTaskTrigger.
         this.trigger(player, instance -> instance.test(task));
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    protected Instance createInstance(@Nonnull JsonObject json, @Nonnull EntityPredicate.Composite entityPredicate, @Nonnull DeserializationContext conditionsParser) {
+    protected Instance createInstance(@NotNull JsonObject json, @NotNull EntityPredicate.Composite entityPredicate, @NotNull DeserializationContext conditionsParser) {
         IMinionTask<?, ?> task = RegUtil.getMinionTask(new ResourceLocation(json.get("action").getAsString()));
         if (task != null) {
             return new Instance(task);
@@ -39,17 +38,17 @@ public class MinionTaskTrigger extends SimpleCriterionTrigger<MinionTaskTrigger.
     }
 
     static class Instance extends AbstractCriterionTriggerInstance {
-        @Nonnull
+        @NotNull
         private final IMinionTask<?, ?> task;
 
-        Instance(@Nonnull IMinionTask<?, ?> task) {
+        Instance(@NotNull IMinionTask<?, ?> task) {
             super(ID, EntityPredicate.Composite.ANY);
             this.task = task;
         }
 
-        @Nonnull
+        @NotNull
         @Override
-        public JsonObject serializeToJson(@Nonnull SerializationContext serializer) {
+        public JsonObject serializeToJson(@NotNull SerializationContext serializer) {
             JsonObject json = super.serializeToJson(serializer);
             json.addProperty("action", RegUtil.id(task).toString());
             return json;

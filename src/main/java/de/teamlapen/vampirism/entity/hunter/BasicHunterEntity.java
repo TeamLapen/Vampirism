@@ -62,8 +62,8 @@ import net.minecraft.world.phys.AABB;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 /**
@@ -128,7 +128,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    public void addAdditionalSaveData(@Nonnull CompoundTag nbt) {
+    public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putInt("level", getEntityLevel());
         nbt.putBoolean("crossbow", isCrossbowInMainhand());
@@ -230,7 +230,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         return entityActionHandler;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ItemStack getArrowStackForAttack(LivingEntity target) {
         return new ItemStack(ModItems.CROSSBOW_ARROW_NORMAL.get());
@@ -248,7 +248,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    public void die(@Nonnull DamageSource cause) {
+    public void die(@NotNull DamageSource cause) {
         if (this.villageAttributes == null) {
             BadOmenEffect.handlePotentialBannerKill(cause.getEntity(), this);
         }
@@ -260,14 +260,14 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         return entitytier;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Optional<Player> getForceLookTarget() {
         return Optional.ofNullable(trainee);
     }
 
     @Override
-    public boolean doHurtTarget(@Nonnull Entity entity) {
+    public boolean doHurtTarget(@NotNull Entity entity) {
         boolean flag = super.doHurtTarget(entity);
         if (flag && this.getMainHandItem().isEmpty()) {
             this.swing(InteractionHand.MAIN_HAND);  //Swing stake if nothing else is held
@@ -277,7 +277,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(@Nonnull ServerLevelAccessor worldIn, @Nonnull DifficultyInstance difficultyIn, @Nonnull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
         if (!(reason == MobSpawnType.SPAWN_EGG || reason == MobSpawnType.BUCKET || reason == MobSpawnType.CONVERSION || reason == MobSpawnType.COMMAND) && this.getRandom().nextInt(50) == 0) {
             this.setItemSlot(EquipmentSlot.HEAD, HunterVillage.createBanner());
         }
@@ -376,7 +376,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
 
     @Override
-    public void readAdditionalSaveData(@Nonnull CompoundTag tagCompund) {
+    public void readAdditionalSaveData(@NotNull CompoundTag tagCompund) {
         super.readAdditionalSaveData(tagCompund);
         if (tagCompund.contains("level")) {
             setEntityLevel(tagCompund.getInt("level"));
@@ -455,9 +455,9 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         return iMob ? ModEntities.HUNTER_IMOB.get() : ModEntities.HUNTER.get();
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    protected InteractionResult mobInteract(@Nonnull Player player, @Nonnull InteractionHand hand) { //processInteract
+    protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) { //processInteract
         if (hand == InteractionHand.MAIN_HAND && tryCureSanguinare(player)) return InteractionResult.SUCCESS;
         int hunterLevel = VampirismPlayerAttributes.get(player).hunterLevel;
         if (this.isAlive() && !player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {

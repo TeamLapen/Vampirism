@@ -4,8 +4,8 @@ package de.teamlapen.vampirism.api.entity.player.actions;
 import com.google.common.collect.ImmutableList;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 
@@ -22,7 +22,7 @@ public interface IActionHandler<T extends IFactionPlayer<T>> {
     /**
      * If active, the remaining duration is extended by the giving duration
      */
-    void extendActionTimer(@Nonnull ILastingAction<T> action, int duration);
+    void extendActionTimer(@NotNull ILastingAction<T> action, int duration);
 
     /**
      * @return A list of actions which currently are available to the player
@@ -33,7 +33,7 @@ public interface IActionHandler<T extends IFactionPlayer<T>> {
      * Returns +Ticks_Left/Total_Duration(Positive) if action is active
      * Returns -Cooldown_Left/Total_Cooldown(Negative) if action is in cooldown
      */
-    float getPercentageForAction(@Nonnull IAction<T> action);
+    float getPercentageForAction(@NotNull IAction<T> action);
 
     /**
      * @return A list of actions which are unlocked for the player
@@ -43,7 +43,7 @@ public interface IActionHandler<T extends IFactionPlayer<T>> {
     /**
      * Checks if the action is currently activated
      */
-    boolean isActionActive(@Nonnull ILastingAction<T> action);
+    boolean isActionActive(@NotNull ILastingAction<T> action);
 
     /**
      * Checks if the lasting action is currently activated.
@@ -71,7 +71,7 @@ public interface IActionHandler<T extends IFactionPlayer<T>> {
      * Set active timer to 0 if {@link ILastingAction}
      * @param action the action that should be effected
      */
-    void resetTimer(@Nonnull IAction action);
+    void resetTimer(@NotNull IAction action);
 
     /**
      * Toggle the action (server side).

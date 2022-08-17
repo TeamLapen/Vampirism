@@ -13,7 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * ModelBiped with a cloak
@@ -46,7 +46,7 @@ public class BipedCloakedModel<T extends LivingEntity> extends PlayerModel<T> {
     }
 
     @Override
-    public void setupAnim(@Nonnull T entity, float f, float f1, float f2, float f3, float f4) {
+    public void setupAnim(@NotNull T entity, float f, float f1, float f2, float f3, float f4) {
         super.setupAnim(entity, f, f1, f2, f3, f4);
         if (entity.isCrouching()) {
             this.bipedCloak.y = 2.0F;

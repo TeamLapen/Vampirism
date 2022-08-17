@@ -15,9 +15,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.LazyOptional;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -30,11 +30,11 @@ public abstract class InventoryContainer extends AbstractContainerMenu {
     protected final Container inventory;
     private final int size;
 
-    public InventoryContainer(MenuType<? extends InventoryContainer> containerType, int id, Inventory playerInventory, ContainerLevelAccess worldPos, @Nonnull Container inventory, SelectorInfo... selectorInfos) {
+    public InventoryContainer(MenuType<? extends InventoryContainer> containerType, int id, Inventory playerInventory, ContainerLevelAccess worldPos, @NotNull Container inventory, SelectorInfo... selectorInfos) {
         this(containerType, id, playerInventory, worldPos, inventory, SelectorSlot::new, selectorInfos);
     }
 
-    public InventoryContainer(MenuType<? extends InventoryContainer> containerType, int id, Inventory playerInventory, ContainerLevelAccess worldPos, @Nonnull Container inventory, SelectorSlotFactory factory, SelectorInfo... selectorInfos) {
+    public InventoryContainer(MenuType<? extends InventoryContainer> containerType, int id, Inventory playerInventory, ContainerLevelAccess worldPos, @NotNull Container inventory, SelectorSlotFactory factory, SelectorInfo... selectorInfos) {
         this(containerType, id, worldPos, inventory, selectorInfos.length);
 
         if (inventory.getContainerSize() < selectorInfos.length) {
@@ -56,9 +56,9 @@ public abstract class InventoryContainer extends AbstractContainerMenu {
         this.size = size;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public ItemStack quickMoveStack(@Nonnull Player playerEntity, int index) {
+    public ItemStack quickMoveStack(@NotNull Player playerEntity, int index) {
         ItemStack result = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
         if (slot != null && slot.hasItem()) {
@@ -100,13 +100,13 @@ public abstract class InventoryContainer extends AbstractContainerMenu {
     }
 
     @Override
-    public void removed(@Nonnull Player playerIn) {
+    public void removed(@NotNull Player playerIn) {
         super.removed(playerIn);
         inventory.stopOpen(playerIn);
     }
 
     @Override
-    public boolean stillValid(@Nonnull Player playerIn) {
+    public boolean stillValid(@NotNull Player playerIn) {
         return true;
     }
 
@@ -158,7 +158,7 @@ public abstract class InventoryContainer extends AbstractContainerMenu {
         }
 
         @Override
-        public int getMaxStackSize(@Nonnull ItemStack stack) {
+        public int getMaxStackSize(@NotNull ItemStack stack) {
             return info.stackLimit;
         }
 
@@ -180,12 +180,12 @@ public abstract class InventoryContainer extends AbstractContainerMenu {
         }
 
         @Override
-        public boolean mayPlace(@Nonnull ItemStack stack) {
+        public boolean mayPlace(@NotNull ItemStack stack) {
             return info.validate(stack);
         }
 
         @Override
-        public void onQuickCraft(@Nonnull ItemStack oldStackIn, @Nonnull ItemStack newStackIn) {
+        public void onQuickCraft(@NotNull ItemStack oldStackIn, @NotNull ItemStack newStackIn) {
             super.onQuickCraft(oldStackIn, newStackIn);
             this.refreshInvFunc.accept(this.container);
         }

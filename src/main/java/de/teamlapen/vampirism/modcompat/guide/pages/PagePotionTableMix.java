@@ -22,7 +22,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,10 +39,10 @@ public class PagePotionTableMix extends Page {
     private ItemStack in2;
     private int recipeCycle;
     private int currentIngredient1Index;
-    @Nonnull
+    @NotNull
     private ItemStack[] ingredients1 = new ItemStack[0];
     private int currentIngredient2Index;
-    @Nonnull
+    @NotNull
     private ItemStack[] ingredients2 = new ItemStack[0];
 
     public PagePotionTableMix(Component description, ExtendedPotionMix... recipes) {

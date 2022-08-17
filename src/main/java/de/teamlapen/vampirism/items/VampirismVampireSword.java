@@ -43,8 +43,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.UUID;
 
@@ -71,7 +71,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         this.addFactionLevelToolTip(stack, worldIn, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());
         float charged = getCharged(stack);
@@ -111,29 +111,29 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
 
     @Nullable
     @Override
-    public IFaction<?> getExclusiveFaction(@Nonnull ItemStack stack) {
+    public IFaction<?> getExclusiveFaction(@NotNull ItemStack stack) {
         return VReference.VAMPIRE_FACTION;
     }
 
     @Override
-    public int getMinLevel(@Nonnull ItemStack stack) {
+    public int getMinLevel(@NotNull ItemStack stack) {
         return 0;
     }
 
     @Nullable
     @Override
-    public ISkill<IVampirePlayer> getRequiredSkill(@Nonnull ItemStack stack) {
+    public ISkill<IVampirePlayer> getRequiredSkill(@NotNull ItemStack stack) {
         return null;
     }
 
     @Override
-    public int getUseDuration(@Nonnull ItemStack stack) {
+    public int getUseDuration(@NotNull ItemStack stack) {
         return 40;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public ItemStack finishUsingItem(@Nonnull ItemStack stack, @Nonnull Level worldIn, @Nonnull LivingEntity entityLiving) {
+    public ItemStack finishUsingItem(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull LivingEntity entityLiving) {
         if (!(entityLiving instanceof Player)) return stack;
         VReference.VAMPIRE_FACTION.getPlayerCapability((Player) entityLiving).ifPresent(vampire -> {
             int amount = (vampire.getSkillHandler().isRefinementEquipped(ModRefinements.BLOOD_CHARGE_SPEED.get()) ? VampirismConfig.BALANCE.vrBloodChargeSpeedMod.get() : 2);
@@ -148,7 +148,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     }
 
     @Override
-    public boolean hurtEnemy(@Nonnull ItemStack stack, @Nonnull LivingEntity target, @Nonnull LivingEntity attacker) {
+    public boolean hurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity target, @NotNull LivingEntity attacker) {
         //Vampire Finisher skill
         if (attacker instanceof Player && !Helper.isVampire(target)) {
             double relTh = VampirismConfig.BALANCE.vsSwordFinisherMaxHealth.get() * VampirePlayer.getOpt((Player) attacker).map(VampirePlayer::getSkillHandler).map(h -> h.isSkillEnabled(VampireSkills.SWORD_FINISHER.get()) ? (h.isRefinementEquipped(ModRefinements.SWORD_FINISHER.get()) ? VampirismConfig.BALANCE.vrSwordFinisherThresholdMod.get() : 1d) : 0d).orElse(0d);
@@ -190,7 +190,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     }
 
     @Override
-    public void inventoryTick(@Nonnull ItemStack stack, Level worldIn, @Nonnull Entity entityIn, int itemSlot, boolean isSelected) {
+    public void inventoryTick(@NotNull ItemStack stack, Level worldIn, @NotNull Entity entityIn, int itemSlot, boolean isSelected) {
         //Try to minimize execution time, but tricky since off hand selection is not directly available, but it can only be off hand if itemSlot 0
         if (worldIn.isClientSide && (isSelected || itemSlot == 0)) {
             float charged = getCharged(stack);
@@ -222,7 +222,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
      *
      * @param value Is clamped between 0 and 1
      */
-    public void setCharged(@Nonnull ItemStack stack, float value) {
+    public void setCharged(@NotNull ItemStack stack, float value) {
         stack.addTagElement("charged", FloatTag.valueOf(Mth.clamp(value, 0f, 1f)));
     }
 
@@ -231,7 +231,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
      *
      * @param value Clamped between 0 and 1
      */
-    public void setTrained(@Nonnull ItemStack stack, @Nonnull LivingEntity player, float value) {
+    public void setTrained(@NotNull ItemStack stack, @NotNull LivingEntity player, float value) {
         CompoundTag nbt = stack.getOrCreateTagElement("trained");
         nbt.putFloat(player.getUUID().toString(), Mth.clamp(value, 0f, 1f));
     }
@@ -251,7 +251,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
      *
      * @return True if the cached value was updated
      */
-    public boolean updateTrainedCached(@Nonnull ItemStack stack, @Nonnull LivingEntity player) {
+    public boolean updateTrainedCached(@NotNull ItemStack stack, @NotNull LivingEntity player) {
         float cached = getTrained(stack);
         float trained = getTrained(stack, player);
         if (cached != trained) {
@@ -261,9 +261,9 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         return false;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public InteractionResultHolder<ItemStack> use(@Nonnull Level worldIn, Player playerIn, @Nonnull InteractionHand handIn) {
+    public InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         return VampirePlayer.getOpt(playerIn).map(vampire -> {
             if (vampire.getLevel() == 0) return new InteractionResultHolder<>(InteractionResult.PASS, stack);
@@ -301,7 +301,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
      *
      * @return Value between 0 and 1
      */
-    protected float getCharged(@Nonnull ItemStack stack) {
+    protected float getCharged(@NotNull ItemStack stack) {
         if (stack.hasTag()) {
             return stack.getTag().getFloat("charged");
         }
@@ -318,7 +318,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
      *
      * @return Value between 0 and 1. Defaults to 0
      */
-    protected float getTrained(@Nonnull ItemStack stack) {
+    protected float getTrained(@NotNull ItemStack stack) {
         if (stack.hasTag()) {
             CompoundTag nbt = stack.getTag();
             if (nbt.contains("trained-cache")) {
@@ -333,7 +333,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
      *
      * @return Value between 0 and 1. Defaults to 0
      */
-    protected float getTrained(@Nonnull ItemStack stack, @Nullable LivingEntity player) {
+    protected float getTrained(@NotNull ItemStack stack, @Nullable LivingEntity player) {
         if (player == null) return getTrained(stack);
         UUID id = player.getUUID();
         CompoundTag nbt = stack.getTagElement("trained");

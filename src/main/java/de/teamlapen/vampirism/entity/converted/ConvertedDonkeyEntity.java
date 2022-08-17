@@ -21,7 +21,7 @@ import net.minecraft.world.entity.animal.horse.Donkey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class ConvertedDonkeyEntity extends Donkey implements CurableConvertedCreature<Donkey, ConvertedDonkeyEntity> {
 
@@ -50,7 +50,7 @@ public class ConvertedDonkeyEntity extends Donkey implements CurableConvertedCre
     }
 
     @Override
-    public InteractionResult mobInteractSuper(@Nonnull Player player, @Nonnull InteractionHand hand) {
+    public InteractionResult mobInteractSuper(@NotNull Player player, @NotNull InteractionHand hand) {
         return super.mobInteract(player, hand);
     }
 
@@ -60,7 +60,7 @@ public class ConvertedDonkeyEntity extends Donkey implements CurableConvertedCre
     }
 
     @Override
-    public void addAdditionalSaveData(@Nonnull CompoundTag compound) {
+    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         this.addAdditionalSaveDataC(compound);
     }
@@ -72,7 +72,7 @@ public class ConvertedDonkeyEntity extends Donkey implements CurableConvertedCre
     }
 
     @Override
-    public void die(@Nonnull DamageSource cause) {
+    public void die(@NotNull DamageSource cause) {
         super.die(cause);
         dieC(cause);
     }
@@ -82,7 +82,7 @@ public class ConvertedDonkeyEntity extends Donkey implements CurableConvertedCre
         return CONVERTING;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public MobType getMobType() {
         return VReference.VAMPIRE_CREATURE_ATTRIBUTE;
@@ -94,18 +94,18 @@ public class ConvertedDonkeyEntity extends Donkey implements CurableConvertedCre
     }
 
     @Override
-    public boolean hurt(@Nonnull DamageSource damageSource, float amount) {
+    public boolean hurt(@NotNull DamageSource damageSource, float amount) {
         return this.hurtC(damageSource, amount);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public InteractionResult mobInteract(@Nonnull Player player, @Nonnull InteractionHand hand) {
+    public InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         return mobInteractC(player, hand);
     }
 
     @Override
-    public void readAdditionalSaveData(@Nonnull CompoundTag compound) {
+    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         readAdditionalSaveDataC(compound);
     }

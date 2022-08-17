@@ -28,8 +28,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.network.NetworkHooks;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Similar to EntityXPOrb
@@ -60,7 +60,7 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
         super(type, worldIn);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
@@ -75,13 +75,13 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
     }
 
 
-    @Nonnull
+    @NotNull
     @Override
     public ItemStack getItem() {
         return getSoulItemStack();
     }
 
-    @Nonnull
+    @NotNull
     public ItemStack getSoulItemStack() {
         if (soulItemStack == null) {
             soulItemStack = createSoulItemStack();
@@ -90,7 +90,7 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
     }
 
     @Override
-    public boolean hurt(@Nonnull DamageSource source, float amount) {
+    public boolean hurt(@NotNull DamageSource source, float amount) {
         return false;
     }
 
@@ -100,7 +100,7 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
     }
 
     @Override
-    public boolean isInvisibleTo(@Nonnull Player player) {
+    public boolean isInvisibleTo(@NotNull Player player) {
         if (getVariant() == VARIANT.VAMPIRE) {
             return !Helper.isHunter(player) || player.isSpectator();
         }
@@ -108,7 +108,7 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
     }
 
     @Override
-    public void playerTouch(@Nonnull Player entityIn) {
+    public void playerTouch(@NotNull Player entityIn) {
         if (!this.level.isClientSide) {
             if (delayBeforePickup == 0) {
                 if (Helper.isHunter(entityIn)) {
@@ -195,7 +195,7 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
         this.getEntityData().define(TYPE_PARAMETER, VARIANT.NONE.name());
     }
 
-    @Nonnull
+    @NotNull
     @Override
     protected MovementEmission getMovementEmission() {
         return MovementEmission.NONE;

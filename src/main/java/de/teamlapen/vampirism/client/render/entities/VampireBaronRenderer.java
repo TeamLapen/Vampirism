@@ -14,7 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class VampireBaronRenderer extends MobRenderer<VampireBaronEntity, BaronWrapperModel> {
@@ -31,7 +31,7 @@ public class VampireBaronRenderer extends MobRenderer<VampireBaronEntity, BaronW
         this.addLayer(new BaronAttireLayer(this, context, VampireBaronEntity::isLady));
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ResourceLocation getTextureLocation(VampireBaronEntity entity) {
         return entity.isEnraged() ? (entity.isLady() ? textureLadyEnraged : textureLordEnraged) : (entity.isLady() ? textureLady : textureLord);

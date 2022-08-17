@@ -17,7 +17,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 
 public class BloodFluid extends Fluid {
@@ -26,50 +26,50 @@ public class BloodFluid extends Fluid {
     }
 
     @Override
-    public int getAmount(@Nonnull FluidState fluidState) {
+    public int getAmount(@NotNull FluidState fluidState) {
         return 0;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Item getBucket() {
         return ModItems.BLOOD_BUCKET.get();
     }
 
     @Override
-    public float getHeight(@Nonnull FluidState fluidState, @Nonnull BlockGetter blockReader, @Nonnull BlockPos blockPos) {
+    public float getHeight(@NotNull FluidState fluidState, @NotNull BlockGetter blockReader, @NotNull BlockPos blockPos) {
         return 0;
     }
 
     @Override
-    public float getOwnHeight(@Nonnull FluidState fluidState) {
+    public float getOwnHeight(@NotNull FluidState fluidState) {
         return 0;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public VoxelShape getShape(@Nonnull FluidState fluidState, @Nonnull BlockGetter blockReader, @Nonnull BlockPos blockPos) {
+    public VoxelShape getShape(@NotNull FluidState fluidState, @NotNull BlockGetter blockReader, @NotNull BlockPos blockPos) {
         return Shapes.block();
     }
 
     @Override
-    public int getTickDelay(@Nonnull LevelReader worldReader) {
+    public int getTickDelay(@NotNull LevelReader worldReader) {
         return 5;
     }
 
     @Override
-    public boolean isSource(@Nonnull FluidState state) {
+    public boolean isSource(@NotNull FluidState state) {
         return false;
     }
 
     @Override
-    protected boolean canBeReplacedWith(@Nonnull FluidState fluidState, @Nonnull BlockGetter blockReader, @Nonnull BlockPos blockPos, @Nonnull Fluid fluid, @Nonnull Direction direction) {
+    protected boolean canBeReplacedWith(@NotNull FluidState fluidState, @NotNull BlockGetter blockReader, @NotNull BlockPos blockPos, @NotNull Fluid fluid, @NotNull Direction direction) {
         return false;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    protected BlockState createLegacyBlock(@Nonnull FluidState state) {
+    protected BlockState createLegacyBlock(@NotNull FluidState state) {
         return Blocks.AIR.defaultBlockState();
     }
 
@@ -78,9 +78,9 @@ public class BloodFluid extends Fluid {
         return 100.0F;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    protected Vec3 getFlow(@Nonnull BlockGetter blockReader, @Nonnull BlockPos blockPos, @Nonnull FluidState fluidState) {
+    protected Vec3 getFlow(@NotNull BlockGetter blockReader, @NotNull BlockPos blockPos, @NotNull FluidState fluidState) {
         return Vec3.ZERO;
     }
 

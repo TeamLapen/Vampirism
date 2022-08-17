@@ -3,8 +3,7 @@ package de.teamlapen.vampirism.api.world;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.AABB;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * used for {@link de.teamlapen.vampirism.api.entity.IVillageCaptureEntity#attackVillage(ICaptureAttributes)} and {@link de.teamlapen.vampirism.api.entity.IVillageCaptureEntity#defendVillage(ICaptureAttributes)}

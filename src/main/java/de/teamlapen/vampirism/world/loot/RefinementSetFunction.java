@@ -16,8 +16,8 @@ import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunct
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class RefinementSetFunction extends LootItemConditionalFunction {
 
@@ -32,20 +32,20 @@ public class RefinementSetFunction extends LootItemConditionalFunction {
     @Nullable
     public final IFaction<?> faction;
 
-    public RefinementSetFunction(@Nonnull LootItemCondition[] conditionsIn, @Nullable IFaction<?> faction) {
+    public RefinementSetFunction(@NotNull LootItemCondition[] conditionsIn, @Nullable IFaction<?> faction) {
         super(conditionsIn);
         this.faction = faction;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public LootItemFunctionType getType() {
         return ModLoot.add_refinement_set.get();
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    protected ItemStack run(@Nonnull ItemStack stack, @Nonnull LootContext context) {
+    protected ItemStack run(@NotNull ItemStack stack, @NotNull LootContext context) {
         if (stack.getItem() instanceof IRefinementItem) {
             IRefinementSet set = RefinementItem.getRandomRefinementForItem(faction, ((IRefinementItem) stack.getItem()));
             if (set != null) {
@@ -57,9 +57,9 @@ public class RefinementSetFunction extends LootItemConditionalFunction {
 
     public static class Serializer extends LootItemConditionalFunction.Serializer<RefinementSetFunction> {
 
-        @Nonnull
+        @NotNull
         @Override
-        public RefinementSetFunction deserialize(@Nonnull JsonObject json, @Nonnull JsonDeserializationContext context, @Nonnull LootItemCondition[] conditionsIn) {
+        public RefinementSetFunction deserialize(@NotNull JsonObject json, @NotNull JsonDeserializationContext context, @NotNull LootItemCondition[] conditionsIn) {
             IFaction<?> faction = null;
             if (json.has("faction")) {
                 String string = json.get("faction").getAsString();
@@ -72,7 +72,7 @@ public class RefinementSetFunction extends LootItemConditionalFunction {
         }
 
         @Override
-        public void serialize(@Nonnull JsonObject json, @Nonnull RefinementSetFunction function, @Nonnull JsonSerializationContext context) {
+        public void serialize(@NotNull JsonObject json, @NotNull RefinementSetFunction function, @NotNull JsonSerializationContext context) {
             super.serialize(json, function, context);
             if (function.faction != null) {
                 json.addProperty("faction", function.faction.getID().toString());

@@ -36,8 +36,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.apache.commons.lang3.tuple.Pair;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -63,18 +63,18 @@ public class TaskManager implements ITaskManager {
         return TASK_REWARD_SUPPLIER.get(id).getValue().apply(buffer);
     }
 
-    @Nonnull
+    @NotNull
     private final IPlayableFaction<?> faction;
-    @Nonnull
+    @NotNull
     private final ServerPlayer player;
-    @Nonnull
+    @NotNull
     private final IFactionPlayer<?> factionPlayer;
-    @Nonnull
+    @NotNull
     private final Set<Task> completedTasks = new HashSet<>();
-    @Nonnull
+    @NotNull
     private final Map<UUID, TaskWrapper> taskWrapperMap = new HashMap<>();
 
-    public TaskManager(@Nonnull ServerPlayer player, @Nonnull IFactionPlayer<?> factionPlayer, @Nonnull IPlayableFaction<?> faction) {
+    public TaskManager(@NotNull ServerPlayer player, @NotNull IFactionPlayer<?> factionPlayer, @NotNull IPlayableFaction<?> faction) {
         this.faction = faction;
         this.player = player;
         this.factionPlayer = factionPlayer;
@@ -83,13 +83,13 @@ public class TaskManager implements ITaskManager {
     // interface -------------------------------------------------------------------------------------------------------
 
     @Override
-    public void abortTask(UUID taskBoardId, @Nonnull UUID taskInstance, boolean remove) {
+    public void abortTask(UUID taskBoardId, @NotNull UUID taskInstance, boolean remove) {
         this.taskWrapperMap.get(taskBoardId).removeTask(taskInstance, remove);
     }
 
 
     @Override
-    public void acceptTask(UUID taskBoardId, @Nonnull UUID taskInstance) {
+    public void acceptTask(UUID taskBoardId, @NotNull UUID taskInstance) {
         ITaskInstance ins = this.taskWrapperMap.get(taskBoardId).acceptTask(taskInstance, this.player.level.getGameTime() + getTaskTimeConfig() * 1200L);
         this.updateStats(ins);
     }
@@ -114,7 +114,7 @@ public class TaskManager implements ITaskManager {
     /**
      * applies the reward of the given taskInstance
      */
-    public void applyRewards(@Nonnull ITaskInstance taskInstance) {
+    public void applyRewards(@NotNull ITaskInstance taskInstance) {
         taskInstance.getReward().applyReward(this.factionPlayer);
     }
 
@@ -122,7 +122,7 @@ public class TaskManager implements ITaskManager {
      * @param taskInstance the taskInstance that should be checked
      * @return whether the taskInstance can be completed or not
      */
-    public boolean canCompleteTask(@Nonnull ITaskInstance taskInstance) {
+    public boolean canCompleteTask(@NotNull ITaskInstance taskInstance) {
         if (!isTaskUnlocked(taskInstance.getTask())) return false;
         if (!isTimeEnough(taskInstance, this.player.level.getGameTime())) return false;
         for (TaskRequirement.Requirement<?> requirement : taskInstance.getTask().getRequirement().getAll()) {
@@ -134,7 +134,7 @@ public class TaskManager implements ITaskManager {
     }
 
     @Override
-    public void completeTask(UUID taskBoardId, @Nonnull UUID taskInstance) {
+    public void completeTask(UUID taskBoardId, @NotNull UUID taskInstance) {
         TaskWrapper wrapper = this.taskWrapperMap.get(taskBoardId);
         ITaskInstance ins = wrapper.getTaskInstance(taskInstance);
         if (!canCompleteTask(ins)) return;
@@ -153,8 +153,8 @@ public class TaskManager implements ITaskManager {
      * @param taskInstances the task for which the requirements are needed
      * @return map of completed requirement per task
      */
-    @Nonnull
-    public Map<UUID, Map<ResourceLocation, Integer>> getCompletedRequirements(@Nonnull Collection<ITaskInstance> taskInstances) {
+    @NotNull
+    public Map<UUID, Map<ResourceLocation, Integer>> getCompletedRequirements(@NotNull Collection<ITaskInstance> taskInstances) {
         Map<UUID, Map<ResourceLocation, Integer>> completedRequirements = Maps.newHashMap();
         taskInstances.forEach(task -> {
             Map<ResourceLocation, Integer> completed = getCompletedRequirements(task);
@@ -183,7 +183,7 @@ public class TaskManager implements ITaskManager {
      * @param task the task that should be checked
      * @return whether the task is unlocked my the player or not
      */
-    public boolean isTaskUnlocked(@Nonnull Task task) {
+    public boolean isTaskUnlocked(@NotNull Task task) {
         if (!matchesFaction(task)) return false;
         for (TaskUnlocker taskUnlocker : task.getUnlocker()) {
             if (!taskUnlocker.isUnlocked(this.factionPlayer)) {
@@ -213,7 +213,7 @@ public class TaskManager implements ITaskManager {
         }
     }
 
-    public void readNBT(@Nonnull CompoundTag compoundNBT) {
+    public void readNBT(@NotNull CompoundTag compoundNBT) {
         if (compoundNBT.contains("taskWrapper")) {
             ListTag infos = compoundNBT.getList("taskWrapper", 10);
             for (int i = 0; i < infos.size(); i++) {
@@ -238,7 +238,7 @@ public class TaskManager implements ITaskManager {
     /**
      * remove the taskInstance's requirements from the player
      */
-    public void removeRequirements(@Nonnull ITaskInstance taskInstance) {
+    public void removeRequirements(@NotNull ITaskInstance taskInstance) {
         taskInstance.getTask().getRequirement().removeRequirement(this.factionPlayer);
     }
 
@@ -291,13 +291,13 @@ public class TaskManager implements ITaskManager {
     }
 
     @Override
-    public boolean wasTaskCompleted(@Nonnull Task task) {
+    public boolean wasTaskCompleted(@NotNull Task task) {
         return this.completedTasks.contains(task);
     }
 
     // task methods ----------------------------------------------------------------------------------------------------
 
-    public void writeNBT(@Nonnull CompoundTag compoundNBT) {
+    public void writeNBT(@NotNull CompoundTag compoundNBT) {
         //completed tasks
         if (!this.completedTasks.isEmpty()) {
             CompoundTag tasksNBT = new CompoundTag();
@@ -320,7 +320,7 @@ public class TaskManager implements ITaskManager {
      * @param requirement  the requirement to check
      * @return if the requirement is completed
      */
-    private boolean checkStat(@Nonnull ITaskInstance taskInstance, @Nonnull TaskRequirement.Requirement<?> requirement) {
+    private boolean checkStat(@NotNull ITaskInstance taskInstance, @NotNull TaskRequirement.Requirement<?> requirement) {
         return getStat(taskInstance, requirement) >= requirement.getAmount(this.factionPlayer);
     }
 
@@ -330,7 +330,7 @@ public class TaskManager implements ITaskManager {
      * @param taskInstances the taskInstances to be filtered
      * @return all completable taskInstances from the given task set
      */
-    private Set<UUID> getCompletableTasks(@Nonnull Set<ITaskInstance> taskInstances) {
+    private Set<UUID> getCompletableTasks(@NotNull Set<ITaskInstance> taskInstances) {
         return taskInstances.stream().filter(this::canCompleteTask).map(ITaskInstance::getId).collect(Collectors.toSet());
     }
 
@@ -340,7 +340,7 @@ public class TaskManager implements ITaskManager {
      * @param taskInstance the taskInstance to be checked
      * @return a list of all taskInstance requirements
      */
-    private Map<ResourceLocation, Integer> getCompletedRequirements(@Nonnull ITaskInstance taskInstance) {
+    private Map<ResourceLocation, Integer> getCompletedRequirements(@NotNull ITaskInstance taskInstance) {
         Map<ResourceLocation, Integer> completed = new HashMap<>();
         for (TaskRequirement.Requirement<?> requirement : taskInstance.getTask().getRequirement().getAll()) {
             completed.put(requirement.getId(), getStat(taskInstance, requirement));
@@ -348,7 +348,7 @@ public class TaskManager implements ITaskManager {
         return completed;
     }
 
-    private int getStat(@Nonnull ITaskInstance taskInstance, @Nonnull TaskRequirement.Requirement<?> requirement) {
+    private int getStat(@NotNull ITaskInstance taskInstance, @NotNull TaskRequirement.Requirement<?> requirement) {
         Map<ResourceLocation, Integer> stats = taskInstance.getStats();
         if (!taskInstance.isAccepted()) return 0;
         int neededStat = 0;
@@ -437,7 +437,7 @@ public class TaskManager implements ITaskManager {
      * @param task the task that should be checked
      * @return whether the task's faction is applicant to the taskManager's {@link #faction}
      */
-    private boolean matchesFaction(@Nonnull Task task) {
+    private boolean matchesFaction(@NotNull Task task) {
         return task.getFaction() == this.faction || task.getFaction() == null;
     }
 
@@ -446,7 +446,7 @@ public class TaskManager implements ITaskManager {
      *
      * @param taskInstances the task to be checked
      */
-    private void removeLockedTasks(@Nonnull Collection<ITaskInstance> taskInstances) {
+    private void removeLockedTasks(@NotNull Collection<ITaskInstance> taskInstances) {
         taskInstances.removeIf(task -> {
             if (!this.isTaskUnlocked(task.getTask())) {
                 task.aboardTask();
@@ -463,7 +463,7 @@ public class TaskManager implements ITaskManager {
      *
      * @param taskInstances the taskInstances to be updated
      */
-    private void updateStats(@Nonnull Collection<ITaskInstance> taskInstances) {
+    private void updateStats(@NotNull Collection<ITaskInstance> taskInstances) {
         taskInstances.forEach(this::updateStats);
     }
 
@@ -472,7 +472,7 @@ public class TaskManager implements ITaskManager {
      *
      * @param taskInstance the taskInstance to be updated
      */
-    private void updateStats(@Nonnull ITaskInstance taskInstance) {
+    private void updateStats(@NotNull ITaskInstance taskInstance) {
         if (!taskInstance.isAccepted()) return;
         if (!taskInstance.getTask().getRequirement().isHasStatBasedReq()) return;
         Map<ResourceLocation, Integer> reqStats = taskInstance.getStats();
@@ -496,7 +496,7 @@ public class TaskManager implements ITaskManager {
 
     public static class TaskWrapper {
 
-        public static TaskWrapper readNBT(@Nonnull CompoundTag nbt) {
+        public static TaskWrapper readNBT(@NotNull CompoundTag nbt) {
             UUID id = nbt.getUUID("id");
             int lessTasks = nbt.getInt("lessTasks");
             int taskAmount = nbt.getInt("taskAmount");
@@ -536,7 +536,7 @@ public class TaskManager implements ITaskManager {
         }
 
         private final UUID id;
-        @Nonnull
+        @NotNull
         private final Map<UUID, ITaskInstance> tasks;
         private int lessTasks;
         private int taskAmount;
@@ -551,7 +551,7 @@ public class TaskManager implements ITaskManager {
             this.lastSeenPos = null;
         }
 
-        private TaskWrapper(UUID id, int lessTasks, int taskAmount, @Nonnull Map<UUID, ITaskInstance> tasks, @Nullable BlockPos lastSeenPos) {
+        private TaskWrapper(UUID id, int lessTasks, int taskAmount, @NotNull Map<UUID, ITaskInstance> tasks, @Nullable BlockPos lastSeenPos) {
             this.id = id;
             this.lessTasks = lessTasks;
             this.taskAmount = taskAmount;
@@ -580,7 +580,7 @@ public class TaskManager implements ITaskManager {
         /**
          * This returns a {@link Map#keySet()}, which means that adding elements is not supported.
          */
-        @Nonnull
+        @NotNull
         public Set<ITaskInstance> getAcceptedTasks() {
             return this.tasks.values().stream().filter(ITaskInstance::isAccepted).collect(Collectors.toSet());
         }
@@ -589,7 +589,7 @@ public class TaskManager implements ITaskManager {
             return id;
         }
 
-        @Nonnull
+        @NotNull
         public Optional<BlockPos> getLastSeenPos() {
             return Optional.ofNullable(lastSeenPos);
         }
@@ -598,7 +598,7 @@ public class TaskManager implements ITaskManager {
             return this.tasks.get(taskInstance);
         }
 
-        @Nonnull
+        @NotNull
         public Collection<ITaskInstance> getTaskInstances() {
             return tasks.values();
         }
@@ -614,7 +614,7 @@ public class TaskManager implements ITaskManager {
             this.removeTask(this.tasks.get(taskInstance), delete);
         }
 
-        public CompoundTag writeNBT(@Nonnull CompoundTag nbt) {
+        public CompoundTag writeNBT(@NotNull CompoundTag nbt) {
             nbt.putUUID("id", this.id);
             nbt.putInt("lessTasks", this.lessTasks);
             nbt.putInt("taskAmount", this.taskAmount);

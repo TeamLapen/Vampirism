@@ -17,7 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class VampirePlayerHeadLayer<T extends Player, Q extends HumanoidModel<T>> extends RenderLayer<T, Q> {
@@ -38,7 +38,7 @@ public class VampirePlayerHeadLayer<T extends Player, Q extends HumanoidModel<T>
     }
 
     @Override
-    public void render(@Nonnull PoseStack stack, @Nonnull MultiBufferSource iRenderTypeBuffer, int i, @Nonnull T player, float v, float v1, float v2, float v3, float v4, float v5) {
+    public void render(@NotNull PoseStack stack, @NotNull MultiBufferSource iRenderTypeBuffer, int i, @NotNull T player, float v, float v1, float v2, float v3, float v4, float v5) {
         if (!VampirismConfig.CLIENT.renderVampireEyes.get() || !player.isAlive()) return;
         VampirismPlayerAttributes atts = VampirismPlayerAttributes.get(player);
         if (atts.vampireLevel > 0 && !atts.getVampSpecial().disguised && !player.isInvisible()) {

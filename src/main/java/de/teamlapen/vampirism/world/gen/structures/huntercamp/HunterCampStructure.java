@@ -9,20 +9,18 @@ import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 
-@ParametersAreNonnullByDefault
 public class HunterCampStructure extends Structure {
     public static final Codec<HunterCampStructure> CODEC = simpleCodec(HunterCampStructure::new);
 
-    public HunterCampStructure(Structure.StructureSettings settings) {
+    public HunterCampStructure(@NotNull Structure.StructureSettings settings) {
         super(settings);
     }
 
     @NotNull
     @Override
-    public Optional<GenerationStub> findGenerationPoint(GenerationContext context) {
+    public Optional<GenerationStub> findGenerationPoint(@NotNull GenerationContext context) {
         return onTopOfChunkCenter(context, Heightmap.Types.WORLD_SURFACE_WG, (builder) -> generatePieces(builder, context));
     }
 
@@ -32,7 +30,7 @@ public class HunterCampStructure extends Structure {
         return ModFeatures.HUNTER_CAMP.get();
     }
 
-    private static <C extends FeatureConfiguration> void generatePieces(StructurePiecesBuilder structurePiecesBuilder, GenerationContext cContext) {
+    private static <C extends FeatureConfiguration> void generatePieces(@NotNull StructurePiecesBuilder structurePiecesBuilder,@NotNull GenerationContext cContext) {
         HunterCampPieces.addStartPieces(structurePiecesBuilder, cContext);
 
     }

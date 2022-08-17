@@ -14,9 +14,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.storage.LevelResource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.List;
@@ -68,7 +68,7 @@ public class BloodValueLoaderDynamic extends BloodValueLoader {
     @Nullable
     private File bloodValueWorldFile;
 
-    public BloodValueLoaderDynamic(@Nonnull String modIdIn, @Nonnull String nameIn, @Nonnull BiConsumer<Map<ResourceLocation, Integer>, Integer> consumerIn, @Nullable ResourceLocation multiplierNameIn, @Nonnull Consumer<Map<ResourceLocation, Integer>> addCalculatedValuesIn, @Nonnull Supplier<Map<ResourceLocation, Integer>> getCalculatedValuesIn) {
+    public BloodValueLoaderDynamic(@NotNull String modIdIn, @NotNull String nameIn, @NotNull BiConsumer<Map<ResourceLocation, Integer>, Integer> consumerIn, @Nullable ResourceLocation multiplierNameIn, @NotNull Consumer<Map<ResourceLocation, Integer>> addCalculatedValuesIn, @NotNull Supplier<Map<ResourceLocation, Integer>> getCalculatedValuesIn) {
         super(nameIn, consumerIn, multiplierNameIn);
         this.addCalculatedValues = addCalculatedValuesIn;
         this.getCalculatedValues = getCalculatedValuesIn;

@@ -2,8 +2,7 @@ package de.teamlapen.vampirism.api.entity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.AABB;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Extends {@link net.minecraft.world.entity.PathfinderMob} home system with a way to set more accurate home positions

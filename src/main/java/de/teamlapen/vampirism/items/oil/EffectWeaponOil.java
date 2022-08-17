@@ -10,33 +10,33 @@ import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
 
 public class EffectWeaponOil extends WeaponOil {
 
-    @Nonnull
+    @NotNull
     private final MobEffect effect;
     private final Supplier<Integer> effectDuration;
 
-    public EffectWeaponOil(@Nonnull MobEffect effect, @Nonnull Supplier<Integer> effectDuration, int maxDuration) {
+    public EffectWeaponOil(@NotNull MobEffect effect, @NotNull Supplier<Integer> effectDuration, int maxDuration) {
         super(effect.getColor(), maxDuration);
         this.effect = Objects.requireNonNull(effect);
         this.effectDuration = Objects.requireNonNull(effectDuration);
     }
 
-    public EffectWeaponOil(@Nonnull MobEffect effect, int effectDuration, int maxDuration) {
+    public EffectWeaponOil(@NotNull MobEffect effect, int effectDuration, int maxDuration) {
         this(effect, ()-> effectDuration, maxDuration);
     }
 
-    @Nonnull
+    @NotNull
     public MobEffect getEffect() {
         return effect;
     }
 
-    @Nonnull
+    @NotNull
     public MobEffectInstance getEffectInstance() {
         return new MobEffectInstance(this.effect, this.effectDuration.get());
     }

@@ -24,8 +24,8 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class SieveBlockEntity extends BlockEntity implements FluidTankWithListener.IFluidTankListener {
 
@@ -44,8 +44,8 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
     }
 
     @Override
-    @Nonnull
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing) {
+    @NotNull
+    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction facing) {
         if ((facing != Direction.DOWN) && capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
             return cap.cast();
         return super.getCapability(capability, facing);
@@ -56,7 +56,7 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public CompoundTag getUpdateTag() {
         CompoundTag nbt = new CompoundTag();
@@ -70,7 +70,7 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
     }
 
     @Override
-    public void load(@Nonnull CompoundTag tag) {
+    public void load(@NotNull CompoundTag tag) {
         super.load(tag);
         tank.readFromNBT(tag);
         cooldownProcess = tag.getInt("cooldown_process");
@@ -93,7 +93,7 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
     }
 
     @Override
-    public void saveAdditional(@Nonnull CompoundTag compound) {
+    public void saveAdditional(@NotNull CompoundTag compound) {
         super.saveAdditional(compound);
         tank.writeToNBT(compound);
         compound.putInt("cooldown_process", this.cooldownProcess);

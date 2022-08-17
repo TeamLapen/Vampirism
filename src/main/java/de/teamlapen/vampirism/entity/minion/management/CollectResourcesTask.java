@@ -18,8 +18,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
@@ -30,9 +30,9 @@ import static de.teamlapen.vampirism.entity.minion.management.CollectResourcesTa
 
 public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTask<Desc<Q>, Q> {
 
-    @Nonnull
+    @NotNull
     private final Function<Q, Integer> coolDownSupplier;
-    @Nonnull
+    @NotNull
     private final List<WeightedRandomItem<ItemStack>> resources;
     private final RandomSource rng = RandomSource.create();
     @Nullable
@@ -42,7 +42,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
     /**
      * @param faction If given, only available to this faction
      */
-    public CollectResourcesTask(@Nullable IFaction<?> faction, @Nonnull Function<Q, Integer> coolDownSupplier, @Nonnull List<WeightedRandomItem<ItemStack>> resources, Supplier<ISkill<?>> requiredSkill) {
+    public CollectResourcesTask(@Nullable IFaction<?> faction, @NotNull Function<Q, Integer> coolDownSupplier, @NotNull List<WeightedRandomItem<ItemStack>> resources, Supplier<ISkill<?>> requiredSkill) {
         super(requiredSkill);
         this.coolDownSupplier = coolDownSupplier;
         this.resources = resources;
@@ -78,7 +78,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
     }
 
     @Override
-    public void tickBackground(Desc<Q> desc, @Nonnull Q data) {
+    public void tickBackground(Desc<Q> desc, @NotNull Q data) {
         if (--desc.coolDown <= 0) {
             boolean lordOnline = desc.lordEntityID != null && ServerLifecycleHooks.getCurrentServer() != null && ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(desc.lordEntityID) != null;
             desc.coolDown = lordOnline ? coolDownSupplier.apply(data) : (int) (coolDownSupplier.apply(data) * VampirismConfig.BALANCE.miResourceCooldownOfflineMult.get());

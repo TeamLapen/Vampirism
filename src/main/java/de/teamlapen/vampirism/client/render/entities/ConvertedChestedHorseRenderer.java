@@ -12,7 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.horse.AbstractChestedHorse;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 public class ConvertedChestedHorseRenderer<T extends AbstractChestedHorse> extends ChestedHorseRenderer<T> {
@@ -23,7 +23,7 @@ public class ConvertedChestedHorseRenderer<T extends AbstractChestedHorse> exten
         this.addLayer(new VampireEntityLayer<>(this, new ResourceLocation(REFERENCE.MODID, "textures/entity/vanilla/horse_overlay.png"), false));
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ResourceLocation getTextureLocation(T entity) {
         return entityTypes.get(entity.getType());

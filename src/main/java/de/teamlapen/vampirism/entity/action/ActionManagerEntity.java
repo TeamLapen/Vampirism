@@ -10,7 +10,7 @@ import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.commons.lang3.ArrayUtils;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class ActionManagerEntity implements IEntityActionManager {
@@ -21,7 +21,7 @@ public class ActionManagerEntity implements IEntityActionManager {
     }
 
     @Override
-    public List<IEntityAction> getAllEntityActionsByTierAndClassType(IFaction<?> faction, @Nonnull EntityActionTier tier, EntityClassType classType) {
+    public List<IEntityAction> getAllEntityActionsByTierAndClassType(IFaction<?> faction, @NotNull EntityActionTier tier, EntityClassType classType) {
         List<IEntityAction> actions = getAllEntityActions();
         actions.removeIf(action -> action.getFaction() != faction || action.getTier().getId() > tier.getId() || !ArrayUtils.contains(action.getClassTypes(), classType));
         return actions;

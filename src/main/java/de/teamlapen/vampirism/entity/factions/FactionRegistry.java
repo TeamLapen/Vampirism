@@ -19,8 +19,8 @@ import net.minecraftforge.common.util.NonNullSupplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -201,19 +201,19 @@ public class FactionRegistry implements IFactionRegistry {
         }
 
         @Override
-        public IFactionBuilder<T> village(@Nonnull Consumer<IFactionVillageBuilder> villageBuilder) {
+        public IFactionBuilder<T> village(@NotNull Consumer<IFactionVillageBuilder> villageBuilder) {
             villageBuilder.accept(this.villageFactionData);
             return this;
         }
 
         @Override
-        public IFactionBuilder<T> name(@Nonnull String nameKey) {
+        public IFactionBuilder<T> name(@NotNull String nameKey) {
             this.name = nameKey;
             return this;
         }
 
         @Override
-        public IFactionBuilder<T> namePlural(@Nonnull String namePluralKey) {
+        public IFactionBuilder<T> namePlural(@NotNull String namePluralKey) {
             this.namePlural = namePluralKey;
             return this;
         }
@@ -261,7 +261,7 @@ public class FactionRegistry implements IFactionRegistry {
             return this;
         }
 
-        public PlayableFactionBuilder<T> lordTitle(@Nonnull BiFunction<Integer, Boolean, Component> lordTitleFunction) {
+        public PlayableFactionBuilder<T> lordTitle(@NotNull BiFunction<Integer, Boolean, Component> lordTitleFunction) {
             this.lordTitleFunction = lordTitleFunction;
             return this;
         }
@@ -272,18 +272,18 @@ public class FactionRegistry implements IFactionRegistry {
         }
 
         @Override
-        public IPlayableFactionBuilder<T> village(@Nonnull Consumer<IFactionVillageBuilder> villageBuilder) {
+        public IPlayableFactionBuilder<T> village(@NotNull Consumer<IFactionVillageBuilder> villageBuilder) {
             return (IPlayableFactionBuilder<T>) super.village(villageBuilder);
         }
 
         @Override
-        public IPlayableFactionBuilder<T> refinementItems(@Nonnull Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot) {
+        public IPlayableFactionBuilder<T> refinementItems(@NotNull Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot) {
             this.refinementItemBySlot = refinementItemBySlot;
             return this;
         }
 
         @Override
-        public IPlayableFactionBuilder<T> chatColor(@Nonnull TextColor color) {
+        public IPlayableFactionBuilder<T> chatColor(@NotNull TextColor color) {
             return (IPlayableFactionBuilder<T>) super.chatColor(color);
         }
 
@@ -293,12 +293,12 @@ public class FactionRegistry implements IFactionRegistry {
         }
 
         @Override
-        public IPlayableFactionBuilder<T> name(@Nonnull String nameKey) {
+        public IPlayableFactionBuilder<T> name(@NotNull String nameKey) {
             return (IPlayableFactionBuilder<T>) super.name(nameKey);
         }
 
         @Override
-        public IPlayableFactionBuilder<T> namePlural(@Nonnull String namePluralKey) {
+        public IPlayableFactionBuilder<T> namePlural(@NotNull String namePluralKey) {
             return (IPlayableFactionBuilder<T>) super.namePlural(namePluralKey);
         }
 
@@ -333,7 +333,7 @@ public class FactionRegistry implements IFactionRegistry {
         }
 
         @Override
-        public LordPlayerBuilder<T> lordTitle(@Nonnull BiFunction<Integer, Boolean, Component> lordTitleFunction) {
+        public LordPlayerBuilder<T> lordTitle(@NotNull BiFunction<Integer, Boolean, Component> lordTitleFunction) {
             this.lordTitleFunction = lordTitleFunction;
             return this;
         }

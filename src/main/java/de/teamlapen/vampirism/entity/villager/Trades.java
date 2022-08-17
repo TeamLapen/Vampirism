@@ -24,8 +24,8 @@ import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Trades {
     public static final VillagerTrades.ItemListing[] converted_trades = new VillagerTrades.ItemListing[]{new net.minecraft.world.entity.npc.VillagerTrades.EmeraldForItems(ModItems.HUMAN_HEART.get(), 9, 2, 2), new VillagerTrades.ItemsForEmeralds(ModItems.HUMAN_HEART.get(), 3, 9, 2), new ItemsForEmeraldsTradeWithDamage(BloodBottleItem.getStackWithDamage(9), 1, 3, 12, 2)};
@@ -64,7 +64,7 @@ public class Trades {
 
         @NotNull
         @Override
-        public MerchantOffer getOffer(@Nonnull Entity entity, @Nonnull RandomSource random) {
+        public MerchantOffer getOffer(@NotNull Entity entity, @NotNull RandomSource random) {
             ItemStack second = new ItemStack(result.getItem(), resultAmount);
             second.setDamageValue(result.getDamageValue());
             return new MerchantOffer(new ItemStack(Items.EMERALD, this.emeraldAmount), second, this.maxUses, this.givenXP, this.priceMultiplier);
@@ -104,7 +104,7 @@ public class Trades {
 
         @Nullable
         @Override
-        public MerchantOffer getOffer(@Nonnull Entity entity, @Nonnull RandomSource random) {
+        public MerchantOffer getOffer(@NotNull Entity entity, @NotNull RandomSource random) {
             return new MerchantOffer(new ItemStack(ModItems.SOUL_ORB_VAMPIRE.get(), price.getPrice(random)), new ItemStack(sellingItem[random.nextInt(sellingItem.length)].getItem(), selling.getPrice(random)), maxUses, xp, 0.2F);
         }
     }
@@ -142,7 +142,7 @@ public class Trades {
 
         @Nullable
         @Override
-        public MerchantOffer getOffer(@Nonnull Entity entity, @Nonnull RandomSource random) {
+        public MerchantOffer getOffer(@NotNull Entity entity, @NotNull RandomSource random) {
             return new MerchantOffer(new ItemStack(ModItems.HUMAN_HEART.get(), price.getPrice(random)), new ItemStack(sellingItem[random.nextInt(sellingItem.length)].getItem(), selling.getPrice(random)), maxUses, xp, 0.2F);
         }
     }
@@ -168,7 +168,7 @@ public class Trades {
 
         @Nullable
         @Override
-        public MerchantOffer getOffer(@Nonnull Entity entity, @Nonnull RandomSource random) {
+        public MerchantOffer getOffer(@NotNull Entity entity, @NotNull RandomSource random) {
             ItemStack bottle = new ItemStack(ModItems.BLOOD_BOTTLE.get(), selling.getPrice(random));
             bottle.setDamageValue(damage);
             return new MerchantOffer(new ItemStack(ModItems.HUMAN_HEART.get(), price.getPrice(random)), bottle, maxUses, xp, 0.2F);

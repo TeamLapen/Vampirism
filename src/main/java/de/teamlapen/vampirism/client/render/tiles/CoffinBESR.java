@@ -25,7 +25,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
@@ -41,11 +41,11 @@ public class CoffinBESR extends VampirismBESR<CoffinBlockEntity> {
     }
 
     @Override
-    public void render(@Nonnull CoffinBlockEntity tile, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource iRenderTypeBuffer, int i, int i1) {
+    public void render(@NotNull CoffinBlockEntity tile, float partialTicks, @NotNull PoseStack matrixStack, @NotNull MultiBufferSource iRenderTypeBuffer, int i, int i1) {
         this.renderBlock(tile, partialTicks, matrixStack, iRenderTypeBuffer, i, i1);
     }
 
-    public void renderBlock(CoffinBlockEntity tile, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource iRenderTypeBuffer, int i, int i1) {
+    public void renderBlock(CoffinBlockEntity tile, float partialTicks, @NotNull PoseStack matrixStack, @NotNull MultiBufferSource iRenderTypeBuffer, int i, int i1) {
         assert tile.getLevel() != null;
         BlockState state = tile.getBlockState();
         Direction direction = state.getValue(HORIZONTAL_FACING);

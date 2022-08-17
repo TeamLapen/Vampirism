@@ -19,7 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -27,11 +27,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
     private static final ISkill<?>[] EMPTY_SKILLS = {};
     private final Either<Ingredient, FluidStack> fluid;
-    @Nonnull
+    @NotNull
     private final ISkill<?>[] skills;
     private final int reqLevel;
 
-    public AlchemicalCauldronRecipe(ResourceLocation idIn, String groupIn, Ingredient ingredientIn, Either<Ingredient, FluidStack> fluidIn, ItemStack resultIn, @Nonnull ISkill<?>[] skillsIn, int reqLevelIn, int cookTimeIn, float exp) {
+    public AlchemicalCauldronRecipe(ResourceLocation idIn, String groupIn, Ingredient ingredientIn, Either<Ingredient, FluidStack> fluidIn, ItemStack resultIn, @NotNull ISkill<?>[] skillsIn, int reqLevelIn, int cookTimeIn, float exp) {
         super(ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get(), idIn, groupIn, ingredientIn, resultIn, exp, cookTimeIn);
         this.fluid = fluidIn;
         this.skills = skillsIn;
@@ -58,19 +58,19 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
         return reqLevel;
     }
 
-    @Nonnull
+    @NotNull
     public ISkill<?>[] getRequiredSkills() {
         return skills;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public RecipeSerializer<?> getSerializer() {
         return ModRecipes.ALCHEMICAL_CAULDRON.get();
     }
 
     @Override
-    public boolean matches(Container inv, @Nonnull Level worldIn) {
+    public boolean matches(Container inv, @NotNull Level worldIn) {
         boolean match = this.ingredient.test(inv.getItem(1));
         AtomicBoolean fluidMatch = new AtomicBoolean(true);
         fluid.ifLeft((ingredient1 -> fluidMatch.set(ingredient1.test(inv.getItem(0)))));
@@ -96,9 +96,9 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
     }
 
     public static class Serializer implements RecipeSerializer<AlchemicalCauldronRecipe> {
-        @Nonnull
+        @NotNull
         @Override
-        public AlchemicalCauldronRecipe fromJson(@Nonnull ResourceLocation recipeId, @Nonnull JsonObject json) {
+        public AlchemicalCauldronRecipe fromJson(@NotNull ResourceLocation recipeId, @NotNull JsonObject json) {
             String group = GsonHelper.getAsString(json, "group", "");
             Ingredient ingredients = Ingredient.fromJson(GsonHelper.isArrayNode(json, "ingredient") ? GsonHelper.getAsJsonArray(json, "ingredient") : GsonHelper.getAsJsonObject(json, "ingredient"));
             int level = GsonHelper.getAsInt(json, "level", 1);
@@ -111,7 +111,7 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
         }
 
         @Override
-        public AlchemicalCauldronRecipe fromNetwork(@Nonnull ResourceLocation recipeId, FriendlyByteBuf buffer) {
+        public AlchemicalCauldronRecipe fromNetwork(@NotNull ResourceLocation recipeId, FriendlyByteBuf buffer) {
             String group = buffer.readUtf(32767);
             ItemStack result = buffer.readItem();
             Ingredient ingredient = Ingredient.fromNetwork(buffer);

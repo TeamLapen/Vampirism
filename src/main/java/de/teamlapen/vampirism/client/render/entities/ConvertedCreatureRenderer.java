@@ -10,7 +10,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Renders a converted creature, by rendering its old creature
@@ -26,14 +26,14 @@ public class ConvertedCreatureRenderer extends EntityRenderer<ConvertedCreatureE
 
 
     @SuppressWarnings("ConstantConditions")
-    @Nonnull
+    @NotNull
     @Override
-    public ResourceLocation getTextureLocation(@Nonnull ConvertedCreatureEntity entity) {
+    public ResourceLocation getTextureLocation(@NotNull ConvertedCreatureEntity entity) {
         return null;
     }
 
     @Override
-    public void render(ConvertedCreatureEntity entity, float entityYaw, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource renderTypeBuffer, int packedLightIn) {
+    public void render(ConvertedCreatureEntity entity, float entityYaw, float partialTicks, @NotNull PoseStack matrixStack, @NotNull MultiBufferSource renderTypeBuffer, int packedLightIn) {
         PathfinderMob creature = entity.getOldCreature();
         if (creature != null) {
 //            creature.removed = false;

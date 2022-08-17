@@ -11,9 +11,9 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Random;
 import java.util.function.Consumer;
@@ -26,7 +26,7 @@ public class SimpleSpawnerLogic<T extends Entity> {
     private final static Logger LOGGER = LogManager.getLogger();
     private static final int MOB_COUNT_DIV = (int) Math.pow(17.0D, 2.0D);
 
-    @Nonnull
+    @NotNull
     private final EntityType<T> entityType;
     @Nullable
     private Consumer<T> onSpawned;
@@ -44,11 +44,11 @@ public class SimpleSpawnerLogic<T extends Entity> {
     private MobCategory limitType;
     private final Random rng = new Random();
 
-    public SimpleSpawnerLogic(@Nonnull EntityType<T> entityTypeIn) {
+    public SimpleSpawnerLogic(@NotNull EntityType<T> entityTypeIn) {
         this.entityType = entityTypeIn;
     }
 
-    @Nonnull
+    @NotNull
     public EntityType<T> getEntityType() {
         return entityType;
     }

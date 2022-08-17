@@ -19,8 +19,8 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class VampireBookItem extends Item {
@@ -42,7 +42,7 @@ public class VampireBookItem extends Item {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         if (stack.hasTag()) {
             CompoundTag compoundnbt = stack.getTag();
             String s = compoundnbt.getString("author");
@@ -56,13 +56,13 @@ public class VampireBookItem extends Item {
     }
 
     @Override
-    public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
+    public void fillItemCategory(@NotNull CreativeModeTab group, @NotNull NonNullList<ItemStack> items) {
         if (this.allowedIn(group)) {
             items.add(VampireBookManager.getInstance().getRandomBookItem(RandomSource.create()));
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Component getName(ItemStack stack) {
         if (stack.hasTag()) {
@@ -76,13 +76,13 @@ public class VampireBookItem extends Item {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public boolean isFoil(@Nonnull ItemStack stack) {
+    public boolean isFoil(@NotNull ItemStack stack) {
         return true;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, @Nonnull InteractionHand handIn) {
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         if (!worldIn.isClientSide && playerIn instanceof ServerPlayer) {
             String id = VampireBookManager.OLD_ID;

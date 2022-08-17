@@ -37,7 +37,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -102,7 +102,7 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
     }
 
     @Override
-    public void render(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
 
         if (this.menu.areRefinementsAvailable()) {
@@ -203,14 +203,14 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
     }
 
     @Override
-    protected void renderLabels(@Nonnull PoseStack stack, int mouseX, int mouseY) {
+    protected void renderLabels(@NotNull PoseStack stack, int mouseX, int mouseY) {
         super.renderLabels(stack, mouseX, mouseY);
         int width = this.font.width(this.level);
         this.font.draw(stack, this.level,Math.max(5, 31 - (float)width /2), 81, -1);
     }
 
     @Override
-    protected void renderBg(@Nonnull PoseStack matrixStack, float v, int i, int i1) {
+    protected void renderBg(@NotNull PoseStack matrixStack, float v, int i, int i1) {
         this.renderBackground(matrixStack);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);

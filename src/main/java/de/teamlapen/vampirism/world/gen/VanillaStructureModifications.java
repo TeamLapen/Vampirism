@@ -28,7 +28,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.RandomBlockMa
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -201,19 +201,19 @@ public class VanillaStructureModifications {
         return BuiltinRegistries.register(BuiltinRegistries.PROCESSOR_LIST, resourcelocation, structureprocessorlist);
     }
 
-    private static SinglePoolElement singleJigsawPiece(@Nonnull String path) {
+    private static SinglePoolElement singleJigsawPiece(@NotNull String path) {
         return singleJigsawPiece(path, ProcessorLists.EMPTY);
     }
 
-    private static SinglePoolElement singleJigsawPiece(@Nonnull String path, @Nonnull Holder<StructureProcessorList> processors) {
+    private static SinglePoolElement singleJigsawPiece(@NotNull String path, @NotNull Holder<StructureProcessorList> processors) {
         return SinglePoolElement.single("vampirism:" + path, processors).apply(StructureTemplatePool.Projection.RIGID);
     }
 
-    private static Function<StructureTemplatePool.Projection, SinglePoolElement> singleJigsawPieceFunction(@Nonnull String path) {
+    private static Function<StructureTemplatePool.Projection, SinglePoolElement> singleJigsawPieceFunction(@NotNull String path) {
         return singleJigsawPieceFunction(path, ProcessorLists.EMPTY);
     }
 
-    private static Function<StructureTemplatePool.Projection, SinglePoolElement> singleJigsawPieceFunction(@Nonnull String path, @Nonnull Holder<StructureProcessorList> processors) {
+    private static Function<StructureTemplatePool.Projection, SinglePoolElement> singleJigsawPieceFunction(@NotNull String path, @NotNull Holder<StructureProcessorList> processors) {
         return SinglePoolElement.single("vampirism:" + path, processors);
     }
 

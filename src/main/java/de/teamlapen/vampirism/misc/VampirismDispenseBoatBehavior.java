@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class VampirismDispenseBoatBehavior extends DefaultDispenseItemBehavior {
     private final DefaultDispenseItemBehavior defaultDispenseItemBehavior = new DefaultDispenseItemBehavior();
@@ -30,7 +30,7 @@ public class VampirismDispenseBoatBehavior extends DefaultDispenseItemBehavior {
      * from {@link net.minecraft.core.dispenser.BoatDispenseItemBehavior#execute(net.minecraft.core.BlockSource, net.minecraft.world.item.ItemStack)}
      * TODO 1.20 recheck
      */
-    @Nonnull
+    @NotNull
     public ItemStack execute(BlockSource p_123375_, ItemStack p_123376_) {
         Direction direction = p_123375_.getBlockState().getValue(DispenserBlock.FACING);
         Level level = p_123375_.getLevel();

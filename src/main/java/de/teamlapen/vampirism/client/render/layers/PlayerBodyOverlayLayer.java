@@ -16,7 +16,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class PlayerBodyOverlayLayer<T extends MinionEntity<?> & IPlayerOverlay, M extends PlayerModel<T>> extends RenderLayer<T, M> {
@@ -25,7 +25,7 @@ public class PlayerBodyOverlayLayer<T extends MinionEntity<?> & IPlayerOverlay, 
     }
 
     @Override
-    public void render(@Nonnull PoseStack matrixStackIn, @Nonnull MultiBufferSource bufferIn, int packedLightIn, @Nonnull T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(@NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn, @NotNull T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         ResourceLocation loc = getTextureLocation(entitylivingbaseIn);
         if (entitylivingbaseIn.shouldRenderLordSkin()) {
             loc = entitylivingbaseIn.getOverlayPlayerProperties().map(Pair::getLeft).orElse(loc);

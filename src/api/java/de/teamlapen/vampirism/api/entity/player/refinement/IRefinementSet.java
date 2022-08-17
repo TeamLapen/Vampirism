@@ -5,8 +5,8 @@ import de.teamlapen.vampirism.api.items.IRefinementItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Optional;
 import java.util.Set;
 
@@ -14,16 +14,16 @@ public interface IRefinementSet {
 
     int getColor();
 
-    @Nonnull
+    @NotNull
     IFaction<?> getFaction();
 
-    @Nonnull
+    @NotNull
     Component getName();
 
-    @Nonnull
+    @NotNull
     Rarity getRarity();
 
-    @Nonnull
+    @NotNull
     Set<RegistryObject<? extends IRefinement>> getRefinements();
 
     /**

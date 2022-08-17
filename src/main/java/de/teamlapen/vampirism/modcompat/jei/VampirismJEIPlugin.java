@@ -46,7 +46,7 @@ import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -64,7 +64,7 @@ public class VampirismJEIPlugin implements IModPlugin {
     public static final RecipeType<AlchemyTableRecipe> ALCHEMY_TABLE = RecipeType.create("vampirism", "alchemy_table", AlchemyTableRecipe.class);
     private static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "plugin");
 
-    @Nonnull
+    @NotNull
     @Override
     public ResourceLocation getPluginUid() {
         return ID;
@@ -129,7 +129,7 @@ public class VampirismJEIPlugin implements IModPlugin {
     }
 
     @Override
-    public void registerVanillaCategoryExtensions(@Nonnull IVanillaCategoryExtensionRegistration registration) {
+    public void registerVanillaCategoryExtensions(@NotNull IVanillaCategoryExtensionRegistration registration) {
 
     }
 

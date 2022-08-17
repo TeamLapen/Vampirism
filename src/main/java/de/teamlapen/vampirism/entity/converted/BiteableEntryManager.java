@@ -17,8 +17,8 @@ import net.minecraft.world.phys.AABB;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -38,11 +38,11 @@ import java.util.Set;
 public class BiteableEntryManager {
     private final static Logger LOGGER = LogManager.getLogger();
 
-    @Nonnull
+    @NotNull
     private final Map<ResourceLocation, BiteableEntry> biteableEntries = Maps.newHashMap();
-    @Nonnull
+    @NotNull
     private final Map<ResourceLocation, BiteableEntry> calculated = Maps.newHashMap();
-    @Nonnull
+    @NotNull
     private final Set<ResourceLocation> blacklist = Sets.newHashSet();
 
     private boolean initialized = false;
@@ -63,7 +63,7 @@ public class BiteableEntryManager {
      * @return The created entry or null
      */
     @Nullable
-    public BiteableEntry calculate(@Nonnull PathfinderMob creature) {
+    public BiteableEntry calculate(@NotNull PathfinderMob creature) {
         if (!VampirismConfig.SERVER.autoCalculateEntityBlood.get()) return null;
         EntityType<?> type = creature.getType();
         @Nullable

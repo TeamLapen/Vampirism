@@ -2,15 +2,14 @@ package de.teamlapen.lib.lib.util;
 
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class ItemStackUtil {
 
     /**
      * Can be used in {@link Container#removeItem(int, int)}
      */
-    public static @Nonnull
+    public static @NotNull
     ItemStack decrIInventoryStackSize(Container inv, int slot, int amt) {
         ItemStack stack = inv.getItem(slot);
         if (!stack.isEmpty()) {
@@ -31,14 +30,14 @@ public class ItemStackUtil {
      * Checks if stackA contains stackB
      * True if A !=null and B == null
      */
-    public static boolean doesStackContain(@Nonnull ItemStack stackA, @Nonnull ItemStack stackB) {
+    public static boolean doesStackContain(@NotNull ItemStack stackA, @NotNull ItemStack stackB) {
         return (stackB.isEmpty() || !stackA.isEmpty() && (areStacksEqualIgnoreAmount(stackA, stackB) && stackA.getCount() >= stackB.getCount()));
     }
 
     /**
      * compares ItemStack argument to the instance ItemStack; returns true if both ItemStacks are equal. ignores stack size
      */
-    public static boolean areStacksEqualIgnoreAmount(@Nonnull ItemStack stackA, @Nonnull ItemStack stackB) {
+    public static boolean areStacksEqualIgnoreAmount(@NotNull ItemStack stackA, @NotNull ItemStack stackB) {
         if (stackA.isEmpty() && stackB.isEmpty()) return true;
         if (stackA.isEmpty() || stackB.isEmpty()) return false;
         if (stackA.getItem() != stackB.getItem()) return false;

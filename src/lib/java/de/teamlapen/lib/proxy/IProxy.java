@@ -9,13 +9,12 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkEvent;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 public interface IProxy {
-    @Nonnull
+    @NotNull
     ISoundReference createMasterSoundReference(SoundEvent event, float volume, float pinch);
 
     /**
@@ -24,7 +23,7 @@ public interface IProxy {
      * Internally creates a ISound.
      * Does not start playing.
      */
-    @Nonnull
+    @NotNull
     ISoundReference createSoundReference(SoundEvent event, SoundSource category, BlockPos pos, float volume, float pinch);
 
     /**
@@ -33,7 +32,7 @@ public interface IProxy {
      * Internally creates a ISound.
      * Does not start playing.
      */
-    @Nonnull
+    @NotNull
     ISoundReference createSoundReference(SoundEvent event, SoundSource category, double x, double y, double z, float volume, float pinch);
 
     /**

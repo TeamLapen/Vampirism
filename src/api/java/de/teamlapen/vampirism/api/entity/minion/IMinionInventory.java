@@ -3,8 +3,7 @@ package de.teamlapen.vampirism.api.entity.minion;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Similar to {@link net.minecraft.world.entity.player.Inventory}
@@ -16,7 +15,7 @@ public interface IMinionInventory extends Container {
      *
      * @param stack Is modified
      */
-    void addItemStack(@Nonnull ItemStack stack);
+    void addItemStack(@NotNull ItemStack stack);
 
     /**
      * @return The number of available main inventory slots. Must be 9, 12 or 15

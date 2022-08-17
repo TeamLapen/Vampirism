@@ -12,8 +12,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.*;
 import org.apache.commons.lang3.tuple.Pair;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +31,7 @@ public class RandomStructureProcessor extends RuleProcessor {
     }
 
     @Nullable
-    public StructureTemplate.StructureBlockInfo process(LevelReader worldReaderIn, @Nonnull BlockPos pos, @Nonnull BlockPos pos2, @Nonnull StructureTemplate.StructureBlockInfo blockInfo, StructureTemplate.StructureBlockInfo blockInfo1, @Nonnull StructurePlaceSettings placementSettings, @Nullable StructureTemplate template) {
+    public StructureTemplate.StructureBlockInfo process(LevelReader worldReaderIn, @NotNull BlockPos pos, @NotNull BlockPos pos2, @NotNull StructureTemplate.StructureBlockInfo blockInfo, StructureTemplate.StructureBlockInfo blockInfo1, @NotNull StructurePlaceSettings placementSettings, @Nullable StructureTemplate template) {
         RandomSource random = RandomSource.create(Mth.getSeed(blockInfo1.pos));
         BlockState blockstate = worldReaderIn.getBlockState(blockInfo1.pos);
 
@@ -45,7 +45,7 @@ public class RandomStructureProcessor extends RuleProcessor {
         return blockInfo1;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     protected StructureProcessorType<?> getType() {
         return VampirismFeatures.RANDOM_SELECTOR.get();

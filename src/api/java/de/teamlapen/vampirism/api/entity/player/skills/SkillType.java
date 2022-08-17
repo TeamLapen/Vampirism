@@ -3,8 +3,8 @@ package de.teamlapen.vampirism.api.entity.player.skills;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.function.Predicate;
 
 public enum SkillType implements ISkillType {
@@ -23,12 +23,12 @@ public enum SkillType implements ISkillType {
         this.isUnlocked = isUnlocked;
     }
 
-    public ResourceLocation createIdForFaction(@Nonnull ResourceLocation id) {
+    public ResourceLocation createIdForFaction(@NotNull ResourceLocation id) {
         return new ResourceLocation(id.getNamespace(), id.getPath() + this.nameSuffix);
     }
 
     @Override
-    public boolean isForFaction(@Nonnull IPlayableFaction<?> faction) {
+    public boolean isForFaction(@NotNull IPlayableFaction<?> faction) {
         return this.isForFaction.test(faction);
     }
 

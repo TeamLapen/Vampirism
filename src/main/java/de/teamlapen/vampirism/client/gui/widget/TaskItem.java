@@ -34,8 +34,8 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.client.gui.ScreenUtils;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -339,7 +339,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
         }
 
         @Override
-        public void renderButton(@Nonnull PoseStack mStack, int mouseX, int mouseY, float p_renderButton_3_) {
+        public void renderButton(@NotNull PoseStack mStack, int mouseX, int mouseY, float p_renderButton_3_) {
             TaskContainer.TaskAction action = TaskItem.this.screen.getTaskContainer().buttonAction(TaskItem.this.item);
             RenderSystem.enableDepthTest();
             RenderSystem.setShaderTexture(0, TASKMASTER_GUI_TEXTURE);
@@ -355,7 +355,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
         }
 
         @Override
-        public void renderToolTip(@Nonnull PoseStack mStack, int mouseX, int mouseY) {
+        public void renderToolTip(@NotNull PoseStack mStack, int mouseX, int mouseY) {
             if (this.isHovered && this.visible) {
                 TaskContainer.TaskAction action = TaskItem.this.screen.getTaskContainer().buttonAction(TaskItem.this.item);
                 TaskItem.this.screen.renderTooltip(mStack, Component.translatable(action.getTranslationKey()), mouseX, mouseY);

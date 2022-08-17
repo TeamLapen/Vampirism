@@ -53,7 +53,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 
@@ -105,7 +105,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         return this.getMinionData().map(d -> d.minionSkin).orElse(false);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public EnumStrength isGettingGarlicDamage(LevelAccessor iWorld, boolean forceRefresh) {
         if (forceRefresh) {
@@ -142,9 +142,9 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         super.aiStep();
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public ItemStack eat(@Nonnull Level world, @Nonnull ItemStack stack) {
+    public ItemStack eat(@NotNull Level world, @NotNull ItemStack stack) {
         return stack;
     }
 
@@ -206,9 +206,9 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         return !fullHealth || !(stack.getItem() instanceof BloodBottleItem);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    protected InteractionResult mobInteract(@Nonnull Player player, @Nonnull InteractionHand hand) {
+    protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (!this.level.isClientSide() && isLord(player) && minionData != null) {
             ItemStack heldItem = player.getItemInHand(hand);
             if (heldItem.getItem() instanceof MinionUpgradeItem && ((MinionUpgradeItem) heldItem.getItem()).getFaction() == this.getFaction()) {
@@ -228,7 +228,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     }
 
     @Override
-    protected void onMinionDataReceived(@Nonnull VampireMinionData data) {
+    protected void onMinionDataReceived(@NotNull VampireMinionData data) {
         super.onMinionDataReceived(data);
         updateAttributes();
     }

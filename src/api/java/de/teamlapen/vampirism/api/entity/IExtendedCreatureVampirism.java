@@ -3,8 +3,7 @@ package de.teamlapen.vampirism.api.entity;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.PathfinderMob;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Interface for Vampirism's capability every {@link PathfinderMob} has attached

@@ -11,8 +11,8 @@ import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -44,7 +44,7 @@ public class FactionVillage implements IFactionVillage {
         return this.badOmenEffect.get();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ItemStack getBanner() {
         return this.bannerStack.get().copy();
@@ -55,13 +55,13 @@ public class FactionVillage implements IFactionVillage {
         return this.captureEntities;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public VillagerProfession getFactionVillageProfession() {
         return this.factionVillageProfession.get();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Class<? extends Mob> getGuardSuperClass() {
         return this.guardSuperClass;
@@ -73,14 +73,14 @@ public class FactionVillage implements IFactionVillage {
         return this.taskMasterEntity.get();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Block getTotemTopBlock(boolean crafted) {
         return crafted ? this.craftedTotem.get() : this.fragileTotem.get();
     }
 
     @Override
-    public boolean isBanner(@Nonnull ItemStack stack) {
+    public boolean isBanner(@NotNull ItemStack stack) {
         return ItemStack.matches(this.bannerStack.get(), stack);
     }
 }

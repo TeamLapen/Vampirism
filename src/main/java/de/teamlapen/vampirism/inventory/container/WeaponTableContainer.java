@@ -27,7 +27,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.network.IContainerFactory;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,7 +73,7 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
      * Called to determine if the current slot is valid for the stack merging (double-click) code. The stack passed in
      * is null for the initial slot that was double-clicked.
      */
-    public boolean canTakeItemForPickAll(@Nonnull ItemStack stack, Slot slotIn) {
+    public boolean canTakeItemForPickAll(@NotNull ItemStack stack, Slot slotIn) {
         return slotIn.container != this.craftResult && super.canTakeItemForPickAll(stack, slotIn);
     }
 
@@ -84,7 +84,7 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
     }
 
     @Override
-    public void fillCraftSlotsStackedContents(@Nonnull StackedContents recipeItemHelper) {
+    public void fillCraftSlotsStackedContents(@NotNull StackedContents recipeItemHelper) {
         craftMatrix.fillStackedContents(recipeItemHelper);
     }
 
@@ -98,7 +98,7 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
         return craftMatrix.getWidth();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public RecipeBookType getRecipeBookType() {
         return RecipeBookType.CRAFTING;
@@ -116,11 +116,11 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void handlePlacement(boolean shouldPlaceAll, @Nonnull Recipe<?> recipe, @Nonnull ServerPlayer serverPlayer) {
+    public void handlePlacement(boolean shouldPlaceAll, @NotNull Recipe<?> recipe, @NotNull ServerPlayer serverPlayer) {
         new NBTServerPlaceRecipe<>(this).recipeClicked(serverPlayer, (Recipe<CraftingContainer>) recipe, shouldPlaceAll);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public List<RecipeBookCategories> getRecipeBookCategories() {
         return Lists.newArrayList(RecipeBookCategories.UNKNOWN);
@@ -135,8 +135,8 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
         return worldPos.evaluate(((world, blockPos) -> world.getBlockState(blockPos).getValue(WeaponTableBlock.LAVA) > 0), false);
     }
 
-    @Nonnull
-    public ItemStack quickMoveStack(@Nonnull Player playerIn, int index) {
+    @NotNull
+    public ItemStack quickMoveStack(@NotNull Player playerIn, int index) {
         ItemStack itemStackCopy = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
 
@@ -190,7 +190,7 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
     }
 
     @Override
-    public void removed(@Nonnull Player playerIn) {
+    public void removed(@NotNull Player playerIn) {
         super.removed(playerIn);
         this.worldPos.execute((world, pos) -> {
             this.clearContainer(playerIn, craftMatrix);
@@ -206,12 +206,12 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
     }
 
     @Override
-    public void slotsChanged(@Nonnull Container inventoryIn) {
+    public void slotsChanged(@NotNull Container inventoryIn) {
         this.worldPos.execute((world, pos) -> slotChangedCraftingGrid(world, this.player, this.hunterPlayer, this.craftMatrix, this.craftResult));
     }
 
     @Override
-    public boolean stillValid(@Nonnull Player playerIn) {
+    public boolean stillValid(@NotNull Player playerIn) {
         return stillValid(this.worldPos, playerIn, ModBlocks.WEAPON_TABLE.get());
     }
 

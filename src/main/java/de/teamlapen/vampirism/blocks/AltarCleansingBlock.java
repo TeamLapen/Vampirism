@@ -20,8 +20,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Placed in some churches
@@ -45,9 +45,9 @@ public class AltarCleansingBlock extends VampirismHorizontalBlock {
     }
 
 
-    @Nonnull
+    @NotNull
     @Override
-    public VoxelShape getShape(BlockState blockState, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
+    public VoxelShape getShape(BlockState blockState, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         Direction dir = blockState.getValue(FACING);
         if (dir == Direction.NORTH || dir == Direction.SOUTH) return SHAPEX;
         return SHAPEZ;
@@ -59,16 +59,16 @@ public class AltarCleansingBlock extends VampirismHorizontalBlock {
         return this.defaultBlockState().setValue(FACING, ctx.getHorizontalDirection().getOpposite());
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String getDescriptionId() {
         return "block.vampirism.church_altar";
     }
 
 
-    @Nonnull
+    @NotNull
     @Override
-    public InteractionResult use(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
+    public InteractionResult use(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         if (!player.isAlive()) return InteractionResult.PASS;
         return FactionPlayerHandler.getOpt(player).map(handler -> {
             if (handler.isInFaction(VReference.VAMPIRE_FACTION)) {

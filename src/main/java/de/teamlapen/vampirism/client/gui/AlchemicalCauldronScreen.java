@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 
 @OnlyIn(Dist.CLIENT)
@@ -24,14 +24,14 @@ public class AlchemicalCauldronScreen extends AbstractContainerScreen<Alchemical
     }
 
     @Override
-    public void render(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(stack);
         super.render(stack, mouseX, mouseY, partialTicks);
         this.renderTooltip(stack, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(@Nonnull PoseStack stack, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(@NotNull PoseStack stack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.setShaderColor(1, 1, 1, 1);
         RenderSystem.setShaderTexture(0, BACKGROUND);
         int i = (this.width - this.imageWidth) / 2;
@@ -48,7 +48,7 @@ public class AlchemicalCauldronScreen extends AbstractContainerScreen<Alchemical
     }
 
     @Override
-    protected void renderLabels(@Nonnull PoseStack stack, int mouseX, int mouseY) {
+    protected void renderLabels(@NotNull PoseStack stack, int mouseX, int mouseY) {
         Component name = Component.translatable("tile.vampirism.alchemical_cauldron.display", minecraft.player.getDisplayName().copy().withStyle(ChatFormatting.DARK_BLUE), ModBlocks.ALCHEMICAL_CAULDRON.get().getName());
         this.font.draw(stack, name, 5, 6, 0x404040);
         this.font.draw(stack, this.playerInventoryTitle, (float) this.inventoryLabelX, (float) this.inventoryLabelY, 4210752);

@@ -15,8 +15,8 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * does not extend {@link VampirismEffect} so other mods can use this too
@@ -56,7 +56,7 @@ public abstract class BadOmenEffect extends MobEffect {
     public abstract IFaction<?> getFaction();
 
     @Override
-    public void applyEffectTick(@Nonnull LivingEntity entityLivingBaseIn, int amplifier) {
+    public void applyEffectTick(@NotNull LivingEntity entityLivingBaseIn, int amplifier) {
         if (entityLivingBaseIn instanceof ServerPlayer playerEntity && !entityLivingBaseIn.isSpectator()) {
             ServerLevel serverWorld = playerEntity.getLevel();
             if (serverWorld.getDifficulty() == Difficulty.PEACEFUL) {

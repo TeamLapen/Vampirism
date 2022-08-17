@@ -4,17 +4,17 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import net.minecraft.resources.ResourceLocation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class StatRequirement implements TaskRequirement.Requirement<ResourceLocation> {
 
-    @Nonnull
+    @NotNull
     private final ResourceLocation stat;
     private final int amount;
-    @Nonnull
+    @NotNull
     private final ResourceLocation id;
 
-    public StatRequirement(@Nonnull ResourceLocation id, @Nonnull ResourceLocation stat, int amount) {
+    public StatRequirement(@NotNull ResourceLocation id, @NotNull ResourceLocation stat, int amount) {
         this.id = id;
         this.stat = stat;
         this.amount = amount;
@@ -25,19 +25,19 @@ public class StatRequirement implements TaskRequirement.Requirement<ResourceLoca
         return amount;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ResourceLocation getId() {
         return id;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ResourceLocation getStat(IFactionPlayer<?> player) {
         return stat;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public TaskRequirement.Type getType() {
         return TaskRequirement.Type.STATS;

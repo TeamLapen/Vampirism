@@ -11,8 +11,8 @@ import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.registries.RegistryObject;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.Set;
 
@@ -44,19 +44,19 @@ public abstract class RefinementSet implements IRefinementSet {
         return color;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Component getName() {
         return this.name != null ? this.name : (this.name = Component.translatable("refinement_set." + RegUtil.id(this).getNamespace() + "." + RegUtil.id(this).getPath()));
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Rarity getRarity() {
         return this.rarity;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Set<RegistryObject<? extends IRefinement>> getRefinements() {
         return this.refinements;
@@ -89,7 +89,7 @@ public abstract class RefinementSet implements IRefinementSet {
             super(rarity, color, refinements);
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public IFaction<?> getFaction() {
             return VReference.VAMPIRE_FACTION;

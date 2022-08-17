@@ -4,8 +4,8 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextColor;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -26,7 +26,7 @@ public interface IPlayableFactionBuilder<T extends IFactionPlayer<T>> extends IF
     IPlayableFactionBuilder<T> highestLevel(int highestLevel);
 
     @Override
-    IPlayableFactionBuilder<T> village(@Nonnull Consumer<IFactionVillageBuilder> villageBuilder);
+    IPlayableFactionBuilder<T> village(@NotNull Consumer<IFactionVillageBuilder> villageBuilder);
 
     /**
      * Allows this faction to have accessories
@@ -34,7 +34,7 @@ public interface IPlayableFactionBuilder<T extends IFactionPlayer<T>> extends IF
      * @param refinementItemBySlot function to get the refinement item for each slot
      * @return the builder
      */
-    IPlayableFactionBuilder<T> refinementItems(@Nonnull Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot);
+    IPlayableFactionBuilder<T> refinementItems(@NotNull Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot);
 
     @Override
     IPlayableFactionBuilder<T> chatColor(TextColor color);
@@ -43,10 +43,10 @@ public interface IPlayableFactionBuilder<T extends IFactionPlayer<T>> extends IF
     IPlayableFactionBuilder<T> chatColor(ChatFormatting color);
 
     @Override
-    IPlayableFactionBuilder<T> name(@Nonnull String nameKey);
+    IPlayableFactionBuilder<T> name(@NotNull String nameKey);
 
     @Override
-    IPlayableFactionBuilder<T> namePlural(@Nonnull String namePluralKey);
+    IPlayableFactionBuilder<T> namePlural(@NotNull String namePluralKey);
 
     ILordPlayerBuilder<T> lord();
 

@@ -1,8 +1,7 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
 import net.minecraft.world.entity.LivingEntity;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Should be implemented (through the subclasses) by any faction entity
@@ -11,7 +10,7 @@ public interface IFactionEntity {
     /**
      * @return the faction this entity belongs to
      */
-    @Nonnull
+    @NotNull
     IFaction<?> getFaction();
 
     /**

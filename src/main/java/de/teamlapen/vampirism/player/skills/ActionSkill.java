@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -47,7 +47,7 @@ public class ActionSkill<T extends IFactionPlayer<T>> extends VampirismSkill<T> 
         return RegUtil.id(action);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Optional<IPlayableFaction<?>> getFaction() {
         return action.getFaction();

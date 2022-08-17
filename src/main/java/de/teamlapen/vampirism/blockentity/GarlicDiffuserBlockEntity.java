@@ -20,9 +20,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 public class GarlicDiffuserBlockEntity extends BlockEntity {
@@ -72,7 +71,7 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
         return bootTimer == 0;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public CompoundTag getUpdateTag() {
         return this.saveWithoutMetadata();
@@ -86,7 +85,7 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void load(@Nonnull CompoundTag compound) {
+    public void load(@NotNull CompoundTag compound) {
         super.load(compound);
         r = compound.getInt("radius");
         defaultStrength = EnumStrength.getFromStrength(compound.getInt("strength"));
@@ -119,7 +118,7 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void saveAdditional(@Nonnull CompoundTag compound) {
+    public void saveAdditional(@NotNull CompoundTag compound) {
         super.saveAdditional(compound);
         compound.putInt("radius", r);
         compound.putInt("strength", defaultStrength.getStrength());

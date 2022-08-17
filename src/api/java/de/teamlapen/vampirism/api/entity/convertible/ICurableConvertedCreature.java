@@ -14,9 +14,9 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.UUID;
 
 /**
@@ -127,7 +127,7 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
      *
      * @param entity the entity that extends this interface
      */
-    default void registerConvertingData(@Nonnull PathfinderMob entity) {
+    default void registerConvertingData(@NotNull PathfinderMob entity) {
         entity.getEntityData().define(this.getConvertingDataParam(), false);
     }
 
@@ -138,7 +138,7 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
      * @param conversionTimeIn    ticks the conversion should take
      * @param entity              the entity that extends this interface
      */
-    default void startConverting(@Nullable UUID conversionStarterIn, int conversionTimeIn, @Nonnull PathfinderMob entity) {
+    default void startConverting(@Nullable UUID conversionStarterIn, int conversionTimeIn, @NotNull PathfinderMob entity) {
         entity.getEntityData().set(this.getConvertingDataParam(), true);
         entity.removeEffect(MobEffects.WEAKNESS);
         entity.level.broadcastEntityEvent(entity, (byte) 16);

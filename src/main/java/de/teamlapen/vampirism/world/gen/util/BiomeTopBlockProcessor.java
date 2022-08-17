@@ -12,8 +12,8 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProc
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +34,7 @@ public class BiomeTopBlockProcessor extends StructureProcessor {
     }
 
     @Nullable
-    public StructureTemplate.StructureBlockInfo process(@Nonnull LevelReader worldReaderIn, @Nonnull BlockPos pos, @Nonnull BlockPos pos1, @Nonnull StructureTemplate.StructureBlockInfo blockInfo, StructureTemplate.StructureBlockInfo blockInfo1, @Nonnull StructurePlaceSettings placementSettings, @Nullable StructureTemplate template) {
+    public StructureTemplate.StructureBlockInfo process(@NotNull LevelReader worldReaderIn, @NotNull BlockPos pos, @NotNull BlockPos pos1, @NotNull StructureTemplate.StructureBlockInfo blockInfo, StructureTemplate.StructureBlockInfo blockInfo1, @NotNull StructurePlaceSettings placementSettings, @Nullable StructureTemplate template) {
         if (blockInfo1.state.equals(replaceBlock)) {
             BlockState topBlock = worldReaderIn.getBlockState(blockInfo1.pos);
             if (streetBlocks.containsKey(topBlock.getBlock())) {
@@ -45,7 +45,7 @@ public class BiomeTopBlockProcessor extends StructureProcessor {
         return blockInfo1;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     protected StructureProcessorType<?> getType() {
         return VampirismFeatures.BIOME_BASED.get();

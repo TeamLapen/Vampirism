@@ -6,8 +6,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Optional;
 
 /**
@@ -30,7 +30,7 @@ public interface IAction<T extends IFactionPlayer<T>> {
     /**
      * @return the faction, which players can use this action
      */
-    @Nonnull
+    @NotNull
     Optional<IPlayableFaction<?>> getFaction();
 
     default Component getName() {

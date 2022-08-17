@@ -10,9 +10,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class TriggerFaction extends SimpleCriterionTrigger<TriggerFaction.Instance> {
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "faction");
@@ -27,7 +26,7 @@ public class TriggerFaction extends SimpleCriterionTrigger<TriggerFaction.Instan
         return new Instance(Type.LORD, faction, lordLevel);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ResourceLocation getId() {
         return ID;
@@ -40,9 +39,9 @@ public class TriggerFaction extends SimpleCriterionTrigger<TriggerFaction.Instan
         this.trigger(playerMP, (instance -> instance.test(faction, level, lordLevel)));
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    protected Instance createInstance(JsonObject json, @Nonnull EntityPredicate.Composite entityPredicate, @Nonnull DeserializationContext conditionsParser) {
+    protected Instance createInstance(JsonObject json, @NotNull EntityPredicate.Composite entityPredicate, @NotNull DeserializationContext conditionsParser) {
         IPlayableFaction<?> playableFaction = null;
         Type type = json.has("type") ? Type.valueOf(json.get("type").getAsString()) : Type.LEVEL;
         if (json.has("faction")) {
@@ -67,22 +66,22 @@ public class TriggerFaction extends SimpleCriterionTrigger<TriggerFaction.Instan
 
     static class Instance extends AbstractCriterionTriggerInstance {
 
-        @Nonnull
+        @NotNull
         private final Type type;
         @Nullable
         private final IPlayableFaction<?> faction;
         private final int level;
 
-        Instance(@Nonnull Type type, @Nullable IPlayableFaction<?> faction, int level) {
+        Instance(@NotNull Type type, @Nullable IPlayableFaction<?> faction, int level) {
             super(ID, EntityPredicate.Composite.ANY);
             this.type = type;
             this.faction = faction;
             this.level = level;
         }
 
-        @Nonnull
+        @NotNull
         @Override
-        public JsonObject serializeToJson(@Nonnull SerializationContext serializer) {
+        public JsonObject serializeToJson(@NotNull SerializationContext serializer) {
             JsonObject json = super.serializeToJson(serializer);
             json.addProperty("type", type.name());
             json.addProperty("faction", faction == null ? "null" : faction.getID().toString());

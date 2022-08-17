@@ -9,11 +9,11 @@ import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import net.minecraft.world.entity.PathfinderMob;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class VampireEntityAction<T extends PathfinderMob & IEntityActionUser> extends DefaultEntityAction implements IEntityAction {
 
-    public VampireEntityAction(@Nonnull EntityActionTier tier, EntityClassType[] param) {
+    public VampireEntityAction(@NotNull EntityActionTier tier, EntityClassType[] param) {
         super(tier, param);
     }
 

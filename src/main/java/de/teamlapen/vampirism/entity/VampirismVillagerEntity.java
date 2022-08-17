@@ -15,7 +15,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Villager extended with the ability to attack and some other things
@@ -47,7 +47,7 @@ public class VampirismVillagerEntity extends Villager {
     }
 
     @Override
-    public boolean checkSpawnRules(@Nonnull LevelAccessor worldIn, @Nonnull MobSpawnType spawnReasonIn) {
+    public boolean checkSpawnRules(@NotNull LevelAccessor worldIn, @NotNull MobSpawnType spawnReasonIn) {
         return (peaceful || worldIn.getDifficulty() != Difficulty.PEACEFUL) && super.checkSpawnRules(worldIn, spawnReasonIn);
     }
 
@@ -58,7 +58,7 @@ public class VampirismVillagerEntity extends Villager {
 //        return cachedVillage;
 //    }
 
-    public boolean doHurtTarget(@Nonnull Entity entity) {
+    public boolean doHurtTarget(@NotNull Entity entity) {
         float f = (float) this.getAttribute(Attributes.ATTACK_DAMAGE).getValue();
         int i = 0;
 
@@ -90,7 +90,7 @@ public class VampirismVillagerEntity extends Villager {
     }
 
     @Override
-    public boolean hurt(@Nonnull DamageSource src, float amount) {
+    public boolean hurt(@NotNull DamageSource src, float amount) {
         if (this.isInvulnerableTo(src)) {
             return false;
         } else if (super.hurt(src, amount)) {

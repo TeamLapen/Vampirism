@@ -46,8 +46,8 @@ import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Optional;
@@ -125,17 +125,17 @@ public class Helper {
     }
 
 
-    @Nonnull
+    @NotNull
     public static EnumStrength getGarlicStrength(Entity e, LevelAccessor world) {
         return getGarlicStrengthAt(world, e.blockPosition());
     }
 
-    @Nonnull
+    @NotNull
     public static EnumStrength getGarlicStrengthAt(LevelAccessor world, BlockPos pos) {
         return world instanceof Level ? VampirismAPI.getVampirismWorld((Level) world).map(vw -> vw.getStrengthAtChunk(new ChunkPos(pos))).orElse(EnumStrength.NONE) : EnumStrength.NONE;
     }
 
-    @Nonnull
+    @NotNull
     public static ResourceKey<Level> getWorldKey(LevelAccessor world) {
         return world instanceof Level ? ((Level) world).dimension() : world instanceof ServerLevelAccessor ? ((ServerLevelAccessor) world).getLevel().dimension() : Level.OVERWORLD;
     }
@@ -256,7 +256,7 @@ public class Helper {
         return false;
     }
 
-    public static <T extends Entity> Optional<T> createEntity(@Nonnull EntityType<T> type, @Nonnull Level world) {
+    public static <T extends Entity> Optional<T> createEntity(@NotNull EntityType<T> type, @NotNull Level world) {
         T e = type.create(world);
         if (e == null) {
             LOGGER.warn("Failed to create entity of type {}", RegUtil.id(type));

@@ -23,8 +23,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
@@ -57,7 +57,7 @@ public class VampirismSplitBlock extends VampirismBlock {
         this.vertical = vertical;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public PushReaction getPistonPushReaction(BlockState state) {
         return PushReaction.DESTROY;
@@ -94,7 +94,7 @@ public class VampirismSplitBlock extends VampirismBlock {
     }
 
     @Override
-    public boolean isPathfindable(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, PathComputationType type) {
+    public boolean isPathfindable(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, PathComputationType type) {
         return false;
     }
 
@@ -137,7 +137,7 @@ public class VampirismSplitBlock extends VampirismBlock {
 
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
         if (facing == getOtherBlockDirection(stateIn)) {

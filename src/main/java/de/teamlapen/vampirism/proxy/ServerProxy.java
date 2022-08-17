@@ -6,7 +6,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import static de.teamlapen.vampirism.blocks.TentBlock.FACING;
 import static de.teamlapen.vampirism.blocks.TentBlock.POSITION;

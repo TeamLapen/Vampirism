@@ -11,7 +11,7 @@ import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -24,9 +24,9 @@ public class BloodValues implements PreparableReloadListener {
     public final BloodValueReader<ResourceLocation> items = new BloodValueReader<>(BloodConversionRegistry::applyNewItemResources, "vampirism/bloodvalues/items", "items");
     public final BloodValueReader<ResourceLocation> fluids = new BloodValueReader<>(BloodConversionRegistry::applyNewFluidResources, "vampirism/bloodvalues/fluids", "fluids");
 
-    @Nonnull
+    @NotNull
     @Override
-    public CompletableFuture<Void> reload(PreparationBarrier stage, @Nonnull ResourceManager resourceManager, @Nonnull ProfilerFiller profiler1, @Nonnull ProfilerFiller profiler2, @Nonnull Executor executor1, @Nonnull Executor executor2) {
+    public CompletableFuture<Void> reload(PreparationBarrier stage, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profiler1, @NotNull ProfilerFiller profiler2, @NotNull Executor executor1, @NotNull Executor executor2) {
         CompletableFuture<Map<String, BloodValueBuilder>> entities = this.entities.prepare(resourceManager, executor1);
         CompletableFuture<Map<String, BloodValueBuilder>> items = this.items.prepare(resourceManager, executor1);
         CompletableFuture<Map<String, BloodValueBuilder>> fluids = this.fluids.prepare(resourceManager, executor1);

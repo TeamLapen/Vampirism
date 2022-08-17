@@ -28,8 +28,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -41,7 +41,7 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         Player playerEntity = VampirismMod.proxy.getClientPlayer();
         this.addFactionPoisonousToolTip(stack, worldIn, tooltip, flagIn, playerEntity);
     }
@@ -71,7 +71,7 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
 
     @Nullable
     @Override
-    public IFaction<?> getExclusiveFaction(@Nonnull ItemStack stack) {
+    public IFaction<?> getExclusiveFaction(@NotNull ItemStack stack) {
         return VReference.VAMPIRE_FACTION;
     }
 

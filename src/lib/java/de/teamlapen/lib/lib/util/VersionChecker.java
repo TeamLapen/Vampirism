@@ -12,9 +12,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.maven.artifact.versioning.ArtifactVersion;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.*;
@@ -222,13 +222,13 @@ public class VersionChecker implements Runnable {
         }
 
         public
-        @Nonnull
+        @NotNull
         Version getCurrentVersion() {
             return currentVersion;
         }
 
         public
-        @Nonnull
+        @NotNull
         String getHomePage() {
             return homePage;
         }
@@ -254,7 +254,7 @@ public class VersionChecker implements Runnable {
      */
     public static class Version implements Comparable<Version> {
 
-        static Version from(@Nonnull ArtifactVersion version) {
+        static Version from(@NotNull ArtifactVersion version) {
             try {
                 String extra = null;
                 String qualifier = version.getQualifier();
@@ -309,7 +309,7 @@ public class VersionChecker implements Runnable {
          * 1 if the given version is older, 0 if they are equal and -1 if the given version is newer
          */
         @Override
-        public int compareTo(@Nonnull Version version) {
+        public int compareTo(@NotNull Version version) {
             if (version.main > this.main) return -1;
             if (version.main < this.main) return 1;
             if (version.major > this.major) return -1;

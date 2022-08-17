@@ -8,8 +8,8 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 import java.util.function.BiFunction;
 
@@ -47,7 +47,7 @@ public class Refinement implements IRefinement {
         return this.attribute;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Component getDescription() {
         if (description == null) {

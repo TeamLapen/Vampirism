@@ -10,8 +10,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -27,27 +27,27 @@ public class BloodConversionRegistry {
     /**
      * stores conversion rate from items to impure blood
      */
-    @Nonnull
+    @NotNull
     private static final Map<ResourceLocation, Float> items = Maps.newHashMap();
 
     /**
      * stores conversion rate from fluids to blood
      */
-    @Nonnull
+    @NotNull
     private static final Map<ResourceLocation, Float> fluids = Maps.newHashMap();
 
-    @Nonnull
+    @NotNull
     private static final Map<ResourceLocation, Float> entities = Maps.newHashMap();
 
     /**
      * stores conversion rate from not listed items to impure blood
      */
-    @Nonnull
+    @NotNull
     private static final Map<ResourceLocation, Float> items_calculated = Maps.newHashMap();
     /**
      * stores items with no conversion rate
      */
-    @Nonnull
+    @NotNull
     private static final Set<ResourceLocation> items_blacklist = Sets.newHashSet();
 
     /**
@@ -151,7 +151,7 @@ public class BloodConversionRegistry {
      * @param item ItemStack
      * @return Impure blood amount in mB or 0
      */
-    public static int getImpureBloodValue(@Nonnull Item item) {
+    public static int getImpureBloodValue(@NotNull Item item) {
         if (items.containsKey(id(item)) || items_calculated.containsKey(id(item))) {
             return (items.containsKey(id(item)) ? items.get(id(item)) : items_calculated.get(id(item))).intValue();
         }
@@ -162,11 +162,11 @@ public class BloodConversionRegistry {
      * @deprecated use {@link #canBeConverted(net.minecraft.world.item.ItemStack)}
      */
     @Deprecated
-    public static boolean canBeConverted(@Nonnull Item item) {
+    public static boolean canBeConverted(@NotNull Item item) {
         return canBeConverted(new ItemStack(item));
     }
 
-    public static boolean canBeConverted(@Nonnull ItemStack stack) {
+    public static boolean canBeConverted(@NotNull ItemStack stack) {
         ResourceLocation id = id(stack.getItem());
         if (items.containsKey(id) || items_calculated.containsKey(id)) {
             return true;
@@ -191,14 +191,14 @@ public class BloodConversionRegistry {
      * @param fluid FluidStack
      * @return Impure blood amount in mB or 0
      */
-    public static float getBloodValue(@Nonnull FluidStack fluid) {
+    public static float getBloodValue(@NotNull FluidStack fluid) {
         if (fluids.containsKey(id(fluid.getFluid()))) {
             return fluids.get(id(fluid.getFluid()));
         }
         return 0f;
     }
 
-    public static boolean existsBloodValue(@Nonnull Fluid fluid) {
+    public static boolean existsBloodValue(@NotNull Fluid fluid) {
         return fluids.containsKey(id(fluid));
     }
 
@@ -208,7 +208,7 @@ public class BloodConversionRegistry {
      * @param fluid FluidStack
      * @return Impure blood amount in mB or 0
      */
-    public static FluidStack getBloodFromFluid(@Nonnull FluidStack fluid) {
+    public static FluidStack getBloodFromFluid(@NotNull FluidStack fluid) {
         if (fluid.getFluid().isSame(VReference.BLOOD.get()))
             return fluid;
         return new FluidStack(VReference.BLOOD.get(), (int) (getBloodValue(fluid) * fluid.getAmount()));

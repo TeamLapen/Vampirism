@@ -20,8 +20,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -35,7 +35,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
     /**
      * @return The loaded arrows or -1 if infinite
      */
-    private static int getArrowsLeft(@Nonnull ItemStack bowStack) {
+    private static int getArrowsLeft(@NotNull ItemStack bowStack) {
         CompoundTag nbt = bowStack.getTag();
         if (nbt == null || !nbt.contains("arrows")) return 0;
         return nbt.getInt("arrows");
@@ -46,7 +46,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
      * @param arrows The loaded arrows
      * @return The same bow stack
      */
-    private static ItemStack setArrowsLeft(@Nonnull ItemStack bowStack, int arrows) {
+    private static ItemStack setArrowsLeft(@NotNull ItemStack bowStack, int arrows) {
         int i = Math.max(-1, Math.min(MAX_ARROW_COUNT, arrows));
         CompoundTag nbt = bowStack.hasTag() ? bowStack.getTag() : new CompoundTag();
         nbt.putInt("arrows", i);
@@ -59,7 +59,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
      *
      * @return If there was an arrow
      */
-    private static boolean reduceArrowCount(@Nonnull ItemStack bowStack, RandomSource rnd) {
+    private static boolean reduceArrowCount(@NotNull ItemStack bowStack, RandomSource rnd) {
         CompoundTag nbt = bowStack.getTag();
         if (nbt == null || !nbt.contains("arrows")) return false;
         int count = nbt.getInt("arrows");
@@ -93,7 +93,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         int arrows = getArrowsLeft(stack);
         if (arrows == -1) {
@@ -107,7 +107,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
     }
 
     @Override
-    public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
+    public void fillItemCategory(@NotNull CreativeModeTab group, @NotNull NonNullList<ItemStack> items) {
         if (this.allowedIn(group)) {
             items.add(setArrowsLeft(new ItemStack(this), 0));
             items.add(setArrowsLeft(new ItemStack(this), MAX_ARROW_COUNT));
@@ -115,17 +115,17 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
     }
 
     @Override
-    public boolean isValidRepairItem(@Nonnull ItemStack toRepair, ItemStack repair) {
+    public boolean isValidRepairItem(@NotNull ItemStack toRepair, ItemStack repair) {
         return repair.is(Tags.Items.INGOTS_IRON);
     }
 
     @Nullable
     @Override
-    public ISkill<IHunterPlayer> getRequiredSkill(@Nonnull ItemStack stack) {
+    public ISkill<IHunterPlayer> getRequiredSkill(@NotNull ItemStack stack) {
         return HunterSkills.TECH_WEAPONS.get();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     protected ItemStack findAmmo(Player player, ItemStack bowStack) {
         boolean arrow = reduceArrowCount(bowStack, player.getRandom());
@@ -170,7 +170,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
         return 100;
     }
 
-    private boolean isArrowPackage(@Nonnull ItemStack stack) {
+    private boolean isArrowPackage(@NotNull ItemStack stack) {
         return ModItems.TECH_CROSSBOW_AMMO_PACKAGE.get() == stack.getItem();
     }
 

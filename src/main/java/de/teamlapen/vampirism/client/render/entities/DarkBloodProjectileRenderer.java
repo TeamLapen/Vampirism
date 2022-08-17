@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class DarkBloodProjectileRenderer extends EntityRenderer<DarkBloodProjectileEntity> {
@@ -20,9 +20,9 @@ public class DarkBloodProjectileRenderer extends EntityRenderer<DarkBloodProject
     /**
      * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
      */
-    @Nonnull
+    @NotNull
     @Override
-    public ResourceLocation getTextureLocation(@Nonnull DarkBloodProjectileEntity entity) {
+    public ResourceLocation getTextureLocation(@NotNull DarkBloodProjectileEntity entity) {
         return null;
     }
 }

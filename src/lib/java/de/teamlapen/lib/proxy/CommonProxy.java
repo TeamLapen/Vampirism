@@ -12,28 +12,27 @@ import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 
 public class CommonProxy implements IProxy {
     private final static Logger LOGGER = LogManager.getLogger();
 
-    @Nonnull
+    @NotNull
     @Override
     public ISoundReference createMasterSoundReference(SoundEvent event, float volume, float pinch) {
         LOGGER.warn("Created sound reference server side. Nothing will happen");
         return new ISoundReference.Dummy();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ISoundReference createSoundReference(SoundEvent event, SoundSource category, BlockPos pos, float volume, float pinch) {
         LOGGER.warn("Created sound reference server side. Nothing will happen");
         return new ISoundReference.Dummy();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ISoundReference createSoundReference(SoundEvent event, SoundSource category, double x, double y, double z, float volume, float pinch) {
         LOGGER.warn("Created sound reference server side. Nothing will happen");

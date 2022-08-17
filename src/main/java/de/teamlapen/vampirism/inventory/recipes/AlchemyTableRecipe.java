@@ -13,8 +13,8 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class AlchemyTableRecipe extends AbstractBrewingRecipe {
 
@@ -25,16 +25,16 @@ public class AlchemyTableRecipe extends AbstractBrewingRecipe {
         this.requiredSkills = skills;
     }
 
-    public boolean isInput(@Nonnull ItemStack input) {
+    public boolean isInput(@NotNull ItemStack input) {
         return UtilLib.matchesItem(this.input, input);
     }
 
-    public boolean isIngredient(@Nonnull ItemStack ingredient) {
+    public boolean isIngredient(@NotNull ItemStack ingredient) {
         return this.ingredient.test(ingredient);
     }
 
-    @Nonnull
-    public ItemStack getResult(@Nonnull ItemStack input, @Nonnull ItemStack ingredient) {
+    @NotNull
+    public ItemStack getResult(@NotNull ItemStack input, @NotNull ItemStack ingredient) {
         return isInput(input) && isIngredient(ingredient) ? this.result.copy() : ItemStack.EMPTY;
     }
 
@@ -42,7 +42,7 @@ public class AlchemyTableRecipe extends AbstractBrewingRecipe {
         return requiredSkills;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public RecipeSerializer<?> getSerializer() {
         return ModRecipes.ALCHEMICAL_TABLE.get();
@@ -50,9 +50,9 @@ public class AlchemyTableRecipe extends AbstractBrewingRecipe {
 
     public static class Serializer implements RecipeSerializer<AlchemyTableRecipe> {
 
-        @Nonnull
+        @NotNull
         @Override
-        public AlchemyTableRecipe fromJson(@Nonnull ResourceLocation recipeId, @Nonnull JsonObject json) {
+        public AlchemyTableRecipe fromJson(@NotNull ResourceLocation recipeId, @NotNull JsonObject json) {
             String group = GsonHelper.getAsString(json, "group", "");
             ISkill[] skills = VampirismRecipeHelper.deserializeSkills(GsonHelper.getAsJsonArray(json, "skill", null));
             Ingredient ingredient = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "ingredient"));
@@ -63,7 +63,7 @@ public class AlchemyTableRecipe extends AbstractBrewingRecipe {
 
         @Nullable
         @Override
-        public AlchemyTableRecipe fromNetwork(@Nonnull ResourceLocation recipeId, @Nonnull FriendlyByteBuf buffer) {
+        public AlchemyTableRecipe fromNetwork(@NotNull ResourceLocation recipeId, @NotNull FriendlyByteBuf buffer) {
             String group = buffer.readUtf();
             ItemStack result = buffer.readItem();
             Ingredient ingredient = Ingredient.fromNetwork(buffer);
@@ -78,7 +78,7 @@ public class AlchemyTableRecipe extends AbstractBrewingRecipe {
         }
 
         @Override
-        public void toNetwork(@Nonnull FriendlyByteBuf buffer, @Nonnull AlchemyTableRecipe recipe) {
+        public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull AlchemyTableRecipe recipe) {
             buffer.writeUtf(recipe.group);
             buffer.writeItem(recipe.getResultItem());
             recipe.ingredient.toNetwork(buffer);

@@ -8,7 +8,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("ClassCanBeRecord")
 public class ItemRewardInstance implements ITaskRewardInstance {
@@ -22,10 +22,10 @@ public class ItemRewardInstance implements ITaskRewardInstance {
         return new ItemRewardInstance(ItemStack.of(nbt.getCompound("reward")));
     }
 
-    @Nonnull
+    @NotNull
     protected final ItemStack reward;
 
-    public ItemRewardInstance(@Nonnull ItemStack reward) {
+    public ItemRewardInstance(@NotNull ItemStack reward) {
         this.reward = reward;
     }
 
@@ -46,13 +46,13 @@ public class ItemRewardInstance implements ITaskRewardInstance {
         return ID;
     }
 
-    @Nonnull
+    @NotNull
     public ItemStack getReward() {
         return reward.copy();
     }
 
     @Override
-    public CompoundTag writeNBT(@Nonnull CompoundTag nbt) {
+    public CompoundTag writeNBT(@NotNull CompoundTag nbt) {
         nbt.put("reward", this.reward.save(new CompoundTag()));
         return nbt;
     }

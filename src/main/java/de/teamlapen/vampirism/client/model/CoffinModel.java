@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 @SuppressWarnings("FieldCanBeLocal")
@@ -74,7 +74,7 @@ public class CoffinModel extends Model {
     }
 
     @Override
-    public void renderToBuffer(@Nonnull PoseStack matrixStack, @Nonnull VertexConsumer iVertexBuilder, int i, int i1, float v, float v1, float v2, float v3) {
+    public void renderToBuffer(@NotNull PoseStack matrixStack, @NotNull VertexConsumer iVertexBuilder, int i, int i1, float v, float v1, float v2, float v3) {
         modelParts.forEach(part -> part.render(matrixStack, iVertexBuilder, i, i1, v, v1, v2, v3));
     }
 

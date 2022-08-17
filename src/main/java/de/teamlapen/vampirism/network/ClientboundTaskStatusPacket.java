@@ -10,7 +10,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkEvent;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -21,7 +21,7 @@ public record ClientboundTaskStatusPacket(Set<ITaskInstance> available,
                                           Map<UUID, Map<ResourceLocation, Integer>> completedRequirements,
                                           int containerId, UUID taskBoardId) implements IMessage {
 
-    static void encode(@Nonnull ClientboundTaskStatusPacket msg, @Nonnull FriendlyByteBuf buf) {
+    static void encode(@NotNull ClientboundTaskStatusPacket msg, @NotNull FriendlyByteBuf buf) {
         buf.writeUtf(msg.taskBoardId.toString());
         buf.writeVarInt(msg.containerId);
         buf.writeVarInt(msg.completableTasks.size());
@@ -39,7 +39,7 @@ public record ClientboundTaskStatusPacket(Set<ITaskInstance> available,
         }));
     }
 
-    static ClientboundTaskStatusPacket decode(@Nonnull FriendlyByteBuf buf) {
+    static ClientboundTaskStatusPacket decode(@NotNull FriendlyByteBuf buf) {
         UUID taskBoardId = UUID.fromString(buf.readUtf());
         int containerId = buf.readVarInt();
         int completableTaskSize = buf.readVarInt();
@@ -66,7 +66,7 @@ public record ClientboundTaskStatusPacket(Set<ITaskInstance> available,
         return new ClientboundTaskStatusPacket(taskInstances, completableTasks, completedRequirements, containerId, taskBoardId);
     }
 
-    public static void handle(final ClientboundTaskStatusPacket msg, @Nonnull Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final ClientboundTaskStatusPacket msg, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> VampirismMod.proxy.handleTaskStatusPacket(msg));
         ctx.setPacketHandled(true);
@@ -77,7 +77,7 @@ public record ClientboundTaskStatusPacket(Set<ITaskInstance> available,
      * @param containerId           the id of the {@link de.teamlapen.vampirism.inventory.container.TaskBoardContainer}
      * @param taskBoardId           the task board id
      */
-    public ClientboundTaskStatusPacket(@Nonnull Set<ITaskInstance> available, Set<UUID> completableTasks, @Nonnull Map<UUID, Map<ResourceLocation, Integer>> completedRequirements, int containerId, UUID taskBoardId) {
+    public ClientboundTaskStatusPacket(@NotNull Set<ITaskInstance> available, Set<UUID> completableTasks, @NotNull Map<UUID, Map<ResourceLocation, Integer>> completedRequirements, int containerId, UUID taskBoardId) {
         this.available = available;
         this.completableTasks = completableTasks;
         this.completedRequirements = completedRequirements;

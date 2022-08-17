@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This recipe copies the {@link net.minecraft.nbt.CompoundTag} from the first found {@link IItemWithTier} and inserts it into the manufacturing result with damage = 0
@@ -23,9 +23,9 @@ public class ShapedItemWithTierRepair extends ShapedRecipe {
         super(shaped.getId(), shaped.getGroup(), shaped.getRecipeWidth(), shaped.getRecipeHeight(), shaped.getIngredients(), shaped.getResultItem());
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public ItemStack assemble(@Nonnull CraftingContainer inv) {
+    public ItemStack assemble(@NotNull CraftingContainer inv) {
         ItemStack stack = null;
         search:
         for (int i = 0; i <= inv.getWidth(); ++i) {
@@ -44,26 +44,26 @@ public class ShapedItemWithTierRepair extends ShapedRecipe {
         return result;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public RecipeSerializer<?> getSerializer() {
         return ModRecipes.REPAIR_IITEMWITHTIER.get();
     }
 
     public static class Serializer extends ShapedRecipe.Serializer {
-        @Nonnull
+        @NotNull
         @Override
-        public ShapedRecipe fromJson(@Nonnull ResourceLocation recipeId, @Nonnull JsonObject json) {
+        public ShapedRecipe fromJson(@NotNull ResourceLocation recipeId, @NotNull JsonObject json) {
             return new ShapedItemWithTierRepair(super.fromJson(recipeId, json));
         }
 
         @Override
-        public ShapedRecipe fromNetwork(@Nonnull ResourceLocation recipeId, @Nonnull FriendlyByteBuf buffer) {
+        public ShapedRecipe fromNetwork(@NotNull ResourceLocation recipeId, @NotNull FriendlyByteBuf buffer) {
             return new ShapedItemWithTierRepair(super.fromNetwork(recipeId, buffer));
         }
 
         @Override
-        public void toNetwork(@Nonnull FriendlyByteBuf buffer, @Nonnull ShapedRecipe recipe) {
+        public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull ShapedRecipe recipe) {
             super.toNetwork(buffer, recipe);
         }
     }

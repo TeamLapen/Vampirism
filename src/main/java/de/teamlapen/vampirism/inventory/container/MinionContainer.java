@@ -28,8 +28,8 @@ import net.minecraftforge.network.IContainerFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 public class MinionContainer extends InventoryContainer {
@@ -59,7 +59,7 @@ public class MinionContainer extends InventoryContainer {
     }
 
     private final MinionEntity<?> minionEntity;
-    @Nonnull
+    @NotNull
     private final IMinionTask<?, ?>[] availableTasks;
     @Nullable
     private final IMinionTask<?, ?> previousTask;
@@ -69,7 +69,7 @@ public class MinionContainer extends InventoryContainer {
     private IMinionTask<?, ?> taskToActivate;
     private boolean taskLocked;
 
-    public MinionContainer(int id, Inventory playerInventory, ILordPlayer lord, MinionEntity<?> minionEntity, @Nonnull Container inventory, int extraSlots, SelectorInfo... selectorInfos) {
+    public MinionContainer(int id, Inventory playerInventory, ILordPlayer lord, MinionEntity<?> minionEntity, @NotNull Container inventory, int extraSlots, SelectorInfo... selectorInfos) {
         super(ModContainer.MINION.get(), id, playerInventory, ContainerLevelAccess.create(minionEntity.level, minionEntity.blockPosition()), inventory, selectorInfos);
         this.minionEntity = minionEntity;
         this.extraSlots = extraSlots;
@@ -82,7 +82,7 @@ public class MinionContainer extends InventoryContainer {
     }
 
     @Override
-    public void removed(@Nonnull Player playerIn) {
+    public void removed(@NotNull Player playerIn) {
         super.removed(playerIn);
         if (this.minionEntity.level.isClientSide()) {
             sendChanges();
@@ -90,7 +90,7 @@ public class MinionContainer extends InventoryContainer {
         minionEntity.setInteractingPlayer(null);
     }
 
-    @Nonnull
+    @NotNull
     public IMinionTask<?, ?>[] getAvailableTasks() {
         return availableTasks;
     }
@@ -103,7 +103,7 @@ public class MinionContainer extends InventoryContainer {
         return Optional.ofNullable(previousTask);
     }
 
-    @Nonnull
+    @NotNull
     public IMinionTask<?, ?> getSelectedTask() {
         return this.taskToActivate != null ? this.taskToActivate : (this.previousTask != null ? this.previousTask : MinionTasks.STAY.get());
     }
@@ -117,7 +117,7 @@ public class MinionContainer extends InventoryContainer {
     }
 
     @Override
-    public boolean stillValid(@Nonnull Player playerIn) {
+    public boolean stillValid(@NotNull Player playerIn) {
         return minionEntity.isAlive();
     }
 

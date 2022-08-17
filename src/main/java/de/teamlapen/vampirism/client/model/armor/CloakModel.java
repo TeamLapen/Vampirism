@@ -74,7 +74,7 @@ public class CloakModel extends VampirismArmorModel {
     }
 
 //    @Override
-//    public void setupAnim(@Nonnull LivingEntity entity, float f, float f1, float ageInTicks, float netHeadYaw, float headPitch) {
+//    public void setupAnim(@NotNull LivingEntity entity, float f, float f1, float ageInTicks, float netHeadYaw, float headPitch) {
 //        super.setupAnim(entity, f, f1, ageInTicks, netHeadYaw, headPitch);
 //        //Isn't use afaik
 //

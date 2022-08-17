@@ -23,7 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 
 public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> {
@@ -51,7 +51,7 @@ public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> 
     }
 
     @Override
-    public void draw(JEIPotionMix recipe, @NotNull IRecipeSlotsView recipeSlotsView, @Nonnull PoseStack stack, double mouseX, double mouseY) {
+    public void draw(JEIPotionMix recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull PoseStack stack, double mouseX, double mouseY) {
         this.blazeHeat.draw(stack, 1, 35);
         this.bubbles.draw(stack, 3, 4);
         this.arrow.draw(stack, 80, 10);
@@ -79,19 +79,19 @@ public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> 
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IDrawable getBackground() {
         return background;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IDrawable getIcon() {
         return icon;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Component getTitle() {
         return localizedName;

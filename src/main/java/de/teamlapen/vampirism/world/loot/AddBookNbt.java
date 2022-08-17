@@ -15,7 +15,7 @@ import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 /**
@@ -31,15 +31,15 @@ public class AddBookNbt extends LootItemConditionalFunction {
         super(conditions);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public LootItemFunctionType getType() {
         return ModLoot.add_book_nbt.get();
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public ItemStack run(@Nonnull ItemStack itemStack, LootContext lootContext) {
+    public ItemStack run(@NotNull ItemStack itemStack, LootContext lootContext) {
         Entity victim = lootContext.getParamOrNull(LootContextParams.THIS_ENTITY);
         Optional<String> id = Optional.empty();
         if (victim instanceof AdvancedHunterEntity) {
@@ -54,9 +54,9 @@ public class AddBookNbt extends LootItemConditionalFunction {
 
     public static class Serializer extends LootItemConditionalFunction.Serializer<AddBookNbt> {
 
-        @Nonnull
+        @NotNull
         @Override
-        public AddBookNbt deserialize(@Nonnull JsonObject jsonObject, @Nonnull JsonDeserializationContext jsonDeserializationContext, @Nonnull LootItemCondition[] iLootConditions) {
+        public AddBookNbt deserialize(@NotNull JsonObject jsonObject, @NotNull JsonDeserializationContext jsonDeserializationContext, @NotNull LootItemCondition[] iLootConditions) {
             return new AddBookNbt(iLootConditions);
         }
     }

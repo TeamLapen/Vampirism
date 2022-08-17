@@ -10,18 +10,18 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 public class MinionDamageSource extends EntityDamageSource {
 
-    @Nonnull
+    @NotNull
     protected final MinionEntity<?> minionEntity;
     @Nullable
     protected final Player playerEntity;
 
-    public MinionDamageSource(@Nonnull MinionEntity<?> minion) {
+    public MinionDamageSource(@NotNull MinionEntity<?> minion) {
         super("mob", minion);
         this.minionEntity = minion;
         this.playerEntity = minion.getLordOpt().map(ILordPlayer::getPlayer).orElse(null);
@@ -39,9 +39,9 @@ public class MinionDamageSource extends EntityDamageSource {
         return this.playerEntity;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public Component getLocalizedDeathMessage(@Nonnull LivingEntity entityLivingBaseIn) {
+    public Component getLocalizedDeathMessage(@NotNull LivingEntity entityLivingBaseIn) {
         Component minionName = this.entity.getDisplayName();
         ItemStack itemstack = minionEntity.getMainHandItem();
         String s = "death.attack." + this.msgId;

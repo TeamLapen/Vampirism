@@ -2,8 +2,8 @@ package de.teamlapen.lib.lib.util;
 
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.function.Predicate;
 
 /**
@@ -22,7 +22,7 @@ public class FluidTankWithListener extends FluidTank {
         super(capacity, validator);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public FluidStack drain(int maxDrain, FluidAction action) {
         if (!drainable) return FluidStack.EMPTY;

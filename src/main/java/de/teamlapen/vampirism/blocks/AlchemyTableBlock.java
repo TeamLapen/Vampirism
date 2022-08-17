@@ -25,8 +25,8 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class AlchemyTableBlock extends HorizontalContainerBlock {
     public static final BooleanProperty HAS_BOTTLE_INPUT_0 = BooleanProperty.create("has_bottle_input_0");;
@@ -40,9 +40,9 @@ public class AlchemyTableBlock extends HorizontalContainerBlock {
         this.registerDefaultState(this.defaultBlockState().setValue(HAS_BOTTLE_INPUT_0, false).setValue(HAS_BOTTLE_INPUT_1, false).setValue(HAS_BOTTLE_OUTPUT_0, false).setValue(HAS_BOTTLE_OUTPUT_1, false));
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public RenderShape getRenderShape(@Nonnull BlockState state) {
+    public RenderShape getRenderShape(@NotNull BlockState state) {
         return RenderShape.MODEL;
     }
 
@@ -54,13 +54,13 @@ public class AlchemyTableBlock extends HorizontalContainerBlock {
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
         return level.isClientSide ? null : createTickerHelper(type, ModTiles.ALCHEMICAL_TABLE.get(), AlchemyTableBlockEntity::serverTick);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public InteractionResult use(@Nonnull BlockState state, Level level, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult rayTrace) {
+    public InteractionResult use(@NotNull BlockState state, Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult rayTrace) {
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
@@ -75,7 +75,7 @@ public class AlchemyTableBlock extends HorizontalContainerBlock {
     }
 
     @Override
-    public void setPlacedBy(@Nonnull Level level, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
+    public void setPlacedBy(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
         if (stack.hasCustomHoverName()) {
             BlockEntity tileentity = level.getBlockEntity(pos);
             if (tileentity instanceof AlchemyTableBlockEntity) {
@@ -85,7 +85,7 @@ public class AlchemyTableBlock extends HorizontalContainerBlock {
     }
 
     @Override
-    public void onRemove(BlockState state, @Nonnull Level level, @Nonnull BlockPos pos, BlockState state1, boolean p_196243_5_) {
+    public void onRemove(BlockState state, @NotNull Level level, @NotNull BlockPos pos, BlockState state1, boolean p_196243_5_) {
         if (!state.is(state1.getBlock())) {
             BlockEntity tileEntity = level.getBlockEntity(pos);
             if (tileEntity instanceof AlchemyTableBlockEntity){

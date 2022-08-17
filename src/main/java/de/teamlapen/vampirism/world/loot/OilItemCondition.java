@@ -14,17 +14,17 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class OilItemCondition implements LootItemCondition {
 
     private final IOil oil;
 
-    public OilItemCondition(@Nonnull IOil oil) {
+    public OilItemCondition(@NotNull IOil oil) {
         this.oil = oil;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public LootItemConditionType getType() {
         return ModLoot.with_oil_item.get();
@@ -39,13 +39,13 @@ public class OilItemCondition implements LootItemCondition {
     public static class Serializer implements net.minecraft.world.level.storage.loot.Serializer<OilItemCondition> {
 
         @Override
-        public void serialize(@Nonnull JsonObject json, @Nonnull OilItemCondition condition, @Nonnull JsonSerializationContext context) {
+        public void serialize(@NotNull JsonObject json, @NotNull OilItemCondition condition, @NotNull JsonSerializationContext context) {
             json.addProperty("oil", RegUtil.id(condition.oil).toString());
         }
 
-        @Nonnull
+        @NotNull
         @Override
-        public OilItemCondition deserialize(@Nonnull JsonObject json, @Nonnull JsonDeserializationContext context) {
+        public OilItemCondition deserialize(@NotNull JsonObject json, @NotNull JsonDeserializationContext context) {
             ResourceLocation oil = new ResourceLocation(json.get("predicate").getAsJsonObject().get("oil").getAsString());
             return new OilItemCondition(RegUtil.getOil(oil));
         }

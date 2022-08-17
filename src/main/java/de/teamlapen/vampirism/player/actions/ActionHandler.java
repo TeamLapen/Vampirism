@@ -21,7 +21,7 @@ import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 /**
@@ -84,7 +84,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     }
 
     @Override
-    public void extendActionTimer(@Nonnull ILastingAction<T> action, int duration) {
+    public void extendActionTimer(@NotNull ILastingAction<T> action, int duration) {
         int i = activeTimers.getOrDefault(RegUtil.id(action), -1);
         if (i > 0) {
             activeTimers.put(RegUtil.id(action), i + duration);
@@ -104,7 +104,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     }
 
     @Override
-    public float getPercentageForAction(@Nonnull IAction<T> action) {
+    public float getPercentageForAction(@NotNull IAction<T> action) {
         if (activeTimers.containsKey(RegUtil.id(action))) {
             return activeTimers.get(RegUtil.id(action)) / ((float) ((ILastingAction<T>) action).getDuration(player));
         }
@@ -120,7 +120,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     }
 
     @Override
-    public boolean isActionActive(@Nonnull ILastingAction<T> action) {
+    public boolean isActionActive(@NotNull ILastingAction<T> action) {
         return activeTimers.containsKey(RegUtil.id(action));
     }
 
@@ -245,7 +245,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     }
 
     @Override
-    public void resetTimer(@Nonnull IAction action) {
+    public void resetTimer(@NotNull IAction action) {
         if (activeTimers.containsKey(RegUtil.id(action))) {
             ((ILastingAction<T>) action).onDeactivated(player);
             activeTimers.removeInt(RegUtil.id(action));

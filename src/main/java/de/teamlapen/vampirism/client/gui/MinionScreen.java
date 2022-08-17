@@ -18,7 +18,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.widget.ExtendedButton;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
@@ -49,7 +49,7 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
     }
 
     @Override
-    public void render(@Nonnull PoseStack mStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull PoseStack mStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(mStack);
         super.render(mStack, mouseX, mouseY, partialTicks);
         this.renderTooltip(mStack, mouseX, mouseY);
@@ -71,7 +71,7 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
     }
 
     @Override
-    protected void renderBg(@Nonnull PoseStack mStack, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(@NotNull PoseStack mStack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, GUI_TEXTURE);
@@ -85,14 +85,14 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
     }
 
     @Override
-    protected void renderLabels(@Nonnull PoseStack mStack, int mouseX, int mouseY) {
+    protected void renderLabels(@NotNull PoseStack mStack, int mouseX, int mouseY) {
         this.font.draw(mStack, title, 5, 6.0F, 0x404040);
         this.font.draw(mStack, Component.translatable("gui.vampirism.minion.active_task"), 120, 10.0F, 0x404040);
 
     }
 
     @Override
-    protected void renderTooltip(@Nonnull PoseStack mStack, int mouseX, int mouseY) {
+    protected void renderTooltip(@NotNull PoseStack mStack, int mouseX, int mouseY) {
         if (this.lockActionButton.isMouseOver(mouseX, mouseY)) {
             drawButtonTip(mStack, Component.translatable("gui.vampirism.minion.lock_action"), mouseX, mouseY);
         } else if (this.appearanceButton.isMouseOver(mouseX, mouseY)) {

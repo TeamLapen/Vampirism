@@ -39,7 +39,7 @@ import net.minecraftforge.event.TickEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.function.Predicate;
 
 /**
@@ -58,14 +58,14 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
      * Always prefer calling #getOpt instead
      */
     @Deprecated
-    public static HunterPlayer get(@Nonnull Player player) {
+    public static HunterPlayer get(@NotNull Player player) {
         return (HunterPlayer) player.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get HunterPlayer from player " + player));
     }
 
     /**
      * Return a LazyOptional, but print a warning message if not present.
      */
-    public static LazyOptional<HunterPlayer> getOpt(@Nonnull Player player) {
+    public static LazyOptional<HunterPlayer> getOpt(@NotNull Player player) {
         LazyOptional<HunterPlayer> opt = player.getCapability(CAP, null).cast();
         if (!opt.isPresent()) {
             LOGGER.warn("Cannot get Hunter player capability. This might break mod functionality.", new Throwable().fillInStackTrace());
@@ -84,9 +84,9 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
                 inst.loadData(nbt);
             }
 
-            @Nonnull
+            @NotNull
             @Override
-            public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, Direction facing) {
+            public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, Direction facing) {
                 return CAP.orEmpty(capability, opt);
             }
 
@@ -152,7 +152,7 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ISkillHandler<IHunterPlayer> getSkillHandler() {
         return skillHandler;
@@ -161,7 +161,7 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
     /**
      * You can use {@link VampirismPlayerAttributes#getHuntSpecial()} instead if you don't have the hunter player already
      */
-    @Nonnull
+    @NotNull
     public HunterPlayerSpecialAttribute getSpecialAttributes() {
         return ((IVampirismPlayer) player).getVampAtts().getHuntSpecial();
     }

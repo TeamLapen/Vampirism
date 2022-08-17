@@ -21,7 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Gui for the Hunter Trainer interaction
@@ -50,7 +50,7 @@ public class HunterTrainerScreen extends AbstractContainerScreen<HunterTrainerCo
     }
 
     @Override
-    public void render(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(stack);
         super.render(stack, mouseX, mouseY, partialTicks);
         this.renderTooltip(stack, mouseX, mouseY);
@@ -65,14 +65,14 @@ public class HunterTrainerScreen extends AbstractContainerScreen<HunterTrainerCo
     }
 
     @Override
-    protected void renderBg(@Nonnull PoseStack stack, float var1, int var2, int var3) {
+    protected void renderBg(@NotNull PoseStack stack, float var1, int var2, int var3) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, altarGuiTextures);
         this.blit(stack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override
-    protected void renderLabels(@Nonnull PoseStack stack, int par1, int par2) {
+    protected void renderLabels(@NotNull PoseStack stack, int par1, int par2) {
         super.renderLabels(stack, par1, par2);
 
         Component text = null;

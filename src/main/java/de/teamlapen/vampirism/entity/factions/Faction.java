@@ -8,7 +8,7 @@ import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.PathfinderMob;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents an entity faction (e.g. Vampires)
@@ -23,13 +23,13 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
      * ID used for hashing
      */
     private final int integerId;
-    @Nonnull
+    @NotNull
     private final IFactionVillage villageFactionData;
-    @Nonnull
+    @NotNull
     private final Component name;
-    @Nonnull
+    @NotNull
     private final Component namePlural;
-    @Nonnull
+    @NotNull
     private final TextColor chatColor;
 
     Faction(FactionRegistry.FactionBuilder<T> builder) {
@@ -49,7 +49,7 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
         return (obj instanceof Faction) && this.id == (((Faction<?>) obj).id);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public TextColor getChatColor() {
         return this.chatColor;
@@ -70,19 +70,19 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
         return id;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Component getName() {
         return name;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Component getNamePlural() {
         return namePlural;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IFactionVillage getVillageData() {
         return villageFactionData;

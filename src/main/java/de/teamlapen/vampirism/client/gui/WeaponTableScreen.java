@@ -18,7 +18,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Gui for the weapon table. Only draws the background and the lava status
@@ -40,7 +40,7 @@ public class WeaponTableScreen extends AbstractContainerScreen<WeaponTableContai
         this.inventoryLabelY = this.imageHeight - 94;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public RecipeBookComponent getRecipeBookComponent() {
         return recipeBookGui;
@@ -67,7 +67,7 @@ public class WeaponTableScreen extends AbstractContainerScreen<WeaponTableContai
     }
 
     @Override
-    public void render(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         super.render(stack, mouseX, mouseY, partialTicks);
         this.renderBackground(stack);
         if (this.recipeBookGui.isVisible() && this.widthTooNarrow) {
@@ -117,7 +117,7 @@ public class WeaponTableScreen extends AbstractContainerScreen<WeaponTableContai
     }
 
     @Override
-    protected void renderBg(@Nonnull PoseStack stack, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(@NotNull PoseStack stack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, TABLE_GUI_TEXTURES);
@@ -135,7 +135,7 @@ public class WeaponTableScreen extends AbstractContainerScreen<WeaponTableContai
     }
 
     @Override
-    protected void slotClicked(@Nonnull Slot slotIn, int slotId, int mouseButton, @Nonnull ClickType type) {
+    protected void slotClicked(@NotNull Slot slotIn, int slotId, int mouseButton, @NotNull ClickType type) {
         super.slotClicked(slotIn, slotId, mouseButton, type);
         this.recipeBookGui.slotClicked(slotIn);
     }

@@ -8,61 +8,58 @@ import net.minecraft.advancements.critereon.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.GsonHelper;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@ParametersAreNonnullByDefault
 public class SkillUnlockedTrigger extends SimpleCriterionTrigger<SkillUnlockedTrigger.Instance> {
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "skill_unlocked");
 
-    public static Instance builder(ISkill<?> skill) {
+    public static Instance builder(@NotNull ISkill<?> skill) {
         return new Instance(skill);
     }
 
-    public static Instance builder(ResourceLocation id) {
+    public static Instance builder(@NotNull ResourceLocation id) {
         return new Instance(id);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ResourceLocation getId() {
         return ID;
     }
 
-    public void trigger(ServerPlayer player, ISkill<?> skill) {
+    public void trigger(@NotNull ServerPlayer player, @NotNull ISkill<?> skill) {
         this.trigger(player, (instance -> instance.test(skill)));
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    protected Instance createInstance(JsonObject json, EntityPredicate.Composite entityPredicate, DeserializationContext conditionsParser) {
+    protected Instance createInstance(@NotNull JsonObject json, @NotNull EntityPredicate.Composite entityPredicate, @NotNull DeserializationContext conditionsParser) {
         return new Instance(new ResourceLocation(GsonHelper.getAsString(json, "skill")));
     }
 
     static class Instance extends AbstractCriterionTriggerInstance {
-        @Nonnull
+        @NotNull
         private final ResourceLocation skillId;
 
-        Instance(@Nonnull ISkill<?> skill) {
+        Instance(@NotNull ISkill<?> skill) {
             super(ID, EntityPredicate.Composite.ANY);
             this.skillId = RegUtil.id(skill) ;
         }
 
-        Instance(@Nonnull ResourceLocation skillId) {
+        Instance(@NotNull ResourceLocation skillId) {
             super(ID, EntityPredicate.Composite.ANY);
             this.skillId = skillId;
         }
 
-        @Nonnull
+        @NotNull
         @Override
-        public JsonObject serializeToJson(SerializationContext serializer) {
+        public JsonObject serializeToJson(@NotNull SerializationContext serializer) {
             JsonObject jsonObject = super.serializeToJson(serializer);
             jsonObject.addProperty("skill", skillId.toString());
             return jsonObject;
         }
 
-        public boolean test(@Nonnull ISkill<?> skill) {
+        public boolean test(@NotNull ISkill<?> skill) {
             return this.skillId.equals(RegUtil.id(skill) );
         }
     }

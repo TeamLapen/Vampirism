@@ -6,8 +6,8 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 /**
@@ -35,7 +35,7 @@ public class PredicateFaction implements Predicate<LivingEntity> {
      * @param ignoreDisguise If the disguise ability of players should be ignored.
      * @param otherFaction   If this is not null, only entities of this faction are selected.
      */
-    protected PredicateFaction(@Nonnull IFaction<?> thisFaction, boolean player, boolean nonPlayer, boolean neutralPlayer, boolean ignoreDisguise, @Nullable IFaction<?> otherFaction) {
+    protected PredicateFaction(@NotNull IFaction<?> thisFaction, boolean player, boolean nonPlayer, boolean neutralPlayer, boolean ignoreDisguise, @Nullable IFaction<?> otherFaction) {
         this.thisFaction = thisFaction;
         this.player = player;
         this.nonPlayer = nonPlayer;

@@ -12,9 +12,9 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -34,5 +34,5 @@ public interface IFactionExclusiveItem extends ItemLike {
      * @return The faction that can use this item or null if any
      */
     @Nullable
-    IFaction<?> getExclusiveFaction(@Nonnull ItemStack stack);
+    IFaction<?> getExclusiveFaction(@NotNull ItemStack stack);
 }

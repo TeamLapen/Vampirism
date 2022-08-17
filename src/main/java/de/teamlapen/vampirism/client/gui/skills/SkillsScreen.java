@@ -27,11 +27,10 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.system.NonnullDefault;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +41,6 @@ import java.util.List;
  * relevant classes {@link SkillsScreen} {@link SkillsTabScreen} {@link SkillNodeScreen}
  */
 @NonnullDefault
-@ParametersAreNonnullByDefault
 public class SkillsScreen extends Screen {
     public static final int SCREEN_WIDTH = 252;
     public static final int SCREEN_HEIGHT = 219;
@@ -135,7 +133,7 @@ public class SkillsScreen extends Screen {
     }
 
     @Override
-    public void render(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(stack);
 
         this.renderInside(stack, mouseX, mouseY, guiLeft, guiTop);
@@ -144,7 +142,7 @@ public class SkillsScreen extends Screen {
         this.renderTooltip(stack, mouseX, mouseY, guiLeft, guiTop);
     }
 
-    public void renderInside(PoseStack stack, int mouseX, int mouseY, int x, int y) {
+    public void renderInside(@NotNull PoseStack stack, int mouseX, int mouseY, int x, int y) {
         if (this.selectedTab != null) {
             stack.pushPose();
             stack.translate((float) (x + 9), (float) (y + 18), 0.0F);
@@ -163,7 +161,7 @@ public class SkillsScreen extends Screen {
         }
     }
 
-    public void renderWindow(PoseStack stack, int mouseX, int mouseY, int x, int y) {
+    public void renderWindow(@NotNull PoseStack stack, int mouseX, int mouseY, int x, int y) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.enableBlend();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -192,7 +190,7 @@ public class SkillsScreen extends Screen {
         this.font.draw(stack, TITLE, (float) (x + 8), (float) (y + 6), 4210752);
     }
 
-    public void renderTooltip(PoseStack stack, int mouseX, int mouseY, int guiLeft, int guiTop) {
+    public void renderTooltip(@NotNull PoseStack stack, int mouseX, int mouseY, int guiLeft, int guiTop) {
         if (this.minecraft.player.getEffect(ModEffects.OBLIVION.get()) != null) return;
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         if (this.selectedTab != null) {
@@ -274,12 +272,12 @@ public class SkillsScreen extends Screen {
         }
     }
 
-    private boolean canUnlockSkill(ISkill skill) {
+    private boolean canUnlockSkill(@NotNull ISkill skill) {
         if (this.factionPlayer == null) return false;
         return this.factionPlayer.getSkillHandler().canSkillBeEnabled(skill) == ISkillHandler.Result.OK;
     }
 
-    private void playSoundEffect(SoundEvent event, float pitch) {
+    private void playSoundEffect(@NotNull SoundEvent event, float pitch) {
         this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(event, 1.0F));
     }
 }

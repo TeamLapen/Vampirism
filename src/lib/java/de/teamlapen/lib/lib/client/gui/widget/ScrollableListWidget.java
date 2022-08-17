@@ -9,8 +9,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraftforge.client.gui.ScreenUtils;
 import net.minecraftforge.client.gui.widget.ExtendedButton;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -35,7 +35,7 @@ public class ScrollableListWidget<T> extends ExtendedButton {
     private boolean canScroll = true;
     private double scrollSpeed = 1D;
 
-    public ScrollableListWidget(int xPos, int yPos, int width, int height, int itemHeight, @Nonnull Supplier<Collection<T>> baseValueSupplier, @Nonnull ItemCreator<T> itemSupplier) {
+    public ScrollableListWidget(int xPos, int yPos, int width, int height, int itemHeight, @NotNull Supplier<Collection<T>> baseValueSupplier, @NotNull ItemCreator<T> itemSupplier) {
         super(xPos, yPos, width, height, Component.literal(""), (button) -> {
         });
         this.itemHeight = itemHeight;
@@ -44,7 +44,7 @@ public class ScrollableListWidget<T> extends ExtendedButton {
         this.refresh();
     }
 
-    public ScrollableListWidget(int xPos, int yPos, int width, int height, int itemHeight, @Nonnull Supplier<Collection<T>> baseValueSupplier, @Nonnull ItemCreator<T> itemSupplier, Component name) {
+    public ScrollableListWidget(int xPos, int yPos, int width, int height, int itemHeight, @NotNull Supplier<Collection<T>> baseValueSupplier, @NotNull ItemCreator<T> itemSupplier, Component name) {
         super(xPos, yPos, width, height, name, (button) -> {
         });
         this.itemHeight = itemHeight;
@@ -56,7 +56,7 @@ public class ScrollableListWidget<T> extends ExtendedButton {
     /**
      * adds a new element at the end of the list
      */
-    public void addItem(@Nonnull T element) {
+    public void addItem(@NotNull T element) {
         this.listItems.add(this.itemSupplier.apply(element, this));
         this.setCanScroll();
     }
@@ -134,7 +134,7 @@ public class ScrollableListWidget<T> extends ExtendedButton {
     }
 
     @Override
-    public void render(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         if (!this.visible) return;
 
         matrixStack.pushPose();
@@ -172,7 +172,7 @@ public class ScrollableListWidget<T> extends ExtendedButton {
     }
 
     @Override
-    public void renderToolTip(@Nonnull PoseStack matrixStack, int mouseX, int mouseY) {
+    public void renderToolTip(@NotNull PoseStack matrixStack, int mouseX, int mouseY) {
         if (mouseX > this.x && mouseX < this.x + this.width && mouseY > this.y && mouseY < this.y + this.height + 1) {
 
             int itemHeight = this.itemHeight; // only 1 pixel between items
@@ -196,7 +196,7 @@ public class ScrollableListWidget<T> extends ExtendedButton {
         return this;
     }
 
-    public void setItems(@Nonnull Collection<T> elements) {
+    public void setItems(@NotNull Collection<T> elements) {
         this.listItems.clear();
         elements.forEach(item -> this.listItems.add(this.itemSupplier.apply(item, this)));
         this.setScrolled(0);
@@ -206,7 +206,7 @@ public class ScrollableListWidget<T> extends ExtendedButton {
     /**
      * adds the newElement after the afterElement in this list
      */
-    protected void addItem(@Nonnull ListItem<T> newElement, @Nonnull ListItem<T> afterElement) {
+    protected void addItem(@NotNull ListItem<T> newElement, @NotNull ListItem<T> afterElement) {
         this.listItems.add(this.listItems.indexOf(afterElement) + 1, newElement);
         this.setCanScroll();
     }
@@ -262,23 +262,23 @@ public class ScrollableListWidget<T> extends ExtendedButton {
 
     @FunctionalInterface
     public interface ItemCreator<T> {
-        ListItem<T> apply(@Nonnull T item, @Nonnull ScrollableListWidget<T> list);
+        ListItem<T> apply(@NotNull T item, @NotNull ScrollableListWidget<T> list);
     }
 
     public abstract static class ListItem<T> {
 
         private static final ResourceLocation WIDGETS = new ResourceLocation("textures/gui/widgets.png");
 
-        @Nonnull
+        @NotNull
         protected final T item;
-        @Nonnull
+        @NotNull
         protected final ScrollableListWidget<T> list;
 
         /**
          * @param item the presenting item
          * @param list the list this item is owned by
          */
-        public ListItem(@Nonnull T item, @Nonnull ScrollableListWidget<T> list) {
+        public ListItem(@NotNull T item, @NotNull ScrollableListWidget<T> list) {
             this.item = item;
             this.list = list;
         }

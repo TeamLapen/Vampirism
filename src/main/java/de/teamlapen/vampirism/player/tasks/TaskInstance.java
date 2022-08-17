@@ -11,8 +11,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -23,7 +23,7 @@ public class TaskInstance implements ITaskInstance {
      * @return {@code null} if the task does not exist
      */
     @Nullable
-    public static TaskInstance readNBT(@Nonnull CompoundTag nbt) {
+    public static TaskInstance readNBT(@NotNull CompoundTag nbt) {
         Task task = RegUtil.getTask(new ResourceLocation(nbt.getString("task")));
         if (task == null) return null;
         UUID id = nbt.getUUID("id");
@@ -56,22 +56,22 @@ public class TaskInstance implements ITaskInstance {
         return new TaskInstance(id, task, stats, accepted, taskTimer, insId, reward, taskDuration);
     }
 
-    @Nonnull
+    @NotNull
     private final UUID taskGiver;
-    @Nonnull
+    @NotNull
     private final Task task;
-    @Nonnull
+    @NotNull
     private final UUID instanceId;
-    @Nonnull
+    @NotNull
     private final Map<ResourceLocation, Integer> stats;
-    @Nonnull
+    @NotNull
     private final ITaskRewardInstance reward;
     private final long taskDuration;
     private boolean accepted;
     private long taskTimeStamp;
     private boolean completed;
 
-    public TaskInstance(@Nonnull Task task, @Nonnull UUID taskGiver, @Nonnull IFactionPlayer<?> player, long taskDuration) {
+    public TaskInstance(@NotNull Task task, @NotNull UUID taskGiver, @NotNull IFactionPlayer<?> player, long taskDuration) {
         this.task = task;
         this.taskGiver = taskGiver;
         this.instanceId = UUID.randomUUID();
@@ -81,7 +81,7 @@ public class TaskInstance implements ITaskInstance {
         this.reward = this.task.getReward().createInstance(player);
     }
 
-    private TaskInstance(@Nonnull UUID taskGiver, @Nonnull Task task, @Nonnull Map<ResourceLocation, Integer> stats, boolean accepted, long taskTimeStamp, @Nonnull UUID instanceId, @Nonnull ITaskRewardInstance taskRewardInstance, long taskDuration) {
+    private TaskInstance(@NotNull UUID taskGiver, @NotNull Task task, @NotNull Map<ResourceLocation, Integer> stats, boolean accepted, long taskTimeStamp, @NotNull UUID instanceId, @NotNull ITaskRewardInstance taskRewardInstance, long taskDuration) {
         this.taskGiver = taskGiver;
         this.task = task;
         this.stats = stats;
@@ -126,23 +126,23 @@ public class TaskInstance implements ITaskInstance {
         return accepted == instance.accepted && taskTimeStamp == instance.taskTimeStamp && Objects.equal(taskGiver, instance.taskGiver) && Objects.equal(instanceId, instance.instanceId) && Objects.equal(task, instance.task) && Objects.equal(stats, instance.stats);
     }
 
-    @Nonnull
+    @NotNull
     public UUID getId() {
         return instanceId;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ITaskRewardInstance getReward() {
         return this.reward;
     }
 
-    @Nonnull
+    @NotNull
     public Map<ResourceLocation, Integer> getStats() {
         return stats;
     }
 
-    @Nonnull
+    @NotNull
     public Task getTask() {
         return task;
     }
@@ -182,7 +182,7 @@ public class TaskInstance implements ITaskInstance {
         this.accepted = true;
     }
 
-    public CompoundTag writeNBT(@Nonnull CompoundTag nbt) {
+    public CompoundTag writeNBT(@NotNull CompoundTag nbt) {
         nbt.putUUID("id", this.taskGiver);
         nbt.putString("task", RegUtil.id(this.task).toString());
         nbt.putUUID("insId", this.instanceId);

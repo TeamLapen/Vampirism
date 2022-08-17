@@ -28,7 +28,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Recipe category for {@link IWeaponTableRecipe}
@@ -48,7 +48,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
     }
 
     @Override
-    public void draw(IWeaponTableRecipe recipe, IRecipeSlotsView recipeSlotsView, @Nonnull PoseStack stack, double mouseX, double mouseY) {
+    public void draw(IWeaponTableRecipe recipe, IRecipeSlotsView recipeSlotsView, @NotNull PoseStack stack, double mouseX, double mouseY) {
 
         int x = 2;
         int y = 80;
@@ -80,13 +80,13 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IDrawable getBackground() {
         return background;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IDrawable getIcon() {
         return icon;
@@ -97,7 +97,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
         return VampirismJEIPlugin.WEAPON_TABLE;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Component getTitle() {
         return localizedName;

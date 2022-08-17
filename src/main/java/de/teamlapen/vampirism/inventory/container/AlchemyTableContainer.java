@@ -14,7 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class AlchemyTableContainer extends AbstractContainerMenu {
 
@@ -53,7 +53,7 @@ public class AlchemyTableContainer extends AbstractContainerMenu {
     }
 
     @Override
-    public boolean stillValid(@Nonnull Player player) {
+    public boolean stillValid(@NotNull Player player) {
         return this.alchemyTable.stillValid(player);
     }
 
@@ -70,8 +70,8 @@ public class AlchemyTableContainer extends AbstractContainerMenu {
     }
 
 
-    @Nonnull
-    public ItemStack quickMoveStack(@Nonnull Player player, int slotId) {
+    @NotNull
+    public ItemStack quickMoveStack(@NotNull Player player, int slotId) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(slotId);
         if (slot != null && slot.hasItem()) {
@@ -139,7 +139,7 @@ public class AlchemyTableContainer extends AbstractContainerMenu {
             return world.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().anyMatch(recipe -> recipe.isIngredient(itemstack));
         }
 
-        public boolean mayPlace(@Nonnull ItemStack stack) {
+        public boolean mayPlace(@NotNull ItemStack stack) {
             return mayPlaceItem(world, stack);
         }
 
@@ -157,7 +157,7 @@ public class AlchemyTableContainer extends AbstractContainerMenu {
 
         }
 
-        public boolean mayPlace(@Nonnull ItemStack stack) {
+        public boolean mayPlace(@NotNull ItemStack stack) {
             return this.world.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().anyMatch(recipe -> recipe.isInput(stack));
         }
 
@@ -171,7 +171,7 @@ public class AlchemyTableContainer extends AbstractContainerMenu {
             super(inventory, slotId, xPos, yPos);
         }
 
-        public boolean mayPlace(@Nonnull ItemStack stack) {
+        public boolean mayPlace(@NotNull ItemStack stack) {
             return mayPlaceItem(stack);
         }
 
@@ -191,7 +191,7 @@ public class AlchemyTableContainer extends AbstractContainerMenu {
         }
 
         @Override
-        public boolean mayPlace(@Nonnull ItemStack stack) {
+        public boolean mayPlace(@NotNull ItemStack stack) {
             return false;
         }
     }

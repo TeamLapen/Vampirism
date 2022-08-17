@@ -19,12 +19,9 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jetbrains.annotations.NotNull;
 
 
-@ParametersAreNonnullByDefault
 public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableRecipe {
     protected static final int MAX_WIDTH = 4;
     protected static final int MAX_HEIGHT = 4;
@@ -38,7 +35,7 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
     private final int requiredLava;
     private final boolean isSimple;
 
-    public ShapelessWeaponTableRecipe(ResourceLocation recipeId, String group, NonNullList<Ingredient> ingredients, ItemStack result, int level, int lava, @Nonnull ISkill<IHunterPlayer>[] skills) {
+    public ShapelessWeaponTableRecipe(@NotNull ResourceLocation recipeId,@NotNull String group,@NotNull NonNullList<Ingredient> ingredients,@NotNull ItemStack result, int level, int lava, @NotNull ISkill<IHunterPlayer>[] skills) {
         this.id = recipeId;
         this.group = group;
         this.recipeItems = ingredients;
@@ -49,9 +46,9 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
         this.isSimple = ingredients.stream().allMatch(Ingredient::isSimple);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public ItemStack assemble(CraftingContainer inv) {
+    public ItemStack assemble(@NotNull CraftingContainer inv) {
         return this.recipeOutput.copy();
     }
 
@@ -60,25 +57,25 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
         return width * height >= this.recipeItems.size();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String getGroup() {
         return group;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ResourceLocation getId() {
         return id;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public NonNullList<Ingredient> getIngredients() {
         return recipeItems;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ItemStack getResultItem() {
         return recipeOutput;
@@ -92,26 +89,26 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
         return requiredLevel;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ISkill<IHunterPlayer>[] getRequiredSkills() {
         return requiredSkills;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public RecipeSerializer<?> getSerializer() {
         return ModRecipes.SHAPELESS_CRAFTING_WEAPONTABLE.get();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public RecipeType<IWeaponTableRecipe> getType() {
         return ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get();
     }
 
     @Override
-    public boolean matches(CraftingContainer inv, Level worldIn) {
+    public boolean matches(@NotNull CraftingContainer inv,@NotNull Level worldIn) {
         StackedContents recipeitemhelper = new StackedContents();
         java.util.List<ItemStack> inputs = new java.util.ArrayList<>();
         int i = 0;
@@ -134,9 +131,9 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
     }
 
     public static class Serializer implements RecipeSerializer<ShapelessWeaponTableRecipe> {
-        @Nonnull
+        @NotNull
         @Override
-        public ShapelessWeaponTableRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+        public ShapelessWeaponTableRecipe fromJson(@NotNull ResourceLocation recipeId, @NotNull JsonObject json) {
             String group = GsonHelper.getAsString(json, "group", "");
             NonNullList<Ingredient> ingredients = VampirismRecipeHelper.readIngredients(GsonHelper.getAsJsonArray(json, "ingredients"));
             int level = GsonHelper.getAsInt(json, "level", 1);
@@ -154,7 +151,7 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
         }
 
         @Override
-        public ShapelessWeaponTableRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
+        public ShapelessWeaponTableRecipe fromNetwork(@NotNull ResourceLocation recipeId,@NotNull FriendlyByteBuf buffer) {
             String group = buffer.readUtf(32767);
             NonNullList<Ingredient> ingredients = NonNullList.withSize(buffer.readVarInt(), Ingredient.EMPTY);
             ingredients.replaceAll(ignored -> Ingredient.fromNetwork(buffer));
@@ -170,7 +167,7 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf buffer, ShapelessWeaponTableRecipe recipe) {
+        public void toNetwork(@NotNull FriendlyByteBuf buffer,@NotNull  ShapelessWeaponTableRecipe recipe) {
             buffer.writeUtf(recipe.group);
             buffer.writeVarInt(recipe.recipeItems.size());
             for (Ingredient ingredient : recipe.recipeItems) {

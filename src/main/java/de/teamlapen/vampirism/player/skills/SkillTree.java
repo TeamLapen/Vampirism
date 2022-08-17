@@ -11,8 +11,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -52,14 +52,14 @@ public class SkillTree {
         return allNodes.get(id);
     }
 
-    @Nonnull
+    @NotNull
     public SkillNode getRootNodeForFaction(ResourceLocation id) {
         if (!rootNodes.containsKey(id))
             throw new IllegalStateException("Faction " + id + " does not have a root skill");
         return rootNodes.get(id);
     }
 
-    @Nonnull
+    @NotNull
     public SkillNode getRootNodeForFaction(ResourceLocation id, ISkillType type) {
         ResourceLocation skillId = type.createIdForFaction(id);
         if (!rootNodes.containsKey(skillId))

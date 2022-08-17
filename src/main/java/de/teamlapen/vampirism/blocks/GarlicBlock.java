@@ -20,7 +20,7 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Garlic Plant
@@ -50,7 +50,7 @@ public class GarlicBlock extends CropBlock {
     }
 
     @Override
-    public void entityInside(BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull Entity entity) {
+    public void entityInside(BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Entity entity) {
         if (state.getValue(AGE) > 5 && Helper.isVampire(entity)) {
             if(entity instanceof Player){
                 VReference.VAMPIRE_FACTION.getPlayerCapability((Player) entity).ifPresent( vamp -> DamageHandler.affectVampireGarlicDirect(vamp, EnumStrength.WEAK));
@@ -61,13 +61,13 @@ public class GarlicBlock extends CropBlock {
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public VoxelShape getShape(BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
+    public VoxelShape getShape(BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         return shape[state.getValue(this.getAgeProperty())];
     }
 
-    @Nonnull
+    @NotNull
     @Override
     protected ItemLike getBaseSeedId() {
         return ModItems.ITEM_GARLIC.get();

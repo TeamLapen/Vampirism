@@ -4,9 +4,8 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Event related to any faction changes of players
@@ -15,10 +14,10 @@ public class PlayerFactionEvent extends Event {
 
     @Nullable
     private final IPlayableFaction<?> currentFaction;
-    @Nonnull
+    @NotNull
     private final IFactionPlayerHandler player;
 
-    private PlayerFactionEvent(@Nonnull IFactionPlayerHandler player, @Nullable IPlayableFaction<?> currentFaction) {
+    private PlayerFactionEvent(@NotNull IFactionPlayerHandler player, @Nullable IPlayableFaction<?> currentFaction) {
         this.currentFaction = currentFaction;
         this.player = player;
     }
@@ -36,7 +35,7 @@ public class PlayerFactionEvent extends Event {
      *
      * @return The faction handler representing the current player
      */
-    @Nonnull
+    @NotNull
     public IFactionPlayerHandler getPlayer() {
         return player;
     }
@@ -53,7 +52,7 @@ public class PlayerFactionEvent extends Event {
         @Nullable
         private final IPlayableFaction<?> newFaction;
 
-        public FactionLevelChangePre(@Nonnull IFactionPlayerHandler player, @Nullable IPlayableFaction<?> currentFaction, int currentLevel, @Nullable IPlayableFaction<?> newFaction, int newLevel) {
+        public FactionLevelChangePre(@NotNull IFactionPlayerHandler player, @Nullable IPlayableFaction<?> currentFaction, int currentLevel, @Nullable IPlayableFaction<?> newFaction, int newLevel) {
             super(player, currentFaction);
             this.currentLevel = currentLevel;
             this.newLevel = newLevel;
@@ -92,7 +91,7 @@ public class PlayerFactionEvent extends Event {
         @Nullable
         private final IPlayableFaction<?> oldFaction;
 
-        public FactionLevelChanged(@Nonnull IFactionPlayerHandler player, @Nullable IPlayableFaction<?> oldFaction, int oldLevel, @Nullable IPlayableFaction<?> newFaction, int newLevel) {
+        public FactionLevelChanged(@NotNull IFactionPlayerHandler player, @Nullable IPlayableFaction<?> oldFaction, int oldLevel, @Nullable IPlayableFaction<?> newFaction, int newLevel) {
             super(player, newFaction);
             this.oldLevel = oldLevel;
             this.newLevel = newLevel;
@@ -138,7 +137,7 @@ public class PlayerFactionEvent extends Event {
 
         private final IPlayableFaction<?> toJoin;
 
-        public CanJoinFaction(@Nonnull IFactionPlayerHandler player, @Nullable IPlayableFaction<?> currentFaction, IPlayableFaction<?> toJoin) {
+        public CanJoinFaction(@NotNull IFactionPlayerHandler player, @Nullable IPlayableFaction<?> currentFaction, IPlayableFaction<?> toJoin) {
             super(player, currentFaction);
             this.toJoin = toJoin;
         }

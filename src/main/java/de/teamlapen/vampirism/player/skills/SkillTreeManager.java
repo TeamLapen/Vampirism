@@ -13,7 +13,7 @@ import net.minecraftforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,7 +45,7 @@ public class SkillTreeManager extends SimpleJsonResourceReloadListener {
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> resourceLocationJsonObjectMap, @Nonnull ResourceManager iResourceManager, @Nonnull ProfilerFiller iProfiler) {
+    protected void apply(Map<ResourceLocation, JsonElement> resourceLocationJsonObjectMap, @NotNull ResourceManager iResourceManager, @NotNull ProfilerFiller iProfiler) {
         Map<ResourceLocation, SkillNode.Builder> parsed = new HashMap<>();
         resourceLocationJsonObjectMap.forEach((id, object) -> {
             try {

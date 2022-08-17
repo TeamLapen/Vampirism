@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.api.entity.factions;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.function.BiFunction;
 
 public interface ILordPlayerBuilder<T extends IFactionPlayer<T>> {
@@ -25,7 +25,7 @@ public interface ILordPlayerBuilder<T extends IFactionPlayer<T>> {
      * @param lordTitleFunction a function that return the title for a lord player based on level and gender
      * @return the builder
      */
-    ILordPlayerBuilder<T> lordTitle(@Nonnull BiFunction<Integer, Boolean, Component> lordTitleFunction);
+    ILordPlayerBuilder<T> lordTitle(@NotNull BiFunction<Integer, Boolean, Component> lordTitleFunction);
 
     /**
      * Enables this faction to have lord skills

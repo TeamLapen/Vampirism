@@ -46,8 +46,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Handle most general rendering related stuff
@@ -55,7 +55,7 @@ import javax.annotation.Nullable;
 @OnlyIn(Dist.CLIENT)
 public class RenderHandler implements ResourceManagerReloadListener {
     private static final int ENTITY_NEAR_SQ_DISTANCE = 100;
-    @Nonnull
+    @NotNull
     private final Minecraft mc;
     private final int BLOOD_VISION_FADE_TICKS = 80;
 
@@ -90,7 +90,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
     private PostPass blur1, blur2, blit0;
     private boolean isInsideBloodVisionRendering = false;
 
-    public RenderHandler(@Nonnull Minecraft mc) {
+    public RenderHandler(@NotNull Minecraft mc) {
         this.mc = mc;
     }
 
@@ -316,7 +316,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
     }
 
     @Override
-    public void onResourceManagerReload(@Nonnull ResourceManager resourceManager) {
+    public void onResourceManagerReload(@NotNull ResourceManager resourceManager) {
         this.reMakeBloodVisionShader();
     }
 

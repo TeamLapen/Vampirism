@@ -39,8 +39,8 @@ import net.minecraftforge.eventbus.api.Event;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -64,7 +64,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     /**
      * Return a LazyOptional, but print a warning message if not present.
      */
-    public static LazyOptional<FactionPlayerHandler> getOpt(@Nonnull Player player) {
+    public static LazyOptional<FactionPlayerHandler> getOpt(@NotNull Player player) {
         LazyOptional<FactionPlayerHandler> opt = player.getCapability(CAP, null).cast();
         if (!opt.isPresent()) {
             LOGGER.warn("Cannot get Faction player capability. This might break mod functionality.", new Throwable().fillInStackTrace());
@@ -75,7 +75,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     /**
      * Resolves the FactionPlayerHandler capability (prints a warning message if not present) and returns an Optional of the current IFactionPlayer instance
      */
-    public static Optional<? extends IFactionPlayer<?>> getCurrentFactionPlayer(@Nonnull Player player){
+    public static Optional<? extends IFactionPlayer<?>> getCurrentFactionPlayer(@NotNull Player player){
         LazyOptional<FactionPlayerHandler> opt = player.getCapability(CAP, null).cast();
         if (!opt.isPresent()) {
             LOGGER.warn("Cannot get Faction player capability. This might break mod functionality.", new Throwable().fillInStackTrace());
@@ -96,9 +96,9 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
                 inst.loadNBTData(nbt);
             }
 
-            @Nonnull
+            @NotNull
             @Override
-            public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, Direction facing) {
+            public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, Direction facing) {
 
                 return CAP.orEmpty(capability, opt);
             }
@@ -113,7 +113,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     private final Player player;
-    @Nonnull
+    @NotNull
     private final Int2ObjectMap<IAction<?>> boundActions = new Int2ObjectArrayMap<>();
     private IPlayableFaction<?> currentFaction = null;
     private int currentLevel = 0;
@@ -177,7 +177,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         return currentFaction;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Optional<? extends IFactionPlayer<?>> getCurrentFactionPlayer() {
         return currentFaction == null ? Optional.empty() : currentFaction.getPlayerCapability(player).map(Optional::of).orElse(Optional.empty());
@@ -219,7 +219,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         return currentLordLevel * VampirismConfig.BALANCE.miMinionPerLordLevel.get();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Player getPlayer() {
         return player;
@@ -236,7 +236,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     @Override
-    public void joinFaction(@Nonnull IPlayableFaction<?> faction) {
+    public void joinFaction(@NotNull IPlayableFaction<?> faction) {
         if (canJoin(faction)) {
             setFactionAndLevel(faction, 1);
         }
@@ -374,7 +374,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     @Override
-    public boolean setFactionLevel(@Nonnull IPlayableFaction<?> faction, int level) {
+    public boolean setFactionLevel(@NotNull IPlayableFaction<?> faction, int level) {
         return faction.equals(currentFaction) && setFactionAndLevel(faction, level);
     }
 

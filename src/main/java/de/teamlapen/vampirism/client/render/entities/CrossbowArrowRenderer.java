@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class CrossbowArrowRenderer extends ArrowRenderer<CrossbowArrowEntity> {
@@ -18,9 +18,9 @@ public class CrossbowArrowRenderer extends ArrowRenderer<CrossbowArrowEntity> {
         super(context);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public ResourceLocation getTextureLocation(@Nonnull CrossbowArrowEntity entity) {
+    public ResourceLocation getTextureLocation(@NotNull CrossbowArrowEntity entity) {
         return RES_ARROW;
     }
 }

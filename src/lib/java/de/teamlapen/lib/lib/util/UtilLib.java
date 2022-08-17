@@ -55,9 +55,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -179,7 +179,7 @@ public class UtilLib {
      * @param mainHand If main hand position
      * @return Absolute position in the world
      */
-    public static @Nonnull
+    public static @NotNull
     Vec3 getItemPosition(LivingEntity entity, boolean mainHand) {
         boolean left = (mainHand ? entity.getMainArm() : entity.getMainArm().getOpposite()) == HumanoidArm.LEFT;
         boolean firstPerson = entity instanceof Player player && player.isLocalPlayer() && Minecraft.getInstance().options.getCameraType().isFirstPerson();
@@ -240,7 +240,7 @@ public class UtilLib {
      * @param reason          Spawn reason
      * @return Successful spawn
      */
-    public static boolean spawnEntityInWorld(ServerLevel world, AABB box, Entity e, int maxTry, @Nonnull List<? extends LivingEntity> avoidedEntities, MobSpawnType reason) {
+    public static boolean spawnEntityInWorld(ServerLevel world, AABB box, Entity e, int maxTry, @NotNull List<? extends LivingEntity> avoidedEntities, MobSpawnType reason) {
         if (!world.hasChunksAt((int) box.minX, (int) box.minY, (int) box.minZ, (int) box.maxX, (int) box.maxY, (int) box.maxZ)) {
             return false;
         }
@@ -288,7 +288,7 @@ public class UtilLib {
      * @return The spawned creature or null if not successful
      */
     @Nullable
-    public static Entity spawnEntityInWorld(ServerLevel world, AABB box, EntityType<?> entityType, int maxTry, @Nonnull List<? extends LivingEntity> avoidedEntities, MobSpawnType reason) {
+    public static Entity spawnEntityInWorld(ServerLevel world, AABB box, EntityType<?> entityType, int maxTry, @NotNull List<? extends LivingEntity> avoidedEntities, MobSpawnType reason) {
         Entity e = entityType.create(world);
         if (spawnEntityInWorld(world, box, e, maxTry, avoidedEntities, reason)) {
             return e;
@@ -605,7 +605,7 @@ public class UtilLib {
         return getStructureStartAt(entity.getCommandSenderWorld(), entity.blockPosition(), s);
     }
 
-    @Nonnull
+    @NotNull
     public static Optional<StructureStart> getStructureStartAt(Entity entity, TagKey<Structure> s) {
         return getStructureStartAt(entity.getCommandSenderWorld(), entity.blockPosition(), s);
     }
@@ -676,33 +676,33 @@ public class UtilLib {
         return new float[]{(float) i / 255.0F, (float) j / 255.0F, (float) k / 255.0F};
     }
 
-    @Nonnull
-    public static int[] bbToInt(@Nonnull AABB bb) {
+    @NotNull
+    public static int[] bbToInt(@NotNull AABB bb) {
         return new int[]{(int) bb.minX, (int) bb.minY, (int) bb.minZ, (int) bb.maxX, (int) bb.maxY, (int) bb.maxZ};
     }
 
-    @Nonnull
-    public static int[] mbToInt(@Nonnull BoundingBox bb) {
+    @NotNull
+    public static int[] mbToInt(@NotNull BoundingBox bb) {
         return new int[]{bb.minX(), bb.minY(), bb.minZ(), bb.maxX(), bb.maxY(), bb.maxZ()};
     }
 
-    @Nonnull
-    public static AABB intToBB(@Nonnull int[] array) {
+    @NotNull
+    public static AABB intToBB(@NotNull int[] array) {
         return new AABB(array[0], array[1], array[2], array[3], array[4], array[5]);
     }
 
-    @Nonnull
-    public static BoundingBox intToMB(@Nonnull int[] array) {
+    @NotNull
+    public static BoundingBox intToMB(@NotNull int[] array) {
         return new BoundingBox(array[0], array[1], array[2], array[3], array[4], array[5]);
     }
 
-    @Nonnull
-    public static BoundingBox AABBtoMB(@Nonnull AABB bb) {
+    @NotNull
+    public static BoundingBox AABBtoMB(@NotNull AABB bb) {
         return new BoundingBox((int) bb.minX, (int) bb.minY, (int) bb.minZ, (int) bb.maxX, (int) bb.maxY, (int) bb.maxZ);
     }
 
-    @Nonnull
-    public static AABB MBtoAABB(@Nonnull BoundingBox bb) {
+    @NotNull
+    public static AABB MBtoAABB(@NotNull BoundingBox bb) {
         return new AABB(bb.minX(), bb.minY(), bb.minZ(), bb.maxX(), bb.maxY(), bb.maxZ());
     }
 

@@ -8,7 +8,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.EnumSet;
 
 /**
@@ -135,7 +135,7 @@ public class AttackRangedCrossbowGoal<T extends VampirismEntity & AttackRangedCr
     }
 
     public interface IAttackWithCrossbow {
-        @Nonnull
+        @NotNull
         ItemStack getArrowStackForAttack(LivingEntity target);
 
         boolean isCrossbowInMainhand();

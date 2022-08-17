@@ -27,7 +27,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 
 public class AlchemyTableRecipeCategory implements IRecipeCategory<AlchemyTableRecipe> {
@@ -55,19 +55,19 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<AlchemyTableR
         return VampirismJEIPlugin.ALCHEMY_TABLE;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Component getTitle() {
         return this.localizedName;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IDrawable getBackground() {
         return this.background;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IDrawable getIcon() {
         return this.icon;
@@ -84,7 +84,7 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<AlchemyTableR
     }
 
     @Override
-    public void draw(@Nonnull AlchemyTableRecipe recipe, IRecipeSlotsView recipeSlotsView, @Nonnull PoseStack matrixStack, double mouseX, double mouseY) {
+    public void draw(@NotNull AlchemyTableRecipe recipe, IRecipeSlotsView recipeSlotsView, @NotNull PoseStack matrixStack, double mouseX, double mouseY) {
         this.blazeHeat.draw(matrixStack,33-9-2,60-10-2);
         this.arrow.draw(matrixStack,73-9-2,57-10-2);
 

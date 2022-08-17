@@ -25,8 +25,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -153,7 +153,7 @@ public class TotemHelper {
      * @param pois collection of {@link PoiRecord} to search for a totem position
      * @return the registered totem position or {@code null} if no totem exists
      */
-    @Nonnull
+    @NotNull
     public static Optional<BlockPos> getTotemPosition(ResourceKey<Level> dimension, Collection<PoiRecord> pois) {
         Map<BlockPos, BlockPos> totemPositions = TotemHelper.totemPositions.computeIfAbsent(dimension, key -> new HashMap<>());
         for (PoiRecord pointOfInterest : pois) {
@@ -178,7 +178,7 @@ public class TotemHelper {
         return null;
     }
 
-    @Nonnull
+    @NotNull
     public static Optional<BlockPos> getTotemPosNearPos(ServerLevel world, BlockPos pos) {
         Collection<PoiRecord> points = world.getPoiManager().getInRange(p -> true, pos, 25, PoiManager.Occupancy.ANY).collect(Collectors.toList());
         if (!points.isEmpty()) {
@@ -187,7 +187,7 @@ public class TotemHelper {
         return Optional.empty();
     }
 
-    @Nonnull
+    @NotNull
     public static Optional<TotemBlockEntity> getTotemNearPos(ServerLevel world, BlockPos posSource, boolean mustBeLoaded) {
         Optional<BlockPos> posOpt = getTotemPosNearPos(world, posSource);
         if (mustBeLoaded) {
@@ -339,11 +339,11 @@ public class TotemHelper {
      * @throws NoSuchElementException if poi is empty
      */
     @Nullable
-    public static AABB getAABBAroundPOIs(@Nonnull Set<PoiRecord> pois) {
+    public static AABB getAABBAroundPOIs(@NotNull Set<PoiRecord> pois) {
         return pois.stream().map(poi -> new AABB(poi.getPos()).inflate(25)).reduce(AABB::minmax).orElse(null);
     }
 
-    public static void ringBell(Level world, @Nonnull Player player) {
+    public static void ringBell(Level world, @NotNull Player player) {
         if (!world.isClientSide) {
             Optional<TotemBlockEntity> tile = getTotemNearPos(((ServerLevel) world), player.blockPosition(), false);
             tile.ifPresent(s -> s.ringBell(player));

@@ -21,7 +21,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.registries.RegistryObject;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 /**
@@ -87,7 +87,7 @@ public class HunterSkills {
     public static final RegistryObject<ISkill<IHunterPlayer>> HUNTER_LORD_ATTACK_SPEED = SKILLS.register("hunter_lord_attack_speed", () -> new ActionSkill<>(HunterActions.HUNTER_LORD_ATTACK_SPEED.get(), SkillType.LORD, true));
     public static final RegistryObject<ISkill<IHunterPlayer>> HUNTER_MINION_COLLECT = SKILLS.register("hunter_minion_collect", () -> new VampirismSkill.LordHunterSkill(true));
     public static final RegistryObject<ISkill<IHunterPlayer>> HUNTER_MINION_RECOVERY = SKILLS.register("hunter_minion_recovery", () -> new MinionRecoverySkill<>() {
-        @Nonnull
+        @NotNull
         @Override
         public Optional<IPlayableFaction<?>> getFaction() {
             return Optional.of(VReference.HUNTER_FACTION);

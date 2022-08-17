@@ -27,8 +27,8 @@ import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.registries.RegistryObject;
 import org.apache.logging.log4j.LogManager;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -158,7 +158,7 @@ public class ModItems {
     public static final RegistryObject<StakeItem> STAKE = ITEMS.register("stake", StakeItem::new);
     public static final RegistryObject<Item> TECH_CROSSBOW_AMMO_PACKAGE = ITEMS.register("tech_crossbow_ammo_package", () -> new Item(new Item.Properties().tab(VampirismMod.creativeTab)) {
             @Override
-            public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
+            public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
                 tooltip.add(Component.translatable("item.vampirism.tech_crossbow_ammo_package.tooltip", Component.translatable(BASIC_TECH_CROSSBOW.get().getDescriptionId())).withStyle(ChatFormatting.GRAY));
             }
 
@@ -227,21 +227,21 @@ public class ModItems {
 
         BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(HOLY_WATER_BOTTLE_NORMAL.get()), Ingredient.of(Items.GUNPOWDER), new ItemStack(HOLY_WATER_SPLASH_BOTTLE_NORMAL.get())) {
             @Override
-            public boolean isInput(@Nonnull ItemStack stack) {
+            public boolean isInput(@NotNull ItemStack stack) {
 
                 return HOLY_WATER_BOTTLE_NORMAL.get().equals(stack.getItem());
             }
         });
         BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(HOLY_WATER_BOTTLE_ENHANCED.get()), Ingredient.of(Items.GUNPOWDER), new ItemStack(HOLY_WATER_SPLASH_BOTTLE_ENHANCED.get())) {
             @Override
-            public boolean isInput(@Nonnull ItemStack stack) {
+            public boolean isInput(@NotNull ItemStack stack) {
 
                 return HOLY_WATER_BOTTLE_ENHANCED.get().equals(stack.getItem());
             }
         });
         BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(HOLY_WATER_BOTTLE_ULTIMATE.get()), Ingredient.of(Items.GUNPOWDER), new ItemStack(HOLY_WATER_SPLASH_BOTTLE_ULTIMATE.get())) {
             @Override
-            public boolean isInput(@Nonnull ItemStack stack) {
+            public boolean isInput(@NotNull ItemStack stack) {
                 return HOLY_WATER_BOTTLE_ULTIMATE.get().equals(stack.getItem());
             }
         });

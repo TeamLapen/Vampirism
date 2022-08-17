@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class PedestalBESR extends VampirismBESR<PedestalBlockEntity> {
     public PedestalBESR(BlockEntityRendererProvider.Context context) {
@@ -17,7 +17,7 @@ public class PedestalBESR extends VampirismBESR<PedestalBlockEntity> {
     }
 
     @Override
-    public void render(PedestalBlockEntity te, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource iRenderTypeBuffer, int i, int i1) {
+    public void render(PedestalBlockEntity te, float partialTicks, @NotNull PoseStack matrixStack, @NotNull MultiBufferSource iRenderTypeBuffer, int i, int i1) {
         ItemStack stack = te.getStackForRender();
         if (!stack.isEmpty()) {
             matrixStack.pushPose();

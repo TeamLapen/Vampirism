@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.api.entity.factions;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextColor;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.function.Consumer;
 
 public interface IFactionBuilder<T extends IFactionEntity> {
@@ -50,7 +50,7 @@ public interface IFactionBuilder<T extends IFactionEntity> {
      * @param villageBuilder village builder
      * @return the builder
      */
-    IFactionBuilder<T> village(@Nonnull Consumer<IFactionVillageBuilder> villageBuilder);
+    IFactionBuilder<T> village(@NotNull Consumer<IFactionVillageBuilder> villageBuilder);
 
     /**
      * Sets the singular name for a entity of this faction
@@ -58,14 +58,14 @@ public interface IFactionBuilder<T extends IFactionEntity> {
      * @param nameKey the translation key of the name
      * @return the builder
      */
-    IFactionBuilder<T> name(@Nonnull String nameKey);
+    IFactionBuilder<T> name(@NotNull String nameKey);
 
     /**
      * Sets the plural name for a entity of this faction
      * @param namePluralKey the translation key of the name
      * @return the builder
      */
-    IFactionBuilder<T> namePlural(@Nonnull String namePluralKey);
+    IFactionBuilder<T> namePlural(@NotNull String namePluralKey);
 
     /**
      * finish the building and registers the faction with values from the builder

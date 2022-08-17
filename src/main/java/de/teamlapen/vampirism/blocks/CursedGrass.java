@@ -29,7 +29,7 @@ import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.PlantType;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class CursedGrass extends SpreadingSnowyDirtBlock implements BonemealableBlock {
@@ -43,7 +43,7 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
      * copied from {@link net.minecraft.world.level.block.SpreadingSnowyDirtBlock#randomTick(net.minecraft.world.level.block.state.BlockState, net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos, net.minecraft.util.RandomSource)} changing dirt to cursed earth
      */
     @Override
-    public void randomTick(@Nonnull BlockState p_222508_, @Nonnull ServerLevel p_222509_, @Nonnull BlockPos p_222510_, @Nonnull RandomSource p_222511_) {
+    public void randomTick(@NotNull BlockState p_222508_, @NotNull ServerLevel p_222509_, @NotNull BlockPos p_222510_, @NotNull RandomSource p_222511_) {
         if (!canBeGrass(p_222508_, p_222509_, p_222510_)) {
             if (!p_222509_.isAreaLoaded(p_222510_, 1)) return; // Forge: prevent loading unloaded chunks when checking neighbor's light and spreading
             p_222509_.setBlockAndUpdate(p_222510_, ModBlocks.CURSED_EARTH.get().defaultBlockState());
@@ -64,12 +64,12 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
     }
 
     @Override
-    public boolean canSustainPlant(@Nonnull BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nonnull Direction direction, @Nonnull IPlantable plantable) {
+    public boolean canSustainPlant(@NotNull BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos, @NotNull Direction direction, @NotNull IPlantable plantable) {
         return plantable.getPlantType(world, pos) == PlantType.PLAINS || plantable instanceof BushBlock || plantable.getPlantType(world, pos).equals(VReference.VAMPIRE_PLANT_TYPE);
     }
 
     @Override
-    public boolean isValidBonemealTarget(@Nonnull BlockGetter blockReader, @Nonnull BlockPos blockPos, @Nonnull BlockState blockState, boolean b) {
+    public boolean isValidBonemealTarget(@NotNull BlockGetter blockReader, @NotNull BlockPos blockPos, @NotNull BlockState blockState, boolean b) {
         return true;
     }
 
@@ -82,7 +82,7 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
      * copied from {@link net.minecraft.world.level.block.GrassBlock#performBonemeal(net.minecraft.server.level.ServerLevel, net.minecraft.util.RandomSource, net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState)}
      */
     @Override
-    public void performBonemeal(@Nonnull ServerLevel p_221270_, @Nonnull RandomSource p_221271_, @Nonnull BlockPos p_221272_, @Nonnull BlockState p_221273_) {
+    public void performBonemeal(@NotNull ServerLevel p_221270_, @NotNull RandomSource p_221271_, @NotNull BlockPos p_221272_, @NotNull BlockState p_221273_) {
         BlockPos blockpos = p_221272_.above();
         BlockState blockstate = Blocks.GRASS.defaultBlockState();
 
@@ -120,9 +120,9 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public InteractionResult use(@Nonnull BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, Player player, @Nonnull InteractionHand handIn, @Nonnull BlockHitResult hit) {
+    public InteractionResult use(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
         ItemStack heldItemStack = player.getItemInHand(handIn);
         Item heldItem = heldItemStack.getItem();
         if (heldItem instanceof HolyWaterBottleItem) {

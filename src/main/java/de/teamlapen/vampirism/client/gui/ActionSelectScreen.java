@@ -30,7 +30,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import org.lwjgl.glfw.GLFW;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -178,7 +178,7 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
     }
 
     @Override
-    public void render(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         super.render(stack, mouseX, mouseY, partialTicks);
         if (editActions) {
             List<Component> tooltips = Lists.newArrayList(Component.translatable("gui.vampirism.action_select.action_binding")
@@ -207,7 +207,7 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
     }
 
     @Override
-    @Nonnull
+    @NotNull
     protected Color getColor(IAction<T> s) {
         if (s == fakeAction) return super.getColor(s);
         if (editActions) {

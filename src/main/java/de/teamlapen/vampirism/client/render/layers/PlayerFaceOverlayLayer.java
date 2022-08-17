@@ -16,7 +16,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Renders an overlay over the entities face
@@ -30,7 +30,7 @@ public class PlayerFaceOverlayLayer<T extends Mob & IPlayerOverlay, M extends Hu
     }
 
     @Override
-    public void render(@Nonnull PoseStack stack, MultiBufferSource buffer, int packedLight, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(@NotNull PoseStack stack, MultiBufferSource buffer, int packedLight, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         ResourceLocation loc = entity.getOverlayPlayerProperties().map(Pair::getLeft).orElseGet(DefaultPlayerSkin::getDefaultSkin);
         VertexConsumer vertexBuilder = buffer.getBuffer(RenderType.entityCutoutNoCull(loc));
         this.getParentModel().head.visible = true;

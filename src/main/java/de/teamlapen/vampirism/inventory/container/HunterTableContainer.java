@@ -28,7 +28,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.network.IContainerFactory;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Container for the hunter table.
@@ -57,7 +57,7 @@ public class HunterTableContainer extends InventoryContainer implements Containe
     }
 
     @Override
-    public void containerChanged(@Nonnull Container invBasic) {
+    public void containerChanged(@NotNull Container invBasic) {
         slotsChanged(invBasic);
     }
 
@@ -73,7 +73,7 @@ public class HunterTableContainer extends InventoryContainer implements Containe
     }
 
     @Override
-    public void removed(@Nonnull Player playerIn) {
+    public void removed(@NotNull Player playerIn) {
         super.removed(playerIn);
         if (!playerIn.getCommandSenderWorld().isClientSide) {
             clearContainer(playerIn, inventory);
@@ -81,7 +81,7 @@ public class HunterTableContainer extends InventoryContainer implements Containe
     }
 
     @Override
-    public void slotsChanged(@Nonnull Container inventoryIn) {
+    public void slotsChanged(@NotNull Container inventoryIn) {
         if (isLevelValid(true)) {
             int[] req = levelingConf.getItemRequirementsForTable(hunterLevel + 1);
             missing = checkItems(req[0], req[1], req[2], req[3]);
@@ -94,7 +94,7 @@ public class HunterTableContainer extends InventoryContainer implements Containe
     }
 
     @Override
-    public boolean stillValid(@Nonnull Player playerIn) {
+    public boolean stillValid(@NotNull Player playerIn) {
         return stillValid(worldPos, playerIn, ModBlocks.HUNTER_TABLE.get());
     }
 
@@ -133,12 +133,12 @@ public class HunterTableContainer extends InventoryContainer implements Containe
         }
 
         @Override
-        public boolean mayPlace(@Nonnull ItemStack stack) {
+        public boolean mayPlace(@NotNull ItemStack stack) {
             return false;
         }
 
         @Override
-        public void onTake(@Nonnull Player playerIn, @Nonnull ItemStack stack) {
+        public void onTake(@NotNull Player playerIn, @NotNull ItemStack stack) {
             hunterTableContainer.onPickupResult();
         }
     }

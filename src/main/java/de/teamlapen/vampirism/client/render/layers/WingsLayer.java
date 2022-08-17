@@ -16,7 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
@@ -41,7 +41,7 @@ public class WingsLayer<T extends LivingEntity, Q extends EntityModel<T>> extend
 
 
     @Override
-    public void render(@Nonnull PoseStack stack, @Nonnull MultiBufferSource buffer, int packedLight, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(@NotNull PoseStack stack, @NotNull MultiBufferSource buffer, int packedLight, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if (!entity.isInvisible() && predicateRender.test(entity)) {
             this.model.copyRotationFromBody(bodyPartFunction.apply(entity, this.getParentModel()));
             float s = 1f;

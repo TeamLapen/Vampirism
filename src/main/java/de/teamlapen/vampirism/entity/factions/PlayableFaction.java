@@ -10,7 +10,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -56,7 +56,7 @@ public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> imp
         return this.hasLordSkills;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Component getLordTitle(int level, boolean female) {
         assert level <= highestLordLevel;

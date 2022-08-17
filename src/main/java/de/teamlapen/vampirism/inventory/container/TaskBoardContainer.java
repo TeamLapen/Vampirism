@@ -23,8 +23,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 
@@ -33,13 +33,13 @@ public class TaskBoardContainer extends AbstractContainerMenu implements TaskCon
     /**
      * all tasks that can be completed by the player
      */
-    @Nonnull
+    @NotNull
     private final Set<UUID> completableTasks = Sets.newHashSet();
-    @Nonnull
+    @NotNull
     private final List<ITaskInstance> taskInstances = new ArrayList<>();
-    @Nonnull
+    @NotNull
     private final TextColor factionColor;
-    @Nonnull
+    @NotNull
     private final IFactionPlayer<?> factionPlayer;
     /**
      * all task requirements that are completed
@@ -58,7 +58,7 @@ public class TaskBoardContainer extends AbstractContainerMenu implements TaskCon
     }
 
     @Override
-    public boolean areRequirementsCompleted(@Nonnull ITaskInstance task, @Nonnull TaskRequirement.Type type) {
+    public boolean areRequirementsCompleted(@NotNull ITaskInstance task, @NotNull TaskRequirement.Type type) {
         if (task.isCompleted()) return true;
         if (this.completableTasks.contains(task.getId())) return true;
         if (this.completedRequirements != null) {
@@ -75,7 +75,7 @@ public class TaskBoardContainer extends AbstractContainerMenu implements TaskCon
     }
 
     @Override
-    public TaskAction buttonAction(@Nonnull ITaskInstance taskInfo) {
+    public TaskAction buttonAction(@NotNull ITaskInstance taskInfo) {
         if (canCompleteTask(taskInfo)) {
             return TaskAction.COMPLETE;
         } else if (isTaskNotAccepted(taskInfo)) {
@@ -88,12 +88,12 @@ public class TaskBoardContainer extends AbstractContainerMenu implements TaskCon
     }
 
     @Override
-    public boolean canCompleteTask(@Nonnull ITaskInstance taskInfo) {
+    public boolean canCompleteTask(@NotNull ITaskInstance taskInfo) {
         return this.completableTasks.contains(taskInfo.getId()) && (taskInfo.isUnique() || this.factionPlayer.getRepresentingPlayer().level.getGameTime() < taskInfo.getTaskTimeStamp());
     }
 
     @Override
-    public void pressButton(@Nonnull ITaskInstance taskInfo) {
+    public void pressButton(@NotNull ITaskInstance taskInfo) {
         TaskAction action = buttonAction(taskInfo);
         switch (action) {
             case COMPLETE -> {
@@ -111,18 +111,18 @@ public class TaskBoardContainer extends AbstractContainerMenu implements TaskCon
         }
     }
 
-    @Nonnull
+    @NotNull
     public IPlayableFaction<?> getFaction() {
         return this.factionPlayer.getFaction();
     }
 
-    @Nonnull
+    @NotNull
     public TextColor getFactionColor() {
         return this.factionColor;
     }
 
     @Override
-    public int getRequirementStatus(@Nonnull ITaskInstance taskInfo, @Nonnull TaskRequirement.Requirement<?> requirement) {
+    public int getRequirementStatus(@NotNull ITaskInstance taskInfo, @NotNull TaskRequirement.Requirement<?> requirement) {
         assert this.completedRequirements != null;
         if (this.completedRequirements.containsKey(taskInfo.getId())) {
             return this.completedRequirements.get(taskInfo.getId()).get(requirement.getId());
@@ -139,7 +139,7 @@ public class TaskBoardContainer extends AbstractContainerMenu implements TaskCon
         return taskBoardId;
     }
 
-    @Nonnull
+    @NotNull
     public List<ITaskInstance> getVisibleTasks() {
         return this.taskInstances;
     }
@@ -148,7 +148,7 @@ public class TaskBoardContainer extends AbstractContainerMenu implements TaskCon
      * @param completedRequirements updated completed requirements
      */
     @OnlyIn(Dist.CLIENT)
-    public void init(@Nonnull Set<ITaskInstance> available, Set<UUID> completableTasks, Map<UUID, Map<ResourceLocation, Integer>> completedRequirements, UUID taskBoardId) {
+    public void init(@NotNull Set<ITaskInstance> available, Set<UUID> completableTasks, Map<UUID, Map<ResourceLocation, Integer>> completedRequirements, UUID taskBoardId) {
         this.taskInstances.clear();
         this.taskInstances.addAll(available);
         this.completableTasks.addAll(completableTasks);
@@ -160,12 +160,12 @@ public class TaskBoardContainer extends AbstractContainerMenu implements TaskCon
     }
 
     @Override
-    public boolean isCompleted(@Nonnull ITaskInstance item) {
+    public boolean isCompleted(@NotNull ITaskInstance item) {
         return item.isCompleted();
     }
 
     @Override
-    public boolean isRequirementCompleted(@Nonnull ITaskInstance taskInfo, @Nonnull TaskRequirement.Requirement<?> requirement) {
+    public boolean isRequirementCompleted(@NotNull ITaskInstance taskInfo, @NotNull TaskRequirement.Requirement<?> requirement) {
         if (taskInfo.isCompleted()) return true;
         if (this.completedRequirements != null) {
             if (this.completedRequirements.containsKey(taskInfo.getId())) {
@@ -182,7 +182,7 @@ public class TaskBoardContainer extends AbstractContainerMenu implements TaskCon
     }
 
     @Override
-    public boolean stillValid(@Nonnull Player playerIn) {
+    public boolean stillValid(@NotNull Player playerIn) {
         return VampirismPlayerAttributes.get(playerIn).faction != null;
     }
 

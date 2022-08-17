@@ -12,7 +12,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class FlyingBloodEntityParticleData implements ParticleOptions {
 
@@ -26,13 +26,13 @@ public class FlyingBloodEntityParticleData implements ParticleOptions {
             .apply(p_239803_0_, (e, d) -> new FlyingBloodEntityParticleData(ModParticles.FLYING_BLOOD_ENTITY.get(), e, d)));
 
     public static final ParticleOptions.Deserializer<FlyingBloodEntityParticleData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
-        @Nonnull
-        public FlyingBloodEntityParticleData fromCommand(@Nonnull ParticleType<FlyingBloodEntityParticleData> particleTypeIn, StringReader reader) throws CommandSyntaxException {
+        @NotNull
+        public FlyingBloodEntityParticleData fromCommand(@NotNull ParticleType<FlyingBloodEntityParticleData> particleTypeIn, StringReader reader) throws CommandSyntaxException {
             return new FlyingBloodEntityParticleData(particleTypeIn, reader.readInt(), reader.readBoolean());
         }
 
-        @Nonnull
-        public FlyingBloodEntityParticleData fromNetwork(@Nonnull ParticleType<FlyingBloodEntityParticleData> particleTypeIn, FriendlyByteBuf buffer) {
+        @NotNull
+        public FlyingBloodEntityParticleData fromNetwork(@NotNull ParticleType<FlyingBloodEntityParticleData> particleTypeIn, FriendlyByteBuf buffer) {
             return new FlyingBloodEntityParticleData(particleTypeIn, buffer.readVarInt(), buffer.readBoolean());
         }
     };
@@ -62,13 +62,13 @@ public class FlyingBloodEntityParticleData implements ParticleOptions {
         buffer.writeBoolean(direct);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ParticleType<?> getType() {
         return particleType;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String writeToString() {
         return ForgeRegistries.PARTICLE_TYPES.getKey(this.getType()) + " " + entity + "" + direct;

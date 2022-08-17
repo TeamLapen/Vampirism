@@ -22,8 +22,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,15 +34,15 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
      * Filled after ResourceManager reload (after 1 tick in game)
      * Stores biteable values
      */
-    @Nonnull
+    @NotNull
     public static final BiteableEntryManager biteableEntryManager = new BiteableEntryManager();
     private static final Logger LOGGER = LogManager.getLogger();
     /**
      * Used to store convertible handlers after {@link FMLCommonSetupEvent}
      */
-    @Nonnull
+    @NotNull
     private final Map<EntityType<? extends PathfinderMob>, IConvertingHandler<?>> convertibles = new ConcurrentHashMap<>();
-    @Nonnull
+    @NotNull
     private final Map<EntityType<? extends PathfinderMob>, ResourceLocation> convertibleOverlay = new ConcurrentHashMap<>();
     /**
      * Stores custom extended creature constructors after {@link InterModEnqueueEvent}
@@ -69,7 +69,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
 
     @Override
     @ThreadSafeAPI
-    public void addConvertible(EntityType<? extends PathfinderMob> type, ResourceLocation overlay_loc, @Nonnull IConvertingHandler<?> handler) {
+    public void addConvertible(EntityType<? extends PathfinderMob> type, ResourceLocation overlay_loc, @NotNull IConvertingHandler<?> handler) {
         if (finished) throw new IllegalStateException("Register convertibles during InterModEnqueueEvent");
         convertibles.put(type, handler);
 
@@ -135,7 +135,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
         finished = true;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     @OnlyIn(Dist.CLIENT)
     public Map<EntityType<? extends PathfinderMob>, ResourceLocation> getConvertibleOverlay() {

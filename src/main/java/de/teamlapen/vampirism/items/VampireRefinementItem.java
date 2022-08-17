@@ -8,7 +8,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class VampireRefinementItem extends RefinementItem {
 
@@ -17,7 +17,7 @@ public class VampireRefinementItem extends RefinementItem {
     }
 
     @Override
-    public void fillItemCategory(@Nonnull CreativeModeTab itemGroup, @Nonnull NonNullList<ItemStack> items) {
+    public void fillItemCategory(@NotNull CreativeModeTab itemGroup, @NotNull NonNullList<ItemStack> items) {
         if (this.allowedIn(itemGroup)) {
             ItemStack stack = new ItemStack(this);
             IRefinementSet set = getRandomRefinementForItem(this.getExclusiveFaction(stack), this);
@@ -28,9 +28,9 @@ public class VampireRefinementItem extends RefinementItem {
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public IFaction<?> getExclusiveFaction(@Nonnull ItemStack stack) {
+    public IFaction<?> getExclusiveFaction(@NotNull ItemStack stack) {
         return VReference.VAMPIRE_FACTION;
     }
 

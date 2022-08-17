@@ -35,8 +35,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -60,13 +60,13 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
     }
 
     @Override
-    public int getMinLevel(@Nonnull ItemStack stack) {
+    public int getMinLevel(@NotNull ItemStack stack) {
         return 1;
     }
 
     @Nullable
     @Override
-    public ISkill<IHunterPlayer> getRequiredSkill(@Nonnull ItemStack stack) {
+    public ISkill<IHunterPlayer> getRequiredSkill(@NotNull ItemStack stack) {
         if (tier == TIER.ULTIMATE) return HunterSkills.ULTIMATE_CRUCIFIX.get();
         return HunterSkills.CRUCIFIX_WIELDER.get();
     }

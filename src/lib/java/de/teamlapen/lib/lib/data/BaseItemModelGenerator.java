@@ -9,8 +9,7 @@ import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class BaseItemModelGenerator extends ItemModelProvider {
 
@@ -43,7 +42,7 @@ public abstract class BaseItemModelGenerator extends ItemModelProvider {
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String getName() {
         return this.modid + " Item Models";
@@ -85,19 +84,19 @@ public abstract class BaseItemModelGenerator extends ItemModelProvider {
         return model;
     }
 
-    @Nonnull
+    @NotNull
     public ItemModelBuilder withExistingParent(Item name, Item parent) {
         return this.withExistingParent(name, ForgeRegistries.ITEMS.getKey(parent));
     }
 
     @SuppressWarnings({"UnusedReturnValue", "ConstantConditions"})
-    @Nonnull
+    @NotNull
     public ItemModelBuilder withExistingParent(Block name, ResourceLocation parent) {
         return super.withExistingParent(ForgeRegistries.BLOCKS.getKey(name) .getPath(), parent);
     }
 
     @SuppressWarnings("ConstantConditions")
-    @Nonnull
+    @NotNull
     public ItemModelBuilder withExistingParent(Item name, ResourceLocation parent) {
         return super.withExistingParent(ForgeRegistries.ITEMS.getKey(name) .getPath(), parent);
     }

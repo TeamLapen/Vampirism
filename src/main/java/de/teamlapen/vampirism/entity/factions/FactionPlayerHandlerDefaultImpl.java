@@ -10,8 +10,8 @@ import net.minecraft.world.entity.player.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 /**
@@ -45,7 +45,7 @@ class FactionPlayerHandlerDefaultImpl implements IFactionPlayerHandler {
         return null;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Optional<? extends IFactionPlayer<?>> getCurrentFactionPlayer() {
         return Optional.empty();
@@ -83,7 +83,7 @@ class FactionPlayerHandlerDefaultImpl implements IFactionPlayerHandler {
         return null;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Player getPlayer() {
         return null;
@@ -95,7 +95,7 @@ class FactionPlayerHandlerDefaultImpl implements IFactionPlayerHandler {
     }
 
     @Override
-    public void joinFaction(@Nonnull IPlayableFaction<?> faction) {
+    public void joinFaction(@NotNull IPlayableFaction<?> faction) {
 
     }
 
@@ -110,7 +110,7 @@ class FactionPlayerHandlerDefaultImpl implements IFactionPlayerHandler {
     }
 
     @Override
-    public boolean setFactionLevel(@Nonnull IPlayableFaction<?> faction, int level) {
+    public boolean setFactionLevel(@NotNull IPlayableFaction<?> faction, int level) {
         return false;
     }
 

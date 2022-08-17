@@ -4,7 +4,7 @@ package de.teamlapen.vampirism.effects;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class FreezeEffect extends VampirismEffect {
     public FreezeEffect() {
@@ -12,7 +12,7 @@ public class FreezeEffect extends VampirismEffect {
     }
 
     @Override
-    public void applyEffectTick(@Nonnull LivingEntity entityLivingBaseIn, int amplifier) {
+    public void applyEffectTick(@NotNull LivingEntity entityLivingBaseIn, int amplifier) {
         entityLivingBaseIn.setDeltaMovement(0, Math.min(0, entityLivingBaseIn.getDeltaMovement().y()), 0);
     }
 
@@ -21,7 +21,7 @@ public class FreezeEffect extends VampirismEffect {
         return true;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     protected String getOrCreateDescriptionId() {
         return "action.vampirism.freeze";

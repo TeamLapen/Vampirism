@@ -13,8 +13,8 @@ import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +39,7 @@ public class SkillManager implements ISkillManager {
      * @return th root skill for the parameters
      * @throws java.lang.IllegalStateException when the faction can not have a skill for the given skill type or when there is no skill registered conforming to the skill type's naming scheme
      */
-    @Nonnull
+    @NotNull
     public <T extends IFactionPlayer<T>> ISkill<T> getRootSkill(IPlayableFaction<T> faction, ISkillType type) {
         if (!type.isForFaction(faction)) throw new IllegalStateException("The skilltype " + type + " is not applicable for the faction " + faction.getID());
         ISkill skill = RegUtil.getSkill(type.createIdForFaction(faction.getID()));
@@ -73,13 +73,13 @@ public class SkillManager implements ISkillManager {
 
     @Nullable
     @Override
-    public ISkillType getSkillType(@Nonnull ResourceLocation id) {
+    public ISkillType getSkillType(@NotNull ResourceLocation id) {
         return this.skillTypes.get(id);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public ISkillType registerSkillType(@Nonnull ISkillType type) {
+    public ISkillType registerSkillType(@NotNull ISkillType type) {
         if (this.skillTypes.containsKey(type.getRegistryName())) {
             throw new IllegalStateException("A skill type with the id " + type.getRegistryName() + " has already been registered");
         }

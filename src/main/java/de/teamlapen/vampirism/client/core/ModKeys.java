@@ -36,8 +36,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Handles all key/input related stuff
@@ -172,7 +172,7 @@ public class ModKeys {
     /**
      * Try to toggle the given action
      **/
-    private void toggleBoundAction(@Nonnull IFactionPlayer<?> player, @Nullable IAction<?> action) {
+    private void toggleBoundAction(@NotNull IFactionPlayer<?> player, @Nullable IAction<?> action) {
         if (action == null) {
             player.getRepresentingPlayer().displayClientMessage(Component.translatable("text.vampirism.action.not_bound", "/vampirism bind-action"), true);
         } else {

@@ -18,7 +18,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Renders the beams for the altar of infusion
@@ -35,7 +35,7 @@ public class AltarInfusionBESR extends VampirismBESR<AltarInfusionBlockEntity> {
 
 
     @Override
-    public void render(AltarInfusionBlockEntity te, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource iRenderTypeBuffer, int combinedLight, int combinedOverlay) {
+    public void render(AltarInfusionBlockEntity te, float partialTicks, @NotNull PoseStack matrixStack, @NotNull MultiBufferSource iRenderTypeBuffer, int combinedLight, int combinedOverlay) {
         // Render the beams if the ritual is running
         AltarInfusionBlockEntity.PHASE phase = te.getCurrentPhase();
         if (phase == AltarInfusionBlockEntity.PHASE.BEAM1 || phase == AltarInfusionBlockEntity.PHASE.BEAM2) {

@@ -3,8 +3,8 @@ package de.teamlapen.vampirism.api.entity;
 import com.google.common.collect.Maps;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Map;
 
 public enum EntityClassType {
