@@ -96,6 +96,7 @@ public class ModPlayerEventHandler {
         if (!(event.getLevel() instanceof Level)) return;
         //don't allow player to destroy blocks with PointOfInterests that are owned by a totem with different faction as the player
         if (event.getPlayer().isCreative()) return;
+        if (VampirismConfig.SERVER.allowVillageDestroyBlocks.get()) return;
         Set<BlockPos> positions = new HashSet<>();
         BlockPos totemPos = TotemHelper.getTotemPosition(((Level) event.getLevel()).dimension(), event.getPos());
         Block block = event.getState().getBlock();
