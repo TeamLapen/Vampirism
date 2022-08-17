@@ -96,9 +96,9 @@ public class VampireBookItem extends Item {
 
     public static CompoundTag createTagFromContext(VampireBookManager.BookContext context) {
         CompoundTag nbt = new CompoundTag();
-        nbt.putString("id", context.id);
-        nbt.putString("author", context.book.getAuthor());
-        nbt.putString("title", context.book.getTitle());
+        nbt.putString("id", context.id());
+        nbt.putString("author", context.book().author());
+        nbt.putString("title", context.book().title());
         return nbt;
     }
 }

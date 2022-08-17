@@ -38,7 +38,7 @@ public class VampireBookScreen extends Screen {
 
 
     public VampireBookScreen(VampireBookManager.BookInfo info) {
-        super(Component.literal(info.getTitle()));
+        super(Component.literal(info.title()));
         this.info = info;
     }
 
@@ -90,7 +90,7 @@ public class VampireBookScreen extends Screen {
             }
         }, true));
 
-        content = Arrays.stream(info.getContent()).map(Component::literal).flatMap(v -> prepareForLongText(v, 164, 120, 120).stream()).collect(Collectors.toList());
+        content = Arrays.stream(info.content()).map(Component::literal).flatMap(v -> prepareForLongText(v, 164, 120, 120).stream()).collect(Collectors.toList());
 
     }
 

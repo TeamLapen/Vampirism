@@ -1,9 +1,13 @@
 package de.teamlapen.vampirism.util;
 
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParseException;
+import com.google.common.collect.Lists;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.VampireBookItem;
@@ -17,13 +21,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class VampireBookManager {
-    private static final Gson GSON = new GsonBuilder().create();
     private static final Logger LOGGER = LogManager.getLogger();
 
     private static VampireBookManager instance;
@@ -37,18 +37,6 @@ public class VampireBookManager {
 
     private VampireBookManager() {
 
-    }
-
-    public static class BookContext {
-        public final BookInfo book;
-        public final String id;
-        public final boolean unique;
-
-        public BookContext(BookInfo book, String id, boolean unique) {
-            this.book = book;
-            this.id = id;
-            this.unique = unique;
-        }
     }
 
     private final Map<String, BookContext> idToBook = new HashMap<>();
@@ -76,66 +64,65 @@ public class VampireBookManager {
     }
 
     public void init() {
-        InputStream inputStream = null;
-        try {
-            inputStream = VampirismMod.class.getResourceAsStream("/vampireBooks.json");
+        try(InputStream inputStream = VampirismMod.class.getResourceAsStream("/vampireBooks.json")) {
             if (inputStream == null) {
                 throw new IOException("Could not find 'vampireBooks.json' in resources");
             }
-            Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-            BookContext[] books = GSON.fromJson(reader, BookContext[].class);
-            idToBook.clear();
-            idToBook.put(OLD_ID, OLD);
-            for (BookContext b : books) {
-                idToBook.put(b.id, b);
-                if (!b.unique) {
-                    nonUnique.add(b);
+            try(Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
+                JsonElement jsonElement = JsonParser.parseReader(reader);
+                List<BookContext> books = Lists.newArrayList(BookContext.CODEC.listOf().parse(new Dynamic<>(JsonOps.INSTANCE, jsonElement)).getOrThrow(false, LOGGER::error));
+                idToBook.clear();
+                idToBook.put(OLD_ID, OLD);
+                for (BookContext b : books) {
+                    idToBook.put(b.id, b);
+                    if (!b.unique) {
+                        nonUnique.add(b);
+                    }
                 }
             }
-        } catch (JsonParseException e) {
+        } catch (Exception e) {
             LOGGER.warn("----------------------------------------");
             LOGGER.error("Failed to load vampire books from JSON", e);
             LOGGER.warn("----------------------------------------");
             if (VampirismMod.inDev) {
-                throw e;
-            }
-        } catch (IOException e) {
-            LOGGER.error("Failed to read vampire books from resources", e);
-        } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    LOGGER.error("Failed to close InputStream", e);
-                }
+                throw new RuntimeException(e);
             }
         }
     }
 
-    public static class BookInfo {
+    public record BookContext(BookInfo book, String id, boolean unique, String... tags) {
+        @SuppressWarnings("CodeBlock2Expr")
+        public static final Codec<BookContext> CODEC = RecordCodecBuilder.create((item) -> {
+            return item.group(BookInfo.CODEC.fieldOf("book").forGetter((bookContext) -> {
+                return bookContext.book;
+            }), Codec.STRING.fieldOf("id").forGetter((bookContext) -> {
+                return bookContext.id;
+            }), Codec.BOOL.fieldOf("unique").orElse(false).forGetter((bookContext) -> {
+                return bookContext.unique;
+            }), Codec.STRING.listOf().fieldOf("tags").forGetter((bookContext) -> {
+                return Arrays.asList(bookContext.tags);
+            })).apply(item, BookContext::new);
+        });
 
-
-        public BookInfo(String title, String author, String... content) {
-            this.title = title;
-            this.author = author;
-            this.content = content;
+        public BookContext(BookInfo book, String id, Boolean unique, List<String> tags) {
+            this(book, id, unique, tags.toArray(new String[0]));
         }
+    }
 
-        private final String title;
-        private final String author;
-        private final String[] content;
+    public record BookInfo(String title, String author, String... content) {
+        @SuppressWarnings("CodeBlock2Expr")
+        public static final Codec<BookInfo> CODEC = RecordCodecBuilder.create((item) -> {
+            return item.group(Codec.STRING.fieldOf("title").forGetter((bookInfo) -> {
+                return bookInfo.title;
+            }), Codec.STRING.fieldOf("author").forGetter((bookInfo) -> {
+                return bookInfo.author;
+            }), Codec.STRING.listOf().fieldOf("content").forGetter((bookInfo) -> {
+                return Arrays.asList(bookInfo.content);
+            })).apply(item, BookInfo::new);
+        });
 
-
-        public String getAuthor() {
-            return author;
-        }
-
-        public String[] getContent() {
-            return content;
-        }
-
-        public String getTitle() {
-            return title;
+        public BookInfo(String title, String author, List<String> content) {
+            this(title, author, content.toArray(new String[0]));
         }
     }
 }
