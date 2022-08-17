@@ -1,13 +1,11 @@
 package de.teamlapen.vampirism.config;
 
 
-import com.google.common.collect.ImmutableList;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -16,7 +14,6 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
@@ -140,6 +137,7 @@ public class VampirismConfig {
         public final ForgeConfigSpec.EnumValue<IMobOptions> entityIMob;
         public final ForgeConfigSpec.BooleanValue infectCreaturesSanguinare;
         public final ForgeConfigSpec.BooleanValue preventRenderingDebugBoundingBoxes;
+        public final ForgeConfigSpec.BooleanValue allowVillageDestroyBlocks;
 
         public final ForgeConfigSpec.BooleanValue sundamageUnknownDimension;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> sundamageDimensionsOverridePositive;
@@ -178,6 +176,7 @@ public class VampirismConfig {
             infectCreaturesSanguinare = builder.comment("If enabled, creatures are infected with Sanguinare Vampirism first instead of immediately being converted to a vampire when their blood is sucked dry").define("infectCreaturesSanguinare", false);
             preventRenderingDebugBoundingBoxes = builder.comment("Prevent players from enabling the rendering of debug bounding boxes. This can allow them to see certain entities they are not supposed to see (e.g. disguised hunter").define("preventDebugBoundingBoxes", false);
             batDimensionBlacklist = builder.comment("Prevent vampire players to transform into a bat").defineList("batDimensionBlacklist", Collections.singletonList(World.END.location().toString()), string -> string instanceof String && UtilLib.isValidResourceLocation(((String) string)));
+            allowVillageDestroyBlocks = builder.comment("Allow players to destroy point of interest blocks in faction villages if they no not have the faction village").define("allowVillageDestroyBlocks", false);
 
             builder.push("sundamage");
             sundamageUnknownDimension = builder.comment("Whether vampires should receive sundamage in unknown dimensions").define("sundamageUnknownDimension", false);
