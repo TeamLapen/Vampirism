@@ -37,5 +37,9 @@ One pillar has to be filled with one and the same material and can have a maximu
 
 Explanation video: https://youtu.be/1pJsJVlk0cw
 
+## Leaving the Faction
+If you no longer want to be a vampire you need to find or craft an [Altar of Cleansing](../../content/blocks.mdx#altar-of-cleansing) and interact with it.
+There you will die to leave the faction unless you hold a Totem of Undying or play in a hardcore world.
+
 ## Level 15
 https://github.com/TeamLapen/Vampirism/wiki/Level-15
