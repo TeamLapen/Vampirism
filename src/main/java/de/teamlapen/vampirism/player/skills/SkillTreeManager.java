@@ -27,7 +27,7 @@ public class SkillTreeManager extends SimpleJsonResourceReloadListener {
     }).create();
     private static SkillTreeManager instance;
 
-    public static SkillTreeManager getInstance() {
+    public static @NotNull SkillTreeManager getInstance() {
         if (instance == null) {
             instance = new SkillTreeManager();
         }
@@ -40,12 +40,12 @@ public class SkillTreeManager extends SimpleJsonResourceReloadListener {
         super(GSON, "vampirismskillnodes");
     }
 
-    public SkillTree getSkillTree() {
+    public @NotNull SkillTree getSkillTree() {
         return skillTree;
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> resourceLocationJsonObjectMap, @NotNull ResourceManager iResourceManager, @NotNull ProfilerFiller iProfiler) {
+    protected void apply(@NotNull Map<ResourceLocation, JsonElement> resourceLocationJsonObjectMap, @NotNull ResourceManager iResourceManager, @NotNull ProfilerFiller iProfiler) {
         Map<ResourceLocation, SkillNode.Builder> parsed = new HashMap<>();
         resourceLocationJsonObjectMap.forEach((id, object) -> {
             try {

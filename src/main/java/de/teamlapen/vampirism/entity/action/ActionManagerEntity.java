@@ -16,12 +16,12 @@ import java.util.List;
 public class ActionManagerEntity implements IEntityActionManager {
 
     @Override
-    public List<IEntityAction> getAllEntityActions() {
+    public @NotNull List<IEntityAction> getAllEntityActions() {
         return Lists.newArrayList(getRegistry().getValues());
     }
 
     @Override
-    public List<IEntityAction> getAllEntityActionsByTierAndClassType(IFaction<?> faction, @NotNull EntityActionTier tier, EntityClassType classType) {
+    public @NotNull List<IEntityAction> getAllEntityActionsByTierAndClassType(IFaction<?> faction, @NotNull EntityActionTier tier, EntityClassType classType) {
         List<IEntityAction> actions = getAllEntityActions();
         actions.removeIf(action -> action.getFaction() != faction || action.getTier().getId() > tier.getId() || !ArrayUtils.contains(action.getClassTypes(), classType));
         return actions;

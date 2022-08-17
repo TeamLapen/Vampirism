@@ -56,6 +56,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.HashSet;
 import java.util.Optional;
@@ -73,7 +74,7 @@ public class ModEntityEventHandler {
     private static final Predicate<LivingEntity> nonVampireCheck = entity -> !Helper.isVampire(entity);
     private static final Object2BooleanMap<String> entityAIReplacementWarnMap = new Object2BooleanArrayMap<>();
 
-    public static <T extends Mob, S extends LivingEntity, Q extends NearestAttackableTargetGoal<S>> void makeVampireFriendly(String name, T e, Class<Q> targetClass, Class<S> targetEntityClass, int attackPriority, BiFunction<T, Predicate<LivingEntity>, Q> replacement, Predicate<EntityType<? extends T>> typeCheck) {
+    public static <T extends Mob, S extends LivingEntity, Q extends NearestAttackableTargetGoal<S>> void makeVampireFriendly(String name, @NotNull T e, @NotNull Class<Q> targetClass, @NotNull Class<S> targetEntityClass, int attackPriority, @NotNull BiFunction<T, Predicate<LivingEntity>, Q> replacement, @NotNull Predicate<EntityType<? extends T>> typeCheck) {
         Goal target = null;
         for (WrappedGoal t : e.targetSelector.availableGoals) {
             Goal g = t.getGoal();
@@ -103,14 +104,14 @@ public class ModEntityEventHandler {
     private boolean warnAboutGolem = true;
 
     @SubscribeEvent
-    public void onAttachCapabilityEntity(AttachCapabilitiesEvent<Entity> event) {
+    public void onAttachCapabilityEntity(@NotNull AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof PathfinderMob) {
             event.addCapability(REFERENCE.EXTENDED_CREATURE_KEY, ExtendedCreature.createNewCapability((PathfinderMob) event.getObject()));
         }
     }
 
     @SubscribeEvent
-    public void onEntityCheckSpawn(LivingSpawnEvent.CheckSpawn event) {
+    public void onEntityCheckSpawn(LivingSpawnEvent.@NotNull CheckSpawn event) {
         BlockPos pos = new BlockPos(event.getX() - 0.4F, event.getY(), event.getZ() - 0.4F).below();
         if (!event.getLevel().hasChunkAt(pos)) return;
         BlockState blockState = event.getLevel().getBlockState(pos);
@@ -134,14 +135,14 @@ public class ModEntityEventHandler {
     }
 
     @SubscribeEvent
-    public void onEntityEquipmentChange(LivingEquipmentChangeEvent event) {
+    public void onEntityEquipmentChange(@NotNull LivingEquipmentChangeEvent event) {
         if (event.getSlot().getType() == EquipmentSlot.Type.ARMOR && event.getEntity() instanceof Player) {
             VampirePlayer.getOpt((Player) event.getEntity()).ifPresent(VampirePlayer::requestNaturalArmorUpdate);
         }
     }
 
     @SubscribeEvent
-    public void onEntityJoinWorld(EntityJoinLevelEvent event) {
+    public void onEntityJoinWorld(@NotNull EntityJoinLevelEvent event) {
         if (!event.getLevel().isClientSide()) {
             if (event.getEntity() instanceof IAdjustableLevel entity) {
                 if (entity.getEntityLevel() == -1) {
@@ -227,7 +228,7 @@ public class ModEntityEventHandler {
     }
 
     @SubscribeEvent
-    public void onEntityLootingEvent(LootingLevelEvent event) {
+    public void onEntityLootingEvent(@NotNull LootingLevelEvent event) {
         if (event.getDamageSource() != null && event.getDamageSource().getEntity() instanceof Player) {
             @Nullable
             IItemWithTier.TIER hunterCoatTier = VampirismPlayerAttributes.get((Player) event.getDamageSource().getEntity()).getHuntSpecial().fullHunterCoat;
@@ -238,7 +239,7 @@ public class ModEntityEventHandler {
     }
 
     @SubscribeEvent
-    public void onEntityVisibilityCheck(LivingEvent.LivingVisibilityEvent event) {
+    public void onEntityVisibilityCheck(LivingEvent.@NotNull LivingVisibilityEvent event) {
         if (event.getEntity() instanceof Player player) {
             if (VampirismPlayerAttributes.get(player).getHuntSpecial().isDisguised()) {
                 event.modifyVisibility((VampirismPlayerAttributes.get((Player) event.getEntity()).getHuntSpecial().fullHunterCoat != null ? 0.5 : 1) * VampirismConfig.BALANCE.haDisguiseVisibilityMod.get());
@@ -247,7 +248,7 @@ public class ModEntityEventHandler {
     }
 
     @SubscribeEvent
-    public void onEyeHeightSet(EntityEvent.Size event) {
+    public void onEyeHeightSet(EntityEvent.@NotNull Size event) {
         if (event.getEntity() instanceof VampireBaseEntity || event.getEntity() instanceof HunterBaseEntity) {
             event.setNewEyeHeight(event.getOldEyeHeight() * 0.875f);
         }
@@ -257,7 +258,7 @@ public class ModEntityEventHandler {
     }
 
     @SubscribeEvent
-    public void onItemUseFinish(LivingEntityUseItemEvent.Finish event) {
+    public void onItemUseFinish(LivingEntityUseItemEvent.@NotNull Finish event) {
         if (event.getEntity() instanceof MinionEntity) {
             if (event.getItem().getItem() instanceof PotionItem) {
                 ItemStack stack = event.getResultStack();
@@ -272,14 +273,14 @@ public class ModEntityEventHandler {
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
-    public void onLivingEquipmentChange(LivingEquipmentChangeEvent event) {
+    public void onLivingEquipmentChange(@NotNull LivingEquipmentChangeEvent event) {
         if (event.getTo().getItem() instanceof VampirismVampireSword) {
             ((VampirismVampireSword) event.getTo().getItem()).updateTrainedCached(event.getTo(), event.getEntity());
         }
     }
 
     @SubscribeEvent
-    public void onLivingUpdate(LivingEvent.LivingTickEvent event) {
+    public void onLivingUpdate(LivingEvent.@NotNull LivingTickEvent event) {
         if (event.getEntity() instanceof PathfinderMob) {
             event.getEntity().getCommandSenderWorld().getProfiler().push("vampirism_extended_creature");
             ExtendedCreature.getSafe(event.getEntity()).ifPresent(IExtendedCreatureVampirism::tick);
@@ -289,7 +290,7 @@ public class ModEntityEventHandler {
     }
 
     @SubscribeEvent
-    public void onActuallyHurt(LivingHurtEvent event) {
+    public void onActuallyHurt(@NotNull LivingHurtEvent event) {
         if (event.getSource() instanceof EntityDamageSource && event.getSource().msgId.equals("player") && event.getSource().getEntity() instanceof Player player) {
             ItemStack stack = player.getMainHandItem();
             OilUtils.getAppliedOil(stack).ifPresent(oil -> {
@@ -302,7 +303,7 @@ public class ModEntityEventHandler {
     }
 
     @SubscribeEvent
-    public void onLivingDamage(LivingDamageEvent event) {
+    public void onLivingDamage(@NotNull LivingDamageEvent event) {
         if (event.getSource() instanceof EntityDamageSource && event.getSource().msgId.equals("player") && event.getSource().getEntity() instanceof Player player) {
             ItemStack stack = player.getMainHandItem();
             OilUtils.getAppliedOil(stack).ifPresent(oil -> {

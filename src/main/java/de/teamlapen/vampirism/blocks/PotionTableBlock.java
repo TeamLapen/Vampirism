@@ -24,14 +24,13 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class PotionTableBlock extends VampirismBlockContainer {
     protected static final VoxelShape shape = makeShape();
 
-    private static VoxelShape makeShape() {
+    private static @NotNull VoxelShape makeShape() {
         VoxelShape a = Block.box(0, 0, 0, 16, 1, 16);
         VoxelShape b = Block.box(1, 1, 1, 15, 2, 15);
         VoxelShape c = Block.box(2, 2, 2, 14, 9, 14);
@@ -73,7 +72,7 @@ public class PotionTableBlock extends VampirismBlockContainer {
 
     @NotNull
     @Override
-    public InteractionResult use(@NotNull BlockState state, Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
+    public InteractionResult use(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
         if (!worldIn.isClientSide && player instanceof ServerPlayer) {
             BlockEntity tile = worldIn.getBlockEntity(pos);
             if (tile instanceof PotionTableBlockEntity) {
@@ -88,7 +87,7 @@ public class PotionTableBlock extends VampirismBlockContainer {
     }
 
     @Override
-    protected void clearContainer(BlockState state, Level worldIn, BlockPos pos) {
+    protected void clearContainer(BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos) {
         BlockEntity te = worldIn.getBlockEntity(pos);
         if (te instanceof PotionTableBlockEntity) {
             for (int i = 0; i < 8; ++i) {

@@ -30,16 +30,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.NotNull;
 
 public class TaskRecipeCategory implements IRecipeCategory<Task> {
-    private final IDrawable background;
-    private final IDrawable icon;
+    private final @NotNull IDrawable background;
+    private final @NotNull IDrawable icon;
 
-    public TaskRecipeCategory(IGuiHelper guiHelper) {
+    public TaskRecipeCategory(@NotNull IGuiHelper guiHelper) {
         this.background = guiHelper.drawableBuilder(new ResourceLocation("jei", "textures/gui/slot.png"), 0, 0, 18, 18).setTextureSize(18, 18).addPadding(14, 90, 75, 75).build();
         this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModItems.VAMPIRE_FANG.get()));
     }
 
     @Override
-    public void draw(Task task, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull PoseStack stack, double mouseX, double mouseY) {
+    public void draw(@NotNull Task task, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull PoseStack stack, double mouseX, double mouseY) {
         Minecraft minecraft = Minecraft.getInstance();
         int x = 4;
         int y = 40;
@@ -87,7 +87,7 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
     }
 
     @Override
-    public void setRecipe(@NotNull IRecipeLayoutBuilder builder, Task recipe, @NotNull IFocusGroup focuses) {
+    public void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull Task recipe, @NotNull IFocusGroup focuses) {
         TaskReward reward = recipe.getReward();
         if (reward instanceof ItemReward itemReward) {
             IRecipeSlotBuilder output = builder.addSlot(RecipeIngredientRole.OUTPUT, 76, 15);

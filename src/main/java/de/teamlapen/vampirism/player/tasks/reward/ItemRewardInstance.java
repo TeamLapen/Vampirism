@@ -14,11 +14,11 @@ import org.jetbrains.annotations.NotNull;
 public class ItemRewardInstance implements ITaskRewardInstance {
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "item");
 
-    public static ItemRewardInstance decode(FriendlyByteBuf buffer) {
+    public static @NotNull ItemRewardInstance decode(@NotNull FriendlyByteBuf buffer) {
         return new ItemRewardInstance(buffer.readItem());
     }
 
-    public static ItemRewardInstance readNbt(CompoundTag nbt) {
+    public static @NotNull ItemRewardInstance readNbt(@NotNull CompoundTag nbt) {
         return new ItemRewardInstance(ItemStack.of(nbt.getCompound("reward")));
     }
 
@@ -30,14 +30,14 @@ public class ItemRewardInstance implements ITaskRewardInstance {
     }
 
     @Override
-    public void applyReward(IFactionPlayer<?> player) {
+    public void applyReward(@NotNull IFactionPlayer<?> player) {
         if (!player.getRepresentingPlayer().addItem(this.reward.copy())) {
             player.getRepresentingPlayer().drop(this.reward.copy(), true);
         }
     }
 
     @Override
-    public void encode(FriendlyByteBuf buffer) {
+    public void encode(@NotNull FriendlyByteBuf buffer) {
         buffer.writeItem(this.reward);
     }
 
@@ -52,7 +52,7 @@ public class ItemRewardInstance implements ITaskRewardInstance {
     }
 
     @Override
-    public CompoundTag writeNBT(@NotNull CompoundTag nbt) {
+    public @NotNull CompoundTag writeNBT(@NotNull CompoundTag nbt) {
         nbt.put("reward", this.reward.save(new CompoundTag()));
         return nbt;
     }

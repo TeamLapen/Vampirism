@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ShapedItemWithTierRepair extends ShapedRecipe {
 
-    public ShapedItemWithTierRepair(ShapedRecipe shaped) {
+    public ShapedItemWithTierRepair(@NotNull ShapedRecipe shaped) {
         super(shaped.getId(), shaped.getGroup(), shaped.getRecipeWidth(), shaped.getRecipeHeight(), shaped.getIngredients(), shaped.getResultItem());
     }
 

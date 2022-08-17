@@ -15,6 +15,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
 import org.apache.commons.lang3.Validate;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -24,16 +25,16 @@ import java.util.function.Supplier;
  */
 public record ServerboundSimpleInputEvent(Type type) implements IMessage {
 
-    static void encode(ServerboundSimpleInputEvent msg, FriendlyByteBuf buf) {
+    static void encode(@NotNull ServerboundSimpleInputEvent msg, @NotNull FriendlyByteBuf buf) {
         buf.writeEnum(msg.type);
     }
 
-    static ServerboundSimpleInputEvent decode(FriendlyByteBuf buf) {
+    static @NotNull ServerboundSimpleInputEvent decode(@NotNull FriendlyByteBuf buf) {
         Type t = buf.readEnum(Type.class);
         return new ServerboundSimpleInputEvent(t);
     }
 
-    static void handle(final ServerboundSimpleInputEvent msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    static void handle(final @NotNull ServerboundSimpleInputEvent msg, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ServerPlayer player = ctx.getSender();
         Validate.notNull(player);

@@ -35,7 +35,7 @@ import java.util.function.Consumer;
 
 public class VampireClothingItem extends ArmorItem implements IFactionExclusiveItem {
 
-    public VampireClothingItem(EquipmentSlot slotType) {
+    public VampireClothingItem(@NotNull EquipmentSlot slotType) {
         super(VampirismArmorMaterials.VAMPIRE_CLOTH, slotType, new Properties().defaultDurability(ArmorMaterials.IRON.getDurabilityForSlot(slotType)).tab(VampirismMod.creativeTab));
     }
 
@@ -49,7 +49,7 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+    public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
         consumer.accept(new IClientItemExtensions() {
             @Override
             public @NotNull Model getGenericArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<?> original) {
@@ -65,7 +65,7 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
     }
 
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
+    public @Nullable String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
         return String.format(REFERENCE.MODID + ":textures/models/armor/%s.png", RegUtil.id(this).getPath());
     }
 
@@ -76,7 +76,7 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
     }
 
     @Override
-    public void onArmorTick(ItemStack stack, Level world, Player player) {
+    public void onArmorTick(ItemStack stack, Level world, @NotNull Player player) {
         super.onArmorTick(stack, world, player);
         if (player.tickCount % 16 == 8) {
             if (!Helper.isVampire(player)) {

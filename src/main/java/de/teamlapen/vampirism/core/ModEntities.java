@@ -22,6 +22,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 import java.util.function.Function;
@@ -124,7 +125,7 @@ public class ModEntities {
         SpawnPlacements.register(VILLAGER_CONVERTED.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules);
     }
 
-    static void onRegisterEntityTypeAttributes(EntityAttributeCreationEvent event) {
+    static void onRegisterEntityTypeAttributes(@NotNull EntityAttributeCreationEvent event) {
         event.put(ADVANCED_HUNTER.get(), AdvancedHunterEntity.getAttributeBuilder().build());
         event.put(ADVANCED_HUNTER_IMOB.get(), AdvancedHunterEntity.getAttributeBuilder().build());
         event.put(ADVANCED_VAMPIRE.get(), AdvancedVampireEntity.getAttributeBuilder().build());
@@ -153,12 +154,12 @@ public class ModEntities {
         event.put(TASK_MASTER_VAMPIRE.get(), VampireTaskMasterEntity.getAttributeBuilder().build());
     }
 
-    static void onModifyEntityTypeAttributes(EntityAttributeModificationEvent event) {
+    static void onModifyEntityTypeAttributes(@NotNull EntityAttributeModificationEvent event) {
         event.add(EntityType.PLAYER, ModAttributes.SUNDAMAGE.get());
         event.add(EntityType.PLAYER, ModAttributes.BLOOD_EXHAUSTION.get());
     }
 
-    private static <T extends Entity> RegistryObject<EntityType<T>> prepareEntityType(String id, Supplier<EntityType.Builder<T>> builder, boolean spawnable) {
+    private static <T extends Entity> RegistryObject<EntityType<T>> prepareEntityType(String id, @NotNull Supplier<EntityType.Builder<T>> builder, boolean spawnable) {
         return ENTITY_TYPES.register(id, () -> {
             EntityType.Builder<T> type = builder.get().setTrackingRange(80).setUpdateInterval(1).setShouldReceiveVelocityUpdates(true);
             if (!spawnable)
@@ -167,7 +168,7 @@ public class ModEntities {
         });
     }
 
-    static void fixMapping(MissingMappingsEvent missingMappings) {
+    static void fixMapping(@NotNull MissingMappingsEvent missingMappings) {
         missingMappings.getAllMappings(ForgeRegistries.Keys.ENTITY_TYPES).forEach((mapping) -> {
             switch (mapping.getKey().toString()) {
                 case "vampirism:vampire_hunter" -> mapping.remap(ModEntities.HUNTER.get());
@@ -177,7 +178,7 @@ public class ModEntities {
     }
 
 
-    public static Set<EntityType<?>> getAllEntities() {
+    public static @NotNull Set<EntityType<?>> getAllEntities() {
         return ENTITY_TYPES.getEntries().stream().map(RegistryObject::get).collect(Collectors.toUnmodifiableSet());
     }
 }

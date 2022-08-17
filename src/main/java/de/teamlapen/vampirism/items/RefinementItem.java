@@ -35,7 +35,7 @@ public abstract class RefinementItem extends Item implements IRefinementItem {
     public static final int MAX_DAMAGE = 500;
     private static final RandomSource RANDOM = RandomSource.create();
 
-    public static ItemStack getRandomRefinementItem(IPlayableFaction<?> faction) {
+    public static @NotNull ItemStack getRandomRefinementItem(@NotNull IPlayableFaction<?> faction) {
         List<WeightedRandomItem<IRefinementSet>> sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream().filter(set -> set.getFaction() == faction).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
         if (sets.isEmpty()) return ItemStack.EMPTY;
         IRefinementSet s = WeightedRandom.getRandomItem(RANDOM, sets).map(WeightedRandomItem::getItem).orElseGet(()->sets.get(0).getItem());
@@ -52,7 +52,7 @@ public abstract class RefinementItem extends Item implements IRefinementItem {
         return ItemStack.EMPTY;
     }
 
-    public static IRefinementSet getRandomRefinementForItem(@Nullable IFaction<?> faction, IRefinementItem stack) {
+    public static @Nullable IRefinementSet getRandomRefinementForItem(@Nullable IFaction<?> faction, @NotNull IRefinementItem stack) {
         List<WeightedRandomItem<IRefinementSet>> sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream().filter(set -> faction == null || set.getFaction() == faction).filter(set -> set.getSlotType().map(s -> s == stack.getSlotType()).orElse(true)).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
         if (sets.isEmpty()) return null;
         return WeightedRandom.getRandomItem(RANDOM, sets).map(WeightedRandomItem::getItem).orElse(null);
@@ -60,7 +60,7 @@ public abstract class RefinementItem extends Item implements IRefinementItem {
 
     private final AccessorySlotType type;
 
-    public RefinementItem(Properties properties, AccessorySlotType type) {
+    public RefinementItem(@NotNull Properties properties, AccessorySlotType type) {
         super(properties.defaultDurability(MAX_DAMAGE).setNoRepair());
         this.type = type;
     }
@@ -75,7 +75,7 @@ public abstract class RefinementItem extends Item implements IRefinementItem {
     }
 
     @Override
-    public boolean applyRefinementSet(ItemStack stack, IRefinementSet set) {
+    public boolean applyRefinementSet(@NotNull ItemStack stack, @NotNull IRefinementSet set) {
         if (set.getSlotType().map(t -> t == type).orElse(true)) {
             CompoundTag tag = stack.getOrCreateTag();
             tag.putString("refinement_set", RegUtil.id(set).toString());
@@ -96,7 +96,7 @@ public abstract class RefinementItem extends Item implements IRefinementItem {
 
     @Nullable
     @Override
-    public IRefinementSet getRefinementSet(ItemStack stack) {
+    public IRefinementSet getRefinementSet(@NotNull ItemStack stack) {
         String refinementsNBT = stack.getOrCreateTag().getString("refinement_set");
         return RegUtil.getRefinementSet(new ResourceLocation(refinementsNBT));
     }
@@ -113,7 +113,7 @@ public abstract class RefinementItem extends Item implements IRefinementItem {
 
     @NotNull
     @Override
-    public InteractionResultHolder<ItemStack> use(Level worldIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
+    public InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
         if (!worldIn.isClientSide()) {
             ItemStack stack = playerIn.getItemInHand(handIn);
             if (FactionPlayerHandler.getOpt(playerIn).map(v -> v).flatMap(FactionPlayerHandler::getCurrentFactionPlayer).map(IFactionPlayer::getSkillHandler).map(sh -> sh.equipRefinementItem(stack)).orElse(false)) {

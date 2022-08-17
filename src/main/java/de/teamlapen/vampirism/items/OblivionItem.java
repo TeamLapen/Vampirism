@@ -27,7 +27,7 @@ import java.util.Optional;
 
 public class OblivionItem extends Item {
 
-    public static void applyEffect(IFactionPlayer<?> factionPlayer) {
+    public static void applyEffect(@NotNull IFactionPlayer<?> factionPlayer) {
         Player player = factionPlayer.getRepresentingPlayer();
         FactionPlayerHandler.getOpt(player).ifPresent(fph -> {
             ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
@@ -42,7 +42,7 @@ public class OblivionItem extends Item {
 
     }
 
-    public OblivionItem(Properties properties) {
+    public OblivionItem(@NotNull Properties properties) {
         super(properties.stacksTo(1).rarity(Rarity.UNCOMMON));
     }
 
@@ -54,7 +54,7 @@ public class OblivionItem extends Item {
 
     @NotNull
     @Override
-    public ItemStack finishUsingItem(ItemStack stack, @NotNull Level worldIn, @NotNull LivingEntity entityLiving) {
+    public ItemStack finishUsingItem(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull LivingEntity entityLiving) {
         stack.shrink(1);
         if (entityLiving instanceof Player) {
             FactionPlayerHandler.getOpt(((Player) entityLiving)).map(FactionPlayerHandler::getCurrentFactionPlayer).orElseGet(Optional::empty).ifPresent(OblivionItem::applyEffect);

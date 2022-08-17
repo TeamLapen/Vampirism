@@ -17,10 +17,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.entity.BannerPatterns;
+import org.jetbrains.annotations.NotNull;
 
 public class HunterVillage {
 
-    public static ItemStack createBanner() {
+    public static @NotNull ItemStack createBanner() {
         ItemStack itemStack = new ItemStack(Items.BLUE_BANNER);
         CompoundTag compoundNBT = itemStack.getOrCreateTagElement("BlockEntityTag");
         ListTag listNBT = new BannerPattern.Builder()
@@ -37,7 +38,7 @@ public class HunterVillage {
         return itemStack;
     }
 
-    public static void hunterVillage(IFactionVillageBuilder builder) {
+    public static void hunterVillage(@NotNull IFactionVillageBuilder builder) {
         builder.badOmenEffect(ModEffects.BAD_OMEN_HUNTER)
                 .captureEntities(Lists.newArrayList(new CaptureEntityEntry<>(ModEntities.HUNTER, 10)))
                 .factionVillagerProfession(ModVillage.HUNTER_EXPERT)

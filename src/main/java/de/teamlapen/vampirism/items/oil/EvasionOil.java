@@ -7,6 +7,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class EvasionOil extends ApplicableOil implements IArmorOil {
     }
 
     @Override
-    public boolean canBeApplied(ItemStack stack) {
+    public boolean canBeApplied(@NotNull ItemStack stack) {
         return stack.getItem() instanceof ArmorItem && stack.is(ModTags.Items.APPLICABLE_OIL_ARMOR) == VampirismConfig.BALANCE.itApplicableOilArmorReverse.get();
     }
 
@@ -32,7 +33,7 @@ public class EvasionOil extends ApplicableOil implements IArmorOil {
     }
 
     @Override
-    public void getDescription(ItemStack stack, List<Component> tooltips) {
+    public void getDescription(ItemStack stack, @NotNull List<Component> tooltips) {
         tooltips.add(Component.translatable("oil.vampirism.evasion.desc").withStyle(ChatFormatting.GRAY));
     }
 

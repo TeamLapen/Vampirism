@@ -5,6 +5,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Field;
 import java.util.*;
@@ -21,7 +22,7 @@ import java.util.function.Predicate;
 public class BalanceBuilder {
     private static final Logger LOGGER = LogManager.getLogger();
 
-    private static void setVal(BalanceConfig conf, String name, Object value) {
+    private static void setVal(BalanceConfig conf, @NotNull String name, Object value) {
         try {
             Field f = BalanceConfig.class.getDeclaredField(name);
             f.setAccessible(true);
@@ -33,8 +34,8 @@ public class BalanceBuilder {
         }
     }
 
-    private final Map<String, Map<String, Conf>> categoryConfigMap;
-    private final Map<String, String> categoryPrefixMap;
+    private final @NotNull Map<String, Map<String, Conf>> categoryConfigMap;
+    private final @NotNull Map<String, String> categoryPrefixMap;
     /**
      * Holds (potentially concurrently) added config modifications that are applied during build
      */
@@ -54,7 +55,7 @@ public class BalanceBuilder {
         categoryPrefixMap = new HashMap<>();
     }
 
-    public void addBalanceModifier(String key, Consumer<? extends Conf> modifier) {
+    public void addBalanceModifier(@NotNull String key, @NotNull Consumer<? extends Conf> modifier) {
         if (balanceModifications.put(key, modifier) != null) {
             if (VampirismMod.inDev) LOGGER.warn("Overriding existing config modifier for {}", key);
         }
@@ -63,7 +64,7 @@ public class BalanceBuilder {
     /**
      * Build the registered configuration considering the modifiers using the give Forge level and inject the created {@link ForgeConfigSpec.ConfigValue} into the given BalanceConfig using reflection
      */
-    public void build(BalanceConfig conf, ForgeConfigSpec.Builder builder) {
+    public void build(BalanceConfig conf, ForgeConfigSpec.@NotNull Builder builder) {
         if (balanceModifications.size() > 0) {
             LOGGER.info("Building balance configuration with {} modifications", balanceModifications.size());
         }
@@ -101,7 +102,7 @@ public class BalanceBuilder {
         currentComment = null;
     }
 
-    public BalanceBuilder category(String name, String prefix) {
+    public @NotNull BalanceBuilder category(String name, String prefix) {
         activeCategory = new HashMap<>();
         categoryConfigMap.put(name, activeCategory);
         categoryPrefixMap.put(name, prefix);
@@ -129,12 +130,12 @@ public class BalanceBuilder {
     /**
      * Add a comment to the next config entry
      */
-    public BalanceBuilder comment(String comment) {
+    public @NotNull BalanceBuilder comment(String comment) {
         this.currentComment = comment;
         return this;
     }
 
-    public BalanceBuilder config(BalanceBuilder.Conf value) {
+    public @NotNull BalanceBuilder config(BalanceBuilder.@NotNull Conf value) {
         activeCategory.put(value.name, value);
         return this;
     }
@@ -143,7 +144,7 @@ public class BalanceBuilder {
      * @return null, for drop-in replacement
      */
     @SuppressWarnings("SameReturnValue")
-    public ForgeConfigSpec.BooleanValue define(String name, boolean defaultValue) {
+    public ForgeConfigSpec.@Nullable BooleanValue define(String name, boolean defaultValue) {
         add(new BalanceBuilder.BoolConf(name, defaultValue));
         return null;
     }
@@ -152,7 +153,7 @@ public class BalanceBuilder {
      * @return null, for drop-in replacement
      */
     @SuppressWarnings("SameReturnValue")
-    public ForgeConfigSpec.IntValue defineInRange(String name, int def, int min, int max) {
+    public ForgeConfigSpec.@Nullable IntValue defineInRange(String name, int def, int min, int max) {
         add(new BalanceBuilder.IntConf(name, def, min, max));
         return null;
     }
@@ -161,7 +162,7 @@ public class BalanceBuilder {
      * @return null, for drop-in replacement
      */
     @SuppressWarnings("SameReturnValue")
-    public ForgeConfigSpec.DoubleValue defineInRange(String name, double def, double min, double max) {
+    public ForgeConfigSpec.@Nullable DoubleValue defineInRange(String name, double def, double min, double max) {
         add(new BalanceBuilder.DoubleConf(name, def, min, max));
         return null;
     }
@@ -170,12 +171,12 @@ public class BalanceBuilder {
      * @return null, for drop-in replacement
      */
     @SuppressWarnings("SameReturnValue")
-    public ForgeConfigSpec.ConfigValue<List<? extends String>> defineList(String name, List<String> defaultValues, Predicate<Object> validator) {
+    public ForgeConfigSpec.@Nullable ConfigValue<List<? extends String>> defineList(String name, @NotNull List<String> defaultValues, Predicate<Object> validator) {
         add(new BalanceBuilder.StringList(name, defaultValues, validator));
         return null;
     }
 
-    private void add(Conf c) {
+    private void add(@NotNull Conf c) {
         if (currentComment != null) {
             c.comment(currentComment);
             currentComment = null;
@@ -192,7 +193,7 @@ public class BalanceBuilder {
             this.name = name;
         }
 
-        public final ForgeConfigSpec.ConfigValue<?> build(ForgeConfigSpec.Builder builder) {
+        public final ForgeConfigSpec.ConfigValue<?> build(ForgeConfigSpec.@NotNull Builder builder) {
             if (comment != null) builder.comment(comment);
             return buildInternal(builder);
         }
@@ -234,7 +235,7 @@ public class BalanceBuilder {
         }
 
         @Override
-        protected ForgeConfigSpec.ConfigValue<?> buildInternal(ForgeConfigSpec.Builder builder) {
+        protected ForgeConfigSpec.ConfigValue<?> buildInternal(ForgeConfigSpec.@NotNull Builder builder) {
             return builder.defineInRange(name, defaultValue, min, max);
         }
     }
@@ -260,7 +261,7 @@ public class BalanceBuilder {
         }
 
         @Override
-        protected ForgeConfigSpec.ConfigValue<?> buildInternal(ForgeConfigSpec.Builder builder) {
+        protected ForgeConfigSpec.ConfigValue<?> buildInternal(ForgeConfigSpec.@NotNull Builder builder) {
             return builder.define(name, defaultValue);
         }
     }
@@ -281,7 +282,7 @@ public class BalanceBuilder {
         }
 
         @Override
-        public ForgeConfigSpec.ConfigValue<?> buildInternal(ForgeConfigSpec.Builder builder) {
+        public ForgeConfigSpec.ConfigValue<?> buildInternal(ForgeConfigSpec.@NotNull Builder builder) {
             return builder.defineInRange(name, defaultValue, minValue, maxValue);
         }
 
@@ -298,10 +299,10 @@ public class BalanceBuilder {
      * Builds a {@link net.minecraftforge.common.ForgeConfigSpec.IntValue}
      */
     public static class StringList extends Conf {
-        private final List<String> defaultValue;
+        private final @NotNull List<String> defaultValue;
         private final Predicate<Object> elementValidator;
 
-        StringList(String name, List<String> defaultValue, Predicate<Object> validator) {
+        StringList(String name, @NotNull List<String> defaultValue, Predicate<Object> validator) {
             super(name);
             this.defaultValue = new ArrayList<>(defaultValue);
             this.elementValidator = validator;
@@ -314,7 +315,7 @@ public class BalanceBuilder {
         }
 
         @Override
-        public ForgeConfigSpec.ConfigValue<?> buildInternal(ForgeConfigSpec.Builder builder) {
+        public ForgeConfigSpec.ConfigValue<?> buildInternal(ForgeConfigSpec.@NotNull Builder builder) {
             return builder.defineList(name, Collections.unmodifiableList(defaultValue), elementValidator);
         }
 

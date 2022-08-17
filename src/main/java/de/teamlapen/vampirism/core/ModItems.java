@@ -257,11 +257,11 @@ public class ModItems {
         }
     }
 
-    private static Item.Properties creativeTabProps() {
+    private static Item.@NotNull Properties creativeTabProps() {
         return new Item.Properties().tab(VampirismMod.creativeTab);
     }
 
-    public static void fixMappings(MissingMappingsEvent event) {
+    public static void fixMappings(@NotNull MissingMappingsEvent event) {
         event.getAllMappings(ForgeRegistries.Keys.ITEMS).forEach(missingMapping -> {
             switch (missingMapping.getKey().toString()) {
                 case "vampirism:blood_potion", "vampirism:blood_potion_table" -> missingMapping.ignore();

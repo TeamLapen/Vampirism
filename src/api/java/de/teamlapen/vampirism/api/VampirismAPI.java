@@ -21,6 +21,7 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Class for core api methods
@@ -121,32 +122,32 @@ public class VampirismAPI {
     /**
      * @return The respective {@link IFactionPlayerHandler}
      */
-    public static LazyOptional<IFactionPlayerHandler> getFactionPlayerHandler(Player player) {
+    public static @NotNull LazyOptional<IFactionPlayerHandler> getFactionPlayerHandler(@NotNull Player player) {
         return player.getCapability(CAP_FACTION_HANDLER_PLAYER, null);
     }
 
     /**
      * @return The respective {@link IVampirePlayer}
      */
-    public static LazyOptional<IVampirePlayer> getVampirePlayer(Player player) {
+    public static @NotNull LazyOptional<IVampirePlayer> getVampirePlayer(@NotNull Player player) {
         return player.getCapability(CAP_VAMPIRE, null);
     }
 
     /**
      * @return The respective {@link de.teamlapen.vampirism.api.entity.hunter.IHunter}
      */
-    public static LazyOptional<IHunterPlayer> getHunterPlayer(Player player) {
+    public static @NotNull LazyOptional<IHunterPlayer> getHunterPlayer(@NotNull Player player) {
         return player.getCapability(CAP_HUNTER, null);
     }
 
     /**
      * Get the {@link IExtendedCreatureVampirism} instance for the given creature
      */
-    public static LazyOptional<IExtendedCreatureVampirism> getExtendedCreatureVampirism(PathfinderMob creature) {
+    public static @NotNull LazyOptional<IExtendedCreatureVampirism> getExtendedCreatureVampirism(@NotNull PathfinderMob creature) {
         return creature.getCapability(CAP_CREATURE, null);
     }
 
-    public static LazyOptional<IVampirismWorld> getVampirismWorld(Level w) {
+    public static @NotNull LazyOptional<IVampirismWorld> getVampirismWorld(@NotNull Level w) {
         return w.getCapability(CAP_WORLD);
     }
 

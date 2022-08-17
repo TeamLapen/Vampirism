@@ -15,7 +15,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -26,7 +25,7 @@ public class HunterTaskMasterRenderer extends MobRenderer<HunterTaskMasterEntity
     private final static ResourceLocation texture = new ResourceLocation("textures/entity/villager/villager.png");
     private final static ResourceLocation overlay = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_task_master_overlay.png");
 
-    public HunterTaskMasterRenderer(EntityRendererProvider.Context context) {
+    public HunterTaskMasterRenderer(EntityRendererProvider.@NotNull Context context) {
         super(context, new VillagerModel<>(context.bakeLayer(ModEntitiesRender.TASK_MASTER)), 0.5F);
 //        this.addLayer(new HeldItemLayer<>(this));
         this.addLayer(new TaskMasterTypeLayer<>(this, overlay));

@@ -26,7 +26,7 @@ public class FlyingBloodParticle extends TextureSheetParticle {
     private final boolean direct;
 
 
-    public FlyingBloodParticle(ClientLevel world, double posX, double posY, double posZ, double destX, double destY, double destZ, int maxage, boolean direct, ResourceLocation particleId) {
+    public FlyingBloodParticle(@NotNull ClientLevel world, double posX, double posY, double posZ, double destX, double destY, double destZ, int maxage, boolean direct, @NotNull ResourceLocation particleId) {
         super(world, posX, posY, posZ);
         this.lifetime = maxage;
         this.destX = destX;
@@ -88,7 +88,7 @@ public class FlyingBloodParticle extends TextureSheetParticle {
 
         @Nullable
         @Override
-        public Particle createParticle(FlyingBloodParticleData typeIn, @NotNull ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+        public Particle createParticle(@NotNull FlyingBloodParticleData typeIn, @NotNull ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
             return new FlyingBloodParticle(worldIn, x, y, z, typeIn.getTargetX(), typeIn.getTargetY(), typeIn.getTargetZ(), typeIn.getMaxAge(), typeIn.isDirect(), typeIn.getTexturePos());
         }
     }

@@ -15,6 +15,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
@@ -33,11 +34,11 @@ public class VampireBookScreen extends Screen {
     private PageButton buttonNext;
     private PageButton buttonPrev;
     private int pageNumber;
-    private final VampireBookManager.BookInfo info;
+    private final VampireBookManager.@NotNull BookInfo info;
     private List<FormattedText> content;
 
 
-    public VampireBookScreen(VampireBookManager.BookInfo info) {
+    public VampireBookScreen(VampireBookManager.@NotNull BookInfo info) {
         super(Component.literal(info.title()));
         this.info = info;
     }
@@ -94,7 +95,7 @@ public class VampireBookScreen extends Screen {
 
     }
 
-    public static void drawCenteredStringWithoutShadow(PoseStack p_238471_0_, Font p_238471_1_, String p_238471_2_, int p_238471_3_, int p_238471_4_, int p_238471_5_) {
+    public static void drawCenteredStringWithoutShadow(@NotNull PoseStack p_238471_0_, @NotNull Font p_238471_1_, @NotNull String p_238471_2_, int p_238471_3_, int p_238471_4_, int p_238471_5_) {
         p_238471_1_.draw(p_238471_0_, p_238471_2_, (float) (p_238471_3_ - p_238471_1_.width(p_238471_2_) / 2), (float) p_238471_4_, p_238471_5_);
     }
 
@@ -149,7 +150,7 @@ public class VampireBookScreen extends Screen {
      * @param subsequentHeight Available height on subsequent pages (pixel)
      * @return Each list element should be drawn on a individual page. Lines are wrapped using '\n'
      */
-    private static List<FormattedText> prepareForLongText(Component text, int lineWidth, int firstHeight, int subsequentHeight) {
+    private static @NotNull List<FormattedText> prepareForLongText(@NotNull Component text, int lineWidth, int firstHeight, int subsequentHeight) {
         Font fontRenderer = Minecraft.getInstance().font;
         int firstCount = firstHeight / fontRenderer.lineHeight;
         int count = subsequentHeight / fontRenderer.lineHeight;
@@ -172,7 +173,7 @@ public class VampireBookScreen extends Screen {
      * @param elements The list ist not used itself, but the elements are passed to the new ITextProperties
      * @return a new ITextProperties that combines the given elements with a newline in between
      */
-    private static FormattedText combineWithNewLine(List<FormattedText> elements) {
+    private static @NotNull FormattedText combineWithNewLine(@NotNull List<FormattedText> elements) {
         FormattedText newLine = Component.literal("\n");
         List<FormattedText> copy = new ArrayList<>(elements.size() * 2);
         for (int i = 0; i < elements.size() - 1; i++) {

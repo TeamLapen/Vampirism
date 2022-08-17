@@ -43,7 +43,7 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem {
     private static final int MULTIPLIER = VReference.FOOD_TO_FLUID_BLOOD;
     private static final int capacity = AMOUNT * MULTIPLIER;
 
-    public static ItemStack getStackWithDamage(int damage) {
+    public static @NotNull ItemStack getStackWithDamage(int damage) {
         ItemStack stack = new ItemStack(ModItems.BLOOD_BOTTLE.get());
         stack.setDamageValue(damage);
         return stack;
@@ -57,7 +57,7 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem {
     }
 
     @Override
-    public boolean doesSneakBypassUse(ItemStack stack, LevelReader world, BlockPos pos, Player player) {
+    public boolean doesSneakBypassUse(ItemStack stack, @NotNull LevelReader world, @NotNull BlockPos pos, Player player) {
         BlockEntity t = world.getBlockEntity(pos);
         return t != null && t.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).isPresent();
     }
@@ -99,7 +99,7 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem {
 
 
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag nbt) {
+    public ICapabilityProvider initCapabilities(@NotNull ItemStack stack, CompoundTag nbt) {
         return new BloodBottleFluidHandler(stack, capacity);
     }
 
@@ -110,7 +110,7 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem {
     }
 
     @Override
-    public void onUsingTick(ItemStack stack, LivingEntity player, int count) {
+    public void onUsingTick(@NotNull ItemStack stack, LivingEntity player, int count) {
         if (player instanceof IVampire) return;
         if (!(player instanceof Player) || !player.isAlive()) {
             player.releaseUsingItem();
@@ -139,7 +139,7 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem {
 
     @NotNull
     @Override
-    public InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
+    public InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         return VampirePlayer.getOpt(playerIn).map(vampire -> {
             if (vampire.getLevel() == 0) return new InteractionResultHolder<>(InteractionResult.PASS, stack);

@@ -31,9 +31,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.UUID;
 
 
@@ -57,7 +57,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
     private UUID ownerID;
     @Nullable
     private Component ownerName;
-    private NonNullList<ItemStack> brewingItemStacks = NonNullList.withSize(8, ItemStack.EMPTY);
+    private @NotNull NonNullList<ItemStack> brewingItemStacks = NonNullList.withSize(8, ItemStack.EMPTY);
     private int brewTime;
     private Item ingredientID;
     private Item extraIngredientID;
@@ -84,7 +84,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
         }
     };
 
-    public PotionTableBlockEntity(BlockPos pos, BlockState state) {
+    public PotionTableBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         super(ModTiles.POTION_TABLE.get(), pos, state);
     }
 
@@ -253,7 +253,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
 
     }
 
-    public void setOwnerID(Player player) {
+    public void setOwnerID(@NotNull Player player) {
         ownerID = player.getUUID();
         ownerName = player.getName();
         this.setChanged();
@@ -277,7 +277,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
         }
     }
 
-    public static void tick(Level level, BlockPos pos, BlockState state, PotionTableBlockEntity blockEntity) {
+    public static void tick(@NotNull Level level, BlockPos pos, BlockState state, @NotNull PotionTableBlockEntity blockEntity) {
         ItemStack itemstack = blockEntity.brewingItemStacks.get(0);
         if (blockEntity.fuel <= 0 && itemstack.getItem() == Items.BLAZE_POWDER) {
             blockEntity.fuel = 20;
@@ -391,7 +391,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
         boolean efficientBrewing;
         boolean multiTaskBrewing;
 
-        public void deriveFromHunter(IHunterPlayer player) {
+        public void deriveFromHunter(@NotNull IHunterPlayer player) {
             ISkillHandler<IHunterPlayer> manager = player.getSkillHandler();
             durableBrewing = manager.isSkillEnabled(HunterSkills.DURABLE_BREWING.get()) || manager.isSkillEnabled(HunterSkills.CONCENTRATED_DURABLE_BREWING.get());
             concentratedBrewing = manager.isSkillEnabled(HunterSkills.CONCENTRATED_BREWING.get()) || manager.isSkillEnabled(HunterSkills.CONCENTRATED_DURABLE_BREWING.get());

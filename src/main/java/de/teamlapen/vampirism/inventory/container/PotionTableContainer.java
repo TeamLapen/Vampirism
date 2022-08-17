@@ -18,8 +18,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class PotionTableContainer extends InventoryContainer {
-    public static final SelectorInfo[] SELECTOR_INFOS;
-    public static final SelectorInfo[] SELECTOR_INFOS_EXTENDED;
+    public static final SelectorInfo @NotNull [] SELECTOR_INFOS;
+    public static final SelectorInfo @NotNull [] SELECTOR_INFOS_EXTENDED;
 
     static {
         SELECTOR_INFOS = new SelectorInfo[6];
@@ -35,9 +35,9 @@ public class PotionTableContainer extends InventoryContainer {
     }
 
     private final boolean extended;
-    private final ContainerData syncedProperties;
+    private final @NotNull ContainerData syncedProperties;
 
-    public PotionTableContainer(int id, Inventory playerInventory, ContainerLevelAccess worldPos, @NotNull Container inventory, boolean extended, @Nullable ContainerData syncedProperties) {
+    public PotionTableContainer(int id, @NotNull Inventory playerInventory, ContainerLevelAccess worldPos, @NotNull Container inventory, boolean extended, @Nullable ContainerData syncedProperties) {
         super(ModContainer.EXTENDED_POTION_TABLE.get(), id, playerInventory, worldPos, inventory, extended ? SELECTOR_INFOS_EXTENDED : SELECTOR_INFOS);
         assert inventory.getContainerSize() >= (extended ? 8 : 6);
         this.syncedProperties = syncedProperties == null ? new SimpleContainerData(2) : syncedProperties;
@@ -67,7 +67,7 @@ public class PotionTableContainer extends InventoryContainer {
 
         @Nullable
         @Override
-        public PotionTableContainer create(int windowId, Inventory inv, FriendlyByteBuf data) {
+        public PotionTableContainer create(int windowId, @NotNull Inventory inv, @Nullable FriendlyByteBuf data) {
             if (data == null)
                 return new PotionTableContainer(windowId, inv, ContainerLevelAccess.NULL, new SimpleContainer(6), false, null);
             boolean extraSlots = data.readBoolean(); //Anything read here has to be written to buffer in open method (in ExtendedPotionTableTileEntity)

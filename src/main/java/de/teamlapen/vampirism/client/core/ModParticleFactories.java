@@ -7,11 +7,12 @@ import de.teamlapen.vampirism.core.ModParticles;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class ModParticleFactories {
 
-    public static void registerFactories(RegisterParticleProvidersEvent event) {
+    public static void registerFactories(@NotNull RegisterParticleProvidersEvent event) {
         event.register(ModParticles.FLYING_BLOOD.get(), new FlyingBloodParticle.Factory());
         event.register(ModParticles.FLYING_BLOOD_ENTITY.get(), new FlyingBloodEntityParticle.Factory());
         event.register(ModParticles.GENERIC.get(), new GenericParticle.Factory());

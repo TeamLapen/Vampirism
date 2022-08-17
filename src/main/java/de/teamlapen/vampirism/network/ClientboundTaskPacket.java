@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.player.TaskManager;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -15,7 +16,7 @@ public record ClientboundTaskPacket(int containerId,
                                     Map<UUID, Set<UUID>> completableTasks,
                                     Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements) implements IMessage {
 
-    public static void encode(ClientboundTaskPacket msg, FriendlyByteBuf buffer) {
+    public static void encode(@NotNull ClientboundTaskPacket msg, @NotNull FriendlyByteBuf buffer) {
         buffer.writeVarInt(msg.containerId);
         buffer.writeVarInt(msg.completableTasks.size());
         buffer.writeVarInt(msg.completedRequirements.size());
@@ -40,7 +41,7 @@ public record ClientboundTaskPacket(int containerId,
         msg.taskWrappers.forEach((id, taskWrapper) -> taskWrapper.encode(buffer));
     }
 
-    public static ClientboundTaskPacket decode(FriendlyByteBuf buffer) {
+    public static @NotNull ClientboundTaskPacket decode(@NotNull FriendlyByteBuf buffer) {
         int containerId = buffer.readVarInt();
         int completableSize = buffer.readVarInt();
         int statSize = buffer.readVarInt();
@@ -79,7 +80,7 @@ public record ClientboundTaskPacket(int containerId,
         return new ClientboundTaskPacket(containerId, taskWrapper, completableTasks, completedRequirements);
     }
 
-    public static void handle(final ClientboundTaskPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final ClientboundTaskPacket msg, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> VampirismMod.proxy.handleTaskPacket(msg));
         ctx.setPacketHandled(true);

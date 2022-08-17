@@ -28,7 +28,7 @@ public class HolyWaterBottleItem extends Item implements IItemWithTier, IFaction
         this(tier, new Properties().tab(VampirismMod.creativeTab));
     }
 
-    protected HolyWaterBottleItem(TIER tier, Properties props) {
+    protected HolyWaterBottleItem(TIER tier, @NotNull Properties props) {
         super(props);
         this.tier = tier;
     }
@@ -48,7 +48,7 @@ public class HolyWaterBottleItem extends Item implements IItemWithTier, IFaction
     /**
      * Converts the tier of this bottle into the strength of the applied holy water
      */
-    public EnumStrength getStrength(TIER tier) {
+    public @NotNull EnumStrength getStrength(@NotNull TIER tier) {
         return switch (tier) {
             case NORMAL -> EnumStrength.WEAK;
             case ENHANCED -> EnumStrength.MEDIUM;

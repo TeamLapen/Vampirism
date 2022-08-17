@@ -17,7 +17,6 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
-
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -26,11 +25,11 @@ import org.jetbrains.annotations.NotNull;
  */
 @OnlyIn(Dist.CLIENT)
 public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, PlayerModel<HunterMinionEntity>> {
-    private final Pair<ResourceLocation, Boolean>[] textures;
-    private final Pair<ResourceLocation, Boolean>[] minionSpecificTextures;
+    private final Pair<ResourceLocation, Boolean> @NotNull [] textures;
+    private final Pair<ResourceLocation, Boolean> @NotNull [] minionSpecificTextures;
 
 
-    public HunterMinionRenderer(EntityRendererProvider.Context context) {
+    public HunterMinionRenderer(EntityRendererProvider.@NotNull Context context) {
         super(context, new PlayerModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED), false), new PlayerModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED_SLIM), true), 0.5F);
         textures = gatherTextures("textures/entity/hunter", true);
         minionSpecificTextures = gatherTextures("textures/entity/minion/hunter", false);
@@ -48,7 +47,7 @@ public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, 
     }
 
     @Override
-    protected Pair<ResourceLocation, Boolean> determineTextureAndModel(HunterMinionEntity entity) {
+    protected Pair<ResourceLocation, Boolean> determineTextureAndModel(@NotNull HunterMinionEntity entity) {
         Pair<ResourceLocation, Boolean> p = (entity.hasMinionSpecificSkin() && this.minionSpecificTextures.length > 0) ? minionSpecificTextures[entity.getHunterType() % minionSpecificTextures.length] : textures[entity.getHunterType() % textures.length];
         if (entity.shouldRenderLordSkin()) {
             return entity.getOverlayPlayerProperties().map(Pair::getRight).map(b -> Pair.of(p.getLeft(), b)).orElse(p);
@@ -57,7 +56,7 @@ public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, 
     }
 
     @Override
-    protected void renderSelected(HunterMinionEntity entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
+    protected void renderSelected(@NotNull HunterMinionEntity entityIn, float entityYaw, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
         if (entityIn.isSwingingArms()) {
             this.model.rightArmPose = HumanoidModel.ArmPose.CROSSBOW_HOLD;
         } else {
@@ -67,7 +66,7 @@ public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, 
     }
 
     @Override
-    protected void scale(HunterMinionEntity entityIn, PoseStack matrixStackIn, float partialTickTime) {
+    protected void scale(@NotNull HunterMinionEntity entityIn, @NotNull PoseStack matrixStackIn, float partialTickTime) {
         float s = entityIn.getScale();
         //float off = (1 - s) * 1.95f;
         matrixStackIn.scale(s, s, s);
@@ -75,7 +74,7 @@ public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, 
     }
 
     @Override
-    protected void renderNameTag(@NotNull HunterMinionEntity pEntity, @NotNull Component pDisplayName, PoseStack pMatrixStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
+    protected void renderNameTag(@NotNull HunterMinionEntity pEntity, @NotNull Component pDisplayName, @NotNull PoseStack pMatrixStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
         pMatrixStack.pushPose();
         pMatrixStack.translate(0,0.4f,0);
         super.renderNameTag(pEntity, pDisplayName, pMatrixStack, pBuffer, pPackedLight);

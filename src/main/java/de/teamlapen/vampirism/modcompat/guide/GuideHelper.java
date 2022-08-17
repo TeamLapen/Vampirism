@@ -11,6 +11,7 @@ import net.minecraft.network.chat.FormattedText;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ public class GuideHelper {
      *
      * @param unlocalized Unlocalized strings
      */
-    public static String append(String... unlocalized) {
+    public static @NotNull String append(String @NotNull ... unlocalized) {
         StringBuilder s = new StringBuilder();
         for (String u : unlocalized) {
             s.append(UtilLib.translate(u)).append("\n\n");
@@ -38,7 +39,7 @@ public class GuideHelper {
     /**
      * Create a simple page informing the reader about a task that can be used to obtain an item
      */
-    public static PageItemStack createItemTaskDescription(Task task) {
+    public static @NotNull PageItemStack createItemTaskDescription(@NotNull Task task) {
         assert task.getReward() instanceof ItemReward;
         Ingredient ingredient = Ingredient.of(((ItemReward) task.getReward()).getAllPossibleRewards().stream());
         List<FormattedText> text = new ArrayList<>();

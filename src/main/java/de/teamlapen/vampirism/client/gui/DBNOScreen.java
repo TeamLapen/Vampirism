@@ -12,14 +12,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @OnlyIn(Dist.CLIENT)
 public class DBNOScreen extends Screen {
 
-    private final Component causeOfDeath;
+    private final @Nullable Component causeOfDeath;
     private int enableButtonsTimer;
     private CooldownButton resurrectButton;
     private Button dieButton;

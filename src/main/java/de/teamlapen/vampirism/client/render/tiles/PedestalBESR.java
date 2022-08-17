@@ -17,7 +17,7 @@ public class PedestalBESR extends VampirismBESR<PedestalBlockEntity> {
     }
 
     @Override
-    public void render(PedestalBlockEntity te, float partialTicks, @NotNull PoseStack matrixStack, @NotNull MultiBufferSource iRenderTypeBuffer, int i, int i1) {
+    public void render(@NotNull PedestalBlockEntity te, float partialTicks, @NotNull PoseStack matrixStack, @NotNull MultiBufferSource iRenderTypeBuffer, int i, int i1) {
         ItemStack stack = te.getStackForRender();
         if (!stack.isEmpty()) {
             matrixStack.pushPose();

@@ -19,7 +19,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,7 +29,7 @@ public class AltarCleansingBlock extends VampirismHorizontalBlock {
     private static final VoxelShape SHAPEX = makeShape();
     private static final VoxelShape SHAPEZ = UtilLib.rotateShape(SHAPEX, UtilLib.RotationAmount.NINETY);
 
-    private static VoxelShape makeShape() {
+    private static @NotNull VoxelShape makeShape() {
         VoxelShape a = Block.box(1, 0, 5, 15, 1, 12);
         VoxelShape b = Block.box(7, 1, 7, 9, 12, 11);
         VoxelShape c = Block.box(1, 9, 3, 15, 14, 13);
@@ -47,7 +46,7 @@ public class AltarCleansingBlock extends VampirismHorizontalBlock {
 
     @NotNull
     @Override
-    public VoxelShape getShape(BlockState blockState, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+    public VoxelShape getShape(@NotNull BlockState blockState, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         Direction dir = blockState.getValue(FACING);
         if (dir == Direction.NORTH || dir == Direction.SOUTH) return SHAPEX;
         return SHAPEZ;
@@ -55,7 +54,7 @@ public class AltarCleansingBlock extends VampirismHorizontalBlock {
 
     @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+    public BlockState getStateForPlacement(@NotNull BlockPlaceContext ctx) {
         return this.defaultBlockState().setValue(FACING, ctx.getHorizontalDirection().getOpposite());
     }
 
@@ -68,7 +67,7 @@ public class AltarCleansingBlock extends VampirismHorizontalBlock {
 
     @NotNull
     @Override
-    public InteractionResult use(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+    public InteractionResult use(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         if (!player.isAlive()) return InteractionResult.PASS;
         return FactionPlayerHandler.getOpt(player).map(handler -> {
             if (handler.isInFaction(VReference.VAMPIRE_FACTION)) {

@@ -9,6 +9,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class SpecialConvertingHandler<T extends PathfinderMob, Z extends PathfinderMob & IConvertedCreature<T>> extends DefaultConvertingHandler<T> {
@@ -22,7 +23,7 @@ public class SpecialConvertingHandler<T extends PathfinderMob, Z extends Pathfin
 
     @Nullable
     @Override
-    public IConvertedCreature<T> createFrom(T entity) {
+    public IConvertedCreature<T> createFrom(@NotNull T entity) {
         return Helper.createEntity(this.convertedType, entity.getCommandSenderWorld()).map(convertedCreature -> {
             copyImportantStuff(convertedCreature, entity);
             convertedCreature.setUUID(Mth.createInsecureUUID(convertedCreature.getRandom()));
@@ -31,7 +32,7 @@ public class SpecialConvertingHandler<T extends PathfinderMob, Z extends Pathfin
         }).orElse(null);
     }
 
-    protected void copyImportantStuff(Z converted, T entity) {
+    protected void copyImportantStuff(@NotNull Z converted, @NotNull T entity) {
         CompoundTag nbt = new CompoundTag();
         entity.saveWithoutId(nbt);
         converted.yBodyRot = entity.yBodyRot;

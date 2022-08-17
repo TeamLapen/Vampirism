@@ -18,11 +18,11 @@ public class TriggerFaction extends SimpleCriterionTrigger<TriggerFaction.Instan
 
     private final static Logger LOGGER = LogManager.getLogger();
 
-    public static Instance level(@Nullable IPlayableFaction<?> faction, int level) {
+    public static @NotNull Instance level(@Nullable IPlayableFaction<?> faction, int level) {
         return new Instance(Type.LEVEL, faction, level);
     }
 
-    public static Instance lord(@Nullable IPlayableFaction<?> faction, int lordLevel) {
+    public static @NotNull Instance lord(@Nullable IPlayableFaction<?> faction, int lordLevel) {
         return new Instance(Type.LORD, faction, lordLevel);
     }
 
@@ -35,13 +35,13 @@ public class TriggerFaction extends SimpleCriterionTrigger<TriggerFaction.Instan
     /**
      * Trigger this criterion
      */
-    public void trigger(ServerPlayer playerMP, IPlayableFaction<?> faction, int level, int lordLevel) {
+    public void trigger(@NotNull ServerPlayer playerMP, IPlayableFaction<?> faction, int level, int lordLevel) {
         this.trigger(playerMP, (instance -> instance.test(faction, level, lordLevel)));
     }
 
     @NotNull
     @Override
-    protected Instance createInstance(JsonObject json, @NotNull EntityPredicate.Composite entityPredicate, @NotNull DeserializationContext conditionsParser) {
+    protected Instance createInstance(@NotNull JsonObject json, @NotNull EntityPredicate.Composite entityPredicate, @NotNull DeserializationContext conditionsParser) {
         IPlayableFaction<?> playableFaction = null;
         Type type = json.has("type") ? Type.valueOf(json.get("type").getAsString()) : Type.LEVEL;
         if (json.has("faction")) {

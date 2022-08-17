@@ -36,8 +36,8 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-
 import org.jetbrains.annotations.NotNull;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -59,7 +59,7 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
     private final Map<Integer, Button> refinementRemoveButtons = new Int2ObjectOpenHashMap<>(3);
     private Component level;
 
-    public VampirismScreen(VampirismContainer container, Inventory playerInventory, Component titleIn) {
+    public VampirismScreen(@NotNull VampirismContainer container, @NotNull Inventory playerInventory, @NotNull Component titleIn) {
         super(container, playerInventory, titleIn);
         this.imageWidth = display_width;
         this.imageHeight = display_height;
@@ -70,12 +70,12 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
     }
 
     @Override
-    public ItemRenderer getItemRenderer() {
+    public @NotNull ItemRenderer getItemRenderer() {
         return this.itemRenderer;
     }
 
     @Override
-    public TaskContainer getTaskContainer() {
+    public @NotNull TaskContainer getTaskContainer() {
         return this.menu;
     }
 
@@ -132,7 +132,7 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
         }
     }
 
-    protected void renderAccessorySlots(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    protected void renderAccessorySlots(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         for (Slot slot : this.menu.slots) {
             if (this.isHovering(slot, mouseX, mouseY) && slot instanceof VampirismContainer.RemovingSelectorSlot && !this.menu.getRefinementStacks().get(slot.getSlotIndex()).isEmpty()) {
                 this.refinementRemoveButtons.get(slot.getSlotIndex()).render(matrixStack, mouseX, mouseY, partialTicks);
@@ -190,7 +190,7 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
                         super.render(matrixStack, mouseX, mouseY, partialTicks);
                     }
 
-                    private boolean overSlot(Slot slot, int mouseX, int mouseY) {
+                    private boolean overSlot(@NotNull Slot slot, int mouseX, int mouseY) {
                         mouseX -= VampirismScreen.this.leftPos;
                         mouseY -= VampirismScreen.this.topPos;
                         return slot.x <= mouseX && slot.x + 16 > mouseX && slot.y <= mouseY && slot.y + 16 > mouseY;
@@ -219,7 +219,7 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
         InventoryScreen.renderEntityInInventory(this.leftPos + 31, this.topPos + 72, 30, (float) (this.leftPos + 10) - this.oldMouseX, (float) (this.topPos + 75 - 50) - this.oldMouseY, this.minecraft.player);
     }
 
-    protected void renderHoveredRefinementTooltip(PoseStack matrixStack, int mouseX, int mouseY) {
+    protected void renderHoveredRefinementTooltip(@NotNull PoseStack matrixStack, int mouseX, int mouseY) {
         if (this.hoveredSlot != null) {
             int index = this.hoveredSlot.index;
             NonNullList<ItemStack> list = this.menu.getRefinementStacks();
@@ -242,7 +242,7 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
 
         private ImageButton button;
 
-        public TaskItem(ITaskInstance item, ScrollableListWithDummyWidget<ITaskInstance> list, boolean isDummy, VampirismScreen screen, IFactionPlayer<?> factionPlayer) {
+        public TaskItem(@NotNull ITaskInstance item, @NotNull ScrollableListWithDummyWidget<ITaskInstance> list, boolean isDummy, VampirismScreen screen, IFactionPlayer<?> factionPlayer) {
             super(item, list, isDummy, screen, factionPlayer);
             if (!item.isUnique()) {
                 this.button = new ImageButton(0, 0, 8, 11, 0, 229, 11, TASKMASTER_GUI_TEXTURE, 256, 256, this::onClick, this::onTooltip, Component.empty());
@@ -260,7 +260,7 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
         }
 
         @Override
-        public void renderItem(PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel) {
+        public void renderItem(@NotNull PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel) {
             super.renderItem(matrixStack, x, y, listWidth, listHeight, itemHeight, mouseX, mouseY, partialTicks, zLevel);
             if (this.button != null) {
                 this.button.x = x + listWidth - 13;
@@ -270,7 +270,7 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
         }
 
         @Override
-        public void renderItemToolTip(PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float zLevel) {
+        public void renderItemToolTip(@NotNull PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float zLevel) {
             if (this.button != null && this.button.isHoveredOrFocused()) {
                 this.button.renderToolTip(matrixStack, mouseX, mouseY);
             } else {
@@ -297,7 +297,7 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
 
         }
 
-        private void onTooltip(Button button, PoseStack matrixStack, int mouseX, int mouseY) {
+        private void onTooltip(Button button, @NotNull PoseStack matrixStack, int mouseX, int mouseY) {
             Component position = menu.taskWrapper.get(this.item.getTaskBoard()).getLastSeenPos().map(pos -> Component.literal("[" + pos.toShortString() + "]").withStyle(ChatFormatting.GREEN)).orElseGet(() -> Component.translatable("gui.vampirism.vampirism_menu.last_known_pos.unknown").withStyle(ChatFormatting.GOLD));
             renderComponentTooltip(matrixStack, Collections.singletonList(Component.translatable("gui.vampirism.vampirism_menu.last_known_pos").append(position)), mouseX, mouseY, font);
 

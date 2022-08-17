@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.effects.VampireNightVisionEffectInstance;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Night Vision
@@ -13,19 +14,19 @@ public class NightVision implements IVampireVision {
 
 
     @Override
-    public String getTranslationKey() {
+    public @NotNull String getTranslationKey() {
         return "text.vampirism.skill.night_vision";
     }
 
     @Override
-    public void onActivated(IVampirePlayer player) {
+    public void onActivated(@NotNull IVampirePlayer player) {
         if (player.isRemote()) {
             player.getRepresentingPlayer().addEffect(new VampireNightVisionEffectInstance());
         }
     }
 
     @Override
-    public void onDeactivated(IVampirePlayer player) {
+    public void onDeactivated(@NotNull IVampirePlayer player) {
         MobEffectInstance nightVision = player.getRepresentingPlayer().getEffect(MobEffects.NIGHT_VISION);
         if (nightVision instanceof VampireNightVisionEffectInstance) {
             player.getRepresentingPlayer().removeEffect(nightVision.getEffect());
@@ -33,7 +34,7 @@ public class NightVision implements IVampireVision {
     }
 
     @Override
-    public void tick(IVampirePlayer player) {
+    public void tick(@NotNull IVampirePlayer player) {
         if (player.getRepresentingPlayer().tickCount % 50 == 8) {
             MobEffectInstance effect = player.getRepresentingPlayer().getEffect(MobEffects.NIGHT_VISION);
             if (!(effect instanceof VampireNightVisionEffectInstance)) {

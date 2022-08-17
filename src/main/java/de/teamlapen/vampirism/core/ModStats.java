@@ -5,6 +5,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.StatFormatter;
 import net.minecraft.stats.Stats;
+import org.jetbrains.annotations.NotNull;
 
 public class ModStats {
 
@@ -26,7 +27,7 @@ public class ModStats {
         register(interact_with_alchemy_table);
     }
 
-    private static void register(ResourceLocation id) {
+    private static void register(@NotNull ResourceLocation id) {
         Registry.register(Registry.CUSTOM_STAT, id, id);
         Stats.CUSTOM.get(id, StatFormatter.DEFAULT);
     }

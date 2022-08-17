@@ -21,7 +21,7 @@ import java.util.List;
 
 public class OilBottle extends Item implements IOilItem {
 
-    public OilBottle(Properties properties) {
+    public OilBottle(@NotNull Properties properties) {
         super(properties);
     }
 
@@ -32,7 +32,7 @@ public class OilBottle extends Item implements IOilItem {
     }
 
     @Override
-    public ItemStack withOil(IOil oil) {
+    public @NotNull ItemStack withOil(@NotNull IOil oil) {
         return OilUtils.setOil(getDefaultInstance(), oil);
     }
 
@@ -60,7 +60,7 @@ public class OilBottle extends Item implements IOilItem {
 
     @NotNull
     @Override
-    public IOil getOil(ItemStack stack) {
+    public IOil getOil(@NotNull ItemStack stack) {
         return OilUtils.getOil(stack);
     }
 }

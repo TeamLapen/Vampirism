@@ -39,7 +39,7 @@ public record ClientboundTaskStatusPacket(Set<ITaskInstance> available,
         }));
     }
 
-    static ClientboundTaskStatusPacket decode(@NotNull FriendlyByteBuf buf) {
+    static @NotNull ClientboundTaskStatusPacket decode(@NotNull FriendlyByteBuf buf) {
         UUID taskBoardId = UUID.fromString(buf.readUtf());
         int containerId = buf.readVarInt();
         int completableTaskSize = buf.readVarInt();

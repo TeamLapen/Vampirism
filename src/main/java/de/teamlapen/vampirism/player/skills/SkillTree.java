@@ -25,9 +25,9 @@ public class SkillTree {
      * Stores values relevant for rendering the skill menu. Only filled on client
      */
     private final Map<ResourceLocation, Integer[]> skillNodeSizeMap = new HashMap<>();
-    private Map<ResourceLocation, SkillNode> allNodes = new HashMap<>();
+    private @NotNull Map<ResourceLocation, SkillNode> allNodes = new HashMap<>();
 
-    public Map<ResourceLocation, SkillNode.Builder> getCopy() {
+    public @NotNull Map<ResourceLocation, SkillNode.Builder> getCopy() {
         Map<ResourceLocation, SkillNode.Builder> map = new HashMap<>();
         for (SkillNode root : rootNodes.values()) {
             addChildrenCopyToMap(root, map);
@@ -60,7 +60,7 @@ public class SkillTree {
     }
 
     @NotNull
-    public SkillNode getRootNodeForFaction(ResourceLocation id, ISkillType type) {
+    public SkillNode getRootNodeForFaction(@NotNull ResourceLocation id, @NotNull ISkillType type) {
         ResourceLocation skillId = type.createIdForFaction(id);
         if (!rootNodes.containsKey(skillId))
             throw new IllegalStateException("Faction " + skillId + " does not have a root skill");
@@ -75,7 +75,7 @@ public class SkillTree {
         return getTreeWidth(getRootNodeForFaction(id));
     }
 
-    public static int getTreeWidth(SkillNode node) {
+    public static int getTreeWidth(@NotNull SkillNode node) {
         int max = node.getElements().length * 26 + ((node.getElements().length-1) * 10);
 
         int children = node.getChildren().size() > 0 ?(node.getChildren().size()-1) * 30:0;
@@ -86,7 +86,7 @@ public class SkillTree {
         return Math.max(max, children);
     }
 
-    public static int getTreeHeight(SkillNode node) {
+    public static int getTreeHeight(@NotNull SkillNode node) {
         int max = 26;
         for (SkillNode child : node.getChildren()) {
             max = Math.max(max, getTreeHeight(child) + 60);
@@ -110,7 +110,7 @@ public class SkillTree {
         }
     }
 
-    public void loadNodes(Map<ResourceLocation, SkillNode.Builder> nodes) {
+    public void loadNodes(@NotNull Map<ResourceLocation, SkillNode.Builder> nodes) {
 
         Map<ResourceLocation, SkillNode> builtNodes = new HashMap<>();
         //Built root nodes
@@ -180,7 +180,7 @@ public class SkillTree {
         }
     }
 
-    private void addChildrenCopyToMap(SkillNode n, Map<ResourceLocation, SkillNode.Builder> map) {
+    private void addChildrenCopyToMap(@NotNull SkillNode n, @NotNull Map<ResourceLocation, SkillNode.Builder> map) {
         for (SkillNode c : n.getChildren()) {
             map.put(c.getId(), c.getCopy());
             addChildrenCopyToMap(c, map);
@@ -190,7 +190,7 @@ public class SkillTree {
     /**
      * Counts the amount of end points in this tree
      */
-    private int calculateEndPoints(SkillNode start) {
+    private int calculateEndPoints(@NotNull SkillNode start) {
         if (start.getChildren().size() == 0) {
             return 1;
         }
@@ -201,7 +201,7 @@ public class SkillTree {
         return count;
     }
 
-    private int calculateMaxSkillDepth(SkillNode start) {
+    private int calculateMaxSkillDepth(@NotNull SkillNode start) {
         int max = start.getDepth();
         for (SkillNode node : start.getChildren()) {
             int n = calculateMaxSkillDepth(node);
@@ -210,7 +210,7 @@ public class SkillTree {
         return max;
     }
 
-    private int calculateMaxSkillsPerNode(SkillNode start) {
+    private int calculateMaxSkillsPerNode(@NotNull SkillNode start) {
         int max = start.getElements().length;
         for (SkillNode node : start.getChildren()) {
             int n = calculateMaxSkillsPerNode(node);
@@ -219,7 +219,7 @@ public class SkillTree {
         return max;
     }
 
-    private Integer[] createDisplayInfo(SkillNode root) {
+    private Integer @NotNull [] createDisplayInfo(@NotNull SkillNode root) {
         Integer[] info = new Integer[3];
         info[0] = calculateEndPoints(root);
         info[1] = calculateMaxSkillsPerNode(root);
@@ -231,7 +231,7 @@ public class SkillTree {
      * Calculate and set the render position for the given node using the given column as center
      */
     @OnlyIn(Dist.CLIENT)
-    private void setRenderPos(SkillNode base, int column) {
+    private void setRenderPos(@NotNull SkillNode base, int column) {
         int left = -(base.getElements().length * 2 - 1) / 2;
         for (ISkill<?> skill : base.getElements()) {
             skill.setRenderPos(base.getDepth() * 2, column + left);

@@ -7,7 +7,6 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.world.entity.Mob;
-
 import org.jetbrains.annotations.NotNull;
 
 public class HunterEquipmentModel<T extends Mob> extends HumanoidModel<T> {
@@ -23,18 +22,18 @@ public class HunterEquipmentModel<T extends Mob> extends HumanoidModel<T> {
     private static final String HAT_RIM2 = "hat_rim2";
     private static final String HAT_RIM3 = "hat_rim3";
 
-    private final ModelPart hatTop;
-    private final ModelPart hatRim;
-    private final ModelPart axeShaft;
-    private final ModelPart axeBlade1;
-    private final ModelPart axeBlade2;
-    private final ModelPart stake;
-    private final ModelPart stakeRight;
-    private final ModelPart hatTop2;
-    private final ModelPart hatRim2;
-    private final ModelPart hatRim3;
+    private final @NotNull ModelPart hatTop;
+    private final @NotNull ModelPart hatRim;
+    private final @NotNull ModelPart axeShaft;
+    private final @NotNull ModelPart axeBlade1;
+    private final @NotNull ModelPart axeBlade2;
+    private final @NotNull ModelPart stake;
+    private final @NotNull ModelPart stakeRight;
+    private final @NotNull ModelPart hatTop2;
+    private final @NotNull ModelPart hatRim2;
+    private final @NotNull ModelPart hatRim3;
 
-    public static LayerDefinition createLayer() {
+    public static @NotNull LayerDefinition createLayer() {
         float offset = 0f;
         PartPose headPose = PartPose.offset(0, offset, 0);
         PartPose rightArmPose = PartPose.offset(-5.0F, 2.0F + offset, 0.0F);
@@ -55,7 +54,7 @@ public class HunterEquipmentModel<T extends Mob> extends HumanoidModel<T> {
         return LayerDefinition.create(mesh, 64, 64);
     }
 
-    public HunterEquipmentModel(ModelPart part) {
+    public HunterEquipmentModel(@NotNull ModelPart part) {
         super(part);
         hatTop = part.getChild(HAT_TOP);
         hatTop2 = part.getChild(HAT_TOP2);
@@ -121,7 +120,7 @@ public class HunterEquipmentModel<T extends Mob> extends HumanoidModel<T> {
     public enum HatType {
         NONE, RIM_ONLY /*>=2*/, HAT1 /*-1/0*/, HAT2 /*1*/;
 
-        public static HatType from(int id) {
+        public static @NotNull HatType from(int id) {
             return switch (id) {
                 case 0 -> HAT1;
                 case 1 -> HAT2;

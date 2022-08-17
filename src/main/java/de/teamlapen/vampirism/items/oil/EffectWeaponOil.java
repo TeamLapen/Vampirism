@@ -19,7 +19,7 @@ public class EffectWeaponOil extends WeaponOil {
 
     @NotNull
     private final MobEffect effect;
-    private final Supplier<Integer> effectDuration;
+    private final @NotNull Supplier<Integer> effectDuration;
 
     public EffectWeaponOil(@NotNull MobEffect effect, @NotNull Supplier<Integer> effectDuration, int maxDuration) {
         super(effect.getColor(), maxDuration);
@@ -42,19 +42,19 @@ public class EffectWeaponOil extends WeaponOil {
     }
 
     @Override
-    public float onHit(ItemStack stack, float amount, IWeaponOil oil, LivingEntity target, LivingEntity source) {
+    public float onHit(ItemStack stack, float amount, IWeaponOil oil, @NotNull LivingEntity target, LivingEntity source) {
         target.addEffect(getEffectInstance());
         return 0;
     }
 
     @Override
-    public void getDescription(ItemStack stack, List<Component> tooltips) {
+    public void getDescription(ItemStack stack, @NotNull List<Component> tooltips) {
         tooltips.add(Component.empty());
         tooltips.add(Component.translatable("text.vampirism.oil.effect_on_hit").withStyle(ChatFormatting.DARK_PURPLE));
         tooltips.add(getEffectDescriptionWithDash(getEffectInstance()));
     }
 
-    private Component getEffectDescriptionWithDash(MobEffectInstance instance) {
+    private @NotNull Component getEffectDescriptionWithDash(@NotNull MobEffectInstance instance) {
         MutableComponent component = Component.translatable(instance.getDescriptionId());
         if (instance.getAmplifier() > 0) {
             component = Component.translatable("potion.withAmplifier", component, Component.translatable("potion.potency." + instance.getAmplifier()));

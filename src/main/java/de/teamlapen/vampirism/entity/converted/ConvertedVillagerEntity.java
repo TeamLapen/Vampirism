@@ -56,7 +56,7 @@ import java.util.UUID;
  * Vampire Villager
  */
 public class ConvertedVillagerEntity extends VampirismVillagerEntity implements ICurableConvertedCreature<Villager> {
-    public static final List<SensorType<? extends Sensor<? super Villager>>> SENSOR_TYPES;
+    public static final @NotNull List<SensorType<? extends Sensor<? super Villager>>> SENSOR_TYPES;
     private static final EntityDataAccessor<Boolean> CONVERTING = SynchedEntityData.defineId(ConvertedVillagerEntity.class, EntityDataSerializers.BOOLEAN);
 
     static {
@@ -65,11 +65,11 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
         SENSOR_TYPES.add(ModVillage.VAMPIRE_VILLAGER_HOSTILES.get());
     }
 
-    private EnumStrength garlicCache = EnumStrength.NONE;
+    private @NotNull EnumStrength garlicCache = EnumStrength.NONE;
     private boolean sundamageCache;
     private int bloodTimer = 0;
     private int conversionTime;
-    private UUID conversationStarter;
+    private @Nullable UUID conversationStarter;
 
     public ConvertedVillagerEntity(EntityType<? extends ConvertedVillagerEntity> type, Level worldIn) {
         super(type, worldIn);
@@ -117,7 +117,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     }
 
     @Override
-    public Villager cureEntity(ServerLevel world, PathfinderMob entity, EntityType<Villager> newType) {
+    public @NotNull Villager cureEntity(@NotNull ServerLevel world, @NotNull PathfinderMob entity, @NotNull EntityType<Villager> newType) {
         Villager villager = ICurableConvertedCreature.super.cureEntity(world, entity, newType);
         villager.setVillagerData(this.getVillagerData());
         villager.setGossips(this.getGossips().store(NbtOps.INSTANCE).getValue());
@@ -155,12 +155,12 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     }
 
     @Override
-    public LivingEntity getRepresentingEntity() {
+    public @NotNull LivingEntity getRepresentingEntity() {
         return this;
     }
 
     @Override
-    protected Component getTypeName() {
+    protected @NotNull Component getTypeName() {
         ResourceLocation profName = RegUtil.id(this.getVillagerData().getProfession());
         return Component.translatable(EntityType.VILLAGER.getDescriptionId() + '.' + (!"minecraft".equals(profName.getNamespace()) ? profName.getNamespace() + '.' : "") + profName.getPath());
     }
@@ -194,7 +194,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
 
     @NotNull
     @Override
-    public InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
+    public InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (stack.getItem() != ModItems.CURE_APPLE.get()) return super.mobInteract(player, hand);
         return interactWithCureItem(player, stack, this);
@@ -264,7 +264,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     public static class ConvertingHandler implements IConvertingHandler<Villager> {
 
         @Override
-        public IConvertedCreature<Villager> createFrom(Villager entity) {
+        public IConvertedCreature<Villager> createFrom(@NotNull Villager entity) {
             CompoundTag nbt = new CompoundTag();
             entity.saveWithoutId(nbt);
             ConvertedVillagerEntity converted = ModEntities.VILLAGER_CONVERTED.get().create(entity.level);

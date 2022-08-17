@@ -30,7 +30,7 @@ public class BasicAreaParticleCloud extends Entity {
     private int waitTime;
     private float radiusPerTick;
 
-    public BasicAreaParticleCloud(EntityType type, Level worldIn) {
+    public BasicAreaParticleCloud(@NotNull EntityType type, @NotNull Level worldIn) {
         super(type, worldIn);
         this.duration = 60;
         this.waitTime = 0;
@@ -61,11 +61,11 @@ public class BasicAreaParticleCloud extends Entity {
         this.duration = duration;
     }
 
-    public ParticleOptions getParticle() {
+    public @NotNull ParticleOptions getParticle() {
         return this.getEntityData().get(PARTICLE);
     }
 
-    public void setParticle(ParticleOptions particleData) {
+    public void setParticle(@NotNull ParticleOptions particleData) {
         this.getEntityData().set(PARTICLE, particleData);
     }
 

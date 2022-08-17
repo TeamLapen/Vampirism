@@ -28,11 +28,11 @@ import java.util.function.Consumer;
 
 public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
 
-    public static ShapelessWeaponTableRecipeBuilder shapelessWeaponTable(@NotNull ItemLike result, int count) {
+    public static @NotNull ShapelessWeaponTableRecipeBuilder shapelessWeaponTable(@NotNull ItemLike result, int count) {
         return new ShapelessWeaponTableRecipeBuilder(result, count);
     }
 
-    public static ShapelessWeaponTableRecipeBuilder shapelessWeaponTable(@NotNull ItemLike result) {
+    public static @NotNull ShapelessWeaponTableRecipeBuilder shapelessWeaponTable(@NotNull ItemLike result) {
         return new ShapelessWeaponTableRecipeBuilder(result, 1);
     }
 
@@ -93,12 +93,12 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
         consumerIn.accept(new Result(id, this.result, this.count, this.group == null ? "" : this.group, this.ingredients, this.advancement, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getItemCategory().getRecipeFolderName() + "/" + id.getPath()), this.lava, this.skills != null ? this.skills : new ISkill[]{}, this.level));
     }
 
-    public ShapelessWeaponTableRecipeBuilder lava(int amount) {
+    public @NotNull ShapelessWeaponTableRecipeBuilder lava(int amount) {
         this.lava = amount;
         return this;
     }
 
-    public ShapelessWeaponTableRecipeBuilder level(int level) {
+    public @NotNull ShapelessWeaponTableRecipeBuilder level(int level) {
         this.level = level;
         return this;
     }
@@ -109,7 +109,7 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
         return (ShapelessWeaponTableRecipeBuilder) super.unlockedBy(name, criterionIn);
     }
 
-    public ShapelessWeaponTableRecipeBuilder skills(@NotNull ISkill<?>... skills) {
+    public @NotNull ShapelessWeaponTableRecipeBuilder skills(@NotNull ISkill<?>... skills) {
         this.skills = skills;
         return this;
     }

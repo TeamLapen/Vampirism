@@ -12,6 +12,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,7 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class ItemModelGenerator extends BaseItemModelGenerator {
-    public ItemModelGenerator(DataGenerator generator, ExistingFileHelper existingFileHelper) {
+    public ItemModelGenerator(@NotNull DataGenerator generator, @NotNull ExistingFileHelper existingFileHelper) {
         super(generator, REFERENCE.MODID, existingFileHelper);
     }
 

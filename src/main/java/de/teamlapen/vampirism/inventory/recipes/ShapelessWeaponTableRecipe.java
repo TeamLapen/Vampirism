@@ -26,10 +26,10 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
     protected static final int MAX_WIDTH = 4;
     protected static final int MAX_HEIGHT = 4;
 
-    private final ResourceLocation id;
-    private final String group;
-    private final NonNullList<Ingredient> recipeItems;
-    private final ItemStack recipeOutput;
+    private final @NotNull ResourceLocation id;
+    private final @NotNull String group;
+    private final @NotNull NonNullList<Ingredient> recipeItems;
+    private final @NotNull ItemStack recipeOutput;
     private final int requiredLevel;
     private final ISkill<IHunterPlayer>[] requiredSkills;
     private final int requiredLava;

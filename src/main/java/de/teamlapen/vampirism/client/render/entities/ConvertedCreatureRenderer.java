@@ -9,7 +9,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -20,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 public class ConvertedCreatureRenderer extends EntityRenderer<ConvertedCreatureEntity> { // RawType because of ConvertedCreatureEntity#IMob
     public static boolean renderOverlay = false;
 
-    public ConvertedCreatureRenderer(EntityRendererProvider.Context context) {
+    public ConvertedCreatureRenderer(EntityRendererProvider.@NotNull Context context) {
         super(context);
     }
 
@@ -33,7 +32,7 @@ public class ConvertedCreatureRenderer extends EntityRenderer<ConvertedCreatureE
     }
 
     @Override
-    public void render(ConvertedCreatureEntity entity, float entityYaw, float partialTicks, @NotNull PoseStack matrixStack, @NotNull MultiBufferSource renderTypeBuffer, int packedLightIn) {
+    public void render(@NotNull ConvertedCreatureEntity entity, float entityYaw, float partialTicks, @NotNull PoseStack matrixStack, @NotNull MultiBufferSource renderTypeBuffer, int packedLightIn) {
         PathfinderMob creature = entity.getOldCreature();
         if (creature != null) {
 //            creature.removed = false;

@@ -82,7 +82,7 @@ public class NBTIngredient extends Ingredient {
 
         @NotNull
         @Override
-        public NBTIngredient parse(FriendlyByteBuf buffer) {
+        public NBTIngredient parse(@NotNull FriendlyByteBuf buffer) {
             int length = buffer.readVarInt();
             ItemStack[] stacks = new ItemStack[length];
             for (int i = 0; i < stacks.length; i++) {
@@ -107,7 +107,7 @@ public class NBTIngredient extends Ingredient {
         }
 
         @Override
-        public void write(FriendlyByteBuf buffer, NBTIngredient ingredient) {
+        public void write(@NotNull FriendlyByteBuf buffer, @NotNull NBTIngredient ingredient) {
             buffer.writeVarInt(ingredient.stacks.length);
             for (ItemStack stack : ingredient.stacks) {
                 buffer.writeItem(stack);

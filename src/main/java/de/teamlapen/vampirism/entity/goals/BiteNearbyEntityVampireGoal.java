@@ -12,13 +12,15 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 import java.util.List;
 
 public class BiteNearbyEntityVampireGoal<T extends Mob & IVampireMob> extends Goal {
     private final T vampire;
-    private IExtendedCreatureVampirism creature;
+    private @Nullable IExtendedCreatureVampirism creature;
     private int timer;
 
     public BiteNearbyEntityVampireGoal(T vampire) {
@@ -89,11 +91,11 @@ public class BiteNearbyEntityVampireGoal<T extends Mob & IVampireMob> extends Go
         }
     }
 
-    protected boolean canFeed(IExtendedCreatureVampirism entity) {
+    protected boolean canFeed(@NotNull IExtendedCreatureVampirism entity) {
         return entity.canBeBitten(vampire) && !entity.hasPoisonousBlood() && (!(entity.getEntity() instanceof Villager) || entity.getBlood() > (entity.getMaxBlood() / 2f));
     }
 
-    protected AABB getBiteBoundingBox() {
+    protected @NotNull AABB getBiteBoundingBox() {
         return vampire.getBoundingBox().inflate(0.5, 0.7, 0.5);
     }
 }

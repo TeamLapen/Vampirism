@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
@@ -33,7 +34,7 @@ public class ServerMultiBossEvent extends MultiBossEvent {
         this.sendUpdate(ClientboundUpdateMultiBossEventPacket.OperationType.UPDATE_PROGRESS);
     }
 
-    public Set<ServerPlayer> getPlayers() {
+    public @NotNull Set<ServerPlayer> getPlayers() {
         return players;
     }
 

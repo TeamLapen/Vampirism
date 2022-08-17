@@ -21,9 +21,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Pillar for Altar of Infusion structure
@@ -33,7 +30,7 @@ public class AltarPillarBlock extends VampirismBlock {
     protected static final VoxelShape pillarShape = makeShape();
     protected static final VoxelShape pillarShapeFilled = makeShapeFull();
 
-    private static VoxelShape makeShape() {
+    private static @NotNull VoxelShape makeShape() {
         VoxelShape a = Block.box(3, 0, 3, 13, 1, 13);
         VoxelShape b1 = Block.box(3, 0, 3, 4, 16, 4);
         VoxelShape b2 = Block.box(12, 0, 3, 13, 16, 4);
@@ -43,7 +40,7 @@ public class AltarPillarBlock extends VampirismBlock {
         return Shapes.or(a, b1, b2, b3, b4, c);
     }
 
-    private static VoxelShape makeShapeFull() {
+    private static @NotNull VoxelShape makeShapeFull() {
         VoxelShape b = Block.box(4, 1, 2, 12, 15, 14);
         VoxelShape c = Block.box(2, 1, 4, 14, 15, 12);
         return Shapes.or(pillarShape, b, c);
@@ -58,13 +55,13 @@ public class AltarPillarBlock extends VampirismBlock {
 
     @NotNull
     @Override
-    public VoxelShape getShape(BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+    public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         return state.getValue(TYPE_PROPERTY) != EnumPillarType.NONE ? pillarShapeFilled : pillarShape;
     }
 
     @NotNull
     @Override
-    public InteractionResult use(BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, Player playerIn, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+    public InteractionResult use(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player playerIn, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         EnumPillarType type = state.getValue(TYPE_PROPERTY);
         ItemStack heldItem = playerIn.getItemInHand(hand);
         if (type != EnumPillarType.NONE && heldItem.isEmpty()) {
@@ -91,7 +88,7 @@ public class AltarPillarBlock extends VampirismBlock {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> builder) {
         builder.add(TYPE_PROPERTY);
     }
 
@@ -111,7 +108,7 @@ public class AltarPillarBlock extends VampirismBlock {
             this.value = value;
         }
 
-        public String getName() {
+        public @NotNull String getName() {
             return getSerializedName();
         }
 
@@ -129,7 +126,7 @@ public class AltarPillarBlock extends VampirismBlock {
         }
 
         @Override
-        public String toString() {
+        public @NotNull String toString() {
             return getName();
         }
     }

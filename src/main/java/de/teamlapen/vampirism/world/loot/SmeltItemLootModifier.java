@@ -32,13 +32,13 @@ public class SmeltItemLootModifier extends LootModifier {
      *
      * @param conditionsIn the ILootConditions that need to be matched before the loot is modified.
      */
-    protected SmeltItemLootModifier(LootItemCondition[] conditionsIn) {
+    protected SmeltItemLootModifier(LootItemCondition @NotNull [] conditionsIn) {
         super(conditionsIn);
     }
 
     @NotNull
     @Override
-    protected ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
+    protected ObjectArrayList<ItemStack> doApply(@NotNull ObjectArrayList<ItemStack> generatedLoot, @NotNull LootContext context) {
         ItemStack stack = context.getParamOrNull(LootContextParams.TOOL);
         Entity entity = context.getParamOrNull(LootContextParams.THIS_ENTITY);
         if (!(entity instanceof LivingEntity) || stack == null || !OilUtils.getAppliedOil(stack).filter(oil -> oil == ModOils.SMELT.get()).isPresent()) {
@@ -50,7 +50,7 @@ public class SmeltItemLootModifier extends LootModifier {
         return trySmelting(generatedLoot, context.getLevel());
     }
 
-    private ObjectArrayList<ItemStack> trySmelting(ObjectArrayList<ItemStack> generatedLoot, ServerLevel level) {
+    private ObjectArrayList<ItemStack> trySmelting(@NotNull ObjectArrayList<ItemStack> generatedLoot, @NotNull ServerLevel level) {
         RecipeManager recipeManager = level.getRecipeManager();
         return generatedLoot.stream().map(stack -> recipeManager.getRecipeFor(RecipeType.SMELTING, new SimpleContainer(stack), level).map(AbstractCookingRecipe::getResultItem).filter(result -> !result.isEmpty()).orElse(stack)).collect(Collector.of(ObjectArrayList::new, ObjectArrayList::add, (left, right) -> {
             left.addAll(right);
@@ -59,7 +59,7 @@ public class SmeltItemLootModifier extends LootModifier {
     }
 
     @Override
-    public Codec<? extends IGlobalLootModifier> codec() {
+    public @NotNull Codec<? extends IGlobalLootModifier> codec() {
         return ModLoot.smelting.get();
     }
 }

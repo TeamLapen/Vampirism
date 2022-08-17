@@ -20,9 +20,9 @@ public class HeartSeekerItem extends VampirismVampireSword implements IItemWithT
     private final static int[] DAMAGE_TIER = {7, 8, 9};
     private final static float[] UNTRAINED_SPEED_TIER = {-3.6f, -3.5f, -3.4f};
     private final static float[] TRAINED_SPEED_TIER = {-2.2f, -2.1f, -2f};
-    private final TIER tier;
+    private final @NotNull TIER tier;
 
-    public HeartSeekerItem(TIER tier) {
+    public HeartSeekerItem(@NotNull TIER tier) {
         super(Tiers.IRON, DAMAGE_TIER[tier.ordinal()], UNTRAINED_SPEED_TIER[tier.ordinal()], TRAINED_SPEED_TIER[tier.ordinal()], new Properties().tab(VampirismMod.creativeTab).durability(2500));
         this.tier = tier;
     }
@@ -36,7 +36,7 @@ public class HeartSeekerItem extends VampirismVampireSword implements IItemWithT
     }
 
     @Override
-    public boolean isValidRepairItem(@NotNull ItemStack toRepair, ItemStack repair) {
+    public boolean isValidRepairItem(@NotNull ItemStack toRepair, @NotNull ItemStack repair) {
         return (this.getVampirismTier() == TIER.NORMAL ? ModItems.BLOOD_INFUSED_IRON_INGOT.get() : ModItems.BLOOD_INFUSED_ENHANCED_IRON_INGOT.get()).equals(repair.getItem()) || super.isValidRepairItem(toRepair, repair);
     }
 

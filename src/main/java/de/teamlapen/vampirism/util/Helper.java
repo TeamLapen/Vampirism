@@ -97,7 +97,7 @@ public class Helper {
         return false;
     }
 
-    public static boolean canBlockSeeSun(LevelAccessor world, BlockPos pos) {
+    public static boolean canBlockSeeSun(@NotNull LevelAccessor world, @NotNull BlockPos pos) {
         if (pos.getY() >= world.getSeaLevel()) {
             return world.canSeeSky(pos);
         } else {
@@ -126,12 +126,12 @@ public class Helper {
 
 
     @NotNull
-    public static EnumStrength getGarlicStrength(Entity e, LevelAccessor world) {
+    public static EnumStrength getGarlicStrength(@NotNull Entity e, LevelAccessor world) {
         return getGarlicStrengthAt(world, e.blockPosition());
     }
 
     @NotNull
-    public static EnumStrength getGarlicStrengthAt(LevelAccessor world, BlockPos pos) {
+    public static EnumStrength getGarlicStrengthAt(LevelAccessor world, @NotNull BlockPos pos) {
         return world instanceof Level ? VampirismAPI.getVampirismWorld((Level) world).map(vw -> vw.getStrengthAtChunk(new ChunkPos(pos))).orElse(EnumStrength.NONE) : EnumStrength.NONE;
     }
 
@@ -140,7 +140,7 @@ public class Helper {
         return world instanceof Level ? ((Level) world).dimension() : world instanceof ServerLevelAccessor ? ((ServerLevelAccessor) world).getLevel().dimension() : Level.OVERWORLD;
     }
 
-    public static boolean canBecomeVampire(Player player) {
+    public static boolean canBecomeVampire(@NotNull Player player) {
         return FactionPlayerHandler.getOpt(player).map(v -> v.canJoin(VReference.VAMPIRE_FACTION)).orElse(false);
     }
 
@@ -179,7 +179,7 @@ public class Helper {
      * @return Checks if all given skills are enabled
      */
     @SafeVarargs
-    public static <T extends IFactionPlayer<T>> boolean areSkillsEnabled(ISkillHandler<T> skillHandler, ISkill<T>... skills) {
+    public static <T extends IFactionPlayer<T>> boolean areSkillsEnabled(@NotNull ISkillHandler<T> skillHandler, ISkill<T> @Nullable ... skills) {
         if (skills == null) return true;
         for (ISkill<T> skill : skills) {
             if (!skillHandler.isSkillEnabled(skill)) {
@@ -189,13 +189,13 @@ public class Helper {
         return true;
     }
 
-    public static boolean isEntityInVampireBiome(Entity e) {
+    public static boolean isEntityInVampireBiome(@Nullable Entity e) {
         if (e == null) return false;
         Level w = e.getCommandSenderWorld();
         return w.getBiome(e.blockPosition()).is(ModTags.Biomes.IS_VAMPIRE_BIOME);
     }
 
-    public static boolean isPosInVampireBiome(BlockPos pos, LevelAccessor level) {
+    public static boolean isPosInVampireBiome(@NotNull BlockPos pos, @NotNull LevelAccessor level) {
         Holder<Biome> biome = level.getBiome(pos);
         return biome.is(ModTags.Biomes.IS_VAMPIRE_BIOME);
     }
@@ -203,28 +203,28 @@ public class Helper {
     /**
      * @return Whether the entity is in a vampire fog area (does not check for vampire biome)
      */
-    public static boolean isEntityInArtificalVampireFogArea(Entity e) {
+    public static boolean isEntityInArtificalVampireFogArea(@Nullable Entity e) {
         if (e == null) return false;
         Level w = e.getCommandSenderWorld();
         return VampirismWorld.getOpt(w).map(vh -> vh.isInsideArtificialVampireFogArea(e.blockPosition())).orElse(false);
     }
 
-    public static ResourceLocation getBiomeId(Entity e) {
+    public static ResourceLocation getBiomeId(@NotNull Entity e) {
         return getBiomeId(e.getCommandSenderWorld(), e.blockPosition());
     }
 
-    public static ResourceLocation getBiomeId(CommonLevelAccessor world, BlockPos pos) {
+    public static ResourceLocation getBiomeId(@NotNull CommonLevelAccessor world, @NotNull BlockPos pos) {
         return getBiomeId(world, world.getBiome(pos));
     }
 
-    public static ResourceLocation getBiomeId(CommonLevelAccessor world, Holder<Biome> biome) {
+    public static ResourceLocation getBiomeId(@NotNull CommonLevelAccessor world, @NotNull Holder<Biome> biome) {
         return biome.unwrap().map(ResourceKey::location, b-> world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getKey(b));
     }
 
     /**
      * Checks if the given {@link IFactionLevelItem} can be used by the given player
      */
-    public static boolean canUseFactionItem(ItemStack stack, IFactionLevelItem<?> item, IFactionPlayerHandler playerHandler) {
+    public static boolean canUseFactionItem(@NotNull ItemStack stack, @NotNull IFactionLevelItem<?> item, @NotNull IFactionPlayerHandler playerHandler) {
         IFaction<?> usingFaction = item.getExclusiveFaction(stack);
         ISkill<?> requiredSkill = item.getRequiredSkill(stack);
         int reqLevel = item.getMinLevel(stack);
@@ -234,7 +234,7 @@ public class Helper {
         return playerHandler.getCurrentFactionPlayer().map(IFactionPlayer::getSkillHandler).map(s -> s.isSkillEnabled(requiredSkill)).orElse(false);
     }
 
-    public static int getExperiencePoints(LivingEntity entity, Player player) {
+    public static int getExperiencePoints(@NotNull LivingEntity entity, Player player) {
         return ((LivingEntityAccessor) entity).invokeGetExperiencePoints_vampirism(); //Use mixin instead of AT since AT does not want to work for this specific method for some reason
     }
 
@@ -256,7 +256,7 @@ public class Helper {
         return false;
     }
 
-    public static <T extends Entity> Optional<T> createEntity(@NotNull EntityType<T> type, @NotNull Level world) {
+    public static <T extends Entity> @NotNull Optional<T> createEntity(@NotNull EntityType<T> type, @NotNull Level world) {
         T e = type.create(world);
         if (e == null) {
             LOGGER.warn("Failed to create entity of type {}", RegUtil.id(type));
@@ -268,7 +268,7 @@ public class Helper {
     /**
      * blockpos to nbt
      */
-    public static ListTag newDoubleNBTList(double... numbers) {
+    public static @NotNull ListTag newDoubleNBTList(double @NotNull ... numbers) {
         ListTag listnbt = new ListTag();
 
         for (double d0 : numbers) {
@@ -283,7 +283,7 @@ public class Helper {
      *
      * @return Whether the given damage source can kill a vampire player or go to DBNO state instead
      */
-    public static boolean canKillVampires(DamageSource source) {
+    public static boolean canKillVampires(@NotNull DamageSource source) {
         if (!source.isBypassInvul()) {
             if (VampirismConfig.BALANCE.vpImmortalFromDamageSources.get().contains(source.getMsgId())) {
                 if (source.getDirectEntity() instanceof LivingEntity) {

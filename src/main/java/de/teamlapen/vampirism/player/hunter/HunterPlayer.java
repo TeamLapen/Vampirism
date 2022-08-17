@@ -58,14 +58,14 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
      * Always prefer calling #getOpt instead
      */
     @Deprecated
-    public static HunterPlayer get(@NotNull Player player) {
+    public static @NotNull HunterPlayer get(@NotNull Player player) {
         return (HunterPlayer) player.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get HunterPlayer from player " + player));
     }
 
     /**
      * Return a LazyOptional, but print a warning message if not present.
      */
-    public static LazyOptional<HunterPlayer> getOpt(@NotNull Player player) {
+    public static @NotNull LazyOptional<HunterPlayer> getOpt(@NotNull Player player) {
         LazyOptional<HunterPlayer> opt = player.getCapability(CAP, null).cast();
         if (!opt.isPresent()) {
             LOGGER.warn("Cannot get Hunter player capability. This might break mod functionality.", new Throwable().fillInStackTrace());
@@ -73,14 +73,14 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
         return opt;
     }
 
-    public static ICapabilityProvider createNewCapability(final Player player) {
+    public static @NotNull ICapabilityProvider createNewCapability(final Player player) {
         return new ICapabilitySerializable<CompoundTag>() {
 
             final HunterPlayer inst = new HunterPlayer(player);
             final LazyOptional<IHunterPlayer> opt = LazyOptional.of(() -> inst);
 
             @Override
-            public void deserializeNBT(CompoundTag nbt) {
+            public void deserializeNBT(@NotNull CompoundTag nbt) {
                 inst.loadData(nbt);
             }
 
@@ -91,7 +91,7 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
             }
 
             @Override
-            public CompoundTag serializeNBT() {
+            public @NotNull CompoundTag serializeNBT() {
                 CompoundTag tag = new CompoundTag();
                 inst.saveData(tag);
                 return tag;
@@ -99,8 +99,8 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
         };
     }
 
-    private final ActionHandler<IHunterPlayer> actionHandler;
-    private final SkillHandler<IHunterPlayer> skillHandler;
+    private final @NotNull ActionHandler<IHunterPlayer> actionHandler;
+    private final @NotNull SkillHandler<IHunterPlayer> skillHandler;
 
     public HunterPlayer(Player player) {
         super(player);
@@ -124,7 +124,7 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
     }
 
     @Override
-    public ResourceLocation getCapKey() {
+    public @NotNull ResourceLocation getCapKey() {
         return REFERENCE.HUNTER_PLAYER_KEY;
     }
 
@@ -176,7 +176,7 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
         return player.hasEffect(ModEffects.DISGUISE_AS_VAMPIRE.get());
     }
 
-    public void loadData(CompoundTag compound) {
+    public void loadData(@NotNull CompoundTag compound) {
         super.loadData(compound);
         actionHandler.loadFromNbt(compound);
         skillHandler.loadFromNbt(compound);
@@ -188,7 +188,7 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
     }
 
     @Override
-    public void onDeath(DamageSource src) {
+    public void onDeath(@NotNull DamageSource src) {
         super.onDeath(src);
         actionHandler.deactivateAllActions();
         if (src.getEntity() instanceof ServerPlayer && Helper.isVampire(((Player) src.getEntity())) && this.getRepresentingPlayer().getEffect(ModEffects.FREEZE.get()) != null) {
@@ -282,14 +282,14 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
 
     }
 
-    public void saveData(CompoundTag compound) {
+    public void saveData(@NotNull CompoundTag compound) {
         super.saveData(compound);
         actionHandler.saveToNbt(compound);
         skillHandler.saveToNbt(compound);
     }
 
     @Override
-    protected FactionBasePlayer<IHunterPlayer> copyFromPlayer(Player old) {
+    protected @NotNull FactionBasePlayer<IHunterPlayer> copyFromPlayer(@NotNull Player old) {
         HunterPlayer oldHunter = get(old);
         CompoundTag nbt = new CompoundTag();
         oldHunter.saveData(nbt);
@@ -298,14 +298,14 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
     }
 
     @Override
-    protected void loadUpdate(CompoundTag nbt) {
+    protected void loadUpdate(@NotNull CompoundTag nbt) {
         super.loadUpdate(nbt);
         actionHandler.readUpdateFromServer(nbt);
         skillHandler.readUpdateFromServer(nbt);
     }
 
     @Override
-    protected void writeFullUpdate(CompoundTag nbt) {
+    protected void writeFullUpdate(@NotNull CompoundTag nbt) {
         super.writeFullUpdate(nbt);
         actionHandler.writeUpdateForClient(nbt);
         skillHandler.writeUpdateForClient(nbt);

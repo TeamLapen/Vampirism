@@ -18,15 +18,15 @@ import org.jetbrains.annotations.NotNull;
 
 public class AlchemyTableContainer extends AbstractContainerMenu {
 
-    private final Container alchemyTable;
-    private final ContainerData alchemyTableData;
-    private final Slot ingredientSlot;
+    private final @NotNull Container alchemyTable;
+    private final @NotNull ContainerData alchemyTableData;
+    private final @NotNull Slot ingredientSlot;
 
-    public AlchemyTableContainer(int containerId, Inventory playerInventory) {
+    public AlchemyTableContainer(int containerId, @NotNull Inventory playerInventory) {
         this(containerId, playerInventory.player.level, playerInventory, new SimpleContainer(6), new SimpleContainerData(3));
     }
 
-    public AlchemyTableContainer(int containerId, Level level, Inventory playerInventory, Container inventory, ContainerData data) {
+    public AlchemyTableContainer(int containerId, Level level, @NotNull Inventory playerInventory, @NotNull Container inventory, @NotNull ContainerData data) {
         super(ModContainer.ALCHEMICAL_TABLE.get(), containerId);
         checkContainerSize(inventory, 5);
         checkContainerDataCount(data, 3);
@@ -130,12 +130,12 @@ public class AlchemyTableContainer extends AbstractContainerMenu {
 
         private final Level world;
 
-        public OilSlot(Level worldPos, Container inventory, int slotId, int xPos, int yPos) {
+        public OilSlot(Level worldPos, @NotNull Container inventory, int slotId, int xPos, int yPos) {
             super(inventory, slotId, xPos, yPos);
             this.world = worldPos;
         }
 
-        public static boolean mayPlaceItem(Level world, ItemStack itemstack) {
+        public static boolean mayPlaceItem(@NotNull Level world, @NotNull ItemStack itemstack) {
             return world.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().anyMatch(recipe -> recipe.isIngredient(itemstack));
         }
 
@@ -151,7 +151,7 @@ public class AlchemyTableContainer extends AbstractContainerMenu {
     static class IngredientSlot extends Slot {
         private final Level world;
 
-        public IngredientSlot(Level worldPos, Container inventory, int slotId, int xPos, int yPos) {
+        public IngredientSlot(Level worldPos, @NotNull Container inventory, int slotId, int xPos, int yPos) {
             super(inventory, slotId, xPos, yPos);
             this.world = worldPos;
 
@@ -167,7 +167,7 @@ public class AlchemyTableContainer extends AbstractContainerMenu {
     }
 
     static class FuelSlot extends Slot {
-        public FuelSlot(Container inventory, int slotId, int xPos, int yPos) {
+        public FuelSlot(@NotNull Container inventory, int slotId, int xPos, int yPos) {
             super(inventory, slotId, xPos, yPos);
         }
 
@@ -175,7 +175,7 @@ public class AlchemyTableContainer extends AbstractContainerMenu {
             return mayPlaceItem(stack);
         }
 
-        public static boolean mayPlaceItem(ItemStack stack) {
+        public static boolean mayPlaceItem(@NotNull ItemStack stack) {
             return stack.getItem() == Items.BLAZE_POWDER;
         }
 
@@ -186,7 +186,7 @@ public class AlchemyTableContainer extends AbstractContainerMenu {
 
     static class ResultSlot extends Slot {
 
-        public ResultSlot(Container inventory, int slotId, int xPos, int yPos) {
+        public ResultSlot(@NotNull Container inventory, int slotId, int xPos, int yPos) {
             super(inventory, slotId, xPos, yPos);
         }
 

@@ -42,7 +42,7 @@ public class AlchemicalFireItem extends Item {
 
     @NotNull
     @Override
-    public InteractionResult useOn(UseOnContext ctx) {
+    public InteractionResult useOn(@NotNull UseOnContext ctx) {
         BlockPos pos = ctx.getClickedPos().relative(ctx.getClickedFace());
 
         if (ctx.getPlayer() != null && !ctx.getPlayer().mayUseItemAt(pos, ctx.getClickedFace(), ctx.getItemInHand())) {

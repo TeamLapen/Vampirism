@@ -6,18 +6,19 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Blood vision
  */
 public class BloodVision implements IVampireVision {
     @Override
-    public String getTranslationKey() {
+    public @NotNull String getTranslationKey() {
         return "text.vampirism.skill.blood_vision";
     }
 
     @Override
-    public void onActivated(IVampirePlayer player) {
+    public void onActivated(@NotNull IVampirePlayer player) {
         ((VampirePlayer) player).getSpecialAttributes().blood_vision = true;
         Player entity = player.getRepresentingPlayer();
         if (entity.level.isClientSide() && OptifineHandler.isShaders()) {
@@ -30,7 +31,7 @@ public class BloodVision implements IVampireVision {
     }
 
     @Override
-    public void onDeactivated(IVampirePlayer player) {
+    public void onDeactivated(@NotNull IVampirePlayer player) {
         ((VampirePlayer) player).getSpecialAttributes().blood_vision = false;
     }
 

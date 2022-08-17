@@ -51,7 +51,7 @@ public class TaskBoardContainer extends AbstractContainerMenu implements TaskCon
     @Nullable
     private Runnable listener;
 
-    public TaskBoardContainer(int id, Inventory playerInventory) {
+    public TaskBoardContainer(int id, @NotNull Inventory playerInventory) {
         super(ModContainer.TASK_MASTER.get(), id);
         this.factionPlayer = FactionPlayerHandler.getCurrentFactionPlayer(playerInventory.player).orElseThrow(() -> new IllegalStateException("Can't open container without faction"));
         this.factionColor = this.factionPlayer.getFaction().getChatColor();
@@ -75,7 +75,7 @@ public class TaskBoardContainer extends AbstractContainerMenu implements TaskCon
     }
 
     @Override
-    public TaskAction buttonAction(@NotNull ITaskInstance taskInfo) {
+    public @NotNull TaskAction buttonAction(@NotNull ITaskInstance taskInfo) {
         if (canCompleteTask(taskInfo)) {
             return TaskAction.COMPLETE;
         } else if (isTaskNotAccepted(taskInfo)) {
@@ -148,7 +148,7 @@ public class TaskBoardContainer extends AbstractContainerMenu implements TaskCon
      * @param completedRequirements updated completed requirements
      */
     @OnlyIn(Dist.CLIENT)
-    public void init(@NotNull Set<ITaskInstance> available, Set<UUID> completableTasks, Map<UUID, Map<ResourceLocation, Integer>> completedRequirements, UUID taskBoardId) {
+    public void init(@NotNull Set<ITaskInstance> available, @NotNull Set<UUID> completableTasks, Map<UUID, Map<ResourceLocation, Integer>> completedRequirements, UUID taskBoardId) {
         this.taskInstances.clear();
         this.taskInstances.addAll(available);
         this.completableTasks.addAll(completableTasks);

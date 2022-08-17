@@ -40,9 +40,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientBlockExtensions;
 import org.jetbrains.annotations.NotNull;
-
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -62,9 +61,9 @@ public class TentBlock extends VampirismBlock {
      *
      */
     public static final IntegerProperty POSITION = IntegerProperty.create("position", 0, 3);
-    private static final Table<Direction, Integer, VoxelShape> shapes;
-    private static final Map<Player.BedSleepingProblem, Component> sleepResults;
-    private static final Table<Integer, Direction, Pair<Double, Double>> offsets;
+    private static final @NotNull Table<Direction, Integer, VoxelShape> shapes;
+    private static final @NotNull Map<Player.BedSleepingProblem, Component> sleepResults;
+    private static final @NotNull Table<Integer, Direction, Pair<Double, Double>> offsets;
 
     static {
         VoxelShape NORTH = makeShape();
@@ -121,11 +120,11 @@ public class TentBlock extends VampirismBlock {
         sleepResults = sleepBuilder.build();
     }
 
-    public static void setTentSleepPosition(Player player, BlockPos blockPos, int position, Direction facing) {
+    public static void setTentSleepPosition(@NotNull Player player, @NotNull BlockPos blockPos, int position, Direction facing) {
         player.setPos(blockPos.getX() + offsets.get(position, facing).getFirst(), blockPos.getY() + 0.0625, blockPos.getZ() + offsets.get(position, facing).getSecond());
     }
 
-    private static VoxelShape makeShape() {
+    private static @NotNull VoxelShape makeShape() {
         return Shapes.or(
                 Block.box(0, 0, 0, 16, 1, 16),
                 Block.box(0.5, 1, 0, 1.4, 1.45, 16),
@@ -169,7 +168,7 @@ public class TentBlock extends VampirismBlock {
         );
     }
 
-    private static VoxelShape makeShapeBack2() {
+    private static @NotNull VoxelShape makeShapeBack2() {
         return Shapes.or(
                 Block.box(15, 1, 0, 16, 15.85, 1),
                 Block.box(14, 1, 0, 15, 14.65, 1),
@@ -188,7 +187,7 @@ public class TentBlock extends VampirismBlock {
                 Block.box(1, 1, 0, 2, 1.85, 1));
     }
 
-    private static VoxelShape makeShapeBack1() {
+    private static @NotNull VoxelShape makeShapeBack1() {
         return Shapes.or(
                 Block.box(14, 1, 0, 15, 1.85, 1),
                 Block.box(13, 1, 0, 14, 2.65, 1),
@@ -214,7 +213,7 @@ public class TentBlock extends VampirismBlock {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void initializeClient(Consumer<IClientBlockExtensions> consumer) {
+    public void initializeClient(@NotNull Consumer<IClientBlockExtensions> consumer) {
         consumer.accept(new IClientBlockExtensions() {
             @Override
             public boolean addDestroyEffects(BlockState state, Level Level, BlockPos pos, ParticleEngine manager) {
@@ -225,12 +224,12 @@ public class TentBlock extends VampirismBlock {
 
 
     @Override
-    public boolean canSurvive(@NotNull BlockState blockState, LevelReader worldReader, @NotNull BlockPos blockPos) {
+    public boolean canSurvive(@NotNull BlockState blockState, @NotNull LevelReader worldReader, @NotNull BlockPos blockPos) {
         return worldReader.getBlockState(blockPos).isAir();
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+    public @NotNull ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         return new ItemStack(ModItems.ITEM_TENT.get());
     }
 
@@ -245,7 +244,7 @@ public class TentBlock extends VampirismBlock {
     }
 
     @Override
-    public Direction getBedDirection(BlockState state, LevelReader world, BlockPos pos) {
+    public @NotNull Direction getBedDirection(@NotNull BlockState state, LevelReader world, BlockPos pos) {
         return switch (state.getValue(POSITION)) {
             case 0, 3 -> state.getValue(HORIZONTAL_FACING).getOpposite();
             default -> state.getValue(HORIZONTAL_FACING);
@@ -254,13 +253,13 @@ public class TentBlock extends VampirismBlock {
 
     @NotNull
     @Override
-    public VoxelShape getShape(BlockState blockState, @NotNull BlockGetter blockReader, @NotNull BlockPos blockPos, @NotNull CollisionContext context) {
+    public VoxelShape getShape(@NotNull BlockState blockState, @NotNull BlockGetter blockReader, @NotNull BlockPos blockPos, @NotNull CollisionContext context) {
         return shapes.get(blockState.getValue(FACING), blockState.getValue(POSITION));
     }
 
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+    public @NotNull BlockState updateShape(@NotNull BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
         Direction thisFacing = stateIn.getValue(FACING);
         int thisPos = stateIn.getValue(POSITION);
         if (facing == thisFacing.getClockWise() || (thisPos == 0 || thisPos == 2) && facing == thisFacing.getOpposite() || (thisPos == 1 || thisPos == 3) && facing == thisFacing) {
@@ -273,7 +272,7 @@ public class TentBlock extends VampirismBlock {
 
 
     @Override
-    public void playerWillDestroy(Level worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
+    public void playerWillDestroy(@NotNull Level worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
         //If in creative mode, also destroy the main block. Otherwise, it will be destroyed due to updateShape and an item will drop
         if (!worldIn.isClientSide && player.isCreative()) {
             Direction thisFacing = state.getValue(FACING);
@@ -298,7 +297,7 @@ public class TentBlock extends VampirismBlock {
 
 
     @Override
-    public void updateEntityAfterFallOn(@NotNull BlockGetter worldIn, Entity entityIn) {
+    public void updateEntityAfterFallOn(@NotNull BlockGetter worldIn, @NotNull Entity entityIn) {
         if (entityIn.isShiftKeyDown()) {
             super.updateEntityAfterFallOn(worldIn, entityIn);
         } else {
@@ -313,7 +312,7 @@ public class TentBlock extends VampirismBlock {
 
     @NotNull
     @Override
-    public InteractionResult use(@NotNull BlockState blockState, Level world, @NotNull final BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult rayTraceResult) {
+    public InteractionResult use(@NotNull BlockState blockState, @NotNull Level world, @NotNull final BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult rayTraceResult) {
         if (world.isClientSide()) return InteractionResult.SUCCESS;
         if (VampirismPlayerAttributes.get(player).hunterLevel == 0) {
             player.displayClientMessage(Component.translatable("text.vampirism.tent.cant_use"), true);
@@ -346,7 +345,7 @@ public class TentBlock extends VampirismBlock {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> builder) {
         builder.add(FACING, POSITION, BlockStateProperties.OCCUPIED);
     }
 

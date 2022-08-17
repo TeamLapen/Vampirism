@@ -33,12 +33,12 @@ public class TrainingDummyHunterEntity extends BasicHunterEntity {
     }
 
     @Override
-    public void convertToMinion(Player lord) {
+    public void convertToMinion(@NotNull Player lord) {
         super.convertToMinion(lord);
     }
 
     @Override
-    protected void actuallyHurt(DamageSource damageSrc, float damageAmount) {
+    protected void actuallyHurt(@NotNull DamageSource damageSrc, float damageAmount) {
         if (damageSrc.isBypassInvul()) {
             super.actuallyHurt(damageSrc, damageAmount);
         }

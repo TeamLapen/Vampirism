@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,7 +29,7 @@ public record ClientboundRequestMinionSelectPacket(Action action, List<Pair<Inte
      * @param action The action that should be executed for the selected minion
      * @return Empty if no minions are available
      */
-    public static Optional<ClientboundRequestMinionSelectPacket> createRequestForPlayer(ServerPlayer player, Action action) {
+    public static @NotNull Optional<ClientboundRequestMinionSelectPacket> createRequestForPlayer(@NotNull ServerPlayer player, Action action) {
         return FactionPlayerHandler.getOpt(player).resolve().flatMap(fp -> {
             PlayerMinionController controller = MinionWorldData.getData(player.server).getOrCreateController(fp);
             Collection<Integer> ids = controller.getCallableMinions();
@@ -43,13 +44,13 @@ public record ClientboundRequestMinionSelectPacket(Action action, List<Pair<Inte
         });
     }
 
-    public static void handle(final ClientboundRequestMinionSelectPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final @NotNull ClientboundRequestMinionSelectPacket msg, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> VampirismMod.proxy.handleRequestMinionSelect(msg.action, msg.minions));
         ctx.setPacketHandled(true);
     }
 
-    static void encode(ClientboundRequestMinionSelectPacket msg, FriendlyByteBuf buf) {
+    static void encode(@NotNull ClientboundRequestMinionSelectPacket msg, @NotNull FriendlyByteBuf buf) {
         buf.writeVarInt(msg.action.ordinal());
         buf.writeVarInt(msg.minions.size());
         for (Pair<Integer, Component> minion : msg.minions) {
@@ -59,7 +60,7 @@ public record ClientboundRequestMinionSelectPacket(Action action, List<Pair<Inte
 
     }
 
-    static ClientboundRequestMinionSelectPacket decode(FriendlyByteBuf buf) {
+    static @NotNull ClientboundRequestMinionSelectPacket decode(@NotNull FriendlyByteBuf buf) {
         Action a = Action.values()[buf.readVarInt()];
         int count = buf.readVarInt();
         List<Pair<Integer, Component>> minions = new ArrayList<>(count);

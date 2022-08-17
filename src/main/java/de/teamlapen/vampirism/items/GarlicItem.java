@@ -35,7 +35,7 @@ public class GarlicItem extends Item implements IPlantable, IFactionExclusiveIte
     }
 
     @Override
-    public BlockState getPlant(BlockGetter world, BlockPos pos) {
+    public @NotNull BlockState getPlant(BlockGetter world, BlockPos pos) {
         return ModBlocks.GARLIC.get().defaultBlockState();
     }
 
@@ -47,7 +47,7 @@ public class GarlicItem extends Item implements IPlantable, IFactionExclusiveIte
 
     @NotNull
     @Override
-    public InteractionResult useOn(UseOnContext ctx) {
+    public InteractionResult useOn(@NotNull UseOnContext ctx) {
         ItemStack stack = ctx.getItemInHand();
         BlockPos pos = ctx.getClickedPos();
         if (ctx.getClickedFace() != Direction.UP) {

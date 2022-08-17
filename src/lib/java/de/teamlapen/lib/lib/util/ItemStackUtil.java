@@ -10,7 +10,7 @@ public class ItemStackUtil {
      * Can be used in {@link Container#removeItem(int, int)}
      */
     public static @NotNull
-    ItemStack decrIInventoryStackSize(Container inv, int slot, int amt) {
+    ItemStack decrIInventoryStackSize(@NotNull Container inv, int slot, int amt) {
         ItemStack stack = inv.getItem(slot);
         if (!stack.isEmpty()) {
             if (stack.getCount() <= amt) {
@@ -45,7 +45,7 @@ public class ItemStackUtil {
         return ItemStack.tagMatches(stackA, stackB);
     }
 
-    public static boolean stackEqualExact(ItemStack stack1, ItemStack stack2) {
+    public static boolean stackEqualExact(@NotNull ItemStack stack1, @NotNull ItemStack stack2) {
         return stack1.getItem() == stack2.getItem() && ItemStack.tagMatches(stack1, stack2);
     }
 }

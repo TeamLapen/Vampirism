@@ -17,7 +17,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -26,12 +25,12 @@ import org.jetbrains.annotations.NotNull;
 public class TentBlockEntity extends BlockEntity {
 
 
-    private final SimpleSpawnerLogic<BasicHunterEntity> spawnerLogicHunter;
-    private final SimpleSpawnerLogic<AdvancedHunterEntity> spawnerLogicAdvancedHunter;
+    private final @NotNull SimpleSpawnerLogic<BasicHunterEntity> spawnerLogicHunter;
+    private final @NotNull SimpleSpawnerLogic<AdvancedHunterEntity> spawnerLogicAdvancedHunter;
     private boolean spawn = false;
     private boolean advanced = false;
 
-    public TentBlockEntity(BlockPos pos, BlockState state) {
+    public TentBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         super(ModTiles.TENT.get(), pos, state);
         this.spawnerLogicHunter = new SimpleSpawnerLogic<>(ModEntities.HUNTER.get()).setActivateRange(64).setSpawnRange(6).setMinSpawnDelay(600).setMaxSpawnDelay(1000).setMaxNearbyEntities(2).setDailyLimit(VampirismConfig.BALANCE.hunterTentMaxSpawn.get()).setLimitTotalEntities(VReference.HUNTER_CREATURE_TYPE).setOnSpawned(hunter -> hunter.makeCampHunter(this.worldPosition));
         this.spawnerLogicAdvancedHunter = new SimpleSpawnerLogic<>(ModEntities.ADVANCED_HUNTER.get()).setActivateRange(64).setSpawnRange(6).setMinSpawnDelay(1200).setMaxSpawnDelay(2000).setMaxNearbyEntities(1).setDailyLimit(1).setLimitTotalEntities(VReference.HUNTER_CREATURE_TYPE).setOnSpawned(hunter -> hunter.makeCampHunter(this.worldPosition));
@@ -85,7 +84,7 @@ public class TentBlockEntity extends BlockEntity {
         this.spawn = spawn;
     }
 
-    public static void serverTick(Level level, BlockPos pos, BlockState state, TentBlockEntity blockEntity) {
+    public static void serverTick(@NotNull Level level, @NotNull BlockPos pos, BlockState state, @NotNull TentBlockEntity blockEntity) {
         if (blockEntity.spawn) {
             if (level.getGameTime() % 64 == 0) {
                 if (UtilLib.isInsideStructure(level, pos, StructureTags.VILLAGE)) {

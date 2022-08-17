@@ -10,19 +10,19 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
-
 import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 
 @OnlyIn(Dist.CLIENT)
 public class SelectMinionScreen extends Screen {
-    private final Integer[] minionIds;
-    private final Component[] minionNames;
+    private final Integer @NotNull [] minionIds;
+    private final Component @NotNull [] minionNames;
     private final ClientboundRequestMinionSelectPacket.Action action;
     private ScrollableArrayTextComponentList list;
 
-    public SelectMinionScreen(ClientboundRequestMinionSelectPacket.Action a, List<Pair<Integer, Component>> minions) {
+    public SelectMinionScreen(ClientboundRequestMinionSelectPacket.Action a, @NotNull List<Pair<Integer, Component>> minions) {
         super(Component.literal(""));
         this.action = a;
         this.minionIds = minions.stream().map(Pair::getLeft).toArray(Integer[]::new);

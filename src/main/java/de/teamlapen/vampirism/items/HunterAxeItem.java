@@ -56,7 +56,7 @@ public class HunterAxeItem extends VampirismHunterWeapon implements IItemWithTie
     /**
      * @return An {@link ItemStack} with the correct knockback enchantment applied
      */
-    public ItemStack getEnchantedStack() {
+    public @NotNull ItemStack getEnchantedStack() {
         ItemStack stack = new ItemStack(this);
         Map<Enchantment, Integer> map = new HashMap<>();
         map.put(Enchantments.KNOCKBACK, getKnockback());

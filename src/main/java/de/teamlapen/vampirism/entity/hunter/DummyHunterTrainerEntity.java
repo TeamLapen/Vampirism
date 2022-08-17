@@ -53,7 +53,7 @@ public class DummyHunterTrainerEntity extends VampirismEntity implements ICaptur
 
     @NotNull
     @Override
-    protected InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
+    protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         boolean flag = !stack.isEmpty() && stack.getItem() instanceof SpawnEggItem;
 

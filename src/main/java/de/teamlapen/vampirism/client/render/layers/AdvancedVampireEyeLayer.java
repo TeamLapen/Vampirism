@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -22,9 +21,9 @@ import org.jetbrains.annotations.NotNull;
 @OnlyIn(Dist.CLIENT)
 public class AdvancedVampireEyeLayer extends RenderLayer<AdvancedVampireEntity, HumanoidModel<AdvancedVampireEntity>> {
 
-    private final ResourceLocation[] overlays;
+    private final ResourceLocation @NotNull [] overlays;
 
-    public AdvancedVampireEyeLayer(RenderLayerParent<AdvancedVampireEntity, HumanoidModel<AdvancedVampireEntity>> renderer) {
+    public AdvancedVampireEyeLayer(@NotNull RenderLayerParent<AdvancedVampireEntity, HumanoidModel<AdvancedVampireEntity>> renderer) {
         super(renderer);
         overlays = new ResourceLocation[REFERENCE.EYE_TYPE_COUNT];
         for (int i = 0; i < overlays.length; i++) {
@@ -34,7 +33,7 @@ public class AdvancedVampireEyeLayer extends RenderLayer<AdvancedVampireEntity, 
 
 
     @Override
-    public void render(@NotNull PoseStack matrixStack, @NotNull MultiBufferSource iRenderTypeBuffer, int packetLightIn, AdvancedVampireEntity advancedVampireEntity, float v, float v1, float v2, float v3, float v4, float v5) {
+    public void render(@NotNull PoseStack matrixStack, @NotNull MultiBufferSource iRenderTypeBuffer, int packetLightIn, @NotNull AdvancedVampireEntity advancedVampireEntity, float v, float v1, float v2, float v3, float v4, float v5) {
         int type = advancedVampireEntity.getEyeType();
         if (type < 0 || type >= overlays.length) {
             type = 0;

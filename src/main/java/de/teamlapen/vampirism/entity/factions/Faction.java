@@ -32,7 +32,7 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     @NotNull
     private final TextColor chatColor;
 
-    Faction(FactionRegistry.FactionBuilder<T> builder) {
+    Faction(FactionRegistry.@NotNull FactionBuilder<T> builder) {
         this.id = builder.id;
         this.entityInterface = builder.entityInterface;
         this.color = builder.color;

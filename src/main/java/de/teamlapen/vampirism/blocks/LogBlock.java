@@ -9,13 +9,14 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
+import org.jetbrains.annotations.NotNull;
 
 public class LogBlock extends RotatedPillarBlock {
 
     public static final WoodType dark_spruce = WoodType.register(WoodType.create("vampirism:dark_spruce"));
     public static final WoodType cursed_spruce = WoodType.register(WoodType.create("vampirism:cursed_spruce"));
 
-    public LogBlock(BlockBehaviour.Properties properties) {
+    public LogBlock(BlockBehaviour.@NotNull Properties properties) {
         super(properties);
         ((FireBlock) Blocks.FIRE).setFlammable(this, 5, 5);
     }

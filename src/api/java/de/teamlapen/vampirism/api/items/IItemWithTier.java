@@ -16,7 +16,7 @@ import java.util.List;
 public interface IItemWithTier extends ItemLike {
 
     @OnlyIn(Dist.CLIENT)
-    default void addTierInformation(List<Component> tooltip) {
+    default void addTierInformation(@NotNull List<Component> tooltip) {
         TIER t = getVampirismTier();
         if (t != TIER.NORMAL) {
             ChatFormatting format = t == TIER.ENHANCED ? ChatFormatting.YELLOW : ChatFormatting.AQUA;
@@ -38,7 +38,7 @@ public interface IItemWithTier extends ItemLike {
             this.name = name;
         }
 
-        public String getName() {
+        public @NotNull String getName() {
             return this.getSerializedName();
         }
 

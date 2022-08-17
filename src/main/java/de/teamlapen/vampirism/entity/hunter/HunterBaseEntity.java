@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class HunterBaseEntity extends VampirismEntity implements IHunterMob, Npc/*mainly for JourneyMap*/ {
 
-    public static boolean spawnPredicateHunter(EntityType<? extends HunterBaseEntity> entityType, LevelAccessor world, MobSpawnType spawnReason, BlockPos blockPos, RandomSource random) {
+    public static boolean spawnPredicateHunter(@NotNull EntityType<? extends HunterBaseEntity> entityType, @NotNull LevelAccessor world, MobSpawnType spawnReason, @NotNull BlockPos blockPos, RandomSource random) {
         return world.getDifficulty() != Difficulty.PEACEFUL && Mob.checkMobSpawnRules(entityType, world, spawnReason, blockPos, random);
     }
 
@@ -48,7 +48,7 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
     }
 
     @Override
-    public LivingEntity getRepresentingEntity() {
+    public @NotNull LivingEntity getRepresentingEntity() {
         return this;
     }
 
@@ -60,7 +60,7 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
         }
     }
 
-    public void makeCampHunter(BlockPos pos) {
+    public void makeCampHunter(@NotNull BlockPos pos) {
         super.setHome(new AABB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1).inflate(10));
         this.setMoveTowardsRestriction(MOVE_TO_RESTRICT_PRIO, true);
     }
@@ -76,7 +76,7 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
      *
      * @return If player was cured
      */
-    protected boolean tryCureSanguinare(Player entity) {
+    protected boolean tryCureSanguinare(@NotNull Player entity) {
         if (!this.level.isClientSide && entity.hasEffect(ModEffects.SANGUINARE.get())) {
             entity.removeEffect(ModEffects.SANGUINARE.get());
             entity.sendSystemMessage(Component.translatable("text.vampirism.hunter.cured_sanguinare"));

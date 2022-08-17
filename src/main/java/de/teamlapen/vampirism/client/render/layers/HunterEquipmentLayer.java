@@ -13,8 +13,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Mob;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
+
 import java.util.function.Function;
 
 /**
@@ -23,7 +23,7 @@ import java.util.function.Function;
 @OnlyIn(Dist.CLIENT)
 public class HunterEquipmentLayer<T extends Mob, Q extends EntityModel<T>> extends RenderLayer<T, Q> {
 
-    private final HunterEquipmentModel<T> equipmentModel;
+    private final @NotNull HunterEquipmentModel<T> equipmentModel;
     private final ResourceLocation textureExtra = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_extra.png");
     private final Function<T, HunterEquipmentModel.StakeType> predicateStake;
     private final Function<T, HunterEquipmentModel.HatType> functionHat;
@@ -31,7 +31,7 @@ public class HunterEquipmentLayer<T extends Mob, Q extends EntityModel<T>> exten
     /**
      * @param predicateStake entity -> Type of equipment that should be rendered
      */
-    public HunterEquipmentLayer(RenderLayerParent<T, Q> entityRendererIn, EntityModelSet modelSet, Function<T, HunterEquipmentModel.StakeType> predicateStake, Function<T, HunterEquipmentModel.HatType> functionHat) {
+    public HunterEquipmentLayer(@NotNull RenderLayerParent<T, Q> entityRendererIn, @NotNull EntityModelSet modelSet, Function<T, HunterEquipmentModel.StakeType> predicateStake, Function<T, HunterEquipmentModel.HatType> functionHat) {
         super(entityRendererIn);
         equipmentModel = new HunterEquipmentModel<>(modelSet.bakeLayer(ModEntitiesRender.HUNTER_EQUIPMENT));
         this.predicateStake = predicateStake;
@@ -39,7 +39,7 @@ public class HunterEquipmentLayer<T extends Mob, Q extends EntityModel<T>> exten
     }
 
     @Override
-    public void render(@NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn, T entityIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(@NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn, @NotNull T entityIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if (!entityIn.isInvisible()) {
             equipmentModel.setHat(functionHat.apply(entityIn));
             equipmentModel.setWeapons(predicateStake.apply(entityIn));

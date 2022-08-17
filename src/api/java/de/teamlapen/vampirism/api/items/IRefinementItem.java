@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.items;
 
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * represents an accessory item
@@ -16,7 +17,7 @@ public interface IRefinementItem extends IFactionExclusiveItem {
      * @param stack the refinement item stack
      * @return the applied refinement set
      */
-    IRefinementSet getRefinementSet(ItemStack stack);
+    @Nullable IRefinementSet getRefinementSet(ItemStack stack);
 
     /**
      * Gets the accessory slot where this item can be equipped

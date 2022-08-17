@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
  * Does almost no damage, but can one hit kill vampire from behind when used by skilled hunters
  */
 public class StakeItem extends VampirismItemWeapon implements IVampireFinisher, IFactionExclusiveItem {
-    public static boolean canKillInstant(LivingEntity target, LivingEntity attacker) {
+    public static boolean canKillInstant(@NotNull LivingEntity target, LivingEntity attacker) {
         boolean instaKillFromBehind = false;
         boolean instaKillLowHealth = false;
         if (attacker instanceof Player && attacker.isAlive()) {
@@ -67,7 +67,7 @@ public class StakeItem extends VampirismItemWeapon implements IVampireFinisher, 
     }
 
     @Override
-    public boolean hurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity target, LivingEntity attacker) {
+    public boolean hurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity target, @NotNull LivingEntity attacker) {
         if (!attacker.getCommandSenderWorld().isClientSide) {
             if (target instanceof IVampireMob || (target instanceof Player && Helper.isVampire(((Player) target)))) {
                 if (canKillInstant(target, attacker)) {

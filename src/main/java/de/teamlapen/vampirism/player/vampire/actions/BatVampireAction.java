@@ -21,6 +21,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -41,7 +42,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     }
 
     @Override
-    public boolean activate(IVampirePlayer vampire, ActivationContext context) {
+    public boolean activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
         Player player = vampire.getRepresentingPlayer();
         setModifier(player, true);
         updatePlayer((VampirePlayer) vampire, true);
@@ -52,7 +53,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     }
 
     @Override
-    public boolean canBeUsedBy(IVampirePlayer vampire) {
+    public boolean canBeUsedBy(@NotNull IVampirePlayer vampire) {
         return !vampire.isGettingSundamage(vampire.getRepresentingEntity().level)
                 && !ModItems.UMBRELLA.equals(vampire.getRepresentingEntity().getMainHandItem().getItem())
                 && vampire.isGettingGarlicDamage(vampire.getRepresentingEntity().level) == EnumStrength.NONE
@@ -79,14 +80,14 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     }
 
     @Override
-    public void onActivatedClient(IVampirePlayer vampire) {
+    public void onActivatedClient(@NotNull IVampirePlayer vampire) {
         if (!((VampirePlayer) vampire).getSpecialAttributes().bat) {
             updatePlayer((VampirePlayer) vampire, true);
         }
     }
 
     @Override
-    public void onDeactivated(IVampirePlayer vampire) {
+    public void onDeactivated(@NotNull IVampirePlayer vampire) {
         Player player = vampire.getRepresentingPlayer();
         setModifier(player, false);
         if (!player.isOnGround()) {
@@ -97,7 +98,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     }
 
     @Override
-    public void onReActivated(IVampirePlayer vampire) {
+    public void onReActivated(@NotNull IVampirePlayer vampire) {
         setModifier(vampire.getRepresentingPlayer(), true);
         if (!((VampirePlayer) vampire).getSpecialAttributes().bat) {
             updatePlayer((VampirePlayer) vampire, true);
@@ -105,7 +106,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     }
 
     @Override
-    public boolean onUpdate(IVampirePlayer vampire) {
+    public boolean onUpdate(@NotNull IVampirePlayer vampire) {
         if (vampire.isGettingSundamage(vampire.getRepresentingEntity().level) && !vampire.isRemote()) {
             vampire.getRepresentingPlayer().sendSystemMessage(Component.translatable("text.vampirism.cant_fly_day"));
             return true;
@@ -128,11 +129,11 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     /**
      * Set's flightspeed capability
      */
-    private void setFlightSpeed(Player player, float speed) {
+    private void setFlightSpeed(@NotNull Player player, float speed) {
         player.getAbilities().flyingSpeed = speed;
     }
 
-    private void setModifier(Player player, boolean enabled) {
+    private void setModifier(@NotNull Player player, boolean enabled) {
         if (enabled) {
 
             AttributeInstance armorAttributeInst = player.getAttribute(Attributes.ARMOR);
@@ -174,7 +175,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     /**
      * Adjust the players size and eye height to fit to the bat model
      */
-    private void updatePlayer(VampirePlayer vampire, boolean bat) {
+    private void updatePlayer(@NotNull VampirePlayer vampire, boolean bat) {
         Player player = vampire.getRepresentingPlayer();
         vampire.getSpecialAttributes().bat = bat;
         player.setForcedPose(bat ? Pose.STANDING : null);

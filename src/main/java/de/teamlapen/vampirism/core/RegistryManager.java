@@ -18,6 +18,7 @@ import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.*;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Handles registrations of all registrable things as well as a few additional
@@ -31,7 +32,7 @@ public class RegistryManager implements IInitListener {
         MinecraftForge.EVENT_BUS.addListener(this::onMissingMappings);
     }
 
-    public static void setupRegistries(IEventBus modbus) {
+    public static void setupRegistries(@NotNull IEventBus modbus) {
         ModRegistries.init(modbus);
         ModAttributes.registerAttributes(modbus);
         ModBiomes.registerBiomes(modbus);
@@ -70,7 +71,7 @@ public class RegistryManager implements IInitListener {
     }
 
     @Override
-    public void onInitStep(Step step, ParallelDispatchEvent event) {
+    public void onInitStep(@NotNull Step step, @NotNull ParallelDispatchEvent event) {
         switch (step) {
             case COMMON_SETUP:
                 ModEntities.registerConvertibles();
@@ -98,7 +99,7 @@ public class RegistryManager implements IInitListener {
         }
     }
 
-    public void onMissingMappings(MissingMappingsEvent event) {
+    public void onMissingMappings(@NotNull MissingMappingsEvent event) {
         VampireSkills.fixMappings(event);
         HunterSkills.fixMappings(event);
         ModPotions.fixMappings(event);
@@ -111,7 +112,7 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
-    public void onRegisterEffects(RegisterEvent event) {
+    public void onRegisterEffects(@NotNull RegisterEvent event) {
         if (event.getRegistryKey().equals(ForgeRegistries.Keys.MOB_EFFECTS)) {
             //noinspection ConstantConditions,unchecked
             ModEffects.replaceEffects((IForgeRegistry<MobEffect>) (Object) event.getForgeRegistry()); //TODO 1.19 check

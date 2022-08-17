@@ -15,6 +15,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import org.jetbrains.annotations.NotNull;
 
 public class SkillCommand extends BasicCommand {
 
@@ -28,7 +29,7 @@ public class SkillCommand extends BasicCommand {
         return create(Commands.literal("skills"));
     }
 
-    private static ArgumentBuilder<CommandSourceStack, ?> create(ArgumentBuilder<CommandSourceStack, ?> builder) {
+    private static ArgumentBuilder<CommandSourceStack, ?> create(@NotNull ArgumentBuilder<CommandSourceStack, ?> builder) {
         return builder.requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
                 .then(Commands.argument("type", SkillArgument.skills())
                         .executes(context -> skill(context.getSource(), context.getSource().getPlayerOrException(), SkillArgument.getSkill(context, "type"), false))
@@ -44,14 +45,14 @@ public class SkillCommand extends BasicCommand {
                         }));
     }
 
-    private static int disableall(CommandSourceStack commandSource, ServerPlayer asPlayer) throws CommandSyntaxException {
+    private static int disableall(@NotNull CommandSourceStack commandSource, @NotNull ServerPlayer asPlayer) throws CommandSyntaxException {
         IFactionPlayer<?> factionPlayer = FactionPlayerHandler.getCurrentFactionPlayer(asPlayer).orElseThrow(NO_FACTION::create);
         factionPlayer.getSkillHandler().resetSkills();
         commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.all_locked"), false);
         return 0;
     }
 
-    private static int enableAll(CommandSourceStack commandSource, ServerPlayer asPlayer) throws CommandSyntaxException {
+    private static int enableAll(@NotNull CommandSourceStack commandSource, @NotNull ServerPlayer asPlayer) throws CommandSyntaxException {
         FactionPlayerHandler playerHandler = FactionPlayerHandler.getOpt(asPlayer).orElseThrow(NO_FACTION::create);
         IFactionPlayer<?> factionPlayer = playerHandler.getCurrentFactionPlayer().orElseThrow(NO_FACTION::create);
         ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
@@ -64,7 +65,7 @@ public class SkillCommand extends BasicCommand {
         return 0;
     }
 
-    private static int skill(CommandSourceStack commandSource, ServerPlayer asPlayer, ISkill skill, boolean force) throws CommandSyntaxException {
+    private static int skill(@NotNull CommandSourceStack commandSource, @NotNull ServerPlayer asPlayer, @NotNull ISkill skill, boolean force) throws CommandSyntaxException {
         IFactionPlayer<?> factionPlayer = FactionPlayerHandler.getCurrentFactionPlayer(asPlayer).orElseThrow(NO_FACTION::create);
         if (factionPlayer.getSkillHandler().isSkillEnabled(skill)) {
             factionPlayer.getSkillHandler().disableSkill(skill);

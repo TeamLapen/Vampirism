@@ -23,11 +23,11 @@ import java.util.Optional;
  */
 public class AddBookNbt extends LootItemConditionalFunction {
 
-    public static Builder<?> builder() {
+    public static @NotNull Builder<?> builder() {
         return simpleBuilder(AddBookNbt::new);
     }
 
-    public AddBookNbt(LootItemCondition[] conditions) {
+    public AddBookNbt(LootItemCondition @NotNull [] conditions) {
         super(conditions);
     }
 
@@ -39,7 +39,7 @@ public class AddBookNbt extends LootItemConditionalFunction {
 
     @NotNull
     @Override
-    public ItemStack run(@NotNull ItemStack itemStack, LootContext lootContext) {
+    public ItemStack run(@NotNull ItemStack itemStack, @NotNull LootContext lootContext) {
         Entity victim = lootContext.getParamOrNull(LootContextParams.THIS_ENTITY);
         Optional<String> id = Optional.empty();
         if (victim instanceof AdvancedHunterEntity) {

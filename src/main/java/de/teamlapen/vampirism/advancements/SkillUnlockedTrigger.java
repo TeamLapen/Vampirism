@@ -13,11 +13,11 @@ import org.jetbrains.annotations.NotNull;
 public class SkillUnlockedTrigger extends SimpleCriterionTrigger<SkillUnlockedTrigger.Instance> {
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "skill_unlocked");
 
-    public static Instance builder(@NotNull ISkill<?> skill) {
+    public static @NotNull Instance builder(@NotNull ISkill<?> skill) {
         return new Instance(skill);
     }
 
-    public static Instance builder(@NotNull ResourceLocation id) {
+    public static @NotNull Instance builder(@NotNull ResourceLocation id) {
         return new Instance(id);
     }
 

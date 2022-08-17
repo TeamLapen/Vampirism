@@ -63,7 +63,7 @@ public class CrossbowArrowItem extends Item implements IVampirismCrossbowArrow<C
      * @return An arrow entity at the players position using the given itemstack
      */
     @Override
-    public CrossbowArrowEntity createEntity(ItemStack stack, Level world, Player player, double heightOffset, double centerOffset, boolean rightHand) {
+    public @NotNull CrossbowArrowEntity createEntity(ItemStack stack, Level world, @NotNull Player player, double heightOffset, double centerOffset, boolean rightHand) {
         CrossbowArrowEntity entity = CrossbowArrowEntity.createWithShooter(world, player, heightOffset, centerOffset, rightHand, stack);
         entity.setBaseDamage(type.baseDamage * VampirismConfig.BALANCE.crossbowDamageMult.get());
         if (this.type == EnumArrowType.SPITFIRE) {
@@ -93,7 +93,7 @@ public class CrossbowArrowItem extends Item implements IVampirismCrossbowArrow<C
      * @param shootingEntity The shooting entity. Can be the arrow entity itself
      */
     @Override
-    public void onHitBlock(ItemStack arrow, BlockPos blockPos, IEntityCrossbowArrow arrowEntity, Entity shootingEntity) {
+    public void onHitBlock(ItemStack arrow, @NotNull BlockPos blockPos, IEntityCrossbowArrow arrowEntity, @NotNull Entity shootingEntity) {
         CrossbowArrowEntity entity = (CrossbowArrowEntity) arrowEntity;
         switch (type){
             case SPITFIRE:
@@ -169,7 +169,7 @@ public class CrossbowArrowItem extends Item implements IVampirismCrossbowArrow<C
             this.color = color;
         }
 
-        public String getName() {
+        public @NotNull String getName() {
             return this.getSerializedName();
         }
 

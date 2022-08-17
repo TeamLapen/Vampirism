@@ -14,6 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.BossEvent;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -22,7 +23,7 @@ import java.util.UUID;
 
 public class CustomBossEventOverlay extends GuiComponent implements IGuiOverlay {
     private static final ResourceLocation GUI_BARS_TEXTURES = new ResourceLocation("textures/gui/bars.png");
-    private final Minecraft client;
+    private final @NotNull Minecraft client;
     private final Map<UUID, MultiBossEvent> bossInfoMap = new LinkedHashMap<>();
 
     public CustomBossEventOverlay() {
@@ -33,7 +34,7 @@ public class CustomBossEventOverlay extends GuiComponent implements IGuiOverlay 
         this.bossInfoMap.clear();
     }
 
-    public void read(ClientboundUpdateMultiBossEventPacket packet) {
+    public void read(@NotNull ClientboundUpdateMultiBossEventPacket packet) {
         if (packet.operation() == ClientboundUpdateMultiBossEventPacket.OperationType.ADD) {
             this.bossInfoMap.put(packet.uniqueId(), new MultiBossEvent(packet));
         } else if (packet.operation() == ClientboundUpdateMultiBossEventPacket.OperationType.REMOVE) {
@@ -44,7 +45,7 @@ public class CustomBossEventOverlay extends GuiComponent implements IGuiOverlay 
     }
 
     @Override
-    public void render(ForgeGui gui, PoseStack stack, float partialTicks, int width, int height) {
+    public void render(ForgeGui gui, @NotNull PoseStack stack, float partialTicks, int width, int height) {
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableBlend();
 
@@ -69,7 +70,7 @@ public class CustomBossEventOverlay extends GuiComponent implements IGuiOverlay 
         RenderSystem.disableBlend();
     }
 
-    private void render(PoseStack stack, int k, int j, MultiBossEvent value) {
+    private void render(@NotNull PoseStack stack, int k, int j, @NotNull MultiBossEvent value) {
         int textureStart = 0;
         List<Color> s = value.getColors();
         Map<Color, Float> perc = value.getEntries();

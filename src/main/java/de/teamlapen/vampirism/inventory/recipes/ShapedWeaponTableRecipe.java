@@ -130,7 +130,7 @@ public class ShapedWeaponTableRecipe implements CraftingRecipe, IWeaponTableReci
     }
 
     @Override
-    public boolean matches(CraftingContainer inv, @NotNull Level worldIn) {
+    public boolean matches(@NotNull CraftingContainer inv, @NotNull Level worldIn) {
         for (int i = 0; i <= inv.getWidth() - this.recipeWidth; ++i) {
             for (int j = 0; j <= inv.getHeight() - this.recipeHeight; ++j) {
                 if (this.checkMatch(inv, i, j, true)) {
@@ -148,7 +148,7 @@ public class ShapedWeaponTableRecipe implements CraftingRecipe, IWeaponTableReci
     /**
      * Checks if the region of a crafting inventory is match for the recipe.
      */
-    private boolean checkMatch(CraftingContainer craftingInventory, int startRow, int startColumn, boolean p_77573_4_) {
+    private boolean checkMatch(@NotNull CraftingContainer craftingInventory, int startRow, int startColumn, boolean p_77573_4_) {
         for (int i = 0; i < craftingInventory.getWidth(); ++i) {
             for (int j = 0; j < craftingInventory.getHeight(); ++j) {
                 int k = i - startRow;
@@ -191,7 +191,7 @@ public class ShapedWeaponTableRecipe implements CraftingRecipe, IWeaponTableReci
         }
 
         @Override
-        public ShapedWeaponTableRecipe fromNetwork(@NotNull ResourceLocation recipeId, FriendlyByteBuf buffer) {
+        public ShapedWeaponTableRecipe fromNetwork(@NotNull ResourceLocation recipeId, @NotNull FriendlyByteBuf buffer) {
             int width = buffer.readVarInt();
             int height = buffer.readVarInt();
             String group = buffer.readUtf(32767);
@@ -211,7 +211,7 @@ public class ShapedWeaponTableRecipe implements CraftingRecipe, IWeaponTableReci
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf buffer, ShapedWeaponTableRecipe recipe) {
+        public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull ShapedWeaponTableRecipe recipe) {
             buffer.writeVarInt(recipe.recipeWidth);
             buffer.writeVarInt(recipe.recipeHeight);
             buffer.writeUtf(recipe.group);

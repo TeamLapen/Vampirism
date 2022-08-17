@@ -11,6 +11,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
 
@@ -23,9 +24,9 @@ public abstract class MoveToPositionGoal<T extends PathfinderMob> extends Goal {
 
 
     protected final T entity;
-    protected final LevelReader world;
+    protected final @NotNull LevelReader world;
     private final double followSpeed;
-    private final PathNavigation navigator;
+    private final @NotNull PathNavigation navigator;
     private final float minDist;
     private final float maxDist;
     private final boolean doTeleport;
@@ -33,7 +34,7 @@ public abstract class MoveToPositionGoal<T extends PathfinderMob> extends Goal {
     private int timeToRecalcPath;
     private float oldWaterCost;
 
-    public MoveToPositionGoal(T entity, double followSpeed, float minDist, float maxDist, boolean doTeleport, boolean look) {
+    public MoveToPositionGoal(@NotNull T entity, double followSpeed, float minDist, float maxDist, boolean doTeleport, boolean look) {
         this.entity = entity;
         this.world = entity.getCommandSenderWorld();
         this.followSpeed = followSpeed;
@@ -101,7 +102,7 @@ public abstract class MoveToPositionGoal<T extends PathfinderMob> extends Goal {
 
     }
 
-    protected boolean canTeleportToBlock(BlockPos pos) {
+    protected boolean canTeleportToBlock(@NotNull BlockPos pos) {
         BlockState blockstate = this.world.getBlockState(pos);
         return blockstate.isValidSpawn(this.world, pos, this.entity.getType()) && this.world.isEmptyBlock(pos.above()) && this.world.isEmptyBlock(pos.above(2));
     }

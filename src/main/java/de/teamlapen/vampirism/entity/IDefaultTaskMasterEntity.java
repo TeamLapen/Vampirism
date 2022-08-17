@@ -10,6 +10,7 @@ import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.VillagerType;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.OptionalInt;
@@ -24,7 +25,7 @@ public interface IDefaultTaskMasterEntity extends ForceLookEntityGoal.TaskOwner,
      */
     VillagerType getBiomeType();
 
-    default boolean processInteraction(Player playerEntity, Entity entity) {
+    default boolean processInteraction(@NotNull Player playerEntity, @NotNull Entity entity) {
         if (FactionPlayerHandler.getOpt(playerEntity).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).map(IFactionPlayer::getTaskManager).map(taskManager -> taskManager.hasAvailableTasks(entity.getUUID())).orElse(false)) {
             OptionalInt containerIdOpt = playerEntity.openMenu(new SimpleMenuProvider((containerId, playerInventory, player) -> new TaskBoardContainer(containerId, playerInventory), entity.getDisplayName().plainCopy()));
             if (containerIdOpt.isPresent()) {

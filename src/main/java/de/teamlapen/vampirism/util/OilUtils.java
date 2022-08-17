@@ -25,7 +25,7 @@ public class OilUtils {
         return oil != null ? oil : ModOils.EMPTY.get();
     }
 
-    public static ItemStack setOil(@NotNull ItemStack stack, @NotNull IOil oil) {
+    public static @NotNull ItemStack setOil(@NotNull ItemStack stack, @NotNull IOil oil) {
         stack.getOrCreateTag().putString("oil", RegUtil.id(oil).toString());
         return stack;
     }
@@ -34,11 +34,11 @@ public class OilUtils {
         return ModItems.OIL_BOTTLE.get().withOil(oil);
     }
 
-    public static Optional<IApplicableOil> getAppliedOil(@NotNull ItemStack stack) {
+    public static @NotNull Optional<IApplicableOil> getAppliedOil(@NotNull ItemStack stack) {
         return getAppliedOilStatus(stack).map(Pair::getLeft);
     }
 
-    public static boolean reduceAppliedOilDuration(ItemStack stack) {
+    public static boolean reduceAppliedOilDuration(@NotNull ItemStack stack) {
         return OilUtils.getAppliedOil(stack).map(oil -> reduceAppliedOilDuration(stack, oil, oil.getDurationReduction())).orElse(true);
     }
 
@@ -62,7 +62,7 @@ public class OilUtils {
         return stack.getOrCreateTag().getCompound("applied_oil").contains("oil");
     }
 
-    public static Optional<Pair<IApplicableOil, Integer>> getAppliedOilStatus(@NotNull ItemStack stack) {
+    public static @NotNull Optional<Pair<IApplicableOil, Integer>> getAppliedOilStatus(@NotNull ItemStack stack) {
         CompoundTag compound = stack.getOrCreateTag().getCompound("applied_oil");
         if (compound.contains("oil")) {
             IOil oil = RegUtil.getOil(new ResourceLocation(compound.getString("oil")));
@@ -78,17 +78,17 @@ public class OilUtils {
         }
     }
 
-    public static ItemStack removeAppliedOil(@NotNull ItemStack stack) {
+    public static @NotNull ItemStack removeAppliedOil(@NotNull ItemStack stack) {
         stack.getOrCreateTag().remove("applied_oil");
         return stack;
     }
 
 
-    public static ItemStack setAppliedOil(@NotNull ItemStack stack, IApplicableOil oil) {
+    public static @NotNull ItemStack setAppliedOil(@NotNull ItemStack stack, @NotNull IApplicableOil oil) {
         return setAppliedOil(stack, oil, oil.getMaxDuration(stack));
     }
 
-    public static ItemStack setAppliedOil(@NotNull ItemStack stack, IApplicableOil oil, int duration) {
+    public static @NotNull ItemStack setAppliedOil(@NotNull ItemStack stack, IApplicableOil oil, int duration) {
         if (duration <= 0) {
             return removeAppliedOil(stack);
         }

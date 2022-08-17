@@ -10,7 +10,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
@@ -18,7 +17,7 @@ public class AltarInfusionScreen extends AbstractContainerScreen<AltarInfusionCo
 
     private static final ResourceLocation altarGuiTextures = new ResourceLocation(REFERENCE.MODID, "textures/gui/altar4.png");
 
-    public AltarInfusionScreen(AltarInfusionContainer inventorySlotsIn, Inventory playerInventory, Component name) {
+    public AltarInfusionScreen(@NotNull AltarInfusionContainer inventorySlotsIn, @NotNull Inventory playerInventory, @NotNull Component name) {
         super(inventorySlotsIn, playerInventory, name);
     }
 

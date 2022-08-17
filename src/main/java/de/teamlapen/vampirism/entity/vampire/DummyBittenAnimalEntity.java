@@ -13,17 +13,18 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Just a simple dummy class, which makes it possible to spawn bitten mobs
  */
 public class DummyBittenAnimalEntity extends Mob {
 
-    public static boolean spawnPredicate(EntityType<? extends DummyBittenAnimalEntity> entityType, LevelAccessor iWorld, MobSpawnType spawnReason, BlockPos blockPos, RandomSource random) {
+    public static boolean spawnPredicate(EntityType<? extends DummyBittenAnimalEntity> entityType, @NotNull LevelAccessor iWorld, MobSpawnType spawnReason, @NotNull BlockPos blockPos, RandomSource random) {
         return (iWorld.getBlockState(blockPos.below()).getBlock() == Blocks.GRASS_BLOCK || iWorld.getBlockState(blockPos.below()).is(ModTags.Blocks.CURSED_EARTH));
     }
 
-    public DummyBittenAnimalEntity(EntityType<? extends DummyBittenAnimalEntity> type, Level world) {
+    public DummyBittenAnimalEntity(@NotNull EntityType<? extends DummyBittenAnimalEntity> type, @NotNull Level world) {
         super(type, world);
     }
 

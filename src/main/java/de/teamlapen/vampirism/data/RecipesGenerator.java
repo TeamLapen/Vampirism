@@ -45,7 +45,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public class RecipesGenerator extends RecipeProvider {
-    public RecipesGenerator(DataGenerator dataGenerator) {
+    public RecipesGenerator(@NotNull DataGenerator dataGenerator) {
         super(dataGenerator);
     }
 
@@ -405,7 +405,7 @@ public class RecipesGenerator extends RecipeProvider {
         ShapedRecipeBuilder.shaped(ModBlocks.ALCHEMY_TABLE.get()).pattern("B  ").pattern("BBB").pattern("P P").define('B', basalt).define('P', planks).unlockedBy("has_basalt", has(basalt)).unlockedBy("has_planks", has(planks)).save(consumer);
     }
 
-    private JsonObject enchantment(int level, Enchantment enchantment) {
+    private @NotNull JsonObject enchantment(int level, Enchantment enchantment) {
         JsonObject nbt = new JsonObject();
         JsonArray enchantmentarray = new JsonArray();
         JsonObject enchantment1 = new JsonObject();
@@ -416,51 +416,51 @@ public class RecipesGenerator extends RecipeProvider {
         return nbt;
     }
 
-    private ResourceLocation general(String path) {
+    private @NotNull ResourceLocation general(String path) {
         return modId("general/" + path);
     }
 
-    private ResourceLocation hunter(String path) {
+    private @NotNull ResourceLocation hunter(String path) {
         return modId("hunter/" + path);
     }
 
-    private ResourceLocation modId(String path) {
+    private @NotNull ResourceLocation modId(@NotNull String path) {
         return new ResourceLocation(REFERENCE.MODID, path);
     }
 
-    private Ingredient potion(Potion... potion) {
+    private @NotNull Ingredient potion(Potion @NotNull ... potion) {
         return new NBTIngredient(Arrays.stream(potion).map(p -> PotionUtils.setPotion(new ItemStack(Items.POTION, 1),p)).toArray(ItemStack[]::new));
     }
-    private Ingredient potion(Potion potion) {
+    private @NotNull Ingredient potion(@NotNull Potion potion) {
         ItemStack stack = new ItemStack(Items.POTION, 1);
         PotionUtils.setPotion(stack, potion);
         return new NBTIngredient(stack);
     }
 
-    private ResourceLocation vampire(String path) {
+    private @NotNull ResourceLocation vampire(String path) {
         return modId("vampire/" + path);
     }
 
     private static class Shapeless extends ShapelessRecipeBuilder {
-        public Shapeless(ItemLike itemProvider, int amount) {
+        public Shapeless(@NotNull ItemLike itemProvider, int amount) {
             super(itemProvider, amount);
         }
 
-        public ShapelessRecipeBuilder addIngredient(TagKey<Item> tag, int amount) {
+        public @NotNull ShapelessRecipeBuilder addIngredient(@NotNull TagKey<Item> tag, int amount) {
             return this.requires(Ingredient.of(tag), amount);
         }
     }
 
     private static class Shaped extends ShapedRecipeBuilder {
-        private final ItemStack stack;
+        private final @NotNull ItemStack stack;
 
-        public Shaped(ItemStack resultIn) {
+        public Shaped(@NotNull ItemStack resultIn) {
             super(resultIn.getItem(), resultIn.getCount());
             this.stack = resultIn;
         }
 
         @Override
-        public void save(Consumer<FinishedRecipe> consumerIn, @NotNull ResourceLocation id) {
+        public void save(@NotNull Consumer<FinishedRecipe> consumerIn, @NotNull ResourceLocation id) {
             this.ensureValid(id);
             this.advancement.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id)).rewards(AdvancementRewards.Builder.recipe(id)).requirements(RequirementsStrategy.OR);
             consumerIn.accept(new Result(id, this.count, this.group == null ? "" : this.group, this.rows, this.key, this.advancement, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getItemCategory().getRecipeFolderName() + "/" + id.getPath()), this.stack));
@@ -468,9 +468,9 @@ public class RecipesGenerator extends RecipeProvider {
         }
 
         private static class Result extends ShapedRecipeBuilder.Result {
-            private final ItemStack stack;
+            private final @NotNull ItemStack stack;
 
-            public Result(ResourceLocation idIn, int countIn, String groupIn, List<String> patternIn, Map<Character, Ingredient> keyIn, Advancement.Builder advancementBuilderIn, ResourceLocation advancementIdIn, ItemStack stack) {
+            public Result(@NotNull ResourceLocation idIn, int countIn, @NotNull String groupIn, @NotNull List<String> patternIn, @NotNull Map<Character, Ingredient> keyIn, Advancement.@NotNull Builder advancementBuilderIn, @NotNull ResourceLocation advancementIdIn, @NotNull ItemStack stack) {
                 super(idIn, stack.getItem(), countIn, groupIn, patternIn, keyIn, advancementBuilderIn, advancementIdIn);
                 this.stack = stack;
             }

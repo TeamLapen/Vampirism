@@ -40,7 +40,7 @@ public class SkillManager implements ISkillManager {
      * @throws java.lang.IllegalStateException when the faction can not have a skill for the given skill type or when there is no skill registered conforming to the skill type's naming scheme
      */
     @NotNull
-    public <T extends IFactionPlayer<T>> ISkill<T> getRootSkill(IPlayableFaction<T> faction, ISkillType type) {
+    public <T extends IFactionPlayer<T>> ISkill<T> getRootSkill(@NotNull IPlayableFaction<T> faction, @NotNull ISkillType type) {
         if (!type.isForFaction(faction)) throw new IllegalStateException("The skilltype " + type + " is not applicable for the faction " + faction.getID());
         ISkill skill = RegUtil.getSkill(type.createIdForFaction(faction.getID()));
         if (skill == null) {
@@ -52,12 +52,12 @@ public class SkillManager implements ISkillManager {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends IFactionPlayer<T>> List<ISkill<T>> getSkillsForFaction(IPlayableFaction<T> faction) {
+    public <T extends IFactionPlayer<T>> @NotNull List<ISkill<T>> getSkillsForFaction(IPlayableFaction<T> faction) {
         return RegUtil.values(ModRegistries.SKILLS).stream().filter(action -> action.getFaction().map(f -> f == faction).orElse(true)).map(action -> (ISkill<T>)action).collect(Collectors.toList());
     }
 
     @Override
-    public Collection<ISkillType> getSkillTypes() {
+    public @NotNull Collection<ISkillType> getSkillTypes() {
         return this.skillTypes.values();
     }
 
@@ -65,7 +65,7 @@ public class SkillManager implements ISkillManager {
      * For debug purpose only.
      * Prints the skills of the given faction to the given sender
      */
-    public void printSkills(IPlayableFaction<?> faction, CommandSourceStack sender) {
+    public void printSkills(IPlayableFaction<?> faction, @NotNull CommandSourceStack sender) {
         for (ISkill<?> s : getSkillsForFaction(faction)) {
             sender.sendSuccess(Component.literal("ID: " + RegUtil.id(s) + " Skill: ").append(s.getName()), true);
         }

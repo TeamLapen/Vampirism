@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.config.bloodvalues;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,7 @@ public class BloodValueBuilder {
         this.legacyEntries.addEntry(new Proxy(new Entry(id, value), sourceName));
     }
 
-    public Map<ResourceLocation, Float> build() {
+    public @NotNull Map<ResourceLocation, Float> build() {
         List<BuilderEntries> entries = this.entries.stream().filter(BuilderEntries::isReplace).collect(Collectors.toList());
         if (entries.isEmpty()) {
             entries = this.entries;
@@ -78,7 +79,7 @@ public class BloodValueBuilder {
         }
 
         @Override
-        public String toString() {
+        public @NotNull String toString() {
             return this.entry.toString() + " (from " + this.source + ")";
         }
     }
@@ -96,7 +97,7 @@ public class BloodValueBuilder {
         }
 
         @Override
-        public String toString() {
+        public @NotNull String toString() {
             return id + " : " + value;
         }
     }

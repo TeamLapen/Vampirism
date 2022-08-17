@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.player.refinements.RefinementSet;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
 
 public class ModRefinementSets {
     public static final DeferredRegister<IRefinementSet> REFINEMENT_SETS = DeferredRegister.create(VampirismRegistries.REFINEMENT_SET_ID, REFERENCE.MODID);
@@ -149,28 +150,28 @@ public class ModRefinementSets {
     }
 
     @SafeVarargs
-    private static IRefinementSet commonV(RegistryObject<? extends IRefinement>... refinements) {
+    private static @NotNull IRefinementSet commonV(RegistryObject<? extends IRefinement>... refinements) {
         return vampire(Rarity.COMMON, refinements);
     }
 
     @SafeVarargs
-    private static IRefinementSet uncommonV(RegistryObject<? extends IRefinement>... refinements) {
+    private static @NotNull IRefinementSet uncommonV(RegistryObject<? extends IRefinement>... refinements) {
         return vampire(Rarity.UNCOMMON, refinements);
     }
 
     @SafeVarargs
-    private static IRefinementSet rareV(RegistryObject<? extends IRefinement>... refinements) {
+    private static @NotNull IRefinementSet rareV(RegistryObject<? extends IRefinement>... refinements) {
         return vampire(Rarity.RARE, refinements);
     }
 
     @SafeVarargs
-    private static IRefinementSet epicV(RegistryObject<? extends IRefinement>... refinements) {
+    private static @NotNull IRefinementSet epicV(RegistryObject<? extends IRefinement>... refinements) {
         return vampire(Rarity.EPIC, refinements);
     }
 
     @SuppressWarnings("ConstantConditions")
     @SafeVarargs
-    private static RefinementSet vampire(Rarity rarity, RegistryObject<? extends IRefinement>... refinements) {
+    private static @NotNull RefinementSet vampire(@NotNull Rarity rarity, RegistryObject<? extends IRefinement>... refinements) {
         return new RefinementSet.VampireRefinementSet(rarity, rarity.color.getColor(), refinements);
     }
 }

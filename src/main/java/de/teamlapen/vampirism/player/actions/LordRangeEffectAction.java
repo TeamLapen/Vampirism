@@ -28,7 +28,7 @@ public abstract class LordRangeEffectAction<T extends IFactionPlayer<T>> extends
     }
 
     @Override
-    protected boolean activate(T player, ActivationContext context) {
+    protected boolean activate(@NotNull T player, ActivationContext context) {
         int lordLevel = FactionPlayerHandler.getOpt(player.getRepresentingPlayer()).map(FactionPlayerHandler::getLordLevel).orElse(0);
         List<LivingEntity> entitiesOfClass = player.getRepresentingPlayer().level.getEntitiesOfClass(LivingEntity.class, new AABB(player.getRepresentingPlayer().blockPosition()).inflate(10, 10, 10), e -> player.getFaction() == VampirismAPI.factionRegistry().getFaction(e));
         for (LivingEntity entity : entitiesOfClass) {
@@ -47,7 +47,7 @@ public abstract class LordRangeEffectAction<T extends IFactionPlayer<T>> extends
         return getEffectDuration(player);
     }
 
-    protected int getEffectAmplifier(T player){
+    protected int getEffectAmplifier(@NotNull T player){
         return ((IVampirismPlayer) player.getRepresentingPlayer()).getVampAtts().lordLevel - 1;
     }
 

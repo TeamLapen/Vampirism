@@ -22,6 +22,7 @@ import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.material.Material;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
 
@@ -30,7 +31,7 @@ public class VampireDungeonFeature extends MonsterRoomFeature {
     private static final BlockState CAVE_AIR = Blocks.CAVE_AIR.defaultBlockState();
 
 
-    public VampireDungeonFeature(Codec<NoneFeatureConfiguration> featureConfig) {
+    public VampireDungeonFeature(@NotNull Codec<NoneFeatureConfiguration> featureConfig) {
         super(featureConfig);
     }
 
@@ -46,7 +47,7 @@ public class VampireDungeonFeature extends MonsterRoomFeature {
      */
     @SuppressWarnings("JavadocReference")
     @Override
-    public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> p_160066_) {
+    public boolean place(@NotNull FeaturePlaceContext<NoneFeatureConfiguration> p_160066_) {
         Predicate<BlockState> predicate = Feature.isReplaceable(BlockTags.FEATURES_CANNOT_REPLACE);
         BlockPos blockpos = p_160066_.origin();
         RandomSource randomsource = p_160066_.random();

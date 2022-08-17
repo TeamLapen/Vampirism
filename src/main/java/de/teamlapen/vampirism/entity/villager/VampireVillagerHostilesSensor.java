@@ -13,7 +13,7 @@ import java.util.Map;
  * just {@link VillagerHostilesSensor} with a hostile map without zombies
  */
 public class VampireVillagerHostilesSensor extends VillagerHostilesSensor {
-    public static final Map<EntityType<?>, Float> hostiles;
+    public static final @NotNull Map<EntityType<?>, Float> hostiles;
 
     static {
         //Adding values will probably not work outside Dev as hasPresence is not called for some reason
@@ -25,7 +25,7 @@ public class VampireVillagerHostilesSensor extends VillagerHostilesSensor {
     }
 
     @Override
-    public boolean isClose(@NotNull LivingEntity villager, LivingEntity hostile) {
+    public boolean isClose(@NotNull LivingEntity villager, @NotNull LivingEntity hostile) {
         //hasPresence is not checked first, so values may not be present
         @Nullable Float f = hostiles.get(hostile.getType()); //Careful about unboxing nullpointer
         if (f == null) return false;
@@ -33,7 +33,7 @@ public class VampireVillagerHostilesSensor extends VillagerHostilesSensor {
     }
 
     @Override
-    public boolean isHostile(LivingEntity hostile) { //For some reason this method is not called (as it does not properly override somehow maybe) outside dev
+    public boolean isHostile(@NotNull LivingEntity hostile) { //For some reason this method is not called (as it does not properly override somehow maybe) outside dev
         return hostiles.containsKey(hostile.getType());
     }
 

@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class HorizontalContainerBlock extends VampirismHorizontalBlock implements EntityBlock {
@@ -30,7 +30,7 @@ public abstract class HorizontalContainerBlock extends VampirismHorizontalBlock 
     }
 
     @Nullable
-    public MenuProvider getMenuProvider(BlockState p_49234_, Level p_49235_, BlockPos p_49236_) {
+    public MenuProvider getMenuProvider(BlockState p_49234_, @NotNull Level p_49235_, BlockPos p_49236_) {
         BlockEntity blockentity = p_49235_.getBlockEntity(p_49236_);
         return blockentity instanceof MenuProvider ? (MenuProvider)blockentity : null;
     }

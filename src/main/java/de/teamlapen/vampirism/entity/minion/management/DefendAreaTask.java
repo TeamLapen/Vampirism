@@ -8,6 +8,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.entity.player.Player;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import static de.teamlapen.vampirism.entity.minion.management.DefendAreaTask.Desc;
@@ -30,7 +31,7 @@ public class DefendAreaTask extends DefaultMinionTask<Desc, MinionData> {
     }
 
     @Override
-    public Desc readFromNBT(CompoundTag nbt) {
+    public @NotNull Desc readFromNBT(@NotNull CompoundTag nbt) {
         BlockPos pos = NbtUtils.readBlockPos(nbt.getCompound("center"));
         int dist = nbt.getInt("radius");
         return new Desc(pos, dist);
@@ -48,12 +49,12 @@ public class DefendAreaTask extends DefaultMinionTask<Desc, MinionData> {
         }
 
         @Override
-        public IMinionTask<?, MinionData> getTask() {
+        public @NotNull IMinionTask<?, MinionData> getTask() {
             return MinionTasks.DEFEND_AREA.get();
         }
 
         @Override
-        public void writeToNBT(CompoundTag nbt) {
+        public void writeToNBT(@NotNull CompoundTag nbt) {
             nbt.put("center", NbtUtils.writeBlockPos(center));
             nbt.putInt("radius", distance);
         }

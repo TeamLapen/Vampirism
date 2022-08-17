@@ -20,14 +20,14 @@ public class FactionVillage implements IFactionVillage {
 
     private final Supplier<MobEffect> badOmenEffect;
     private final Supplier<ItemStack> bannerStack;
-    private final ImmutableList<CaptureEntityEntry<?>> captureEntities;
+    private final @NotNull ImmutableList<CaptureEntityEntry<?>> captureEntities;
     private final Supplier<VillagerProfession> factionVillageProfession;
     private final Class<? extends Mob> guardSuperClass;
     private final Supplier<EntityType<? extends ITaskMasterEntity>> taskMasterEntity;
     private final Supplier<? extends Block> fragileTotem;
     private final Supplier<? extends Block> craftedTotem;
 
-    public FactionVillage(FactionVillageBuilder builder) {
+    public FactionVillage(@NotNull FactionVillageBuilder builder) {
         this.badOmenEffect = builder.badOmenEffect;
         this.bannerStack = builder.bannerStack;
         this.captureEntities = ImmutableList.copyOf(builder.captureEntities);

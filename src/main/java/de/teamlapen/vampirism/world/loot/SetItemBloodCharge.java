@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class SetItemBloodCharge extends LootItemConditionalFunction {
 
-    public static Builder<?> builder(NumberProvider p_215931_0_) {
+    public static @NotNull Builder<?> builder(NumberProvider p_215931_0_) {
         return simpleBuilder((p_215930_1_) -> new SetItemBloodCharge(p_215930_1_, p_215931_0_));
     }
 
@@ -32,7 +32,7 @@ public class SetItemBloodCharge extends LootItemConditionalFunction {
     /**
      * Either charge or (minCharge and maxCharge) should be -1
      */
-    private SetItemBloodCharge(LootItemCondition[] conditions, NumberProvider charge) {
+    private SetItemBloodCharge(LootItemCondition @NotNull [] conditions, NumberProvider charge) {
         super(conditions);
         this.charge = charge;
     }

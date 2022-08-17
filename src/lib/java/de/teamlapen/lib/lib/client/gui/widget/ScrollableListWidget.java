@@ -25,10 +25,10 @@ public class ScrollableListWidget<T> extends ExtendedButton {
 
     private static final ResourceLocation MISC = new ResourceLocation(LIBREFERENCE.MODID, "textures/gui/misc.png");
     protected final List<ListItem<T>> listItems = new ArrayList<>();
-    private final ItemCreator<T> itemSupplier;
+    private final @NotNull ItemCreator<T> itemSupplier;
     private final int itemHeight;
     private final int scrollerWidth = 9;
-    private final Supplier<Collection<T>> baseValueSupplier;
+    private final @NotNull Supplier<Collection<T>> baseValueSupplier;
     private int scrolled;
     private double scrolledD;
     private boolean scrollerClicked;
@@ -216,11 +216,11 @@ public class ScrollableListWidget<T> extends ExtendedButton {
         this.setCanScroll();
     }
 
-    private void renderBackground(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    private void renderBackground(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         ScreenUtils.blitWithBorder(matrixStack, new ResourceLocation("textures/gui/widgets.png"), x, y, 0, 46, this.width - this.scrollerWidth + 1, this.height, 200, 20, 3, 3, 3, 3, this.getBlitOffset());
     }
 
-    private void renderItems(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    private void renderItems(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         int itemHeight = this.itemHeight; // only 1 pixel between items
         for (int i = 0; i < this.listItems.size(); i++) {
 
@@ -235,12 +235,12 @@ public class ScrollableListWidget<T> extends ExtendedButton {
         this.hLine(matrixStack, this.x, this.x + width - 1, this.y + height - 1, 0xff000000);
     }
 
-    private void renderScrollBar(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    private void renderScrollBar(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         ScreenUtils.blitWithBorder(matrixStack, MISC, this.x + this.width - this.scrollerWidth, this.y, 0, 0, 9, this.height, 9, 200, 2, getBlitOffset());
         this.renderScroller(matrixStack, mouseX, mouseY, partialTicks);
     }
 
-    private void renderScroller(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    private void renderScroller(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         int scrollerHeight = 27;
         int scrollHeight = this.height - 2 - scrollerHeight;
         float perc = (float) this.scrolled / (float) (this.listItems.size() * this.itemHeight - this.height + 2);
@@ -316,7 +316,7 @@ public class ScrollableListWidget<T> extends ExtendedButton {
          * @param listHeight height of the list
          * @param itemHeight height of the list item
          */
-        public void render(PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel) {
+        public void render(@NotNull PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel) {
             int v = 66;
             if (mouseX >= x && mouseX < x + listWidth && mouseY >= y && mouseY < y + itemHeight) {
                 v = 86;

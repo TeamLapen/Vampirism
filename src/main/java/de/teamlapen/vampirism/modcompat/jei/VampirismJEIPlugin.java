@@ -72,13 +72,13 @@ public class VampirismJEIPlugin implements IModPlugin {
 
 
     @Override
-    public void registerCategories(IRecipeCategoryRegistration registration) {
+    public void registerCategories(@NotNull IRecipeCategoryRegistration registration) {
         IGuiHelper helper = registration.getJeiHelpers().getGuiHelper();
         registration.addRecipeCategories(new AlchemicalCauldronRecipeCategory(helper), new WeaponTableRecipeCategory(helper), new TaskRecipeCategory(helper), new PotionTableRecipeCategory(helper), new AlchemyTableRecipeCategory(helper), new BlessingRecipeCategory(helper));
     }
 
     @Override
-    public void registerGuiHandlers(IGuiHandlerRegistration registration) {
+    public void registerGuiHandlers(@NotNull IGuiHandlerRegistration registration) {
         registration.addRecipeClickArea(AlchemicalCauldronScreen.class, 80, 34, 20, 15, ALCHEMICAL_CAULDRON);
         registration.addRecipeClickArea(WeaponTableScreen.class, 114, 46, 20, 15, WEAPON_TABLE);
         registration.addRecipeClickArea(PotionTableScreen.class, 145, 17,9,28, POTION);
@@ -87,14 +87,14 @@ public class VampirismJEIPlugin implements IModPlugin {
     }
 
     @Override
-    public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
+    public void registerRecipeTransferHandlers(@NotNull IRecipeTransferRegistration registration) {
         registration.addRecipeTransferHandler(AlchemicalCauldronContainer.class, ModContainer.ALCHEMICAL_CAULDRON.get(), ALCHEMICAL_CAULDRON, 0, 2, 4, 36);
         registration.addRecipeTransferHandler(AlchemicalCauldronContainer.class, ModContainer.ALCHEMICAL_CAULDRON.get(), RecipeTypes.FUELING, 3, 1, 4, 36);
         registration.addRecipeTransferHandler(WeaponTableContainer.class, ModContainer.WEAPON_TABLE.get(), WEAPON_TABLE, 1, 16, 17, 36);
     }
 
     @Override
-    public void registerItemSubtypes(ISubtypeRegistration registration) {
+    public void registerItemSubtypes(@NotNull ISubtypeRegistration registration) {
         registration.registerSubtypeInterpreter(ModItems.OIL_BOTTLE.get(), OilNBT.INSTANCE);
     }
 
@@ -105,7 +105,7 @@ public class VampirismJEIPlugin implements IModPlugin {
         }
 
         @Override
-        public String apply(ItemStack itemStack, UidContext context) {
+        public @NotNull String apply(@NotNull ItemStack itemStack, UidContext context) {
             CompoundTag nbtTagCompound = itemStack.getTag();
             if (nbtTagCompound == null || nbtTagCompound.isEmpty()) {
                 return IIngredientSubtypeInterpreter.NONE;
@@ -115,7 +115,7 @@ public class VampirismJEIPlugin implements IModPlugin {
     }
 
     @Override
-    public void registerRecipes(IRecipeRegistration registration) {
+    public void registerRecipes(@NotNull IRecipeRegistration registration) {
         ClientLevel world = Minecraft.getInstance().level;
         RecipeManager recipeManager = world.getRecipeManager();
         registration.addRecipes(ALCHEMICAL_CAULDRON, ((RecipeManagerAccessor)recipeManager).getByType(ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get()).values().stream().toList());
@@ -133,7 +133,7 @@ public class VampirismJEIPlugin implements IModPlugin {
 
     }
 
-    private List<IJeiAnvilRecipe> getRepairRecipes(IVanillaRecipeFactory factory) {
+    private @NotNull List<IJeiAnvilRecipe> getRepairRecipes(@NotNull IVanillaRecipeFactory factory) {
         List<IJeiAnvilRecipe> recipes = new ArrayList<>();
         Map<Ingredient, List<Item>> items = Maps.newHashMap();
         Ingredient ironIngredient = Tiers.IRON.getRepairIngredient();
@@ -175,7 +175,7 @@ public class VampirismJEIPlugin implements IModPlugin {
         return recipes;
     }
 
-    private List<CraftingRecipe> getApplicableOilRecipes() {
+    private @NotNull List<CraftingRecipe> getApplicableOilRecipes() {
         return RegUtil.values(ModRegistries.OILS).stream()
                 .filter(IApplicableOil.class::isInstance)
                 .map(IApplicableOil.class::cast)

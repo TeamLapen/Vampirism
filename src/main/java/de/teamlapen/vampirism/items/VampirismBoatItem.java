@@ -28,7 +28,7 @@ public class VampirismBoatItem extends Item {
     private final IVampirismBoat.BoatType type;
     private final boolean hasChest;
 
-    public VampirismBoatItem(IVampirismBoat.BoatType type, boolean hasChest, Properties properties) {
+    public VampirismBoatItem(IVampirismBoat.BoatType type, boolean hasChest, @NotNull Properties properties) {
         super(properties);
         this.type = type;
         this.hasChest = hasChest;
@@ -43,7 +43,7 @@ public class VampirismBoatItem extends Item {
      */
     @Override
     @NotNull
-    public InteractionResultHolder<ItemStack> use(Level p_77659_1_, Player p_77659_2_, InteractionHand p_77659_3_) {
+    public InteractionResultHolder<ItemStack> use(Level p_77659_1_, @NotNull Player p_77659_2_, InteractionHand p_77659_3_) {
         ItemStack itemstack = p_77659_2_.getItemInHand(p_77659_3_);
         HitResult hitresult = getPlayerPOVHitResult(p_77659_1_, p_77659_2_, ClipContext.Fluid.ANY);
         if (hitresult.getType() == HitResult.Type.MISS) {
@@ -88,7 +88,7 @@ public class VampirismBoatItem extends Item {
         }
     }
 
-    private IVampirismBoat getBoat(Level level, HitResult hitResult){
+    private @NotNull IVampirismBoat getBoat(Level level, @NotNull HitResult hitResult){
         return hasChest ? new VampirismChestBoatEntity(level, hitResult.getLocation().x, hitResult.getLocation().y, hitResult.getLocation().z) : new VampirismBoatEntity(level, hitResult.getLocation().x, hitResult.getLocation().y, hitResult.getLocation().z);
     }
 }

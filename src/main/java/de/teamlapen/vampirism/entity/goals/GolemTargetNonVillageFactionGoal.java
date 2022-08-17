@@ -10,6 +10,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.IronGolem;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,10 +22,10 @@ import java.util.function.Predicate;
  */
 public class GolemTargetNonVillageFactionGoal extends NearestAttackableTargetGoal<LivingEntity> {
     private static final Map<IFaction<?>, Predicate<LivingEntity>> predicates = new HashMap<>();
-    private final IronGolem golem;
+    private final @NotNull IronGolem golem;
     private IFaction<?> faction;
 
-    public GolemTargetNonVillageFactionGoal(IronGolem creature) {
+    public GolemTargetNonVillageFactionGoal(@NotNull IronGolem creature) {
         super(creature, LivingEntity.class, 4, false, false, null);
         this.golem = creature;
     }

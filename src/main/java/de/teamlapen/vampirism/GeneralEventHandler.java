@@ -27,6 +27,7 @@ import net.minecraftforge.server.ServerLifecycleHooks;
 import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Array;
 import java.util.Map;
@@ -39,12 +40,12 @@ public class GeneralEventHandler {
     private final static Logger LOGGER = LogManager.getLogger();
 
     @SubscribeEvent
-    public void onAttachCapabilityWorld(AttachCapabilitiesEvent<Level> event) {
+    public void onAttachCapabilityWorld(@NotNull AttachCapabilitiesEvent<Level> event) {
         event.addCapability(REFERENCE.WORLD_CAP_KEY, VampirismWorld.createNewCapability(event.getObject()));
     }
 
     @SubscribeEvent
-    public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+    public void onPlayerLoggedIn(PlayerEvent.@NotNull PlayerLoggedInEvent event) {
         VersionChecker.VersionInfo versionInfo = VampirismMod.instance.getVersionInfo();
         if (!versionInfo.isChecked()) LOGGER.warn("Version check is not finished yet");
 
@@ -106,7 +107,7 @@ public class GeneralEventHandler {
     }
 
     @SubscribeEvent
-    public void onServerTick(TickEvent.ServerTickEvent event) {
+    public void onServerTick(TickEvent.@NotNull ServerTickEvent event) {
         if (event.phase == TickEvent.Phase.END) return;
         MinionWorldData.getData(ServerLifecycleHooks.getCurrentServer()).tick();
 
@@ -114,7 +115,7 @@ public class GeneralEventHandler {
 
 
     @SubscribeEvent
-    public void onWorldUnload(LevelEvent.Unload event) {
+    public void onWorldUnload(LevelEvent.@NotNull Unload event) {
         if (event.getLevel() instanceof Level level) {
             VampirismWorld.getOpt(level).ifPresent(VampirismWorld::clearCaches);
         }

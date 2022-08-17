@@ -42,14 +42,14 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
 
     class Data<T> {
         public boolean vulnerableToFire = true;
-        public EnumStrength garlicCache = EnumStrength.NONE;
+        public @NotNull EnumStrength garlicCache = EnumStrength.NONE;
         public T entityCreature;
         public boolean sundamageCache;
         public boolean dropSoul = false;
         @Nullable
         public Component name;
         public int conversionTime;
-        public UUID conversationStarter;
+        public @Nullable UUID conversationStarter;
     }
 
     Data<T> data();
@@ -90,7 +90,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
      * return in {@link net.minecraft.world.entity.PathfinderMob#getTypeName()} ()}
      */
     @SuppressWarnings("JavadocReference")
-    default Component getNameC(Supplier<Component> baseName) {
+    default @Nullable Component getNameC(@NotNull Supplier<Component> baseName) {
         if (data().name == null) {
             this.data().name = Component.translatable("entity.vampirism.vampire").append(baseName.get());
         }
@@ -106,7 +106,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
         }
     }
 
-    default boolean doesResistGarlic(EnumStrength strength) {
+    default boolean doesResistGarlic(@NotNull EnumStrength strength) {
         return !strength.isStrongerThan(EnumStrength.NONE);
     }
 
@@ -134,7 +134,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     /**
      * call in {@link PathfinderMob#aiStep()}
      */
-    default void aiStepC(EntityType<T> originalType) {
+    default void aiStepC(@NotNull EntityType<T> originalType) {
         PathfinderMob entity = ((PathfinderMob) this);
         if (!entity.level.isClientSide && entity.isAlive() && this.isConverting(entity)) {
             --data().conversionTime;
@@ -168,7 +168,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     /**
      * call in {@link PathfinderMob#die(DamageSource)}
      */
-    default void dieC(DamageSource cause) {
+    default void dieC(@NotNull DamageSource cause) {
         if (cause.getDirectEntity() instanceof CrossbowArrowEntity && Helper.isHunter(cause.getEntity())) {
             data().dropSoul = true;
         } else if (cause.getDirectEntity() instanceof Player && Helper.isHunter(cause.getDirectEntity())) {
@@ -255,7 +255,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     }
 
     @Override
-    default LivingEntity getRepresentingEntity() {
+    default @NotNull LivingEntity getRepresentingEntity() {
         return ((PathfinderMob) this);
     }
 

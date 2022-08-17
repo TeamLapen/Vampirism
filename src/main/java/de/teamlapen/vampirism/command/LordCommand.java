@@ -14,6 +14,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
@@ -37,7 +38,7 @@ public class LordCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int setLevel(CommandContext<CommandSourceStack> context, int level, Collection<ServerPlayer> players) throws CommandSyntaxException {
+    private static int setLevel(@NotNull CommandContext<CommandSourceStack> context, int level, @NotNull Collection<ServerPlayer> players) throws CommandSyntaxException {
         for (ServerPlayer player : players) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             IPlayableFaction<?> faction = handler.getCurrentFaction();

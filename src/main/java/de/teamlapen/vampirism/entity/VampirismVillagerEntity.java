@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class VampirismVillagerEntity extends Villager {
 
-    public static AttributeSupplier.Builder getAttributeBuilder() {
+    public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
         return Villager.createAttributes().add(Attributes.ATTACK_DAMAGE);
     }
 
@@ -32,11 +32,11 @@ public class VampirismVillagerEntity extends Villager {
      */
     private int randomTickDivider;
 
-    public VampirismVillagerEntity(EntityType<? extends VampirismVillagerEntity> type, Level worldIn) {
+    public VampirismVillagerEntity(@NotNull EntityType<? extends VampirismVillagerEntity> type, @NotNull Level worldIn) {
         super(type, worldIn);
     }
 
-    public VampirismVillagerEntity(EntityType<? extends VampirismVillagerEntity> type, Level worldIn, VillagerType villagerType) {
+    public VampirismVillagerEntity(@NotNull EntityType<? extends VampirismVillagerEntity> type, @NotNull Level worldIn, @NotNull VillagerType villagerType) {
         super(type, worldIn, villagerType);
     }
 

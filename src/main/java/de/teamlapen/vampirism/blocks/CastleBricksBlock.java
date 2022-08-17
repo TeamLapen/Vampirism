@@ -14,9 +14,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 public class CastleBricksBlock extends VampirismBlock {
@@ -62,7 +62,7 @@ public class CastleBricksBlock extends VampirismBlock {
             this.name = name;
         }
 
-        public String getName() {
+        public @NotNull String getName() {
             return this.getSerializedName();
         }
 

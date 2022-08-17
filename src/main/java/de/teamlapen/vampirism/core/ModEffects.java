@@ -17,6 +17,7 @@ import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Handles all potion registrations and reference.
@@ -59,7 +60,7 @@ public class ModEffects {
         EFFECTS.register(bus);
     }
 
-    static void replaceEffects(IForgeRegistry<MobEffect> registry) {
+    static void replaceEffects(@NotNull IForgeRegistry<MobEffect> registry) {
         vanilla_night_vision = MobEffects.NIGHT_VISION;
         modded_night_vision = new VampirismNightVisionPotion();
         registry.register(registry.getKey(vanilla_night_vision), modded_night_vision);
@@ -102,7 +103,7 @@ public class ModEffects {
         return true;
     }
 
-    public static void fixMappings(MissingMappingsEvent event) {
+    public static void fixMappings(@NotNull MissingMappingsEvent event) {
         event.getAllMappings(ForgeRegistries.Keys.MOB_EFFECTS).forEach(missingMapping -> {
             switch (missingMapping.getKey().toString()) {
                 case "vampirism:thirst" ->  missingMapping.remap(MobEffects.HUNGER);

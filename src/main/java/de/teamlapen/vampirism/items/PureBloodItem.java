@@ -34,7 +34,7 @@ public class PureBloodItem extends Item {
     public static final int COUNT = 5;
     private final static Logger LOGGER = LogManager.getLogger();
 
-    public static Item getBloodItemForLevel(int level) {
+    public static @NotNull Item getBloodItemForLevel(int level) {
         switch (level) {
             case 0:
                 return ModItems.PURE_BLOOD_0.get();
@@ -61,7 +61,7 @@ public class PureBloodItem extends Item {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         tooltip.add(Component.translatable("item.vampirism.pure_blood.purity").append(Component.literal(": " + (level + 1 + "/" + COUNT))).withStyle(ChatFormatting.RED));
     }
 
@@ -83,7 +83,7 @@ public class PureBloodItem extends Item {
         return this.level;
     }
 
-    public Component getCustomName() {
+    public @NotNull Component getCustomName() {
         return Component.translatable(this.getOrCreateDescriptionId()).append(Component.literal(" " + (level + 1)));
     }
 
@@ -111,7 +111,7 @@ public class PureBloodItem extends Item {
         return super.use(worldIn, playerIn, handIn);
     }
 
-    private void checkWingConditions(VampirePlayer p) {
+    private void checkWingConditions(@NotNull VampirePlayer p) {
         net.minecraft.world.entity.player.Player e = p.getRepresentingPlayer();
         if (!e.getAbilities().instabuild && !e.level.isClientSide()) {
             if (e.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.CHEST).getItem() instanceof VampireClothingItem) {

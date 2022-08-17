@@ -11,6 +11,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.Map;
@@ -54,7 +55,7 @@ public class BloodConversionRegistry {
      * @deprecated use {@link #applyNewFluidResources(java.util.Map)}
      */
     @Deprecated //TODO remove
-    public static void applyNewFluidResources(Map<ResourceLocation, Integer> values, int divider) {
+    public static void applyNewFluidResources(@NotNull Map<ResourceLocation, Integer> values, int divider) {
         applyNewFluidResources(values.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() / (float)divider)));
     }
 
@@ -62,7 +63,7 @@ public class BloodConversionRegistry {
      * @deprecated use {@link #applyNewItemResources(java.util.Map)}
      */
     @Deprecated //TODO remove
-    public static void applyNewItemResources(Map<ResourceLocation, Integer> values, int multiplier) {
+    public static void applyNewItemResources(@NotNull Map<ResourceLocation, Integer> values, int multiplier) {
         applyNewItemResources(values.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() * (float)multiplier)));
     }
 
@@ -70,7 +71,7 @@ public class BloodConversionRegistry {
      * @deprecated no longer used
      */
     @Deprecated //TODO remove
-    public static void applyNewItemCalculated(Map<ResourceLocation, Integer> values) {
+    public static void applyNewItemCalculated(@NotNull Map<ResourceLocation, Integer> values) {
         items_calculated.putAll(values.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() * 100f)));
     }
 
@@ -78,7 +79,7 @@ public class BloodConversionRegistry {
      * @deprecated use {@link #getItemConversions()}
      */
     @Deprecated //TODO remove
-    public static Map<ResourceLocation, Integer> getItemValues() {
+    public static @NotNull Map<ResourceLocation, Integer> getItemValues() {
         return items.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> (int) (e.getValue() / 100)));
     }
 
@@ -86,7 +87,7 @@ public class BloodConversionRegistry {
      * @deprecated use {@link #getFluidConversions()}
      */
     @Deprecated //TODO remove
-    public static Map<ResourceLocation, Integer> getFluidValues() {
+    public static @NotNull Map<ResourceLocation, Integer> getFluidValues() {
         return fluids.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> (int) (e.getValue() * 100)));
     }
 
@@ -94,21 +95,21 @@ public class BloodConversionRegistry {
      * @deprecated use {@link #getItemConversionCalculated()}
      */
     @Deprecated //TODO remove
-    public static Map<ResourceLocation, Integer> getItemValuesCalculated() {
+    public static @NotNull Map<ResourceLocation, Integer> getItemValuesCalculated() {
         return items_calculated.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> (int) (e.getValue() / 100f)));
     }
 
-    public static void applyNewFluidResources(Map<ResourceLocation, Float> values) {
+    public static void applyNewFluidResources(@NotNull Map<ResourceLocation, Float> values) {
         fluids.clear();
         fluids.putAll(values);
     }
 
-    public static void applyNewEntitiesResources(Map<ResourceLocation, Float> values) {
+    public static void applyNewEntitiesResources(@NotNull Map<ResourceLocation, Float> values) {
         entities.clear();
         entities.putAll(values);
     }
 
-    public static void applyNewItemResources(Map<ResourceLocation, Float> values) {
+    public static void applyNewItemResources(@NotNull Map<ResourceLocation, Float> values) {
         items.clear();
         for (Map.Entry<ResourceLocation, Float> value : values.entrySet()) {
             if (value.getValue() != 0) {
@@ -119,19 +120,19 @@ public class BloodConversionRegistry {
         }
     }
 
-    public static Map<ResourceLocation, Float> getItemConversions() {
+    public static @NotNull Map<ResourceLocation, Float> getItemConversions() {
         return Collections.unmodifiableMap(items);
     }
 
-    public static Map<ResourceLocation, Float> getEntityConversions() {
+    public static @NotNull Map<ResourceLocation, Float> getEntityConversions() {
         return Collections.unmodifiableMap(entities);
     }
 
-    public static Map<ResourceLocation, Float> getFluidConversions() {
+    public static @NotNull Map<ResourceLocation, Float> getFluidConversions() {
         return Collections.unmodifiableMap(fluids);
     }
 
-    public static Map<ResourceLocation, Float> getItemConversionCalculated() {
+    public static @NotNull Map<ResourceLocation, Float> getItemConversionCalculated() {
         return Collections.unmodifiableMap(items_calculated);
     }
 
@@ -208,17 +209,17 @@ public class BloodConversionRegistry {
      * @param fluid FluidStack
      * @return Impure blood amount in mB or 0
      */
-    public static FluidStack getBloodFromFluid(@NotNull FluidStack fluid) {
+    public static @NotNull FluidStack getBloodFromFluid(@NotNull FluidStack fluid) {
         if (fluid.getFluid().isSame(VReference.BLOOD.get()))
             return fluid;
         return new FluidStack(VReference.BLOOD.get(), (int) (getBloodValue(fluid) * fluid.getAmount()));
     }
 
-    public static ResourceLocation id(Item item) {
+    public static @Nullable ResourceLocation id(Item item) {
         return ForgeRegistries.ITEMS.getKey(item);
     }
 
-    public static ResourceLocation id(Fluid block) {
+    public static @Nullable ResourceLocation id(Fluid block) {
         return ForgeRegistries.FLUIDS.getKey(block);
     }
 }

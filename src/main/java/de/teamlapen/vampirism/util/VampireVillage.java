@@ -17,10 +17,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.entity.BannerPatterns;
+import org.jetbrains.annotations.NotNull;
 
 public class VampireVillage {
 
-    public static ItemStack createBanner() {
+    public static @NotNull ItemStack createBanner() {
         ItemStack itemStack = new ItemStack(Items.BLACK_BANNER);
         CompoundTag compoundNBT = itemStack.getOrCreateTagElement("BlockEntityTag");
         ListTag listNBT = new BannerPattern.Builder()
@@ -37,7 +38,7 @@ public class VampireVillage {
         return itemStack;
     }
 
-    public static void vampireVillage(IFactionVillageBuilder builder) {
+    public static void vampireVillage(@NotNull IFactionVillageBuilder builder) {
         builder.badOmenEffect(ModEffects.BAD_OMEN_VAMPIRE)
                 .captureEntities(Lists.newArrayList(new CaptureEntityEntry<>(ModEntities.VAMPIRE, 10), new CaptureEntityEntry<>(ModEntities.ADVANCED_VAMPIRE, 2)))
                 .factionVillagerProfession(ModVillage.VAMPIRE_EXPERT)

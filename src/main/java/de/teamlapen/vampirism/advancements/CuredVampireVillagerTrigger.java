@@ -19,7 +19,7 @@ public class CuredVampireVillagerTrigger extends SimpleCriterionTrigger<CuredVam
         return ID;
     }
 
-    public void trigger(ServerPlayer player, Entity vampire, Villager villager) {
+    public void trigger(@NotNull ServerPlayer player, @NotNull Entity vampire, @NotNull Villager villager) {
         LootContext lootcontext = EntityPredicate.createContext(player, vampire);
         LootContext lootcontext1 = EntityPredicate.createContext(player, villager);
         this.trigger(player, (instance) -> instance.test(lootcontext, lootcontext1));
@@ -34,14 +34,14 @@ public class CuredVampireVillagerTrigger extends SimpleCriterionTrigger<CuredVam
     }
 
     public static class Instance extends AbstractCriterionTriggerInstance {
-        public static Instance any() {
+        public static @NotNull Instance any() {
             return new Instance(EntityPredicate.Composite.ANY, EntityPredicate.Composite.ANY, EntityPredicate.Composite.ANY);
         }
 
         private final EntityPredicate.Composite vampire;
         private final EntityPredicate.Composite villager;
 
-        public Instance(EntityPredicate.Composite player, EntityPredicate.Composite vampire, EntityPredicate.Composite villager) {
+        public Instance(EntityPredicate.@NotNull Composite player, EntityPredicate.Composite vampire, EntityPredicate.Composite villager) {
             super(ID, player);
             this.vampire = vampire;
             this.villager = villager;
@@ -56,7 +56,7 @@ public class CuredVampireVillagerTrigger extends SimpleCriterionTrigger<CuredVam
             return json;
         }
 
-        public boolean test(LootContext vampire, LootContext villager) {
+        public boolean test(@NotNull LootContext vampire, @NotNull LootContext villager) {
             if (!this.vampire.matches(vampire)) {
                 return false;
             } else {

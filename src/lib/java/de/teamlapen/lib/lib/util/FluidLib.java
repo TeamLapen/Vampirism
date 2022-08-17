@@ -31,7 +31,7 @@ public class FluidLib {
     }
 
 
-    public static LazyOptional<IFluidHandlerItem> getFluidItemCap(@NotNull ItemStack stack) {
+    public static @NotNull LazyOptional<IFluidHandlerItem> getFluidItemCap(@NotNull ItemStack stack) {
         return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
     }
 

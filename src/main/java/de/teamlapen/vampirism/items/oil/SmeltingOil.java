@@ -6,6 +6,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PickaxeItem;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class SmeltingOil extends ApplicableOil {
     }
 
     @Override
-    public boolean canBeApplied(ItemStack stack) {
+    public boolean canBeApplied(@NotNull ItemStack stack) {
         return stack.getItem() instanceof PickaxeItem && stack.is(ModTags.Items.APPLICABLE_OIL_PICKAXE) == VampirismConfig.BALANCE.itApplicableOilPickaxeReverse.get();
     }
 
@@ -31,7 +32,7 @@ public class SmeltingOil extends ApplicableOil {
     }
 
     @Override
-    public void getDescription(ItemStack stack, List<Component> tooltips) {
+    public void getDescription(ItemStack stack, @NotNull List<Component> tooltips) {
         tooltips.add(Component.translatable("oil.vampirism.smelt.desc").withStyle(ChatFormatting.GRAY));
     }
 }

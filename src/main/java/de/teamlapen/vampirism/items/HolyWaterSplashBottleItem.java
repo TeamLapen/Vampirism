@@ -34,7 +34,7 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
     }
 
     @Override
-    public void onImpact(ThrowableItemEntity entity, ItemStack stack, HitResult result, boolean remote) {
+    public void onImpact(@NotNull ThrowableItemEntity entity, ItemStack stack, @NotNull HitResult result, boolean remote) {
         TIER tier = getVampirismTier();
         if (!remote) {
             AABB axisalignedbb = entity.getBoundingBox().inflate(4.0D, 2.0D, 4.0D);
@@ -55,7 +55,7 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
 
     @NotNull
     @Override
-    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
+    public InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
 
 

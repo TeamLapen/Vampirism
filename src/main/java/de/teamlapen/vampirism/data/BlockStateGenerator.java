@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.client.model.generators.*;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
@@ -23,7 +24,7 @@ import java.util.function.Consumer;
 public class BlockStateGenerator extends BlockStateProvider {
 
 
-    public BlockStateGenerator(DataGenerator gen, ExistingFileHelper exFileHelper) {
+    public BlockStateGenerator(@NotNull DataGenerator gen, @NotNull ExistingFileHelper exFileHelper) {
         super(gen, REFERENCE.MODID, exFileHelper);
     }
 
@@ -333,7 +334,7 @@ public class BlockStateGenerator extends BlockStateProvider {
         }
     }
 
-    private void button(Block block, ResourceLocation texture) {
+    private void button(Block block, @NotNull ResourceLocation texture) {
         ResourceLocation id = RegUtil.id(block);
         ModelFile button = models().withExistingParent("block/" + id.getPath(), new ResourceLocation("block/button")).texture("texture", texture.getPath());
         ModelFile button_pressed = models().withExistingParent("block/" + id.getPath() + "_pressed", new ResourceLocation("block/button_pressed")).texture("texture", texture.getPath());
@@ -368,7 +369,7 @@ public class BlockStateGenerator extends BlockStateProvider {
         ;
     }
 
-    private void pressurePlate(Block block, ResourceLocation texture) {
+    private void pressurePlate(Block block, @NotNull ResourceLocation texture) {
         ResourceLocation id = RegUtil.id(block);
         ModelFile pressure_plate = models().withExistingParent("block/" + id.getPath(), new ResourceLocation("block/pressure_plate_up")).texture("texture", texture.getPath());
         ModelFile pressure_plate_down = models().withExistingParent("block/" + id.getPath() + "_down", new ResourceLocation("block/pressure_plate_down")).texture("texture", texture.getPath());
@@ -378,11 +379,11 @@ public class BlockStateGenerator extends BlockStateProvider {
                 .partialState().with(PressurePlateBlock.POWERED, true).modelForState().modelFile(pressure_plate_down).addModel();
     }
 
-    private MultiPartBlockStateBuilder applyHorizontalModel(MultiPartBlockStateBuilder builder, ModelFile file) {
+    private @NotNull MultiPartBlockStateBuilder applyHorizontalModel(@NotNull MultiPartBlockStateBuilder builder, ModelFile file) {
         return applyHorizontalModel(builder, file, partBuilder -> {});
     }
 
-    private MultiPartBlockStateBuilder applyHorizontalModel(MultiPartBlockStateBuilder builder, ModelFile file, Consumer<MultiPartBlockStateBuilder.PartBuilder> conditions) {
+    private @NotNull MultiPartBlockStateBuilder applyHorizontalModel(@NotNull MultiPartBlockStateBuilder builder, ModelFile file, @NotNull Consumer<MultiPartBlockStateBuilder.PartBuilder> conditions) {
         MultiPartBlockStateBuilder.PartBuilder partBuilder = builder.part().modelFile(file).rotationY(0).addModel().condition(HunterTableBlock.FACING, Direction.NORTH);
         conditions.accept(partBuilder);
         partBuilder.end();
@@ -401,7 +402,7 @@ public class BlockStateGenerator extends BlockStateProvider {
 
 
 
-        private MultiPartBlockStateBuilder getHorizontalMultiPartBlockStateBuilder(Block block, ModelFile file, Consumer<MultiPartBlockStateBuilder.PartBuilder> conditions) {
+        private @NotNull MultiPartBlockStateBuilder getHorizontalMultiPartBlockStateBuilder(Block block, ModelFile file, @NotNull Consumer<MultiPartBlockStateBuilder.PartBuilder> conditions) {
         MultiPartBlockStateBuilder builder = getMultipartBuilder(block);
         MultiPartBlockStateBuilder.PartBuilder partBuilder = builder.part().modelFile(file).rotationY(0).addModel().condition(HunterTableBlock.FACING, Direction.NORTH);
         conditions.accept(partBuilder);

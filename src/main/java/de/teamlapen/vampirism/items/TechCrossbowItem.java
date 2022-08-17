@@ -46,7 +46,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
      * @param arrows The loaded arrows
      * @return The same bow stack
      */
-    private static ItemStack setArrowsLeft(@NotNull ItemStack bowStack, int arrows) {
+    private static @NotNull ItemStack setArrowsLeft(@NotNull ItemStack bowStack, int arrows) {
         int i = Math.max(-1, Math.min(MAX_ARROW_COUNT, arrows));
         CompoundTag nbt = bowStack.hasTag() ? bowStack.getTag() : new CompoundTag();
         nbt.putInt("arrows", i);
@@ -59,7 +59,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
      *
      * @return If there was an arrow
      */
-    private static boolean reduceArrowCount(@NotNull ItemStack bowStack, RandomSource rnd) {
+    private static boolean reduceArrowCount(@NotNull ItemStack bowStack, @NotNull RandomSource rnd) {
         CompoundTag nbt = bowStack.getTag();
         if (nbt == null || !nbt.contains("arrows")) return false;
         int count = nbt.getInt("arrows");
@@ -75,14 +75,14 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
     /**
      * Returns an itemstack of a fully loaded crossbow of the given type
      */
-    public static ItemStack getLoadedItemStack(TechCrossbowItem crossbow) {
+    public static @NotNull ItemStack getLoadedItemStack(TechCrossbowItem crossbow) {
         return setArrowsLeft(new ItemStack(crossbow, 1), MAX_ARROW_COUNT);
     }
 
     /**
      * Returns an itemstack of a fully unloaded crossbow of the given type
      */
-    public static ItemStack getUnLoadedItemStack(TechCrossbowItem crossbow) {
+    public static @NotNull ItemStack getUnLoadedItemStack(TechCrossbowItem crossbow) {
         return setArrowsLeft(new ItemStack(crossbow, 1), 0);
     }
 
@@ -115,7 +115,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
     }
 
     @Override
-    public boolean isValidRepairItem(@NotNull ItemStack toRepair, ItemStack repair) {
+    public boolean isValidRepairItem(@NotNull ItemStack toRepair, @NotNull ItemStack repair) {
         return repair.is(Tags.Items.INGOTS_IRON);
     }
 
@@ -127,7 +127,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
 
     @NotNull
     @Override
-    protected ItemStack findAmmo(Player player, ItemStack bowStack) {
+    protected ItemStack findAmmo(@NotNull Player player, @NotNull ItemStack bowStack) {
         boolean arrow = reduceArrowCount(bowStack, player.getRandom());
         if (!arrow) {
             for (int i = 0; i < player.getInventory().getContainerSize(); ++i) {

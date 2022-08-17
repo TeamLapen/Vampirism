@@ -26,7 +26,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -42,7 +41,7 @@ public class AlchemicalFireBlock extends VampirismBlock {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void animateTick(@NotNull BlockState stateIn, @NotNull Level worldIn, @NotNull BlockPos pos, RandomSource rand) {
+    public void animateTick(@NotNull BlockState stateIn, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull RandomSource rand) {
         if (rand.nextInt(24) == 0) {
             worldIn.playLocalSound((float) pos.getX() + 0.5F, (float) pos.getY() + 0.5F, (float) pos.getZ() + 0.5F, SoundEvents.FIRE_AMBIENT, SoundSource.BLOCKS, 1.0F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.3F, false);
         }
@@ -69,12 +68,12 @@ public class AlchemicalFireBlock extends VampirismBlock {
     }
 
     @Override
-    public boolean canSurvive(@NotNull BlockState state, LevelReader worldIn, BlockPos pos) {
+    public boolean canSurvive(@NotNull BlockState state, @NotNull LevelReader worldIn, @NotNull BlockPos pos) {
         return worldIn.getBlockState(pos.below()).isFaceSturdy(worldIn, pos.below(), Direction.UP);
     }
 
     @Override
-    public void entityInside(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, Entity entityIn) {
+    public void entityInside(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Entity entityIn) {
         if (!entityIn.fireImmune()) {
             entityIn.setRemainingFireTicks(entityIn.getRemainingFireTicks() + 1);
             if (entityIn.getRemainingFireTicks() == 0) {
@@ -97,7 +96,7 @@ public class AlchemicalFireBlock extends VampirismBlock {
     /**
      * Marks the block to burn for an infinite time
      */
-    public void setBurningInfinite(Level worldIn, BlockPos pos, BlockState state) {
+    public void setBurningInfinite(@NotNull Level worldIn, @NotNull BlockPos pos, @NotNull BlockState state) {
         worldIn.setBlock(pos, state.setValue(AGE, 15), 4);
     }
 
@@ -122,7 +121,7 @@ public class AlchemicalFireBlock extends VampirismBlock {
 
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> builder) {
         builder.add(AGE);
     }
 

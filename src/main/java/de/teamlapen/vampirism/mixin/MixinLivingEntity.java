@@ -8,6 +8,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity extends Entity {
     @Deprecated
-    protected MixinLivingEntity(EntityType<? extends LivingEntity> type, Level worldIn) {
+    protected MixinLivingEntity(@NotNull EntityType<? extends LivingEntity> type, @NotNull Level worldIn) {
         super(type, worldIn);
     }
 
@@ -25,7 +26,7 @@ public abstract class MixinLivingEntity extends Entity {
     public abstract boolean addEffect(MobEffectInstance effectInstanceIn);
 
     @Inject(method = "checkTotemDeathProtection", at = @At("RETURN"))
-    private void handleTotemOfUndying(DamageSource damageSourceIn, CallbackInfoReturnable<Boolean> cir) {
+    private void handleTotemOfUndying(DamageSource damageSourceIn, @NotNull CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue() && Helper.isVampire(this)) {
             this.addEffect(new MobEffectInstance(ModEffects.FIRE_PROTECTION.get(), 800, 5));
             this.addEffect(new MobEffectInstance(ModEffects.SUNSCREEN.get(), 800, 4));

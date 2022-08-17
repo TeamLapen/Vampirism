@@ -22,6 +22,7 @@ import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -33,7 +34,7 @@ import java.util.function.Supplier;
 public record ServerboundToggleActionPacket(ResourceLocation actionId, @Nullable Either<Integer, BlockPos> target) implements IMessage {
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public static ServerboundToggleActionPacket createFromRaytrace(ResourceLocation action, HitResult traceResult) {
+    public static @NotNull ServerboundToggleActionPacket createFromRaytrace(ResourceLocation action, @Nullable HitResult traceResult) {
         if (traceResult != null) {
             if (traceResult.getType() == HitResult.Type.ENTITY) {
                 return new ServerboundToggleActionPacket(action, ((EntityHitResult) traceResult).getEntity().getId());
@@ -44,7 +45,7 @@ public record ServerboundToggleActionPacket(ResourceLocation actionId, @Nullable
         return new ServerboundToggleActionPacket(action);
     }
 
-    static void encode(ServerboundToggleActionPacket msg, FriendlyByteBuf buf) {
+    static void encode(@NotNull ServerboundToggleActionPacket msg, @NotNull FriendlyByteBuf buf) {
         buf.writeResourceLocation(msg.actionId);
         if (msg.target != null) {
             buf.writeBoolean(true);
@@ -61,7 +62,7 @@ public record ServerboundToggleActionPacket(ResourceLocation actionId, @Nullable
         }
     }
 
-    static ServerboundToggleActionPacket decode(FriendlyByteBuf buf) {
+    static @NotNull ServerboundToggleActionPacket decode(@NotNull FriendlyByteBuf buf) {
         ResourceLocation id = buf.readResourceLocation();
         Either<Integer, BlockPos> target = null;
         if (buf.readBoolean()) {
@@ -75,7 +76,7 @@ public record ServerboundToggleActionPacket(ResourceLocation actionId, @Nullable
         return new ServerboundToggleActionPacket(id, target);
     }
 
-    static void handle(ServerboundToggleActionPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    static void handle(@NotNull ServerboundToggleActionPacket msg, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ServerPlayer player = ctx.getSender();
         Validate.notNull(player);

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.player.vampire;
 
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Stores special attributes that can be activated by skills or actions.
@@ -9,7 +10,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
  */
 public class VampirePlayerSpecialAttributes {
     public boolean disguised = false;
-    public IFaction<?> disguisedAs = null;
+    public @Nullable IFaction<?> disguisedAs = null;
     public boolean bat = false;
     public boolean blood_vision = false;
     public boolean half_invulnerable = false;

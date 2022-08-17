@@ -44,7 +44,7 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefau
 
     private static final EntityDataAccessor<String> BIOME_TYPE = SynchedEntityData.defineId(VampireTaskMasterEntity.class, EntityDataSerializers.STRING);
 
-    public static AttributeSupplier.Builder getAttributeBuilder() {
+    public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
         return VampireBaseEntity.getAttributeBuilder()
                 .add(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.VAMPIRE_MAX_HEALTH)
                 .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.VAMPIRE_ATTACK_DAMAGE)
@@ -76,13 +76,13 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefau
     }
 
     @Override
-    public VillagerType getBiomeType() {
+    public @NotNull VillagerType getBiomeType() {
         String key = this.entityData.get(BIOME_TYPE);
         ResourceLocation id = new ResourceLocation(key);
         return Registry.VILLAGER_TYPE.get(id);
     }
 
-    protected void setBiomeType(VillagerType type) {
+    protected void setBiomeType(@NotNull VillagerType type) {
         this.entityData.set(BIOME_TYPE, Registry.VILLAGER_TYPE.getKey(type).toString());
     }
 

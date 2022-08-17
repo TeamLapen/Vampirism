@@ -25,7 +25,7 @@ import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 public class TaskBuilder {
-    public static TaskBuilder builder() {
+    public static @NotNull TaskBuilder builder() {
         return new TaskBuilder();
     }
 
@@ -45,27 +45,27 @@ public class TaskBuilder {
     }
 
     @NotNull
-    public TaskBuilder addRequirement(String name, @NotNull EntityType<?> entityType, int amount) {
+    public TaskBuilder addRequirement(@NotNull String name, @NotNull EntityType<?> entityType, int amount) {
         return this.addRequirement(new EntityRequirement(new ResourceLocation(modId(), name), entityType, amount));
     }
 
     @NotNull
-    public TaskBuilder addRequirement(String name, @NotNull TagKey<EntityType<?>> entityType, int amount) {
+    public TaskBuilder addRequirement(@NotNull String name, @NotNull TagKey<EntityType<?>> entityType, int amount) {
         return this.addRequirement(new EntityTypeRequirement(new ResourceLocation(modId(), name), entityType, amount));
     }
 
     @NotNull
-    public TaskBuilder addRequirement(String name, @NotNull ResourceLocation stat, int amount) {
+    public TaskBuilder addRequirement(@NotNull String name, @NotNull ResourceLocation stat, int amount) {
         return this.addRequirement(new StatRequirement(new ResourceLocation(modId(), name), stat, amount));
     }
 
     @NotNull
-    public TaskBuilder addRequirement(String name, NonnullSupplier<ItemStack> itemStack) {
+    public TaskBuilder addRequirement(@NotNull String name, NonnullSupplier<ItemStack> itemStack) {
         return this.addRequirement(new ItemRequirement(new ResourceLocation(modId(), name), itemStack));
     }
 
     @NotNull
-    public TaskBuilder addRequirement(String name, @NotNull BooleanRequirement.BooleanSupplier function) {
+    public TaskBuilder addRequirement(@NotNull String name, @NotNull BooleanRequirement.BooleanSupplier function) {
         return this.addRequirement(new BooleanRequirement(new ResourceLocation(modId(), name), function));
     }
 
@@ -139,7 +139,7 @@ public class TaskBuilder {
         return this;
     }
 
-    protected String modId() {
+    protected @NotNull String modId() {
         return REFERENCE.MODID;
     }
 }

@@ -19,19 +19,19 @@ import java.util.stream.Stream;
 public class VampirismBoatRenderer extends BoatRenderer {
     private final Map<IVampirismBoat.BoatType, Pair<ResourceLocation, BoatModel>> boatResources;
 
-    public VampirismBoatRenderer(EntityRendererProvider.Context context, boolean hasChest) {
+    public VampirismBoatRenderer(EntityRendererProvider.@NotNull Context context, boolean hasChest) {
         super(context, hasChest);
         this.boatResources = Stream.of(IVampirismBoat.BoatType.values()).collect(ImmutableMap.toImmutableMap((type) -> type, (type) -> {
             return Pair.of(new ResourceLocation(getTextureLocation(type, hasChest)), this.createBoatModel(context, type, hasChest));
         }));
     }
 
-    private BoatModel createBoatModel(EntityRendererProvider.Context context, IVampirismBoat.BoatType type, boolean hasChest) {
+    private @NotNull BoatModel createBoatModel(EntityRendererProvider.@NotNull Context context, IVampirismBoat.@NotNull BoatType type, boolean hasChest) {
         ModelLayerLocation modellayerlocation = hasChest ? ModEntitiesRender.createChestBoatModelName(type) : ModEntitiesRender.createBoatModelName(type);
         return new BoatModel(context.bakeLayer(modellayerlocation), hasChest);
     }
 
-    public String getTextureLocation(IVampirismBoat.BoatType type, boolean hasChest) {
+    public @NotNull String getTextureLocation(IVampirismBoat.@NotNull BoatType type, boolean hasChest) {
         return hasChest ? REFERENCE.MODID + ":textures/entity/chest_boat/" + type.getName() + ".png" : REFERENCE.MODID + ":textures/entity/boat/" + type.getName() + ".png";
     }
 

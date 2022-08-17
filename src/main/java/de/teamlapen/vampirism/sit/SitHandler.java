@@ -12,9 +12,10 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.jetbrains.annotations.NotNull;
 
 public class SitHandler {
-    public static void startSitting(Player player, Level level, BlockPos pos, double offset) {
+    public static void startSitting(@NotNull Player player, @NotNull Level level, @NotNull BlockPos pos, double offset) {
         if (!level.isClientSide && !SitUtil.isPlayerSitting(player) && !player.isShiftKeyDown()) {
             if (isPlayerInRange(player, pos) && !SitUtil.isOccupied(level, pos) && player.getMainHandItem().isEmpty()) //level.getBlockState(pos.above()).isAir(level, pos.above()
             {
@@ -31,7 +32,7 @@ public class SitHandler {
 
 
     @SubscribeEvent
-    public static void onBreak(BlockEvent.BreakEvent event) {
+    public static void onBreak(BlockEvent.@NotNull BreakEvent event) {
         if (!event.getLevel().isClientSide()) {
             //BreakEvent gets a World in its constructor, so the cast is safe
             SitEntity entity = SitUtil.getSitEntity((Level) event.getLevel(), event.getPos());
@@ -50,7 +51,7 @@ public class SitHandler {
      * @param pos    The position of the block to sit on
      * @return true if the player is close enough, false otherwise
      */
-    private static boolean isPlayerInRange(Player player, BlockPos pos) {
+    private static boolean isPlayerInRange(@NotNull Player player, BlockPos pos) {
         BlockPos playerPos = player.blockPosition();
         double blockReachDistance = player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue();
 

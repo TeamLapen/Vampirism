@@ -13,9 +13,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
@@ -32,7 +32,7 @@ public class AppearanceScreen<T extends LivingEntity> extends Screen {
     protected int guiLeft;
     protected int guiTop;
 
-    public AppearanceScreen(Component titleIn, T entity, @Nullable Screen backScreen) {
+    public AppearanceScreen(@NotNull Component titleIn, T entity, @Nullable Screen backScreen) {
         super(titleIn);
         this.entity = entity;
         this.backScreen = backScreen;
@@ -79,12 +79,12 @@ public class AppearanceScreen<T extends LivingEntity> extends Screen {
         }
     }
 
-    protected void renderGuiBackground(PoseStack mStack) {
+    protected void renderGuiBackground(@NotNull PoseStack mStack) {
         RenderSystem.setShaderTexture(0, BACKGROUND);
         blit(mStack, this.guiLeft, this.guiTop, this.getBlitOffset(), 0, 0, this.xSize, this.ySize, 300, 256);
     }
 
-    private void drawTitle(PoseStack mStack) {
+    private void drawTitle(@NotNull PoseStack mStack) {
         this.font.drawShadow(mStack, title, this.guiLeft + 15, this.guiTop + 5, 0xFFFFFFFF);
     }
 }

@@ -22,6 +22,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.*;
 
 /**
@@ -43,7 +45,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
      * <p>
      * Keys should be mutually exclusive with {@link #activeTimers}
      */
-    private final Object2IntMap<ResourceLocation> cooldownTimers;
+    private final @NotNull Object2IntMap<ResourceLocation> cooldownTimers;
     /**
      * Holds any active action. Maps it to the corresponding action timer.
      * Actions represented by any key in this map have to be registered and must implement ILastingAction.
@@ -51,7 +53,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
      * <p>
      * Keys should be mutually exclusive with {@link #cooldownTimers}
      */
-    private final Object2IntMap<ResourceLocation> activeTimers;
+    private final @NotNull Object2IntMap<ResourceLocation> activeTimers;
 
     private final T player;
 
@@ -62,7 +64,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
      */
     private boolean dirty = false;
 
-    public ActionHandler(T player) {
+    public ActionHandler(@NotNull T player) {
         this.player = player;
         List<IAction<T>> actions = VampirismAPI.actionManager().getActionsForFaction(player.getFaction());
 
@@ -92,7 +94,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     }
 
     @Override
-    public List<IAction<T>> getAvailableActions() {
+    public @NotNull List<IAction<T>> getAvailableActions() {
         ArrayList<IAction<T>> actions = new ArrayList<>();
         for (IAction<T> action : unlockedActions) {
             if (action.canUse(player) == IAction.PERM.ALLOWED) {
@@ -115,7 +117,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     }
 
     @Override
-    public ImmutableList<IAction<T>> getUnlockedActions() {
+    public @NotNull ImmutableList<IAction<T>> getUnlockedActions() {
         return ImmutableList.copyOf(unlockedActions);
     }
 
@@ -142,7 +144,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     /**
      * Should only be called by the corresponding Capability instance
      **/
-    public void loadFromNbt(CompoundTag nbt) {
+    public void loadFromNbt(@NotNull CompoundTag nbt) {
         //If loading from save we want to clear everything beforehand.
         //NBT only contains actions that are active/cooldown
         activeTimers.clear();
@@ -171,7 +173,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
      * <p>
      * Attention: nbt is modified in the process
      **/
-    public void readUpdateFromServer(CompoundTag nbt) {
+    public void readUpdateFromServer(@NotNull CompoundTag nbt) {
         /*
          * This happens client side
          * We want to:
@@ -222,7 +224,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     }
 
     @Override
-    public void relockActions(Collection<IAction<T>> actions) {
+    public void relockActions(@NotNull Collection<IAction<T>> actions) {
         unlockedActions.removeAll(actions);
         for (IAction<T> action : actions) {
             if (action instanceof ILastingAction<T> lastingAction) {
@@ -258,14 +260,14 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
      * Saves action timings to nbt
      * Should only be called by the corresponding Capability instance
      */
-    public void saveToNbt(CompoundTag nbt) {
+    public void saveToNbt(@NotNull CompoundTag nbt) {
 
         nbt.put("actions_active", writeTimersToNBT(activeTimers.object2IntEntrySet()));
         nbt.put("actions_cooldown", writeTimersToNBT(cooldownTimers.object2IntEntrySet()));
     }
 
     @Override
-    public IAction.PERM toggleAction(IAction<T> action, IAction.ActivationContext context) {
+    public IAction.PERM toggleAction(@NotNull IAction<T> action, IAction.ActivationContext context) {
         ResourceLocation id = RegUtil.id(action);
         if (activeTimers.containsKey(id)) {
             deactivateAction((ILastingAction<T>) action);
@@ -295,7 +297,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     }
 
     @Override
-    public void deactivateAction(ILastingAction<T> action) {
+    public void deactivateAction(@NotNull ILastingAction<T> action) {
         ResourceLocation id = RegUtil.id(action);
         if (activeTimers.containsKey(id)) {
             int cooldown = action.getCooldown(player);
@@ -310,7 +312,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     }
 
     @Override
-    public void unlockActions(Collection<IAction<T>> actions) {
+    public void unlockActions(@NotNull Collection<IAction<T>> actions) {
         for (IAction<T> action : actions) {
             if (!RegUtil.has(action)) {
                 throw new ActionNotRegisteredException(action);
@@ -367,7 +369,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
      * Writes an update for the client.
      * Should only be called by the corresponding Capability instance
      */
-    public void writeUpdateForClient(CompoundTag nbt) {
+    public void writeUpdateForClient(@NotNull CompoundTag nbt) {
         nbt.put("actions_active", writeTimersToNBT(activeTimers.object2IntEntrySet()));
         nbt.put("actions_cooldown", writeTimersToNBT(cooldownTimers.object2IntEntrySet()));
     }
@@ -379,7 +381,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
         return true;
     }
 
-    private void loadTimerMapFromNBT(CompoundTag nbt, Object2IntMap<ResourceLocation> map) {
+    private void loadTimerMapFromNBT(@NotNull CompoundTag nbt, @NotNull Object2IntMap<ResourceLocation> map) {
         for (String key : nbt.getAllKeys()) {
             ResourceLocation id = new ResourceLocation(key);
             if (RegUtil.getAction(id) == null) {
@@ -390,7 +392,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
         }
     }
 
-    private CompoundTag writeTimersToNBT(ObjectSet<Object2IntMap.Entry<ResourceLocation>> set) {
+    private @NotNull CompoundTag writeTimersToNBT(@NotNull ObjectSet<Object2IntMap.Entry<ResourceLocation>> set) {
         CompoundTag nbt = new CompoundTag();
         for (Object2IntMap.Entry<ResourceLocation> entry : set) {
             nbt.putInt(entry.getKey().toString(), entry.getIntValue());
@@ -406,15 +408,15 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             super("Action " + name + " is not registered. You cannot use it otherwise");
         }
 
-        public ActionNotRegisteredException(IAction<?> action) {
+        public ActionNotRegisteredException(@NotNull IAction<?> action) {
             this(action.toString());
         }
     }
 
     public static class ActivationContext implements IAction.ActivationContext{
 
-        private final Entity entity;
-        private final BlockPos blockPos;
+        private final @Nullable Entity entity;
+        private final @Nullable BlockPos blockPos;
 
         public ActivationContext(Entity entity){
             this.entity = entity;
@@ -432,12 +434,12 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
         }
 
         @Override
-        public Optional<BlockPos> targetBlock() {
+        public @NotNull Optional<BlockPos> targetBlock() {
             return Optional.ofNullable(blockPos);
         }
 
         @Override
-        public Optional<Entity> targetEntity() {
+        public @NotNull Optional<Entity> targetEntity() {
             return Optional.ofNullable(entity);
         }
     }

@@ -12,13 +12,13 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
 import org.jetbrains.annotations.NotNull;
+
 import java.util.stream.Stream;
 
 
 public class CandelabraBlock extends VampirismHorizontalBlock {
-    private static VoxelShape makeCandelabraShape() {
+    private static @NotNull VoxelShape makeCandelabraShape() {
         return Stream.of(
                 Block.box(6, 0, 6, 10, 1, 10),
                 Block.box(6.5, 1, 6.5, 9.5, 2, 9.5),
@@ -38,7 +38,7 @@ public class CandelabraBlock extends VampirismHorizontalBlock {
     }
 
     @Override
-    public boolean canSurvive(@NotNull BlockState state, @NotNull LevelReader worldIn, BlockPos pos) {
+    public boolean canSurvive(@NotNull BlockState state, @NotNull LevelReader worldIn, @NotNull BlockPos pos) {
         return canSupportCenter(worldIn, pos.below(), Direction.UP);
     }
 

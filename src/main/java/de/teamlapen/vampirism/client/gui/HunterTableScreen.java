@@ -13,7 +13,6 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -25,11 +24,11 @@ public class HunterTableScreen extends AbstractContainerScreen<HunterTableContai
     @SuppressWarnings("FieldCanBeLocal")
     private final ContainerLevelAccess worldPos;
 
-    public HunterTableScreen(HunterTableContainer inventorySlotsIn, Inventory playerInventory, Component name) {
+    public HunterTableScreen(@NotNull HunterTableContainer inventorySlotsIn, @NotNull Inventory playerInventory, @NotNull Component name) {
         this(inventorySlotsIn, playerInventory, name, ContainerLevelAccess.NULL);
     }
 
-    public HunterTableScreen(HunterTableContainer inventorySlotsIn, Inventory playerInventory, Component name, ContainerLevelAccess worldPosIn) {
+    public HunterTableScreen(@NotNull HunterTableContainer inventorySlotsIn, @NotNull Inventory playerInventory, @NotNull Component name, ContainerLevelAccess worldPosIn) {
         super(inventorySlotsIn, playerInventory, name);
         this.worldPos = worldPosIn;
     }

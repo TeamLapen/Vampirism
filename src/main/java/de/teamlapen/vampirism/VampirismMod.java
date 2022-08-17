@@ -141,7 +141,7 @@ public class VampirismMod {
     }
 
     public final ModCompatLoader modCompatLoader = new ModCompatLoader();
-    private final RegistryManager registryManager;
+    private final @NotNull RegistryManager registryManager;
     private VersionChecker.VersionInfo versionInfo;
 
     public VampirismMod() {
@@ -205,7 +205,7 @@ public class VampirismMod {
     }
 
     @SubscribeEvent
-    public void onAddReloadListenerEvent(AddReloadListenerEvent event) {
+    public void onAddReloadListenerEvent(@NotNull AddReloadListenerEvent event) {
         SkillTreeManager.getInstance().getSkillTree().initRootSkills();//Load root skills here, so even if data pack reload fail, the root skills are available #622
         event.addListener(SkillTreeManager.getInstance());
         event.addListener(new BloodValues());
@@ -213,7 +213,7 @@ public class VampirismMod {
     }
 
     @SubscribeEvent
-    public void onCommandsRegister(RegisterCommandsEvent event) {
+    public void onCommandsRegister(@NotNull RegisterCommandsEvent event) {
         ModCommands.registerCommands(event.getDispatcher());
     }
 
@@ -223,7 +223,7 @@ public class VampirismMod {
     }
 
     @SubscribeEvent
-    public void onServerStart(ServerStartingEvent event) {
+    public void onServerStart(@NotNull ServerStartingEvent event) {
         for (BloodValueLoaderDynamic loader : BloodValues.getDynamicLoader()) {
             loader.onServerStarting(event.getServer());
         }
@@ -259,7 +259,7 @@ public class VampirismMod {
     }
 
     @SuppressWarnings("unchecked")
-    private void enqueueIMC(final InterModEnqueueEvent event) {
+    private void enqueueIMC(final @NotNull InterModEnqueueEvent event) {
         onInitStep(IInitListener.Step.ENQUEUE_IMC, event);
         HelperRegistry.registerPlayerEventReceivingCapability((Capability<IPlayerEventListener>) (Object) VampirePlayer.CAP, VampirePlayer.class);
         HelperRegistry.registerPlayerEventReceivingCapability((Capability<IPlayerEventListener>) (Object) HunterPlayer.CAP, HunterPlayer.class);
@@ -269,7 +269,7 @@ public class VampirismMod {
         HelperRegistry.registerSyncablePlayerCapability((Capability<ISyncable.ISyncableEntityCapabilityInst>) (Object) FactionPlayerHandler.CAP, REFERENCE.FACTION_PLAYER_HANDLER_KEY, FactionPlayerHandler.class);
     }
 
-    private void registerCapabilities(RegisterCapabilitiesEvent event) {
+    private void registerCapabilities(@NotNull RegisterCapabilitiesEvent event) {
         event.register(IExtendedCreatureVampirism.class);
         event.register(IFactionPlayerHandler.class);
         event.register(IHunterPlayer.class);
@@ -289,7 +289,7 @@ public class VampirismMod {
         ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).finishRegistration();
     }
 
-    private void gatherData(final GatherDataEvent event) {
+    private void gatherData(final @NotNull GatherDataEvent event) {
         registryManager.onGatherData(event);
         DataGenerator gen = event.getGenerator();
 
@@ -305,7 +305,7 @@ public class VampirismMod {
         gen.addProvider(event.includeClient(), new ItemModelGenerator(event.getGenerator(), event.getExistingFileHelper()));
     }
 
-    private void loadComplete(final FMLLoadCompleteEvent event) {
+    private void loadComplete(final @NotNull FMLLoadCompleteEvent event) {
         onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
         event.enqueueWork(OverworldModifications::addBiomesToOverworldUnsafe);
         VampirismAPI.skillManager().registerSkillType(SkillType.LEVEL);
@@ -362,7 +362,7 @@ public class VampirismMod {
         VampirismAPI.onSetupComplete();
     }
 
-    private void processIMC(final InterModProcessEvent event) {
+    private void processIMC(final @NotNull InterModProcessEvent event) {
         finishAPI();
         onInitStep(IInitListener.Step.PROCESS_IMC, event);
         IMCHandler.handleInterModMessage(event);
@@ -371,7 +371,7 @@ public class VampirismMod {
         }
     }
 
-    private void setup(final FMLCommonSetupEvent event) {
+    private void setup(final @NotNull FMLCommonSetupEvent event) {
         dispatcher.registerPackets();
         onInitStep(IInitListener.Step.COMMON_SETUP, event);
         proxy.onInitStep(IInitListener.Step.COMMON_SETUP, event);
@@ -398,11 +398,11 @@ public class VampirismMod {
 
     }
 
-    private void setupClient(FMLClientSetupEvent event) {
+    private void setupClient(@NotNull FMLClientSetupEvent event) {
         onInitStep(IInitListener.Step.CLIENT_SETUP, event);
     }
 
-    private void onInitStep(IInitListener.Step step, ParallelDispatchEvent event) {
+    private void onInitStep(IInitListener.@NotNull Step step, @NotNull ParallelDispatchEvent event) {
         registryManager.onInitStep(step, event);
         proxy.onInitStep(step, event);
         modCompatLoader.onInitStep(step, event);

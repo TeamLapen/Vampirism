@@ -30,7 +30,7 @@ import net.minecraft.world.item.Item.Properties;
 public abstract class VampirismHunterWeapon extends VampirismItemWeapon implements IFactionLevelItem<IHunterPlayer>, IFactionSlayerItem, IVampireFinisher, IFactionExclusiveItem {
 
 
-    public VampirismHunterWeapon(Tier material, int attackDamage, float attackSpeed, Properties props) {
+    public VampirismHunterWeapon(@NotNull Tier material, int attackDamage, float attackSpeed, @NotNull Properties props) {
         super(material, attackDamage, attackSpeed, props);
     }
 

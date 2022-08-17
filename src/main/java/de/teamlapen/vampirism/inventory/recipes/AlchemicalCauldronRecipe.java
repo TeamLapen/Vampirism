@@ -31,14 +31,14 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
     private final ISkill<?>[] skills;
     private final int reqLevel;
 
-    public AlchemicalCauldronRecipe(ResourceLocation idIn, String groupIn, Ingredient ingredientIn, Either<Ingredient, FluidStack> fluidIn, ItemStack resultIn, @NotNull ISkill<?>[] skillsIn, int reqLevelIn, int cookTimeIn, float exp) {
+    public AlchemicalCauldronRecipe(@NotNull ResourceLocation idIn, @NotNull String groupIn, @NotNull Ingredient ingredientIn, Either<Ingredient, FluidStack> fluidIn, @NotNull ItemStack resultIn, @NotNull ISkill<?>[] skillsIn, int reqLevelIn, int cookTimeIn, float exp) {
         super(ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get(), idIn, groupIn, ingredientIn, resultIn, exp, cookTimeIn);
         this.fluid = fluidIn;
         this.skills = skillsIn;
         this.reqLevel = reqLevelIn;
     }
 
-    public boolean canBeCooked(int level, ISkillHandler<IHunterPlayer> skillHandler) {
+    public boolean canBeCooked(int level, @NotNull ISkillHandler<IHunterPlayer> skillHandler) {
         if (level < reqLevel) return false;
         for (ISkill<?> s : skills) {
             if (!skillHandler.isSkillEnabled(s)) return false;
@@ -50,7 +50,7 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
         return fluid;
     }
 
-    public Ingredient getIngredient() {
+    public @NotNull Ingredient getIngredient() {
         return ingredient;
     }
 
@@ -70,7 +70,7 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
     }
 
     @Override
-    public boolean matches(Container inv, @NotNull Level worldIn) {
+    public boolean matches(@NotNull Container inv, @NotNull Level worldIn) {
         boolean match = this.ingredient.test(inv.getItem(1));
         AtomicBoolean fluidMatch = new AtomicBoolean(true);
         fluid.ifLeft((ingredient1 -> fluidMatch.set(ingredient1.test(inv.getItem(0)))));
@@ -83,7 +83,7 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return "AlchemicalCauldronRecipe{" +
                 "cookingTime=" + cookingTime +
                 ", skills=" + Arrays.toString(skills) +
@@ -111,7 +111,7 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
         }
 
         @Override
-        public AlchemicalCauldronRecipe fromNetwork(@NotNull ResourceLocation recipeId, FriendlyByteBuf buffer) {
+        public AlchemicalCauldronRecipe fromNetwork(@NotNull ResourceLocation recipeId, @NotNull FriendlyByteBuf buffer) {
             String group = buffer.readUtf(32767);
             ItemStack result = buffer.readItem();
             Ingredient ingredient = Ingredient.fromNetwork(buffer);
@@ -132,7 +132,7 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf buffer, AlchemicalCauldronRecipe recipe) {
+        public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull AlchemicalCauldronRecipe recipe) {
             buffer.writeUtf(recipe.group);
             buffer.writeItem(recipe.result);
             recipe.ingredient.toNetwork(buffer);

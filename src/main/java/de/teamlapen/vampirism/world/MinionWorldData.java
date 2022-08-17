@@ -24,12 +24,12 @@ public class MinionWorldData extends SavedData {
     private final static String ID = "vampirism-minion-data";
 
     @NotNull
-    public static MinionWorldData getData(ServerLevel world) {
+    public static MinionWorldData getData(@NotNull ServerLevel world) {
         return getData(world.getServer());
     }
 
     @NotNull
-    public static MinionWorldData getData(final MinecraftServer server) {
+    public static MinionWorldData getData(final @NotNull MinecraftServer server) {
         return server.getLevel(Level.OVERWORLD).getDataStorage().computeIfAbsent((data) -> MinionWorldData.load(server, data), () -> new MinionWorldData(server), ID);
     }
 
@@ -56,7 +56,7 @@ public class MinionWorldData extends SavedData {
     }
 
     @NotNull
-    public PlayerMinionController getOrCreateController(FactionPlayerHandler lord) {
+    public PlayerMinionController getOrCreateController(@NotNull FactionPlayerHandler lord) {
         UUID id = lord.getPlayer().getUUID();
         if (controllers.containsKey(id)) {
             return controllers.get(id);
@@ -81,7 +81,7 @@ public class MinionWorldData extends SavedData {
         controllers.remove(lordID);
     }
 
-    public static MinionWorldData load(MinecraftServer server, CompoundTag nbt) {
+    public static @NotNull MinionWorldData load(@NotNull MinecraftServer server, @NotNull CompoundTag nbt) {
         MinionWorldData data = new MinionWorldData(server);
         ListTag all = nbt.getList("controllers", 10);
         for (Tag inbt : all) {
@@ -103,7 +103,7 @@ public class MinionWorldData extends SavedData {
 
     @NotNull
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    public CompoundTag save(@NotNull CompoundTag compound) {
         ListTag all = new ListTag();
         controllers.object2ObjectEntrySet().fastForEach((entry) -> {
             if (entry.getValue().hasMinions()) {

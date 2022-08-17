@@ -13,11 +13,11 @@ import org.jetbrains.annotations.Nullable;
 
 public class DefendVillageGoal<T extends PathfinderMob & IVillageCaptureEntity> extends TargetGoal {
 
-    private final T creature;
-    protected final TargetingConditions entityPredicate;
+    private final @NotNull T creature;
+    protected final @NotNull TargetingConditions entityPredicate;
     private final double distance = getFollowDistance() * 4;
 
-    public DefendVillageGoal(T creature) {
+    public DefendVillageGoal(@NotNull T creature) {
         super(creature, false, false);
         this.creature = creature;
         this.entityPredicate = new TargetingConditions(true) {

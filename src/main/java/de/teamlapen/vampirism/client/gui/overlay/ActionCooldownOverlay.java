@@ -12,12 +12,13 @@ import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import org.jetbrains.annotations.NotNull;
 
 public class ActionCooldownOverlay extends GuiComponent implements IGuiOverlay {
 
     private final Minecraft mc = Minecraft.getInstance();
     @Override
-    public void render(ForgeGui gui, PoseStack poseStack, float partialTick, int screenWidth, int screenHeight) {
+    public void render(ForgeGui gui, @NotNull PoseStack poseStack, float partialTick, int screenWidth, int screenHeight) {
         if (VampirismAPI.factionRegistry().getFaction(this.mc.player) != null) {
             VampirismAPI.getFactionPlayerHandler(this.mc.player).ifPresent(playerHandler -> {
                 playerHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> {

@@ -25,17 +25,17 @@ import org.jetbrains.annotations.Nullable;
  */
 public class HunterBasicContainer extends InventoryContainer {
     private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(ModItems.VAMPIRE_BLOOD_BOTTLE.get(), 27, 32)};
-    private final IHunterPlayer player;
+    private final @NotNull IHunterPlayer player;
     @Nullable
     private final BasicHunterEntity entity;
 
     @SuppressWarnings("DeprecatedIsStillUsed")
     @Deprecated
-    public HunterBasicContainer(int id, Inventory playerInventory) {
+    public HunterBasicContainer(int id, @NotNull Inventory playerInventory) {
         this(id, playerInventory, null);
     }
 
-    public HunterBasicContainer(int id, Inventory playerInventory, @Nullable BasicHunterEntity hunter) {
+    public HunterBasicContainer(int id, @NotNull Inventory playerInventory, @Nullable BasicHunterEntity hunter) {
         super(ModContainer.HUNTER_BASIC.get(), id, playerInventory, hunter == null ? ContainerLevelAccess.NULL : ContainerLevelAccess.create(hunter.level, hunter.blockPosition()), new SimpleContainer(SELECTOR_INFOS.length), SELECTOR_INFOS);
         player = HunterPlayer.get(playerInventory.player);
         this.addPlayerSlots(playerInventory);

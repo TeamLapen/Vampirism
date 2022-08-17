@@ -6,11 +6,12 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 public class VampirismPotion extends Potion {
-    public static Optional<VampirismPotion.HunterPotion> isHunterPotion(ItemStack stack, boolean onlyNormal) {
+    public static @NotNull Optional<VampirismPotion.HunterPotion> isHunterPotion(@NotNull ItemStack stack, boolean onlyNormal) {
         if (stack.getItem() == Items.POTION || (!onlyNormal && (stack.getItem() == Items.LINGERING_POTION || stack.getItem() == Items.SPLASH_POTION))) {
             Potion potion = PotionUtils.getPotion(stack);
             if (potion instanceof VampirismPotion.HunterPotion) {

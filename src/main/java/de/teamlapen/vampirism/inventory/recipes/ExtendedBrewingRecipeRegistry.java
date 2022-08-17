@@ -12,6 +12,7 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import org.apache.commons.lang3.tuple.Triple;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -32,7 +33,7 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
 
 
     @Override
-    public boolean brewPotions(NonNullList<ItemStack> inputs, ItemStack ingredient, ItemStack extraIngredient, IExtendedBrewingCapabilities capabilities, int[] inputIndexes, boolean onlyExtended) {
+    public boolean brewPotions(@NotNull NonNullList<ItemStack> inputs, @NotNull ItemStack ingredient, @NotNull ItemStack extraIngredient, @NotNull IExtendedBrewingCapabilities capabilities, int @NotNull [] inputIndexes, boolean onlyExtended) {
         boolean brewed = false;
         int useMain = 0;
         int useExtra = 0;
@@ -52,7 +53,7 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
     }
 
     @Override
-    public boolean canBrew(NonNullList<ItemStack> inputs, ItemStack ingredient, ItemStack extraIngredient, IExtendedBrewingCapabilities capabilities, int[] inputIndexes) {
+    public boolean canBrew(@NotNull NonNullList<ItemStack> inputs, @NotNull ItemStack ingredient, @NotNull ItemStack extraIngredient, @NotNull IExtendedBrewingCapabilities capabilities, int @NotNull [] inputIndexes) {
         if (ingredient.isEmpty()) return false;
 
         for (int i : inputIndexes) {
@@ -65,7 +66,7 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
     }
 
     @Override
-    public Optional<Triple<ItemStack, Integer, Integer>> getOutput(ItemStack bottle, ItemStack ingredient, ItemStack extraIngredient, IExtendedBrewingCapabilities capabilities, boolean onlyExtended) {
+    public @NotNull Optional<Triple<ItemStack, Integer, Integer>> getOutput(@NotNull ItemStack bottle, @NotNull ItemStack ingredient, @NotNull ItemStack extraIngredient, @NotNull IExtendedBrewingCapabilities capabilities, boolean onlyExtended) {
         if (bottle.isEmpty() || bottle.getCount() != 1) return Optional.empty();
         if (ingredient.isEmpty()) return Optional.empty();
         Potion potion = PotionUtils.getPotion(bottle);
@@ -94,18 +95,18 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
     }
 
     @Override
-    public List<ExtendedPotionMix> getPotionMixes() {
+    public @NotNull List<ExtendedPotionMix> getPotionMixes() {
         return Collections.unmodifiableList(conversionMixes);
     }
 
 
     @Override
-    public boolean hasOutput(ItemStack input, ItemStack ingredient, ItemStack extraIngredient, IExtendedBrewingCapabilities capabilities) {
+    public boolean hasOutput(@NotNull ItemStack input, @NotNull ItemStack ingredient, @NotNull ItemStack extraIngredient, @NotNull IExtendedBrewingCapabilities capabilities) {
         return getOutput(input, ingredient, extraIngredient, capabilities, false).isPresent();
     }
 
     @Override
-    public boolean isValidExtraIngredient(ItemStack stack) {
+    public boolean isValidExtraIngredient(@NotNull ItemStack stack) {
         if (stack.isEmpty()) return false;
 
         for (ExtendedPotionMix mix : conversionMixes) {
@@ -117,7 +118,7 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
     }
 
     @Override
-    public boolean isValidIngredient(ItemStack stack) {
+    public boolean isValidIngredient(@NotNull ItemStack stack) {
         if (stack.isEmpty()) return false;
 
         for (ExtendedPotionMix mix : conversionMixes) {
@@ -127,7 +128,7 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
     }
 
     @Override
-    public boolean isValidInput(ItemStack stack) {
+    public boolean isValidInput(@NotNull ItemStack stack) {
         if (stack.getCount() != 1) return false;
 
         Item item = stack.getItem();

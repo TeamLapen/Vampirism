@@ -30,8 +30,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
-
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class CursedBarkBlock extends Block {
@@ -90,13 +88,13 @@ public class CursedBarkBlock extends Block {
     }
 
 
-    private boolean canAttachTo(BlockGetter blockReader, BlockPos pos, Direction direction) {
+    private boolean canAttachTo(@NotNull BlockGetter blockReader, @NotNull BlockPos pos, @NotNull Direction direction) {
         BlockState blockstate = blockReader.getBlockState(pos);
         return blockstate.isFaceSturdy(blockReader, pos, direction);
     }
 
     @Override
-    public boolean canSurvive(BlockState state, @NotNull LevelReader worldReader, BlockPos blockPos) {
+    public boolean canSurvive(@NotNull BlockState state, @NotNull LevelReader worldReader, @NotNull BlockPos blockPos) {
         Direction mainDirection = state.getValue(FACING);
         Direction secondaryDirection = state.getValue(FACING2);
         BlockPos pos =  blockPos.relative(secondaryDirection);
@@ -108,7 +106,7 @@ public class CursedBarkBlock extends Block {
 
     @NotNull
     @Override
-    public BlockState updateShape(BlockState blockState, @NotNull Direction direction, @NotNull BlockState otherState, @NotNull LevelAccessor level, @NotNull BlockPos pos, @NotNull BlockPos otherPos) {
+    public BlockState updateShape(@NotNull BlockState blockState, @NotNull Direction direction, @NotNull BlockState otherState, @NotNull LevelAccessor level, @NotNull BlockPos pos, @NotNull BlockPos otherPos) {
         boolean facing = blockState.getValue(FACING) == direction;
         if (!facing && blockState.getValue(FACING) != blockState.getValue(FACING2)) {
             pos = pos.relative(blockState.getValue(FACING));
@@ -123,7 +121,7 @@ public class CursedBarkBlock extends Block {
 
     @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
+    public BlockState getStateForPlacement(@NotNull BlockPlaceContext context) {
         return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection()).setValue(FACING2, context.getNearestLookingDirection()).setValue(AXIS, Direction.Axis.Y); //TODO usage?
     }
 
@@ -142,7 +140,7 @@ public class CursedBarkBlock extends Block {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> builder) {
         builder.add(FACING, FACING2, AXIS);
     }
 }

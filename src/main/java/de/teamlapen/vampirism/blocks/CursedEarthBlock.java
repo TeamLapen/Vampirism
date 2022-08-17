@@ -20,7 +20,6 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.IPlantable;
-
 import org.jetbrains.annotations.NotNull;
 
 public class CursedEarthBlock extends VampirismBlock {
@@ -36,7 +35,7 @@ public class CursedEarthBlock extends VampirismBlock {
     }
 
     @Override
-    public InteractionResult use(@NotNull BlockState state,@NotNull Level worldIn,@NotNull BlockPos pos, Player player,@NotNull InteractionHand handIn,@NotNull BlockHitResult hit) {
+    public @NotNull InteractionResult use(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
         ItemStack heldItemStack = player.getItemInHand(handIn);
         Item heldItem = heldItemStack.getItem();
         if (heldItem instanceof HolyWaterBottleItem) {

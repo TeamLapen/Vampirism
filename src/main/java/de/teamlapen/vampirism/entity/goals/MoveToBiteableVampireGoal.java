@@ -6,6 +6,7 @@ import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -15,7 +16,7 @@ public class MoveToBiteableVampireGoal<T extends Mob & IVampireMob> extends Goal
     private final T vampire;
     @SuppressWarnings("FieldCanBeLocal")
     private final double movementSpeed;
-    private PathfinderMob target;
+    private @Nullable PathfinderMob target;
     private int timeout;
 
     /**

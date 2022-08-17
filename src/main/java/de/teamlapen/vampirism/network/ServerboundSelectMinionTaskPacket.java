@@ -16,6 +16,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.List;
@@ -27,7 +28,7 @@ public record ServerboundSelectMinionTaskPacket(int minionID, ResourceLocation t
     public final static ResourceLocation RESPAWN = new ResourceLocation(REFERENCE.MODID, "respawn");
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public static void handle(final ServerboundSelectMinionTaskPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final @NotNull ServerboundSelectMinionTaskPacket msg, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         if (ctx.getSender() != null) {
             ctx.enqueueWork(() -> FactionPlayerHandler.getOpt(ctx.getSender()).ifPresent(fp -> {
@@ -72,7 +73,7 @@ public record ServerboundSelectMinionTaskPacket(int minionID, ResourceLocation t
         ctx.setPacketHandled(true);
     }
 
-    public static void printRecoveringMinions(ServerPlayer player, List<MutableComponent> recoveringMinions) {
+    public static void printRecoveringMinions(@NotNull ServerPlayer player, @NotNull List<MutableComponent> recoveringMinions) {
         if (recoveringMinions.size() == 1) {
             player.displayClientMessage(Component.translatable("text.vampirism.minion_is_still_recovering", recoveringMinions.get(0)), true);
         } else if (recoveringMinions.size() > 1) {
@@ -80,12 +81,12 @@ public record ServerboundSelectMinionTaskPacket(int minionID, ResourceLocation t
         }
     }
 
-    static void encode(ServerboundSelectMinionTaskPacket msg, FriendlyByteBuf buf) {
+    static void encode(@NotNull ServerboundSelectMinionTaskPacket msg, @NotNull FriendlyByteBuf buf) {
         buf.writeVarInt(msg.minionID);
         buf.writeResourceLocation(msg.taskID);
     }
 
-    static ServerboundSelectMinionTaskPacket decode(FriendlyByteBuf buf) {
+    static @NotNull ServerboundSelectMinionTaskPacket decode(@NotNull FriendlyByteBuf buf) {
         return new ServerboundSelectMinionTaskPacket(buf.readVarInt(), buf.readResourceLocation());
     }
 

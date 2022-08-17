@@ -13,6 +13,7 @@ import net.minecraftforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 public class CommonProxy implements IProxy {
@@ -40,18 +41,18 @@ public class CommonProxy implements IProxy {
     }
 
     @Override
-    public String getActiveLanguage() {
+    public @NotNull String getActiveLanguage() {
         return "English";
     }
 
 
     @Override
-    public Player getPlayerEntity(NetworkEvent.Context ctx) {
+    public @Nullable Player getPlayerEntity(NetworkEvent.@NotNull Context ctx) {
         return ctx.getSender();
     }
 
     @Override
-    public Level getWorldFromKey(ResourceKey<Level> world) {
+    public @Nullable Level getWorldFromKey(@NotNull ResourceKey<Level> world) {
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
         if (server != null) {
             return server.getLevel(world);

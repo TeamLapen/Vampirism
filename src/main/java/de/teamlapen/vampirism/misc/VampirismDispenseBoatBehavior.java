@@ -31,7 +31,7 @@ public class VampirismDispenseBoatBehavior extends DefaultDispenseItemBehavior {
      * TODO 1.20 recheck
      */
     @NotNull
-    public ItemStack execute(BlockSource p_123375_, ItemStack p_123376_) {
+    public ItemStack execute(@NotNull BlockSource p_123375_, ItemStack p_123376_) {
         Direction direction = p_123375_.getBlockState().getValue(DispenserBlock.FACING);
         Level level = p_123375_.getLevel();
         double d0 = p_123375_.x() + (double)((float)direction.getStepX() * 1.125F);
@@ -58,7 +58,7 @@ public class VampirismDispenseBoatBehavior extends DefaultDispenseItemBehavior {
         return p_123376_;
     }
 
-    protected void playSound(BlockSource p_82485_1_) {
+    protected void playSound(@NotNull BlockSource p_82485_1_) {
         p_82485_1_.getLevel().levelEvent(1000, p_82485_1_.getPos(), 0);
     }
 }

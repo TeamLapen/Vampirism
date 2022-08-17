@@ -18,11 +18,11 @@ public class AltarInfusionContainer extends InventoryContainer {
 
     @SuppressWarnings("DeprecatedIsStillUsed")
     @Deprecated
-    public AltarInfusionContainer(int id, Inventory playerInventory) {
+    public AltarInfusionContainer(int id, @NotNull Inventory playerInventory) {
         this(id, playerInventory, new SimpleContainer(3), ContainerLevelAccess.NULL);
     }
 
-    public AltarInfusionContainer(int id, Inventory playerInventory, Container inventory, ContainerLevelAccess worldPosCallable) {
+    public AltarInfusionContainer(int id, @NotNull Inventory playerInventory, @NotNull Container inventory, ContainerLevelAccess worldPosCallable) {
         super(ModContainer.ALTAR_INFUSION.get(), id, playerInventory, worldPosCallable, inventory, SELECTOR_INFOS);
         this.addPlayerSlots(playerInventory);
     }

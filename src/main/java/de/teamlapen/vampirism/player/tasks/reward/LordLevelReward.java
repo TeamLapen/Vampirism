@@ -19,11 +19,11 @@ import org.jetbrains.annotations.NotNull;
 public class LordLevelReward implements TaskReward, ITaskRewardInstance {
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "lord_level_reward");
 
-    public static LordLevelReward decode(FriendlyByteBuf buffer) {
+    public static @NotNull LordLevelReward decode(@NotNull FriendlyByteBuf buffer) {
         return new LordLevelReward(buffer.readVarInt());
     }
 
-    public static LordLevelReward readNbt(CompoundTag nbt) {
+    public static @NotNull LordLevelReward readNbt(@NotNull CompoundTag nbt) {
         return new LordLevelReward(nbt.getInt("targetLevel"));
     }
 
@@ -34,7 +34,7 @@ public class LordLevelReward implements TaskReward, ITaskRewardInstance {
     }
 
     @Override
-    public void applyReward(IFactionPlayer<?> p) {
+    public void applyReward(@NotNull IFactionPlayer<?> p) {
         FactionPlayerHandler.getOpt(p.getRepresentingPlayer()).ifPresent(fph -> {
             if (fph.getLordLevel() == targetLevel - 1) {
                 fph.setLordLevel(targetLevel);
@@ -43,12 +43,12 @@ public class LordLevelReward implements TaskReward, ITaskRewardInstance {
     }
 
     @Override
-    public ITaskRewardInstance createInstance(IFactionPlayer<?> player) {
+    public @NotNull ITaskRewardInstance createInstance(IFactionPlayer<?> player) {
         return this;
     }
 
     @Override
-    public void encode(FriendlyByteBuf buffer) {
+    public void encode(@NotNull FriendlyByteBuf buffer) {
         buffer.writeVarInt(this.targetLevel);
     }
 
@@ -58,7 +58,7 @@ public class LordLevelReward implements TaskReward, ITaskRewardInstance {
     }
 
     @Override
-    public CompoundTag writeNBT(@NotNull CompoundTag nbt) {
+    public @NotNull CompoundTag writeNBT(@NotNull CompoundTag nbt) {
         nbt.putInt("targetLevel", this.targetLevel);
         return nbt;
     }

@@ -6,6 +6,7 @@ import de.teamlapen.lib.lib.util.BasicCommand;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import org.apache.logging.log4j.LogManager;
+import org.jetbrains.annotations.Nullable;
 
 public class MarkerCommand extends BasicCommand {
 
@@ -18,7 +19,7 @@ public class MarkerCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int marker(String args) {
+    private static int marker(@Nullable String args) {
         LogManager.getLogger().debug("************************************************************");
         LogManager.getLogger().debug("");
         LogManager.getLogger().debug("Marker %s");

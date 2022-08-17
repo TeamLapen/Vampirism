@@ -18,9 +18,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -121,12 +121,12 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
 
     protected abstract boolean isActive(T data, int i);
 
-    protected void renderGuiBackground(PoseStack mStack) {
+    protected void renderGuiBackground(@NotNull PoseStack mStack) {
         RenderSystem.setShaderTexture(0, BACKGROUND);
         blit(mStack, this.guiLeft, this.guiTop, this.getBlitOffset(), 0, 0, this.xSize, this.ySize, 300,256);
     }
 
-    protected void renderLevelRow(PoseStack mStack, int current, int max) {
+    protected void renderLevelRow(@NotNull PoseStack mStack, int current, int max) {
         this.font.draw(mStack, textLevel, guiLeft + 10, guiTop + 30, 0x0);
         this.font.draw(mStack, current + "/" + max, guiLeft + 145, guiTop + 30, 0x404040);
         int remainingPoints = entity.getMinionData().map(this::getRemainingStatPoints).orElse(0);
@@ -136,7 +136,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
         this.hLine(mStack, guiLeft + 10, guiLeft + xSize - 10, guiTop + 40, 0xF0303030);
     }
 
-    protected void renderStatRow(PoseStack mStack, int i, MutableComponent name, Component value, int currentLevel, int maxLevel) {
+    protected void renderStatRow(@NotNull PoseStack mStack, int i, @NotNull MutableComponent name, @NotNull Component value, int currentLevel, int maxLevel) {
         this.font.draw(mStack, name.append(":"), guiLeft + 10, guiTop + 50 + 26 * i, 0x404040);
         this.font.draw(mStack, value, guiLeft + 145, guiTop + 50 + 26 * i, 0x404040);
         this.font.draw(mStack, UtilLib.translate("text.vampirism.level_short") + ": " + currentLevel + "/" + maxLevel, guiLeft + 175, guiTop + 50 + 26 * i, 0x404040);
@@ -146,11 +146,11 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
 
     }
 
-    private void drawTitle(PoseStack mStack) {
+    private void drawTitle(@NotNull PoseStack mStack) {
         this.font.drawShadow(mStack, this.title, this.guiLeft + 10, this.guiTop + 10, 0xFFFFFF);
     }
 
-    private Optional<ItemStack> getOblivionPotion() {
+    private @NotNull Optional<ItemStack> getOblivionPotion() {
         return Optional.ofNullable(entity.getMinionData().flatMap(data -> Optional.ofNullable(InventoryHelper.getFirst(data.getInventory(), ModItems.OBLIVION_POTION.get()))).orElse(InventoryHelper.getFirst(this.minecraft.player.getInventory(), ModItems.OBLIVION_POTION.get())));
     }
 

@@ -25,7 +25,7 @@ import java.util.List;
 
 public class VampireBookItem extends Item {
 
-    public static boolean validBookTagContents(CompoundTag nbt) {
+    public static boolean validBookTagContents(@NotNull CompoundTag nbt) {
         if (!WritableBookItem.makeSureTagIsValid(nbt)) {
             return false;
         } else if (!nbt.contains("title")) {
@@ -42,7 +42,7 @@ public class VampireBookItem extends Item {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         if (stack.hasTag()) {
             CompoundTag compoundnbt = stack.getTag();
             String s = compoundnbt.getString("author");
@@ -64,7 +64,7 @@ public class VampireBookItem extends Item {
 
     @NotNull
     @Override
-    public Component getName(ItemStack stack) {
+    public Component getName(@NotNull ItemStack stack) {
         if (stack.hasTag()) {
             CompoundTag nbttagcompound = stack.getTag();
             String s = nbttagcompound.getString("title");
@@ -82,7 +82,7 @@ public class VampireBookItem extends Item {
 
     @NotNull
     @Override
-    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
+    public InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         if (!worldIn.isClientSide && playerIn instanceof ServerPlayer) {
             String id = VampireBookManager.OLD_ID;
@@ -94,7 +94,7 @@ public class VampireBookItem extends Item {
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
     }
 
-    public static CompoundTag createTagFromContext(VampireBookManager.BookContext context) {
+    public static @NotNull CompoundTag createTagFromContext(VampireBookManager.@NotNull BookContext context) {
         CompoundTag nbt = new CompoundTag();
         nbt.putString("id", context.id());
         nbt.putString("author", context.book().author());

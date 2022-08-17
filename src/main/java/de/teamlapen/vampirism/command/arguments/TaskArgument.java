@@ -14,6 +14,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -23,11 +24,11 @@ public class TaskArgument implements ArgumentType<Task> {
     public static final DynamicCommandExceptionType TASK_NOT_FOUND = new DynamicCommandExceptionType((particle) -> Component.translatable("command.vampirism.argument.task.notfound", particle));
     private static final Collection<String> EXAMPLES = Collections.singletonList("modid:task");
 
-    public static TaskArgument tasks() {
+    public static @NotNull TaskArgument tasks() {
         return new TaskArgument();
     }
 
-    public static Task getTask(CommandContext<CommandSourceStack> context, String name) {
+    public static Task getTask(@NotNull CommandContext<CommandSourceStack> context, String name) {
         return context.getArgument(name, Task.class);
     }
 
@@ -37,12 +38,12 @@ public class TaskArgument implements ArgumentType<Task> {
     }
 
     @Override
-    public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
+    public <S> @NotNull CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, @NotNull SuggestionsBuilder builder) {
         return SharedSuggestionProvider.suggestResource(RegUtil.keys(ModRegistries.TASKS), builder);
     }
 
     @Override
-    public Task parse(StringReader reader) throws CommandSyntaxException {
+    public @NotNull Task parse(@NotNull StringReader reader) throws CommandSyntaxException {
         ResourceLocation id = ResourceLocation.read(reader);
         Task task = RegUtil.getTask(id);
         if (task == null)

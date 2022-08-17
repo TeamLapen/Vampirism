@@ -14,7 +14,6 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
-
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -38,25 +37,25 @@ public class BaronessModel extends AgeableListModel<VampireBaronEntity> implemen
     private static final String CLAWS_RIGHT = "claws_right";
     private static final String CLAWS_LEFT = "claws_left";
 
-    public final ModelPart body;
-    public final ModelPart headOverlay;
-    public final ModelPart legRightOverlay;
-    public final ModelPart legLeftOverlay;
-    public final ModelPart armRightOverlay;
-    public final ModelPart bodyOverlay;
-    public final ModelPart armLeftOverlay;
-    public final ModelPart head;
-    public final ModelPart armRight;
-    public final ModelPart armLeft;
-    public final ModelPart legRight;
-    public final ModelPart legLeft;
-    public final ModelPart clawsRight;
-    public final ModelPart clawsLeft;
+    public final @NotNull ModelPart body;
+    public final @NotNull ModelPart headOverlay;
+    public final @NotNull ModelPart legRightOverlay;
+    public final @NotNull ModelPart legLeftOverlay;
+    public final @NotNull ModelPart armRightOverlay;
+    public final @NotNull ModelPart bodyOverlay;
+    public final @NotNull ModelPart armLeftOverlay;
+    public final @NotNull ModelPart head;
+    public final @NotNull ModelPart armRight;
+    public final @NotNull ModelPart armLeft;
+    public final @NotNull ModelPart legRight;
+    public final @NotNull ModelPart legLeft;
+    public final @NotNull ModelPart clawsRight;
+    public final @NotNull ModelPart clawsLeft;
 
     protected final HumanoidModel.ArmPose leftArmPose = HumanoidModel.ArmPose.EMPTY;
     protected final HumanoidModel.ArmPose rightArmPose = HumanoidModel.ArmPose.EMPTY;
 
-    public static LayerDefinition createLayer() {
+    public static @NotNull LayerDefinition createLayer() {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition part = mesh.getRoot();
         CubeDeformation DEFORM_OVERLAY = new CubeDeformation(0.2f);
@@ -78,7 +77,7 @@ public class BaronessModel extends AgeableListModel<VampireBaronEntity> implemen
         return LayerDefinition.create(mesh, 64, 64);
     }
 
-    public BaronessModel(ModelPart part) {
+    public BaronessModel(@NotNull ModelPart part) {
 
         this.body = part.getChild(BODY);
         this.headOverlay = part.getChild(HEAD_OVERLAY);
@@ -215,7 +214,7 @@ public class BaronessModel extends AgeableListModel<VampireBaronEntity> implemen
         return ImmutableList.of(this.body, this.headOverlay, this.bodyOverlay, this.armLeftOverlay, this.armRightOverlay, this.legLeftOverlay, this.legRightOverlay);
     }
 
-    protected HumanoidArm getSwingingSide(VampireBaronEntity entity) {
+    protected @NotNull HumanoidArm getSwingingSide(@NotNull VampireBaronEntity entity) {
         HumanoidArm handside = entity.getMainArm();
         return entity.swingingArm == InteractionHand.MAIN_HAND ? handside : handside.getOpposite();
     }

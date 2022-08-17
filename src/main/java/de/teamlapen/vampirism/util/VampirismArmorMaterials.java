@@ -40,11 +40,11 @@ public enum VampirismArmorMaterials implements ArmorMaterial {
         this.repairMaterial = repairMaterial;
     }
 
-    public int getDefenseForSlot(EquipmentSlot slotIn) {
+    public int getDefenseForSlot(@NotNull EquipmentSlot slotIn) {
         return this.damageReductionAmountArray[slotIn.getIndex()];
     }
 
-    public int getDurabilityForSlot(EquipmentSlot slotIn) {
+    public int getDurabilityForSlot(@NotNull EquipmentSlot slotIn) {
         return MAX_DAMAGE_ARRAY[slotIn.getIndex()] * this.maxDamageFactor;
     }
 

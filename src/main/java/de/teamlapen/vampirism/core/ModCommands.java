@@ -16,6 +16,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class ModCommands {
     }
 
 
-    public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher) {
+    public static void registerCommands(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
         List<String> vampirism = Lists.newArrayList("vampirism");
         List<String> test = Lists.newArrayList("vampirism-test");
         if (VampirismMod.inDev) {

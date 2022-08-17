@@ -13,7 +13,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 
 
@@ -25,7 +24,7 @@ public class HunterBasicScreen extends AbstractContainerScreen<HunterBasicContai
     private int missing = 0;
     private int timer = 0;
 
-    public HunterBasicScreen(HunterBasicContainer inventorySlotsIn, Inventory playerInventory, Component name) {
+    public HunterBasicScreen(@NotNull HunterBasicContainer inventorySlotsIn, @NotNull Inventory playerInventory, @NotNull Component name) {
         super(inventorySlotsIn, playerInventory, name);
     }
 

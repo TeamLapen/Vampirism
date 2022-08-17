@@ -30,7 +30,7 @@ public abstract class AbstractBrewingRecipe implements Recipe<Container> {
     }
 
     @Override
-    public boolean matches(Container inventory, @NotNull Level level) {
+    public boolean matches(@NotNull Container inventory, @NotNull Level level) {
         return this.ingredient.test(inventory.getItem(0));
     }
 

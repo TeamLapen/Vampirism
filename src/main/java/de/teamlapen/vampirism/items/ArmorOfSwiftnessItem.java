@@ -32,9 +32,9 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
     private static final int[] DAMAGE_REDUCTION_ENHANCED = new int[]{2, 5, 6, 2};
     private static final int[] DAMAGE_REDUCTION_NORMAL = new int[]{1, 2, 3, 1};
 
-    private final TIER tier;
+    private final @NotNull TIER tier;
 
-    private static Map<Attribute, Tuple<Double, AttributeModifier.Operation>> getModifiers(EquipmentSlot slot, TIER tier) {
+    private static @NotNull Map<Attribute, Tuple<Double, AttributeModifier.Operation>> getModifiers(@NotNull EquipmentSlot slot, @NotNull TIER tier) {
         HashMap<Attribute, Tuple<Double, AttributeModifier.Operation>> map = new HashMap<>();
         int slot1 = slot.getIndex();
         int damageReduction = switch (tier) {
@@ -53,7 +53,7 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
         return map;
     }
 
-    public ArmorOfSwiftnessItem(EquipmentSlot equipmentSlotIn, TIER tier) {
+    public ArmorOfSwiftnessItem(@NotNull EquipmentSlot equipmentSlotIn, @NotNull TIER tier) {
         super(VampirismArmorMaterials.MASTERLY_LEATHER, equipmentSlotIn, new Item.Properties().tab(VampirismMod.creativeTab), getModifiers(equipmentSlotIn, tier));
         this.tier = tier;
     }
@@ -66,7 +66,7 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
     }
 
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
+    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, @Nullable String type) {
         if (type == null) {
             return getTextureLocationLeather(slot);
         }
@@ -83,7 +83,7 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
     }
 
     @Override
-    public void onArmorTick(ItemStack itemStack, Level world, Player player) {
+    public void onArmorTick(ItemStack itemStack, Level world, @NotNull Player player) {
         super.onArmorTick(itemStack, world, player);
         if (player.tickCount % 45 == 3) {
             if (this.getSlot() == EquipmentSlot.CHEST) {
@@ -113,7 +113,7 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
      *
      * @return -1 if none
      */
-    private int getJumpBoost(TIER tier) {
+    private int getJumpBoost(@NotNull TIER tier) {
         return switch (tier) {
             case ULTIMATE -> 1;
             case ENHANCED -> 0;

@@ -19,6 +19,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -39,7 +40,7 @@ public class ModBlocksRender {
         registerRenderType();
     }
 
-    public static void registerBlockColors(RegisterColorHandlersEvent.Block event) {
+    public static void registerBlockColors(RegisterColorHandlersEvent.@NotNull Block event) {
         event.register((state, worldIn, pos, tintIndex) -> {
             if (tintIndex == 1) {
                 return 0x9966FF;
@@ -68,7 +69,7 @@ public class ModBlocksRender {
         event.register((state, worldIn, pos, tintIndex) -> 0x1E1F1F, ModBlocks.DARK_SPRUCE_LEAVES.get());
     }
 
-    public static void registerBlockEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+    public static void registerBlockEntityRenderers(EntityRenderersEvent.@NotNull RegisterRenderers event) {
         event.registerBlockEntityRenderer(ModTiles.COFFIN.get(), CoffinBESR::new);
         event.registerBlockEntityRenderer(ModTiles.ALTAR_INFUSION.get(), AltarInfusionBESR::new);
         event.registerBlockEntityRenderer(ModTiles.BLOOD_PEDESTAL.get(), PedestalBESR::new);

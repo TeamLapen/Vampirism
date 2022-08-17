@@ -17,7 +17,6 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -33,7 +32,7 @@ public class WeaponTableScreen extends AbstractContainerScreen<WeaponTableContai
     private final RecipeBookComponent recipeBookGui = new WeaponTableRecipeBookGui();
     private boolean widthTooNarrow;
 
-    public WeaponTableScreen(WeaponTableContainer inventorySlotsIn, Inventory inventoryPlayer, Component name) {
+    public WeaponTableScreen(@NotNull WeaponTableContainer inventorySlotsIn, @NotNull Inventory inventoryPlayer, @NotNull Component name) {
         super(inventorySlotsIn, inventoryPlayer, name);
         this.imageWidth = 196;
         this.imageHeight = 191;

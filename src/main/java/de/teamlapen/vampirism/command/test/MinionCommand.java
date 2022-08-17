@@ -24,6 +24,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
@@ -55,18 +56,18 @@ public class MinionCommand extends BasicCommand {
     }
 
 
-    private static int spawnNewVampireMinion(CommandSourceStack ctx, String name, int type, boolean useLordSkin) throws CommandSyntaxException {
+    private static int spawnNewVampireMinion(@NotNull CommandSourceStack ctx, String name, int type, boolean useLordSkin) throws CommandSyntaxException {
         VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData(name, type, useLordSkin);
         return spawnNewMinion(ctx, VReference.VAMPIRE_FACTION, data, ModEntities.VAMPIRE_MINION.get());
     }
 
-    private static int spawnNewHunterMinion(CommandSourceStack ctx, String name, int type, int hat, boolean useLordSkin) throws CommandSyntaxException {
+    private static int spawnNewHunterMinion(@NotNull CommandSourceStack ctx, String name, int type, int hat, boolean useLordSkin) throws CommandSyntaxException {
         HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData(name, type, hat, useLordSkin);
         return spawnNewMinion(ctx, VReference.HUNTER_FACTION, data, ModEntities.HUNTER_MINION.get());
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static <T extends MinionData> int spawnNewMinion(CommandSourceStack ctx, IPlayableFaction<?> faction, T data, EntityType<? extends MinionEntity<T>> type) throws CommandSyntaxException {
+    private static <T extends MinionData> int spawnNewMinion(@NotNull CommandSourceStack ctx, IPlayableFaction<?> faction, @NotNull T data, EntityType<? extends MinionEntity<T>> type) throws CommandSyntaxException {
         Player p = ctx.getPlayerOrException();
         FactionPlayerHandler fph = FactionPlayerHandler.get(p);
         if (fph.getMaxMinions() > 0) {
@@ -96,7 +97,7 @@ public class MinionCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int recall(CommandSourceStack ctx) throws CommandSyntaxException {
+    private static int recall(@NotNull CommandSourceStack ctx) throws CommandSyntaxException {
         Player p = ctx.getPlayerOrException();
         FactionPlayerHandler fph = FactionPlayerHandler.get(p);
         if (fph.getMaxMinions() > 0) {
@@ -114,7 +115,7 @@ public class MinionCommand extends BasicCommand {
 
 
     @SuppressWarnings("SameReturnValue")
-    private static int respawn(CommandSourceStack ctx) throws CommandSyntaxException {
+    private static int respawn(@NotNull CommandSourceStack ctx) throws CommandSyntaxException {
         Player p = ctx.getPlayerOrException();
         FactionPlayerHandler fph = FactionPlayerHandler.get(p);
         if (fph.getMaxMinions() > 0) {
@@ -132,7 +133,7 @@ public class MinionCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int purge(CommandSourceStack ctx) throws CommandSyntaxException {
+    private static int purge(@NotNull CommandSourceStack ctx) throws CommandSyntaxException {
         Player p = ctx.getPlayerOrException();
         MinionWorldData.getData(ctx.getServer()).purgeController(p.getUUID());
         p.displayClientMessage(Component.literal("Reload world"), false);

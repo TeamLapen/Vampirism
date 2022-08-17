@@ -29,12 +29,11 @@ import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.PlantType;
 import org.jetbrains.annotations.NotNull;
 
-import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class CursedGrass extends SpreadingSnowyDirtBlock implements BonemealableBlock {
 
-    public CursedGrass(Properties properties) {
+    public CursedGrass(@NotNull Properties properties) {
         super(properties);
     }
 
@@ -122,7 +121,7 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
 
     @NotNull
     @Override
-    public InteractionResult use(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
+    public InteractionResult use(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
         ItemStack heldItemStack = player.getItemInHand(handIn);
         Item heldItem = heldItemStack.getItem();
         if (heldItem instanceof HolyWaterBottleItem) {

@@ -63,12 +63,12 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         MinionData.registerDataType(VampireMinionEntity.VampireMinionData.ID, VampireMinionEntity.VampireMinionData::new);
     }
 
-    public static AttributeSupplier.Builder getAttributeBuilder() {
+    public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
         return BasicVampireEntity.getAttributeBuilder();
     }
 
     private boolean sundamageCache;
-    private EnumStrength garlicCache = EnumStrength.NONE;
+    private @NotNull EnumStrength garlicCache = EnumStrength.NONE;
 
     public VampireMinionEntity(EntityType<? extends VampirismEntity> type, Level world) {
         super(type, world, VampirismAPI.factionRegistry().getPredicate(VReference.VAMPIRE_FACTION, true, true, true, false, null).or(e -> !(e instanceof IFactionEntity) && e instanceof Enemy && !(e instanceof Zombie) && !(e instanceof Skeleton) && !(e instanceof Creeper)));
@@ -85,12 +85,12 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     }
 
     @Override
-    public List<IMinionTask<?, ?>> getAvailableTasks() {
+    public @NotNull List<IMinionTask<?, ?>> getAvailableTasks() {
         return Lists.newArrayList(MinionTasks.FOLLOW_LORD.get(), MinionTasks.STAY.get(), MinionTasks.DEFEND_AREA.get(), MinionTasks.COLLECT_BLOOD.get(), MinionTasks.PROTECT_LORD.get());
     }
 
     @Override
-    public LivingEntity getRepresentingEntity() {
+    public @NotNull LivingEntity getRepresentingEntity() {
         return this;
     }
 
@@ -197,7 +197,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     }
 
     @Override
-    protected boolean canConsume(ItemStack stack) {
+    protected boolean canConsume(@NotNull ItemStack stack) {
         if (!super.canConsume(stack)) return false;
         if ((stack.isEdible() && !(stack.getItem() instanceof VampirismItemBloodFood))) return false;
         boolean fullHealth = this.getHealth() == this.getMaxHealth();
@@ -281,7 +281,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         @Override
-        public void deserializeNBT(CompoundTag nbt) {
+        public void deserializeNBT(@NotNull CompoundTag nbt) {
             super.deserializeNBT(nbt);
             type = nbt.getInt("vampire_type");
             level = nbt.getInt("level");
@@ -294,7 +294,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         @Override
-        public MutableComponent getFormattedName() {
+        public @NotNull MutableComponent getFormattedName() {
             return super.getFormattedName().withStyle(style -> style.withColor(VReference.VAMPIRE_FACTION.getChatColor()));
         }
 
@@ -329,7 +329,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         @Override
-        public void handleMinionAppearanceConfig(String newName, int... data) {
+        public void handleMinionAppearanceConfig(String newName, int @NotNull ... data) {
             this.setName(newName);
             if (data.length >= 2) {
                 this.type = data[0];
@@ -356,7 +356,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         @Override
-        public void serializeNBT(CompoundTag tag) {
+        public void serializeNBT(@NotNull CompoundTag tag) {
             super.serializeNBT(tag);
             tag.putInt("vampire_type", type);
             tag.putInt("level", level);
@@ -380,7 +380,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         @Override
-        public boolean upgradeStat(int statId, MinionEntity<?> entity) {
+        public boolean upgradeStat(int statId, @NotNull MinionEntity<?> entity) {
             if (super.upgradeStat(statId, entity)) return true;
             if (getRemainingStatPoints() == 0) {
                 LOGGER.warn("Cannot upgrade minion stat as no stat points are left");

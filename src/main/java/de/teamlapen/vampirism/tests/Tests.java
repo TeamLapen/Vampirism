@@ -32,6 +32,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.concurrent.TimeUnit;
 
@@ -44,7 +45,7 @@ public class Tests {
 
     private final static Logger LOGGER = LogManager.getLogger(Tests.class);
 
-    public static void runTests(Level world, ServerPlayer player) {
+    public static void runTests(@NotNull Level world, @NotNull ServerPlayer player) {
         sendMsg(player, "Starting tests");
         LOGGER.warn("Clearing area", new Object[]{});
         clearArea(world);
@@ -63,7 +64,7 @@ public class Tests {
         sendMsg(player, "Finished tests");
     }
 
-    private static void runTest(Tester tester, TestInfo info) {
+    private static void runTest(@NotNull Tester tester, @NotNull TestInfo info) {
         boolean result;
         try {
             result = tester.run(info);
@@ -74,7 +75,7 @@ public class Tests {
         sendMsg(info.player, info.name + " test " + (result ? "§2was successful§r" : "§4failed§r"));
     }
 
-    private static void runLightTest(LightTester tester, String name, @Nullable Player player) {
+    private static void runLightTest(@NotNull LightTester tester, String name, @Nullable Player player) {
         boolean result;
         try {
             result = tester.run();
@@ -99,7 +100,7 @@ public class Tests {
         LOGGER.warn("Finished background tests after {} ms", new Object[]{w.stop().elapsed(TimeUnit.MILLISECONDS)});
     }
 
-    private static boolean bloodFluidHandler(TestInfo info) {
+    private static boolean bloodFluidHandler(@NotNull TestInfo info) {
         info.world.setBlockAndUpdate(info.pos, ModBlocks.BLOOD_CONTAINER.get().defaultBlockState());
         BlockEntity t = info.world.getBlockEntity(info.pos);
         LazyOptional<IFluidHandler> opt = t.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, Direction.getRandom(info.world.random));
@@ -129,7 +130,7 @@ public class Tests {
 
     }
 
-    private static boolean blockWeaponTableFluids(TestInfo info) {
+    private static boolean blockWeaponTableFluids(@NotNull TestInfo info) {
         info.world.setBlockAndUpdate(info.pos, ModBlocks.WEAPON_TABLE.get().defaultBlockState());
         info.player.setItemInHand(info.player.getUsedItemHand(), new ItemStack(Items.LAVA_BUCKET));
         BlockState block = info.world.getBlockState(info.pos);
@@ -141,11 +142,11 @@ public class Tests {
         return true;
     }
 
-    private static void sendMsg(Player player, String msg) {
+    private static void sendMsg(@NotNull Player player, String msg) {
         player.displayClientMessage(Component.literal("§1[V-TEST]§r " + msg), false);
     }
 
-    private static void clearArea(Level world) {
+    private static void clearArea(@NotNull Level world) {
         for (int x = -21; x < 22; x++) {
             for (int y = 1; y < 22; y++) {
                 for (int z = -21; z < 22; z++) {
@@ -192,7 +193,7 @@ public class Tests {
         }
 
 
-        private TestInfo next(String name) {
+        private @NotNull TestInfo next(String name) {
             int x = pos.getX();
             int z = pos.getZ();
             x += 5;

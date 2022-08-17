@@ -23,14 +23,15 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
 public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
 
-    private NonNullList<ItemStack> items = NonNullList.withSize(6, ItemStack.EMPTY);
+    private @NotNull NonNullList<ItemStack> items = NonNullList.withSize(6, ItemStack.EMPTY);
     private int brewTime;
-    private boolean[] lastOilCount;
+    private boolean @Nullable [] lastOilCount;
     private Item ingredient;
     private int fuel;
     private int productColor;
@@ -58,7 +59,7 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
         }
     };
 
-    public AlchemyTableBlockEntity(BlockPos pos, BlockState state) {
+    public AlchemyTableBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         super(ModTiles.ALCHEMICAL_TABLE.get(), pos, state);
     }
 
@@ -142,7 +143,7 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
         this.items.clear();
     }
 
-    public static void serverTick(Level level, BlockPos pos, BlockState state, AlchemyTableBlockEntity blockEntity) {
+    public static void serverTick(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull AlchemyTableBlockEntity blockEntity) {
         ItemStack itemstack = blockEntity.items.get(5);
         if (blockEntity.fuel <= 0 && itemstack.getItem() == Items.BLAZE_POWDER) {
             blockEntity.fuel = 20;
@@ -190,7 +191,7 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
         }
     }
 
-    private boolean isBrewable(Level level) {
+    private boolean isBrewable(@NotNull Level level) {
         ItemStack itemstack = this.items.get(4);
         if (itemstack.isEmpty()) {
             return false;
@@ -211,7 +212,7 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
         }
     }
 
-    private void doBrew(Level level) {
+    private void doBrew(@NotNull Level level) {
         ItemStack itemstack = this.items.get(4);
 
         for (int i = 0; i < 2; i++) {
@@ -250,19 +251,19 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
         }
     }
 
-    private boolean hasRecipe(Level level, ItemStack input, ItemStack ingredient) {
+    private boolean hasRecipe(@NotNull Level level, @NotNull ItemStack input, @NotNull ItemStack ingredient) {
         return level.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().anyMatch(recipe -> recipe.isInput(input) && recipe.isIngredient(ingredient));
     }
 
-    public boolean isValidIngredient(Level level, ItemStack stack) {
+    public boolean isValidIngredient(@NotNull Level level, @NotNull ItemStack stack) {
         return level.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().anyMatch(recipe -> recipe.isIngredient(stack));
     }
 
-    public boolean isValidInput(Level level, ItemStack stack) {
+    public boolean isValidInput(@NotNull Level level, @NotNull ItemStack stack) {
         return level.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().anyMatch(recipe -> recipe.isInput(stack));
     }
 
-    public ItemStack getOutput(Level level, ItemStack input, ItemStack ingredient) {
+    public @NotNull ItemStack getOutput(@NotNull Level level, @NotNull ItemStack input, @NotNull ItemStack ingredient) {
         return level.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().map(recipe -> recipe.getResult(input, ingredient)).filter(a -> !a.isEmpty()).findFirst().orElse(ItemStack.EMPTY);
     }
 

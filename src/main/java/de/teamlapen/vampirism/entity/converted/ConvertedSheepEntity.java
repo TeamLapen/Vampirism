@@ -27,7 +27,7 @@ import java.util.List;
 public class ConvertedSheepEntity extends ConvertedCreatureEntity<Sheep> implements net.minecraftforge.common.IForgeShearable {
     private final static EntityDataAccessor<Byte> COAT = SynchedEntityData.defineId(ConvertedSheepEntity.class, EntityDataSerializers.BYTE);
 
-    private Boolean lastSheared = null;
+    private @Nullable Boolean lastSheared = null;
 
     public ConvertedSheepEntity(EntityType<? extends ConvertedSheepEntity> type, Level world) {
         super(type, world);
@@ -50,7 +50,7 @@ public class ConvertedSheepEntity extends ConvertedCreatureEntity<Sheep> impleme
         nbt.putBoolean("Sheared", this.getSheared());
     }
 
-    public DyeColor getFleeceColor() {
+    public @NotNull DyeColor getFleeceColor() {
         return nil() ? DyeColor.WHITE : this.getOldCreature().getColor();
     }
 
@@ -75,7 +75,7 @@ public class ConvertedSheepEntity extends ConvertedCreatureEntity<Sheep> impleme
 
     @NotNull
     @Override
-    public List<ItemStack> onSheared(@Nullable Player player, @NotNull ItemStack item, Level world, BlockPos pos, int fortune) {
+    public List<ItemStack> onSheared(@Nullable Player player, @NotNull ItemStack item, @NotNull Level world, BlockPos pos, int fortune) {
         java.util.List<ItemStack> ret = new java.util.ArrayList<>();
         if (!world.isClientSide()) {
             this.setSheared(true);
@@ -108,7 +108,7 @@ public class ConvertedSheepEntity extends ConvertedCreatureEntity<Sheep> impleme
         }
 
         @Override
-        public ConvertedCreatureEntity<Sheep> createFrom(Sheep entity) {
+        public ConvertedCreatureEntity<Sheep> createFrom(@NotNull Sheep entity) {
             return Helper.createEntity(ModEntities.CONVERTED_SHEEP.get(), entity.getCommandSenderWorld()).map(creature -> {
                 this.copyImportantStuff(creature, entity);
                 creature.setSheared(entity.isSheared());

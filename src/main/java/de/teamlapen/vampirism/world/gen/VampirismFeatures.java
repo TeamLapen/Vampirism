@@ -37,6 +37,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProc
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.OptionalInt;
@@ -114,7 +115,7 @@ public class VampirismFeatures {
      * MUST only be used for objects that belong to registries that are guaranteed to be present
      */
     @SuppressWarnings({"unchecked"})
-    private static <T> Holder<T> getHolder(RegistryObject<? extends T> object) {
+    private static <T> Holder<T> getHolder(@NotNull RegistryObject<? extends T> object) {
         return (Holder<T>)object.getHolder().orElseThrow(() -> new IllegalStateException("Registry object "+object.getKey()+" does not have a holder. Something is wrong"));
     }
 

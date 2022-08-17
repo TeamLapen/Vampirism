@@ -122,7 +122,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
      * Always prefer using #getOpt instead
      */
     @Deprecated
-    public static VampirePlayer get(@NotNull Player player) {
+    public static @NotNull VampirePlayer get(@NotNull Player player) {
         return (VampirePlayer) player.getCapability(CAP).orElseThrow(() -> new IllegalStateException("Cannot get Vampire player capability from player " + player));
     }
 
@@ -130,7 +130,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     /**
      * Return a LazyOptional, but print a warning message if not present.
      */
-    public static LazyOptional<VampirePlayer> getOpt(@NotNull Player player) {
+    public static @NotNull LazyOptional<VampirePlayer> getOpt(@NotNull Player player) {
         LazyOptional<VampirePlayer> opt = player.getCapability(CAP).cast();
         if (!opt.isPresent()) {
             LOGGER.warn("Cannot get Vampire player capability. This might break mod functionality.", new Throwable().fillInStackTrace());
@@ -138,14 +138,14 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         return opt;
     }
 
-    public static ICapabilityProvider createNewCapability(final Player player) {
+    public static @NotNull ICapabilityProvider createNewCapability(final Player player) {
         return new ICapabilitySerializable<CompoundTag>() {
 
             final VampirePlayer inst = new VampirePlayer(player);
             final LazyOptional<IVampirePlayer> opt = LazyOptional.of(() -> inst);
 
             @Override
-            public void deserializeNBT(CompoundTag nbt) {
+            public void deserializeNBT(@NotNull CompoundTag nbt) {
                 inst.loadData(nbt);
             }
 
@@ -156,7 +156,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             }
 
             @Override
-            public CompoundTag serializeNBT() {
+            public @NotNull CompoundTag serializeNBT() {
                 CompoundTag tag = new CompoundTag();
                 inst.saveData(tag);
                 return tag;
@@ -172,16 +172,16 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         return (lvl / (double) REFERENCE.HIGHEST_VAMPIRE_LEVEL) * VampirismConfig.BALANCE.vpNaturalArmorToughnessIncrease.get();
     }
 
-    private final BloodStats bloodStats;
-    private final ActionHandler<IVampirePlayer> actionHandler;
-    private final SkillHandler<IVampirePlayer> skillHandler;
+    private final @NotNull BloodStats bloodStats;
+    private final @NotNull ActionHandler<IVampirePlayer> actionHandler;
+    private final @NotNull SkillHandler<IVampirePlayer> skillHandler;
     private final List<IVampireVision> unlockedVisions = new ArrayList<>();
     private boolean sundamage_cache = false;
-    private EnumStrength garlic_cache = EnumStrength.NONE;
+    private @NotNull EnumStrength garlic_cache = EnumStrength.NONE;
     private int ticksInSun = 0;
     private int remainingBarkTicks = 0;
     private boolean wasDead = false;
-    private IVampireVision activatedVision = null;
+    private @Nullable IVampireVision activatedVision = null;
     private int wing_counter = 0;
     private int feed_victim = -1;
     /**
@@ -189,7 +189,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
      */
     @Nullable
     private ISoundReference feedingSoundReference;
-    private BITE_TYPE feed_victim_bite_type;
+    private @Nullable BITE_TYPE feed_victim_bite_type;
     private int feedBiteTickCounter = 0;
     private boolean forceNaturalArmorUpdate;
     /**
@@ -251,7 +251,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
      * <p>
      * Named like this to match biteEntity
      */
-    public void biteBlock(BlockPos pos) {
+    public void biteBlock(@NotNull BlockPos pos) {
         if (player.isSpectator()) {
             LOGGER.warn("Player can't bite in spectator mode");
             return;
@@ -440,7 +440,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     @Override
-    public ResourceLocation getCapKey() {
+    public @NotNull ResourceLocation getCapKey() {
         return REFERENCE.VAMPIRE_PLAYER_KEY;
     }
 
@@ -589,7 +589,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         return false;
     }
 
-    public void loadData(CompoundTag nbt) {
+    public void loadData(@NotNull CompoundTag nbt) {
         super.loadData(nbt);
         bloodStats.readNBT(nbt);
         VampirePlayerSpecialAttributes a = getSpecialAttributes();
@@ -659,7 +659,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     @Override
-    public boolean onDeadlyHit(DamageSource source) {
+    public boolean onDeadlyHit(@NotNull DamageSource source) {
         if (getLevel() > 0 && !this.player.hasEffect(ModEffects.NEONATAL.get()) && !Helper.canKillVampires(source)) {
             this.setDBNOTimer(getDbnoDuration());
             this.player.setHealth(0.5f);
@@ -679,7 +679,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     @Override
-    public void onDeath(DamageSource src) {
+    public void onDeath(@NotNull DamageSource src) {
         super.onDeath(src);
         if (actionHandler.isActionActive(VampireActions.BAT.get()) && src.getDirectEntity() instanceof Projectile) {
             if (player instanceof ServerPlayer) {
@@ -693,7 +693,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     @Override
-    public boolean onEntityAttacked(DamageSource src, float amt) {
+    public boolean onEntityAttacked(@NotNull DamageSource src, float amt) {
         if (getLevel() > 0) {
             if (isDBNO() && !Helper.canKillVampires(src)) {
                 if (src.getEntity() != null && src.getEntity() instanceof Mob && ((Mob) src.getEntity()).getTarget() == player) {
@@ -982,7 +982,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         this.forceNaturalArmorUpdate = true;
     }
 
-    public void saveData(CompoundTag nbt) {
+    public void saveData(@NotNull CompoundTag nbt) {
         super.saveData(nbt);
         bloodStats.writeNBT(nbt);
         nbt.putInt(KEY_EYE, getEyeType());
@@ -1037,7 +1037,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         return true;
     }
 
-    public void setSkinData(int... data) {
+    public void setSkinData(int @NotNull ... data) {
         if (data.length > 0) {
             this.setFangType(data[0]);
             if (data.length > 1) {
@@ -1172,7 +1172,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     @Override
-    protected FactionBasePlayer<IVampirePlayer> copyFromPlayer(Player old) {
+    protected @NotNull FactionBasePlayer<IVampirePlayer> copyFromPlayer(@NotNull Player old) {
         VampirePlayer oldVampire = get(old);
         CompoundTag nbt = new CompoundTag();
         oldVampire.saveData(nbt);
@@ -1182,7 +1182,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     @Override
-    protected void loadUpdate(CompoundTag nbt) {
+    protected void loadUpdate(@NotNull CompoundTag nbt) {
         super.loadUpdate(nbt);
         if (nbt.contains(KEY_EYE)) {
             setEyeType(nbt.getInt(KEY_EYE));
@@ -1249,7 +1249,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     @Override
-    protected void writeFullUpdate(CompoundTag nbt) {
+    protected void writeFullUpdate(@NotNull CompoundTag nbt) {
         super.writeFullUpdate(nbt);
         nbt.putInt(KEY_EYE, getEyeType());
         nbt.putInt(KEY_FANGS, getFangType());
@@ -1324,7 +1324,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
      * @param entity the entity to feed on
      * @return If feeding can continue
      */
-    private boolean biteFeed(LivingEntity entity) {
+    private boolean biteFeed(@NotNull LivingEntity entity) {
         if (isRemote()) return true;
         if (getLevel() == 0) return false;
         int blood = 0;

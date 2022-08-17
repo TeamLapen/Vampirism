@@ -15,12 +15,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class AdvancementGenerator extends AdvancementProvider {
-    public AdvancementGenerator(DataGenerator generatorIn) {
+    public AdvancementGenerator(@NotNull DataGenerator generatorIn) {
         super(generatorIn);
         MainAdvancements main = new MainAdvancements();
         this.tabs = ImmutableList.of(main, new HunterAdvancements(main::getRoot), new VampireAdvancements(main::getRoot), new MinionAdvancements(main::getRoot));
@@ -37,7 +38,7 @@ public class AdvancementGenerator extends AdvancementProvider {
 
         @SuppressWarnings("unused")
         @Override
-        public void accept(Consumer<Advancement> consumer) {
+        public void accept(@NotNull Consumer<Advancement> consumer) {
             Advancement become_hunter = Advancement.Builder.advancement()
                     .display(ModItems.ITEM_GARLIC.get(), Component.translatable("advancement.vampirism.become_hunter"), Component.translatable("advancement.vampirism.become_hunter.desc"), null, FrameType.TASK, true, false, false)
                     .parent(root.get())
@@ -86,7 +87,7 @@ public class AdvancementGenerator extends AdvancementProvider {
 
         @SuppressWarnings("unused")
         @Override
-        public void accept(Consumer<Advancement> consumer) {
+        public void accept(@NotNull Consumer<Advancement> consumer) {
             root = Advancement.Builder.advancement()
                     .display(ModItems.VAMPIRE_FANG.get(), Component.translatable("advancement.vampirism"), Component.translatable("advancement.vampirism.desc"), new ResourceLocation(REFERENCE.MODID, "textures/block/castle_block_dark_brick.png"), FrameType.TASK, false, false, false) //TODO BREAKING: change background texture to "textures/gui/advancements/backgrounds/vampirism.png"
                     .addCriterion("main", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.VAMPIRE_FANG.get()))
@@ -128,7 +129,7 @@ public class AdvancementGenerator extends AdvancementProvider {
 
         @SuppressWarnings("unused")
         @Override
-        public void accept(Consumer<Advancement> consumer) {
+        public void accept(@NotNull Consumer<Advancement> consumer) {
             Advancement become_vampire = Advancement.Builder.advancement()
                     .display(ModItems.VAMPIRE_FANG.get(), Component.translatable("advancement.vampirism.become_vampire"), Component.translatable("advancement.vampirism.become_vampire.desc"), null, FrameType.TASK, true, false, false)
                     .parent(root.get())
@@ -196,7 +197,7 @@ public class AdvancementGenerator extends AdvancementProvider {
         }
 
         @Override
-        public void accept(Consumer<Advancement> consumer) {
+        public void accept(@NotNull Consumer<Advancement> consumer) {
             Advancement become_lord = Advancement.Builder.advancement()
                     .display(Items.PAPER, Component.translatable("advancement.vampirism.become_lord"), Component.translatable("advancement.vampirism.become_lord.desc"), null, FrameType.TASK, true, true, true)
                     .parent(root.get())

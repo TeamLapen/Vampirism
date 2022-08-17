@@ -51,7 +51,7 @@ public class SkillNodeGenerator implements DataProvider {
         return "Vampirism skillnode generator";
     }
 
-    protected void registerSkillNodes(Consumer<FinishedSkillNode> consumer) {
+    protected void registerSkillNodes(@NotNull Consumer<FinishedSkillNode> consumer) {
         //hunter
         {
             ResourceLocation skill2 = SkillNodeBuilder.hunter(modId("hunter"), HunterSkills.STAKE1.get()).build(consumer, modId("skill2"));
@@ -123,11 +123,11 @@ public class SkillNodeGenerator implements DataProvider {
 
     }
 
-    private ResourceLocation modId(String string) {
+    private @NotNull ResourceLocation modId(@NotNull String string) {
         return new ResourceLocation(REFERENCE.MODID, string);
     }
 
-    private void saveSkillNode(CachedOutput cache, JsonObject nodeJson, Path path) {
+    private void saveSkillNode(@NotNull CachedOutput cache, JsonObject nodeJson, @NotNull Path path) {
         try {
             DataProvider.saveStable(cache, nodeJson, path);
         } catch (IOException ioExeption) {

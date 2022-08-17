@@ -13,6 +13,8 @@ import net.minecraft.util.GsonHelper;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +26,7 @@ import java.util.List;
 public class SkillNode {
     private final static Logger LOGGER = LogManager.getLogger();
     private final SkillNode parent;
-    private final List<SkillNode> children;
+    private final @NotNull List<SkillNode> children;
     private final ISkill<?>[] elements;
     private final ResourceLocation[] lockingNodes;
     private final int depth;
@@ -46,7 +48,7 @@ public class SkillNode {
     /**
      * For root skill node
      */
-    public SkillNode(IPlayableFaction<?> faction, ISkill<?> element, ISkillType type) {
+    public SkillNode(@NotNull IPlayableFaction<?> faction, ISkill<?> element, @NotNull ISkillType type) {
         this(type.createIdForFaction(faction.getID()), faction, null, 0, new ISkill[]{element});
 
     }
@@ -56,7 +58,7 @@ public class SkillNode {
      *
      * @param elements One or more xor skills
      */
-    public SkillNode(ResourceLocation id, SkillNode parent, ISkill<?>[] elements, ResourceLocation... lockingNodes) {
+    public SkillNode(ResourceLocation id, @NotNull SkillNode parent, ISkill<?>[] elements, ResourceLocation... lockingNodes) {
         this(id, parent.getFaction(), parent, parent.depth + 1, elements, lockingNodes);
         parent.children.add(this);
     }
@@ -72,7 +74,7 @@ public class SkillNode {
         return children;
     }
 
-    public Builder getCopy() {
+    public @NotNull Builder getCopy() {
         return new Builder(parent.id, null, Arrays.asList(elements), Arrays.asList(lockingNodes));
     }
 
@@ -109,7 +111,7 @@ public class SkillNode {
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return "SkillNode{" +
                 "faction=" + faction +
                 ", depth=" + depth +
@@ -118,7 +120,7 @@ public class SkillNode {
     }
 
     public static class Builder {
-        public static Builder deserialize(JsonObject json, @SuppressWarnings("unused") JsonDeserializationContext context) {
+        public static @Nullable Builder deserialize(@NotNull JsonObject json, @SuppressWarnings("unused") JsonDeserializationContext context) {
             if (json.has("remove") && GsonHelper.getAsBoolean(json, "remove")) return null;
             ResourceLocation parent = json.has("parent") ? new ResourceLocation(GsonHelper.getAsString(json, "parent")) : null;
             ResourceLocation merge = json.has("merge") ? new ResourceLocation(GsonHelper.getAsString(json, "merge")) : null;
@@ -140,7 +142,7 @@ public class SkillNode {
             return new Builder(parent, merge, skillList, lockingList);
         }
 
-        public static Builder readFrom(FriendlyByteBuf buf) {
+        public static @NotNull Builder readFrom(@NotNull FriendlyByteBuf buf) {
             ResourceLocation parent = buf.readBoolean() ? buf.readResourceLocation() : null;
             ResourceLocation merge = buf.readBoolean() ? buf.readResourceLocation() : null;
 
@@ -177,7 +179,7 @@ public class SkillNode {
             this.lockingNodes = lockingNodes;
         }
 
-        public SkillNode build(ResourceLocation id, SkillNode parent) {
+        public @NotNull SkillNode build(ResourceLocation id, @NotNull SkillNode parent) {
             return new SkillNode(id, parent, skills.toArray(new ISkill[0]), lockingNodes.toArray(new ResourceLocation[0]));
         }
 
@@ -190,7 +192,7 @@ public class SkillNode {
             return true;
         }
 
-        public JsonObject serialize() {
+        public @NotNull JsonObject serialize() {
 
             JsonObject jsonobject = new JsonObject();
             if (this.parentId != null) {
@@ -216,11 +218,11 @@ public class SkillNode {
         }
 
         @Override
-        public String toString() {
+        public @NotNull String toString() {
             return "SkillNode.Builder{parent=" + parentId + ",merge=" + mergeId + "skills" + skills.toString() + "}";
         }
 
-        public void writeTo(FriendlyByteBuf buf) {
+        public void writeTo(@NotNull FriendlyByteBuf buf) {
             if (this.parentId == null) {
                 buf.writeBoolean(false);
             } else {

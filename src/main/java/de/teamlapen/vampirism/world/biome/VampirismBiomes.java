@@ -11,10 +11,11 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.*;
 import net.minecraft.world.level.levelgen.GenerationStep;
+import org.jetbrains.annotations.NotNull;
 
 public class VampirismBiomes {
 
-    public static Biome createVampireForest() {
+    public static @NotNull Biome createVampireForest() {
         MobSpawnSettings.Builder mobSpawnBuilder = new MobSpawnSettings.Builder();
         mobSpawnBuilder.creatureGenerationProbability(0.25f);
         mobSpawnBuilder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.VAMPIRE.get(), 35, 1, 3));
@@ -30,7 +31,7 @@ public class VampirismBiomes {
         return prepareVampireForestBuilder(mobSpawnBuilder, biomeSpecialEffectsBuilder).build();
     }
 
-    public static Biome.BiomeBuilder prepareVampireForestBuilder(MobSpawnSettings.Builder spawnBuilder, BiomeSpecialEffects.Builder ambienceBuilder) {
+    public static Biome.@NotNull BiomeBuilder prepareVampireForestBuilder(MobSpawnSettings.@NotNull Builder spawnBuilder, BiomeSpecialEffects.@NotNull Builder ambienceBuilder) {
         BiomeGenerationSettings.Builder builder = new BiomeGenerationSettings.Builder();
         BiomeDefaultFeatures.addDefaultCarversAndLakes(builder); //carver
         addModdedWaterLake(builder);
@@ -50,35 +51,35 @@ public class VampirismBiomes {
     }
 
 
-    public static void addVampireFlower(BiomeGenerationSettings.Builder builder) {
+    public static void addVampireFlower(BiomeGenerationSettings.@NotNull Builder builder) {
         builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.VAMPIRE_FLOWER_PLACED.getHolder().orElseThrow());
     }
 
-    public static void addWaterSprings(BiomeGenerationSettings.Builder builder) {
+    public static void addWaterSprings(BiomeGenerationSettings.@NotNull Builder builder) {
         builder.addFeature(GenerationStep.Decoration.FLUID_SPRINGS, MiscOverworldPlacements.SPRING_WATER);
     }
 
-    public static void addModdedWaterLake(BiomeGenerationSettings.Builder builder) {
+    public static void addModdedWaterLake(BiomeGenerationSettings.@NotNull Builder builder) {
          builder.addFeature(GenerationStep.Decoration.LAKES, VampirismFeatures.WATER_LAKE_PLACED.getHolder().orElseThrow());
     }
 
-    public static void addVampireTrees(BiomeGenerationSettings.Builder builder) {
+    public static void addVampireTrees(BiomeGenerationSettings.@NotNull Builder builder) {
         builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.VAMPIRE_TREES_PLACED.getHolder().orElseThrow());
     }
 
-    public static void addUndergroundVariety(BiomeGenerationSettings.Builder builder) {
+    public static void addUndergroundVariety(BiomeGenerationSettings.@NotNull Builder builder) {
         builder.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, OrePlacements.ORE_GRAVEL);
         builder.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, VampirismFeatures.ORE_CURSED_DIRT_PLACED.getHolder().orElseThrow());
         builder.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, VampirismFeatures.ORE_DARK_STONE_LOWER_PLACED.getHolder().orElseThrow());
         builder.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, VampirismFeatures.ORE_DARK_STONE_UPPER_PLACED.getHolder().orElseThrow());
     }
 
-    public static void addBushPatch(BiomeGenerationSettings.Builder builder) {
+    public static void addBushPatch(BiomeGenerationSettings.@NotNull Builder builder) {
         builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.CURSED_ROOT_PLACED.getHolder().orElseThrow());
         builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.FOREST_GRASS_PLACED.getHolder().orElseThrow());
     }
 
-    public static void addDefaultCarversWithoutLakes(BiomeGenerationSettings.Builder builder) {
+    public static void addDefaultCarversWithoutLakes(BiomeGenerationSettings.@NotNull Builder builder) {
         builder.addCarver(GenerationStep.Carving.AIR, Carvers.CAVE);
         builder.addCarver(GenerationStep.Carving.AIR, Carvers.CAVE_EXTRA_UNDERGROUND);
         builder.addCarver(GenerationStep.Carving.AIR, Carvers.CANYON);

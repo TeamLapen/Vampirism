@@ -6,9 +6,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 /**
@@ -18,7 +18,7 @@ public class VampirismBlock extends Block {
 
     private boolean isDecorativeBlock;
 
-    public VampirismBlock(Block.Properties properties) {
+    public VampirismBlock(Block.@NotNull Properties properties) {
         super(properties);
     }
 
@@ -30,7 +30,7 @@ public class VampirismBlock extends Block {
         }
     }
 
-    public VampirismBlock markDecorativeBlock() {
+    public @NotNull VampirismBlock markDecorativeBlock() {
         this.isDecorativeBlock = true;
         return this;
     }

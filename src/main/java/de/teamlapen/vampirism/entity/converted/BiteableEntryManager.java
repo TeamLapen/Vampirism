@@ -50,7 +50,7 @@ public class BiteableEntryManager {
     /**
      * see {@link #addCalculated(ResourceLocation, int)}
      */
-    public void addCalculated(Map<ResourceLocation, Integer> map) {
+    public void addCalculated(@NotNull Map<ResourceLocation, Integer> map) {
         for (Map.Entry<ResourceLocation, Integer> e : map.entrySet()) {
             addCalculated(e.getKey(), e.getValue());
         }
@@ -104,7 +104,7 @@ public class BiteableEntryManager {
      * @return {@code null} if resources aren't loaded or the creatures type is blacklisted.
      */
     @Nullable
-    public BiteableEntry get(PathfinderMob creature) {
+    public BiteableEntry get(@NotNull PathfinderMob creature) {
         if (!initialized) return null;
         EntityType<?> type = creature.getType();
         ResourceLocation id = EntityType.getKey(type);
@@ -118,7 +118,7 @@ public class BiteableEntryManager {
      *
      * @return map of entities, which are not present in data folder, to calculated blood values
      */
-    public Map<ResourceLocation, Integer> getValuesToSave() {
+    public @NotNull Map<ResourceLocation, Integer> getValuesToSave() {
         Map<ResourceLocation, Integer> map = Maps.newHashMap();
         for (Map.Entry<ResourceLocation, BiteableEntry> entry : calculated.entrySet()) {
             if (!biteableEntries.containsKey(entry.getKey())) {
@@ -149,7 +149,7 @@ public class BiteableEntryManager {
      * @param id registryname of the entity type
      * @return weather the entity type is blacklisted by the server config or not
      */
-    private boolean isConfigBlackListed(ResourceLocation id) {
+    private boolean isConfigBlackListed(@NotNull ResourceLocation id) {
         List<? extends String> list = VampirismConfig.SERVER.blacklistedBloodEntity.get();
         return list.contains(id.toString());
     }
@@ -170,7 +170,7 @@ public class BiteableEntryManager {
         return isConfigBlackListed(RegUtil.id(type));
     }
 
-    void setNewBiteables(Map<ResourceLocation, BiteableEntry> biteableEntries, Set<ResourceLocation> blacklist) {
+    void setNewBiteables(@NotNull Map<ResourceLocation, BiteableEntry> biteableEntries, @NotNull Set<ResourceLocation> blacklist) {
         this.biteableEntries.clear();
         this.blacklist.clear();
         this.biteableEntries.putAll(biteableEntries);

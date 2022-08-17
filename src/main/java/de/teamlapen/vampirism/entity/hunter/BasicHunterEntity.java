@@ -79,7 +79,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     private static final Component name = Component.translatable("container.hunter");
 
-    public static AttributeSupplier.Builder getAttributeBuilder() {
+    public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
         return VampirismEntity.getAttributeBuilder()
                 .add(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.VAMPIRE_HUNTER_MAX_HEALTH)
                 .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE)
@@ -88,14 +88,14 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
 
     private final int MAX_LEVEL = 3;
-    private final MeleeAttackGoal attackMelee;
-    private final AttackRangedCrossbowGoal<BasicHunterEntity> attackRange;
+    private final @NotNull MeleeAttackGoal attackMelee;
+    private final @NotNull AttackRangedCrossbowGoal<BasicHunterEntity> attackRange;
     /**
      * available actions for AI task & task
      */
-    private final ActionHandlerEntity<?> entityActionHandler;
+    private final @NotNull ActionHandlerEntity<?> entityActionHandler;
     private final EntityClassType entityclass;
-    private final EntityActionTier entitytier;
+    private final @NotNull EntityActionTier entitytier;
     /**
      * Player currently being trained otherwise null
      */
@@ -187,7 +187,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     /**
      * Assumes preconditions as been met. Check conditions but does not give feedback to user
      */
-    public void convertToMinion(Player lord) {
+    public void convertToMinion(@NotNull Player lord) {
         FactionPlayerHandler.getOpt(lord).ifPresent(fph -> {
             if (fph.getMaxMinions() > 0) {
                 MinionWorldData.getData(lord.level).map(w -> w.getOrCreateController(fph)).ifPresent(controller -> {
@@ -425,7 +425,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    public int suggestEntityLevel(Difficulty d) {
+    public int suggestEntityLevel(@NotNull Difficulty d) {
         return switch (this.random.nextInt(6)) {
             case 0 -> (int) (d.minPercLevel / 100F * MAX_LEVEL);
             case 1 -> (int) (d.avgPercLevel / 100F * MAX_LEVEL);
@@ -451,7 +451,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     //IMob -------------------------------------------------------------------------------------------------------------
     @Override
-    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
+    protected @NotNull EntityType<?> getIMobTypeOpt(boolean iMob) {
         return iMob ? ModEntities.HUNTER_IMOB.get() : ModEntities.HUNTER.get();
     }
 

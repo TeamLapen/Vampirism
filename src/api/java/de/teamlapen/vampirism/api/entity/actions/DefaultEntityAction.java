@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class DefaultEntityAction implements IEntityAction {
     private final EntityClassType[] entityClassTypes;
-    private final EntityActionTier entityActionTier;
+    private final @NotNull EntityActionTier entityActionTier;
 
     public DefaultEntityAction(@NotNull EntityActionTier tier, EntityClassType... param) {
         entityActionTier = tier;

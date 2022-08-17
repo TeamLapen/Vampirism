@@ -69,7 +69,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
 
     @Override
     @ThreadSafeAPI
-    public void addConvertible(EntityType<? extends PathfinderMob> type, ResourceLocation overlay_loc, @NotNull IConvertingHandler<?> handler) {
+    public void addConvertible(EntityType<? extends PathfinderMob> type, @Nullable ResourceLocation overlay_loc, @NotNull IConvertingHandler<?> handler) {
         if (finished) throw new IllegalStateException("Register convertibles during InterModEnqueueEvent");
         convertibles.put(type, handler);
 
@@ -85,7 +85,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
         extendedCreatureConstructors.put(clazz, constructor);
     }
 
-    public void applyNewResources(Map<ResourceLocation, Float> valuesIn) {
+    public void applyNewResources(@NotNull Map<ResourceLocation, Float> valuesIn) {
         Map<ResourceLocation, Float> values = Maps.newHashMap(valuesIn);
         Map<ResourceLocation, BiteableEntry> biteables = Maps.newHashMap();
         Set<ResourceLocation> blacklist = Sets.newHashSet();
@@ -122,7 +122,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     @Override
     @Nullable
     @SuppressWarnings("unchecked")
-    public IConvertedCreature<?> convert(PathfinderMob entity) {
+    public IConvertedCreature<?> convert(@NotNull PathfinderMob entity) {
         BiteableEntry b = biteableEntryManager.get(entity);
         if (b != null && b.convertingHandler != null) {
             return ((IConvertingHandler<PathfinderMob>) b.convertingHandler).createFrom(entity);
@@ -145,13 +145,13 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     @Nullable
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends PathfinderMob> Function<T, IExtendedCreatureVampirism> getCustomExtendedCreatureConstructor(T entity) {
+    public <T extends PathfinderMob> Function<T, IExtendedCreatureVampirism> getCustomExtendedCreatureConstructor(@NotNull T entity) {
         return (Function<T, IExtendedCreatureVampirism>) extendedCreatureConstructors.get(entity.getClass());
     }
 
     @Nullable
     @Override
-    public BiteableEntry getEntry(PathfinderMob creature) {
+    public BiteableEntry getEntry(@NotNull PathfinderMob creature) {
         return biteableEntryManager.get(creature);
     }
 

@@ -44,7 +44,7 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
     public static final int CAPACITY = 100 * VReference.FOOD_TO_FLUID_BLOOD;
     public static final ModelProperty<Integer> FLUID_LEVEL_PROP = new ModelProperty<>();
 
-    public static void setBloodValue(BlockGetter worldIn, Random randomIn, BlockPos blockPosIn) {
+    public static void setBloodValue(@NotNull BlockGetter worldIn, @NotNull Random randomIn, @NotNull BlockPos blockPosIn) {
         BlockEntity tileEntity = worldIn.getBlockEntity(blockPosIn);
         if (tileEntity instanceof AltarInspirationBlockEntity) {
             tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(fluidHandler -> fluidHandler.fill(new FluidStack(ModFluids.BLOOD.get(), BloodBottleFluidHandler.getAdjustedAmount((int) (CAPACITY * randomIn.nextFloat()))), IFluidHandler.FluidAction.EXECUTE));
@@ -61,7 +61,7 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
     private Player ritualPlayer;
     private ModelData modelData;
 
-    public AltarInspirationBlockEntity(BlockPos pos, BlockState state) {
+    public AltarInspirationBlockEntity(@NotNull BlockPos pos, BlockState state) {
         super(ModTiles.ALTAR_INSPIRATION.get(), pos, state);
         this.tank = new InternalTank(CAPACITY).setListener(this);
     }
@@ -86,7 +86,7 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+    public void onDataPacket(Connection net, @NotNull ClientboundBlockEntityDataPacket pkt) {
         if (!hasLevel()) return;
         FluidStack old = tank.getFluid();
         this.load(pkt.getTag());
@@ -110,7 +110,7 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
         }
     }
 
-    public void startRitual(Player p) {
+    public void startRitual(@NotNull Player p) {
         if (ritualTicksLeft > 0 || !p.isAlive()) return;
         targetLevel = VampirismPlayerAttributes.get(p).vampireLevel + 1;
         VampireLevelingConf levelingConf = VampireLevelingConf.getInstance();
@@ -134,7 +134,7 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
         ritualTicksLeft = RITUAL_TIME;
     }
 
-    public static void serverTick(Level level, BlockPos pos, BlockState state, AltarInspirationBlockEntity blockEntity) {
+    public static void serverTick(@NotNull Level level, @NotNull BlockPos pos, BlockState state, @NotNull AltarInspirationBlockEntity blockEntity) {
         if (blockEntity.ritualTicksLeft == 0 || blockEntity.ritualPlayer == null || !blockEntity.ritualPlayer.isAlive())
             return;
 

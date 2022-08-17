@@ -21,14 +21,13 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class PedestalBlock extends VampirismBlockContainer {
     private static final VoxelShape pedestalShape = makeShape();
 
-    private static void takeItemPlayer(Player player, InteractionHand hand, ItemStack stack) {
+    private static void takeItemPlayer(@NotNull Player player, @NotNull InteractionHand hand, @NotNull ItemStack stack) {
         player.setItemInHand(hand, stack);
         if (stack.getItem() instanceof VampirismVampireSword) {
             if (((VampirismVampireSword) stack.getItem()).isFullyCharged(stack)) {
@@ -37,7 +36,7 @@ public class PedestalBlock extends VampirismBlockContainer {
         }
     }
 
-    private static VoxelShape makeShape() {
+    private static @NotNull VoxelShape makeShape() {
         VoxelShape a = Block.box(1, 0, 1, 15, 1, 15);
         VoxelShape b = Block.box(2, 1, 2, 14, 2, 14);
         VoxelShape c = Block.box(5, 2, 5, 11, 3, 11);
@@ -102,7 +101,7 @@ public class PedestalBlock extends VampirismBlockContainer {
     }
 
     @Override
-    protected void clearContainer(BlockState state, Level worldIn, BlockPos pos) {
+    protected void clearContainer(BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos) {
         PedestalBlockEntity tile = getTileEntity(worldIn, pos);
         if (tile != null && tile.hasStack()) {
             dropItem(worldIn, pos, tile.removeStack());
@@ -110,7 +109,7 @@ public class PedestalBlock extends VampirismBlockContainer {
     }
 
     @Nullable
-    private PedestalBlockEntity getTileEntity(BlockGetter world, BlockPos pos) {
+    private PedestalBlockEntity getTileEntity(@NotNull BlockGetter world, @NotNull BlockPos pos) {
         BlockEntity tile = world.getBlockEntity(pos);
         if (tile instanceof PedestalBlockEntity) {
             return (PedestalBlockEntity) tile;
@@ -120,7 +119,7 @@ public class PedestalBlock extends VampirismBlockContainer {
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
         return createTickerHelper(type, ModTiles.BLOOD_PEDESTAL.get(), level.isClientSide() ? PedestalBlockEntity::clientTick : PedestalBlockEntity::serverTick);
     }
 }

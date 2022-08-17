@@ -31,7 +31,7 @@ public class OblivionEffect extends VampirismEffect {
     }
 
     @Override
-    public List<ItemStack> getCurativeItems() {
+    public @NotNull List<ItemStack> getCurativeItems() {
         return Collections.emptyList();
     }
 

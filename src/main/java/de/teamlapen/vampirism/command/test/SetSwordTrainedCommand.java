@@ -11,6 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -27,7 +28,7 @@ public class SetSwordTrainedCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int setSwordCharged(CommandSourceStack commandSource, Collection<ServerPlayer> players, float train) {
+    private static int setSwordCharged(@NotNull CommandSourceStack commandSource, @NotNull Collection<ServerPlayer> players, float train) {
         for (ServerPlayer player : players) {
             ItemStack held = player.getMainHandItem();
 

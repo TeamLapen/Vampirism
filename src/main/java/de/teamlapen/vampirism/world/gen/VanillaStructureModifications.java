@@ -45,7 +45,7 @@ public class VanillaStructureModifications {
         Pools.register(new StructureTemplatePool(new ResourceLocation("vampirism", "village/entities/hunter_trainer"), new ResourceLocation("empty"), Lists.newArrayList(Pair.of(singleJigsawPieceFunction("village/entities/hunter_trainer"), 1)), StructureTemplatePool.Projection.RIGID));
     }
 
-    public static void addVillageStructures(RegistryAccess dynamicRegistries) {
+    public static void addVillageStructures(@NotNull RegistryAccess dynamicRegistries) {
         addHunterTrainerHouse(dynamicRegistries, getDefaultPools());
         addTotem(dynamicRegistries, getDefaultPools());
         replaceTemples(dynamicRegistries, getTempleReplacements());
@@ -63,14 +63,14 @@ public class VanillaStructureModifications {
     /**
      * @return a map the maps {@link StructurePoolElement}s that should be modified to the type village type of added objects
      */
-    private static Map<ResourceLocation, BiomeType> getDefaultPools() {
+    private static @NotNull Map<ResourceLocation, BiomeType> getDefaultPools() {
         return Map.ofEntries(Map.entry(new ResourceLocation("village/plains/houses"), VanillaStructureModifications.BiomeType.PLAINS), Map.entry(new ResourceLocation("village/desert/houses"), VanillaStructureModifications.BiomeType.DESERT), Map.entry(new ResourceLocation("village/savanna/houses"), VanillaStructureModifications.BiomeType.SAVANNA), Map.entry(new ResourceLocation("village/taiga/houses"), VanillaStructureModifications.BiomeType.TAIGA), Map.entry(new ResourceLocation("village/snowy/houses"), VanillaStructureModifications.BiomeType.SNOWY));
     }
 
     /**
      * @return a map that maps {@link StructureTemplatePool}s that should be modified to a map that maps temple {@link StructurePoolElement}s to modified temple {@link StructurePoolElement}s
      */
-    private static Map<ResourceLocation, Map<String, StructurePoolElement>> getTempleReplacements() {
+    private static @NotNull Map<ResourceLocation, Map<String, StructurePoolElement>> getTempleReplacements() {
         return new HashMap<>() {
             {
                 this.put(new ResourceLocation("village/plains/houses"), ImmutableMap.of(VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/plains/houses/plains_temple_3"), VanillaStructureModifications.singleJigsawPiece("village/plains/houses/plains_temple_3", ProcessorLists.MOSSIFY_10_PERCENT), VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/plains/houses/plains_temple_4"), VanillaStructureModifications.singleJigsawPiece("village/plains/houses/plains_temple_4", ProcessorLists.MOSSIFY_10_PERCENT)));
@@ -90,7 +90,7 @@ public class VanillaStructureModifications {
     /**
      * replaces half of the temples with temples with church altar
      */
-    private static void replaceTemples(RegistryAccess dynamicRegistries, Map<ResourceLocation, Map<String, StructurePoolElement>> patternReplacements) {
+    private static void replaceTemples(@NotNull RegistryAccess dynamicRegistries, @NotNull Map<ResourceLocation, Map<String, StructurePoolElement>> patternReplacements) {
         // return if temples should not be modified
         if (!VampirismConfig.COMMON.villageReplaceTemples.get()) return;
         // get jigsaw registry
@@ -145,7 +145,7 @@ public class VanillaStructureModifications {
     /**
      * adds a hunter trainer house to each village
      */
-    private static void addHunterTrainerHouse(RegistryAccess reg, Map<ResourceLocation, VanillaStructureModifications.BiomeType> pools) {
+    private static void addHunterTrainerHouse(@NotNull RegistryAccess reg, @NotNull Map<ResourceLocation, VanillaStructureModifications.BiomeType> pools) {
         // get jigsaw registry
         reg.registry(BuiltinRegistries.TEMPLATE_POOL.key()).ifPresent(patternRegistry -> {
             // for every desired pools
@@ -170,7 +170,7 @@ public class VanillaStructureModifications {
 
     }
 
-    private static void addTotem(RegistryAccess reg, Map<ResourceLocation, VanillaStructureModifications.BiomeType> pools) {
+    private static void addTotem(@NotNull RegistryAccess reg, @NotNull Map<ResourceLocation, VanillaStructureModifications.BiomeType> pools) {
         StructureProcessor factionProcessor = new RandomStructureProcessor(ImmutableList.of(new RandomBlockState(new RandomBlockMatchTest(ModBlocks.TOTEM_TOP.get(), (VampirismConfig.COMMON.villageTotemFactionChance.get()).floatValue()), AlwaysTrueTest.INSTANCE, ModBlocks.TOTEM_TOP.get().defaultBlockState(), TotemTopBlock.getBlocks().stream().filter((totemx) -> totemx != ModBlocks.TOTEM_TOP.get() && !totemx.isCrafted()).map(Block::defaultBlockState).collect(Collectors.toList()))));
         StructureProcessor biomeTopBlockProcessor = new BiomeTopBlockProcessor(Blocks.DIRT.defaultBlockState());
         Holder<StructureProcessorList> TOTEM_FACTION_PROCESSOR = registerStructureProcessor("totem_faction", ImmutableList.of(factionProcessor, biomeTopBlockProcessor));
@@ -195,7 +195,7 @@ public class VanillaStructureModifications {
         }));
     }
 
-    private static Holder<StructureProcessorList> registerStructureProcessor(String pId, ImmutableList<StructureProcessor> pProcessors) {
+    private static @NotNull Holder<StructureProcessorList> registerStructureProcessor(@NotNull String pId, @NotNull ImmutableList<StructureProcessor> pProcessors) {
         ResourceLocation resourcelocation = new ResourceLocation(REFERENCE.MODID, pId);
         StructureProcessorList structureprocessorlist = new StructureProcessorList(pProcessors);
         return BuiltinRegistries.register(BuiltinRegistries.PROCESSOR_LIST, resourcelocation, structureprocessorlist);
@@ -209,19 +209,19 @@ public class VanillaStructureModifications {
         return SinglePoolElement.single("vampirism:" + path, processors).apply(StructureTemplatePool.Projection.RIGID);
     }
 
-    private static Function<StructureTemplatePool.Projection, SinglePoolElement> singleJigsawPieceFunction(@NotNull String path) {
+    private static @NotNull Function<StructureTemplatePool.Projection, SinglePoolElement> singleJigsawPieceFunction(@NotNull String path) {
         return singleJigsawPieceFunction(path, ProcessorLists.EMPTY);
     }
 
-    private static Function<StructureTemplatePool.Projection, SinglePoolElement> singleJigsawPieceFunction(@NotNull String path, @NotNull Holder<StructureProcessorList> processors) {
+    private static @NotNull Function<StructureTemplatePool.Projection, SinglePoolElement> singleJigsawPieceFunction(@NotNull String path, @NotNull Holder<StructureProcessorList> processors) {
         return SinglePoolElement.single("vampirism:" + path, processors);
     }
 
-    private static String singleJigsawString(String resourceLocation) {
+    private static @NotNull String singleJigsawString(String resourceLocation) {
         return "Single[Left[" + resourceLocation + "]]";
     }
 
-    private static String singleLegacyJigsawString(String resourceLocation) {
+    private static @NotNull String singleLegacyJigsawString(String resourceLocation) {
         return "LegacySingle[Left[" + resourceLocation + "]]";
     }
 

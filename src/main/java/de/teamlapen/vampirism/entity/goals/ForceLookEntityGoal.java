@@ -12,12 +12,12 @@ import java.util.Optional;
  * Makes the hunter trainer look at his trainee
  */
 public class ForceLookEntityGoal<T extends Mob & ForceLookEntityGoal.TaskOwner> extends LookAtPlayerGoal {
-    private final T theTrainer;
+    private final @NotNull T theTrainer;
 
     /**
      * @param theTrainer Has to be {@code instanceof} ITrainer
      */
-    public ForceLookEntityGoal(T theTrainer) {
+    public ForceLookEntityGoal(@NotNull T theTrainer) {
         super(theTrainer, Player.class, 8.0F);
         this.theTrainer = theTrainer;
         this.setFlags(EnumSet.of(Flag.LOOK, Flag.MOVE));

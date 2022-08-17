@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-
 import org.jetbrains.annotations.NotNull;
 
 
@@ -23,13 +22,13 @@ public class BaronWrapperModel extends EntityModel<VampireBaronEntity> {
         this.baroness = baroness;
     }
 
-    public ModelPart getBodyPart(VampireBaronEntity entityIn) {
+    public @NotNull ModelPart getBodyPart(@NotNull VampireBaronEntity entityIn) {
         return entityIn.isLady() ? baroness.body : baron.body;
     }
 
 
     @Override
-    public void prepareMobModel(VampireBaronEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
+    public void prepareMobModel(@NotNull VampireBaronEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
         this.lady = entityIn.isLady();
         EntityModel<VampireBaronEntity> model = lady ? baroness : baron;
         this.copyPropertiesTo(model);
@@ -43,7 +42,7 @@ public class BaronWrapperModel extends EntityModel<VampireBaronEntity> {
     }
 
     @Override
-    public void setupAnim(VampireBaronEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(@NotNull VampireBaronEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         EntityModel<VampireBaronEntity> model = entityIn.isLady() ? baroness : baron;
         model.setupAnim(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
     }

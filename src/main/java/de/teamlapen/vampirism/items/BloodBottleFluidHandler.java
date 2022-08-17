@@ -44,7 +44,7 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
 
     @NotNull
     @Override
-    public FluidStack drain(FluidStack resource, FluidAction action) {
+    public FluidStack drain(@Nullable FluidStack resource, @NotNull FluidAction action) {
         if (container.getCount() != 1 || resource == null || resource.getAmount() <= 0 || ModFluids.BLOOD.get() != resource.getFluid()) {
             return FluidStack.EMPTY;
         }
@@ -53,7 +53,7 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
 
     @NotNull
     @Override
-    public FluidStack drain(int maxDrain, FluidAction action) {
+    public FluidStack drain(int maxDrain, @NotNull FluidAction action) {
         int currentAmt = getBlood(container);
         if (currentAmt == 0) return FluidStack.EMPTY;
         FluidStack stack = new FluidStack(ModFluids.BLOOD.get(), Math.min(currentAmt, getAdjustedAmount(maxDrain)));
@@ -70,7 +70,7 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
     }
 
     @Override
-    public int fill(FluidStack resource, FluidAction action) {
+    public int fill(@Nullable FluidStack resource, @NotNull FluidAction action) {
         if (resource == null) return 0;
         if (!resource.getFluid().equals(ModFluids.BLOOD.get())) {
             return 0;
@@ -84,7 +84,7 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
         return toFill;
     }
 
-    public int getBlood(ItemStack stack) {
+    public int getBlood(@NotNull ItemStack stack) {
         return stack.getItem() == ModItems.BLOOD_BOTTLE.get() ? stack.getDamageValue() * MULTIPLIER : 0;
     }
 
@@ -122,7 +122,7 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
         return ModFluids.BLOOD.get().isSame(stack.getFluid());
     }
 
-    public void setBlood(ItemStack stack, int amt) {
+    public void setBlood(@NotNull ItemStack stack, int amt) {
         stack.setDamageValue(amt / MULTIPLIER);
     }
 }

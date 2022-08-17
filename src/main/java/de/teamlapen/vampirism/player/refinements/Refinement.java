@@ -15,9 +15,9 @@ import java.util.function.BiFunction;
 
 public class Refinement implements IRefinement {
 
-    private final Attribute attribute;
-    private final BiFunction<UUID, Double, AttributeModifier> modifier;
-    private final UUID uuid;
+    private final @Nullable Attribute attribute;
+    private final @Nullable BiFunction<UUID, Double, AttributeModifier> modifier;
+    private final @Nullable UUID uuid;
     private final double baseValue;
     private boolean detrimental = false;
     private MutableComponent description;
@@ -73,7 +73,7 @@ public class Refinement implements IRefinement {
      *
      * @return this
      */
-    public Refinement setDetrimental() {
+    public @NotNull Refinement setDetrimental() {
         this.detrimental = true;
         return this;
     }

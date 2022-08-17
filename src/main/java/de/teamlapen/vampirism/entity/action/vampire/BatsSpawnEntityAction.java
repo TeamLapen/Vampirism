@@ -10,15 +10,16 @@ import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.PathfinderMob;
+import org.jetbrains.annotations.NotNull;
 
 public class BatsSpawnEntityAction<T extends PathfinderMob & IEntityActionUser> extends VampireEntityAction<T> implements IInstantAction<T> {
 
-    public BatsSpawnEntityAction(EntityActionTier tier, EntityClassType... param) {
+    public BatsSpawnEntityAction(@NotNull EntityActionTier tier, EntityClassType... param) {
         super(tier, param);
     }
 
     @Override
-    public boolean activate(T entity) {
+    public boolean activate(@NotNull T entity) {
         int amount = VampirismConfig.BALANCE.eaBatspawnAmount.get();
         for (int i = 0; i < amount; i++) {
             Helper.createEntity(ModEntities.BLINDING_BAT.get(), entity.getCommandSenderWorld()).ifPresent(e -> {

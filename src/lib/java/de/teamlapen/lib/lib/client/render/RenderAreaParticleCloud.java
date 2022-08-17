@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class RenderAreaParticleCloud extends EntityRenderer<BasicAreaParticleCloud> {
-    public RenderAreaParticleCloud(EntityRendererProvider.Context context) {
+    public RenderAreaParticleCloud(EntityRendererProvider.@NotNull Context context) {
         super(context);
     }
 

@@ -9,13 +9,12 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraftforge.client.gui.ScreenUtils;
-
 import org.jetbrains.annotations.NotNull;
 
 public class CooldownButton extends Button {
     private float progress = 1f;
 
-    public CooldownButton(int x, int y, int width, int height, Component title, OnPress pressedAction) {
+    public CooldownButton(int x, int y, int width, int height, @NotNull Component title, @NotNull OnPress pressedAction) {
         super(x, y, width, height, title, pressedAction);
     }
 

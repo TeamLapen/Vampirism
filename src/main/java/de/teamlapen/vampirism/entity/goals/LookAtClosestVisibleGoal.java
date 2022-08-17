@@ -4,16 +4,17 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Same as vanilla but ignoring invisible entities
  */
 public class LookAtClosestVisibleGoal extends LookAtPlayerGoal {
-    public LookAtClosestVisibleGoal(Mob entityIn, Class<? extends LivingEntity> watchTargetClass, float maxDistance) {
+    public LookAtClosestVisibleGoal(@NotNull Mob entityIn, @NotNull Class<? extends LivingEntity> watchTargetClass, float maxDistance) {
         super(entityIn, watchTargetClass, maxDistance);
     }
 
-    public LookAtClosestVisibleGoal(Mob entityIn, Class<? extends LivingEntity> watchTargetClass, float maxDistance, float chanceIn) {
+    public LookAtClosestVisibleGoal(@NotNull Mob entityIn, @NotNull Class<? extends LivingEntity> watchTargetClass, float maxDistance, float chanceIn) {
         super(entityIn, watchTargetClass, maxDistance, chanceIn);
     }
 

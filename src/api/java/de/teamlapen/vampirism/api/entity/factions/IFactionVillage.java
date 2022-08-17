@@ -43,7 +43,7 @@ public interface IFactionVillage {
      * @deprecated internal use only
      */
     @Deprecated
-    default IFactionVillage build() {
+    default @NotNull IFactionVillage build() {
         return this;
     }
 }

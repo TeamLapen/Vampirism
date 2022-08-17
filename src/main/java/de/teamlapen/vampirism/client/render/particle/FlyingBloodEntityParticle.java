@@ -27,9 +27,9 @@ public class FlyingBloodEntityParticle extends TextureSheetParticle {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final int MAX_AGE = 60;
 
-    private final Entity entity;
+    private final @NotNull Entity entity;
 
-    public FlyingBloodEntityParticle(ClientLevel world, double posX, double posY, double posZ, Entity entity, boolean direct) {
+    public FlyingBloodEntityParticle(@NotNull ClientLevel world, double posX, double posY, double posZ, @NotNull Entity entity, boolean direct) {
         super(world, posX, posY, posZ, 0D, 0D, 0D);
 
         Validate.notNull(entity);
@@ -89,7 +89,7 @@ public class FlyingBloodEntityParticle extends TextureSheetParticle {
     public static class Factory implements ParticleProvider<FlyingBloodEntityParticleData> {
         @Nullable
         @Override
-        public Particle createParticle(FlyingBloodEntityParticleData typeIn, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+        public Particle createParticle(@NotNull FlyingBloodEntityParticleData typeIn, @NotNull ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
             Entity e = worldIn.getEntity(typeIn.getEntityID());
             if (e == null) {
                 LOGGER.warn("Could not find entity {} for flying blood particle", typeIn.getEntityID());

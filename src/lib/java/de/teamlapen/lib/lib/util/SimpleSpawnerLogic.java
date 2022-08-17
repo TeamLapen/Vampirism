@@ -57,30 +57,30 @@ public class SimpleSpawnerLogic<T extends Entity> {
         return spawnedToday;
     }
 
-    public boolean isActivated(Level level, BlockPos pos) {
+    public boolean isActivated(@Nullable Level level, @Nullable BlockPos pos) {
         if (level == null) return false;
         if (pos == null) return false;
         return level.hasNearbyAlivePlayer(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, this.activateRange);
     }
 
-    public void readFromNbt(CompoundTag nbt) {
+    public void readFromNbt(@NotNull CompoundTag nbt) {
         this.spawnDelay = nbt.getInt("delay");
         this.spawnedToday = nbt.getInt("spawned_today");
         this.spawnedLast = nbt.getLong("spawned_last");
         this.flag = nbt.getBoolean("spawner_flag");
     }
 
-    public SimpleSpawnerLogic<T> setActivateRange(int activateRange) {
+    public @NotNull SimpleSpawnerLogic<T> setActivateRange(int activateRange) {
         this.activateRange = activateRange;
         return this;
     }
 
-    public SimpleSpawnerLogic<T> setDailyLimit(int dailyLimit) {
+    public @NotNull SimpleSpawnerLogic<T> setDailyLimit(int dailyLimit) {
         this.dailyLimit = dailyLimit;
         return this;
     }
 
-    public boolean setDelayToMin(int id, Level level) {
+    public boolean setDelayToMin(int id, @NotNull Level level) {
         if (id == 1 && (level.isClientSide)) {
             this.spawnDelay = this.minSpawnDelay;
             return true;
@@ -92,47 +92,47 @@ public class SimpleSpawnerLogic<T extends Entity> {
     /**
      * Checks if any more creatures of the given type are allowed in the world before spawning
      */
-    public SimpleSpawnerLogic<T> setLimitTotalEntities(MobCategory creatureType) {
+    public @NotNull SimpleSpawnerLogic<T> setLimitTotalEntities(MobCategory creatureType) {
         limitType = creatureType;
         return this;
     }
 
-    public SimpleSpawnerLogic<T> setMaxNearbyEntities(int maxNearbyEntities) {
+    public @NotNull SimpleSpawnerLogic<T> setMaxNearbyEntities(int maxNearbyEntities) {
         this.maxNearbyEntities = maxNearbyEntities;
         return this;
     }
 
-    public SimpleSpawnerLogic<T> setMaxSpawnDelay(int maxSpawnDelay) {
+    public @NotNull SimpleSpawnerLogic<T> setMaxSpawnDelay(int maxSpawnDelay) {
         this.maxSpawnDelay = maxSpawnDelay;
         return this;
     }
 
-    public SimpleSpawnerLogic<T> setMinSpawnDelay(int minSpawnDelay) {
+    public @NotNull SimpleSpawnerLogic<T> setMinSpawnDelay(int minSpawnDelay) {
         this.minSpawnDelay = minSpawnDelay;
         return this;
     }
 
-    public SimpleSpawnerLogic<T> setOnSpawned(Consumer<T> onSpawned) {
+    public @NotNull SimpleSpawnerLogic<T> setOnSpawned(Consumer<T> onSpawned) {
         this.onSpawned = onSpawned;
         return this;
     }
 
-    public SimpleSpawnerLogic<T> setSpawn(boolean spawn) {
+    public @NotNull SimpleSpawnerLogic<T> setSpawn(boolean spawn) {
         this.flag = spawn;
         return this;
     }
 
-    public SimpleSpawnerLogic<T> setSpawnCount(int spawnCount) {
+    public @NotNull SimpleSpawnerLogic<T> setSpawnCount(int spawnCount) {
         this.spawnCount = spawnCount;
         return this;
     }
 
-    public SimpleSpawnerLogic<T> setSpawnRange(int spawnRange) {
+    public @NotNull SimpleSpawnerLogic<T> setSpawnRange(int spawnRange) {
         this.spawnRange = spawnRange;
         return this;
     }
 
-    public void serverTick(Level level, BlockPos pos) {
+    public void serverTick(Level level, @NotNull BlockPos pos) {
         if (isActivated(level, pos)) {
             if (level instanceof ServerLevel) {
                 if (this.spawnDelay == -1) {
@@ -199,14 +199,14 @@ public class SimpleSpawnerLogic<T extends Entity> {
         }
     }
 
-    public void writeToNbt(CompoundTag nbt) {
+    public void writeToNbt(@NotNull CompoundTag nbt) {
         nbt.putInt("delay", spawnDelay);
         nbt.putInt("spawned_today", spawnedToday);
         nbt.putLong("spawned_last", spawnedLast);
         nbt.putBoolean("spawner_flag", flag);
     }
 
-    protected AABB getSpawningBox(BlockPos pos) {
+    protected @NotNull AABB getSpawningBox(@Nullable BlockPos pos) {
         if (pos == null) return AABB.ofSize(Vec3.ZERO, 0, 0, 0);
         return (new AABB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1)).inflate(this.spawnRange, this.spawnRange, this.spawnRange);
 

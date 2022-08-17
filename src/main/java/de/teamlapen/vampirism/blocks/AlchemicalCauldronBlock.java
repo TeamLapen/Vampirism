@@ -28,7 +28,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,7 +41,7 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
     public static final IntegerProperty LIQUID = IntegerProperty.create("liquid", 0, 2);
     protected static final VoxelShape cauldronShape = makeShape();
 
-    private static VoxelShape makeShape() {
+    private static @NotNull VoxelShape makeShape() {
         VoxelShape a = Block.box(2, 0, 2, 14, 9, 14);
         VoxelShape b = Block.box(1, 9, 1, 15, 13, 15);
         VoxelShape c = Block.box(2, 13, 2, 14, 14, 14);
@@ -65,7 +64,7 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153212_, @NotNull BlockState p_153213_, @NotNull BlockEntityType<T> p_153214_) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level p_153212_, @NotNull BlockState p_153213_, @NotNull BlockEntityType<T> p_153214_) {
         return p_153212_.isClientSide() ? null : createTickerHelper(p_153214_, ModTiles.ALCHEMICAL_CAULDRON.get(), AlchemicalCauldronBlockEntity::serverTick);
     }
 
@@ -91,12 +90,12 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> builder) {
         builder.add(LIT, FACING, LIQUID);
     }
 
     @Override
-    protected void openContainer(Level world, @NotNull BlockPos blockPos, @NotNull Player playerEntity) {
+    protected void openContainer(@NotNull Level world, @NotNull BlockPos blockPos, @NotNull Player playerEntity) {
         BlockEntity tile = world.getBlockEntity(blockPos);
         if (tile instanceof AlchemicalCauldronBlockEntity) {
             playerEntity.openMenu((MenuProvider) tile);

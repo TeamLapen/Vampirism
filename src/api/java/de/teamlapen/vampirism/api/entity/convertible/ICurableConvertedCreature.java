@@ -42,7 +42,7 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
      * @param newType the entity type of the cured entity
      * @return the new entity
      */
-    default T createCuredEntity(PathfinderMob entity, EntityType<T> newType) {
+    default T createCuredEntity(@NotNull PathfinderMob entity, @NotNull EntityType<T> newType) {
         T newEntity = newType.create(entity.level);
         assert newEntity != null;
         newEntity.load(entity.saveWithoutId(new CompoundTag()));
@@ -63,7 +63,7 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
      * @param newType the entity type of the cured entity
      * @return the new cured entity
      */
-    default T cureEntity(ServerLevel world, PathfinderMob entity, EntityType<T> newType) {
+    default T cureEntity(@NotNull ServerLevel world, @NotNull PathfinderMob entity, @NotNull EntityType<T> newType) {
         T newEntity = createCuredEntity(entity, newType);
         entity.remove(Entity.RemovalReason.DISCARDED);
         entity.level.addFreshEntity(newEntity);
@@ -85,7 +85,7 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
      * @param entity the entity that extends this interface
      * @return if the staus update was handled
      */
-    default boolean handleSound(byte id, PathfinderMob entity) {
+    default boolean handleSound(byte id, @NotNull PathfinderMob entity) {
         if (id == 16) {
             if (!entity.isSilent()) {
                 entity.level.playLocalSound(entity.getX(), entity.getEyeY(), entity.getZ(), SoundEvents.ZOMBIE_VILLAGER_CURE, entity.getSoundSource(), 1.0F + entity.getRandom().nextFloat(), entity.getRandom().nextFloat() * 0.7F + 0.3F, false);
@@ -103,7 +103,7 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
      * @param entity the entity that extends this interface
      * @return the action result
      */
-    default InteractionResult interactWithCureItem(Player player, ItemStack stack, PathfinderMob entity) {
+    default @NotNull InteractionResult interactWithCureItem(@NotNull Player player, @NotNull ItemStack stack, @NotNull PathfinderMob entity) {
         if (!entity.hasEffect(MobEffects.WEAKNESS)) return InteractionResult.CONSUME;
         if (!player.getAbilities().instabuild) {
             stack.shrink(1);
@@ -118,7 +118,7 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
      * @param entity the entity that extends this interface
      * @return if the entity is in progress of converting
      */
-    default boolean isConverting(PathfinderMob entity) {
+    default boolean isConverting(@NotNull PathfinderMob entity) {
         return entity.getEntityData().get(this.getConvertingDataParam());
     }
 

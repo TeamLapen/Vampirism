@@ -9,20 +9,21 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
 import org.apache.commons.lang3.Validate;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
 
 public record ServerboundNameItemPacket(String name) implements IMessage {
-    static void encode(ServerboundNameItemPacket msg, FriendlyByteBuf buf) {
+    static void encode(@NotNull ServerboundNameItemPacket msg, @NotNull FriendlyByteBuf buf) {
         buf.writeUtf(msg.name);
     }
 
-    static ServerboundNameItemPacket decode(FriendlyByteBuf buf) {
+    static @NotNull ServerboundNameItemPacket decode(@NotNull FriendlyByteBuf buf) {
         return new ServerboundNameItemPacket(buf.readUtf(35));
     }
 
-    static void handle(ServerboundNameItemPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    static void handle(@NotNull ServerboundNameItemPacket msg, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ServerPlayer player = ctx.getSender();
         Validate.notNull(player);

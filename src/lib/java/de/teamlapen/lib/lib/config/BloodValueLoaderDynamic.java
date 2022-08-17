@@ -33,7 +33,7 @@ public class BloodValueLoaderDynamic extends BloodValueLoader {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(new TypeToken<ResourceLocation>() {
     }.getType(), new ResourceLocationTypeAdapter()).create();
 
-    private static void writeBloodValues(Writer w, Map<ResourceLocation, Integer> values, String comment) throws IOException, JsonIOException {
+    private static void writeBloodValues(@NotNull Writer w, Map<ResourceLocation, Integer> values, @NotNull String comment) throws IOException, JsonIOException {
         try (BufferedWriter bw = new BufferedWriter(w)) {
             bw.write('#');
             bw.write(comment);
@@ -43,7 +43,7 @@ public class BloodValueLoaderDynamic extends BloodValueLoader {
         }
     }
 
-    private static Optional<Map<ResourceLocation, Integer>> loadBloodValues(Reader r) throws IOException, JsonSyntaxException {
+    private static @NotNull Optional<Map<ResourceLocation, Integer>> loadBloodValues(@NotNull Reader r) throws IOException, JsonSyntaxException {
         try (BufferedReader br = new BufferedReader(r)) {
             br.readLine();
             Type s = new TypeToken<Map<ResourceLocation, Integer>>() {
@@ -52,16 +52,16 @@ public class BloodValueLoaderDynamic extends BloodValueLoader {
         }
     }
 
-    public static List<BloodValueLoaderDynamic> getDynamicBloodLoader() {
+    public static @NotNull List<BloodValueLoaderDynamic> getDynamicBloodLoader() {
         return ImmutableList.copyOf(LOADER);
     }
 
-    private final Consumer<Map<ResourceLocation, Integer>> addCalculatedValues;
-    private final Supplier<Map<ResourceLocation, Integer>> getCalculatedValues;
-    private final String name;
+    private final @NotNull Consumer<Map<ResourceLocation, Integer>> addCalculatedValues;
+    private final @NotNull Supplier<Map<ResourceLocation, Integer>> getCalculatedValues;
+    private final @NotNull String name;
     @SuppressWarnings("FieldCanBeLocal")
-    private final String modId;
-    private final LevelResource worldSubFolder;
+    private final @NotNull String modId;
+    private final @NotNull LevelResource worldSubFolder;
     /**
      * File to save dynamically calculated values to
      */
@@ -78,7 +78,7 @@ public class BloodValueLoaderDynamic extends BloodValueLoader {
         LOADER.add(this);
     }
 
-    public void onServerStarting(MinecraftServer server) {
+    public void onServerStarting(@NotNull MinecraftServer server) {
         bloodValueWorldFile = new File(server.getWorldPath(worldSubFolder).toFile(), "calculated-" + name + "-blood-values.txt");
         if (bloodValueWorldFile.exists()) {
             loadDynamicBloodValues(bloodValueWorldFile);
@@ -97,7 +97,7 @@ public class BloodValueLoaderDynamic extends BloodValueLoader {
     /**
      * Reads automatically calculated values from world file
      */
-    private void loadDynamicBloodValues(File f) {
+    private void loadDynamicBloodValues(@NotNull File f) {
         try {
             Optional<Map<ResourceLocation, Integer>> saved = loadBloodValues(new InputStreamReader(new FileInputStream(f)));
             saved.ifPresent(this.addCalculatedValues);
@@ -109,7 +109,7 @@ public class BloodValueLoaderDynamic extends BloodValueLoader {
     /**
      * Saves blood values to file to be saved in world dir
      */
-    private void saveDynamicBloodValues(File f) {
+    private void saveDynamicBloodValues(@NotNull File f) {
         Map<ResourceLocation, Integer> values = this.getCalculatedValues.get();
         if (!f.exists() && values.isEmpty()) return; //Don't create an empty file
         if (!f.exists()) {

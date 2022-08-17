@@ -67,18 +67,18 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
     }
 
     @Override
-    public boolean isAvailable(IPlayableFaction<?> faction, @Nullable ILordPlayer player) {
+    public boolean isAvailable(@NotNull IPlayableFaction<?> faction, @Nullable ILordPlayer player) {
         return (this.faction == null || this.faction == faction) && isRequiredSkillUnlocked(faction, player);
     }
 
 
     @Override
-    public Desc<Q> readFromNBT(CompoundTag nbt) {
+    public @NotNull Desc<Q> readFromNBT(@NotNull CompoundTag nbt) {
         return new Desc<>(this, nbt.getInt("cooldown"), nbt.contains("lordid") ? nbt.getUUID("lordid") : null);
     }
 
     @Override
-    public void tickBackground(Desc<Q> desc, @NotNull Q data) {
+    public void tickBackground(@NotNull Desc<Q> desc, @NotNull Q data) {
         if (--desc.coolDown <= 0) {
             boolean lordOnline = desc.lordEntityID != null && ServerLifecycleHooks.getCurrentServer() != null && ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(desc.lordEntityID) != null;
             desc.coolDown = lordOnline ? coolDownSupplier.apply(data) : (int) (coolDownSupplier.apply(data) * VampirismConfig.BALANCE.miResourceCooldownOfflineMult.get());
@@ -104,7 +104,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
         }
 
         @Override
-        public void writeToNBT(CompoundTag nbt) {
+        public void writeToNBT(@NotNull CompoundTag nbt) {
             nbt.putInt("cooldown", coolDown);
             if (lordEntityID != null) {
                 nbt.putUUID("lordid", lordEntityID);

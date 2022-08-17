@@ -30,7 +30,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends Defaul
         return description.get();
     }
 
-    public VampirismSkill<T> setDescription(Supplier<Component> descriptionIn) {
+    public @NotNull VampirismSkill<T> setDescription(Supplier<Component> descriptionIn) {
         this.description = descriptionIn;
         return this;
     }
@@ -38,12 +38,12 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends Defaul
     /**
      * Enable description using "text.vampirism.skill."+getID()+".desc" as unloc key
      */
-    public VampirismSkill<T> setHasDefaultDescription() {
+    public @NotNull VampirismSkill<T> setHasDefaultDescription() {
         description = () -> Component.translatable(getTranslationKey() + ".desc");
         return this;
     }
 
-    public VampirismSkill<T> setToggleActions(Consumer<T> activateIn, Consumer<T> deactivateIn) {
+    public @NotNull VampirismSkill<T> setToggleActions(Consumer<T> activateIn, Consumer<T> deactivateIn) {
         this.activate = activateIn;
         this.deactivate = deactivateIn;
         return this;
@@ -80,7 +80,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends Defaul
         }
 
         @Override
-        public ISkillType getType() {
+        public @NotNull ISkillType getType() {
             return SkillType.LEVEL;
         }
     }
@@ -92,7 +92,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends Defaul
         }
 
         @Override
-        public ISkillType getType() {
+        public @NotNull ISkillType getType() {
             return SkillType.LORD;
         }
     }
@@ -115,7 +115,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends Defaul
         }
 
         @Override
-        public ISkillType getType() {
+        public @NotNull ISkillType getType() {
             return SkillType.LEVEL;
         }
     }
@@ -127,7 +127,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends Defaul
         }
 
         @Override
-        public ISkillType getType() {
+        public @NotNull ISkillType getType() {
             return SkillType.LORD;
         }
     }

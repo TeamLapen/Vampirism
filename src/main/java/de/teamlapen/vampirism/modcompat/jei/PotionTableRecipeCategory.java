@@ -29,16 +29,16 @@ import org.jetbrains.annotations.NotNull;
 public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> {
 
     private static final ResourceLocation backgroundLocation = new ResourceLocation(REFERENCE.MODID, "textures/gui/potion_table.png");
-    private final Component localizedName;
-    private final IDrawable background;
-    private final IDrawable icon;
-    private final IDrawable slotDrawable;
-    private final IDrawableAnimated arrow;
-    private final IDrawableAnimated bubbles;
-    private final IDrawableStatic blazeHeat;
+    private final @NotNull Component localizedName;
+    private final @NotNull IDrawable background;
+    private final @NotNull IDrawable icon;
+    private final @NotNull IDrawable slotDrawable;
+    private final @NotNull IDrawableAnimated arrow;
+    private final @NotNull IDrawableAnimated bubbles;
+    private final @NotNull IDrawableStatic blazeHeat;
 
 
-    PotionTableRecipeCategory(IGuiHelper guiHelper) {
+    PotionTableRecipeCategory(@NotNull IGuiHelper guiHelper) {
         this.localizedName = Component.translatable(ModBlocks.POTION_TABLE.get().getDescriptionId());
         this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.POTION_TABLE.get()));
         this.background = guiHelper.drawableBuilder(backgroundLocation, 65, 6, 103, 73).addPadding(0, 33, 0, 25).build();
@@ -51,7 +51,7 @@ public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> 
     }
 
     @Override
-    public void draw(JEIPotionMix recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull PoseStack stack, double mouseX, double mouseY) {
+    public void draw(@NotNull JEIPotionMix recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull PoseStack stack, double mouseX, double mouseY) {
         this.blazeHeat.draw(stack, 1, 35);
         this.bubbles.draw(stack, 3, 4);
         this.arrow.draw(stack, 80, 10);
@@ -103,7 +103,7 @@ public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> 
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, JEIPotionMix recipe, @NotNull IFocusGroup focuses) {
+    public void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull JEIPotionMix recipe, @NotNull IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.INPUT, 39, 53).addItemStack(recipe.getPotionInput());
         builder.addSlot(RecipeIngredientRole.INPUT, 61, 53).addItemStack(recipe.getPotionInput());
         builder.addSlot(RecipeIngredientRole.INPUT, 83, 53).addItemStack(recipe.getPotionInput());
@@ -114,9 +114,9 @@ public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> 
 
     private static class BrewingBubblesTickTimer implements ITickTimer {
         private static final int[] BUBBLE_LENGTHS = new int[]{29, 23, 18, 13, 9, 5, 0};
-        private final ITickTimer internalTimer;
+        private final @NotNull ITickTimer internalTimer;
 
-        public BrewingBubblesTickTimer(IGuiHelper guiHelper) {
+        public BrewingBubblesTickTimer(@NotNull IGuiHelper guiHelper) {
             this.internalTimer = guiHelper.createTickTimer(14, BUBBLE_LENGTHS.length - 1, false);
         }
 

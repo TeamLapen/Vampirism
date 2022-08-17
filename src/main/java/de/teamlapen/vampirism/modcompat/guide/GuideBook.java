@@ -53,6 +53,7 @@ import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.net.URI;
 import java.util.*;
@@ -66,7 +67,7 @@ public class GuideBook implements IGuideBook {
     @SuppressWarnings("FieldCanBeLocal")
     private static Book guideBook;
 
-    static void buildCategories(List<CategoryAbstract> categories) {
+    static void buildCategories(@NotNull List<CategoryAbstract> categories) {
         LOGGER.debug("Building content");
         long start = System.currentTimeMillis();
         BookHelper helper = new BookHelper.Builder(REFERENCE.MODID).setBaseKey("guide.vampirism").setLocalizer(GuideBook::translateComponent).setRecipeRendererSupplier(GuideBook::getRenderer).build();
@@ -100,7 +101,7 @@ public class GuideBook implements IGuideBook {
 
 
     @SuppressWarnings("CollectionAddAllCanBeReplacedWithConstructor")
-    private static Map<ResourceLocation, EntryAbstract> buildOverview(BookHelper helper) {
+    private static @NotNull Map<ResourceLocation, EntryAbstract> buildOverview(@NotNull BookHelper helper) {
         Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.overview.";
 
@@ -145,16 +146,16 @@ public class GuideBook implements IGuideBook {
         return entries;
     }
 
-    private static String loc(Block b) {
+    private static String loc(@NotNull Block b) {
         return UtilLib.translate(b.getDescriptionId());
     }
 
-    private static String loc(Item i) {
+    private static String loc(@NotNull Item i) {
         return UtilLib.translate(i.getDescriptionId());
     }
 
     @SuppressWarnings("CollectionAddAllCanBeReplacedWithConstructor")
-    private static Map<ResourceLocation, EntryAbstract> buildVampire(BookHelper helper) {
+    private static @NotNull Map<ResourceLocation, EntryAbstract> buildVampire(@NotNull BookHelper helper) {
         Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.vampire.";
 
@@ -261,7 +262,7 @@ public class GuideBook implements IGuideBook {
     }
 
     @SuppressWarnings("CollectionAddAllCanBeReplacedWithConstructor")
-    private static Map<ResourceLocation, EntryAbstract> buildHunter(BookHelper helper) {
+    private static @NotNull Map<ResourceLocation, EntryAbstract> buildHunter(@NotNull BookHelper helper) {
         Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.hunter.";
 
@@ -356,7 +357,7 @@ public class GuideBook implements IGuideBook {
         return entries;
     }
 
-    private static Map<ResourceLocation, EntryAbstract> buildCreatures(BookHelper helper) {
+    private static @NotNull Map<ResourceLocation, EntryAbstract> buildCreatures(@NotNull BookHelper helper) {
         Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.entity.";
 
@@ -419,7 +420,7 @@ public class GuideBook implements IGuideBook {
         return entries;
     }
 
-    private static Map<ResourceLocation, EntryAbstract> buildWorld(BookHelper helper) {
+    private static @NotNull Map<ResourceLocation, EntryAbstract> buildWorld(@NotNull BookHelper helper) {
         Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.world.";
 
@@ -433,7 +434,7 @@ public class GuideBook implements IGuideBook {
         return entries;
     }
 
-    private static Map<ResourceLocation, EntryAbstract> buildItems(BookHelper helper) {
+    private static @NotNull Map<ResourceLocation, EntryAbstract> buildItems(@NotNull BookHelper helper) {
         Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.items.";
         //General
@@ -474,7 +475,7 @@ public class GuideBook implements IGuideBook {
         return entries;
     }
 
-    private static Map<ResourceLocation, EntryAbstract> buildBlocks(BookHelper helper) {
+    private static @NotNull Map<ResourceLocation, EntryAbstract> buildBlocks(@NotNull BookHelper helper) {
         Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.blocks.";
         //General
@@ -514,14 +515,14 @@ public class GuideBook implements IGuideBook {
         return entries;
     }
 
-    public static Map<ResourceLocation, EntryAbstract> buildChangelog(BookHelper helper) {
+    public static @NotNull Map<ResourceLocation, EntryAbstract> buildChangelog(BookHelper helper) {
         Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.changelog.";
         entries.put(new ResourceLocation(base + "v1_8"), buildChangelog1_8());
         return entries;
     }
 
-    public static EntryAbstract buildChangelog1_8() {
+    public static @NotNull EntryAbstract buildChangelog1_8() {
         String base = "guide.vampirism.changelog.";
         String base1_8 = base + "v1_8.";
 
@@ -563,7 +564,7 @@ public class GuideBook implements IGuideBook {
         return new EntryResourceLocation(v1_8, translateComponent(base + "v1_8"), new ResourceLocation("textures/item/writable_book.png"));
     }
 
-    private static IPage[] generatePotionMixes() {
+    private static IPage @NotNull [] generatePotionMixes() {
         IPage[] pages = new IPage[6];
         pages[0] = new PagePotionTableMix(HunterSkills.DURABLE_BREWING.get().getName(), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.durable && !mix.concentrated && !mix.efficient).toArray(ExtendedPotionMix[]::new));
         pages[1] = new PagePotionTableMix(HunterSkills.CONCENTRATED_BREWING.get().getName(), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.concentrated && !mix.durable && !mix.efficient).toArray(ExtendedPotionMix[]::new));
@@ -574,12 +575,12 @@ public class GuideBook implements IGuideBook {
         return pages;
     }
 
-    public static MutableComponent translateComponent(String key, Object... format) {
+    public static @NotNull MutableComponent translateComponent(String key, Object... format) {
         String result = UtilLib.translate(key, format);
         return Component.literal(result.replaceAll("\\\\n", Matcher.quoteReplacement("\n"))); //Fix legacy newlines. //Probably shouldn't use new StringTextComponent here, but don't want to rewrite everything
     }
 
-    public static String translate(String key, Object... format) {
+    public static @NotNull String translate(String key, Object... format) {
         String result = UtilLib.translate(key, format);
         return result.replaceAll("\\\\n", Matcher.quoteReplacement("\n"));
     }

@@ -27,11 +27,11 @@ public class CoffinBlockEntity extends BlockEntity {
     public DyeColor color = DyeColor.RED;
     private boolean lastTickOccupied;
 
-    public CoffinBlockEntity(BlockPos pos, BlockState state) {
+    public CoffinBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         super(ModTiles.COFFIN.get(), pos, state);
     }
 
-    public CoffinBlockEntity(BlockPos pos, BlockState state, DyeColor color) {
+    public CoffinBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state, DyeColor color) {
         super(ModTiles.COFFIN.get(), pos, state);
         this.color = color;
     }
@@ -42,7 +42,7 @@ public class CoffinBlockEntity extends BlockEntity {
     }
 
     @Override
-    public AABB getRenderBoundingBox() {
+    public @NotNull AABB getRenderBoundingBox() {
         return new AABB(worldPosition.getX() - 4, worldPosition.getY(), worldPosition.getZ() - 4, worldPosition.getX() + 4, worldPosition.getY() + 2, worldPosition.getZ() + 4);
     }
 
@@ -67,7 +67,7 @@ public class CoffinBlockEntity extends BlockEntity {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet) {
+    public void onDataPacket(Connection net, @NotNull ClientboundBlockEntityDataPacket packet) {
         if (hasLevel()) load(packet.getTag());
     }
 
@@ -86,7 +86,7 @@ public class CoffinBlockEntity extends BlockEntity {
         }
     }
 
-    public static void clientTickHead(Level level, BlockPos pos, BlockState state, CoffinBlockEntity blockEntity) {
+    public static void clientTickHead(@NotNull Level level, @NotNull BlockPos pos, BlockState state, @NotNull CoffinBlockEntity blockEntity) {
         boolean occupied = CoffinBlock.isOccupied(level, pos);
         if (blockEntity.lastTickOccupied != occupied) {
             level.playLocalSound(pos.getX(), (double) pos.getY() + 0.5D, pos.getZ(), ModSounds.COFFIN_LID.get(), SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.1F + 0.9F, true);

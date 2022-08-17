@@ -80,7 +80,7 @@ public abstract class VampirismVillageEvent extends Event {
         /**
          * Faction that owns the village
          */
-        public IFaction<?> getFaction() {
+        public @Nullable IFaction<?> getFaction() {
             return this.totem.getControllingFaction();
         }
 
@@ -120,7 +120,7 @@ public abstract class VampirismVillageEvent extends Event {
     @Cancelable
     public static class MakeAggressive extends VampirismVillageEvent {
 
-        private final Villager oldVillager;
+        private final @NotNull Villager oldVillager;
 
         public MakeAggressive(ITotem totem, @NotNull Villager villager) {
             super(totem);

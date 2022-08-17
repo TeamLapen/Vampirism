@@ -14,6 +14,8 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,11 +39,11 @@ public class VampirismConfig {
      */
     public static final Common COMMON;
 
-    public static final BalanceConfig BALANCE;
+    public static final @NotNull BalanceConfig BALANCE;
     private static final ForgeConfigSpec clientSpec;
     private static final ForgeConfigSpec serverSpec;
     private static final ForgeConfigSpec commonSpec;
-    private static BalanceBuilder balanceBuilder;
+    private static @Nullable BalanceBuilder balanceBuilder;
 
     static {
         final Pair<Client, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Client::new);
@@ -72,7 +74,7 @@ public class VampirismConfig {
     }
 
     @ThreadSafeAPI
-    public static <T extends BalanceBuilder.Conf> void addBalanceModification(String key, Consumer<T> modifier) {
+    public static <T extends BalanceBuilder.Conf> void addBalanceModification(@NotNull String key, @NotNull Consumer<T> modifier) {
         if (balanceBuilder == null)
             throw new IllegalStateException("Must add balance modifications during mod construction");
         balanceBuilder.addBalanceModifier(key, modifier);
@@ -105,7 +107,7 @@ public class VampirismConfig {
     }
 
     @SubscribeEvent
-    public static void onLoad(final ModConfigEvent.Loading configEvent) {
+    public static void onLoad(final ModConfigEvent.@NotNull Loading configEvent) {
         if (configEvent.getConfig().getType() == ModConfig.Type.SERVER) {
             ((SundamageRegistry) VampirismAPI.sundamageRegistry()).reloadConfiguration();
 
@@ -113,7 +115,7 @@ public class VampirismConfig {
     }
 
     @SubscribeEvent
-    public static void onReload(final ModConfigEvent.Reloading configEvent) {
+    public static void onReload(final ModConfigEvent.@NotNull Reloading configEvent) {
         if (configEvent.getConfig().getType() == ModConfig.Type.SERVER) {
             ((SundamageRegistry) VampirismAPI.sundamageRegistry()).reloadConfiguration();
         }
@@ -159,7 +161,7 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue infoAboutGuideAPI;
 
 
-        Server(ForgeConfigSpec.Builder builder) {
+        Server(ForgeConfigSpec.@NotNull Builder builder) {
             builder.comment("Server configuration settings")
                     .push("server");
 
@@ -234,7 +236,7 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue disableHudActionCooldownRendering;
         public final ForgeConfigSpec.BooleanValue disableHudActionDurationRendering;
 
-        Client(ForgeConfigSpec.Builder builder) {
+        Client(ForgeConfigSpec.@NotNull Builder builder) {
             builder.comment("Client configuration settings")
                     .push("client");
 
@@ -297,7 +299,7 @@ public class VampirismConfig {
 
 
 
-        Common(ForgeConfigSpec.Builder builder) {
+        Common(ForgeConfigSpec.@NotNull Builder builder) {
             builder.comment("Common configuration settings. Most other configuration can be found in the world (server)configuration folder")
                     .push("common");
             versionCheck = builder.comment("Check for new versions of Vampirism on startup").define("versionCheck", true);

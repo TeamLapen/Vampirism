@@ -32,7 +32,7 @@ import java.util.List;
 public class TentItem extends Item {
 
     @SuppressWarnings("DuplicateExpressions")
-    public static boolean placeAt(LevelAccessor world, BlockPos pos, Direction dir, boolean force, boolean spawner) {
+    public static boolean placeAt(@NotNull LevelAccessor world, @NotNull BlockPos pos, @NotNull Direction dir, boolean force, boolean spawner) {
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
@@ -64,7 +64,7 @@ public class TentItem extends Item {
         return false;
     }
 
-    private static boolean canPlaceAt(BlockState state, Block block, LevelAccessor world, int x, int y, int z) {
+    private static boolean canPlaceAt(@NotNull BlockState state, @NotNull Block block, @NotNull LevelAccessor world, int x, int y, int z) {
         return block.canSurvive(state, world, new BlockPos(x, y, z));
     }
 
@@ -86,7 +86,7 @@ public class TentItem extends Item {
 
     @NotNull
     @Override
-    public InteractionResult useOn(UseOnContext ctx) {
+    public InteractionResult useOn(@NotNull UseOnContext ctx) {
         if (ctx.getClickedFace() != Direction.UP)
             return InteractionResult.PASS;
         if (ctx.getLevel().isClientSide) return InteractionResult.PASS;

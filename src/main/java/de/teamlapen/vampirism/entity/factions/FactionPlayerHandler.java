@@ -57,14 +57,14 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
      * Always prefer using #getOpt
      */
     @Deprecated
-    public static FactionPlayerHandler get(Player player) {
+    public static @NotNull FactionPlayerHandler get(@NotNull Player player) {
         return (FactionPlayerHandler) player.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get FactionPlayerHandler from EntityPlayer " + player));
     }
 
     /**
      * Return a LazyOptional, but print a warning message if not present.
      */
-    public static LazyOptional<FactionPlayerHandler> getOpt(@NotNull Player player) {
+    public static @NotNull LazyOptional<FactionPlayerHandler> getOpt(@NotNull Player player) {
         LazyOptional<FactionPlayerHandler> opt = player.getCapability(CAP, null).cast();
         if (!opt.isPresent()) {
             LOGGER.warn("Cannot get Faction player capability. This might break mod functionality.", new Throwable().fillInStackTrace());
@@ -75,7 +75,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     /**
      * Resolves the FactionPlayerHandler capability (prints a warning message if not present) and returns an Optional of the current IFactionPlayer instance
      */
-    public static Optional<? extends IFactionPlayer<?>> getCurrentFactionPlayer(@NotNull Player player){
+    public static @NotNull Optional<? extends IFactionPlayer<?>> getCurrentFactionPlayer(@NotNull Player player){
         LazyOptional<FactionPlayerHandler> opt = player.getCapability(CAP, null).cast();
         if (!opt.isPresent()) {
             LOGGER.warn("Cannot get Faction player capability. This might break mod functionality.", new Throwable().fillInStackTrace());
@@ -85,14 +85,14 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
 
 
 
-    public static ICapabilityProvider createNewCapability(final Player player) {
+    public static @NotNull ICapabilityProvider createNewCapability(final Player player) {
         return new ICapabilitySerializable<CompoundTag>() {
 
             final FactionPlayerHandler inst = new FactionPlayerHandler(player);
             final LazyOptional<IFactionPlayerHandler> opt = LazyOptional.of(() -> inst);
 
             @Override
-            public void deserializeNBT(CompoundTag nbt) {
+            public void deserializeNBT(@NotNull CompoundTag nbt) {
                 inst.loadNBTData(nbt);
             }
 
@@ -104,7 +104,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             }
 
             @Override
-            public CompoundTag serializeNBT() {
+            public @NotNull CompoundTag serializeNBT() {
                 CompoundTag tag = new CompoundTag();
                 inst.saveNBTData(tag);
                 return tag;
@@ -115,7 +115,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     private final Player player;
     @NotNull
     private final Int2ObjectMap<IAction<?>> boundActions = new Int2ObjectArrayMap<>();
-    private IPlayableFaction<?> currentFaction = null;
+    private @Nullable IPlayableFaction<?> currentFaction = null;
     private int currentLevel = 0;
     private int currentLordLevel = 0;
     /**
@@ -146,7 +146,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     /**
      * Make sure the player caps are valid (call #reviveCaps if dead)
      */
-    public void copyFrom(Player old) {
+    public void copyFrom(@NotNull Player old) {
         FactionPlayerHandler oldP = get(old);
         currentFaction = oldP.currentFaction;
         currentLevel = oldP.currentLevel;
@@ -167,7 +167,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     @Override
-    public ResourceLocation getCapKey() {
+    public @NotNull ResourceLocation getCapKey() {
         return REFERENCE.FACTION_PLAYER_HANDLER_KEY;
     }
 
@@ -243,7 +243,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     @Override
-    public void loadUpdateFromNBT(CompoundTag nbt) {
+    public void loadUpdateFromNBT(@NotNull CompoundTag nbt) {
         IPlayableFaction<?> old = currentFaction;
         int oldLevel = currentLevel;
         String f = nbt.getString("faction");
@@ -396,7 +396,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     @Override
-    public void writeFullUpdateToNBT(CompoundTag nbt) {
+    public void writeFullUpdateToNBT(@NotNull CompoundTag nbt) {
         nbt.putString("faction", currentFaction == null ? "null" : currentFaction.getID().toString());
         nbt.putInt("level", currentLevel);
         nbt.putInt("lord_level", currentLordLevel);
@@ -415,7 +415,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         }
     }
 
-    private IPlayableFaction<?> getFactionFromKey(ResourceLocation key) {
+    private @Nullable IPlayableFaction<?> getFactionFromKey(ResourceLocation key) {
         for (IPlayableFaction<?> p : VampirismAPI.factionRegistry().getPlayableFactions()) {
             if (p.getID().equals(key)) {
                 return p;
@@ -424,7 +424,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         return null;
     }
 
-    private void loadBoundActions(CompoundTag nbt) {
+    private void loadBoundActions(@NotNull CompoundTag nbt) {
         // Read bound actions from legacy format
         if (nbt.contains("bound1")) {
             IAction<?> i = RegUtil.getAction(new ResourceLocation(nbt.getString("bound1")));
@@ -452,7 +452,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         }
     }
 
-    private void loadNBTData(CompoundTag nbt) {
+    private void loadNBTData(@NotNull CompoundTag nbt) {
         if (nbt.contains("faction")) {
             currentFaction = getFactionFromKey(new ResourceLocation(nbt.getString("faction")));
             if (currentFaction == null) {
@@ -480,7 +480,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
      * Notify faction about changes.
      * {@link FactionPlayerHandler#currentFaction} and {@link FactionPlayerHandler#currentLevel} will be used as the new ones
      */
-    private void notifyFaction(IPlayableFaction<?> oldFaction, int oldLevel) {
+    private void notifyFaction(@Nullable IPlayableFaction<?> oldFaction, int oldLevel) {
         if (oldFaction != null && !oldFaction.equals(currentFaction)) {
             LOGGER.debug(LogUtil.FACTION, "{} is leaving faction {}", this.player.getName().getString(), oldFaction.getID());
             oldFaction.getPlayerCapability(player).ifPresent(c -> c.onLevelChanged(0, oldLevel));
@@ -492,7 +492,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.FACTION_CRITERIA, currentFaction == null ? 0 : currentFaction.getID().hashCode());
     }
 
-    private void saveNBTData(CompoundTag nbt) {
+    private void saveNBTData(@NotNull CompoundTag nbt) {
         //Don't forget to also add things to copyFrom !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         if (currentFaction != null) {
             nbt.putString("faction", currentFaction.getID().toString());
@@ -550,7 +550,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         atts.faction = this.currentFaction;
     }
 
-    private void writeBoundActions(CompoundTag nbt) {
+    private void writeBoundActions(@NotNull CompoundTag nbt) {
         CompoundTag bounds = new CompoundTag();
         for (Int2ObjectMap.Entry<IAction<?>> entry : this.boundActions.int2ObjectEntrySet()) {
             bounds.putString(String.valueOf(entry.getIntKey()), RegUtil.id(entry.getValue()).toString());

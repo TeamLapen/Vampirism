@@ -21,18 +21,18 @@ import org.jetbrains.annotations.Nullable;
 
 public class RefinementSetFunction extends LootItemConditionalFunction {
 
-    public static Builder<?> builder(IFaction<?> faction) {
+    public static @NotNull Builder<?> builder(IFaction<?> faction) {
         return simpleBuilder(conditions -> new RefinementSetFunction(conditions, faction));
     }
 
-    public static Builder<?> builder() {
+    public static @NotNull Builder<?> builder() {
         return simpleBuilder(conditions -> new RefinementSetFunction(conditions, null));
     }
 
     @Nullable
     public final IFaction<?> faction;
 
-    public RefinementSetFunction(@NotNull LootItemCondition[] conditionsIn, @Nullable IFaction<?> faction) {
+    public RefinementSetFunction(@NotNull LootItemCondition @NotNull [] conditionsIn, @Nullable IFaction<?> faction) {
         super(conditionsIn);
         this.faction = faction;
     }

@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 public class ConvertedHorseEntity extends Horse implements CurableConvertedCreature<Horse, ConvertedHorseEntity> {
     private static final EntityDataAccessor<Boolean> CONVERTING = SynchedEntityData.defineId(ConvertedHorseEntity.class, EntityDataSerializers.BOOLEAN);
 
-    public static AttributeSupplier.Builder getAttributeBuilder() {
+    public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
         return AbstractHorse.createBaseHorseAttributes()
                 .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_DMG)
                 .add(ModAttributes.SUNDAMAGE.get(), BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
@@ -35,7 +35,7 @@ public class ConvertedHorseEntity extends Horse implements CurableConvertedCreat
 
     private final Data<Horse> data = new Data<>();
 
-    public ConvertedHorseEntity(EntityType<? extends Horse> type, Level worldIn) {
+    public ConvertedHorseEntity(@NotNull EntityType<? extends Horse> type, @NotNull Level worldIn) {
         super(type, worldIn);
         this.xpReward = 2;
     }
@@ -51,12 +51,12 @@ public class ConvertedHorseEntity extends Horse implements CurableConvertedCreat
     }
 
     @Override
-    public InteractionResult mobInteractSuper(@NotNull Player player, @NotNull InteractionHand hand) {
+    public @NotNull InteractionResult mobInteractSuper(@NotNull Player player, @NotNull InteractionHand hand) {
         return super.mobInteract(player, hand);
     }
 
     @Override
-    public boolean hurtSuper(DamageSource damageSource, float amount) {
+    public boolean hurtSuper(@NotNull DamageSource damageSource, float amount) {
         return super.hurt(damageSource, amount);
     }
 

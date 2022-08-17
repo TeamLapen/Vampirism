@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.core.ModTags;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
+import org.jetbrains.annotations.NotNull;
 
 public class WeaponOil extends ApplicableOil implements IWeaponOil {
 
@@ -13,7 +14,7 @@ public class WeaponOil extends ApplicableOil implements IWeaponOil {
         super(color, maxDuration);
     }
 
-    public boolean canBeApplied(ItemStack stack) {
+    public boolean canBeApplied(@NotNull ItemStack stack) {
         return stack.getItem() instanceof SwordItem && stack.is(ModTags.Items.APPLICABLE_OIL_SWORD) == VampirismConfig.BALANCE.itApplicableOilSwordReverse.get();
     }
 

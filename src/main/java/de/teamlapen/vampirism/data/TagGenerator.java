@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class TagGenerator {
 
-    public static void register(GatherDataEvent event, DataGenerator generator) {
+    public static void register(@NotNull GatherDataEvent event, @NotNull DataGenerator generator) {
         BlockTagsProvider blockTagsProvider = new ModBlockTagsProvider(generator, event.getExistingFileHelper());
         generator.addProvider(event.includeServer(), blockTagsProvider);
         generator.addProvider(event.includeServer(), new ModItemTagsProvider(generator, blockTagsProvider, event.getExistingFileHelper()));
@@ -34,7 +34,7 @@ public class TagGenerator {
     }
 
     public static class ModBlockTagsProvider extends BlockTagsProvider {
-        public ModBlockTagsProvider(DataGenerator dataGenerator, ExistingFileHelper helper) {
+        public ModBlockTagsProvider(@NotNull DataGenerator dataGenerator, ExistingFileHelper helper) {
             super(dataGenerator, REFERENCE.MODID, helper);
         }
 
@@ -83,7 +83,7 @@ public class TagGenerator {
     }
 
     public static class ModItemTagsProvider extends ItemTagsProvider {
-        public ModItemTagsProvider(DataGenerator dataGenerator, BlockTagsProvider blockTagsProvider, ExistingFileHelper helper) {
+        public ModItemTagsProvider(@NotNull DataGenerator dataGenerator, @NotNull BlockTagsProvider blockTagsProvider, ExistingFileHelper helper) {
             super(dataGenerator, blockTagsProvider, REFERENCE.MODID, helper);
         }
 
@@ -134,7 +134,7 @@ public class TagGenerator {
     }
 
     public static class ModEntityTypeTagsProvider extends EntityTypeTagsProvider {
-        public ModEntityTypeTagsProvider(DataGenerator dataGenerator, ExistingFileHelper helper) {
+        public ModEntityTypeTagsProvider(@NotNull DataGenerator dataGenerator, ExistingFileHelper helper) {
             super(dataGenerator, REFERENCE.MODID, helper);
         }
 
@@ -149,7 +149,7 @@ public class TagGenerator {
     }
 
     public static class ModFluidTagsProvider extends FluidTagsProvider {
-        public ModFluidTagsProvider(DataGenerator generatorIn, ExistingFileHelper helper) {
+        public ModFluidTagsProvider(@NotNull DataGenerator generatorIn, ExistingFileHelper helper) {
             super(generatorIn, REFERENCE.MODID, helper);
         }
 
@@ -168,7 +168,7 @@ public class TagGenerator {
 
     public static class ModBiomeTagsProvider extends BiomeTagsProvider {
 
-        public ModBiomeTagsProvider(DataGenerator generator, @Nullable ExistingFileHelper existingFileHelper) {
+        public ModBiomeTagsProvider(@NotNull DataGenerator generator, @Nullable ExistingFileHelper existingFileHelper) {
             super(generator, REFERENCE.MODID, existingFileHelper);
         }
 
@@ -198,7 +198,7 @@ public class TagGenerator {
 
     public static class ModPoiTypeProvider extends PoiTypeTagsProvider {
 
-        public ModPoiTypeProvider(DataGenerator p_236434_, @Nullable ExistingFileHelper existingFileHelper) {
+        public ModPoiTypeProvider(@NotNull DataGenerator p_236434_, @Nullable ExistingFileHelper existingFileHelper) {
             super(p_236434_, REFERENCE.MODID, existingFileHelper);
         }
 
@@ -214,7 +214,7 @@ public class TagGenerator {
 
     public static class ModVillageProfessionProvider extends TagsProvider<VillagerProfession> {
 
-        public ModVillageProfessionProvider(DataGenerator p_236434_, @Nullable ExistingFileHelper existingFileHelper) {
+        public ModVillageProfessionProvider(@NotNull DataGenerator p_236434_, @Nullable ExistingFileHelper existingFileHelper) {
             super(p_236434_, Registry.VILLAGER_PROFESSION, REFERENCE.MODID, existingFileHelper);
         }
 

@@ -27,15 +27,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 
 public class AlchemicalCauldronRecipeBuilder {
-    public static AlchemicalCauldronRecipeBuilder cauldronRecipe(@NotNull Item item) {
+    public static @NotNull AlchemicalCauldronRecipeBuilder cauldronRecipe(@NotNull Item item) {
         return AlchemicalCauldronRecipeBuilder.cauldronRecipe(item, 1);
     }
 
-    public static AlchemicalCauldronRecipeBuilder cauldronRecipe(@NotNull Item item, int count) {
+    public static @NotNull AlchemicalCauldronRecipeBuilder cauldronRecipe(@NotNull Item item, int count) {
         return new AlchemicalCauldronRecipeBuilder(item, count);
     }
 
-    private final ItemStack result;
+    private final @NotNull ItemStack result;
     private final Advancement.Builder advancementBuilder = Advancement.Builder.advancement();
     private String group;
     private Ingredient ingredient;
@@ -60,67 +60,67 @@ public class AlchemicalCauldronRecipeBuilder {
         consumer.accept(new Result(id, this.group != null ? this.group : "", this.ingredient, this.fluid, this.result, this.skills != null ? skills : new ISkill[]{HunterSkills.BASIC_ALCHEMY.get()}, this.reqLevel, this.cookTime, this.exp, advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + id.getPath())));
     }
 
-    public AlchemicalCauldronRecipeBuilder cookTime(int cookTime) {
+    public @NotNull AlchemicalCauldronRecipeBuilder cookTime(int cookTime) {
         this.cookTime = cookTime;
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder experience(float exp) {
+    public @NotNull AlchemicalCauldronRecipeBuilder experience(float exp) {
         this.exp = exp;
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder group(@NotNull String group) {
+    public @NotNull AlchemicalCauldronRecipeBuilder group(@NotNull String group) {
         this.group = group;
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder requireLevel(int level) {
+    public @NotNull AlchemicalCauldronRecipeBuilder requireLevel(int level) {
         this.reqLevel = level;
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder withCriterion(@NotNull String name,@NotNull CriterionTriggerInstance criterion) {
+    public @NotNull AlchemicalCauldronRecipeBuilder withCriterion(@NotNull String name, @NotNull CriterionTriggerInstance criterion) {
         this.advancementBuilder.addCriterion(name, criterion);
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder withFluid(@NotNull TagKey<Item> tag) {
+    public @NotNull AlchemicalCauldronRecipeBuilder withFluid(@NotNull TagKey<Item> tag) {
         this.fluid = Either.left(Ingredient.of(tag));
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder withFluid(@NotNull FluidStack fluid) {
+    public @NotNull AlchemicalCauldronRecipeBuilder withFluid(@NotNull FluidStack fluid) {
         this.fluid = Either.right(fluid);
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder withFluid(@NotNull ItemLike... item) {
+    public @NotNull AlchemicalCauldronRecipeBuilder withFluid(@NotNull ItemLike... item) {
         this.fluid = Either.left(Ingredient.of(item));
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder withFluid(@NotNull ItemStack... stacks) {
+    public @NotNull AlchemicalCauldronRecipeBuilder withFluid(@NotNull ItemStack... stacks) {
         this.fluid = Either.left(Ingredient.of(stacks));
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder withIngredient(@NotNull ItemLike... items) {
+    public @NotNull AlchemicalCauldronRecipeBuilder withIngredient(@NotNull ItemLike... items) {
         this.ingredient = Ingredient.of(items);
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder withIngredient(@NotNull ItemStack... stacks) {
+    public @NotNull AlchemicalCauldronRecipeBuilder withIngredient(@NotNull ItemStack... stacks) {
         this.ingredient = Ingredient.of(stacks);
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder withIngredient(@NotNull TagKey<Item> tag) {
+    public @NotNull AlchemicalCauldronRecipeBuilder withIngredient(@NotNull TagKey<Item> tag) {
         this.ingredient = Ingredient.of(tag);
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder withSkills(@NotNull ISkill<?>... skills) {
+    public @NotNull AlchemicalCauldronRecipeBuilder withSkills(@NotNull ISkill<?>... skills) {
         this.skills = skills;
         return this;
     }
@@ -134,17 +134,17 @@ public class AlchemicalCauldronRecipeBuilder {
     }
 
     public static class Result implements FinishedRecipe {
-        private final ResourceLocation id;
-        private final String group;
-        private final Ingredient ingredient;
-        private final Either<Ingredient, FluidStack> fluid;
-        private final ItemStack result;
+        private final @NotNull ResourceLocation id;
+        private final @NotNull String group;
+        private final @NotNull Ingredient ingredient;
+        private final @NotNull Either<Ingredient, FluidStack> fluid;
+        private final @NotNull ItemStack result;
         private final ISkill<?>[] skills;
         private final int reqLevel;
         private final int cookTimeIn;
         private final float exp;
-        private final Advancement.Builder advancementBuilder;
-        private final ResourceLocation advancementId;
+        private final Advancement.@NotNull Builder advancementBuilder;
+        private final @NotNull ResourceLocation advancementId;
 
         public Result(@NotNull ResourceLocation idIn, @NotNull String groupIn, @NotNull Ingredient ingredientIn, @NotNull Either<Ingredient, FluidStack> fluidIn, @NotNull ItemStack resultIn, @NotNull ISkill<?>[] skillsIn, int reqLevelIn, int cookTimeIn, float exp, @NotNull Advancement.Builder advancementBuilderIn,@NotNull ResourceLocation advancementId) {
             this.id = idIn;

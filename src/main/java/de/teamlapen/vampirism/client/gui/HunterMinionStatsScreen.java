@@ -6,7 +6,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
@@ -22,17 +22,17 @@ public class HunterMinionStatsScreen extends MinionStatsScreen<HunterMinionEntit
     }
 
     @Override
-    protected boolean areButtonsVisible(HunterMinionEntity.HunterMinionData d) {
+    protected boolean areButtonsVisible(HunterMinionEntity.@NotNull HunterMinionData d) {
         return d.getRemainingStatPoints() > 0 || d.getLevel() < HunterMinionEntity.HunterMinionData.MAX_LEVEL;
     }
 
     @Override
-    protected int getRemainingStatPoints(HunterMinionEntity.HunterMinionData d) {
+    protected int getRemainingStatPoints(HunterMinionEntity.@NotNull HunterMinionData d) {
         return d.getRemainingStatPoints();
     }
 
     @Override
-    protected boolean isActive(HunterMinionEntity.HunterMinionData data, int i) {
+    protected boolean isActive(HunterMinionEntity.@NotNull HunterMinionData data, int i) {
         return switch (i) {
             case 0 -> data.getRemainingStatPoints() > 0 && data.getInventoryLevel() < HunterMinionEntity.HunterMinionData.MAX_LEVEL_INVENTORY;
             case 1 -> data.getRemainingStatPoints() > 0 && data.getHealthLevel() < HunterMinionEntity.HunterMinionData.MAX_LEVEL_HEALTH;
@@ -43,7 +43,7 @@ public class HunterMinionStatsScreen extends MinionStatsScreen<HunterMinionEntit
     }
 
     @Override
-    protected void renderStats(PoseStack mStack, HunterMinionEntity.HunterMinionData data) {
+    protected void renderStats(@NotNull PoseStack mStack, HunterMinionEntity.@NotNull HunterMinionData data) {
         renderLevelRow(mStack, data.getLevel() + 1, HunterMinionEntity.HunterMinionData.MAX_LEVEL + 1);
         renderStatRow(mStack, 0, inventoryLevel, Component.literal("" + data.getInventorySize()), data.getInventoryLevel() + 1, HunterMinionEntity.HunterMinionData.MAX_LEVEL_INVENTORY + 1);
         renderStatRow(mStack, 1, healthLevel, Component.literal("" + entity.getAttribute(Attributes.MAX_HEALTH).getBaseValue()), data.getHealthLevel() + 1, HunterMinionEntity.HunterMinionData.MAX_LEVEL_HEALTH + 1);

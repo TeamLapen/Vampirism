@@ -9,6 +9,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.crafting.Ingredient;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class JEIPotionMix {
-    public static Collection<JEIPotionMix> createFromMix(ExtendedPotionMix mix) {
+    public static @NotNull Collection<JEIPotionMix> createFromMix(@NotNull ExtendedPotionMix mix) {
         List<ItemStack> in1 = mix.reagent1.map(Ingredient::getItems).stream().flatMap(Arrays::stream).map(ItemStack::copy).peek(s -> s.setCount(mix.reagent1Count)).filter(s -> !s.isEmpty()).collect(Collectors.toList());
         List<ItemStack> in2 = mix.reagent2.map(Ingredient::getItems).stream().flatMap(Arrays::stream).map(ItemStack::copy).peek(s -> s.setCount(mix.reagent2Count)).filter(s -> !s.isEmpty()).collect(Collectors.toList());
         List<JEIPotionMix> recipes = new ArrayList<>(3);
@@ -29,7 +30,7 @@ public class JEIPotionMix {
         return recipes;
     }
 
-    private static JEIPotionMix build(ExtendedPotionMix mix, Item base, Potion in, Potion out, List<ItemStack> in1, List<ItemStack> in2) {
+    private static @NotNull JEIPotionMix build(ExtendedPotionMix mix, Item base, @NotNull Potion in, @NotNull Potion out, List<ItemStack> in1, List<ItemStack> in2) {
         ItemStack potionIn = PotionUtils.setPotion(new ItemStack(base), in);
         ItemStack potionOut = PotionUtils.setPotion(new ItemStack(base), out);
         return new JEIPotionMix(mix, potionIn, in1, in2, potionOut);

@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class OilItemCondition implements LootItemCondition {
 
-    private final IOil oil;
+    private final @NotNull IOil oil;
 
     public OilItemCondition(@NotNull IOil oil) {
         this.oil = oil;
@@ -31,7 +31,7 @@ public class OilItemCondition implements LootItemCondition {
     }
 
     @Override
-    public boolean test(LootContext lootContext) {
+    public boolean test(@NotNull LootContext lootContext) {
         ItemStack stack = lootContext.getParamOrNull(LootContextParams.TOOL);
         return stack != null && OilUtils.getAppliedOil(stack).map(oil -> oil == this.oil).orElse(false);
     }

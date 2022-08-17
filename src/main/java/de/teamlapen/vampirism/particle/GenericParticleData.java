@@ -36,7 +36,7 @@ public class GenericParticleData implements ParticleOptions {
         }
 
         @NotNull
-        public GenericParticleData fromNetwork(@NotNull ParticleType<GenericParticleData> particleTypeIn, FriendlyByteBuf buffer) {
+        public GenericParticleData fromNetwork(@NotNull ParticleType<GenericParticleData> particleTypeIn, @NotNull FriendlyByteBuf buffer) {
             return new GenericParticleData(particleTypeIn, buffer.readResourceLocation(), buffer.readVarInt(), buffer.readVarInt(), buffer.readFloat());
         }
     };
@@ -69,7 +69,7 @@ public class GenericParticleData implements ParticleOptions {
     }
 
     @Override
-    public void writeToNetwork(FriendlyByteBuf packetBuffer) {
+    public void writeToNetwork(@NotNull FriendlyByteBuf packetBuffer) {
         packetBuffer.writeResourceLocation(texture);
         packetBuffer.writeVarInt(maxAge);
         packetBuffer.writeVarInt(color);

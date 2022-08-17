@@ -8,6 +8,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,7 +50,7 @@ public class LevelAttributeModifier {
      * @param operation   The operation applied to the attribute
      * @param evenIntOnly If the modifier should be rounded to an even integer
      */
-    public static void applyModifier(Player player, Attribute attribute, String name, int level, int lcap, double max, double type, AttributeModifier.Operation operation, boolean evenIntOnly) {
+    public static void applyModifier(@NotNull Player player, @NotNull Attribute attribute, String name, int level, int lcap, double max, double type, AttributeModifier.@NotNull Operation operation, boolean evenIntOnly) {
         UUID mod = modifiers.get(attribute);
         if (mod == null) {
             LOGGER.warn("Cannot modify {}, no modifier is registered", attribute);
@@ -84,7 +85,7 @@ public class LevelAttributeModifier {
      * @param att  Attribute
      * @param uuid UUID of modifier to remove
      */
-    private static void rmMod(AttributeInstance att, UUID uuid) {
+    private static void rmMod(@NotNull AttributeInstance att, @NotNull UUID uuid) {
         AttributeModifier m = att.getModifier(uuid);
         if (m != null) {
             att.removeModifier(m);

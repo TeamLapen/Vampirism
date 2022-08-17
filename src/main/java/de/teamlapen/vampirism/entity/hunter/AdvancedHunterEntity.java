@@ -64,7 +64,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     private static final int MAX_LEVEL = 1;
     private static final int MOVE_TO_RESTRICT_PRIO = 3;
 
-    public static AttributeSupplier.Builder getAttributeBuilder() {
+    public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
         return VampirismEntity.getAttributeBuilder()
                 .add(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.ADVANCED_HUNTER_MAX_HEALTH)
                 .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.ADVANCED_HUNTER_ATTACK_DAMAGE)
@@ -73,9 +73,9 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     /**
      * available actions for AI task & task
      */
-    private final ActionHandlerEntity<?> entityActionHandler;
+    private final @NotNull ActionHandlerEntity<?> entityActionHandler;
     private final EntityClassType entityclass;
-    private final EntityActionTier entitytier;
+    private final @NotNull EntityActionTier entitytier;
     /**
      * Overlay player texture and if slim (true)
      */
@@ -157,7 +157,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         return flag;
     }
 
-    public Optional<String> getBookLootId() {
+    public @NotNull Optional<String> getBookLootId() {
         return Optional.ofNullable(lootBookId);
     }
 
@@ -296,7 +296,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    public int suggestEntityLevel(Difficulty d) {
+    public int suggestEntityLevel(@NotNull Difficulty d) {
         if (random.nextBoolean()) {
             return (int) (d.avgPercLevel * MAX_LEVEL / 100F);
         }
@@ -322,7 +322,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
+    protected @NotNull EntityType<?> getIMobTypeOpt(boolean iMob) {
         return iMob ? ModEntities.ADVANCED_HUNTER_IMOB.get() : ModEntities.ADVANCED_HUNTER.get();
     }
 

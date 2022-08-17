@@ -47,7 +47,7 @@ public class RefinementItemReward extends ItemReward {
     }
 
     @Override
-    public ItemRewardInstance createInstance(IFactionPlayer<?> player) {
+    public @NotNull ItemRewardInstance createInstance(IFactionPlayer<?> player) {
         return new ItemRewardInstance(createItem());
     }
 
@@ -57,7 +57,7 @@ public class RefinementItemReward extends ItemReward {
         return !reward.isEmpty() ? Collections.singletonList(new ItemStack(reward.getItem())) : getAllRefinementItems();
     }
 
-    protected <Z extends Item & IRefinementItem> ItemStack createItem() {
+    protected <Z extends Item & IRefinementItem> @NotNull ItemStack createItem() {
         if (this.faction != null && !(this.faction instanceof IPlayableFaction<?>)) return ItemStack.EMPTY;
         IPlayableFaction<?> faction = ((IPlayableFaction<?>) this.faction);
         if (faction == null) {
@@ -80,7 +80,7 @@ public class RefinementItemReward extends ItemReward {
         return stack;
     }
 
-    private List<ItemStack> getAllRefinementItems() {
+    private @NotNull List<ItemStack> getAllRefinementItems() {
         return Arrays.stream(this.faction != null ? new IPlayableFaction[]{(IPlayableFaction<?>) this.faction} : VampirismAPI.factionRegistry().getPlayableFactions()).filter(IPlayableFaction::hasRefinements).flatMap(function -> Arrays.stream(IRefinementItem.AccessorySlotType.values()).map(function::getRefinementItem)).map(a -> new ItemStack((Item) a)).collect(Collectors.toList());
     }
 

@@ -9,20 +9,21 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.PathfinderMob;
+import org.jetbrains.annotations.NotNull;
 
 public class SunscreenEntityAction<T extends PathfinderMob & IEntityActionUser> extends VampireEntityAction<T> implements ILastingAction<T> {
 
-    public SunscreenEntityAction(EntityActionTier tier, EntityClassType... param) {
+    public SunscreenEntityAction(@NotNull EntityActionTier tier, EntityClassType... param) {
         super(tier, param);
     }
 
     @Override
-    public void activate(T entity) {
+    public void activate(@NotNull T entity) {
         entity.getRepresentingEntity().addEffect(new MobEffectInstance(ModEffects.SUNSCREEN.get(), getDuration(entity.getEntityLevel()), 3, false, false));
     }
 
     @Override
-    public void deactivate(T entity) {
+    public void deactivate(@NotNull T entity) {
         entity.getRepresentingEntity().removeEffect(ModEffects.SUNSCREEN.get());
     }
 
@@ -37,7 +38,7 @@ public class SunscreenEntityAction<T extends PathfinderMob & IEntityActionUser> 
     }
 
     @Override
-    public int getWeight(PathfinderMob entity) {
+    public int getWeight(@NotNull PathfinderMob entity) {
         if (!entity.getCommandSenderWorld().isDay() || entity.getCommandSenderWorld().isRaining()) {//Not perfectly accurate (the actual sundamage checks for celestial angle and also might exclude certain dimensions and biomes
             return 0;
         }

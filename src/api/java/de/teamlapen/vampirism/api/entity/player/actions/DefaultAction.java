@@ -7,6 +7,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Default implementation for an action
@@ -14,7 +16,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 public abstract class DefaultAction<T extends IFactionPlayer<T>> implements IAction<T> {
     private Component name;
 
-    public void addEffectInstance(T player, MobEffectInstance instance) {
+    public void addEffectInstance(@NotNull T player, @NotNull MobEffectInstance instance) {
         ((EffectInstanceWithSource) instance).setSource(this.getRegistryName());
         player.getRepresentingPlayer().addEffect(instance);
     }
@@ -27,7 +29,7 @@ public abstract class DefaultAction<T extends IFactionPlayer<T>> implements IAct
     }
 
     @Override
-    public final IAction.PERM canUse(T player) {
+    public final IAction.@NotNull PERM canUse(@NotNull T player) {
         if (!isEnabled())
             return IAction.PERM.DISABLED;
         if (this.getFaction().map(f -> f.getFactionPlayerInterface().isInstance(player)).orElse(true)) {
@@ -39,13 +41,13 @@ public abstract class DefaultAction<T extends IFactionPlayer<T>> implements IAct
     }
 
     @Override
-    public Component getName() {
+    public @NotNull Component getName() {
         return name == null ? name = Component.translatable(getTranslationKey()) : name;
     }
 
     @Deprecated
     @Override
-    public String getTranslationKey() {
+    public @NotNull String getTranslationKey() {
         return "action." + getRegistryName().getNamespace() + "." + getRegistryName().getPath();
     }
 
@@ -55,7 +57,7 @@ public abstract class DefaultAction<T extends IFactionPlayer<T>> implements IAct
     public abstract boolean isEnabled();
 
     @Override
-    public boolean onActivated(T player, ActivationContext context) {
+    public boolean onActivated(@NotNull T player, ActivationContext context) {
         if (this.getFaction().map(f -> f.getFactionPlayerInterface().isInstance(player)).orElse(false)) {
             return activate(player, context);
         } else {
@@ -63,7 +65,7 @@ public abstract class DefaultAction<T extends IFactionPlayer<T>> implements IAct
         }
     }
 
-    public void removePotionEffect(T player, MobEffect effect) {
+    public void removePotionEffect(@NotNull T player, @NotNull MobEffect effect) {
         MobEffectInstance ins = player.getRepresentingPlayer().getEffect(effect);
         while (ins != null) {
             EffectInstanceWithSource insM = ((EffectInstanceWithSource) ins);
@@ -78,7 +80,7 @@ public abstract class DefaultAction<T extends IFactionPlayer<T>> implements IAct
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return this.getRegistryName() + " (" + this.getClass().getSimpleName() + ")";
     }
 
@@ -89,7 +91,7 @@ public abstract class DefaultAction<T extends IFactionPlayer<T>> implements IAct
      */
     protected abstract boolean activate(T player, ActivationContext context);
 
-    private ResourceLocation getRegistryName() {
+    private @Nullable ResourceLocation getRegistryName() {
         return VampirismRegistries.ACTIONS.get().getKey(this);
     }
 }

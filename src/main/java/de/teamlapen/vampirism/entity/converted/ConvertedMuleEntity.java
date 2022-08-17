@@ -27,7 +27,7 @@ public class ConvertedMuleEntity extends Mule implements CurableConvertedCreatur
 
     private static final EntityDataAccessor<Boolean> CONVERTING = SynchedEntityData.defineId(ConvertedMuleEntity.class, EntityDataSerializers.BOOLEAN);
 
-    public static AttributeSupplier.Builder getAttributeBuilder() {
+    public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
         return AbstractHorse.createBaseHorseAttributes()
                 .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_DMG)
                 .add(ModAttributes.SUNDAMAGE.get(), BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
@@ -35,7 +35,7 @@ public class ConvertedMuleEntity extends Mule implements CurableConvertedCreatur
 
     private final Data<Mule> data = new Data<>();
 
-    public ConvertedMuleEntity(EntityType<? extends Mule> type, Level worldIn) {
+    public ConvertedMuleEntity(@NotNull EntityType<? extends Mule> type, @NotNull Level worldIn) {
         super(type, worldIn);
     }
 
@@ -50,12 +50,12 @@ public class ConvertedMuleEntity extends Mule implements CurableConvertedCreatur
     }
 
     @Override
-    public InteractionResult mobInteractSuper(@NotNull Player player, @NotNull InteractionHand hand) {
+    public @NotNull InteractionResult mobInteractSuper(@NotNull Player player, @NotNull InteractionHand hand) {
         return super.mobInteract(player, hand);
     }
 
     @Override
-    public boolean hurtSuper(DamageSource damageSource, float amount) {
+    public boolean hurtSuper(@NotNull DamageSource damageSource, float amount) {
         return super.hurt(damageSource, amount);
     }
 

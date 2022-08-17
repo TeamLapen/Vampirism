@@ -33,23 +33,23 @@ import java.util.function.Supplier;
 
 public class AlchemyTableRecipeBuilder {
 
-    public static AlchemyTableRecipeBuilder builder(@NotNull ItemStack stack) {
+    public static @NotNull AlchemyTableRecipeBuilder builder(@NotNull ItemStack stack) {
         return new AlchemyTableRecipeBuilder(stack);
     }
-    public static AlchemyTableRecipeBuilder builder(@NotNull IOil oilStack) {
+    public static @NotNull AlchemyTableRecipeBuilder builder(@NotNull IOil oilStack) {
         return new AlchemyTableRecipeBuilder(OilUtils.createOilItem(oilStack));
     }
 
-    public static AlchemyTableRecipeBuilder builder(@NotNull Supplier<? extends IOil> oilStack) {
+    public static @NotNull AlchemyTableRecipeBuilder builder(@NotNull Supplier<? extends IOil> oilStack) {
         return builder(oilStack.get());
     }
 
-    private final ItemStack result;
-    private final IOil resultOil;
+    private final @NotNull ItemStack result;
+    private final @NotNull IOil resultOil;
     private final Advancement.Builder advancementBuilder = Advancement.Builder.advancement();
     private String group;
     private Ingredient ingredient;
-    private IOil ingredientOil = ModOils.EMPTY.get();
+    private @NotNull IOil ingredientOil = ModOils.EMPTY.get();
     private Ingredient input;
     private ISkill[] skills;
 
@@ -57,24 +57,24 @@ public class AlchemyTableRecipeBuilder {
         this(result, OilUtils.getOil(result));
     }
 
-    public AlchemyTableRecipeBuilder(@NotNull ItemStack result, IOil resultOil) {
+    public AlchemyTableRecipeBuilder(@NotNull ItemStack result, @NotNull IOil resultOil) {
         Objects.requireNonNull(result);
         Objects.requireNonNull(resultOil);
         this.result = result;
         this.resultOil = resultOil;
     }
 
-    public AlchemyTableRecipeBuilder group(@NotNull String group){
+    public @NotNull AlchemyTableRecipeBuilder group(@NotNull String group){
         this.group = group;
         return this;
     }
 
-    public AlchemyTableRecipeBuilder ingredient(@NotNull Ingredient ingredient){
+    public @NotNull AlchemyTableRecipeBuilder ingredient(@NotNull Ingredient ingredient){
         this.ingredient = ingredient;
         return this;
     }
 
-    public AlchemyTableRecipeBuilder oilIngredient(@NotNull IOil oil) {
+    public @NotNull AlchemyTableRecipeBuilder oilIngredient(@NotNull IOil oil) {
         this.ingredient = new NBTIngredient(ModItems.OIL_BOTTLE.get().withOil(oil));
         return this;
     }
@@ -86,17 +86,17 @@ public class AlchemyTableRecipeBuilder {
         return ingredient(new NBTIngredient(ModItems.OIL_BOTTLE.get().withOil(ModOils.VAMPIRE_BLOOD.get()))).withCriterion("has_bottles", has(ModItems.OIL_BOTTLE.get()));
     }
 
-    public AlchemyTableRecipeBuilder input(@NotNull Ingredient input){
+    public @NotNull AlchemyTableRecipeBuilder input(@NotNull Ingredient input){
         this.input = input;
         return this;
     }
 
-    public AlchemyTableRecipeBuilder withCriterion(@NotNull String name,@NotNull CriterionTriggerInstance criterion) {
+    public @NotNull AlchemyTableRecipeBuilder withCriterion(@NotNull String name, @NotNull CriterionTriggerInstance criterion) {
         this.advancementBuilder.addCriterion(name, criterion);
         return this;
     }
 
-    public AlchemyTableRecipeBuilder withSkills(@NotNull ISkill... skills) {
+    public @NotNull AlchemyTableRecipeBuilder withSkills(@NotNull ISkill... skills) {
         this.skills = skills;
         return this;
     }
@@ -116,29 +116,29 @@ public class AlchemyTableRecipeBuilder {
         }
     }
 
-    protected static InventoryChangeTrigger.TriggerInstance has(@NotNull ItemLike p_200403_0_) {
+    protected static InventoryChangeTrigger.@NotNull TriggerInstance has(@NotNull ItemLike p_200403_0_) {
         return inventoryTrigger(ItemPredicate.Builder.item().of(p_200403_0_).build());
     }
 
-    protected static InventoryChangeTrigger.TriggerInstance has(@NotNull TagKey<Item> p_200409_0_) {
+    protected static InventoryChangeTrigger.@NotNull TriggerInstance has(@NotNull TagKey<Item> p_200409_0_) {
         return inventoryTrigger(ItemPredicate.Builder.item().of(p_200409_0_).build());
     }
 
-    protected static InventoryChangeTrigger.TriggerInstance inventoryTrigger(@NotNull ItemPredicate... p_200405_0_) {
+    protected static InventoryChangeTrigger.@NotNull TriggerInstance inventoryTrigger(@NotNull ItemPredicate @NotNull ... p_200405_0_) {
         return new InventoryChangeTrigger.TriggerInstance(EntityPredicate.Composite.ANY, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, p_200405_0_);
     }
 
     private static class Result implements FinishedRecipe {
-        private final ResourceLocation id;
-        private final ItemStack result;
-        private final IOil resultOil;
-        private final Advancement.Builder advancementBuilder;
-        private final String group;
-        private final Ingredient ingredient;
-        private final IOil ingredientOil;
-        private final Ingredient input;
+        private final @NotNull ResourceLocation id;
+        private final @NotNull ItemStack result;
+        private final @NotNull IOil resultOil;
+        private final Advancement.@NotNull Builder advancementBuilder;
+        private final @NotNull String group;
+        private final @NotNull Ingredient ingredient;
+        private final @NotNull IOil ingredientOil;
+        private final @NotNull Ingredient input;
         private final ISkill[] skills;
-        private final ResourceLocation advancementId;
+        private final @NotNull ResourceLocation advancementId;
 
         public Result(@NotNull ResourceLocation id,@NotNull String group,@NotNull Ingredient ingredient,@NotNull IOil ingredientOil,@NotNull Ingredient input,@NotNull ItemStack result,@NotNull IOil resultOil,@NotNull ISkill[] skills,@NotNull ResourceLocation advancementId,@NotNull Advancement.Builder advancementBuilder) {
             this.id = id;
@@ -193,7 +193,7 @@ public class AlchemyTableRecipeBuilder {
             json.add("skill", skills);
         }
 
-        private JsonObject item(@NotNull ItemStack stack) {
+        private @NotNull JsonObject item(@NotNull ItemStack stack) {
             JsonObject obj = new JsonObject();
             obj.addProperty("item", RegUtil.id(stack.getItem()).toString());
             if (stack.getCount() > 1) {

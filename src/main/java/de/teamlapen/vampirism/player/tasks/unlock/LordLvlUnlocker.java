@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 public class LordLvlUnlocker implements TaskUnlocker {
 
@@ -20,12 +21,12 @@ public class LordLvlUnlocker implements TaskUnlocker {
     }
 
     @Override
-    public Component getDescription() {
+    public @NotNull Component getDescription() {
         return Component.translatable("text.vampirism.lord").append(Component.literal(" ")).append(Component.translatable("text.vampirism.level")).append(Component.literal((exact ? " = " : " ") + reqLordLevel));
     }
 
     @Override
-    public boolean isUnlocked(IFactionPlayer<?> playerEntity) {
+    public boolean isUnlocked(@NotNull IFactionPlayer<?> playerEntity) {
         int aL = FactionPlayerHandler.getOpt(playerEntity.getRepresentingPlayer()).map(FactionPlayerHandler::getLordLevel).orElse(0);
         return exact ? aL == reqLordLevel : aL >= reqLordLevel;
     }

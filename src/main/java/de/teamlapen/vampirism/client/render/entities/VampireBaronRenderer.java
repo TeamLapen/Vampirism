@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
@@ -25,7 +24,7 @@ public class VampireBaronRenderer extends MobRenderer<VampireBaronEntity, BaronW
     private static final ResourceLocation textureLadyEnraged = new ResourceLocation(REFERENCE.MODID + ":textures/entity/baroness_enraged.png");
 
 
-    public VampireBaronRenderer(EntityRendererProvider.Context context) {
+    public VampireBaronRenderer(EntityRendererProvider.@NotNull Context context) {
         super(context, new BaronWrapperModel(new BaronModel(context.bakeLayer(ModEntitiesRender.BARON)), new BaronessModel(context.bakeLayer(ModEntitiesRender.BARONESS))), 0.5F);
         this.addLayer(new WingsLayer<>(this, context.getModelSet(), vampireBaronEntity -> true, (entity, model) -> model.getBodyPart(entity)));
         this.addLayer(new BaronAttireLayer(this, context, VampireBaronEntity::isLady));
@@ -33,7 +32,7 @@ public class VampireBaronRenderer extends MobRenderer<VampireBaronEntity, BaronW
 
     @NotNull
     @Override
-    public ResourceLocation getTextureLocation(VampireBaronEntity entity) {
+    public ResourceLocation getTextureLocation(@NotNull VampireBaronEntity entity) {
         return entity.isEnraged() ? (entity.isLady() ? textureLadyEnraged : textureLordEnraged) : (entity.isLady() ? textureLady : textureLord);
     }
 

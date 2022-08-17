@@ -50,7 +50,7 @@ public class LootTablesGenerator extends LootTableProvider {
     public static final float[] DEFAULT_SAPLING_DROP_RATES = new float[]{0.05F, 0.0625F, 0.083333336F, 0.1F};
 
 
-    public LootTablesGenerator(DataGenerator dataGeneratorIn) {
+    public LootTablesGenerator(@NotNull DataGenerator dataGeneratorIn) {
         super(dataGeneratorIn);
     }
 
@@ -62,7 +62,7 @@ public class LootTablesGenerator extends LootTableProvider {
     }
 
     @Override
-    protected void validate(Map<ResourceLocation, LootTable> map, @NotNull ValidationContext validationtracker) {
+    protected void validate(@NotNull Map<ResourceLocation, LootTable> map, @NotNull ValidationContext validationtracker) {
         for (ResourceLocation resourcelocation : Sets.difference(ModLootTables.getLootTables(), map.keySet())) {
             validationtracker.reportProblem("Missing built-in table: " + resourcelocation);
         }
@@ -156,7 +156,7 @@ public class LootTablesGenerator extends LootTableProvider {
 
     private static class ModChestLootTables implements Consumer<BiConsumer<ResourceLocation, LootTable.Builder>> {
         @Override
-        public void accept(BiConsumer<ResourceLocation, LootTable.Builder> consumer) {
+        public void accept(@NotNull BiConsumer<ResourceLocation, LootTable.Builder> consumer) {
             consumer.accept(ModLootTables.chest_hunter_trainer, LootTable.lootTable()
                     .withPool(LootPool.lootPool().name("main").setRolls(UniformGenerator.between(5, 9))
                             .add(LootItem.lootTableItem(Items.IRON_INGOT).setWeight(40))
@@ -327,7 +327,7 @@ public class LootTablesGenerator extends LootTableProvider {
 
     private static class InjectLootTables implements Consumer<BiConsumer<ResourceLocation, LootTable.Builder>> {
         @Override
-        public void accept(BiConsumer<ResourceLocation, LootTable.Builder> consumer) {
+        public void accept(@NotNull BiConsumer<ResourceLocation, LootTable.Builder> consumer) {
             consumer.accept(ModLootTables.abandoned_mineshaft, LootTable.lootTable()
                     .withPool(LootPool.lootPool().name("main").setRolls(UniformGenerator.between(0f, 4f))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_FANG.get()).setWeight(20))

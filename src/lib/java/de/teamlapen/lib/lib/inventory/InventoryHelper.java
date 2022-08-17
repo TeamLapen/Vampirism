@@ -34,7 +34,7 @@ public class InventoryHelper {
      * @param compareFunction Used to determine if the first items can be used in place of the second one (most simple -> equals)
      * @return Null if all tileInventory are present otherwise an itemstack which represents the missing tileInventory
      */
-    public static ItemStack checkItems(Container inventory, Item[] items, int[] amounts, BiPredicate<Item, Item> compareFunction) {
+    public static @NotNull ItemStack checkItems(@NotNull Container inventory, Item @NotNull [] items, int @NotNull [] amounts, @NotNull BiPredicate<Item, Item> compareFunction) {
         if (inventory.getContainerSize() < amounts.length || items.length != amounts.length) {
             throw new IllegalArgumentException("There has to be one itemstack and amount value for each item");
         }
@@ -48,7 +48,7 @@ public class InventoryHelper {
         return ItemStack.EMPTY;
     }
 
-    public static ItemStack checkItems(Container inventory, Item[] items, int[] amounts) {
+    public static ItemStack checkItems(@NotNull Container inventory, Item @NotNull [] items, int @NotNull [] amounts) {
         return checkItems(inventory, items, amounts, Object::equals);
     }
 
@@ -57,7 +57,7 @@ public class InventoryHelper {
      *
      * @param amounts Has to have the same size as the inventory
      */
-    public static void removeItems(Container inventory, int[] amounts) {
+    public static void removeItems(@NotNull Container inventory, int @NotNull [] amounts) {
         if (inventory.getContainerSize() < amounts.length) {
             throw new IllegalArgumentException("There has to be one itemstack value for each amount");
         }
@@ -67,7 +67,7 @@ public class InventoryHelper {
     }
 
     @NotNull
-    public static Optional<Pair<IItemHandler, BlockEntity>> tryGetItemHandler(BlockGetter world, BlockPos pos, @Nullable Direction side) {
+    public static Optional<Pair<IItemHandler, BlockEntity>> tryGetItemHandler(@NotNull BlockGetter world, @NotNull BlockPos pos, @Nullable Direction side) {
         BlockState state = world.getBlockState(pos);
         if (state.hasBlockEntity()) {
             BlockEntity tile = world.getBlockEntity(pos);
@@ -82,7 +82,7 @@ public class InventoryHelper {
     /**
      * Write the given inventory as new ListNBT "inventory" to given tag
      */
-    public static void writeInventoryToTag(CompoundTag tag, SimpleContainer inventory) {
+    public static void writeInventoryToTag(@NotNull CompoundTag tag, @NotNull SimpleContainer inventory) {
         ListTag listTag = new ListTag();
 
         for (int i = 0; i < inventory.getContainerSize(); ++i) {
@@ -97,7 +97,7 @@ public class InventoryHelper {
     /**
      * Write the given inventory from ListNBT "inventory" in the given tag
      */
-    public static void readInventoryFromTag(CompoundTag tag, SimpleContainer inventory) {
+    public static void readInventoryFromTag(@NotNull CompoundTag tag, @NotNull SimpleContainer inventory) {
         ListTag list = tag.getList("inventory", 10);
 
         for (int i = 0; i < list.size(); ++i) {
@@ -109,7 +109,7 @@ public class InventoryHelper {
 
     }
 
-    public static boolean canMergeStacks(ItemStack stack1, ItemStack stack2, int invLimit) {
+    public static boolean canMergeStacks(@NotNull ItemStack stack1, @NotNull ItemStack stack2, int invLimit) {
         return !stack1.isEmpty() && ItemStackUtil.stackEqualExact(stack1, stack2) && stack1.isStackable() && stack1.getCount() < stack1.getMaxStackSize() && stack1.getCount() < invLimit;
     }
 
@@ -118,7 +118,7 @@ public class InventoryHelper {
      *
      * @param addStack is Modified to remove the added items
      */
-    public static void addStackToSlotWithoutCheck(Container inv, int slot, ItemStack addStack) {
+    public static void addStackToSlotWithoutCheck(@NotNull Container inv, int slot, @NotNull ItemStack addStack) {
 
         int newCount = addStack.getCount();
         ItemStack existingStack = inv.getItem(slot);
@@ -150,11 +150,11 @@ public class InventoryHelper {
      * @param invLimit The maximum item count per slot in the inventory
      * @return the slot id or -1 if none found
      */
-    public static int getFirstSuitableSlotToAdd(NonNullList<ItemStack> inventory, ItemStack stack, int invLimit) {
+    public static int getFirstSuitableSlotToAdd(@NotNull NonNullList<ItemStack> inventory, @NotNull ItemStack stack, int invLimit) {
         return getFirstSuitableSlotToAdd(inventory, inventory.size(), stack, invLimit);
     }
 
-    public static int getFirstSuitableSlotToAdd(NonNullList<ItemStack> inventory, int inventorySize, ItemStack stack, int invLimit) {
+    public static int getFirstSuitableSlotToAdd(@NotNull NonNullList<ItemStack> inventory, int inventorySize, @NotNull ItemStack stack, int invLimit) {
         assert inventory.size() >= inventorySize;
         if (!stack.isDamaged() && stack.isStackable()) {
             for (int i = 0; i < inventorySize; ++i) {
@@ -172,7 +172,7 @@ public class InventoryHelper {
     }
 
 
-    public static boolean removeItemFromInventory(Container inventory, ItemStack item) {
+    public static boolean removeItemFromInventory(@NotNull Container inventory, @NotNull ItemStack item) {
         int i = item.getCount();
 
         for (int j = 0; j < inventory.getContainerSize(); ++j) {
@@ -192,7 +192,7 @@ public class InventoryHelper {
         return i <= 0;
     }
 
-    public static ItemStack getFirst(Container inventory, Item set) {
+    public static @Nullable ItemStack getFirst(@NotNull Container inventory, Item set) {
         for (int i = 0; i < inventory.getContainerSize(); ++i) {
             ItemStack itemstack = inventory.getItem(i);
             if (set == itemstack.getItem() && itemstack.getCount() > 0) {

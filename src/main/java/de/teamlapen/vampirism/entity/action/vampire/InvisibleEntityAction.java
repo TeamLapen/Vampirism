@@ -9,21 +9,22 @@ import de.teamlapen.vampirism.core.ModParticles;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 public class InvisibleEntityAction<T extends PathfinderMob & IEntityActionUser> extends VampireEntityAction<T> implements ILastingAction<T> {
 
-    public InvisibleEntityAction(EntityActionTier tier, EntityClassType... param) {
+    public InvisibleEntityAction(@NotNull EntityActionTier tier, EntityClassType... param) {
         super(tier, param);
     }
 
     @Override
-    public void activate(T entity) {
+    public void activate(@NotNull T entity) {
         ModParticles.spawnParticlesServer(entity.getCommandSenderWorld(), ParticleTypes.EXPLOSION, entity.getX(), entity.getY(), entity.getZ(), 60, 1, 1, 1, 0);
 
     }
 
     @Override
-    public void deactivate(T entity) {
+    public void deactivate(@NotNull T entity) {
         entity.getRepresentingEntity().setInvisible(false);
 
     }
@@ -39,7 +40,7 @@ public class InvisibleEntityAction<T extends PathfinderMob & IEntityActionUser> 
     }
 
     @Override
-    public int getWeight(PathfinderMob entity) {
+    public int getWeight(@NotNull PathfinderMob entity) {
         if (entity.getTarget() == null) return 0;
         double distanceToTarget = new Vec3(entity.getX(), entity.getY(), entity.getZ()).subtract(entity.getTarget().getX(), entity.getTarget().getY(), entity.getTarget().getZ()).length();
         if (distanceToTarget > 4) {
@@ -50,14 +51,14 @@ public class InvisibleEntityAction<T extends PathfinderMob & IEntityActionUser> 
     }
 
     @Override
-    public void onUpdate(T entity, int duration) {
+    public void onUpdate(@NotNull T entity, int duration) {
         if (!entity.getRepresentingEntity().isInvisible()) {
             entity.getRepresentingEntity().setInvisible(true);
         }
     }
 
     @Override
-    public void updatePreAction(T entity, int duration) {
+    public void updatePreAction(@NotNull T entity, int duration) {
         if (duration % 5 == 0) {
             ModParticles.spawnParticlesServer(entity.getCommandSenderWorld(), ParticleTypes.EXPLOSION, entity.getX(), entity.getY(), entity.getZ(), 10, 1, 1, 1, 0);
         }

@@ -37,7 +37,7 @@ public class VampireSkills {
     public static final RegistryObject<ISkill<IVampirePlayer>> ADVANCED_BITER = SKILLS.register("advanced_biter", () -> new VampirismSkill.SimpleVampireSkill(false).setToggleActions(player -> ((VampirePlayer) player).getSpecialAttributes().advanced_biter = true, player -> ((VampirePlayer) player).getSpecialAttributes().advanced_biter = false).setHasDefaultDescription());
     public static final RegistryObject<ISkill<IVampirePlayer>> FLEDGLING = SKILLS.register("fledgling", () -> new VampirismSkill.SimpleVampireSkill(true) {
         @Override
-        protected void getActions(Collection<IAction<IVampirePlayer>> list) {
+        protected void getActions(@NotNull Collection<IAction<IVampirePlayer>> list) {
             list.add(VampireActions.BAT.get());
             list.add(VampireActions.INFECT.get());
         }
@@ -100,7 +100,7 @@ public class VampireSkills {
         SKILLS.register(SkillType.LORD.createIdForFaction(VReference.VAMPIRE_FACTION.getID()).getPath(), () -> new VampirismSkill.SimpleVampireSkill(false));
     }
 
-    public static void fixMappings(MissingMappingsEvent event) {
+    public static void fixMappings(@NotNull MissingMappingsEvent event) {
         event.getAllMappings(VampirismRegistries.SKILLS_ID).forEach(missingMapping -> {
             switch (missingMapping.getKey().toString()) {
                 case "vampirism:creeper_avoided", "vampirism:enhanced_crossbow", "vampirism:vampire_forest_fog" -> missingMapping.ignore();

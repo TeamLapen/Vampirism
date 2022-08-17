@@ -28,6 +28,7 @@ import net.minecraftforge.network.NetworkEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @OnlyIn(Dist.CLIENT)
 public class ClientProxy extends CommonProxy {
@@ -51,29 +52,29 @@ public class ClientProxy extends CommonProxy {
 
     @NotNull
     @Override
-    public ISoundReference createMasterSoundReference(SoundEvent event, float volume, float pinch) {
+    public ISoundReference createMasterSoundReference(@NotNull SoundEvent event, float volume, float pinch) {
         return new SoundReference(SimpleSoundInstance.forUI(event, volume, pinch));
     }
 
     @NotNull
     @Override
-    public ISoundReference createSoundReference(SoundEvent event, SoundSource category, BlockPos pos, float volume, float pinch) {
+    public ISoundReference createSoundReference(@NotNull SoundEvent event, @NotNull SoundSource category, @NotNull BlockPos pos, float volume, float pinch) {
         return new SoundReference(new SimpleSoundInstance(event, category, volume, pinch, RandomSource.create(), pos));
     }
 
     @NotNull
     @Override
-    public ISoundReference createSoundReference(SoundEvent event, SoundSource category, double x, double y, double z, float volume, float pinch) {
+    public ISoundReference createSoundReference(@NotNull SoundEvent event, @NotNull SoundSource category, double x, double y, double z, float volume, float pinch) {
         return new SoundReference(new SimpleSoundInstance(event, category, volume, pinch, RandomSource.create(), (float) x, (float) y, (float) z));
     }
 
     @Override
-    public String getActiveLanguage() {
+    public @NotNull String getActiveLanguage() {
         return Minecraft.getInstance().getLanguageManager().getSelected().toString();
     }
 
     @Override
-    public Player getPlayerEntity(NetworkEvent.Context ctx) {
+    public @Nullable Player getPlayerEntity(NetworkEvent.@NotNull Context ctx) {
         //Need to double-check the side for some reason
         return (EffectiveSide.get() == LogicalSide.CLIENT ? Minecraft.getInstance().player : super.getPlayerEntity(ctx));
     }
@@ -92,7 +93,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void handleUpdateEntityPacket(UpdateEntityPacket msg) {
+    public void handleUpdateEntityPacket(@NotNull UpdateEntityPacket msg) {
         Player player = Minecraft.getInstance().player;
         if (player == null) {
             LOGGER.error("Cannot handle update package because sending player entity is null. Message: {}", msg);

@@ -1,5 +1,8 @@
 package de.teamlapen.lib.util;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Arrays;
 
 /**
@@ -19,7 +22,7 @@ public class Color {
 
 
     private final int value;
-    private final float[] frgbvalue;
+    private final float @NotNull [] frgbvalue;
 
     public Color(int red, int green, int blue, int alpha) {
         this(getRgb(red, green, blue, alpha), true);
@@ -109,7 +112,7 @@ public class Color {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 

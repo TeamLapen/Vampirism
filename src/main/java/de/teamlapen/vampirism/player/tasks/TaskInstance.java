@@ -39,7 +39,7 @@ public class TaskInstance implements ITaskInstance {
         return new TaskInstance(id, task, stats, accepted, taskTimer, insId, reward, taskDuration);
     }
 
-    public static TaskInstance decode(FriendlyByteBuf buffer) {
+    public static @NotNull TaskInstance decode(@NotNull FriendlyByteBuf buffer) {
         UUID id = buffer.readUUID();
         Task task = RegUtil.getTask(buffer.readResourceLocation());
         UUID insId = buffer.readUUID();
@@ -102,7 +102,7 @@ public class TaskInstance implements ITaskInstance {
         this.completed = true;
     }
 
-    public void encode(FriendlyByteBuf buffer) {
+    public void encode(@NotNull FriendlyByteBuf buffer) {
         buffer.writeUUID(this.taskGiver);
         buffer.writeResourceLocation(RegUtil.id(this.task));
         buffer.writeUUID(this.instanceId);
@@ -119,7 +119,7 @@ public class TaskInstance implements ITaskInstance {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TaskInstance instance = (TaskInstance) o;
@@ -148,7 +148,7 @@ public class TaskInstance implements ITaskInstance {
     }
 
     @Override
-    public UUID getTaskBoard() {
+    public @NotNull UUID getTaskBoard() {
         return this.taskGiver;
     }
 
@@ -182,7 +182,7 @@ public class TaskInstance implements ITaskInstance {
         this.accepted = true;
     }
 
-    public CompoundTag writeNBT(@NotNull CompoundTag nbt) {
+    public @NotNull CompoundTag writeNBT(@NotNull CompoundTag nbt) {
         nbt.putUUID("id", this.taskGiver);
         nbt.putString("task", RegUtil.id(this.task).toString());
         nbt.putUUID("insId", this.instanceId);

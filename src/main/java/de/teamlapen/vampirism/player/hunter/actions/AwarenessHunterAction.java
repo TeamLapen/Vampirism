@@ -11,6 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.NotNull;
 
 public class AwarenessHunterAction extends DefaultHunterAction implements ILastingAction<IHunterPlayer> {
 
@@ -21,7 +22,7 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
     }
 
     @Override
-    public boolean canBeUsedBy(IHunterPlayer player) {
+    public boolean canBeUsedBy(@NotNull IHunterPlayer player) {
         return !player.getActionHandler().isActionActive(HunterActions.DISGUISE_HUNTER.get());
     }
 
@@ -41,22 +42,22 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
     }
 
     @Override
-    public void onActivatedClient(IHunterPlayer player) {
+    public void onActivatedClient(@NotNull IHunterPlayer player) {
         onUpdate(player);
     }
 
     @Override
-    public void onDeactivated(IHunterPlayer player) {
+    public void onDeactivated(@NotNull IHunterPlayer player) {
         ((HunterPlayer) player).getSpecialAttributes().nearbyVampire(0);
     }
 
     @Override
-    public void onReActivated(IHunterPlayer player) {
+    public void onReActivated(@NotNull IHunterPlayer player) {
         onUpdate(player);
     }
 
     @Override
-    public boolean onUpdate(IHunterPlayer player) {
+    public boolean onUpdate(@NotNull IHunterPlayer player) {
         if (player.getRepresentingEntity().getCommandSenderWorld().isClientSide() && player.getRepresentingEntity().tickCount % 8 == 0) {
             double dist = nearbyVampire(player);
             double p = 0;
@@ -73,7 +74,7 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
         return false;
     }
 
-    private double nearbyVampire(IHunterPlayer player) {
+    private double nearbyVampire(@NotNull IHunterPlayer player) {
         int r = VampirismConfig.BALANCE.haAwarenessRadius.get();
         LivingEntity closestVampire = player.getRepresentingEntity().getCommandSenderWorld().getNearestEntity(LivingEntity.class, vampirePredicate, null, player.getRepresentingEntity().getX(), player.getRepresentingEntity().getY(), player.getRepresentingEntity().getZ(), new AABB(player.getRepresentingEntity().getX() - r, player.getRepresentingEntity().getY()
                 - r + 1, player.getRepresentingEntity().getZ()

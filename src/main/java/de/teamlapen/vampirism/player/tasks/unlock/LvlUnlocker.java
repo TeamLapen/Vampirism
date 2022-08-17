@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import org.jetbrains.annotations.NotNull;
 
 public class LvlUnlocker implements TaskUnlocker {
 
@@ -23,7 +24,7 @@ public class LvlUnlocker implements TaskUnlocker {
     }
 
     @Override
-    public Component getDescription() {
+    public @NotNull Component getDescription() {
         MutableComponent t = Component.translatable("text.vampirism.level_min", reqLevel);
         if (maxLevel > 0) {
             t.append(" ").append(Component.translatable("text.vampirism.level_max", maxLevel));
@@ -32,7 +33,7 @@ public class LvlUnlocker implements TaskUnlocker {
     }
 
     @Override
-    public boolean isUnlocked(IFactionPlayer<?> playerEntity) {
+    public boolean isUnlocked(@NotNull IFactionPlayer<?> playerEntity) {
         return playerEntity.getLevel() >= reqLevel && (maxLevel <= 0 || playerEntity.getLevel() <= maxLevel);
     }
 }

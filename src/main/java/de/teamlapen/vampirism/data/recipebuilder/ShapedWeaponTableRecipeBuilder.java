@@ -28,19 +28,19 @@ import java.util.function.Consumer;
 
 public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
 
-    public static ShapedWeaponTableRecipeBuilder shapedWeaponTable(@NotNull ItemLike item) {
+    public static @NotNull ShapedWeaponTableRecipeBuilder shapedWeaponTable(@NotNull ItemLike item) {
         return new ShapedWeaponTableRecipeBuilder(item, 1, null);
     }
 
-    public static ShapedWeaponTableRecipeBuilder shapedWeaponTable(@NotNull ItemLike item, int count) {
+    public static @NotNull ShapedWeaponTableRecipeBuilder shapedWeaponTable(@NotNull ItemLike item, int count) {
         return new ShapedWeaponTableRecipeBuilder(item, count, null);
     }
 
-    public static ShapedWeaponTableRecipeBuilder shapedWeaponTable(@NotNull ItemLike item, int count,@NotNull JsonObject nbt) {
+    public static @NotNull ShapedWeaponTableRecipeBuilder shapedWeaponTable(@NotNull ItemLike item, int count, @NotNull JsonObject nbt) {
         return new ShapedWeaponTableRecipeBuilder(item, count, nbt);
     }
 
-    private final JsonObject extraNbt;
+    private final @Nullable JsonObject extraNbt;
     private int lava = 1;
     private ISkill<?>[] skills;
     private int level = 1;
@@ -80,12 +80,12 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
         return (ShapedWeaponTableRecipeBuilder) super.pattern(patternIn);
     }
 
-    public ShapedWeaponTableRecipeBuilder lava(int amount) {
+    public @NotNull ShapedWeaponTableRecipeBuilder lava(int amount) {
         this.lava = amount;
         return this;
     }
 
-    public ShapedWeaponTableRecipeBuilder level(int level) {
+    public @NotNull ShapedWeaponTableRecipeBuilder level(int level) {
         this.level = level;
         return this;
     }
@@ -109,7 +109,7 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
         return (ShapedWeaponTableRecipeBuilder) super.unlockedBy(name, criterionIn);
     }
 
-    public ShapedWeaponTableRecipeBuilder skills(@NotNull ISkill<?>... skills) {
+    public @NotNull ShapedWeaponTableRecipeBuilder skills(@NotNull ISkill<?>... skills) {
         this.skills = skills;
         return this;
     }
@@ -118,7 +118,7 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
         private final int lava;
         private final ISkill<?>[] skills;
         private final int level;
-        private final JsonObject extraNbt;
+        private final @NotNull JsonObject extraNbt;
 
         public Result(@NotNull ResourceLocation id,@NotNull Item item, int count, @NotNull String group,@NotNull List<String> pattern,@NotNull Map<Character, Ingredient> ingredients,@NotNull Advancement.Builder advancementBuilder,@NotNull ResourceLocation advancementId, int lava,@NotNull ISkill<?>[] skills, int level,@NotNull JsonObject extraNbt) {
             super(id, item, count, group, pattern, ingredients, advancementBuilder, advancementId);

@@ -24,7 +24,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -60,7 +59,7 @@ public class AlchemyTableBlock extends HorizontalContainerBlock {
 
     @NotNull
     @Override
-    public InteractionResult use(@NotNull BlockState state, Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult rayTrace) {
+    public InteractionResult use(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult rayTrace) {
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
@@ -75,7 +74,7 @@ public class AlchemyTableBlock extends HorizontalContainerBlock {
     }
 
     @Override
-    public void setPlacedBy(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
+    public void setPlacedBy(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state, @Nullable LivingEntity entity, @NotNull ItemStack stack) {
         if (stack.hasCustomHoverName()) {
             BlockEntity tileentity = level.getBlockEntity(pos);
             if (tileentity instanceof AlchemyTableBlockEntity) {
@@ -85,7 +84,7 @@ public class AlchemyTableBlock extends HorizontalContainerBlock {
     }
 
     @Override
-    public void onRemove(BlockState state, @NotNull Level level, @NotNull BlockPos pos, BlockState state1, boolean p_196243_5_) {
+    public void onRemove(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state1, boolean p_196243_5_) {
         if (!state.is(state1.getBlock())) {
             BlockEntity tileEntity = level.getBlockEntity(pos);
             if (tileEntity instanceof AlchemyTableBlockEntity){
@@ -96,12 +95,12 @@ public class AlchemyTableBlock extends HorizontalContainerBlock {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(HAS_BOTTLE_INPUT_0).add(HAS_BOTTLE_INPUT_1).add(HAS_BOTTLE_OUTPUT_0).add(HAS_BOTTLE_OUTPUT_1);
     }
 
-    private static VoxelShape makeShape() {
+    private static @NotNull VoxelShape makeShape() {
         VoxelShape shape = Shapes.empty();
         shape = Shapes.join(shape, Shapes.box(0, 0.625, 0.3125, 1, 0.6875, 0.6875), BooleanOp.OR);
         shape = Shapes.join(shape, Shapes.box(0.0625, 0.625, 0.25, 0.9375, 0.6875, 0.3125), BooleanOp.OR);

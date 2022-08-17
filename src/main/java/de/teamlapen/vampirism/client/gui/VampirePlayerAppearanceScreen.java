@@ -21,7 +21,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.widget.ExtendedButton;
 import org.apache.commons.lang3.tuple.Pair;
-
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @OnlyIn(Dist.CLIENT)
@@ -88,7 +88,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
     }
 
     @Override
-    protected void renderGuiBackground(PoseStack mStack) {
+    protected void renderGuiBackground(@NotNull PoseStack mStack) {
         RenderSystem.setShaderColor(color[0], color[1], color[2], 1f);
         super.renderGuiBackground(mStack);
         RenderSystem.setShaderColor(1, 1, 1, 1);

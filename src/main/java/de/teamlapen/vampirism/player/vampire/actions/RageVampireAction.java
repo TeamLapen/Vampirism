@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class RageVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
@@ -15,7 +16,7 @@ public class RageVampireAction extends DefaultVampireAction implements ILastingA
     }
 
     @Override
-    public boolean activate(IVampirePlayer vampire, ActivationContext context) {
+    public boolean activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
         int duration = getDuration(vampire);
         addEffectInstance(vampire, new MobEffectInstance(MobEffects.MOVEMENT_SPEED, duration, 2, false, false));
         addEffectInstance(vampire, new MobEffectInstance(MobEffects.DAMAGE_BOOST, duration, 0, false, false));
@@ -25,7 +26,7 @@ public class RageVampireAction extends DefaultVampireAction implements ILastingA
     }
 
     @Override
-    public boolean canBeUsedBy(IVampirePlayer vampire) {
+    public boolean canBeUsedBy(@NotNull IVampirePlayer vampire) {
         return !vampire.getActionHandler().isActionActive(VampireActions.BAT.get());
     }
 
@@ -35,7 +36,7 @@ public class RageVampireAction extends DefaultVampireAction implements ILastingA
     }
 
     @Override
-    public int getDuration(IVampirePlayer player) {
+    public int getDuration(@NotNull IVampirePlayer player) {
         return 20 * (VampirismConfig.BALANCE.vaRageMinDuration.get() + VampirismConfig.BALANCE.vaRageDurationIncrease.get() * player.getLevel());
     }
 
@@ -50,7 +51,7 @@ public class RageVampireAction extends DefaultVampireAction implements ILastingA
     }
 
     @Override
-    public void onDeactivated(IVampirePlayer vampire) {
+    public void onDeactivated(@NotNull IVampirePlayer vampire) {
         removePotionEffect(vampire, MobEffects.MOVEMENT_SPEED);
         removePotionEffect(vampire, MobEffects.DAMAGE_BOOST);
         removePotionEffect(vampire, MobEffects.DIG_SPEED);

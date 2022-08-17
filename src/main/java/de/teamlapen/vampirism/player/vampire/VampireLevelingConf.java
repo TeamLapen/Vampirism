@@ -29,7 +29,7 @@ public class VampireLevelingConf {
     /**
      * Maps <target level> to requirements
      */
-    private final Map<Integer, AltarInfusionRequirements> altarInfusionRequirementsHashMap;
+    private final @NotNull Map<Integer, AltarInfusionRequirements> altarInfusionRequirementsHashMap;
 
     private VampireLevelingConf() {
         INSPIRATION_MIN_LEVEL = 2;

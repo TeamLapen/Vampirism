@@ -34,13 +34,13 @@ import java.util.UUID;
  */
 public abstract class VampirismHunterArmor extends ArmorItem implements IFactionExclusiveItem {
     protected static final UUID[] VAMPIRISM_ARMOR_MODIFIER = new UUID[]{UUID.fromString("f0b9a417-0cec-4629-8623-053cd0feec3c"), UUID.fromString("e54474a9-62a0-48ee-baaf-7efddca3d711"), UUID.fromString("ac0c33f4-ebbf-44fe-9be3-a729f7633329"), UUID.fromString("8839e157-d576-4cff-bf34-0a788131fe0f")};
-    private final Multimap<Attribute, AttributeModifier> modifierMultimap;
+    private final @NotNull Multimap<Attribute, AttributeModifier> modifierMultimap;
 
-    public VampirismHunterArmor(ArmorMaterial materialIn, EquipmentSlot equipmentSlotIn, Item.Properties props) {
+    public VampirismHunterArmor(@NotNull ArmorMaterial materialIn, @NotNull EquipmentSlot equipmentSlotIn, Item.@NotNull Properties props) {
         this(materialIn, equipmentSlotIn, props, ImmutableMap.of());
     }
 
-    public VampirismHunterArmor(ArmorMaterial materialIn, EquipmentSlot equipmentSlotIn, Item.Properties props, Map<Attribute, Tuple<Double, AttributeModifier.Operation>> modifiers) {
+    public VampirismHunterArmor(@NotNull ArmorMaterial materialIn, @NotNull EquipmentSlot equipmentSlotIn, Item.@NotNull Properties props, @NotNull Map<Attribute, Tuple<Double, AttributeModifier.Operation>> modifiers) {
         super(materialIn, equipmentSlotIn, props);
 
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
@@ -82,7 +82,7 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
     }
 
     @Override
-    public void onArmorTick(ItemStack stack, Level world, Player player) {
+    public void onArmorTick(ItemStack stack, Level world, @NotNull Player player) {
         if (player.tickCount % 16 == 8) {
             IFaction<?> f = VampirismPlayerAttributes.get(player).faction;
             if (f != null && !VReference.HUNTER_FACTION.equals(f)) {
@@ -91,7 +91,7 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
         }
     }
 
-    protected String getTextureLocation(String name, EquipmentSlot slot, String type) {
+    protected String getTextureLocation(String name, EquipmentSlot slot, @Nullable String type) {
         return String.format(REFERENCE.MODID + ":textures/models/armor/%s_layer_%d%s.png", name, slot == EquipmentSlot.LEGS ? 2 : 1, type == null ? "" : "_overlay");
     }
 

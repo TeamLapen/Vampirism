@@ -45,15 +45,15 @@ import java.util.Arrays;
  */
 public abstract class VampirismEntity extends PathfinderMob implements IEntityWithHome, IVampirismEntity {
 
-    public static boolean spawnPredicateVampireFog(LevelAccessor world, BlockPos blockPos) {
+    public static boolean spawnPredicateVampireFog(@NotNull LevelAccessor world, @NotNull BlockPos blockPos) {
         return world.getBiome(blockPos).is(ModTags.Biomes.IS_VAMPIRE_BIOME) || (world instanceof Level && VampirismWorld.getOpt((Level) world).map(vh -> vh.isInsideArtificialVampireFogArea(blockPos)).orElse(false));
     }
 
-    public static AttributeSupplier.Builder getAttributeBuilder() {
+    public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
         return PathfinderMob.createLivingAttributes().add(Attributes.ATTACK_DAMAGE).add(Attributes.FOLLOW_RANGE, 16).add(Attributes.ATTACK_KNOCKBACK);
     }
 
-    private final Goal moveTowardsRestriction;
+    private final @NotNull Goal moveTowardsRestriction;
     protected boolean hasArms = true;
     protected boolean peaceful = false;
     /**
@@ -70,7 +70,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
     private int randomTickDivider;
     private boolean doImobConversion = false;
 
-    public VampirismEntity(EntityType<? extends VampirismEntity> type, Level world) {
+    public VampirismEntity(@NotNull EntityType<? extends VampirismEntity> type, @NotNull Level world) {
         super(type, world);
         moveTowardsRestriction = new MoveTowardsRestrictionGoal(this, 1.0F);
     }
@@ -115,7 +115,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
     }
 
     @Override
-    public BlockPos getHomePosition() {
+    public @NotNull BlockPos getHomePosition() {
         return getRestrictCenter();
     }
 
@@ -162,7 +162,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
     }
 
     @Override
-    public void setHomeArea(BlockPos pos, int r) {
+    public void setHomeArea(@NotNull BlockPos pos, int r) {
         this.setHome(new AABB(pos.offset(-r, -r, -r), pos.offset(r, r, r)));
     }
 
@@ -226,7 +226,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
      * @param iMob Whether we want the iMob or non iMob variant
      * @return Must be LivingEntity type
      */
-    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
+    protected @NotNull EntityType<?> getIMobTypeOpt(boolean iMob) {
         return this.getType();
     }
 
@@ -242,7 +242,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
         return SoundEvents.HOSTILE_SPLASH;
     }
 
-    protected boolean isLowLightLevel(LevelAccessor iWorld) {
+    protected boolean isLowLightLevel(@NotNull LevelAccessor iWorld) {
         //copy of Monster#isDarkEnoughToSSpawn, but not requiring server level
         BlockPos blockpos = new BlockPos(this.getX(), this.getBoundingBox().minY, this.getZ());
         if (iWorld.getBrightness(LightLayer.SKY, blockpos) > this.random.nextInt(32)) {

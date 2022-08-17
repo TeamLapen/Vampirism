@@ -32,12 +32,12 @@ public class FlyingBloodParticleData implements ParticleOptions {
 
     public static final ParticleOptions.Deserializer<FlyingBloodParticleData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
         @NotNull
-        public FlyingBloodParticleData fromCommand(@NotNull ParticleType<FlyingBloodParticleData> particleTypeIn, StringReader reader) throws CommandSyntaxException {
+        public FlyingBloodParticleData fromCommand(@NotNull ParticleType<FlyingBloodParticleData> particleTypeIn, @NotNull StringReader reader) throws CommandSyntaxException {
             return new FlyingBloodParticleData(particleTypeIn, reader.readInt(), reader.readBoolean(), reader.readDouble(), reader.readDouble(), reader.readDouble(), ResourceLocation.read(reader));
         }
 
         @NotNull
-        public FlyingBloodParticleData fromNetwork(@NotNull ParticleType<FlyingBloodParticleData> particleTypeIn, FriendlyByteBuf buffer) {
+        public FlyingBloodParticleData fromNetwork(@NotNull ParticleType<FlyingBloodParticleData> particleTypeIn, @NotNull FriendlyByteBuf buffer) {
             return new FlyingBloodParticleData(particleTypeIn, buffer.readVarInt(), buffer.readBoolean(), buffer.readDouble(), buffer.readDouble(), buffer.readDouble(), buffer.readResourceLocation());
         }
     };
@@ -69,7 +69,7 @@ public class FlyingBloodParticleData implements ParticleOptions {
     }
 
     @Override
-    public void writeToNetwork(FriendlyByteBuf buffer) {
+    public void writeToNetwork(@NotNull FriendlyByteBuf buffer) {
         buffer.writeVarInt(maxAge);
         buffer.writeBoolean(direct);
         buffer.writeDouble(targetX);

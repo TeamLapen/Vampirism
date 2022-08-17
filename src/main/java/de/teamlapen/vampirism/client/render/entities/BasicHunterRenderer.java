@@ -12,6 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
 
 
 /**
@@ -24,9 +25,9 @@ public class BasicHunterRenderer extends DualBipedRenderer<BasicHunterEntity, Ba
     private static final ResourceLocation textureCloak = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_cloak.png");
 
     private final Pair<ResourceLocation, Boolean> textureDefault = Pair.of(new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base1.png"), false);
-    private final Pair<ResourceLocation, Boolean>[] textures;
+    private final Pair<ResourceLocation, Boolean> @NotNull [] textures;
 
-    public BasicHunterRenderer(EntityRendererProvider.Context context) {
+    public BasicHunterRenderer(EntityRendererProvider.@NotNull Context context) {
         super(context, new BasicHunterModel<>(context.bakeLayer(ModEntitiesRender.HUNTER), false), new BasicHunterModel<>(context.bakeLayer(ModEntitiesRender.HUNTER_SLIM), true), 0.5F);
         this.addLayer(new HunterEquipmentLayer<>(this, context.getModelSet(), entity -> (entity.getEntityLevel() < 2 || entity.isCrossbowInMainhand()) ? HunterEquipmentModel.StakeType.ONLY : HunterEquipmentModel.StakeType.FULL, entity -> entity.getEntityLevel() == 0 ? HunterEquipmentModel.HatType.from(entity.getEntityTextureType() % 3) : HunterEquipmentModel.HatType.HAT1));
         this.addLayer(new CloakLayer<>(this, textureCloak, entity -> entity.getEntityLevel() > 0));
@@ -35,7 +36,7 @@ public class BasicHunterRenderer extends DualBipedRenderer<BasicHunterEntity, Ba
 
 
     @Override
-    protected Pair<ResourceLocation, Boolean> determineTextureAndModel(BasicHunterEntity entity) {
+    protected Pair<ResourceLocation, Boolean> determineTextureAndModel(@NotNull BasicHunterEntity entity) {
         int level = entity.getEntityLevel();
         if (level > 0) return textureDefault;
         return textures[entity.getEntityTextureType() % textures.length];

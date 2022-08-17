@@ -8,6 +8,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
 
@@ -83,7 +84,7 @@ public class AttackRangedDarkBloodGoal extends Goal {
     /**
      * Spawns the dark blood entity heading towards the target entity
      */
-    protected void attack(LivingEntity target) {
+    protected void attack(@NotNull LivingEntity target) {
         Vec3 vec3d = target.position().add(0, target.getBbHeight() * 0.6f, 0).subtract(entity.getEyePosition(1f)).normalize();
 
         DarkBloodProjectileEntity projectile = new DarkBloodProjectileEntity(entity.getCommandSenderWorld(), entity.getX() + vec3d.x * 0.3f, entity.getY() + entity.getEyeHeight() * 0.9f, entity.getZ() + vec3d.z * 0.3f, vec3d.x, vec3d.y, vec3d.z);

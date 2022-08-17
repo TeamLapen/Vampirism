@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 public class MinionTaskTrigger extends SimpleCriterionTrigger<MinionTaskTrigger.Instance> {
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "minion_tasks");
 
-    public static Instance tasks(IMinionTask<?, ?> task) {
+    public static @NotNull Instance tasks(@NotNull IMinionTask<?, ?> task) {
         return new Instance(task);
     }
 
@@ -22,7 +22,7 @@ public class MinionTaskTrigger extends SimpleCriterionTrigger<MinionTaskTrigger.
         return ID;
     }
 
-    public void trigger(ServerPlayer player, IMinionTask<?, ?> task) {
+    public void trigger(@NotNull ServerPlayer player, IMinionTask<?, ?> task) {
         this.trigger(player, instance -> instance.test(task));
     }
 

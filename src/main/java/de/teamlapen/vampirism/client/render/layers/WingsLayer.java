@@ -23,7 +23,7 @@ import java.util.function.Predicate;
 
 public class WingsLayer<T extends LivingEntity, Q extends EntityModel<T>> extends RenderLayer<T, Q> {
 
-    private final WingModel<T> model;
+    private final @NotNull WingModel<T> model;
     private final Predicate<T> predicateRender;
     private final BiFunction<T, Q, ModelPart> bodyPartFunction;
     private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/wings.png");
@@ -32,7 +32,7 @@ public class WingsLayer<T extends LivingEntity, Q extends EntityModel<T>> extend
      * @param predicateRender  Decides if the layer is rendered
      * @param bodyPartFunction Should return the main body part. The returned ModelRenderer is used to adjust the wing rotation
      */
-    public WingsLayer(RenderLayerParent<T, Q> entityRendererIn, EntityModelSet modelSet, Predicate<T> predicateRender, BiFunction<T, Q, ModelPart> bodyPartFunction) {
+    public WingsLayer(@NotNull RenderLayerParent<T, Q> entityRendererIn, @NotNull EntityModelSet modelSet, Predicate<T> predicateRender, BiFunction<T, Q, ModelPart> bodyPartFunction) {
         super(entityRendererIn);
         this.model = new WingModel<>(modelSet.bakeLayer(ModEntitiesRender.WING));
         this.predicateRender = predicateRender;
@@ -41,7 +41,7 @@ public class WingsLayer<T extends LivingEntity, Q extends EntityModel<T>> extend
 
 
     @Override
-    public void render(@NotNull PoseStack stack, @NotNull MultiBufferSource buffer, int packedLight, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(@NotNull PoseStack stack, @NotNull MultiBufferSource buffer, int packedLight, @NotNull T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if (!entity.isInvisible() && predicateRender.test(entity)) {
             this.model.copyRotationFromBody(bodyPartFunction.apply(entity, this.getParentModel()));
             float s = 1f;

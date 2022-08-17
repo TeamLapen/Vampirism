@@ -18,8 +18,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
+
 import java.util.Collection;
 
 @OnlyIn(Dist.CLIENT)
@@ -30,7 +30,7 @@ public class TaskBoardScreen extends AbstractContainerScreen<TaskBoardContainer>
     private ScrollableListWidget<ITaskInstance> list;
 
 
-    public TaskBoardScreen(TaskBoardContainer container, Inventory playerInventory, Component containerName) {
+    public TaskBoardScreen(@NotNull TaskBoardContainer container, @NotNull Inventory playerInventory, @NotNull Component containerName) {
         super(container, playerInventory, containerName);
         this.imageWidth = 176;
         this.imageHeight = 181;
@@ -39,12 +39,12 @@ public class TaskBoardScreen extends AbstractContainerScreen<TaskBoardContainer>
     }
 
     @Override
-    public ItemRenderer getItemRenderer() {
+    public @NotNull ItemRenderer getItemRenderer() {
         return this.itemRenderer;
     }
 
     @Override
-    public TaskContainer getTaskContainer() {
+    public @NotNull TaskContainer getTaskContainer() {
         return this.menu;
     }
 
@@ -63,7 +63,7 @@ public class TaskBoardScreen extends AbstractContainerScreen<TaskBoardContainer>
         this.list.renderToolTip(matrixStack, mouseX, mouseY);
     }
 
-    public Collection<ITaskInstance> taskSupplier() {
+    public @NotNull Collection<ITaskInstance> taskSupplier() {
         return this.menu.getVisibleTasks();
     }
 

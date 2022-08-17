@@ -16,12 +16,12 @@ import org.jetbrains.annotations.NotNull;
 
 public class ApplicableOilRecipe extends CustomRecipe {
 
-    public ApplicableOilRecipe(ResourceLocation id) {
+    public ApplicableOilRecipe(@NotNull ResourceLocation id) {
         super(id);
     }
 
     @Override
-    public boolean matches(CraftingContainer inventory, @NotNull Level world) {
+    public boolean matches(@NotNull CraftingContainer inventory, @NotNull Level world) {
         IApplicableOil oil = null;
         ItemStack tool = null;
         for (int i = 0; i < inventory.getContainerSize(); i++) {

@@ -9,15 +9,16 @@ import de.teamlapen.vampirism.entity.DarkBloodProjectileEntity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 public class DarkProjectileEntityAction<T extends PathfinderMob & IEntityActionUser> extends VampireEntityAction<T> implements IInstantAction<T> {
 
-    public DarkProjectileEntityAction(EntityActionTier tier, EntityClassType... param) {
+    public DarkProjectileEntityAction(@NotNull EntityActionTier tier, EntityClassType... param) {
         super(tier, param);
     }
 
     @Override
-    public boolean activate(T entity) {
+    public boolean activate(@NotNull T entity) {
         LivingEntity shooter = entity.getRepresentingEntity();
 
         Vec3 vec3dd = entity.getTarget() != null ? new Vec3(entity.getTarget().getX() - entity.getX(), entity.getTarget().getY() - entity.getY(), entity.getTarget().getZ() - entity.getZ()) : Vec3.ZERO;
@@ -37,7 +38,7 @@ public class DarkProjectileEntityAction<T extends PathfinderMob & IEntityActionU
     }
 
     @Override
-    public int getWeight(PathfinderMob entity) {
+    public int getWeight(@NotNull PathfinderMob entity) {
         double distanceToTarget = new Vec3(entity.getX(), entity.getY(), entity.getZ()).subtract(entity.getTarget().getX(), entity.getTarget().getY(), entity.getTarget().getZ()).length();
         if (distanceToTarget > 20) {
             return 3;

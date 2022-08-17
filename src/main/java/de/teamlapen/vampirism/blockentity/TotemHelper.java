@@ -24,9 +24,9 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -59,7 +59,7 @@ public class TotemHelper {
      * @param totemPos position of the totem
      * @return false if no {@link PoiRecord} belongs to the totem
      */
-    public static boolean addTotem(ServerLevel world, Set<PoiRecord> pois, BlockPos totemPos) {
+    public static boolean addTotem(@NotNull ServerLevel world, @NotNull Set<PoiRecord> pois, @NotNull BlockPos totemPos) {
         BlockPos conflict = null;
         Map<BlockPos, BlockPos> totemPositions = TotemHelper.totemPositions.computeIfAbsent(world.dimension(), key -> new HashMap<>());
         for (PoiRecord poi : pois) {
@@ -98,7 +98,7 @@ public class TotemHelper {
      * @param totem       position of the totem
      * @param conflicting position of the conflicting totem
      */
-    private static void handleTotemConflict(Set<PoiRecord> pois, ServerLevel world, BlockPos totem, BlockPos conflicting) {
+    private static void handleTotemConflict(@NotNull Set<PoiRecord> pois, @NotNull ServerLevel world, @NotNull BlockPos totem, @NotNull BlockPos conflicting) {
 
         TotemBlockEntity totem1 = ((TotemBlockEntity) world.getBlockEntity(totem));
         TotemBlockEntity totem2 = ((TotemBlockEntity) world.getBlockEntity(conflicting));
@@ -138,7 +138,7 @@ public class TotemHelper {
      * @param pos         the position of the totem
      * @param removeTotem if the totem poi should be removed too
      */
-    public static void removeTotem(ResourceKey<Level> dimension, Collection<PoiRecord> pois, BlockPos pos, boolean removeTotem) {
+    public static void removeTotem(ResourceKey<Level> dimension, @NotNull Collection<PoiRecord> pois, BlockPos pos, boolean removeTotem) {
         Map<BlockPos, BlockPos> totemPositions = TotemHelper.totemPositions.computeIfAbsent(dimension, key -> new HashMap<>());
         pois.forEach(pointOfInterest -> totemPositions.remove(pointOfInterest.getPos(), pos));
         if (removeTotem) {
@@ -154,7 +154,7 @@ public class TotemHelper {
      * @return the registered totem position or {@code null} if no totem exists
      */
     @NotNull
-    public static Optional<BlockPos> getTotemPosition(ResourceKey<Level> dimension, Collection<PoiRecord> pois) {
+    public static Optional<BlockPos> getTotemPosition(ResourceKey<Level> dimension, @NotNull Collection<PoiRecord> pois) {
         Map<BlockPos, BlockPos> totemPositions = TotemHelper.totemPositions.computeIfAbsent(dimension, key -> new HashMap<>());
         for (PoiRecord pointOfInterest : pois) {
             if (totemPositions.containsKey(pointOfInterest.getPos())) {
@@ -179,7 +179,7 @@ public class TotemHelper {
     }
 
     @NotNull
-    public static Optional<BlockPos> getTotemPosNearPos(ServerLevel world, BlockPos pos) {
+    public static Optional<BlockPos> getTotemPosNearPos(@NotNull ServerLevel world, @NotNull BlockPos pos) {
         Collection<PoiRecord> points = world.getPoiManager().getInRange(p -> true, pos, 25, PoiManager.Occupancy.ANY).collect(Collectors.toList());
         if (!points.isEmpty()) {
             return getTotemPosition(world.dimension(), points);
@@ -188,7 +188,7 @@ public class TotemHelper {
     }
 
     @NotNull
-    public static Optional<TotemBlockEntity> getTotemNearPos(ServerLevel world, BlockPos posSource, boolean mustBeLoaded) {
+    public static Optional<TotemBlockEntity> getTotemNearPos(@NotNull ServerLevel world, @NotNull BlockPos posSource, boolean mustBeLoaded) {
         Optional<BlockPos> posOpt = getTotemPosNearPos(world, posSource);
         if (mustBeLoaded) {
             posOpt = posOpt.filter(world::isPositionEntityTicking);
@@ -210,7 +210,7 @@ public class TotemHelper {
      * @param player  the player that requests the faction
      * @return the feedback for the player
      */
-    public static Component forceFactionCommand(IFaction<?> faction, ServerPlayer player) {
+    public static @NotNull Component forceFactionCommand(@Nullable IFaction<?> faction, @NotNull ServerPlayer player) {
         Map<BlockPos, BlockPos> totemPositions = TotemHelper.totemPositions.computeIfAbsent(player.getCommandSenderWorld().dimension(), key -> new HashMap<>());
         List<PoiRecord> pointOfInterests = ((ServerLevel) player.getCommandSenderWorld()).getPoiManager().getInRange(point -> true, player.blockPosition(), 25, PoiManager.Occupancy.ANY).sorted(Comparator.comparingInt(point -> (int) (point.getPos()).distSqr(player.blockPosition()))).toList();
         if (pointOfInterests.stream().noneMatch(point -> totemPositions.containsKey(point.getPos()))) {
@@ -232,7 +232,7 @@ public class TotemHelper {
      * @param pos   position of the village totem to start searching
      * @return a set of all related {@link PoiRecord} points
      */
-    public static Set<PoiRecord> getVillagePointsOfInterest(ServerLevel world, BlockPos pos) {
+    public static @NotNull Set<PoiRecord> getVillagePointsOfInterest(@NotNull ServerLevel world, @NotNull BlockPos pos) {
         PoiManager manager = world.getPoiManager();
         Set<PoiRecord> finished = Sets.newHashSet();
         Set<PoiRecord> points = manager.getInRange(type -> !type.is(ModTags.PoiTypes.HAS_FACTION), pos, 50, PoiManager.Occupancy.ANY).collect(Collectors.toSet());
@@ -272,7 +272,7 @@ public class TotemHelper {
      * @param hasInteraction if the village is influenced by a faction
      * @return flag which requirements are met
      */
-    public static int isVillage(Map<Integer, Integer> stats, boolean hasInteraction) {
+    public static int isVillage(@NotNull Map<Integer, Integer> stats, boolean hasInteraction) {
         int status = 0;
         if (stats.get(1) >= MIN_HOMES) {
             status += 1;
@@ -308,7 +308,7 @@ public class TotemHelper {
      * @param hasInteraction   if the village is influenced by a faction
      * @return flag which requirements are met
      */
-    public static int isVillage(Set<PoiRecord> pointOfInterests, ServerLevel world, BlockPos totemPos, boolean hasInteraction) {
+    public static int isVillage(@NotNull Set<PoiRecord> pointOfInterests, @NotNull ServerLevel world, @NotNull BlockPos totemPos, boolean hasInteraction) {
         if (UtilLib.getStructureStartAt(world, totemPos, StructureTags.VILLAGE).isPresent()) {
             return 7;
         }
@@ -322,7 +322,7 @@ public class TotemHelper {
      * @param world            world of the point of interests
      * @return map containing village related data
      */
-    public static Map<Integer, Integer> getVillageStats(Set<PoiRecord> pointOfInterests, Level world) {
+    public static @NotNull Map<Integer, Integer> getVillageStats(@NotNull Set<PoiRecord> pointOfInterests, @NotNull Level world) {
         Map<ResourceKey<PoiType>, Long> poiTCounts = pointOfInterests.stream().map(PoiRecord::getPoiType).flatMap(a -> ForgeRegistries.POI_TYPES.getResourceKey(a.get()).stream()).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
         AABB area = getAABBAroundPOIs(pointOfInterests);
         return new HashMap<>() {{
@@ -343,7 +343,7 @@ public class TotemHelper {
         return pois.stream().map(poi -> new AABB(poi.getPos()).inflate(25)).reduce(AABB::minmax).orElse(null);
     }
 
-    public static void ringBell(Level world, @NotNull Player player) {
+    public static void ringBell(@NotNull Level world, @NotNull Player player) {
         if (!world.isClientSide) {
             Optional<TotemBlockEntity> tile = getTotemNearPos(((ServerLevel) world), player.blockPosition(), false);
             tile.ifPresent(s -> s.ringBell(player));

@@ -29,7 +29,7 @@ public class VampirismItemWeapon extends SwordItem {
     private String translation_key;
 
 
-    public VampirismItemWeapon(Tier material, int attackDamageIn, float attackSpeedIn, Properties builder) {
+    public VampirismItemWeapon(@NotNull Tier material, int attackDamageIn, float attackSpeedIn, @NotNull Properties builder) {
         super(material, attackDamageIn, attackSpeedIn, builder);
         this.attackDamage = attackDamageIn;
         this.attackSpeed = attackSpeedIn;
@@ -46,7 +46,7 @@ public class VampirismItemWeapon extends SwordItem {
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot equipmentSlot, ItemStack stack) {
+    public @NotNull Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot equipmentSlot, ItemStack stack) {
         Multimap<Attribute, AttributeModifier> multimap = HashMultimap.create();
         if (equipmentSlot == EquipmentSlot.MAINHAND) {
             multimap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", getAttackDamage(stack), AttributeModifier.Operation.ADDITION));

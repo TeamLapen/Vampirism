@@ -78,7 +78,7 @@ public class Trades {
         private final Price selling;
         private final int maxUses;
 
-        public ItemsForSouls(Price priceIn, ItemLike sellingItemIn, Price sellingIn) {
+        public ItemsForSouls(Price priceIn, @NotNull ItemLike sellingItemIn, Price sellingIn) {
             this(priceIn, new ItemStack[]{new ItemStack(sellingItemIn.asItem())}, sellingIn, 2, 8);
         }
 
@@ -86,7 +86,7 @@ public class Trades {
             this(priceIn, sellingItemIn, sellingIn, 2, 8);
         }
 
-        public ItemsForSouls(Price priceIn, ItemLike sellingItemIn, Price sellingIn, int xpIn, int maxUsesIn) {
+        public ItemsForSouls(Price priceIn, @NotNull ItemLike sellingItemIn, Price sellingIn, int xpIn, int maxUsesIn) {
             this.price = priceIn;
             this.sellingItem = new ItemStack[]{new ItemStack(sellingItemIn.asItem())};
             this.selling = sellingIn;
@@ -116,7 +116,7 @@ public class Trades {
         private final Price selling;
         private final int maxUses;
 
-        public ItemsForHeart(Price priceIn, ItemLike sellingItemIn, Price sellingIn) {
+        public ItemsForHeart(Price priceIn, @NotNull ItemLike sellingItemIn, Price sellingIn) {
             this(priceIn, new ItemStack[]{new ItemStack(sellingItemIn.asItem())}, sellingIn, 2, 8);
         }
 
@@ -124,7 +124,7 @@ public class Trades {
             this(priceIn, sellingItemIn, sellingIn, 2, 8);
         }
 
-        public ItemsForHeart(Price priceIn, ItemLike sellingItemIn, Price sellingIn, int xpIn, int maxUsesIn) {
+        public ItemsForHeart(Price priceIn, @NotNull ItemLike sellingItemIn, Price sellingIn, int xpIn, int maxUsesIn) {
             this.price = priceIn;
             this.sellingItem = new ItemStack[]{new ItemStack(sellingItemIn.asItem())};
             this.selling = sellingIn;
@@ -189,7 +189,7 @@ public class Trades {
         }
 
         @Nullable
-        public MerchantOffer getOffer(Entity pTrader, RandomSource pRand) {
+        public MerchantOffer getOffer(@NotNull Entity pTrader, RandomSource pRand) {
             if (!(pTrader.level instanceof ServerLevel serverlevel)) {
                 return null;
             } else {
@@ -221,7 +221,7 @@ public class Trades {
             this.min = minIn;
         }
 
-        int getPrice(RandomSource rand) {
+        int getPrice(@NotNull RandomSource rand) {
             if (min >= max) return min;
             else return min + rand.nextInt(max - min);
         }

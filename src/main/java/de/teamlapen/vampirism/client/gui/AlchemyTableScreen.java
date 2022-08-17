@@ -10,13 +10,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
+import org.jetbrains.annotations.NotNull;
 
 public class AlchemyTableScreen extends AbstractContainerScreen<AlchemyTableContainer> {
 
     private static final ResourceLocation BREWING_STAND_LOCATION = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/alchemy_table.png");
     private static final int[] BUBBLELENGTHS = new int[]{29, 24, 20, 16, 11, 6, 0};
 
-    public AlchemyTableScreen(AlchemyTableContainer p_i51105_1_, Inventory p_i51105_2_, Component p_i51105_3_) {
+    public AlchemyTableScreen(@NotNull AlchemyTableContainer p_i51105_1_, @NotNull Inventory p_i51105_2_, @NotNull Component p_i51105_3_) {
         super(p_i51105_1_, p_i51105_2_, p_i51105_3_);
         this.imageHeight = 181;
         this.inventoryLabelY = this.imageHeight - 94;

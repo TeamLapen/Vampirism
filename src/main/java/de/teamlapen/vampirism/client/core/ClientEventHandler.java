@@ -41,6 +41,7 @@ import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -55,7 +56,7 @@ public class ClientEventHandler {
 
 
     @SubscribeEvent
-    public static void onModelBakeEvent(BakingCompleted event) {
+    public static void onModelBakeEvent(@NotNull BakingCompleted event) {
         /*
          * Not really a clean solution but it works
          * Bake each model, then replace the fluid texture with impure blood, then bake it again.
@@ -126,7 +127,7 @@ public class ClientEventHandler {
     }
 
     @SubscribeEvent
-    public void onFovOffsetUpdate(ComputeFovModifierEvent event) {
+    public void onFovOffsetUpdate(@NotNull ComputeFovModifierEvent event) {
         if (VampirismConfig.CLIENT.disableFovChange.get() && Helper.isVampire(event.getPlayer())) {
             AttributeInstance speed = event.getPlayer().getAttribute(Attributes.MOVEMENT_SPEED);
             AttributeModifier vampirespeed = speed.getModifier(LevelAttributeModifier.getUUID(Attributes.MOVEMENT_SPEED));
@@ -138,7 +139,7 @@ public class ClientEventHandler {
     }
 
     @SubscribeEvent
-    public void onToolTip(ItemTooltipEvent event) {
+    public void onToolTip(@NotNull ItemTooltipEvent event) {
         if (VampirismPotion.isHunterPotion(event.getItemStack(), true).map(Potion::getEffects).map(effectInstances -> effectInstances.stream().map(MobEffectInstance::getEffect).anyMatch(MobEffect::isBeneficial)).orElse(false) && (event.getEntity() == null || !Helper.isHunter(event.getEntity()))) {
             event.getToolTip().add(Component.translatable("text.vampirism.hunter_potion.deadly").withStyle(ChatFormatting.DARK_RED));
         }
@@ -151,7 +152,7 @@ public class ClientEventHandler {
     }
 
     @SubscribeEvent
-    public static void onModelRegistry(ModelEvent.RegisterAdditional event) {
+    public static void onModelRegistry(ModelEvent.@NotNull RegisterAdditional event) {
         for (DyeColor dye : DyeColor.values()) {
             event.register(new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_bottom_" + dye.getName()));
             event.register(new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_top_" + dye.getName()));
@@ -160,7 +161,7 @@ public class ClientEventHandler {
     }
 
     @SubscribeEvent
-    public void onItemToolTip(ItemTooltipEvent event) {
+    public void onItemToolTip(@NotNull ItemTooltipEvent event) {
         OilUtils.getAppliedOilStatus(event.getItemStack()).flatMap(pair -> pair.getLeft().getToolTipLine(event.getItemStack(), pair.getKey(), pair.getValue(), event.getFlags())).ifPresent(tooltipLine -> {
             int position = 1;
             int flags = getHideFlags(event.getItemStack());
@@ -170,11 +171,11 @@ public class ClientEventHandler {
         });
     }
 
-    private static boolean shouldShowInTooltip(int p_242394_0_, ItemStack.TooltipPart p_242394_1_) {
+    private static boolean shouldShowInTooltip(int p_242394_0_, ItemStack.@NotNull TooltipPart p_242394_1_) {
         return (p_242394_0_ & p_242394_1_.getMask()) == 0;
     }
 
-    private int getHideFlags(ItemStack stack) {
+    private int getHideFlags(@NotNull ItemStack stack) {
         return stack.hasTag() && stack.getTag().contains("HideFlags", 99) ? stack.getTag().getInt("HideFlags") : 0;
     }
 }

@@ -36,13 +36,13 @@ import java.util.Optional;
  */
 public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
     private final ContainerLevelAccess worldPos;
-    private final HunterPlayer hunterPlayer;
-    private final Player player;
+    private final @NotNull HunterPlayer hunterPlayer;
+    private final @NotNull Player player;
     private final CraftingContainer craftMatrix = new CraftingContainer(this, 4, 4);
     private final ResultContainer craftResult = new ResultContainer();
     private final BooleanDataSlot missingLava = new BooleanDataSlot();
 
-    public WeaponTableContainer(int id, Inventory playerInventory, ContainerLevelAccess worldPosCallable) {
+    public WeaponTableContainer(int id, @NotNull Inventory playerInventory, ContainerLevelAccess worldPosCallable) {
         super(ModContainer.WEAPON_TABLE.get(), id);
         this.worldPos = worldPosCallable;
         this.hunterPlayer = HunterPlayer.get(playerInventory.player);
@@ -73,7 +73,7 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
      * Called to determine if the current slot is valid for the stack merging (double-click) code. The stack passed in
      * is null for the initial slot that was double-clicked.
      */
-    public boolean canTakeItemForPickAll(@NotNull ItemStack stack, Slot slotIn) {
+    public boolean canTakeItemForPickAll(@NotNull ItemStack stack, @NotNull Slot slotIn) {
         return slotIn.container != this.craftResult && super.canTakeItemForPickAll(stack, slotIn);
     }
 
@@ -185,7 +185,7 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
     }
 
     @Override
-    public boolean recipeMatches(Recipe<? super CraftingContainer> recipeIn) {
+    public boolean recipeMatches(@NotNull Recipe<? super CraftingContainer> recipeIn) {
         return recipeIn.matches(craftMatrix, this.player.level);
     }
 
@@ -215,7 +215,7 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
         return stillValid(this.worldPos, playerIn, ModBlocks.WEAPON_TABLE.get());
     }
 
-    private void slotChangedCraftingGrid(Level worldIn, Player playerIn, HunterPlayer hunter, CraftingContainer craftMatrixIn, ResultContainer craftResultIn) {
+    private void slotChangedCraftingGrid(@NotNull Level worldIn, Player playerIn, @NotNull HunterPlayer hunter, @NotNull CraftingContainer craftMatrixIn, @NotNull ResultContainer craftResultIn) {
         if (!worldIn.isClientSide && playerIn instanceof ServerPlayer serverPlayer) {
             Optional<IWeaponTableRecipe> optional = worldIn.getServer() == null ? Optional.empty() : worldIn.getServer().getRecipeManager().getRecipeFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get(), craftMatrixIn, worldIn);
             this.missingLava.set(false);
@@ -240,7 +240,7 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
     public static class Factory implements IContainerFactory<WeaponTableContainer> {
 
         @Override
-        public WeaponTableContainer create(int windowId, Inventory inv, FriendlyByteBuf data) {
+        public @NotNull WeaponTableContainer create(int windowId, @NotNull Inventory inv, @NotNull FriendlyByteBuf data) {
             BlockPos pos = data.readBlockPos();
             return new WeaponTableContainer(windowId, inv, ContainerLevelAccess.create(inv.player.level, pos));
         }
@@ -252,7 +252,7 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
      */
     static class NBTServerPlaceRecipe<C extends Container> extends ServerPlaceRecipe<C> {
 
-        public NBTServerPlaceRecipe(RecipeBookMenu<C> p_135431_) {
+        public NBTServerPlaceRecipe(@NotNull RecipeBookMenu<C> p_135431_) {
             super(p_135431_);
         }
 
@@ -286,7 +286,7 @@ public class WeaponTableContainer extends RecipeBookMenu<CraftingContainer> {
          * Copied from {@link net.minecraft.world.entity.player.Inventory#findSlotMatchingUnusedItem(net.minecraft.world.item.ItemStack)}
          * but nbt check removed
          */
-        public int findSlotMatchingUnusedItem(ItemStack p_36044_) {
+        public int findSlotMatchingUnusedItem(@NotNull ItemStack p_36044_) {
             for(int i = 0; i < this.inventory.items.size(); ++i) {
                 ItemStack itemstack = this.inventory.items.get(i);
                 //    do not check for nbt tag here    //

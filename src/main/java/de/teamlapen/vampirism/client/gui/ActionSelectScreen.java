@@ -28,9 +28,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.settings.KeyConflictContext;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
-import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -58,7 +59,7 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
         }
 
         @Override
-        public String getTranslationKey() {
+        public @NotNull String getTranslationKey() {
             return "action.vampirism.cancel";
         }
 
@@ -67,7 +68,7 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
             return true;
         }
     };
-    public static IAction<?> SELECTEDACTION;
+    public static @Nullable IAction<?> SELECTEDACTION;
 
     /**
      * safes the action order to client config
@@ -189,7 +190,7 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
     }
 
     @Override
-    protected void afterIconDraw(PoseStack stack, IAction<T> p, int x, int y) {
+    protected void afterIconDraw(@NotNull PoseStack stack, @NotNull IAction<T> p, int x, int y) {
         if (p == fakeAction || editActions)
             return;
         // Draw usage indicator
@@ -208,7 +209,7 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
 
     @Override
     @NotNull
-    protected Color getColor(IAction<T> s) {
+    protected Color getColor(@NotNull IAction<T> s) {
         if (s == fakeAction) return super.getColor(s);
         if (editActions) {
             if (SELECTEDACTION != null && (s == SELECTEDACTION || (getSelectedElement() >= 0 && elements.get(getSelectedElement()) == s)))
@@ -230,23 +231,23 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
     }
 
     @Override
-    protected ResourceLocation getIconLoc(IAction<T> item) {
+    protected @NotNull ResourceLocation getIconLoc(IAction<T> item) {
         if (item == fakeAction) return new ResourceLocation(REFERENCE.MODID, "textures/actions/cancel.png");
         return new ResourceLocation(RegUtil.id(item).getNamespace(), "textures/actions/" + RegUtil.id(item).getPath() + ".png");
     }
 
     @Override
-    protected KeyMapping getMenuKeyBinding() {
+    protected @NotNull KeyMapping getMenuKeyBinding() {
         return ModKeys.ACTION;
     }
 
     @Override
-    protected Component getName(IAction<T> item) {
+    protected Component getName(@NotNull IAction<T> item) {
         return item.getName();
     }
 
     @Override
-    protected void onElementSelected(IAction<T> action) {
+    protected void onElementSelected(@NotNull IAction<T> action) {
         //noinspection unchecked
         if (action != fakeAction && action.canUse((T)FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer().orElse(null)) == IAction.PERM.ALLOWED) {
             VampirismMod.dispatcher.sendToServer(ServerboundToggleActionPacket.createFromRaytrace(RegUtil.id(action), Minecraft.getInstance().hitResult));
@@ -262,7 +263,7 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
 
     }
 
-    private boolean checkBinding(Function<KeyMapping, Boolean> func) {
+    private boolean checkBinding(@NotNull Function<KeyMapping, Boolean> func) {
         if (elements.get(getSelectedElement()) == fakeAction) {
             return true;
         }
@@ -282,7 +283,7 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
     /**
      * orders the given list after client preference
      */
-    private ImmutableList<IAction<T>> getActionOrdered(List<IAction<T>> toSort) {
+    private @NotNull ImmutableList<IAction<T>> getActionOrdered(@NotNull List<IAction<T>> toSort) {
         if (ACTIONORDER.isEmpty()) ACTIONORDER.addAll(RegUtil.values(ModRegistries.ACTIONS));
         @SuppressWarnings({"SuspiciousMethodCalls", "unchecked"})
         List<IAction<T>> list = (List<IAction<T>>) (Object)ACTIONORDER.stream().filter(toSort::contains).collect(Collectors.toList());

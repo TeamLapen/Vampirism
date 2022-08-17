@@ -38,7 +38,7 @@ import java.util.List;
 public class BloodGrinderBlockEntity extends InventoryBlockEntity {
 
 
-    private static List<ItemEntity> getCaptureItems(Level worldIn, BlockPos pos) {
+    private static @NotNull List<ItemEntity> getCaptureItems(@NotNull Level worldIn, @NotNull BlockPos pos) {
         int posX = pos.getX();
         int posY = pos.getY();
         int posZ = pos.getZ();
@@ -46,12 +46,12 @@ public class BloodGrinderBlockEntity extends InventoryBlockEntity {
     }
 
     //Used to provide ItemHandler compatibility
-    private final IItemHandler itemHandler;
-    private final LazyOptional<IItemHandler> itemHandlerOptional;
+    private final @NotNull IItemHandler itemHandler;
+    private final @NotNull LazyOptional<IItemHandler> itemHandlerOptional;
     private int cooldownPull = 0;
     private int cooldownProcess = 0;
 
-    public BloodGrinderBlockEntity(BlockPos pos, BlockState state) {
+    public BloodGrinderBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         super(ModTiles.GRINDER.get(), pos, state, 1, BloodGrinderContainer.SELECTOR_INFOS);
         this.itemHandler = createWrapper();
         this.itemHandlerOptional = LazyOptional.of(() -> itemHandler);
@@ -80,7 +80,7 @@ public class BloodGrinderBlockEntity extends InventoryBlockEntity {
         compound.putInt("cooldown_process", cooldownProcess);
     }
 
-    public static void serverTick(Level level, BlockPos pos, BlockState state, BloodGrinderBlockEntity blockEntity) {
+    public static void serverTick(@NotNull Level level, @NotNull BlockPos pos, BlockState state, @NotNull BloodGrinderBlockEntity blockEntity) {
         --blockEntity.cooldownPull;
         if (blockEntity.cooldownPull <= 0) {
             blockEntity.cooldownPull = 10;
@@ -111,7 +111,7 @@ public class BloodGrinderBlockEntity extends InventoryBlockEntity {
         return Component.translatable("tile.vampirism.blood_grinder");
     }
 
-    private static boolean pullItems(BloodGrinderBlockEntity blockEntity, Level level, BlockPos pos) {
+    private static boolean pullItems(@NotNull BloodGrinderBlockEntity blockEntity, @NotNull Level level, @NotNull BlockPos pos) {
 
         boolean flag = de.teamlapen.lib.lib.inventory.InventoryHelper.tryGetItemHandler(level, pos.above(), Direction.DOWN).map(pair -> {
             IItemHandler handler = pair.getLeft();

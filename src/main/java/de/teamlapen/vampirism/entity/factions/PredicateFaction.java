@@ -14,7 +14,7 @@ import java.util.Optional;
  * Predicate for faction related selection
  */
 public class PredicateFaction implements Predicate<LivingEntity> {
-    private final IFaction<?> thisFaction;
+    private final @NotNull IFaction<?> thisFaction;
     private final boolean player;
     private final boolean nonPlayer;
     private final boolean neutralPlayer;
@@ -44,7 +44,7 @@ public class PredicateFaction implements Predicate<LivingEntity> {
         this.ignoreDisguise = ignoreDisguise;
     }
 
-    protected PredicateFaction(Faction<?> thisFaction, boolean player, boolean nonPlayer, boolean neutralPlayer, boolean ignoreDisguise) {
+    protected PredicateFaction(@NotNull Faction<?> thisFaction, boolean player, boolean nonPlayer, boolean neutralPlayer, boolean ignoreDisguise) {
         this(thisFaction, player, nonPlayer, neutralPlayer, ignoreDisguise, null);
     }
 
@@ -67,7 +67,7 @@ public class PredicateFaction implements Predicate<LivingEntity> {
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return "PredicateFaction{" +
                 "thisFaction=" + thisFaction +
                 ", player=" + player +

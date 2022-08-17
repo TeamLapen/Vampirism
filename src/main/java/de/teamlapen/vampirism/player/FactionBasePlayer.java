@@ -14,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Basic class for all of Vampirism's players.
@@ -26,7 +27,7 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
     /**
      * {@code @NotNull} on server, otherwise {@code null}
      */
-    private final TaskManager taskManager;
+    private final @Nullable TaskManager taskManager;
 
     public FactionBasePlayer(Player player) {
         this.player = player;
@@ -82,7 +83,7 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
         return player.getCommandSenderWorld().isClientSide;
     }
 
-    public void loadData(CompoundTag nbt) {
+    public void loadData(@NotNull CompoundTag nbt) {
         if (this.taskManager != null) {
             this.taskManager.readNBT(nbt);
         } else {
@@ -101,7 +102,7 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
     }
 
     @Override
-    public void onPlayerClone(Player original, boolean wasDeath) {
+    public void onPlayerClone(@NotNull Player original, boolean wasDeath) {
         original.reviveCaps();
         copyFromPlayer(original);
         original.invalidateCaps();
@@ -114,7 +115,7 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
         }
     }
 
-    public void saveData(CompoundTag nbt) {
+    public void saveData(@NotNull CompoundTag nbt) {
         if (this.taskManager != null) {
             this.taskManager.writeNBT(nbt);
         } else {
@@ -152,7 +153,7 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
      *
      * @param all Whether all tracking players should receive this packet or only the representing player
      */
-    protected void sync(CompoundTag data, boolean all) {
+    protected void sync(@NotNull CompoundTag data, boolean all) {
         HelperLib.sync(this, data, player, all);
     }
 

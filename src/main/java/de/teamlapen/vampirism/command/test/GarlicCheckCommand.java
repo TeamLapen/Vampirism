@@ -11,6 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
+import org.jetbrains.annotations.NotNull;
 
 public class GarlicCheckCommand extends BasicCommand {
 
@@ -23,7 +24,7 @@ public class GarlicCheckCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int garlicCheck(CommandSourceStack commandSource, ServerPlayer asPlayer, boolean print) {
+    private static int garlicCheck(@NotNull CommandSourceStack commandSource, @NotNull ServerPlayer asPlayer, boolean print) {
         if (commandSource.getEntity() != null && commandSource.getEntity() instanceof Player) {
             commandSource.sendSuccess(Component.translatable("command.vampirism.test.garliccheck.strength" + VampirismAPI.getVampirismWorld(asPlayer.getCommandSenderWorld()).map(w -> w.getStrengthAtChunk(new ChunkPos(asPlayer.blockPosition()))).orElse(EnumStrength.NONE)), true);
         }

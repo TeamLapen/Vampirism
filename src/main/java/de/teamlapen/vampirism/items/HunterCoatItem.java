@@ -33,7 +33,7 @@ public class HunterCoatItem extends VampirismHunterArmor implements IItemWithTie
      * @return if fully equipped the tier of the worst item, otherwise null
      */
     @Nullable
-    public static TIER isFullyEquipped(Player player) {
+    public static TIER isFullyEquipped(@NotNull Player player) {
         int minLevel = 1000;
         for (ItemStack stack : player.getInventory().armor) {
             if (stack.isEmpty() || !(stack.getItem() instanceof HunterCoatItem)) {
@@ -50,7 +50,7 @@ public class HunterCoatItem extends VampirismHunterArmor implements IItemWithTie
     private static final int[] DAMAGE_REDUCTION_NORMAL = new int[]{2, 5, 6, 2};
 
 
-    private static Map<Attribute, Tuple<Double, AttributeModifier.Operation>> getModifiers(EquipmentSlot slot, TIER tier) {
+    private static @NotNull Map<Attribute, Tuple<Double, AttributeModifier.Operation>> getModifiers(@NotNull EquipmentSlot slot, @NotNull TIER tier) {
         HashMap<Attribute, Tuple<Double, AttributeModifier.Operation>> map = new HashMap<>();
         int slot1 = slot.getIndex();
         int damageReduction = switch (tier) {
@@ -63,9 +63,9 @@ public class HunterCoatItem extends VampirismHunterArmor implements IItemWithTie
         return map;
     }
 
-    private final TIER tier;
+    private final @NotNull TIER tier;
 
-    private static int getDamageReduction(int slot, TIER tier) {
+    private static int getDamageReduction(int slot, @NotNull TIER tier) {
         return switch (tier) {
             case ULTIMATE -> DAMAGE_REDUCTION_ULTIMATE[slot];
             case ENHANCED -> DAMAGE_REDUCTION_ENHANCED[slot];
@@ -95,7 +95,7 @@ public class HunterCoatItem extends VampirismHunterArmor implements IItemWithTie
         return tier;
     }
 
-    public HunterCoatItem(EquipmentSlot equipmentSlotIn, TIER tier) {
+    public HunterCoatItem(@NotNull EquipmentSlot equipmentSlotIn, @NotNull TIER tier) {
         super(VampirismArmorMaterials.MASTERLY_IRON, equipmentSlotIn, new Properties().tab(VampirismMod.creativeTab), getModifiers(equipmentSlotIn, tier));
         this.tier = tier;
     }

@@ -10,7 +10,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
@@ -18,7 +17,7 @@ public class BloodGrinderScreen extends AbstractContainerScreen<BloodGrinderCont
 
     private static final ResourceLocation background = new ResourceLocation(REFERENCE.MODID, "textures/gui/grinder.png");
 
-    public BloodGrinderScreen(BloodGrinderContainer inventorySlotsIn, Inventory playerInventory, Component name) {
+    public BloodGrinderScreen(@NotNull BloodGrinderContainer inventorySlotsIn, @NotNull Inventory playerInventory, @NotNull Component name) {
         super(inventorySlotsIn, playerInventory, name);
     }
 

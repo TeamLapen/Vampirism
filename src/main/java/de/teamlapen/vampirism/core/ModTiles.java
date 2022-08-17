@@ -13,6 +13,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -40,7 +41,7 @@ public class ModTiles {
         BLOCK_ENTITY_TYPES.register(bus);
     }
 
-    private static <T extends BlockEntity> BlockEntityType<T> create(BlockEntityType.BlockEntitySupplier<T> factoryIn, Block... blocks) {
+    private static <T extends BlockEntity> @NotNull BlockEntityType<T> create(BlockEntityType.@NotNull BlockEntitySupplier<T> factoryIn, Block... blocks) {
         return BlockEntityType.Builder.of(factoryIn, blocks).build(null);
     }
 
@@ -51,7 +52,7 @@ public class ModTiles {
         ((TileEntityTypeAccessor) BlockEntityType.SIGN).setValidBlocks(blocks);
     }
 
-    public static void fixMappings(MissingMappingsEvent event) {
+    public static void fixMappings(@NotNull MissingMappingsEvent event) {
         event.getAllMappings(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES).forEach(missingMapping -> {
             //noinspection SwitchStatementWithTooFewBranches
             switch (missingMapping.getKey().toString()) {

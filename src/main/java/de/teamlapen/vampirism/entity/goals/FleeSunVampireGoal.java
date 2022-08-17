@@ -4,20 +4,21 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 
 public class FleeSunVampireGoal<T extends PathfinderMob & IVampire> extends FleeGoal {
-    private final T vampire;
+    private final @NotNull T vampire;
 
 
-    public FleeSunVampireGoal(T vampire, double movementSpeed, boolean restrictToHome) {
+    public FleeSunVampireGoal(@NotNull T vampire, double movementSpeed, boolean restrictToHome) {
         super(vampire, movementSpeed, restrictToHome);
         this.vampire = vampire;
     }
 
 
     @Override
-    protected boolean isPositionAcceptable(Level world, BlockPos pos) {
+    protected boolean isPositionAcceptable(@NotNull Level world, @NotNull BlockPos pos) {
         return !world.canSeeSkyFromBelowWater(pos);
     }
 

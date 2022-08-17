@@ -8,6 +8,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import org.jetbrains.annotations.NotNull;
 
 public class CurrentDimensionCommand extends BasicCommand {
 
@@ -18,7 +19,7 @@ public class CurrentDimensionCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int currentDimension(CommandContext<CommandSourceStack> context, ServerPlayer asPlayer) {
+    private static int currentDimension(@NotNull CommandContext<CommandSourceStack> context, @NotNull ServerPlayer asPlayer) {
         context.getSource().sendSuccess(Component.translatable("command.vampirism.base.currentdimension.dimension", asPlayer.getCommandSenderWorld().dimension().location() + " (" + asPlayer.getServer().registryAccess().registryOrThrow(Registry.DIMENSION_TYPE_REGISTRY).getKey(asPlayer.getCommandSenderWorld().dimensionType())), false);
         return 0;
     }

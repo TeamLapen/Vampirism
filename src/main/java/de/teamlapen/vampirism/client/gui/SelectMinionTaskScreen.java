@@ -19,6 +19,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
@@ -56,23 +57,23 @@ public class SelectMinionTaskScreen extends GuiPieMenu<SelectMinionTaskScreen.En
     }
 
     @Override
-    protected ResourceLocation getIconLoc(Entry item) {
+    protected ResourceLocation getIconLoc(@NotNull Entry item) {
         return item.getIconLoc();
     }
 
     @Override
-    protected KeyMapping getMenuKeyBinding() {
+    protected @NotNull KeyMapping getMenuKeyBinding() {
         return ModKeys.MINION;
     }
 
     @Override
-    protected Component getName(Entry item) {
+    protected Component getName(@NotNull Entry item) {
         return item.getText();
     }
 
 
     @Override
-    protected void onElementSelected(Entry id) {
+    protected void onElementSelected(@NotNull Entry id) {
         id.onSelected(this);
     }
 
@@ -110,7 +111,7 @@ public class SelectMinionTaskScreen extends GuiPieMenu<SelectMinionTaskScreen.En
         private final ResourceLocation loc;
         private final Consumer<SelectMinionTaskScreen> onSelected;
 
-        public Entry(IMinionTask<?, ?> task) {
+        public Entry(@NotNull IMinionTask<?, ?> task) {
             this(task.getName(), new ResourceLocation(RegUtil.id(task).getNamespace(), "textures/minion_tasks/" + RegUtil.id(task).getPath() + ".png"), (screen -> screen.sendTask(task)));
         }
 

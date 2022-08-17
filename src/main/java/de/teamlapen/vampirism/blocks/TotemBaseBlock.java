@@ -13,15 +13,12 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
 import org.jetbrains.annotations.NotNull;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class TotemBaseBlock extends VampirismBlock {
     private static final VoxelShape shape = makeShape();
 
-    private static VoxelShape makeShape() {
+    private static @NotNull VoxelShape makeShape() {
         VoxelShape a = Block.box(1, 0, 1, 15, 1, 15);
         VoxelShape b = Block.box(2, 1, 2, 14, 2, 14);
         VoxelShape c = Block.box(3, 2, 3, 13, 3, 13);
@@ -47,7 +44,7 @@ public class TotemBaseBlock extends VampirismBlock {
     }
 
     @Override
-    public boolean onDestroyedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+    public boolean onDestroyedByPlayer(BlockState state, @NotNull Level world, @NotNull BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         BlockPos up = pos.above();
         BlockState upState = world.getBlockState(pos.above());
         if (upState.getBlock() instanceof TotemTopBlock) {

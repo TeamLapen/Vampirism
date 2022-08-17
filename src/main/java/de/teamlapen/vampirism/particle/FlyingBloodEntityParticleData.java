@@ -27,12 +27,12 @@ public class FlyingBloodEntityParticleData implements ParticleOptions {
 
     public static final ParticleOptions.Deserializer<FlyingBloodEntityParticleData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
         @NotNull
-        public FlyingBloodEntityParticleData fromCommand(@NotNull ParticleType<FlyingBloodEntityParticleData> particleTypeIn, StringReader reader) throws CommandSyntaxException {
+        public FlyingBloodEntityParticleData fromCommand(@NotNull ParticleType<FlyingBloodEntityParticleData> particleTypeIn, @NotNull StringReader reader) throws CommandSyntaxException {
             return new FlyingBloodEntityParticleData(particleTypeIn, reader.readInt(), reader.readBoolean());
         }
 
         @NotNull
-        public FlyingBloodEntityParticleData fromNetwork(@NotNull ParticleType<FlyingBloodEntityParticleData> particleTypeIn, FriendlyByteBuf buffer) {
+        public FlyingBloodEntityParticleData fromNetwork(@NotNull ParticleType<FlyingBloodEntityParticleData> particleTypeIn, @NotNull FriendlyByteBuf buffer) {
             return new FlyingBloodEntityParticleData(particleTypeIn, buffer.readVarInt(), buffer.readBoolean());
         }
     };
@@ -57,7 +57,7 @@ public class FlyingBloodEntityParticleData implements ParticleOptions {
     }
 
     @Override
-    public void writeToNetwork(FriendlyByteBuf buffer) {
+    public void writeToNetwork(@NotNull FriendlyByteBuf buffer) {
         buffer.writeVarInt(entity);
         buffer.writeBoolean(direct);
     }

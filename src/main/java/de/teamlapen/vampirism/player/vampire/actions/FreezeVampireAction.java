@@ -13,6 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class FreezeVampireAction extends DefaultVampireAction {
     }
 
     @Override
-    public boolean activate(final IVampirePlayer vampire, ActivationContext context) {
+    public boolean activate(final @NotNull IVampirePlayer vampire, ActivationContext context) {
         Player player = vampire.getRepresentingPlayer();
         List<LivingEntity> l = player.getCommandSenderWorld().getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(10, 5, 10), vampire.getNonFriendlySelector(true, false));
         for (LivingEntity e : l) {

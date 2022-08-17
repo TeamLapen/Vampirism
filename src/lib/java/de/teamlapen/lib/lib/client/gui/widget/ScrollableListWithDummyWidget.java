@@ -21,7 +21,7 @@ public class ScrollableListWithDummyWidget<T> extends ScrollableListWidget<T> {
     @Nullable
     private ListItem<T> dummyItem;
 
-    public ScrollableListWithDummyWidget(int xPos, int yPos, int width, int height, int itemHeight, Supplier<Collection<T>> baseValueSupplier, @NotNull ItemCreator<T> itemSupplier) {
+    public ScrollableListWithDummyWidget(int xPos, int yPos, int width, int height, int itemHeight, @NotNull Supplier<Collection<T>> baseValueSupplier, @NotNull ItemCreator<T> itemSupplier) {
         super(xPos, yPos, width, height, itemHeight, baseValueSupplier, (item, list) -> itemSupplier.apply(item, (ScrollableListWithDummyWidget<T>) list, false));
         this.itemCreator = itemSupplier;
     }
@@ -57,7 +57,7 @@ public class ScrollableListWithDummyWidget<T> extends ScrollableListWidget<T> {
 
         protected final boolean isDummy;
 
-        public ListItem(T item, ScrollableListWithDummyWidget<T> list, boolean isDummy) {
+        public ListItem(@NotNull T item, @NotNull ScrollableListWithDummyWidget<T> list, boolean isDummy) {
             super(item, list);
             this.isDummy = isDummy;
         }

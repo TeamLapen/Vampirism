@@ -30,7 +30,7 @@ public class CrossbowArrowEntity extends AbstractArrow implements IEntityCrossbo
      * @param arrow        ItemStack of the represented arrow. Is copied.
      * @param centerOffset An offset from the center of the entity
      */
-    public static CrossbowArrowEntity createWithShooter(Level world, LivingEntity shooter, double heightOffset, double centerOffset, boolean rightHanded, ItemStack arrow) {
+    public static @NotNull CrossbowArrowEntity createWithShooter(@NotNull Level world, @NotNull LivingEntity shooter, double heightOffset, double centerOffset, boolean rightHanded, @NotNull ItemStack arrow) {
         double yaw = ((shooter.getYRot() - 90)) / 180 * Math.PI;
         if (rightHanded) {
             yaw += Math.PI;
@@ -47,7 +47,7 @@ public class CrossbowArrowEntity extends AbstractArrow implements IEntityCrossbo
     ItemStack arrowStack = new ItemStack(ModItems.CROSSBOW_ARROW_NORMAL.get());
     private boolean ignoreHurtTimer = false;
 
-    public CrossbowArrowEntity(EntityType<? extends CrossbowArrowEntity> type, Level world) {
+    public CrossbowArrowEntity(@NotNull EntityType<? extends CrossbowArrowEntity> type, @NotNull Level world) {
         super(type, world);
     }
 
@@ -55,7 +55,7 @@ public class CrossbowArrowEntity extends AbstractArrow implements IEntityCrossbo
     /**
      * @param arrow ItemStack of the represented arrow. Is copied.
      */
-    public CrossbowArrowEntity(Level worldIn, double x, double y, double z, ItemStack arrow) {
+    public CrossbowArrowEntity(@NotNull Level worldIn, double x, double y, double z, @NotNull ItemStack arrow) {
         this(ModEntities.CROSSBOW_ARROW.get(), worldIn);
         this.setPos(x, y, z);
         this.arrowStack = arrow.copy();
@@ -78,7 +78,7 @@ public class CrossbowArrowEntity extends AbstractArrow implements IEntityCrossbo
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    public RandomSource getRNG() {
+    public @NotNull RandomSource getRNG() {
         return this.random;
     }
 

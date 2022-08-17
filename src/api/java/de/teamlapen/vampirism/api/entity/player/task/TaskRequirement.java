@@ -15,13 +15,13 @@ public class TaskRequirement {
     private final int size;
     private final boolean hasStatBasedReq;
 
-    public TaskRequirement(Map<Type, List<Requirement<?>>> requirements) {
+    public TaskRequirement(@NotNull Map<Type, List<Requirement<?>>> requirements) {
         this.requirements = requirements;
         this.size = requirements.values().stream().mapToInt(List::size).sum();
         this.hasStatBasedReq = requirements.keySet().stream().anyMatch(Type::isStatBased);
     }
 
-    public List<Requirement<?>> getAll() {
+    public @NotNull List<Requirement<?>> getAll() {
         return this.requirements.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
     }
 

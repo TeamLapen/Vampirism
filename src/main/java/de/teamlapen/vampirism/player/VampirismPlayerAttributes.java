@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.player.hunter.HunterPlayerSpecialAttribute;
 import de.teamlapen.vampirism.player.vampire.VampirePlayerSpecialAttributes;
 import net.minecraft.world.entity.player.Player;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -14,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
  * If you need 100% guaranteed correct values, use the capabilities instead. Otherwise, prefer this for performance reason
  */
 public class VampirismPlayerAttributes {
-    public static VampirismPlayerAttributes get(Player player) {
+    public static VampirismPlayerAttributes get(@NotNull Player player) {
         return ((IVampirismPlayer) player).getVampAtts();
     }
 
@@ -26,11 +27,11 @@ public class VampirismPlayerAttributes {
     public IPlayableFaction<?> faction = null;
     public int lordLevel = 0;
 
-    public HunterPlayerSpecialAttribute getHuntSpecial() {
+    public @NotNull HunterPlayerSpecialAttribute getHuntSpecial() {
         return huntSpecial;
     }
 
-    public VampirePlayerSpecialAttributes getVampSpecial() {
+    public @NotNull VampirePlayerSpecialAttributes getVampSpecial() {
         return vampSpecial;
     }
 }

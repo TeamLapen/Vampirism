@@ -36,13 +36,13 @@ import org.jetbrains.annotations.NotNull;
  */
 public class HunterTableContainer extends InventoryContainer implements ContainerListener {
     private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(Items.BOOK, 15, 28), new SelectorInfo(ModItems.VAMPIRE_FANG.get(), 42, 28), new SelectorInfo(ModTags.Items.PURE_BLOOD, 69, 28), new SelectorInfo(ModItems.VAMPIRE_BOOK.get(), 96, 28)};
-    private final SlotResult slotResult;
+    private final @NotNull SlotResult slotResult;
     private final int hunterLevel;
     private final HunterLevelingConf levelingConf = HunterLevelingConf.instance();
     private ItemStack missing = ItemStack.EMPTY;
 
 
-    public HunterTableContainer(int id, Inventory playerInventory, ContainerLevelAccess worldPosCallable) {
+    public HunterTableContainer(int id, @NotNull Inventory playerInventory, ContainerLevelAccess worldPosCallable) {
         super(ModContainer.HUNTER_TABLE.get(), id, playerInventory, worldPosCallable, new SimpleContainer(SELECTOR_INFOS.length), SELECTOR_INFOS);
         ((SimpleContainer) inventory).addListener(this);
         slotResult = new SlotResult(this, new ResultContainer() {
@@ -117,7 +117,7 @@ public class HunterTableContainer extends InventoryContainer implements Containe
     public static class Factory implements IContainerFactory<HunterTableContainer> {
 
         @Override
-        public HunterTableContainer create(int windowId, Inventory inv, FriendlyByteBuf data) {
+        public @NotNull HunterTableContainer create(int windowId, @NotNull Inventory inv, @NotNull FriendlyByteBuf data) {
             BlockPos pos = data.readBlockPos();
             return new HunterTableContainer(windowId, inv, ContainerLevelAccess.create(inv.player.level, pos));
         }
@@ -127,7 +127,7 @@ public class HunterTableContainer extends InventoryContainer implements Containe
 
         private final HunterTableContainer hunterTableContainer;
 
-        public SlotResult(HunterTableContainer container, Container inventory, int index, int xPosition, int yPosition) {
+        public SlotResult(HunterTableContainer container, @NotNull Container inventory, int index, int xPosition, int yPosition) {
             super(inventory, index, xPosition, yPosition);
             this.hunterTableContainer = container;
         }

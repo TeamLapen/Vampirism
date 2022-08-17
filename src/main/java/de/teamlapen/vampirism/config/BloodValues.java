@@ -26,7 +26,7 @@ public class BloodValues implements PreparableReloadListener {
 
     @NotNull
     @Override
-    public CompletableFuture<Void> reload(PreparationBarrier stage, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profiler1, @NotNull ProfilerFiller profiler2, @NotNull Executor executor1, @NotNull Executor executor2) {
+    public CompletableFuture<Void> reload(@NotNull PreparationBarrier stage, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profiler1, @NotNull ProfilerFiller profiler2, @NotNull Executor executor1, @NotNull Executor executor2) {
         CompletableFuture<Map<String, BloodValueBuilder>> entities = this.entities.prepare(resourceManager, executor1);
         CompletableFuture<Map<String, BloodValueBuilder>> items = this.items.prepare(resourceManager, executor1);
         CompletableFuture<Map<String, BloodValueBuilder>> fluids = this.fluids.prepare(resourceManager, executor1);
@@ -37,12 +37,12 @@ public class BloodValues implements PreparableReloadListener {
         });
     }
 
-    private void applyNewEntitiesResources(Map<ResourceLocation, Float> map) {
+    private void applyNewEntitiesResources(@NotNull Map<ResourceLocation, Float> map) {
         BloodConversionRegistry.applyNewEntitiesResources(map);
         ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).applyNewResources(map);
     }
 
-    public static List<BloodValueLoaderDynamic> getDynamicLoader() {
+    public static @NotNull List<BloodValueLoaderDynamic> getDynamicLoader() {
         return BloodValueLoaderDynamic.getDynamicBloodLoader();
     }
 }

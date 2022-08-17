@@ -8,7 +8,6 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -17,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 public class AltarTipBlock extends VampirismBlock {
     protected static final VoxelShape tipShape = makeShape();
 
-    private static VoxelShape makeShape() {
+    private static @NotNull VoxelShape makeShape() {
         VoxelShape a = Block.box(3, 0, 3, 13, 3, 13);
         VoxelShape b = Block.box(4, 3, 4, 12, 4, 12);
         VoxelShape c = Block.box(5, 4, 5, 11, 5, 11);

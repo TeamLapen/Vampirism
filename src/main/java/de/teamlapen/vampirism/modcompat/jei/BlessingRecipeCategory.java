@@ -18,27 +18,28 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
 
 public class BlessingRecipeCategory implements IRecipeCategory<BlessableItem.Recipe> {
 
-    private final IDrawable background;
-    private final IDrawable icon;
+    private final @NotNull IDrawable background;
+    private final @NotNull IDrawable icon;
 
-    public BlessingRecipeCategory(IGuiHelper guiHelper) {
+    public BlessingRecipeCategory(@NotNull IGuiHelper guiHelper) {
         background = guiHelper.drawableBuilder(new ResourceLocation(REFERENCE.MODID, "textures/gui/blessing_recipe_jei.png"), 0, 0, 83, 49).setTextureSize(83, 49).addPadding(10, 20, 20, 20).build();
         icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.ALTAR_CLEANSING.get()));
     }
 
     @Override
-    public RecipeType<BlessableItem.Recipe> getRecipeType() {
+    public @NotNull RecipeType<BlessableItem.Recipe> getRecipeType() {
         return VampirismJEIPlugin.BLESSING;
     }
 
     @Override
-    public Component getTitle() {
+    public @NotNull Component getTitle() {
         return Component.translatable("text.vampirism.blessing");
     }
 
@@ -53,7 +54,7 @@ public class BlessingRecipeCategory implements IRecipeCategory<BlessableItem.Rec
     }
 
     @Override
-    public void draw(BlessableItem.Recipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack poseStack, double mouseX, double mouseY) {
+    public void draw(BlessableItem.@NotNull Recipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack poseStack, double mouseX, double mouseY) {
         if (recipe.enhanced) {
             Minecraft minecraft = Minecraft.getInstance();
             minecraft.font.draw(poseStack, Component.translatable("gui.vampirism.skill_required"), 15, 52, Color.gray.getRGB());
@@ -63,7 +64,7 @@ public class BlessingRecipeCategory implements IRecipeCategory<BlessableItem.Rec
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, BlessableItem.Recipe recipe, IFocusGroup focuses) {
+    public void setRecipe(@NotNull IRecipeLayoutBuilder builder, BlessableItem.@NotNull Recipe recipe, IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.INPUT, 23, 26).addItemStack(recipe.input.getDefaultInstance());
         builder.addSlot(RecipeIngredientRole.OUTPUT, 75, 26).addItemStack(recipe.output.getDefaultInstance());
     }

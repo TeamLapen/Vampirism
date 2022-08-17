@@ -11,13 +11,14 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
 public class SpeedEntityAction<T extends PathfinderMob & IEntityActionUser> extends VampireEntityAction<T> implements ILastingAction<T> {
     public static final UUID UUIDS = UUID.fromString("2b49cf70-b634-4e85-8c3e-0147919eaf54");
 
-    public SpeedEntityAction(EntityActionTier tier, EntityClassType... param) {
+    public SpeedEntityAction(@NotNull EntityActionTier tier, EntityClassType... param) {
         super(tier, param);
     }
 
@@ -26,7 +27,7 @@ public class SpeedEntityAction<T extends PathfinderMob & IEntityActionUser> exte
     }
 
     @Override
-    public void deactivate(T entity) {
+    public void deactivate(@NotNull T entity) {
         entity.getRepresentingEntity().getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(UUIDS);
     }
 
@@ -41,7 +42,7 @@ public class SpeedEntityAction<T extends PathfinderMob & IEntityActionUser> exte
     }
 
     @Override
-    public int getWeight(PathfinderMob entity) {
+    public int getWeight(@NotNull PathfinderMob entity) {
         if (entity.getTarget() == null) return 0;
         double distanceToTarget = new Vec3(entity.getX(), entity.getY(), entity.getZ()).subtract(entity.getTarget().getX(), entity.getTarget().getY(), entity.getTarget().getZ()).length();
         if (distanceToTarget > 10) {
@@ -54,7 +55,7 @@ public class SpeedEntityAction<T extends PathfinderMob & IEntityActionUser> exte
     }
 
     @Override
-    public void onUpdate(T entity, int duration) {
+    public void onUpdate(@NotNull T entity, int duration) {
         if (entity.getRepresentingEntity().getAttribute(Attributes.MOVEMENT_SPEED).getModifier(UUIDS) == null) {
             entity.getRepresentingEntity().getAttribute(Attributes.MOVEMENT_SPEED).addPermanentModifier(new AttributeModifier(UUIDS, "speedaction", VampirismConfig.BALANCE.eaSpeedAmount.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
         }

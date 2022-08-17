@@ -34,10 +34,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.glfw.GLFW;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.glfw.GLFW;
 
 /**
  * Handles all key/input related stuff
@@ -72,7 +71,7 @@ public class ModKeys {
     public static final KeyMapping ACTION3 = new KeyMapping(ACTIVATE_ACTION3, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_3, CATEGORY);
     public static final KeyMapping MINION = new KeyMapping(MINION_TASK, KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
 
-    public static void registerKeyMapping(RegisterKeyMappingsEvent event) {
+    public static void registerKeyMapping(@NotNull RegisterKeyMappingsEvent event) {
         event.register(ACTION);
         event.register(SUCK);
         event.register(VAMPIRISM_MENU);

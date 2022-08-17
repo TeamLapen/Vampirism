@@ -11,7 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 
 
@@ -19,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 public class AlchemicalCauldronScreen extends AbstractContainerScreen<AlchemicalCauldronContainer> {
     private static final ResourceLocation BACKGROUND = new ResourceLocation("vampirism:textures/gui/alchemical_cauldron.png");
 
-    public AlchemicalCauldronScreen(AlchemicalCauldronContainer inventorySlotsIn, Inventory inventoryPlayer, Component name) {
+    public AlchemicalCauldronScreen(@NotNull AlchemicalCauldronContainer inventorySlotsIn, @NotNull Inventory inventoryPlayer, @NotNull Component name) {
         super(inventorySlotsIn, inventoryPlayer, name);
     }
 

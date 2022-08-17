@@ -35,7 +35,7 @@ import java.util.function.Predicate;
 public class FactionRegistry implements IFactionRegistry {
     private static final Logger LOGGER = LogManager.getLogger();
     private final Map<Integer, Predicate<LivingEntity>> predicateMap = new HashMap<>();
-    private List<Faction<?>> temp = new CopyOnWriteArrayList<>(); //Copy on write is costly, but we only expect very few elements anyway
+    private @Nullable List<Faction<?>> temp = new CopyOnWriteArrayList<>(); //Copy on write is costly, but we only expect very few elements anyway
     private Faction<?>[] allFactions;
     private PlayableFaction<?>[] playableFactions;
 
@@ -90,13 +90,13 @@ public class FactionRegistry implements IFactionRegistry {
     }
 
     @Override
-    public Predicate<LivingEntity> getPredicate(IFaction<?> thisFaction, boolean ignoreDisguise) {
+    public Predicate<LivingEntity> getPredicate(@NotNull IFaction<?> thisFaction, boolean ignoreDisguise) {
 
         return getPredicate(thisFaction, true, true, true, ignoreDisguise, null);
     }
 
     @Override
-    public Predicate<LivingEntity> getPredicate(IFaction<?> thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, @Nullable IFaction<?> otherFaction) {
+    public Predicate<LivingEntity> getPredicate(@NotNull IFaction<?> thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, @Nullable IFaction<?> otherFaction) {
         int key = 0;
         if (otherFaction != null) {
             int id = otherFaction.hashCode();
@@ -133,7 +133,7 @@ public class FactionRegistry implements IFactionRegistry {
     }
 
     @ThreadSafeAPI
-    private void addFaction(Faction<?> faction) {
+    private void addFaction(@NotNull Faction<?> faction) {
         if (temp == null) {
             throw new IllegalStateException(String.format("[Vampirism]You have to register factions during InterModEnqueueEvent. (%s)", faction.getID()));
         } else {
@@ -142,7 +142,7 @@ public class FactionRegistry implements IFactionRegistry {
     }
 
     @Override
-    public <T extends IFactionEntity> IFactionBuilder<T> createFaction(ResourceLocation id, Class<T> entityInterface) {
+    public <T extends IFactionEntity> @NotNull IFactionBuilder<T> createFaction(ResourceLocation id, Class<T> entityInterface) {
         if (!UtilLib.isNonNull(id, entityInterface)) {
             throw new IllegalArgumentException("[Vampirism] Parameter for faction cannot be null");
         }
@@ -150,7 +150,7 @@ public class FactionRegistry implements IFactionRegistry {
     }
 
     @Override
-    public <T extends IFactionPlayer<T>> IPlayableFactionBuilder<T> createPlayableFaction(ResourceLocation id, Class<T> entityInterface, NonNullSupplier<Capability<T>> playerCapabilitySupplier) {
+    public <T extends IFactionPlayer<T>> @NotNull IPlayableFactionBuilder<T> createPlayableFaction(ResourceLocation id, Class<T> entityInterface, NonNullSupplier<Capability<T>> playerCapabilitySupplier) {
         if (!UtilLib.isNonNull(id, entityInterface, playerCapabilitySupplier)) {
             throw new IllegalArgumentException("[Vampirism] Parameters for faction cannot be null");
         }
@@ -164,7 +164,7 @@ public class FactionRegistry implements IFactionRegistry {
         protected int color = Color.WHITE.getRGB();
         protected boolean hostileTowardsNeutral;
         protected final FactionVillageBuilder villageFactionData = new FactionVillageBuilder();
-        protected TextColor chatColor;
+        protected @Nullable TextColor chatColor;
         protected String name;
         protected String namePlural;
 
@@ -186,7 +186,7 @@ public class FactionRegistry implements IFactionRegistry {
         }
 
         @Override
-        public IFactionBuilder<T> chatColor(ChatFormatting color) {
+        public IFactionBuilder<T> chatColor(@NotNull ChatFormatting color) {
             if (!color.isColor()) {
                 throw new IllegalArgumentException("Parameter must be a color");
             }
@@ -219,7 +219,7 @@ public class FactionRegistry implements IFactionRegistry {
         }
 
         @Override
-        public IFaction<T> register() {
+        public @NotNull IFaction<T> register() {
             Faction<T> faction = new Faction<>(this);
             addFaction(faction);
             return faction;
@@ -251,22 +251,22 @@ public class FactionRegistry implements IFactionRegistry {
         }
 
         @Override
-        public IPlayableFactionBuilder<T> highestLevel(int highestLevel) {
+        public @NotNull IPlayableFactionBuilder<T> highestLevel(int highestLevel) {
             this.highestLevel = highestLevel;
             return this;
         }
 
-        public PlayableFactionBuilder<T> lordLevel(int highestLordLevel) {
+        public @NotNull PlayableFactionBuilder<T> lordLevel(int highestLordLevel) {
             this.highestLordLevel = highestLordLevel;
             return this;
         }
 
-        public PlayableFactionBuilder<T> lordTitle(@NotNull BiFunction<Integer, Boolean, Component> lordTitleFunction) {
+        public @NotNull PlayableFactionBuilder<T> lordTitle(@NotNull BiFunction<Integer, Boolean, Component> lordTitleFunction) {
             this.lordTitleFunction = lordTitleFunction;
             return this;
         }
 
-        public PlayableFactionBuilder<T> enableLordSkills(boolean enabled) {
+        public @NotNull PlayableFactionBuilder<T> enableLordSkills(boolean enabled) {
             this.hasLordSkills = enabled;
             return this;
         }
@@ -277,7 +277,7 @@ public class FactionRegistry implements IFactionRegistry {
         }
 
         @Override
-        public IPlayableFactionBuilder<T> refinementItems(@NotNull Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot) {
+        public @NotNull IPlayableFactionBuilder<T> refinementItems(@NotNull Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot) {
             this.refinementItemBySlot = refinementItemBySlot;
             return this;
         }
@@ -288,7 +288,7 @@ public class FactionRegistry implements IFactionRegistry {
         }
 
         @Override
-        public IPlayableFactionBuilder<T> chatColor(ChatFormatting color) {
+        public IPlayableFactionBuilder<T> chatColor(@NotNull ChatFormatting color) {
             return (IPlayableFactionBuilder<T>) super.chatColor(color);
         }
 
@@ -303,12 +303,12 @@ public class FactionRegistry implements IFactionRegistry {
         }
 
         @Override
-        public ILordPlayerBuilder<T> lord(){
+        public @NotNull ILordPlayerBuilder<T> lord(){
             return new LordPlayerBuilder<>(this);
         }
 
         @Override
-        public IPlayableFaction<T> register() {
+        public @NotNull IPlayableFaction<T> register() {
             PlayableFaction<T> faction = new PlayableFaction<>(this);
             addFaction(faction);
             return faction;
@@ -327,19 +327,19 @@ public class FactionRegistry implements IFactionRegistry {
         }
 
         @Override
-        public LordPlayerBuilder<T> lordLevel(int level) {
+        public @NotNull LordPlayerBuilder<T> lordLevel(int level) {
             this.maxLevel = level;
             return this;
         }
 
         @Override
-        public LordPlayerBuilder<T> lordTitle(@NotNull BiFunction<Integer, Boolean, Component> lordTitleFunction) {
+        public @NotNull LordPlayerBuilder<T> lordTitle(@NotNull BiFunction<Integer, Boolean, Component> lordTitleFunction) {
             this.lordTitleFunction = lordTitleFunction;
             return this;
         }
 
         @Override
-        public ILordPlayerBuilder<T> enableLordSkills() {
+        public @NotNull ILordPlayerBuilder<T> enableLordSkills() {
             this.lordSkillsEnabled = true;
             return this;
         }

@@ -16,7 +16,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import org.jetbrains.annotations.NotNull;
 
 public class StakeCondition implements LootItemCondition {
-    public static Builder builder(LootContext.EntityTarget target) {
+    public static @NotNull Builder builder(LootContext.EntityTarget target) {
         return () -> new StakeCondition(target);
     }
 
@@ -33,7 +33,7 @@ public class StakeCondition implements LootItemCondition {
     }
 
     @Override
-    public boolean test(LootContext context) {
+    public boolean test(@NotNull LootContext context) {
         Entity player = context.getParamOrNull(target.getParam());
         if (player instanceof Player) {
             ItemStack active = ((Player) player).getMainHandItem();
@@ -52,7 +52,7 @@ public class StakeCondition implements LootItemCondition {
         }
 
         @Override
-        public void serialize(JsonObject json, StakeCondition value, JsonSerializationContext context) {
+        public void serialize(@NotNull JsonObject json, @NotNull StakeCondition value, @NotNull JsonSerializationContext context) {
             json.add("entity", context.serialize(value.target));
 
         }

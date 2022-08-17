@@ -17,8 +17,8 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.widget.ExtendedButton;
-
 import org.jetbrains.annotations.NotNull;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
@@ -35,7 +35,7 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
     private Button statButton;
     private LockIconButton lockActionButton;
 
-    public MinionScreen(MinionContainer screenContainer, Inventory inv, Component titleIn) {
+    public MinionScreen(@NotNull MinionContainer screenContainer, @NotNull Inventory inv, @NotNull Component titleIn) {
         super(Objects.requireNonNull(screenContainer), inv, titleIn);
         this.imageWidth = 214;
         this.imageHeight = 185;
@@ -105,7 +105,7 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
     }
 
 
-    private void drawButtonTip(PoseStack mStack, Component text, int mouseX, int mouseY) {
+    private void drawButtonTip(@NotNull PoseStack mStack, Component text, int mouseX, int mouseY) {
         this.renderTooltip(mStack, Collections.singletonList(text), Optional.empty(),mouseX, mouseY, font);
     }
 

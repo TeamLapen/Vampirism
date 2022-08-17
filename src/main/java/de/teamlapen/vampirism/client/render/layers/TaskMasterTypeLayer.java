@@ -19,14 +19,14 @@ import org.jetbrains.annotations.NotNull;
 public class TaskMasterTypeLayer<T extends Mob & IDefaultTaskMasterEntity> extends RenderLayer<T, VillagerModel<T>> {
     private final ResourceLocation additionalOverlay;
 
-    public TaskMasterTypeLayer(RenderLayerParent<T, VillagerModel<T>> entityRendererIn, ResourceLocation additionalOverlay) {
+    public TaskMasterTypeLayer(@NotNull RenderLayerParent<T, VillagerModel<T>> entityRendererIn, ResourceLocation additionalOverlay) {
         super(entityRendererIn);
         this.additionalOverlay = additionalOverlay;
     }
 
 
     @Override
-    public void render(@NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn, T entityIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(@NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn, @NotNull T entityIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if (!entityIn.isInvisible()) {
             VillagerType type = entityIn.getBiomeType();
             VillagerModel<T> m = getParentModel();
@@ -35,7 +35,7 @@ public class TaskMasterTypeLayer<T extends Mob & IDefaultTaskMasterEntity> exten
         }
     }
 
-    private ResourceLocation deriveTypeTextureOverlay(ResourceLocation id) {
+    private @NotNull ResourceLocation deriveTypeTextureOverlay(@NotNull ResourceLocation id) {
         return new ResourceLocation(id.getNamespace(), "textures/entity/villager/type/" + id.getPath() + ".png");
     }
 

@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.NotNull;
 
 
 public class ThroneBlock extends VampirismSplitBlock {
@@ -22,7 +23,7 @@ public class ThroneBlock extends VampirismSplitBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand p_225533_5_, BlockHitResult traceResult) {
+    public @NotNull InteractionResult use(@NotNull BlockState state, Level world, BlockPos pos, Player player, InteractionHand p_225533_5_, BlockHitResult traceResult) {
         Part part = state.getValue(PART);
         Direction oppFacing = state.getValue(FACING).getOpposite();
         if (part == Part.MAIN && (traceResult.getDirection() == Direction.UP || traceResult.getDirection() == oppFacing)) {

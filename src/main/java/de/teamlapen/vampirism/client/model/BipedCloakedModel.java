@@ -12,7 +12,6 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -21,21 +20,21 @@ import org.jetbrains.annotations.NotNull;
 @OnlyIn(Dist.CLIENT)
 public class BipedCloakedModel<T extends LivingEntity> extends PlayerModel<T> {
     private static final String CLOAK = "cloak";
-    protected final ModelPart bipedCloak;
+    protected final @NotNull ModelPart bipedCloak;
 
-    public static MeshDefinition createMesh(boolean smallArms) {
+    public static @NotNull MeshDefinition createMesh(boolean smallArms) {
         MeshDefinition var2 = PlayerModel.createMesh(CubeDeformation.NONE, smallArms);
         PartDefinition var3 = var2.getRoot();
         var3.addOrReplaceChild(CLOAK, CubeListBuilder.create().texOffs(0, 0).addBox(-7, 0, 0.4f, 14, 20, 1), PartPose.offset(0, 0, 2));
         return var2;
     }
 
-    public BipedCloakedModel(ModelPart part, boolean smallArms) {
+    public BipedCloakedModel(@NotNull ModelPart part, boolean smallArms) {
         super(part, smallArms);
         bipedCloak = part.getChild(CLOAK);
     }
 
-    public void renderCustomCloak(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn) {
+    public void renderCustomCloak(@NotNull PoseStack matrixStackIn, @NotNull VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn) {
         this.bipedCloak.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn);
     }
 

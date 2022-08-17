@@ -13,11 +13,11 @@ import org.jetbrains.annotations.Nullable;
 
 public class AttackVillageGoal<T extends VampirismEntity & IVillageCaptureEntity> extends TargetGoal {
 
-    private final T attacker;
-    protected final TargetingConditions entityPredicate;
+    private final @NotNull T attacker;
+    protected final @NotNull TargetingConditions entityPredicate;
     private final double distance = getFollowDistance() * 4;
 
-    public AttackVillageGoal(T creature) {
+    public AttackVillageGoal(@NotNull T creature) {
         super(creature, false, false);
         this.attacker = creature;
         this.entityPredicate = new TargetingConditions(true) {

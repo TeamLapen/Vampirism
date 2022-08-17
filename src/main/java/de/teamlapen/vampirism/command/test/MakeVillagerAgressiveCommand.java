@@ -8,6 +8,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.npc.Villager;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class MakeVillagerAgressiveCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int makeVillagerAgressive(ServerPlayer asPlayer) {
+    private static int makeVillagerAgressive(@NotNull ServerPlayer asPlayer) {
         List<Villager> l = asPlayer.getCommandSenderWorld().getEntitiesOfClass(Villager.class, asPlayer.getBoundingBox().inflate(3, 2, 3));
         for (Villager v : l) {
             if (v instanceof IFactionEntity) continue;

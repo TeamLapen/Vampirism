@@ -6,6 +6,8 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 
@@ -15,13 +17,13 @@ import java.util.EnumSet;
 public abstract class FleeGoal extends Goal {
     private final PathfinderMob theCreature;
     private final double movementSpeed;
-    private final Level world;
+    private final @NotNull Level world;
     private final boolean restrictToHome;
     private double shelterX;
     private double shelterY;
     private double shelterZ;
 
-    public FleeGoal(PathfinderMob theCreature, double movementSpeed, boolean restrictToHome) {
+    public FleeGoal(@NotNull PathfinderMob theCreature, double movementSpeed, boolean restrictToHome) {
         this.theCreature = theCreature;
         this.movementSpeed = movementSpeed;
         this.restrictToHome = restrictToHome;
@@ -56,7 +58,7 @@ public abstract class FleeGoal extends Goal {
 
     protected abstract boolean shouldFlee();
 
-    private Vec3 findPossibleShelter() {
+    private @Nullable Vec3 findPossibleShelter() {
         RandomSource random = this.theCreature.getRandom();
         BlockPos blockpos = new BlockPos(this.theCreature.getX(), this.theCreature.getBoundingBox().minY, this.theCreature.getZ());
 

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.util;
 
 
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 public class LordTitles {
     private static final Component VAMPIRE_1M = Component.translatable("text.vampirism.lord_title.vampire.male1");
@@ -21,7 +22,7 @@ public class LordTitles {
     private static final Component HUNTER_5 = Component.translatable("text.vampirism.lord_title.hunter.5");
     private static final Component EMPTY = Component.literal("");
 
-    public static Component getVampireTitle(int level, boolean female) {
+    public static @NotNull Component getVampireTitle(int level, boolean female) {
         if (female) {
             switch (level) {
                 case 1:
@@ -52,7 +53,7 @@ public class LordTitles {
         return EMPTY;
     }
 
-    public static Component getHunterTitle(int level, boolean female) {
+    public static @NotNull Component getHunterTitle(int level, boolean female) {
         return switch (level) {
             case 1 -> HUNTER_1;
             case 2 -> HUNTER_2;

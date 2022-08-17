@@ -10,6 +10,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.ProcessorRule
 import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,11 +49,11 @@ public class RandomBlockState extends ProcessorRule {
 
     private final List<Pair<BlockState, Optional<CompoundTag>>> states;
 
-    public RandomBlockState(RuleTest inputPredicate, RuleTest locationPredicate, BlockState defaultState, List<BlockState> outputStates) {
+    public RandomBlockState(@NotNull RuleTest inputPredicate, @NotNull RuleTest locationPredicate, BlockState defaultState, @NotNull List<BlockState> outputStates) {
         this(inputPredicate, locationPredicate, Pair.of(defaultState, Optional.empty()), outputStates.stream().map(state -> Pair.of(state, Optional.<CompoundTag>empty())).collect(Collectors.toList()));
     }
 
-    public RandomBlockState(RuleTest inputPredicate, RuleTest locationPredicate, Pair<BlockState, Optional<CompoundTag>> defaultState, List<Pair<BlockState, Optional<CompoundTag>>> states) {
+    public RandomBlockState(@NotNull RuleTest inputPredicate, @NotNull RuleTest locationPredicate, @NotNull Pair<BlockState, Optional<CompoundTag>> defaultState, List<Pair<BlockState, Optional<CompoundTag>>> states) {
         super(inputPredicate, locationPredicate, PosAlwaysTrueTest.INSTANCE, defaultState.getLeft(), defaultState.getRight());
         this.states = states;
     }

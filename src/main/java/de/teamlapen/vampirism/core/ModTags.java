@@ -14,13 +14,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
+import org.jetbrains.annotations.NotNull;
 
 public class ModTags {
-    private static ResourceLocation forge(String resourceName) {
+    private static @NotNull ResourceLocation forge(@NotNull String resourceName) {
         return new ResourceLocation("forge", resourceName);
     }
 
-    private static ResourceLocation vanilla(String resourceName) {
+    private static @NotNull ResourceLocation vanilla(@NotNull String resourceName) {
         return new ResourceLocation(resourceName);
     }
 
@@ -32,11 +33,11 @@ public class ModTags {
         public static final TagKey<Block> DARK_SPRUCE_LOG = tag("dark_spruce_log");
         public static final TagKey<Block> CURSED_SPRUCE_LOG = tag("cursed_spruce_log");
 
-        private static TagKey<Block> tag(ResourceLocation resourceLocation) {
+        private static @NotNull TagKey<Block> tag(@NotNull ResourceLocation resourceLocation) {
             return BlockTags.create(resourceLocation);
         }
 
-        private static TagKey<Block> tag(String name) {
+        private static @NotNull TagKey<Block> tag(@NotNull String name) {
             return tag(new ResourceLocation(REFERENCE.MODID, name));
         }
     }
@@ -60,11 +61,11 @@ public class ModTags {
         public static final TagKey<Item> APPLICABLE_OIL_PICKAXE = tag("applicable_oil/pickaxe");
         public static final TagKey<Item> APPLICABLE_OIL_ARMOR = tag("applicable_oil/armor");
 
-        private static TagKey<Item> tag(ResourceLocation resourceLocation) {
+        private static @NotNull TagKey<Item> tag(@NotNull ResourceLocation resourceLocation) {
             return ItemTags.create(resourceLocation);
         }
 
-        private static TagKey<Item> tag(String name) {
+        private static @NotNull TagKey<Item> tag(@NotNull String name) {
             return tag(new ResourceLocation(REFERENCE.MODID, name));
         }
     }
@@ -92,11 +93,11 @@ public class ModTags {
          */
         public static final TagKey<EntityType<?>> ZOMBIES = tag("zombies");
 
-        private static TagKey<EntityType<?>> tag(ResourceLocation resourceLocation) {
+        private static @NotNull TagKey<EntityType<?>> tag(@NotNull ResourceLocation resourceLocation) {
             return TagKey.create(Registry.ENTITY_TYPE_REGISTRY, resourceLocation);
         }
 
-        private static TagKey<EntityType<?>> tag(String name) {
+        private static @NotNull TagKey<EntityType<?>> tag(@NotNull String name) {
             return tag(new ResourceLocation(REFERENCE.MODID, name));
         }
     }
@@ -105,11 +106,11 @@ public class ModTags {
         public static final TagKey<Fluid> BLOOD = tag("vampirism_blood");
         public static final TagKey<Fluid> IMPURE_BLOOD = tag("vampirism_impure_blood");
 
-        private static TagKey<Fluid> tag(ResourceLocation resourceLocation) {
+        private static @NotNull TagKey<Fluid> tag(@NotNull ResourceLocation resourceLocation) {
             return FluidTags.create(resourceLocation);
         }
 
-        private static TagKey<Fluid> tag(String name) {
+        private static @NotNull TagKey<Fluid> tag(@NotNull String name) {
             return tag(new ResourceLocation(REFERENCE.MODID, name));
         }
     }
@@ -139,7 +140,7 @@ public class ModTags {
             public static final TagKey<Biome> ADVANCED_HUNTER = tag("no_spawn/advanced_hunter");
         }
 
-        private static TagKey<Biome> tag(String name) {
+        private static @NotNull TagKey<Biome> tag(@NotNull String name) {
             return TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(REFERENCE.MODID, name));
         }
     }
@@ -149,7 +150,7 @@ public class ModTags {
         public static final TagKey<PoiType> IS_VAMPIRE = tag("is_vampire");
         public static final TagKey<PoiType> IS_HUNTER = tag("is_hunter");
 
-        private static TagKey<PoiType> tag(String name) {
+        private static @NotNull TagKey<PoiType> tag(@NotNull String name) {
             return TagKey.create(Registry.POINT_OF_INTEREST_TYPE_REGISTRY, new ResourceLocation(REFERENCE.MODID, name));
         }
     }
@@ -159,7 +160,7 @@ public class ModTags {
         public static final TagKey<VillagerProfession> IS_VAMPIRE = tag("is_vampire");
         public static final TagKey<VillagerProfession> IS_HUNTER = tag("is_hunter");
 
-        private static TagKey<VillagerProfession> tag(String name) {
+        private static @NotNull TagKey<VillagerProfession> tag(@NotNull String name) {
             return TagKey.create(Registry.VILLAGER_PROFESSION_REGISTRY, new ResourceLocation(REFERENCE.MODID, name));
         }
     }

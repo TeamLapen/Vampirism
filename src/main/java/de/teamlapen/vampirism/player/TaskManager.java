@@ -97,7 +97,7 @@ public class TaskManager implements ITaskManager {
     /**
      * Handle a task action message that was sent from client to server
      */
-    public void handleTaskActionMessage(ServerboundTaskActionPacket msg){
+    public void handleTaskActionMessage(@NotNull ServerboundTaskActionPacket msg){
         switch (msg.action()) {
             case COMPLETE:
                 completeTask(msg.entityId(), msg.task());
@@ -175,7 +175,7 @@ public class TaskManager implements ITaskManager {
     // task filter -----------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean hasAvailableTasks(UUID taskBoardId) {
+    public boolean hasAvailableTasks(@NotNull UUID taskBoardId) {
         return !(getTasks(taskBoardId).isEmpty() && getUniqueTasks().isEmpty());
     }
 
@@ -194,7 +194,7 @@ public class TaskManager implements ITaskManager {
     }
 
     @Override
-    public void openTaskMasterScreen(UUID taskBoardId) {
+    public void openTaskMasterScreen(@NotNull UUID taskBoardId) {
         if (player.containerMenu instanceof TaskBoardContainer) {
             TaskWrapper wrapper = this.taskWrapperMap.computeIfAbsent(taskBoardId, TaskWrapper::new);
             Set<ITaskInstance> selectedTasks = new HashSet<>(getTasks(taskBoardId));
@@ -260,7 +260,7 @@ public class TaskManager implements ITaskManager {
     }
 
     @Override
-    public void resetUniqueTask(Task task) {
+    public void resetUniqueTask(@NotNull Task task) {
         if (!task.isUnique()) return;
         this.completedTasks.remove(task);
         TaskWrapper wrapper = this.taskWrapperMap.get(UNIQUE_TASKS);
@@ -330,7 +330,7 @@ public class TaskManager implements ITaskManager {
      * @param taskInstances the taskInstances to be filtered
      * @return all completable taskInstances from the given task set
      */
-    private Set<UUID> getCompletableTasks(@NotNull Set<ITaskInstance> taskInstances) {
+    private @NotNull Set<UUID> getCompletableTasks(@NotNull Set<ITaskInstance> taskInstances) {
         return taskInstances.stream().filter(this::canCompleteTask).map(ITaskInstance::getId).collect(Collectors.toSet());
     }
 
@@ -340,7 +340,7 @@ public class TaskManager implements ITaskManager {
      * @param taskInstance the taskInstance to be checked
      * @return a list of all taskInstance requirements
      */
-    private Map<ResourceLocation, Integer> getCompletedRequirements(@NotNull ITaskInstance taskInstance) {
+    private @NotNull Map<ResourceLocation, Integer> getCompletedRequirements(@NotNull ITaskInstance taskInstance) {
         Map<ResourceLocation, Integer> completed = new HashMap<>();
         for (TaskRequirement.Requirement<?> requirement : taskInstance.getTask().getRequirement().getAll()) {
             completed.put(requirement.getId(), getStat(taskInstance, requirement));
@@ -391,7 +391,7 @@ public class TaskManager implements ITaskManager {
      * @param taskBoardId the id of the task board
      * @return all visible tasks for the task board
      */
-    private Collection<ITaskInstance> getTasks(UUID taskBoardId) {
+    private @NotNull Collection<ITaskInstance> getTasks(@NotNull UUID taskBoardId) {
         TaskWrapper wrapper = this.taskWrapperMap.computeIfAbsent(taskBoardId, TaskWrapper::new);
         if (!wrapper.tasks.isEmpty()) {
             this.removeLockedTasks(wrapper.getTaskInstances());
@@ -413,7 +413,7 @@ public class TaskManager implements ITaskManager {
      *
      * @return all visible unique tasks
      */
-    private Collection<ITaskInstance> getUniqueTasks() {
+    private @NotNull Collection<ITaskInstance> getUniqueTasks() {
         TaskWrapper wrapper = this.taskWrapperMap.computeIfAbsent(UNIQUE_TASKS, TaskWrapper::new);
         Map<UUID, ITaskInstance> uniqueTasks = wrapper.tasks;
         if (!uniqueTasks.isEmpty()) {
@@ -426,7 +426,7 @@ public class TaskManager implements ITaskManager {
         return uniqueTasks.values();
     }
 
-    private boolean isTimeEnough(ITaskInstance taskInstance, long gameTime) {
+    private boolean isTimeEnough(@NotNull ITaskInstance taskInstance, long gameTime) {
         if (!taskInstance.isUnique()) {
             return taskInstance.getTaskTimeStamp() >= gameTime;
         }
@@ -496,7 +496,7 @@ public class TaskManager implements ITaskManager {
 
     public static class TaskWrapper {
 
-        public static TaskWrapper readNBT(@NotNull CompoundTag nbt) {
+        public static @NotNull TaskWrapper readNBT(@NotNull CompoundTag nbt) {
             UUID id = nbt.getUUID("id");
             int lessTasks = nbt.getInt("lessTasks");
             int taskAmount = nbt.getInt("taskAmount");
@@ -518,7 +518,7 @@ public class TaskManager implements ITaskManager {
             return new TaskWrapper(id, lessTasks, taskAmount, tasks, taskBoardInfo);
         }
 
-        public static TaskWrapper decode(FriendlyByteBuf buffer) {
+        public static @NotNull TaskWrapper decode(@NotNull FriendlyByteBuf buffer) {
             UUID id = buffer.readUUID();
             int lessTasks = buffer.readVarInt();
             int taskAmount = buffer.readVarInt();
@@ -559,13 +559,13 @@ public class TaskManager implements ITaskManager {
             this.lastSeenPos = lastSeenPos;
         }
 
-        public ITaskInstance acceptTask(UUID taskInstance, long timeStamp) {
+        public @NotNull ITaskInstance acceptTask(UUID taskInstance, long timeStamp) {
             ITaskInstance ins = this.tasks.get(taskInstance);
             ins.startTask(timeStamp);
             return ins;
         }
 
-        public void encode(FriendlyByteBuf buffer) {
+        public void encode(@NotNull FriendlyByteBuf buffer) {
             buffer.writeUUID(this.id);
             buffer.writeVarInt(this.lessTasks);
             buffer.writeVarInt(this.taskAmount);
@@ -603,7 +603,7 @@ public class TaskManager implements ITaskManager {
             return tasks.values();
         }
 
-        public void removeTask(ITaskInstance taskInstance, boolean delete) {
+        public void removeTask(@NotNull ITaskInstance taskInstance, boolean delete) {
             if (delete) {
                 this.tasks.remove(taskInstance.getId());
             }
@@ -614,7 +614,7 @@ public class TaskManager implements ITaskManager {
             this.removeTask(this.tasks.get(taskInstance), delete);
         }
 
-        public CompoundTag writeNBT(@NotNull CompoundTag nbt) {
+        public @NotNull CompoundTag writeNBT(@NotNull CompoundTag nbt) {
             nbt.putUUID("id", this.id);
             nbt.putInt("lessTasks", this.lessTasks);
             nbt.putInt("taskAmount", this.taskAmount);

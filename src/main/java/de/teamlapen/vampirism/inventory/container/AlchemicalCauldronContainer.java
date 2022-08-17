@@ -16,11 +16,11 @@ public class AlchemicalCauldronContainer extends AbstractFurnaceMenu {
 
     @SuppressWarnings("DeprecatedIsStillUsed")
     @Deprecated
-    public AlchemicalCauldronContainer(int id, Inventory playerInventory) {
+    public AlchemicalCauldronContainer(int id, @NotNull Inventory playerInventory) {
         this(id, playerInventory, new SimpleContainer(4), new SimpleContainerData(4), ContainerLevelAccess.NULL);
     }
 
-    public AlchemicalCauldronContainer(int id, Inventory playerInventory, Container inv, ContainerData data, ContainerLevelAccess worldPos) {
+    public AlchemicalCauldronContainer(int id, @NotNull Inventory playerInventory, @NotNull Container inv, @NotNull ContainerData data, ContainerLevelAccess worldPos) {
         super(ModContainer.ALCHEMICAL_CAULDRON.get(), ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get(), RecipeBookType.FURNACE, id, playerInventory, inv, data);
         setSlots(playerInventory);
     }
@@ -75,7 +75,7 @@ public class AlchemicalCauldronContainer extends AbstractFurnaceMenu {
         return stackCopy;
     }
 
-    private void setSlots(Inventory playerInv) {
+    private void setSlots(@NotNull Inventory playerInv) {
         this.slots.clear();
         this.lastSlots.clear();
         //Keep order

@@ -23,11 +23,11 @@ public class VampirismChestBoatEntity extends ChestBoat implements IVampirismBoa
 
     private static final EntityDataAccessor<Integer> DATA_ID_TYPE = SynchedEntityData.defineId(VampirismChestBoatEntity.class, EntityDataSerializers.INT);
 
-    public VampirismChestBoatEntity(EntityType<? extends Boat> type, Level level) {
+    public VampirismChestBoatEntity(@NotNull EntityType<? extends Boat> type, @NotNull Level level) {
         super(type, level);
     }
 
-    public VampirismChestBoatEntity(Level level, double x, double y, double z) {
+    public VampirismChestBoatEntity(@NotNull Level level, double x, double y, double z) {
         super(ModEntities.CHEST_BOAT.get(), level);
         this.setPos(x,y,z);
         this.setDeltaMovement(Vec3.ZERO);
@@ -61,7 +61,7 @@ public class VampirismChestBoatEntity extends ChestBoat implements IVampirismBoa
     }
 
     @Override
-    public void setType(BoatType type) {
+    public void setType(@NotNull BoatType type) {
         this.entityData.set(DATA_ID_TYPE, type.ordinal());
     }
 
@@ -81,13 +81,13 @@ public class VampirismChestBoatEntity extends ChestBoat implements IVampirismBoa
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag tag) {
+    protected void addAdditionalSaveData(@NotNull CompoundTag tag) {
         tag.putString("Type", this.getBType().getName());
         this.addChestVehicleSaveData(tag);
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag tag) {
+    protected void readAdditionalSaveData(@NotNull CompoundTag tag) {
         if (tag.contains("Type", 8)) {
             this.setType(BoatType.byName(tag.getString("Type")));
         }

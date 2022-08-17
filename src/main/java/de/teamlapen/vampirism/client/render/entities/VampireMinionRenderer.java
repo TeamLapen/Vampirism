@@ -14,15 +14,16 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class VampireMinionRenderer extends DualBipedRenderer<VampireMinionEntity, PlayerModel<VampireMinionEntity>> {
 
-    private final Pair<ResourceLocation, Boolean>[] textures;
-    private final Pair<ResourceLocation, Boolean>[] minionSpecificTextures;
+    private final Pair<ResourceLocation, Boolean> @NotNull [] textures;
+    private final Pair<ResourceLocation, Boolean> @NotNull [] minionSpecificTextures;
 
 
-    public VampireMinionRenderer(EntityRendererProvider.Context context) {
+    public VampireMinionRenderer(EntityRendererProvider.@NotNull Context context) {
         super(context, new PlayerModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED), false), new PlayerModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED_SLIM), true), 0.5F);
         ResourceManager rm = Minecraft.getInstance().getResourceManager();
         textures = gatherTextures("textures/entity/vampire", true);
@@ -44,7 +45,7 @@ public class VampireMinionRenderer extends DualBipedRenderer<VampireMinionEntity
     }
 
     @Override
-    protected Pair<ResourceLocation, Boolean> determineTextureAndModel(VampireMinionEntity entity) {
+    protected Pair<ResourceLocation, Boolean> determineTextureAndModel(@NotNull VampireMinionEntity entity) {
         Pair<ResourceLocation, Boolean> p = (entity.hasMinionSpecificSkin() && this.minionSpecificTextures.length > 0) ? minionSpecificTextures[entity.getVampireType() % minionSpecificTextures.length] : textures[entity.getVampireType() % textures.length];
         if (entity.shouldRenderLordSkin()) {
             return entity.getOverlayPlayerProperties().map(Pair::getRight).map(b -> Pair.of(p.getLeft(), b)).orElse(p);
@@ -53,7 +54,7 @@ public class VampireMinionRenderer extends DualBipedRenderer<VampireMinionEntity
     }
 
     @Override
-    protected void scale(VampireMinionEntity entityIn, PoseStack matrixStackIn, float partialTickTime) {
+    protected void scale(@NotNull VampireMinionEntity entityIn, @NotNull PoseStack matrixStackIn, float partialTickTime) {
         float s = entityIn.getScale();
         //float off = (1 - s) * 1.95f;
         matrixStackIn.scale(s, s, s);

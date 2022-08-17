@@ -14,7 +14,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import org.jetbrains.annotations.NotNull;
 
 public class AdjustableLevelCondition implements LootItemCondition {
-    public static Builder builder(int level, LootContext.EntityTarget target) {
+    public static @NotNull Builder builder(int level, LootContext.EntityTarget target) {
         return () -> new AdjustableLevelCondition(level, target);
     }
 
@@ -33,7 +33,7 @@ public class AdjustableLevelCondition implements LootItemCondition {
     }
 
     @Override
-    public boolean test(LootContext lootContext) {
+    public boolean test(@NotNull LootContext lootContext) {
         Entity e = lootContext.getParamOrNull(target.getParam());
         if (e instanceof IAdjustableLevel) {
             int l = ((IAdjustableLevel) e).getEntityLevel();
@@ -49,12 +49,12 @@ public class AdjustableLevelCondition implements LootItemCondition {
 
         @NotNull
         @Override
-        public AdjustableLevelCondition deserialize(JsonObject json, @NotNull JsonDeserializationContext context) {
+        public AdjustableLevelCondition deserialize(@NotNull JsonObject json, @NotNull JsonDeserializationContext context) {
             return new AdjustableLevelCondition(json.has("level") ? GsonHelper.getAsInt(json, "level") : -1, GsonHelper.getAsObject(json, "entity", context, LootContext.EntityTarget.class));
         }
 
         @Override
-        public void serialize(JsonObject json, AdjustableLevelCondition lootFunction, JsonSerializationContext context) {
+        public void serialize(@NotNull JsonObject json, @NotNull AdjustableLevelCondition lootFunction, @NotNull JsonSerializationContext context) {
             json.add("level", context.serialize(lootFunction.levelTest));
             json.add("entity", context.serialize(lootFunction.target));
         }

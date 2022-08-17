@@ -122,7 +122,7 @@ public class AttackRangedCrossbowGoal<T extends VampirismEntity & AttackRangedCr
         }
     }
 
-    protected void attackWithCrossbow(LivingEntity target) {
+    protected void attackWithCrossbow(@NotNull LivingEntity target) {
         ItemStack arrows = entity.getArrowStackForAttack(target);
         CrossbowArrowEntity entityArrow = CrossbowArrowEntity.createWithShooter(entity.getCommandSenderWorld(), entity, 0, 0.3F, !entity.isLeftHanded(), arrows);
         double sx = target.getX() - entityArrow.getX();

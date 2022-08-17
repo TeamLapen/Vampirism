@@ -26,7 +26,7 @@ public class VampireFangItem extends Item {
 
     @NotNull
     @Override
-    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
+    public InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
 
         ItemStack stack = playerIn.getItemInHand(handIn);
         if (!worldIn.isClientSide) {

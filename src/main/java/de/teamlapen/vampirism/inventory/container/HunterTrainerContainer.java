@@ -30,19 +30,19 @@ import org.jetbrains.annotations.Nullable;
  */
 public class HunterTrainerContainer extends InventoryContainer implements ContainerListener {
     private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(Items.IRON_INGOT, 27, 26), new SelectorInfo(Items.GOLD_INGOT, 57, 26), new SelectorInfo(ModTags.Items.HUNTER_INTEL, 86, 26)};
-    private final Player player;
+    private final @NotNull Player player;
     @Nullable
     private final HunterTrainerEntity entity;
     private boolean changed = false;
-    private ItemStack missing = ItemStack.EMPTY;
+    private @NotNull ItemStack missing = ItemStack.EMPTY;
 
     @SuppressWarnings("DeprecatedIsStillUsed")
     @Deprecated
-    public HunterTrainerContainer(int id, Inventory playerInventory) {
+    public HunterTrainerContainer(int id, @NotNull Inventory playerInventory) {
         this(id, playerInventory, null);
     }
 
-    public HunterTrainerContainer(int id, Inventory playerInventory, @Nullable HunterTrainerEntity trainer) {
+    public HunterTrainerContainer(int id, @NotNull Inventory playerInventory, @Nullable HunterTrainerEntity trainer) {
         super(ModContainer.HUNTER_TRAINER.get(), id, playerInventory, trainer == null ? ContainerLevelAccess.NULL : ContainerLevelAccess.create(trainer.level, trainer.blockPosition()), new SimpleContainer(SELECTOR_INFOS.length), SELECTOR_INFOS);
         ((SimpleContainer) this.inventory).addListener(this);
         this.player = playerInventory.player;

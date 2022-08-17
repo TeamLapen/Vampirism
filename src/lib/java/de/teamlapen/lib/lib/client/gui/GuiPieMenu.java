@@ -52,7 +52,7 @@ public abstract class GuiPieMenu<T> extends Screen {
      */
     private static final int CS = 100;
 
-    protected final ArrayList<T> elements;
+    protected final @NotNull ArrayList<T> elements;
     protected final Color backgroundColor;
 
     private int selectedElement = -1;
@@ -62,7 +62,7 @@ public abstract class GuiPieMenu<T> extends Screen {
      */
     private double radDiff;
 
-    public GuiPieMenu(Color backgroundColorIn, Component title) {
+    public GuiPieMenu(Color backgroundColorIn, @NotNull Component title) {
         super(title);
         this.passEvents = true;
         this.backgroundColor = backgroundColorIn;
@@ -199,7 +199,7 @@ public abstract class GuiPieMenu<T> extends Screen {
     /**
      * Draws a line between the given coordinates
      */
-    protected void drawLine(PoseStack stack, double x1, double y1, double x2, double y2) {
+    protected void drawLine(@NotNull PoseStack stack, double x1, double y1, double x2, double y2) {
         RenderSystem.disableTexture();
         BufferBuilder builder = Tesselator.getInstance().getBuilder();
         builder.begin(VertexFormat.Mode.LINES, DefaultVertexFormat.POSITION_COLOR);
@@ -262,7 +262,7 @@ public abstract class GuiPieMenu<T> extends Screen {
      * @param cX CenterX
      * @param cY CenterY
      */
-    private void drawBackground(PoseStack stack, float cX, float cY) {
+    private void drawBackground(@NotNull PoseStack stack, float cX, float cY) {
         // Calculate the scale which has to be applied for the image to fit
         float scale = (this.height
                 / 2F + 16 + 16) / BGS;
@@ -310,7 +310,7 @@ public abstract class GuiPieMenu<T> extends Screen {
      *
      * @param rad The direction the arrow should point in radiant
      */
-    private void drawSelectedCenter(PoseStack stack, double cX, double cY, double rad) {
+    private void drawSelectedCenter(@NotNull PoseStack stack, double cX, double cY, double rad) {
 
         // Calculate rotation and scale
         double deg = Math.toDegrees(-rad);
@@ -347,7 +347,7 @@ public abstract class GuiPieMenu<T> extends Screen {
         stack.popPose();
     }
 
-    private void drawUnselectedCenter(PoseStack stack, double cX, double cY) {
+    private void drawUnselectedCenter(@NotNull PoseStack stack, double cX, double cY) {
 
         float scale = (this.height
         ) / 4F / CS;

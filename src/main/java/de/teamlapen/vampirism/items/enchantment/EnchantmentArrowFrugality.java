@@ -13,13 +13,13 @@ import org.jetbrains.annotations.NotNull;
  * Makes tech crossbows use less arrows
  */
 public class EnchantmentArrowFrugality extends Enchantment {
-    public EnchantmentArrowFrugality(Rarity rarityIn) {
+    public EnchantmentArrowFrugality(@NotNull Rarity rarityIn) {
         super(rarityIn, VReference.CROSSBOW_ENCHANTMENT, new EquipmentSlot[]{EquipmentSlot.MAINHAND});
 
     }
 
     @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack) {
+    public boolean canApplyAtEnchantingTable(@NotNull ItemStack stack) {
         return !stack.isEmpty() && stack.getItem() instanceof VampirismItemCrossbow;
     }
 

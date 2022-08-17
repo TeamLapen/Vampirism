@@ -49,22 +49,22 @@ public class ModParticles {
         PARTICLE_TYPES.register(bus);
     }
 
-    public static void spawnParticlesClient(Level worldIn, ParticleOptions particle, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, int count, double maxDist, RandomSource rand) {
+    public static void spawnParticlesClient(Level worldIn, @NotNull ParticleOptions particle, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, int count, double maxDist, @NotNull RandomSource rand) {
         assert !(worldIn instanceof ServerLevel) : "Calling spawnParticlesClient on ServerWorld is pointless";
         for (int i = 0; i < count; i++) {
             worldIn.addParticle(particle, x + maxDist * (2 * rand.nextDouble() - 1), y + (2 * rand.nextDouble() - 1) * maxDist, z + (2 * rand.nextDouble() - 1) * maxDist, xSpeed, ySpeed, zSpeed);
         }
     }
 
-    public static void spawnParticlesClient(Level worldIn, ParticleOptions particle, double x, double y, double z, int count, double maxDist, RandomSource rand) {
+    public static void spawnParticlesClient(Level worldIn, @NotNull ParticleOptions particle, double x, double y, double z, int count, double maxDist, @NotNull RandomSource rand) {
         spawnParticlesClient(worldIn, particle, x, y, z, 0, 0, 0, count, maxDist, rand);
     }
 
-    public static void spawnParticleClient(Level worldIn, ParticleOptions particle, double x, double y, double z) {
+    public static void spawnParticleClient(@NotNull Level worldIn, @NotNull ParticleOptions particle, double x, double y, double z) {
         spawnParticleClient(worldIn, particle, x, y, z, 0, 0, 0);
     }
 
-    public static void spawnParticleClient(Level worldIn, ParticleOptions particle, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+    public static void spawnParticleClient(@NotNull Level worldIn, @NotNull ParticleOptions particle, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
         assert !(worldIn instanceof ServerLevel) : "Calling spawnParticleClient on ServerWorld is pointless";
         worldIn.addParticle(particle, x, y, z, xSpeed, ySpeed, zSpeed);
     }
@@ -80,7 +80,7 @@ public class ModParticles {
      * @param speed         Direction is randomized but multiplied by x/y/zOffset
      * @return Number of players this has been sent to.
      */
-    public static int spawnParticlesServer(Level worldIn, ParticleOptions particle, double posX, double posY, double posZ, int particleCount, double xOffset, double yOffset, double zOffset, double speed) {
+    public static int spawnParticlesServer(Level worldIn, @NotNull ParticleOptions particle, double posX, double posY, double posZ, int particleCount, double xOffset, double yOffset, double zOffset, double speed) {
         assert worldIn instanceof ServerLevel : "Calling spawnParticlesServer on client side is pointless";
         if (worldIn instanceof ServerLevel) {
             return ((ServerLevel) worldIn).sendParticles(particle, posX, posY, posZ, particleCount, xOffset, yOffset, zOffset, speed);

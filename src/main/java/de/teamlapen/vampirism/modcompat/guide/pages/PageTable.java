@@ -15,6 +15,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class PageTable extends Page {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void draw(PoseStack stack, Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen guiBase, Font fontRendererObj) {
+    public void draw(@NotNull PoseStack stack, Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, @NotNull BaseScreen guiBase, @NotNull Font fontRendererObj) {
         float charWidth = fontRendererObj.width("W");
         int y = guiTop + 12;
         int x = guiLeft + 39;
@@ -69,7 +70,7 @@ public class PageTable extends Page {
     /**
      * Copied from GuiPieMenu
      */
-    protected void drawLine(PoseStack stack, double x1, double y1, double x2, double y2, float publicZLevel) {
+    protected void drawLine(@NotNull PoseStack stack, double x1, double y1, double x2, double y2, float publicZLevel) {
         stack.pushPose();
         Matrix4f matrix = stack.last().pose();
         GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -94,7 +95,7 @@ public class PageTable extends Page {
             lines = new ArrayList<>();
         }
 
-        public Builder addLine(Object... objects) {
+        public @NotNull Builder addLine(Object @NotNull ... objects) {
             if (objects.length != columns) {
                 throw new IllegalArgumentException("Every added line as to contain one String for every column");
             }
@@ -106,7 +107,7 @@ public class PageTable extends Page {
             return this;
         }
 
-        public Builder addUnlocLine(String... strings) {
+        public Builder addUnlocLine(String @NotNull ... strings) {
             String[] loc = new String[strings.length];
             for (int i = 0; i < strings.length; i++) {
                 loc[i] = UtilLib.translate(strings[i]);
@@ -114,7 +115,7 @@ public class PageTable extends Page {
             return addLine((Object[]) loc);
         }
 
-        public PageTable build() {
+        public @NotNull PageTable build() {
             int[] width = new int[columns];
             for (int i = 0; i < columns; i++) {
                 int max = 0;
@@ -127,7 +128,7 @@ public class PageTable extends Page {
             return new PageTable(lines, width, headline);
         }
 
-        public Builder setHeadline(MutableComponent s) {
+        public @NotNull Builder setHeadline(MutableComponent s) {
             headline = s;
             return this;
         }

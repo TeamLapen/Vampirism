@@ -6,6 +6,8 @@ import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -13,10 +15,10 @@ import java.util.Optional;
 public class FollowLordGoal extends MoveToPositionGoal<MinionEntity<?>> {
 
 
-    private ILordPlayer lord;
+    private @Nullable ILordPlayer lord;
 
 
-    public FollowLordGoal(MinionEntity<?> entity, double followSpeedIn) {
+    public FollowLordGoal(@NotNull MinionEntity<?> entity, double followSpeedIn) {
         super(entity, followSpeedIn, 5, 15, true, true);
     }
 
@@ -49,12 +51,12 @@ public class FollowLordGoal extends MoveToPositionGoal<MinionEntity<?>> {
     }
 
     @Override
-    protected Vec3 getLookPosition() {
+    protected @NotNull Vec3 getLookPosition() {
         return lord.getPlayer().getEyePosition(1);
     }
 
     @Override
-    protected Vec3i getTargetPosition() {
+    protected @NotNull Vec3i getTargetPosition() {
         return lord.getPlayer().blockPosition();
     }
 

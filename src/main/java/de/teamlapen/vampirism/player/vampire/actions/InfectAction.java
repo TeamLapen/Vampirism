@@ -14,6 +14,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -31,7 +32,7 @@ public class InfectAction extends DefaultVampireAction {
     }
 
     @Override
-    protected boolean activate(IVampirePlayer vampire, ActivationContext context) {
+    protected boolean activate(@NotNull IVampirePlayer vampire, @NotNull ActivationContext context) {
         Player player = vampire.getRepresentingPlayer();
         return context.targetEntity().filter(LivingEntity.class::isInstance).map(target -> {
             if (!UtilLib.canReallySee((LivingEntity) target, player, false)) {
@@ -48,7 +49,7 @@ public class InfectAction extends DefaultVampireAction {
 
 
     @Override
-    public boolean canBeUsedBy(IVampirePlayer player) {
+    public boolean canBeUsedBy(@NotNull IVampirePlayer player) {
         if(player.isRemote()){
             Entity target = VampirismMod.proxy.getMouseOverEntity();
             if(target != null){
@@ -59,7 +60,7 @@ public class InfectAction extends DefaultVampireAction {
         return true;
     }
 
-    private Optional<? extends IBiteableEntity> deriveBiteableEntry(Entity target){
+    private @NotNull Optional<? extends IBiteableEntity> deriveBiteableEntry(Entity target){
         if (target instanceof IBiteableEntity) {
             return Optional.of((IBiteableEntity) target);
         } else if (target instanceof PathfinderMob) {

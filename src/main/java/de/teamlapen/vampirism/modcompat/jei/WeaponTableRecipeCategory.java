@@ -37,18 +37,18 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
 
     private final static ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/weapon_table_clean.png");
     private static final ItemStack lavaStack = new ItemStack(Items.LAVA_BUCKET);
-    private final Component localizedName;
-    private final IDrawable background;
-    private final IDrawable icon;
+    private final @NotNull Component localizedName;
+    private final @NotNull IDrawable background;
+    private final @NotNull IDrawable icon;
 
-    WeaponTableRecipeCategory(IGuiHelper guiHelper) {
+    WeaponTableRecipeCategory(@NotNull IGuiHelper guiHelper) {
         this.localizedName = Component.translatable(ModBlocks.WEAPON_TABLE.get().getDescriptionId());
         this.background = guiHelper.drawableBuilder(BACKGROUND, 32, 14, 134, 77).addPadding(0, 33, 0, 0).build();
         this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.WEAPON_TABLE.get()));
     }
 
     @Override
-    public void draw(IWeaponTableRecipe recipe, IRecipeSlotsView recipeSlotsView, @NotNull PoseStack stack, double mouseX, double mouseY) {
+    public void draw(@NotNull IWeaponTableRecipe recipe, IRecipeSlotsView recipeSlotsView, @NotNull PoseStack stack, double mouseX, double mouseY) {
 
         int x = 2;
         int y = 80;
@@ -93,7 +93,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
     }
 
     @Override
-    public RecipeType<IWeaponTableRecipe> getRecipeType() {
+    public @NotNull RecipeType<IWeaponTableRecipe> getRecipeType() {
         return VampirismJEIPlugin.WEAPON_TABLE;
     }
 

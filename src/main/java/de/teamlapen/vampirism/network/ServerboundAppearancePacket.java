@@ -9,12 +9,13 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.NetworkEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
 public record ServerboundAppearancePacket(int entityId, String name, int... data) implements IMessage {
 
-    static void encode(ServerboundAppearancePacket msg, FriendlyByteBuf buf) {
+    static void encode(@NotNull ServerboundAppearancePacket msg, @NotNull FriendlyByteBuf buf) {
         buf.writeVarInt(msg.entityId);
         buf.writeUtf(msg.name);
         buf.writeVarInt(msg.data.length);
@@ -23,7 +24,7 @@ public record ServerboundAppearancePacket(int entityId, String name, int... data
         }
     }
 
-    static ServerboundAppearancePacket decode(FriendlyByteBuf buf) {
+    static @NotNull ServerboundAppearancePacket decode(@NotNull FriendlyByteBuf buf) {
         int entityId = buf.readVarInt();
         String newName = buf.readUtf(MinionData.MAX_NAME_LENGTH);
         int[] data = new int[buf.readVarInt()];
@@ -33,7 +34,7 @@ public record ServerboundAppearancePacket(int entityId, String name, int... data
         return new ServerboundAppearancePacket(entityId, newName, data);
     }
 
-    public static void handle(final ServerboundAppearancePacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final @NotNull ServerboundAppearancePacket msg, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> {
             Entity entity = ctx.getSender().level.getEntity(msg.entityId);

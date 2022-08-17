@@ -14,7 +14,6 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
-
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -26,11 +25,11 @@ public class BaronAttireModel extends EntityModel<VampireBaronEntity> {
     private static final String HOOD = "hood";
     private static final String CLOAK = "cloak";
 
-    public final ModelPart hood;
-    public final ModelPart cloak;
+    public final @NotNull ModelPart hood;
+    public final @NotNull ModelPart cloak;
     private float enragedProgress = 0;
 
-    public static LayerDefinition createLayer() {
+    public static @NotNull LayerDefinition createLayer() {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition part = mesh.getRoot();
         PartDefinition hood = part.addOrReplaceChild(HOOD, CubeListBuilder.create().texOffs(44, 0).addBox(-4.5f, -8.5f, -4, 9, 9, 9), PartPose.ZERO);
@@ -38,13 +37,13 @@ public class BaronAttireModel extends EntityModel<VampireBaronEntity> {
         return LayerDefinition.create(mesh, 128, 64);
     }
 
-    public BaronAttireModel(ModelPart part) {
+    public BaronAttireModel(@NotNull ModelPart part) {
         hood = part.getChild(HOOD);
         cloak = hood.getChild(CLOAK);
     }
 
     @Override
-    public void prepareMobModel(VampireBaronEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
+    public void prepareMobModel(@NotNull VampireBaronEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
         enragedProgress = entityIn.getEnragedProgress();
     }
 
@@ -73,7 +72,7 @@ public class BaronAttireModel extends EntityModel<VampireBaronEntity> {
     }
 
 
-    protected HumanoidArm getSwingingSide(VampireBaronEntity entity) {
+    protected @NotNull HumanoidArm getSwingingSide(@NotNull VampireBaronEntity entity) {
         HumanoidArm handside = entity.getMainArm();
         return entity.swingingArm == InteractionHand.MAIN_HAND ? handside : handside.getOpposite();
     }

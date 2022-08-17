@@ -14,8 +14,8 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
 import org.jetbrains.annotations.NotNull;
+
 import java.util.stream.Stream;
 
 
@@ -91,7 +91,7 @@ public class ChandelierBlock extends VampirismBlock {
     }
 
     @Override
-    public boolean canSurvive(@NotNull BlockState state, @NotNull LevelReader worldIn, BlockPos pos) {
+    public boolean canSurvive(@NotNull BlockState state, @NotNull LevelReader worldIn, @NotNull BlockPos pos) {
         return canSupportCenter(worldIn, pos.above(), Direction.DOWN);
     }
 

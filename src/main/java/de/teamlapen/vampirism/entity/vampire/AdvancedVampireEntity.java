@@ -61,7 +61,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     private static final EntityDataAccessor<String> NAME = SynchedEntityData.defineId(AdvancedVampireEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<String> TEXTURE = SynchedEntityData.defineId(AdvancedVampireEntity.class, EntityDataSerializers.STRING);
 
-    public static AttributeSupplier.Builder getAttributeBuilder() {
+    public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
         return VampireBaseEntity.getAttributeBuilder()
                 .add(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.ADVANCED_VAMPIRE_MAX_HEALTH)
                 .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.ADVANCED_VAMPIRE_ATTACK_DAMAGE)
@@ -73,9 +73,9 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     /**
      * available actions for AI task & task
      */
-    private final ActionHandlerEntity<?> entityActionHandler;
+    private final @NotNull ActionHandlerEntity<?> entityActionHandler;
     private final EntityClassType entityclass;
-    private final EntityActionTier entitytier;
+    private final @NotNull EntityActionTier entitytier;
     /**
      * Store the approximate count of entities that are following this advanced vampire.
      * Not guaranteed to be exact and not saved to nbt
@@ -156,7 +156,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         }
     }
 
-    public Optional<String> getBookLootId() {
+    public @NotNull Optional<String> getBookLootId() {
         return Optional.ofNullable(lootBookId);
     }
 
@@ -306,7 +306,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    public int suggestEntityLevel(Difficulty d) {
+    public int suggestEntityLevel(@NotNull Difficulty d) {
         if (random.nextBoolean()) {
             return (int) (d.avgPercLevel * MAX_LEVEL / 100F);
         }
@@ -332,7 +332,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
+    protected @NotNull EntityType<?> getIMobTypeOpt(boolean iMob) {
         return iMob ? ModEntities.ADVANCED_VAMPIRE_IMOB.get() : ModEntities.ADVANCED_VAMPIRE.get();
     }
 

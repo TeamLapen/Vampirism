@@ -15,13 +15,15 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Map;
 import java.util.Set;
 
 class VampirismRecipeHelper {
 
     @NotNull
-    static ISkill<?>[] deserializeSkills(JsonArray jsonObject) {
+    static ISkill<?> @NotNull [] deserializeSkills(@Nullable JsonArray jsonObject) {
         if (jsonObject == null || jsonObject.size() == 0)
             return new ISkill[0];
         ISkill<?>[] skills = new ISkill[jsonObject.size()];
@@ -37,7 +39,7 @@ class VampirismRecipeHelper {
         return skills;
     }
 
-    static String[] shrink(String... toShrink) {
+    static String @NotNull [] shrink(String @NotNull ... toShrink) {
         int i = Integer.MAX_VALUE;
         int j = 0;
         int k = 0;
@@ -72,7 +74,7 @@ class VampirismRecipeHelper {
         }
     }
 
-    private static int firstNonSpace(String str) {
+    private static int firstNonSpace(@NotNull String str) {
         int i;
         for (i = 0; i < str.length() && str.charAt(i) == ' '; ++i) {
         }
@@ -80,7 +82,7 @@ class VampirismRecipeHelper {
         return i;
     }
 
-    private static int lastNonSpace(String str) {
+    private static int lastNonSpace(@NotNull String str) {
         int i;
         for (i = str.length() - 1; i >= 0 && str.charAt(i) == ' '; --i) {
         }
@@ -91,7 +93,7 @@ class VampirismRecipeHelper {
     /**
      * deserialize ingredients for shapeless recipes
      */
-    static NonNullList<Ingredient> readIngredients(JsonArray ingredientArray) {
+    static @NotNull NonNullList<Ingredient> readIngredients(@NotNull JsonArray ingredientArray) {
         NonNullList<Ingredient> nonnulllist = NonNullList.create();
 
         for (int i = 0; i < ingredientArray.size(); ++i) {
@@ -104,7 +106,7 @@ class VampirismRecipeHelper {
         return nonnulllist;
     }
 
-    static FluidStack deserializeFluid(JsonObject object) {
+    static @NotNull FluidStack deserializeFluid(@NotNull JsonObject object) {
         String s = GsonHelper.getAsString(object, "fluid");
         Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(s));
         if (fluid == null) throw new JsonSyntaxException("Unknown fluid '" + s + "'");
@@ -119,7 +121,7 @@ class VampirismRecipeHelper {
     /**
      * Returns a key json object as a Java HashMap.
      */
-    static Map<String, Ingredient> deserializeKey(JsonObject json) {
+    static @NotNull Map<String, Ingredient> deserializeKey(@NotNull JsonObject json) {
         Map<String, Ingredient> map = Maps.newHashMap();
 
         for (Map.Entry<String, JsonElement> entry : json.entrySet()) {
@@ -141,7 +143,7 @@ class VampirismRecipeHelper {
     /**
      * deserialize ingredients for shaped recipes
      */
-    static NonNullList<Ingredient> deserializeIngredients(String[] pattern, Map<String, Ingredient> keys, int patternWidth, int patternHeight) {
+    static @NotNull NonNullList<Ingredient> deserializeIngredients(String @NotNull [] pattern, @NotNull Map<String, Ingredient> keys, int patternWidth, int patternHeight) {
         NonNullList<Ingredient> nonnulllist = NonNullList.withSize(patternWidth * patternHeight, Ingredient.EMPTY);
         Set<String> set = Sets.newHashSet(keys.keySet());
         set.remove(" ");
@@ -171,7 +173,7 @@ class VampirismRecipeHelper {
      *
      * @param max crafting grid max size (4x4 -> 4)
      */
-    static String[] patternFromJson(JsonArray jsonArr, int max) {
+    static String @NotNull [] patternFromJson(@NotNull JsonArray jsonArr, int max) {
         String[] astring = new String[jsonArr.size()];
         if (astring.length > max) {
             throw new JsonSyntaxException("Invalid pattern: too many rows, " + max + " is maximum");
@@ -195,7 +197,7 @@ class VampirismRecipeHelper {
         }
     }
 
-    static Either<Ingredient, FluidStack> getFluidOrItem(JsonObject json) {
+    static @NotNull Either<Ingredient, FluidStack> getFluidOrItem(@NotNull JsonObject json) {
         if (json.has("fluidItem")) {
             return Either.left(Ingredient.fromJson(json.get("fluidItem")));
 

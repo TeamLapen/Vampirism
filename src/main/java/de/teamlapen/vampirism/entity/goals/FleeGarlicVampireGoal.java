@@ -5,20 +5,21 @@ import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 
 public class FleeGarlicVampireGoal extends FleeGoal {
 
-    private final VampireBaseEntity theCreature;
+    private final @NotNull VampireBaseEntity theCreature;
 
-    public FleeGarlicVampireGoal(VampireBaseEntity theCreature, double movementSpeed, boolean restrictHome) {
+    public FleeGarlicVampireGoal(@NotNull VampireBaseEntity theCreature, double movementSpeed, boolean restrictHome) {
         super(theCreature, movementSpeed, restrictHome);
         this.theCreature = theCreature;
     }
 
 
     @Override
-    protected boolean isPositionAcceptable(Level world, BlockPos pos) {
+    protected boolean isPositionAcceptable(Level world, @NotNull BlockPos pos) {
         return theCreature.doesResistGarlic(Helper.getGarlicStrengthAt(world, pos));
     }
 

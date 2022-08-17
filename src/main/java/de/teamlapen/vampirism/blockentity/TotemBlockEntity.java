@@ -203,7 +203,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     }
 
     @Override
-    public Optional<EntityType<? extends Mob>> getCaptureEntityForFaction(@NotNull IFaction<?> faction) {
+    public @NotNull Optional<EntityType<? extends Mob>> getCaptureEntityForFaction(@NotNull IFaction<?> faction) {
         return WeightedRandom.getRandomItem(RNG, faction.getVillageData().getCaptureEntries()).map(CaptureEntityEntry::getEntity);
     }
 
@@ -245,7 +245,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     }
 
     @Override
-    public AABB getRenderBoundingBox() {
+    public @NotNull AABB getRenderBoundingBox() {
         return INFINITE_EXTENT_AABB;
     }
 
@@ -1257,8 +1257,8 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         private final IFaction<?> defendingFaction;
         @Nullable
         private final IFaction<?> attackingFaction;
-        private final AABB villageArea;
-        private final BlockPos pos;
+        private final @NotNull AABB villageArea;
+        private final @NotNull BlockPos pos;
         private final boolean shouldForceTargets;
 
         private CaptureInfo(@NotNull TotemBlockEntity totem) {

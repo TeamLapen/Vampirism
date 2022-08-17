@@ -30,11 +30,11 @@ public abstract class InventoryContainer extends AbstractContainerMenu {
     protected final Container inventory;
     private final int size;
 
-    public InventoryContainer(MenuType<? extends InventoryContainer> containerType, int id, Inventory playerInventory, ContainerLevelAccess worldPos, @NotNull Container inventory, SelectorInfo... selectorInfos) {
+    public InventoryContainer(MenuType<? extends InventoryContainer> containerType, int id, @NotNull Inventory playerInventory, ContainerLevelAccess worldPos, @NotNull Container inventory, SelectorInfo... selectorInfos) {
         this(containerType, id, playerInventory, worldPos, inventory, SelectorSlot::new, selectorInfos);
     }
 
-    public InventoryContainer(MenuType<? extends InventoryContainer> containerType, int id, Inventory playerInventory, ContainerLevelAccess worldPos, @NotNull Container inventory, SelectorSlotFactory factory, SelectorInfo... selectorInfos) {
+    public InventoryContainer(MenuType<? extends InventoryContainer> containerType, int id, @NotNull Inventory playerInventory, ContainerLevelAccess worldPos, @NotNull Container inventory, @NotNull SelectorSlotFactory factory, SelectorInfo @NotNull ... selectorInfos) {
         this(containerType, id, worldPos, inventory, selectorInfos.length);
 
         if (inventory.getContainerSize() < selectorInfos.length) {
@@ -110,7 +110,7 @@ public abstract class InventoryContainer extends AbstractContainerMenu {
         return true;
     }
 
-    protected void addPlayerSlots(Inventory playerInventory, int baseX, int baseY) {
+    protected void addPlayerSlots(@NotNull Inventory playerInventory, int baseX, int baseY) {
         int i;
         for (i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
@@ -122,7 +122,7 @@ public abstract class InventoryContainer extends AbstractContainerMenu {
         }
     }
 
-    protected void addPlayerSlots(Inventory playerInventory) {
+    protected void addPlayerSlots(@NotNull Inventory playerInventory) {
         this.addPlayerSlots(playerInventory, 8, 84);
     }
 
@@ -137,12 +137,12 @@ public abstract class InventoryContainer extends AbstractContainerMenu {
 
     public static class SelectorSlot extends Slot {
 
-        private final SelectorInfo info;
+        private final @NotNull SelectorInfo info;
         private final Function<Integer, Boolean> activeFunc;
         private final Consumer<Container> refreshInvFunc;
         private InventoryContainer ourContainer;
 
-        public SelectorSlot(Container inventoryIn, int index, SelectorInfo info, Consumer<Container> refreshInvFunc, Function<Integer, Boolean> activeFunc) {
+        public SelectorSlot(@NotNull Container inventoryIn, int index, @NotNull SelectorInfo info, Consumer<Container> refreshInvFunc, Function<Integer, Boolean> activeFunc) {
             super(inventoryIn, index, info.xDisplay, info.yDisplay);
             this.info = info;
             this.activeFunc = activeFunc;
@@ -213,25 +213,25 @@ public abstract class InventoryContainer extends AbstractContainerMenu {
             this.background = background;
         }
 
-        public SelectorInfo(Item item, int x, int y) {
+        public SelectorInfo(@NotNull Item item, int x, int y) {
             this(item, x, y, false, 64, null);
         }
 
 
-        public SelectorInfo(Item item, int x, int y, boolean inverted, int stackLimit, @Nullable Pair<ResourceLocation, ResourceLocation> background) {
+        public SelectorInfo(@NotNull Item item, int x, int y, boolean inverted, int stackLimit, @Nullable Pair<ResourceLocation, ResourceLocation> background) {
             this(itemStack -> item.equals(itemStack.getItem()), x, y, inverted, stackLimit, background);
         }
 
-        public SelectorInfo(LazyOptional<Collection<Item>> lazyItemCollection, int x, int y, boolean inverted, int stackLimit, @Nullable Pair<ResourceLocation, ResourceLocation> background) {
+        public SelectorInfo(@NotNull LazyOptional<Collection<Item>> lazyItemCollection, int x, int y, boolean inverted, int stackLimit, @Nullable Pair<ResourceLocation, ResourceLocation> background) {
             this(itemStack -> lazyItemCollection.map(list -> list.contains(itemStack.getItem())).orElse(false), x, y, inverted, stackLimit, background);
         }
 
-        public SelectorInfo(TagKey<Item> tag, int x, int y) {
+        public SelectorInfo(@NotNull TagKey<Item> tag, int x, int y) {
             this(tag, x, y, false, 64, null);
         }
 
 
-        public SelectorInfo(TagKey<Item> tag, int x, int y, boolean inverted, int stackLimit, @Nullable Pair<ResourceLocation, ResourceLocation> background) {
+        public SelectorInfo(@NotNull TagKey<Item> tag, int x, int y, boolean inverted, int stackLimit, @Nullable Pair<ResourceLocation, ResourceLocation> background) {
             this(itemStack -> itemStack.is(tag) , x, y, inverted, stackLimit, background);
         }
 

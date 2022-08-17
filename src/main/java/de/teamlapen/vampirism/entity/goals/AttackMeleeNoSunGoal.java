@@ -8,6 +8,7 @@ import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.level.pathfinder.Node;
 import net.minecraft.world.level.pathfinder.Path;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Checks paths of {@link MeleeAttackGoal} for sunny parts.
@@ -15,7 +16,7 @@ import net.minecraft.world.level.pathfinder.Path;
 public class AttackMeleeNoSunGoal extends MeleeAttackGoal {
 
 
-    public AttackMeleeNoSunGoal(PathfinderMob creature, double speedIn, boolean useLongMemory) {
+    public AttackMeleeNoSunGoal(@NotNull PathfinderMob creature, double speedIn, boolean useLongMemory) {
         super(creature, speedIn, useLongMemory);
     }
 

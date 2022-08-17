@@ -138,7 +138,7 @@ public abstract class HunterCampPieces extends StructurePiece {
         /**
          * @throws IllegalArgumentException if direction size == 0
          */
-        private StructurePiece getComponent(@NotNull RandomSource rand,@NotNull List<Direction> directions, boolean advanced) {
+        private @NotNull StructurePiece getComponent(@NotNull RandomSource rand, @NotNull List<Direction> directions, boolean advanced) {
             @NotNull Direction direction = directions.remove(rand.nextInt(directions.size()));
             //blockpos at center of the 3x3 component
             int x = this.x + (direction.getAxis().equals(Direction.Axis.X) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? 3 : -3 : 0);
@@ -155,7 +155,7 @@ public abstract class HunterCampPieces extends StructurePiece {
         /**
          * @throws IllegalArgumentException if direction size == 0
          */
-        private StructurePiece getTentComponent(@NotNull RandomSource rand,@NotNull List<Direction> directions, boolean advanced) {
+        private @NotNull StructurePiece getTentComponent(@NotNull RandomSource rand, @NotNull List<Direction> directions, boolean advanced) {
             @NotNull Direction direction = directions.remove(rand.nextInt(directions.size()));
             //blockpos at center of the 3x3 component
             int x = this.x + (direction.getAxis().equals(Direction.Axis.X) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? 3 : -3 : 0);
@@ -165,7 +165,7 @@ public abstract class HunterCampPieces extends StructurePiece {
     }
 
     public static class Tent extends HunterCampPieces {
-        private final Direction direction;
+        private final @NotNull Direction direction;
         private final boolean advanced;
         int xDiff;
         int xCenter;

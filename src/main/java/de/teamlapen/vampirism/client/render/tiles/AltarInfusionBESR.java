@@ -35,7 +35,7 @@ public class AltarInfusionBESR extends VampirismBESR<AltarInfusionBlockEntity> {
 
 
     @Override
-    public void render(AltarInfusionBlockEntity te, float partialTicks, @NotNull PoseStack matrixStack, @NotNull MultiBufferSource iRenderTypeBuffer, int combinedLight, int combinedOverlay) {
+    public void render(@NotNull AltarInfusionBlockEntity te, float partialTicks, @NotNull PoseStack matrixStack, @NotNull MultiBufferSource iRenderTypeBuffer, int combinedLight, int combinedOverlay) {
         // Render the beams if the ritual is running
         AltarInfusionBlockEntity.PHASE phase = te.getCurrentPhase();
         if (phase == AltarInfusionBlockEntity.PHASE.BEAM1 || phase == AltarInfusionBlockEntity.PHASE.BEAM2) {
@@ -65,7 +65,7 @@ public class AltarInfusionBESR extends VampirismBESR<AltarInfusionBlockEntity> {
     /**
      * Renders a beam in the world, similar to the dragon healing beam
      */
-    private void renderBeam(PoseStack matrixStack, MultiBufferSource renderTypeBuffer, float partialTicks, float dx, float dy, float dz, int packedLight, boolean beacon) {
+    private void renderBeam(@NotNull PoseStack matrixStack, @NotNull MultiBufferSource renderTypeBuffer, float partialTicks, float dx, float dy, float dz, int packedLight, boolean beacon) {
 
         float distFlat = Mth.sqrt(dx * dx + dz * dz);
         float dist = Mth.sqrt(dx * dx + dy * dy + dz * dz);

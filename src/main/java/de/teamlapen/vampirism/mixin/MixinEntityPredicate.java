@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -21,7 +22,7 @@ public class MixinEntityPredicate {
     private boolean isCombat;
 
     @Inject(method = "test", at = @At("RETURN"), cancellable = true)
-    private void handleCanTarget_vampirism(LivingEntity attacker, LivingEntity target, CallbackInfoReturnable<Boolean> cir) {
+    private void handleCanTarget_vampirism(LivingEntity attacker, LivingEntity target, @NotNull CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue() && isCombat) {
             if (target instanceof Player && !(attacker instanceof IHunterMob)) {
                 if (VampirismPlayerAttributes.get((Player) target).getVampSpecial().isDBNO) {

@@ -54,7 +54,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -98,7 +98,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
     }
 
     @SubscribeEvent
-    public void onClientTick(TickEvent.ClientTickEvent event) {
+    public void onClientTick(TickEvent.@NotNull ClientTickEvent event) {
 
         if (mc.player == null || !mc.player.isAlive()) {
             renderFullTick = 0;
@@ -134,7 +134,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
     }
 
     @SubscribeEvent
-    public void onRenderCrosshair(RenderGuiOverlayEvent.Pre event) {
+    public void onRenderCrosshair(RenderGuiOverlayEvent.@NotNull Pre event) {
 
         if (event.getOverlay().id() != VanillaGuiOverlay.CROSSHAIR.id() || mc.player == null || !mc.player.isAlive()) {
             return;
@@ -216,7 +216,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
     }
 
     @SubscribeEvent
-    public void onRenderFoodBar(RenderGuiOverlayEvent.Pre event) {
+    public void onRenderFoodBar(RenderGuiOverlayEvent.@NotNull Pre event) {
         //disable foodbar if bloodbar is rendered
         if (event.getOverlay().id() == VanillaGuiOverlay.FOOD_LEVEL.id() && mc.player != null && Helper.isVampire(mc.player) && !IMCHandler.requestedToDisableBloodbar && mc.gameMode.hasExperience() && mc.player.isAlive()) {
             event.setCanceled(true);
@@ -224,7 +224,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onRenderGameOverlay(RenderGuiEvent.Pre event) {
+    public void onRenderGameOverlay(RenderGuiEvent.@NotNull Pre event) {
         if ((screenPercentage > 0 || screenBottomPercentage > 0) && VampirismConfig.CLIENT.renderScreenOverlay.get()) {
             PoseStack stack = event.getPoseStack();
             stack.pushPose();
@@ -294,7 +294,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
     }
 
     @SubscribeEvent
-    public void onRenderHealthBarPost(RenderGuiOverlayEvent.Post event) {
+    public void onRenderHealthBarPost(RenderGuiOverlayEvent.@NotNull Post event) {
         if (event.getOverlay().id() != VanillaGuiOverlay.PLAYER_HEALTH.id()) {
             return;
         }
@@ -306,7 +306,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
     }
 
     @SubscribeEvent
-    public void onRenderHealthBarPre(RenderGuiOverlayEvent.Pre event) {
+    public void onRenderHealthBarPre(RenderGuiOverlayEvent.@NotNull Pre event) {
         if (event.getOverlay().id() != VanillaGuiOverlay.PLAYER_HEALTH.id()) {
             return;
         }
@@ -321,7 +321,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
     }
 
-    private void handleScreenColorHunter(HunterPlayer hunter) {
+    private void handleScreenColorHunter(@NotNull HunterPlayer hunter) {
         if (hunter.getSpecialAttributes().isDisguised()) {
             screenPercentage = (int) (100 * hunter.getSpecialAttributes().getDisguiseProgress());
             screenColor = 0xff111111;
@@ -335,7 +335,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
         }
     }
 
-    private void handleScreenColorVampire(VampirePlayer vampire) {
+    private void handleScreenColorVampire(@NotNull VampirePlayer vampire) {
 
         //Main area/borders
         if (vampire.getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE.get())) {
@@ -373,7 +373,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
         }
     }
 
-    private void renderBloodFangs(PoseStack stack, int width, int height, float perc, int color) {
+    private void renderBloodFangs(@NotNull PoseStack stack, int width, int height, float perc, int color) {
 
         float r = ((color & 0xFF0000) >> 16) / 256f;
         float g = ((color & 0xFF00) >> 8) / 256f;
@@ -392,7 +392,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
     }
 
-    private void renderStakeInstantKill(PoseStack mStack, int width, int height) {
+    private void renderStakeInstantKill(@NotNull PoseStack mStack, int width, int height) {
         if (this.mc.options.getCameraType().isFirstPerson() && this.mc.gameMode.getPlayerMode() != GameType.SPECTATOR) {
             RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR.value, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR.value, GlStateManager.SourceFactor.ONE.value, GlStateManager.DestFactor.ZERO.value);
             RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);

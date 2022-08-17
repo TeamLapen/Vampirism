@@ -44,6 +44,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
@@ -115,7 +116,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void handleBloodValuePacket(ClientboundBloodValuePacket msg) {
+    public void handleBloodValuePacket(@NotNull ClientboundBloodValuePacket msg) {
         Map<ResourceLocation, Float> entities = msg.getValues()[0];
         ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).applyNewResources(entities);
         BloodConversionRegistry.applyNewEntitiesResources(entities);
@@ -124,24 +125,24 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void handlePlayEventPacket(ClientboundPlayEventPacket msg) {
+    public void handlePlayEventPacket(@NotNull ClientboundPlayEventPacket msg) {
         if (msg.type() == 1) {
             spawnParticles(Minecraft.getInstance().level, msg.pos(), Block.stateById(msg.stateId()));
         }
     }
 
     @Override
-    public void handleRequestMinionSelect(ClientboundRequestMinionSelectPacket.Action action, List<Pair<Integer, Component>> minions) {
+    public void handleRequestMinionSelect(ClientboundRequestMinionSelectPacket.Action action, @NotNull List<Pair<Integer, Component>> minions) {
         Minecraft.getInstance().setScreen(new SelectMinionScreen(action, minions));
     }
 
     @Override
-    public void handleSkillTreePacket(ClientboundSkillTreePacket msg) {
+    public void handleSkillTreePacket(@NotNull ClientboundSkillTreePacket msg) {
         skillTreeManager.loadUpdate(msg);
     }
 
     @Override
-    public void handleSleepClient(Player player) {
+    public void handleSleepClient(@NotNull Player player) {
         if (player.isSleeping()) {
             player.getSleepingPos().ifPresent(pos -> {
                 if (player.level.getBlockState(pos).getBlock() instanceof TentBlock) {
@@ -160,7 +161,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void handleTaskPacket(ClientboundTaskPacket msg) {
+    public void handleTaskPacket(@NotNull ClientboundTaskPacket msg) {
         AbstractContainerMenu container = Minecraft.getInstance().player.containerMenu;
         if (msg.containerId() == container.containerId && container instanceof VampirismContainer) {
             ((VampirismContainer) container).init(msg.taskWrappers(), msg.completableTasks(), msg.completedRequirements());
@@ -168,7 +169,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void handleTaskStatusPacket(ClientboundTaskStatusPacket msg) {
+    public void handleTaskStatusPacket(@NotNull ClientboundTaskStatusPacket msg) {
         AbstractContainerMenu container = Objects.requireNonNull(Minecraft.getInstance().player).containerMenu;
         if (msg.containerId() == container.containerId && container instanceof TaskBoardContainer) {
             ((TaskBoardContainer) container).init(msg.available(), msg.completableTasks(), msg.completedRequirements(), msg.taskBoardId());
@@ -176,17 +177,17 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void handleUpdateMultiBossInfoPacket(ClientboundUpdateMultiBossEventPacket msg) {
+    public void handleUpdateMultiBossInfoPacket(@NotNull ClientboundUpdateMultiBossEventPacket msg) {
         this.bossInfoOverlay.read(msg);
     }
 
     @Override
-    public void handleVampireBookPacket(VampireBookManager.BookInfo bookInfo) {
+    public void handleVampireBookPacket(VampireBookManager.@NotNull BookInfo bookInfo) {
         Minecraft.getInstance().setScreen(new VampireBookScreen(bookInfo));
     }
 
     @Override
-    public void onInitStep(Step step, ParallelDispatchEvent event) {
+    public void onInitStep(@NotNull Step step, @NotNull ParallelDispatchEvent event) {
         super.onInitStep(step, event);
         switch (step) {
             case CLIENT_SETUP -> {
@@ -216,7 +217,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void showDBNOScreen(Player playerEntity, @Nullable Component deathMessage) {
+    public void showDBNOScreen(@NotNull Player playerEntity, @Nullable Component deathMessage) {
         if (playerEntity == Minecraft.getInstance().player && !playerEntity.isDeadOrDying()) {
             Minecraft.getInstance().setScreen(new DBNOScreen(deathMessage));
         }
@@ -240,7 +241,7 @@ public class ClientProxy extends CommonProxy {
     /**
      * copied but which much lesser particles
      */
-    private void spawnParticles(Level world, BlockPos pos, BlockState state) {
+    private void spawnParticles(Level world, @NotNull BlockPos pos, @NotNull BlockState state) {
         if (!(world instanceof ClientLevel)) return;
         VoxelShape voxelshape = state.getShape(world, pos);
         voxelshape.forAllBoxes((p_199284_3_, p_199284_5_, p_199284_7_, p_199284_9_, p_199284_11_, p_199284_13_) -> {

@@ -6,15 +6,17 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 
 public class DefendLeaderGoal extends TargetGoal {
-    private final BasicVampireEntity entity;
-    private LivingEntity attacker;
+    private final @NotNull BasicVampireEntity entity;
+    private @Nullable LivingEntity attacker;
     private int timestamp;
 
-    public DefendLeaderGoal(BasicVampireEntity basicVampire) {
+    public DefendLeaderGoal(@NotNull BasicVampireEntity basicVampire) {
         super(basicVampire, false);
         this.entity = basicVampire;
         this.setFlags(EnumSet.of(Goal.Flag.TARGET));

@@ -28,7 +28,7 @@ public class InjectionItem extends Item {
 
     @NotNull
     @Override
-    public InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
+    public InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         if (type == TYPE.SANGUINARE) {
             playerIn.displayClientMessage(Component.literal("Please use a ").append(Component.translatable(ModBlocks.MED_CHAIR.get().getDescriptionId())), true);
@@ -46,7 +46,7 @@ public class InjectionItem extends Item {
             this.name = name;
         }
 
-        public String getName() {
+        public @NotNull String getName() {
             return this.getSerializedName();
         }
 

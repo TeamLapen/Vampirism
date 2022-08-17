@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import net.minecraftforge.fml.ModList;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,7 +23,7 @@ public class IntegrationsNotifier {
      *
      * @return Empty list if no notification. Otherwise, list of installed mod ids with potential compat
      */
-    public static List<String> shouldNotifyAboutIntegrations() {
+    public static @NotNull List<String> shouldNotifyAboutIntegrations() {
         if (!ModList.get().isLoaded(REFERENCE.INTEGRATIONS_MODID)) {
             List<String> installedMods = Lists.newArrayList();
             for (String s : available_compats) {
@@ -46,7 +47,7 @@ public class IntegrationsNotifier {
      *
      * @return If already notified
      */
-    private static boolean checkAndUpdateAlreadyNotified(List<String> mods) {
+    private static boolean checkAndUpdateAlreadyNotified(@NotNull List<String> mods) {
         String saved = VampirismConfig.COMMON.integrationsNotifier.get();
         if ("never".equals(saved) || "'never'".equals(saved)) {
             return true;

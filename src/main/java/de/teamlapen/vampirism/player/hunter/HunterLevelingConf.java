@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.player.hunter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Stores values/information about the leveling of hunters. Might be replaced by an actually configurable object at some point
@@ -11,7 +12,7 @@ public class HunterLevelingConf {
     private final static Logger LOGGER = LogManager.getLogger(HunterLevelingConf.class);
     private static HunterLevelingConf instance;
 
-    public static HunterLevelingConf instance() {
+    public static @NotNull HunterLevelingConf instance() {
         if (instance == null) {
             instance = new HunterLevelingConf();
         }

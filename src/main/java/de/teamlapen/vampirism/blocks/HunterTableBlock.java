@@ -27,7 +27,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,7 +40,7 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
     private static final VoxelShape NORTH = UtilLib.rotateShape(SOUTH, UtilLib.RotationAmount.HUNDRED_EIGHTY);
     private static final VoxelShape EAST = UtilLib.rotateShape(SOUTH, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY);
 
-    private static VoxelShape makeShape() {
+    private static @NotNull VoxelShape makeShape() {
         VoxelShape a = Block.box(0, 0, 0, 2, 10, 2);
         VoxelShape b = Block.box(14, 0, 0, 16, 10, 2);
         VoxelShape c = Block.box(0, 0, 14, 2, 10, 16);
@@ -59,7 +58,7 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
         return Shapes.or(d3, f1);
     }
 
-    public static TABLE_VARIANT getTierFor(boolean weapon_table, boolean potion_table, boolean cauldron) {
+    public static @NotNull TABLE_VARIANT getTierFor(boolean weapon_table, boolean potion_table, boolean cauldron) {
         return weapon_table ? (potion_table ? (cauldron ? TABLE_VARIANT.COMPLETE : TABLE_VARIANT.WEAPON_POTION) : (cauldron ? TABLE_VARIANT.WEAPON_CAULDRON : TABLE_VARIANT.WEAPON)) : (potion_table ? (cauldron ? TABLE_VARIANT.POTION_CAULDRON : TABLE_VARIANT.POTION) : (cauldron ? TABLE_VARIANT.CAULDRON : TABLE_VARIANT.SIMPLE));
     }
 
@@ -71,7 +70,7 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
 
     @NotNull
     @Override
-    public VoxelShape getShape(BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+    public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         return switch (state.getValue(FACING)) {
             case EAST -> EAST;
             case SOUTH -> SOUTH;
@@ -82,13 +81,13 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
 
     @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
+    public BlockState getStateForPlacement(@NotNull BlockPlaceContext context) {
         Direction facing = context.getHorizontalDirection();
         return this.defaultBlockState().setValue(FACING, facing).setValue(VARIANT, determineTier(context.getLevel(), context.getClickedPos(), facing));
     }
 
     @Override
-    public void neighborChanged(@NotNull BlockState state, @NotNull Level worldIn, BlockPos pos, @NotNull Block blockIn, BlockPos fromPos, boolean isMoving) {
+    public void neighborChanged(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Block blockIn, @NotNull BlockPos fromPos, boolean isMoving) {
         if (fromPos.getY() != pos.getY()) return;
         TABLE_VARIANT newVariant = determineTier(worldIn, pos, state.getValue(FACING));
         if (newVariant != state.getValue(VARIANT)) {
@@ -98,7 +97,7 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
 
     @NotNull
     @Override
-    public InteractionResult use(@NotNull BlockState state, Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+    public InteractionResult use(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         if (!worldIn.isClientSide) {
             if (player instanceof ServerPlayer serverPlayer) {
                 NetworkHooks.openScreen(serverPlayer, new SimpleMenuProvider((id, playerInventory, playerIn) -> new HunterTableContainer(id, playerInventory, ContainerLevelAccess.create(playerIn.level, pos)), Component.translatable("container.crafting")), pos);
@@ -109,11 +108,11 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> builder) {
         builder.add(FACING, VARIANT);
     }
 
-    protected TABLE_VARIANT determineTier(LevelReader world, BlockPos pos, Direction facing) {
+    protected TABLE_VARIANT determineTier(@NotNull LevelReader world, @NotNull BlockPos pos, @NotNull Direction facing) {
         Block behind = world.getBlockState(pos.relative(facing)).getBlock();
         Block left = world.getBlockState(pos.relative(facing.getClockWise())).getBlock();
         Block right = world.getBlockState(pos.relative(facing.getCounterClockWise())).getBlock();

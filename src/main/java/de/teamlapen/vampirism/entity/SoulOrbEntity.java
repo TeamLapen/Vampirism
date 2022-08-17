@@ -42,12 +42,12 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
 
     public static final EntityDataAccessor<String> TYPE_PARAMETER = SynchedEntityData.defineId(SoulOrbEntity.class, EntityDataSerializers.STRING);
     private int delayBeforePickup;
-    private Player player;
+    private @Nullable Player player;
     private int age;
     @Nullable
     private ItemStack soulItemStack;
 
-    public SoulOrbEntity(Level worldIn, double x, double y, double z, VARIANT type) {
+    public SoulOrbEntity(@NotNull Level worldIn, double x, double y, double z, @NotNull VARIANT type) {
         super(ModEntities.SOUL_ORB.get(), worldIn);
         this.setVariant(type);
         delayBeforePickup = 10;
@@ -56,7 +56,7 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
         this.setDeltaMovement((this.random.nextDouble() * (double) 0.2F - (double) 0.1F) * 2.0D, this.random.nextDouble() * 0.2D * 2.0D, (this.random.nextDouble() * (double) 0.2F - (double) 0.1F) * 2.0D);
     }
 
-    public SoulOrbEntity(EntityType<? extends SoulOrbEntity> type, Level worldIn) {
+    public SoulOrbEntity(@NotNull EntityType<? extends SoulOrbEntity> type, @NotNull Level worldIn) {
         super(type, worldIn);
     }
 
@@ -66,11 +66,11 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    public VARIANT getVariant() {
+    public @NotNull VARIANT getVariant() {
         return VARIANT.valueOf(getEntityData().get(TYPE_PARAMETER));
     }
 
-    private void setVariant(VARIANT type) {
+    private void setVariant(@NotNull VARIANT type) {
         getEntityData().set(TYPE_PARAMETER, type.name());
     }
 
@@ -185,7 +185,7 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag compound) {
+    protected void addAdditionalSaveData(@NotNull CompoundTag compound) {
         compound.putString("type", this.getVariant().name());
         compound.putInt("age", age);
     }
@@ -203,13 +203,13 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
 
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag compound) {
+    protected void readAdditionalSaveData(@NotNull CompoundTag compound) {
         this.setVariant(VARIANT.valueOf(compound.getString("type")));
         this.age = compound.getInt("age");
         soulItemStack = null;//Reset item just in case an item of a different type has been created beforehand
     }
 
-    private ItemStack createSoulItemStack() {
+    private @NotNull ItemStack createSoulItemStack() {
         //noinspection IfStatementWithIdenticalBranches
         if (getVariant() == VARIANT.VAMPIRE) {
             return new ItemStack(ModItems.SOUL_ORB_VAMPIRE.get());

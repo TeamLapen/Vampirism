@@ -9,20 +9,21 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 import org.apache.commons.lang3.Validate;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
 
 public record ServerboundToggleMinionTaskLock(int minionID) implements IMessage {
-    static void encode(ServerboundToggleMinionTaskLock msg, FriendlyByteBuf buf) {
+    static void encode(@NotNull ServerboundToggleMinionTaskLock msg, @NotNull FriendlyByteBuf buf) {
         buf.writeVarInt(msg.minionID);
     }
 
-    static ServerboundToggleMinionTaskLock decode(FriendlyByteBuf buf) {
+    static @NotNull ServerboundToggleMinionTaskLock decode(@NotNull FriendlyByteBuf buf) {
         return new ServerboundToggleMinionTaskLock(buf.readVarInt());
     }
 
-    static void handle(ServerboundToggleMinionTaskLock msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    static void handle(@NotNull ServerboundToggleMinionTaskLock msg, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ServerPlayer player = ctx.getSender();
         Validate.notNull(player);

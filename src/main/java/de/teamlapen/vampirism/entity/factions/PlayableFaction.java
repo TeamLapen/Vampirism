@@ -26,7 +26,7 @@ public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> imp
     private final Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot;
     private boolean hasLordSkills;
 
-    PlayableFaction(FactionRegistry.PlayableFactionBuilder<T> builder) {
+    PlayableFaction(FactionRegistry.@NotNull PlayableFactionBuilder<T> builder) {
         super(builder);
         this.highestLevel = builder.highestLevel;
         this.highestLordLevel = builder.highestLordLevel;
@@ -64,7 +64,7 @@ public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> imp
     }
 
     @Override
-    public LazyOptional<T> getPlayerCapability(Player player) {
+    public @NotNull LazyOptional<T> getPlayerCapability(@NotNull Player player) {
         return player.getCapability(playerCapabilitySupplier.get(), null);
     }
 
@@ -81,7 +81,7 @@ public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> imp
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return "PlayableFaction{" +
                 "id='" + id + '\'' +
                 '}';

@@ -32,7 +32,6 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.network.NetworkHooks;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,7 +41,7 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
     public static final IntegerProperty LAVA = IntegerProperty.create("lava", 0, MAX_LAVA);
     private static final Component name = Component.translatable("gui.vampirism.hunter_weapon_table");
 
-    private static VoxelShape makeShape() {
+    private static @NotNull VoxelShape makeShape() {
         VoxelShape a = Block.box(3, 0, 0, 13, 2, 8);
         VoxelShape b = Block.box(4, 2, 1, 12, 3, 7);
         VoxelShape c = Block.box(5, 3, 2, 11, 6, 6);
@@ -79,7 +78,7 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
 
     @NotNull
     @Override
-    public InteractionResult use(@NotNull BlockState state, Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+    public InteractionResult use(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         if (!world.isClientSide) {
             int fluid = world.getBlockState(pos).getValue(LAVA);
             boolean flag = false;
@@ -117,14 +116,14 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> builder) {
         builder.add(LAVA, FACING);
     }
 
     /**
      * @return If the given player is allowed to use this.
      */
-    private boolean canUse(Player player) {
+    private boolean canUse(@NotNull Player player) {
         if (Helper.isHunter(player)) {
             return HunterPlayer.getOpt(player).map(HunterPlayer::getSkillHandler).map(handler -> handler.isSkillEnabled(HunterSkills.WEAPON_TABLE.get())).orElse(false);
         }

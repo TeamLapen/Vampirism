@@ -83,14 +83,14 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
     }
 
     @Override
-    public UseAnim getUseAnimation(ItemStack p_77661_1_) {
+    public @NotNull UseAnim getUseAnimation(ItemStack p_77661_1_) {
         return UseAnim.NONE;
     }
 
 
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public @NotNull InteractionResultHolder<ItemStack> use(Level world, @NotNull Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         player.startUsingItem(hand);
         return InteractionResultHolder.consume(itemstack);
@@ -115,7 +115,7 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
         }
     }
 
-    protected boolean affectsEntity(LivingEntity e) {
+    protected boolean affectsEntity(@NotNull LivingEntity e) {
         return e.getMobType() == MobType.UNDEAD || Helper.isVampire(e);
     }
 
@@ -190,7 +190,7 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
     }
 
     @Override
-    public void onUsingTick(ItemStack stack, LivingEntity player, int count) {
+    public void onUsingTick(ItemStack stack, @NotNull LivingEntity player, int count) {
         for (LivingEntity nearbyEntity : player.level.getNearbyEntities(LivingEntity.class, TargetingConditions.forCombat().selector(this::affectsEntity), player, player.getBoundingBox().inflate(getRange(stack)))) {
             Vec3 baseVector = player.position().subtract(nearbyEntity.position()).multiply(1, 0, 1).normalize(); //Normalized horizontal (xz) vector giving the direction towards the holder of this crucifix
             Vec3 oldDelta = nearbyEntity.getDeltaMovement();

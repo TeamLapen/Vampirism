@@ -10,7 +10,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -22,11 +21,11 @@ public class BasicHunterModel<T extends LivingEntity> extends BipedCloakedModel<
     private boolean targetingRight = false;
     private float xAngle = 0;
 
-    public static LayerDefinition createBodyLayer() {
+    public static @NotNull LayerDefinition createBodyLayer() {
         return LayerDefinition.create(BipedCloakedModel.createMesh(false), 64, 64);
     }
 
-    public static LayerDefinition createSlimBodyLayer() {
+    public static @NotNull LayerDefinition createSlimBodyLayer() {
         return LayerDefinition.create(BipedCloakedModel.createMesh(true), 64, 64);
     }
 
@@ -36,7 +35,7 @@ public class BasicHunterModel<T extends LivingEntity> extends BipedCloakedModel<
 
 
     @Override
-    public void prepareMobModel(T entitylivingbaseIn, float p_78086_2_, float p_78086_3_, float partialTickTime) {
+    public void prepareMobModel(@NotNull T entitylivingbaseIn, float p_78086_2_, float p_78086_3_, float partialTickTime) {
         this.targetingRight = false;
         this.targetingLeft = false;
         ItemStack itemStack = entitylivingbaseIn.getItemInHand(InteractionHand.MAIN_HAND);

@@ -25,9 +25,9 @@ public class BloodValueLoader extends SimplePreparableReloadListener<Collection<
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String BLOOD_VALUE_DIRECTORY = "vampirism_blood_values/";
 
-    private final String folderLocation;
-    private final String type;
-    private final BiConsumer<Map<ResourceLocation, Integer>, Integer> consumer;
+    private final @NotNull String folderLocation;
+    private final @NotNull String type;
+    private final @NotNull BiConsumer<Map<ResourceLocation, Integer>, Integer> consumer;
     @Nullable
     private final ResourceLocation multiplierName;
     private int multiplier;
@@ -65,7 +65,7 @@ public class BloodValueLoader extends SimplePreparableReloadListener<Collection<
      * @param modId should be equals to the file name of location
      */
     @Nullable
-    public Map<ResourceLocation, Integer> loadBloodValuesFromDataPack(ResourceLocation location, String modId, ResourceManager resourceManager) {
+    public Map<ResourceLocation, Integer> loadBloodValuesFromDataPack(@NotNull ResourceLocation location, String modId, @NotNull ResourceManager resourceManager) {
         if (!ModList.get().isLoaded(modId)) return null;
         return resourceManager.getResource(location).map(resource -> {
             try (Reader reader = resource.openAsReader()) {
@@ -81,7 +81,7 @@ public class BloodValueLoader extends SimplePreparableReloadListener<Collection<
      * @param r     Reader the values should be read from
      * @param modId Just for logging of errors
      */
-    protected <T> Map<ResourceLocation, Integer> loadBloodValuesFromReader(Reader r, String modId) throws IOException {
+    protected <T> @NotNull Map<ResourceLocation, Integer> loadBloodValuesFromReader(@NotNull Reader r, String modId) throws IOException {
         Map<ResourceLocation, Integer> bloodValues = Maps.newConcurrentMap();
         try (BufferedReader br = new BufferedReader(r)) {
             String line;
@@ -130,7 +130,7 @@ public class BloodValueLoader extends SimplePreparableReloadListener<Collection<
 
     @NotNull
     @Override
-    public Collection<ResourceLocation> prepare(ResourceManager resourceManagerIn, @NotNull ProfilerFiller profilerIn) {
+    public Collection<ResourceLocation> prepare(@NotNull ResourceManager resourceManagerIn, @NotNull ProfilerFiller profilerIn) {
         return resourceManagerIn.listResources(folderLocation, (file) -> file.getPath().endsWith(".txt")).keySet();
     }
 }

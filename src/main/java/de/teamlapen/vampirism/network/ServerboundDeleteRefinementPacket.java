@@ -8,6 +8,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 import org.apache.commons.lang3.Validate;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -15,15 +16,15 @@ import java.util.function.Supplier;
 
 public record ServerboundDeleteRefinementPacket(IRefinementItem.AccessorySlotType slot) implements IMessage {
 
-    static void encode(ServerboundDeleteRefinementPacket msg, FriendlyByteBuf buf) {
+    static void encode(@NotNull ServerboundDeleteRefinementPacket msg, @NotNull FriendlyByteBuf buf) {
         buf.writeEnum(msg.slot);
     }
 
-    static ServerboundDeleteRefinementPacket decode(FriendlyByteBuf buf) {
+    static @NotNull ServerboundDeleteRefinementPacket decode(@NotNull FriendlyByteBuf buf) {
         return new ServerboundDeleteRefinementPacket(buf.readEnum(IRefinementItem.AccessorySlotType.class));
     }
 
-    static void handle(ServerboundDeleteRefinementPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    static void handle(@NotNull ServerboundDeleteRefinementPacket msg, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ServerPlayer player = ctx.getSender();
         Validate.notNull(player);

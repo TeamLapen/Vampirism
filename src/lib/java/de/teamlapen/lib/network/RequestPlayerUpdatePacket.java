@@ -5,6 +5,7 @@ import de.teamlapen.lib.lib.network.ISyncable;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
@@ -18,12 +19,12 @@ public class RequestPlayerUpdatePacket implements IMessage {
 
     }
 
-    static RequestPlayerUpdatePacket decode(FriendlyByteBuf buf) {
+    static @NotNull RequestPlayerUpdatePacket decode(FriendlyByteBuf buf) {
         return new RequestPlayerUpdatePacket();
     }
 
 
-    public static void handle(final RequestPlayerUpdatePacket pkt, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final RequestPlayerUpdatePacket pkt, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> { //Execute on main thread
             ServerPlayer player = ctx.getSender();

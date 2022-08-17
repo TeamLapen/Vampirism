@@ -45,7 +45,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
      *
      * @param villager Is not modified or removed
      */
-    public static AggressiveVillagerEntity makeHunter(@NotNull Villager villager) {
+    public static @NotNull AggressiveVillagerEntity makeHunter(@NotNull Villager villager) {
         AggressiveVillagerEntity hunter = ModEntities.VILLAGER_ANGRY.get().create(villager.level);
         assert hunter != null;
         CompoundTag nbt = new CompoundTag();
@@ -59,7 +59,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
         return hunter;
     }
 
-    public static AttributeSupplier.Builder getAttributeBuilder() {
+    public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
         return VampirismVillagerEntity.getAttributeBuilder()
                 .add(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.HUNTER_VILLAGER_MAX_HEALTH)
                 .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.HUNTER_VILLAGER_ATTACK_DAMAGE)
@@ -92,7 +92,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     }
 
     @Override
-    public LivingEntity getRepresentingEntity() {
+    public @NotNull LivingEntity getRepresentingEntity() {
         return this;
     }
 

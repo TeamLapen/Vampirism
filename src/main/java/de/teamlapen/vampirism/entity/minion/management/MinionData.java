@@ -35,7 +35,7 @@ public class MinionData implements INBTSerializable<CompoundTag>, IMinionData {
     }
 
     @NotNull
-    public static MinionData fromNBT(CompoundTag nbt) {
+    public static MinionData fromNBT(@NotNull CompoundTag nbt) {
         ResourceLocation dataType = new ResourceLocation(nbt.getString("data_type"));
         Supplier<? extends MinionData> c = constructors.get(dataType);
         if (c == null) {
@@ -48,7 +48,7 @@ public class MinionData implements INBTSerializable<CompoundTag>, IMinionData {
         return d;
     }
 
-    private final MinionInventory inventory;
+    private final @NotNull MinionInventory inventory;
     private float health;
     private String name;
 
@@ -70,7 +70,7 @@ public class MinionData implements INBTSerializable<CompoundTag>, IMinionData {
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
+    public void deserializeNBT(@NotNull CompoundTag nbt) {
         inventory.read(nbt.getList("inv", 10));
         inventory.setAvailableSize(nbt.getInt("inv_size"));
         health = nbt.getFloat("health");
@@ -147,7 +147,7 @@ public class MinionData implements INBTSerializable<CompoundTag>, IMinionData {
         return taskLocked;
     }
 
-    public void resetStats(MinionEntity<?> entity) {
+    public void resetStats(@NotNull MinionEntity<?> entity) {
         entity.getInventory().ifPresent(inv -> {
             if (!InventoryHelper.removeItemFromInventory(inv, new ItemStack(ModItems.OBLIVION_POTION.get()))) {
                 entity.getLordOpt().ifPresent(lord -> InventoryHelper.removeItemFromInventory(lord.getPlayer().getInventory(), new ItemStack(ModItems.OBLIVION_POTION.get())));
@@ -157,13 +157,13 @@ public class MinionData implements INBTSerializable<CompoundTag>, IMinionData {
     }
 
     @Override
-    public final CompoundTag serializeNBT() {
+    public final @NotNull CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
         serializeNBT(tag);
         return tag;
     }
 
-    public void serializeNBT(CompoundTag tag) {
+    public void serializeNBT(@NotNull CompoundTag tag) {
         tag.putInt("inv_size", inventory.getAvailableSize());
         tag.put("inv", inventory.write(new ListTag()));
         tag.putFloat("health", health);
@@ -182,7 +182,7 @@ public class MinionData implements INBTSerializable<CompoundTag>, IMinionData {
         return this.taskLocked = locked;
     }
 
-    public void shrinkInventory(MinionEntity<?> entity) {
+    public void shrinkInventory(@NotNull MinionEntity<?> entity) {
         Optional<MinionInventory> invOpt = entity.getMinionData().map(MinionData::getInventory);
         if (invOpt.isPresent()) {
             MinionInventory inv = invOpt.get();
@@ -210,7 +210,7 @@ public class MinionData implements INBTSerializable<CompoundTag>, IMinionData {
     }
 
     @SuppressWarnings("unchecked")
-    public <Q extends IMinionTask.IMinionTaskDesc<MinionData>, T extends IMinionTask<Q, ?>> void switchTask(T oldTask, IMinionTask.IMinionTaskDesc<MinionData> oldDesc, IMinionTask.IMinionTaskDesc<MinionData> newDesc) {
+    public <Q extends IMinionTask.IMinionTaskDesc<MinionData>, T extends IMinionTask<Q, ?>> void switchTask(@NotNull T oldTask, IMinionTask.IMinionTaskDesc<MinionData> oldDesc, IMinionTask.@NotNull IMinionTaskDesc<MinionData> newDesc) {
         oldTask.deactivateTask((Q) oldDesc);
         this.activeTaskDesc = newDesc;
     }
@@ -221,7 +221,7 @@ public class MinionData implements INBTSerializable<CompoundTag>, IMinionData {
      * @param statId -1 if stats are to be reset
      * @return if attributes where changed and a sync is required
      */
-    public boolean upgradeStat(int statId, MinionEntity<?> entity) {
+    public boolean upgradeStat(int statId, @NotNull MinionEntity<?> entity) {
         if (statId == -1) {
             resetStats(entity);
             return true;

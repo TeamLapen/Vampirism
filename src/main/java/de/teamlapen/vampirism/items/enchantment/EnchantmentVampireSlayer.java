@@ -15,7 +15,7 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import org.jetbrains.annotations.NotNull;
 
 public class EnchantmentVampireSlayer extends Enchantment {
-    public EnchantmentVampireSlayer(Rarity rarityIn) {
+    public EnchantmentVampireSlayer(@NotNull Rarity rarityIn) {
         super(rarityIn, EnchantmentCategory.WEAPON, new EquipmentSlot[]{EquipmentSlot.MAINHAND});
     }
 
@@ -31,7 +31,7 @@ public class EnchantmentVampireSlayer extends Enchantment {
     }
 
     @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack) {
+    public boolean canApplyAtEnchantingTable(@NotNull ItemStack stack) {
         return stack.getItem() instanceof PitchforkItem || super.canApplyAtEnchantingTable(stack);
     }
 

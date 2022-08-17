@@ -5,6 +5,7 @@ import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece;
 import net.minecraft.world.level.levelgen.structure.pools.EmptyPoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -24,7 +25,7 @@ public abstract class MixinJigsawPlacer {
     }
 
     @Redirect(method = "tryPlacingChildren", at = @At(value = "INVOKE", target = "Ljava/util/Iterator;next()Ljava/lang/Object;", ordinal = 1))
-    private Object inject(Iterator<StructurePoolElement> iterator) {
+    private @NotNull Object inject(@NotNull Iterator<StructurePoolElement> iterator) {
         while (iterator.hasNext()) {
             StructurePoolElement piece = iterator.next();
             if (!MixinHooks.checkStructures(this.pieces, piece)) {

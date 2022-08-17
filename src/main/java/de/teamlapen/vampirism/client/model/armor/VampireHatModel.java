@@ -9,6 +9,7 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class VampireHatModel extends VampirismArmorModel {
@@ -26,10 +27,10 @@ public class VampireHatModel extends VampirismArmorModel {
         return instance;
     }
 
-    public final ModelPart base;
-    public final ModelPart top;
+    public final @NotNull ModelPart base;
+    public final @NotNull ModelPart top;
 
-    public static LayerDefinition createLayer() {
+    public static @NotNull LayerDefinition createLayer() {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition part = mesh.getRoot();
         CubeDeformation def = new CubeDeformation(0.25f);
@@ -38,7 +39,7 @@ public class VampireHatModel extends VampirismArmorModel {
         return LayerDefinition.create(mesh, 64, 32);
     }
 
-    public VampireHatModel(ModelPart part) {
+    public VampireHatModel(@NotNull ModelPart part) {
         super();
         base = part.getChild(BASE);
         top = base.getChild(TOP);
@@ -46,7 +47,7 @@ public class VampireHatModel extends VampirismArmorModel {
 
 
     @Override
-    protected Iterable<ModelPart> getHeadModels() {
+    protected @NotNull Iterable<ModelPart> getHeadModels() {
         return ImmutableList.of(this.base);
     }
 }

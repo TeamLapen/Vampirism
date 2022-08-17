@@ -1,6 +1,8 @@
 package de.teamlapen.lib.lib.util;
 
 
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.reflect.Array;
 import java.util.Comparator;
 
@@ -10,14 +12,14 @@ public class ValuedObject<T> {
         return Comparator.comparingInt(qValuedObject -> qValuedObject.value);
     }
 
-    public static <Q> Comparator<ValuedObject<Q>> getInvertedComparator() {
+    public static <Q> @NotNull Comparator<ValuedObject<Q>> getInvertedComparator() {
         return (qValuedObject, t1) -> t1.value - qValuedObject.value;
     }
 
     /**
      * Extract the objects of the ValuedObjects out of the given array into a new array
      */
-    public static <Q> Q[] extract(Class<Q> clz, ValuedObject<Q>[] array) {
+    public static <Q> Q @NotNull [] extract(Class<Q> clz, ValuedObject<Q> @NotNull [] array) {
         @SuppressWarnings("unchecked")
         Q[] a = (Q[]) Array.newInstance(clz, array.length);
         for (int i = 0; i < array.length; i++) {
@@ -35,7 +37,7 @@ public class ValuedObject<T> {
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return "Obj " + object + " Value " + value;
     }
 }

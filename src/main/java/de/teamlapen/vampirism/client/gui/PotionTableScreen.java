@@ -10,7 +10,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
-
 import org.jetbrains.annotations.NotNull;
 
 public class PotionTableScreen extends AbstractContainerScreen<PotionTableContainer> {
@@ -20,7 +19,7 @@ public class PotionTableScreen extends AbstractContainerScreen<PotionTableContai
     private final ResourceLocation TABLE_GUI_TEXTURES = new ResourceLocation(REFERENCE.MODID, "textures/gui/potion_table.png");
 
 
-    public PotionTableScreen(PotionTableContainer screenContainer, Inventory inv, Component titleIn) {
+    public PotionTableScreen(@NotNull PotionTableContainer screenContainer, @NotNull Inventory inv, @NotNull Component titleIn) {
         super(screenContainer, inv, titleIn);
         this.titleLabelY = 5;
     }

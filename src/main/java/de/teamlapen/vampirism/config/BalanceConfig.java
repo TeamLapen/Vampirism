@@ -8,6 +8,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -213,7 +214,7 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue laLordAttackSpeedCooldown;
     public final ForgeConfigSpec.IntValue laLordAttackSpeedDuration;
 
-    BalanceConfig(BalanceBuilder builder) {
+    BalanceConfig(@NotNull BalanceBuilder builder) {
         boolean iceAndFire = ModList.get().isLoaded("iceandfire");
         if (iceAndFire) {
             LOGGER.info("IceAndFire is loaded -> Adjusting default fire related configuration.");

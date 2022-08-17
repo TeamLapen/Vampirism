@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class BaseItemModelGenerator extends ItemModelProvider {
 
-    public BaseItemModelGenerator(DataGenerator generator, String modid, ExistingFileHelper existingFileHelper) {
+    public BaseItemModelGenerator(@NotNull DataGenerator generator, @NotNull String modid, @NotNull ExistingFileHelper existingFileHelper) {
         super(generator, modid, existingFileHelper);
     }
 
@@ -76,7 +76,7 @@ public abstract class BaseItemModelGenerator extends ItemModelProvider {
      * @param item    the item for the {@link ItemModelBuilder}
      * @param texture all layers for the model
      */
-    public ItemModelBuilder item(String item, ResourceLocation... texture) {
+    public ItemModelBuilder item(String item, ResourceLocation @NotNull ... texture) {
         ItemModelBuilder model = withExistingParent(item, mcLoc("item/generated"));
         for (int i = 0; i < texture.length; i++) {
             model.texture("layer" + i, texture[i]);

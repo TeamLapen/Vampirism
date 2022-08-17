@@ -27,11 +27,11 @@ public class HunterIntelItem extends Item {
 
     private final static Logger LOGGER = LogManager.getLogger();
 
-    public static HunterIntelItem getIntelForExactlyLevel(int level) {
+    public static @NotNull HunterIntelItem getIntelForExactlyLevel(int level) {
         return getIntelForLevel(level - 5);
     }
 
-    public static HunterIntelItem getIntelForLevel(int level) {
+    public static @NotNull HunterIntelItem getIntelForLevel(int level) {
         switch (level) {
             case 0:
                 return ModItems.HUNTER_INTEL_0.get();
@@ -77,7 +77,7 @@ public class HunterIntelItem extends Item {
         tooltips.add(this.tooltip);
     }
 
-    public Component getCustomName() {
+    public @NotNull Component getCustomName() {
         return Component.translatable(this.getOrCreateDescriptionId()).append(Component.literal(" ")).append(Component.translatable("text.vampirism.for_up_to_level").append(Component.literal(" " + (level + 5))));
     }
 

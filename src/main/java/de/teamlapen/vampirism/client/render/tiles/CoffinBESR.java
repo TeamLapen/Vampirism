@@ -45,7 +45,7 @@ public class CoffinBESR extends VampirismBESR<CoffinBlockEntity> {
         this.renderBlock(tile, partialTicks, matrixStack, iRenderTypeBuffer, i, i1);
     }
 
-    public void renderBlock(CoffinBlockEntity tile, float partialTicks, @NotNull PoseStack matrixStack, @NotNull MultiBufferSource iRenderTypeBuffer, int i, int i1) {
+    public void renderBlock(@NotNull CoffinBlockEntity tile, float partialTicks, @NotNull PoseStack matrixStack, @NotNull MultiBufferSource iRenderTypeBuffer, int i, int i1) {
         assert tile.getLevel() != null;
         BlockState state = tile.getBlockState();
         Direction direction = state.getValue(HORIZONTAL_FACING);
@@ -115,7 +115,7 @@ public class CoffinBESR extends VampirismBESR<CoffinBlockEntity> {
     /**
      * Checks if the coffin part at the given pos is the head of the coffin. Any exception is caught and false is returned
      */
-    private boolean isHeadSafe(Level world, BlockPos pos) {
+    private boolean isHeadSafe(@NotNull Level world, @NotNull BlockPos pos) {
         try {
             return CoffinBlock.isHead(world, pos);
         } catch (IllegalArgumentException e) {

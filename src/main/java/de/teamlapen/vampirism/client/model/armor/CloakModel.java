@@ -12,6 +12,7 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class CloakModel extends VampirismArmorModel {
@@ -36,7 +37,7 @@ public class CloakModel extends VampirismArmorModel {
         return cloakItemModel;
     }
 
-    public static LayerDefinition createLayer() {
+    public static @NotNull LayerDefinition createLayer() {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition part = mesh.getRoot();
         part.addOrReplaceChild(CLOAK_BACK, CubeListBuilder.create().texOffs(0, 48).mirror().addBox(-4, 0, 2, 8, 15, 1), PartPose.offsetAndRotation(0, 0.2f, 2, 0.0872665F, 0F, 0F));
@@ -51,17 +52,17 @@ public class CloakModel extends VampirismArmorModel {
         return LayerDefinition.create(mesh, 64, 64);
     }
 
-    private final ModelPart cloakback;
-    private final ModelPart leftlong;
-    private final ModelPart rightmedium;
-    private final ModelPart leftmedium;
-    private final ModelPart rightshort;
-    private final ModelPart leftshort;
-    private final ModelPart rightlong;
-    private final ModelPart shoulderright;
-    private final ModelPart shoulderleft;
+    private final @NotNull ModelPart cloakback;
+    private final @NotNull ModelPart leftlong;
+    private final @NotNull ModelPart rightmedium;
+    private final @NotNull ModelPart leftmedium;
+    private final @NotNull ModelPart rightshort;
+    private final @NotNull ModelPart leftshort;
+    private final @NotNull ModelPart rightlong;
+    private final @NotNull ModelPart shoulderright;
+    private final @NotNull ModelPart shoulderleft;
 
-    public CloakModel(ModelPart part) {
+    public CloakModel(@NotNull ModelPart part) {
         cloakback = part.getChild(CLOAK_BACK);
         leftlong = part.getChild(LEFT_LONG);
         rightmedium = part.getChild(RIGHT_MEDIUM);
@@ -116,7 +117,7 @@ public class CloakModel extends VampirismArmorModel {
 //    }
 
     @Override
-    protected Iterable<ModelPart> getBodyModels() {
+    protected @NotNull Iterable<ModelPart> getBodyModels() {
         return ImmutableList.of(cloakback, leftlong, rightmedium, leftmedium, rightshort, leftshort, rightlong, shoulderright, shoulderleft);
     }
 

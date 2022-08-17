@@ -17,7 +17,7 @@ public class HunterActionTrigger extends SimpleCriterionTrigger<HunterActionTrig
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "hunter_action");
     private final static Logger LOGGER = LogManager.getLogger();
 
-    public static Instance builder(Action action) {
+    public static @NotNull Instance builder(@NotNull Action action) {
         return new Instance(action);
     }
 
@@ -27,13 +27,13 @@ public class HunterActionTrigger extends SimpleCriterionTrigger<HunterActionTrig
         return ID;
     }
 
-    public void trigger(ServerPlayer player, Action action) {
+    public void trigger(@NotNull ServerPlayer player, Action action) {
         this.trigger(player, (instance) -> instance.test(action));
     }
 
     @NotNull
     @Override
-    protected Instance createInstance(JsonObject json, @NotNull EntityPredicate.Composite entityPredicate, @NotNull DeserializationContext conditionsParser) {
+    protected Instance createInstance(@NotNull JsonObject json, @NotNull EntityPredicate.Composite entityPredicate, @NotNull DeserializationContext conditionsParser) {
         Action action = Action.NONE;
         if (json.has("action")) {
             String name = json.get("action").getAsString();

@@ -78,6 +78,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -91,7 +92,7 @@ public class ModPlayerEventHandler {
     private final static Logger LOGGER = LogManager.getLogger(ModPlayerEventHandler.class);
 
     @SubscribeEvent
-    public void blockDestroyed(BlockEvent.BreakEvent event) {
+    public void blockDestroyed(BlockEvent.@NotNull BreakEvent event) {
         if (!(event.getLevel() instanceof Level)) return;
         //don't allow player to destroy blocks with PointOfInterests that are owned by a totem with different faction as the player
         if (event.getPlayer().isCreative()) return;
@@ -141,7 +142,7 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void eyeHeight(EntityEvent.Size event) {
+    public void eyeHeight(EntityEvent.@NotNull Size event) {
         if (event.getEntity() instanceof Player && ((Player) event.getEntity()).getInventory() != null /*make sure we are not in the player's contructor*/) {
             if (event.getEntity().isAlive() && event.getEntity().position().lengthSqr() != 0 && event.getEntity().getVehicle() == null) { //Do not attempt to get capability while entity is being initialized
                 if (VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().bat) {
@@ -156,14 +157,14 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void onTryMount(EntityMountEvent event){
+    public void onTryMount(@NotNull EntityMountEvent event){
         if (event.getEntity() instanceof Player && VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().isCannotInteract()) {
             event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
-    public void onAttachCapability(AttachCapabilitiesEvent<Entity> event) {
+    public void onAttachCapability(@NotNull AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof Player) {
             try {
                 event.addCapability(REFERENCE.FACTION_PLAYER_HANDLER_KEY, FactionPlayerHandler.createNewCapability((Player) event.getObject()));
@@ -177,7 +178,7 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onAttackEntity(AttackEntityEvent event) {
+    public void onAttackEntity(@NotNull AttackEntityEvent event) {
         Player player = event.getEntity();
         if (player.isAlive()) {
             if (VampirismPlayerAttributes.get(player).getVampSpecial().bat) {
@@ -192,14 +193,14 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void onBlockBreak(BlockEvent.BreakEvent event) {
+    public void onBlockBreak(BlockEvent.@NotNull BreakEvent event) {
         if (event.getPlayer() != null) {
             HunterPlayer.getOpt(event.getPlayer()).ifPresent(HunterPlayer::breakDisguise);
         }
     }
 
     @SubscribeEvent
-    public void onBlockPlaced(BlockEvent.EntityPlaceEvent event) {
+    public void onBlockPlaced(BlockEvent.@NotNull EntityPlaceEvent event) {
         if (!(event.getEntity() instanceof Player) || !event.getEntity().isAlive()) return;
         if(event.getPlacedBlock().isAir()) return; //If for some reason, cough Create cough, a block is removed (so air is placed) we don't want to prevent that.
         try {
@@ -229,7 +230,7 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
+    public void onBreakSpeed(PlayerEvent.@NotNull BreakSpeed event) {
         if (VampirismPlayerAttributes.get(event.getEntity()).getVampSpecial().isCannotInteract()) {
             event.setCanceled(true);
         } else if ((ModBlocks.GARLIC_DIFFUSER_NORMAL.get() == event.getState().getBlock() || ModBlocks.GARLIC_DIFFUSER_WEAK.get() == event.getState().getBlock() || ModBlocks.GARLIC_DIFFUSER_IMPROVED.get() == event.getState().getBlock()) && VampirismPlayerAttributes.get(event.getEntity()).vampireLevel > 0) {
@@ -238,14 +239,14 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void onItemPickupPre(EntityItemPickupEvent event) {
+    public void onItemPickupPre(@NotNull EntityItemPickupEvent event) {
         if (VampirismPlayerAttributes.get(event.getEntity()).getVampSpecial().isDBNO) {
             event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
-    public void onItemRightClick(PlayerInteractEvent.RightClickItem event) {
+    public void onItemRightClick(PlayerInteractEvent.@NotNull RightClickItem event) {
         if (!checkItemUsePerm(event.getItemStack(), event.getEntity())) {
             event.setCanceled(true);
         }
@@ -259,7 +260,7 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onItemUse(LivingEntityUseItemEvent.Start event) {
+    public void onItemUse(LivingEntityUseItemEvent.@NotNull Start event) {
         if (event.getEntity() instanceof Player player) {
             if (VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().isCannotInteract()) {
                 event.setCanceled(true);
@@ -272,7 +273,7 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onItemUse(LivingEntityUseItemEvent.Finish event) {
+    public void onItemUse(LivingEntityUseItemEvent.@NotNull Finish event) {
         if (Helper.isVampire(event.getEntity())) {
             if (event.getItem().getItem() instanceof GarlicBreadItem) {
                 if (!event.getEntity().getCommandSenderWorld().isClientSide) {
@@ -296,7 +297,7 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onLivingAttack(LivingAttackEvent event) {
+    public void onLivingAttack(@NotNull LivingAttackEvent event) {
         if (event.getEntity() instanceof Player) {
             if (event.getEntity().isAlive() && !FactionPlayerHandler.getOpt((Player) event.getEntity()).map(h -> h.onEntityAttacked(event.getSource(), event.getAmount())).orElse(false)) {
                 event.setCanceled(true);
@@ -308,7 +309,7 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onLivingDeathFirst(LivingDeathEvent event) {
+    public void onLivingDeathFirst(@NotNull LivingDeathEvent event) {
         if (event.getEntity() instanceof Player) {
             if (VampirePlayer.getOpt((Player) event.getEntity()).map(v -> v.onDeadlyHit(event.getSource())).orElse(false))
                 event.setCanceled(true);
@@ -316,14 +317,14 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void onLivingFall(LivingFallEvent event) {
+    public void onLivingFall(@NotNull LivingFallEvent event) {
         if (event.getEntity() instanceof Player) {
             event.setDistance(event.getDistance() - VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().getJumpBoost());
         }
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
-    public void onLivingHurt(LivingHurtEvent event) {
+    public void onLivingHurt(@NotNull LivingHurtEvent event) {
         DamageSource d = event.getSource();
         if (!d.isBypassMagic() && !d.isBypassArmor() && event.getEntity() instanceof Player) {
             if (VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().bat) {
@@ -333,14 +334,14 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void onLivingJump(LivingEvent.LivingJumpEvent event) {
+    public void onLivingJump(LivingEvent.@NotNull LivingJumpEvent event) {
         if (event.getEntity() instanceof Player) {
             event.getEntity().setDeltaMovement(event.getEntity().getDeltaMovement().add(0.0D, (float) VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().getJumpBoost() * 0.1F, 0.0D));
         }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onPlayerClone(PlayerEvent.Clone event) {
+    public void onPlayerClone(PlayerEvent.@NotNull Clone event) {
         if (!event.getEntity().getCommandSenderWorld().isClientSide) {
             event.getOriginal().reviveCaps();
             FactionPlayerHandler.get(event.getEntity()).copyFrom(event.getOriginal());
@@ -349,7 +350,7 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onPlayerInteract(PlayerInteractEvent.RightClickBlock event) {
+    public void onPlayerInteract(PlayerInteractEvent.@NotNull RightClickBlock event) {
 
         //To replace glas bottles with blood bottles if interacting with a blood container
         //Also used to force block interaction with blood container if sneaking
@@ -399,7 +400,7 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void onPlayerInteract(PlayerInteractEvent.EntityInteract event) {
+    public void onPlayerInteract(PlayerInteractEvent.@NotNull EntityInteract event) {
         if (!(event.getTarget().getType() == EntityType.ZOMBIE)) return;
         ItemStack stack = event.getEntity().getItemInHand(event.getHand());
         if (stack.getItem() != ModItems.INJECTION_EMPTY.get()) return;
@@ -409,7 +410,7 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void onPlayerLeftClickedBlock(PlayerInteractEvent.LeftClickBlock event) {
+    public void onPlayerLeftClickedBlock(PlayerInteractEvent.@NotNull LeftClickBlock event) {
         if (event.getFace() == null) return;
         BlockPos pos = event.getPos().relative(event.getFace());
         Level world = event.getLevel();
@@ -425,7 +426,7 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
-    public void onPlayerName(PlayerEvent.NameFormat event) {
+    public void onPlayerName(PlayerEvent.@NotNull NameFormat event) {
         if (event.getEntity() != null && VampirismConfig.SERVER.factionColorInChat.get()) {
             FactionPlayerHandler.getOpt(event.getEntity()).ifPresent(fph -> fph.getCurrentFactionPlayer().ifPresent(fp -> {
                 IFaction<?> f = fp.getDisguisedAs();
@@ -443,7 +444,7 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void sleepTimeCheck(SleepingTimeCheckEvent event) {
+    public void sleepTimeCheck(@NotNull SleepingTimeCheckEvent event) {
         if (Helper.isVampire(event.getEntity())) {
             event.getSleepingLocation().ifPresent((blockPos -> event.setResult(event.getEntity().level.getBlockState(blockPos).getBlock() instanceof CoffinBlock ? event.getEntity().level.isDay() ? Event.Result.ALLOW : Event.Result.DENY : event.getResult())));
         }
@@ -453,7 +454,7 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void sleepTimeFinish(SleepFinishedTimeEvent event) {
+    public void sleepTimeFinish(@NotNull SleepFinishedTimeEvent event) {
         if (event.getLevel() instanceof ServerLevel && ((ServerLevel) event.getLevel()).isDay()) {
             boolean sleepingInCoffin = event.getLevel().players().stream().anyMatch(player -> {
                 Optional<BlockPos> pos = player.getSleepingPos();
@@ -472,7 +473,7 @@ public class ModPlayerEventHandler {
      *
      * @return If it is allowed to use the item
      */
-    private boolean checkItemUsePerm(ItemStack stack, Player player) {
+    private boolean checkItemUsePerm(@NotNull ItemStack stack, @NotNull Player player) {
 
         boolean message = !player.getCommandSenderWorld().isClientSide;
         if (!stack.isEmpty() && stack.getItem() instanceof IFactionLevelItem<?> item) {
@@ -503,7 +504,7 @@ public class ModPlayerEventHandler {
 
 
     @SubscribeEvent
-    public void onPlayerAttackCritical(CriticalHitEvent event){
+    public void onPlayerAttackCritical(@NotNull CriticalHitEvent event){
         ItemStack stack = event.getEntity().getMainHandItem();
         if (!stack.isEmpty() && stack.getItem() instanceof IFactionSlayerItem item) {
             IFaction<?> faction = VampirismAPI.factionRegistry().getFaction(event.getTarget());

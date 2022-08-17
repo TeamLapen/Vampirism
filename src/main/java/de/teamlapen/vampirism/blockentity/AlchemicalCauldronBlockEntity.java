@@ -60,11 +60,11 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
     private UUID ownerID;
     @Nullable
     private String ownerName;
-    private AlchemicalCauldronRecipe recipeChecked;
+    private @Nullable AlchemicalCauldronRecipe recipeChecked;
 
     private static boolean warnedRecipeType = false;
 
-    public AlchemicalCauldronBlockEntity(BlockPos pos, BlockState state) {
+    public AlchemicalCauldronBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         super(ModTiles.ALCHEMICAL_CAULDRON.get(), pos, state, ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get());
         this.items = NonNullList.withSize(4, ItemStack.EMPTY);
     }
@@ -109,7 +109,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
         return FluidUtil.getFluidContained(liquidItem).map(fluidStack -> IClientFluidTypeExtensions.of(fluidStack.getFluid()).getTintColor(fluidStack)).orElseGet(()-> ModRecipes.getLiquidColor(liquidItem.getItem()));
     }
 
-    public Component getOwnerName() {
+    public @NotNull Component getOwnerName() {
         return Component.literal(ownerName == null ? "Unknown" : ownerName);
     }
 
@@ -139,7 +139,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag compound) {
+    public void handleUpdateTag(@NotNull CompoundTag compound) {
         super.handleUpdateTag(compound);
         ownerID = compound.hasUUID("owner") ? compound.getUUID("owner") : null;
         ownerName = compound.contains("owner_name") ? compound.getString("owner_name") : null;
@@ -147,7 +147,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
     }
 
     @Override
-    public void load(CompoundTag compound) {
+    public void load(@NotNull CompoundTag compound) {
         ownerID = compound.hasUUID("owner") ? compound.getUUID("owner") : null;
         ownerName = compound.contains("owner_name") ? compound.getString("owner_name") : null;
         super.load(compound);
@@ -155,7 +155,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+    public void onDataPacket(Connection net, @NotNull ClientboundBlockEntityDataPacket pkt) {
         CompoundTag nbt = pkt.getTag();
         if (hasLevel()) {
             handleUpdateTag(nbt);
@@ -198,7 +198,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
         }
     }
 
-    public void setOwnerID(Player player) {
+    public void setOwnerID(@NotNull Player player) {
         ownerID = player.getUUID();
         ownerName = player.getName().getString();
         this.setChanged();
@@ -207,7 +207,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
     /**
      * copy of AbstractFurnaceTileEntity#tick() with modification
      */
-    public static void serverTick(Level level, BlockPos pos, BlockState state, AlchemicalCauldronBlockEntity blockEntity) {
+    public static void serverTick(@NotNull Level level, BlockPos pos, BlockState state, @NotNull AlchemicalCauldronBlockEntity blockEntity) {
         boolean wasBurning = blockEntity.isBurning();
         boolean dirty = false;
         if (wasBurning) {
@@ -304,7 +304,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
     /**
      * copy of AbstractFurnaceTileEntity#finishCooking(IRecipe) with modification
      */
-    private void finishCooking(AlchemicalCauldronRecipe recipe) {
+    private void finishCooking(@Nullable AlchemicalCauldronRecipe recipe) {
         if (recipe != null && ((AbstractFurnaceBlockEntityAccessor) this).canBurn_vampirism(recipe, items, getMaxStackSize()) && canPlayerCook(recipe)) {
             ItemStack itemstackfluid = this.items.get(0);
             ItemStack itemstackingredient = this.items.get(1);

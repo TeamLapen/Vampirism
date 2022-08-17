@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 
 public class SkillNodeBuilder {
 
-    public static SkillNodeBuilder skill(@NotNull ResourceLocation parent,@NotNull ISkill<?>... skills) {
+    public static @NotNull SkillNodeBuilder skill(@NotNull ResourceLocation parent, @NotNull ISkill<?>... skills) {
         return new SkillNodeBuilder(parent, skills);
     }
 
@@ -29,7 +29,7 @@ public class SkillNodeBuilder {
         return skill(parent, skills).faction(VReference.VAMPIRE_FACTION);
     }
 
-    private final ResourceLocation parent;
+    private final @NotNull ResourceLocation parent;
     private final ISkill<?>[] skills;
     private ResourceLocation faction;
     private ResourceLocation[] lockingSkillNodes;
@@ -40,7 +40,7 @@ public class SkillNodeBuilder {
         this.lockingSkillNodes = new ResourceLocation[0];
     }
 
-    public ResourceLocation build(@NotNull Consumer<FinishedSkillNode> consumer,@NotNull ResourceLocation id) {
+    public @NotNull ResourceLocation build(@NotNull Consumer<FinishedSkillNode> consumer, @NotNull ResourceLocation id) {
         if (faction != null) {
             id = new ResourceLocation(id.getNamespace(), faction.getPath() + "/" + id.getPath());
         }
@@ -49,12 +49,12 @@ public class SkillNodeBuilder {
         return id;
     }
 
-    public SkillNodeBuilder faction(@NotNull IPlayableFaction<?> faction) {
+    public @NotNull SkillNodeBuilder faction(@NotNull IPlayableFaction<?> faction) {
         this.faction = faction.getID();
         return this;
     }
 
-    public SkillNodeBuilder lockingNodes(@NotNull ResourceLocation... skillNodes) {
+    public @NotNull SkillNodeBuilder lockingNodes(@NotNull ResourceLocation... skillNodes) {
         this.lockingSkillNodes = skillNodes;
         return this;
     }
@@ -67,9 +67,9 @@ public class SkillNodeBuilder {
 
     @SuppressWarnings("ClassCanBeRecord")
     private static class Result implements FinishedSkillNode {
-        private final ResourceLocation parent;
+        private final @NotNull ResourceLocation parent;
         private final ISkill<?>[] skills;
-        private final ResourceLocation id;
+        private final @NotNull ResourceLocation id;
         private final ResourceLocation[] lockingSkillNodes;
 
         public Result(@NotNull ResourceLocation id,@NotNull ResourceLocation parent,@NotNull ISkill<?>[] skills,@NotNull ResourceLocation[] lockingSkillNodes) {
@@ -80,7 +80,7 @@ public class SkillNodeBuilder {
         }
 
         @Override
-        public ResourceLocation getID() {
+        public @NotNull ResourceLocation getID() {
             return id;
         }
 

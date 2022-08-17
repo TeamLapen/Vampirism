@@ -30,7 +30,7 @@ public class WeaponTableCraftingSlot extends Slot {
     private final CraftingContainer craftMatrix;
     private int amountCrafted = 0;
 
-    public WeaponTableCraftingSlot(Player player, CraftingContainer craftingInventory, Container inventoryIn, int index, int xPosition, int yPosition, ContainerLevelAccess worldPosCallable) {
+    public WeaponTableCraftingSlot(Player player, CraftingContainer craftingInventory, @NotNull Container inventoryIn, int index, int xPosition, int yPosition, ContainerLevelAccess worldPosCallable) {
         super(inventoryIn, index, xPosition, yPosition);
         this.player = player;
         this.craftMatrix = craftingInventory;
@@ -111,7 +111,7 @@ public class WeaponTableCraftingSlot extends Slot {
         this.amountCrafted = 0;
     }
 
-    protected IWeaponTableRecipe findMatchingRecipe(Player playerIn, IFactionPlayer<IHunterPlayer> factionPlayer, int lava) {
+    protected @Nullable IWeaponTableRecipe findMatchingRecipe(@NotNull Player playerIn, @NotNull IFactionPlayer<IHunterPlayer> factionPlayer, int lava) {
         Optional<IWeaponTableRecipe> optional = playerIn.getCommandSenderWorld().getRecipeManager().getRecipeFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get(), this.craftMatrix, playerIn.getCommandSenderWorld());
         if (optional.isPresent()) {
             IWeaponTableRecipe recipe = optional.get();

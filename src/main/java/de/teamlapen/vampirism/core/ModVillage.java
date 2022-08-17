@@ -21,6 +21,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -61,11 +62,11 @@ public class ModVillage {
 
     }
 
-    private static Set<BlockState> getAllStates(Block... blocks) {
+    private static Set<BlockState> getAllStates(Block @NotNull ... blocks) {
         return Arrays.stream(blocks).map(block -> block.getStateDefinition().any()).collect(ImmutableSet.toImmutableSet());
     }
 
-    private static Map<Integer, VillagerTrades.ItemListing[]> getHunterTrades() {
+    private static @NotNull Map<Integer, VillagerTrades.ItemListing[]> getHunterTrades() {
         return ImmutableMap.of(
                 1, new VillagerTrades.ItemListing[]{
                         new Trades.ItemsForSouls(new Trades.Price(10, 20), ModItems.ITEM_GARLIC.get(), new Trades.Price(2, 5)),
@@ -110,7 +111,7 @@ public class ModVillage {
                 });
     }
 
-    private static Map<Integer, VillagerTrades.ItemListing[]> getPriestTrades() {
+    private static @NotNull Map<Integer, VillagerTrades.ItemListing[]> getPriestTrades() {
         return ImmutableMap.of(
                 1, new VillagerTrades.ItemListing[]{
                         new VillagerTrades.EmeraldForItems(ModItems.PURE_SALT.get(), 25, 1, 4),
@@ -139,7 +140,7 @@ public class ModVillage {
                 });
     }
 
-    private static Map<Integer, VillagerTrades.ItemListing[]> getVampireTrades() {
+    private static @NotNull Map<Integer, VillagerTrades.ItemListing[]> getVampireTrades() {
         return ImmutableMap.of(
                 1, new VillagerTrades.ItemListing[]{
                         new Trades.ItemsForHeart(new Trades.Price(10, 15), ModItems.PURE_BLOOD_0.get(), new Trades.Price(1, 1)),

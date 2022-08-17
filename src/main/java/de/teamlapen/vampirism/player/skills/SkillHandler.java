@@ -29,6 +29,7 @@ import net.minecraftforge.registries.RegistryObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -55,7 +56,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         this.faction = faction;
     }
 
-    public Optional<SkillNode> anyLastNode() {
+    public @NotNull Optional<SkillNode> anyLastNode() {
         Queue<SkillNode> queue = new ArrayDeque<>();
         for (ISkillType skillType : VampirismAPI.skillManager().getSkillTypes()) {
             if(skillType.isForFaction(faction)) {
@@ -75,7 +76,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     }
 
     @Override
-    public Result canSkillBeEnabled(ISkill<T> skill) {
+    public @NotNull Result canSkillBeEnabled(@NotNull ISkill<T> skill) {
         if (player.getRepresentingPlayer().getEffect(ModEffects.OBLIVION.get()) != null) {
             return Result.LOCKED_BY_PLAYER_STATE;
         }
@@ -104,7 +105,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     }
 
     @Override
-    public ItemStack[] createRefinementItems() {
+    public ItemStack @NotNull [] createRefinementItems() {
         ItemStack[] items = new ItemStack[this.appliedRefinementSets.length];
         for (int i = 0; i < this.appliedRefinementSets.length; i++) {
             if (this.appliedRefinementSets[i] != null) {
@@ -136,7 +137,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     }
 
     @Override
-    public void disableSkill(ISkill<T> skill) {
+    public void disableSkill(@NotNull ISkill<T> skill) {
         if (enabledSkills.remove(skill)) {
             skill.onDisable(player);
             dirty = true;
@@ -158,12 +159,12 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     }
 
     @Override
-    public void enableRootSkill(ISkillType type) {
+    public void enableRootSkill(@NotNull ISkillType type) {
         enableSkill((ISkill<T>) getRootNode(type).getElements()[0]);
     }
 
     @Override
-    public void enableSkill(ISkill<T> skill) {
+    public void enableSkill(@NotNull ISkill<T> skill) {
         if (!enabledSkills.contains(skill)) {
             skill.onEnable(player);
             enabledSkills.add(skill);
@@ -176,7 +177,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     }
 
     @Override
-    public boolean equipRefinementItem(ItemStack stack) {
+    public boolean equipRefinementItem(@NotNull ItemStack stack) {
         if (stack.getItem() instanceof IRefinementItem refinementItem) {
             if (refinementItem.getExclusiveFaction(stack).equals(this.faction)) {
                 @Nullable IRefinementSet newSet = refinementItem.getRefinementSet(stack);
@@ -196,12 +197,12 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     }
 
     @Override
-    public void removeRefinementItem(IRefinementItem.AccessorySlotType slot) {
+    public void removeRefinementItem(IRefinementItem.@NotNull AccessorySlotType slot) {
         this.removeRefinementSet(slot.getSlot());
         this.dirty = true;
     }
 
-    public SkillNode findSkillNode(SkillNode base, ISkill<T> skill) {
+    public @Nullable SkillNode findSkillNode(@NotNull SkillNode base, ISkill<T> skill) {
         for (ISkill<?> s : base.getElements()) {
             if (s.equals(skill)) {
                 return base;
@@ -228,13 +229,13 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         return remainingSkillPoints;
     }
 
-    public List<ISkill<T>> getLockingSkills(SkillNode nodeIn) {
+    public @NotNull List<ISkill<T>> getLockingSkills(@NotNull SkillNode nodeIn) {
         //noinspection unchecked
         return (List<ISkill<T>>) (Object) Arrays.stream(nodeIn.getLockingNodes()).map(id -> SkillTreeManager.getInstance().getSkillTree().getNodeFromId(id)).filter(Objects::nonNull).flatMap(node -> Arrays.stream(node.getElements())).collect(Collectors.toList());
     }
 
     @Override
-    public ISkill<T>[] getParentSkills(ISkill<T> skill) {
+    public ISkill<T> @Nullable [] getParentSkills(@NotNull ISkill<T> skill) {
         SkillNode node = findSkillNode(getRootNode(skill.getType()), skill);
         if (node == null) {
             return null;
@@ -249,15 +250,15 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     }
 
     @Deprecated
-    public SkillNode getRootNode() {
+    public @NotNull SkillNode getRootNode() {
         return VampirismMod.proxy.getSkillTree(player.isRemote()).getRootNodeForFaction(faction.getID());
     }
 
-    public Collection<SkillNode> getRootNodes() {
+    public @NotNull Collection<SkillNode> getRootNodes() {
         return VampirismAPI.skillManager().getSkillTypes().stream().map(this::getRootNode).collect(Collectors.toList());
     }
 
-    public SkillNode getRootNode(ISkillType type) {
+    public @NotNull SkillNode getRootNode(@NotNull ISkillType type) {
         return VampirismMod.proxy.getSkillTree(player.isRemote()).getRootNodeForFaction(type.createIdForFaction(faction.getID()));
     }
 
@@ -269,7 +270,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         return dirty;
     }
 
-    public boolean isNodeEnabled(SkillNode node) {
+    public boolean isNodeEnabled(@NotNull SkillNode node) {
         for (ISkill<T> s : enabledSkills) {
             if (node.containsSkill(s)) return true;
         }
@@ -286,11 +287,11 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         return enabledSkills.contains(skill);
     }
 
-    public boolean isSkillNodeLocked(SkillNode nodeIn) {
+    public boolean isSkillNodeLocked(@NotNull SkillNode nodeIn) {
         return Arrays.stream(nodeIn.getLockingNodes()).map(id -> SkillTreeManager.getInstance().getSkillTree().getNodeFromId(id)).filter(Objects::nonNull).flatMap(node -> Arrays.stream(node.getElements())).anyMatch(this::isSkillEnabled);
     }
 
-    public void loadFromNbt(CompoundTag nbt) {
+    public void loadFromNbt(@NotNull CompoundTag nbt) {
         if (nbt.contains("skills")) {
             for (String id : nbt.getCompound("skills").getAllKeys()) {
                 //noinspection unchecked
@@ -321,7 +322,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
 
     }
 
-    public void readUpdateFromServer(CompoundTag nbt) {
+    public void readUpdateFromServer(@NotNull CompoundTag nbt) {
         if (nbt.contains("skills")) {
 
             //noinspection unchecked
@@ -379,7 +380,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         enableRootSkills();
     }
 
-    public void saveToNbt(CompoundTag nbt) {
+    public void saveToNbt(@NotNull CompoundTag nbt) {
         CompoundTag skills = new CompoundTag();
         for (ISkill<T> skill : enabledSkills) {
             skills.putBoolean(RegUtil.id(skill) .toString(), true);
@@ -398,7 +399,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
 
     }
 
-    public void writeUpdateForClient(CompoundTag nbt) {
+    public void writeUpdateForClient(@NotNull CompoundTag nbt) {
         CompoundTag skills = new CompoundTag();
         for (ISkill<T> skill : enabledSkills) {
             skills.putBoolean(RegUtil.id(skill) .toString(), true);

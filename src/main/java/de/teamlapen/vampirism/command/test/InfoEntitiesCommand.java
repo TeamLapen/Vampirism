@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.NaturalSpawner;
+import org.jetbrains.annotations.NotNull;
 
 public class InfoEntitiesCommand extends BasicCommand {
     public static final int maxSpawns = 50;
@@ -21,7 +22,7 @@ public class InfoEntitiesCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int infoEntities(CommandSourceStack commandSource, ServerPlayer asPlayer) {
+    private static int infoEntities(@NotNull CommandSourceStack commandSource, @NotNull ServerPlayer asPlayer) {
         NaturalSpawner.SpawnState densityManager = asPlayer.getLevel().getChunkSource().getLastSpawnState();
         Object2IntMap<MobCategory> object2intmap = densityManager.getMobCategoryCounts();
         commandSource.sendSuccess(Component.literal(String.format("Creature: %d (%d), Monster: %s (%s), Hunter: %s (%s), Vampire: %s (%s)", object2intmap.getOrDefault(MobCategory.CREATURE, 0), MobCategory.CREATURE.getMaxInstancesPerChunk(), object2intmap.getOrDefault(MobCategory.MONSTER, 0), MobCategory.MONSTER.getMaxInstancesPerChunk(), object2intmap.getOrDefault(VReference.HUNTER_CREATURE_TYPE, 0), VReference.HUNTER_CREATURE_TYPE.getMaxInstancesPerChunk(), object2intmap.getOrDefault(VReference.VAMPIRE_CREATURE_TYPE, 0), VReference.VAMPIRE_CREATURE_TYPE.getMaxInstancesPerChunk())), true);

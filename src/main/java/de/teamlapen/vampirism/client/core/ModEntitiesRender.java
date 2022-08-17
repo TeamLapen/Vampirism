@@ -32,6 +32,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -66,7 +67,7 @@ public class ModEntitiesRender {
     public static final ModelLayerLocation TASK_MASTER = new ModelLayerLocation(new ResourceLocation("vampirism:task_master"), "main");
 
 
-    public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
+    public static void onRegisterRenderers(EntityRenderersEvent.@NotNull RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.BLINDING_BAT.get(), BatRenderer::new);
         event.registerEntityRenderer(ModEntities.CONVERTED_CREATURE_IMOB.get(), ConvertedCreatureRenderer::new);
         event.registerEntityRenderer(ModEntities.CONVERTED_CREATURE.get(), (ConvertedCreatureRenderer::new));
@@ -107,7 +108,7 @@ public class ModEntitiesRender {
         event.registerEntityRenderer(ModEntities.CHEST_BOAT.get(), context -> new VampirismBoatRenderer(context, true));
     }
 
-    public static void onRegisterLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
+    public static void onRegisterLayers(EntityRenderersEvent.@NotNull RegisterLayerDefinitions event) {
         event.registerLayerDefinition(HUNTER, BasicHunterModel::createBodyLayer);
         event.registerLayerDefinition(HUNTER_SLIM, BasicHunterModel::createSlimBodyLayer);
         event.registerLayerDefinition(COFFIN, CoffinModel::createLayer);
@@ -140,12 +141,12 @@ public class ModEntitiesRender {
 
     }
 
-    public static void onAddLayers(EntityRenderersEvent.AddLayers event) {
+    public static void onAddLayers(EntityRenderersEvent.@NotNull AddLayers event) {
         _onAddLayers(event);
     }
 
     @SuppressWarnings("unchecked")
-    private static <T extends Player, Q extends EntityModel<T>, Z extends HumanoidModel<T>, I extends LivingEntity, U extends EntityModel<I>> void _onAddLayers(EntityRenderersEvent.AddLayers event) {
+    private static <T extends Player, Q extends EntityModel<T>, Z extends HumanoidModel<T>, I extends LivingEntity, U extends EntityModel<I>> void _onAddLayers(EntityRenderersEvent.@NotNull AddLayers event) {
 
         for (String s : event.getSkins()) {
             LivingEntityRenderer<T,Q> renderPlayer = event.getSkin(s);
@@ -166,11 +167,11 @@ public class ModEntitiesRender {
         }
     }
 
-    public static ModelLayerLocation createBoatModelName(IVampirismBoat.BoatType type) {
+    public static @NotNull ModelLayerLocation createBoatModelName(IVampirismBoat.@NotNull BoatType type) {
         return new ModelLayerLocation(new ResourceLocation(REFERENCE.MODID, "boat/" + type.getName()), "main");
     }
 
-    public static ModelLayerLocation createChestBoatModelName(IVampirismBoat.BoatType type) {
+    public static @NotNull ModelLayerLocation createChestBoatModelName(IVampirismBoat.@NotNull BoatType type) {
         return new ModelLayerLocation(new ResourceLocation(REFERENCE.MODID, "chest_boat/" + type.getName()), "main");
     }
 

@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 
 
 public class InvisibilityVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
@@ -14,12 +15,12 @@ public class InvisibilityVampireAction extends DefaultVampireAction implements I
     }
 
     @Override
-    public boolean activate(IVampirePlayer vampire, ActivationContext context) {
+    public boolean activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
         activate(vampire);
         return true;
     }
 
-    protected void activate(IVampirePlayer player) {
+    protected void activate(@NotNull IVampirePlayer player) {
         player.getRepresentingPlayer().setInvisible(true);
     }
 
@@ -39,23 +40,23 @@ public class InvisibilityVampireAction extends DefaultVampireAction implements I
     }
 
     @Override
-    public void onActivatedClient(IVampirePlayer vampire) {
+    public void onActivatedClient(@NotNull IVampirePlayer vampire) {
         ((VampirePlayer) vampire).getSpecialAttributes().invisible = true;
     }
 
     @Override
-    public void onDeactivated(IVampirePlayer vampire) {
+    public void onDeactivated(@NotNull IVampirePlayer vampire) {
         vampire.getRepresentingPlayer().setInvisible(false);
         ((VampirePlayer) vampire).getSpecialAttributes().invisible = false;
     }
 
     @Override
-    public void onReActivated(IVampirePlayer vampire) {
+    public void onReActivated(@NotNull IVampirePlayer vampire) {
         activate(vampire);
     }
 
     @Override
-    public boolean onUpdate(IVampirePlayer vampire) {
+    public boolean onUpdate(@NotNull IVampirePlayer vampire) {
         if (!vampire.getRepresentingPlayer().isInvisible()) {
             vampire.getRepresentingPlayer().setInvisible(true);
         }

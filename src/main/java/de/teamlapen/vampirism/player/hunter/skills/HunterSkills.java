@@ -103,7 +103,7 @@ public class HunterSkills {
         SKILLS.register(bus);
     }
 
-    public static void fixMappings(MissingMappingsEvent event) {
+    public static void fixMappings(@NotNull MissingMappingsEvent event) {
         event.getAllMappings(VampirismRegistries.SKILLS_ID).forEach(missingMapping -> {
             switch (missingMapping.getKey().toString()) {
                 case "vampirism:garlic_beacon_improved" -> missingMapping.remap(GARLIC_DIFFUSER_IMPROVED.get());

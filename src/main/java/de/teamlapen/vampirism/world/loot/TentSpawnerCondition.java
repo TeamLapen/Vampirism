@@ -19,7 +19,7 @@ public class TentSpawnerCondition implements LootItemCondition {
 
     private final static TentSpawnerCondition INSTANCE = new TentSpawnerCondition();
 
-    public static Builder builder() {
+    public static @NotNull Builder builder() {
         return () -> INSTANCE;
     }
 
@@ -30,7 +30,7 @@ public class TentSpawnerCondition implements LootItemCondition {
     }
 
     @Override
-    public boolean test(LootContext lootContext) {
+    public boolean test(@NotNull LootContext lootContext) {
         BlockEntity t = lootContext.getParamOrNull(LootContextParams.BLOCK_ENTITY);
         if (t instanceof TentBlockEntity) {
             return ((TentBlockEntity) t).isSpawner();

@@ -38,7 +38,7 @@ public class VersionChecker implements Runnable {
      * Use the other one
      */
     @Deprecated
-    public static VersionInfo executeVersionCheck(String updateUrl, ArtifactVersion currentVersion) {
+    public static VersionInfo executeVersionCheck(String updateUrl, @NotNull ArtifactVersion currentVersion) {
         VersionChecker checker = new VersionChecker(updateUrl, currentVersion, false);
         new Thread(checker).start();
         return checker.versionInfo;
@@ -50,7 +50,7 @@ public class VersionChecker implements Runnable {
      * @param stats if to send very basic stats
      * @return a version info object, which is update when the check is finished
      */
-    public static VersionInfo executeVersionCheck(String updateUrl, ArtifactVersion currentVersion, boolean stats) {
+    public static VersionInfo executeVersionCheck(String updateUrl, @NotNull ArtifactVersion currentVersion, boolean stats) {
         VersionChecker checker = new VersionChecker(updateUrl, currentVersion, stats);
         new Thread(checker).start();
         return checker.versionInfo;
@@ -58,10 +58,10 @@ public class VersionChecker implements Runnable {
 
     private final boolean stats;
     private final String UPDATE_FILE_URL;
-    private final VersionInfo versionInfo;
+    private final @NotNull VersionInfo versionInfo;
     private final ArtifactVersion currentVersion;
 
-    protected VersionChecker(String update_file_url, ArtifactVersion currentVersion, boolean stats) {
+    protected VersionChecker(String update_file_url, @NotNull ArtifactVersion currentVersion, boolean stats) {
         UPDATE_FILE_URL = update_file_url;
         this.currentVersion = currentVersion;
         versionInfo = new VersionInfo(currentVersion);
@@ -171,7 +171,7 @@ public class VersionChecker implements Runnable {
 
     }
 
-    private String getStatsString() {
+    private @NotNull String getStatsString() {
         return "?" +
                 "current=" + URLEncoder.encode(currentVersion.getMajorVersion() + "." + currentVersion.getMinorVersion() + "." + currentVersion.getIncrementalVersion(), StandardCharsets.UTF_8) +
                 '&' +
@@ -217,7 +217,7 @@ public class VersionChecker implements Runnable {
         private boolean checked = false;
         private String homePage = "";
 
-        public VersionInfo(ArtifactVersion current) {
+        public VersionInfo(@NotNull ArtifactVersion current) {
             currentVersion = Version.from(current);
         }
 
@@ -254,7 +254,7 @@ public class VersionChecker implements Runnable {
      */
     public static class Version implements Comparable<Version> {
 
-        static Version from(@NotNull ArtifactVersion version) {
+        static @NotNull Version from(@NotNull ArtifactVersion version) {
             try {
                 String extra = null;
                 String qualifier = version.getQualifier();
@@ -283,7 +283,7 @@ public class VersionChecker implements Runnable {
             }
         }
 
-        static Version parse(String s) {
+        static @NotNull Version parse(@NotNull String s) {
             return from(new DefaultArtifactVersion(s));
         }
 
@@ -360,7 +360,7 @@ public class VersionChecker implements Runnable {
         }
 
         @Override
-        public String toString() {
+        public @NotNull String toString() {
             return "Version{" +
                     "main=" + main +
                     ", major=" + major +
@@ -374,7 +374,7 @@ public class VersionChecker implements Runnable {
         /**
          * two if the given version is older, 0 if they are equal and -1 if the two is newer
          */
-        private int compareDate(String one, String two) {
+        private int compareDate(@NotNull String one, @NotNull String two) {
             try {
                 String[] ones = one.split("-");
                 String[] twos = two.split("-");
@@ -401,7 +401,7 @@ public class VersionChecker implements Runnable {
             /**
              * 1 if the given type is less recommend, 0 if equal, -1 if the given type is more recommend
              */
-            public int compare(TYPE type) {
+            public int compare(@NotNull TYPE type) {
                 return Integer.compare(type.ORDER, this.ORDER);
             }
         }

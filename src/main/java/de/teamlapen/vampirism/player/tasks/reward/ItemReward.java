@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.player.task.TaskReward;
 import de.teamlapen.vampirism.api.util.NonnullSupplier;
 import net.minecraft.world.item.ItemStack;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
@@ -18,7 +19,7 @@ public class ItemReward implements TaskReward {
     }
 
     @Override
-    public void applyReward(IFactionPlayer<?> player) {
+    public void applyReward(@NotNull IFactionPlayer<?> player) {
         if (!player.getRepresentingPlayer().addItem(this.reward.get())) {
             player.getRepresentingPlayer().drop(this.reward.get(), true);
         }

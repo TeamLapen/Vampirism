@@ -10,7 +10,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
@@ -25,7 +24,7 @@ public class GarlicDiffuserScreen extends Screen {
     protected ProgressBar startupBar;
     protected ProgressBar fueledTimer;
 
-    public GarlicDiffuserScreen(GarlicDiffuserBlockEntity tile, Component title) {
+    public GarlicDiffuserScreen(GarlicDiffuserBlockEntity tile, @NotNull Component title) {
         super(title);
         this.tile = tile;
     }
@@ -74,12 +73,12 @@ public class GarlicDiffuserScreen extends Screen {
         fueledTimer.setFGColor(0xFFFFFF);
     }
 
-    protected void renderGuiBackground(PoseStack mStack) {
+    protected void renderGuiBackground(@NotNull PoseStack mStack) {
         RenderSystem.setShaderTexture(0, BACKGROUND);
         blit(mStack, this.guiLeft, this.guiTop, this.getBlitOffset(), 0, 0, this.xSize, this.ySize, 256, 256);
     }
 
-    private void drawTitle(PoseStack mStack) {
+    private void drawTitle(@NotNull PoseStack mStack) {
         this.font.drawShadow(mStack, title, this.guiLeft + 15, this.guiTop + 5, 0xFFFFFFFF);
     }
 }

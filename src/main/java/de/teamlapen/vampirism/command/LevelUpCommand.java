@@ -10,6 +10,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
@@ -23,7 +24,7 @@ public class LevelUpCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int levelUp(CommandContext<CommandSourceStack> context, Collection<ServerPlayer> players) {
+    private static int levelUp(@NotNull CommandContext<CommandSourceStack> context, @NotNull Collection<ServerPlayer> players) {
         for (ServerPlayer player : players) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             if (handler.getCurrentLevel() == 0) {

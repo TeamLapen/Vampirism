@@ -15,6 +15,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Handles VP's blood stats. Very similar to {@link FoodData}
@@ -137,7 +138,7 @@ public class BloodStats implements IBloodStats {
     /**
      * Reads nbt written by either {@link #writeNBTBlood(CompoundTag)} or {@link #writeNBT(CompoundTag)}
      */
-    public void readNBT(CompoundTag nbt) {
+    public void readNBT(@NotNull CompoundTag nbt) {
         if (nbt.contains("bloodLevel")) {
             bloodLevel = nbt.getInt("bloodLevel");
             if (nbt.contains("bloodTimer")) {
@@ -179,7 +180,7 @@ public class BloodStats implements IBloodStats {
         this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount, 40F);
     }
 
-    void loadUpdate(CompoundTag nbt) {
+    void loadUpdate(@NotNull CompoundTag nbt) {
         if (nbt.contains("maxBlood")) {
             setMaxBlood(nbt.getInt("maxBlood"));
         }
@@ -203,7 +204,7 @@ public class BloodStats implements IBloodStats {
     /**
      * Write all relevant data to nbt
      */
-    void writeNBT(CompoundTag nbt) {
+    void writeNBT(@NotNull CompoundTag nbt) {
         writeNBTBlood(nbt);
         nbt.putInt("bloodTimer", bloodTimer);
         nbt.putFloat("bloodSaturation", bloodSaturationLevel);
@@ -214,11 +215,11 @@ public class BloodStats implements IBloodStats {
     /**
      * Write only the blood level to nbt
      */
-    void writeNBTBlood(CompoundTag nbt) {
+    void writeNBTBlood(@NotNull CompoundTag nbt) {
         nbt.putInt("bloodLevel", bloodLevel);
     }
 
-    CompoundTag writeUpdate(CompoundTag nbt) {
+    @NotNull CompoundTag writeUpdate(@NotNull CompoundTag nbt) {
         nbt.putInt("bloodLevel", bloodLevel);
         nbt.putInt("maxBlood", maxBlood);
         return nbt;

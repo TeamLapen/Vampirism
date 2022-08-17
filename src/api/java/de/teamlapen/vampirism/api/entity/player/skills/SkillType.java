@@ -23,7 +23,7 @@ public enum SkillType implements ISkillType {
         this.isUnlocked = isUnlocked;
     }
 
-    public ResourceLocation createIdForFaction(@NotNull ResourceLocation id) {
+    public @NotNull ResourceLocation createIdForFaction(@NotNull ResourceLocation id) {
         return new ResourceLocation(id.getNamespace(), id.getPath() + this.nameSuffix);
     }
 

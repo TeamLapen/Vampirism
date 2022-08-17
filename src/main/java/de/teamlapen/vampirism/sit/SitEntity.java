@@ -16,23 +16,24 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
+import org.jetbrains.annotations.NotNull;
 
 public class SitEntity extends Entity {
 
-    public static SitEntity newEntity(Level level, BlockPos pos, double offset) {
+    public static @NotNull SitEntity newEntity(@NotNull Level level, @NotNull BlockPos pos, double offset) {
         SitEntity e = ModEntities.dummy_sit_entity.get().create(level);
         e.setPos(pos.getX() + 0.5D, pos.getY() + offset, pos.getZ() + 0.5D);
         e.noPhysics = true;
         return e;
     }
 
-    public SitEntity(EntityType<SitEntity> type, Level level) {
+    public SitEntity(@NotNull EntityType<SitEntity> type, @NotNull Level level) {
         super(type, level);
     }
 
 
     @Override
-    public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
+    public @NotNull Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
         if (passenger instanceof Player) {
             BlockPos pos = SitUtil.getPreviousPlayerPosition((Player) passenger, this);
 

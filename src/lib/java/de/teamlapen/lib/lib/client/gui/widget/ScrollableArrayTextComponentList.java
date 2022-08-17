@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 
 public class ScrollableArrayTextComponentList extends ScrollableListWidget<Pair<Integer, Component>> {
 
-    private static Collection<Pair<Integer, Component>> getItems(Supplier<Component[]> baseValueSupplier) {
+    private static @NotNull Collection<Pair<Integer, Component>> getItems(@NotNull Supplier<Component[]> baseValueSupplier) {
         Collection<Pair<Integer, Component>> items = new ArrayList<>();
         Component[] baseValues = baseValueSupplier.get();
         for (int i = 0; i < baseValues.length; i++) {
@@ -26,7 +26,7 @@ public class ScrollableArrayTextComponentList extends ScrollableListWidget<Pair<
         return items;
     }
 
-    private static Supplier<Component[]> createTextArray(int amount, MutableComponent baseName) {
+    private static @NotNull Supplier<Component[]> createTextArray(int amount, @NotNull MutableComponent baseName) {
         Component[] array = new Component[amount];
         for (int i = 0; i < array.length; i++) {
             array[i] = baseName.plainCopy().append(" " + (i + 1));
@@ -38,11 +38,11 @@ public class ScrollableArrayTextComponentList extends ScrollableListWidget<Pair<
         super(xPos, yPos, width, height, itemHeight, () -> getItems(baseValueSupplier), (item, list) -> new TextComponentItem<>(item, list, buttonPressed));
     }
 
-    public ScrollableArrayTextComponentList(int xPos, int yPos, int width, int height, int itemHeight, int valueAmount, MutableComponent baseName, @NotNull Consumer<Integer> buttonPressed) {
+    public ScrollableArrayTextComponentList(int xPos, int yPos, int width, int height, int itemHeight, int valueAmount, @NotNull MutableComponent baseName, @NotNull Consumer<Integer> buttonPressed) {
         super(xPos, yPos, width, height, itemHeight, () -> getItems(createTextArray(valueAmount, baseName)), (item, list) ->  new TextComponentItem<>(item, list, buttonPressed), baseName);
     }
 
-    public ScrollableArrayTextComponentList(int xPos, int yPos, int width, int height, int itemHeight, int valueAmount, MutableComponent baseName, @NotNull Consumer<Integer> buttonPressed, @Nullable BiConsumer<Integer, Boolean> onHover) {
+    public ScrollableArrayTextComponentList(int xPos, int yPos, int width, int height, int itemHeight, int valueAmount, @NotNull MutableComponent baseName, @NotNull Consumer<Integer> buttonPressed, @Nullable BiConsumer<Integer, Boolean> onHover) {
         super(xPos, yPos, width, height, itemHeight, () -> getItems(createTextArray(valueAmount, baseName)), (item, list) ->  new TextComponentItem<>(item, list, buttonPressed, onHover), baseName);
     }
 
@@ -78,7 +78,7 @@ public class ScrollableArrayTextComponentList extends ScrollableListWidget<Pair<
         }
 
         @Override
-        public void render(PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel) {
+        public void render(@NotNull PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel) {
             super.render(matrixStack, x - 1, y, listWidth + 1, listHeight, itemHeight, mouseX, mouseY, partialTicks, zLevel);
             Font font = Minecraft.getInstance().font;
             int width = font.width(this.item.getRight());

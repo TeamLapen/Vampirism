@@ -20,7 +20,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -31,7 +30,7 @@ public class HunterTrainerScreen extends AbstractContainerScreen<HunterTrainerCo
     private static final ResourceLocation altarGuiTextures = new ResourceLocation(REFERENCE.MODID, "textures/gui/hunter_trainer.png");
     private Button buttonLevelup;
 
-    public HunterTrainerScreen(HunterTrainerContainer inventorySlotsIn, Inventory playerInventory, Component name) {
+    public HunterTrainerScreen(@NotNull HunterTrainerContainer inventorySlotsIn, @NotNull Inventory playerInventory, @NotNull Component name) {
         super(inventorySlotsIn, playerInventory, name);
     }
 

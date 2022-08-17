@@ -56,7 +56,7 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
 
     }
 
-    public void damageArmor(DamageSource source, float damage, MinionEntity<?> entity) {
+    public void damageArmor(@NotNull DamageSource source, float damage, @NotNull MinionEntity<?> entity) {
         if (damage > 0) {
             damage = damage / 6.0F;
             if (damage < 1.0F && damage >= 0.5f) {
@@ -87,19 +87,19 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
         return availableSize;
     }
 
-    public MinionInventory setAvailableSize(int newSize) {
+    public @NotNull MinionInventory setAvailableSize(int newSize) {
         assert newSize == 9 || newSize == 12 || newSize == 15;
         this.availableSize = newSize;
         return this;
     }
 
     @Override
-    public NonNullList<ItemStack> getInventoryArmor() {
+    public @NotNull NonNullList<ItemStack> getInventoryArmor() {
         return inventoryArmor;
     }
 
     @Override
-    public NonNullList<ItemStack> getInventoryHands() {
+    public @NotNull NonNullList<ItemStack> getInventoryHands() {
         return inventoryHands;
     }
 
@@ -117,7 +117,7 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
         return ItemStack.EMPTY;
     }
 
-    public void read(ListTag nbtTagListIn) {
+    public void read(@NotNull ListTag nbtTagListIn) {
         this.inventory.clear();
         this.inventoryArmor.clear();
         this.inventoryHands.clear();
@@ -200,7 +200,7 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
         return true;
     }
 
-    public ListTag write(ListTag nbt) {
+    public ListTag write(@NotNull ListTag nbt) {
         for (int i = 0; i < this.inventoryHands.size(); ++i) {
             if (!this.inventoryHands.get(i).isEmpty()) {
                 CompoundTag compoundnbt = new CompoundTag();

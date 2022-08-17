@@ -11,22 +11,21 @@ import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class BasicVampireRenderer extends HumanoidMobRenderer<BasicVampireEntity, HumanoidModel<BasicVampireEntity>> {
 
-    private final ResourceLocation[] textures;
+    private final ResourceLocation @NotNull [] textures;
 
-    public BasicVampireRenderer(EntityRendererProvider.Context context) {
+    public BasicVampireRenderer(EntityRendererProvider.@NotNull Context context) {
         super(context, new PlayerModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED), false), 0.5F);
         textures = Minecraft.getInstance().getResourceManager().listResources("textures/entity/vampire", s -> s.getPath().endsWith(".png")).keySet().stream().filter(r -> REFERENCE.MODID.equals(r.getNamespace())).toArray(ResourceLocation[]::new);
     }
 
     @NotNull
     @Override
-    public ResourceLocation getTextureLocation(BasicVampireEntity entity) {
+    public ResourceLocation getTextureLocation(@NotNull BasicVampireEntity entity) {
         return getVampireTexture(entity.getEntityTextureType());
     }
 

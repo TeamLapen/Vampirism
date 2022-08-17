@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.util.MixinHooks;
 import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -14,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MixinEntity {
 
     @Inject(method = "isCurrentlyGlowing", at = @At("RETURN"), cancellable = true)
-    private void handleIsGlowing(CallbackInfoReturnable<Boolean> cir) {
+    private void handleIsGlowing(@NotNull CallbackInfoReturnable<Boolean> cir) {
         if (MixinHooks.enforcingGlowing_bloodVision) {
             Entity p = VampirismMod.proxy.getClientPlayer();
             Entity e = (Entity) (Object) this;

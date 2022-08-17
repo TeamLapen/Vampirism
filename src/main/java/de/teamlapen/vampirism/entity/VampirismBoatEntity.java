@@ -23,11 +23,11 @@ public class VampirismBoatEntity extends Boat implements IVampirismBoat{
     private static final EntityDataAccessor<Integer> DATA_ID_TYPE = SynchedEntityData.defineId(VampirismBoatEntity.class, EntityDataSerializers.INT);
 
 
-    public VampirismBoatEntity(EntityType<? extends VampirismBoatEntity> type, Level level) {
+    public VampirismBoatEntity(@NotNull EntityType<? extends VampirismBoatEntity> type, @NotNull Level level) {
         super(type, level);
     }
 
-    public VampirismBoatEntity(Level level, double x, double y, double z) {
+    public VampirismBoatEntity(@NotNull Level level, double x, double y, double z) {
         this(ModEntities.BOAT.get(), level);
         this.setPos(x,y,z);
         this.setDeltaMovement(Vec3.ZERO);
@@ -61,7 +61,7 @@ public class VampirismBoatEntity extends Boat implements IVampirismBoat{
     }
 
     @Override
-    public void setType(BoatType type) {
+    public void setType(@NotNull BoatType type) {
         this.entityData.set(DATA_ID_TYPE, type.ordinal());
     }
 
@@ -81,12 +81,12 @@ public class VampirismBoatEntity extends Boat implements IVampirismBoat{
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag tag) {
+    protected void addAdditionalSaveData(@NotNull CompoundTag tag) {
         tag.putString("Type", this.getBType().getName());
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag tag) {
+    protected void readAdditionalSaveData(@NotNull CompoundTag tag) {
         if (tag.contains("Type", 8)) {
             this.setType(BoatType.byName(tag.getString("Type")));
         }

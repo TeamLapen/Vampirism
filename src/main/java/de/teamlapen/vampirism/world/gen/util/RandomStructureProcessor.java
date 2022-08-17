@@ -23,15 +23,15 @@ import java.util.Optional;
  */
 public class RandomStructureProcessor extends RuleProcessor {
     public static final Codec<RandomStructureProcessor> CODEC = RandomBlockState.CODEC.listOf().fieldOf("rules").xmap(RandomStructureProcessor::new, rule -> rule.rules).codec();
-    private final ImmutableList<RandomBlockState> rules;
+    private final @NotNull ImmutableList<RandomBlockState> rules;
 
-    public RandomStructureProcessor(List<RandomBlockState> rules) {
+    public RandomStructureProcessor(@NotNull List<RandomBlockState> rules) {
         super(Collections.emptyList());
         this.rules = ImmutableList.copyOf(rules);
     }
 
     @Nullable
-    public StructureTemplate.StructureBlockInfo process(LevelReader worldReaderIn, @NotNull BlockPos pos, @NotNull BlockPos pos2, @NotNull StructureTemplate.StructureBlockInfo blockInfo, StructureTemplate.StructureBlockInfo blockInfo1, @NotNull StructurePlaceSettings placementSettings, @Nullable StructureTemplate template) {
+    public StructureTemplate.StructureBlockInfo process(@NotNull LevelReader worldReaderIn, @NotNull BlockPos pos, @NotNull BlockPos pos2, @NotNull StructureTemplate.StructureBlockInfo blockInfo, StructureTemplate.@NotNull StructureBlockInfo blockInfo1, @NotNull StructurePlaceSettings placementSettings, @Nullable StructureTemplate template) {
         RandomSource random = RandomSource.create(Mth.getSeed(blockInfo1.pos));
         BlockState blockstate = worldReaderIn.getBlockState(blockInfo1.pos);
 

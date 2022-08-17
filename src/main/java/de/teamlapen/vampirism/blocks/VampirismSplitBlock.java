@@ -22,8 +22,6 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
-
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
@@ -33,17 +31,17 @@ public class VampirismSplitBlock extends VampirismBlock {
     public static final DirectionProperty FACING = HORIZONTAL_FACING;
     public static final EnumProperty<Part> PART = EnumProperty.create("part", Part.class);
     private final VoxelShape NORTH1;
-    private final VoxelShape EAST1;
-    private final VoxelShape SOUTH1;
-    private final VoxelShape WEST1;
+    private final @NotNull VoxelShape EAST1;
+    private final @NotNull VoxelShape SOUTH1;
+    private final @NotNull VoxelShape WEST1;
     private final VoxelShape NORTH2;
-    private final VoxelShape EAST2;
-    private final VoxelShape SOUTH2;
-    private final VoxelShape WEST2;
+    private final @NotNull VoxelShape EAST2;
+    private final @NotNull VoxelShape SOUTH2;
+    private final @NotNull VoxelShape WEST2;
     private final boolean vertical;
 
 
-    public VampirismSplitBlock(Properties properties, VoxelShape mainShape, VoxelShape subShape, boolean vertical) {
+    public VampirismSplitBlock(@NotNull Properties properties, VoxelShape mainShape, VoxelShape subShape, boolean vertical) {
         super(properties);
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(PART, Part.MAIN));
         NORTH1 = mainShape;
@@ -64,12 +62,12 @@ public class VampirismSplitBlock extends VampirismBlock {
     }
 
     @NotNull
-    public RenderShape getRenderShape(BlockState p_149645_1_) {
+    public RenderShape getRenderShape(@NotNull BlockState p_149645_1_) {
         return p_149645_1_.getValue(PART) == Part.MAIN ? RenderShape.MODEL : RenderShape.INVISIBLE;
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(@NotNull BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         boolean main = state.getValue(PART) == Part.MAIN;
         switch (state.getValue(FACING)) {
             case NORTH:
@@ -86,7 +84,7 @@ public class VampirismSplitBlock extends VampirismBlock {
 
     @Override
     @Nullable
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
+    public BlockState getStateForPlacement(@NotNull BlockPlaceContext context) {
         Direction enumfacing = context.getHorizontalDirection();
         BlockPos blockpos = context.getClickedPos();
         BlockPos blockpos1 = blockpos.relative(enumfacing);
@@ -99,12 +97,12 @@ public class VampirismSplitBlock extends VampirismBlock {
     }
 
     @Override
-    public BlockState mirror(BlockState state, Mirror mirrorIn) {
+    public @NotNull BlockState mirror(@NotNull BlockState state, @NotNull Mirror mirrorIn) {
         return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
     @Override
-    public void playerWillDestroy(Level world, BlockPos blockPos, BlockState blockState, Player player) {
+    public void playerWillDestroy(@NotNull Level world, BlockPos blockPos, BlockState blockState, Player player) {
         if (!world.isClientSide && player.isCreative()) {
             Part part = blockState.getValue(PART);
             if (part == Part.SUB) {
@@ -121,7 +119,7 @@ public class VampirismSplitBlock extends VampirismBlock {
     }
 
     @Override
-    public BlockState rotate(BlockState state, Rotation rot) {
+    public @NotNull BlockState rotate(@NotNull BlockState state, @NotNull Rotation rot) {
         return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
@@ -148,11 +146,11 @@ public class VampirismSplitBlock extends VampirismBlock {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> builder) {
         builder.add(FACING, PART);
     }
 
-    protected Direction getOtherBlockDirection(BlockState blockState) {
+    protected @NotNull Direction getOtherBlockDirection(@NotNull BlockState blockState) {
         if (vertical) {
             return blockState.getValue(PART) == Part.MAIN ? Direction.UP : Direction.DOWN;
         }

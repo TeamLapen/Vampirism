@@ -12,7 +12,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
@@ -20,7 +19,7 @@ public class HunterVillagerRenderer extends MobRenderer<Villager, VillagerWithAr
 
     private static final ResourceLocation texture = new ResourceLocation("textures/entity/villager/villager.png");
 
-    public HunterVillagerRenderer(EntityRendererProvider.Context context) {
+    public HunterVillagerRenderer(EntityRendererProvider.@NotNull Context context) {
         super(context, new VillagerWithArmsModel<>(context.bakeLayer(ModEntitiesRender.VILLAGER_WITH_ARMS)), 0.5f);
         this.addLayer(new CustomHeadLayer<>(this, context.getModelSet(), context.getItemInHandRenderer()));
         this.addLayer(new VillagerProfessionLayer<>(this, context.getResourceManager(), "villager"));
@@ -37,7 +36,7 @@ public class HunterVillagerRenderer extends MobRenderer<Villager, VillagerWithAr
      * Copied from VillagerRenderer
      */
     @Override
-    protected void scale(Villager entity, @NotNull PoseStack matrixStack, float partialTickTime) {
+    protected void scale(@NotNull Villager entity, @NotNull PoseStack matrixStack, float partialTickTime) {
         float s = 0.9375F;
         if (entity.isBaby()) {
             s = (float) ((double) s * 0.5D);

@@ -33,9 +33,9 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 /**
@@ -45,7 +45,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
     protected static final VoxelShape containerShape = Block.box(2, 0, 2, 14, 16, 14);
     private final static Logger LOGGER = LogManager.getLogger();
 
-    public static FluidStack getFluidFromItemStack(ItemStack stack) {
+    public static FluidStack getFluidFromItemStack(@NotNull ItemStack stack) {
         if (ModBlocks.BLOOD_CONTAINER.get().asItem().equals(stack.getItem())) {
             if (stack.hasTag() && stack.getTag().contains("fluid", 10)) {
                 CompoundTag fluidTag = stack.getTag().getCompound("fluid");
@@ -57,7 +57,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
         return FluidStack.EMPTY;
     }
 
-    public static void writeFluidToItemStack(ItemStack stack, FluidStack fluid) {
+    public static void writeFluidToItemStack(@NotNull ItemStack stack, @NotNull FluidStack fluid) {
         if (fluid.isEmpty()) {
             if (stack.hasTag() && stack.getTag().contains("fluid")) {
                 stack.getTag().remove("fluid");
@@ -72,7 +72,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable BlockGetter worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         if (stack.hasTag() && stack.getTag().contains("fluid")) {
             CompoundTag nbt = stack.getTag().getCompound("fluid");
             FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt);
@@ -137,7 +137,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
 
     @NotNull
     @Override
-    public InteractionResult use(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player playerIn, @NotNull InteractionHand hand, BlockHitResult hit) {
+    public InteractionResult use(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player playerIn, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         if (!FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, hit.getDirection()) && playerIn.getItemInHand(hand).getItem().equals(Items.GLASS_BOTTLE) && VampirismConfig.COMMON.autoConvertGlassBottles.get()) {
             FluidUtil.getFluidHandler(worldIn, pos, hit.getDirection()).ifPresent((fluidHandler -> {
                 if (fluidHandler.getFluidInTank(0).getFluid().equals(ModFluids.BLOOD.get())) {

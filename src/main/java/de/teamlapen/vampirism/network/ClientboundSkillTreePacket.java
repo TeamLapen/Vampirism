@@ -6,13 +6,14 @@ import de.teamlapen.vampirism.player.skills.SkillNode;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
 public record ClientboundSkillTreePacket(Map<ResourceLocation, SkillNode.Builder> nodes) implements IMessage {
-    static void encode(ClientboundSkillTreePacket msg, FriendlyByteBuf buf) {
+    static void encode(@NotNull ClientboundSkillTreePacket msg, @NotNull FriendlyByteBuf buf) {
         buf.writeVarInt(msg.nodes.size());
         for (Map.Entry<ResourceLocation, SkillNode.Builder> e : msg.nodes.entrySet()) {
             buf.writeResourceLocation(e.getKey());
@@ -21,7 +22,7 @@ public record ClientboundSkillTreePacket(Map<ResourceLocation, SkillNode.Builder
     }
 
 
-    static ClientboundSkillTreePacket decode(FriendlyByteBuf buf) {
+    static @NotNull ClientboundSkillTreePacket decode(@NotNull FriendlyByteBuf buf) {
         HashMap<ResourceLocation, SkillNode.Builder> nodes = new HashMap<>();
         int count = buf.readVarInt();
         for (int i = 0; i < count; i++) {
@@ -31,7 +32,7 @@ public record ClientboundSkillTreePacket(Map<ResourceLocation, SkillNode.Builder
     }
 
 
-    public static void handle(final ClientboundSkillTreePacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final ClientboundSkillTreePacket msg, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> VampirismMod.proxy.handleSkillTreePacket(msg));
         ctx.setPacketHandled(true);

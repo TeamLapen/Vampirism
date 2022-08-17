@@ -11,16 +11,16 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 import java.util.function.Supplier;
 
 public class CastleStairsBlock extends StairBlock {
     private final CastleBricksBlock.EnumVariant variant;
 
-    public CastleStairsBlock(Supplier<BlockState> state, CastleBricksBlock.EnumVariant variant) {
+    public CastleStairsBlock(@NotNull Supplier<BlockState> state, CastleBricksBlock.EnumVariant variant) {
         super(state, Properties.of(Material.STONE).strength(2, 10).sound(SoundType.STONE));
         this.variant = variant;
     }

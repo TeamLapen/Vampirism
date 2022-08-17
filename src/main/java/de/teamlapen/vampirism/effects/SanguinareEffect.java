@@ -33,7 +33,7 @@ public class SanguinareEffect extends VampirismEffect {
     /**
      * @param player Whether to use the player effect duration or the mob duration
      */
-    public static void addRandom(LivingEntity entity, boolean player) {
+    public static void addRandom(@NotNull LivingEntity entity, boolean player) {
         int avgDuration = 20 * (player ? VampirismConfig.BALANCE.vpSanguinareAverageDuration.get() : BalanceMobProps.mobProps.SANGUINARE_AVG_DURATION);
         int duration = (int) ((entity.getRandom().nextFloat() + 0.5F) * avgDuration);
         MobEffectInstance effect = new SanguinareEffectInstance(duration);
@@ -45,13 +45,13 @@ public class SanguinareEffect extends VampirismEffect {
 
     }
 
-    public SanguinareEffect(MobEffectCategory effectType, int potionColor) {
+    public SanguinareEffect(@NotNull MobEffectCategory effectType, int potionColor) {
         super(effectType, potionColor);
         addAttributeModifier(Attributes.ATTACK_DAMAGE, "22663B89-116E-49DC-9B6B-9971489B5BE5", 2.0D, AttributeModifier.Operation.ADDITION);
     }
 
     @Override
-    public List<ItemStack> getCurativeItems() {
+    public @NotNull List<ItemStack> getCurativeItems() {
         List<ItemStack> l = super.getCurativeItems();
         l.add(new ItemStack(ModItems.GARLIC_BREAD.get()));
         return l;
@@ -76,7 +76,7 @@ public class SanguinareEffect extends VampirismEffect {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void initializeClient(Consumer<IClientMobEffectExtensions> consumer) {
+    public void initializeClient(@NotNull Consumer<IClientMobEffectExtensions> consumer) {
         consumer.accept(new IClientMobEffectExtensions() {
             @Override
             public boolean renderGuiIcon(MobEffectInstance instance, Gui gui, PoseStack poseStack, int x, int y, float z, float alpha) {
@@ -84,7 +84,7 @@ public class SanguinareEffect extends VampirismEffect {
             }
 
             @Override
-            public boolean renderInventoryText(MobEffectInstance instance, EffectRenderingInventoryScreen<?> screen, PoseStack poseStack, int x, int y, int blitOffset) {
+            public boolean renderInventoryText(@NotNull MobEffectInstance instance, @NotNull EffectRenderingInventoryScreen<?> screen, @NotNull PoseStack poseStack, int x, int y, int blitOffset) {
                 Component name = screen.getEffectName(instance);
                 screen.font.draw(poseStack, name, x + 10 + 18, y + 6, 16777215);
                 screen.font.draw(poseStack, "?", x + 10 + 18, y + 6 + 10, 8355711);

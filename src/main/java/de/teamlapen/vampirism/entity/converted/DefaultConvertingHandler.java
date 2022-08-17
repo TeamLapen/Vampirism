@@ -14,6 +14,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
@@ -31,7 +32,7 @@ public class DefaultConvertingHandler<T extends PathfinderMob> implements IConve
 
 
         @Override
-        public double getConvertedDMG(EntityType<? extends PathfinderMob> entityType) {
+        public double getConvertedDMG(@NotNull EntityType<? extends PathfinderMob> entityType) {
             AttributeSupplier map = DefaultAttributes.getSupplier(entityType);
             if (map.hasAttribute(Attributes.ATTACK_DAMAGE)) {
                 return map.getBaseValue(Attributes.ATTACK_DAMAGE) * 1.3;
@@ -41,25 +42,25 @@ public class DefaultConvertingHandler<T extends PathfinderMob> implements IConve
         }
 
         @Override
-        public double getConvertedKnockbackResistance(EntityType<? extends PathfinderMob> entityType) {
+        public double getConvertedKnockbackResistance(@NotNull EntityType<? extends PathfinderMob> entityType) {
             AttributeSupplier map = DefaultAttributes.getSupplier(entityType);
             return map.getBaseValue(Attributes.KNOCKBACK_RESISTANCE) * 1.3;
         }
 
         @Override
-        public double getConvertedMaxHealth(EntityType<? extends PathfinderMob> entityType) {
+        public double getConvertedMaxHealth(@NotNull EntityType<? extends PathfinderMob> entityType) {
             AttributeSupplier map = DefaultAttributes.getSupplier(entityType);
             return map.getBaseValue(Attributes.MAX_HEALTH) * 1.5;
         }
 
         @Override
-        public double getConvertedSpeed(EntityType<? extends PathfinderMob> entityType) {
+        public double getConvertedSpeed(@NotNull EntityType<? extends PathfinderMob> entityType) {
             AttributeSupplier map = DefaultAttributes.getSupplier(entityType);
             return Math.min(map.getBaseValue(Attributes.MOVEMENT_SPEED) * 1.2, 2.9D);
         }
     };
 
-    protected final IDefaultHelper helper;
+    protected final @NotNull IDefaultHelper helper;
 
     /**
      * @param helper If null a default one will be used
@@ -70,7 +71,7 @@ public class DefaultConvertingHandler<T extends PathfinderMob> implements IConve
 
     @Nullable
     @Override
-    public IConvertedCreature<T> createFrom(T entity) {
+    public IConvertedCreature<T> createFrom(@NotNull T entity) {
         //noinspection unchecked
         return Helper.createEntity((EntityType<ConvertedCreatureEntity<T>>) (Object)ModEntities.CONVERTED_CREATURE.get(), entity.getCommandSenderWorld()).map(convertedCreature -> {
             copyImportantStuff(convertedCreature, entity);
@@ -87,7 +88,7 @@ public class DefaultConvertingHandler<T extends PathfinderMob> implements IConve
         return helper;
     }
 
-    protected void copyImportantStuff(ConvertedCreatureEntity<T> converted, T entity) {
+    protected void copyImportantStuff(@NotNull ConvertedCreatureEntity<T> converted, @NotNull T entity) {
         converted.copyPosition(entity);
         converted.setEntityCreature(entity);
         converted.updateEntityAttributes();

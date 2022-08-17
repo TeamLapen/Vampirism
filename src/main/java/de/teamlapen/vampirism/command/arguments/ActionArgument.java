@@ -13,6 +13,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -22,11 +23,11 @@ public class ActionArgument implements ArgumentType<IAction<?>> {
     public static final DynamicCommandExceptionType ACTION_NOT_FOUND = new DynamicCommandExceptionType((particle) -> Component.translatable("command.vampirism.argument.action.notfound", particle));
     private static final Collection<String> EXAMPLES = Arrays.asList("action", "modid:action");
 
-    public static ActionArgument actions() {
+    public static @NotNull ActionArgument actions() {
         return new ActionArgument();
     }
 
-    public static IAction<?> getAction(CommandContext<CommandSourceStack> context, String name) {
+    public static IAction<?> getAction(@NotNull CommandContext<CommandSourceStack> context, String name) {
         return context.getArgument(name, IAction.class);
     }
 
@@ -36,12 +37,12 @@ public class ActionArgument implements ArgumentType<IAction<?>> {
     }
 
     @Override
-    public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
+    public <S> @NotNull CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, @NotNull SuggestionsBuilder builder) {
         return SharedSuggestionProvider.suggestResource(ModRegistries.ACTIONS.get().getKeys(), builder);
     }
 
     @Override
-    public IAction<?> parse(StringReader reader) throws CommandSyntaxException {
+    public @NotNull IAction<?> parse(@NotNull StringReader reader) throws CommandSyntaxException {
         ResourceLocation id = ResourceLocation.read(reader);
         IAction<?> action = ModRegistries.ACTIONS.get().getValue(id);
         if (action == null)

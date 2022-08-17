@@ -36,12 +36,12 @@ public class MinionContainer extends InventoryContainer {
     private final static Logger LOGGER = LogManager.getLogger();
 
     @Nullable
-    public static MinionContainer create(int id, Inventory playerInventory, MinionEntity<?> minionEntity, ILordPlayer lord) {
+    public static MinionContainer create(int id, @NotNull Inventory playerInventory, @NotNull MinionEntity<?> minionEntity, @NotNull ILordPlayer lord) {
         Optional<IMinionInventory> minionInv = minionEntity.getInventory();
         return minionInv.map(inv -> new MinionContainer(id, playerInventory, lord , minionEntity, inv, inv.getAvailableSize(), createSelectors(minionEntity, inv.getAvailableSize()))).orElse(null);
     }
 
-    private static SelectorInfo[] createSelectors(MinionEntity<?> minionEntity, int extraSlots) {
+    private static SelectorInfo @NotNull [] createSelectors(@NotNull MinionEntity<?> minionEntity, int extraSlots) {
         SelectorInfo[] slots = new SelectorInfo[6 + extraSlots];
         slots[0] = new SelectorInfo(minionEntity.getEquipmentPredicate(EquipmentSlot.MAINHAND).and(stack -> stack.canEquip(EquipmentSlot.MAINHAND, minionEntity)), 7, 60, false, 1, null);
         slots[1] = new SelectorInfo(minionEntity.getEquipmentPredicate(EquipmentSlot.OFFHAND).and(stack -> stack.canEquip(EquipmentSlot.OFFHAND, minionEntity) || stack.getUseAnimation() == UseAnim.DRINK || stack.getUseAnimation() == UseAnim.EAT), 7, 78, false, 5, null);
@@ -58,9 +58,9 @@ public class MinionContainer extends InventoryContainer {
         return slots;
     }
 
-    private final MinionEntity<?> minionEntity;
+    private final @NotNull MinionEntity<?> minionEntity;
     @NotNull
-    private final IMinionTask<?, ?>[] availableTasks;
+    private final IMinionTask<?, ?> @NotNull [] availableTasks;
     @Nullable
     private final IMinionTask<?, ?> previousTask;
     private final boolean previousTaskLocked;
@@ -69,7 +69,7 @@ public class MinionContainer extends InventoryContainer {
     private IMinionTask<?, ?> taskToActivate;
     private boolean taskLocked;
 
-    public MinionContainer(int id, Inventory playerInventory, ILordPlayer lord, MinionEntity<?> minionEntity, @NotNull Container inventory, int extraSlots, SelectorInfo... selectorInfos) {
+    public MinionContainer(int id, @NotNull Inventory playerInventory, @NotNull ILordPlayer lord, @NotNull MinionEntity<?> minionEntity, @NotNull Container inventory, int extraSlots, SelectorInfo... selectorInfos) {
         super(ModContainer.MINION.get(), id, playerInventory, ContainerLevelAccess.create(minionEntity.level, minionEntity.blockPosition()), inventory, selectorInfos);
         this.minionEntity = minionEntity;
         this.extraSlots = extraSlots;
@@ -99,7 +99,7 @@ public class MinionContainer extends InventoryContainer {
         return extraSlots;
     }
 
-    public Optional<IMinionTask<?, ?>> getPreviousTask() {
+    public @NotNull Optional<IMinionTask<?, ?>> getPreviousTask() {
         return Optional.ofNullable(previousTask);
     }
 
@@ -154,7 +154,7 @@ public class MinionContainer extends InventoryContainer {
 
         @Nullable
         @Override
-        public MinionContainer create(int windowId, Inventory inv, FriendlyByteBuf data) {
+        public MinionContainer create(int windowId, @NotNull Inventory inv, @Nullable FriendlyByteBuf data) {
             if (data == null) return null;
             int entityId = data.readVarInt(); //Anything read here has to be written to buffer in open method (in MinionEntity)
             Entity e = inv.player.level == null ? null : inv.player.level.getEntity(entityId);

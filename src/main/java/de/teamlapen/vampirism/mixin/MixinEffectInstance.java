@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 public class MixinEffectInstance implements EffectInstanceWithSource {
 
     @Inject(method = "loadSpecifiedEffect(Lnet/minecraft/world/effect/MobEffect;Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/world/effect/MobEffectInstance;", at = @At("RETURN"))
-    private static void readInternal_vampirism(MobEffect effect, CompoundTag nbt, CallbackInfoReturnable<MobEffectInstance> cir) {
+    private static void readInternal_vampirism(MobEffect effect, @NotNull CompoundTag nbt, @NotNull CallbackInfoReturnable<MobEffectInstance> cir) {
         if (nbt.contains("source")) {
             ((EffectInstanceWithSource) cir.getReturnValue()).setSource(new ResourceLocation(nbt.getString("source")));
         }
@@ -29,7 +30,7 @@ public class MixinEffectInstance implements EffectInstanceWithSource {
     @Shadow
     @Nullable
     private MobEffectInstance hiddenEffect;
-    private ResourceLocation source;
+    private @Nullable ResourceLocation source;
 
     @Override
     @Nullable
@@ -59,17 +60,17 @@ public class MixinEffectInstance implements EffectInstanceWithSource {
     }
 
     @Inject(method = "update(Lnet/minecraft/world/effect/MobEffectInstance;)Z", at = @At(value = "JUMP", ordinal = 2))
-    private void copySource(MobEffectInstance other, CallbackInfoReturnable<Boolean> cir) {
+    private void copySource(@NotNull MobEffectInstance other, CallbackInfoReturnable<Boolean> cir) {
         this.source = ((EffectInstanceWithSource) other).getSource();
     }
 
     @Inject(method = "setDetailsFrom(Lnet/minecraft/world/effect/MobEffectInstance;)V", at = @At("TAIL"))
-    private void copySource1(MobEffectInstance other, CallbackInfo ci) {
+    private void copySource1(@NotNull MobEffectInstance other, CallbackInfo ci) {
         this.source = ((EffectInstanceWithSource) other).getSource();
     }
 
     @Inject(method = "writeDetailsTo(Lnet/minecraft/nbt/CompoundTag;)V", at = @At("TAIL"))
-    private void writeInternal_vampirism(CompoundTag nbt, CallbackInfo ci) {
+    private void writeInternal_vampirism(@NotNull CompoundTag nbt, CallbackInfo ci) {
         if (source != null) {
             nbt.putString("source", source.toString());
         }

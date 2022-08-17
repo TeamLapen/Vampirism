@@ -24,7 +24,6 @@ import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 
-import org.jetbrains.annotations.NotNull;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -55,7 +54,7 @@ public class BakedBloodContainerModel implements IDynamicBakedModel {
         this.baseModel = baseModel;
     }
 
-    public BakedBloodContainerModel(BakedModel baseModel, FluidStack stack) {
+    public BakedBloodContainerModel(BakedModel baseModel, @NotNull FluidStack stack) {
         this.baseModel = baseModel;
         this.impure = stack.getFluid().equals(ModFluids.IMPURE_BLOOD.get());
         this.fluidLevel = Mth.clamp(stack.getAmount() / BloodContainerBlockEntity.LEVEL_AMOUNT, 1, FLUID_LEVELS) - 1;

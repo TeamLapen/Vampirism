@@ -8,6 +8,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 import org.apache.commons.lang3.Validate;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
@@ -16,7 +17,7 @@ import java.util.function.Supplier;
  * Player has initiate feeding on an entity
  */
 public record ServerboundStartFeedingPacket(Either<Integer, BlockPos> target) implements IMessage {
-    static void encode(ServerboundStartFeedingPacket msg, FriendlyByteBuf buffer) {
+    static void encode(@NotNull ServerboundStartFeedingPacket msg, @NotNull FriendlyByteBuf buffer) {
         msg.target.ifLeft(entityID -> {
             buffer.writeBoolean(false);
             buffer.writeVarInt(entityID);
@@ -27,7 +28,7 @@ public record ServerboundStartFeedingPacket(Either<Integer, BlockPos> target) im
         });
     }
 
-    static ServerboundStartFeedingPacket decode(FriendlyByteBuf buffer) {
+    static @NotNull ServerboundStartFeedingPacket decode(@NotNull FriendlyByteBuf buffer) {
         if (buffer.readBoolean()) {
             return new ServerboundStartFeedingPacket(buffer.readBlockPos());
         } else {
@@ -35,7 +36,7 @@ public record ServerboundStartFeedingPacket(Either<Integer, BlockPos> target) im
         }
     }
 
-    static void handle(final ServerboundStartFeedingPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    static void handle(final @NotNull ServerboundStartFeedingPacket msg, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ServerPlayer player = ctx.getSender();
         Validate.notNull(player);

@@ -66,7 +66,7 @@ public class GarlicDiffuserBESR extends VampirismBESR<GarlicDiffuserBlockEntity>
     private static class Accessor extends RenderStateShard {
         private static final RenderType CUTOUT_NODEPTH = RenderType.create("cutout_nodepth", DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 131072, true, false, RenderType.CompositeState.builder().setLightmapState(RenderStateShard.LIGHTMAP).setDepthTestState(NO_DEPTH_TEST).setTextureState(BLOCK_SHEET).setShaderState(RenderStateShard.RENDERTYPE_CUTOUT_SHADER).createCompositeState(true));
 
-        public Accessor(String nameIn, Runnable setupTaskIn, Runnable clearTaskIn) {
+        public Accessor(@NotNull String nameIn, @NotNull Runnable setupTaskIn, @NotNull Runnable clearTaskIn) {
             super(nameIn, setupTaskIn, clearTaskIn);
         }
     }

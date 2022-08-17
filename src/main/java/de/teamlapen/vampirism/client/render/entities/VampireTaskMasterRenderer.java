@@ -14,7 +14,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -26,7 +25,7 @@ public class VampireTaskMasterRenderer extends MobRenderer<VampireTaskMasterEnti
     private final static ResourceLocation vampireOverlay = new ResourceLocation(REFERENCE.MODID, "textures/entity/vanilla/villager_overlay.png");
     private final static ResourceLocation overlay = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire_task_master_overlay.png");
 
-    public VampireTaskMasterRenderer(EntityRendererProvider.Context context) {
+    public VampireTaskMasterRenderer(EntityRendererProvider.@NotNull Context context) {
         super(context, new VillagerModel<>(context.bakeLayer(ModEntitiesRender.TASK_MASTER)), 0.5F);
 //        this.addLayer(new HeldItemLayer<>(this));
         this.addLayer(new VampireEntityLayer<>(this, vampireOverlay, false));

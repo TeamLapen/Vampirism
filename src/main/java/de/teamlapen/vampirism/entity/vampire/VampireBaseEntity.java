@@ -47,16 +47,16 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class VampireBaseEntity extends VampirismEntity implements IVampireMob, Npc/*mainly for JourneyMap*/ {
 
-    public static boolean spawnPredicateVampire(EntityType<? extends VampirismEntity> entityType, ServerLevelAccessor world, MobSpawnType spawnReason, BlockPos blockPos, RandomSource random) {
+    public static boolean spawnPredicateVampire(@NotNull EntityType<? extends VampirismEntity> entityType, @NotNull ServerLevelAccessor world, MobSpawnType spawnReason, @NotNull BlockPos blockPos, @NotNull RandomSource random) {
         return world.getDifficulty() != Difficulty.PEACEFUL && (Monster.isDarkEnoughToSpawn(world, blockPos, random) || spawnPredicateVampireFog(world, blockPos)) && Mob.checkMobSpawnRules(entityType, world, spawnReason, blockPos, random);
     }
 
-    public static AttributeSupplier.Builder getAttributeBuilder() {
+    public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
         return VampirismEntity.getAttributeBuilder().add(ModAttributes.SUNDAMAGE.get(), BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
     }
 
     private final boolean countAsMonsterForSpawn;
-    protected EnumStrength garlicResist = EnumStrength.NONE;
+    protected @NotNull EnumStrength garlicResist = EnumStrength.NONE;
     protected boolean canSuckBloodFromPlayer = false;
     protected boolean vulnerableToFire = true;
     /**
@@ -64,7 +64,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
      */
     private SpawnRestriction spawnRestriction = SpawnRestriction.NORMAL;
     private boolean sundamageCache;
-    private EnumStrength garlicCache = EnumStrength.NONE;
+    private @NotNull EnumStrength garlicCache = EnumStrength.NONE;
     /**
      * If the vampire should spawn a vampire soul at the end of its death animation.
      * No need to store this in NBT as it is only set during onDeath() so basically 20 ticks beforehand.
@@ -170,7 +170,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     @Override
-    public boolean doesResistGarlic(EnumStrength strength) {
+    public boolean doesResistGarlic(@NotNull EnumStrength strength) {
         return !strength.isStrongerThan(garlicResist);
     }
 
@@ -296,7 +296,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
      * Checks if light level is low enough
      * Only exception is the vampire biome in which it returns true if ontop of {@link ModBlocks#CURSED_EARTH}
      */
-    private boolean getCanSpawnHereRestricted(LevelAccessor iWorld) {
+    private boolean getCanSpawnHereRestricted(@NotNull LevelAccessor iWorld) {
         boolean vampireBiome = iWorld.getBiome(this.blockPosition()).is(ModTags.Biomes.IS_VAMPIRE_BIOME);
         boolean lowLightLevel = isLowLightLevel(iWorld);
         if(lowLightLevel) return true;

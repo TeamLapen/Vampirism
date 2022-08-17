@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.crafting.conditions.ICondition;
 import net.minecraftforge.common.crafting.conditions.IConditionSerializer;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
@@ -16,10 +17,10 @@ import java.util.function.Function;
 public class ConfigCondition implements ICondition {
 
     private static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "config");
-    private final Function<IContext, Boolean> tester;
-    private final String option;
+    private final @NotNull Function<IContext, Boolean> tester;
+    private final @NotNull String option;
 
-    public ConfigCondition(String option) {
+    public ConfigCondition(@NotNull String option) {
         this.tester = getTester(option);
         this.option = option;
     }
@@ -34,7 +35,7 @@ public class ConfigCondition implements ICondition {
         return tester.apply(context);
     }
 
-    private Function<IContext, Boolean> getTester(String option) {
+    private @NotNull Function<IContext, Boolean> getTester(@NotNull String option) {
         return switch (option) {
             case "auto_convert" -> (context) -> VampirismConfig.COMMON.autoConvertGlassBottles.get();
             case "umbrella" -> (context) -> VampirismConfig.COMMON.umbrella.get();
@@ -45,18 +46,18 @@ public class ConfigCondition implements ICondition {
     public static class Serializer implements IConditionSerializer<ConfigCondition> {
 
         @Override
-        public ResourceLocation getID() {
+        public @NotNull ResourceLocation getID() {
             return ID;
         }
 
         @Override
-        public ConfigCondition read(JsonObject json) {
+        public @NotNull ConfigCondition read(@NotNull JsonObject json) {
             String option = json.get("option").getAsString();
             return new ConfigCondition(option);
         }
 
         @Override
-        public void write(JsonObject json, ConfigCondition value) {
+        public void write(@NotNull JsonObject json, @NotNull ConfigCondition value) {
             json.addProperty("option", value.option);
         }
     }

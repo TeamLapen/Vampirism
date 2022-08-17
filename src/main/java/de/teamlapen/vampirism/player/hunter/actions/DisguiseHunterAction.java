@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Allows a hunter player to disguise himself which makes him less visible and reduces the detection radius for mobs
@@ -18,13 +19,13 @@ public class DisguiseHunterAction extends DefaultHunterAction implements ILastin
     }
 
     @Override
-    public boolean activate(IHunterPlayer player, ActivationContext context) {
+    public boolean activate(@NotNull IHunterPlayer player, ActivationContext context) {
         ((HunterPlayer) player).getSpecialAttributes().activateDisguise();
         return true;
     }
 
     @Override
-    public boolean canBeUsedBy(IHunterPlayer player) {
+    public boolean canBeUsedBy(@NotNull IHunterPlayer player) {
         return !player.getActionHandler().isActionActive(HunterActions.AWARENESS_HUNTER.get());
     }
 
@@ -44,25 +45,25 @@ public class DisguiseHunterAction extends DefaultHunterAction implements ILastin
     }
 
     @Override
-    public void onActivatedClient(IHunterPlayer player) {
+    public void onActivatedClient(@NotNull IHunterPlayer player) {
         ((HunterPlayer) player).getSpecialAttributes().activateDisguise();
 
     }
 
     @Override
-    public void onDeactivated(IHunterPlayer player) {
+    public void onDeactivated(@NotNull IHunterPlayer player) {
         ((HunterPlayer) player).getSpecialAttributes().resetDisguise();
 
     }
 
     @Override
-    public void onReActivated(IHunterPlayer player) {
+    public void onReActivated(@NotNull IHunterPlayer player) {
         ((HunterPlayer) player).getSpecialAttributes().activateDisguise();
 
     }
 
     @Override
-    public boolean onUpdate(IHunterPlayer player) {
+    public boolean onUpdate(@NotNull IHunterPlayer player) {
         ((HunterPlayer) player).getSpecialAttributes().increaseDisguiseTicks();
         return false;
     }

@@ -16,7 +16,7 @@ import java.util.List;
  * Base class for Vampirism's potions
  */
 public class VampirismEffect extends MobEffect {
-    public VampirismEffect(MobEffectCategory effectType, int potionColor) {
+    public VampirismEffect(@NotNull MobEffectCategory effectType, int potionColor) {
         super(effectType, potionColor);
     }
 

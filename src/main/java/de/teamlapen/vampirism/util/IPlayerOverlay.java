@@ -4,6 +4,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -20,5 +21,6 @@ public interface IPlayerOverlay {
      * @return Description of the overlay. Textures loc and boolean (true: slimArms, false: normal)
      */
     @OnlyIn(Dist.CLIENT)
+    @Nullable
     Optional<Pair<ResourceLocation, Boolean>> getOverlayPlayerProperties();
 }

@@ -61,7 +61,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         MinionData.registerDataType(HunterMinionData.ID, HunterMinionData::new);
     }
 
-    public static AttributeSupplier.Builder getAttributeBuilder() {
+    public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
         return BasicHunterEntity.getAttributeBuilder();
     }
 
@@ -80,7 +80,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     }
 
     @Override
-    public List<IMinionTask<?, ?>> getAvailableTasks() {
+    public @NotNull List<IMinionTask<?, ?>> getAvailableTasks() {
         return Lists.newArrayList(MinionTasks.FOLLOW_LORD.get(), MinionTasks.DEFEND_AREA.get(), MinionTasks.STAY.get(), MinionTasks.COLLECT_HUNTER_ITEMS.get(), MinionTasks.PROTECT_LORD.get());
     }
 
@@ -102,7 +102,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     }
 
     @Override
-    public LivingEntity getRepresentingEntity() {
+    public @NotNull LivingEntity getRepresentingEntity() {
         return this;
     }
 
@@ -168,7 +168,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     }
 
     @Override
-    protected boolean canConsume(ItemStack stack) {
+    protected boolean canConsume(@NotNull ItemStack stack) {
         if (!super.canConsume(stack)) return false;
         boolean fullHealth = this.getHealth() == this.getMaxHealth();
         return !stack.isEdible() || !fullHealth || stack.getItem().getFoodProperties(stack, this).canAlwaysEat();
@@ -277,7 +277,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         }
 
         @Override
-        public void deserializeNBT(CompoundTag nbt) {
+        public void deserializeNBT(@NotNull CompoundTag nbt) {
             super.deserializeNBT(nbt);
             type = nbt.getInt("hunter_type");
             hat = nbt.getInt("hunter_hat");
@@ -292,7 +292,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         }
 
         @Override
-        public MutableComponent getFormattedName() {
+        public @NotNull MutableComponent getFormattedName() {
             return super.getFormattedName().withStyle(style -> style.withColor((VReference.HUNTER_FACTION.getChatColor())));
         }
 
@@ -327,7 +327,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         }
 
         @Override
-        public void handleMinionAppearanceConfig(String newName, int... data) {
+        public void handleMinionAppearanceConfig(String newName, int @NotNull ... data) {
             this.setName(newName);
             if (data.length >= 3) {
                 type = data[0];
@@ -355,7 +355,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         }
 
         @Override
-        public void serializeNBT(CompoundTag tag) {
+        public void serializeNBT(@NotNull CompoundTag tag) {
             super.serializeNBT(tag);
             tag.putInt("hunter_type", type);
             tag.putInt("hunter_hat", hat);
@@ -381,7 +381,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         }
 
         @Override
-        public boolean upgradeStat(int statId, MinionEntity<?> entity) {
+        public boolean upgradeStat(int statId, @NotNull MinionEntity<?> entity) {
             if (super.upgradeStat(statId, entity)) return true;
             if (getRemainingStatPoints() == 0) {
                 LOGGER.warn("Cannot upgrade minion stat as no stat points are left");

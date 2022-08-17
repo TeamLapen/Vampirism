@@ -16,7 +16,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -26,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 public class AdvancedVampireRenderer extends HumanoidMobRenderer<AdvancedVampireEntity, HumanoidModel<AdvancedVampireEntity>> {
     private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/advanced_vampire.png");
 
-    public AdvancedVampireRenderer(EntityRendererProvider.Context context) {
+    public AdvancedVampireRenderer(EntityRendererProvider.@NotNull Context context) {
         super(context, new PlayerModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED), false), 0.5F);
         if (VampirismConfig.CLIENT.renderAdvancedMobPlayerFaces.get()) {
             this.addLayer(new PlayerFaceOverlayLayer<>(this));

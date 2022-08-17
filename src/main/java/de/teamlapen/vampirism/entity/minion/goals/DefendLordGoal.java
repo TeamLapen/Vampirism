@@ -6,18 +6,19 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
 
 
 public class DefendLordGoal extends TargetGoal {
 
-    protected final MinionEntity<?> entity;
-    private final TargetingConditions predicate;
+    protected final @NotNull MinionEntity<?> entity;
+    private final @NotNull TargetingConditions predicate;
     private final int maxStartDistSQ = 200;
     private final int maxStopDistSQ = 500;
 
-    public DefendLordGoal(MinionEntity<?> mobIn) {
+    public DefendLordGoal(@NotNull MinionEntity<?> mobIn) {
         super(mobIn, false, false);
         this.setFlags(EnumSet.of(Goal.Flag.TARGET));
         this.entity = mobIn;

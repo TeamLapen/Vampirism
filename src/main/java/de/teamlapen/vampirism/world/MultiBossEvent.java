@@ -5,6 +5,7 @@ import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.network.ClientboundUpdateMultiBossEventPacket;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.BossEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +27,7 @@ public class MultiBossEvent {
         this.entries = new HashMap<>();
     }
 
-    public MultiBossEvent(ClientboundUpdateMultiBossEventPacket packet) {
+    public MultiBossEvent(@NotNull ClientboundUpdateMultiBossEventPacket packet) {
         this.uniqueId = packet.uniqueId();
         this.name = packet.name();
         this.colors = packet.colors();
@@ -77,7 +78,7 @@ public class MultiBossEvent {
         this.entries.put(color, perc);
     }
 
-    public void setPercentage(float... perc) {
+    public void setPercentage(float @NotNull ... perc) {
         for (int i = 0; i < perc.length; i++) {
             if (this.colors.size() >= i + 1) {
                 this.entries.put(this.colors.get(i), perc[i]);
@@ -85,7 +86,7 @@ public class MultiBossEvent {
         }
     }
 
-    public void updateFromPackage(ClientboundUpdateMultiBossEventPacket packet) {
+    public void updateFromPackage(@NotNull ClientboundUpdateMultiBossEventPacket packet) {
         switch (packet.operation()) {
             case UPDATE_NAME -> this.name = packet.name();
             case UPDATE_PROGRESS -> this.entries = packet.entries();

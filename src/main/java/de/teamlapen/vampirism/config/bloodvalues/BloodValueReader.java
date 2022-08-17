@@ -10,6 +10,7 @@ import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Reader;
 import java.util.HashMap;
@@ -34,11 +35,11 @@ public class BloodValueReader<T> {
         this.name = name;
     }
 
-    public CompletableFuture<Map<String, BloodValueBuilder>> prepare(ResourceManager manager, Executor executor){
+    public @NotNull CompletableFuture<Map<String, BloodValueBuilder>> prepare(@NotNull ResourceManager manager, Executor executor){
         return CompletableFuture.supplyAsync(() -> load(manager), executor);
     }
 
-    public Map<String, BloodValueBuilder> load(ResourceManager manager) {
+    public @NotNull Map<String, BloodValueBuilder> load(@NotNull ResourceManager manager) {
         Map<String, BloodValueBuilder> values = new HashMap<>();
         for (Map.Entry<ResourceLocation, List<Resource>> entry : manager.listResourceStacks(this.directory, (file) -> file.getPath().endsWith(".json")).entrySet()) {
             ResourceLocation resourcelocation = entry.getKey();
@@ -57,7 +58,7 @@ public class BloodValueReader<T> {
         return values;
     }
 
-    public void load(Map<String, BloodValueBuilder> values) {
+    public void load(@NotNull Map<String, BloodValueBuilder> values) {
         this.valueConsumer.accept(values.entrySet().stream().flatMap(a -> a.getValue().build().entrySet().stream()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     }
 }

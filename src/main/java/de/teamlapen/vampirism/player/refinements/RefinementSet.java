@@ -21,7 +21,7 @@ public abstract class RefinementSet implements IRefinementSet {
     private final Set<RegistryObject<? extends IRefinement>> refinements;
     private final Rarity rarity;
     private final int color;
-    private final WeightedRandomItem<IRefinementSet> weightedRandom;
+    private final @NotNull WeightedRandomItem<IRefinementSet> weightedRandom;
     private Component name;
     private Component desc;
     @Nullable
@@ -63,7 +63,7 @@ public abstract class RefinementSet implements IRefinementSet {
     }
 
     @Override
-    public Optional<IRefinementItem.AccessorySlotType> getSlotType() {
+    public @NotNull Optional<IRefinementItem.AccessorySlotType> getSlotType() {
         return Optional.ofNullable(restrictedType);
     }
 
@@ -74,7 +74,7 @@ public abstract class RefinementSet implements IRefinementSet {
     /**
      * Specify the one and only accessory type this refinement can be put on
      */
-    public RefinementSet onlyFor(IRefinementItem.AccessorySlotType restrictedType) {
+    public @NotNull RefinementSet onlyFor(IRefinementItem.AccessorySlotType restrictedType) {
         this.restrictedType = restrictedType;
         return this;
     }

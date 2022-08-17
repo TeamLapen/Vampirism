@@ -32,16 +32,16 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 public class GarlicDiffuserBlock extends VampirismBlockContainer {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     private static final VoxelShape shape = makeShape();
 
-    private static VoxelShape makeShape() {
+    private static @NotNull VoxelShape makeShape() {
         VoxelShape a = Block.box(1, 0, 1, 15, 2, 15);
         VoxelShape b = Block.box(3, 2, 3, 13, 12, 13);
         return Shapes.or(a, b);
@@ -95,13 +95,13 @@ public class GarlicDiffuserBlock extends VampirismBlockContainer {
 
     @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
+    public BlockState getStateForPlacement(@NotNull BlockPlaceContext context) {
         return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection());
     }
 
     @NotNull
     @Override
-    public BlockState mirror(BlockState state, Mirror mirrorIn) {
+    public BlockState mirror(@NotNull BlockState state, @NotNull Mirror mirrorIn) {
         return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
@@ -124,13 +124,13 @@ public class GarlicDiffuserBlock extends VampirismBlockContainer {
 
     @NotNull
     @Override
-    public BlockState rotate(BlockState state, Rotation rot) {
+    public BlockState rotate(@NotNull BlockState state, @NotNull Rotation rot) {
         return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
     @NotNull
     @Override
-    public InteractionResult use(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+    public InteractionResult use(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         ItemStack heldItem = player.getItemInHand(hand);
         if (!heldItem.isEmpty() && ModItems.PURIFIED_GARLIC.get() == heldItem.getItem()) {
             if (!world.isClientSide) {
@@ -159,12 +159,12 @@ public class GarlicDiffuserBlock extends VampirismBlockContainer {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 
     @Nullable
-    private GarlicDiffuserBlockEntity getTile(BlockGetter world, BlockPos pos) {
+    private GarlicDiffuserBlockEntity getTile(@NotNull BlockGetter world, @NotNull BlockPos pos) {
         BlockEntity t = world.getBlockEntity(pos);
         if (t instanceof GarlicDiffuserBlockEntity) {
             return (GarlicDiffuserBlockEntity) t;
@@ -188,7 +188,7 @@ public class GarlicDiffuserBlock extends VampirismBlockContainer {
             this.name = name;
         }
 
-        public String getName() {
+        public @NotNull String getName() {
             return this.getSerializedName();
         }
 

@@ -63,7 +63,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     private final float untrainedAttackSpeed;
 
 
-    public VampirismVampireSword(Tiers material, int attackDamage, float untrainedAttackSpeed, float trainedAttackSpeed, Properties prop) {
+    public VampirismVampireSword(@NotNull Tiers material, int attackDamage, float untrainedAttackSpeed, float trainedAttackSpeed, @NotNull Properties prop) {
         super(material, attackDamage, untrainedAttackSpeed, prop);
         this.trainedAttackSpeed = trainedAttackSpeed;
         this.untrainedAttackSpeed = untrainedAttackSpeed;
@@ -89,12 +89,12 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     }
 
     @Override
-    public boolean canBeCharged(ItemStack stack) {
+    public boolean canBeCharged(@NotNull ItemStack stack) {
         return getCharged(stack) < 1f;
     }
 
     @Override
-    public int charge(ItemStack stack, int amount) {
+    public int charge(@NotNull ItemStack stack, int amount) {
         float factor = getChargingFactor(stack);
         float charge = getCharged(stack);
         float actual = Math.min(factor * amount, 1f - charge);
@@ -105,7 +105,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     /**
      * Prevent the player from being asked to name this item
      */
-    public void doNotName(ItemStack stack) {
+    public void doNotName(@NotNull ItemStack stack) {
         stack.addTagElement("dont_name", ByteTag.valueOf(Byte.MAX_VALUE));
     }
 
@@ -180,7 +180,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         return super.hurtEnemy(stack, target, attacker);
     }
 
-    public boolean isFullyCharged(ItemStack stack) {
+    public boolean isFullyCharged(@NotNull ItemStack stack) {
         return getCharged(stack) == 1f;
     }
 
@@ -190,7 +190,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     }
 
     @Override
-    public void inventoryTick(@NotNull ItemStack stack, Level worldIn, @NotNull Entity entityIn, int itemSlot, boolean isSelected) {
+    public void inventoryTick(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull Entity entityIn, int itemSlot, boolean isSelected) {
         //Try to minimize execution time, but tricky since off hand selection is not directly available, but it can only be off hand if itemSlot 0
         if (worldIn.isClientSide && (isSelected || itemSlot == 0)) {
             float charged = getCharged(stack);
@@ -204,7 +204,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     }
 
     @Override
-    public void onUsingTick(ItemStack stack, LivingEntity player, int count) {
+    public void onUsingTick(ItemStack stack, @NotNull LivingEntity player, int count) {
         if (player.getCommandSenderWorld().isClientSide) {
             if (count % 3 == 0) {
                 spawnChargingParticle(player, player.getMainHandItem().equals(stack));
@@ -239,7 +239,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     /**
      * If the stack is not named and the player hasn't been named before, ask the player to name this stack
      */
-    public void tryName(ItemStack stack, Player player) {
+    public void tryName(@NotNull ItemStack stack, @NotNull Player player) {
         if (!stack.hasCustomHoverName() && player.level.isClientSide() && (!stack.hasTag() || !stack.getTag().getBoolean("dont_name"))) {
             VampirismMod.proxy.displayNameSwordScreen(stack);
             player.level.playLocalSound((player).getX(), (player).getY(), (player).getZ(), SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS, 1f, 1f, false);
@@ -263,7 +263,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
 
     @NotNull
     @Override
-    public InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
+    public InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         return VampirePlayer.getOpt(playerIn).map(vampire -> {
             if (vampire.getLevel() == 0) return new InteractionResultHolder<>(InteractionResult.PASS, stack);
@@ -278,16 +278,16 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     }
 
     @Override
-    protected final float getAttackDamage(ItemStack stack) {
+    protected final float getAttackDamage(@NotNull ItemStack stack) {
         return super.getAttackDamage(stack) * getAttackDamageModifier(stack);
     }
 
-    protected float getAttackDamageModifier(ItemStack stack) {
+    protected float getAttackDamageModifier(@NotNull ItemStack stack) {
         return getCharged(stack) > 0 ? 1f : minStrength;
     }
 
     @Override
-    protected final float getAttackSpeed(ItemStack stack) {
+    protected final float getAttackSpeed(@NotNull ItemStack stack) {
         return untrainedAttackSpeed + (trainedAttackSpeed - untrainedAttackSpeed) * getTrained(stack);
     }
 
@@ -346,7 +346,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     }
 
     @OnlyIn(Dist.CLIENT)
-    private void spawnChargedParticle(LivingEntity player, boolean mainHand) {
+    private void spawnChargedParticle(@NotNull LivingEntity player, boolean mainHand) {
         Vec3 mainPos = UtilLib.getItemPosition(player, mainHand);
         for (int j = 0; j < 3; ++j) {
             Vec3 pos = mainPos.add((player.getRandom().nextFloat() - 0.5f) * 0.1f, (player.getRandom().nextFloat() - 0.3f) * 0.9f, (player.getRandom().nextFloat() - 0.5f) * 0.1f);
@@ -355,7 +355,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     }
 
     @OnlyIn(Dist.CLIENT)
-    private void spawnChargingParticle(LivingEntity player, boolean mainHand) {
+    private void spawnChargingParticle(@NotNull LivingEntity player, boolean mainHand) {
         Vec3 pos = UtilLib.getItemPosition(player, mainHand);
         if (player.getAttackAnim(1f) > 0f) return;
         pos = pos.add((player.getRandom().nextFloat() - 0.5f) * 0.1f, (player.getRandom().nextFloat() - 0.3f) * 0.9f, (player.getRandom().nextFloat() - 0.5f) * 0.1f);

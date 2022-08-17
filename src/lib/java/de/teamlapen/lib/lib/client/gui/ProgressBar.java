@@ -22,7 +22,7 @@ public class ProgressBar extends AbstractWidget {
     private float progress = 0;
     private int color = 0xFFFFFF;
 
-    public ProgressBar(Screen screen, int x, int y, int width, Component title) {
+    public ProgressBar(Screen screen, int x, int y, int width, @NotNull Component title) {
         super(x, y, width, 20, title);
         this.screen = screen;
     }

@@ -29,7 +29,7 @@ public class TotemBESR extends VampirismBESR<TotemBlockEntity> {
     }
 
     @Override
-    public void render(TotemBlockEntity te, float partialTicks, @NotNull PoseStack matrixStack, @NotNull MultiBufferSource iRenderTypeBuffer, int i, int i1) {
+    public void render(@NotNull TotemBlockEntity te, float partialTicks, @NotNull PoseStack matrixStack, @NotNull MultiBufferSource iRenderTypeBuffer, int i, int i1) {
         float textureScale = te.shouldRenderBeam();
         if (textureScale > 0.0f) {
             long totalWorldTime = te.getLevel().getGameTime();
@@ -55,7 +55,7 @@ public class TotemBESR extends VampirismBESR<TotemBlockEntity> {
         return true;
     }
 
-    private void renderFactionName(IFaction<?> faction, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int packedLight) {
+    private void renderFactionName(@NotNull IFaction<?> faction, @NotNull PoseStack matrixStack, @NotNull MultiBufferSource iRenderTypeBuffer, int packedLight) {
         Component displayNameIn = faction.getNamePlural().plainCopy().withStyle(style -> style.withColor((faction.getChatColor())));
         matrixStack.pushPose();
         matrixStack.translate(0.5, 1, 0.5);

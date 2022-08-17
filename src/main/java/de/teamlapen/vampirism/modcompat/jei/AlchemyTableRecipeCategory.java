@@ -34,14 +34,14 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<AlchemyTableR
 
     private static final ResourceLocation location = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/alchemy_table.png");
 
-    private final Component localizedName;
-    private final IDrawable icon;
-    private final IDrawable background;
-    private final IDrawableStatic blazeHeat;
-    private final IDrawableAnimated arrow;
-    private final IDrawableAnimated pool;
+    private final @NotNull Component localizedName;
+    private final @NotNull IDrawable icon;
+    private final @NotNull IDrawable background;
+    private final @NotNull IDrawableStatic blazeHeat;
+    private final @NotNull IDrawableAnimated arrow;
+    private final @NotNull IDrawableAnimated pool;
 
-    public AlchemyTableRecipeCategory(IGuiHelper helper) {
+    public AlchemyTableRecipeCategory(@NotNull IGuiHelper helper) {
         this.localizedName = ModBlocks.ALCHEMY_TABLE.get().getName();
         this.background = helper.drawableBuilder(location, 11, 12, 149, 80).addPadding(0,30,0,0).build();
         this.icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.ALCHEMY_TABLE.get()));
@@ -51,7 +51,7 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<AlchemyTableR
     }
 
     @Override
-    public RecipeType<AlchemyTableRecipe> getRecipeType() {
+    public @NotNull RecipeType<AlchemyTableRecipe> getRecipeType() {
         return VampirismJEIPlugin.ALCHEMY_TABLE;
     }
 
@@ -74,7 +74,7 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<AlchemyTableR
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, AlchemyTableRecipe recipe, @NotNull IFocusGroup focuses) {
+    public void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull AlchemyTableRecipe recipe, @NotNull IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.INPUT, 4, 13).addIngredients(recipe.getInput());
         builder.addSlot(RecipeIngredientRole.INPUT, 44,4).addIngredients(recipe.getIngredient());
         builder.addSlot(RecipeIngredientRole.INPUT, 68,4).addIngredients(recipe.getIngredient());

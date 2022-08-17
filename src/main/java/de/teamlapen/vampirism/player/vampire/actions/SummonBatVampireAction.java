@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.BlindingBatEntity;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Summon bat skill
@@ -20,7 +21,7 @@ public class SummonBatVampireAction extends DefaultVampireAction {
     }
 
     @Override
-    public boolean activate(IVampirePlayer player, ActivationContext context) {
+    public boolean activate(@NotNull IVampirePlayer player, ActivationContext context) {
         Player entityPlayer = player.getRepresentingPlayer();
         boolean refined = player.getSkillHandler().isRefinementEquipped(ModRefinements.SUMMON_BATS.get());
         int amount = VampirismConfig.BALANCE.vaSummonBatsCount.get();
@@ -40,13 +41,13 @@ public class SummonBatVampireAction extends DefaultVampireAction {
     }
 
     @Override
-    public boolean canBeUsedBy(IVampirePlayer player) {
+    public boolean canBeUsedBy(@NotNull IVampirePlayer player) {
         return player.getActionHandler().isActionActive(VampireActions.BAT.get()) || player.getSkillHandler().isRefinementEquipped(ModRefinements.SUMMON_BATS.get());
     }
 
 
     @Override
-    public int getCooldown(IVampirePlayer player) {
+    public int getCooldown(@NotNull IVampirePlayer player) {
         return (int) ((player.getSkillHandler().isRefinementEquipped(ModRefinements.SUMMON_BATS.get()) ? 0.7 : 1) * VampirismConfig.BALANCE.vaSummonBatsCooldown.get() * 20);
     }
 

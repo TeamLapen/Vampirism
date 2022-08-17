@@ -30,7 +30,7 @@ public interface IFactionLevelItem<T extends IFactionPlayer<T>> extends IFaction
 
     @SuppressWarnings("RedundantCast")
     @OnlyIn(Dist.CLIENT)
-    default void addFactionLevelToolTip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn, @Nullable Player player) {
+    default void addFactionLevelToolTip(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, TooltipFlag flagIn, @Nullable Player player) {
         ChatFormatting factionC = ChatFormatting.DARK_RED;
         ChatFormatting levelC = ChatFormatting.DARK_RED;
         ChatFormatting skillC = ChatFormatting.DARK_RED;

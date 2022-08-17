@@ -33,9 +33,9 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.client.gui.ScreenUtils;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -55,19 +55,19 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
 
     protected final T screen;
     protected final IFactionPlayer<?> factionPlayer;
-    private final TaskActionButton taskButton;
+    private final @Nullable TaskActionButton taskButton;
 
     private final Map<ITaskInstance, List<Component>> toolTips = Maps.newHashMap();
 
 
-    public TaskItem(ITaskInstance item, ScrollableListWithDummyWidget<ITaskInstance> list, boolean isDummy, T screen, IFactionPlayer<?> factionPlayer) {
+    public TaskItem(@NotNull ITaskInstance item, @NotNull ScrollableListWithDummyWidget<ITaskInstance> list, boolean isDummy, T screen, IFactionPlayer<?> factionPlayer) {
         super(item, list, isDummy);
         this.screen = screen;
         this.factionPlayer = factionPlayer;
         this.taskButton = isDummy ? new TaskActionButton(0, 0) : null;
     }
 
-    public List<Component> getTooltipFromItem2(ItemStack itemStack, boolean strikeThough, @Nullable String bonus) {
+    public @NotNull List<Component> getTooltipFromItem2(@NotNull ItemStack itemStack, boolean strikeThough, @Nullable String bonus) {
         List<Component> list = itemStack.getTooltipLines(Minecraft.getInstance().player, Minecraft.getInstance().options.advancedItemTooltips ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL);
         List<Component> list1 = Lists.newArrayList();
         for (int i = 0; i < list.size(); i++) {
@@ -89,7 +89,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
     }
 
     @Override
-    public void renderDummy(PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel) {
+    public void renderDummy(@NotNull PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel) {
         //render background
         RenderSystem.enableDepthTest();
         ScreenUtils.blitWithBorder(matrixStack, TASKMASTER_GUI_TEXTURE, x, y, 17, 208, listWidth, itemHeight, 136, 21, 3, 3, 3, 3, zLevel);
@@ -127,7 +127,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
     }
 
     @Override
-    public void renderDummyToolTip(PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float zLevel) {
+    public void renderDummyToolTip(@NotNull PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float zLevel) {
         if (mouseX >= x + 3 + 113 - 21 + 1 && mouseX < x + 3 + 113 - 21 + 16 + 1 && mouseY >= y + 2 && mouseY < y + 2 + 16) {
             ITaskRewardInstance reward = this.item.getReward();
             if (reward instanceof ItemRewardInstance) {
@@ -146,7 +146,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
     }
 
     @Override
-    public void renderItem(PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel) {
+    public void renderItem(@NotNull PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel) {
         //render background
         RenderSystem.enableDepthTest();
 
@@ -218,7 +218,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
     }
 
     @Override
-    public void renderItemToolTip(PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float zLevel) {
+    public void renderItemToolTip(@NotNull PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float zLevel) {
         //default task tooltips
         List<Component> toolTips = this.toolTips.getOrDefault(this.item, Lists.newArrayList());
         if (toolTips.isEmpty()) {
@@ -231,7 +231,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
         this.screen.getTaskContainer().pressButton(this.item);
     }
 
-    private void generateTaskToolTip(ITaskInstance taskInfo, List<Component> toolTips) {
+    private void generateTaskToolTip(@NotNull ITaskInstance taskInfo, @NotNull List<Component> toolTips) {
         Task task = taskInfo.getTask();
         toolTips.clear();
         toolTips.add(task.getTranslation().plainCopy().withStyle(style -> style.withColor(this.screen.getTaskContainer().getFactionColor())));
@@ -274,7 +274,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
         this.toolTips.put(taskInfo, toolTips);
     }
 
-    private void renderDefaultRequirementToolTip(PoseStack mStack, ITaskInstance task, TaskRequirement.Requirement<?> requirement, int x, int y, boolean strikeThrough) {
+    private void renderDefaultRequirementToolTip(@NotNull PoseStack mStack, @NotNull ITaskInstance task, TaskRequirement.@NotNull Requirement<?> requirement, int x, int y, boolean strikeThrough) {
         List<Component> tooltips = Lists.newArrayList();
         tooltips.add((strikeThrough ? REQUIREMENT_STRIKE : REQUIREMENT));
         MutableComponent text = Component.translatable(task.getTask().getTranslationKey() + ".req." + requirement.getId().toString().replace(':', '.'));
@@ -285,7 +285,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
         this.screen.renderComponentTooltip(mStack, tooltips, x, y);
     }
 
-    private void renderGenericRequirementTooltip(PoseStack mStack, TaskRequirement.Type type, int x, int y, MutableComponent text, boolean strikeThrough) {
+    private void renderGenericRequirementTooltip(@NotNull PoseStack mStack, TaskRequirement.@NotNull Type type, int x, int y, @NotNull MutableComponent text, boolean strikeThrough) {
         List<Component> tooltips = Lists.newArrayList();
         MutableComponent title = Component.translatable(type.getTranslationKey()).append(":");
         if (strikeThrough) {
@@ -298,19 +298,19 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
         this.screen.renderComponentTooltip(mStack, tooltips, x, y);
     }
 
-    private void renderItemTooltip(PoseStack mStack, ItemStack stack, int x, int y, Component text, boolean strikeThrough, @Nullable String bonus) {
+    private void renderItemTooltip(@NotNull PoseStack mStack, @NotNull ItemStack stack, int x, int y, Component text, boolean strikeThrough, @Nullable String bonus) {
         List<Component> tooltips = getTooltipFromItem2(stack, strikeThrough, bonus);
         tooltips.add(0, text);
         this.screen.renderComponentTooltip(mStack, tooltips, x, y);
     }
 
-    private void renderItemTooltip(PoseStack mStack, Task task, int x, int y) {
+    private void renderItemTooltip(@NotNull PoseStack mStack, @NotNull Task task, int x, int y) {
         List<Component> tooltips = Lists.newArrayList(REWARD);
         tooltips.add(Component.translatable(task.getTranslationKey() + ".reward"));
         this.screen.renderComponentTooltip(mStack, tooltips, x, y);
     }
 
-    private void renderRequirementTool(PoseStack mStack, ITaskInstance task, TaskRequirement.Requirement<?> requirement, int x, int y) {
+    private void renderRequirementTool(@NotNull PoseStack mStack, @NotNull ITaskInstance task, TaskRequirement.@NotNull Requirement<?> requirement, int x, int y) {
         boolean notAccepted = this.screen.getTaskContainer().isTaskNotAccepted(this.item);
         boolean completed = this.screen.getTaskContainer().isRequirementCompleted(this.item, requirement);
         int completedAmount = this.screen.getTaskContainer().getRequirementStatus(this.item, requirement);

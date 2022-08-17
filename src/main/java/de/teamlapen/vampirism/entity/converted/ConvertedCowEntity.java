@@ -21,7 +21,7 @@ public class ConvertedCowEntity extends ConvertedCreatureEntity<Cow> {
     }
 
     @NotNull
-    public InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
+    public InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         if (itemstack.getItem() == Items.BUCKET && !this.isBaby()) {
             player.playSound(SoundEvents.COW_MILK, 1.0F, 1.0F);
@@ -39,7 +39,7 @@ public class ConvertedCowEntity extends ConvertedCreatureEntity<Cow> {
         }
 
         @Override
-        public ConvertedCreatureEntity<Cow> createFrom(Cow entity) {
+        public ConvertedCreatureEntity<Cow> createFrom(@NotNull Cow entity) {
             return Helper.createEntity(ModEntities.CONVERTED_COW.get(), entity.getCommandSenderWorld()).map(creature -> {
                 this.copyImportantStuff(creature, entity);
                 return creature;

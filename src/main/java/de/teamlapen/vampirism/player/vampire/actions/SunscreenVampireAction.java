@@ -8,11 +8,12 @@ import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModRefinements;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class SunscreenVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
     @Override
-    public boolean activate(IVampirePlayer vampire, ActivationContext context) {
+    public boolean activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
         addEffectInstance(vampire, new MobEffectInstance(ModEffects.SUNSCREEN.get(), getDuration(vampire), 3, false, false));
         return true;
     }
@@ -23,7 +24,7 @@ public class SunscreenVampireAction extends DefaultVampireAction implements ILas
     }
 
     @Override
-    public int getDuration(IVampirePlayer player) {
+    public int getDuration(@NotNull IVampirePlayer player) {
         int duration = 20 * (VampirismConfig.BALANCE.vaSunscreenDuration.get());
         if (player.getSkillHandler().isRefinementEquipped(ModRefinements.SUN_SCREEN.get())) {
             duration *= VampirismConfig.BALANCE.vrSunscreenDurationMod.get();
@@ -42,7 +43,7 @@ public class SunscreenVampireAction extends DefaultVampireAction implements ILas
     }
 
     @Override
-    public void onDeactivated(IVampirePlayer vampire) {
+    public void onDeactivated(@NotNull IVampirePlayer vampire) {
         removePotionEffect(vampire, ModEffects.SUNSCREEN.get());
     }
 

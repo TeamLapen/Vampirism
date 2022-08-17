@@ -17,6 +17,7 @@ import net.minecraftforge.network.NetworkEvent;
 import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -25,15 +26,15 @@ import java.util.function.Supplier;
 public record ServerboundUnlockSkillPacket(ResourceLocation skillId) implements IMessage {
     private static final Logger LOGGER = LogManager.getLogger();
 
-    static void encode(ServerboundUnlockSkillPacket msg, FriendlyByteBuf buf) {
+    static void encode(@NotNull ServerboundUnlockSkillPacket msg, @NotNull FriendlyByteBuf buf) {
         buf.writeResourceLocation(msg.skillId);
     }
 
-    static ServerboundUnlockSkillPacket decode(FriendlyByteBuf buf) {
+    static @NotNull ServerboundUnlockSkillPacket decode(@NotNull FriendlyByteBuf buf) {
         return new ServerboundUnlockSkillPacket(buf.readResourceLocation());
     }
 
-    static void handle(ServerboundUnlockSkillPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    static void handle(@NotNull ServerboundUnlockSkillPacket msg, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ServerPlayer player = ctx.getSender();
         Validate.notNull(player);

@@ -30,6 +30,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Optional;
 
 /**
@@ -39,7 +41,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
     private static final Component name = Component.translatable("container.huntertrainer");
     private static final int MOVE_TO_RESTRICT_PRIO = 3;
 
-    public static AttributeSupplier.Builder getAttributeBuilder() {
+    public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
         return VampirismEntity.getAttributeBuilder()
                 .add(Attributes.MAX_HEALTH, 300)
                 .add(Attributes.ATTACK_DAMAGE, 19)
@@ -47,7 +49,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
                 .add(Attributes.FOLLOW_RANGE, 5);
     }
 
-    private Player trainee;
+    private @Nullable Player trainee;
     private boolean shouldCreateHome;
 
     public HunterTrainerEntity(EntityType<? extends HunterTrainerEntity> type, Level world) {

@@ -15,6 +15,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,7 +29,7 @@ public class VampireBookManager {
 
     private static VampireBookManager instance;
 
-    public static VampireBookManager getInstance() {
+    public static @NotNull VampireBookManager getInstance() {
         if (instance == null) {
             instance = new VampireBookManager();
         }
@@ -53,11 +54,11 @@ public class VampireBookManager {
         return idToBook.getOrDefault(id, DUMMY);
     }
 
-    public BookContext getRandomBook(RandomSource rng) {
+    public BookContext getRandomBook(@NotNull RandomSource rng) {
         return nonUnique.size() > 0 ? nonUnique.get(rng.nextInt(nonUnique.size())) : DUMMY;
     }
 
-    public ItemStack getRandomBookItem(RandomSource rng) {
+    public @NotNull ItemStack getRandomBookItem(@NotNull RandomSource rng) {
         ItemStack book = new ItemStack(ModItems.VAMPIRE_BOOK.get(), 1);
         book.setTag(VampireBookItem.createTagFromContext(getRandomBook(rng)));
         return book;
@@ -104,7 +105,7 @@ public class VampireBookManager {
             })).apply(item, BookContext::new);
         });
 
-        public BookContext(BookInfo book, String id, Boolean unique, List<String> tags) {
+        public BookContext(BookInfo book, String id, Boolean unique, @NotNull List<String> tags) {
             this(book, id, unique, tags.toArray(new String[0]));
         }
     }
@@ -121,7 +122,7 @@ public class VampireBookManager {
             })).apply(item, BookInfo::new);
         });
 
-        public BookInfo(String title, String author, List<String> content) {
+        public BookInfo(String title, String author, @NotNull List<String> content) {
             this(title, author, content.toArray(new String[0]));
         }
     }

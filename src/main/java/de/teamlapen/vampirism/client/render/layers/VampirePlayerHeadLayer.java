@@ -22,10 +22,10 @@ import org.jetbrains.annotations.NotNull;
 @OnlyIn(Dist.CLIENT)
 public class VampirePlayerHeadLayer<T extends Player, Q extends HumanoidModel<T>> extends RenderLayer<T, Q> {
 
-    private final ResourceLocation[] eyeOverlays;
-    private final ResourceLocation[] fangOverlays;
+    private final ResourceLocation @NotNull [] eyeOverlays;
+    private final ResourceLocation @NotNull [] fangOverlays;
 
-    public VampirePlayerHeadLayer(RenderLayerParent<T, Q> entityRendererIn) {
+    public VampirePlayerHeadLayer(@NotNull RenderLayerParent<T, Q> entityRendererIn) {
         super(entityRendererIn);
         eyeOverlays = new ResourceLocation[REFERENCE.EYE_TYPE_COUNT];
         for (int i = 0; i < eyeOverlays.length; i++) {

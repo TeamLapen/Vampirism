@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import org.apache.logging.log4j.LogManager;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class InfoEntityCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int infoEntity(CommandSourceStack commandSource, ServerPlayer asPlayer) {
+    private static int infoEntity(@NotNull CommandSourceStack commandSource, @NotNull ServerPlayer asPlayer) {
         List<Entity> l = asPlayer.getCommandSenderWorld().getEntities(asPlayer, asPlayer.getBoundingBox().inflate(3, 2, 3));
         for (Entity o : l) {
             CompoundTag nbt = new CompoundTag();

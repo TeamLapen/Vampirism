@@ -41,14 +41,14 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     public static final Capability<IExtendedCreatureVampirism> CAP = CapabilityManager.get(new CapabilityToken<>(){});
 
 
-    public static LazyOptional<IExtendedCreatureVampirism> getSafe(Entity mob) {
+    public static @NotNull LazyOptional<IExtendedCreatureVampirism> getSafe(@NotNull Entity mob) {
         return mob.getCapability(CAP);
     }
 
-    static <Q extends PathfinderMob> ICapabilityProvider createNewCapability(final Q creature) {
+    static <Q extends PathfinderMob> @NotNull ICapabilityProvider createNewCapability(final Q creature) {
         return new ICapabilitySerializable<CompoundTag>() {
 
-            final Function<Q, IExtendedCreatureVampirism> constructor = VampirismAPI.entityRegistry().getCustomExtendedCreatureConstructor(creature);
+            final @Nullable Function<Q, IExtendedCreatureVampirism> constructor = VampirismAPI.entityRegistry().getCustomExtendedCreatureConstructor(creature);
             final IExtendedCreatureVampirism inst = constructor == null ? new ExtendedCreature(creature) : constructor.apply(creature);
             final LazyOptional<IExtendedCreatureVampirism> opt = LazyOptional.of(() -> inst);
 
@@ -65,7 +65,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
             }
 
             @Override
-            public CompoundTag serializeNBT() {
+            public @NotNull CompoundTag serializeNBT() {
                 CompoundTag tag = new CompoundTag();
                 inst.saveData(tag);
                 return tag;
@@ -141,7 +141,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     }
 
     @Override
-    public ResourceLocation getCapKey() {
+    public @NotNull ResourceLocation getCapKey() {
         return REFERENCE.EXTENDED_CREATURE_KEY;
     }
 
@@ -174,7 +174,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     }
 
     @Override
-    public void loadUpdateFromNBT(CompoundTag nbt) {
+    public void loadUpdateFromNBT(@NotNull CompoundTag nbt) {
         if (nbt.contains(KEY_BLOOD)) {
             setBlood(nbt.getInt(KEY_BLOOD));
         }
@@ -299,19 +299,19 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return super.toString() + " for entity (" + entity.toString() + ") [B" + blood + ",MB" + maxBlood + ",CV" + canBecomeVampire + "]";
     }
 
     @Override
-    public void writeFullUpdateToNBT(CompoundTag nbt) {
+    public void writeFullUpdateToNBT(@NotNull CompoundTag nbt) {
         nbt.putInt(KEY_BLOOD, getBlood());
         nbt.putInt(KEY_MAX_BLOOD, getBlood());
         nbt.putBoolean(POISONOUS_BLOOD, hasPoisonousBlood());
     }
 
     @Override
-    public void loadData(CompoundTag compound) {
+    public void loadData(@NotNull CompoundTag compound) {
         if (compound.contains(KEY_MAX_BLOOD)) {
             setMaxBlood(compound.getInt(KEY_MAX_BLOOD));
         }
@@ -324,7 +324,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     }
 
     @Override
-    public void saveData(CompoundTag compound) {
+    public void saveData(@NotNull CompoundTag compound) {
         compound.putInt(KEY_BLOOD, blood);
         compound.putInt(KEY_MAX_BLOOD, maxBlood);
         compound.putBoolean(POISONOUS_BLOOD, poisonousBlood);
@@ -334,7 +334,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         HelperLib.sync(this, getEntity(), false);
     }
 
-    private void sync(CompoundTag data) {
+    private void sync(@NotNull CompoundTag data) {
         HelperLib.sync(this, data, getEntity(), false);
 
     }

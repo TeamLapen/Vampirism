@@ -42,10 +42,10 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
     private final IFactionPlayer<?> factionPlayer;
     private final TextColor factionColor;
     private final NonNullList<ItemStack> refinementStacks = NonNullList.withSize(3, ItemStack.EMPTY);
-    public Map<UUID, TaskManager.TaskWrapper> taskWrapper = new HashMap<>();
-    public Map<UUID, Set<UUID>> completableTasks = new HashMap<>();
-    public Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements = new HashMap<>();
-    private Runnable listener;
+    public @NotNull Map<UUID, TaskManager.TaskWrapper> taskWrapper = new HashMap<>();
+    public @NotNull Map<UUID, Set<UUID>> completableTasks = new HashMap<>();
+    public @NotNull Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements = new HashMap<>();
+    private @Nullable Runnable listener;
     private final boolean refinementsAvailable;
 
     public VampirismContainer(int id, @NotNull Inventory playerInventory) {
@@ -79,7 +79,7 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
     }
 
     @Override
-    public TaskAction buttonAction(@NotNull ITaskInstance taskInfo) {
+    public @NotNull TaskAction buttonAction(@NotNull ITaskInstance taskInfo) {
         return taskInfo.isUnique() || this.factionPlayer.getRepresentingPlayer().level.getGameTime() < taskInfo.getTaskTimeStamp() ? TaskContainer.TaskAction.ABORT : TaskAction.REMOVE;
     }
 
@@ -116,7 +116,7 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
         }
     }
 
-    public Collection<ITaskInstance> getTaskInfos() {
+    public @NotNull Collection<ITaskInstance> getTaskInfos() {
         return this.taskWrapper.values().stream().flatMap(t -> t.getTaskInstances().stream().filter(ITaskInstance::isAccepted)).collect(Collectors.toList());
     }
 
@@ -172,7 +172,7 @@ public class VampirismContainer extends InventoryContainer implements TaskContai
 
     public static class RemovingSelectorSlot extends SelectorSlot {
 
-        private RemovingSelectorSlot(Container inventoryIn, int index, SelectorInfo info, Consumer<Container> refreshInvFunc, Function<Integer, Boolean> activeFunc) {
+        private RemovingSelectorSlot(@NotNull Container inventoryIn, int index, @NotNull SelectorInfo info, Consumer<Container> refreshInvFunc, Function<Integer, Boolean> activeFunc) {
             super(inventoryIn, index, info, refreshInvFunc, activeFunc);
         }
 

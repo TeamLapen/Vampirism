@@ -17,6 +17,7 @@ import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.Stream;
 
@@ -42,7 +43,7 @@ public class ModItemsRender {
         });
     }
 
-    public static void registerColors(RegisterColorHandlersEvent.Item event) {
+    public static void registerColors(RegisterColorHandlersEvent.@NotNull Item event) {
         // Swiftness armor
         event.register((stack, tintIndex) -> {
             return tintIndex > 0 ? -1 : ((DyeableLeatherItem)stack.getItem()).getColor(stack);

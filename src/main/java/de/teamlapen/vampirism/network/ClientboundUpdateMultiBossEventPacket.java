@@ -8,12 +8,13 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.BossEvent;
 import net.minecraftforge.network.NetworkEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.Supplier;
 
 public record ClientboundUpdateMultiBossEventPacket(UUID uniqueId, OperationType operation, List<Color> colors, Map<Color, Float> entries, Component name, BossEvent.BossBarOverlay overlay) implements IMessage {
-    static void encode(ClientboundUpdateMultiBossEventPacket msg, FriendlyByteBuf buf) {
+    static void encode(@NotNull ClientboundUpdateMultiBossEventPacket msg, @NotNull FriendlyByteBuf buf) {
         buf.writeUUID(msg.uniqueId);
         buf.writeEnum(msg.operation);
         switch (msg.operation) {
@@ -38,7 +39,7 @@ public record ClientboundUpdateMultiBossEventPacket(UUID uniqueId, OperationType
         }
     }
 
-    static ClientboundUpdateMultiBossEventPacket decode(FriendlyByteBuf buf) {
+    static @NotNull ClientboundUpdateMultiBossEventPacket decode(@NotNull FriendlyByteBuf buf) {
         UUID uuid = buf.readUUID();
         OperationType operation = buf.readEnum(OperationType.class);
         Component name = null;
@@ -75,14 +76,14 @@ public record ClientboundUpdateMultiBossEventPacket(UUID uniqueId, OperationType
         return new ClientboundUpdateMultiBossEventPacket(uuid, operation , colors, entries, name, overlay);
     }
 
-    public static void handle(final ClientboundUpdateMultiBossEventPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final ClientboundUpdateMultiBossEventPacket msg, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> VampirismMod.proxy.handleUpdateMultiBossInfoPacket(msg));
         ctx.setPacketHandled(true);
     }
 
 
-    public ClientboundUpdateMultiBossEventPacket(OperationType operation, MultiBossEvent data) {
+    public ClientboundUpdateMultiBossEventPacket(OperationType operation, @NotNull MultiBossEvent data) {
         this(data.getUniqueId(), operation, data.getColors(), data.getEntries(), data.getName() , data.getOverlay());
     }
 

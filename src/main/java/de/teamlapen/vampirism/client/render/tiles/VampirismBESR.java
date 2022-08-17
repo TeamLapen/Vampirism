@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -21,7 +22,7 @@ abstract class VampirismBESR<T extends BlockEntity> implements BlockEntityRender
      * Rotates the block to fit the enum facing.
      * ONLY CALL THIS IF THE BLOCK HAS A {@link HorizontalDirectionalBlock#FACING} PROPERTY
      */
-    protected void adjustRotatePivotViaState(@Nullable BlockEntity tile, PoseStack matrixStack) {
+    protected void adjustRotatePivotViaState(@Nullable BlockEntity tile, @NotNull PoseStack matrixStack) {
         if (tile == null) return;
         Direction dir = Direction.NORTH;
         if (tile.getLevel() != null)

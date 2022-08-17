@@ -65,7 +65,7 @@ public class ActionSkill<T extends IFactionPlayer<T>> extends VampirismSkill<T> 
     }
 
     @Override
-    protected void getActions(Collection<IAction<T>> list) {
+    protected void getActions(@NotNull Collection<IAction<T>> list) {
         list.add(action);
     }
 

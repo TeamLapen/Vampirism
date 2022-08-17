@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class VampireRefinementItem extends RefinementItem {
 
-    public VampireRefinementItem(Properties properties, AccessorySlotType type) {
+    public VampireRefinementItem(@NotNull Properties properties, AccessorySlotType type) {
         super(properties, type);
     }
 
@@ -34,7 +34,7 @@ public class VampireRefinementItem extends RefinementItem {
         return VReference.VAMPIRE_FACTION;
     }
 
-    public static RefinementItem getItemForType(AccessorySlotType type) {
+    public static @NotNull RefinementItem getItemForType(@NotNull AccessorySlotType type) {
         return switch (type) {
             case AMULET -> ModItems.AMULET.get();
             case RING -> ModItems.RING.get();

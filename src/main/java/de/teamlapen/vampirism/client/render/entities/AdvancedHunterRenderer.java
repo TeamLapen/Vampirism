@@ -17,7 +17,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -30,7 +29,7 @@ public class AdvancedHunterRenderer extends HumanoidMobRenderer<AdvancedHunterEn
     private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base1.png");
 
 
-    public AdvancedHunterRenderer(EntityRendererProvider.Context context) {
+    public AdvancedHunterRenderer(EntityRendererProvider.@NotNull Context context) {
         super(context, new BasicHunterModel<>(context.bakeLayer(ModEntitiesRender.HUNTER), false), 0.5F);
         this.addLayer(new HunterEquipmentLayer<>(this, context.getModelSet(), h -> HunterEquipmentModel.StakeType.FULL, e -> HunterEquipmentModel.HatType.from(e.getHunterType())));
         this.addLayer(new CloakLayer<>(this, textureCloak, advancedHunterEntity -> true));

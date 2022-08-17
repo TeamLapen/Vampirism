@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
@@ -17,7 +18,7 @@ public class ParentUnlocker implements TaskUnlocker {
     }
 
     @Override
-    public Component getDescription() {
+    public @NotNull Component getDescription() {
         return Component.translatable("text.vampirism.task.require_parent", parent.get().getTranslation());
     }
 
@@ -26,7 +27,7 @@ public class ParentUnlocker implements TaskUnlocker {
     }
 
     @Override
-    public boolean isUnlocked(IFactionPlayer<?> playerEntity) {
+    public boolean isUnlocked(@NotNull IFactionPlayer<?> playerEntity) {
         return playerEntity.getTaskManager().wasTaskCompleted(parent.get());
     }
 }

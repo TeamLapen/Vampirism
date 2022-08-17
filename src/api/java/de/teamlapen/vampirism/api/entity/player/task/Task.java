@@ -116,7 +116,7 @@ public class Task {
         return useDescription;
     }
 
-    private ResourceLocation getRegistryName() {
+    private @Nullable ResourceLocation getRegistryName() {
         return VampirismRegistries.TASKS.get().getKey(this);
     }
 

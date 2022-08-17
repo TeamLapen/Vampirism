@@ -18,6 +18,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
@@ -150,7 +151,7 @@ public class ModPotions {
     }
 
 
-    public static void fixMappings(MissingMappingsEvent event) {
+    public static void fixMappings(@NotNull MissingMappingsEvent event) {
         event.getAllMappings(ForgeRegistries.Keys.POTIONS).forEach(missingMapping -> {
             switch (missingMapping.getKey().toString()) {
                 case "vampirism:long_strong_resistance", "vampirism:very_long_resistance" -> missingMapping.remap(ModPotions.LONG_RESISTANCE.get());

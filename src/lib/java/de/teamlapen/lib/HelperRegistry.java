@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Set;
@@ -20,9 +21,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class HelperRegistry {
     private final static Logger LOGGER = LogManager.getLogger();
 
-    private static Map<ResourceLocation, Capability<ISyncable.ISyncableEntityCapabilityInst>> syncablePlayerCaps = new ConcurrentHashMap<>();
-    private static Map<ResourceLocation, Capability<ISyncable.ISyncableEntityCapabilityInst>> syncableEntityCaps = new ConcurrentHashMap<>();
-    private static Set<Capability<IPlayerEventListener>> playerEventListenerCaps = ConcurrentHashMap.newKeySet();
+    private static @Nullable Map<ResourceLocation, Capability<ISyncable.ISyncableEntityCapabilityInst>> syncablePlayerCaps = new ConcurrentHashMap<>();
+    private static @Nullable Map<ResourceLocation, Capability<ISyncable.ISyncableEntityCapabilityInst>> syncableEntityCaps = new ConcurrentHashMap<>();
+    private static @Nullable Set<Capability<IPlayerEventListener>> playerEventListenerCaps = ConcurrentHashMap.newKeySet();
     private static Capability<IPlayerEventListener>[] playerEventListenerCapsFinal;
     /**
      * Stores syncable capabilities for {@link net.minecraft.world.entity.player.Player}

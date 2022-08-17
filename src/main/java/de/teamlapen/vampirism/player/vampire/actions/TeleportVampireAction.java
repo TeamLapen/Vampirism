@@ -15,6 +15,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import org.jetbrains.annotations.NotNull;
 
 
 public class TeleportVampireAction extends DefaultVampireAction {
@@ -25,7 +26,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
     }
 
     @Override
-    public boolean activate(IVampirePlayer vampire, ActivationContext context) {
+    public boolean activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
         Player player = vampire.getRepresentingPlayer();
         int dist = VampirismConfig.BALANCE.vaTeleportMaxDistance.get();
         if (vampire.getSkillHandler().isRefinementEquipped(ModRefinements.TELEPORT_DISTANCE.get())) {
@@ -80,12 +81,12 @@ public class TeleportVampireAction extends DefaultVampireAction {
     }
 
     @Override
-    public boolean canBeUsedBy(IVampirePlayer vampire) {
+    public boolean canBeUsedBy(@NotNull IVampirePlayer vampire) {
         return !vampire.getActionHandler().isActionActive(VampireActions.BAT.get());
     }
 
     @Override
-    public int getCooldown(IVampirePlayer player) {
+    public int getCooldown(@NotNull IVampirePlayer player) {
         return (int) ((player.getSkillHandler().isRefinementEquipped(ModRefinements.TELEPORT_DISTANCE.get()) ? 0.5 : 1) * VampirismConfig.BALANCE.vaTeleportCooldown.get() * 20);
     }
 

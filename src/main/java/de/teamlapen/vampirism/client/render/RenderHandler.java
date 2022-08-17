@@ -63,7 +63,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
     private final Logger LOGGER = LogManager.getLogger();
     @Nullable
     private OutlineBufferSource bloodVisionBuffer;
-    private Bat entityBat;
+    private @Nullable Bat entityBat;
     /**
      * Fog fade counter
      * Between 0 and {@link #BLOOD_VISION_FADE_TICKS}
@@ -95,7 +95,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
     }
 
     @SubscribeEvent
-    public void onCameraSetup(ViewportEvent.ComputeCameraAngles event) {
+    public void onCameraSetup(ViewportEvent.@NotNull ComputeCameraAngles event) {
         if (shouldRenderBloodVision()) {
             reducedBloodVision = OptifineHandler.isShaders();
             if (!reducedBloodVision) {
@@ -125,7 +125,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
     }
 
     @SubscribeEvent
-    public void onClientTick(TickEvent.ClientTickEvent event) {
+    public void onClientTick(TickEvent.@NotNull ClientTickEvent event) {
         if (mc.level == null || mc.player == null || !mc.player.isAlive()) return;
         if (event.phase == TickEvent.Phase.END) return;
         lastBloodVisionTicks = bloodVisionTicks;
@@ -184,7 +184,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
     }
 
     @SubscribeEvent
-    public void onRenderFog(ViewportEvent.RenderFog event) {
+    public void onRenderFog(ViewportEvent.@NotNull RenderFog event) {
         if (vampireBiomeTicks == 0) return;
         float f = ((float) VAMPIRE_BIOME_FADE_TICKS) / (float) vampireBiomeTicks / 1.5f;
         f *= vampireBiomeFogDistanceMultiplier;
@@ -195,14 +195,14 @@ public class RenderHandler implements ResourceManagerReloadListener {
     }
 
     @SubscribeEvent
-    public void onRenderHand(RenderHandEvent event) {
+    public void onRenderHand(@NotNull RenderHandEvent event) {
         if (mc.player != null && mc.player.isAlive() && VampirismPlayerAttributes.get(mc.player).getVampSpecial().bat) {
             event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
-    public void onRenderLivingPost(RenderLivingEvent.Post<?,?> event) {
+    public void onRenderLivingPost(RenderLivingEvent.@NotNull Post<?,?> event) {
         if (!isInsideBloodVisionRendering && shouldRenderBloodVision() && !reducedBloodVision) {
             Entity entity = event.getEntity();
 
@@ -242,7 +242,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
     }
 
     @SubscribeEvent
-    public void onRenderLivingPre(RenderLivingEvent.Pre<Player, PlayerModel<Player>> event) {
+    public void onRenderLivingPre(RenderLivingEvent.@NotNull Pre<Player, PlayerModel<Player>> event) {
         LivingEntity entity = event.getEntity();
         if (entity instanceof Player && VampirismPlayerAttributes.get((Player) entity).getHuntSpecial().isDisguised()) {
             double dist = this.mc.player == null ? 0 : entity.distanceToSqr(this.mc.player);
@@ -258,7 +258,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
     }
 
     @SubscribeEvent
-    public void onRenderFirstPersonHand(RenderHandEvent event){
+    public void onRenderFirstPersonHand(@NotNull RenderHandEvent event){
         LocalPlayer player = Minecraft.getInstance().player;
         if(player!=null&&event.getHand() == InteractionHand.MAIN_HAND && player.isUsingItem() && player.getUseItemRemainingTicks() >0 ){
             if(player.getMainHandItem().getItem() instanceof CrucifixItem){
@@ -269,7 +269,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
     }
 
     @SubscribeEvent
-    public void onRenderPlayer(RenderPlayerEvent.Pre event) {
+    public void onRenderPlayer(RenderPlayerEvent.@NotNull Pre event) {
         Player player = event.getEntity();
         VampirePlayerSpecialAttributes vAtt = VampirismPlayerAttributes.get(player).getVampSpecial();
        if (vAtt.isDBNO) {
@@ -297,7 +297,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
     }
 
     @SubscribeEvent
-    public void onRenderWorldLast(RenderLevelStageEvent event) {
+    public void onRenderWorldLast(@NotNull RenderLevelStageEvent event) {
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_WEATHER) {
             MixinHooks.enforcingGlowing_bloodVision = false;
             if (mc.level == null) return;
@@ -326,7 +326,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onRenderPlayerPreHigh(RenderPlayerEvent.Pre event){
+    public void onRenderPlayerPreHigh(RenderPlayerEvent.@NotNull Pre event){
         Player player = event.getEntity();
         VampirePlayerSpecialAttributes vAtt = VampirismPlayerAttributes.get(player).getVampSpecial();
         if (vAtt.invisible) {

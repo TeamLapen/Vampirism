@@ -11,12 +11,13 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class RegenerationAOFEntityAction<T extends PathfinderMob & IEntityActionUser> extends VampireEntityAction<T> implements ILastingAction<T> {
 
-    public RegenerationAOFEntityAction(EntityActionTier tier, EntityClassType... param) {
+    public RegenerationAOFEntityAction(@NotNull EntityActionTier tier, EntityClassType... param) {
         super(tier, param);
     }
 
@@ -39,7 +40,7 @@ public class RegenerationAOFEntityAction<T extends PathfinderMob & IEntityAction
     }
 
     @Override
-    public int getWeight(PathfinderMob entity) {
+    public int getWeight(@NotNull PathfinderMob entity) {
         double healthPercent = entity.getHealth() / entity.getMaxHealth();
         if (healthPercent < 0.1) {
             return 3;
@@ -51,7 +52,7 @@ public class RegenerationAOFEntityAction<T extends PathfinderMob & IEntityAction
     }
 
     @Override
-    public void onUpdate(T entity, int duration) {
+    public void onUpdate(@NotNull T entity, int duration) {
         List<Mob> entities = entity.getCommandSenderWorld().getEntitiesOfClass(Mob.class, new AABB(entity.getX() - 4, entity.getY() - 1, entity.getZ() - 4, entity.getX() + 4, entity.getY() + 3, entity.getZ() + 4));
         for (Mob e : entities) {
             if (VampirismAPI.factionRegistry().getFaction(entity) == VampirismAPI.factionRegistry().getFaction(e)) {

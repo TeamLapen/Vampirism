@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class PlayerBodyOverlayLayer<T extends MinionEntity<?> & IPlayerOverlay, M extends PlayerModel<T>> extends RenderLayer<T, M> {
-    public PlayerBodyOverlayLayer(RenderLayerParent<T, M> entityRendererIn) {
+    public PlayerBodyOverlayLayer(@NotNull RenderLayerParent<T, M> entityRendererIn) {
         super(entityRendererIn);
     }
 

@@ -13,6 +13,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryManager;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
@@ -41,7 +42,7 @@ public class VampirismRegistries {
     public static final Supplier<IForgeRegistry<IRefinementSet>> REFINEMENT_SETS = () -> RegistryManager.ACTIVE.getRegistry(REFINEMENT_SET_ID);
     public static final Supplier<IForgeRegistry<IOil>> OILS = () -> RegistryManager.ACTIVE.getRegistry(OILS_ID);
 
-    private static <T> ResourceKey<Registry<T>> key(String name)
+    private static <T> @NotNull ResourceKey<Registry<T>> key(@NotNull String name)
     {
         return ResourceKey.createRegistryKey(new ResourceLocation(name));
     }

@@ -25,12 +25,12 @@ import org.jetbrains.annotations.NotNull;
 public class PlayerFaceOverlayLayer<T extends Mob & IPlayerOverlay, M extends HumanoidModel<T>> extends RenderLayer<T, M> {
 
 
-    public PlayerFaceOverlayLayer(HumanoidMobRenderer<T, M> renderBiped) {
+    public PlayerFaceOverlayLayer(@NotNull HumanoidMobRenderer<T, M> renderBiped) {
         super(renderBiped);
     }
 
     @Override
-    public void render(@NotNull PoseStack stack, MultiBufferSource buffer, int packedLight, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(@NotNull PoseStack stack, @NotNull MultiBufferSource buffer, int packedLight, @NotNull T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         ResourceLocation loc = entity.getOverlayPlayerProperties().map(Pair::getLeft).orElseGet(DefaultPlayerSkin::getDefaultSkin);
         VertexConsumer vertexBuilder = buffer.getBuffer(RenderType.entityCutoutNoCull(loc));
         this.getParentModel().head.visible = true;

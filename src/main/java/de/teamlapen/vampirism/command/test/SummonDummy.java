@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.entity.vampire.TrainingDummyVampireEntity;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
+import org.jetbrains.annotations.NotNull;
 
 
 public class SummonDummy extends BasicCommand {
@@ -21,7 +22,7 @@ public class SummonDummy extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int summon(ServerPlayer p, boolean b) {
+    private static int summon(@NotNull ServerPlayer p, boolean b) {
         VampirismEntity t = b ? new TrainingDummyVampireEntity(ModEntities.VAMPIRE.get(), p.level) : new TrainingDummyHunterEntity(ModEntities.HUNTER.get(), p.level);
         t.copyPosition(p);
         p.level.addFreshEntity(t);

@@ -31,11 +31,11 @@ public class ThrowableItemEntity extends ThrowableProjectile implements ItemSupp
     private final static Logger LOGGER = LogManager.getLogger(ThrowableItemEntity.class);
     private static final EntityDataAccessor<ItemStack> ITEM = SynchedEntityData.defineId(ThrowableItemEntity.class, EntityDataSerializers.ITEM_STACK);
 
-    public ThrowableItemEntity(EntityType<? extends ThrowableItemEntity> type, Level worldIn) {
+    public ThrowableItemEntity(@NotNull EntityType<? extends ThrowableItemEntity> type, @NotNull Level worldIn) {
         super(type, worldIn);
     }
 
-    public ThrowableItemEntity(Level worldIn, LivingEntity thrower) {
+    public ThrowableItemEntity(@NotNull Level worldIn, @NotNull LivingEntity thrower) {
         super(ModEntities.THROWABLE_ITEM.get(), thrower, worldIn);
     }
 

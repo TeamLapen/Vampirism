@@ -13,8 +13,8 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 @SuppressWarnings("FieldCanBeLocal")
@@ -32,19 +32,19 @@ public class CoffinModel extends Model {
     private static final String RIGHT_HANDLE = "right_handle";
 
     // fields
-    private final ModelPart leftPlate;
-    private final ModelPart rightPlate;
-    private final ModelPart backPlate;
-    private final ModelPart topPlate;
-    private final ModelPart bottomPlate;
-    private final ModelPart leftLid;
-    private final ModelPart rightLid;
-    private final ModelPart leftHandle;
-    private final ModelPart rightHandle;
+    private final @NotNull ModelPart leftPlate;
+    private final @NotNull ModelPart rightPlate;
+    private final @NotNull ModelPart backPlate;
+    private final @NotNull ModelPart topPlate;
+    private final @NotNull ModelPart bottomPlate;
+    private final @NotNull ModelPart leftLid;
+    private final @NotNull ModelPart rightLid;
+    private final @NotNull ModelPart leftHandle;
+    private final @NotNull ModelPart rightHandle;
 
-    private final List<ModelPart> modelParts;
+    private final @NotNull List<ModelPart> modelParts;
 
-    public static LayerDefinition createLayer() {
+    public static @NotNull LayerDefinition createLayer() {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition part = mesh.getRoot();
         part.addOrReplaceChild(LEFT_PLATE, CubeListBuilder.create().texOffs(0, 64).mirror().addBox(7, -12, 0, 1, 12, 32), PartPose.offset(0, 23, -8));
@@ -59,7 +59,7 @@ public class CoffinModel extends Model {
         return LayerDefinition.create(mesh, 256, 128);
     }
 
-    public CoffinModel(ModelPart part) {
+    public CoffinModel(@NotNull ModelPart part) {
         super(RenderType::entitySolid);
         this.leftPlate = part.getChild(LEFT_PLATE);
         this.rightPlate = part.getChild(RIGHT_PLATE);

@@ -9,6 +9,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class ModScreens {
@@ -31,7 +32,7 @@ public class ModScreens {
         MenuScreens.register(ModContainer.ALCHEMICAL_TABLE.get(), AlchemyTableScreen::new);
     }
 
-    public static void registerScreenOverlays(RegisterGuiOverlaysEvent event) {
+    public static void registerScreenOverlays(@NotNull RegisterGuiOverlaysEvent event) {
         event.registerAbove(VanillaGuiOverlay.EXPERIENCE_BAR.id(), VIngameOverlays.FACTION_LEVEL_ID.getPath(), VIngameOverlays.FACTION_LEVEL_ELEMENT);
         event.registerAbove(VanillaGuiOverlay.BOSS_EVENT_PROGRESS.id(),VIngameOverlays.FACTION_RAID_BAR_ID.getPath(), VIngameOverlays.FACTION_RAID_BAR_ELEMENT);
         event.registerAbove(VanillaGuiOverlay.FOOD_LEVEL.id(), VIngameOverlays.BLOOD_BAR_ID.getPath(), VIngameOverlays.BLOOD_BAR_ELEMENT);

@@ -62,15 +62,15 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     /**
      * Used to store a saved player UUID during read until world and player are available
      */
-    private UUID playerToLoadUUID;
+    private @Nullable UUID playerToLoadUUID;
     /**
      * Only available when running ({@link #runningTick}>0)
      */
-    private Player player;
+    private @Nullable Player player;
     /**
      * Only available when running ({@link #runningTick}>0)
      */
-    private BlockPos[] tips;
+    private BlockPos @Nullable [] tips;
     private int runningTick;
     /**
      * The level the player will be after the levelup.
@@ -78,7 +78,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
      */
     private int targetLevel;
 
-    public AltarInfusionBlockEntity(BlockPos pos, BlockState state) {
+    public AltarInfusionBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         super(ModTiles.ALTAR_INFUSION.get(), pos, state, 3, AltarInfusionContainer.SELECTOR_INFOS);
     }
 
@@ -88,7 +88,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
      * @param player        trying to execute the ritual
      * @param messagePlayer If the player should be notified on fail
      */
-    public Result canActivate(Player player, boolean messagePlayer) {
+    public @NotNull Result canActivate(@NotNull Player player, boolean messagePlayer) {
         if (runningTick > 0) {
             if (messagePlayer)
                 player.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual_still_running"), true);
@@ -132,7 +132,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     /**
      * Returns the phase the ritual is in
      */
-    public PHASE getCurrentPhase() {
+    public @NotNull PHASE getCurrentPhase() {
         if (runningTick < 1) {
             return PHASE.NOT_RUNNING;
         }
@@ -160,7 +160,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     /**
      * Returns the affected player. If the ritual isn't running it returns null
      */
-    public Player getPlayer() {
+    public @Nullable Player getPlayer() {
         if (this.runningTick <= 1)
             return null;
         return this.player;
@@ -168,7 +168,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public AABB getRenderBoundingBox() {
+    public @NotNull AABB getRenderBoundingBox() {
         return INFINITE_EXTENT_AABB;
     }
 
@@ -179,7 +179,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     /**
      * Returns the position of the tips. If the ritual isn't running it returns null
      */
-    public BlockPos[] getTips() {
+    public BlockPos @Nullable [] getTips() {
         if (this.runningTick <= 1)
             return null;
         return this.tips;
@@ -214,7 +214,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+    public void onDataPacket(Connection net, @NotNull ClientboundBlockEntityDataPacket pkt) {
         if (this.hasLevel()) this.load(pkt.getTag());
     }
 
@@ -231,7 +231,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
      * Starts the ritual.
      * ONLY call if {@link AltarInfusionBlockEntity#canActivate(Player, boolean)} returned 1
      */
-    public void startRitual(Player player) {
+    public void startRitual(@NotNull Player player) {
         if (level == null) return;
         LOGGER.debug("Starting ritual for {}", player);
         this.player = player;
@@ -310,7 +310,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
         }
     }
 
-    public static void tick(Level level, BlockPos pos, BlockState state, AltarInfusionBlockEntity blockEntity) {
+    public static void tick(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull AltarInfusionBlockEntity blockEntity) {
         if (blockEntity.playerToLoadUUID != null) { //Restore loaded ritual
             if (!blockEntity.loadRitual(blockEntity.playerToLoadUUID)) return;
             blockEntity.playerToLoadUUID = null;
@@ -346,7 +346,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
      *
      * @param messagePlayer If the player should be notified about missing ones
      */
-    private boolean checkItemRequirements(Player player, boolean messagePlayer) {
+    private boolean checkItemRequirements(@NotNull Player player, boolean messagePlayer) {
         int newLevel = targetLevel;
         VampireLevelingConf.AltarInfusionRequirements requirements = VampireLevelingConf.getInstance().getAltarInfusionRequirements(newLevel);
         ItemStack missing = InventoryHelper.checkItems(this, new Item[] {
@@ -439,7 +439,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     /**
      * Finds all {@link AltarTipBlock}'s in the area
      */
-    private BlockPos[] findTips() {
+    private BlockPos @NotNull [] findTips() {
         if (level == null) return new BlockPos[0];
         List<BlockPos> list = new ArrayList<>();
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
@@ -455,7 +455,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
         return list.toArray(new BlockPos[0]);
     }
 
-    private boolean loadRitual(UUID playerID) {
+    private boolean loadRitual(@NotNull UUID playerID) {
         if (this.level == null) return false;
         if (this.level.players().size() == 0) return false;
         this.player = this.level.getPlayerByUUID(playerID);

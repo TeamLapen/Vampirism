@@ -42,7 +42,7 @@ public class FluidTankWithListener extends FluidTank {
         this.drainable = drainable;
     }
 
-    public FluidTankWithListener setListener(IFluidTankListener listener) {
+    public @NotNull FluidTankWithListener setListener(IFluidTankListener listener) {
         this.listener = listener;
         return this;
     }

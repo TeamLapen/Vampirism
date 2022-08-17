@@ -28,7 +28,7 @@ public class TrunkCursedVineDecorator extends TreeDecorator {
     }
 
     @Override
-    public void place(Context context) {
+    public void place(@NotNull Context context) {
         RandomSource randomsource = context.random();
         context.logs().forEach((trunkPos) -> {
                     List<Direction> directions = Arrays.stream(Direction.values()).collect(Collectors.toList());
@@ -65,7 +65,7 @@ public class TrunkCursedVineDecorator extends TreeDecorator {
         );
     }
 
-    protected void placeCursedVine(Context context, BlockPos pos, Direction mainDirection, Direction secondaryDirection, Direction.Axis axis) {
+    protected void placeCursedVine(@NotNull Context context, @NotNull BlockPos pos, @NotNull Direction mainDirection, @NotNull Direction secondaryDirection, Direction.@NotNull Axis axis) {
         context.setBlock(pos, ModBlocks.CURSED_BARK.get().defaultBlockState().setValue(CursedBarkBlock.FACING, mainDirection).setValue(CursedBarkBlock.FACING2, secondaryDirection).setValue(CursedBarkBlock.AXIS, axis));
     }
 

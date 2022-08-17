@@ -48,7 +48,7 @@ public abstract class VampirismItemCrossbow extends Item implements IFactionLeve
      * @param crossbowStack crossbow to check
      * @return the enchantment level
      */
-    protected static int isCrossbowFrugal(ItemStack crossbowStack) {
+    protected static int isCrossbowFrugal(@NotNull ItemStack crossbowStack) {
         return EnchantmentHelper.getItemEnchantmentLevel(ModEnchantments.CROSSBOWFRUGALITY.get(), crossbowStack);
     }
 
@@ -57,7 +57,7 @@ public abstract class VampirismItemCrossbow extends Item implements IFactionLeve
     /**
      * @param maxDamage Max damage or 0 if unbreakable
      */
-    public VampirismItemCrossbow(int maxDamage, Tiers material) {
+    public VampirismItemCrossbow(int maxDamage, @NotNull Tiers material) {
         super(new Properties().stacksTo(1).defaultDurability(maxDamage).tab(VampirismMod.creativeTab));
         setEnchantability(material);
     }
@@ -74,7 +74,7 @@ public abstract class VampirismItemCrossbow extends Item implements IFactionLeve
     }
 
     @Override
-    public boolean isValidRepairItem(@NotNull ItemStack toRepair, ItemStack repair) {
+    public boolean isValidRepairItem(@NotNull ItemStack toRepair, @NotNull ItemStack repair) {
         return repair.is(Tags.Items.STRING) || super.isValidRepairItem(toRepair, repair);
     }
 
@@ -100,13 +100,13 @@ public abstract class VampirismItemCrossbow extends Item implements IFactionLeve
         return VReference.HUNTER_FACTION;
     }
 
-    private void setEnchantability(Tiers material) {
+    private void setEnchantability(@NotNull Tiers material) {
         this.enchantability = material.getEnchantmentValue();
     }
 
     @NotNull
     @Override
-    public InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
+    public InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         shoot(playerIn, 0, 0, worldIn, stack, handIn);
         return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
@@ -121,7 +121,7 @@ public abstract class VampirismItemCrossbow extends Item implements IFactionLeve
      */
     protected
     @NotNull
-    ItemStack findAmmo(Player player, ItemStack bowStack) {
+    ItemStack findAmmo(@NotNull Player player, ItemStack bowStack) {
         if (this.isArrow(player.getItemInHand(InteractionHand.OFF_HAND))) {
             return player.getItemInHand(InteractionHand.OFF_HAND);
         } else if (this.isArrow(player.getItemInHand(InteractionHand.MAIN_HAND))) {
@@ -139,7 +139,7 @@ public abstract class VampirismItemCrossbow extends Item implements IFactionLeve
         }
     }
 
-    public static boolean hasAmmo(Player player, ItemStack crossbowStack) {
+    public static boolean hasAmmo(@NotNull Player player, @NotNull ItemStack crossbowStack) {
         if (player.isCreative()) return true;
         Item i = crossbowStack.getItem();
         if (i instanceof VampirismItemCrossbow) {
@@ -184,7 +184,7 @@ public abstract class VampirismItemCrossbow extends Item implements IFactionLeve
     /**
      * @return If the crossbow can shoot without an arrow in the players inventory
      */
-    protected boolean isCrossbowInfinite(ItemStack stack, Player player) {
+    protected boolean isCrossbowInfinite(@NotNull ItemStack stack, @NotNull Player player) {
         int enchant = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.INFINITY_ARROWS, stack);
         return enchant > 0 || player.isCreative();
     }
@@ -204,7 +204,7 @@ public abstract class VampirismItemCrossbow extends Item implements IFactionLeve
      * @param stack  The crossbow item stack
      * @return If successful
      */
-    protected boolean shoot(Player player, float heightOffset, float centerOffset, Level world, ItemStack stack, InteractionHand hand) {
+    protected boolean shoot(@NotNull Player player, float heightOffset, float centerOffset, @NotNull Level world, @NotNull ItemStack stack, @NotNull InteractionHand hand) {
         boolean creative = player.getAbilities().instabuild;
         boolean bowInfinite = isCrossbowInfinite(stack, player);
         int bowFrugal = isCrossbowFrugal(stack);
@@ -287,14 +287,14 @@ public abstract class VampirismItemCrossbow extends Item implements IFactionLeve
      * @param playerCreative If the player is creative
      * @param bowInfinite    if the bow is infinite
      */
-    protected boolean shouldConsumeArrow(RandomSource rnd, ItemStack arrowStack, boolean playerCreative, boolean bowInfinite, int bowFrugal) {
+    protected boolean shouldConsumeArrow(@NotNull RandomSource rnd, @NotNull ItemStack arrowStack, boolean playerCreative, boolean bowInfinite, int bowFrugal) {
         return !(playerCreative || bowInfinite && canArrowBeInfinite(arrowStack) || (bowFrugal > 0 && rnd.nextInt(Math.max(2, 4 - bowFrugal)) == 0));
     }
 
     /**
      * @return If the given arrow type can be used in an infinite crossbow
      */
-    private boolean canArrowBeInfinite(ItemStack arrowStack) {
+    private boolean canArrowBeInfinite(@NotNull ItemStack arrowStack) {
         return !(arrowStack.getItem() instanceof IVampirismCrossbowArrow) || ((IVampirismCrossbowArrow<?>) arrowStack.getItem()).isCanBeInfinite();
     }
 

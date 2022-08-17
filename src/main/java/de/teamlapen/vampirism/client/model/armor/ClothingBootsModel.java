@@ -9,6 +9,7 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class ClothingBootsModel extends VampirismArmorModel {
@@ -18,7 +19,7 @@ public class ClothingBootsModel extends VampirismArmorModel {
     private static final String LEFT_BOOT = "left_boot";
     private static final String LEFT_TOES = "left_toes";
 
-    public static LayerDefinition createLayer() {
+    public static @NotNull LayerDefinition createLayer() {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition part = mesh.getRoot();
         CubeDeformation scale = new CubeDeformation(0.4f);
@@ -39,13 +40,13 @@ public class ClothingBootsModel extends VampirismArmorModel {
         return instance;
     }
 
-    public final ModelPart rightBoot;
-    public final ModelPart leftBoot;
-    public final ModelPart leftToes;
-    public final ModelPart rightToes;
+    public final @NotNull ModelPart rightBoot;
+    public final @NotNull ModelPart leftBoot;
+    public final @NotNull ModelPart leftToes;
+    public final @NotNull ModelPart rightToes;
 
 
-    public ClothingBootsModel(ModelPart part) {
+    public ClothingBootsModel(@NotNull ModelPart part) {
         super();
         this.rightBoot = part.getChild(RIGHT_BOOT);
         this.rightToes = part.getChild(RIGHT_TOES);
@@ -54,12 +55,12 @@ public class ClothingBootsModel extends VampirismArmorModel {
     }
 
     @Override
-    protected Iterable<ModelPart> getLeftLegModels() {
+    protected @NotNull Iterable<ModelPart> getLeftLegModels() {
         return ImmutableList.of(this.leftBoot, this.leftToes);
     }
 
     @Override
-    protected Iterable<ModelPart> getRightLegModels() {
+    protected @NotNull Iterable<ModelPart> getRightLegModels() {
         return ImmutableList.of(this.rightBoot, this.rightToes);
     }
 }

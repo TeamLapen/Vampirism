@@ -8,14 +8,13 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
-
 import org.jetbrains.annotations.NotNull;
 
 
 public class DummyRenderer<T extends Entity> extends EntityRenderer<T> {
     private final ResourceLocation TEX = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire.png");
 
-    public DummyRenderer(EntityRendererProvider.Context context) {
+    public DummyRenderer(EntityRendererProvider.@NotNull Context context) {
         super(context);
     }
 

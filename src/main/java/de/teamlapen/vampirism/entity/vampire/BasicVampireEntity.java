@@ -71,7 +71,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public static AttributeSupplier.Builder getAttributeBuilder() {
+    public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
         return VampireBaseEntity.getAttributeBuilder()
                 .add(Attributes.MAX_HEALTH, 1)
                 .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.VAMPIRE_ATTACK_DAMAGE)
@@ -81,11 +81,11 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     /**
      * available actions for AI task & task
      */
-    private final ActionHandlerEntity<?> entityActionHandler;
+    private final @NotNull ActionHandlerEntity<?> entityActionHandler;
     private final EntityClassType entityclass;
-    private final EntityActionTier entitytier;
+    private final @NotNull EntityActionTier entitytier;
     private int bloodtimer = 100;
-    private IEntityLeader advancedLeader = null;
+    private @Nullable IEntityLeader advancedLeader = null;
     private int angryTimer = 0;
     private Goal tasks_avoidHunter;
     @Nullable
@@ -156,7 +156,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     /**
      * Assumes preconditions as been met. Check conditions but does not give feedback to user
      */
-    public void convertToMinion(Player lord) {
+    public void convertToMinion(@NotNull Player lord) {
         FactionPlayerHandler.getOpt(lord).ifPresent(fph -> {
             if (fph.getMaxMinions() > 0) {
                 MinionWorldData.getData(lord.level).map(w -> w.getOrCreateController(fph)).ifPresent(controller -> {
@@ -371,7 +371,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public int suggestEntityLevel(Difficulty d) {
+    public int suggestEntityLevel(@NotNull Difficulty d) {
         return switch (this.random.nextInt(5)) {
             case 0 -> (int) (d.minPercLevel / 100F * MAX_LEVEL);
             case 1 -> (int) (d.avgPercLevel / 100F * MAX_LEVEL);
@@ -409,7 +409,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
+    protected @NotNull EntityType<?> getIMobTypeOpt(boolean iMob) {
         return iMob ? ModEntities.VAMPIRE_IMOB.get() : ModEntities.VAMPIRE.get();
     }
 

@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 @OnlyIn(Dist.CLIENT)
 public class GenericParticle extends TextureSheetParticle {
 
-    private GenericParticle(ClientLevel world, double posX, double posY, double posZ, double speedX, double speedY, double speedZ, ResourceLocation texture, int maxAge, int color, float speedModifier) {
+    private GenericParticle(@NotNull ClientLevel world, double posX, double posY, double posZ, double speedX, double speedY, double speedZ, @NotNull ResourceLocation texture, int maxAge, int color, float speedModifier) {
         super(world, posX, posY, posZ, speedX, speedY, speedZ);
         this.lifetime = maxAge;
         this.xd *= speedModifier;
@@ -42,7 +42,7 @@ public class GenericParticle extends TextureSheetParticle {
     public static class Factory implements ParticleProvider<GenericParticleData> {
         @Nullable
         @Override
-        public Particle createParticle(GenericParticleData typeIn, @NotNull ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+        public Particle createParticle(@NotNull GenericParticleData typeIn, @NotNull ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
             return new GenericParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, typeIn.getTexturePos(), typeIn.getMaxAge(), typeIn.getColor(), typeIn.getSpeed());
         }
     }

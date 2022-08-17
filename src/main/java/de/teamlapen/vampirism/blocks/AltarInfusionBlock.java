@@ -22,7 +22,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 public class AltarInfusionBlock extends VampirismBlockContainer {
     protected static final VoxelShape altarBase = makeShape();
 
-    private static VoxelShape makeShape() {
+    private static @NotNull VoxelShape makeShape() {
         //base
         VoxelShape a = Block.box(5, 0, 5, 11, 4, 11);
         VoxelShape b = Block.box(2, 4, 2, 14, 5, 14);
@@ -86,7 +85,7 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
 
     @NotNull
     @Override
-    public InteractionResult use(@NotNull BlockState state, Level worldIn, @NotNull BlockPos pos, Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+    public InteractionResult use(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         ItemStack heldItem = player.getItemInHand(hand);
         AltarInfusionBlockEntity te = (AltarInfusionBlockEntity) worldIn.getBlockEntity(pos);
         //If empty hand and can start -> StartAdvanced
@@ -116,7 +115,7 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
     }
 
     @Override
-    protected void clearContainer(BlockState state, Level worldIn, BlockPos pos) {
+    protected void clearContainer(BlockState state, @NotNull Level worldIn, BlockPos pos) {
         dropInventoryTileEntityItems(worldIn, pos);
     }
 

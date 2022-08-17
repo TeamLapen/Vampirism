@@ -47,7 +47,7 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
     @NotNull
     private ItemStack internalStack;
 
-    public PedestalBlockEntity(BlockPos pos, BlockState state) {
+    public PedestalBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         super(ModTiles.BLOOD_PEDESTAL.get(), pos, state);
         this.internalStack = ItemStack.EMPTY;
     }
@@ -151,7 +151,7 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+    public void onDataPacket(Connection net, @NotNull ClientboundBlockEntityDataPacket pkt) {
         if (hasLevel()) handleUpdateTag(pkt.getTag());
     }
 
@@ -172,7 +172,7 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
         compound.putInt("charging_ticks", chargingTicks);
     }
 
-    public static void serverTick(Level level, BlockPos pos, BlockState state, PedestalBlockEntity blockEntity) {
+    public static void serverTick(Level level, BlockPos pos, BlockState state, @NotNull PedestalBlockEntity blockEntity) {
         if (blockEntity.chargingTicks > 0) {
             blockEntity.chargingTicks--;
             if (blockEntity.chargingTicks == 0) {
@@ -205,7 +205,7 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
         }
     }
 
-    public static void clientTick(Level level, BlockPos pos, BlockState state, PedestalBlockEntity blockEntity) {
+    public static void clientTick(@NotNull Level level, @NotNull BlockPos pos, BlockState state, @NotNull PedestalBlockEntity blockEntity) {
         blockEntity.ticksExistedClient++;
         if (blockEntity.chargingTicks > 0 && blockEntity.ticksExistedClient % 8 == 0) {
             spawnChargedParticle(level, pos, blockEntity.rand);
@@ -252,7 +252,7 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
     }
 
     @OnlyIn(Dist.CLIENT)
-    private static void spawnChargedParticle(Level level, BlockPos blockPos, Random rand) {
+    private static void spawnChargedParticle(@NotNull Level level, @NotNull BlockPos blockPos, @NotNull Random rand) {
         Vec3 pos = Vec3.upFromBottomCenterOf(blockPos, 0.8);
         ModParticles.spawnParticleClient(level, new FlyingBloodParticleData(ModParticles.FLYING_BLOOD.get(), (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, new ResourceLocation("minecraft", "glitter_1")), blockPos.getX() + 0.20, blockPos.getY() + 0.65, blockPos.getZ() + 0.20);
         ModParticles.spawnParticleClient(level, new FlyingBloodParticleData(ModParticles.FLYING_BLOOD.get(), (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, new ResourceLocation("minecraft", "glitter_1")), blockPos.getX() + 0.80, blockPos.getY() + 0.65, blockPos.getZ() + 0.20);

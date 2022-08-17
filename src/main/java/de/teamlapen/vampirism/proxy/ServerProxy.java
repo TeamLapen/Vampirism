@@ -6,6 +6,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import static de.teamlapen.vampirism.blocks.TentBlock.FACING;
@@ -30,7 +31,7 @@ public class ServerProxy extends CommonProxy {
     }
 
     @Override
-    public void handleSleepClient(Player player) {
+    public void handleSleepClient(@NotNull Player player) {
         if (player.isSleeping()) {
             player.getSleepingPos().ifPresent(pos -> {
                 BlockState state = player.level.getBlockState(pos);

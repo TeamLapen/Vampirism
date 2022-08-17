@@ -20,6 +20,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -28,21 +29,21 @@ import java.util.Map;
  */
 @SuppressWarnings("unused")
 public class ModRecipes {
-    public static DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(Registry.RECIPE_TYPE_REGISTRY, REFERENCE.MODID);
-    public static DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, REFERENCE.MODID);
+    public static @NotNull DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(Registry.RECIPE_TYPE_REGISTRY, REFERENCE.MODID);
+    public static @NotNull DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, REFERENCE.MODID);
 
     public static final RegistryObject<RecipeType<IWeaponTableRecipe>> WEAPONTABLE_CRAFTING_TYPE = RECIPE_TYPES.register("weapontable_crafting", () -> new RecipeType<>() {
-                public String toString() {
+                public @NotNull String toString() {
                     return "weapontable_crafting";
                 }
             });
     public static final RegistryObject<RecipeType<AlchemicalCauldronRecipe>> ALCHEMICAL_CAULDRON_TYPE = RECIPE_TYPES.register("alchemical_cauldron", () -> new RecipeType<>() {
-                public String toString() {
+                public @NotNull String toString() {
                     return "alchemical_cauldron";
                 }
             });
     public static final RegistryObject<RecipeType<AlchemyTableRecipe>> ALCHEMICAL_TABLE_TYPE = RECIPE_TYPES.register("alchemical_table", () -> new RecipeType<>() {
-        public String toString() {
+        public @NotNull String toString() {
             return "alchemical_table";
         }
     });
@@ -68,7 +69,7 @@ public class ModRecipes {
 
     }
 
-    static void registerRecipeTypesAndSerializers(IEventBus bus) {
+    static void registerRecipeTypesAndSerializers(@NotNull IEventBus bus) {
         RECIPE_TYPES.register(bus);
         RECIPE_SERIALIZERS.register(bus);
         bus.addListener(ModRecipes::registerRecipeSerializers);
@@ -82,7 +83,7 @@ public class ModRecipes {
         liquidColorsTags.put(items, color);
     }
 
-    static void registerRecipeSerializers(RegisterEvent event) {
+    static void registerRecipeSerializers(@NotNull RegisterEvent event) {
         if (event.getRegistryKey() == ForgeRegistries.Keys.RECIPE_SERIALIZERS) {
             CraftingHelper.register(new ResourceLocation(REFERENCE.MODID, "nbt"), NBTIngredient.Serializer.INSTANCE);
         }

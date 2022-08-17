@@ -39,7 +39,7 @@ public interface ITotem {
      *
      * @return level of the totem
      */
-    default Level getTileWorld() {
+    default @Nullable Level getTileWorld() {
         return ((BlockEntity) this).getLevel();
     }
 

@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.api.entity;
 import com.google.common.collect.Maps;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -25,7 +26,7 @@ public enum EntityClassType {
         }
     }
 
-    public static EntityClassType getRandomClass(RandomSource rand) {
+    public static EntityClassType getRandomClass(@NotNull RandomSource rand) {
         return values()[rand.nextInt(values().length - 1)];
     }
 
@@ -42,9 +43,9 @@ public enum EntityClassType {
         return (id >= ID.size() || id < 0) ? null : ID.get(id);
     }
 
-    private final AttributeModifier healthModifier;
-    private final AttributeModifier damageModifier;
-    private final AttributeModifier speedModifier;
+    private final @NotNull AttributeModifier healthModifier;
+    private final @NotNull AttributeModifier damageModifier;
+    private final @NotNull AttributeModifier speedModifier;
 
     EntityClassType(double healthModifier, double damageModifier, double speedModifier) {
         this.healthModifier = new AttributeModifier("entity_class_health", healthModifier, AttributeModifier.Operation.MULTIPLY_BASE);
@@ -52,15 +53,15 @@ public enum EntityClassType {
         this.speedModifier = new AttributeModifier("entity_class_speed", speedModifier, AttributeModifier.Operation.MULTIPLY_BASE);
     }
 
-    public AttributeModifier getDamageModifier() {
+    public @NotNull AttributeModifier getDamageModifier() {
         return damageModifier;
     }
 
-    public AttributeModifier getHealthModifier() {
+    public @NotNull AttributeModifier getHealthModifier() {
         return healthModifier;
     }
 
-    public AttributeModifier getSpeedModifier() {
+    public @NotNull AttributeModifier getSpeedModifier() {
         return speedModifier;
     }
 }
