@@ -127,10 +127,6 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
             entityCreature.yBodyRot = this.yBodyRot;
             entityCreature.yBodyRotO = this.yBodyRotO;
             entityCreature.deathTime = this.deathTime;
-
-//            if (world.isRemote) {
-//                entityCreature.setPacketCoordinates(this.positionOffset()); //Careful not available on server, so if needed we have to use a proxy here
-//            }
         }
         if (entityChanged) {
             this.updateEntityAttributes();

@@ -214,10 +214,6 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void resetSkillScreenCache() {
-    }
-
-    @Override
     public void showDBNOScreen(@NotNull Player playerEntity, @Nullable Component deathMessage) {
         if (playerEntity == Minecraft.getInstance().player && !playerEntity.isDeadOrDying()) {
             Minecraft.getInstance().setScreen(new DBNOScreen(deathMessage));

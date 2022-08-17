@@ -8,6 +8,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.VisibleForDebug;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
 import org.apache.logging.log4j.LogManager;
@@ -76,7 +77,7 @@ public class MinionWorldData extends SavedData {
     /**
      * Only for debugging. Removes controller from saved data not from entities. Reload world afterwards
      */
-    @Deprecated
+    @VisibleForDebug
     public void purgeController(UUID lordID) {
         controllers.remove(lordID);
     }

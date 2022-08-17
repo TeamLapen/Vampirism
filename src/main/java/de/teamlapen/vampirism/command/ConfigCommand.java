@@ -135,6 +135,7 @@ public class ConfigCommand extends BasicCommand {
         return modifyList(player, dim.dimension().location(), VampirismConfig.SERVER.batDimensionBlacklist, "command.vampirism.base.config.bat_dim.blacklisted", "command.vampirism.base.config.bat_dim.not_blacklisted");
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static int modifyList(@NotNull ServerPlayer player, @NotNull ResourceLocation id, ForgeConfigSpec.@NotNull ConfigValue<List<? extends String>> configList, @NotNull String blacklist, @NotNull String not_blacklist) {
         List<? extends String> list = configList.get();
         if (!list.contains(id.toString())) {

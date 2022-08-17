@@ -54,37 +54,37 @@ public class CoffinBESR extends VampirismBESR<CoffinBlockEntity> {
         matrixStack.pushPose();
         boolean vertical = state.getValue(CoffinBlock.VERTICAL);
         switch (direction) {
-            case EAST:
+            case EAST -> {
                 if (vertical) {
                     matrixStack.mulPose(new Quaternion(new Vector3f(0, 0, 1), 90, true));
                     matrixStack.translate(0, -1, 0);
                 }
                 matrixStack.mulPose(new Quaternion(new Vector3f(0, 1, 0), 90, true));
                 matrixStack.translate(-1, 0, -1);
-                break;
-            case WEST:
+            }
+            case WEST -> {
                 if (vertical) {
                     matrixStack.mulPose(new Quaternion(new Vector3f(0, 0, 1), -90, true));
                     matrixStack.translate(-1, 0, 0);
                 }
                 matrixStack.mulPose(new Quaternion(new Vector3f(0, 1, 0), -90, true));
                 matrixStack.translate(0, 0, -2);
-                break;
-            case SOUTH:
+            }
+            case SOUTH -> {
                 if (vertical) {
                     matrixStack.mulPose(new Quaternion(new Vector3f(1, 0, 0), -90, true));
                     matrixStack.translate(0, -1, 0);
                 }
                 matrixStack.translate(0, 0, -1);
-                break;
-            case NORTH:
+            }
+            case NORTH -> {
                 if (vertical) {
                     matrixStack.mulPose(new Quaternion(new Vector3f(1, 0, 0), 90, true));
                     matrixStack.translate(0, 0, -1);
                 }
                 matrixStack.mulPose(new Quaternion(new Vector3f(0, 1, 0), 180, true));
                 matrixStack.translate(-1, 0, -2);
-                break;
+            }
         }
 
         BakedModel baseModel = Minecraft.getInstance().getModelManager().getModel(new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_bottom_" + tile.color.getName()));

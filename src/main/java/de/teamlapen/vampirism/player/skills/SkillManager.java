@@ -32,7 +32,7 @@ public class SkillManager implements ISkillManager {
     private final Map<ResourceLocation, ISkillType> skillTypes = new HashMap<>();
 
     /**
-     * Gets the root skill of the faction for the given skill type. The skill must be registered with an id that matches {@link de.teamlapen.vampirism.api.entity.player.skills.ISkillType#createIdForFaction(net.minecraft.util.ResourceLocation)}
+     * Gets the root skill of the faction for the given skill type. The skill must be registered with an id that matches {@link de.teamlapen.vampirism.api.entity.player.skills.ISkillType#createIdForFaction(net.minecraft.resources.ResourceLocation)}
      *
      * @param faction the faction for which the skill should be returned
      * @param type    the type of skill that is searched for

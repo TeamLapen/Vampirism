@@ -38,12 +38,6 @@ public class ModFeatures {
     //features
     public static final RegistryObject<VampireDungeonFeature> VAMPIRE_DUNGEON = FEATURES.register("vampire_dungeon", () -> new VampireDungeonFeature(NoneFeatureConfiguration.CODEC));
     public static final Holder<Structure> HUNTER_CAMP_HOLDER = BuiltinRegistries.register(BuiltinRegistries.STRUCTURES, HUNTER_CAMP_KEY, new HunterCampStructure(structure(ModTags.Biomes.HasStructure.HUNTER_TENT, TerrainAdjustment.NONE)));
-    //structures
-//    public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> HUNTER_CAMP = STRUCTURE_FEATURES.register("hunter_camp", () -> {
-//                StructureFeature<NoneFeatureConfiguration> feature = new HunterCampStructure(NoneFeatureConfiguration.CODEC);
-//                StructureFeature.STEP.put(feature, GenerationStep.Decoration.SURFACE_STRUCTURES);
-//                return feature;
-//            });
 
     public static final RegistryObject<TreeDecoratorType<TrunkCursedVineDecorator>> trunk_cursed_vine = TREE_DECORATOR.register("trunk_cursed_vine", () -> new TreeDecoratorType<>(TrunkCursedVineDecorator.CODEC));
 

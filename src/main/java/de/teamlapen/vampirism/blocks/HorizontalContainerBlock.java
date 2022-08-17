@@ -23,20 +23,21 @@ public abstract class HorizontalContainerBlock extends VampirismHorizontalBlock 
     }
 
     @Override
-    public boolean triggerEvent(BlockState p_49226_, Level p_49227_, BlockPos p_49228_, int p_49229_, int p_49230_) {
-        super.triggerEvent(p_49226_, p_49227_, p_49228_, p_49229_, p_49230_);
-        BlockEntity blockentity = p_49227_.getBlockEntity(p_49228_);
+    public boolean triggerEvent(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, int p_49229_, int p_49230_) {
+        super.triggerEvent(state, level, pos, p_49229_, p_49230_);
+        BlockEntity blockentity = level.getBlockEntity(pos);
         return blockentity != null && blockentity.triggerEvent(p_49229_, p_49230_);
     }
 
     @Nullable
-    public MenuProvider getMenuProvider(BlockState p_49234_, @NotNull Level p_49235_, BlockPos p_49236_) {
-        BlockEntity blockentity = p_49235_.getBlockEntity(p_49236_);
+    public MenuProvider getMenuProvider(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos) {
+        BlockEntity blockentity = level.getBlockEntity(pos);
         return blockentity instanceof MenuProvider ? (MenuProvider) blockentity : null;
     }
 
     @Nullable
-    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> p_152133_, BlockEntityType<E> p_152134_, BlockEntityTicker<? super E> p_152135_) {
-        return p_152134_ == p_152133_ ? (BlockEntityTicker<A>) p_152135_ : null;
+    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> typeA, BlockEntityType<E> typeB, BlockEntityTicker<? super E> ticker) {
+        //noinspection unchecked
+        return typeB == typeA ? (BlockEntityTicker<A>) ticker : null;
     }
 }

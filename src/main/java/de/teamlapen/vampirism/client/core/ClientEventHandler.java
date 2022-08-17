@@ -68,6 +68,7 @@ public class ClientEventHandler {
                 UnbakedModel model = event.getModelBakery().getModel(loc);
                 BakedBloodContainerModel.BLOOD_FLUID_MODELS[x] = model.bake(event.getModelBakery(), event.getModelBakery().getAtlasSet()::getSprite, BlockModelRotation.X0_Y0, loc);
                 if (model instanceof BlockModel) {
+                    //noinspection UnstableApiUsage
                     ((BlockModel) model).textureMap.put("fluid", Either.left(ForgeHooksClient.getBlockMaterial(IClientFluidTypeExtensions.of(ModFluids.IMPURE_BLOOD.get()).getStillTexture())));
                     BakedBloodContainerModel.IMPURE_BLOOD_FLUID_MODELS[x] = model.bake(event.getModelBakery(), event.getModelBakery().getAtlasSet()::getSprite, BlockModelRotation.X0_Y0, loc);
                 } else {

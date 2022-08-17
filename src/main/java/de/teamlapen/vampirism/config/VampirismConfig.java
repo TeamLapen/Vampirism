@@ -129,8 +129,6 @@ public class VampirismConfig {
     public static class Server {
 
         public final ForgeConfigSpec.BooleanValue enforceRenderForestFog;
-        @Deprecated
-        public final ForgeConfigSpec.BooleanValue batModeInEnd;
         public final ForgeConfigSpec.BooleanValue unlockAllSkills;
         public final ForgeConfigSpec.BooleanValue pvpOnlyBetweenFactions;
         public final ForgeConfigSpec.BooleanValue pvpOnlyBetweenFactionsIncludeHumans;
@@ -167,7 +165,6 @@ public class VampirismConfig {
                     .push("server");
 
             enforceRenderForestFog = builder.comment("Prevent clients from disabling the vampire forest fog").define("enforceForestFog", true);
-            batModeInEnd = builder.comment("Deprecated! Use 'batDimensionBlacklist'", "If vampires can convert to a bat in the End").define("batModeInEnd", false);
             pvpOnlyBetweenFactions = builder.comment("If PVP should only be allowed between factions. PVP has to be enabled in the server properties for this. Not guaranteed to always protect player from teammates").define("pvpOnlyBetweenFactions", false);
             pvpOnlyBetweenFactionsIncludeHumans = builder.comment("If pvpOnlyBetweenFactions is enabled, this decides whether human players can be attacked and attack others").define("pvpOnlyBetweenFactionsIncludeHumans", false);
             sunscreenBeaconDistance = builder.comment("Block radius the sunscreen beacon affects").defineInRange("sunscreenBeaconDistance", 32, 1, 40000);

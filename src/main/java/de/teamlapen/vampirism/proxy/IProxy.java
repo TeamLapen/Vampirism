@@ -78,13 +78,6 @@ public interface IProxy extends IInitListener {
     void renderScreenFullColor(int ticksOn, int ticksOff, int color);
 
     /**
-     * @deprecated unused
-     */
-    @Deprecated
-    default void resetSkillScreenCache() { //TODO BREAKING remove
-    }
-
-    /**
      * Shows a DBNO state with the given death message if the passed player is the client player
      */
     default void showDBNOScreen(Player player, @Nullable Component deathMessage) {

@@ -107,10 +107,10 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     @Override
     public float getPercentageForAction(@NotNull IAction<T> action) {
         if (activeTimers.containsKey(RegUtil.id(action))) {
-            return activeTimers.get(RegUtil.id(action)) / ((float) ((ILastingAction<T>) action).getDuration(player));
+            return activeTimers.getInt(RegUtil.id(action)) / ((float) ((ILastingAction<T>) action).getDuration(player));
         }
         if (cooldownTimers.containsKey(RegUtil.id(action))) {
-            return -cooldownTimers.get(RegUtil.id(action)) / (float) action.getCooldown(player);
+            return -cooldownTimers.getInt(RegUtil.id(action)) / (float) action.getCooldown(player);
         }
         return 0f;
     }
@@ -246,7 +246,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     }
 
     @Override
-    public void resetTimer(@NotNull IAction action) {
+    public void resetTimer(@NotNull IAction<T> action) {
         if (activeTimers.containsKey(RegUtil.id(action))) {
             ((ILastingAction<T>) action).onDeactivated(player);
             activeTimers.removeInt(RegUtil.id(action));
@@ -417,12 +417,12 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
         private final @Nullable Entity entity;
         private final @Nullable BlockPos blockPos;
 
-        public ActivationContext(Entity entity) {
+        public ActivationContext(@Nullable Entity entity) {
             this.entity = entity;
             this.blockPos = null;
         }
 
-        public ActivationContext(BlockPos pos) {
+        public ActivationContext(@Nullable BlockPos pos) {
             this.entity = null;
             this.blockPos = pos;
         }

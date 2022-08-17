@@ -30,13 +30,16 @@ public class ActionCooldownOverlay extends GuiComponent implements IGuiOverlay {
                     int x = this.mc.getWindow().getGuiScaledWidth() - 12 - 16;
 
                     if (!VampirismConfig.CLIENT.disableHudActionCooldownRendering.get()) {
+                        //noinspection rawtypes
                         for (IAction action : factionPlayer.getActionHandler().getUnlockedActions()) {
                             if (!(action.showHudCooldown(this.mc.player))) continue;
+                            // noinspection unchecked
                             if (!actionHandler.isActionOnCooldown(action)) continue;
                             ResourceLocation id = RegUtil.id(action);
                             ResourceLocation loc = new ResourceLocation(id.getNamespace(), "textures/actions/" + id.getPath() + ".png");
                             RenderSystem.setShaderTexture(0, loc);
-                            int perc = (int) ((1 - -actionHandler.getPercentageForAction(action)) * 16);
+                            //noinspection unchecked
+                            int perc = (int) ((1 + actionHandler.getPercentageForAction(action)) * 16);
                             //render gray transparent background for remaining cooldown
                             this.fillGradient(poseStack, x, y + perc, x + 16, y + 16, 0x44888888/*Color.GRAY - 0xBB000000 */, 0x44888888/*Color.GRAY - 0xBB000000 */);
                             //render action icon transparent

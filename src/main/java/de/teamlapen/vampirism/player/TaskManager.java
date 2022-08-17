@@ -100,15 +100,9 @@ public class TaskManager implements ITaskManager {
      */
     public void handleTaskActionMessage(@NotNull ServerboundTaskActionPacket msg) {
         switch (msg.action()) {
-            case COMPLETE:
-                completeTask(msg.entityId(), msg.task());
-                break;
-            case ACCEPT:
-                acceptTask(msg.entityId(), msg.task());
-                break;
-            default:
-                abortTask(msg.entityId(), msg.task(), msg.action() == TaskContainer.TaskAction.REMOVE);
-                break;
+            case COMPLETE -> completeTask(msg.entityId(), msg.task());
+            case ACCEPT -> acceptTask(msg.entityId(), msg.task());
+            default -> abortTask(msg.entityId(), msg.task(), msg.action() == TaskContainer.TaskAction.REMOVE);
         }
     }
 

@@ -42,7 +42,6 @@ public interface IBiteableEntity {
     int onBite(IVampire biter);
 
     /**
-     * @param vampire
      * @return Whether this creatures can be turned in general and whether the given vampire is able to do so
      */
     default boolean canBeInfected(IVampire vampire) {

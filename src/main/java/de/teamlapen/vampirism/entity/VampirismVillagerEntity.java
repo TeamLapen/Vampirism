@@ -50,13 +50,6 @@ public class VampirismVillagerEntity extends Villager {
         return (peaceful || worldIn.getDifficulty() != Difficulty.PEACEFUL) && super.checkSpawnRules(worldIn, spawnReasonIn);
     }
 
-//    @Nullable
-//    public StructureStart getVillage() {
-//        if (cachedVillage == StructureStart.DUMMY)
-//            return null;
-//        return cachedVillage;
-//    }
-
     public boolean doHurtTarget(@NotNull Entity entity) {
         float f = (float) this.getAttribute(Attributes.ATTACK_DAMAGE).getValue();
         int i = 0;

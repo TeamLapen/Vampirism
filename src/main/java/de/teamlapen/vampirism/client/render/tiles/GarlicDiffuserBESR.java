@@ -44,12 +44,6 @@ public class GarlicDiffuserBESR extends VampirismBESR<GarlicDiffuserBlockEntity>
             matrixStackIn.translate(-0.5D, 0, -0.5);
             matrixStackIn.pushPose();
 
-            //Matrix stack is already translated to block pos
-//        GarlicBeaconBlock.shape.forEachEdge((p_230013_12_, p_230013_14_, p_230013_16_, p_230013_18_, p_230013_20_, p_230013_22_) -> {
-//            vertexConsumer.pos(matrix4f, (float)(p_230013_12_ ), (float)(p_230013_14_ ), (float)(p_230013_16_ )).color(1, 1, 1, 1f).endVertex();
-//            vertexConsumer.pos(matrix4f, (float)(p_230013_18_ ), (float)(p_230013_20_ ), (float)(p_230013_22_ )).color(1, 1, 1, 1f).endVertex();
-//        });
-
             BakedModel garlic_model = Minecraft.getInstance().getItemRenderer().getModel(new ItemStack(ModItems.ITEM_GARLIC.get()), null, null, 0);
             Minecraft.getInstance().getItemRenderer().renderModelLists(garlic_model, new ItemStack(ModItems.ITEM_GARLIC.get()), combinedLightIn, combinedOverlayIn, matrixStackIn, vertexConsumer);
             matrixStackIn.popPose();

@@ -142,10 +142,6 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         int i = Mth.floor(this.getBoundingBox().minY);
         //Only spawn on the surface
         if (i < 60) return false;
-//        CastlePositionData data = CastlePositionData.get(world);
-//        if (data.isPosAt(MathHelper.floor_double(posX), MathHelper.floor_double(posZ))) {
-//            return false;
-//        }
         BlockPos blockpos = new BlockPos(this.getX(), this.getBoundingBox().minY, this.getZ());
         return worldIn.getBlockState(blockpos.below()).is(ModTags.Blocks.CURSED_EARTH) && super.checkSpawnRules(worldIn, spawnReasonIn);
     }

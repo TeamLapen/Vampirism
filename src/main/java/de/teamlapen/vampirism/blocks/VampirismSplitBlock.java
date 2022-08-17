@@ -57,7 +57,7 @@ public class VampirismSplitBlock extends VampirismBlock {
 
     @NotNull
     @Override
-    public PushReaction getPistonPushReaction(BlockState state) {
+    public PushReaction getPistonPushReaction(@NotNull BlockState state) {
         return PushReaction.DESTROY;
     }
 
@@ -67,19 +67,15 @@ public class VampirismSplitBlock extends VampirismBlock {
     }
 
     @Override
-    public VoxelShape getShape(@NotNull BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+    public @NotNull VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         boolean main = state.getValue(PART) == Part.MAIN;
-        switch (state.getValue(FACING)) {
-            case NORTH:
-                return main ? NORTH1 : NORTH2;
-            case EAST:
-                return main ? EAST1 : EAST2;
-            case SOUTH:
-                return main ? SOUTH1 : SOUTH2;
-            case WEST:
-                return main ? WEST1 : WEST2;
-        }
-        return NORTH1;
+        return switch (state.getValue(FACING)) {
+            case NORTH -> main ? NORTH1 : NORTH2;
+            case EAST -> main ? EAST1 : EAST2;
+            case SOUTH -> main ? SOUTH1 : SOUTH2;
+            case WEST -> main ? WEST1 : WEST2;
+            default -> NORTH1;
+        };
     }
 
     @Override
@@ -92,7 +88,7 @@ public class VampirismSplitBlock extends VampirismBlock {
     }
 
     @Override
-    public boolean isPathfindable(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, PathComputationType type) {
+    public boolean isPathfindable(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull PathComputationType type) {
         return false;
     }
 
@@ -102,7 +98,7 @@ public class VampirismSplitBlock extends VampirismBlock {
     }
 
     @Override
-    public void playerWillDestroy(@NotNull Level world, BlockPos blockPos, BlockState blockState, Player player) {
+    public void playerWillDestroy(@NotNull Level world, @NotNull BlockPos blockPos, @NotNull BlockState blockState, @NotNull Player player) {
         if (!world.isClientSide && player.isCreative()) {
             Part part = blockState.getValue(PART);
             if (part == Part.SUB) {
@@ -124,7 +120,7 @@ public class VampirismSplitBlock extends VampirismBlock {
     }
 
     @Override
-    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+    public void setPlacedBy(@NotNull Level world, @NotNull BlockPos pos, @NotNull BlockState state, @Nullable LivingEntity placer, @NotNull ItemStack itemStack) {
         super.setPlacedBy(world, pos, state, placer, itemStack);
         if (!world.isClientSide) {
             BlockPos blockpos = pos.relative(getOtherBlockDirection(state));
@@ -137,7 +133,7 @@ public class VampirismSplitBlock extends VampirismBlock {
 
     @NotNull
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+    public BlockState updateShape(@NotNull BlockState stateIn, @NotNull Direction facing, @NotNull BlockState facingState, @NotNull LevelAccessor worldIn, @NotNull BlockPos currentPos, @NotNull BlockPos facingPos) {
         if (facing == getOtherBlockDirection(stateIn)) {
             return facingState.getBlock() == this && facingState.getValue(PART) != stateIn.getValue(PART) ? updateFromOther(stateIn, facingState) : Blocks.AIR.defaultBlockState();
         } else {
@@ -173,7 +169,7 @@ public class VampirismSplitBlock extends VampirismBlock {
         }
 
         @Override
-        public String getSerializedName() {
+        public @NotNull String getSerializedName() {
             return name;
         }
 

@@ -559,7 +559,7 @@ public class UtilLib {
      * modifies the rolls or pitch of the shape by 90 degree
      */
     public static @NotNull VoxelShape rollShape(@NotNull VoxelShape shape, @NotNull Direction direction) {
-        Set<VoxelShape> rotatedShapes = new HashSet<VoxelShape>();
+        Set<VoxelShape> rotatedShapes = new HashSet<>();
         shape.forAllBoxes((x1, y1, z1, x2, y2, z2) -> {
             double yMin;
             double yMax;

@@ -433,18 +433,13 @@ public class CoffinBlock extends VampirismBlockContainer {
         }
 
         private VoxelShape buildShapeDirectional(@NotNull VoxelShape shape, @NotNull Direction direction) {
-            switch (direction) {
-                case NORTH:
-                    return shape;
-                case EAST:
-                    return UtilLib.rotateShape(shape, UtilLib.RotationAmount.NINETY);
-                case SOUTH:
-                    return UtilLib.rotateShape(shape, UtilLib.RotationAmount.HUNDRED_EIGHTY);
-                case WEST:
-                    return UtilLib.rotateShape(shape, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY);
-                default:
-                    throw new IllegalArgumentException("Wrong direction argument");
-            }
+            return switch (direction) {
+                case NORTH -> shape;
+                case EAST -> UtilLib.rotateShape(shape, UtilLib.RotationAmount.NINETY);
+                case SOUTH -> UtilLib.rotateShape(shape, UtilLib.RotationAmount.HUNDRED_EIGHTY);
+                case WEST -> UtilLib.rotateShape(shape, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY);
+                default -> throw new IllegalArgumentException("Wrong direction argument");
+            };
         }
     }
 }

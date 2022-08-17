@@ -28,7 +28,7 @@ public class ModScreens {
         MenuScreens.register(ModContainer.MINION.get(), MinionScreen::new);
         MenuScreens.register(ModContainer.TASK_MASTER.get(), TaskBoardScreen::new);
         MenuScreens.register(ModContainer.EXTENDED_POTION_TABLE.get(), PotionTableScreen::new);
-        MenuScreens.register(ModContainer.VAMPIRISM.get(), VampirismScreen::new);
+        MenuScreens.register(ModContainer.VAMPIRISM.get(), VampirismContainerScreen::new);
         MenuScreens.register(ModContainer.ALCHEMICAL_TABLE.get(), AlchemyTableScreen::new);
     }
 

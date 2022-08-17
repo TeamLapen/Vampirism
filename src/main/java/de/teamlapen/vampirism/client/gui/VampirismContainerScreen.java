@@ -42,10 +42,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
-/**
- * TODO 1.19 refactor VampirismContainerScreen
- */
-public class VampirismScreen extends AbstractContainerScreen<VampirismContainer> implements ExtendedScreen {
+public class VampirismContainerScreen extends AbstractContainerScreen<VampirismContainer> implements ExtendedScreen {
 
     private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/vampirism_menu.png");
     private static final ResourceLocation BACKGROUND_REFINEMENTS = new ResourceLocation(REFERENCE.MODID, "textures/gui/vampirism_menu_refinements.png");
@@ -59,7 +56,7 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
     private final Map<Integer, Button> refinementRemoveButtons = new Int2ObjectOpenHashMap<>(3);
     private Component level;
 
-    public VampirismScreen(@NotNull VampirismContainer container, @NotNull Inventory playerInventory, @NotNull Component titleIn) {
+    public VampirismContainerScreen(@NotNull VampirismContainer container, @NotNull Inventory playerInventory, @NotNull Component titleIn) {
         super(container, playerInventory, titleIn);
         this.imageWidth = display_width;
         this.imageHeight = display_height;
@@ -182,17 +179,17 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
                     VampirismMod.dispatcher.sendToServer(new ServerboundDeleteRefinementPacket(IRefinementItem.AccessorySlotType.values()[slot.index]));
                     refinementList.set(slot.index, ItemStack.EMPTY);
                 }, (button12, matrixStack, xPos, yPos) -> {
-                    VampirismScreen.this.renderTooltip(matrixStack, Component.translatable("gui.vampirism.vampirism_menu.destroy_item").withStyle(ChatFormatting.RED), xPos, yPos);
+                    VampirismContainerScreen.this.renderTooltip(matrixStack, Component.translatable("gui.vampirism.vampirism_menu.destroy_item").withStyle(ChatFormatting.RED), xPos, yPos);
                 }, Component.empty()) {
                     @Override
                     public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-                        this.visible = !refinementList.get(slot.index).isEmpty() && VampirismScreen.this.draggingItem.isEmpty() && overSlot(slot, mouseX, mouseY);
+                        this.visible = !refinementList.get(slot.index).isEmpty() && VampirismContainerScreen.this.draggingItem.isEmpty() && overSlot(slot, mouseX, mouseY);
                         super.render(matrixStack, mouseX, mouseY, partialTicks);
                     }
 
                     private boolean overSlot(@NotNull Slot slot, int mouseX, int mouseY) {
-                        mouseX -= VampirismScreen.this.leftPos;
-                        mouseY -= VampirismScreen.this.topPos;
+                        mouseX -= VampirismContainerScreen.this.leftPos;
+                        mouseY -= VampirismContainerScreen.this.topPos;
                         return slot.x <= mouseX && slot.x + 16 > mouseX && slot.y <= mouseY && slot.y + 16 > mouseY;
                     }
                 });
@@ -238,11 +235,11 @@ public class VampirismScreen extends AbstractContainerScreen<VampirismContainer>
         }
     }
 
-    private class TaskItem extends de.teamlapen.vampirism.client.gui.widget.TaskItem<VampirismScreen> {
+    private class TaskItem extends de.teamlapen.vampirism.client.gui.widget.TaskItem<VampirismContainerScreen> {
 
         private ImageButton button;
 
-        public TaskItem(@NotNull ITaskInstance item, @NotNull ScrollableListWithDummyWidget<ITaskInstance> list, boolean isDummy, VampirismScreen screen, IFactionPlayer<?> factionPlayer) {
+        public TaskItem(@NotNull ITaskInstance item, @NotNull ScrollableListWithDummyWidget<ITaskInstance> list, boolean isDummy, VampirismContainerScreen screen, IFactionPlayer<?> factionPlayer) {
             super(item, list, isDummy, screen, factionPlayer);
             if (!item.isUnique()) {
                 this.button = new ImageButton(0, 0, 8, 11, 0, 229, 11, TASKMASTER_GUI_TEXTURE, 256, 256, this::onClick, this::onTooltip, Component.empty());

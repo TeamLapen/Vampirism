@@ -249,11 +249,6 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         return player;
     }
 
-    @Deprecated
-    public @NotNull SkillNode getRootNode() {
-        return VampirismMod.proxy.getSkillTree(player.isRemote()).getRootNodeForFaction(faction.getID());
-    }
-
     public @NotNull Collection<SkillNode> getRootNodes() {
         return VampirismAPI.skillManager().getSkillTypes().stream().map(this::getRootNode).collect(Collectors.toList());
     }

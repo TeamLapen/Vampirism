@@ -27,9 +27,9 @@ import java.util.Set;
 /**
  * Manages biteable values.
  * Get values from various sources
- * Static values present in datapacks from {@link BloodValues#ENTITIES}
+ * Static values present in datapacks from {@link BloodValues#entities}
  * Dynamically calculated values from itself
- * Dynamically saved values on world load from {@link BloodValues#ENTITIES}}
+ * Dynamically saved values on world load from {@link BloodValues#entities}}
  * <p>
  * <p>
  * Dynamic values are calculated during gameplay and saved on stopping (server).

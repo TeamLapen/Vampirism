@@ -41,11 +41,10 @@ public class SmeltItemLootModifier extends LootModifier {
     protected ObjectArrayList<ItemStack> doApply(@NotNull ObjectArrayList<ItemStack> generatedLoot, @NotNull LootContext context) {
         ItemStack stack = context.getParamOrNull(LootContextParams.TOOL);
         Entity entity = context.getParamOrNull(LootContextParams.THIS_ENTITY);
-        if (!(entity instanceof LivingEntity) || stack == null || !OilUtils.getAppliedOil(stack).filter(oil -> oil == ModOils.SMELT.get()).isPresent()) {
+        if (!(entity instanceof LivingEntity) || stack == null || OilUtils.getAppliedOil(stack).filter(oil -> oil == ModOils.SMELT.get()).isEmpty()) {
             return generatedLoot;
         }
-        ItemStack entityStack = ((LivingEntity) entity).getMainHandItem();
-        stack = entityStack;
+        stack = ((LivingEntity) entity).getMainHandItem();
         OilUtils.reduceAppliedOilDuration(stack);
         return trySmelting(generatedLoot, context.getLevel());
     }

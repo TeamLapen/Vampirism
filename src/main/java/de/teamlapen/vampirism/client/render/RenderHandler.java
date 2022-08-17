@@ -165,20 +165,6 @@ public class RenderHandler implements ResourceManagerReloadListener {
                 vampireBiomeTicks--;
             }
         }
-
-        //Saturation shader BUGGED this renderes the hotbar white
-//        if (mc.player != null && mc.player.getRNG().nextInt(10) == 3) {
-//            EffectInstance pe = mc.player.getActivePotionEffect(ModEffects.SATURATION.get());
-//            boolean active = pe != null && pe.getAmplifier() >= 2;
-//            GameRenderer renderer = mc.gameRenderer;
-//            if (active && renderer.getShaderGroup() == null) {
-//                renderer.loadShader(saturation1);
-//            } else if (!active && renderer.getShaderGroup() != null && renderer.getShaderGroup().getShaderGroupName().equals(saturation1.toString())) {
-//                renderer.stopUseShader();
-//            }
-//        }
-
-
     }
 
     @SubscribeEvent

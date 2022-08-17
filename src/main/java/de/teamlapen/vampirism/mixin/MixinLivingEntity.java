@@ -17,8 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity extends Entity {
-    @Deprecated
-    protected MixinLivingEntity(@NotNull EntityType<? extends LivingEntity> type, @NotNull Level worldIn) {
+    private MixinLivingEntity(@NotNull EntityType<? extends LivingEntity> type, @NotNull Level worldIn) {
         super(type, worldIn);
     }
 

@@ -33,17 +33,6 @@ public class VersionChecker implements Runnable {
     private final static Logger LOGGER = LogManager.getLogger();
     private static final int MAX_HTTP_REDIRECTS = Integer.getInteger("http.maxRedirects", 20);
 
-
-    /**
-     * Use the other one
-     */
-    @Deprecated
-    public static VersionInfo executeVersionCheck(String updateUrl, @NotNull ArtifactVersion currentVersion) {
-        VersionChecker checker = new VersionChecker(updateUrl, currentVersion, false);
-        new Thread(checker).start();
-        return checker.versionInfo;
-    }
-
     /**
      * Execute an async version check.
      *

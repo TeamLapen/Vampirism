@@ -16,7 +16,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Store blood conversion factors.
@@ -50,54 +49,6 @@ public class BloodConversionRegistry {
      */
     @NotNull
     private static final Set<ResourceLocation> items_blacklist = Sets.newHashSet();
-
-    /**
-     * @deprecated use {@link #applyNewFluidResources(java.util.Map)}
-     */
-    @Deprecated //TODO remove
-    public static void applyNewFluidResources(@NotNull Map<ResourceLocation, Integer> values, int divider) {
-        applyNewFluidResources(values.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() / (float) divider)));
-    }
-
-    /**
-     * @deprecated use {@link #applyNewItemResources(java.util.Map)}
-     */
-    @Deprecated //TODO remove
-    public static void applyNewItemResources(@NotNull Map<ResourceLocation, Integer> values, int multiplier) {
-        applyNewItemResources(values.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() * (float) multiplier)));
-    }
-
-    /**
-     * @deprecated no longer used
-     */
-    @Deprecated //TODO remove
-    public static void applyNewItemCalculated(@NotNull Map<ResourceLocation, Integer> values) {
-        items_calculated.putAll(values.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() * 100f)));
-    }
-
-    /**
-     * @deprecated use {@link #getItemConversions()}
-     */
-    @Deprecated //TODO remove
-    public static @NotNull Map<ResourceLocation, Integer> getItemValues() {
-        return items.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> (int) (e.getValue() / 100)));
-    }
-
-    /**
-     * @deprecated use {@link #getFluidConversions()}
-     */
-    @Deprecated //TODO remove
-    public static @NotNull Map<ResourceLocation, Integer> getFluidValues() {
-        return fluids.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> (int) (e.getValue() * 100)));
-    }
-
-    /**
-     * @deprecated use {@link #getItemConversionCalculated()}
-     */
-    @Deprecated //TODO remove
-    public static @NotNull Map<ResourceLocation, Integer> getItemValuesCalculated() {
-        return items_calculated.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> (int) (e.getValue() / 100f)));
-    }
 
     public static void applyNewFluidResources(@NotNull Map<ResourceLocation, Float> values) {
         fluids.clear();
@@ -136,16 +87,6 @@ public class BloodConversionRegistry {
         return Collections.unmodifiableMap(items_calculated);
     }
 
-    @Deprecated //TODO remove
-    public static int getFluidDivider() {
-        return 100;
-    }
-
-    @Deprecated //TODO remove
-    public static int getItemMultiplier() {
-        return 100;
-    }
-
     /**
      * Get the amount of impure blood the given item is worth.
      *
@@ -157,14 +98,6 @@ public class BloodConversionRegistry {
             return (items.containsKey(id(item)) ? items.get(id(item)) : items_calculated.get(id(item))).intValue();
         }
         return 0;
-    }
-
-    /**
-     * @deprecated use {@link #canBeConverted(net.minecraft.world.item.ItemStack)}
-     */
-    @Deprecated
-    public static boolean canBeConverted(@NotNull Item item) {
-        return canBeConverted(new ItemStack(item));
     }
 
     public static boolean canBeConverted(@NotNull ItemStack stack) {

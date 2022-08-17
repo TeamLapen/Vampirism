@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.api.entity.player.task.TaskReward;
 import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
 import de.teamlapen.vampirism.api.util.NonnullSupplier;
+import de.teamlapen.vampirism.api.util.NullableSupplier;
 import de.teamlapen.vampirism.player.tasks.req.*;
 import de.teamlapen.vampirism.player.tasks.reward.ItemReward;
 import de.teamlapen.vampirism.player.tasks.unlock.ParentUnlocker;
@@ -36,7 +37,7 @@ public class TaskBuilder {
     @Nullable
     private TaskReward reward;
     @NotNull
-    private Supplier<IPlayableFaction<?>> faction = () -> null;
+    private NullableSupplier<IPlayableFaction<?>> faction = () -> null;
     @NotNull
     private Task.Variant variant = Task.Variant.REPEATABLE;
     private boolean useDescription = false;
@@ -123,18 +124,8 @@ public class TaskBuilder {
         return this;
     }
 
-    /**
-     * @deprecated use {@link #withFaction(Supplier)}
-     */
-    @Deprecated
     @NotNull
-    public TaskBuilder withFaction(@Nullable IPlayableFaction<?> faction) {
-        this.faction = () -> faction;
-        return this;
-    }
-
-    @NotNull
-    public TaskBuilder withFaction(@Nullable Supplier<IPlayableFaction<?>> faction) {
+    public TaskBuilder withFaction(@NotNull NullableSupplier<IPlayableFaction<?>> faction) {
         this.faction = faction;
         return this;
     }

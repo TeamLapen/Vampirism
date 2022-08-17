@@ -72,7 +72,7 @@ public interface IActionHandler<T extends IFactionPlayer<T>> {
      *
      * @param action the action that should be effected
      */
-    void resetTimer(@NotNull IAction action);
+    void resetTimer(@NotNull IAction<T> action);
 
     /**
      * Toggle the action (server side).

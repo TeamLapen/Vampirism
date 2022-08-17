@@ -53,7 +53,7 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
                 for (int i = 0; i < 4; ++i) {
                     BlockPos blockpos = p_222510_.offset(p_222511_.nextInt(3) - 1, p_222511_.nextInt(5) - 3, p_222511_.nextInt(3) - 1);
                     if (p_222509_.getBlockState(blockpos).is(ModBlocks.CURSED_EARTH.get()) && canPropagate(blockstate, p_222509_, blockpos)) {
-                        p_222509_.setBlockAndUpdate(blockpos, blockstate.setValue(SNOWY, Boolean.valueOf(p_222509_.getBlockState(blockpos.above()).is(Blocks.SNOW))));
+                        p_222509_.setBlockAndUpdate(blockpos, blockstate.setValue(SNOWY, p_222509_.getBlockState(blockpos.above()).is(Blocks.SNOW)));
                     }
                 }
             }

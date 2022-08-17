@@ -39,15 +39,6 @@ public class ScreenEventHandler {
         }
     }
 
-    // Less intrusive method. However, button is at the wrong position until you release the mouse button
-//    @OnlyIn(Dist.CLIENT)
-//    @SubscribeEvent
-//    public void onButtonClicked(GuiScreenEvent.MouseReleasedEvent.Pre event) {//InventoryScreen changes layout if recipe book button is clicked. Unfortunately it does not propagate this to the screen children, so we need to use this
-//        if (VampirismConfig.CLIENT.guiSkillButton.get() && event.getGui() instanceof InventoryScreen && FactionPlayerHandler.get(event.getGui().getMinecraft().player).getCurrentFactionPlayer() != null) {
-//            if(button!=null)button.setPosition(((InventoryScreen) event.getGui()).getGuiLeft() + 125, event.getGui().height / 2 - 22);
-//        }
-//    }
-
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public void onInitGuiEventPost(ScreenEvent.Init.@NotNull Post event) {

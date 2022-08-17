@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.config;
 
-import de.teamlapen.lib.lib.config.BloodValueLoaderDynamic;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.config.bloodvalues.BloodValueBuilder;
@@ -12,7 +11,6 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -40,9 +38,5 @@ public class BloodValues implements PreparableReloadListener {
     private void applyNewEntitiesResources(@NotNull Map<ResourceLocation, Float> map) {
         BloodConversionRegistry.applyNewEntitiesResources(map);
         ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).applyNewResources(map);
-    }
-
-    public static @NotNull List<BloodValueLoaderDynamic> getDynamicLoader() {
-        return BloodValueLoaderDynamic.getDynamicBloodLoader();
     }
 }

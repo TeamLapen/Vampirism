@@ -284,10 +284,4 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
         ContainerHelper.saveAllItems(tag, this.items);
         tag.putByte("Fuel", (byte) this.fuel);
     }
-
-    @NotNull
-    @Override
-    public CompoundTag getUpdateTag() {
-        return super.getUpdateTag();
-    }
 }

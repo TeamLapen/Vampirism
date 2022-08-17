@@ -44,11 +44,6 @@ public class DefendLordGoal extends TargetGoal {
                 this.targetMob = revengeTarget;
                 return true;
             }
-//            LivingEntity attackingEntity = lp.getPlayer().getAttackingEntity();
-//            if(isSuitableTarget(attackingEntity,predicate)){
-//                this.target = attackingEntity;
-//                return true;
-//            }
             return false;
         }).orElse(false);
     }

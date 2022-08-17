@@ -13,7 +13,7 @@ public interface IOilItem {
     IOil getOil(ItemStack stack);
 
     /**
-     * like the {@link net.minecraft.item.Item#getDefaultInstance()} with a refined oil instead of an empty oil
+     * like the {@link net.minecraft.world.item.Item#getDefaultInstance()} with a refined oil instead of an empty oil
      *
      * @param oil oil for the new itemStack
      * @return a new itemStack with oil

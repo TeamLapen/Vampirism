@@ -18,7 +18,6 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IVampiri
 
     private final VampirismPlayerAttributes vampirismPlayerAttributes = new VampirismPlayerAttributes();
 
-    @Deprecated
     private MixinPlayerEntity(@NotNull EntityType<? extends LivingEntity> type, @NotNull Level worldIn) {
         super(type, worldIn);
     }

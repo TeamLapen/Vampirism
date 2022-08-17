@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism;
 
 import de.teamlapen.lib.HelperRegistry;
-import de.teamlapen.lib.lib.config.BloodValueLoaderDynamic;
 import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.network.AbstractPacketDispatcher;
 import de.teamlapen.lib.lib.network.ISyncable;
@@ -73,8 +72,6 @@ import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
-import net.minecraftforge.event.server.ServerStartingEvent;
-import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -104,11 +101,6 @@ public class VampirismMod {
 
             return new ItemStack(ModItems.VAMPIRE_FANG.get());
         }
-//
-//        @Override
-//        public void fill(NonNullList<ItemStack> items) { //Sort based on registry name. Not ideal
-//            ForgeRegistries.ITEMS.getValues().stream().sorted(Comparator.comparing(ForgeRegistryEntry::getRegistryName)).forEach(item->item.fillItemGroup(this,items));
-//        }
     };
     private final static Logger LOGGER = LogManager.getLogger();
     /**
@@ -222,24 +214,10 @@ public class VampirismMod {
     }
 
     @SubscribeEvent
-    public void onServerStart(@NotNull ServerStartingEvent event) {
-        for (BloodValueLoaderDynamic loader : BloodValues.getDynamicLoader()) {
-            loader.onServerStarting(event.getServer());
-        }
-    }
-
-    @SubscribeEvent
     public void onServerStarted(ServerStartedEvent event) {
         int missing = ModLootTables.checkAndResetInsertedAll();
         if (missing > 0) {
             LOGGER.warn("LootTables Failed to inject {} loottables", missing);
-        }
-    }
-
-    @SubscribeEvent
-    public void onServerStopping(ServerStoppingEvent event) {
-        for (BloodValueLoaderDynamic loader : BloodValues.getDynamicLoader()) {
-            loader.onServerStopping();
         }
     }
 

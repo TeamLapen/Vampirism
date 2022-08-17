@@ -33,14 +33,6 @@ public class Task {
     private Component desc;
 
     /**
-     * @deprecated use {@link #Task(Variant, Supplier, TaskRequirement, TaskReward, TaskUnlocker[], boolean)}
-     */
-    @Deprecated
-    public Task(@NotNull Variant variant, @Nullable IPlayableFaction<?> faction, @NotNull TaskRequirement requirements, @NotNull TaskReward rewards, @NotNull TaskUnlocker[] unlocker, boolean useDescription) {
-        this(variant, () -> faction, requirements, rewards, unlocker, useDescription);
-    }
-
-    /**
      * translation keys used for a task are
      * <p>
      * - {@code task.<registryname>}

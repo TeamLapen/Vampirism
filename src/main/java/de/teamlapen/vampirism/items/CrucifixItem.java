@@ -128,14 +128,11 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
     }
 
     protected int getCooldown(ItemStack stack) {
-        switch (tier) {
-            case ENHANCED:
-                return 100;
-            case ULTIMATE:
-                return 60;
-            default:
-                return 140;
-        }
+        return switch (tier) {
+            case ENHANCED -> 100;
+            case ULTIMATE -> 60;
+            default -> 140;
+        };
     }
 
     @Override
