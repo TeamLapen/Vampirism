@@ -16,7 +16,7 @@ It is located in your `.minecraft` or server directory. Copy a server or balance
 
 Additionally, Here is a video description of Vampirism's config system [Description](https://youtu.be/JyfdM_sv2WQ)
 
-Even more detailed customization can be done via [datapacks](../api/datapacks.md).
+Even more detailed customization can be done via [datapacks](../data/intro.md).
 
 ### Noticeable configuration options
 #### Mob type compatibility/IMob

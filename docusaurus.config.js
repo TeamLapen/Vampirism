@@ -68,6 +68,12 @@ const config = {
             position: 'left',
             label: 'API',
           },
+          {
+            type: 'doc',
+            docId: 'data/intro',
+            position: 'left',
+            label: 'Data Packs',
+          },
           {to: '/blog', label: 'Blog', position: 'left'},
           {
             href: 'https://github.com/Teamlapen/Vampirism',
@@ -89,6 +95,10 @@ const config = {
               {
                 label: 'API',
                 to: '/docs/api/intro',
+              },
+              {
+                label: 'Data Pack',
+                to: '/docs/data/intro',
               },
             ],
           },

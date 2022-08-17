@@ -3,7 +3,7 @@ sidebar_position: 7
 title: Multiplayer
 ---
 
-This mod should play well on multiplayer servers. Players can choose to join the vampire faction or the the hunter faction or even mostly ignore this mod if they want.
+This mod should play well on multiplayer servers. Players can choose to join the vampire faction or the hunter faction or even mostly ignore this mod if they want.
 
 ### Permissions
 Certain actions can be controlled via permission. See [Permissions](https://github.com/TeamLapen/Vampirism/wiki/Permissions).

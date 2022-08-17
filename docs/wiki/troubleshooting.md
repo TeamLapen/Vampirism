@@ -21,18 +21,10 @@ Certain version of Mohist `1.16#700-740` are bugged.
 This is a tricky issue as mob spawning is quite complex and many things can mess it up.
 It is likely that either a) some other mod purposely modifies the spawning algorithm/list or b) some other mod accidentally spawns too many other entities.
 Have a look on your mod list and try to spot suspicious mods. Then try to narrow it down by removing mods and testing vampire spawn in a freshly generated flat world
-#### Custom Mob Spawner / Mo's creatures (1.12)
-Custom Mob Spawner replaces the vanilla spawning algorithm and does not properly handle Vampirism's creatures.
 
-As a workaround:
-Go to your config directory and look for the CustomSpawner directory. In there you should find a overworld folder with a Creatures subfolder. Edit the DE.cfg file and look for vampire and vampire baron. Change canSpawn to true and the type to MONSTER.
-With that I was able to see some vampires spawn. However, I do not know if this is reset on certain occasions.
 
-### Thaumcraft - Can't get Examine Fire closely research (1.12)
-As a workaround you can go to your config directory (or use the GUI Main Menu -> Mods -> Vampirsm -> Config -> Balance) and open the Balance - vampire_player.cfg (Vampire Player General) and change fire_vulnerability_type to 0 and fire_vulnerability_max_mod to 1. Thereby the increased fire vulnerability added by Vampirism is deactivated.
-
-## Crashreport - If your game crashes or does not start, we do NEED a crashreport
-_Without a crashreport file, we can do absolutely nothing to help you._  
+## Crash report - If your game crashes or does not start, we do NEED a crash-report
+_Without a crash-report file, we can do absolutely nothing to help you._  
 _So please follow the following steps (If you have questions about the steps themselves, feel free to ask):_
 
 1. Find the Minecraft crash report file. If you use the standard Minecraft launcher, the folder can be found [here](https://minecraft.gamepedia.com/.minecraft). The interesting file is inside the _crash-reports_, choose the latest file. If you use another launcher, it might have a function to easily upload or locate log files.

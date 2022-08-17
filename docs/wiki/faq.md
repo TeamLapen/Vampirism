@@ -3,9 +3,9 @@ sidebar_position: 2
 title: FAQ
 ---
 
-#### I want more skillpoints
-There are two ways of having more skillpoints by changinc config values:
-1) You can increase the `skillPointsPerLevel` value in the `vampirism-balance.toml` (eg. to 1.5 to have enough skillpoint on lvl 14 to unlock all skills)
+#### I want more skill points
+There are two ways of having more skill points by changing config values:
+1) You can increase the `skillPointsPerLevel` value in the `vampirism-balance.toml` (e.g. to 1.5 to have enough skill point on lvl 14 to unlock all skills)
 2) You can set the `unlockAllSkills` value in the `vampirism-server.toml` to `true` to be able to unlock all skills on max level
 
 If you are more interested in a general powerup for vampires you can install the [Vampirism Godly](https://www.curseforge.com/minecraft/mc-mods/godly-vampirism) Mod. It automatically increases the `skillPointsPerLevel` value
@@ -15,7 +15,7 @@ If you are more interested in a general powerup for vampires you can install the
 3) Make sure to hold down the feed button
 
 #### Fire damage is too high
-This can be configured in the *balance* configuration. See [Configuration](configuration.md)
+This can be configured in the `balance` configuration. See [Configuration](configuration.md)
 
 #### I want werewolves etc.
 Go write an addon mod for Vampirism (see [Addon Example](https://github.com/TeamLapen/VampirismAddonExample)) or checkout for [Werewolves Mod](https://github.com/TeamLapen/Werewolves)
@@ -26,8 +26,8 @@ Killing a Vampire NPC with a Stake is the traditional method of getting Vampire 
 #### I have a toxicant effect
 This happens if you wear hunter armor as a vampire or the other way around
 
-#### How do I become human ("unvampire"/"unhunter")
-As a vampire look for an *altar of cleansing* (or craft one), as a hunter use a *sanguinare injection* at a *med chair*.
+#### How do I become human ("un-vampire"/"un-hunter")
+As a vampire look for an [Altar of Cleansing](content/blocks.mdx#altar-of-cleansing) (or craft one), as a hunter use a [Sanguinare Injection](content/items.mdx#sanguinare-injection) at a [med chair](content/blocks.mdx#injection-chair).
 
 #### How do I get vampire books
 Vampire books can be found around the world (e.g. in mineshafts or vampire dungeons). They have cryptic names and content.
