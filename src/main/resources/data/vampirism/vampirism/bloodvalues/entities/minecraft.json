@@ -21,6 +21,7 @@
     "minecraft:cat": 30,
     "minecraft:turtle": 50,
     "minecraft:fox": 40,
-    "minecraft:bee": 0
+    "minecraft:bee": 0,
+    "minecraft:skeleton_horse": 0
   }
 }
