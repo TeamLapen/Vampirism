@@ -1093,7 +1093,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     }
 
     private void spawnVillagerDefault(boolean poisonousBlood, boolean vampire) {
-        assert poisonousBlood != vampire;
+        assert !(vampire && poisonousBlood);
         //noinspection ConstantConditions
         VillagerEntity newVillager = (vampire ? ModEntities.VILLAGER_CONVERTED.get() : EntityType.VILLAGER).create(this.level);
         //noinspection ConstantConditions
