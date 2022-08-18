@@ -14,6 +14,7 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.IDyeableArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.text.ITextComponent;
@@ -34,6 +35,12 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
     public ArmorOfSwiftnessItem(EquipmentSlotType equipmentSlotIn, TIER tier) {
         super(VampirismArmorMaterials.MASTERLY_LEATHER, equipmentSlotIn, new Item.Properties().tab(VampirismMod.creativeTab));
         this.tier = tier;
+    }
+
+    @Override
+    public int getColor(ItemStack p_200886_1_) {
+        CompoundNBT compoundnbt = p_200886_1_.getTagElement("display");
+        return compoundnbt != null && compoundnbt.contains("color", 99) ? compoundnbt.getInt("color") : -1;
     }
 
     @OnlyIn(Dist.CLIENT)
