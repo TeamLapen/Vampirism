@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.util.VampirismArmorMaterials;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -56,6 +57,12 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmorItem implements II
     public ArmorOfSwiftnessItem(@NotNull EquipmentSlot equipmentSlotIn, @NotNull TIER tier) {
         super(VampirismArmorMaterials.MASTERLY_LEATHER, equipmentSlotIn, new Item.Properties().tab(VampirismMod.creativeTab), getModifiers(equipmentSlotIn, tier));
         this.tier = tier;
+    }
+
+    @Override
+    public int getColor(ItemStack stack) {
+        CompoundTag compoundtag = stack.getTagElement("display");
+        return compoundtag != null && compoundtag.contains("color", 99) ? compoundtag.getInt("color") : -1;
     }
 
     @OnlyIn(Dist.CLIENT)
