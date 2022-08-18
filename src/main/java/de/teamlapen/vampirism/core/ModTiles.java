@@ -37,7 +37,7 @@ public class ModTiles {
     public static final RegistryObject<BlockEntityType<PotionTableBlockEntity>> POTION_TABLE = BLOCK_ENTITY_TYPES.register("potion_table", () -> create(PotionTableBlockEntity::new, ModBlocks.POTION_TABLE.get()));
     public static final RegistryObject<BlockEntityType<AlchemyTableBlockEntity>> ALCHEMICAL_TABLE = BLOCK_ENTITY_TYPES.register("alchemical_table", () -> create(AlchemyTableBlockEntity::new, ModBlocks.ALCHEMY_TABLE.get()));
 
-    static void registerTiles(IEventBus bus) {
+    static void register(IEventBus bus) {
         BLOCK_ENTITY_TYPES.register(bus);
     }
 

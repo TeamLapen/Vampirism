@@ -24,7 +24,7 @@ public interface IVampirismCrossbowArrow<T extends AbstractArrow & IEntityCrossb
 
     boolean isCanBeInfinite();
 
-    void onHitBlock(ItemStack arrow, BlockPos blockPos, IEntityCrossbowArrow arrowEntity, Entity shootingEntity);
+    void onHitBlock(ItemStack arrow, BlockPos blockPos, IEntityCrossbowArrow arrowEntity, @Nullable Entity shootingEntity);
 
     void onHitEntity(ItemStack arrow, LivingEntity entity, IEntityCrossbowArrow arrowEntity, Entity shootingEntity);
 }

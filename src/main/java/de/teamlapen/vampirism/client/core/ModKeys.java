@@ -30,7 +30,6 @@ import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -71,7 +70,7 @@ public class ModKeys {
     public static final KeyMapping ACTION3 = new KeyMapping(ACTIVATE_ACTION3, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_3, CATEGORY);
     public static final KeyMapping MINION = new KeyMapping(MINION_TASK, KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
 
-    public static void registerKeyMapping(@NotNull RegisterKeyMappingsEvent event) {
+    static void registerKeyMapping(@NotNull RegisterKeyMappingsEvent event) {
         event.register(ACTION);
         event.register(SUCK);
         event.register(VAMPIRISM_MENU);
@@ -82,19 +81,11 @@ public class ModKeys {
         event.register(MINION);
     }
 
-    public static void register() {
-        MinecraftForge.EVENT_BUS.register(new ModKeys());
-    }
-
     private boolean suckKeyDown = false;
     private long lastAction1Trigger = 0;
     private long lastAction2Trigger = 0;
     private long lastAction3Trigger = 0;
 
-
-    private ModKeys() {
-
-    }
 
     @SubscribeEvent
     public void handleInputEvent(InputEvent event) {

@@ -44,7 +44,7 @@ public class ModParticles {
         }
     });
 
-    static void registerParticles(IEventBus bus) {
+    static void register(IEventBus bus) {
         PARTICLE_TYPES.register(bus);
     }
 

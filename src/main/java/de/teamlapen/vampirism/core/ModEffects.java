@@ -56,7 +56,7 @@ public class ModEffects {
     private static MobEffect vanilla_night_vision; //Vanilla night vision instance
 
 
-    static void registerEffects(IEventBus bus) {
+    static void register(IEventBus bus) {
         EFFECTS.register(bus);
     }
 

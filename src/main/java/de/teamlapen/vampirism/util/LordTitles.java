@@ -24,33 +24,24 @@ public class LordTitles {
 
     public static @NotNull Component getVampireTitle(int level, boolean female) {
         if (female) {
-            switch (level) {
-                case 1:
-                    return VAMPIRE_1F;
-                case 2:
-                    return VAMPIRE_2F;
-                case 3:
-                    return VAMPIRE_3F;
-                case 4:
-                    return VAMPIRE_4F;
-                case 5:
-                    return VAMPIRE_5F;
-            }
+            return switch (level) {
+                case 1 -> VAMPIRE_1F;
+                case 2 -> VAMPIRE_2F;
+                case 3 -> VAMPIRE_3F;
+                case 4 -> VAMPIRE_4F;
+                case 5 -> VAMPIRE_5F;
+                default -> EMPTY;
+            };
         } else {
-            switch (level) {
-                case 1:
-                    return VAMPIRE_1M;
-                case 2:
-                    return VAMPIRE_2M;
-                case 3:
-                    return VAMPIRE_3M;
-                case 4:
-                    return VAMPIRE_4M;
-                case 5:
-                    return VAMPIRE_5M;
-            }
+            return switch (level) {
+                case 1 -> VAMPIRE_1M;
+                case 2 -> VAMPIRE_2M;
+                case 3 -> VAMPIRE_3M;
+                case 4 -> VAMPIRE_4M;
+                case 5 -> VAMPIRE_5M;
+                default -> EMPTY;
+            };
         }
-        return EMPTY;
     }
 
     public static @NotNull Component getHunterTitle(int level, boolean female) {

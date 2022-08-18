@@ -41,7 +41,7 @@ public class ModFeatures {
 
     public static final RegistryObject<TreeDecoratorType<TrunkCursedVineDecorator>> trunk_cursed_vine = TREE_DECORATOR.register("trunk_cursed_vine", () -> new TreeDecoratorType<>(TrunkCursedVineDecorator.CODEC));
 
-    static void registerFeaturesAndStructures(IEventBus bus) {
+    static void register(IEventBus bus) {
         FEATURES.register(bus);
         STRUCTURE_TYPES.register(bus);
         TREE_DECORATOR.register(bus);

@@ -4,6 +4,7 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.ModLootTables;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.ClientboundBloodValuePacket;
 import de.teamlapen.vampirism.network.ClientboundSkillTreePacket;
@@ -21,6 +22,7 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.LevelEvent;
+import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.server.ServerLifecycleHooks;
@@ -118,6 +120,14 @@ public class GeneralEventHandler {
     public void onWorldUnload(LevelEvent.@NotNull Unload event) {
         if (event.getLevel() instanceof Level level) {
             VampirismWorld.getOpt(level).ifPresent(VampirismWorld::clearCaches);
+        }
+    }
+
+    @SubscribeEvent
+    public void onServerStarted(ServerStartedEvent event) {
+        int missing = ModLootTables.checkAndResetInsertedAll();
+        if (missing > 0) {
+            LOGGER.warn("LootTables Failed to inject {} loottables", missing);
         }
     }
 }

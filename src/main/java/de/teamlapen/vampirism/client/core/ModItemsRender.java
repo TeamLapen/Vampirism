@@ -43,7 +43,7 @@ public class ModItemsRender {
         });
     }
 
-    public static void registerColors(RegisterColorHandlersEvent.@NotNull Item event) {
+    static void registerColors(RegisterColorHandlersEvent.@NotNull Item event) {
         // Swiftness armor
         event.register((stack, tintIndex) -> {
             return tintIndex > 0 ? -1 : ((DyeableLeatherItem) stack.getItem()).getColor(stack);

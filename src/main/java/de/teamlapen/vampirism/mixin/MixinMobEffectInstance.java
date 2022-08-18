@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(MobEffectInstance.class)
-public class MixinEffectInstance implements EffectInstanceWithSource {
+public class MixinMobEffectInstance implements EffectInstanceWithSource {
 
     @Inject(method = "loadSpecifiedEffect(Lnet/minecraft/world/effect/MobEffect;Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/world/effect/MobEffectInstance;", at = @At("RETURN"))
     private static void readInternal_vampirism(MobEffect effect, @NotNull CompoundTag nbt, @NotNull CallbackInfoReturnable<MobEffectInstance> cir) {

@@ -37,7 +37,7 @@ public class ModOils {
     public static final RegistryObject<IOil> TELEPORT = OILS.register("teleport", () -> new Oil(0x0b4d42));
     public static final RegistryObject<EvasionOil> EVASION = OILS.register("evasion", () -> new EvasionOil(0x888800, 60));
 
-    static void registerOils(IEventBus bus) {
+    static void register(IEventBus bus) {
         OILS.register(bus);
     }
 }

@@ -99,7 +99,7 @@ public class ModEntities {
         registry.addConvertible(EntityType.MULE, overlay.apply("horse"), new SpecialConvertingHandler<>(ModEntities.CONVERTED_MULE.get()));
     }
 
-    static void registerEntities(IEventBus bus) {
+    static void register(IEventBus bus) {
         ENTITY_TYPES.register(bus);
     }
 

@@ -13,7 +13,7 @@ import java.util.List;
  * Implementation for several small registries.
  * (Currently only vampire vision)
  */
-public class GeneralRegistryImpl implements IVampireVisionRegistry {
+public class VampireVisionRegistry implements IVampireVisionRegistry {
 
     private final ArrayList<IVampireVision> visionList = new ArrayList<>();
 

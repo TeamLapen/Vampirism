@@ -93,7 +93,7 @@ public class CrossbowArrowItem extends Item implements IVampirismCrossbowArrow<C
      * @param shootingEntity The shooting entity. Can be the arrow entity itself
      */
     @Override
-    public void onHitBlock(ItemStack arrow, @NotNull BlockPos blockPos, IEntityCrossbowArrow arrowEntity, @NotNull Entity shootingEntity) {
+    public void onHitBlock(ItemStack arrow, @NotNull BlockPos blockPos, IEntityCrossbowArrow arrowEntity, @Nullable Entity shootingEntity) {
         CrossbowArrowEntity entity = (CrossbowArrowEntity) arrowEntity;
         switch (type) {
             case SPITFIRE:
@@ -111,21 +111,23 @@ public class CrossbowArrowItem extends Item implements IVampirismCrossbowArrow<C
                 }
                 break;
             case TELEPORT:
-                if (!shootingEntity.level.isClientSide && shootingEntity.isAlive()) {
-                    if (shootingEntity instanceof ServerPlayer player) {
-                        if (player.connection.getConnection().isConnected() && player.level == entity.level && !player.isSleeping()) {
+                if (shootingEntity != null) {
+                    if (!shootingEntity.level.isClientSide && shootingEntity.isAlive()) {
+                        if (shootingEntity instanceof ServerPlayer player) {
+                            if (player.connection.getConnection().isConnected() && player.level == entity.level && !player.isSleeping()) {
 
-                            if (player.isPassenger()) {
-                                player.stopRiding();
+                                if (player.isPassenger()) {
+                                    player.stopRiding();
+                                }
+
+                                player.teleportTo(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+                                player.fallDistance = 0.0F;
+                                player.hurt(DamageSource.FALL, 1);
                             }
-
-                            player.teleportTo(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-                            player.fallDistance = 0.0F;
-                            player.hurt(DamageSource.FALL, 1);
+                        } else {
+                            shootingEntity.teleportTo(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+                            shootingEntity.fallDistance = 0.0F;
                         }
-                    } else if (shootingEntity != null) {
-                        shootingEntity.teleportTo(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-                        shootingEntity.fallDistance = 0.0F;
                     }
                 }
                 break;

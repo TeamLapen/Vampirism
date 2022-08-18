@@ -118,9 +118,9 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
         private final int lava;
         private final ISkill<?>[] skills;
         private final int level;
-        private final @NotNull JsonObject extraNbt;
+        private final @Nullable JsonObject extraNbt;
 
-        public Result(@NotNull ResourceLocation id, @NotNull Item item, int count, @NotNull String group, @NotNull List<String> pattern, @NotNull Map<Character, Ingredient> ingredients, @NotNull Advancement.Builder advancementBuilder, @NotNull ResourceLocation advancementId, int lava, @NotNull ISkill<?>[] skills, int level, @NotNull JsonObject extraNbt) {
+        public Result(@NotNull ResourceLocation id, @NotNull Item item, int count, @NotNull String group, @NotNull List<String> pattern, @NotNull Map<Character, Ingredient> ingredients, @NotNull Advancement.Builder advancementBuilder, @NotNull ResourceLocation advancementId, int lava, @NotNull ISkill<?>[] skills, int level, @Nullable JsonObject extraNbt) {
             super(id, item, count, group, pattern, ingredients, advancementBuilder, advancementId);
             this.lava = lava;
             this.skills = skills;

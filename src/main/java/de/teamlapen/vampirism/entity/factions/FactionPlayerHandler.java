@@ -425,20 +425,6 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     private void loadBoundActions(@NotNull CompoundTag nbt) {
-        // Read bound actions from legacy format
-        if (nbt.contains("bound1")) {
-            IAction<?> i = RegUtil.getAction(new ResourceLocation(nbt.getString("bound1")));
-            if (i != null) this.boundActions.put(1, i);
-        }
-        if (nbt.contains("bound2")) {
-            IAction<?> i = RegUtil.getAction(new ResourceLocation(nbt.getString("bound2")));
-            if (i != null) this.boundActions.put(2, i);
-        }
-        if (nbt.contains("bound3")) {
-            IAction<?> i = RegUtil.getAction(new ResourceLocation(nbt.getString("bound3")));
-            if (i != null) this.boundActions.put(3, i);
-        }
-        // Read bound actions from new format
         CompoundTag bounds = nbt.getCompound("bound_actions");
         for (String s : bounds.getAllKeys()) {
             int id = Integer.parseInt(s);

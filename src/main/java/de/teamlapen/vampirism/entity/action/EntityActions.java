@@ -31,7 +31,7 @@ public class EntityActions {
     public static final RegistryObject<GarlicAOFEntityAction<?>> ENTITY_GARLIC_AREAOFEFFECT = ENTITY_ACTIONS.register("entity_garlic_areaofeffect", () -> new GarlicAOFEntityAction<>(EntityActionTier.High, EntityClassType.Caster));
     public static final RegistryObject<IgnoreSunDamageEntityAction<?>> ENTITY_IGNORESUNDAMAGE = ENTITY_ACTIONS.register("entity_ignoresundamage", () -> new IgnoreSunDamageEntityAction<>(EntityActionTier.High, EntityClassType.Fighter));
 
-    public static void registerDefaultActions(IEventBus bus) {
+    public static void register(IEventBus bus) {
         ENTITY_ACTIONS.register(bus);
     }
 }

@@ -28,7 +28,7 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> BLESSING_MUSIC = create("blessing_music");
 
 
-    static void registerSounds(IEventBus bus) {
+    static void register(IEventBus bus) {
         SOUND_EVENTS.register(bus);
     }
 

@@ -74,7 +74,7 @@ public class ModPotions {
     public static final RegistryObject<VampirismPotion> VAMPIRE_FIRE_RESISTANCE = POTIONS.register("vampire_fire_resistance", () -> new VampirismPotion(null, new MobEffectInstance(ModEffects.FIRE_PROTECTION.get(), 3600, 5)));
     public static final RegistryObject<VampirismPotion> LONG_VAMPIRE_FIRE_RESISTANCE = POTIONS.register("long_vampire_fire_resistance", () -> new VampirismPotion("vampire_fire_resistance", new MobEffectInstance(ModEffects.FIRE_PROTECTION.get(), 9600, 5)));
 
-    public static void registerPotions(IEventBus bus) {
+    public static void register(IEventBus bus) {
         POTIONS.register(bus);
     }
 

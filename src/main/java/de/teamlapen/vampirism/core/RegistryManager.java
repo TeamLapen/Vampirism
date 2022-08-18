@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
+import de.teamlapen.vampirism.world.gen.VampirismFeatures;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraftforge.common.MinecraftForge;
@@ -34,34 +35,36 @@ public class RegistryManager implements IInitListener {
 
     public static void setupRegistries(@NotNull IEventBus modbus) {
         ModRegistries.init(modbus);
-        ModAttributes.registerAttributes(modbus);
-        ModBiomes.registerBiomes(modbus);
-        ModBlocks.registerBlocks(modbus);
-        ModContainer.registerContainer(modbus);
-        ModEffects.registerEffects(modbus);
-        ModEnchantments.registerEnchantments(modbus);
-        ModEntities.registerEntities(modbus);
-        ModFeatures.registerFeaturesAndStructures(modbus);
-        ModFluids.registerFluids(modbus);
-        ModItems.registerItems(modbus);
-        ModLoot.registerLoot(modbus);
-        ModParticles.registerParticles(modbus);
-        ModPotions.registerPotions(modbus);
-        ModRecipes.registerRecipeTypesAndSerializers(modbus);
-        ModRefinements.registerRefinements(modbus);
-        ModRefinementSets.registerRefinementSets(modbus);
-        ModSounds.registerSounds(modbus);
-        ModTasks.registerTasks(modbus);
-        ModTiles.registerTiles(modbus);
-        ModVillage.registerVillageObjects(modbus);
-        VampireActions.registerDefaultActions(modbus);
-        HunterActions.registerDefaultActions(modbus);
-        EntityActions.registerDefaultActions(modbus);
-        MinionTasks.registerMinionTasks(modbus);
-        VampireSkills.registerVampireSkills(modbus);
-        HunterSkills.registerHunterSkills(modbus);
-        ModCommands.registerArgumentTypes(modbus);
-        ModOils.registerOils(modbus);
+        ModAttributes.register(modbus);
+        ModBiomes.register(modbus);
+        ModBlocks.register(modbus);
+        ModContainer.register(modbus);
+        ModEffects.register(modbus);
+        ModEnchantments.register(modbus);
+        ModEntities.register(modbus);
+        ModFeatures.register(modbus);
+        ModFluids.register(modbus);
+        ModItems.register(modbus);
+        ModLoot.register(modbus);
+        ModParticles.register(modbus);
+        ModPotions.register(modbus);
+        ModRecipes.register(modbus);
+        ModRefinements.register(modbus);
+        ModRefinementSets.register(modbus);
+        ModSounds.register(modbus);
+        ModTasks.register(modbus);
+        ModTiles.register(modbus);
+        ModVillage.register(modbus);
+        VampireActions.register(modbus);
+        HunterActions.register(modbus);
+        EntityActions.register(modbus);
+        MinionTasks.register(modbus);
+        VampireSkills.register(modbus);
+        HunterSkills.register(modbus);
+        ModCommands.register(modbus);
+        ModOils.register(modbus);
+
+        VampirismFeatures.register(modbus);
     }
 
     @SubscribeEvent

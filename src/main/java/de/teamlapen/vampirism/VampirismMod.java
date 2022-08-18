@@ -17,7 +17,7 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.world.IVampirismWorld;
-import de.teamlapen.vampirism.client.core.*;
+import de.teamlapen.vampirism.client.core.ClientRegistryHandler;
 import de.teamlapen.vampirism.config.BloodValues;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModCommands;
@@ -54,13 +54,10 @@ import de.teamlapen.vampirism.sit.SitHandler;
 import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.biome.OverworldModifications;
-import de.teamlapen.vampirism.world.gen.VampirismFeatures;
 import de.teamlapen.vampirism.world.gen.VanillaStructureModifications;
 import net.minecraft.ChatFormatting;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.MobType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -70,10 +67,7 @@ import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.server.ServerAboutToStartEvent;
-import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
@@ -92,49 +86,25 @@ import java.util.Optional;
 @Mod(value = REFERENCE.MODID)
 public class VampirismMod {
 
+    private static final Logger LOGGER = LogManager.getLogger();
+
     public static final AbstractPacketDispatcher dispatcher = new ModPacketDispatcher();
     public static final CreativeModeTab creativeTab = new CreativeModeTab(REFERENCE.MODID) {
-
         @NotNull
         @Override
         public ItemStack makeIcon() {
-
             return new ItemStack(ModItems.VAMPIRE_FANG.get());
         }
     };
-    private final static Logger LOGGER = LogManager.getLogger();
-    /**
-     * Hunter creatures are of this creature type. Use the instance in
-     * {@link VReference} instead of this one. This is only here to init it as early
-     * as possible
-     */
-    private final static MobCategory HUNTER_CREATURE_TYPE = MobCategory.create("vampirism_hunter", "vampirism_hunter", 25, false, false, 128);
-    /**
-     * Vampire creatures are of this creature type. Use the instance in
-     * {@link VReference} instead of this one. This is only here to init it as early
-     * as possible
-     */
-    private static final MobCategory VAMPIRE_CREATURE_TYPE = MobCategory.create("vampirism_vampire", "vampirism_vampire", 30, false, false, 128);
-    /**
-     * Vampire creatures have this attribute Vampire creatures are of this creature
-     * type. Use the instance in {@link VReference} instead of this one. This is
-     * only here to init it as early as possible
-     */
-    @SuppressWarnings("InstantiationOfUtilityClass")
-    private static final MobType VAMPIRE_CREATURE_ATTRIBUTE = new MobType();
-
     public static VampirismMod instance;
-    public static final IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
+    public static final IProxy proxy = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> ServerProxy::new);
     public static boolean inDev = false;
     public static boolean inDataGen = false;
 
-    public static boolean isRealism() {
-        return false;
-    }
-
-    public final ModCompatLoader modCompatLoader = new ModCompatLoader();
-    private final @NotNull RegistryManager registryManager;
+    private final @NotNull RegistryManager registryManager = new RegistryManager();
     private VersionChecker.VersionInfo versionInfo;
+    public final @NotNull ModCompatLoader modCompatLoader = new ModCompatLoader();
+
 
     public VampirismMod() {
         instance = this;
@@ -156,32 +126,21 @@ public class VampirismMod {
         modbus.addListener(this::gatherData);
         modbus.addListener(this::registerCapabilities);
         modbus.addListener(this::finalizeConfiguration);
-        VampirismFeatures.register(FMLJavaModLoadingContext.get().getModEventBus());
 
+        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ClientRegistryHandler::init);
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-            modbus.addListener(ClientEventHandler::onModelBakeEvent);
             modbus.addListener(this::setupClient);
-            modbus.addListener(ModEntitiesRender::onRegisterRenderers);
-            modbus.addListener(ModEntitiesRender::onRegisterLayers);
-            modbus.addListener(ModEntitiesRender::onAddLayers);
-            modbus.addListener(ModBlocksRender::registerBlockEntityRenderers);
-            modbus.addListener(ModScreens::registerScreenOverlays);
-            modbus.addListener(ModBlocksRender::registerBlockColors);
-            modbus.addListener(ModItemsRender::registerColors);
-            modbus.addListener(ModParticleFactories::registerFactories);
-            modbus.addListener(ModKeys::registerKeyMapping);
-            modbus.addListener(ClientEventHandler::onModelRegistry);
         });
-        VampirismConfig.init();
-        MinecraftForge.EVENT_BUS.register(this);
-        addModCompats();
-        registryManager = new RegistryManager();
+
         MinecraftForge.EVENT_BUS.register(Permissions.class);
         MinecraftForge.EVENT_BUS.register(SitHandler.class);
+        MinecraftForge.EVENT_BUS.addListener(this::onCommandsRegister);
+        MinecraftForge.EVENT_BUS.addListener(this::onAddReloadListenerEvent);
+
+        VampirismConfig.init();
 
         prepareAPI();
         RegistryManager.setupRegistries(modbus);
-
 
         if (OptifineHandler.isOptifineLoaded()) {
             LOGGER.warn("Using Optifine. Expect visual glitches and reduces blood vision functionality if using shaders.");
@@ -195,7 +154,6 @@ public class VampirismMod {
         return versionInfo;
     }
 
-    @SubscribeEvent
     public void onAddReloadListenerEvent(@NotNull AddReloadListenerEvent event) {
         SkillTreeManager.getInstance().getSkillTree().initRootSkills();//Load root skills here, so even if data pack reload fail, the root skills are available #622
         event.addListener(SkillTreeManager.getInstance());
@@ -203,26 +161,8 @@ public class VampirismMod {
 
     }
 
-    @SubscribeEvent
     public void onCommandsRegister(@NotNull RegisterCommandsEvent event) {
         ModCommands.registerCommands(event.getDispatcher());
-    }
-
-    @SuppressWarnings("EmptyMethod")
-    @SubscribeEvent
-    public void onServerAboutToStart(ServerAboutToStartEvent event) {
-    }
-
-    @SubscribeEvent
-    public void onServerStarted(ServerStartedEvent event) {
-        int missing = ModLootTables.checkAndResetInsertedAll();
-        if (missing > 0) {
-            LOGGER.warn("LootTables Failed to inject {} loottables", missing);
-        }
-    }
-
-    @SuppressWarnings("EmptyMethod")
-    private void addModCompats() {
     }
 
     private void checkEnv() {
@@ -294,19 +234,9 @@ public class VampirismMod {
      * Called during constructor to set up the API as well as VReference
      */
     private void prepareAPI() {
-        FactionRegistry factionRegistry = new FactionRegistry();
-        SundamageRegistry sundamageRegistry = new SundamageRegistry();
-        VampirismEntityRegistry biteableRegistry = new VampirismEntityRegistry();
-        ActionManager actionManager = new ActionManager();
-        SkillManager skillManager = new SkillManager();
-        GeneralRegistryImpl generalRegistry = new GeneralRegistryImpl();
-        ActionManagerEntity entityActionManager = new ActionManagerEntity();
-        ExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistry = new ExtendedBrewingRecipeRegistry();
 
-        biteableRegistry.setDefaultConvertingHandlerCreator(DefaultConvertingHandler::new);
-        VampirismAPI.setUpRegistries(factionRegistry, sundamageRegistry, biteableRegistry, actionManager, skillManager, generalRegistry, entityActionManager, extendedBrewingRecipeRegistry);
+        VampirismAPI.setUpRegistries(new FactionRegistry(), new SundamageRegistry(), new VampirismEntityRegistry().setDefaultConvertingHandlerCreator(DefaultConvertingHandler::new), new ActionManager(), new SkillManager(), new VampireVisionRegistry(), new ActionManagerEntity(), new ExtendedBrewingRecipeRegistry());
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> proxy::setupAPIClient);
-
 
         VReference.VAMPIRE_FACTION = VampirismAPI.factionRegistry()
                 .createPlayableFaction(REFERENCE.VAMPIRE_PLAYER_KEY, IVampirePlayer.class, () -> VampirePlayer.CAP)
@@ -330,9 +260,7 @@ public class VampirismMod {
                 .lord().lordLevel(REFERENCE.HIGHEST_HUNTER_LORD).lordTitle(LordTitles::getHunterTitle).enableLordSkills().build()
                 .village(HunterVillage::hunterVillage)
                 .register();
-        VReference.HUNTER_CREATURE_TYPE = HUNTER_CREATURE_TYPE;
-        VReference.VAMPIRE_CREATURE_TYPE = VAMPIRE_CREATURE_TYPE;
-        VReference.VAMPIRE_CREATURE_ATTRIBUTE = VAMPIRE_CREATURE_ATTRIBUTE;
+
         VReference.vision_nightVision = VampirismAPI.vampireVisionRegistry().registerVision("nightVision", new NightVision());
         VReference.vision_bloodVision = VampirismAPI.vampireVisionRegistry().registerVision("bloodVision", new BloodVision());
 
@@ -351,7 +279,6 @@ public class VampirismMod {
     private void setup(final @NotNull FMLCommonSetupEvent event) {
         dispatcher.registerPackets();
         onInitStep(IInitListener.Step.COMMON_SETUP, event);
-        proxy.onInitStep(IInitListener.Step.COMMON_SETUP, event);
 
         if (!VampirismConfig.COMMON.versionCheck.get()) {
             versionInfo = new VersionChecker.VersionInfo(REFERENCE.VERSION);

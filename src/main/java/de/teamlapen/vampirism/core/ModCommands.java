@@ -31,7 +31,7 @@ public class ModCommands {
     public static final RegistryObject<ArgumentTypeInfo<?, ?>> TASK = COMMAND_ARGUMENT_TYPES.register("task", () -> ArgumentTypeInfos.registerByClass(TaskArgument.class, SingletonArgumentInfo.contextFree(TaskArgument::tasks)));
     public static final RegistryObject<ArgumentTypeInfo<?, ?>> BIOME = COMMAND_ARGUMENT_TYPES.register("biome", () -> ArgumentTypeInfos.registerByClass(BiomeArgument.class, SingletonArgumentInfo.contextFree(BiomeArgument::biome)));
 
-    static void registerArgumentTypes(IEventBus bus) {
+    static void register(IEventBus bus) {
         COMMAND_ARGUMENT_TYPES.register(bus);
     }
 

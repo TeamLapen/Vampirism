@@ -20,7 +20,7 @@ public class ModEnchantments {
     public static final RegistryObject<EnchantmentVampireSlayer> VAMPIRESLAYER = ENCHANTMENTS.register("vampireslayer", () -> new EnchantmentVampireSlayer(Enchantment.Rarity.UNCOMMON));
 
 
-    static void registerEnchantments(IEventBus bus) {
+    static void register(IEventBus bus) {
         ENCHANTMENTS.register(bus);
     }
 

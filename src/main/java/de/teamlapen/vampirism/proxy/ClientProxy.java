@@ -64,11 +64,11 @@ public class ClientProxy extends CommonProxy {
     private CustomBossEventOverlay bossInfoOverlay;
 
     public ClientProxy() {
-        RenderHandler renderHandler = new RenderHandler(Minecraft.getInstance());
-        MinecraftForge.EVENT_BUS.register(renderHandler);
         //Minecraft.instance is null during runData.
         //noinspection ConstantConditions
         if (Minecraft.getInstance() != null) {
+            RenderHandler renderHandler = new RenderHandler(Minecraft.getInstance());
+            MinecraftForge.EVENT_BUS.register(renderHandler);
             ((ReloadableResourceManager) Minecraft.getInstance().getResourceManager()).registerReloadListener(renderHandler); // Must be added before initial resource manager load
         }
     }
@@ -193,7 +193,6 @@ public class ClientProxy extends CommonProxy {
         switch (step) {
             case CLIENT_SETUP -> {
                 this.overlay = new VampirismHUDOverlay(Minecraft.getInstance());
-                ModKeys.register();
                 registerSubscriptions();
                 ActionSelectScreen.loadActionOrder();
                 ModBlocksRender.register();
@@ -224,6 +223,7 @@ public class ClientProxy extends CommonProxy {
         MinecraftForge.EVENT_BUS.register(this.overlay);
         MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
         MinecraftForge.EVENT_BUS.register(new ScreenEventHandler());
+        MinecraftForge.EVENT_BUS.register(new ModKeys());
     }
 
     @Override

@@ -23,7 +23,7 @@ public class HunterActions {
     public static final RegistryObject<SpeedLordAction<IHunterPlayer>> HUNTER_LORD_SPEED = ACTIONS.register("hunter_lord_speed", () -> new SpeedLordAction<>(VReference.HUNTER_FACTION));
     public static final RegistryObject<AttackSpeedLordAction<IHunterPlayer>> HUNTER_LORD_ATTACK_SPEED = ACTIONS.register("hunter_lord_attack_speed", () -> new AttackSpeedLordAction<>(VReference.HUNTER_FACTION));
 
-    public static void registerDefaultActions(IEventBus bus) {
+    public static void register(IEventBus bus) {
         ACTIONS.register(bus);
     }
 }

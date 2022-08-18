@@ -67,7 +67,7 @@ public class ModEntitiesRender {
     public static final ModelLayerLocation TASK_MASTER = new ModelLayerLocation(new ResourceLocation("vampirism:task_master"), "main");
 
 
-    public static void onRegisterRenderers(EntityRenderersEvent.@NotNull RegisterRenderers event) {
+    static void onRegisterRenderers(EntityRenderersEvent.@NotNull RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.BLINDING_BAT.get(), BatRenderer::new);
         event.registerEntityRenderer(ModEntities.CONVERTED_CREATURE_IMOB.get(), ConvertedCreatureRenderer::new);
         event.registerEntityRenderer(ModEntities.CONVERTED_CREATURE.get(), (ConvertedCreatureRenderer::new));
@@ -108,7 +108,7 @@ public class ModEntitiesRender {
         event.registerEntityRenderer(ModEntities.CHEST_BOAT.get(), context -> new VampirismBoatRenderer(context, true));
     }
 
-    public static void onRegisterLayers(EntityRenderersEvent.@NotNull RegisterLayerDefinitions event) {
+    static void onRegisterLayers(EntityRenderersEvent.@NotNull RegisterLayerDefinitions event) {
         event.registerLayerDefinition(HUNTER, BasicHunterModel::createBodyLayer);
         event.registerLayerDefinition(HUNTER_SLIM, BasicHunterModel::createSlimBodyLayer);
         event.registerLayerDefinition(COFFIN, CoffinModel::createLayer);
@@ -141,7 +141,7 @@ public class ModEntitiesRender {
 
     }
 
-    public static void onAddLayers(EntityRenderersEvent.@NotNull AddLayers event) {
+    static void onAddLayers(EntityRenderersEvent.@NotNull AddLayers event) {
         _onAddLayers(event);
     }
 

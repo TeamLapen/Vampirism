@@ -21,6 +21,7 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -159,7 +160,9 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
      * Set the creator for Vampirism's default converting handler
      * FOR INTERNAL USAGE ONLY
      */
-    public void setDefaultConvertingHandlerCreator(Function<IConvertingHandler.IDefaultHelper, IConvertingHandler<?>> creator) {
-        defaultConvertingHandlerCreator = creator;
+    @ApiStatus.Internal
+    public VampirismEntityRegistry setDefaultConvertingHandlerCreator(Function<IConvertingHandler.IDefaultHelper, IConvertingHandler<?>> creator) {
+        this.defaultConvertingHandlerCreator = creator;
+        return this;
     }
 }

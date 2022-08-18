@@ -249,7 +249,7 @@ public class ModItems {
     }
 
 
-    public static void registerItems(IEventBus bus) {
+    public static void register(IEventBus bus) {
         ITEMS.register(bus);
         if (VampirismMod.inDataGen) {
             DeferredRegister<Item> DUMMY_ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, "guideapi_vp");

@@ -208,7 +208,7 @@ public class RecipesGenerator extends RecipeProvider {
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.BASIC_TECH_CROSSBOW.get()).lava(5).skills(HunterSkills.TECH_WEAPONS.get()).pattern("YXXY").pattern("XZZX").pattern(" XX ").pattern(" XX ").define('X', iron_ingot).define('Y', string).define('Z', diamond).save(consumer);
         ShapelessWeaponTableRecipeBuilder.shapelessWeaponTable(ModItems.CROSSBOW_ARROW_SPITFIRE.get(), 3).lava(1).requires(crossbow_arrow_normal, 3).requires(alchemical_fire).unlockedBy("has_crossbow_arrow_normal", has(crossbow_arrow_normal)).save(consumer);
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get(), 3).lava(1).pattern(" X ").pattern("XYX").pattern(" Z ").pattern(" W ").define('X', garlic).define('Y', gold_ingot).define('Z', stick).define('W', feather).unlockedBy("has_crossbow_arrow_normal", has(crossbow_arrow_normal)).save(consumer);
-        ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.CROSSBOW_ARROW_TELEPORT.get(), 4).lava(2).pattern(" X ").pattern("XYX").pattern(" X ").define('X', crossbow_arrow_normal).define('Y', new de.teamlapen.vampirism.util.NBTIngredient(OilUtils.createOilItem(ModOils.TELEPORT.get()))).unlockedBy("has_crossbow_arrow_normal", has(crossbow_arrow_normal)).save(consumer);
+        ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.CROSSBOW_ARROW_TELEPORT.get(), 4).lava(2).pattern(" X ").pattern("XYX").pattern(" X ").define('X', crossbow_arrow_normal).define('Y', new NBTIngredient(OilUtils.createOilItem(ModOils.TELEPORT.get()))).unlockedBy("has_crossbow_arrow_normal", has(crossbow_arrow_normal)).save(consumer);
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.ENHANCED_CROSSBOW.get()).lava(2).skills(HunterSkills.ENHANCED_WEAPONS.get()).pattern("YXXY").pattern(" XX ").pattern(" XX ").define('X', iron_ingot).define('Y', string).save(consumer);
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.ENHANCED_DOUBLE_CROSSBOW.get()).lava(3).skills(HunterSkills.DOUBLE_CROSSBOW.get(), HunterSkills.ENHANCED_WEAPONS.get()).pattern("YXXY").pattern("YXXY").pattern(" XX ").pattern(" XX ").define('X', iron_ingot).define('Y', string).save(consumer);
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.ENHANCED_TECH_CROSSBOW.get()).lava(5).skills(HunterSkills.TECH_WEAPONS.get()).pattern("YXXY").pattern("XZZX").pattern("XZZX").pattern(" XX ").define('X', iron_ingot).define('Y', string).define('Z', diamond).save(consumer);
@@ -386,12 +386,12 @@ public class RecipesGenerator extends RecipeProvider {
         AlchemyTableRecipeBuilder
                 .builder(ModOils.SMELT)
                 .bloodOilIngredient()
-                .input(new de.teamlapen.vampirism.util.NBTIngredient(new ItemStack(ModItems.ITEM_ALCHEMICAL_FIRE.get())))
+                .input(new NBTIngredient(new ItemStack(ModItems.ITEM_ALCHEMICAL_FIRE.get())))
                 .build(consumer, new ResourceLocation(REFERENCE.MODID, "smelt_oil"));
         AlchemyTableRecipeBuilder
                 .builder(ModOils.TELEPORT)
                 .bloodOilIngredient()
-                .input(new de.teamlapen.vampirism.util.NBTIngredient(new ItemStack(Items.ENDER_PEARL)))
+                .input(new NBTIngredient(new ItemStack(Items.ENDER_PEARL)))
                 .build(consumer, new ResourceLocation(REFERENCE.MODID, "teleport_oil"));
         AlchemyTableRecipeBuilder
                 .builder(ModOils.EVASION)

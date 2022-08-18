@@ -71,7 +71,7 @@ public class ModRefinements {
     public static final RegistryObject<Refinement> CRUCIFIX_RESISTANT = REFINEMENTS.register("crucifix_resistant", Refinement::new);
 
 
-    public static void registerRefinements(IEventBus bus) {
+    public static void register(IEventBus bus) {
         REFINEMENTS.register(bus);
     }
 }

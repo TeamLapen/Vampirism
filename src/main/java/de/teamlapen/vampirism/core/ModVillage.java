@@ -48,7 +48,7 @@ public class ModVillage {
     public static final RegistryObject<VillagerProfession> HUNTER_EXPERT = PROFESSIONS.register("hunter_expert", () -> new VillagerProfession("hunter_expert", (holder) -> holder.is(ModTags.PoiTypes.IS_HUNTER), (holder) -> holder.is(ModTags.PoiTypes.IS_HUNTER), ImmutableSet.of(), ImmutableSet.of(), null));
     public static final RegistryObject<VillagerProfession> PRIEST = PROFESSIONS.register("priest", () -> new VillagerProfession("priest", holder -> holder.is(ALTAR_CLEANSING.getKey()), holder -> holder.is(ALTAR_CLEANSING.getKey()), ImmutableSet.of(), ImmutableSet.of(), ModSounds.BLESSING_MUSIC.get()));
 
-    static void registerVillageObjects(IEventBus bus) {
+    static void register(IEventBus bus) {
         POI_TYPES.register(bus);
         PROFESSIONS.register(bus);
         SENSOR_TYPES.register(bus);

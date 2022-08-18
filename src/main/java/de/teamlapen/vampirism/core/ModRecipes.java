@@ -69,7 +69,7 @@ public class ModRecipes {
 
     }
 
-    static void registerRecipeTypesAndSerializers(@NotNull IEventBus bus) {
+    static void register(@NotNull IEventBus bus) {
         RECIPE_TYPES.register(bus);
         RECIPE_SERIALIZERS.register(bus);
         bus.addListener(ModRecipes::registerRecipeSerializers);

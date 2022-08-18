@@ -99,7 +99,7 @@ public class HunterSkills {
         SKILLS.register(SkillType.LORD.createIdForFaction(VReference.HUNTER_FACTION.getID()).getPath(), () -> new VampirismSkill.SimpleHunterSkill(false));
     }
 
-    public static void registerHunterSkills(IEventBus bus) {
+    public static void register(IEventBus bus) {
         SKILLS.register(bus);
     }
 

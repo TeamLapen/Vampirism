@@ -91,7 +91,7 @@ public class VampireSkills {
         }
     });
 
-    public static void registerVampireSkills(IEventBus bus) {
+    public static void register(IEventBus bus) {
         SKILLS.register(bus);
     }
 

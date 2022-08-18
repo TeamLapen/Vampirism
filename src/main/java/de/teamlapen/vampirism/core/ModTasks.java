@@ -44,7 +44,7 @@ public class ModTasks {
     public static final RegistryObject<Task> OBLIVION_POTION = TASKS.register("oblivion_potion", () -> TaskBuilder.builder().addRequirement("poison", () -> PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.POISON)).addRequirement("vampire_blood", () -> new ItemStack(ModItems.VAMPIRE_BLOOD_BOTTLE.get())).setReward(() -> new ItemStack(ModItems.OBLIVION_POTION.get())).build());
 
 
-    public static void registerTasks(IEventBus bus) {
+    public static void register(IEventBus bus) {
         TASKS.register(bus);
     }
 

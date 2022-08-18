@@ -47,8 +47,6 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             add(ModBlocks.CURSED_EARTH.get());
             add(ModBlocks.SUNSCREEN_BEACON.get());
             add(ModBlocks.TOTEM_TOP.get());
-            add(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE.get());
-            add(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER.get());
             add(ModBlocks.VAMPIRE_ORCHID.get());
             add(ModBlocks.CHANDELIER.get());
             add(ModBlocks.CROSS.get());

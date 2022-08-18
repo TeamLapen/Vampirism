@@ -81,7 +81,7 @@ public class ModFluids {
     public static final RegistryObject<Fluid> BLOOD = FLUIDS.register("blood", BloodFluid::new);
     public static final RegistryObject<Fluid> IMPURE_BLOOD = FLUIDS.register("impure_blood", ImpureBloodFluid::new);
 
-    static void registerFluids(IEventBus bus) {
+    static void register(IEventBus bus) {
         FLUIDS.register(bus);
         FLUID_TYPES.register(bus);
     }

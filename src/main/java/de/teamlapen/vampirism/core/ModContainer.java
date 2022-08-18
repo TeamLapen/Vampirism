@@ -26,7 +26,7 @@ public class ModContainer {
     public static final RegistryObject<MenuType<AlchemyTableContainer>> ALCHEMICAL_TABLE = MENUS.register("alchemical_table", () -> new MenuType<>(AlchemyTableContainer::new));
 
 
-    static void registerContainer(IEventBus bus) {
+    static void register(IEventBus bus) {
         MENUS.register(bus);
     }
 }

@@ -33,7 +33,7 @@ public class VampireActions {
     public static final RegistryObject<SpeedLordAction<IVampirePlayer>> VAMPIRE_LORD_SPEED = ACTIONS.register("vampire_lord_speed", () -> new SpeedLordAction<>(VReference.VAMPIRE_FACTION));
     public static final RegistryObject<AttackSpeedLordAction<IVampirePlayer>> VAMPIRE_LORD_ATTACK_SPEED = ACTIONS.register("vampire_lord_attack_speed", () -> new AttackSpeedLordAction<>(VReference.VAMPIRE_FACTION));
 
-    public static void registerDefaultActions(IEventBus bus) {
+    public static void register(IEventBus bus) {
         ACTIONS.register(bus);
     }
 }

@@ -40,7 +40,7 @@ public class ModBlocksRender {
         registerRenderType();
     }
 
-    public static void registerBlockColors(RegisterColorHandlersEvent.@NotNull Block event) {
+    static void registerBlockColors(RegisterColorHandlersEvent.@NotNull Block event) {
         event.register((state, worldIn, pos, tintIndex) -> {
             if (tintIndex == 1) {
                 return 0x9966FF;
@@ -69,7 +69,7 @@ public class ModBlocksRender {
         event.register((state, worldIn, pos, tintIndex) -> 0x1E1F1F, ModBlocks.DARK_SPRUCE_LEAVES.get());
     }
 
-    public static void registerBlockEntityRenderers(EntityRenderersEvent.@NotNull RegisterRenderers event) {
+    static void registerBlockEntityRenderers(EntityRenderersEvent.@NotNull RegisterRenderers event) {
         event.registerBlockEntityRenderer(ModTiles.COFFIN.get(), CoffinBESR::new);
         event.registerBlockEntityRenderer(ModTiles.ALTAR_INFUSION.get(), AltarInfusionBESR::new);
         event.registerBlockEntityRenderer(ModTiles.BLOOD_PEDESTAL.get(), PedestalBESR::new);
@@ -78,7 +78,6 @@ public class ModBlocksRender {
     }
 
     private static void registerRenderType() {
-        RenderType cutout = RenderType.cutout();
         ItemBlockRenderTypes.setRenderLayer(ModFluids.IMPURE_BLOOD.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(ModFluids.BLOOD.get(), RenderType.translucent());
     }

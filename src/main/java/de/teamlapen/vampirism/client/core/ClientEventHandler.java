@@ -51,12 +51,10 @@ import java.util.Map;
  */
 @OnlyIn(Dist.CLIENT)
 public class ClientEventHandler {
-    public static final ResourceLocation COFFIN_SHEET = new ResourceLocation(REFERENCE.MODID, "textures/atlas/coffins.png");
     private final static Logger LOGGER = LogManager.getLogger();
 
 
-    @SubscribeEvent
-    public static void onModelBakeEvent(@NotNull BakingCompleted event) {
+    static void onModelBakeEvent(@NotNull BakingCompleted event) {
         /*
          * Not really a clean solution but it works
          * Bake each model, then replace the fluid texture with impure blood, then bake it again.
@@ -153,8 +151,7 @@ public class ClientEventHandler {
         ((ClientProxy) VampirismMod.proxy).clearBossBarOverlay();
     }
 
-    @SubscribeEvent
-    public static void onModelRegistry(ModelEvent.@NotNull RegisterAdditional event) {
+    static void onModelRegistry(@NotNull ModelEvent.RegisterAdditional event) {
         for (DyeColor dye : DyeColor.values()) {
             event.register(new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_bottom_" + dye.getName()));
             event.register(new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_top_" + dye.getName()));
@@ -173,7 +170,7 @@ public class ClientEventHandler {
         });
     }
 
-    private static boolean shouldShowInTooltip(int p_242394_0_, ItemStack.@NotNull TooltipPart p_242394_1_) {
+    private static boolean shouldShowInTooltip(int p_242394_0_, @NotNull ItemStack.TooltipPart p_242394_1_) {
         return (p_242394_0_ & p_242394_1_.getMask()) == 0;
     }
 
