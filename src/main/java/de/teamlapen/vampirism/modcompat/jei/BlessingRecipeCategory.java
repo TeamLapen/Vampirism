@@ -65,7 +65,7 @@ public class BlessingRecipeCategory implements IRecipeCategory<BlessableItem.Rec
 
     @Override
     public void setRecipe(@NotNull IRecipeLayoutBuilder builder, BlessableItem.@NotNull Recipe recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 23, 26).addItemStack(recipe.input.getDefaultInstance());
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 75, 26).addItemStack(recipe.output.getDefaultInstance());
+        builder.addSlot(RecipeIngredientRole.INPUT, 24, 27).addItemStack(recipe.input.getDefaultInstance());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 76, 27).addItemStack(recipe.output.getDefaultInstance());
     }
 }
