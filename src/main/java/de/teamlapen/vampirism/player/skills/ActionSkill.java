@@ -12,19 +12,20 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * Simple skill that unlocks one action
  */
 public class ActionSkill<T extends IFactionPlayer<T>> extends VampirismSkill<T> {
-    private final IAction<T> action;
+    private final Supplier<IAction<T>> action;
     private final ISkillType type;
 
-    public ActionSkill(IAction<T> action) {
+    public ActionSkill(Supplier<IAction<T>> action) {
         this(action, false);
     }
 
-    public ActionSkill(IAction<T> action, boolean customDescription) {
+    public ActionSkill(Supplier<IAction<T>> action, boolean customDescription) {
         this(action, SkillType.LEVEL, false);
     }
 
@@ -32,7 +33,7 @@ public class ActionSkill<T extends IFactionPlayer<T>> extends VampirismSkill<T> 
      * @param action            The corresponding action
      * @param customDescription If false a generic "unlocks action" string is used
      */
-    public ActionSkill(IAction<T> action, ISkillType type, boolean customDescription) {
+    public ActionSkill(Supplier<IAction<T>> action, ISkillType type, boolean customDescription) {
         this.action = action;
         this.type = type;
         if (customDescription) {
@@ -44,29 +45,29 @@ public class ActionSkill<T extends IFactionPlayer<T>> extends VampirismSkill<T> 
     }
 
     public ResourceLocation getActionID() {
-        return RegUtil.id(action);
+        return RegUtil.id(action.get());
     }
 
     @NotNull
     @Override
     public Optional<IPlayableFaction<?>> getFaction() {
-        return action.getFaction();
+        return action.get().getFaction();
     }
 
     @Override
     public Component getName() {
-        return action.getName();
+        return action.get().getName();
     }
 
     @Deprecated
     @Override
     public String getTranslationKey() {
-        return action.getTranslationKey();
+        return action.get().getTranslationKey();
     }
 
     @Override
     protected void getActions(@NotNull Collection<IAction<T>> list) {
-        list.add(action);
+        list.add(action.get());
     }
 
     @Override
