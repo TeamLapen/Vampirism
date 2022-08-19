@@ -10,7 +10,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
-import de.teamlapen.vampirism.entity.player.skills.MinionRecoverySkill;
+import de.teamlapen.vampirism.entity.player.lord.skills.LordSkills;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.nbt.CompoundTag;
@@ -342,7 +342,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
             i.deathCooldown = 20 * VampirismConfig.BALANCE.miDeathRecoveryTime.get();
             getLord().ifPresent(player -> {
                 player.getLordFaction().getPlayerCapability(player.getPlayer()).map(IFactionPlayer::getSkillHandler).ifPresent(s -> {
-                    if (RegUtil.values(ModRegistries.SKILLS).stream().filter(MinionRecoverySkill.class::isInstance).anyMatch(s::isSkillEnabled)) {
+                    if (s.isSkillEnabled(LordSkills.MINION_RECOVERY.get())) {
                         i.deathCooldown *= 0.8;
                     }
                 });

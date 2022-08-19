@@ -1,7 +1,7 @@
 {
   "parent": "vampirism:hunter_lord",
   "skills": [
-    "vampirism:hunter_lord_speed",
-    "vampirism:hunter_lord_attack_speed"
+    "vampirism:lord_speed",
+    "vampirism:lord_attack_speed"
   ]
 }

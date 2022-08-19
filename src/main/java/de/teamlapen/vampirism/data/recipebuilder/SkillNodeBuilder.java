@@ -4,13 +4,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.function.Consumer;
 
 public class SkillNodeBuilder {
@@ -19,14 +18,20 @@ public class SkillNodeBuilder {
         return new SkillNodeBuilder(parent, skills);
     }
 
-    @SafeVarargs
-    public static SkillNodeBuilder hunter(@NotNull ResourceLocation parent, @NotNull ISkill<IHunterPlayer>... skills) {
+    public static SkillNodeBuilder hunter(@NotNull ResourceLocation parent, @NotNull ISkill<?>... skills) {
+        assertFactionSkills(VReference.HUNTER_FACTION, skills);
         return skill(parent, skills).faction(VReference.HUNTER_FACTION);
     }
 
-    @SafeVarargs
-    public static SkillNodeBuilder vampire(@NotNull ResourceLocation parent, @NotNull ISkill<IVampirePlayer>... skills) {
+    public static SkillNodeBuilder vampire(@NotNull ResourceLocation parent, @NotNull ISkill<?>... skills) {
+        assertFactionSkills(VReference.VAMPIRE_FACTION, skills);
         return skill(parent, skills).faction(VReference.VAMPIRE_FACTION);
+    }
+
+    public static void assertFactionSkills(IPlayableFaction<?> faction, ISkill<?>... skills) {
+        if(Arrays.stream(skills).anyMatch(skill -> skill.getFaction().filter(f -> f != faction).isPresent())){
+            throw new IllegalArgumentException("Illegal skill for faction. Skills must be for the same or any faction");
+        }
     }
 
     private final @NotNull ResourceLocation parent;

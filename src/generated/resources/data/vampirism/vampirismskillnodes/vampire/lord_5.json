@@ -1,6 +1,6 @@
 {
   "parent": "vampirism:vampire_lord",
   "skills": [
-    "vampirism:vampire_minion_recovery"
+    "vampirism:minion_recovery"
   ]
 }

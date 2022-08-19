@@ -1,14 +1,14 @@
 package de.teamlapen.vampirism.entity.player.lord.actions;
 
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
+import org.jetbrains.annotations.NotNull;
 
 public class AttackSpeedLordAction<T extends IFactionPlayer<T>> extends LordRangeEffectAction<T> {
 
-    public AttackSpeedLordAction(IPlayableFaction<T> faction) {
-        super(ModEffects.LORD_ATTACK_SPEED, faction);
+    public AttackSpeedLordAction() {
+        super(ModEffects.LORD_ATTACK_SPEED);
     }
 
     @Override
@@ -27,7 +27,7 @@ public class AttackSpeedLordAction<T extends IFactionPlayer<T>> extends LordRang
     }
 
     @Override
-    protected int getEffectAmplifier(T player) {
+    protected int getEffectAmplifier(@NotNull T player) {
         return 0;
     }
 }

@@ -20,11 +20,9 @@ import java.util.function.Supplier;
 public abstract class LordRangeEffectAction<T extends IFactionPlayer<T>> extends DefaultAction<T> {
 
     private final Supplier<MobEffect> effect;
-    private final IPlayableFaction<?> faction;
 
-    public LordRangeEffectAction(Supplier<MobEffect> effect, IPlayableFaction<?> faction) {
+    public LordRangeEffectAction(Supplier<MobEffect> effect) {
         this.effect = effect;
-        this.faction = faction;
     }
 
     @Override
@@ -54,6 +52,6 @@ public abstract class LordRangeEffectAction<T extends IFactionPlayer<T>> extends
     @NotNull
     @Override
     public Optional<IPlayableFaction<?>> getFaction() {
-        return Optional.of(this.faction);
+        return Optional.empty();
     }
 }

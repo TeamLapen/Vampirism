@@ -6,6 +6,8 @@ import de.teamlapen.vampirism.entity.action.EntityActions;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.entity.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.entity.player.lord.actions.LordActions;
+import de.teamlapen.vampirism.entity.player.lord.skills.LordSkills;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.misc.VampirismDispenseBoatBehavior;
@@ -59,6 +61,8 @@ public class RegistryManager implements IInitListener {
         HunterActions.register(modbus);
         EntityActions.register(modbus);
         MinionTasks.register(modbus);
+        LordActions.register(modbus);
+        LordSkills.register(modbus);
         VampireSkills.register(modbus);
         HunterSkills.register(modbus);
         ModCommands.register(modbus);

@@ -59,7 +59,7 @@ public abstract class DefaultAction<T extends IFactionPlayer<T>> implements IAct
 
     @Override
     public boolean onActivated(@NotNull T player, ActivationContext context) {
-        if (this.getFaction().map(f -> f.getFactionPlayerInterface().isInstance(player)).orElse(false)) {
+        if (this.getFaction().map(f -> f.getFactionPlayerInterface().isInstance(player)).orElse(true)) {
             return activate(player, context);
         } else {
             throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + this.getFaction().get().getFactionPlayerInterface());

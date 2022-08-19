@@ -1,15 +1,12 @@
 package de.teamlapen.vampirism.entity.player.vampire.actions;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
-import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
-import de.teamlapen.vampirism.entity.player.lord.actions.AttackSpeedLordAction;
-import de.teamlapen.vampirism.entity.player.lord.actions.SpeedLordAction;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.ApiStatus;
 
 /**
  * Registers and holds all skills for vampire player
@@ -30,9 +27,8 @@ public class VampireActions {
     public static final RegistryObject<RageVampireAction> VAMPIRE_RAGE = ACTIONS.register("vampire_rage", RageVampireAction::new);
     public static final RegistryObject<HissingAction> HISSING = ACTIONS.register("hissing", HissingAction::new);
     public static final RegistryObject<InfectAction> INFECT = ACTIONS.register("infect", InfectAction::new);
-    public static final RegistryObject<SpeedLordAction<IVampirePlayer>> VAMPIRE_LORD_SPEED = ACTIONS.register("vampire_lord_speed", () -> new SpeedLordAction<>(VReference.VAMPIRE_FACTION));
-    public static final RegistryObject<AttackSpeedLordAction<IVampirePlayer>> VAMPIRE_LORD_ATTACK_SPEED = ACTIONS.register("vampire_lord_attack_speed", () -> new AttackSpeedLordAction<>(VReference.VAMPIRE_FACTION));
 
+    @ApiStatus.Internal
     public static void register(IEventBus bus) {
         ACTIONS.register(bus);
     }

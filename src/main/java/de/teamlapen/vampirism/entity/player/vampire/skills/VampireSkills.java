@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.entity.player.vampire.skills;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismRegistries;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
@@ -11,7 +10,6 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAttributes;
 import de.teamlapen.vampirism.entity.player.skills.ActionSkill;
-import de.teamlapen.vampirism.entity.player.skills.MinionRecoverySkill;
 import de.teamlapen.vampirism.entity.player.skills.VampirismSkill;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
@@ -22,10 +20,10 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
-import java.util.Optional;
 
 /**
  * Registers the default vampire skills
@@ -79,18 +77,10 @@ public class VampireSkills {
     public static final RegistryObject<ISkill<IVampirePlayer>> NEONATAL_DECREASE = SKILLS.register("neonatal_decrease", () -> new VampirismSkill.SimpleVampireSkill(true));
     public static final RegistryObject<ISkill<IVampirePlayer>> DBNO_DURATION = SKILLS.register("dbno_duration", () -> new VampirismSkill.SimpleVampireSkill(true));
     public static final RegistryObject<ISkill<IVampirePlayer>> HISSING = SKILLS.register("hissing", () -> new ActionSkill<>(VampireActions.HISSING::get, true));
-    public static final RegistryObject<ISkill<IVampirePlayer>> VAMPIRE_MINION_STATS_INCREASE = SKILLS.register("vampire_minion_stats_increase", () -> new VampirismSkill.LordVampireSkill(true));
-    public static final RegistryObject<ISkill<IVampirePlayer>> VAMPIRE_LORD_SPEED = SKILLS.register("vampire_lord_speed", () -> new ActionSkill<>(VampireActions.VAMPIRE_LORD_SPEED::get, SkillType.LORD, true));
-    public static final RegistryObject<ISkill<IVampirePlayer>> VAMPIRE_LORD_ATTACK_SPEED = SKILLS.register("vampire_lord_attack_speed", () -> new ActionSkill<>(VampireActions.VAMPIRE_LORD_ATTACK_SPEED::get, SkillType.LORD, true));
-    public static final RegistryObject<ISkill<IVampirePlayer>> VAMPIRE_MINION_COLLECT = SKILLS.register("vampire_minion_collect", () -> new VampirismSkill.LordVampireSkill(true));
-    public static final RegistryObject<ISkill<IVampirePlayer>> VAMPIRE_MINION_RECOVERY = SKILLS.register("vampire_minion_recovery", () -> new MinionRecoverySkill<IVampirePlayer>() {
-        @NotNull
-        @Override
-        public Optional<IPlayableFaction<?>> getFaction() {
-            return Optional.of(VReference.VAMPIRE_FACTION);
-        }
-    });
+    public static final RegistryObject<ISkill<IVampirePlayer>> MINION_COLLECT = SKILLS.register("vampire_minion_collect", () -> new VampirismSkill.LordVampireSkill(true));
+    public static final RegistryObject<ISkill<IVampirePlayer>> MINION_STATS_INCREASE = SKILLS.register("vampire_minion_stats_increase", () -> new VampirismSkill.LordVampireSkill(true));
 
+    @ApiStatus.Internal
     public static void register(IEventBus bus) {
         SKILLS.register(bus);
     }
