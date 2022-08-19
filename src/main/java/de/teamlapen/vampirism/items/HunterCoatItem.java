@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
-import de.teamlapen.vampirism.player.hunter.HunterPlayerSpecialAttribute;
+import de.teamlapen.vampirism.entity.player.hunter.HunterPlayerSpecialAttribute;
 import de.teamlapen.vampirism.util.VampirismArmorMaterials;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Tuple;
@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class HunterCoatItem extends VampirismHunterArmor implements IItemWithTier {
+public class HunterCoatItem extends VampirismHunterArmorItem implements IItemWithTier {
 
     /**
      * Consider using cached value instead {@link HunterPlayerSpecialAttribute#fullHunterCoat}

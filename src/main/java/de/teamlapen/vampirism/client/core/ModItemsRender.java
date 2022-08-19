@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.CrossbowArrowItem;
-import de.teamlapen.vampirism.items.VampirismItemCrossbow;
+import de.teamlapen.vampirism.items.VampirismItemCrossbowItem;
 import de.teamlapen.vampirism.util.OilUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -35,7 +35,7 @@ public class ModItemsRender {
                     if (cooldown > 0) {
                         return cooldown;
                     }
-                    return VampirismItemCrossbow.hasAmmo(player, stack) ? 0.0f : 1.0f;
+                    return VampirismItemCrossbowItem.hasAmmo(player, stack) ? 0.0f : 1.0f;
                 } else {
                     return 0.0f;
                 }

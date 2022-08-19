@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class HunterAxeItem extends VampirismHunterWeapon implements IItemWithTier {
+public class HunterAxeItem extends VampirismHunterWeaponItem implements IItemWithTier {
 
     private final TIER tier;
 

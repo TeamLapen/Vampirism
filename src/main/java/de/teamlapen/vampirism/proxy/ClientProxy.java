@@ -7,15 +7,16 @@ import de.teamlapen.vampirism.blockentity.GarlicDiffuserBlockEntity;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.blocks.TentBlock;
 import de.teamlapen.vampirism.client.core.*;
-import de.teamlapen.vampirism.client.gui.*;
+import de.teamlapen.vampirism.client.gui.ScreenEventHandler;
 import de.teamlapen.vampirism.client.gui.overlay.*;
-import de.teamlapen.vampirism.client.render.RenderHandler;
+import de.teamlapen.vampirism.client.gui.screens.*;
+import de.teamlapen.vampirism.client.renderer.RenderHandler;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
-import de.teamlapen.vampirism.inventory.container.TaskBoardContainer;
-import de.teamlapen.vampirism.inventory.container.VampirismContainer;
+import de.teamlapen.vampirism.entity.player.skills.ClientSkillTreeManager;
+import de.teamlapen.vampirism.entity.player.skills.SkillTree;
+import de.teamlapen.vampirism.inventory.TaskBoardMenu;
+import de.teamlapen.vampirism.inventory.VampirismMenu;
 import de.teamlapen.vampirism.network.*;
-import de.teamlapen.vampirism.player.skills.ClientSkillTreeManager;
-import de.teamlapen.vampirism.player.skills.SkillTree;
 import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.InBedChatScreen;
@@ -164,16 +165,16 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void handleTaskPacket(@NotNull ClientboundTaskPacket msg) {
         AbstractContainerMenu container = Minecraft.getInstance().player.containerMenu;
-        if (msg.containerId() == container.containerId && container instanceof VampirismContainer) {
-            ((VampirismContainer) container).init(msg.taskWrappers(), msg.completableTasks(), msg.completedRequirements());
+        if (msg.containerId() == container.containerId && container instanceof VampirismMenu) {
+            ((VampirismMenu) container).init(msg.taskWrappers(), msg.completableTasks(), msg.completedRequirements());
         }
     }
 
     @Override
     public void handleTaskStatusPacket(@NotNull ClientboundTaskStatusPacket msg) {
         AbstractContainerMenu container = Objects.requireNonNull(Minecraft.getInstance().player).containerMenu;
-        if (msg.containerId() == container.containerId && container instanceof TaskBoardContainer) {
-            ((TaskBoardContainer) container).init(msg.available(), msg.completableTasks(), msg.completedRequirements(), msg.taskBoardId());
+        if (msg.containerId() == container.containerId && container instanceof TaskBoardMenu) {
+            ((TaskBoardMenu) container).init(msg.available(), msg.completableTasks(), msg.completedRequirements(), msg.taskBoardId());
         }
     }
 

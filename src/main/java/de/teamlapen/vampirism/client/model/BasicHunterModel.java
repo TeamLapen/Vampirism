@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.model;
 
 import de.teamlapen.vampirism.entity.hunter.BasicHunterEntity;
-import de.teamlapen.vampirism.items.VampirismItemCrossbow;
+import de.teamlapen.vampirism.items.VampirismItemCrossbowItem;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.world.InteractionHand;
@@ -39,7 +39,7 @@ public class BasicHunterModel<T extends LivingEntity> extends BipedCloakedModel<
         this.targetingRight = false;
         this.targetingLeft = false;
         ItemStack itemStack = entitylivingbaseIn.getItemInHand(InteractionHand.MAIN_HAND);
-        if (!itemStack.isEmpty() && itemStack.getItem() instanceof VampirismItemCrossbow && entitylivingbaseIn instanceof BasicHunterEntity && ((BasicHunterEntity) entitylivingbaseIn).isSwingingArms()) {
+        if (!itemStack.isEmpty() && itemStack.getItem() instanceof VampirismItemCrossbowItem && entitylivingbaseIn instanceof BasicHunterEntity && ((BasicHunterEntity) entitylivingbaseIn).isSwingingArms()) {
             if (entitylivingbaseIn.getMainArm() == HumanoidArm.RIGHT) {
                 this.targetingRight = true;
             } else {

@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class HeartStrikerItem extends VampirismVampireSword implements IItemWithTier {
+public class HeartStrikerItem extends VampirismVampireSwordItem implements IItemWithTier {
 
     private final static int[] DAMAGE_TIER = {8, 9, 10};
     private final static float[] UNTRAINED_SPEED_TIER = {-3.8f, -3.7f, -3.6f};

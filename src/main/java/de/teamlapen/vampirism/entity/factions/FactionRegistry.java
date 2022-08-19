@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.entity.factions.*;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
-import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
+import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
@@ -126,7 +126,7 @@ public class FactionRegistry implements IFactionRegistry {
         if (predicateMap.containsKey(key)) {
             predicate = predicateMap.get(key);
         } else {
-            predicate = new PredicateFaction(thisFaction, player, mob, neutralPlayer, ignoreDisguise, otherFaction);
+            predicate = new FactionPredicate(thisFaction, player, mob, neutralPlayer, ignoreDisguise, otherFaction);
             predicateMap.put(key, predicate);
         }
         return predicate;

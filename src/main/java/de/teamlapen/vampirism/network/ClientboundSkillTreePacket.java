@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.network;
 
 import de.teamlapen.lib.network.IMessage;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.player.skills.SkillNode;
+import de.teamlapen.vampirism.entity.player.skills.SkillNode;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkEvent;

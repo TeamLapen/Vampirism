@@ -14,19 +14,19 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.effects.BadOmenEffect;
 import de.teamlapen.vampirism.entity.VampirismEntity;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
+import de.teamlapen.vampirism.entity.ai.goals.AttackRangedCrossbowGoal;
+import de.teamlapen.vampirism.entity.ai.goals.AttackVillageGoal;
+import de.teamlapen.vampirism.entity.ai.goals.DefendVillageGoal;
+import de.teamlapen.vampirism.entity.ai.goals.ForceLookEntityGoal;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.entity.goals.AttackRangedCrossbowGoal;
-import de.teamlapen.vampirism.entity.goals.AttackVillageGoal;
-import de.teamlapen.vampirism.entity.goals.DefendVillageGoal;
-import de.teamlapen.vampirism.entity.goals.ForceLookEntityGoal;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
+import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
+import de.teamlapen.vampirism.entity.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
-import de.teamlapen.vampirism.inventory.container.HunterBasicContainer;
-import de.teamlapen.vampirism.items.VampirismItemCrossbow;
-import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
-import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
+import de.teamlapen.vampirism.inventory.HunterBasicMenu;
+import de.teamlapen.vampirism.items.VampirismItemCrossbowItem;
 import de.teamlapen.vampirism.util.HunterVillage;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.core.BlockPos;
@@ -149,7 +149,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     @Override
     public void aiStep() {
         super.aiStep();
-        if (trainee != null && !(trainee.containerMenu instanceof HunterBasicContainer)) {
+        if (trainee != null && !(trainee.containerMenu instanceof HunterBasicMenu)) {
             this.trainee = null;
         }
         if (!level.isClientSide) {
@@ -349,7 +349,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     @Override
     public boolean isCrossbowInMainhand() {
-        return !this.getMainHandItem().isEmpty() && this.getMainHandItem().getItem() instanceof VampirismItemCrossbow;
+        return !this.getMainHandItem().isEmpty() && this.getMainHandItem().getItem() instanceof VampirismItemCrossbowItem;
     }
 
     @Override
@@ -464,7 +464,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             if (!level.isClientSide) {
                 if (HunterLevelingConf.instance().isLevelValidForBasicHunter(hunterLevel + 1)) {
                     if (trainee == null) {
-                        player.openMenu(new SimpleMenuProvider((id, playerInventory, playerEntity) -> new HunterBasicContainer(id, playerInventory, this), name));
+                        player.openMenu(new SimpleMenuProvider((id, playerInventory, playerEntity) -> new HunterBasicMenu(id, playerInventory, this), name));
                         trainee = player;
                         this.getNavigation().stop();
                     } else {
@@ -549,7 +549,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         this.goalSelector.removeGoal(attackMelee);
         this.goalSelector.removeGoal(attackRange);
         ItemStack stack = this.getMainHandItem();
-        if (!stack.isEmpty() && stack.getItem() instanceof VampirismItemCrossbow) {
+        if (!stack.isEmpty() && stack.getItem() instanceof VampirismItemCrossbowItem) {
             this.goalSelector.addGoal(2, this.attackRange);
         } else {
             this.goalSelector.addGoal(2, this.attackMelee);

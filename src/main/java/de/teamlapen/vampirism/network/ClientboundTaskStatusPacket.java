@@ -5,7 +5,7 @@ import com.google.common.collect.Sets;
 import de.teamlapen.lib.network.IMessage;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
-import de.teamlapen.vampirism.player.tasks.TaskInstance;
+import de.teamlapen.vampirism.entity.player.tasks.TaskInstance;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkEvent;
@@ -74,7 +74,7 @@ public record ClientboundTaskStatusPacket(Set<ITaskInstance> available,
 
     /**
      * @param completedRequirements all requirements of the visible tasks that are already completed
-     * @param containerId           the id of the {@link de.teamlapen.vampirism.inventory.container.TaskBoardContainer}
+     * @param containerId           the id of the {@link de.teamlapen.vampirism.inventory.TaskBoardMenu}
      * @param taskBoardId           the task board id
      */
     public ClientboundTaskStatusPacket(@NotNull Set<ITaskInstance> available, Set<UUID> completableTasks, @NotNull Map<UUID, Map<ResourceLocation, Integer>> completedRequirements, int containerId, UUID taskBoardId) {

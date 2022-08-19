@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.blockentity.PedestalBlockEntity;
 import de.teamlapen.vampirism.core.ModTiles;
-import de.teamlapen.vampirism.items.VampirismVampireSword;
+import de.teamlapen.vampirism.items.VampirismVampireSwordItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -29,9 +29,9 @@ public class PedestalBlock extends VampirismBlockContainer {
 
     private static void takeItemPlayer(@NotNull Player player, @NotNull InteractionHand hand, @NotNull ItemStack stack) {
         player.setItemInHand(hand, stack);
-        if (stack.getItem() instanceof VampirismVampireSword) {
-            if (((VampirismVampireSword) stack.getItem()).isFullyCharged(stack)) {
-                ((VampirismVampireSword) stack.getItem()).tryName(stack, player);
+        if (stack.getItem() instanceof VampirismVampireSwordItem) {
+            if (((VampirismVampireSwordItem) stack.getItem()).isFullyCharged(stack)) {
+                ((VampirismVampireSwordItem) stack.getItem()).tryName(stack, player);
             }
         }
     }

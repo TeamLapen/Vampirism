@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModTiles;
-import de.teamlapen.vampirism.inventory.container.BloodGrinderContainer;
+import de.teamlapen.vampirism.inventory.BloodGrinderMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -52,7 +52,7 @@ public class BloodGrinderBlockEntity extends InventoryBlockEntity {
     private int cooldownProcess = 0;
 
     public BloodGrinderBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        super(ModTiles.GRINDER.get(), pos, state, 1, BloodGrinderContainer.SELECTOR_INFOS);
+        super(ModTiles.GRINDER.get(), pos, state, 1, BloodGrinderMenu.SELECTOR_INFOS);
         this.itemHandler = createWrapper();
         this.itemHandlerOptional = LazyOptional.of(() -> itemHandler);
     }
@@ -102,7 +102,7 @@ public class BloodGrinderBlockEntity extends InventoryBlockEntity {
     @NotNull
     @Override
     protected AbstractContainerMenu createMenu(int id, @NotNull Inventory player) {
-        return new BloodGrinderContainer(id, player, this, ContainerLevelAccess.create(player.player.getCommandSenderWorld(), this.getBlockPos()));
+        return new BloodGrinderMenu(id, player, this, ContainerLevelAccess.create(player.player.getCommandSenderWorld(), this.getBlockPos()));
     }
 
     @NotNull

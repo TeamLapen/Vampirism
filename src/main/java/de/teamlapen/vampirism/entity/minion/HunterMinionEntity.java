@@ -9,18 +9,18 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
-import de.teamlapen.vampirism.client.gui.HunterMinionAppearanceScreen;
-import de.teamlapen.vampirism.client.gui.HunterMinionStatsScreen;
+import de.teamlapen.vampirism.client.gui.screens.HunterMinionAppearanceScreen;
+import de.teamlapen.vampirism.client.gui.screens.HunterMinionStatsScreen;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.VampirismEntity;
-import de.teamlapen.vampirism.entity.goals.AttackRangedCrossbowGoal;
+import de.teamlapen.vampirism.entity.ai.goals.AttackRangedCrossbowGoal;
 import de.teamlapen.vampirism.entity.hunter.BasicHunterEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
+import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.items.MinionUpgradeItem;
-import de.teamlapen.vampirism.items.VampirismItemCrossbow;
-import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.items.VampirismItemCrossbowItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -119,7 +119,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
 
     @Override
     public boolean isCrossbowInMainhand() {
-        return this.getMainHandItem().getItem() instanceof VampirismItemCrossbow;
+        return this.getMainHandItem().getItem() instanceof VampirismItemCrossbowItem;
     }
 
     public boolean isSwingingArms() {

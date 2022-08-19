@@ -2,7 +2,14 @@ package de.teamlapen.vampirism.core;
 
 import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.world.loot.*;
+import de.teamlapen.vampirism.world.loot.SmeltItemLootModifier;
+import de.teamlapen.vampirism.world.loot.conditions.AdjustableLevelCondition;
+import de.teamlapen.vampirism.world.loot.conditions.OilItemCondition;
+import de.teamlapen.vampirism.world.loot.conditions.StakeCondition;
+import de.teamlapen.vampirism.world.loot.conditions.TentSpawnerCondition;
+import de.teamlapen.vampirism.world.loot.functions.AddBookNbtFunction;
+import de.teamlapen.vampirism.world.loot.functions.RefinementSetFunction;
+import de.teamlapen.vampirism.world.loot.functions.SetItemBloodChargeFunction;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
@@ -18,8 +25,8 @@ public class ModLoot {
     public static final DeferredRegister<LootItemConditionType> LOOT_CONDITION_TYPES = DeferredRegister.create(Registry.LOOT_ITEM_REGISTRY, REFERENCE.MODID);
     public static final DeferredRegister<Codec<? extends IGlobalLootModifier>> GLOBAL_LOOT_MODIFIER = DeferredRegister.create(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, REFERENCE.MODID);
 
-    public static final RegistryObject<LootItemFunctionType> add_book_nbt = LOOT_FUNCTION_TYPES.register("add_book_nbt", () -> new LootItemFunctionType(new AddBookNbt.Serializer()));
-    public static final RegistryObject<LootItemFunctionType> set_item_blood_charge = LOOT_FUNCTION_TYPES.register("set_item_blood_charge", () -> new LootItemFunctionType(new SetItemBloodCharge.Serializer()));
+    public static final RegistryObject<LootItemFunctionType> add_book_nbt = LOOT_FUNCTION_TYPES.register("add_book_nbt", () -> new LootItemFunctionType(new AddBookNbtFunction.Serializer()));
+    public static final RegistryObject<LootItemFunctionType> set_item_blood_charge = LOOT_FUNCTION_TYPES.register("set_item_blood_charge", () -> new LootItemFunctionType(new SetItemBloodChargeFunction.Serializer()));
     public static final RegistryObject<LootItemFunctionType> add_refinement_set = LOOT_FUNCTION_TYPES.register("add_refinement_set", () -> new LootItemFunctionType(new RefinementSetFunction.Serializer()));
 
     public static final RegistryObject<LootItemConditionType> with_stake = LOOT_CONDITION_TYPES.register("with_stake", () -> new LootItemConditionType(new StakeCondition.Serializer()));

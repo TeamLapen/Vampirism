@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.command.test;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.lib.lib.util.BasicCommand;
-import de.teamlapen.vampirism.items.VampirismVampireSword;
+import de.teamlapen.vampirism.items.VampirismVampireSwordItem;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -32,8 +32,8 @@ public class SetSwordTrainedCommand extends BasicCommand {
         for (ServerPlayer player : players) {
             ItemStack held = player.getMainHandItem();
 
-            if (held.getItem() instanceof VampirismVampireSword) {
-                ((VampirismVampireSword) held.getItem()).setTrained(held, player, train);
+            if (held.getItem() instanceof VampirismVampireSwordItem) {
+                ((VampirismVampireSwordItem) held.getItem()).setTrained(held, player, train);
                 player.setItemInHand(InteractionHand.MAIN_HAND, held);
             } else {
                 commandSource.sendSuccess(Component.translatable("command.vampirism.test.swordtrained.nosword"), false);

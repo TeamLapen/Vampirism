@@ -3,8 +3,8 @@ package de.teamlapen.vampirism.blockentity;
 import de.teamlapen.vampirism.blocks.AlchemyTableBlock;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.core.ModTiles;
-import de.teamlapen.vampirism.inventory.container.AlchemyTableContainer;
-import de.teamlapen.vampirism.inventory.recipes.AbstractBrewingRecipe;
+import de.teamlapen.vampirism.inventory.AlchemyTableMenu;
+import de.teamlapen.vampirism.recipes.AbstractBrewingRecipe;
 import de.teamlapen.vampirism.util.OilUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -72,7 +72,7 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
     @NotNull
     @Override
     protected AbstractContainerMenu createMenu(int menuId, @NotNull Inventory playerInventory) {
-        return new AlchemyTableContainer(menuId, this.level, playerInventory, this, this.dataAccess);
+        return new AlchemyTableMenu(menuId, this.level, playerInventory, this, this.dataAccess);
     }
 
     @Override

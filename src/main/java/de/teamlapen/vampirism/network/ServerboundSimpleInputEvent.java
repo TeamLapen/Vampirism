@@ -6,10 +6,10 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.inventory.container.HunterBasicContainer;
-import de.teamlapen.vampirism.inventory.container.HunterTrainerContainer;
+import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.inventory.HunterBasicMenu;
+import de.teamlapen.vampirism.inventory.HunterTrainerMenu;
 import de.teamlapen.vampirism.items.OblivionItem;
-import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -58,13 +58,13 @@ public record ServerboundSimpleInputEvent(Type type) implements IMessage {
                     VampirePlayer.getOpt(player).ifPresent(VampirePlayer::switchVision);
                     break;
                 case TRAINER_LEVELUP:
-                    if (player.containerMenu instanceof HunterTrainerContainer) {
-                        ((HunterTrainerContainer) player.containerMenu).onLevelupClicked();
+                    if (player.containerMenu instanceof HunterTrainerMenu) {
+                        ((HunterTrainerMenu) player.containerMenu).onLevelupClicked();
                     }
                     break;
                 case BASIC_HUNTER_LEVELUP:
-                    if (player.containerMenu instanceof HunterBasicContainer) {
-                        ((HunterBasicContainer) player.containerMenu).onLevelUpClicked();
+                    if (player.containerMenu instanceof HunterBasicMenu) {
+                        ((HunterBasicMenu) player.containerMenu).onLevelUpClicked();
                     }
                     break;
                 case SHOW_MINION_CALL_SELECTION:

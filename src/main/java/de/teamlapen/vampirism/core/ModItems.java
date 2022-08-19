@@ -126,7 +126,7 @@ public class ModItems {
     public static final RegistryObject<HunterIntelItem> HUNTER_INTEL_8 = ITEMS.register("hunter_intel_8", () -> new HunterIntelItem(8));
     public static final RegistryObject<HunterIntelItem> HUNTER_INTEL_9 = ITEMS.register("hunter_intel_9", () -> new HunterIntelItem(9));
 
-    public static final RegistryObject<VampirismItemBloodFood> HUMAN_HEART = ITEMS.register("human_heart", () -> new VampirismItemBloodFood((new FoodProperties.Builder()).nutrition(20).saturationMod(1.5F).build(), new FoodProperties.Builder().nutrition(5).saturationMod(1f).build()));
+    public static final RegistryObject<VampirismItemBloodFoodItem> HUMAN_HEART = ITEMS.register("human_heart", () -> new VampirismItemBloodFoodItem((new FoodProperties.Builder()).nutrition(20).saturationMod(1.5F).build(), new FoodProperties.Builder().nutrition(5).saturationMod(1f).build()));
 
     public static final RegistryObject<InjectionItem> INJECTION_EMPTY = ITEMS.register("injection_empty", () -> new InjectionItem(InjectionItem.TYPE.EMPTY));
     public static final RegistryObject<InjectionItem> INJECTION_GARLIC = ITEMS.register("injection_garlic", () -> new InjectionItem(InjectionItem.TYPE.GARLIC));
@@ -173,7 +173,7 @@ public class ModItems {
     public static final RegistryObject<VampireBloodBottleItem> VAMPIRE_BLOOD_BOTTLE = ITEMS.register("vampire_blood_bottle", VampireBloodBottleItem::new);
     public static final RegistryObject<VampireBookItem> VAMPIRE_BOOK = ITEMS.register("vampire_book", VampireBookItem::new);
     public static final RegistryObject<VampireFangItem> VAMPIRE_FANG = ITEMS.register("vampire_fang", VampireFangItem::new);
-    public static final RegistryObject<VampirismItemBloodFood> WEAK_HUMAN_HEART = ITEMS.register("weak_human_heart", () -> new VampirismItemBloodFood((new FoodProperties.Builder()).nutrition(10).saturationMod(0.9F).build(), new FoodProperties.Builder().nutrition(3).saturationMod(1f).build()));
+    public static final RegistryObject<VampirismItemBloodFoodItem> WEAK_HUMAN_HEART = ITEMS.register("weak_human_heart", () -> new VampirismItemBloodFoodItem((new FoodProperties.Builder()).nutrition(10).saturationMod(0.9F).build(), new FoodProperties.Builder().nutrition(3).saturationMod(1f).build()));
 
     public static final RegistryObject<SpawnEggItem> VAMPIRE_SPAWN_EGG = ITEMS.register("vampire_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.VAMPIRE, 0x8B15A3, 0xa735e3, new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
     public static final RegistryObject<SpawnEggItem> VAMPIRE_HUNTER_SPAWN_EGG = ITEMS.register("vampire_hunter_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.HUNTER, 0x2d05f2, 0x2600e0, new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
@@ -220,7 +220,7 @@ public class ModItems {
     public static final RegistryObject<VampirismBoatItem> dark_spruce_chest_boat = ITEMS.register("dark_spruce_chest_boat", () -> new VampirismBoatItem(IVampirismBoat.BoatType.DARK_SPRUCE, true, creativeTabProps().stacksTo(1)));
     public static final RegistryObject<VampirismBoatItem> cursed_spruce_chest_boat = ITEMS.register("cursed_spruce_chest_boat", () -> new VampirismBoatItem(IVampirismBoat.BoatType.CURSED_SPRUCE, true, creativeTabProps().stacksTo(1)));
 
-    public static final RegistryObject<OilBottle> OIL_BOTTLE = ITEMS.register("oil_bottle", () -> new OilBottle(creativeTabProps().stacksTo(1)));
+    public static final RegistryObject<OilBottleItem> OIL_BOTTLE = ITEMS.register("oil_bottle", () -> new OilBottleItem(creativeTabProps().stacksTo(1)));
 
     static void registerCraftingRecipes() {
         // Brewing

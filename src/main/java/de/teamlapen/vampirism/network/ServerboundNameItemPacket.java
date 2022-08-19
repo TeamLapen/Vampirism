@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.network;
 
 import de.teamlapen.lib.network.IMessage;
-import de.teamlapen.vampirism.items.VampirismVampireSword;
+import de.teamlapen.vampirism.items.VampirismVampireSwordItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -28,10 +28,10 @@ public record ServerboundNameItemPacket(String name) implements IMessage {
         ServerPlayer player = ctx.getSender();
         Validate.notNull(player);
         ctx.enqueueWork(() -> {
-            if (VampirismVampireSword.DO_NOT_NAME_STRING.equals(msg.name)) {
+            if (VampirismVampireSwordItem.DO_NOT_NAME_STRING.equals(msg.name)) {
                 ItemStack stack = player.getMainHandItem();
-                if (stack.getItem() instanceof VampirismVampireSword) {
-                    ((VampirismVampireSword) stack.getItem()).doNotName(stack);
+                if (stack.getItem() instanceof VampirismVampireSwordItem) {
+                    ((VampirismVampireSwordItem) stack.getItem()).doNotName(stack);
                 }
             } else if (!org.apache.commons.lang3.StringUtils.isBlank(msg.name)) {
                 ItemStack stack = player.getMainHandItem();

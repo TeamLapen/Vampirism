@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.proxy;
 
 
-import de.teamlapen.vampirism.player.skills.SkillTree;
-import de.teamlapen.vampirism.player.skills.SkillTreeManager;
+import de.teamlapen.vampirism.entity.player.skills.SkillTree;
+import de.teamlapen.vampirism.entity.player.skills.SkillTreeManager;
 import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
 
 /**

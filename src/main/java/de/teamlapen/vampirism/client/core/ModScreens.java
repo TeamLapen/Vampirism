@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.vampirism.api.client.VIngameOverlays;
-import de.teamlapen.vampirism.client.gui.*;
+import de.teamlapen.vampirism.client.gui.screens.*;
 import de.teamlapen.vampirism.core.ModContainer;
-import de.teamlapen.vampirism.inventory.container.HunterTableContainer;
+import de.teamlapen.vampirism.inventory.HunterTableMenu;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -18,7 +18,7 @@ public class ModScreens {
      */
     public static void registerScreensUnsafe() {
         //noinspection RedundantTypeArguments
-        MenuScreens.<HunterTableContainer, HunterTableScreen>register(ModContainer.HUNTER_TABLE.get(), HunterTableScreen::new);
+        MenuScreens.<HunterTableMenu, HunterTableScreen>register(ModContainer.HUNTER_TABLE.get(), HunterTableScreen::new);
         MenuScreens.register(ModContainer.ALCHEMICAL_CAULDRON.get(), AlchemicalCauldronScreen::new);
         MenuScreens.register(ModContainer.WEAPON_TABLE.get(), WeaponTableScreen::new);
         MenuScreens.register(ModContainer.HUNTER_TRAINER.get(), HunterTrainerScreen::new);

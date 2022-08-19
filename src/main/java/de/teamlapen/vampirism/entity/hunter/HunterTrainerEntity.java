@@ -3,11 +3,11 @@ package de.teamlapen.vampirism.entity.hunter;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.ICaptureIgnore;
 import de.teamlapen.vampirism.entity.VampirismEntity;
-import de.teamlapen.vampirism.entity.goals.ForceLookEntityGoal;
+import de.teamlapen.vampirism.entity.ai.goals.ForceLookEntityGoal;
+import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
+import de.teamlapen.vampirism.entity.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
-import de.teamlapen.vampirism.inventory.container.HunterTrainerContainer;
-import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
-import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
+import de.teamlapen.vampirism.inventory.HunterTrainerMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -69,7 +69,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
     @Override
     public void aiStep() {
         super.aiStep();
-        if (trainee != null && !(trainee.containerMenu instanceof HunterTrainerContainer)) {
+        if (trainee != null && !(trainee.containerMenu instanceof HunterTrainerMenu)) {
             this.trainee = null;
         }
     }
@@ -127,7 +127,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
                 int levelCorrect = HunterLevelingConf.instance().isLevelValidForTrainer(lvl + 1);
                 if (levelCorrect == 0) {
                     if (trainee == null) {
-                        player.openMenu(new SimpleMenuProvider((id, playerInventory, playerEntity) -> new HunterTrainerContainer(id, playerInventory, this), name));
+                        player.openMenu(new SimpleMenuProvider((id, playerInventory, playerEntity) -> new HunterTrainerMenu(id, playerInventory, this), name));
                         this.trainee = player;
                         this.getNavigation().stop();
                     } else {

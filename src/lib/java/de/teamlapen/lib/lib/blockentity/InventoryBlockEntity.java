@@ -1,6 +1,6 @@
 package de.teamlapen.lib.lib.blockentity;
 
-import de.teamlapen.lib.lib.inventory.InventoryContainer;
+import de.teamlapen.lib.lib.inventory.InventoryContainerMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -26,10 +26,10 @@ public abstract class InventoryBlockEntity extends BaseContainerBlockEntity impl
      */
     protected final int MAX_DIST_SQRT = 64;
     protected final @NotNull NonNullList<ItemStack> inventorySlots;
-    protected InventoryContainer.SelectorInfo[] selectors;
+    protected InventoryContainerMenu.SelectorInfo[] selectors;
 
 
-    public InventoryBlockEntity(@NotNull BlockEntityType<?> tileEntityTypeIn, @NotNull BlockPos pos, @NotNull BlockState state, int size, InventoryContainer.SelectorInfo @NotNull ... selectorInfos) {
+    public InventoryBlockEntity(@NotNull BlockEntityType<?> tileEntityTypeIn, @NotNull BlockPos pos, @NotNull BlockState state, int size, InventoryContainerMenu.SelectorInfo @NotNull ... selectorInfos) {
         super(tileEntityTypeIn, pos, state);
         this.inventorySlots = NonNullList.withSize(size, ItemStack.EMPTY);
         if (selectorInfos.length != size) {

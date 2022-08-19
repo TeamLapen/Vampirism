@@ -5,7 +5,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tiers;
 
-public class SimpleCrossbowItem extends VampirismItemCrossbow {
+public class SimpleCrossbowItem extends VampirismItemCrossbowItem {
 
     private final float speed;
     private final int coolDownTicks;

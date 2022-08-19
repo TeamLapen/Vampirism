@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.inventory.container.WeaponTableContainer;
-import de.teamlapen.vampirism.player.hunter.HunterPlayer;
-import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.inventory.WeaponTableMenu;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -73,7 +73,7 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
     @Nullable
     @Override
     public MenuProvider getMenuProvider(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos) {
-        return new SimpleMenuProvider((id, playerInventory, playerEntity) -> new WeaponTableContainer(id, playerInventory, ContainerLevelAccess.create(worldIn, pos)), name);
+        return new SimpleMenuProvider((id, playerInventory, playerEntity) -> new WeaponTableMenu(id, playerInventory, ContainerLevelAccess.create(worldIn, pos)), name);
     }
 
     @NotNull
@@ -106,7 +106,7 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
             if (!flag) {
 
                 if (canUse(player) && player instanceof ServerPlayer) {
-                    NetworkHooks.openScreen((ServerPlayer) player, new SimpleMenuProvider((id, playerInventory, playerIn) -> new WeaponTableContainer(id, playerInventory, ContainerLevelAccess.create(playerIn.level, pos)), name), pos);
+                    NetworkHooks.openScreen((ServerPlayer) player, new SimpleMenuProvider((id, playerInventory, playerIn) -> new WeaponTableMenu(id, playerInventory, ContainerLevelAccess.create(playerIn.level, pos)), name), pos);
                 } else {
                     player.displayClientMessage(Component.translatable("text.vampirism.weapon_table.cannot_use"), true);
                 }

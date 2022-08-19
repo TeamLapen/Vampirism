@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemWithTier, DyeableLeatherItem {
+public class ArmorOfSwiftnessItem extends VampirismHunterArmorItem implements IItemWithTier, DyeableLeatherItem {
     private static final int[] DAMAGE_REDUCTION_ULTIMATE = new int[]{3, 6, 8, 3};
     private static final int[] DAMAGE_REDUCTION_ENHANCED = new int[]{2, 5, 6, 2};
     private static final int[] DAMAGE_REDUCTION_NORMAL = new int[]{1, 2, 3, 1};

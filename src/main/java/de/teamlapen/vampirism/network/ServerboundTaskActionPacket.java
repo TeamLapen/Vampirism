@@ -3,8 +3,8 @@ package de.teamlapen.vampirism.network;
 import de.teamlapen.lib.network.IMessage;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.inventory.container.TaskContainer;
-import de.teamlapen.vampirism.player.TaskManager;
+import de.teamlapen.vampirism.entity.player.TaskManager;
+import de.teamlapen.vampirism.inventory.TaskMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +13,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 public record ServerboundTaskActionPacket(UUID task, UUID entityId,
-                                          TaskContainer.TaskAction action) implements IMessage {
+                                          TaskMenu.TaskAction action) implements IMessage {
 
     static void encode(@NotNull ServerboundTaskActionPacket msg, @NotNull FriendlyByteBuf buf) {
         buf.writeUUID(msg.task);
@@ -22,7 +22,7 @@ public record ServerboundTaskActionPacket(UUID task, UUID entityId,
     }
 
     static @NotNull ServerboundTaskActionPacket decode(@NotNull FriendlyByteBuf buf) {
-        return new ServerboundTaskActionPacket(buf.readUUID(), buf.readUUID(), TaskContainer.TaskAction.values()[buf.readVarInt()]);
+        return new ServerboundTaskActionPacket(buf.readUUID(), buf.readUUID(), TaskMenu.TaskAction.values()[buf.readVarInt()]);
     }
 
     public static void handle(final @NotNull ServerboundTaskActionPacket msg, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {

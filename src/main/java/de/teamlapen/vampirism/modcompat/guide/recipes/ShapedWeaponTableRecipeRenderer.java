@@ -7,7 +7,7 @@ import de.maxanier.guideapi.api.impl.abstraction.EntryAbstract;
 import de.maxanier.guideapi.api.util.GuiHelper;
 import de.maxanier.guideapi.api.util.IngredientCycler;
 import de.maxanier.guideapi.gui.BaseScreen;
-import de.teamlapen.vampirism.inventory.recipes.ShapedWeaponTableRecipe;
+import de.teamlapen.vampirism.recipes.ShapedWeaponTableRecipe;
 import net.minecraft.client.gui.Font;
 import org.jetbrains.annotations.NotNull;
 

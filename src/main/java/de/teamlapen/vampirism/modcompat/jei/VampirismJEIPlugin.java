@@ -7,18 +7,18 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.api.items.oil.IApplicableOil;
-import de.teamlapen.vampirism.client.gui.AlchemicalCauldronScreen;
-import de.teamlapen.vampirism.client.gui.AlchemyTableScreen;
-import de.teamlapen.vampirism.client.gui.PotionTableScreen;
-import de.teamlapen.vampirism.client.gui.WeaponTableScreen;
+import de.teamlapen.vampirism.client.gui.screens.AlchemicalCauldronScreen;
+import de.teamlapen.vampirism.client.gui.screens.AlchemyTableScreen;
+import de.teamlapen.vampirism.client.gui.screens.PotionTableScreen;
+import de.teamlapen.vampirism.client.gui.screens.WeaponTableScreen;
 import de.teamlapen.vampirism.core.*;
-import de.teamlapen.vampirism.inventory.container.AlchemicalCauldronContainer;
-import de.teamlapen.vampirism.inventory.container.WeaponTableContainer;
-import de.teamlapen.vampirism.inventory.recipes.AlchemicalCauldronRecipe;
-import de.teamlapen.vampirism.inventory.recipes.AlchemyTableRecipe;
+import de.teamlapen.vampirism.entity.player.tasks.TaskUtil;
+import de.teamlapen.vampirism.inventory.AlchemicalCauldronMenu;
+import de.teamlapen.vampirism.inventory.WeaponTableMenu;
 import de.teamlapen.vampirism.items.BlessableItem;
 import de.teamlapen.vampirism.mixin.RecipeManagerAccessor;
-import de.teamlapen.vampirism.player.tasks.TaskUtil;
+import de.teamlapen.vampirism.recipes.AlchemicalCauldronRecipe;
+import de.teamlapen.vampirism.recipes.AlchemyTableRecipe;
 import de.teamlapen.vampirism.util.OilUtils;
 import de.teamlapen.vampirism.util.RegUtil;
 import mezz.jei.api.IModPlugin;
@@ -88,9 +88,9 @@ public class VampirismJEIPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeTransferHandlers(@NotNull IRecipeTransferRegistration registration) {
-        registration.addRecipeTransferHandler(AlchemicalCauldronContainer.class, ModContainer.ALCHEMICAL_CAULDRON.get(), ALCHEMICAL_CAULDRON, 0, 2, 4, 36);
-        registration.addRecipeTransferHandler(AlchemicalCauldronContainer.class, ModContainer.ALCHEMICAL_CAULDRON.get(), RecipeTypes.FUELING, 3, 1, 4, 36);
-        registration.addRecipeTransferHandler(WeaponTableContainer.class, ModContainer.WEAPON_TABLE.get(), WEAPON_TABLE, 1, 16, 17, 36);
+        registration.addRecipeTransferHandler(AlchemicalCauldronMenu.class, ModContainer.ALCHEMICAL_CAULDRON.get(), ALCHEMICAL_CAULDRON, 0, 2, 4, 36);
+        registration.addRecipeTransferHandler(AlchemicalCauldronMenu.class, ModContainer.ALCHEMICAL_CAULDRON.get(), RecipeTypes.FUELING, 3, 1, 4, 36);
+        registration.addRecipeTransferHandler(WeaponTableMenu.class, ModContainer.WEAPON_TABLE.get(), WEAPON_TABLE, 1, 16, 17, 36);
     }
 
     @Override

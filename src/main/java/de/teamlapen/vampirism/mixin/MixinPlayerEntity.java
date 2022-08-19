@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.mixin;
 
-import de.teamlapen.vampirism.player.IVampirismPlayer;
-import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
+import de.teamlapen.vampirism.entity.player.IVampirismPlayer;
+import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.util.MixinHooks;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;

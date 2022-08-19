@@ -11,22 +11,22 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
-import de.teamlapen.vampirism.client.gui.VampireMinionAppearanceScreen;
-import de.teamlapen.vampirism.client.gui.VampireMinionStatsScreen;
+import de.teamlapen.vampirism.client.gui.screens.VampireMinionAppearanceScreen;
+import de.teamlapen.vampirism.client.gui.screens.VampireMinionStatsScreen;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModAttributes;
 import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.VampirismEntity;
-import de.teamlapen.vampirism.entity.goals.FleeSunVampireGoal;
-import de.teamlapen.vampirism.entity.goals.RestrictSunVampireGoal;
+import de.teamlapen.vampirism.entity.ai.goals.FleeSunVampireGoal;
+import de.teamlapen.vampirism.entity.ai.goals.RestrictSunVampireGoal;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
+import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.entity.vampire.BasicVampireEntity;
 import de.teamlapen.vampirism.items.BloodBottleItem;
 import de.teamlapen.vampirism.items.MinionUpgradeItem;
-import de.teamlapen.vampirism.items.VampirismItemBloodFood;
-import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
+import de.teamlapen.vampirism.items.VampirismItemBloodFoodItem;
+import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
@@ -200,9 +200,9 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     @Override
     protected boolean canConsume(@NotNull ItemStack stack) {
         if (!super.canConsume(stack)) return false;
-        if ((stack.isEdible() && !(stack.getItem() instanceof VampirismItemBloodFood))) return false;
+        if ((stack.isEdible() && !(stack.getItem() instanceof VampirismItemBloodFoodItem))) return false;
         boolean fullHealth = this.getHealth() == this.getMaxHealth();
-        if (fullHealth && (stack.isEdible() && stack.getItem() instanceof VampirismItemBloodFood)) return false;
+        if (fullHealth && (stack.isEdible() && stack.getItem() instanceof VampirismItemBloodFoodItem)) return false;
         if (stack.getItem() instanceof BloodBottleItem && stack.getDamageValue() == 0) return false;
         return !fullHealth || !(stack.getItem() instanceof BloodBottleItem);
     }

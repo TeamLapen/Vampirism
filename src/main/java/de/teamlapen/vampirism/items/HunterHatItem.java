@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 /**
  * Simple headwear that look like a hunter head
  */
-public class HunterHatItem extends VampirismHunterArmor {
+public class HunterHatItem extends VampirismHunterArmorItem {
     private final int type;
 
     public HunterHatItem(int type) {

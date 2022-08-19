@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.entity.minion.goals;
 
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
-import de.teamlapen.vampirism.entity.goals.MoveToPositionGoal;
+import de.teamlapen.vampirism.entity.ai.goals.MoveToPositionGoal;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import net.minecraft.core.Vec3i;

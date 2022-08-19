@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.network;
 
 import com.mojang.datafixers.util.Either;
 import de.teamlapen.lib.network.IMessage;
-import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
