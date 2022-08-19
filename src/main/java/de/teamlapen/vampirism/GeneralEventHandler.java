@@ -110,7 +110,7 @@ public class GeneralEventHandler {
     @SubscribeEvent
     public void onServerTick(TickEvent.ServerTickEvent event) {
         if (event.phase == TickEvent.Phase.END) return;
-        MinionWorldData.getData(ServerLifecycleHooks.getCurrentServer()).tick();
+        MinionWorldData.getDataSafe(ServerLifecycleHooks.getCurrentServer()).ifPresent(MinionWorldData::tick);
 
     }
 

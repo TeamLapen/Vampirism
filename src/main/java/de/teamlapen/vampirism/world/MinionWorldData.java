@@ -28,9 +28,17 @@ public class MinionWorldData extends SavedData {
         return getData(world.getServer());
     }
 
+    /**
+     * only call if server is running, not during startup
+     */
     @Nonnull
     public static MinionWorldData getData(final MinecraftServer server) {
         return server.getLevel(Level.OVERWORLD).getDataStorage().computeIfAbsent((data) -> MinionWorldData.load(server, data), () -> new MinionWorldData(server), ID);
+    }
+
+    @Nonnull
+    public static Optional<MinionWorldData> getDataSafe(final MinecraftServer server) {
+        return Optional.ofNullable(server.getLevel(Level.OVERWORLD)).map(level -> level.getDataStorage().computeIfAbsent((data) -> MinionWorldData.load(server, data), () -> new MinionWorldData(server), ID));
     }
 
 
