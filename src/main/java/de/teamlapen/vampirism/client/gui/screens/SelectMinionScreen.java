@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.lib.lib.client.gui.widget.ScrollableArrayTextComponentList;
+import de.teamlapen.lib.lib.client.gui.components.ScrollableArrayTextComponentList;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.network.ClientboundRequestMinionSelectPacket;
 import de.teamlapen.vampirism.network.ServerboundSelectMinionTaskPacket;

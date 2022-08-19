@@ -12,24 +12,24 @@ import java.util.function.Supplier;
 /**
  * Request an update packet for the players {@link ISyncable.ISyncableEntityCapabilityInst} (e.g. on World join)
  */
-public class RequestPlayerUpdatePacket implements IMessage {
+public class ServerboundRequestPlayerUpdatePacket implements IMessage {
 
     @SuppressWarnings("EmptyMethod")
-    static void encode(RequestPlayerUpdatePacket msg, FriendlyByteBuf buf) {
+    static void encode(ServerboundRequestPlayerUpdatePacket msg, FriendlyByteBuf buf) {
 
     }
 
-    static @NotNull RequestPlayerUpdatePacket decode(FriendlyByteBuf buf) {
-        return new RequestPlayerUpdatePacket();
+    static @NotNull ServerboundRequestPlayerUpdatePacket decode(FriendlyByteBuf buf) {
+        return new ServerboundRequestPlayerUpdatePacket();
     }
 
 
-    public static void handle(final RequestPlayerUpdatePacket pkt, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final ServerboundRequestPlayerUpdatePacket pkt, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> { //Execute on main thread
             ServerPlayer player = ctx.getSender();
             if (player != null) {
-                UpdateEntityPacket update = UpdateEntityPacket.createJoinWorldPacket(player);
+                ClientboundUpdateEntityPacket update = ClientboundUpdateEntityPacket.createJoinWorldPacket(player);
                 if (update != null) {
                     update.markAsPlayerItself();
                     VampLib.dispatcher.sendTo(update, player);

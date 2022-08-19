@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.client.gui.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.lib.lib.client.gui.widget.ScrollableArrayTextComponentList;
+import de.teamlapen.lib.lib.client.gui.components.ScrollableArrayTextComponentList;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.inventory.MinionContainer;

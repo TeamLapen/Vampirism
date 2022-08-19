@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity.minion.management;
 
-import de.teamlapen.lib.util.WeightedRandomItem;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
@@ -13,6 +12,7 @@ import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -33,7 +33,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
     @NotNull
     private final Function<Q, Integer> coolDownSupplier;
     @NotNull
-    private final List<WeightedRandomItem<ItemStack>> resources;
+    private final List<WeightedEntry.Wrapper<ItemStack>> resources;
     private final RandomSource rng = RandomSource.create();
     @Nullable
     private final IFaction<?> faction;
@@ -42,7 +42,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
     /**
      * @param faction If given, only available to this faction
      */
-    public CollectResourcesTask(@Nullable IFaction<?> faction, @NotNull Function<Q, Integer> coolDownSupplier, @NotNull List<WeightedRandomItem<ItemStack>> resources, Supplier<ISkill<?>> requiredSkill) {
+    public CollectResourcesTask(@Nullable IFaction<?> faction, @NotNull Function<Q, Integer> coolDownSupplier, @NotNull List<WeightedEntry.Wrapper<ItemStack>> resources, Supplier<ISkill<?>> requiredSkill) {
         super(requiredSkill);
         this.coolDownSupplier = coolDownSupplier;
         this.resources = resources;
@@ -82,7 +82,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
         if (--desc.coolDown <= 0) {
             boolean lordOnline = desc.lordEntityID != null && ServerLifecycleHooks.getCurrentServer() != null && ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(desc.lordEntityID) != null;
             desc.coolDown = lordOnline ? coolDownSupplier.apply(data) : (int) (coolDownSupplier.apply(data) * VampirismConfig.BALANCE.miResourceCooldownOfflineMult.get());
-            WeightedRandom.getRandomItem(rng, resources).map(WeightedRandomItem::getItem).map(ItemStack::copy).ifPresent(s -> data.getInventory().addItemStack(s));
+            WeightedRandom.getRandomItem(rng, resources).map(WeightedEntry.Wrapper::getData).map(ItemStack::copy).ifPresent(s -> data.getInventory().addItemStack(s));
         }
     }
 

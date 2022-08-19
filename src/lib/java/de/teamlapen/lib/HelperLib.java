@@ -1,8 +1,8 @@
 package de.teamlapen.lib;
 
 import de.teamlapen.lib.lib.network.ISyncable;
+import de.teamlapen.lib.network.ClientboundUpdateEntityPacket;
 import de.teamlapen.lib.network.IMessage;
-import de.teamlapen.lib.network.UpdateEntityPacket;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -19,7 +19,7 @@ public class HelperLib {
      */
     public static <T extends Entity & ISyncable> void sync(@NotNull T entity) {
         if (!entity.getCommandSenderWorld().isClientSide) {
-            IMessage m = UpdateEntityPacket.create(entity);
+            IMessage m = ClientboundUpdateEntityPacket.create(entity);
             VampLib.dispatcher.sendToAllTrackingPlayers(m, entity);
         }
 
@@ -31,7 +31,7 @@ public class HelperLib {
      */
     public static <T extends Entity & ISyncable> void sync(@NotNull T entity, CompoundTag data) {
         if (!entity.getCommandSenderWorld().isClientSide) {
-            IMessage m = UpdateEntityPacket.create(entity, data);
+            IMessage m = ClientboundUpdateEntityPacket.create(entity, data);
             VampLib.dispatcher.sendToAllTrackingPlayers(m, entity);
         }
 
@@ -46,7 +46,7 @@ public class HelperLib {
      */
     public static void sync(ISyncable.@NotNull ISyncableEntityCapabilityInst cap, @NotNull Entity entity, boolean all) {
         if (!entity.getCommandSenderWorld().isClientSide) {
-            IMessage m = UpdateEntityPacket.create(cap);
+            IMessage m = ClientboundUpdateEntityPacket.create(cap);
             if (entity instanceof ServerPlayer player && !all) {
                 //noinspection ConstantConditions
                 if (player.connection != null) {
@@ -69,7 +69,7 @@ public class HelperLib {
      */
     public static void sync(ISyncable.@NotNull ISyncableEntityCapabilityInst cap, @NotNull CompoundTag data, @NotNull Entity entity, boolean all) {
         if (!entity.getCommandSenderWorld().isClientSide) {
-            IMessage m = UpdateEntityPacket.create(cap, data);
+            IMessage m = ClientboundUpdateEntityPacket.create(cap, data);
             if (entity instanceof ServerPlayer player && !all) {
                 //noinspection ConstantConditions
                 if (player.connection != null) {

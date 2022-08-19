@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity.player.tasks.reward;
 
-import de.teamlapen.lib.util.WeightedRandomItem;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -11,6 +10,7 @@ import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.player.refinements.RefinementSet;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -68,14 +68,14 @@ public class RefinementItemReward extends ItemReward {
 
         Z item = faction.getRefinementItem(IRefinementItem.AccessorySlotType.values()[RANDOM.nextInt(IRefinementItem.AccessorySlotType.values().length)]);
         IRefinementItem.AccessorySlotType slot = (item).getSlotType();
-        List<WeightedRandomItem<IRefinementSet>> sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream()
+        List< WeightedEntry.Wrapper<IRefinementSet>> sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream()
                 .filter(set -> finalFaction == null || set.getFaction() == finalFaction)
                 .filter(set -> this.rarity == null || set.getRarity().ordinal() >= this.rarity.ordinal())
                 .filter(set -> set.getSlotType().map(slot1 -> slot1 == slot).orElse(true))
                 .map(set -> ((RefinementSet) set).getWeightedRandom()).collect(Collectors.toList());
         ItemStack stack = new ItemStack(item);
         if (!sets.isEmpty()) {
-            WeightedRandom.getRandomItem(RANDOM, sets).map(WeightedRandomItem::getItem).ifPresent(set -> item.applyRefinementSet(stack, set));
+            WeightedRandom.getRandomItem(RANDOM, sets).map(WeightedEntry.Wrapper::getData).ifPresent(set -> item.applyRefinementSet(stack, set));
         }
         return stack;
     }

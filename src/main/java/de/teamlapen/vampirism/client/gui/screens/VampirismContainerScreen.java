@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.client.gui.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.lib.lib.client.gui.widget.ScrollableListWidget;
-import de.teamlapen.lib.lib.client.gui.widget.ScrollableListWithDummyWidget;
+import de.teamlapen.lib.lib.client.gui.components.ScrollableListComponent;
+import de.teamlapen.lib.lib.client.gui.components.ScrollableListWithDummyWidget;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
@@ -52,7 +52,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
     private final IFactionPlayer<?> factionPlayer;
     private int oldMouseX;
     private int oldMouseY;
-    private ScrollableListWidget<ITaskInstance> list;
+    private ScrollableListComponent<ITaskInstance> list;
     private final Map<Integer, Button> refinementRemoveButtons = new Int2ObjectOpenHashMap<>(3);
     private Component level;
 

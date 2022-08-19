@@ -1,4 +1,4 @@
-package de.teamlapen.lib.lib.client.gui.widget;
+package de.teamlapen.lib.lib.client.gui.components;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import org.jetbrains.annotations.NotNull;
@@ -8,13 +8,13 @@ import java.util.Collection;
 import java.util.function.Supplier;
 
 /**
- * This is a {@link ScrollableListWidget} that supports a dummy element.
+ * This is a {@link ScrollableListComponent} that supports a dummy element.
  * This dummy element has the same item as the element which created it.
  * This dummy element is capable to be rendered differently.
  *
  * @param <T> item that should be presented by a list entry
  */
-public class ScrollableListWithDummyWidget<T> extends ScrollableListWidget<T> {
+public class ScrollableListWithDummyWidget<T> extends ScrollableListComponent<T> {
 
     @NotNull
     private final ItemCreator<T> itemCreator;
@@ -52,7 +52,7 @@ public class ScrollableListWithDummyWidget<T> extends ScrollableListWidget<T> {
         ListItem<T> apply(T item, ScrollableListWithDummyWidget<T> list, boolean isDummy);
     }
 
-    public abstract static class ListItem<T> extends ScrollableListWidget.ListItem<T> {
+    public abstract static class ListItem<T> extends ScrollableListComponent.ListItem<T> {
 
 
         protected final boolean isDummy;

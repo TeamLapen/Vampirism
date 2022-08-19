@@ -1,4 +1,4 @@
-package de.teamlapen.lib.lib.client.gui.widget;
+package de.teamlapen.lib.lib.client.gui.components;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -21,7 +21,7 @@ import java.util.function.Supplier;
  * - {@link #mouseDragged(double, double, int, double, double)} must be called in {@link net.minecraft.client.gui.screens.Screen#mouseDragged(double, double, int, double, double)}
  * - {@link #renderToolTip(PoseStack, int, int)} must be called in {@link net.minecraft.client.gui.screens.Screen#render(PoseStack, int, int, float)}
  */
-public class ScrollableListWidget<T> extends ExtendedButton {
+public class ScrollableListComponent<T> extends ExtendedButton {
 
     private static final ResourceLocation MISC = new ResourceLocation(LIBREFERENCE.MODID, "textures/gui/misc.png");
     protected final List<ListItem<T>> listItems = new ArrayList<>();
@@ -35,7 +35,7 @@ public class ScrollableListWidget<T> extends ExtendedButton {
     private boolean canScroll = true;
     private double scrollSpeed = 1D;
 
-    public ScrollableListWidget(int xPos, int yPos, int width, int height, int itemHeight, @NotNull Supplier<Collection<T>> baseValueSupplier, @NotNull ItemCreator<T> itemSupplier) {
+    public ScrollableListComponent(int xPos, int yPos, int width, int height, int itemHeight, @NotNull Supplier<Collection<T>> baseValueSupplier, @NotNull ItemCreator<T> itemSupplier) {
         super(xPos, yPos, width, height, Component.literal(""), (button) -> {
         });
         this.itemHeight = itemHeight;
@@ -44,7 +44,7 @@ public class ScrollableListWidget<T> extends ExtendedButton {
         this.refresh();
     }
 
-    public ScrollableListWidget(int xPos, int yPos, int width, int height, int itemHeight, @NotNull Supplier<Collection<T>> baseValueSupplier, @NotNull ItemCreator<T> itemSupplier, Component name) {
+    public ScrollableListComponent(int xPos, int yPos, int width, int height, int itemHeight, @NotNull Supplier<Collection<T>> baseValueSupplier, @NotNull ItemCreator<T> itemSupplier, Component name) {
         super(xPos, yPos, width, height, name, (button) -> {
         });
         this.itemHeight = itemHeight;
@@ -191,7 +191,7 @@ public class ScrollableListWidget<T> extends ExtendedButton {
         }
     }
 
-    public ScrollableListWidget<T> scrollSpeed(double scrollSpeed) {
+    public ScrollableListComponent<T> scrollSpeed(double scrollSpeed) {
         this.scrollSpeed = scrollSpeed;
         return this;
     }
@@ -262,7 +262,7 @@ public class ScrollableListWidget<T> extends ExtendedButton {
 
     @FunctionalInterface
     public interface ItemCreator<T> {
-        ListItem<T> apply(@NotNull T item, @NotNull ScrollableListWidget<T> list);
+        ListItem<T> apply(@NotNull T item, @NotNull ScrollableListComponent<T> list);
     }
 
     public abstract static class ListItem<T> {
@@ -272,13 +272,13 @@ public class ScrollableListWidget<T> extends ExtendedButton {
         @NotNull
         protected final T item;
         @NotNull
-        protected final ScrollableListWidget<T> list;
+        protected final ScrollableListComponent<T> list;
 
         /**
          * @param item the presenting item
          * @param list the list this item is owned by
          */
-        public ListItem(@NotNull T item, @NotNull ScrollableListWidget<T> list) {
+        public ListItem(@NotNull T item, @NotNull ScrollableListComponent<T> list) {
             this.item = item;
             this.list = list;
         }

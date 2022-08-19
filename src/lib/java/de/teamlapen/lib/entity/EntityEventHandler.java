@@ -4,7 +4,7 @@ import de.teamlapen.lib.HelperRegistry;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.network.ISyncable;
-import de.teamlapen.lib.network.UpdateEntityPacket;
+import de.teamlapen.lib.network.ClientboundUpdateEntityPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
@@ -114,7 +114,7 @@ public class EntityEventHandler {
     @SubscribeEvent
     public void onStartTracking(PlayerEvent.@NotNull StartTracking event) {
         if ((event.getTarget() instanceof PathfinderMob && HelperRegistry.getSyncableEntityCaps().size() > 0) || event.getTarget() instanceof ISyncable || (event.getTarget() instanceof Player && HelperRegistry.getSyncablePlayerCaps().size() > 0)) {
-            UpdateEntityPacket packet = UpdateEntityPacket.createJoinWorldPacket(event.getTarget());
+            ClientboundUpdateEntityPacket packet = ClientboundUpdateEntityPacket.createJoinWorldPacket(event.getTarget());
             if (packet != null) {
                 VampLib.dispatcher.sendTo(packet, (ServerPlayer) event.getEntity());
             }

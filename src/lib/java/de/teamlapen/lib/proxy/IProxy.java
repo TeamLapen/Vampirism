@@ -1,6 +1,6 @@
 package de.teamlapen.lib.proxy;
 
-import de.teamlapen.lib.network.UpdateEntityPacket;
+import de.teamlapen.lib.network.ClientboundUpdateEntityPacket;
 import de.teamlapen.lib.util.ISoundReference;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
@@ -48,7 +48,7 @@ public interface IProxy {
     @Nullable
     Level getWorldFromKey(ResourceKey<Level> dimension);
 
-    default void handleUpdateEntityPacket(UpdateEntityPacket msg) {
+    default void handleUpdateEntityPacket(ClientboundUpdateEntityPacket msg) {
     }
 
 }

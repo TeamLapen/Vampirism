@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.command.test;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.BasicCommand;
-import de.teamlapen.lib.network.UpdateEntityPacket;
+import de.teamlapen.lib.network.ClientboundUpdateEntityPacket;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
@@ -17,7 +17,7 @@ public class ForcePlayerSyncCommand extends BasicCommand {
     }
 
     private static int triggerSync(CommandSourceStack commandSource, ServerPlayer asPlayer) {
-        UpdateEntityPacket update = UpdateEntityPacket.createJoinWorldPacket(asPlayer);
+        ClientboundUpdateEntityPacket update = ClientboundUpdateEntityPacket.createJoinWorldPacket(asPlayer);
         update.markAsPlayerItself();
         VampLib.dispatcher.sendTo(update, asPlayer);
 

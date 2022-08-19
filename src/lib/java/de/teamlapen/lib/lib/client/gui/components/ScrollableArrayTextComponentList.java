@@ -1,4 +1,4 @@
-package de.teamlapen.lib.lib.client.gui.widget;
+package de.teamlapen.lib.lib.client.gui.components;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -15,7 +15,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class ScrollableArrayTextComponentList extends ScrollableListWidget<Pair<Integer, Component>> {
+public class ScrollableArrayTextComponentList extends ScrollableListComponent<Pair<Integer, Component>> {
 
     private static @NotNull Collection<Pair<Integer, Component>> getItems(@NotNull Supplier<Component[]> baseValueSupplier) {
         Collection<Pair<Integer, Component>> items = new ArrayList<>();
@@ -59,13 +59,13 @@ public class ScrollableArrayTextComponentList extends ScrollableListWidget<Pair<
         private final BiConsumer<T, Boolean> onHover;
         private boolean hovered;
 
-        public TextComponentItem(@NotNull Pair<T, Component> item, @NotNull ScrollableListWidget<Pair<T, Component>> list, @NotNull Consumer<T> onClick) {
+        public TextComponentItem(@NotNull Pair<T, Component> item, @NotNull ScrollableListComponent<Pair<T, Component>> list, @NotNull Consumer<T> onClick) {
             super(item, list);
             this.onClick = onClick;
             this.onHover = null;
         }
 
-        public TextComponentItem(@NotNull Pair<T, Component> item, @NotNull ScrollableListWidget<Pair<T, Component>> list, @NotNull Consumer<T> onClick, @Nullable BiConsumer<T, Boolean> onHover) {
+        public TextComponentItem(@NotNull Pair<T, Component> item, @NotNull ScrollableListComponent<Pair<T, Component>> list, @NotNull Consumer<T> onClick, @Nullable BiConsumer<T, Boolean> onHover) {
             super(item, list);
             this.onClick = onClick;
             this.onHover = onHover;

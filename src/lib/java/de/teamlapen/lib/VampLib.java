@@ -25,7 +25,7 @@ public class VampLib {
 
     public static final AbstractPacketDispatcher dispatcher = new LibraryPacketDispatcher();
     public static boolean inDev = false;
-    public static final IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
+    public static final IProxy proxy = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
 
     public VampLib() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::preInit);

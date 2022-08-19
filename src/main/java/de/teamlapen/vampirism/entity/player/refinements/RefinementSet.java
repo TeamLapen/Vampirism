@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.entity.player.refinements;
 
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.lib.util.WeightedRandomItem;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
@@ -9,6 +8,7 @@ import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.random.WeightedEntry;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -21,7 +21,7 @@ public abstract class RefinementSet implements IRefinementSet {
     private final Set<RegistryObject<? extends IRefinement>> refinements;
     private final Rarity rarity;
     private final int color;
-    private final @NotNull WeightedRandomItem<IRefinementSet> weightedRandom;
+    private final @NotNull WeightedEntry.Wrapper<IRefinementSet> weightedRandom;
     private Component name;
     private Component desc;
     @Nullable
@@ -30,7 +30,7 @@ public abstract class RefinementSet implements IRefinementSet {
     public RefinementSet(Rarity rarity, int color, Set<RegistryObject<? extends IRefinement>> refinements) {
         this.refinements = refinements;
         this.rarity = rarity;
-        this.weightedRandom = new WeightedRandomItem<>(this, this.rarity.weight);
+        this.weightedRandom = WeightedEntry.wrap(this, this.rarity.weight);
         this.color = color;
     }
 
@@ -67,7 +67,7 @@ public abstract class RefinementSet implements IRefinementSet {
         return Optional.ofNullable(restrictedType);
     }
 
-    public WeightedRandomItem<IRefinementSet> getWeightedRandom() {
+    public WeightedEntry.Wrapper<IRefinementSet> getWeightedRandom() {
         return weightedRandom;
     }
 

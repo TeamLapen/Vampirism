@@ -3,7 +3,7 @@ package de.teamlapen.lib.proxy;
 
 import de.teamlapen.lib.HelperRegistry;
 import de.teamlapen.lib.lib.network.ISyncable;
-import de.teamlapen.lib.network.UpdateEntityPacket;
+import de.teamlapen.lib.network.ClientboundUpdateEntityPacket;
 import de.teamlapen.lib.util.ISoundReference;
 import de.teamlapen.lib.util.SoundReference;
 import net.minecraft.client.Minecraft;
@@ -93,7 +93,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void handleUpdateEntityPacket(@NotNull UpdateEntityPacket msg) {
+    public void handleUpdateEntityPacket(@NotNull ClientboundUpdateEntityPacket msg) {
         Player player = Minecraft.getInstance().player;
         if (player == null) {
             LOGGER.error("Cannot handle update package because sending player entity is null. Message: {}", msg);

@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.client.gui.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.lib.lib.client.gui.widget.ScrollableArrayTextComponentList;
-import de.teamlapen.lib.lib.client.gui.widget.ScrollableListWidget;
+import de.teamlapen.lib.lib.client.gui.components.ScrollableArrayTextComponentList;
+import de.teamlapen.lib.lib.client.gui.components.ScrollableListComponent;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
@@ -34,8 +34,8 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
     private int fangType;
     private int eyeType;
     private boolean glowingEyes;
-    private ScrollableListWidget<Pair<Integer, Component>> eyeList;
-    private ScrollableListWidget<Pair<Integer, Component>> fangList;
+    private ScrollableListComponent<Pair<Integer, Component>> eyeList;
+    private ScrollableListComponent<Pair<Integer, Component>> fangList;
     private ExtendedButton eyeButton;
     private ExtendedButton fangButton;
     private Checkbox glowingEyesButton;

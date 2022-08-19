@@ -25,12 +25,12 @@ import java.util.function.Supplier;
  * Does Entity or Entity capability updates.
  * Entity capabilities that want to use this, have to be registered in {@link HelperRegistry}
  */
-public class UpdateEntityPacket implements IMessage {
+public class ClientboundUpdateEntityPacket implements IMessage {
 
     private final static Logger LOGGER = LogManager.getLogger();
 
 
-    static void encode(@NotNull UpdateEntityPacket msg, @NotNull FriendlyByteBuf buf) {
+    static void encode(@NotNull ClientboundUpdateEntityPacket msg, @NotNull FriendlyByteBuf buf) {
         CompoundTag tag = new CompoundTag();
         tag.putInt("id", msg.id);
         if (msg.data != null) {
@@ -45,9 +45,9 @@ public class UpdateEntityPacket implements IMessage {
         buf.writeNbt(tag);
     }
 
-    static @NotNull UpdateEntityPacket decode(@NotNull FriendlyByteBuf buf) {
+    static @NotNull ClientboundUpdateEntityPacket decode(@NotNull FriendlyByteBuf buf) {
         CompoundTag tag = buf.readNbt();
-        UpdateEntityPacket pkt = new UpdateEntityPacket();
+        ClientboundUpdateEntityPacket pkt = new ClientboundUpdateEntityPacket();
         pkt.id = tag.getInt("id");
         if (tag.contains("data")) {
             pkt.data = tag.getCompound("data");
@@ -61,7 +61,7 @@ public class UpdateEntityPacket implements IMessage {
         return pkt;
     }
 
-    public static void handle(final UpdateEntityPacket message, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final ClientboundUpdateEntityPacket message, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> { //Execute on main thread
             VampLib.proxy.handleUpdateEntityPacket(message);
@@ -72,7 +72,7 @@ public class UpdateEntityPacket implements IMessage {
     /**
      * Create a sync packet for the given capability instance.
      */
-    public static @NotNull UpdateEntityPacket create(ISyncable.@NotNull ISyncableEntityCapabilityInst cap) {
+    public static @NotNull ClientboundUpdateEntityPacket create(ISyncable.@NotNull ISyncableEntityCapabilityInst cap) {
         CompoundTag data = new CompoundTag();
         cap.writeFullUpdateToNBT(data);
         return create(cap, data);
@@ -84,11 +84,11 @@ public class UpdateEntityPacket implements IMessage {
      * @param entity EntityLiving which implements ISyncable
      * @param caps   Have to belong to the given entity
      */
-    public static @NotNull UpdateEntityPacket create(Mob entity, ISyncable.ISyncableEntityCapabilityInst... caps) {
+    public static @NotNull ClientboundUpdateEntityPacket create(Mob entity, ISyncable.ISyncableEntityCapabilityInst... caps) {
         if (!(entity instanceof ISyncable)) {
             throw new IllegalArgumentException("You cannot use this packet to sync this entity. The entity has to implement ISyncable");
         }
-        UpdateEntityPacket packet = create(caps);
+        ClientboundUpdateEntityPacket packet = create(caps);
         packet.data = new CompoundTag();
         ((ISyncable) entity).writeFullUpdateToNBT(packet.data);
         return packet;
@@ -99,8 +99,8 @@ public class UpdateEntityPacket implements IMessage {
      *
      * @param caps Have to belong to the same entity
      */
-    public static @NotNull UpdateEntityPacket create(ISyncable.ISyncableEntityCapabilityInst @NotNull ... caps) {
-        UpdateEntityPacket packet = new UpdateEntityPacket();
+    public static @NotNull ClientboundUpdateEntityPacket create(ISyncable.ISyncableEntityCapabilityInst @NotNull ... caps) {
+        ClientboundUpdateEntityPacket packet = new ClientboundUpdateEntityPacket();
         packet.id = caps[0].getTheEntityID();
         packet.caps = new CompoundTag();
         for (ISyncable.ISyncableEntityCapabilityInst cap : caps) {
@@ -116,8 +116,8 @@ public class UpdateEntityPacket implements IMessage {
      *
      * @param data Should be loadable by the capability instance
      */
-    public static @NotNull UpdateEntityPacket create(ISyncable.@NotNull ISyncableEntityCapabilityInst cap, @NotNull CompoundTag data) {
-        UpdateEntityPacket packet = new UpdateEntityPacket();
+    public static @NotNull ClientboundUpdateEntityPacket create(ISyncable.@NotNull ISyncableEntityCapabilityInst cap, @NotNull CompoundTag data) {
+        ClientboundUpdateEntityPacket packet = new ClientboundUpdateEntityPacket();
         packet.id = cap.getTheEntityID();
         packet.caps = new CompoundTag();
         packet.caps.put(cap.getCapKey().toString(), data);
@@ -129,11 +129,11 @@ public class UpdateEntityPacket implements IMessage {
      *
      * @param entity Has to implement ISyncable
      */
-    public static @NotNull UpdateEntityPacket create(Entity entity) {
+    public static @NotNull ClientboundUpdateEntityPacket create(Entity entity) {
         if (!(entity instanceof ISyncable)) {
             throw new IllegalArgumentException("You cannot use this packet to sync this entity. The entity has to implement ISyncable");
         }
-        UpdateEntityPacket packet = new UpdateEntityPacket();
+        ClientboundUpdateEntityPacket packet = new ClientboundUpdateEntityPacket();
         packet.id = entity.getId();
         packet.data = new CompoundTag();
         ((ISyncable) entity).writeFullUpdateToNBT(packet.data);
@@ -146,8 +146,8 @@ public class UpdateEntityPacket implements IMessage {
      * @param entity Has to implement ISyncable
      * @param data   Should be loadable by the entity
      */
-    public static <T extends Entity & ISyncable> @NotNull UpdateEntityPacket create(@NotNull T entity, CompoundTag data) {
-        UpdateEntityPacket packet = new UpdateEntityPacket();
+    public static <T extends Entity & ISyncable> @NotNull ClientboundUpdateEntityPacket create(@NotNull T entity, CompoundTag data) {
+        ClientboundUpdateEntityPacket packet = new ClientboundUpdateEntityPacket();
         packet.id = entity.getId();
         packet.data = data;
         return packet;
@@ -159,7 +159,7 @@ public class UpdateEntityPacket implements IMessage {
      * @return If nothing to update -> null
      */
     public static @Nullable
-    UpdateEntityPacket createJoinWorldPacket(Entity entity) {
+    ClientboundUpdateEntityPacket createJoinWorldPacket(Entity entity) {
         final List<ISyncable.ISyncableEntityCapabilityInst> capsToSync = new ArrayList<>();
         Collection<Capability<ISyncable.ISyncableEntityCapabilityInst>> allCaps = null;
         if (entity instanceof PathfinderMob) {
@@ -175,12 +175,12 @@ public class UpdateEntityPacket implements IMessage {
         }
         if (capsToSync.size() > 0) {
             if (entity instanceof ISyncable) {
-                return UpdateEntityPacket.create((Mob) entity, capsToSync.toArray(new ISyncable.ISyncableEntityCapabilityInst[0]));
+                return ClientboundUpdateEntityPacket.create((Mob) entity, capsToSync.toArray(new ISyncable.ISyncableEntityCapabilityInst[0]));
             } else {
-                return UpdateEntityPacket.create(capsToSync.toArray(new ISyncable.ISyncableEntityCapabilityInst[0]));
+                return ClientboundUpdateEntityPacket.create(capsToSync.toArray(new ISyncable.ISyncableEntityCapabilityInst[0]));
             }
         } else if (entity instanceof ISyncable) {
-            return UpdateEntityPacket.create(entity);
+            return ClientboundUpdateEntityPacket.create(entity);
         } else {
             LOGGER.warn("There is nothing to update for entity {}", entity);
             return null;
@@ -195,7 +195,7 @@ public class UpdateEntityPacket implements IMessage {
     /**
      * Don't use
      */
-    public UpdateEntityPacket() {
+    public ClientboundUpdateEntityPacket() {
 
     }
 
@@ -215,7 +215,7 @@ public class UpdateEntityPacket implements IMessage {
         return playerItself;
     }
 
-    public @NotNull UpdateEntityPacket markAsPlayerItself() {
+    public @NotNull ClientboundUpdateEntityPacket markAsPlayerItself() {
         playerItself = true;
         return this;
     }
