@@ -1,5 +1,5 @@
 {
-  "__comment": "Designed by Random",
+  "credit": "Designed by Random",
   "elements": [
     {
       "from": [
@@ -394,7 +394,7 @@
       ],
       "to": [
         7.6,
-        3.65,
+        3.75,
         3.55
       ],
       "rotation": {
@@ -471,7 +471,7 @@
       ],
       "to": [
         9.4,
-        3.65,
+        3.75,
         3.55
       ],
       "rotation": {
@@ -2412,6 +2412,8 @@
         7.4419
       ],
       "color": 0,
+      "nbt": "{}",
+      "armAnimationEnabled": false,
       "children": [
         {
           "name": "Crossbow_string_A",
@@ -2421,6 +2423,8 @@
             8.13345
           ],
           "color": 0,
+          "nbt": "{}",
+          "armAnimationEnabled": false,
           "children": [
             0
           ]
@@ -2433,6 +2437,8 @@
             7.4419
           ],
           "color": 0,
+          "nbt": "{}",
+          "armAnimationEnabled": false,
           "children": [
             1
           ]
@@ -2447,6 +2453,8 @@
         8.7
       ],
       "color": 0,
+      "nbt": "{}",
+      "armAnimationEnabled": false,
       "children": [
         {
           "name": "Shoulders_A",
@@ -2456,6 +2464,8 @@
             8.7
           ],
           "color": 0,
+          "nbt": "{}",
+          "armAnimationEnabled": false,
           "children": [
             2,
             3,
@@ -2474,6 +2484,8 @@
             8.7
           ],
           "color": 0,
+          "nbt": "{}",
+          "armAnimationEnabled": false,
           "children": [
             9,
             10,
@@ -2494,6 +2506,8 @@
         8.7
       ],
       "color": 0,
+      "nbt": "{}",
+      "armAnimationEnabled": false,
       "children": [
         {
           "name": "Handle",
@@ -2503,6 +2517,8 @@
             10.56213
           ],
           "color": 0,
+          "nbt": "{}",
+          "armAnimationEnabled": false,
           "children": [
             16,
             17,
@@ -2519,6 +2535,8 @@
             8.7
           ],
           "color": 0,
+          "nbt": "{}",
+          "armAnimationEnabled": false,
           "children": [
             21,
             22,
@@ -2537,6 +2555,8 @@
             8.7
           ],
           "color": 0,
+          "nbt": "{}",
+          "armAnimationEnabled": false,
           "children": [
             28,
             29
