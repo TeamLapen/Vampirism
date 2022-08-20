@@ -81,9 +81,10 @@ public class SkillTree {
     }
 
     public static int getTreeHeight(@NotNull SkillNode node) {
-        int max = 26;
+        int max = 0;
         for (SkillNode child : node.getChildren()) {
-            max = Math.max(max, getTreeHeight(child) + 60);
+            // this value should be synced with the skill screen renderer
+            max = Math.max(max, getTreeHeight(child) + 50);
         }
         return max;
     }

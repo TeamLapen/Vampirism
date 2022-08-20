@@ -124,14 +124,18 @@ public class SkillNodeScreen extends GuiComponent {
         stack.translate(0, 0, 50);
         SkillNodeState state = getState();
         if (state == SkillNodeState.HIDDEN) return;
-        int width = 26 * this.skillNode.getElements().length + (this.skillNode.getElements().length - 1) * 10;
+        int width = getNodeWidth();
+
+        //center
+        stack.pushPose();
+        stack.translate(-width/2f, 0,0);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
 
         int x = getNodeStart();
         //draw skill background
         if (this.skillNode.getElements().length > 1) {
-            ScreenUtils.blitWithBorder(stack, i + x, j + this.y, 200, 0, width, 26, 26, 26, 3, this.getBlitOffset());
+            ScreenUtils.blitWithBorder(stack, x, this.y, 200, 0, width, 26, 26, 26, 3, this.getBlitOffset());
         }
 
         //draw skills
@@ -143,7 +147,7 @@ public class SkillNodeScreen extends GuiComponent {
             }
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
-            this.blit(stack, i + x, j + this.y, skillNode.isRoot() ? 226 : 200, 0, 26, 26);
+            this.blit(stack, x, this.y, skillNode.isRoot() ? 226 : 200, 0, 26, 26);
 
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, getSkillIconLocation(this.skillNode.getElements()[i1]));
@@ -151,11 +155,13 @@ public class SkillNodeScreen extends GuiComponent {
             RenderSystem.setShaderColor(1, 1, 1, 1);
 //            RenderSystem.disableLighting();
             RenderSystem.enableBlend();
-            UtilLib.drawTexturedModalRect(stack.last().pose(), this.getBlitOffset(), x + i + 5, this.y + j + 5, 0, 0, 16, 16, 16, 16);
+            UtilLib.drawTexturedModalRect(stack.last().pose(), this.getBlitOffset(), x + 5, this.y + 5, 0, 0, 16, 16, 16, 16);
 //            RenderSystem.disableLighting();
 
             x += 26 + 10;
         }
+
+        stack.popPose();
 
         for (SkillNodeScreen child : this.children) {
             child.draw(stack, i, j);
@@ -173,15 +179,15 @@ public class SkillNodeScreen extends GuiComponent {
             if (state == SkillNodeState.UNLOCKED) {
                 stack.translate(0, 0, 10);
             }
-            int i = startX + x + 13;
-            int i1 = startX + this.parent.x + 13;
+            int i = startX + x;
+            int i1 = startX + this.parent.x;
             int j = startY + this.y - 30;
             int j2 = startY + this.parent.y + 13;
             int j3 = startY + this.y - 29;
             int j4 = startY + this.parent.y + 13 + 16;
-            int i2 = startX + x + 13;
+            int i2 = startX + x;
             int j5 = startY + this.y;
-            int i3 = startX + this.parent.x + 13;
+            int i3 = startX + this.parent.x;
             if (outerLine) {
                 this.hLine(stack, i, i1, j - 1, color);
                 this.hLine(stack, i, i1, j + 1, color);
@@ -203,12 +209,17 @@ public class SkillNodeScreen extends GuiComponent {
         }
     }
 
+    private int getNodeWidth(){
+        return 26 * this.skillNode.getElements().length + (this.skillNode.getElements().length - 1) * 10;
+    }
+
     public void drawHover(@NotNull PoseStack stack, double mouseX, double mouseY, float fade, int scrollX, int scrollY) {
         SkillNodeState state = getState();
         if (state == SkillNodeState.HIDDEN) return;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
         ISkill[] elements = this.skillNode.getElements();
+        scrollX -= getNodeWidth() /2f;
 
         //check if a node is hovered
         int hoveredSkill = -1;
@@ -337,20 +348,21 @@ public class SkillNodeScreen extends GuiComponent {
     }
 
     public boolean isMouseOver(double mouseX, double mouseY, int scrollX, int scrollY) {
-        double width = 26 * this.skillNode.getElements().length + (this.skillNode.getElements().length - 1) * 10;
-        return mouseX >= this.x + scrollX - width / 2 + 13 && mouseX < this.x + scrollX + 13 + width / 2 - 1 && mouseY > scrollY + this.y && mouseY < scrollY + this.y + 26;
+        double width = getNodeWidth();
+        return mouseX >= this.x + scrollX - width / 2  && mouseX < this.x + scrollX  + width / 2 - 1 && mouseY > scrollY + this.y && mouseY < scrollY + this.y + 26;
     }
 
     public boolean isMouseOverSkill(int index, double mouseX, double mouseY, int guiLeft, int guiTop) {
-        int x = getNodeStart() + (26 + 10) * index;
+        int x = this.x + (26 + 10) * index;
         return mouseX > x + guiLeft && mouseX < x + guiLeft + 26 && mouseY > guiTop + this.y && mouseY < guiTop + this.y + 26;
     }
 
     @Nullable
     public ISkill getSelectedSkill(double mouseX, double mouseY, int scrollX, int scrollY) {
         if (!isMouseOver(mouseX, mouseY, scrollX, scrollY)) return null;
+        int nodeWidth = getNodeWidth();
         for (int i = 0; i < this.skillNode.getElements().length; i++) {
-            if (isMouseOverSkill(i, mouseX, mouseY, scrollX, scrollY)) {
+            if (isMouseOverSkill(i, mouseX, mouseY, (int) (scrollX - nodeWidth/2f), scrollY)) {
                 return this.skillNode.getElements()[i];
             }
         }
@@ -364,17 +376,6 @@ public class SkillNodeScreen extends GuiComponent {
      */
     private int getNodeStart() {
         int x = this.x;
-        if (this.skillNode.getElements().length > 1) {
-            if (this.skillNode.getElements().length % 2 == 0) {
-                x -= ((this.skillNode.getElements().length) / 2 * 26);
-                x -= (this.skillNode.getElements().length - 1) / 2 * 8;
-                x -= 2 * ((this.skillNode.getElements().length) / 2);
-                x += 10;
-            } else {
-                x -= (this.skillNode.getElements().length - 1) / 2 * 26;
-                x -= (this.skillNode.getElements().length - 1) / 2 * 10;
-            }
-        }
         return x;
     }
 

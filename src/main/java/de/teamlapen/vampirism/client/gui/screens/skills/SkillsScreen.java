@@ -204,7 +204,7 @@ public class SkillsScreen extends Screen {
 
         if (this.tabs.size() > 1) {
             for (SkillsTabScreen tabScreen : this.tabs) {
-                if (tabScreen == selectedTab && tabScreen.isMouseOver(guiLeft, guiTop, mouseX, mouseY)) {
+                if (tabScreen.isMouseOver(guiLeft, guiTop, mouseX, mouseY)) {
                     this.renderTooltip(stack, tabScreen.getTitle(), mouseX, mouseY);
                 }
             }
@@ -261,7 +261,7 @@ public class SkillsScreen extends Screen {
     }
 
     private void unlockSkill(double mouseX, double mouseY) {
-        ISkill selected = selectedTab != null ? selectedTab.getSelected(mouseX, mouseY, guiLeft, guiTop) : null;
+        ISkill<?> selected = selectedTab != null ? selectedTab.getSelected((int) (mouseX - guiLeft - 9), (int) (mouseY - guiTop - 18)) : null;
         if (selected != null) {
             if (canUnlockSkill(selected)) {
                 VampirismMod.dispatcher.sendToServer(new ServerboundUnlockSkillPacket(RegUtil.id(selected)));

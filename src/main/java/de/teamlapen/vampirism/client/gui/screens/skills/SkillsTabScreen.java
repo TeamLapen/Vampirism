@@ -48,7 +48,6 @@ public class SkillsTabScreen extends GuiComponent {
     private final int treeWidth;
     private final int treeHeight;
     private final ResourceLocation background;
-    private boolean centered;
     private double scrollX;
     private double scrollY;
     private int minX = Integer.MIN_VALUE;
@@ -75,18 +74,18 @@ public class SkillsTabScreen extends GuiComponent {
         addNode(this.root);
 
         recalculateBorders();
-        this.scrollX = (SkillsScreen.SCREEN_WIDTH - 18) / (float) 2 - 13;
+        this.scrollX = 0;
         this.scrollY = 20;
     }
 
     private void recalculateBorders() {
-        this.maxY = 20;
-        this.minY = (int) (-(this.treeHeight - 40) * this.zoom);
+        this.minY = (int) -((this.treeHeight) * this.zoom);
+        this.maxY = (int) (20 * this.zoom);
 
-        this.minX = 0;
-        this.maxX = this.treeWidth;
+        this.minX = (int) ((-this.treeWidth/2) * this.zoom);
+        this.maxX = (int) ((this.treeWidth/2) * this.zoom);
 
-        this.centered = false;
+        this.center();
     }
 
     private void addNode(@NotNull SkillNodeScreen screen) {
@@ -113,11 +112,6 @@ public class SkillsTabScreen extends GuiComponent {
     }
 
     public void drawContents(@NotNull PoseStack stack) {
-        if (!this.centered) {
-            this.scrollX = Mth.clamp(this.scrollX, this.minX, this.maxX);
-            this.scrollY = Mth.clamp(this.scrollY, this.minY, this.maxY);
-            this.centered = true;
-        }
 
         stack.pushPose();
         RenderSystem.enableDepthTest();
@@ -133,8 +127,8 @@ public class SkillsTabScreen extends GuiComponent {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, this.background);
 
-        int i = Mth.floor(this.scrollX);
-        int j = Mth.floor(this.scrollY);
+        int i = getX();
+        int j = getY();
         int k = i % 16;
         int l = j % 16;
         stack.scale(this.zoom, this.zoom, 1);
@@ -145,10 +139,13 @@ public class SkillsTabScreen extends GuiComponent {
             }
         }
 
+        stack.pushPose();
+        stack.translate(i,j,0);
+        this.root.drawConnectivity(stack, 0, 0, true);
+        this.root.drawConnectivity(stack, 0, 0, false);
+        this.root.draw(stack, 0, 0);
+        stack.popPose();
 
-        this.root.drawConnectivity(stack, i, j, true);
-        this.root.drawConnectivity(stack, i, j, false);
-        this.root.draw(stack, i, j);
         RenderSystem.depthFunc(518);
         stack.translate(0.0F, 0.0F, -950.0F);
         RenderSystem.colorMask(false, false, false, false);
@@ -178,11 +175,11 @@ public class SkillsTabScreen extends GuiComponent {
         stack.translate(0.0F, 0.0F, 200.0F);
         fill(stack, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Mth.floor(this.fade * 255.0F) << 24);
         boolean flag = false;
-        int scrollX = Mth.floor(this.scrollX);
-        int scrollY = Mth.floor(this.scrollY);
+        int scrollX = getX();
+        int scrollY = getY();
         if (mouseX >= 0 && mouseX < 235 && mouseY >= 0 && mouseY < 173) {
             for (SkillNodeScreen nodeScreen : this.nodes.values()) {
-                if (nodeScreen.isMouseOver(mouseX / this.zoom, mouseY / this.zoom, scrollX, scrollY)) {
+                if (nodeScreen.isMouseOver(mouseX / this.zoom, mouseY / this.zoom, scrollX,  scrollY)) {
                     flag = true;
                     stack.pushPose();
                     stack.scale(this.zoom, this.zoom, 1);
@@ -202,21 +199,40 @@ public class SkillsTabScreen extends GuiComponent {
     }
 
     public void mouseDragged(double mouseX, double mouseY, int mouseButton, double xDragged, double yDragged) {
-        this.scrollX += xDragged / this.zoom;
-        this.scrollY += yDragged / this.zoom;
-        this.centered = false;
+        this.scrollX += xDragged;
+        this.scrollY += yDragged;
+        center();
+    }
+
+    private void center() {
+        this.scrollX = Mth.clamp(this.scrollX, this.minX, this.maxX);
+        this.scrollY = Mth.clamp(this.scrollY, this.minY, this.maxY);
     }
 
     public Component getTitle() {
         return this.title;
     }
 
+    private int getX(){
+        int centerX = (SCREEN_WIDTH / 2);
+        centerX += scrollX;
+        centerX /= this.zoom;
+        return centerX;
+    }
+
+    private int getY() {
+        int centerY = 20;
+        centerY += scrollY;
+        centerY /= this.zoom;
+        return centerY;
+    }
+
     @Nullable
-    public ISkill getSelected(double mouseX, double mouseY, int guiLeft, int guiTop) {
-        int i = Mth.floor(this.scrollX);
-        int j = Mth.floor(this.scrollY);
+    public ISkill<?> getSelected(int mouseX, int mouseY) {
+        int i = getX();
+        int j = getY();
         for (SkillNodeScreen screen : this.nodes.values()) {
-            ISkill selected = screen.getSelectedSkill((mouseX - guiLeft - 9) / this.zoom, (mouseY - guiTop - 18) / this.zoom, i, j);
+            ISkill<?> selected = screen.getSelectedSkill(mouseX / this.zoom, mouseY / this.zoom, i, j);
             if (selected != null) {
                 return selected;
             }
