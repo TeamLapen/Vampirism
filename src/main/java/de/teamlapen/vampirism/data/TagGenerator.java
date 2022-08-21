@@ -185,13 +185,13 @@ public class TagGenerator {
             tag(Tags.Biomes.IS_SPOOKY).add(ModBiomes.VAMPIRE_FOREST.getKey());
             tag(ModTags.Biomes.HasStructure.VAMPIRE_DUNGEON).addTags(BiomeTags.IS_OVERWORLD);
             tag(ModTags.Biomes.HasSpawn.VAMPIRE).addTags(BiomeTags.IS_OVERWORLD); //TODO 1.19 determine spawn-able biomes
-            tag(ModTags.Biomes.NoSpawn.VAMPIRE).addTags(ModTags.Biomes.IS_VAMPIRE_BIOME);
+            tag(ModTags.Biomes.NoSpawn.VAMPIRE).addTags(ModTags.Biomes.IS_FACTION_BIOME);
             tag(ModTags.Biomes.HasSpawn.ADVANCED_VAMPIRE).addTags(BiomeTags.IS_OVERWORLD); //TODO 1.19 determine spawn-able biomes
-            tag(ModTags.Biomes.NoSpawn.ADVANCED_VAMPIRE).addTags(ModTags.Biomes.IS_VAMPIRE_BIOME);
+            tag(ModTags.Biomes.NoSpawn.ADVANCED_VAMPIRE).addTags(ModTags.Biomes.IS_FACTION_BIOME);
             tag(ModTags.Biomes.HasSpawn.HUNTER).addTags(BiomeTags.IS_OVERWORLD); //TODO 1.19 determine spawn-able biomes
-            tag(ModTags.Biomes.NoSpawn.HUNTER).addTags(ModTags.Biomes.IS_HUNTER_BIOME);
+            tag(ModTags.Biomes.NoSpawn.HUNTER).addTags(ModTags.Biomes.IS_FACTION_BIOME);
             tag(ModTags.Biomes.HasSpawn.ADVANCED_HUNTER).addTags(BiomeTags.IS_OVERWORLD); //TODO 1.19 determine spawn-able biomes
-            tag(ModTags.Biomes.NoSpawn.ADVANCED_HUNTER).addTags(ModTags.Biomes.IS_HUNTER_BIOME);
+            tag(ModTags.Biomes.NoSpawn.ADVANCED_HUNTER).addTags(ModTags.Biomes.IS_FACTION_BIOME);
         }
     }
 
