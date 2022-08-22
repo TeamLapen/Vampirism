@@ -111,7 +111,10 @@ Used in recipes or for placing Alchemical Fire.
         source: armorOfSwiftnessUltimateRecipes
     }
 ]}/>
-<Items title="Beacon Core" img={beaconImages} source={beaconCoreRecipes}/>
+<Items title="Beacon Core" img={beaconImages} source={beaconCoreRecipes}>
+
+The Beacon Cores are used in crafting [Garlic Diffuser](blocks.mdx#garlic-diffuser)
+</Items>
 <Items title="Blood Bottle" img={bloodBottleImages}>
 
 Blood Bottle are used to store blood to drink or transport.
@@ -129,10 +132,25 @@ You can disable the automatic conversion of Glass Bottles to Blood Bottles by se
 Blood Infused Iron Ingots are used to craft Vampire Swords
 
 </Items>
-<Items title="Crossbow" img={crossbowImages} source={crossbowRecipes}/>
-<Items title="Crossbow Arrow" img={crossbowArrowImages} source={crossbowArrowRecipes}></Items>
-<Item title="Crossbow Clip" img={crossbowClipImage} source={crossbowArrowClipRecipes}></Item>
-<Item title="Feeding Adapter" img={feedingAdapterImage} source={feedingAdapterRecipes} ></Item>
+<Items title="Crossbow" img={crossbowImages} source={crossbowRecipes}>
+    There are several variants of the Crossbow which are unlocked by certain skills.
+    There is a basic crossbow and an enhanced crossbow, both come with a double-barreled variant and then there are the Semi-Auto Crossbows which can fire multiple arrows without the need of reloading.
+</Items>
+<Items title="Crossbow Arrow" img={crossbowArrowImages} source={crossbowArrowRecipes}>
+
+### Spitfire
+The Spitfire Arrows create alchemical fire on impact.
+
+### Vampire Killer
+Kills low level vampires NPC instantly.
+</Items>
+<Item title="Crossbow Clip" img={crossbowClipImage} source={crossbowArrowClipRecipes}>
+
+Used as ammunition for [Semi-Auto Crossbows](#crossbow).
+</Item>
+<Item title="Feeding Adapter" img={feedingAdapterImage} source={feedingAdapterRecipes} >
+    Instead of refilling your blood bottles everything you can carry a blood container and directly drinking from it with the Feeding Adapter in your hand.
+</Item>
 <Item title="Garlic" img={garlicImage} source={garlicRecipes}></Item>
 <Item title="Garlic Bread" img={garlicBreadImage} source={garlicBreadRecipes}>
 
@@ -302,5 +320,5 @@ Protects from the sun when held in hand. Config option `umbrella` must be enable
 
 Stylish vampire clothing that provides minimal protection but can be fully enchanted.
 </TieredItem>
-<Item title="Vampire Blook" img={vampireBloodImage}/>
+<Item title="Vampire Blood" img={vampireBloodImage}/>
 <Item title="Vampire Book" img={vampireBookImage}/>

@@ -54,11 +54,11 @@ Fluid blood values are placed in the `data/<modid>/vampirism_blood_values/fluids
 ```text title="<modid>.txt"
 divider=100
 
-<fluidid>=<value>
-<fluidid>=<value>
-<fluidid>=<value>
-<fluidid>=<value>
+<fluid-id>=<value>
+<fluid-id>=<value>
+<fluid-id>=<value>
+<fluid-id>=<value>
 ```
 - `divider`: The divider for the conversion rate that is applied to all values after loading. The pre-specified value is 100 (and no need to override)
-- `<fluidid>`: The registry name of the fluid.
+- `<fluid-id>`: The registry name of the fluid.
 - `<value>`: The conversion rate of the fluid to blood. As integer percentage considering the divider.

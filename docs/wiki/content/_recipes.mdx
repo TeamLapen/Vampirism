@@ -237,7 +237,7 @@ export const garlicDiffuserRecipes = craftingRecipe(garlicDiffuserRecipe)
 export const hunterTableRecipes = craftingRecipe(hunterTableRecipe)
 export const injectionChairRecipes = craftingRecipe(injectionChairRecipe)
 export const potionTableRecipes = craftingRecipe(potionTableRecipe)
-export const stoneBricksRecipes = craftingRecipes([darkStoneRecipe, darkStoneBrickRecipe, darkStoneBrick2Recipe, purpleStoneBrickRecipe, stoneBricksRecipe, stoneBricks2Recipe] )
+export const stoneBricksRecipes = craftingRecipes([darkStoneRecipe, darkStoneBrickRecipe, darkStoneBrick2Recipe, purpleStoneBrickRecipe, stoneBricksRecipe] )
 export const stoneSlapsRecipes = craftingRecipes([darkStoneSlapRecipe, darkStoneBrickSlapRecipe, purpleStoneBrickSlapRecipe])
 export const stoneStairsRecipes = craftingRecipes([darkStoneStairsRecipe, darkStoneBrickStairsRecipe, purpleStoneBrickStairsRecipe])
 export const vampireOrchidRecipes = [
@@ -247,5 +247,13 @@ export const vampireOrchidRecipes = [
         source: ["Vampire Orchids can be found in the Vampire Forest"]
     }
 ]
-export const villageTotemRecipes = craftingRecipes([totemTopRecipe, totemBottomRecipe])
+export const villageFragileTotemRecipes = [
+    {
+        type: "list",
+        title: "World",
+        source: ["Fragile Village Totems can be found in villages"]
+    }
+]
+export const villageCraftedTotemRecipes = craftingRecipes([totemBottomRecipe, totemTopRecipe])
+export const villageTotemRecipes = sumSource([villageFragileTotemRecipes, villageCraftedTotemRecipes])
 export const weaponTableRecipes = craftingRecipe(weaponTableRecipe)

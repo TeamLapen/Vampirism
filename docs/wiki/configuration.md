@@ -44,7 +44,7 @@ The position of the level indicator as well as the skill button can be changed i
 ## Datapacks
 As Mojang pushes more and more towards datapack based content/configuration, Vampirism has to adapt to that. Therefore, some things are only configurable via datapacks. This is a bit more complicated, but at the same time more powerful. This affects e.g. recipes, blood values and parts of world generation
 
-To see things that can be configured via datapacks, have a look at the following two folders: [First](https://github.com/TeamLapen/Vampirism/tree/1.18/src/main/resources/data/vampirism) and [Second](https://github.com/TeamLapen/Vampirism/tree/1.18/src/generated/resources/data/vampirism). Make sure to select the correct version branch.
+To see things that can be configured via datapacks, take a look at [Data Packs](../data/intro.md).
 
 For datapack creation in general checkout the [Minecraft Wiki](https://minecraft.fandom.com/wiki/Tutorials/Creating_a_data_pack).
 

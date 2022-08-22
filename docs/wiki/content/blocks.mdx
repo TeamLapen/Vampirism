@@ -61,7 +61,9 @@ import {
     weaponTableRecipes
 } from "./_recipes.mdx";
 
-<Blocks img={alchemicalCauldronImages} title="Alchemical Cauldron" source={alchemicalTableRecipes}></Blocks>
+<Blocks img={alchemicalCauldronImages} title="Alchemical Cauldron" source={alchemicalTableRecipes}>
+    The Alchemical Cauldron is a processing block in which hunter can brew with the help of a fire source. It requires some sort of fluid (depending on the recipe) to process items.
+</Blocks>
 <Block img={churchAltarImage} title="Altar of Cleansing" source={altarOfCleansingRecipes}>
     The Altar of Cleansing is used for two purposes: Leaving the Vampire faction and creating holy water.
 </Block>
@@ -128,23 +130,41 @@ Placed Garlic Diffuser provide a garlic aura that effects nearby vampires with t
 
 The Hunter Table is use to craft [Hunter Intel](../content/items.mdx#hunter-intel) from items. That can be used for [hunter leveling](../factions/hunter/leveling.md)
 </Blocks>
-<Block img={injectionChairImage} title="Injection Chair" source={injectionChairRecipes}></Block>
-<Blocks img={spruceLeavesImages} title="Spruce Leaves" source={spruceLeavesRecipes}></Blocks>
+<Block img={injectionChairImage} title="Injection Chair" source={injectionChairRecipes}>
+
+At an Injection Chair you can use [Injections](../content/items.mdx#injections).
+</Block>
+<Blocks img={spruceLeavesImages} title="Spruce Leaves" source={spruceLeavesRecipes}>
+    Leaves for the dark spruce trees and bloody spruce trees.
+</Blocks>
 <Block img={potionTableImage} title="Potion Table" source={potionTableRecipes}></Block>
 <Blocks img={stoneBrickImages} title="Stone Bricks" source={stoneBricksRecipes}>
-    <Decorative></Decorative>
+<Decorative></Decorative>
+
+Only Vampire can spawn on these bricks, except for the Dark Stone where no entity can spawn.
 </Blocks>
 <Blocks img={stoneSlapImages} title="Stone Slaps" source={stoneSlapsRecipes}>
-    <Decorative></Decorative>
+<Decorative></Decorative>
+
+Only Vampire can spawn on these slaps, except for the Dark Stone Slaps where no entity can spawn.
 </Blocks>
 <Blocks img={stoneStairImages} title="Stone Stairs" source={stoneStairsRecipes}>
-    <Decorative></Decorative>
+<Decorative></Decorative>
+
+Only Vampire can spawn on these stairs, except for the Dark Stone Stairs where no entity can spawn.
 </Blocks>
 <Block img={sunscreenBeaconImage} title="Sunscreen Beacon">
-    <CreativeOnly></CreativeOnly>
+<CreativeOnly></CreativeOnly>
+
+A Sunscreen Beacon protects vampires in a 32x32 area from the sun.
 </Block>
 <Block img={vampireOrchidImage} title="Vampire Orchid" source={vampireOrchidRecipes}>
     <Decorative></Decorative>
 </Block>
-<Blocks img={totemImages} title="Village Totem Top/Base" source={villageTotemRecipes}></Blocks>
-<Blocks img={weaponTableImages} title="Weapon Table" source={weaponTableRecipes}></Blocks>
+<Blocks img={totemImages} title="Village Totem Top/Base" source={villageTotemRecipes}>
+
+Totems are used to control villages for a faction. See [Faction Raids](../factions/faction-raids.md) for a more detailed description.
+</Blocks>
+<Blocks img={weaponTableImages} title="Weapon Table" source={weaponTableRecipes}>
+    Weapon Tables are extended Crafting Tables that are abe to craft advanced weapons, but require Lava to work.
+</Blocks>

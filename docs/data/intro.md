@@ -11,7 +11,7 @@ Checkout the Minecraft Wiki to see how [datapacks](https://minecraft.gamepedia.c
 [Installing them](https://minecraft.gamepedia.com/Tutorials/Installing_a_data_pack)  
 [Creating them](https://minecraft.gamepedia.com/Tutorials/Creating_a_data_pack)  
 
-Also make sure you are familiar with the namespace concept. If you want to modify/override Vampirism's own definition you have to use "vampirism" for everything else use your own.
+Also make sure you are familiar with the namespace concept. If you want to modify/override Vampirism's own definition you have to use `vampirism` for everything else use your own.
 
 ## Things that are customizable
 Besides the already mentioned vanilla contents you can also customize:

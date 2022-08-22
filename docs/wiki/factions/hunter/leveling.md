@@ -11,11 +11,11 @@ To reach higher levels you have collect some vampire blood (Kill normal vampire 
 If you got enough look around for a normal hunter NPC. Interact with him and a GUI will open.  
 Current required counts to reach  
 
-| For Level | [Vampire Blood](../../content/fluids.md#blood) |
-|-----------|------------------------------------------------|
-| 2         | 4                                              |
-| 3         | 8                                              |
-| 4         | 12                                             |
+| For Level | [Vampire Blood](../../content/items.mdx#vampire-blood) |
+|-----------|--------------------------------------------------------|
+| 2         | 4                                                      |
+| 3         | 8                                                      |
+| 4         | 12                                                     |
 
 ## To reach level 5+
 To level up further you have to do some research first. Craft yourself a [Hunter Table](../../content/blocks.mdx#hunter-table) and open its GUI. By inspecting some special items you will get some intel/research about vampires which you can use to level up at a [Vampire Hunter Trainer](../../content/entities/hunter_trainer.mdx) in a village.  
