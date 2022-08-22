@@ -76,6 +76,14 @@ const config = {
           },
           {to: '/blog', label: 'Blog', position: 'left'},
           {
+            type: 'docsVersionDropdown',
+            position: 'right',
+            dropdownItemsAfter: [
+              { to: 'https://github.com/TeamLapen/Vampirism/wiki/%5B1.7.10%5D-Getting-Started', label: 'For MC 1.7.10' },
+            ],
+            dropdownActiveClassDisabled: false,
+          },
+          {
             href: 'https://github.com/Teamlapen/Vampirism',
             label: 'GitHub',
             position: 'right',
