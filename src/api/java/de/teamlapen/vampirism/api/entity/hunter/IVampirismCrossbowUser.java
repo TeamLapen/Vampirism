@@ -19,6 +19,10 @@ public interface IVampirismCrossbowUser extends ICrossbowUser {
 
     boolean isChargingCrossbow();
 
+    default boolean canUseCrossbow(ItemStack stack){
+        return true;
+    }
+
     /**
      * current crossbow arm pose to use for rendering
      */
@@ -41,10 +45,11 @@ public interface IVampirismCrossbowUser extends ICrossbowUser {
         Hand hand = ProjectileHelper.getWeaponHoldingHand(entity, IVampirismCrossbow.class::isInstance);
         ItemStack itemstack = entity.getItemInHand(hand);
         if (itemstack.getItem() instanceof IVampirismCrossbow) {
-            ((IVampirismCrossbow) itemstack.getItem()).performShootingMod(entity.level, entity, hand, itemstack, speed, (float)(14 - entity.level.getDifficulty().getId() * 4));
+            if (CrossbowItem.isCharged(itemstack)){
+                ((IVampirismCrossbow) itemstack.getItem()).performShootingMod(entity.level, entity, hand, itemstack, speed, (float)(14 - entity.level.getDifficulty().getId() * 4));
+                this.onCrossbowAttackPerformed();
+            }
         }
-
-        this.onCrossbowAttackPerformed();
     }
 
     enum ArmPose {

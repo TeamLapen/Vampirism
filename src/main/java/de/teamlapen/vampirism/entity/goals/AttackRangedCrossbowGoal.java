@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.entity.goals;
 
+import de.teamlapen.vampirism.api.entity.hunter.IVampirismCrossbowUser;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
 import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.ICrossbowUser;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
@@ -18,7 +18,7 @@ import java.util.EnumSet;
  *
  * @author maxanier
  */
-public class AttackRangedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & ICrossbowUser> extends Goal {
+public class AttackRangedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & IVampirismCrossbowUser> extends Goal {
     public static final RangedInteger PATHFINDING_DELAY_RANGE = new RangedInteger(20, 40);
     private final T mob;
     private CrossbowState crossbowState = CrossbowState.UNCHARGED;
@@ -42,11 +42,23 @@ public class AttackRangedCrossbowGoal<T extends CreatureEntity & IRangedAttackMo
 
     @Override
     public boolean canUse() {
-        return this.isValidTarget() && this.isHoldingCrossbow();
+        return this.isValidTarget() && this.isHoldingCrossbow() && this.canUseCrossbow();
     }
 
     private boolean isHoldingCrossbow() {
         return this.mob.isHolding(IVampirismCrossbow.class::isInstance);
+    }
+
+    private boolean canUseCrossbow() {
+        ItemStack stack = this.mob.getMainHandItem();
+        if (stack.getItem() instanceof IVampirismCrossbow) {
+            return this.mob.canUseCrossbow(stack);
+        }
+        stack = this.mob.getOffhandItem();
+        if (stack.getItem() instanceof IVampirismCrossbow) {
+            return this.mob.canUseCrossbow(stack);
+        }
+        return false;
     }
 
     private boolean isValidTarget() {
@@ -62,7 +74,7 @@ public class AttackRangedCrossbowGoal<T extends CreatureEntity & IRangedAttackMo
         if (this.mob.isUsingItem()) {
             this.mob.stopUsingItem();
             this.mob.setChargingCrossbow(false);
-            CrossbowItem.setCharged(this.mob.getUseItem(), false);
+//            CrossbowItem.setCharged(this.mob.getUseItem(), false);
         }
     }
 
@@ -109,7 +121,7 @@ public class AttackRangedCrossbowGoal<T extends CreatureEntity & IRangedAttackMo
 
                 int i = this.mob.getTicksUsingItem();
                 ItemStack itemstack = this.mob.getUseItem();
-                if (i >= CrossbowItem.getChargeDuration(itemstack)) {
+                if (i >= ((IVampirismCrossbow) itemstack.getItem()).getChargeDurationMod(itemstack)) {
                     this.mob.releaseUsingItem();
                     this.crossbowState = CrossbowState.CHARGED;
                     this.attackDelay = 20 + this.mob.getRandom().nextInt(20);
@@ -123,8 +135,13 @@ public class AttackRangedCrossbowGoal<T extends CreatureEntity & IRangedAttackMo
             } else if (this.crossbowState == CrossbowState.READY_TO_ATTACK && flag) {
                 this.mob.performRangedAttack(livingentity, 1.0F);
                 ItemStack itemstack1 = this.mob.getItemInHand(ProjectileHelper.getWeaponHoldingHand(this.mob, IVampirismCrossbow.class::isInstance));
-                CrossbowItem.setCharged(itemstack1, false);
-                this.crossbowState = CrossbowState.UNCHARGED;
+                if (CrossbowItem.getChargedProjectiles(itemstack1).isEmpty()) {
+                    CrossbowItem.setCharged(itemstack1, false);
+                    this.crossbowState = CrossbowState.UNCHARGED;
+                } else {
+                    this.attackDelay = 20 + this.mob.getRandom().nextInt(20);
+                    this.crossbowState = CrossbowState.CHARGED;
+                }
             }
 
         }

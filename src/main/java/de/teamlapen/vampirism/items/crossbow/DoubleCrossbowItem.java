@@ -60,7 +60,7 @@ public class DoubleCrossbowItem extends VampirismCrossbowItem {
      * see comments for changes
      * TODO 1.19 recheck
      */
-    public void performShootingMod(World level, LivingEntity shooter, Hand hand, ItemStack stack, float speed, float angle) {
+    public boolean performShootingMod(World level, LivingEntity shooter, Hand hand, ItemStack stack, float speed, float angle) {
         List<ItemStack> list = getChargedProjectiles(stack);
         float[] afloat = getShotPitches(shooter.getRandom());
 
@@ -73,5 +73,6 @@ public class DoubleCrossbowItem extends VampirismCrossbowItem {
         }
 
         onCrossbowShot(level, shooter, stack);
+        return list.isEmpty();
     }
 }

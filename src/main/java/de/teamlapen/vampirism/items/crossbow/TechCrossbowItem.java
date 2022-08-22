@@ -51,7 +51,7 @@ public class TechCrossbowItem extends VampirismCrossbowItem {
     public ActionResult<ItemStack> use(@Nonnull World p_77659_1_, PlayerEntity p_77659_2_, @Nonnull Hand p_77659_3_) {
         ItemStack itemstack = p_77659_2_.getItemInHand(p_77659_3_);
         if (isCharged(itemstack)) {
-            if(performShootingMod2(p_77659_1_, p_77659_2_, p_77659_3_, itemstack, getShootingPowerMod(itemstack), 1.0F)) { // do not set uncharged if projectiles left | get shooting power from crossbow
+            if(performShootingMod(p_77659_1_, p_77659_2_, p_77659_3_, itemstack, getShootingPowerMod(itemstack), 1.0F)) { // do not set uncharged if projectiles left | get shooting power from crossbow
                 setCharged(itemstack, false);
             } else {
                 p_77659_2_.getCooldowns().addCooldown(this, 10); // add cooldown if projectiles left
@@ -74,7 +74,7 @@ public class TechCrossbowItem extends VampirismCrossbowItem {
      * same as {@link  net.minecraft.item.CrossbowItem#performShooting(net.minecraft.world.World, net.minecraft.entity.LivingEntity, net.minecraft.util.Hand, net.minecraft.item.ItemStack, float, float)} see comments for changes
      * TODO 1.19 recheck
      */
-    public boolean performShootingMod2(World p_220014_0_, LivingEntity p_220014_1_, Hand p_220014_2_, ItemStack p_220014_3_, float p_220014_4_, float p_220014_5_) {
+    public boolean performShootingMod(World p_220014_0_, LivingEntity p_220014_1_, Hand p_220014_2_, ItemStack p_220014_3_, float p_220014_4_, float p_220014_5_) {
         List<ItemStack> list = getChargedProjectiles(p_220014_3_);
         float[] afloat = getShotPitches(p_220014_1_.getRandom());
 

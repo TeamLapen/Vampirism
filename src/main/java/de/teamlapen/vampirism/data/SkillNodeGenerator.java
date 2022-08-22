@@ -84,6 +84,7 @@ public class SkillNodeGenerator implements IDataProvider {
             ResourceLocation lord_3 = SkillNodeBuilder.hunter(modId("hunter_lord"), HunterSkills.HUNTER_LORD_SPEED.get(), HunterSkills.HUNTER_LORD_ATTACK_SPEED.get()).build(consumer, modId("lord_3"));
             ResourceLocation lord_4 = SkillNodeBuilder.hunter(modId("hunter_lord"), HunterSkills.HUNTER_MINION_COLLECT.get()).build(consumer, modId("lord_4"));
             ResourceLocation lord_5 = SkillNodeBuilder.hunter(modId("hunter_lord"), HunterSkills.HUNTER_MINION_RECOVERY.get()).build(consumer, modId("lord_5"));
+            ResourceLocation lord_6 = SkillNodeBuilder.hunter(lord_2, HunterSkills.MINION_TECH_CROSSBOWS.get()).build(consumer, modId("lord_6"));
         }
 
         //vampire

@@ -21,6 +21,8 @@ import de.teamlapen.vampirism.entity.hunter.BasicHunterEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.items.MinionUpgradeItem;
+import de.teamlapen.vampirism.items.crossbow.TechCrossbowItem;
+import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;
@@ -50,6 +52,7 @@ import net.minecraftforge.fml.DistExecutor;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.function.Predicate;
 
 
 public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMinionData> implements IHunter, IVampirismCrossbowUser {
@@ -107,14 +110,6 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
 
     public int getHatType() {
         return this.getItemBySlot(EquipmentSlotType.HEAD).isEmpty() ? this.getMinionData().map(d -> d.hat).orElse(0) : -2;
-    }
-
-    public boolean isSwingingArms() {
-        return this.getEntityData().get(RAISED_ARM);
-    }
-
-    protected void setSwingingArms(boolean b) {
-        this.getEntityData().set(RAISED_ARM, b);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -230,6 +225,11 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     }
 
     @Override
+    public boolean canUseCrossbow(ItemStack stack) {
+        return stack.getItem() instanceof TechCrossbowItem ? getLordOpt().flatMap(p -> HunterPlayer.getOpt(p.getPlayer()).map(HunterPlayer::getSkillHandler)).map(skillHandler -> skillHandler.isSkillEnabled(HunterSkills.MINION_TECH_CROSSBOWS.get())).orElse(false) : true;
+    }
+
+    @Override
     public boolean isChargingCrossbow() {
         return this.getEntityData().get(IS_CHARGING_CROSSBOW);
     }
@@ -238,9 +238,22 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     @Override
     public ItemStack getProjectile(ItemStack stack) {
         if (stack.getItem() instanceof IVampirismCrossbow) {
-            return ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance();
+            if (stack.getItem() instanceof TechCrossbowItem) {
+                return ModItems.TECH_CROSSBOW_AMMO_PACKAGE.get().getDefaultInstance();
+            } else {
+                return ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance();
+            }
         }
         return ItemStack.EMPTY;
+    }
+
+    @Override
+    public Predicate<ItemStack> getEquipmentPredicate(EquipmentSlotType slotType) {
+        Predicate<ItemStack> predicate = super.getEquipmentPredicate(slotType);
+        if (slotType == EquipmentSlotType.MAINHAND) {
+            predicate = predicate.and(stack -> !(stack.getItem() instanceof TechCrossbowItem) || HunterPlayer.getOpt(getLord().getPlayer()).map(a -> a.getSkillHandler().isSkillEnabled(HunterSkills.MINION_TECH_CROSSBOWS.get())).orElse(false));
+        }
+        return predicate;
     }
 
     public static class HunterMinionData extends MinionData {

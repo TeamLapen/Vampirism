@@ -95,6 +95,7 @@ public class HunterSkills {
             return VReference.HUNTER_FACTION;
         }
     });
+    public static final RegistryObject<ISkill> MINION_TECH_CROSSBOWS = SKILLS.register("minion_tech_crossbows", () -> new VampirismSkill.LordHunterSkill(true));
 
     static {
         SKILLS.register(SkillType.LEVEL.createIdForFaction(VReference.HUNTER_FACTION.getID()).getPath(), () -> new VampirismSkill.SimpleHunterSkill(false));

@@ -122,7 +122,7 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
      * same as {@link net.minecraft.item.CrossbowItem#performShooting(net.minecraft.world.World, net.minecraft.entity.LivingEntity, net.minecraft.util.Hand, net.minecraft.item.ItemStack, float, float)}
      * check comments for changes
      */
-    public void performShootingMod(World level, LivingEntity shooter, Hand hand, ItemStack stack, float speed, float angle) {
+    public boolean performShootingMod(World level, LivingEntity shooter, Hand hand, ItemStack stack, float speed, float angle) {
         List<ItemStack> list = getChargedProjectiles(stack);
         float[] afloat = getShotPitches(shooter.getRandom());
 
@@ -136,6 +136,7 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
         }
 
         onCrossbowShot(level, shooter, stack);
+        return list.isEmpty();
     }
 
     /**
