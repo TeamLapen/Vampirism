@@ -4,6 +4,7 @@ import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.lib.lib.util.LogUtil;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.advancements.critereon.FactionCriterionTrigger;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -366,8 +367,13 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             VampirismEventFactory.fireFactionLevelChangedEvent(this, old, oldLevel, currentFaction, currentLevel);
         }
         sync(!Objects.equals(old, currentFaction));
-        if (player instanceof ServerPlayer) {
-            ModAdvancements.TRIGGER_FACTION.trigger((ServerPlayer) player, currentFaction, currentLevel, currentLordLevel);
+        if (player instanceof ServerPlayer serverPlayer) {
+            if (old != faction) {
+                ModAdvancements.TRIGGER_FACTION.revokeAll(serverPlayer);
+            } else if (oldLevel > level) {
+                ModAdvancements.TRIGGER_FACTION.revokeLevel(serverPlayer, faction, FactionCriterionTrigger.Type.LEVEL, level);
+            }
+            ModAdvancements.TRIGGER_FACTION.trigger(serverPlayer, currentFaction, currentLevel, currentLordLevel);
         }
         return true;
 
@@ -491,6 +497,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     private boolean setLordLevel(int level, boolean sync) {
+        int oldLevel = this.currentLordLevel;
         if (level > 0 && (currentFaction == null || currentLevel != currentFaction.getHighestReachableLevel() || level > currentFaction.getHighestLordLevel())) {
             return false;
         }
@@ -515,8 +522,11 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         } else {
             LOGGER.debug(LogUtil.FACTION, "{} has now lord level {}", this.player.getName().getString(), level);
         }
-        if (player instanceof ServerPlayer) {
-            ModAdvancements.TRIGGER_FACTION.trigger((ServerPlayer) player, currentFaction, currentLevel, currentLordLevel);
+        if (player instanceof ServerPlayer serverPlayer) {
+            if (currentLordLevel < oldLevel){
+                ModAdvancements.TRIGGER_FACTION.revokeLevel(serverPlayer, currentFaction, FactionCriterionTrigger.Type.LORD, currentLordLevel);
+            }
+            ModAdvancements.TRIGGER_FACTION.trigger(serverPlayer, currentFaction, currentLevel, currentLordLevel);
         }
         if (sync) sync(false);
         return true;

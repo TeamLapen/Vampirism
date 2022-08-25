@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ModAdvancements {
 
-    public static final TriggerCriterionTrigger TRIGGER_FACTION = register(new TriggerCriterionTrigger());
+    public static final FactionCriterionTrigger TRIGGER_FACTION = register(new FactionCriterionTrigger());
     public static final VampireActionCriterionTrigger TRIGGER_VAMPIRE_ACTION = register(new VampireActionCriterionTrigger());
     public static final HunterActionCriterionTrigger TRIGGER_HUNTER_ACTION = register(new HunterActionCriterionTrigger());
     public static final SkillUnlockedCriterionTrigger TRIGGER_SKILL_UNLOCKED = register(new SkillUnlockedCriterionTrigger());

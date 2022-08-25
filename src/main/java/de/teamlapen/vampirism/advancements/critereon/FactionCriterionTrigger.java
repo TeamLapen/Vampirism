@@ -5,15 +5,21 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.mixin.PlayerAdvancementsAccessor;
+import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.PlayerAdvancements;
 import net.minecraft.server.level.ServerPlayer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class TriggerCriterionTrigger extends SimpleCriterionTrigger<TriggerCriterionTrigger.Instance> {
+import java.util.Objects;
+import java.util.function.Predicate;
+
+public class FactionCriterionTrigger extends SimpleCriterionTrigger<FactionCriterionTrigger.Instance> {
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "faction");
 
     private final static Logger LOGGER = LogManager.getLogger();
@@ -37,6 +43,26 @@ public class TriggerCriterionTrigger extends SimpleCriterionTrigger<TriggerCrite
      */
     public void trigger(@NotNull ServerPlayer playerMP, IPlayableFaction<?> faction, int level, int lordLevel) {
         this.trigger(playerMP, (instance -> instance.test(faction, level, lordLevel)));
+    }
+
+    public void revokeAll(ServerPlayer player) {
+        this.revoke(player, instance -> true);
+    }
+
+    public void revokeLevel(ServerPlayer player, IPlayableFaction<?> faction, Type type, int newLevel) {
+        this.revoke(player, instance -> instance.faction == faction && instance.type == type && instance.level > newLevel);
+    }
+
+    private void revoke(ServerPlayer player, Predicate<Instance> instancePredicate) {
+        PlayerAdvancements advancements = player.getAdvancements();
+        ((PlayerAdvancementsAccessor) advancements).getAdvancements().entrySet().stream().filter(entry -> !entry.getValue().isDone()).forEach(advancementProgressEntry -> {
+            if(advancementProgressEntry.getKey().getCriteria().values().stream().anyMatch(pair -> {
+                CriterionTriggerInstance trigger = pair.getTrigger();
+                return trigger != null && trigger.getCriterion().equals(FactionCriterionTrigger.ID) && instancePredicate.test(((Instance) trigger));
+            })) {
+                advancementProgressEntry.getValue().getCompletedCriteria().forEach(a -> advancements.revoke(advancementProgressEntry.getKey(), a));
+            }
+        });
     }
 
     @NotNull
@@ -90,7 +116,7 @@ public class TriggerCriterionTrigger extends SimpleCriterionTrigger<TriggerCrite
         }
 
         public boolean test(IPlayableFaction<?> faction, int level, int lordLevel) {
-            if (this.faction == null || this.faction.equals(faction)) {
+            if ((faction == null && this.faction == null) || Objects.equals(this.faction, faction)) {
                 if (type == Type.LEVEL) {
                     return level >= this.level;
                 } else if (type == Type.LORD) {

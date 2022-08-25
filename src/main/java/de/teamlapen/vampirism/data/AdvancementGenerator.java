@@ -42,7 +42,7 @@ public class AdvancementGenerator extends AdvancementProvider {
             Advancement become_hunter = Advancement.Builder.advancement()
                     .display(ModItems.ITEM_GARLIC.get(), Component.translatable("advancement.vampirism.become_hunter"), Component.translatable("advancement.vampirism.become_hunter.desc"), null, FrameType.TASK, true, false, false)
                     .parent(root.get())
-                    .addCriterion("main", TriggerCriterionTrigger.level(VReference.HUNTER_FACTION, 1))
+                    .addCriterion("main", FactionCriterionTrigger.level(VReference.HUNTER_FACTION, 1))
                     .save(consumer, REFERENCE.MODID + ":hunter/become_hunter");
             Advancement stake = Advancement.Builder.advancement()
                     .display(ModItems.STAKE.get(), Component.translatable("advancement.vampirism.stake"), Component.translatable("advancement.vampirism.stake.desc"), null, FrameType.CHALLENGE, true, true, true)
@@ -54,12 +54,12 @@ public class AdvancementGenerator extends AdvancementProvider {
                     .display(ModItems.HUMAN_HEART.get(), Component.translatable("advancement.vampirism.betrayal"), Component.translatable("advancement.vampirism.betrayal.desc"), null, FrameType.TASK, true, true, true)
                     .parent(become_hunter)
                     .addCriterion("kill", KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().of(ModTags.Entities.HUNTER)))
-                    .addCriterion("faction", TriggerCriterionTrigger.level(VReference.HUNTER_FACTION, 1))
+                    .addCriterion("faction", FactionCriterionTrigger.level(VReference.HUNTER_FACTION, 1))
                     .save(consumer, REFERENCE.MODID + ":hunter/betrayal");
             Advancement max_level = Advancement.Builder.advancement()
                     .display(ModItems.ITEM_GARLIC.get(), Component.translatable("advancement.vampirism.max_level_hunter"), Component.translatable("advancement.vampirism.max_level_hunter.desc"), null, FrameType.GOAL, true, true, true)
                     .parent(stake)
-                    .addCriterion("level", TriggerCriterionTrigger.level(VReference.HUNTER_FACTION, 14))
+                    .addCriterion("level", FactionCriterionTrigger.level(VReference.HUNTER_FACTION, 14))
                     .rewards(AdvancementRewards.Builder.experience(100))
                     .save(consumer, REFERENCE.MODID + ":hunter/max_level");
             Advancement technology = Advancement.Builder.advancement()
@@ -72,7 +72,7 @@ public class AdvancementGenerator extends AdvancementProvider {
             Advancement max_lord = Advancement.Builder.advancement()
                     .display(ModItems.HUNTER_MINION_UPGRADE_SPECIAL.get(), Component.translatable("advancement.vampirism.max_lord_hunter"), Component.translatable("advancement.vampirism.max_lord_hunter.desc"), null, FrameType.CHALLENGE, true, true, true)
                     .parent(max_level)
-                    .addCriterion("level", TriggerCriterionTrigger.lord(VReference.HUNTER_FACTION, 5))
+                    .addCriterion("level", FactionCriterionTrigger.lord(VReference.HUNTER_FACTION, 5))
                     .save(consumer, REFERENCE.MODID + ":hunter/max_lord");
             Advancement cure_vampire = Advancement.Builder.advancement()
                     .display(Items.GOLDEN_APPLE, Component.translatable("advancement.vampirism.cure_vampire_villager"), Component.translatable("advancement.vampirism.cure_vampire_villager.desc"), null, FrameType.TASK, true, true, true)
@@ -133,7 +133,7 @@ public class AdvancementGenerator extends AdvancementProvider {
             Advancement become_vampire = Advancement.Builder.advancement()
                     .display(ModItems.VAMPIRE_FANG.get(), Component.translatable("advancement.vampirism.become_vampire"), Component.translatable("advancement.vampirism.become_vampire.desc"), null, FrameType.TASK, true, false, false)
                     .parent(root.get())
-                    .addCriterion("main", TriggerCriterionTrigger.level(VReference.VAMPIRE_FACTION, 1))
+                    .addCriterion("main", FactionCriterionTrigger.level(VReference.VAMPIRE_FACTION, 1))
                     .save(consumer, REFERENCE.MODID + ":vampire/become_vampire");
             Advancement bat = Advancement.Builder.advancement()
                     .display(Items.FEATHER, Component.translatable("advancement.vampirism.bat"), Component.translatable("advancement.vampirism.bat.desc"), null, FrameType.TASK, true, true, true)
@@ -158,7 +158,7 @@ public class AdvancementGenerator extends AdvancementProvider {
             Advancement max_level = Advancement.Builder.advancement()
                     .display(ModItems.VAMPIRE_FANG.get(), Component.translatable("advancement.vampirism.max_level_vampire"), Component.translatable("advancement.vampirism.max_level_vampire.desc"), null, FrameType.GOAL, true, true, true)
                     .parent(bat)
-                    .addCriterion("level", TriggerCriterionTrigger.level(VReference.VAMPIRE_FACTION, 14))
+                    .addCriterion("level", FactionCriterionTrigger.level(VReference.VAMPIRE_FACTION, 14))
                     .rewards(AdvancementRewards.Builder.experience(100))
                     .save(consumer, REFERENCE.MODID + ":vampire/max_level");
             Advancement sniped = Advancement.Builder.advancement()
@@ -181,7 +181,7 @@ public class AdvancementGenerator extends AdvancementProvider {
             Advancement max_lord = Advancement.Builder.advancement()
                     .display(ModItems.VAMPIRE_MINION_UPGRADE_SPECIAL.get(), Component.translatable("advancement.vampirism.max_lord_vampire"), Component.translatable("advancement.vampirism.max_lord_vampire.desc"), null, FrameType.CHALLENGE, true, true, true)
                     .parent(max_level)
-                    .addCriterion("level", TriggerCriterionTrigger.lord(VReference.VAMPIRE_FACTION, 5))
+                    .addCriterion("level", FactionCriterionTrigger.lord(VReference.VAMPIRE_FACTION, 5))
                     .save(consumer, REFERENCE.MODID + ":vampire/max_lord");
 
         }
@@ -201,7 +201,7 @@ public class AdvancementGenerator extends AdvancementProvider {
             Advancement become_lord = Advancement.Builder.advancement()
                     .display(Items.PAPER, Component.translatable("advancement.vampirism.become_lord"), Component.translatable("advancement.vampirism.become_lord.desc"), null, FrameType.TASK, true, true, true)
                     .parent(root.get())
-                    .addCriterion("level", TriggerCriterionTrigger.lord(null, 1))
+                    .addCriterion("level", FactionCriterionTrigger.lord(null, 1))
                     .save(consumer, REFERENCE.MODID + ":minion/become_lord");
             Advancement collect_blood = Advancement.Builder.advancement()
                     .display(ModItems.BLOOD_BOTTLE.get(), Component.translatable("advancement.vampirism.collect_blood"), Component.translatable("advancement.vampirism.collect_blood.desc"), null, FrameType.TASK, true, true, true)

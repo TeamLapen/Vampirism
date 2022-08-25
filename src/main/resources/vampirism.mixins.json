@@ -19,6 +19,7 @@
     "MixinPlayerEntity",
     "MixinPotionBrewing",
     "MultiNoiseBiomeSourcePresetAccessor",
+    "PlayerAdvancementsAccessor",
     "RecipeManagerAccessor",
     "SurfaceRuleDataMixin",
     "TileEntityTypeAccessor"
