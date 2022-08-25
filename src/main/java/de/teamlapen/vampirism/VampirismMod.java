@@ -28,6 +28,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.FactionRegistry;
 import de.teamlapen.vampirism.inventory.recipes.ExtendedBrewingRecipeRegistry;
 import de.teamlapen.vampirism.items.VampireRefinementItem;
+import de.teamlapen.vampirism.misc.VampirismLogger;
 import de.teamlapen.vampirism.modcompat.IMCHandler;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.player.ModPlayerEventHandler;
@@ -278,6 +279,7 @@ public class VampirismMod {
         modCompatLoader.onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
         VampirismAPI.skillManager().registerSkillType(SkillType.LEVEL);
         VampirismAPI.skillManager().registerSkillType(SkillType.LORD);
+        DistExecutor.safeRunWhenOn(Dist.DEDICATED_SERVER, () -> VampirismLogger::init);
     }
 
     /**

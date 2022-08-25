@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillPlayer;
+import de.teamlapen.vampirism.command.arguments.MinionArgument;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -514,6 +515,17 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
             task.tickBackground((Q) desc, info.data);
 
         }
+    }
+
+    /**
+     * creates a collection of id for all minions that are unique identifier to be used safely in commands
+     * <br>
+     * since the player is not necessarily available because the player might not be connected the players name is needed as parameter
+     * @param playerName the players name
+     * @return collection of minion ids
+     */
+    public Collection<MinionArgument.MinionId> getMinionIdForName(String playerName) {
+        return Arrays.stream(minions).map(i -> new MinionArgument.MinionId(playerName, i.minionID, i.data.getFormattedName().getString())).collect(Collectors.toList());
     }
 
     private static class MinionInfo {

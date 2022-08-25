@@ -16,6 +16,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
+import de.teamlapen.vampirism.misc.VampirismLogger;
 import de.teamlapen.vampirism.player.IVampirismPlayer;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.tasks.reward.LordLevelReward;
@@ -52,7 +53,7 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
  * Extended entity property that handles factions and levels for the player
  */
 public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapabilityInst, IFactionPlayerHandler {
-    private final static Logger LOGGER = LogManager.getLogger(FactionPlayerHandler.class);
+    private final static Logger LOGGER = LogManager.getLogger();
     @CapabilityInject(IFactionPlayerHandler.class)
     public static Capability<IFactionPlayerHandler> CAP = getNull();
 
@@ -391,6 +392,15 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         this.updateSkillTypes();
         updateCache();
         notifyFaction(old, oldLevel);
+        if (this.player instanceof ServerPlayerEntity && !(currentFaction == old && oldLevel == currentLevel)) {
+            if (old == currentFaction) {
+                VampirismLogger.info(VampirismLogger.LEVEL, "{} has new faction level {} {}, was {}", this.player.getName().getString(), currentFaction.getID(), currentLevel, oldLevel);
+            } else if (currentFaction != null) {
+                VampirismLogger.info(VampirismLogger.LEVEL, "{} is now in faction {} {}", this.player.getName().getString(), currentFaction.getID(), currentLevel);
+            } else {
+                VampirismLogger.info(VampirismLogger.LEVEL, "{} has now no level", this.player.getName().getString());
+            }
+        }
         if(old != currentFaction || oldLevel != currentLevel){
             VampirismEventFactory.fireFactionLevelChangedEvent(this,old,oldLevel,currentFaction,currentLevel);
         }
@@ -524,6 +534,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     private void notifyFaction(IPlayableFaction<? extends IFactionPlayer<?>> oldFaction, int oldLevel) {
         if (oldFaction != null && !oldFaction.equals(currentFaction)) {
             LOGGER.debug(LogUtil.FACTION, "{} is leaving faction {}", this.player.getName().getString(), oldFaction.getID());
+            VampirismLogger.info(VampirismLogger.LEVEL, "{} is leaving faction {}", this.player.getName().getString(), oldFaction.getID());
             oldFaction.getPlayerCapability(player).ifPresent(c -> c.onLevelChanged(0, oldLevel));
         }
         if (currentFaction != null) {
@@ -569,8 +580,10 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         });
         if (level == 0) {
             LOGGER.debug(LogUtil.FACTION, "Resetting lord level for {}", this.player.getName().getString());
+            VampirismLogger.info(VampirismLogger.LORD_LEVEL, "Resetting lord level for {}", this.player.getName().getString());
         } else {
             LOGGER.debug(LogUtil.FACTION, "{} has now lord level {}", this.player.getName().getString(), level);
+            VampirismLogger.info(VampirismLogger.LORD_LEVEL, "{} has now lord level {}", this.player.getName().getString(), level);
         }
         if (player instanceof ServerPlayerEntity) {
             if (currentLordLevel < oldLevel){

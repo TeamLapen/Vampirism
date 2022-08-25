@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * Similar to {@link PlayerInventory}
@@ -27,4 +28,6 @@ public interface IMinionInventory extends IInventory {
     NonNullList<ItemStack> getInventoryArmor();
 
     NonNullList<ItemStack> getInventoryHands();
+
+    List<NonNullList<ItemStack>> getAllInventorys();
 }
