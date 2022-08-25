@@ -2,7 +2,7 @@
   "parent": "vampirism:hunter/become_hunter",
   "display": {
     "icon": {
-      "item": "vampirism:cure_apple"
+      "item": "minecraft:golden_apple"
     },
     "title": {
       "translate": "advancement.vampirism.cure_vampire_villager"

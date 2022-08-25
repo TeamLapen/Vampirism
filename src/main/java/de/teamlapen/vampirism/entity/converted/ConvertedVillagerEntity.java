@@ -13,7 +13,6 @@ import de.teamlapen.vampirism.api.entity.convertible.ICurableConvertedCreature;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModVillage;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.VampirismVillagerEntity;
@@ -39,6 +38,7 @@ import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTDynamicOps;
 import net.minecraft.network.datasync.DataParameter;
@@ -204,8 +204,10 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     @Override
     public ActionResultType mobInteract(PlayerEntity player, @Nonnull Hand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (stack.getItem() != ModItems.CURE_APPLE.get()) return super.mobInteract(player, hand);
-        return interactWithCureItem(player, stack, this);
+        if (stack.getItem() == Items.GOLDEN_APPLE) {
+            return interactWithCureItem(player, stack, this);
+        }
+        return super.mobInteract(player, hand);
     }
 
     @Override

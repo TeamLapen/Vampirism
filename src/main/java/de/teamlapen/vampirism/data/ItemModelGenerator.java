@@ -158,7 +158,6 @@ public class ItemModelGenerator extends ItemModelProvider {
             add(ModItems.INJECTION_EMPTY.get());
             add(ModItems.INJECTION_GARLIC.get());
             add(ModItems.INJECTION_SANGUINARE.get());
-            add(ModItems.INJECTION_ZOMBIE_BLOOD.get());
             add(ModItems.PURIFIED_GARLIC.get());
             add(ModItems.SOUL_ORB_VAMPIRE.get());
             add(ModItems.TECH_CROSSBOW_AMMO_PACKAGE.get());
@@ -185,7 +184,6 @@ public class ItemModelGenerator extends ItemModelProvider {
             add(ModItems.HUNTER_MINION_UPGRADE_ENHANCED.get());
             add(ModItems.HUNTER_MINION_UPGRADE_SPECIAL.get());
             add(ModItems.OBLIVION_POTION.get());
-            add(ModItems.CURE_APPLE.get());
             add(ModItems.VAMPIRE_CLOTHING_HAT.get());
             add(ModItems.VAMPIRE_CLOTHING_BOOTS.get());
             add(ModItems.VAMPIRE_CLOTHING_LEGS.get());

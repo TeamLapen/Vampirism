@@ -133,9 +133,6 @@ public class ModItems {
     public static final RegistryObject<InjectionItem> INJECTION_EMPTY = ITEMS.register("injection_empty", () -> new InjectionItem(InjectionItem.TYPE.EMPTY));
     public static final RegistryObject<InjectionItem> INJECTION_GARLIC = ITEMS.register("injection_garlic", () -> new InjectionItem(InjectionItem.TYPE.GARLIC));
     public static final RegistryObject<InjectionItem> INJECTION_SANGUINARE = ITEMS.register("injection_sanguinare", () -> new InjectionItem(InjectionItem.TYPE.SANGUINARE));
-    public static final RegistryObject<InjectionItem> INJECTION_ZOMBIE_BLOOD = ITEMS.register("injection_zombie_blood", () -> new InjectionItem(InjectionItem.TYPE.ZOMBIE_BLOOD));
-
-    public static final RegistryObject<Item> CURE_APPLE = ITEMS.register("cure_apple", () -> new Item(creativeTabProps().rarity(Rarity.RARE)));
 
     public static final RegistryObject<BucketItem> IMPURE_BLOOD_BUCKET = ITEMS.register("impure_blood_bucket", () -> new BucketItem(ModFluids.IMPURE_BLOOD, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(ItemGroup.TAB_MISC)));
     public static final RegistryObject<GarlicItem> ITEM_GARLIC = ITEMS.register("item_garlic", GarlicItem::new);
@@ -294,6 +291,12 @@ public class ModItems {
                     break;
                 case "vampirism:holy_salt":
                     missingMapping.remap(PURE_SALT.get());
+                    break;
+                case "vampirism:injection_zombie_blood":
+                    missingMapping.remap(Items.APPLE);
+                    break;
+                case "vampirism:cure_apple":
+                    missingMapping.remap(Items.GOLDEN_APPLE);
                     break;
             }
             if(missingMapping.key.toString().startsWith("vampirism:obsidian_armor")){

@@ -37,7 +37,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntitySize;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IInventory;
@@ -402,16 +401,6 @@ public class ModPlayerEventHandler {
                 }
             }
         }
-    }
-
-    @SubscribeEvent
-    public void onPlayerInteract(PlayerInteractEvent.EntityInteract event) {
-        if (!(event.getTarget().getType() == EntityType.ZOMBIE)) return;
-        ItemStack stack = event.getPlayer().getItemInHand(event.getHand());
-        if (stack.getItem() != ModItems.INJECTION_EMPTY.get()) return;
-        stack.split(1);
-        event.getPlayer().addItem(new ItemStack(ModItems.INJECTION_ZOMBIE_BLOOD.get()));
-        event.setCanceled(true);
     }
 
     @SubscribeEvent
