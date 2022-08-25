@@ -19,6 +19,7 @@
     "MixinMobEntity",
     "MixinPlayerEntity",
     "MixinPotionBrewing",
+    "PlayerAdvancementsAccessor",
     "TileEntityTypeAccessor"
   ],
   "client": [

@@ -4,6 +4,7 @@ import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.lib.lib.util.LogUtil;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.advancements.TriggerFaction;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -395,6 +396,11 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         }
         sync(!Objects.equals(old, currentFaction));
         if (player instanceof ServerPlayerEntity) {
+            if (old != faction) {
+                ModAdvancements.TRIGGER_FACTION.revokeAll((ServerPlayerEntity) player);
+            } else if (oldLevel > level) {
+                ModAdvancements.TRIGGER_FACTION.revokeLevel((ServerPlayerEntity) player, faction, TriggerFaction.Type.LEVEL, level);
+            }
             ModAdvancements.TRIGGER_FACTION.trigger((ServerPlayerEntity) player, currentFaction, currentLevel, currentLordLevel);
         }
         return true;
@@ -541,6 +547,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     private boolean setLordLevel(int level, boolean sync) {
+        int oldLevel = this.currentLordLevel;
         if (level > 0 && (currentFaction == null || currentLevel != currentFaction.getHighestReachableLevel() || level > currentFaction.getHighestLordLevel())) {
             return false;
         }
@@ -566,6 +573,9 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             LOGGER.debug(LogUtil.FACTION, "{} has now lord level {}", this.player.getName().getString(), level);
         }
         if (player instanceof ServerPlayerEntity) {
+            if (currentLordLevel < oldLevel){
+                ModAdvancements.TRIGGER_FACTION.revokeLevel(((ServerPlayerEntity) player), currentFaction, TriggerFaction.Type.LORD, currentLordLevel);
+            }
             ModAdvancements.TRIGGER_FACTION.trigger((ServerPlayerEntity) player, currentFaction, currentLevel, currentLordLevel);
         }
         if (sync) sync(false);
