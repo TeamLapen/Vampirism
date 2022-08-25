@@ -81,6 +81,7 @@ public class HunterSkills {
     public static final RegistryObject<ISkill<IHunterPlayer>> ULTIMATE_CRUCIFIX = SKILLS.register("ultimate_crucifix", () -> new VampirismSkill.SimpleHunterSkill(true));
     public static final RegistryObject<ISkill<IHunterPlayer>> MINION_COLLECT = SKILLS.register("hunter_minion_collect", () -> new VampirismSkill.LordHunterSkill(true));
     public static final RegistryObject<ISkill<IHunterPlayer>> MINION_STATS_INCREASE = SKILLS.register("hunter_minion_stats_increase", () -> new VampirismSkill.LordHunterSkill(true));
+    public static final RegistryObject<ISkill<IHunterPlayer>> MINION_TECH_CROSSBOWS = SKILLS.register("minion_tech_crossbows", () -> new VampirismSkill.LordHunterSkill(true));
 
     static {
         SKILLS.register(SkillType.LEVEL.createIdForFaction(VReference.HUNTER_FACTION.getID()).getPath(), () -> new VampirismSkill.SimpleHunterSkill(false));

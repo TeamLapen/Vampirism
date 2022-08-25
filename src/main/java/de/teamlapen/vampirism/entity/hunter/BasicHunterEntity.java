@@ -7,6 +7,8 @@ import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
+import de.teamlapen.vampirism.api.entity.hunter.IVampirismCrossbowUser;
+import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
 import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEntities;
@@ -26,7 +28,6 @@ import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.entity.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.inventory.HunterBasicMenu;
-import de.teamlapen.vampirism.items.VampirismItemCrossbowItem;
 import de.teamlapen.vampirism.util.HunterVillage;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.core.BlockPos;
@@ -53,6 +54,7 @@ import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.monster.PatrollingMonster;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -64,16 +66,18 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
 import java.util.Optional;
 
 /**
  * Exists in {@link BasicHunterEntity#MAX_LEVEL}+1 different levels
  */
-public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter, ForceLookEntityGoal.TaskOwner, AttackRangedCrossbowGoal.IAttackWithCrossbow, IEntityActionUser {
+public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter, ForceLookEntityGoal.TaskOwner, IVampirismCrossbowUser, IEntityActionUser {
     private static final EntityDataAccessor<Integer> LEVEL = SynchedEntityData.defineId(BasicHunterEntity.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Boolean> SWINGING_ARMS = SynchedEntityData.defineId(BasicHunterEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> WATCHED_ID = SynchedEntityData.defineId(BasicHunterEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(BasicHunterEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> IS_CHARGING_CROSSBOW = SynchedEntityData.defineId(BasicHunterEntity.class, EntityDataSerializers.BOOLEAN);
+
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -88,8 +92,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
 
     private final int MAX_LEVEL = 3;
-    private final @NotNull MeleeAttackGoal attackMelee;
-    private final @NotNull AttackRangedCrossbowGoal<BasicHunterEntity> attackRange;
     /**
      * available actions for AI task & task
      */
@@ -101,10 +103,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
      */
     @Nullable
     private Player trainee;
-    /**
-     * Stores the x-axis angle between when targeting an enemy with the crossbow
-     */
-    private float targetAngle = 0;
     @Nullable
     private ICaptureAttributes villageAttributes;
     //Village capture --------------------------------------------------------------------------------------------------
@@ -117,9 +115,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
         this.setDontDropEquipment();
 
-        this.attackMelee = new MeleeAttackGoal(this, 1.0, false);
-        this.attackRange = new AttackRangedCrossbowGoal<>(this, 0.6, 60, 20);
-        this.updateCombatTask();
         entitytier = EntityActionTier.Medium;
         entityclass = EntityClassType.getRandomClass(this.getRandom());
         IEntityActionUser.applyAttributes(this);
@@ -131,7 +126,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putInt("level", getEntityLevel());
-        nbt.putBoolean("crossbow", isCrossbowInMainhand());
+        nbt.putBoolean("crossbow", isHoldingCrossbow());
         nbt.putBoolean("attack", attack);
         nbt.putInt("type", getEntityTextureType());
         nbt.putInt("entityclasstype", EntityClassType.getID(entityclass));
@@ -161,23 +156,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                 randomDestination = this.level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, randomDestination);
                 this.setHomeArea(randomDestination, 10);
             }
-        } else {
-            targetAngle = 0;
-            if (isSwingingArms()) {
-                int id = getWatchedId();
-                if (id != 0) {
-                    Entity target = level.getEntity(id);
-                    if (target instanceof LivingEntity) {
-
-                        double dx = target.getX() - (this).getX();
-                        double dy = target.getY() - this.getY();
-                        double dz = target.getZ() - this.getZ();
-                        double dist = Math.sqrt(dx * dx + dz * dz);
-                        targetAngle = (float) Math.atan(dy / dist);
-                    }
-                }
-            }
-
         }
         if (entityActionHandler != null) {
             entityActionHandler.handle();
@@ -230,13 +208,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         return entityActionHandler;
     }
 
-    @NotNull
-    @Override
-    public ItemStack getArrowStackForAttack(LivingEntity target) {
-        return new ItemStack(ModItems.CROSSBOW_ARROW_NORMAL.get());
-    }
-
-    @Nullable
     @Override
     public ICaptureAttributes getCaptureInfo() {
         return this.villageAttributes;
@@ -291,18 +262,13 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         } else {
             this.setLeftHanded(false);
         }
-        this.updateCombatTask();
-        getEntityData().set(TYPE, this.getRandom().nextInt(TYPES));
+
         return livingData;
     }
 
     @Override
     public int getMaxEntityLevel() {
         return MAX_LEVEL;
-    }
-
-    public float getTargetAngle() {
-        return targetAngle;
     }
 
     @Nullable
@@ -348,11 +314,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    public boolean isCrossbowInMainhand() {
-        return !this.getMainHandItem().isEmpty() && this.getMainHandItem().getItem() instanceof VampirismItemCrossbowItem;
-    }
-
-    @Override
     public void makeNormalHunter() {
         super.setHome(null);
         this.disableMoveTowardsRestriction();
@@ -362,14 +323,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     public void makeVillageHunter(AABB box) {
         super.setHome(box);
         this.setMoveTowardsRestriction(MOVE_TO_RESTRICT_PRIO, true);
-    }
-
-    public boolean isSwingingArms() {
-        return this.getEntityData().get(SWINGING_ARMS);
-    }
-
-    private void setSwingingArms(boolean b) {
-        this.getEntityData().set(SWINGING_ARMS, b);
     }
 
     //Entityactions ----------------------------------------------------------------------------------------------------
@@ -389,7 +342,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             this.setLeftHanded(false);
             this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
         }
-        this.updateCombatTask();
         if (tagCompund.contains("attack")) {
             this.attack = tagCompund.getBoolean("attack");
         }
@@ -401,16 +353,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         if (entityActionHandler != null) {
             entityActionHandler.read(tagCompund);
         }
-    }
-
-    @Override
-    public void startTargeting() {
-        this.setSwingingArms(true);
-    }
-
-    @Override
-    public void stopTargeting() {
-        this.setSwingingArms(false);
     }
 
     @Override
@@ -439,9 +381,9 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.getEntityData().define(LEVEL, -1);
-        this.getEntityData().define(SWINGING_ARMS, false);
         this.getEntityData().define(WATCHED_ID, 0);
         this.getEntityData().define(TYPE, -1);
+        this.getEntityData().define(IS_CHARGING_CROSSBOW, false);
     }
 
     @Override
@@ -508,12 +450,52 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
+    public void setChargingCrossbow(boolean p_213671_1_) {
+        this.getEntityData().set(IS_CHARGING_CROSSBOW, p_213671_1_);
+    }
+
+    @Override
+    public void shootCrossbowProjectile(@NotNull LivingEntity p_230284_1_, @NotNull ItemStack p_230284_2_, @NotNull Projectile p_230284_3_, float p_230284_4_) {
+        this.shootCrossbowProjectile(this, p_230284_1_, p_230284_3_, p_230284_4_, 1.6f);
+    }
+
+    @Override
+    public void onCrossbowAttackPerformed() {
+        this.noActionTime = 0;
+    }
+
+    @Override
+    public void performRangedAttack(@NotNull LivingEntity p_82196_1_, float p_82196_2_) {
+        this.performCrossbowAttack(this, 1.6f);
+    }
+
+    @Override
+    public boolean isHoldingCrossbow(){
+        return this.isHolding(stack -> stack.getItem() instanceof IVampirismCrossbow);
+    }
+
+    @Override
+    public boolean isChargingCrossbow() {
+        return this.getEntityData().get(IS_CHARGING_CROSSBOW);
+    }
+
+    @Nonnull
+    @Override
+    public ItemStack getProjectile(ItemStack stack) {
+        if (stack.getItem() instanceof IVampirismCrossbow) {
+            return ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance();
+        }
+        return ItemStack.EMPTY;
+    }
+
+    @Override
     protected void registerGoals() {
         super.registerGoals();
 
         this.goalSelector.addGoal(1, new OpenDoorGoal(this, true));
-        //Attack task is added in #updateCombatTasks which is e.g. called at end of constructor
         this.goalSelector.addGoal(3, new ForceLookEntityGoal<>(this));
+        this.goalSelector.addGoal(3, new AttackRangedCrossbowGoal<>(this, 0.6, 60));
+        this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0, false));
         this.goalSelector.addGoal(5, new MoveThroughVillageGoal(this, 0.7F, false, 300, () -> false));
         this.goalSelector.addGoal(6, new RandomStrollGoal(this, 0.7, 50));
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 13F));
@@ -543,17 +525,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     private int getWatchedId() {
         return getEntityData().get(WATCHED_ID);
-    }
-
-    private void updateCombatTask() {
-        this.goalSelector.removeGoal(attackMelee);
-        this.goalSelector.removeGoal(attackRange);
-        ItemStack stack = this.getMainHandItem();
-        if (!stack.isEmpty() && stack.getItem() instanceof VampirismItemCrossbowItem) {
-            this.goalSelector.addGoal(2, this.attackRange);
-        } else {
-            this.goalSelector.addGoal(2, this.attackMelee);
-        }
     }
 
     private void updateWatchedId(int id) {

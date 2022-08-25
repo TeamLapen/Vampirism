@@ -3,11 +3,11 @@ package de.teamlapen.vampirism.client.renderer.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.model.HunterEquipmentModel;
+import de.teamlapen.vampirism.client.model.HunterMinionModel;
 import de.teamlapen.vampirism.client.renderer.entity.layers.HunterEquipmentLayer;
 import de.teamlapen.vampirism.client.renderer.entity.layers.PlayerBodyOverlayLayer;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
@@ -24,13 +24,13 @@ import org.jetbrains.annotations.NotNull;
  * Hunter as of level 1 look all the same, but have different weapons
  */
 @OnlyIn(Dist.CLIENT)
-public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, PlayerModel<HunterMinionEntity>> {
+public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, HunterMinionModel<HunterMinionEntity>> {
     private final Pair<ResourceLocation, Boolean> @NotNull [] textures;
     private final Pair<ResourceLocation, Boolean> @NotNull [] minionSpecificTextures;
 
 
     public HunterMinionRenderer(EntityRendererProvider.@NotNull Context context) {
-        super(context, new PlayerModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED), false), new PlayerModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED_SLIM), true), 0.5F);
+        super(context, new HunterMinionModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED), false), new HunterMinionModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED_SLIM), true), 0.5F);
         textures = gatherTextures("textures/entity/hunter", true);
         minionSpecificTextures = gatherTextures("textures/entity/minion/hunter", false);
         this.addLayer(new PlayerBodyOverlayLayer<>(this));
@@ -53,16 +53,6 @@ public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, 
             return entity.getOverlayPlayerProperties().map(Pair::getRight).map(b -> Pair.of(p.getLeft(), b)).orElse(p);
         }
         return p;
-    }
-
-    @Override
-    protected void renderSelected(@NotNull HunterMinionEntity entityIn, float entityYaw, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
-        if (entityIn.isSwingingArms()) {
-            this.model.rightArmPose = HumanoidModel.ArmPose.CROSSBOW_HOLD;
-        } else {
-            this.model.rightArmPose = HumanoidModel.ArmPose.ITEM;
-        }
-        super.renderSelected(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
 
     @Override

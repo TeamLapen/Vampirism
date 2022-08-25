@@ -8,7 +8,9 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
+import de.teamlapen.vampirism.api.entity.hunter.IVampirismCrossbowUser;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
+import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
 import de.teamlapen.vampirism.client.gui.screens.HunterMinionAppearanceScreen;
 import de.teamlapen.vampirism.client.gui.screens.HunterMinionStatsScreen;
 import de.teamlapen.vampirism.config.BalanceMobProps;
@@ -18,9 +20,10 @@ import de.teamlapen.vampirism.entity.ai.goals.AttackRangedCrossbowGoal;
 import de.teamlapen.vampirism.entity.hunter.BasicHunterEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
+import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.items.MinionUpgradeItem;
-import de.teamlapen.vampirism.items.VampirismItemCrossbowItem;
+import de.teamlapen.vampirism.items.crossbow.TechCrossbowItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -40,6 +43,7 @@ import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
@@ -48,14 +52,17 @@ import net.minecraftforge.fml.DistExecutor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 
-public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMinionData> implements IHunter, AttackRangedCrossbowGoal.IAttackWithCrossbow {
+public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMinionData> implements IHunter, IVampirismCrossbowUser {
 
     /**
      * Used for holding a crossbow
      */
     private static final EntityDataAccessor<Boolean> RAISED_ARM = SynchedEntityData.defineId(HunterMinionEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> IS_CHARGING_CROSSBOW = SynchedEntityData.defineId(HunterMinionEntity.class, EntityDataSerializers.BOOLEAN);
+
 
     public static void init() {
         MinionData.registerDataType(HunterMinionData.ID, HunterMinionData::new);
@@ -65,31 +72,13 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         return BasicHunterEntity.getAttributeBuilder();
     }
 
-    private boolean crossbowTask = false;
-    private AttackRangedCrossbowGoal<HunterMinionEntity> crossbowGoal;
-    private MeleeAttackGoal meleeGoal;
-
     public HunterMinionEntity(EntityType<? extends VampirismEntity> type, Level world) {
         super(type, world, VampirismAPI.factionRegistry().getPredicate(VReference.HUNTER_FACTION, true, true, false, false, null).or(e -> !(e instanceof IFactionEntity) && (e instanceof Enemy) && !(e instanceof Creeper)));
-    }
-
-    @NotNull
-    @Override
-    public ItemStack getArrowStackForAttack(LivingEntity target) {
-        return new ItemStack(ModItems.CROSSBOW_ARROW_NORMAL.get());
     }
 
     @Override
     public @NotNull List<IMinionTask<?, ?>> getAvailableTasks() {
         return Lists.newArrayList(MinionTasks.FOLLOW_LORD.get(), MinionTasks.DEFEND_AREA.get(), MinionTasks.STAY.get(), MinionTasks.COLLECT_HUNTER_ITEMS.get(), MinionTasks.PROTECT_LORD.get());
-    }
-
-    @Override
-    public void aiStep() {
-        super.aiStep();
-        if (this.tickCount % 100 == 0) {
-            this.updateAttackGoal();
-        }
     }
 
     public void setHatType(int type) {
@@ -115,19 +104,6 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
 
     public int getHatType() {
         return this.getItemBySlot(EquipmentSlot.HEAD).isEmpty() ? this.getMinionData().map(d -> d.hat).orElse(0) : -1;
-    }
-
-    @Override
-    public boolean isCrossbowInMainhand() {
-        return this.getMainHandItem().getItem() instanceof VampirismItemCrossbowItem;
-    }
-
-    public boolean isSwingingArms() {
-        return this.getEntityData().get(RAISED_ARM);
-    }
-
-    protected void setSwingingArms(boolean b) {
-        this.getEntityData().set(RAISED_ARM, b);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -158,16 +134,6 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     }
 
     @Override
-    public void startTargeting() {
-        this.setSwingingArms(true);
-    }
-
-    @Override
-    public void stopTargeting() {
-        this.setSwingingArms(false);
-    }
-
-    @Override
     protected boolean canConsume(@NotNull ItemStack stack) {
         if (!super.canConsume(stack)) return false;
         boolean fullHealth = this.getHealth() == this.getMaxHealth();
@@ -178,6 +144,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.getEntityData().define(RAISED_ARM, false);
+        this.getEntityData().define(IS_CHARGING_CROSSBOW, false);
 
     }
 
@@ -212,25 +179,12 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        meleeGoal = new MeleeAttackGoal(this, 1.0D, false);
-        crossbowGoal = new AttackRangedCrossbowGoal<>(this, 0.8, 60, 25);
-        this.goalSelector.addGoal(1, meleeGoal);
-
-
+        this.goalSelector.addGoal(1, new AttackRangedCrossbowGoal<>(this, 0.8, 60));
+        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, false));
     }
 
     private void updateAttackGoal() {
         if (this.level.isClientSide()) return;
-        boolean usingCrossbow = isCrossbowInMainhand();
-        if (crossbowTask && !usingCrossbow) {
-            this.goalSelector.removeGoal(crossbowGoal);
-            this.goalSelector.addGoal(1, meleeGoal);
-            crossbowTask = false;
-        } else if (!crossbowTask && usingCrossbow) {
-            this.goalSelector.removeGoal(meleeGoal);
-            this.goalSelector.addGoal(1, crossbowGoal);
-            crossbowTask = true;
-        }
     }
 
     private void updateAttributes() {
@@ -238,6 +192,63 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.MINION_MAX_HEALTH + BalanceMobProps.mobProps.MINION_MAX_HEALTH_PL * getMinionData().map(HunterMinionData::getHealthLevel).orElse(0) * statsMultiplier);
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE + BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE_PL * getMinionData().map(HunterMinionData::getStrengthLevel).orElse(0) * statsMultiplier);
         this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_SPEED * statsMultiplier);
+    }
+
+    @Override
+    public void setChargingCrossbow(boolean p_213671_1_) {
+        this.getEntityData().set(IS_CHARGING_CROSSBOW, p_213671_1_);
+    }
+
+    @Override
+    public void shootCrossbowProjectile(LivingEntity p_32328_, ItemStack p_32329_, Projectile p_32330_, float p_32331_) {
+        this.shootCrossbowProjectile(this, p_32328_, p_32330_, p_32331_, 1.6f);
+    }
+
+    @Override
+    public void onCrossbowAttackPerformed() {
+        this.noActionTime = 0;
+    }
+
+    @Override
+    public void performRangedAttack(LivingEntity p_82196_1_, float p_82196_2_) {
+        this.performCrossbowAttack(this, 1.6f);
+    }
+
+    @Override
+    public boolean isHoldingCrossbow() {
+        return this.isHolding(stack -> stack.getItem() instanceof IVampirismCrossbow);
+    }
+
+    @Override
+    public boolean canUseCrossbow(ItemStack stack) {
+        return stack.getItem() instanceof TechCrossbowItem ? getLordOpt().flatMap(p -> HunterPlayer.getOpt(p.getPlayer()).map(HunterPlayer::getSkillHandler)).map(skillHandler -> skillHandler.isSkillEnabled(HunterSkills.MINION_TECH_CROSSBOWS.get())).orElse(false) : true;
+    }
+
+    @Override
+    public boolean isChargingCrossbow() {
+        return this.getEntityData().get(IS_CHARGING_CROSSBOW);
+    }
+
+    @NotNull
+    @Override
+    public ItemStack getProjectile(ItemStack stack) {
+        if (stack.getItem() instanceof IVampirismCrossbow) {
+            if (stack.getItem() instanceof TechCrossbowItem) {
+                return ModItems.TECH_CROSSBOW_AMMO_PACKAGE.get().getDefaultInstance();
+            } else {
+                return ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance();
+            }
+        }
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public @NotNull Predicate<ItemStack> getEquipmentPredicate(EquipmentSlot slotType) {
+        Predicate<ItemStack> predicate = super.getEquipmentPredicate(slotType);
+        if (slotType == EquipmentSlot.MAINHAND) {
+            predicate = predicate.and(stack -> !(stack.getItem() instanceof TechCrossbowItem) || HunterPlayer.getOpt(getLord().getPlayer()).map(a -> a.getSkillHandler().isSkillEnabled(HunterSkills.MINION_TECH_CROSSBOWS.get())).orElse(false));
+        }
+        return predicate;
     }
 
     public static class HunterMinionData extends MinionData {

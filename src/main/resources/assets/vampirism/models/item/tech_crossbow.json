@@ -1,5 +1,5 @@
 {
-  "__comment": "Designed by Random",
+  "credit": "Designed by Random",
   "elements": [
     {
       "from": [
@@ -3221,9 +3221,9 @@
   "display": {
     "thirdperson_righthand": {
       "rotation": [
-        1.9,
-        0.88,
-        0.17
+        0,
+        -11.5,
+        0
       ],
       "translation": [
         0,
@@ -3238,9 +3238,9 @@
     },
     "thirdperson_lefthand": {
       "rotation": [
-        1.9,
-        0.88,
-        0.17
+        0,
+        -11.5,
+        0
       ],
       "translation": [
         0,
@@ -3255,26 +3255,26 @@
     },
     "firstperson_righthand": {
       "rotation": [
-        5,
         0,
+        -10,
         0
       ],
       "translation": [
-        -1.5,
-        8.16,
-        3
+        0.75,
+        8,
+        2.75
       ]
     },
     "firstperson_lefthand": {
       "rotation": [
-        5,
         0,
+        -10,
         0
       ],
       "translation": [
-        -1.5,
-        8.16,
-        3
+        0.75,
+        8,
+        2.75
       ]
     },
     "ground": {
@@ -3323,6 +3323,8 @@
         1.8
       ],
       "color": 0,
+      "nbt": "{}",
+      "armAnimationEnabled": false,
       "children": [
         {
           "name": "shoulder_A",
@@ -3332,6 +3334,8 @@
             2.25
           ],
           "color": 0,
+          "nbt": "{}",
+          "armAnimationEnabled": false,
           "children": [
             0,
             1,
@@ -3350,6 +3354,8 @@
             4.99142
           ],
           "color": 0,
+          "nbt": "{}",
+          "armAnimationEnabled": false,
           "children": [
             7,
             8,
@@ -3371,6 +3377,8 @@
             0
           ],
           "color": 0,
+          "nbt": "{}",
+          "armAnimationEnabled": false,
           "children": [
             17,
             18
@@ -3386,6 +3394,8 @@
         8.8
       ],
       "color": 0,
+      "nbt": "{}",
+      "armAnimationEnabled": false,
       "children": [
         {
           "name": "handle",
@@ -3395,6 +3405,8 @@
             9.98268
           ],
           "color": 0,
+          "nbt": "{}",
+          "armAnimationEnabled": false,
           "children": [
             19,
             20,
@@ -3420,6 +3432,8 @@
         8.8
       ],
       "color": 0,
+      "nbt": "{}",
+      "armAnimationEnabled": false,
       "children": [
         31,
         32
@@ -3433,6 +3447,8 @@
         -3.1
       ],
       "color": 0,
+      "nbt": "{}",
+      "armAnimationEnabled": false,
       "children": [
         33,
         34,
@@ -3449,6 +3465,8 @@
         -2.1
       ],
       "color": 0,
+      "nbt": "{}",
+      "armAnimationEnabled": false,
       "children": [
         38,
         39,

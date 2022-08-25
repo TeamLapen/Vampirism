@@ -1,5 +1,5 @@
 {
-  "credit": "Created by Random",
+  "credit": "Designed by Random",
   "elements": [
     {
       "from": [
@@ -3085,8 +3085,8 @@
   "display": {
     "thirdperson_righthand": {
       "rotation": [
-        16,
         0,
+        -11.5,
         0
       ],
       "translation": [
@@ -3102,8 +3102,8 @@
     },
     "thirdperson_lefthand": {
       "rotation": [
-        16,
         0,
+        -11.5,
         0
       ],
       "translation": [
@@ -3118,17 +3118,27 @@
       ]
     },
     "firstperson_righthand": {
-      "translation": [
+      "rotation": [
         0,
-        7.25,
+        -9.5,
         0
+      ],
+      "translation": [
+        0.75,
+        8.75,
+        2.75
       ]
     },
     "firstperson_lefthand": {
-      "translation": [
+      "rotation": [
         0,
-        7.25,
+        -9.5,
         0
+      ],
+      "translation": [
+        0.75,
+        8.75,
+        2.75
       ]
     },
     "ground": {
@@ -3182,6 +3192,8 @@
         7.39571
       ],
       "color": 0,
+      "nbt": "{}",
+      "armAnimationEnabled": false,
       "children": [
         {
           "name": "Arrow_A",
@@ -3191,6 +3203,8 @@
             2.34571
           ],
           "color": 0,
+          "nbt": "{}",
+          "armAnimationEnabled": false,
           "children": [
             0,
             1,
@@ -3206,6 +3220,8 @@
             7.39571
           ],
           "color": 0,
+          "nbt": "{}",
+          "armAnimationEnabled": false,
           "children": [
             4,
             5,
@@ -3223,6 +3239,8 @@
         7.4419
       ],
       "color": 0,
+      "nbt": "{}",
+      "armAnimationEnabled": false,
       "children": [
         {
           "name": "Crossbow_string_A",
@@ -3232,6 +3250,8 @@
             8.13345
           ],
           "color": 0,
+          "nbt": "{}",
+          "armAnimationEnabled": false,
           "children": [
             8,
             9
@@ -3245,6 +3265,8 @@
             7.4419
           ],
           "color": 0,
+          "nbt": "{}",
+          "armAnimationEnabled": false,
           "children": [
             10,
             11
@@ -3260,6 +3282,8 @@
         8.7
       ],
       "color": 0,
+      "nbt": "{}",
+      "armAnimationEnabled": false,
       "children": [
         {
           "name": "Shoulders_A",
@@ -3269,6 +3293,8 @@
             8.7
           ],
           "color": 0,
+          "nbt": "{}",
+          "armAnimationEnabled": false,
           "children": [
             12,
             13,
@@ -3287,6 +3313,8 @@
             8.7
           ],
           "color": 0,
+          "nbt": "{}",
+          "armAnimationEnabled": false,
           "children": [
             19,
             20,
@@ -3307,6 +3335,8 @@
         8.7
       ],
       "color": 0,
+      "nbt": "{}",
+      "armAnimationEnabled": false,
       "children": [
         {
           "name": "Handle",
@@ -3316,6 +3346,8 @@
             10.56213
           ],
           "color": 0,
+          "nbt": "{}",
+          "armAnimationEnabled": false,
           "children": [
             26,
             27,
@@ -3332,6 +3364,8 @@
             8.7
           ],
           "color": 0,
+          "nbt": "{}",
+          "armAnimationEnabled": false,
           "children": [
             31,
             32,
@@ -3350,6 +3384,8 @@
             8.7
           ],
           "color": 0,
+          "nbt": "{}",
+          "armAnimationEnabled": false,
           "children": [
             38,
             39

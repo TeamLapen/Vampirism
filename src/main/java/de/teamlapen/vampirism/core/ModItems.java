@@ -7,6 +7,10 @@ import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.entity.IVampirismBoat;
 import de.teamlapen.vampirism.items.*;
+import de.teamlapen.vampirism.items.crossbow.ArrowContainer;
+import de.teamlapen.vampirism.items.crossbow.DoubleCrossbowItem;
+import de.teamlapen.vampirism.items.crossbow.SingleCrossbowItem;
+import de.teamlapen.vampirism.items.crossbow.TechCrossbowItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -52,9 +56,9 @@ public class ModItems {
     public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_NORMAL = ITEMS.register("armor_of_swiftness_legs_normal", () -> new ArmorOfSwiftnessItem(EquipmentSlot.LEGS, IItemWithTier.TIER.NORMAL));
     public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE = ITEMS.register("armor_of_swiftness_legs_ultimate", () -> new ArmorOfSwiftnessItem(EquipmentSlot.LEGS, IItemWithTier.TIER.ULTIMATE));
 
-    public static final RegistryObject<SimpleCrossbowItem> BASIC_CROSSBOW = ITEMS.register("basic_crossbow", () -> new SimpleCrossbowItem(1, 20, 300, Tiers.WOOD));
-    public static final RegistryObject<DoubleCrossbowItem> BASIC_DOUBLE_CROSSBOW = ITEMS.register("basic_double_crossbow", () -> new DoubleCrossbowItem(1, 20, 300, Tiers.WOOD));
-    public static final RegistryObject<TechCrossbowItem> BASIC_TECH_CROSSBOW = ITEMS.register("basic_tech_crossbow", () -> new TechCrossbowItem(1.6F, 6, 300, Tiers.DIAMOND));
+    public static final RegistryObject<SingleCrossbowItem> BASIC_CROSSBOW = ITEMS.register("basic_crossbow", () -> new SingleCrossbowItem(creativeTabProps().defaultDurability(300), 1,20,Tiers.WOOD));
+    public static final RegistryObject<DoubleCrossbowItem> BASIC_DOUBLE_CROSSBOW = ITEMS.register("basic_double_crossbow", () -> new DoubleCrossbowItem(creativeTabProps().durability(300),1,20,Tiers.WOOD));
+    public static final RegistryObject<TechCrossbowItem> BASIC_TECH_CROSSBOW = ITEMS.register("basic_tech_crossbow", () -> new TechCrossbowItem(creativeTabProps().durability(300),1.6F, 40, Tiers.DIAMOND));
 
     public static final RegistryObject<BloodBottleItem> BLOOD_BOTTLE = ITEMS.register("blood_bottle", BloodBottleItem::new);
     public static final RegistryObject<BucketItem> BLOOD_BUCKET = ITEMS.register("blood_bucket", () -> new BucketItem(ModFluids.BLOOD, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(CreativeModeTab.TAB_MISC)));
@@ -66,9 +70,9 @@ public class ModItems {
     public static final RegistryObject<CrossbowArrowItem> CROSSBOW_ARROW_VAMPIRE_KILLER = ITEMS.register("crossbow_arrow_vampire_killer", () -> new CrossbowArrowItem(CrossbowArrowItem.EnumArrowType.VAMPIRE_KILLER));
     public static final RegistryObject<CrossbowArrowItem> CROSSBOW_ARROW_TELEPORT = ITEMS.register("crossbow_arrow_teleport", () -> new CrossbowArrowItem(CrossbowArrowItem.EnumArrowType.TELEPORT));
 
-    public static final RegistryObject<SimpleCrossbowItem> ENHANCED_CROSSBOW = ITEMS.register("enhanced_crossbow", () -> new SimpleCrossbowItem(1.5F, 15, 350, Tiers.IRON));
-    public static final RegistryObject<DoubleCrossbowItem> ENHANCED_DOUBLE_CROSSBOW = ITEMS.register("enhanced_double_crossbow", () -> new DoubleCrossbowItem(1.5F, 15, 350, Tiers.IRON));
-    public static final RegistryObject<TechCrossbowItem> ENHANCED_TECH_CROSSBOW = ITEMS.register("enhanced_tech_crossbow", () -> new TechCrossbowItem(1.7F, 4, 450, Tiers.DIAMOND));
+    public static final RegistryObject<SingleCrossbowItem> ENHANCED_CROSSBOW = ITEMS.register("enhanced_crossbow", () -> new SingleCrossbowItem(creativeTabProps().durability(250), 1.5F, 15, Tiers.IRON));
+    public static final RegistryObject<DoubleCrossbowItem> ENHANCED_DOUBLE_CROSSBOW = ITEMS.register("enhanced_double_crossbow", () -> new DoubleCrossbowItem(creativeTabProps().durability(350),1.5F, 15, Tiers.IRON));
+    public static final RegistryObject<TechCrossbowItem> ENHANCED_TECH_CROSSBOW = ITEMS.register("enhanced_tech_crossbow", () -> new TechCrossbowItem(creativeTabProps().durability(450), 1.7F, 30, Tiers.DIAMOND));
 
     public static final RegistryObject<Item> GARLIC_DIFFUSER_CORE = ITEMS.register("garlic_diffuser_core", () -> new Item(creativeTabProps()));
     public static final RegistryObject<Item> GARLIC_DIFFUSER_CORE_IMPROVED = ITEMS.register("garlic_diffuser_core_improved", () -> new Item(creativeTabProps()));
@@ -153,7 +157,7 @@ public class ModItems {
     public static final RegistryObject<Item> SOUL_ORB_VAMPIRE = ITEMS.register("soul_orb_vampire", () -> new Item(creativeTabProps()));
 
     public static final RegistryObject<StakeItem> STAKE = ITEMS.register("stake", StakeItem::new);
-    public static final RegistryObject<Item> TECH_CROSSBOW_AMMO_PACKAGE = ITEMS.register("tech_crossbow_ammo_package", () -> new Item(new Item.Properties().tab(VampirismMod.creativeTab)) {
+    public static final RegistryObject<Item> TECH_CROSSBOW_AMMO_PACKAGE = ITEMS.register("tech_crossbow_ammo_package", () -> new ArrowContainer(new Item.Properties().tab(VampirismMod.creativeTab), CROSSBOW_ARROW_NORMAL,12) {
         @Override
         public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
             tooltip.add(Component.translatable("item.vampirism.tech_crossbow_ammo_package.tooltip", Component.translatable(BASIC_TECH_CROSSBOW.get().getDescriptionId())).withStyle(ChatFormatting.GRAY));

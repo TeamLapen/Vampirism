@@ -17,9 +17,8 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -34,7 +33,8 @@ import java.util.List;
 /**
  * Ammo for the crossbows. Has different subtypes with different base damage/names/special effects.
  */
-public class CrossbowArrowItem extends Item implements IVampirismCrossbowArrow<CrossbowArrowEntity> {
+public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowArrow<CrossbowArrowEntity> {
+
     private final EnumArrowType type;
 
 
@@ -57,19 +57,16 @@ public class CrossbowArrowItem extends Item implements IVampirismCrossbowArrow<C
         }
     }
 
-    /**
-     * @param stack        Is copied by {@link CrossbowArrowEntity}
-     * @param heightOffset A height offset for the position the entity is created
-     * @return An arrow entity at the players position using the given itemstack
-     */
+    @NotNull
     @Override
-    public @NotNull CrossbowArrowEntity createEntity(ItemStack stack, Level world, @NotNull Player player, double heightOffset, double centerOffset, boolean rightHand) {
-        CrossbowArrowEntity entity = CrossbowArrowEntity.createWithShooter(world, player, heightOffset, centerOffset, rightHand, stack);
-        entity.setBaseDamage(type.baseDamage * VampirismConfig.BALANCE.crossbowDamageMult.get());
+    public AbstractArrow createArrow(@NotNull Level level, @NotNull ItemStack stack, @NotNull LivingEntity entity) {
+        CrossbowArrowEntity arrowEntity = new CrossbowArrowEntity(level, entity, stack);
+        arrowEntity.setEffectsFromItem(stack);
+        arrowEntity.setBaseDamage(type.baseDamage * VampirismConfig.BALANCE.crossbowDamageMult.get());
         if (this.type == EnumArrowType.SPITFIRE) {
-            entity.setSecondsOnFire(100);
+            arrowEntity.setSecondsOnFire(100);
         }
-        return entity;
+        return arrowEntity;
     }
 
     public EnumArrowType getType() {

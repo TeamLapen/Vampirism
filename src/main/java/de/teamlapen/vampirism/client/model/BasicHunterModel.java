@@ -1,13 +1,10 @@
 package de.teamlapen.vampirism.client.model;
 
-import de.teamlapen.vampirism.entity.hunter.BasicHunterEntity;
-import de.teamlapen.vampirism.items.VampirismItemCrossbowItem;
+import de.teamlapen.vampirism.api.entity.hunter.IVampirismCrossbowUser;
+import net.minecraft.client.model.AnimationUtils;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
@@ -17,9 +14,6 @@ import org.jetbrains.annotations.NotNull;
  */
 @OnlyIn(Dist.CLIENT)
 public class BasicHunterModel<T extends LivingEntity> extends BipedCloakedModel<T> {
-    private boolean targetingLeft = false;
-    private boolean targetingRight = false;
-    private float xAngle = 0;
 
     public static @NotNull LayerDefinition createBodyLayer() {
         return LayerDefinition.create(BipedCloakedModel.createMesh(false), 64, 64);
@@ -35,34 +29,19 @@ public class BasicHunterModel<T extends LivingEntity> extends BipedCloakedModel<
 
 
     @Override
-    public void prepareMobModel(@NotNull T entitylivingbaseIn, float p_78086_2_, float p_78086_3_, float partialTickTime) {
-        this.targetingRight = false;
-        this.targetingLeft = false;
-        ItemStack itemStack = entitylivingbaseIn.getItemInHand(InteractionHand.MAIN_HAND);
-        if (!itemStack.isEmpty() && itemStack.getItem() instanceof VampirismItemCrossbowItem && entitylivingbaseIn instanceof BasicHunterEntity && ((BasicHunterEntity) entitylivingbaseIn).isSwingingArms()) {
-            if (entitylivingbaseIn.getMainArm() == HumanoidArm.RIGHT) {
-                this.targetingRight = true;
-            } else {
-                this.targetingLeft = true;
-            }
-            xAngle = -((BasicHunterEntity) entitylivingbaseIn).getTargetAngle() - (float) Math.PI / 3;
-        }
-
-        super.prepareMobModel(entitylivingbaseIn, p_78086_2_, p_78086_3_, partialTickTime);
-
-    }
-
-    @Override
     public void setupAnim(@NotNull T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         super.setupAnim(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-        if (targetingRight) {
-            this.rightArm.yRot = -0.1F + this.head.yRot;
-            this.rightArm.xRot = xAngle;
-            this.leftArm.xRot = xAngle / 2F;
-        } else if (targetingLeft) {
-            this.leftArm.yRot = 0.1F + this.head.yRot;
-            this.rightArm.xRot = xAngle / 2F;
-            this.leftArm.xRot = xAngle;
+        if (entityIn instanceof IVampirismCrossbowUser) {
+            switch (((IVampirismCrossbowUser) entityIn).getArmPose()) {
+                case CROSSBOW_HOLD:
+                    AnimationUtils.animateCrossbowHold(this.rightArm, this.leftArm, this.head, true);
+                    break;
+                case CROSSBOW_CHARGE:
+                    AnimationUtils.animateCrossbowCharge(this.rightArm, this.leftArm, entityIn, true);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

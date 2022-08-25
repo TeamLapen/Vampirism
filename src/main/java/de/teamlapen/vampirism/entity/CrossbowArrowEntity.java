@@ -21,26 +21,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class CrossbowArrowEntity extends AbstractArrow implements IEntityCrossbowArrow {
 
-    /**
-     * Create an entity arrow for a shooting entity (with offset)
-     *
-     * @param heightOffset A height offset for the position the entity is created
-     * @param rightHanded  If the entity is right-handed
-     * @param arrow        ItemStack of the represented arrow. Is copied.
-     * @param centerOffset An offset from the center of the entity
-     */
-    public static @NotNull CrossbowArrowEntity createWithShooter(@NotNull Level world, @NotNull LivingEntity shooter, double heightOffset, double centerOffset, boolean rightHanded, @NotNull ItemStack arrow) {
-        double yaw = ((shooter.getYRot() - 90)) / 180 * Math.PI;
-        if (rightHanded) {
-            yaw += Math.PI;
-        }
-        double posX = shooter.getX() - Math.sin(yaw) * centerOffset;
-        double posZ = shooter.getZ() + Math.cos(yaw) * centerOffset;
-        CrossbowArrowEntity entityArrow = new CrossbowArrowEntity(world, posX, shooter.getY() + (double) shooter.getEyeHeight() - 0.10000000149011612D + heightOffset, posZ, arrow);
-        entityArrow.setOwner(shooter);
-        return entityArrow;
-    }
-
     private
     @NotNull
     ItemStack arrowStack = new ItemStack(ModItems.CROSSBOW_ARROW_NORMAL.get());
@@ -48,6 +28,12 @@ public class CrossbowArrowEntity extends AbstractArrow implements IEntityCrossbo
 
     public CrossbowArrowEntity(@NotNull EntityType<? extends CrossbowArrowEntity> type, @NotNull Level world) {
         super(type, world);
+    }
+
+    public CrossbowArrowEntity(Level level, LivingEntity entity, ItemStack stack) {
+        super(ModEntities.CROSSBOW_ARROW.get(), entity, level);
+        this.arrowStack = stack.copy();
+        this.arrowStack.setCount(1);
     }
 
 
@@ -119,5 +105,8 @@ public class CrossbowArrowEntity extends AbstractArrow implements IEntityCrossbo
             ((IVampirismCrossbowArrow<?>) item).onHitBlock(arrowStack, (blockRayTraceResult).getBlockPos(), this, getOwner());
         }
         super.onHitBlock(blockRayTraceResult);
+    }
+
+    public void setEffectsFromItem(ItemStack p_200887_2_) {
     }
 }
