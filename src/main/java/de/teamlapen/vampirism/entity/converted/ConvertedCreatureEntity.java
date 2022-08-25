@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.api.entity.convertible.ICurableConvertedCreature;
 import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.ai.goals.AttackMeleeNoSunGoal;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
@@ -318,8 +317,10 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     @Override
     protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (stack.getItem() != ModItems.CURE_APPLE.get()) return super.mobInteract(player, hand);
-        return interactWithCureItem(player, stack, this);
+        if (stack.getItem() == Items.GOLDEN_APPLE){
+            return interactWithCureItem(player, stack, this);
+        }
+        return super.mobInteract(player, hand);
     }
 
     @Override

@@ -14,7 +14,7 @@
     "frame": "task",
     "hidden": true,
     "icon": {
-      "item": "vampirism:cure_apple"
+      "item": "minecraft:golden_apple"
     },
     "show_toast": true,
     "title": {

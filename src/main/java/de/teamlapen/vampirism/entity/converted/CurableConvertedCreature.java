@@ -8,7 +8,6 @@ import de.teamlapen.vampirism.api.entity.convertible.ICurableConvertedCreature;
 import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.core.ModAttributes;
 import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
 import de.teamlapen.vampirism.entity.SoulOrbEntity;
 import de.teamlapen.vampirism.util.DamageHandler;
@@ -30,6 +29,7 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.LevelAccessor;
 import org.jetbrains.annotations.NotNull;
@@ -75,10 +75,10 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     @SuppressWarnings("JavadocReference")
     default InteractionResult mobInteractC(@NotNull Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (stack.getItem() != ModItems.CURE_APPLE.get()) {
-            return mobInteractSuper(player, hand);
+        if (stack.getItem() == Items.GOLDEN_APPLE) {
+            return interactWithCureItem(player, stack, ((PathfinderMob) this));
         }
-        return interactWithCureItem(player, stack, ((PathfinderMob) this));
+        return mobInteractSuper(player, hand);
     }
 
     @Override

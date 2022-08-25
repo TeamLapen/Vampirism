@@ -155,9 +155,6 @@ public class MedChairBlock extends VampirismHorizontalBlock {
             if (stack.getItem().equals(ModItems.INJECTION_SANGUINARE.get())) {
                 return handleSanguinareInjection(player, handler, faction);
             }
-            if (stack.getItem().equals(ModItems.INJECTION_ZOMBIE_BLOOD.get())) {
-                return handleZombieBloodInjection(player);
-            }
             return false;
         }).orElse(false);
 

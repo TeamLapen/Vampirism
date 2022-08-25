@@ -75,7 +75,7 @@ public class AdvancementGenerator extends AdvancementProvider {
                     .addCriterion("level", TriggerCriterionTrigger.lord(VReference.HUNTER_FACTION, 5))
                     .save(consumer, REFERENCE.MODID + ":hunter/max_lord");
             Advancement cure_vampire = Advancement.Builder.advancement()
-                    .display(ModItems.CURE_APPLE.get(), Component.translatable("advancement.vampirism.cure_vampire_villager"), Component.translatable("advancement.vampirism.cure_vampire_villager.desc"), null, FrameType.TASK, true, true, true)
+                    .display(Items.GOLDEN_APPLE, Component.translatable("advancement.vampirism.cure_vampire_villager"), Component.translatable("advancement.vampirism.cure_vampire_villager.desc"), null, FrameType.TASK, true, true, true)
                     .parent(become_hunter)
                     .addCriterion("cure", CuredVampireVillagerCriterionTrigger.Instance.any())
                     .save(consumer, REFERENCE.MODID + ":hunter/cure_vampire_villager");

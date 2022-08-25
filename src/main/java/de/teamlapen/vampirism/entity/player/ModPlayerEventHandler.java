@@ -49,7 +49,6 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
@@ -399,16 +398,6 @@ public class ModPlayerEventHandler {
                 }
             }
         }
-    }
-
-    @SubscribeEvent
-    public void onPlayerInteract(PlayerInteractEvent.@NotNull EntityInteract event) {
-        if (!(event.getTarget().getType() == EntityType.ZOMBIE)) return;
-        ItemStack stack = event.getEntity().getItemInHand(event.getHand());
-        if (stack.getItem() != ModItems.INJECTION_EMPTY.get()) return;
-        stack.split(1);
-        event.getEntity().addItem(new ItemStack(ModItems.INJECTION_ZOMBIE_BLOOD.get()));
-        event.setCanceled(true);
     }
 
     @SubscribeEvent
