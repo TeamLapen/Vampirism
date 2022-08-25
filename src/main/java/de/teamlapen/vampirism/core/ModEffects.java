@@ -37,7 +37,7 @@ public class ModEffects {
     public static final RegistryObject<MobEffect> POISON = EFFECTS.register("poison", () -> new VampirismPoisonEffect(0x4E9331));
     public static final RegistryObject<MobEffect> FREEZE = EFFECTS.register("freeze", FreezeEffect::new);
     public static final RegistryObject<MobEffect> NEONATAL = EFFECTS.register("neonatal", () -> new VampirismEffect(MobEffectCategory.NEUTRAL, 0xFFBBBB).addAttributeModifier(Attributes.ATTACK_DAMAGE, "377d132d-d091-43b2-8a8f-b940f9bc894c", -0.15, AttributeModifier.Operation.MULTIPLY_TOTAL).addAttributeModifier(Attributes.MOVEMENT_SPEED, "ad6d7def-46e2-485f-afba-39252767f114", -0.15, AttributeModifier.Operation.MULTIPLY_TOTAL));
-    public static final RegistryObject<MobEffect> OBLIVION = EFFECTS.register("oblivion", () -> new VampirismEffect(MobEffectCategory.NEUTRAL, 0x4E9331));
+    public static final RegistryObject<MobEffect> OBLIVION = EFFECTS.register("oblivion", OblivionEffect::new);
     public static final RegistryObject<MobEffect> ARMOR_REGENERATION = EFFECTS.register("armor_regeneration", () -> new VampirismEffect(MobEffectCategory.NEUTRAL, 0xD17642));
     public static final RegistryObject<MobEffect> BAD_OMEN_HUNTER = EFFECTS.register("bad_omen_hunter", () -> new BadOmenEffect() {
                 @Override

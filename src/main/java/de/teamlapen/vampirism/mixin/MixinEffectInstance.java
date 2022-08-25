@@ -1,10 +1,12 @@
 package de.teamlapen.vampirism.mixin;
 
 import de.teamlapen.vampirism.api.entity.effect.EffectInstanceWithSource;
+import de.teamlapen.vampirism.api.entity.effect.EffectWithNoCounter;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import javax.annotation.Nullable;
 
 @Mixin(MobEffectInstance.class)
-public class MixinEffectInstance implements EffectInstanceWithSource {
+public abstract class MixinEffectInstance implements EffectInstanceWithSource {
 
     @Inject(method = "loadSpecifiedEffect(Lnet/minecraft/world/effect/MobEffect;Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/world/effect/MobEffectInstance;", at = @At("RETURN"))
     private static void readInternal_vampirism(MobEffect effect, CompoundTag nbt, CallbackInfoReturnable<MobEffectInstance> cir) {
@@ -29,6 +31,7 @@ public class MixinEffectInstance implements EffectInstanceWithSource {
     @Shadow
     @Nullable
     private MobEffectInstance hiddenEffect;
+    @Shadow @Final private MobEffect effect;
     private ResourceLocation source;
 
     @Override
@@ -56,6 +59,13 @@ public class MixinEffectInstance implements EffectInstanceWithSource {
     @Override
     public void removeEffect() {
         this.duration = 1;
+    }
+
+    @Inject(method = "isNoCounter", at = @At("HEAD"), cancellable = true)
+    private void isNoCounter(CallbackInfoReturnable<Boolean> cir) {
+        if (this.effect instanceof EffectWithNoCounter) {
+            cir.setReturnValue(true);
+        }
     }
 
     @Inject(method = "update(Lnet/minecraft/world/effect/MobEffectInstance;)Z", at = @At(value = "JUMP", ordinal = 2))
