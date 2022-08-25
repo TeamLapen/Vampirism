@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.render.entities;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import de.teamlapen.vampirism.client.model.HunterMinionModel;
 import de.teamlapen.vampirism.client.render.layers.HunterEquipmentLayer;
 import de.teamlapen.vampirism.client.render.layers.PlayerBodyOverlayLayer;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
@@ -8,7 +9,6 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.layers.BipedArmorLayer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -21,13 +21,13 @@ import org.apache.commons.lang3.tuple.Pair;
  * Hunter as of level 1 look all the same, but have different weapons
  */
 @OnlyIn(Dist.CLIENT)
-public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, PlayerModel<HunterMinionEntity>> {
+public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, HunterMinionModel<HunterMinionEntity>> {
     private final Pair<ResourceLocation, Boolean>[] textures;
     private final Pair<ResourceLocation, Boolean>[] minionSpecificTextures;
 
 
     public HunterMinionRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new PlayerModel<>(0.5f, false), new PlayerModel<>(0.5f, true), 0.5F);
+        super(renderManagerIn, new HunterMinionModel<>(0.5f, false), new HunterMinionModel<>(0.5f, true), 0.5F);
         textures = gatherTextures("textures/entity/hunter", true);
         minionSpecificTextures = gatherTextures("textures/entity/minion/hunter", false);
         this.addLayer(new PlayerBodyOverlayLayer<>(this));
@@ -54,11 +54,6 @@ public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, 
 
     @Override
     protected void renderSelected(HunterMinionEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
-        if (entityIn.isSwingingArms()) {
-            this.model.rightArmPose = BipedModel.ArmPose.CROSSBOW_HOLD;
-        } else {
-            this.model.rightArmPose = BipedModel.ArmPose.ITEM;
-        }
         super.renderSelected(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
 

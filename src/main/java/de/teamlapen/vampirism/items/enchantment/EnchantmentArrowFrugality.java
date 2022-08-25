@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.items.enchantment;
 
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.items.VampirismItemCrossbow;
+import de.teamlapen.vampirism.items.crossbow.VampirismCrossbowItem;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -17,7 +17,7 @@ public class EnchantmentArrowFrugality extends Enchantment {
 
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack) {
-        return !stack.isEmpty() && stack.getItem() instanceof VampirismItemCrossbow;
+        return !stack.isEmpty() && stack.getItem() instanceof VampirismCrossbowItem;
     }
 
     @Override

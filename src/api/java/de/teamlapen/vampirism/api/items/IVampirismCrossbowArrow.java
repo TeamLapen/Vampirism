@@ -14,6 +14,10 @@ import javax.annotation.Nonnull;
 
 public interface IVampirismCrossbowArrow<T extends AbstractArrowEntity & IEntityCrossbowArrow> extends IFactionExclusiveItem {
 
+    /**
+     * @deprecated use {@link net.minecraft.item.ArrowItem#createArrow(net.minecraft.world.World, net.minecraft.item.ItemStack, net.minecraft.entity.LivingEntity)}
+     */
+    @Deprecated //TODO 1.19 remove
     T createEntity(ItemStack stack, World world, PlayerEntity player, double heightOffset, double centerOffset, boolean rightHand);
 
     @Nonnull

@@ -29,7 +29,9 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
      * @param rightHanded  If the entiy is right handed
      * @param arrow        ItemStack of the represented arrow. Is copied.
      * @param centerOffset An offset from the center of the entity
+     * @deprecated use {@link net.minecraft.item.ArrowItem#createArrow(net.minecraft.world.World, net.minecraft.item.ItemStack, net.minecraft.entity.LivingEntity)}
      */
+    @Deprecated
     public static CrossbowArrowEntity createWithShooter(World world, LivingEntity shooter, double heightOffset, double centerOffset, boolean rightHanded, ItemStack arrow) {
         double yaw = ((shooter.yRot - 90)) / 180 * Math.PI;
         if (rightHanded) {
@@ -49,6 +51,12 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
 
     public CrossbowArrowEntity(EntityType<? extends CrossbowArrowEntity> type, World world) {
         super(type, world);
+    }
+
+    public CrossbowArrowEntity(World level, LivingEntity entity, ItemStack stack) {
+        super(ModEntities.CROSSBOW_ARROW.get(), entity, level);
+        this.arrowStack = stack.copy();
+        this.arrowStack.setCount(1);
     }
 
 
@@ -119,5 +127,8 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
             ((IVampirismCrossbowArrow) item).onHitBlock(arrowStack, (blockRayTraceResult).getBlockPos(), this, getOwner());
         }
         super.onHitBlock(blockRayTraceResult);
+    }
+
+    public void setEffectsFromItem(ItemStack p_200887_2_) {
     }
 }

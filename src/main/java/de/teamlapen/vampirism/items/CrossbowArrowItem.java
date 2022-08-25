@@ -15,6 +15,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
+import net.minecraft.item.ArrowItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
@@ -24,17 +25,17 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraft.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
 /**
  * Ammo for the crossbows. Has different subtypes with different base damage/names/special effects.
  */
-public class CrossbowArrowItem extends Item implements IVampirismCrossbowArrow<CrossbowArrowEntity> {
+public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowArrow<CrossbowArrowEntity> {
 
     private final EnumArrowType type;
 
@@ -63,6 +64,7 @@ public class CrossbowArrowItem extends Item implements IVampirismCrossbowArrow<C
      * @param heightOffset An height offset for the position the entity is created
      * @return An arrow entity at the players position using the given itemstack
      */
+    @Deprecated
     @Override
     public CrossbowArrowEntity createEntity(ItemStack stack, World world, PlayerEntity player, double heightOffset, double centerOffset, boolean rightHand) {
         CrossbowArrowEntity entity = CrossbowArrowEntity.createWithShooter(world, player, heightOffset, centerOffset, rightHand, stack);
@@ -71,6 +73,18 @@ public class CrossbowArrowItem extends Item implements IVampirismCrossbowArrow<C
             entity.setSecondsOnFire(100);
         }
         return entity;
+    }
+
+    @Nonnull
+    @Override
+    public AbstractArrowEntity createArrow(@Nonnull World level, @Nonnull ItemStack stack, @Nonnull LivingEntity entity) {
+        CrossbowArrowEntity arrowEntity = new CrossbowArrowEntity(level, entity, stack);
+        arrowEntity.setEffectsFromItem(stack);
+        arrowEntity.setBaseDamage(type.baseDamage * VampirismConfig.BALANCE.crossbowDamageMult.get());
+        if (this.type == EnumArrowType.SPITFIRE) {
+            arrowEntity.setSecondsOnFire(100);
+        }
+        return arrowEntity;
     }
 
     public EnumArrowType getType() {
