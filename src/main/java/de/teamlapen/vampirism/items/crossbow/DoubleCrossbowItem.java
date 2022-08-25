@@ -64,7 +64,7 @@ public class DoubleCrossbowItem extends VampirismCrossbowItem {
         List<ItemStack> list = getChargedProjectiles(stack);
         float[] afloat = getShotPitches(shooter.getRandom());
 
-        for(int i = 0; i < list.size() || i < 2; ++i) { // only shoot a maximum of 2 arrows
+        for(int i = 0; i < list.size() && i < 2; ++i) { // only shoot a maximum of 2 arrows
             ItemStack itemstack = list.get(i);
             boolean flag = shooter instanceof PlayerEntity && ((PlayerEntity) shooter).abilities.instabuild;
             if (!itemstack.isEmpty()) {

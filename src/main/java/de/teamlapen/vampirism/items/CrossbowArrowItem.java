@@ -64,6 +64,7 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
      * @param heightOffset An height offset for the position the entity is created
      * @return An arrow entity at the players position using the given itemstack
      */
+    @Deprecated
     @Override
     public CrossbowArrowEntity createEntity(ItemStack stack, World world, PlayerEntity player, double heightOffset, double centerOffset, boolean rightHand) {
         CrossbowArrowEntity entity = CrossbowArrowEntity.createWithShooter(world, player, heightOffset, centerOffset, rightHand, stack);
