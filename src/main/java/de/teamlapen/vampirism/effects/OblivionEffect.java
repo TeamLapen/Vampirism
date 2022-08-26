@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.effects;
 
 import de.teamlapen.lib.lib.util.LogUtil;
+import de.teamlapen.vampirism.api.entity.effect.EffectWithNoCounter;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.core.ModEffects;
@@ -23,12 +24,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class OblivionEffect extends VampirismEffect {
+public class OblivionEffect extends VampirismEffect implements EffectWithNoCounter {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public OblivionEffect(MobEffectCategory effectType, int potionColor) {
-        super(effectType, potionColor);
+    public OblivionEffect() {
+        super(MobEffectCategory.NEUTRAL, 0x4E9331);
     }
 
     @Override

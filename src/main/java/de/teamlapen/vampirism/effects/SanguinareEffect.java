@@ -1,16 +1,13 @@
 package de.teamlapen.vampirism.effects;
 
 import com.google.common.base.Preconditions;
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
+import de.teamlapen.vampirism.api.entity.effect.EffectWithNoCounter;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -29,7 +26,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 
-public class SanguinareEffect extends VampirismEffect {
+public class SanguinareEffect extends VampirismEffect implements EffectWithNoCounter {
     /**
      * @param player Whether to use the player effect duration or the mob duration
      */
@@ -78,22 +75,10 @@ public class SanguinareEffect extends VampirismEffect {
     @Override
     public void initializeClient(@NotNull Consumer<IClientMobEffectExtensions> consumer) {
         consumer.accept(new IClientMobEffectExtensions() {
-            @Override
-            public boolean renderGuiIcon(MobEffectInstance instance, Gui gui, PoseStack poseStack, int x, int y, float z, float alpha) {
-                return true;
-            }
-
-            @Override
-            public boolean renderInventoryText(@NotNull MobEffectInstance instance, @NotNull EffectRenderingInventoryScreen<?> screen, @NotNull PoseStack poseStack, int x, int y, int blitOffset) {
-                Component name = screen.getEffectName(instance);
-                screen.font.draw(poseStack, name, x + 10 + 18, y + 6, 16777215);
-                screen.font.draw(poseStack, "?", x + 10 + 18, y + 6 + 10, 8355711);
-                return true;
-            }
 
             @Override
             public boolean isVisibleInGui(MobEffectInstance instance) {
-                return true;
+                return false;
             }
         });
     }
