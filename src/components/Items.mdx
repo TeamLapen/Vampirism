@@ -52,11 +52,12 @@ export const Item = ({children, title, img, source}) => (
     <Items children={children} title={title} source={source} img={[{src: img, alt: title}]}></Items>
 );
 
-export const TieredItem = ({title, tiers}) => (
+export const TieredItem = ({children, title, tiers}) => (
     <div style={{marginBottom: '50px'}} id={title.toLowerCase().replaceAll(' ', '-')}>
         <div>
             <h1 style={{fontSize: 'xx-large'}}>{title}</h1>
         </div>
+        {children}
         {tiers.map(tier => (
             <div>
                 <Items children={tier.children} title={tier.title} source={tier.source} img={tier.img} subHeading={true}></Items>

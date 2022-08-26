@@ -34,10 +34,12 @@ import {
     crossbowArrowSpitfireRecipe,
     crossbowArrowVampireKillerRecipe,
     crossbowRecipe,
-    crossRecipe, darkStoneBrick2Recipe,
+    crossRecipe,
+    darkStoneBrick2Recipe,
     darkStoneBrickRecipe,
     darkStoneBrickSlapRecipe,
-    darkStoneBrickStairsRecipe, darkStoneRecipe,
+    darkStoneBrickStairsRecipe,
+    darkStoneRecipe,
     darkStoneSlapRecipe,
     darkStoneStairsRecipe,
     doubleCrossbowRecipe,
@@ -51,7 +53,7 @@ import {
     heartSeekerEnhancedRecipe,
     heartSeekerNormalRecipe,
     heartStrikerEnhancedRecipe,
-    heartStrikerNormalRecipe,
+    heartStrikerNormalRecipe, holySaltWaterRecipe,
     hunterAxeEnhancedRecipe,
     hunterAxeRecipe,
     hunterBootsEnhancedRecipe,
@@ -79,13 +81,20 @@ import {
     obsidianLegsEnhancedRecipe,
     obsidianLegsRecipe,
     pitchForkRecipe,
-    potionTableRecipe,
-    purifiedGarlicRecipe, purpleStoneBrickRecipe,
+    potionTableRecipe, pureSaltRecipe,
+    purifiedGarlicRecipe,
+    purpleStoneBrickRecipe,
     purpleStoneBrickSlapRecipe,
     purpleStoneBrickStairsRecipe,
-    stakeRecipe, stoneBricks2Recipe,
+    splashHolyWaterEnhancedRecipe,
+    splashHolyWaterNormalRecipe,
+    splashHolyWaterUltimateRecipe,
+    stakeRecipe,
+    stoneBricks2Recipe,
     stoneBricksRecipe,
-    techCrossbowRecipe, totemBottomRecipe, totemTopRecipe,
+    techCrossbowRecipe,
+    totemBottomRecipe,
+    totemTopRecipe,
     vampireBootsRecipe,
     vampireCloak1Recipe,
     vampireCloak2Recipe,
@@ -145,8 +154,32 @@ export const garlicRecipes = [
 export const garlicBreadRecipes = craftingRecipe(garlicBreadRecipe)
 export const heartSeekerNormalRecipes = craftingRecipe(heartSeekerNormalRecipe)
 export const heartSeekerEnhancedRecipes = craftingRecipe(heartSeekerEnhancedRecipe)
+export const heartSeekerUltimateRecipes = [
+    {
+        type: "list",
+        title: "Trading",
+        source : ["Hunter Expert"]
+    },
+    {
+        type: "list",
+        title: "World",
+        source: ["Can be found in Vampire Monster Rooms"]
+    }
+];
 export const heartStrikerNormalRecipes = craftingRecipe(heartStrikerNormalRecipe)
 export const heartStrikerEnhancedRecipes = craftingRecipe(heartStrikerEnhancedRecipe)
+export const heartStrikerUltimateRecipes = [
+    {
+        type: "list",
+        title: "Trading",
+        source : ["Vampire Expert"]
+    },
+    {
+        type: "list",
+        title: "World",
+        source: ["Can be found in Vampire Monster Rooms"]
+    }
+]
 export const garlicFinderRecipes = craftingRecipe(garlicFinderRecipe)
 export const hunterHatRecipes = craftingRecipes([hunterHat1Recipe, hunterHat2Recipe], "Weapon Table")
 export const infestedAppleRecipes = craftingRecipe(infestedAppleRecipe)
@@ -257,3 +290,122 @@ export const villageFragileTotemRecipes = [
 export const villageCraftedTotemRecipes = craftingRecipes([totemBottomRecipe, totemTopRecipe])
 export const villageTotemRecipes = sumSource([villageFragileTotemRecipes, villageCraftedTotemRecipes])
 export const weaponTableRecipes = craftingRecipe(weaponTableRecipe)
+export const holyWaterRecipes = [
+    {
+        type: "list",
+        title: "Altar of Cleansing",
+        source: ["Interact with the Altar of Cleansing while holding Holy Salt Water. This Produces either normal or enhanced Holy Water depending on the unlocked status of the Holy Water Enhanced skill"]
+    },
+    {
+        type: "list",
+        title: "Trading",
+        source: ["Hunter Expert (Only Ultimate Holy Water)"]
+    }
+]
+export const holySaltRecipes = [
+    {
+        type: "list",
+        title: "Altar of Cleansing",
+        source: ["Interact with the Altar of Cleansing while holding Pure Salt"]
+    }
+]
+export const soulOrbRecipes = [
+    {
+        type: "list",
+        title: "Entity Drops",
+        source: ["All Vampires"]
+    }
+]
+export const vampireBookRecipes = [
+    {
+        type: "list",
+        title: "Entity Drops",
+        source: ["Advanced Vampires", "Advanced Hunters"]
+    }
+]
+export const vampireBloodRecipes = [
+    {
+        type: "list",
+        title: "Entity Drops",
+        source: ["Advanced Vampires", "Advanced Hunters", "Vampire"]
+    },
+    {
+        type: "list",
+        title: "World",
+        source: ["Hunter Trainer Houses"]
+    }
+]
+export const vampireFangRecipes = [
+    {
+        type: "list",
+        title: "Entity Drops",
+        source: ["Vampire"]
+    },
+    {
+        type: "list",
+        title: "World",
+        source: ["Vampire Monster Rooms", "Abandoned Mineshaft", "Jungle Temple"]
+    }
+]
+export const splashHolyWaterRecipes = craftingRecipe([splashHolyWaterNormalRecipe, splashHolyWaterEnhancedRecipe, splashHolyWaterUltimateRecipe])
+export const pureSaltRecipes = craftingRecipe(pureSaltRecipe)
+export const pureBloodRecipes = [
+    {
+        type: "list",
+        title: "Entity Drops",
+        source: ["Vampire Baron"]
+    },
+    {
+        type: "list",
+        title: "Trades",
+        source: ["Vampire Expert"]
+    }
+]
+export const vampireMinionBindingRecipes = [
+    {
+        type: "list",
+        title: "Tasks",
+        source: ["Can be acquired once becoming Vampire Lord"]
+    }
+]
+export const hunterMinionBindingRecipes = [
+    {
+        type: "list",
+        title: "Tasks",
+        source: ["Can be acquired once becoming Hunter Lord"]
+    }
+]
+export const vampireMinionUpgradesRecipes = [
+    {
+        type: "list",
+        title: "Tasks",
+        source: ["Can be acquired once becoming Vampire Lord. Higher lord level -> higher upgrade"]
+    }
+]
+export const hunterMinionUpgradesRecipes = [
+    {
+        type: "list",
+        title: "Tasks",
+        source: ["Can be acquired once becoming Hunter Lord. Higher lord level -> higher upgrade"]
+    }
+]
+export const hunterIntelRecipes = [
+    {
+        type: "list",
+        title: "Hunter Table",
+        source: ["Book is created in the table"]
+    }
+]
+export const humanHeartRecipes = [
+    {
+        type: "list",
+        title: "Tasks",
+        source: ["Can be acquired through tasks"]
+    },
+    {
+        type: "list",
+        title: "Entity Drops",
+        source: ["Vampire Hunter"]
+    }
+]
+export const holySaltWaterRecipes = craftingRecipe(holySaltWaterRecipe)

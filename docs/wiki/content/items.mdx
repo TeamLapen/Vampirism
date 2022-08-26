@@ -72,17 +72,31 @@ import {
     feedingAdapterRecipes,
     garlicBreadRecipes,
     garlicFinderRecipes,
-    garlicRecipes, heartSeekerEnhancedRecipes, heartSeekerNormalRecipes,
-    heartStrikerEnhancedRecipes, heartStrikerNormalRecipes,
-    hunterAxeEnhancedRecipes, hunterAxeNormalRecipes,
-    hunterCoatEnhancedRecipes, hunterCoatNormalRecipes,
-    hunterHatRecipes,
+    garlicRecipes,
+    heartSeekerEnhancedRecipes,
+    heartSeekerNormalRecipes,
+    heartSeekerUltimateRecipes,
+    heartStrikerEnhancedRecipes,
+    heartStrikerNormalRecipes,
+    heartStrikerUltimateRecipes, holySaltRecipes, holySaltWaterRecipes, holyWaterRecipes, humanHeartRecipes,
+    hunterAxeEnhancedRecipes,
+    hunterAxeNormalRecipes,
+    hunterCoatEnhancedRecipes,
+    hunterCoatNormalRecipes,
+    hunterHatRecipes, hunterIntelRecipes, hunterMinionBindingRecipes, hunterMinionUpgradesRecipes,
     infestedAppleRecipes,
-    injectionRecipes, obsidianArmorEnhancedRecipes, obsidianArmorNormalRecipes,
+    injectionRecipes,
+    obsidianArmorEnhancedRecipes,
+    obsidianArmorNormalRecipes,
     pitchforkRecipes,
-    potionOfOblivionRecipes,
-    purifiedGarlicRecipes,
-    stakeRecipes, vampireClothBootsRecipes, vampireClothChestRecipes, vampireClothHeadRecipes, vampireClothLegsRecipes
+    potionOfOblivionRecipes, pureBloodRecipes, pureSaltRecipes,
+    purifiedGarlicRecipes, soulOrbRecipes, splashHolyWaterRecipes,
+    stakeRecipes, vampireBloodRecipes,
+    vampireBookRecipes,
+    vampireClothBootsRecipes,
+    vampireClothChestRecipes,
+    vampireClothHeadRecipes,
+    vampireClothLegsRecipes, vampireFangRecipes, vampireMinionBindingRecipes, vampireMinionUpgradesRecipes
 } from "./_recipes.mdx";
 
 Recipes may be outdated. Just Enough items is recommended
@@ -110,7 +124,10 @@ Used in recipes or for placing Alchemical Fire.
         img: armorOfSwiftnessUltimateImages,
         source: armorOfSwiftnessUltimateRecipes
     }
-]}/>
+]}>
+
+Armor of Swiftness is a better leather armor that provides speed and a minimal jump boost
+</TieredItem>
 <Items title="Beacon Core" img={beaconImages} source={beaconCoreRecipes}>
 
 The Beacon Cores are used in crafting [Garlic Diffuser](blocks.mdx#garlic-diffuser)
@@ -180,9 +197,22 @@ Vampirism's guide book if [GuideAPI](https://www.curseforge.com/minecraft/mc-mod
     },
     {
         title: "Ultimate",
-        img: [{ src: heartSeekerUltimateImage}]
+        img: [{ src: heartSeekerUltimateImage}],
+        source: heartSeekerUltimateRecipes
     }
-]}/>
+]}>
+
+Heart Seeker are Vampire swords that can be trained to become better, but require blood to work.
+<details><summary>Charge & Train</summary>
+
+#### Charge
+To change a Heart Seeker put it onto a [Blood Pedestal](./blocks.mdx#blood-pedestal) that sits on top of a [Blood Container](./blocks.mdx#blood-container).
+
+#### Train
+Simply kill mobs
+
+</details>
+</TieredItem>
 
 <TieredItem title="Heart Striker" tiers={ [
     {
@@ -197,15 +227,28 @@ Vampirism's guide book if [GuideAPI](https://www.curseforge.com/minecraft/mc-mod
     },
     {
         title: "Ultimate",
-        img: [{src: heartStrikerUltimateImage}]
+        img: [{src: heartStrikerUltimateImage}],
+        source: heartStrikerUltimateRecipes
     }
-]}/>
+]}>
 
-<Items title="Holy Water" img={holyWaterImages}></Items>
-<Items title="Splash Holy Water" img={splashHolyWaterImages}></Items>
-<Item title="Holy Salt" img={holySaltImage}></Item>
-<Item title="Holy Salt Water" img={holySaltWaterImage}></Item>
-<Item title="Human Heart" img={humanHeartImage}></Item>
+Heart Striker are Vampire swords that can be trained to become better, but require blood to work.
+<details><summary>Charge & Train</summary>
+
+#### Charge
+To change a Heart Striker put it onto a [Blood Pedestal](./blocks.mdx#blood-pedestal) that sits on top of a [Blood Container](./blocks.mdx#blood-container).
+
+#### Train
+Simply kill mobs
+
+</details>
+</TieredItem>
+
+<Items title="Holy Water" img={holyWaterImages} source={holyWaterRecipes}></Items>
+<Items title="Splash Holy Water" img={splashHolyWaterImages} source={splashHolyWaterRecipes}></Items>
+<Item title="Blessed Salt" img={holySaltImage} source={holySaltRecipes}></Item>
+<Item title="Blessed Salt Water" img={holySaltWaterImage} source={holySaltWaterRecipes}></Item>
+<Item title="Human Heart" img={humanHeartImage} source={humanHeartRecipes}></Item>
 <Item title="Weak Human Heart" img={weakHumanHeartImage}></Item>
 <TieredItem title="Hunter Axe" tiers={ [
     {
@@ -240,25 +283,25 @@ Vampirism's guide book if [GuideAPI](https://www.curseforge.com/minecraft/mc-mod
     }
 ]}/>
 <Items title="Hunter Hat" img={hunterHeadImages} source={hunterHatRecipes}></Items>
-<Item title="Hunter Intel" img={hunterIntelImage}></Item>
+<Item title="Hunter Intel" img={hunterIntelImage} source={hunterIntelRecipes}></Item>
 <Item title="Infested Apple" img={infectedAppleImage} source={infestedAppleRecipes}>
 
 Cure vampiric creatures. For details see [here](https://github.com/TeamLapen/Vampirism/wiki/Vampiric-Creatures#curing-creatures).
 </Item>
 <Items title="Injection" img={injectionImages} source={injectionRecipes()}/>
-<Item title="Vampire Minion Binding" img={vampireMinionBindingImage}>
+<Item title="Vampire Minion Binding" img={vampireMinionBindingImage} source={vampireMinionBindingRecipes}>
 
 With a Minion Equipment you can hire weak Vampire entities as your minions.
 </Item>
-<Item title="Hunter Minion Binding" img={hunterMinionBindingImage}>
+<Item title="Hunter Minion Binding" img={hunterMinionBindingImage} source={hunterMinionBindingRecipes}>
 
 With a Minion Equipment you can hire weak Hunter entities as your minions.
 </Item>
-<Items title="Vampire Minion Upgrade" img={vampireMinionUpgradeImages}>
+<Items title="Vampire Minion Upgrade" img={vampireMinionUpgradeImages} source={vampireMinionUpgradesRecipes}>
 
 Increase minion level by 1. While you need better Minion Upgrades to reach higher minion levels, each Minion Upgrade is eligible for two level.
 </Items>
-<Items title="Hunter Minion Upgrade" img={hunterMinionUpgradeImages}>
+<Items title="Hunter Minion Upgrade" img={hunterMinionUpgradeImages} source={hunterMinionUpgradesRecipes}>
 
 Increase minion level by 1. While you need better Minion Upgrades to reach higher minion levels, each Minion Upgrade is eligible for two level.
 </Items>
@@ -284,10 +327,10 @@ Increase minion level by 1. While you need better Minion Upgrades to reach highe
 
 On consumption reset all learned skills over time.
 </Item>
-<Item title="Pure Salt" img={pureSaltImage}></Item>
-<Items title="Pure Blood" img={pureBloodImages}></Items>
+<Item title="Pure Salt" img={pureSaltImage} source={pureSaltRecipes}></Item>
+<Items title="Pure Blood" img={pureBloodImages} source={pureBloodRecipes}></Items>
 <Item title="Purified Garlic" img={purifiedGarlicImage} source={purifiedGarlicRecipes}></Item>
-<Item title="Soul Orb" img={soulOrbImage}></Item>
+<Item title="Soul Orb" img={soulOrbImage} source={soulOrbRecipes}></Item>
 <Item title="Stake" img={stakeImage} source={stakeRecipes}></Item>
 <Item title="Umbrella" img={umbrellaImage}>
 
@@ -320,6 +363,6 @@ Protects from the sun when held in hand. Config option `umbrella` must be enable
 
 Stylish vampire clothing that provides minimal protection but can be fully enchanted.
 </TieredItem>
-<Item title="Vampire Fang" img={vampireFangImage}/>
-<Item title="Vampire Blood" img={vampireBloodImage}/>
-<Item title="Vampire Book" img={vampireBookImage}/>
+<Item title="Vampire Fang" img={vampireFangImage} source={vampireFangRecipes}/>
+<Item title="Vampire Blood" img={vampireBloodImage} source={vampireBloodRecipes}/>
+<Item title="Vampire Book" img={vampireBookImage} source={vampireBookRecipes}/>
