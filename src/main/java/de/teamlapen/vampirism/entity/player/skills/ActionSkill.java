@@ -18,14 +18,14 @@ import java.util.function.Supplier;
  * Simple skill that unlocks one action
  */
 public class ActionSkill<T extends IFactionPlayer<T>> extends VampirismSkill<T> {
-    private final Supplier<IAction<T>> action;
+    private final Supplier<? extends IAction<T>> action;
     private final ISkillType type;
 
-    public ActionSkill(Supplier<IAction<T>> action) {
+    public ActionSkill(Supplier<? extends IAction<T>> action) {
         this(action, false);
     }
 
-    public ActionSkill(Supplier<IAction<T>> action, boolean customDescription) {
+    public ActionSkill(Supplier<? extends IAction<T>> action, boolean customDescription) {
         this(action, SkillType.LEVEL, false);
     }
 
@@ -33,7 +33,7 @@ public class ActionSkill<T extends IFactionPlayer<T>> extends VampirismSkill<T> 
      * @param action            The corresponding action
      * @param customDescription If false a generic "unlocks action" string is used
      */
-    public ActionSkill(Supplier<IAction<T>> action, ISkillType type, boolean customDescription) {
+    public ActionSkill(Supplier<? extends IAction<T>> action, ISkillType type, boolean customDescription) {
         this.action = action;
         this.type = type;
         if (customDescription) {
