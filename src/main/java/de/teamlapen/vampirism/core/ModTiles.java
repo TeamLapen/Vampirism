@@ -49,6 +49,8 @@ public class ModTiles {
         Set<Block> blocks = new HashSet<>(((TileEntityTypeAccessor) BlockEntityType.SIGN).getValidBlocks());
         blocks.add(ModBlocks.DARK_SPRUCE_SIGN.get());
         blocks.add(ModBlocks.CURSED_SPRUCE_SIGN.get());
+        blocks.add(ModBlocks.DARK_SPRUCE_WALL_SIGN.get());
+        blocks.add(ModBlocks.CURSED_SPRUCE_WALL_SIGN.get());
         ((TileEntityTypeAccessor) BlockEntityType.SIGN).setValidBlocks(blocks);
     }
 

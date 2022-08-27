@@ -295,9 +295,9 @@ public class BlockStateGenerator extends BlockStateProvider {
         pressurePlate(ModBlocks.DARK_SPRUCE_PRESSURE_PLACE.get(), blockTexture(ModBlocks.DARK_SPRUCE_PLANKS.get()));
         pressurePlate(ModBlocks.CURSED_SPRUCE_PRESSURE_PLACE.get(), blockTexture(ModBlocks.CURSED_SPRUCE_PLANKS.get()));
 
-        simpleBlock(ModBlocks.DARK_SPRUCE_WALL_SIGN.get(), models().getBuilder("vampirism:dark_spruce_wall_sign").texture("particle", "vampirism:block/cursed_spruce_planks"));
+        simpleBlock(ModBlocks.DARK_SPRUCE_WALL_SIGN.get(), models().getBuilder("vampirism:dark_spruce_wall_sign").texture("particle", "vampirism:block/dark_spruce_planks"));
         simpleBlock(ModBlocks.CURSED_SPRUCE_WALL_SIGN.get(), models().getBuilder("vampirism:cursed_spruce_wall_sign").texture("particle", "vampirism:block/cursed_spruce_planks"));
-        simpleBlock(ModBlocks.DARK_SPRUCE_SIGN.get(), models().getBuilder("vampirism:dark_spruce_sign").texture("particle", "vampirism:block/cursed_spruce_planks"));
+        simpleBlock(ModBlocks.DARK_SPRUCE_SIGN.get(), models().getBuilder("vampirism:dark_spruce_sign").texture("particle", "vampirism:block/dark_spruce_planks"));
         simpleBlock(ModBlocks.CURSED_SPRUCE_SIGN.get(), models().getBuilder("vampirism:cursed_spruce_sign").texture("particle", "vampirism:block/cursed_spruce_planks"));
     }
 

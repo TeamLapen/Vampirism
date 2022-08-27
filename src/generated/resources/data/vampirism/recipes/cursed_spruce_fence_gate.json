@@ -1,16 +1,19 @@
 {
   "type": "minecraft:crafting_shaped",
-  "group": "boat",
+  "group": "wooden_fence_gate",
   "key": {
     "#": {
+      "item": "minecraft:stick"
+    },
+    "W": {
       "item": "vampirism:cursed_spruce_planks"
     }
   },
   "pattern": [
-    "# #",
-    "###"
+    "#W#",
+    "#W#"
   ],
   "result": {
-    "item": "vampirism:cursed_spruce_boat"
+    "item": "vampirism:cursed_spruce_fence_gate"
   }
 }
