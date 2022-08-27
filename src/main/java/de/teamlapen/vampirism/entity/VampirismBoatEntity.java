@@ -73,8 +73,8 @@ public class VampirismBoatEntity extends Boat implements IVampirismBoat {
     @Override
     public Item getDropItem() {
         return switch (this.getBType()) {
-            case DARK_SPRUCE -> ModItems.dark_spruce_boat.get();
-            case CURSED_SPRUCE -> ModItems.cursed_spruce_boat.get();
+            case DARK_SPRUCE -> ModItems.DARK_SPRUCE_BOAT.get();
+            case CURSED_SPRUCE -> ModItems.CURSED_SPRUCE_BOAT.get();
         };
     }
 

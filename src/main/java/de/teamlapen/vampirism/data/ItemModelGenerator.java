@@ -133,10 +133,10 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             add(ModItems.VAMPIRE_CLOTHING_LEGS.get());
             add(ModItems.VAMPIRE_CLOTHING_CROWN.get());
             add(ModItems.GARLIC_FINDER.get());
-            add(ModItems.dark_spruce_boat.get());
-            add(ModItems.cursed_spruce_boat.get());
-            add(ModItems.dark_spruce_chest_boat.get());
-            add(ModItems.cursed_spruce_chest_boat.get());
+            add(ModItems.DARK_SPRUCE_BOAT.get());
+            add(ModItems.CURSED_SPRUCE_BOAT.get());
+            add(ModItems.DARK_SPRUCE_CHEST_BOAT.get());
+            add(ModItems.CURSED_SPRUCE_CHEST_BOAT.get());
         }};
         Map<Item, ResourceLocation> itemsWithTexture = new HashMap<>() {{
             put(ModItems.HOLY_WATER_BOTTLE_NORMAL.get(), modLoc("item/holy_water_normal"));
@@ -154,8 +154,8 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             put(ModItems.ITEM_TENT_SPAWNER.get(), modLoc("item/item_tent"));
             put(ModItems.VAMPIRE_BOOK.get(), modLoc("item/vampire_book"));
             put(ModBlocks.CURSED_BARK.get().asItem(), modLoc("block/cursed_bark"));
-            put(ModItems.dark_spruce_sign.get(), modLoc("item/dark_spruce_sign"));
-            put(ModItems.cursed_spruce_sign.get(), modLoc("item/cursed_spruce_sign"));
+            put(ModItems.DARK_SPRUCE_SIGN.get(), modLoc("item/dark_spruce_sign"));
+            put(ModItems.CURSED_SPRUCE_SIGN.get(), modLoc("item/cursed_spruce_sign"));
         }};
 
         blocks.forEach(this::block);

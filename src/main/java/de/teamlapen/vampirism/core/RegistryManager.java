@@ -93,8 +93,8 @@ public class RegistryManager implements IInitListener {
                     ModVillage.villagerTradeSetup();
                 });
                 ModTiles.registerTileExtensionsUnsafe();
-                DispenserBlock.registerBehavior(ModItems.dark_spruce_boat.get(), new VampirismDispenseBoatBehavior(IVampirismBoat.BoatType.DARK_SPRUCE));
-                DispenserBlock.registerBehavior(ModItems.cursed_spruce_boat.get(), new VampirismDispenseBoatBehavior(IVampirismBoat.BoatType.CURSED_SPRUCE));
+                DispenserBlock.registerBehavior(ModItems.DARK_SPRUCE_BOAT.get(), new VampirismDispenseBoatBehavior(IVampirismBoat.BoatType.DARK_SPRUCE));
+                DispenserBlock.registerBehavior(ModItems.CURSED_SPRUCE_BOAT.get(), new VampirismDispenseBoatBehavior(IVampirismBoat.BoatType.CURSED_SPRUCE));
             case LOAD_COMPLETE:
                 if (ModEffects.checkNightVision()) {
                     event.enqueueWork(ModEffects::fixNightVisionEffectTypesUnsafe);

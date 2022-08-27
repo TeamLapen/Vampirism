@@ -290,8 +290,10 @@ public class RecipesGenerator extends RecipeProvider {
         woodFromLogs(consumer, ModBlocks.CURSED_SPRUCE_WOOD.get(), ModBlocks.CURSED_SPRUCE_LOG.get());
         woodFromLogs(consumer, ModBlocks.STRIPPED_DARK_SPRUCE_WOOD.get(), ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get());
         woodFromLogs(consumer, ModBlocks.STRIPPED_CURSED_SPRUCE_WOOD.get(), ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get());
-        woodenBoat(consumer, ModItems.dark_spruce_boat.get(), ModBlocks.DARK_SPRUCE_PLANKS.get());
-        woodenBoat(consumer, ModItems.cursed_spruce_boat.get(), ModBlocks.CURSED_SPRUCE_BUTTON.get());
+        woodenBoat(consumer, ModItems.DARK_SPRUCE_BOAT.get(), ModBlocks.DARK_SPRUCE_PLANKS.get());
+        woodenBoat(consumer, ModItems.CURSED_SPRUCE_BOAT.get(), ModBlocks.CURSED_SPRUCE_PLANKS.get());
+        chestBoat(consumer, ModItems.DARK_SPRUCE_CHEST_BOAT.get(), ModBlocks.DARK_SPRUCE_PLANKS.get());
+        chestBoat(consumer, ModItems.CURSED_SPRUCE_CHEST_BOAT.get(), ModBlocks.CURSED_SPRUCE_PLANKS.get());
 
         ShapedRecipeBuilder.shaped(ModBlocks.THRONE.get()).pattern(" YZ").pattern("YYZ").pattern("XZX").define('Y', Blocks.RED_CARPET).define('Z', ItemTags.PLANKS).define('X', Items.STICK).unlockedBy("has_stick", has(Items.STICK)).unlockedBy("has_planks", has(ItemTags.PLANKS)).unlockedBy("has_wool", has(Blocks.RED_CARPET)).save(consumer, general("throne"));
         ShapedRecipeBuilder.shaped(ModBlocks.VAMPIRE_RACK.get()).pattern("XYX").pattern("ABC").pattern("XYX").define('X', ItemTags.PLANKS).define('Y', Items.BOOK).define('A', ModItems.VAMPIRE_FANG.get()).define('B', Items.GLASS_BOTTLE).define('C', Items.HONEYCOMB).unlockedBy("has_planks", has(ItemTags.PLANKS)).unlockedBy("has_book", has(Items.BOOK)).unlockedBy("has_fangs", has(ModItems.VAMPIRE_FANG.get())).unlockedBy("has_honey", has(Items.HONEYCOMB)).unlockedBy("has_potion", has(Items.GLASS_BOTTLE)).save(consumer, general("vampire_rack"));

@@ -209,17 +209,17 @@ public class ModItems {
     public static final RegistryObject<Item> GARLIC_FINDER = ITEMS.register("garlic_finder", () -> new Item(creativeTabProps().rarity(Rarity.RARE)));
 
     public static final RegistryObject<StandingAndWallBlockItem> ITEM_CANDELABRA = ITEMS.register("item_candelabra", () -> new StandingAndWallBlockItem(ModBlocks.CANDELABRA.get(), ModBlocks.CANDELABRA_WALL.get(), new Item.Properties().tab(VampirismMod.creativeTab)));
-    public static final RegistryObject<SignItem> dark_spruce_sign = ITEMS.register("dark_spruce_sign", () -> new SignItem((new Item.Properties()).stacksTo(16).tab(VampirismMod.creativeTab), ModBlocks.DARK_SPRUCE_SIGN.get(), ModBlocks.DARK_SPRUCE_WALL_SIGN.get()));
-    public static final RegistryObject<SignItem> cursed_spruce_sign = ITEMS.register("cursed_spruce_sign", () -> new SignItem((new Item.Properties()).stacksTo(16).tab(VampirismMod.creativeTab), ModBlocks.CURSED_SPRUCE_SIGN.get(), ModBlocks.CURSED_SPRUCE_WALL_SIGN.get()));
+    public static final RegistryObject<SignItem> DARK_SPRUCE_SIGN = ITEMS.register("dark_spruce_sign", () -> new SignItem((new Item.Properties()).stacksTo(16).tab(VampirismMod.creativeTab), ModBlocks.DARK_SPRUCE_SIGN.get(), ModBlocks.DARK_SPRUCE_WALL_SIGN.get()));
+    public static final RegistryObject<SignItem> CURSED_SPRUCE_SIGN = ITEMS.register("cursed_spruce_sign", () -> new SignItem((new Item.Properties()).stacksTo(16).tab(VampirismMod.creativeTab), ModBlocks.CURSED_SPRUCE_SIGN.get(), ModBlocks.CURSED_SPRUCE_WALL_SIGN.get()));
 
     public static final RegistryObject<CrucifixItem> CRUCIFIX_NORMAL = ITEMS.register("crucifix_normal", () -> new CrucifixItem(IItemWithTier.TIER.NORMAL));
     public static final RegistryObject<CrucifixItem> CRUCIFIX_ENHANCED = ITEMS.register("crucifix_enhanced", () -> new CrucifixItem(IItemWithTier.TIER.ENHANCED));
     public static final RegistryObject<CrucifixItem> CRUCIFIX_ULTIMATE = ITEMS.register("crucifix_ultimate", () -> new CrucifixItem(IItemWithTier.TIER.ULTIMATE));
 
-    public static final RegistryObject<VampirismBoatItem> dark_spruce_boat = ITEMS.register("dark_spruce_boat", () -> new VampirismBoatItem(IVampirismBoat.BoatType.DARK_SPRUCE, false, creativeTabProps().stacksTo(1)));
-    public static final RegistryObject<VampirismBoatItem> cursed_spruce_boat = ITEMS.register("cursed_spruce_boat", () -> new VampirismBoatItem(IVampirismBoat.BoatType.CURSED_SPRUCE, false, creativeTabProps().stacksTo(1)));
-    public static final RegistryObject<VampirismBoatItem> dark_spruce_chest_boat = ITEMS.register("dark_spruce_chest_boat", () -> new VampirismBoatItem(IVampirismBoat.BoatType.DARK_SPRUCE, true, creativeTabProps().stacksTo(1)));
-    public static final RegistryObject<VampirismBoatItem> cursed_spruce_chest_boat = ITEMS.register("cursed_spruce_chest_boat", () -> new VampirismBoatItem(IVampirismBoat.BoatType.CURSED_SPRUCE, true, creativeTabProps().stacksTo(1)));
+    public static final RegistryObject<VampirismBoatItem> DARK_SPRUCE_BOAT = ITEMS.register("dark_spruce_boat", () -> new VampirismBoatItem(IVampirismBoat.BoatType.DARK_SPRUCE, false, creativeTabProps().stacksTo(1)));
+    public static final RegistryObject<VampirismBoatItem> CURSED_SPRUCE_BOAT = ITEMS.register("cursed_spruce_boat", () -> new VampirismBoatItem(IVampirismBoat.BoatType.CURSED_SPRUCE, false, creativeTabProps().stacksTo(1)));
+    public static final RegistryObject<VampirismBoatItem> DARK_SPRUCE_CHEST_BOAT = ITEMS.register("dark_spruce_chest_boat", () -> new VampirismBoatItem(IVampirismBoat.BoatType.DARK_SPRUCE, true, creativeTabProps().stacksTo(1)));
+    public static final RegistryObject<VampirismBoatItem> CURSED_SPRUCE_CHEST_BOAT = ITEMS.register("cursed_spruce_chest_boat", () -> new VampirismBoatItem(IVampirismBoat.BoatType.CURSED_SPRUCE, true, creativeTabProps().stacksTo(1)));
 
     public static final RegistryObject<OilBottleItem> OIL_BOTTLE = ITEMS.register("oil_bottle", () -> new OilBottleItem(creativeTabProps().stacksTo(1)));
 
