@@ -724,7 +724,7 @@ public class UtilLib {
 
         for (int j = 0; j < inventory.getContainerSize(); ++j) {
             ItemStack itemstack = inventory.getItem(j);
-            if (ItemStack.matches(itemstack, stack)) {
+            if (ItemStack.isSame(itemstack, stack) && ItemStack.tagMatches(itemstack, stack)) {
                 i += itemstack.getCount();
             }
         }
