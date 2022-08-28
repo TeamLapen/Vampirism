@@ -43,7 +43,7 @@ Villagers can be captured and controlled by vampires or hunters. The controlling
 ### Configuration
 ![](img/config.png)
 Many aspects of the game are configurable. Instead of modifying the configuration files you can also use the ingame menu (Only in Minecraft 1.12).  
-Almost all balance related values are configurable in the balance section. For more information see here: https://github.com/TeamLapen/Vampirism/wiki/Configuration
+Almost all balance related values are configurable in the balance section. For more information see here: [Configuration](/docs/wiki/configuration)
 
 ### Items and Blocks
 ![](img/item_overview.png)

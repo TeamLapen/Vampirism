@@ -5,7 +5,7 @@ title: Vampiric Creature
 
 Vampiric Creatures are vampire variants or normal creatures like cows, sheeps, pigs etc. They can naturally spawn in the Vampire Forest or can be turned by Vampires. While some creatures lose their functionality most will keep their behavior eg tamed horses.
 
-(By default there are only vanilla creatures that can be turned if you want to add modded entities take a look [here](https://github.com/TeamLapen/Vampirism/wiki/Biteable-Creatures-Blood-Grinder#adding-a-new-convertible-creature))
+(By default there are only vanilla creatures that can be turned if you want to add modded entities take a look [here](biteable-creatures-blood-grinder.md#adding-a-new-convertible-creature))
 
 
 # Pictures

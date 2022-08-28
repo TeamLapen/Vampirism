@@ -36,7 +36,8 @@ const config = {
           editUrl: 'https://github.com/TeamLapen/Vampirism/tree/gh-pages/',
           versions: {
             current: {
-              label: '1.8',
+              /** this value must be changed if a new version is released */
+                label: '1.8',
             }
           }
         },

@@ -27,5 +27,3 @@ If you do not want this or it causes problems with another mod, you can disable 
 In this folder you will find quite a few files with a lot of options. They allow you to balance Vampirism after your own wishes and should be pretty self-explaining.  
 In case you haven't changed anything, it is very recommend to use the `/resetBalance <category>` after updating Vampirism to a new version to apply changed default balance values.  
 You can either reset all files at once (Use "all") or specific ones.
-
-https://github.com/TeamLapen/Vampirism/wiki/IMob-issue

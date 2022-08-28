@@ -21,7 +21,7 @@ Even more detailed customization can be done via [datapacks](../data/intro.md).
 ### Noticeable configuration options
 #### Mob type compatibility/IMob
 'entityIMob' in *server*  
-Change how Vampirism's mobs are seen by other mods. See https://github.com/TeamLapen/Vampirism/wiki/IMob-issue
+Change how Vampirism's mobs are seen by other mods. See [IMob-Issue](other/imob-issue.md) for more information.
 #### Sundamage dimension configuration
 The way how sundamage is handled in the vanilla overworld dimensions as well as additional modded ones can be configured.  
 `sundamageUnknownDimension` in *server*  
@@ -53,4 +53,4 @@ There also is an example datapack [here](https://github.com/TeamLapen/VampirismD
 
 ## Permissions
 Using appropriate server mods/plugins certain actions can also be controlled with permissions.  
-See [Permissions](https://github.com/TeamLapen/Vampirism/wiki/Permissions)
+See [Permissions](permissions.md)

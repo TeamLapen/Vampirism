@@ -42,4 +42,4 @@ If you no longer want to be a vampire you need to find or craft an [Altar of Cle
 There you will die to leave the faction unless you hold a Totem of Undying or play in a hardcore world.
 
 ## Level 15
-https://github.com/TeamLapen/Vampirism/wiki/Level-15
+[Link](../../other/old/level-15.md)

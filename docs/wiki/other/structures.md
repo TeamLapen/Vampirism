@@ -17,8 +17,6 @@ Generated in some villages.
 Looks like a normal church. 
 Has an Altar of Cleansing which can be used to cure you of vampirism
 
-//TODO more
-
 ### Submit your own structures
 It is possible to submit your own structure suggestions which might be included in future versions of the mod.  
-Read [this](https://github.com/TeamLapen/Vampirism/wiki/Submit-your-own-structures).
+Read [this](submit-your-own-structures.md).
