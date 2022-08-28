@@ -1,0 +1,74 @@
+---
+sidebar_position: 6
+title: Effects
+---
+
+import {Effect, EffectC} from "@site/src/components/Effects";
+import oblivion from '../assets/effects/oblivion.png';
+
+<Effect title="Sanguinare Vampiris" icon="sanguinare.png" >
+Sanguinare Vampiris turns you into a vampire after one minecraft day.
+
+The effect can be obtained by getting bit by a vampire or by injecting yourself with a Sanguinare Injection at an Injection Chair
+
+</Effect>
+<Effect title="Sunscreen" icon="sunscreen.png" >
+Sunscreen makes vampire temporary immune to sundamage.
+
+This effect is used by the sunscreen action.
+</Effect>
+<Effect title="Thirst" icon="thirst.png" >
+Like Hunger increases the blood consumption of vampires.
+
+Can be created in potions or applied while certain vampire actions are active.
+</Effect>
+<Effect title="Toxicant" icon="poison.png" >
+Just like the Poison Effect.
+
+When you get this effect you wear armor that is not wearable by your faction
+</Effect>
+<Effect title="Saturation" icon="saturation.png" >
+A saturation effect.
+
+Will get applied at a few interactions.
+</Effect>
+<Effect title="Fire Protection" icon="fire_protection.png" >
+Vampire version of Fire Resistance.
+
+Because vampires are highly vulnerable to fire there is no way for them to be immune. So as soon as a vampire receives the Fire Resistance effect it will get replaced by Fire Protection.
+</Effect>
+<Effect title="Garlic" icon="garlic.png" >
+Visual indicator that a vampire is effected by garlic.
+
+The actual logic is not done by the effect.
+</Effect>
+<EffectC title="Oblivion" icon={oblivion} >
+Forget all learned skills.
+
+Will be activated as soon as you consume a Potion of Oblivion or by the reset skills in the Skill Menu.
+</EffectC>
+<Effect title="Neonatal" icon="neonatal.png" >
+While this effect is active you will die instantly as vampire.
+
+After being resurrected as vampire you will get this effect for a defined time.
+</Effect>
+<Effect title="Armor Recovery" icon="armor_regeneration.png" >
+Recovers the armor of vampires.
+
+After dying a vampire does not have its full natural armor until the Armor Recovery effect has ended.
+</Effect>
+<Effect title="Bad Omen (Vampire)" icon="bad_omen_vampire.png" >
+Vampire variant of the Vanilla Bad Omen effect that causes a village with a totem to get raided by vampires if the village is not controlled by vampires.
+
+Can be obtained by killing vampire entities with banners on their backs.
+
+Stacks up to level 5 for a stronger village raid
+</Effect>
+
+<Effect title="Bad Omen (Hunter)" icon="bad_omen_hunter.png" >
+Hunter variant of the Vanilla Bad Omen effect that causes a village with a totem to get raided by hunters if the village is not controlled by hunters.
+
+Can be obtained by killing faction entities with banners on their backs.
+
+Stacks up to level 5 for a stronger village raid.
+</Effect>

@@ -1,0 +1,368 @@
+---
+sidebar_position: 1
+title: Items
+---
+
+import {Item, Items, TieredItem} from '@site/src/components/Items.mdx'
+import {
+    accessoryImages,
+    alchemicalFireImage,
+    armorOfSwiftnessEnhancedImages,
+    armorOfSwiftnessNormalImages,
+    armorOfSwiftnessUltimateImages,
+    beaconImages,
+    bloodBottleImages,
+    bloodInfusedIronIngotImages,
+    crossbowArrowImages,
+    crossbowClipImage,
+    crossbowImages,
+    feedingAdapterImage,
+    garlicBreadImage,
+    garlicFinderImage,
+    garlicImage,
+    guideBookImage,
+    heartSeekerEnhancedImage,
+    heartSeekerNormalImage,
+    heartSeekerUltimateImage,
+    heartStrikerEnhancedImage,
+    heartStrikerNormalImage,
+    heartStrikerUltimateImage,
+    holySaltImage,
+    holySaltWaterImage,
+    holyWaterImages,
+    humanHeartImage,
+    hunterAxeEnhancedImage,
+    hunterAxeNormalImage,
+    hunterAxeUltimateImage, hunterCoatEnhancedImages,
+    hunterCoatNormalImages, hunterCoatUltimateImages,
+    hunterHeadImages,
+    hunterIntelImage,
+    hunterMinionBindingImage,
+    hunterMinionUpgradeImages,
+    infectedAppleImage,
+    injectionImages, obsidianArmorEnhancedImages,
+    obsidianArmorNormalImages, obsidianArmorUltimateImages,
+    pitchforkImage,
+    potionOfOblivionImage,
+    pureBloodImages,
+    pureSaltImage,
+    purifiedGarlicImage,
+    soulOrbImage,
+    splashHolyWaterImages,
+    stakeImage,
+    umbrellaImage,
+    vampireBloodImage,
+    vampireBookImage, vampireClothChestImages, vampireClothFeetImage, vampireClothHeadImages,
+    vampireClothLegsImage, vampireFangImage,
+    vampireMinionBindingImage,
+    vampireMinionUpgradeImages,
+    weakHumanHeartImage
+} from "../assets/images/_images.mdx";
+import {
+    accessoriesRecipes,
+    alchemicalFireBrewingRecipes,
+    armorOfSwiftnessEnhancedRecipes,
+    armorOfSwiftnessNormalRecipes,
+    armorOfSwiftnessUltimateRecipes,
+    beaconCoreRecipes,
+    bloodInfusedIronIngotRecipes,
+    crossbowArrowClipRecipes,
+    crossbowArrowRecipes,
+    crossbowRecipes,
+    feedingAdapterRecipes,
+    garlicBreadRecipes,
+    garlicFinderRecipes,
+    garlicRecipes,
+    heartSeekerEnhancedRecipes,
+    heartSeekerNormalRecipes,
+    heartSeekerUltimateRecipes,
+    heartStrikerEnhancedRecipes,
+    heartStrikerNormalRecipes,
+    heartStrikerUltimateRecipes, holySaltRecipes, holySaltWaterRecipes, holyWaterRecipes, humanHeartRecipes,
+    hunterAxeEnhancedRecipes,
+    hunterAxeNormalRecipes,
+    hunterCoatEnhancedRecipes,
+    hunterCoatNormalRecipes,
+    hunterHatRecipes, hunterIntelRecipes, hunterMinionBindingRecipes, hunterMinionUpgradesRecipes,
+    infestedAppleRecipes,
+    injectionRecipes,
+    obsidianArmorEnhancedRecipes,
+    obsidianArmorNormalRecipes,
+    pitchforkRecipes,
+    potionOfOblivionRecipes, pureBloodRecipes, pureSaltRecipes,
+    purifiedGarlicRecipes, soulOrbRecipes, splashHolyWaterRecipes,
+    stakeRecipes, vampireBloodRecipes,
+    vampireBookRecipes,
+    vampireClothBootsRecipes,
+    vampireClothChestRecipes,
+    vampireClothHeadRecipes,
+    vampireClothLegsRecipes, vampireFangRecipes, vampireMinionBindingRecipes, vampireMinionUpgradesRecipes
+} from "./_recipes.mdx";
+
+Recipes may be outdated. Just Enough items is recommended
+<Items title="Accessories" img={accessoryImages} source={accessoriesRecipes}>
+
+Accessories are unique equipment for vampire player which can be equipped in the Vampirism Menu. They each have a special effect (see [Refinements](refinements.md) for more information about these effects)
+</Items>
+<Item title="Alchemical Fire" img={alchemicalFireImage} source={alchemicalFireBrewingRecipes}>
+
+Used in recipes or for placing Alchemical Fire.
+</Item>
+<TieredItem title="Armor of Swiftness" tiers={ [
+    {
+        title: "Normal",
+        img: armorOfSwiftnessNormalImages,
+        source: armorOfSwiftnessNormalRecipes
+    },
+    {
+        title: "Enhanced",
+        img: armorOfSwiftnessEnhancedImages,
+        source: armorOfSwiftnessEnhancedRecipes
+    },
+    {
+        title: "Ultimate",
+        img: armorOfSwiftnessUltimateImages,
+        source: armorOfSwiftnessUltimateRecipes
+    }
+]}>
+
+Armor of Swiftness is a better leather armor that provides speed and a minimal jump boost
+</TieredItem>
+<Items title="Beacon Core" img={beaconImages} source={beaconCoreRecipes}>
+
+The Beacon Cores are used in crafting [Garlic Diffuser](blocks.mdx#garlic-diffuser)
+</Items>
+<Items title="Blood Bottle" img={bloodBottleImages}>
+
+Blood Bottle are used to store blood to drink or transport.
+
+Glass Bottles are automatically transformed into Blood Bottles and back when they are filled/emptied.
+
+<details><summary>disable autoconvert</summary>
+
+You can disable the automatic conversion of Glass Bottles to Blood Bottles by setting `autoConvertGlassBottles` in the common config to `false`. Then you must craft the bottles.
+
+</details>
+</Items>
+<Items title="Blood Infused Iron Ingot" img={bloodInfusedIronIngotImages} source={bloodInfusedIronIngotRecipes}>
+
+Blood Infused Iron Ingots are used to craft Vampire Swords
+
+</Items>
+<Items title="Crossbow" img={crossbowImages} source={crossbowRecipes}>
+    There are several variants of the Crossbow which are unlocked by certain skills.
+    There is a basic crossbow and an enhanced crossbow, both come with a double-barreled variant and then there are the Semi-Auto Crossbows which can fire multiple arrows without the need of reloading.
+</Items>
+<Items title="Crossbow Arrow" img={crossbowArrowImages} source={crossbowArrowRecipes}>
+
+### Spitfire
+The Spitfire Arrows create alchemical fire on impact.
+
+### Vampire Killer
+Kills low level vampires NPC instantly.
+</Items>
+<Item title="Crossbow Clip" img={crossbowClipImage} source={crossbowArrowClipRecipes}>
+
+Used as ammunition for [Semi-Auto Crossbows](#crossbow).
+</Item>
+<Item title="Feeding Adapter" img={feedingAdapterImage} source={feedingAdapterRecipes} >
+    Instead of refilling your blood bottles everything you can carry a blood container and directly drinking from it with the Feeding Adapter in your hand.
+</Item>
+<Item title="Garlic" img={garlicImage} source={garlicRecipes}></Item>
+<Item title="Garlic Bread" img={garlicBreadImage} source={garlicBreadRecipes}>
+
+Delicious bread
+
+</Item>
+<Item title="Garlic Finder" img={garlicFinderImage} source={garlicFinderRecipes}>
+
+Detects Garlic Beacons when held in hand
+
+</Item>
+<Item title="Guide Book" img={guideBookImage}>
+
+Vampirism's guide book if [GuideAPI](https://www.curseforge.com/minecraft/mc-mods/guide-api-village-and-pillage) is installed
+
+</Item>
+<TieredItem title="Heart Seeker" tiers={ [
+    {
+        title: "Normal",
+        img: [{ src: heartSeekerNormalImage}],
+        source: heartSeekerNormalRecipes
+    },
+    {
+        title: "Enhanced",
+        img: [{ src: heartSeekerEnhancedImage}],
+        source: heartSeekerEnhancedRecipes
+    },
+    {
+        title: "Ultimate",
+        img: [{ src: heartSeekerUltimateImage}],
+        source: heartSeekerUltimateRecipes
+    }
+]}>
+
+Heart Seeker are Vampire swords that can be trained to become better, but require blood to work.
+<details><summary>Charge & Train</summary>
+
+#### Charge
+To change a Heart Seeker put it onto a [Blood Pedestal](./blocks.mdx#blood-pedestal) that sits on top of a [Blood Container](./blocks.mdx#blood-container).
+
+#### Train
+Simply kill mobs
+
+</details>
+</TieredItem>
+
+<TieredItem title="Heart Striker" tiers={ [
+    {
+        title: "Normal",
+        img: [{src:heartStrikerNormalImage}],
+        source: heartStrikerNormalRecipes
+    },
+    {
+        title: "Enhanced",
+        img: [{src: heartStrikerEnhancedImage}],
+        source: heartStrikerEnhancedRecipes
+    },
+    {
+        title: "Ultimate",
+        img: [{src: heartStrikerUltimateImage}],
+        source: heartStrikerUltimateRecipes
+    }
+]}>
+
+Heart Striker are Vampire swords that can be trained to become better, but require blood to work.
+<details><summary>Charge & Train</summary>
+
+#### Charge
+To change a Heart Striker put it onto a [Blood Pedestal](./blocks.mdx#blood-pedestal) that sits on top of a [Blood Container](./blocks.mdx#blood-container).
+
+#### Train
+Simply kill mobs
+
+</details>
+</TieredItem>
+
+<Items title="Holy Water" img={holyWaterImages} source={holyWaterRecipes}></Items>
+<Items title="Splash Holy Water" img={splashHolyWaterImages} source={splashHolyWaterRecipes}></Items>
+<Item title="Blessed Salt" img={holySaltImage} source={holySaltRecipes}></Item>
+<Item title="Blessed Salt Water" img={holySaltWaterImage} source={holySaltWaterRecipes}></Item>
+<Item title="Human Heart" img={humanHeartImage} source={humanHeartRecipes}></Item>
+<Item title="Weak Human Heart" img={weakHumanHeartImage}></Item>
+<TieredItem title="Hunter Axe" tiers={ [
+    {
+        title: "Normal",
+        img: [{src: hunterAxeNormalImage}],
+        source: hunterAxeNormalRecipes
+    },
+    {
+        title: "Enhanced",
+        img: [{src: hunterAxeEnhancedImage}],
+        source: hunterAxeEnhancedRecipes
+    },
+    {
+        title: "Ultimate",
+        img: [{src: hunterAxeUltimateImage}]
+    }
+]}/>
+<TieredItem title="Hunter Coat" tiers={ [
+    {
+        title: "Normal",
+        img: hunterCoatNormalImages,
+        source: hunterCoatNormalRecipes
+    },
+    {
+        title: "Enhanced",
+        img: hunterCoatEnhancedImages,
+        source: hunterCoatEnhancedRecipes
+    },
+    {
+        title: "Ultimate",
+        img: hunterCoatUltimateImages
+    }
+]}/>
+<Items title="Hunter Hat" img={hunterHeadImages} source={hunterHatRecipes}></Items>
+<Item title="Hunter Intel" img={hunterIntelImage} source={hunterIntelRecipes}></Item>
+<Item title="Infested Apple" img={infectedAppleImage} source={infestedAppleRecipes}>
+
+Cure vampiric creatures. For details see [here](../other/vampiric-creatures.md#curing-creatures).
+</Item>
+<Items title="Injection" img={injectionImages} source={injectionRecipes()}/>
+<Item title="Vampire Minion Binding" img={vampireMinionBindingImage} source={vampireMinionBindingRecipes}>
+
+With a Minion Equipment you can hire weak Vampire entities as your minions.
+</Item>
+<Item title="Hunter Minion Binding" img={hunterMinionBindingImage} source={hunterMinionBindingRecipes}>
+
+With a Minion Equipment you can hire weak Hunter entities as your minions.
+</Item>
+<Items title="Vampire Minion Upgrade" img={vampireMinionUpgradeImages} source={vampireMinionUpgradesRecipes}>
+
+Increase minion level by 1. While you need better Minion Upgrades to reach higher minion levels, each Minion Upgrade is eligible for two level.
+</Items>
+<Items title="Hunter Minion Upgrade" img={hunterMinionUpgradeImages} source={hunterMinionUpgradesRecipes}>
+
+Increase minion level by 1. While you need better Minion Upgrades to reach higher minion levels, each Minion Upgrade is eligible for two level.
+</Items>
+
+<TieredItem title="Obsidian Armor of Hell"  tiers={[
+    {
+        title: "Normal",
+        img: obsidianArmorNormalImages,
+        source: obsidianArmorNormalRecipes
+    },
+    {
+        title: "Enhanced",
+        img: obsidianArmorEnhancedImages,
+        source: obsidianArmorEnhancedRecipes
+    },
+    {
+        title: "Ultimate",
+        img: obsidianArmorUltimateImages
+    }
+]}></TieredItem>
+<Item title="Pitchfork" img={pitchforkImage} source={pitchforkRecipes}></Item>
+<Item title="Potion of Oblivion" img={potionOfOblivionImage} source={potionOfOblivionRecipes}>
+
+On consumption reset all learned skills over time.
+</Item>
+<Item title="Pure Salt" img={pureSaltImage} source={pureSaltRecipes}></Item>
+<Items title="Pure Blood" img={pureBloodImages} source={pureBloodRecipes}></Items>
+<Item title="Purified Garlic" img={purifiedGarlicImage} source={purifiedGarlicRecipes}></Item>
+<Item title="Soul Orb" img={soulOrbImage} source={soulOrbRecipes}></Item>
+<Item title="Stake" img={stakeImage} source={stakeRecipes}></Item>
+<Item title="Umbrella" img={umbrellaImage}>
+
+Protects from the sun when held in hand. Config option `umbrella` must be enabled in common [config](../configuration.md).
+</Item>
+<TieredItem title="Vampire Cloth" tiers={
+    [
+        {
+            title: "Head",
+            img: vampireClothHeadImages,
+            source: vampireClothHeadRecipes
+        },
+        {
+            title: "Chest",
+            img: vampireClothChestImages,
+            source: vampireClothChestRecipes
+        },
+        {
+            title: "Legs",
+            img: [{ src: vampireClothLegsImage}],
+            source: vampireClothLegsRecipes
+        },
+        {
+            title: "Boots",
+            img: [{ src: vampireClothFeetImage}],
+            source: vampireClothBootsRecipes
+        }
+    ]
+}>
+
+Stylish vampire clothing that provides minimal protection but can be fully enchanted.
+</TieredItem>
+<Item title="Vampire Fang" img={vampireFangImage} source={vampireFangRecipes}/>
+<Item title="Vampire Blood" img={vampireBloodImage} source={vampireBloodRecipes}/>
+<Item title="Vampire Book" img={vampireBookImage} source={vampireBookRecipes}/>

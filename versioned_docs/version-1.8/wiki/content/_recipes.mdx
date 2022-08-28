@@ -1,0 +1,411 @@
+import {
+    alchemicalFire1Recipe,
+    alchemicalFire2Recipe,
+    alchemicalFire3Recipe,
+    alchemicalTableRecipe,
+    altarOfCleansingRecipe1,
+    altarOfCleansingRecipe2,
+    altarOfInfusionRecipe,
+    altarOfInspirationRecipe,
+    altarPillarRecipe,
+    altarTipRecipe,
+    armorOfSwiftnessBootsEnhancedRecipe,
+    armorOfSwiftnessBootsNormalRecipe,
+    armorOfSwiftnessChestEnhancedRecipe,
+    armorOfSwiftnessChestNormalRecipe,
+    armorOfSwiftnessHelmetEnhancedRecipe,
+    armorOfSwiftnessHelmetNormalRecipe,
+    armorOfSwiftnessLegsEnhancedRecipe,
+    armorOfSwiftnessLegsNormalRecipe,
+    beaconCoreEnhancedRecipe,
+    beaconCoreRecipe,
+    bloodContainerRecipe,
+    bloodGrinderRecipe,
+    bloodInfusedIngotRecipe,
+    bloodPedestalRecipe,
+    bloodSieveRecipe,
+    campfireRecipe,
+    candelabraRecipe,
+    chandelierRecipe,
+    coffinRecipe,
+    crossbowArrow1Recipe,
+    crossbowArrow2Recipe,
+    crossbowArrowClip,
+    crossbowArrowSpitfireRecipe,
+    crossbowArrowVampireKillerRecipe,
+    crossbowRecipe,
+    crossRecipe,
+    darkStoneBrick2Recipe,
+    darkStoneBrickRecipe,
+    darkStoneBrickSlapRecipe,
+    darkStoneBrickStairsRecipe,
+    darkStoneRecipe,
+    darkStoneSlapRecipe,
+    darkStoneStairsRecipe,
+    doubleCrossbowRecipe,
+    enhancedBloodInfusedIngotRecipe,
+    enhancedCrossbowRecipe,
+    enhancedDoubleCrossbowRecipe,
+    enhancedTechCrossbowRecipe,
+    garlicBreadRecipe,
+    garlicDiffuserRecipe,
+    garlicFinderRecipe,
+    heartSeekerEnhancedRecipe,
+    heartSeekerNormalRecipe,
+    heartStrikerEnhancedRecipe,
+    heartStrikerNormalRecipe, holySaltWaterRecipe,
+    hunterAxeEnhancedRecipe,
+    hunterAxeRecipe,
+    hunterBootsEnhancedRecipe,
+    hunterBootsRecipe,
+    hunterChestEnhancedRecipe,
+    hunterChestRecipe,
+    hunterHat1Recipe,
+    hunterHat2Recipe,
+    hunterHeadEnhancedRecipe,
+    hunterHeadRecipe,
+    hunterLegsEnhancedRecipe,
+    hunterLegsRecipe,
+    hunterTableRecipe,
+    infestedAppleRecipe,
+    injectionChairRecipe,
+    injectionEmptyRecipe,
+    injectionGarlicRecipe,
+    injectionSanguinemRecipe,
+    obsidianBootsEnhancedRecipe,
+    obsidianBootsRecipe,
+    obsidianChestEnhancedRecipe,
+    obsidianChestRecipe,
+    obsidianHeadEnhancedRecipe,
+    obsidianHeadRecipe,
+    obsidianLegsEnhancedRecipe,
+    obsidianLegsRecipe,
+    pitchForkRecipe,
+    potionTableRecipe, pureSaltRecipe,
+    purifiedGarlicRecipe,
+    purpleStoneBrickRecipe,
+    purpleStoneBrickSlapRecipe,
+    purpleStoneBrickStairsRecipe,
+    splashHolyWaterEnhancedRecipe,
+    splashHolyWaterNormalRecipe,
+    splashHolyWaterUltimateRecipe,
+    stakeRecipe,
+    stoneBricks2Recipe,
+    stoneBricksRecipe,
+    techCrossbowRecipe,
+    totemBottomRecipe,
+    totemTopRecipe,
+    vampireBootsRecipe,
+    vampireCloak1Recipe,
+    vampireCloak2Recipe,
+    vampireCloak3Recipe,
+    vampireCloak4Recipe,
+    vampireCloak5Recipe,
+    vampireCrownRecipe,
+    vampireHatRecipe,
+    vampireLegsRecipe,
+    weaponTableRecipe
+} from "../assets/recipes/_recipes.mdx";
+import {craftingRecipes, craftingRecipe, sumSource} from "@site/src/components/Recipes.tsx";
+
+
+export const accessoriesRecipes = [
+    {
+        type: "list",
+        title: "Entity Drops",
+        source: ["Vampire", "Advanced Vampire", "Hunter", "Advanced Hunter"]
+    },
+    {
+        type: "list",
+        title: "Chest Loot",
+        source: ["Vampire Dungeon", "Abandoned Mineshaft", "Desert Pyramid", "Jungle Temple", "Stronghold Corridor", "Stronghold Library"]
+    }
+];
+export const alchemicalFireBrewingRecipes = craftingRecipes([alchemicalFire1Recipe,alchemicalFire2Recipe,alchemicalFire3Recipe], "Brewing")
+export const beaconCoreRecipes = craftingRecipes([beaconCoreRecipe, beaconCoreEnhancedRecipe])
+export const bloodInfusedIronIngotRecipes = craftingRecipes([bloodInfusedIngotRecipe, enhancedBloodInfusedIngotRecipe])
+export const crossbowRecipes = craftingRecipes([crossbowRecipe, doubleCrossbowRecipe, enhancedCrossbowRecipe, enhancedDoubleCrossbowRecipe, techCrossbowRecipe, enhancedTechCrossbowRecipe])
+export const armorOfSwiftnessNormalRecipes = craftingRecipes([armorOfSwiftnessHelmetNormalRecipe, armorOfSwiftnessChestNormalRecipe, armorOfSwiftnessLegsNormalRecipe, armorOfSwiftnessBootsNormalRecipe], "Weapon Table")
+export const armorOfSwiftnessEnhancedRecipes = craftingRecipes([armorOfSwiftnessHelmetEnhancedRecipe, armorOfSwiftnessChestEnhancedRecipe, armorOfSwiftnessLegsEnhancedRecipe, armorOfSwiftnessBootsEnhancedRecipe], "Weapon Table")
+
+export const armorOfSwiftnessUltimateRecipes = [
+    {
+        type: "list",
+        title: "Trading",
+        source : ["Hunter Expert"]
+    }
+];
+export const crossbowArrowRecipes = craftingRecipes([crossbowArrow1Recipe, crossbowArrow2Recipe, crossbowArrowVampireKillerRecipe, crossbowArrowSpitfireRecipe])
+export const crossbowArrowClipRecipes = craftingRecipe(crossbowArrowClip, "Weapon Table")
+export const feedingAdapterRecipes = [
+    {
+        type: "list",
+        title: "Tasks",
+        source: ["the Feeding Adapter can be acquired by completing a task for a vampire village representative"]
+    }
+];
+export const garlicRecipes = [
+    {
+        type: "list",
+        title: "World",
+        source: ["Garlic can be found at hunter trainer houses in villages"]
+    }
+];
+export const garlicBreadRecipes = craftingRecipe(garlicBreadRecipe)
+export const heartSeekerNormalRecipes = craftingRecipe(heartSeekerNormalRecipe)
+export const heartSeekerEnhancedRecipes = craftingRecipe(heartSeekerEnhancedRecipe)
+export const heartSeekerUltimateRecipes = [
+    {
+        type: "list",
+        title: "Trading",
+        source : ["Hunter Expert"]
+    },
+    {
+        type: "list",
+        title: "World",
+        source: ["Can be found in Vampire Monster Rooms"]
+    }
+];
+export const heartStrikerNormalRecipes = craftingRecipe(heartStrikerNormalRecipe)
+export const heartStrikerEnhancedRecipes = craftingRecipe(heartStrikerEnhancedRecipe)
+export const heartStrikerUltimateRecipes = [
+    {
+        type: "list",
+        title: "Trading",
+        source : ["Vampire Expert"]
+    },
+    {
+        type: "list",
+        title: "World",
+        source: ["Can be found in Vampire Monster Rooms"]
+    }
+]
+export const garlicFinderRecipes = craftingRecipe(garlicFinderRecipe)
+export const hunterHatRecipes = craftingRecipes([hunterHat1Recipe, hunterHat2Recipe], "Weapon Table")
+export const infestedAppleRecipes = craftingRecipe(infestedAppleRecipe)
+export const injectionCraftingRecipes = craftingRecipes([injectionEmptyRecipe, injectionGarlicRecipe, injectionSanguinemRecipe])
+export const injectionWorldRecipe = [
+    {
+        type: "list",
+        title: "World",
+        source: ["Interact with a zombie while holding a Syringe"]
+    }
+];
+export function injectionRecipes() {
+    return sumSource([injectionCraftingRecipes, injectionWorldRecipe])
+}
+export const pitchforkRecipes = craftingRecipe(pitchForkRecipe, "Weapon Table")
+export const purifiedGarlicRecipes = craftingRecipe(purifiedGarlicRecipe)
+export const hunterAxeNormalRecipes = craftingRecipe(hunterAxeRecipe, "Weapon Table")
+export const hunterAxeEnhancedRecipes = craftingRecipe(hunterAxeEnhancedRecipe, "Weapon Table")
+export const stakeRecipes = craftingRecipe(stakeRecipe)
+export const vampireClothHeadRecipes = craftingRecipes([vampireHatRecipe, vampireCrownRecipe])
+export const vampireClothChestRecipes = craftingRecipes([vampireCloak1Recipe, vampireCloak2Recipe, vampireCloak3Recipe, vampireCloak4Recipe, vampireCloak5Recipe])
+export const vampireClothLegsRecipes = craftingRecipe(vampireLegsRecipe)
+export const vampireClothBootsRecipes = craftingRecipe(vampireBootsRecipe)
+export const potionOfOblivionRecipes = [
+    {
+        type: "list",
+        title: "Tasks",
+        source: ["Can be acquired through several Tasks for village representatives"]
+    }
+];
+export const obsidianArmorNormalRecipes = craftingRecipes([obsidianHeadRecipe, obsidianChestRecipe, obsidianLegsRecipe, obsidianBootsRecipe], "Weapon Table")
+export const obsidianArmorEnhancedRecipes = craftingRecipes([obsidianHeadEnhancedRecipe, obsidianChestEnhancedRecipe, obsidianLegsEnhancedRecipe, obsidianBootsEnhancedRecipe], "Weapon Table")
+export const hunterCoatNormalRecipes = craftingRecipes([hunterHeadRecipe, hunterChestRecipe, hunterLegsRecipe, hunterBootsRecipe], "Weapon Table")
+export const hunterCoatEnhancedRecipes = craftingRecipes([hunterHeadEnhancedRecipe, hunterChestEnhancedRecipe, hunterLegsEnhancedRecipe, hunterBootsEnhancedRecipe], "Weapon Table")
+
+export const alchemicalTableRecipes  = craftingRecipe(alchemicalTableRecipe)
+export const altarOfCleansingCraftingRecipe = craftingRecipes([altarOfCleansingRecipe1, altarOfCleansingRecipe2])
+export const altarOfCleansingWorldRecipe = [
+    {
+        type: "list",
+        title: "World",
+        source: ["The Altar of Cleansing can be found in some churches"]
+    }
+];
+export const altarOfCleansingRecipes = sumSource([altarOfCleansingCraftingRecipe,altarOfCleansingWorldRecipe])
+export const altarOfInfusionRecipes = craftingRecipe(altarOfInfusionRecipe)
+export const altarOfInspirationRecipes = craftingRecipe(altarOfInspirationRecipe)
+export const altarPillarRecipes = craftingRecipe(altarPillarRecipe)
+export const altarTipRecipes = craftingRecipe(altarTipRecipe)
+export const bloodContainerRecipes = craftingRecipe(bloodContainerRecipe)
+export const bloodGrinderRecipes = craftingRecipe(bloodGrinderRecipe)
+export const bloodPedestalRecipes = craftingRecipe(bloodPedestalRecipe)
+export const bloodSieveRecipes = craftingRecipe(bloodSieveRecipe)
+export const bloodySpruceSaplingRecipes = [
+    {
+        type: "list",
+        title: "World",
+        source: ["Spruce Saplings drop from Dark or Bloody Spruce Leaves"]
+    }
+]
+export const spruceLeavesRecipes = [
+    {
+        type: "list",
+        title: "World",
+        source: ["Dark and Bloody Spruce Leaves spawns at spruce trees in the Vampire Forest"]
+    }
+]
+export const candelabraRecipes = craftingRecipe(candelabraRecipe)
+export const chandelierRecipes = craftingRecipe(chandelierRecipe)
+export const coffinRecipes = craftingRecipe(coffinRecipe)
+export const crossRecipes = craftingRecipe(crossRecipe)
+export const cursedEarthRecipes = [
+    {
+        type: "list",
+        title: "World",
+        source: ["Cursed Earth is the ground block in the Vampire Forest"]
+    }
+]
+export const firePlaceRecipes = craftingRecipe(campfireRecipe)
+export const garlicBlockRecipes = [
+    {
+        type: "list",
+        title: "World",
+        source: ["Garlic can be found at hunter trainer houses in villages"]
+    }
+]
+export const garlicDiffuserRecipes = craftingRecipe(garlicDiffuserRecipe)
+export const hunterTableRecipes = craftingRecipe(hunterTableRecipe)
+export const injectionChairRecipes = craftingRecipe(injectionChairRecipe)
+export const potionTableRecipes = craftingRecipe(potionTableRecipe)
+export const stoneBricksRecipes = craftingRecipes([darkStoneRecipe, darkStoneBrickRecipe, darkStoneBrick2Recipe, purpleStoneBrickRecipe, stoneBricksRecipe] )
+export const stoneSlapsRecipes = craftingRecipes([darkStoneSlapRecipe, darkStoneBrickSlapRecipe, purpleStoneBrickSlapRecipe])
+export const stoneStairsRecipes = craftingRecipes([darkStoneStairsRecipe, darkStoneBrickStairsRecipe, purpleStoneBrickStairsRecipe])
+export const vampireOrchidRecipes = [
+    {
+        type: "list",
+        title: "World",
+        source: ["Vampire Orchids can be found in the Vampire Forest"]
+    }
+]
+export const villageFragileTotemRecipes = [
+    {
+        type: "list",
+        title: "World",
+        source: ["Fragile Village Totems can be found in villages"]
+    }
+]
+export const villageCraftedTotemRecipes = craftingRecipes([totemBottomRecipe, totemTopRecipe])
+export const villageTotemRecipes = sumSource([villageFragileTotemRecipes, villageCraftedTotemRecipes])
+export const weaponTableRecipes = craftingRecipe(weaponTableRecipe)
+export const holyWaterRecipes = [
+    {
+        type: "list",
+        title: "Altar of Cleansing",
+        source: ["Interact with the Altar of Cleansing while holding Holy Salt Water. This Produces either normal or enhanced Holy Water depending on the unlocked status of the Holy Water Enhanced skill"]
+    },
+    {
+        type: "list",
+        title: "Trading",
+        source: ["Hunter Expert (Only Ultimate Holy Water)"]
+    }
+]
+export const holySaltRecipes = [
+    {
+        type: "list",
+        title: "Altar of Cleansing",
+        source: ["Interact with the Altar of Cleansing while holding Pure Salt"]
+    }
+]
+export const soulOrbRecipes = [
+    {
+        type: "list",
+        title: "Entity Drops",
+        source: ["All Vampires"]
+    }
+]
+export const vampireBookRecipes = [
+    {
+        type: "list",
+        title: "Entity Drops",
+        source: ["Advanced Vampires", "Advanced Hunters"]
+    }
+]
+export const vampireBloodRecipes = [
+    {
+        type: "list",
+        title: "Entity Drops",
+        source: ["Advanced Vampires", "Advanced Hunters", "Vampire"]
+    },
+    {
+        type: "list",
+        title: "World",
+        source: ["Hunter Trainer Houses"]
+    }
+]
+export const vampireFangRecipes = [
+    {
+        type: "list",
+        title: "Entity Drops",
+        source: ["Vampire"]
+    },
+    {
+        type: "list",
+        title: "World",
+        source: ["Vampire Monster Rooms", "Abandoned Mineshaft", "Jungle Temple"]
+    }
+]
+export const splashHolyWaterRecipes = craftingRecipe([splashHolyWaterNormalRecipe, splashHolyWaterEnhancedRecipe, splashHolyWaterUltimateRecipe])
+export const pureSaltRecipes = craftingRecipe(pureSaltRecipe)
+export const pureBloodRecipes = [
+    {
+        type: "list",
+        title: "Entity Drops",
+        source: ["Vampire Baron"]
+    },
+    {
+        type: "list",
+        title: "Trades",
+        source: ["Vampire Expert"]
+    }
+]
+export const vampireMinionBindingRecipes = [
+    {
+        type: "list",
+        title: "Tasks",
+        source: ["Can be acquired once becoming Vampire Lord"]
+    }
+]
+export const hunterMinionBindingRecipes = [
+    {
+        type: "list",
+        title: "Tasks",
+        source: ["Can be acquired once becoming Hunter Lord"]
+    }
+]
+export const vampireMinionUpgradesRecipes = [
+    {
+        type: "list",
+        title: "Tasks",
+        source: ["Can be acquired once becoming Vampire Lord. Higher lord level -> higher upgrade"]
+    }
+]
+export const hunterMinionUpgradesRecipes = [
+    {
+        type: "list",
+        title: "Tasks",
+        source: ["Can be acquired once becoming Hunter Lord. Higher lord level -> higher upgrade"]
+    }
+]
+export const hunterIntelRecipes = [
+    {
+        type: "list",
+        title: "Hunter Table",
+        source: ["Book is created in the table"]
+    }
+]
+export const humanHeartRecipes = [
+    {
+        type: "list",
+        title: "Tasks",
+        source: ["Can be acquired through tasks"]
+    },
+    {
+        type: "list",
+        title: "Entity Drops",
+        source: ["Vampire Hunter"]
+    }
+]
+export const holySaltWaterRecipes = craftingRecipe(holySaltWaterRecipe)
