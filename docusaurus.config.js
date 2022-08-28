@@ -34,12 +34,9 @@ const config = {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl: 'https://github.com/TeamLapen/Vampirism/tree/gh-pages/',
-          lastVersion: 'current',
           versions: {
             current: {
-              /** update version here to currently maintained one*/
               label: '1.8',
-              path: '1.8',
             }
           }
         },
@@ -61,7 +58,7 @@ const config = {
         title: 'Vampirism',
         logo: {
           alt: 'Vampirism Logo',
-          src: 'img/logo2.png',
+          src: 'img/fang.png',
         },
         items: [
           {
