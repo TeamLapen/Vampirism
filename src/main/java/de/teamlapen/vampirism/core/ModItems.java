@@ -193,7 +193,7 @@ public class ModItems {
     public static final RegistryObject<Item> VAMPIRE_MINION_BINDING = ITEMS.register("vampire_minion_binding", () -> new Item(creativeTabProps()));
     public static final RegistryObject<MinionUpgradeItem> VAMPIRE_MINION_UPGRADE_SIMPLE = ITEMS.register("vampire_minion_upgrade_simple", () -> new MinionUpgradeItem(1, 2, VReference.VAMPIRE_FACTION));
     public static final RegistryObject<MinionUpgradeItem> VAMPIRE_MINION_UPGRADE_ENHANCED = ITEMS.register("vampire_minion_upgrade_enhanced", () -> new MinionUpgradeItem(3, 4, VReference.VAMPIRE_FACTION));
-    public static final RegistryObject<MinionUpgradeItem> VAMPIRE_MINION_UPGRADE_SPECIAL = ITEMS.register("vampire_minion_upgrade_special", () -> new MinionUpgradeItem(6, 6, VReference.VAMPIRE_FACTION));
+    public static final RegistryObject<MinionUpgradeItem> VAMPIRE_MINION_UPGRADE_SPECIAL = ITEMS.register("vampire_minion_upgrade_special", () -> new MinionUpgradeItem(5, 6, VReference.VAMPIRE_FACTION));
 
     public static final RegistryObject<OblivionItem> OBLIVION_POTION = ITEMS.register("oblivion_potion", () -> new OblivionItem(creativeTabProps()));
 
