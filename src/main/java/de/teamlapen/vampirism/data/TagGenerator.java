@@ -56,7 +56,7 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
         @SuppressWarnings("unchecked")
         @Override
         protected void addTags(HolderLookup.Provider holderLookup) {
-            tag(BlockTags.DIRT).add(ModBlocks.CURSED_EARTH.get(), ModBlocks.CURSED_GRASS.get());
+            tag(BlockTags.DIRT).add(ModBlocks.CURSED_EARTH.get(), ModBlocks.CURSED_GRASS.get(), ModBlocks.CURSED_ROOTED_DIRT.get(), ModBlocks.VULNERABLE_CURSED_ROOTED_DIRT.get());
             tag(ModTags.Blocks.CURSED_EARTH).add(ModBlocks.CURSED_EARTH.get(), ModBlocks.CURSED_GRASS.get());
             tag(ModTags.Blocks.CASTLE_BLOCK).add(ModBlocks.CASTLE_BLOCK_DARK_BRICK.get(), ModBlocks.CASTLE_BLOCK_DARK_BRICK_BLOODY.get(), ModBlocks.CASTLE_BLOCK_DARK_STONE.get(), ModBlocks.CASTLE_BLOCK_NORMAL_BRICK.get(), ModBlocks.CASTLE_BLOCK_PURPLE_BRICK.get());
             tag(ModTags.Blocks.CASTLE_SLAPS).add(ModBlocks.CASTLE_SLAB_DARK_BRICK.get(), ModBlocks.CASTLE_SLAB_DARK_STONE.get(), ModBlocks.CASTLE_SLAB_PURPLE_BRICK.get());
@@ -69,6 +69,7 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
             tag(BlockTags.MINEABLE_WITH_SHOVEL)
                     .add(ModBlocks.CURSED_EARTH.get())
                     .add(ModBlocks.CURSED_GRASS.get())
+                    .add(ModBlocks.VULNERABLE_CURSED_ROOTED_DIRT.get())
             ;
             tag(BlockTags.MINEABLE_WITH_PICKAXE)
                     .add(ModBlocks.ALTAR_PILLAR.get())
@@ -148,6 +149,7 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
                     .addTag(ModTags.Blocks.TOTEM_TOP_CRAFTED)
             ;
 
+            tag(BlockTags.REPLACEABLE_PLANTS).add(ModBlocks.CURSED_HANGING_ROOTS.get());
             tag(ModTags.Blocks.DARK_SPRUCE_LOG).add(ModBlocks.DARK_SPRUCE_LOG.get(), ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get(), ModBlocks.DARK_SPRUCE_WOOD.get(), ModBlocks.STRIPPED_DARK_SPRUCE_WOOD.get());
             tag(ModTags.Blocks.CURSED_SPRUCE_LOG).add(ModBlocks.CURSED_SPRUCE_LOG.get(), ModBlocks.CURSED_SPRUCE_LOG_CURED.get(), ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get(), ModBlocks.CURSED_SPRUCE_WOOD.get(), ModBlocks.CURSED_SPRUCE_WOOD_CURED.get(), ModBlocks.STRIPPED_CURSED_SPRUCE_WOOD.get());
             tag(BlockTags.LEAVES).add(ModBlocks.DARK_SPRUCE_LEAVES.get());
@@ -168,6 +170,7 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
             tag(ModTags.Blocks.TOTEM_TOP_CRAFTED).add(ModBlocks.TOTEM_TOP_CRAFTED.get(), ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED.get(), ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED.get());
             tag(ModTags.Blocks.TOTEM_TOP).addTag(ModTags.Blocks.TOTEM_TOP_FRAGILE).addTag(ModTags.Blocks.TOTEM_TOP_CRAFTED);
             tag(ModTags.Blocks.COFFIN).add(ModBlocks.COFFIN_RED.get()).add(ModBlocks.COFFIN_BLUE.get()).add(ModBlocks.COFFIN_GREEN.get()).add(ModBlocks.COFFIN_BROWN.get()).add(ModBlocks.COFFIN_BLACK.get()).add(ModBlocks.COFFIN_GRAY.get()).add(ModBlocks.COFFIN_LIGHT_BLUE.get()).add(ModBlocks.COFFIN_WHITE.get()).add(ModBlocks.COFFIN_LIGHT_GRAY.get()).add(ModBlocks.COFFIN_CYAN.get()).add(ModBlocks.COFFIN_PURPLE.get()).add(ModBlocks.COFFIN_PINK.get()).add(ModBlocks.COFFIN_LIME.get()).add(ModBlocks.COFFIN_YELLOW.get()).add(ModBlocks.COFFIN_ORANGE.get()).add(ModBlocks.COFFIN_MAGENTA.get());
+            tag(ModTags.Blocks.MOTHER_GROWS_ON).addTag(BlockTags.DIRT);
         }
     }
 
@@ -282,6 +285,7 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
             tag(ModTags.Biomes.NoSpawn.HUNTER).addTags(ModTags.Biomes.IS_FACTION_BIOME);
             tag(ModTags.Biomes.HasSpawn.ADVANCED_HUNTER).addTags(BiomeTags.IS_OVERWORLD); //TODO 1.19 determine spawn-able biomes
             tag(ModTags.Biomes.NoSpawn.ADVANCED_HUNTER).addTags(ModTags.Biomes.IS_FACTION_BIOME);
+            tag(ModTags.Biomes.HasStructure.MOTHER).addTag(ModTags.Biomes.IS_VAMPIRE_BIOME);
         }
     }
 

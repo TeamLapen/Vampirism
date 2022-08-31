@@ -324,6 +324,10 @@ public class LootTablesGenerator {//TODO 1.20 move to de.teamlapen.vampirism.dat
             this.add(ModBlocks.THRONE.get(), (p_218567_0_) -> createSinglePropConditionTable(p_218567_0_, VampirismSplitBlock.PART, VampirismSplitBlock.Part.MAIN));
             this.dropSelf(ModBlocks.ALCHEMY_TABLE.get());
             this.add(ModBlocks.DIAGONAL_CURSED_BARK.get(), noDrop());
+            this.dropSelf(ModBlocks.CURSED_ROOTED_DIRT.get());
+            this.add(ModBlocks.CURSED_HANGING_ROOTS.get(), ModBlockLootTables::createShearsOnlyDrop);
+            this.dropOther(ModBlocks.VULNERABLE_CURSED_ROOTED_DIRT.get(), ModBlocks.CURSED_ROOTED_DIRT.get());
+            this.add(ModBlocks.MOTHER.get(), noDrop());
         }
 
         @NotNull

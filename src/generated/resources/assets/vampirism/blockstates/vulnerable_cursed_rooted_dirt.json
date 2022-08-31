@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "is_active=false": {
+      "model": "vampirism:block/cursed_rooted_dirt"
+    },
+    "is_active=true,is_invulnerable=false": {
+      "model": "vampirism:block/vulnerable_cursed_rooted_dirt"
+    },
+    "is_active=true,is_invulnerable=true": {
+      "model": "vampirism:block/invulnerable_cursed_rooted_dirt"
+    }
+  }
+}

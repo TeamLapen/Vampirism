@@ -267,6 +267,15 @@ public class BlockStateGenerator extends BlockStateProvider {//TODO 1.20 move to
         applyHorizontalModel(alchemy_table, models().getExistingFile(modLoc("block/alchemy_table/alchemy_table_input_1")), partBuilder -> partBuilder.condition(AlchemyTableBlock.HAS_BOTTLE_INPUT_1, true));
         applyHorizontalModel(alchemy_table, models().getExistingFile(modLoc("block/alchemy_table/alchemy_table_output_0")), partBuilder -> partBuilder.condition(AlchemyTableBlock.HAS_BOTTLE_OUTPUT_0, true));
         applyHorizontalModel(alchemy_table, models().getExistingFile(modLoc("block/alchemy_table/alchemy_table_output_1")), partBuilder -> partBuilder.condition(AlchemyTableBlock.HAS_BOTTLE_OUTPUT_1, true));
+
+        var cursedRootsModel = models().cubeAll("cursed_rooted_dirt", modLoc("block/cursed_rooted_dirt")).renderType(cutout);
+        simpleBlock(ModBlocks.CURSED_ROOTED_DIRT.get(), cursedRootsModel);
+        simpleBlock(ModBlocks.CURSED_HANGING_ROOTS.get(), models().cross("cursed_hanging_roots", modLoc("block/cursed_hanging_roots")).renderType(cutout));
+
+        getVariantBuilder(ModBlocks.VULNERABLE_CURSED_ROOTED_DIRT.get())
+                .partialState().with(VulnerableCursedRootedDirtBlock.IS_ACTIVE, false).modelForState().modelFile(cursedRootsModel).addModel()
+                .partialState().with(VulnerableCursedRootedDirtBlock.IS_ACTIVE, true).with(VulnerableCursedRootedDirtBlock.IS_INVULNERABLE, false).modelForState().modelFile(models().cubeAll("vulnerable_cursed_rooted_dirt", modLoc("block/vulnerable_cursed_rooted_dirt")).renderType(cutout)).addModel()
+                .partialState().with(VulnerableCursedRootedDirtBlock.IS_ACTIVE, true).with(VulnerableCursedRootedDirtBlock.IS_INVULNERABLE, true).modelForState().modelFile(models().cubeAll("invulnerable_cursed_rooted_dirt", modLoc("block/invulnerable_cursed_rooted_dirt")).renderType(cutout)).addModel();
     }
 
     private void createWoodStates() {

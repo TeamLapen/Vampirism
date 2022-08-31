@@ -39,6 +39,7 @@ public class ModTags {
         public static final TagKey<Block> TOTEM_TOP_FRAGILE = tag("totem_top_fragile");
         public static final TagKey<Block> TOTEM_TOP = tag("totem_top");
         public static final TagKey<Block> COFFIN = tag("coffin");
+        public static final TagKey<Block> MOTHER_GROWS_ON = tag("mother_grows_on");
 
         private static @NotNull TagKey<Block> tag(@NotNull ResourceLocation resourceLocation) {
             return BlockTags.create(resourceLocation);
@@ -131,6 +132,7 @@ public class ModTags {
         public static class HasStructure {
             public static final TagKey<Biome> HUNTER_TENT = tag("has_structure/hunter_tent");
             public static final TagKey<Biome> VAMPIRE_DUNGEON = tag("has_structure/vampire_dungeon");
+            public static final TagKey<Biome> MOTHER = tag("has_structure/mother");
         }
 
         public static class HasSpawn {

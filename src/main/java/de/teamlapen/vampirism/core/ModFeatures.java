@@ -8,7 +8,10 @@ import de.teamlapen.vampirism.world.gen.VanillaStructureModifications;
 import de.teamlapen.vampirism.world.gen.feature.VampireDungeonFeature;
 import de.teamlapen.vampirism.world.gen.feature.treedecorators.TrunkCursedVineDecorator;
 import de.teamlapen.vampirism.world.gen.structure.huntercamp.HunterCampStructure;
-import net.minecraft.core.*;
+import de.teamlapen.vampirism.world.gen.structure.mother.MotherStructure;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
@@ -41,6 +44,9 @@ public class ModFeatures {
 
     public static final RegistryObject<TreeDecoratorType<TrunkCursedVineDecorator>> trunk_cursed_vine = TREE_DECORATOR.register("trunk_cursed_vine", () -> new TreeDecoratorType<>(TrunkCursedVineDecorator.CODEC));
 
+    public static final ResourceKey<Structure> MOTHER_KEY = ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(REFERENCE.MODID, "mother"));
+    public static final RegistryObject<StructureType<MotherStructure>> MOTHER = STRUCTURE_TYPES.register("mother", () -> () -> MotherStructure.CODEC);
+
     static void register(IEventBus bus) {
         FEATURES.register(bus);
         STRUCTURE_TYPES.register(bus);
@@ -51,5 +57,6 @@ public class ModFeatures {
         HolderGetter<Biome> lookup = context.lookup(Registries.BIOME);
 
         context.register(ModFeatures.HUNTER_CAMP, new HunterCampStructure(StructuresAccessor.structure(lookup.getOrThrow(ModTags.Biomes.HasStructure.HUNTER_TENT), TerrainAdjustment.NONE)));
+        context.register(ModFeatures.MOTHER_KEY, new MotherStructure(StructuresAccessor.structure(lookup.getOrThrow(ModTags.Biomes.HasStructure.MOTHER), TerrainAdjustment.NONE)));
     }
 }

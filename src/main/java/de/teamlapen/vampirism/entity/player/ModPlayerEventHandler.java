@@ -12,10 +12,7 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
 import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
-import de.teamlapen.vampirism.blocks.AltarInspirationBlock;
-import de.teamlapen.vampirism.blocks.BloodContainerBlock;
-import de.teamlapen.vampirism.blocks.CoffinBlock;
-import de.teamlapen.vampirism.blocks.TentBlock;
+import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEffects;
@@ -412,16 +409,24 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void onPlayerLeftClickedBlock(PlayerInteractEvent.@NotNull LeftClickBlock event) {
         if (event.getFace() == null) return;
-        BlockPos pos = event.getPos().relative(event.getFace());
         Level world = event.getLevel();
+        BlockPos pos = event.getPos();
         BlockState state = world.getBlockState(pos);
 
         if (state.getBlock() == ModBlocks.ALCHEMICAL_FIRE.get()) {
+            BlockPos pos1 = event.getPos().relative(event.getFace());
+            BlockState state1 = world.getBlockState(pos);
             world.levelEvent(null, 1009, pos, 0);
             world.removeBlock(pos, false);
             event.setCanceled(true);
         } else if ((ModBlocks.GARLIC_DIFFUSER_NORMAL.get() == state.getBlock() || ModBlocks.GARLIC_DIFFUSER_WEAK.get() == state.getBlock() || ModBlocks.GARLIC_DIFFUSER_IMPROVED.get() == state.getBlock()) && Helper.isVampire(event.getEntity())) {
             event.getEntity().addEffect(new MobEffectInstance(ModEffects.GARLIC.get()));
+        } else if (state.getBlock() == ModBlocks.MOTHER.get()) {
+            if (((MotherBlock) state.getBlock()).isInvulnerable(world, pos)) {
+                event.setUseItem(Event.Result.DENY);
+            }
+        } else if (state.getBlock() instanceof CursedRootedDirtBlock) {
+            event.setUseItem(Event.Result.DENY);
         }
     }
 

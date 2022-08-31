@@ -1,6 +1,8 @@
 {
   "values": [
     "vampirism:cursed_earth",
-    "vampirism:cursed_grass"
+    "vampirism:cursed_grass",
+    "vampirism:cursed_rooted_dirt",
+    "vampirism:vulnerable_cursed_rooted_dirt"
   ]
 }

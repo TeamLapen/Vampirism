@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "vampirism:block/cursed_hanging_roots"
+  }
+}
