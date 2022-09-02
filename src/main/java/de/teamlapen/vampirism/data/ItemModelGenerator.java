@@ -104,7 +104,7 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             add(ModItems.INJECTION_SANGUINARE.get());
             add(ModItems.PURIFIED_GARLIC.get());
             add(ModItems.SOUL_ORB_VAMPIRE.get());
-            add(ModItems.TECH_CROSSBOW_AMMO_PACKAGE.get());
+            add(ModItems.ARROW_CLIP.get());
             add(ModItems.VAMPIRE_BLOOD_BOTTLE.get());
             add(ModItems.VAMPIRE_CLOAK_BLACK_BLUE.get());
             add(ModItems.VAMPIRE_CLOAK_BLACK_RED.get());

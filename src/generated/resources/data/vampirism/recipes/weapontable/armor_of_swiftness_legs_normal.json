@@ -2,7 +2,7 @@
   "type": "vampirism:shaped_crafting_weapontable",
   "key": {
     "X": {
-      "item": "minecraft:leather"
+      "tag": "forge:leather"
     },
     "Y": {
       "tag": "forge:crops/garlic"

@@ -86,7 +86,7 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
     @Nonnull
     @Override
     public Predicate<ItemStack> getSupportedHeldProjectiles() {
-        return (stack) -> false;
+        return getAllSupportedProjectiles();
     }
 
     @Override
@@ -270,27 +270,28 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
      * <br>
      * changes at comments
      */
-    protected boolean loadProjectileMod(LivingEntity p_220023_0_, ItemStack p_220023_1_, ItemStack p_220023_2_, boolean p_220023_3_, boolean p_220023_4_) {
-        if (p_220023_2_.isEmpty()) {
+    protected boolean loadProjectileMod(LivingEntity entity, ItemStack crossbow, ItemStack projectile, boolean p_220023_3_, boolean noConsume) {
+        if (projectile.isEmpty()) {
             return false;
         } else {
-            boolean flag = p_220023_4_ && p_220023_2_.getItem() instanceof ArrowItem;
+            boolean flag = noConsume && projectile.getItem() instanceof ArrowItem;
             ItemStack itemstack;
-            if (!flag && !p_220023_4_ && !p_220023_3_) {
-                itemstack = p_220023_2_.split(1);
-                if (p_220023_2_.isEmpty() && p_220023_0_ instanceof Player) {
-                    ((Player)p_220023_0_).getInventory().removeItem(p_220023_2_);
+            if (!flag && !noConsume && !p_220023_3_) {
+                itemstack = projectile.getItem() instanceof IArrowContainer ? projectile : projectile.split(1);
+                if (projectile.isEmpty() && entity instanceof Player) {
+                    ((Player)entity).getInventory().removeItem(projectile);
                 }
             } else {
-                itemstack = p_220023_2_.copy();
+                itemstack = projectile.getItem() instanceof IArrowContainer ? projectile : projectile.copy();
             }
 
-            if (itemstack.getItem() instanceof IArrowContainer) { // if arrow container use contents
-                for (ItemStack arrow : ((IArrowContainer) itemstack.getItem()).getArrows(itemstack)) {
-                    CrossbowItemMixin.addChargedProjectile(p_220023_1_, arrow);
+            if (itemstack.getItem() instanceof IArrowContainer container) { // if arrow container use contents
+                Collection<ItemStack> projectiles = noConsume ? container.getArrows(projectile) : container.getAndRemoveArrows(projectile);
+                for (ItemStack arrow : projectiles) {
+                    CrossbowItemMixin.addChargedProjectile(crossbow, arrow);
                 }
             } else {
-                CrossbowItemMixin.addChargedProjectile(p_220023_1_, itemstack);
+                CrossbowItemMixin.addChargedProjectile(crossbow, itemstack);
             }
             return true;
         }

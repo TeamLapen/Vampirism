@@ -234,7 +234,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     public ItemStack getProjectile(ItemStack stack) {
         if (stack.getItem() instanceof IVampirismCrossbow) {
             if (stack.getItem() instanceof TechCrossbowItem) {
-                return ModItems.TECH_CROSSBOW_AMMO_PACKAGE.get().getDefaultInstance();
+                return ModItems.ARROW_CLIP.get().getDefaultInstance();
             } else {
                 return ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance();
             }
