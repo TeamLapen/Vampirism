@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.items.crossbow;
 
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.api.items.IArrowContainer;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.mixin.CrossbowItemMixin;
 import net.minecraft.nbt.CompoundTag;
@@ -38,7 +38,7 @@ public class TechCrossbowItem extends VampirismCrossbowItem {
     @Nonnull
     @Override
     public Predicate<ItemStack> getAllSupportedProjectiles() {
-        return stack -> stack.getItem() == ModItems.TECH_CROSSBOW_AMMO_PACKAGE.get();
+        return stack -> stack.getItem() instanceof IArrowContainer && !((IArrowContainer) stack.getItem()).getArrows(stack).isEmpty();
     }
 
     /**

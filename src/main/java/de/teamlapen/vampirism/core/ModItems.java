@@ -157,10 +157,12 @@ public class ModItems {
     public static final RegistryObject<Item> SOUL_ORB_VAMPIRE = ITEMS.register("soul_orb_vampire", () -> new Item(creativeTabProps()));
 
     public static final RegistryObject<StakeItem> STAKE = ITEMS.register("stake", StakeItem::new);
-    public static final RegistryObject<Item> TECH_CROSSBOW_AMMO_PACKAGE = ITEMS.register("tech_crossbow_ammo_package", () -> new ArrowContainer(new Item.Properties().tab(VampirismMod.creativeTab), CROSSBOW_ARROW_NORMAL,12) {
+    public static final RegistryObject<Item> ARROW_CLIP = ITEMS.register("tech_crossbow_ammo_package", () -> new ArrowContainer(new Item.Properties().tab(VampirismMod.creativeTab), 12, (stack) -> stack.is(CROSSBOW_ARROW_NORMAL.get())) {
         @Override
-        public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-            tooltip.add(Component.translatable("item.vampirism.tech_crossbow_ammo_package.tooltip", Component.translatable(BASIC_TECH_CROSSBOW.get().getDescriptionId())).withStyle(ChatFormatting.GRAY));
+        public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> texts, @NotNull TooltipFlag flag) {
+            texts.add(Component.translatable("item.vampirism.tech_crossbow_ammo_package.tooltip", Component.translatable(BASIC_TECH_CROSSBOW.get().getDescriptionId())).withStyle(ChatFormatting.GRAY));
+            texts.add(Component.empty());
+            super.appendHoverText(stack, level, texts, flag);
         }
 
     });

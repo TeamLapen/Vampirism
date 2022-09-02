@@ -5,7 +5,7 @@
       "tag": "forge:ingots/iron"
     },
     "Y": {
-      "item": "minecraft:leather"
+      "tag": "forge:leather"
     },
     "Z": {
       "tag": "forge:crops/garlic"

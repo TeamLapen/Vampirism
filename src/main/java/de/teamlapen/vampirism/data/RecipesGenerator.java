@@ -81,7 +81,6 @@ public class RecipesGenerator extends RecipeProvider {
         ItemLike holy_water_bottle_normal = ModItems.HOLY_WATER_BOTTLE_NORMAL.get();
         ItemLike holy_water_bottle_enhanced = ModItems.HOLY_WATER_BOTTLE_ENHANCED.get();
         ItemLike holy_water_bottle_ultimate = ModItems.HOLY_WATER_BOTTLE_ULTIMATE.get();
-        ItemLike leather = Items.LEATHER;
         ItemLike feather = Items.FEATHER;
         ItemLike string = Items.STRING;
         ItemLike black_wool = Items.BLACK_WOOL;
@@ -122,6 +121,7 @@ public class RecipesGenerator extends RecipeProvider {
         TagKey<Item> pure_blood = ModTags.Items.PURE_BLOOD;
         TagKey<Item> holy_water = ModTags.Items.HOLY_WATER;
         TagKey<Item> heart = ModTags.Items.HEART;
+        TagKey<Item> leather = Tags.Items.LEATHER;
 
 
         ShapedRecipeBuilder.shaped(ModBlocks.BLOOD_GRINDER.get()).define('Z', hopper).define('Y', planks).define('D', diamond).define('X', iron_ingot).pattern(" Z ").pattern("YDY").pattern("YXY").unlockedBy("has_hopper", has(hopper)).save(consumer, general("blood_grinder"));
@@ -215,7 +215,7 @@ public class RecipesGenerator extends RecipeProvider {
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.HUNTER_HAT_HEAD_0.get()).pattern(" YY ").pattern(" YY ").pattern("XXXX").define('X', iron_ingot).define('Y', black_wool).save(consumer);
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.HUNTER_HAT_HEAD_1.get()).lava(1).pattern(" YY ").pattern("XXXX").define('X', iron_ingot).define('Y', black_wool).save(consumer);
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.PITCHFORK.get()).pattern("X X").pattern("YYY").pattern(" Y ").pattern(" Y ").define('X', iron_ingot).define('Y', stick).save(consumer);
-        ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.TECH_CROSSBOW_AMMO_PACKAGE.get()).lava(1).pattern(" XZ ").pattern("YYYY").pattern("YYYY").pattern("YYYY").define('X', iron_ingot).define('Y', crossbow_arrow_normal).define('Z', planks).save(consumer);
+        ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.ARROW_CLIP.get()).lava(1).pattern("ILLI").pattern("PLLP").pattern("ILLI").define('I', iron_ingot).define('L', leather).define('P', planks).save(consumer);
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.HUNTER_AXE_NORMAL.get(), 1, enchantment(2, Enchantments.KNOCKBACK)).lava(5).pattern("XXZY").pattern("XXZY").pattern("  ZY").pattern("  Z ").define('X', iron_ingot).define('Y', garlic).define('Z', stick).save(consumer);
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.HUNTER_AXE_ENHANCED.get(), 1, enchantment(3, Enchantments.KNOCKBACK)).lava(5).skills(HunterSkills.ENHANCED_WEAPONS.get()).pattern("XWZY").pattern("XWZY").pattern("  ZY").pattern("  Z ").define('X', iron_ingot).define('Y', garlic).define('W', diamond).define('Z', stick).save(consumer);
 
@@ -405,7 +405,7 @@ public class RecipesGenerator extends RecipeProvider {
 
         SimpleCookingRecipeBuilder.smelting(Ingredient.of(amulet, ring), Items.GOLD_NUGGET, 0.1f, 200).unlockedBy("has_amulet", has(amulet)).unlockedBy("has_ring", has(ring)).save(consumer, new ResourceLocation(REFERENCE.MODID, "gold_nugget_from_accessory_smelting"));
         SimpleCookingRecipeBuilder.blasting(Ingredient.of(amulet, ring), Items.GOLD_NUGGET, 0.1f, 100).unlockedBy("has_amulet", has(amulet)).unlockedBy("has_ring", has(ring)).save(consumer, new ResourceLocation(REFERENCE.MODID, "gold_nugget_from_accessory_blasting"));
-        ShapelessRecipeBuilder.shapeless(leather).requires(obi_belt).unlockedBy("has_obi_belt", has(obi_belt)).save(consumer, new ResourceLocation(REFERENCE.MODID, "leather_from_obi_belt"));
+        ShapelessRecipeBuilder.shapeless(Items.LEATHER).requires(obi_belt).unlockedBy("has_obi_belt", has(obi_belt)).save(consumer, new ResourceLocation(REFERENCE.MODID, "leather_from_obi_belt"));
         ShapedRecipeBuilder.shaped(ModBlocks.ALCHEMY_TABLE.get()).pattern("B  ").pattern("BBB").pattern("P P").define('B', basalt).define('P', planks).unlockedBy("has_basalt", has(basalt)).unlockedBy("has_planks", has(planks)).save(consumer);
     }
 
