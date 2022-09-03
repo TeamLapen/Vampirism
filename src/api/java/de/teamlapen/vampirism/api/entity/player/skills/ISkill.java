@@ -6,6 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Range;
 
 import java.util.Optional;
 
@@ -65,5 +66,10 @@ public interface ISkill<T extends IFactionPlayer<T>> {
      */
     default ISkillType getType() {
         return SkillType.LEVEL;
+    }
+
+    @Range(from = 0, to = 9)
+    default int getSkillPointCost() {
+        return 1;
     }
 }

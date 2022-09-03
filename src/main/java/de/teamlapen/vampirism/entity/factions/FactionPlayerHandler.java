@@ -518,6 +518,9 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         }
 
         this.currentLordLevel = level;
+        this.getCurrentFactionPlayer().ifPresent(player -> {
+            player.getSkillHandler().addSkillPoints((int) ((level - oldLevel) * VampirismConfig.BALANCE.skillPointsPerLordLevel.get()));
+        });
         if (this.currentLordLevel > 0) {
             this.updateSkillTypes();
         }

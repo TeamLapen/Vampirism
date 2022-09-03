@@ -12,9 +12,11 @@ import java.util.Optional;
 public class SimpleLordSkill<T extends IFactionPlayer<T>> extends VampirismSkill<T> {
 
     public SimpleLordSkill(boolean hasDescription) {
-        if (hasDescription){
-            this.setHasDefaultDescription();
-        }
+        super(hasDescription);
+    }
+
+    public SimpleLordSkill(int skillPointCost, boolean hasDescription) {
+        super(skillPointCost, hasDescription);
     }
 
     @Override

@@ -107,7 +107,7 @@ public class SkillNodeScreen extends GuiComponent {
         }
     }
 
-    private Collection<ISkill> getLockingSkills(@NotNull SkillNode node) {
+    private Collection<ISkill<?>> getLockingSkills(@NotNull SkillNode node) {
         return Arrays.stream(node.getLockingNodes()).map(id -> SkillTreeManager.getInstance().getSkillTree().getNodeFromId(id)).filter(Objects::nonNull).flatMap(node2 -> Arrays.stream(node2.getElements())).filter(skillHandler::isSkillEnabled).collect(Collectors.toList());
     }
 
@@ -218,22 +218,23 @@ public class SkillNodeScreen extends GuiComponent {
         if (state == SkillNodeState.HIDDEN) return;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
-        ISkill[] elements = this.skillNode.getElements();
+        ISkill<?>[] elements = this.skillNode.getElements();
         scrollX -= getNodeWidth() /2f;
 
         //check if a node is hovered
-        int hoveredSkill = -1;
+        int hoveredSkillIndex = -1;
         for (int i = 0; i < elements.length; i++) {
             if (this.isMouseOverSkill(i, mouseX, mouseY, scrollX, scrollY)) {
-                hoveredSkill = i;
+                hoveredSkillIndex = i;
                 break;
             }
         }
 
-        if (hoveredSkill != -1) {
-            int x = getNodeStart() + (26 + 10) * hoveredSkill;
+        if (hoveredSkillIndex != -1) {
+            ISkill<?> hoveredSkill = elements[hoveredSkillIndex];
+            int x = getNodeStart() + (26 + 10) * hoveredSkillIndex;
 
-            Collection<ISkill> lockingSkills = this.getLockingSkills(this.skillNode);
+            Collection<ISkill<?>> lockingSkills = this.getLockingSkills(this.skillNode);
             //draw blocked
             if (state == SkillNodeState.LOCKED || state == SkillNodeState.VISIBLE) {
                 List<Component> text = new ArrayList<>();
@@ -254,13 +255,13 @@ public class SkillNodeScreen extends GuiComponent {
                 }
             }
 
-            List<FormattedCharSequence> description = this.descriptions[hoveredSkill];
+            List<FormattedCharSequence> description = this.descriptions[hoveredSkillIndex];
 
             if (!lockingSkills.isEmpty()) {
                 List<Component> text = new ArrayList<>();
                 text.add(Component.translatable("text.vampirism.skill.excluding"));
                 lockingSkills.stream().map(a -> a.getName().copy().withStyle(ChatFormatting.YELLOW)).forEach(text::add);
-                int width = Math.min(this.width[hoveredSkill], text.stream().mapToInt(this.minecraft.font::width).max().getAsInt());
+                int width = Math.min(this.width[hoveredSkillIndex], text.stream().mapToInt(this.minecraft.font::width).max().getAsInt());
 
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
@@ -276,7 +277,7 @@ public class SkillNodeScreen extends GuiComponent {
             if (!description.isEmpty()) {
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
-                ScreenUtils.blitWithBorder(stack, scrollX + x - 5, scrollY + this.y + 3, 0, 81, this.width[hoveredSkill], 30 + description.size() * 9, 200, 20, 3, this.getBlitOffset());
+                ScreenUtils.blitWithBorder(stack, scrollX + x - 5, scrollY + this.y + 3, 0, 81, this.width[hoveredSkillIndex], 30 + description.size() * 9, 200, 20, 3, this.getBlitOffset());
                 for (int i = 0; i < description.size(); i++) {
                     this.minecraft.font.drawShadow(stack, description.get(i), scrollX + x + 2, scrollY + this.y + 3 + 24 + i * 9, -1);
                 }
@@ -285,14 +286,23 @@ public class SkillNodeScreen extends GuiComponent {
             //draw title
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
-            int wid = this.width[hoveredSkill] / 2;
+            int wid = this.width[hoveredSkillIndex] / 2;
             int titleTextureY = state.titleTextureY;
-            if (state == SkillNodeState.UNLOCKED && !this.skillHandler.isSkillEnabled(elements[hoveredSkill])) {
+            if (state == SkillNodeState.UNLOCKED && !this.skillHandler.isSkillEnabled(hoveredSkill)) {
                 titleTextureY = SkillNodeState.LOCKED.titleTextureY;
             }
             blit(stack, scrollX + x - 5, scrollY + this.y + 3, 0, titleTextureY, wid, 22);
             blit(stack, scrollX + x - 5 + wid, scrollY + this.y + 3, 200 - wid, titleTextureY, wid, 22);
-            this.minecraft.font.drawShadow(stack, this.titles[hoveredSkill], scrollX + x + 40, scrollY + this.y + 9, -1);
+            this.minecraft.font.drawShadow(stack, this.titles[hoveredSkillIndex], scrollX + x + 40, scrollY + this.y + 9, -1);
+
+            //draw skill point cost
+            int cost = hoveredSkill.getSkillPointCost();
+            int costWidth = this.minecraft.font.width(String.valueOf(cost));
+            int costHeight = this.minecraft.font.lineHeight;
+            RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            ScreenUtils.blitWithBorder(stack, scrollX + x + 24, scrollY + this.y + ((26 - costHeight) /2) -1, 0, 81, costWidth + 5, costHeight + 4, 200, 20, 3, this.getBlitOffset());
+            this.minecraft.font.drawShadow(stack, Component.literal(String.valueOf(cost)), scrollX + x + 27, scrollY + this.y + ((26 - costHeight) /2f) + 1, -1);
 
             //draw skill
             RenderSystem.setShaderColor(1f, 1f, 1f, 1);
@@ -300,7 +310,7 @@ public class SkillNodeScreen extends GuiComponent {
             RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
             this.blit(stack, scrollX + x, scrollY + this.y, skillNode.isRoot() ? 226 : 200, 0, 26, 26);
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderTexture(0, getSkillIconLocation(elements[hoveredSkill]));
+            RenderSystem.setShaderTexture(0, getSkillIconLocation(hoveredSkill));
 
             RenderSystem.setShaderColor(1, 1, 1, 1);
 //            RenderSystem.disableLighting();

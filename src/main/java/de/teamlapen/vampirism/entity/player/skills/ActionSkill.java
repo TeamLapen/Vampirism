@@ -22,25 +22,31 @@ public class ActionSkill<T extends IFactionPlayer<T>> extends VampirismSkill<T> 
     private final ISkillType type;
 
     public ActionSkill(Supplier<? extends IAction<T>> action) {
-        this(action, false);
+        this(action, 1);
+    }
+
+    public ActionSkill(Supplier<? extends IAction<T>> action, int skillPointCost) {
+        this(action, skillPointCost, false);
     }
 
     public ActionSkill(Supplier<? extends IAction<T>> action, boolean customDescription) {
-        this(action, SkillType.LEVEL, false);
+        this(action, 1, customDescription);
+    }
+
+    public ActionSkill(Supplier<? extends IAction<T>> action, int skillPointCost, boolean customDescription) {
+        this(action, SkillType.LEVEL, skillPointCost, customDescription);
     }
 
     /**
      * @param action            The corresponding action
      * @param customDescription If false a generic "unlocks action" string is used
      */
-    public ActionSkill(Supplier<? extends IAction<T>> action, ISkillType type, boolean customDescription) {
+    public ActionSkill(Supplier<? extends IAction<T>> action, ISkillType type, int skillPointCost, boolean customDescription) {
+        super(skillPointCost, customDescription);
         this.action = action;
         this.type = type;
-        if (customDescription) {
-            this.setHasDefaultDescription();
-        } else {
+        if (!customDescription) {
             this.setDescription(() -> Component.translatable("text.vampirism.skill.unlocks_action"));
-
         }
     }
 

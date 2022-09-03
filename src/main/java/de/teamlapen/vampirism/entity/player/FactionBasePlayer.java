@@ -5,6 +5,7 @@ import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -160,5 +161,23 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
      * Can be overridden to put data into updates in subclasses
      */
     protected void writeFullUpdate(CompoundTag nbt) {
+    }
+
+    @Override
+    public void onLevelChanged(int newLevel, int oldLevel) {
+        if (!isRemote()) {
+            if (newLevel > 0) {
+                this.getSkillHandler().addSkillPoints((int) ((newLevel - oldLevel) * VampirismConfig.BALANCE.skillPointsPerLevel.get()));
+            } else {
+                this.getSkillHandler().reset();
+                this.getActionHandler().resetTimers();
+            }
+
+        } else {
+            if (newLevel == 0) {
+                this.getActionHandler().resetTimers();
+                this.getSkillHandler().resetRefinements();
+            }
+        }
     }
 }

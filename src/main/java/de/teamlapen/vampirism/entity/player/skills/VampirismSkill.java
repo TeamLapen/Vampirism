@@ -25,6 +25,17 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends Defaul
     private Consumer<T> deactivate = (T player) -> {
     };
 
+    public VampirismSkill(boolean hasDescription) {
+        this(1, hasDescription);
+    }
+
+    public VampirismSkill(int skillPointCost, boolean hasDescription) {
+        super(skillPointCost);
+        if (hasDescription) {
+            this.setHasDefaultDescription();
+        }
+    }
+
     @Override
     public Component getDescription() {
         return description.get();
@@ -66,11 +77,15 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends Defaul
      */
     public static class SimpleHunterSkill extends VampirismSkill<IHunterPlayer> {
 
+        public SimpleHunterSkill(boolean desc) {
+            super(desc);
+        }
+
         /**
          * @param desc Enable description using the default unlocalized key
          */
-        public SimpleHunterSkill(boolean desc) {
-            if (desc) this.setHasDefaultDescription();
+        public SimpleHunterSkill(int skillPointCost, boolean desc) {
+            super(skillPointCost, desc);
         }
 
         @NotNull
@@ -91,6 +106,10 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends Defaul
             super(desc);
         }
 
+        public LordHunterSkill(int skillPointCost, boolean desc) {
+            super(skillPointCost, desc);
+        }
+
         @Override
         public @NotNull ISkillType getType() {
             return SkillType.LORD;
@@ -105,7 +124,11 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends Defaul
          * @param desc Enable description using the default unlocalized key
          */
         public SimpleVampireSkill(boolean desc) {
-            if (desc) setHasDefaultDescription();
+            super(desc);
+        }
+
+        public SimpleVampireSkill(int skillPointCost, boolean desc) {
+            super(skillPointCost, desc);
         }
 
         @NotNull
@@ -124,6 +147,10 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends Defaul
 
         public LordVampireSkill(boolean desc) {
             super(desc);
+        }
+
+        public LordVampireSkill(int skillPointCost, boolean desc) {
+            super(skillPointCost, desc);
         }
 
         @Override

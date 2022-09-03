@@ -14,7 +14,6 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.entity.player.IVampirismPlayer;
 import de.teamlapen.vampirism.items.RefinementItem;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.nbt.CompoundTag;
@@ -49,6 +48,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     private final int[] refinementSetDamage = new int[3];
     private final Set<IRefinement> activeRefinements = new HashSet<>();
     private final Map<IRefinement, AttributeModifier> refinementModifier = new HashMap<>();
+    private int maxSkillpoints;
     private boolean dirty = false;
 
     public SkillHandler(T player, IPlayableFaction<T> faction) {
@@ -220,13 +220,28 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     @Override
     public int getLeftSkillPoints() {
         int level = player.getLevel();
-        int totalSkillPoints = (int) (level * VampirismConfig.BALANCE.skillPointsPerLevel.get());
-        totalSkillPoints += ((IVampirismPlayer) player.getRepresentingPlayer()).getVampAtts().lordLevel * VampirismConfig.BALANCE.skillPointsPerLordLevel.get();
-        int remainingSkillPoints = totalSkillPoints - enabledSkills.size();
+        int remainingSkillPoints = this.maxSkillpoints - enabledSkills.stream().mapToInt(ISkill::getSkillPointCost).sum();
         if (VampirismConfig.SERVER.unlockAllSkills.get() && level == player.getMaxLevel()) {
             return Math.max(remainingSkillPoints, 1);
         }
         return remainingSkillPoints;
+    }
+
+    @Override
+    public int getMaxSkillPoints() {
+        return this.maxSkillpoints;
+    }
+
+    public void addSkillPoints(int points) {
+        this.maxSkillpoints = Math.max(0, this.maxSkillpoints + points);
+        this.dirty = true;
+    }
+
+    public void reset() {
+        disableAllSkills();
+        resetRefinements();
+        this.maxSkillpoints = 0;
+        this.dirty = true;
     }
 
     public @NotNull List<ISkill<T>> getLockingSkills(@NotNull SkillNode nodeIn) {
@@ -314,7 +329,9 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
                 this.refinementSetDamage[i] = damage;
             }
         }
-
+        if (nbt.contains("skill_points")) {
+            this.maxSkillpoints = nbt.getInt("skill_points");
+        }
     }
 
     public void readUpdateFromServer(@NotNull CompoundTag nbt) {
@@ -361,6 +378,9 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
                 this.refinementSetDamage[i] = damage;
             }
         }
+        if (nbt.contains("skill_points")) {
+            this.maxSkillpoints = nbt.getInt("skill_points");
+        }
     }
 
     @Override
@@ -391,7 +411,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
             refinements.put(String.valueOf(i), setNbt);
         }
         nbt.put("refinement_set", refinements);
-
+        nbt.putInt("skill_points", this.maxSkillpoints);
     }
 
     public void writeUpdateForClient(@NotNull CompoundTag nbt) {
@@ -410,6 +430,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
             refinements.put(String.valueOf(i), setNbt);
         }
         nbt.put("refinement_set", refinements);
+        nbt.putInt("skill_points", this.maxSkillpoints);
         dirty = false;
     }
 
