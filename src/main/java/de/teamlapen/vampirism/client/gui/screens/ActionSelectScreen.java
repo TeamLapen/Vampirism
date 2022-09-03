@@ -33,6 +33,7 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -270,15 +271,11 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
         if (elements.get(getSelectedElement()) == fakeAction) {
             return true;
         }
-        if (func.apply(ModKeys.ACTION1) && ModKeys.ACTION1.getKeyModifier().isActive(KeyConflictContext.GUI)) {
-            setBinding(1);
-            return true;
-        } else if (func.apply(ModKeys.ACTION2) && ModKeys.ACTION2.getKeyModifier().isActive(KeyConflictContext.GUI)) {
-            setBinding(2);
-            return true;
-        } else if (func.apply(ModKeys.ACTION3) && ModKeys.ACTION3.getKeyModifier().isActive(KeyConflictContext.GUI)) {
-            setBinding(3);
-            return true;
+        for (Map.Entry<Integer, KeyMapping> entry : ModKeys.ACTION_KEYS.entrySet()) {
+            if (func.apply(entry.getValue()) && entry.getValue().getKeyModifier().isActive(KeyConflictContext.GUI)) {
+                setBinding(entry.getKey());
+                return true;
+            }
         }
         return false;
     }
