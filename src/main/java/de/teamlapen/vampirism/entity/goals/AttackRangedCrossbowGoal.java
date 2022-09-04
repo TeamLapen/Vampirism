@@ -117,6 +117,7 @@ public class AttackRangedCrossbowGoal<T extends CreatureEntity & IRangedAttackMo
             } else if (this.crossbowState == CrossbowState.CHARGING) {
                 if (!this.mob.isUsingItem()) {
                     this.crossbowState = CrossbowState.UNCHARGED;
+                    return;
                 }
 
                 int i = this.mob.getTicksUsingItem();
