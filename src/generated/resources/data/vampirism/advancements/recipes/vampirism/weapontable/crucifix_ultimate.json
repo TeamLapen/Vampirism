@@ -1,25 +1,23 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_holy_water": {
+    "fire": {
       "conditions": {
         "items": [
           {
             "items": [
-              "vampirism:holy_water_bottle_normal"
+              "vampirism:item_alchemical_fire"
             ]
           }
         ]
       },
       "trigger": "minecraft:inventory_changed"
     },
-    "has_holy_water_enhanced": {
+    "gold": {
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:holy_water_bottle_enhanced"
-            ]
+            "tag": "forge:storage_blocks/gold"
           }
         ]
       },
@@ -27,21 +25,23 @@
     },
     "has_skill": {
       "conditions": {
-        "skill": "vampirism:crucifix_wielder"
+        "skill": "vampirism:ultimate_crucifix"
       },
       "trigger": "vampirism:skill_unlocked"
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "vampirism:weapontable/hunter/crucifix_enhanced"
+        "recipe": "vampirism:weapontable/crucifix_ultimate"
       },
       "trigger": "minecraft:recipe_unlocked"
     },
-    "iron": {
+    "holy_water": {
       "conditions": {
         "items": [
           {
-            "tag": "forge:ingots/iron"
+            "items": [
+              "vampirism:holy_water_bottle_enhanced"
+            ]
           }
         ]
       },
@@ -62,9 +62,9 @@
   },
   "requirements": [
     [
-      "iron",
-      "has_holy_water",
-      "has_holy_water_enhanced",
+      "fire",
+      "gold",
+      "holy_water",
       "stake",
       "has_skill",
       "has_the_recipe"
@@ -72,7 +72,7 @@
   ],
   "rewards": {
     "recipes": [
-      "vampirism:weapontable/hunter/crucifix_enhanced"
+      "vampirism:weapontable/crucifix_ultimate"
     ]
   }
 }

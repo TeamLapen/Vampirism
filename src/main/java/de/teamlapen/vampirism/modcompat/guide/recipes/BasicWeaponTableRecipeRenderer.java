@@ -69,7 +69,7 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe> extend
         if (recipe.getRequiredSkills().length > 0) {
             FormattedText newLine = Component.literal("\n");
             List<FormattedText> skills = new ArrayList<>();
-            skills.add(Component.translatable("gui.vampirism.hunter_weapon_table.skill", "\n"));
+            skills.add(Component.translatable("gui.vampirism.skill_required", "\n"));
             for (ISkill<?> skill : recipe.getRequiredSkills()) {
                 skills.add(skill.getName().copy().withStyle(ChatFormatting.ITALIC));
                 skills.add(newLine);

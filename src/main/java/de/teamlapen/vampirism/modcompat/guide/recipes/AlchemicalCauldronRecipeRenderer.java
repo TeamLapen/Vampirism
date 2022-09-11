@@ -85,7 +85,7 @@ public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRend
         if (recipe.getRequiredSkills().length > 0) {
             FormattedText newLine = Component.literal("\n");
             List<FormattedText> skills = new ArrayList<>();
-            skills.add(Component.translatable("gui.vampirism.alchemical_cauldron.skill", "\n"));
+            skills.add(Component.translatable("gui.vampirism.skill_required", "\n"));
             for (ISkill<?> skill : recipe.getRequiredSkills()) {
                 skills.add(skill.getName().copy().withStyle(ChatFormatting.ITALIC));
                 skills.add(newLine);
