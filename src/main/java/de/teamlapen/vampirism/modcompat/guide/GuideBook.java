@@ -38,6 +38,7 @@ import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.player.vampire.VampireLevelingConf;
+import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
@@ -160,6 +161,7 @@ public class GuideBook implements IGuideBook {
         gettingStarted.addAll(PageHelper.pagesForLongText(translateComponent(base + "getting_started.as_vampire")));
         gettingStarted.addAll(PageHelper.pagesForLongText(translateComponent(base + "getting_started.zombie")));
         gettingStarted.addAll(PageHelper.pagesForLongText(translateComponent(base + "getting_started.blood", new TranslationTextComponent(ModKeys.getKeyBinding(ModKeys.KEY.SUCK).saveString()))));
+        gettingStarted.addAll(PageHelper.pagesForLongText(translateComponent(base + "getting_started.infecting", VampireActions.INFECT.get().getName())));
         gettingStarted.addAll(PageHelper.pagesForLongText(ITextProperties.composite(translateComponent(base + "getting_started.level"), translateComponent(base + "getting_started.level2"))));
 
         entries.put(new ResourceLocation(base + "getting_started"), new EntryText(gettingStarted, translateComponent(base + "getting_started")));
@@ -467,6 +469,7 @@ public class GuideBook implements IGuideBook {
         helper.info(ModItems.HUNTER_COAT_CHEST_NORMAL.get(), ModItems.HUNTER_COAT_CHEST_ENHANCED.get(), ModItems.HUNTER_COAT_CHEST_ENHANCED.get(), ModItems.HUNTER_COAT_LEGS_NORMAL.get(), ModItems.HUNTER_COAT_LEGS_ENHANCED.get(), ModItems.HUNTER_COAT_LEGS_ULTIMATE.get(), ModItems.HUNTER_COAT_HEAD_NORMAL.get(), ModItems.HUNTER_COAT_HEAD_ENHANCED.get(), ModItems.HUNTER_COAT_HEAD_ULTIMATE.get(), ModItems.HUNTER_COAT_FEET_NORMAL.get(), ModItems.HUNTER_COAT_FEET_ENHANCED.get(), ModItems.HUNTER_COAT_FEET_ULTIMATE.get()).recipes("weapontable/hunter_coat_chest_normal", "weapontable/hunter_coat_legs_normal", "weapontable/hunter_coat_head_normal", "weapontable/hunter_coat_feet_normal", "weapontable/hunter_coat_chest_enhanced", "weapontable/hunter_coat_legs_enhanced", "weapontable/hunter_coat_head_enhanced", "weapontable/hunter_coat_feet_enhanced").build(entries);
         helper.info(ModItems.HUNTER_AXE_NORMAL.get(), ModItems.HUNTER_AXE_ENHANCED.get(), ModItems.HUNTER_AXE_ULTIMATE.get()).recipes("weapontable/hunter_axe_normal", "weapontable/hunter_axe_enhanced").build(entries);
         helper.info(ModItems.HUNTER_MINION_EQUIPMENT.get(), ModItems.HUNTER_MINION_UPGRADE_SIMPLE.get(), ModItems.HUNTER_MINION_UPGRADE_ENHANCED.get(), ModItems.HUNTER_MINION_UPGRADE_SPECIAL.get()).setFormats(loc(ModItems.HUNTER_MINION_EQUIPMENT.get()), loc(ModItems.HUNTER_MINION_UPGRADE_SIMPLE.get()), ModItems.HUNTER_MINION_UPGRADE_SIMPLE.get().getMinLevel() + 1, ModItems.HUNTER_MINION_UPGRADE_SIMPLE.get().getMaxLevel() + 1, loc(ModItems.HUNTER_MINION_UPGRADE_ENHANCED.get()), ModItems.HUNTER_MINION_UPGRADE_ENHANCED.get().getMinLevel() + 1, ModItems.HUNTER_MINION_UPGRADE_ENHANCED.get().getMaxLevel() + 1, loc(ModItems.HUNTER_MINION_UPGRADE_SPECIAL.get()), ModItems.HUNTER_MINION_UPGRADE_SPECIAL.get().getMinLevel() + 1, ModItems.HUNTER_MINION_UPGRADE_SPECIAL.get().getMaxLevel() + 1, translate(ModEntities.TASK_MASTER_HUNTER.get().getDescriptionId())).setLinks(new ResourceLocation("guide.vampirism.entity.taskmaster"), new ResourceLocation("guide.vampirism.hunter.lord")).build(entries);
+        helper.info(ModItems.CRUCIFIX_NORMAL.get(), ModItems.CRUCIFIX_ENHANCED.get(), ModItems.CRUCIFIX_ULTIMATE.get()).setKeyName("crucifix").recipes("hunter/crucifix","weapontable/crucifix_enhanced", "weapontable/crucifix_ultimate").build(entries);
         return entries;
     }
 
@@ -496,6 +499,8 @@ public class GuideBook implements IGuideBook {
         helper.info(ModBlocks.TOTEM_TOP_CRAFTED.get(), ModBlocks.TOTEM_TOP.get()).setLinks(new ResourceLocation("guide.vampirism.blocks.totem_base"), new ResourceLocation("guide.vampirism.world.villages")).build(entries);
         helper.info(ModBlocks.TOTEM_BASE.get()).recipes("general/totem_base").setLinks(new ResourceLocation("guide.vampirism.blocks.totem_top_crafted"), new ResourceLocation("guide.vampirism.world.villages")).build(entries);
         helper.info(ModBlocks.POTION_TABLE.get()).recipes("hunter/potion_table").customPages(generatePotionMixes()).build(entries);
+        ItemStack activatedOil = ModItems.OIL_BOTTLE.get().withOil(ModOils.VAMPIRE_BLOOD.get());
+        helper.info(ModBlocks.ALCHEMY_TABLE.get()).recipes("alchemy_table").setFormats(ModItems.OIL_BOTTLE.get().getName(activatedOil)).build(entries);
 
         List<IPage> decorativeBlocks = new ArrayList<>(PageHelper.pagesForLongText(translateComponent(base + "decorative.text"), ModItems.ITEM_CANDELABRA.get()));
         decorativeBlocks.add(helper.getRecipePage(new ResourceLocation(REFERENCE.MODID, "vampire/candelabra")));
@@ -514,6 +519,7 @@ public class GuideBook implements IGuideBook {
         Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.changelog.";
         entries.put(new ResourceLocation(base + "v1_8"), buildChangelog1_8());
+        entries.put(new ResourceLocation(base + "v1_9"), buildChangelog1_9());
         return entries;
     }
 
@@ -556,7 +562,41 @@ public class GuideBook implements IGuideBook {
         //misc
         List<IPage> misc = PageHelper.pagesForLongText(translateComponent(base1_8 + "misc.text"));
         v1_8.addAll(misc);
-        return new EntryResourceLocation(v1_8, translateComponent(base + "v1_8"), new ResourceLocation("textures/item/writable_book.png"));
+        return new EntryResourceLocation(v1_8, new StringTextComponent("Vampirism 1.8"), new ResourceLocation("textures/item/writable_book.png"));
+    }
+
+    public static EntryAbstract buildChangelog1_9() {
+        String base = "guide.vampirism.changelog.";
+        String base1_9 = base + "v1_9.";
+
+        //Vampirism 1.9
+        List<IPage> v1_9 = new ArrayList<>(PageHelper.pagesForLongText(translateComponent(base1_9 + "overview.text")));
+
+        //general
+        List<IPage> general = PageHelper.pagesForLongText(translateComponent(base1_9 + "general.text"));
+        v1_9.addAll(general);
+
+        //weapon oils
+        List<IPage> oils = PageHelper.pagesForLongText(translateComponent(base1_9 + "oils.text"));
+        v1_9.addAll(oils);
+
+        //lord skills
+        List<IPage> skills = PageHelper.pagesForLongText(translateComponent(base1_9 + "skills.text"));
+        v1_9.addAll(skills);
+
+        //item blessing
+        List<IPage> blessing = PageHelper.pagesForLongText(translateComponent(base1_9 + "blessing.text"));
+        v1_9.addAll(blessing);
+
+        //crucifix
+        List<IPage> crucifix = PageHelper.pagesForLongText(translateComponent(base1_9 + "crucifix.text"));
+        v1_9.addAll(crucifix);
+
+        //vampire infection
+        List<IPage> infection = PageHelper.pagesForLongText(translateComponent(base1_9 + "infection.text"));
+        v1_9.addAll(infection);
+
+        return new EntryResourceLocation(v1_9, new StringTextComponent("Vampirism 1.9"), new ResourceLocation("textures/item/writable_book.png"));
     }
 
     private static IPage[] generatePotionMixes() {

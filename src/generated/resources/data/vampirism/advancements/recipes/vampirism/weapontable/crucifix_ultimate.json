@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "vampirism:weapontable/hunter/crucifix_ultimate"
+      "vampirism:weapontable/crucifix_ultimate"
     ]
   },
   "criteria": {
@@ -55,7 +55,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "vampirism:weapontable/hunter/crucifix_ultimate"
+        "recipe": "vampirism:weapontable/crucifix_ultimate"
       }
     }
   },
