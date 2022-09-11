@@ -173,6 +173,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
         if (canSuckBloodFromPlayer && !level.isClientSide && wantsBlood() && entity instanceof PlayerEntity && !Helper.isHunter(entity) && !UtilLib.canReallySee((LivingEntity) entity, this, true)) {
             int amt = VampirePlayer.getOpt((PlayerEntity) entity).map(v -> v.onBite(this)).orElse(0);
             drinkBlood(amt, IBloodStats.MEDIUM_SATURATION);
+            VampirePlayer.getOpt((PlayerEntity) entity).ifPresent(v -> v.tryInfect(this));
             return true;
         }
         for (ItemStack e : entity.getArmorSlots()) {
