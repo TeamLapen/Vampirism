@@ -176,9 +176,10 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
 
     @Override
     public boolean doHurtTarget(@NotNull Entity entity) {
-        if (canSuckBloodFromPlayer && !level.isClientSide && wantsBlood() && entity instanceof Player && !Helper.isHunter(entity) && !UtilLib.canReallySee((LivingEntity) entity, this, true)) {
-            int amt = VampirePlayer.getOpt((Player) entity).map(v -> v.onBite(this)).orElse(0);
+        if (canSuckBloodFromPlayer && !level.isClientSide && wantsBlood() && entity instanceof Player player && !Helper.isHunter(player) && !UtilLib.canReallySee(player, this, true)) {
+            int amt = VampirePlayer.getOpt(player).map(v -> v.onBite(this)).orElse(0);
             drinkBlood(amt, IBloodStats.MEDIUM_SATURATION);
+            VampirePlayer.getOpt(player).ifPresent(v -> v.tryInfect(this));
             return true;
         }
         for (ItemStack e : entity.getArmorSlots()) {
