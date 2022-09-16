@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
@@ -7,11 +8,14 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.client.model.armor.*;
 import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.Model;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -84,6 +88,13 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
         if (player.tickCount % 16 == 8) {
             if (!Helper.isVampire(player)) {
                 player.addEffect(new MobEffectInstance(ModEffects.poison, 20, 1));
+            }
+        }
+        if (stack.getItem() == ModItems.vampire_clothing_crown && stack.hasCustomHoverName() && "10000000".equals(stack.getHoverName().getString())) {
+            UtilLib.spawnParticlesAroundEntity(player, ParticleTypes.FIREWORK, 0.5, 4);
+            if (player.tickCount % 16 == 4) {
+                player.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 30, 0));
+                player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 100, 2));
             }
         }
     }

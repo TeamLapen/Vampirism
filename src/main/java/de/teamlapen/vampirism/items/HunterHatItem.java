@@ -1,14 +1,20 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.model.armor.HunterHatModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.Model;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.IItemRenderProperties;
@@ -37,13 +43,24 @@ public class HunterHatItem extends VampirismHunterArmor {
     @Override
     public void initializeClient(Consumer<IItemRenderProperties> consumer) {
         consumer.accept(new IItemRenderProperties() {
-                @NotNull
-                @Override
-                public Model getBaseArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel<?> _default) {
-                    return (type == 0 ? HunterHatModel.getAdjustedInstance0(_default) : HunterHatModel.getAdjustedInstance1(_default));
-                }
+            @NotNull
+            @Override
+            public Model getBaseArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel<?> _default) {
+                return (type == 0 ? HunterHatModel.getAdjustedInstance0(_default) : HunterHatModel.getAdjustedInstance1(_default));
+            }
         });
     }
 
+
+    @Override
+    public void onArmorTick(ItemStack stack, Level world, Player player) {
+        if (stack.hasCustomHoverName() && "10000000".equals(stack.getHoverName().getString())) {
+            UtilLib.spawnParticlesAroundEntity(player, ParticleTypes.ELECTRIC_SPARK, 0.5, 4);
+            if (player.tickCount % 16 == 4) {
+                player.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 30, 0));
+                player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 100, 2));
+            }
+        }
+    }
 
 }
