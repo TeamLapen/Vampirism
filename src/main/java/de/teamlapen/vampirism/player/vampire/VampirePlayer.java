@@ -104,7 +104,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     private final static String KEY_SPAWN_BITE_PARTICLE = "bite_particle";
     private final static String KEY_VISION = "vision";
     private final static String KEY_FEED_VICTIM_ID = "feed_victim";
-    private final static String KEY_WING_COUNTER = "wing";
     private final static String KEY_DBNO_TIMER = "dbno";
     private final static String KEY_DBNO_MSG = "dbno_msg";
     private final static String KEY_WAS_DBNO = "wasDBNO";
@@ -178,7 +177,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     private int ticksInSun = 0;
     private boolean wasDead = false;
     private IVampireVision activatedVision = null;
-    private int wing_counter = 0;
     private int feed_victim = -1;
     private BITE_TYPE feed_victim_bite_type;
     private int feedBiteTickCounter = 0;
@@ -524,10 +522,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     @Override
     public int getTicksInSun() {
         return ticksInSun;
-    }
-
-    public int getWingCounter() {
-        return this.wing_counter;
     }
 
     @Override
@@ -916,9 +910,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         if (feed_victim == -1) {
             feedBiteTickCounter = 0;
         }
-        if (wing_counter > 0) {
-            --wing_counter;
-        }
         world.getProfiler().pop();
     }
 
@@ -1023,11 +1014,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             id = -1;
         }
         activateVision(id == -1 ? null : unlockedVisions.get(id));
-    }
-
-    public void triggerWings() {
-        this.wing_counter = 1200;
-        this.sync(true);
     }
 
     public void tryResurrect() {
@@ -1160,9 +1146,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         if (nbt.contains(KEY_FEED_VICTIM_ID)) {
             feed_victim = nbt.getInt(KEY_FEED_VICTIM_ID);
         }
-        if (nbt.contains(KEY_WING_COUNTER)) {
-            wing_counter = nbt.getInt(KEY_WING_COUNTER);
-        }
         if (nbt.contains(KEY_DBNO_MSG)) {
             dbnoMessage = Component.Serializer.fromJson(nbt.getString(KEY_DBNO_MSG));
         }
@@ -1204,7 +1187,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         nbt.putInt(KEY_FANGS, getFangType());
         nbt.putBoolean(KEY_GLOWING_EYES, getGlowingEyes());
         nbt.putInt(KEY_FEED_VICTIM_ID, feed_victim);
-        nbt.putInt(KEY_WING_COUNTER, wing_counter);
         bloodStats.writeUpdate(nbt);
         actionHandler.writeUpdateForClient(nbt);
         skillHandler.writeUpdateForClient(nbt);

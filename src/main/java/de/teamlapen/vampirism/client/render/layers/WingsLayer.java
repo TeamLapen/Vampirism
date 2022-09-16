@@ -47,9 +47,6 @@ public class WingsLayer<T extends LivingEntity, Q extends EntityModel<T>> extend
             float s = 1f;
             if (entity instanceof VampireBaronEntity) {
                 s = ((VampireBaronEntity) entity).getEnragedProgress();
-            } else if (entity instanceof Player) { //In case we are using the player model for rendering the baron
-                int ticks = VampirePlayer.getOpt((Player) entity).map(VampirePlayer::getWingCounter).orElse(0);
-                s = ticks > 20 ? (ticks > 1180 ? 1f - (ticks - 1180) / 20f : 1f) : ticks / 20f;
             }
             stack.pushPose();
             stack.translate(0f, 0, 0.02f);

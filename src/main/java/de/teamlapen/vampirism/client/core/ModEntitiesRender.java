@@ -143,7 +143,6 @@ public class ModEntitiesRender {
             if (renderPlayer != null && renderPlayer.getModel() instanceof HumanoidModel) {
                 LivingEntityRenderer<T, Z> renderPlayer2 = (LivingEntityRenderer<T, Z>) renderPlayer;
                 renderPlayer2.addLayer(new VampirePlayerHeadLayer<>(renderPlayer2));
-                renderPlayer2.addLayer(new WingsLayer<>(renderPlayer2, Minecraft.getInstance().getEntityModels(), player -> VampirePlayer.getOpt(player).map(VampirePlayer::getWingCounter).filter(i -> i > 0).isPresent(), (e, m) -> m.body));
             }
         }
         for (Map.Entry<EntityType<? extends PathfinderMob>, ResourceLocation> entry : VampirismAPI.entityRegistry().getConvertibleOverlay().entrySet()) {
