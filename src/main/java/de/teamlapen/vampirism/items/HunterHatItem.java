@@ -1,13 +1,19 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.model.armor.HunterHatModel;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particles.ParticleTypes;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -49,5 +55,16 @@ public class HunterHatItem extends VampirismHunterArmor {
         }
 
         return this.descriptionId;
+    }
+
+    @Override
+    public void onArmorTick(ItemStack stack, World world, PlayerEntity player) {
+        if(stack.hasCustomHoverName() && "10000000".equals(stack.getHoverName().getString())){
+            UtilLib.spawnParticlesAroundEntity(player, ParticleTypes.FIREWORK, 0.5, 4);
+            if(player.tickCount % 16 == 4) {
+                player.addEffect(new EffectInstance(Effects.LEVITATION,30,0));
+                player.addEffect(new EffectInstance(Effects.SLOW_FALLING, 100, 2));
+            }
+        }
     }
 }
