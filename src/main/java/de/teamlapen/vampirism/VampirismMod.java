@@ -6,7 +6,6 @@ import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.network.AbstractPacketDispatcher;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.lib.lib.util.IInitListener;
-import de.teamlapen.lib.lib.util.ModCompatLoader;
 import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.lib.util.OptifineHandler;
@@ -134,11 +133,6 @@ public class VampirismMod {
     public static boolean inDev = false;
     public static boolean inDataGen = false;
 
-    public static boolean isRealism() {
-        return false;
-    }
-
-    public final ModCompatLoader modCompatLoader = new ModCompatLoader();
     private final RegistryManager registryManager;
     private VersionChecker.VersionInfo versionInfo;
 
@@ -399,7 +393,6 @@ public class VampirismMod {
     private void onInitStep(IInitListener.Step step, ParallelDispatchEvent event) {
         registryManager.onInitStep(step, event);
         proxy.onInitStep(step, event);
-        modCompatLoader.onInitStep(step, event);
     }
 
 }

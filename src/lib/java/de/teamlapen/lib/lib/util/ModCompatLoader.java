@@ -15,7 +15,9 @@ import java.util.*;
 
 /**
  * Handles loading of mod compatibilities
+ * TODO remove 1.20 -> integrations uses own class
  */
+@Deprecated(forRemoval = true)
 public class ModCompatLoader implements IInitListener {
 
     private final static Logger LOGGER = LogManager.getLogger();
