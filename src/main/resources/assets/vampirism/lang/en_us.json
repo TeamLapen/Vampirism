@@ -93,6 +93,7 @@
   "text.vampirism.oil.effect_on_hit": "Effect On Hit:",
   "text.vampirism.blessing": "Blessing",
   "gui.vampirism.jei.category.oil_brewing": "Process Oil",
+  "text.vampirism.oils.cannot_use": "You can not handle oiled items",
   "text.vampirism.skills.level": "Level Skills",
   "text.vampirism.skills.lord": "Lord Skills",
   "__comment": "block interaction texts",

@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.blocks.CastleBricksBlock;
 import de.teamlapen.vampirism.blocks.CastleSlabBlock;
 import de.teamlapen.vampirism.blocks.CastleStairsBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.ModOils;
 import de.teamlapen.vampirism.entity.ai.goals.GolemTargetNonVillageFactionGoal;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
@@ -28,6 +29,7 @@ import de.teamlapen.vampirism.util.TotemHelper;
 import it.unimi.dsi.fastutil.objects.Object2BooleanArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.EntityDamageSource;
@@ -50,6 +52,7 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.*;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -63,7 +66,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
-import java.util.stream.StreamSupport;
 
 /**
  * Event handler for all entity related events
@@ -290,6 +292,14 @@ public class ModEntityEventHandler {
     }
 
     @SubscribeEvent
+    public void onStartAttackHit(AttackEntityEvent event) {
+        if (!Helper.isHunter(event.getEntity()) && OilUtils.getAppliedOil(event.getEntity().getMainHandItem()).isPresent()) {
+            event.setCanceled(true);
+            event.getEntity().displayClientMessage(Component.translatable("text.vampirism.oils.cannot_use"),true);
+        }
+    }
+
+    @SubscribeEvent
     public void onActuallyHurt(@NotNull LivingHurtEvent event) {
         if (event.getSource() instanceof EntityDamageSource && event.getSource().msgId.equals("player") && event.getSource().getEntity() instanceof Player player) {
             ItemStack stack = player.getMainHandItem();
@@ -312,8 +322,19 @@ public class ModEntityEventHandler {
                 }
             });
         }
-        if (event.getSource() instanceof EntityDamageSource && !event.getSource().isBypassArmor() && StreamSupport.stream(event.getEntity().getArmorSlots().spliterator(), false).map(OilUtils::getAppliedOil).filter(Optional::isPresent).map(Optional::get).filter(EvasionOil.class::isInstance).anyMatch(oil -> ((EvasionOil) oil).evasionChance() > event.getEntity().getRandom().nextFloat())) {
-            event.setAmount(0);
+        if (event.getSource() instanceof EntityDamageSource && !event.getSource().isBypassArmor()) {
+            for (ItemStack armorStack : event.getEntity().getArmorSlots()) {
+                if(OilUtils.getAppliedOil(armorStack).map(oil -> {
+                    if (oil == ModOils.EVASION.get()) {
+                        event.setAmount(0);
+                        oil.reduceDuration(armorStack, oil, oil.getDurationReduction());
+                        return true;
+                    }
+                    return false;
+                }).orElse(false)) {
+                    break;
+                }
+            }
         }
     }
 }
