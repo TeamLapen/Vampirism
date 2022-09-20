@@ -93,6 +93,7 @@
   "text.vampirism.oil.effect_on_hit": "Effect On Hit:",
   "text.vampirism.blessing": "Blessing",
   "gui.vampirism.jei.category.oil_brewing": "Process Oil",
+  "text.vampirism.oils.cannot_use": "You can not handle oiled items",
   "__comment": "block interaction texts",
   "text.vampirism.med_chair_other_faction": "You cannot become a Hunter since you already are a %s",
   "__comment": "faction item texts",

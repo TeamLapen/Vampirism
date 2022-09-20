@@ -21,6 +21,7 @@ import de.teamlapen.vampirism.player.actions.ActionHandler;
 import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.OilUtils;
 import de.teamlapen.vampirism.util.ScoreboardUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -29,6 +30,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.RegistryKey;
@@ -275,6 +277,12 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
                 actionHandler.updateActions();
                 VampirismMod.proxy.handleSleepClient(player);
 
+            }
+        } else {
+            if (this.player.level.getGameTime() % 100 == 16) {
+                if(OilUtils.getEquippedArmorOils(this.player).size() > 0) {
+                    this.player.addEffect(new EffectInstance(ModEffects.POISON.get(), 120, 0, false, false));
+                }
             }
         }
         getSpecialAttributes().fullHunterCoat = level > 0 ? HunterCoatItem.isFullyEquipped(player) : null;

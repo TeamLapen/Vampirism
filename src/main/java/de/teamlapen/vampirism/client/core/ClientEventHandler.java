@@ -4,6 +4,9 @@ import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.items.oil.IArmorOil;
+import de.teamlapen.vampirism.api.items.oil.IWeaponOil;
 import de.teamlapen.vampirism.client.model.blocks.BakedAltarInspirationModel;
 import de.teamlapen.vampirism.client.model.blocks.BakedBloodContainerModel;
 import de.teamlapen.vampirism.client.model.blocks.BakedWeaponTableModel;
@@ -28,6 +31,7 @@ import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -194,12 +198,25 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public void onItemToolTip(ItemTooltipEvent event) {
-        OilUtils.getAppliedOilStatus(event.getItemStack()).flatMap(pair -> pair.getLeft().getToolTipLine(event.getItemStack(), pair.getKey(), pair.getValue(), event.getFlags())).ifPresent(tooltipLine -> {
-            int position = 1;
-            int flags = getHideFlags(event.getItemStack());
-            if (shouldShowInTooltip(flags, ItemStack.TooltipDisplayFlags.ADDITIONAL)) ++position;
+        OilUtils.getAppliedOilStatus(event.getItemStack()).ifPresent(pair -> {
+            ITextComponent tooltipLine = null;
+            if (event.getPlayer() != null && !Helper.isHunter(event.getPlayer())) {
+                if (pair.getLeft() instanceof IArmorOil) {
+                    tooltipLine = new TranslationTextComponent("text.vampirism.poisonous_to_non", VReference.HUNTER_FACTION.getNamePlural()).withStyle(TextFormatting.DARK_RED);
+                } else if (pair.getLeft() instanceof IWeaponOil) {
+                    tooltipLine =VReference.HUNTER_FACTION.getNamePlural().plainCopy().withStyle(TextFormatting.DARK_RED);
+                }
+            } else {
+                tooltipLine = pair.getLeft().getToolTipLine(event.getItemStack(), pair.getKey(), pair.getValue(), event.getFlags()).orElse(null);
+            }
 
-            event.getToolTip().add(position, tooltipLine);
+            if (tooltipLine != null) {
+                int position = 1;
+                int flags = getHideFlags(event.getItemStack());
+                if (shouldShowInTooltip(flags, ItemStack.TooltipDisplayFlags.ADDITIONAL)) ++position;
+
+                event.getToolTip().add(position, tooltipLine);
+            }
         });
     }
 

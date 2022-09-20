@@ -1,17 +1,22 @@
 package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.api.items.oil.IApplicableOil;
+import de.teamlapen.vampirism.api.items.oil.IArmorOil;
 import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModOils;
 import de.teamlapen.vampirism.core.ModRegistries;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class OilUtils {
 
@@ -33,6 +38,10 @@ public class OilUtils {
 
     public static ItemStack createOilItem(IOil oil) {
         return ModItems.OIL_BOTTLE.get().withOil(oil);
+    }
+
+    public static Collection<IArmorOil> getEquippedArmorOils(PlayerEntity player) {
+        return StreamSupport.stream(player.getArmorSlots().spliterator(), false).map(OilUtils::getAppliedOil).filter(o -> o.isPresent() && o.get() instanceof IArmorOil).map(iApplicableOil -> (IArmorOil)iApplicableOil.get()).collect(Collectors.toList());
     }
 
     public static Optional<IApplicableOil> getAppliedOil(@Nonnull ItemStack stack) {
@@ -59,7 +68,6 @@ public class OilUtils {
     }
 
     public static boolean hasAppliedOil(@Nonnull ItemStack stack) {
-        CompoundNBT applied_oil = stack.getOrCreateTag().getCompound("applied_oil");
         return stack.getOrCreateTag().getCompound("applied_oil").contains("oil");
     }
 
