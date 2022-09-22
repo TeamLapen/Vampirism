@@ -4,12 +4,10 @@ import de.teamlapen.lib.lib.client.gui.GuiPieMenu;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
-import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.network.ServerboundSelectMinionTaskPacket;
 import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
 import de.teamlapen.vampirism.util.RegUtil;
@@ -36,10 +34,9 @@ public class SelectMinionTaskScreen extends GuiPieMenu<SelectMinionTaskScreen.En
     public boolean keyPressed(int key, int scancode, int modifiers) {
         if (key == GLFW.GLFW_KEY_SPACE) {
             if (Minecraft.getInstance().player.isAlive()) {
-                IPlayableFaction<?> faction = VampirismPlayerAttributes.get(Minecraft.getInstance().player).faction;
-                if (faction != null) {
-                    Minecraft.getInstance().setScreen(new ActionSelectScreen<>(new Color(faction.getColor()), false));
-                }
+                FactionPlayerHandler.getCurrentFactionPlayer(Minecraft.getInstance().player).ifPresent(f -> {
+                    Minecraft.getInstance().setScreen(new SelectActionScreen(f));
+                });
             }
         }
         return super.keyPressed(key, scancode, modifiers);

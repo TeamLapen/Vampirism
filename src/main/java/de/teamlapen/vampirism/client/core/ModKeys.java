@@ -2,12 +2,11 @@ package de.teamlapen.vampirism.client.core;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.platform.InputConstants;
-import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
-import de.teamlapen.vampirism.client.gui.screens.ActionSelectScreen;
+import de.teamlapen.vampirism.client.gui.screens.SelectActionScreen;
 import de.teamlapen.vampirism.client.gui.screens.SelectMinionTaskScreen;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
@@ -166,7 +165,7 @@ public class ModKeys {
         if (mc.player.isAlive()  && !mc.player.isSpectator()) {
             IPlayableFaction<?> faction = VampirismPlayerAttributes.get(mc.player).faction;
             if (faction != null) {
-                Minecraft.getInstance().setScreen(new ActionSelectScreen<>(new Color(faction.getColor()), false));
+                Minecraft.getInstance().setScreen(new SelectActionScreen(faction.getPlayerCapability(mc.player).orElseThrow(IllegalStateException::new)));
             }
         }
     }
