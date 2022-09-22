@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.client.gui.screens.actions;
+package de.teamlapen.vampirism.client.gui.screens.radialmenu;
 
 public enum SecondaryIconPosition {
     NORTH, EAST, SOUTH, WEST;

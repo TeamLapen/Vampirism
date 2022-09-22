@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.client.gui.screens.actions;
+package de.teamlapen.vampirism.client.gui.screens.radialmenu;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 

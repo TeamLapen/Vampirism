@@ -41,6 +41,7 @@ import java.util.stream.Collectors;
 /**
  * Gui which is used to select vampire actions
  */
+@Deprecated(forRemoval = true)
 @OnlyIn(Dist.CLIENT)
 public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<IAction<T>> {
     public final static List<IAction<?>> ACTIONORDER = NonNullList.create();

@@ -163,7 +163,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
 
         var button2 = this.addRenderableWidget(new ImageButton(this.leftPos + 26, this.topPos + 90, 20, 20, 0, 205, 20, BACKGROUND, 256, 256, (context) -> {
             IPlayableFaction<?> factionNew = VampirismPlayerAttributes.get(this.minecraft.player).faction;
-            Minecraft.getInstance().setScreen(new ActionSelectScreen<>(new Color(factionNew.getColor()), true));
+            //TODO edit actions
         }, Component.empty()));
         button2.setTooltip(Tooltip.create(Component.translatable("gui.vampirism.vampirism_menu.edit_actions")));
 

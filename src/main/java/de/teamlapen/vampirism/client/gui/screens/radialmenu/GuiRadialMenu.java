@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.client.gui.screens.actions;
+package de.teamlapen.vampirism.client.gui.screens.radialmenu;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -137,12 +137,14 @@ public class GuiRadialMenu<T> extends Screen {
         for (int i = 0; i < numberOfSlices; i++) {
             float sliceBorderLeft = (((i - 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
             float sliceBorderRight = (((i + 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
+            var item = this.radialMenuSlots.get((i + numberOfSlices/2) % numberOfSlices);
             if (selectedItem == i) {
-                drawSlice(buffer, centerOfScreenX, centerOfScreenY, 10, radiusIn, radiusOut, sliceBorderLeft, sliceBorderRight, 63, 161, 191, 60);
+                drawSlice(item, true, buffer, centerOfScreenX, centerOfScreenY, 10, radiusIn, radiusOut, sliceBorderLeft, sliceBorderRight, 63, 161, 191, 60);
                 hasMouseOver = true;
                 mousedOverSlot = selectedItem;
-            } else
-                drawSlice(buffer, centerOfScreenX, centerOfScreenY, 10, radiusIn, radiusOut, sliceBorderLeft, sliceBorderRight, 0, 0, 0, 64);
+            } else {
+                drawSlice(item, false, buffer, centerOfScreenX, centerOfScreenY, 10, radiusIn, radiusOut, sliceBorderLeft, sliceBorderRight, 0, 0, 0, 64);
+            }
         }
 
         tessellator.end();
@@ -239,8 +241,7 @@ public class GuiRadialMenu<T> extends Screen {
         return true;
     }
 
-    public void drawSlice(
-            BufferBuilder buffer, float x, float y, float z, float radiusIn, float radiusOut, float startAngle, float endAngle, int r, int g, int b, int a) {
+    public void drawSlice(RadialMenuSlot<T> slot, boolean highlighted, BufferBuilder buffer, float x, float y, float z, float radiusIn, float radiusOut, float startAngle, float endAngle, int r, int g, int b, int a) {
         float angle = endAngle - startAngle;
         int sections = Math.max(1, Mth.ceil(angle / PRECISION));
 
