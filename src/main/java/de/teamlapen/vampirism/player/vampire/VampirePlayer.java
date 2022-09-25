@@ -27,6 +27,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.fluids.BloodHelper;
 import de.teamlapen.vampirism.items.VampirismHunterArmor;
 import de.teamlapen.vampirism.mixin.ArmorItemAccessor;
+import de.teamlapen.vampirism.modcompat.PlayerReviveHelper;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleData;
 import de.teamlapen.vampirism.player.FactionBasePlayer;
@@ -618,7 +619,9 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     @Override
     public boolean onDeadlyHit(DamageSource source) {
         if (getLevel() > 0 && !this.player.hasEffect(ModEffects.neonatal) && !Helper.canKillVampires(source)) {
-            this.setDBNOTimer(getDbnoDuration());
+            int timePreviouslySpentInPlayerRevive = PlayerReviveHelper.getPreviousDownTime(this.player);
+            int dbnoTime = Math.max(1, getDbnoDuration() - timePreviouslySpentInPlayerRevive);
+            this.setDBNOTimer(dbnoTime);
             this.player.setHealth(0.5f);
             this.player.setForcedPose(Pose.SLEEPING);
             resetNearbyTargetingMobs();
