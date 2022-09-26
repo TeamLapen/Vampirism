@@ -37,7 +37,6 @@ public class ModPotions {
     public static final RegistryObject<HunterPotion> VERY_STRONG_POISON = POTION_TYPES.register("very_strong_poison", () -> new HunterPotion("poison", new EffectInstance(Effects.POISON, 432, 2)));
     public static final RegistryObject<HunterPotion> LONG_STRONG_POISON = POTION_TYPES.register("long_strong_poison", () -> new HunterPotion("poison", new EffectInstance(Effects.POISON, 1200, 1)));
     public static final RegistryObject<HunterPotion> VERY_LONG_POISON = POTION_TYPES.register("very_long_poison", () -> new HunterPotion("poison", new EffectInstance(Effects.POISON, 18000)));
-    public static final RegistryObject<HunterPotion> VERY_STRONG_HARMING = POTION_TYPES.register("very_strong_harming", () -> new HunterPotion("harming", new EffectInstance(Effects.HARM, 1, 2)));
     public static final RegistryObject<HunterPotion> VERY_STRONG_HEALING = POTION_TYPES.register("very_strong_healing", () -> new HunterPotion("healing", new EffectInstance(Effects.HEAL, 1, 2)));
     public static final RegistryObject<HunterPotion> VERY_LONG_WATER_BREATHING = POTION_TYPES.register("very_long_water_breathing", () -> new HunterPotion("water_breathing", new EffectInstance(Effects.WATER_BREATHING, 96000)));
     public static final RegistryObject<HunterPotion> VERY_STRONG_SLOWNESS = POTION_TYPES.register("very_strong_slowness", () -> new HunterPotion("slowness", new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 400, 5)));
@@ -93,7 +92,6 @@ public class ModPotions {
         veryStrong(Potions.STRONG_POISON, VERY_STRONG_POISON.get());
         veryDurable(VERY_STRONG_POISON.get(), LONG_STRONG_POISON.get());
         veryStrong(VERY_LONG_POISON.get(), LONG_STRONG_POISON.get());
-        veryStrong(Potions.STRONG_HARMING, VERY_STRONG_HARMING.get());
         veryStrong(Potions.STRONG_HEALING, VERY_STRONG_HEALING.get());
         veryDurable(Potions.LONG_WATER_BREATHING, VERY_LONG_WATER_BREATHING.get());
         veryDurable(Potions.LONG_SLOWNESS, VERY_LONG_SLOWNESS.get());
@@ -167,6 +165,10 @@ public class ModPotions {
                 case "vampirism:very_strong_thirst":
                 case "vampirism:long_strong_thirst":
                     missingMapping.ignore();
+                    break;
+                case "vampirism:very_strong_harming":
+                    missingMapping.remap(Potions.STRONG_HARMING);
+                    break;
             }
         });
     }
