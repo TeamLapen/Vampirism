@@ -104,7 +104,6 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             add(ModItems.INJECTION_SANGUINARE.get());
             add(ModItems.PURIFIED_GARLIC.get());
             add(ModItems.SOUL_ORB_VAMPIRE.get());
-            add(ModItems.ARROW_CLIP.get());
             add(ModItems.VAMPIRE_BLOOD_BOTTLE.get());
             add(ModItems.VAMPIRE_CLOAK_BLACK_BLUE.get());
             add(ModItems.VAMPIRE_CLOAK_BLACK_RED.get());
@@ -260,6 +259,12 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
                 .override().predicate(mcLoc("damage"), 0.77f).model(withExistingParent("blood_bottle_7", mcLoc("item/generated")).texture("layer0", modLoc("item/blood_bottle_7"))).end()
                 .override().predicate(mcLoc("damage"), 0.88f).model(withExistingParent("blood_bottle_8", mcLoc("item/generated")).texture("layer0", modLoc("item/blood_bottle_8"))).end()
                 .override().predicate(mcLoc("damage"), 0.99f).model(withExistingParent("blood_bottle_9", mcLoc("item/generated")).texture("layer0", modLoc("item/blood_bottle_9"))).end();
+
+        singleTexture("tech_crossbow_ammo_package", mcLoc("item/generated"), "layer0", modLoc("item/arrow_clip0"))
+                .override().predicate(new ResourceLocation(REFERENCE.MODID, "filled"), 0.0f).model(withExistingParent("arrow_clip/arrow_clip0",  mcLoc("item/generated")).texture("layer0", modLoc("item/arrow_clip0"))).end()
+                .override().predicate(new ResourceLocation(REFERENCE.MODID, "filled"), 0.01f).model(withExistingParent("arrow_clip/arrow_clip1",  mcLoc("item/generated")).texture("layer0", modLoc("item/arrow_clip1"))).end()
+                .override().predicate(new ResourceLocation(REFERENCE.MODID, "filled"), 0.55f).model(withExistingParent("arrow_clip/arrow_clip2",  mcLoc("item/generated")).texture("layer0", modLoc("item/arrow_clip2"))).end()
+                .override().predicate(new ResourceLocation(REFERENCE.MODID, "filled"), 0.99f).model(withExistingParent("arrow_clip/arrow_clip3",  mcLoc("item/generated")).texture("layer0", modLoc("item/arrow_clip3"))).end();
 
         withExistingParent(ModBlocks.DARK_SPRUCE_TRAPDOOR.get(), modLoc("block/dark_spruce_trapdoor_bottom"));
         withExistingParent(ModBlocks.CURSED_SPRUCE_TRAPDOOR.get(), modLoc("block/cursed_spruce_trapdoor_bottom"));
