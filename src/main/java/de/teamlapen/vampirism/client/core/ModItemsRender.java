@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
+import de.teamlapen.vampirism.api.items.IArrowContainer;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -30,6 +31,9 @@ public class ModItemsRender {
             ItemProperties.register(item, new ResourceLocation(REFERENCE.MODID, "charged"), (stack, world, entity, tint) -> {
                 return CrossbowItem.isCharged(stack) ? 0.0f : 1.0f;
             });
+        });
+        ItemProperties.register(ModItems.ARROW_CLIP.get(), new ResourceLocation(REFERENCE.MODID, "filled"), (stack, world, entity, tint) -> {
+            return (float)((IArrowContainer) stack.getItem()).getArrows(stack).size()/(float)((IArrowContainer) stack.getItem()).getMaxArrows(stack);
         });
     }
 
