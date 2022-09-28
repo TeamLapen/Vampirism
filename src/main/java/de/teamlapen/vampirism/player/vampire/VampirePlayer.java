@@ -38,6 +38,7 @@ import de.teamlapen.vampirism.player.actions.ActionHandler;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
+import de.teamlapen.vampirism.util.DBNODamageSource;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Permissions;
 import de.teamlapen.vampirism.util.ScoreboardUtil;
@@ -1047,11 +1048,12 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         if (this.isDBNO()) {
             //Reset dbno state before killing the player in case something is canceling the death event
             this.setDBNOTimer(-1);
+            Component msg = this.dbnoMessage;
             this.dbnoMessage = null;
             this.player.setForcedPose(null);
             this.player.refreshDimensions();
             this.sync(true);
-            this.player.hurt(DamageSource.GENERIC, 10000);
+            this.player.hurt(new DBNODamageSource(msg), 10000);
         }
     }
 

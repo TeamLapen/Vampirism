@@ -75,7 +75,7 @@ dependencies {
 //    runtimeOnly fg.deobf("com.telepathicgrunt:FeatureNBTDeadlockBeGone-Forge:2.0.0+1.18.2")
 
     // Player revive - Only enable for testing
-//    runtimeOnly fg.deobf("curse.maven:player-revive-266890:4001523")
+//    runtimeOnly fg.deobf("curse.maven:player-revive-266890:4009481")
 //    runtimeOnly fg.deobf("curse.maven:creative-core-257814:3999672")
 
 }
