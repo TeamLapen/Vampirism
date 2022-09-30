@@ -13,7 +13,7 @@ import java.util.List;
 
 public class IntegrationsNotifier {
 
-    private final static String[] available_compats = new String[]{"waila", "consecration", "bloodmagic", "biomesoplenty", "toughasnails", "evilcraft"};
+    private final static String[] available_compats = new String[]{"waila", "consecration", "bloodmagic", "biomesoplenty", "toughasnails", "evilcraft", "diet", "tconstruct", "survive", "betteranimals", "betteranimalsplus", "crafttweaker", "mca"};
 
     /**
      * Check if there should be a notification about the integrations mods.

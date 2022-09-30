@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.modcompat.IntegrationsNotifier;
 import de.teamlapen.vampirism.network.BloodValuePacket;
 import de.teamlapen.vampirism.network.SkillTreePacket;
 import de.teamlapen.vampirism.util.Permissions;
@@ -35,6 +36,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Array;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -70,13 +72,12 @@ public class GeneralEventHandler {
             }
         }
         if (isAdminLikePlayer) {
-            //TODO 1.18
-//            List<String> mods = IntegrationsNotifier.shouldNotifyAboutIntegrations();
-//            if (!mods.isEmpty()) {
-//                player.sendMessage(new TranslatableComponent("text.vampirism.integrations_available.first"), Util.NIL_UUID);
-//                player.sendMessage(new TextComponent(ChatFormatting.BLUE + ChatFormatting.ITALIC.toString() + org.apache.commons.lang3.StringUtils.join(mods, ", ") + ChatFormatting.RESET), Util.NIL_UUID);
-//                player.sendMessage(new TranslatableComponent("text.vampirism.integrations_available.download").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, REFERENCE.INTEGRATIONS_LINK)).setUnderlined(true)), Util.NIL_UUID);
-//            }
+            List<String> mods = IntegrationsNotifier.shouldNotifyAboutIntegrations();
+            if (!mods.isEmpty()) {
+                player.sendMessage(new TranslatableComponent("text.vampirism.integrations_available.first"), Util.NIL_UUID);
+                player.sendMessage(new TextComponent(ChatFormatting.BLUE + ChatFormatting.ITALIC.toString() + org.apache.commons.lang3.StringUtils.join(mods, ", ") + ChatFormatting.RESET), Util.NIL_UUID);
+                player.sendMessage(new TranslatableComponent("text.vampirism.integrations_available.download").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, REFERENCE.INTEGRATIONS_LINK)).setUnderlined(true)), Util.NIL_UUID);
+            }
 
             if (!ModList.get().isLoaded("guideapi_vp")) {
                 if (VampirismConfig.SERVER.infoAboutGuideAPI.get()) {
