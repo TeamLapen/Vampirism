@@ -72,7 +72,6 @@ public class PureBloodItem extends Item {
                 v.drinkBlood(50, 0.3f, false);
                 entityLiving.addEffect(new MobEffectInstance(ModEffects.SATURATION.get()));
                 stack.shrink(1);
-                checkWingConditions(v);
             });
         }
         return stack;
@@ -110,14 +109,6 @@ public class PureBloodItem extends Item {
         return super.use(worldIn, playerIn, handIn);
     }
 
-    private void checkWingConditions(@NotNull VampirePlayer p) {
-        net.minecraft.world.entity.player.Player e = p.getRepresentingPlayer();
-        if (!e.getAbilities().instabuild && !e.level.isClientSide()) {
-            if (e.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.CHEST).getItem() instanceof VampireClothingItem) {
-                p.triggerWings();
-            }
-        }
-    }
 
     private String descriptionId;
 

@@ -36,12 +36,10 @@ import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.fluids.BloodHelper;
 import de.teamlapen.vampirism.items.VampirismHunterArmorItem;
 import de.teamlapen.vampirism.mixin.ArmorItemAccessor;
+import de.teamlapen.vampirism.modcompat.PlayerReviveHelper;
 import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
 import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleData;
-import de.teamlapen.vampirism.util.DamageHandler;
-import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.Permissions;
-import de.teamlapen.vampirism.util.ScoreboardUtil;
+import de.teamlapen.vampirism.util.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ItemParticleOption;
@@ -107,7 +105,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     private final static String KEY_SPAWN_BITE_PARTICLE = "bite_particle";
     private final static String KEY_VISION = "vision";
     private final static String KEY_FEED_VICTIM_ID = "feed_victim";
-    private final static String KEY_WING_COUNTER = "wing";
     private final static String KEY_DBNO_TIMER = "dbno";
     private final static String KEY_DBNO_MSG = "dbno_msg";
     private final static String KEY_WAS_DBNO = "wasDBNO";
@@ -182,7 +179,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     private int remainingBarkTicks = 0;
     private boolean wasDead = false;
     private @Nullable IVampireVision activatedVision = null;
-    private int wing_counter = 0;
     private int feed_victim = -1;
     /**
      * Holds a sound reference (client side only) for the feeding sound while feed_victim!=-1
@@ -545,10 +541,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         return ticksInSun;
     }
 
-    public int getWingCounter() {
-        return this.wing_counter;
-    }
-
     @Override
     public boolean isAdvancedBiter() {
         return getSpecialAttributes().advanced_biter;
@@ -663,7 +655,9 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     @Override
     public boolean onDeadlyHit(@NotNull DamageSource source) {
         if (getLevel() > 0 && !this.player.hasEffect(ModEffects.NEONATAL.get()) && !Helper.canKillVampires(source)) {
-            this.setDBNOTimer(getDbnoDuration());
+            int timePreviouslySpentInPlayerRevive = PlayerReviveHelper.getPreviousDownTime(this.player);
+            int dbnoTime = Math.max(1, getDbnoDuration()-timePreviouslySpentInPlayerRevive);
+            this.setDBNOTimer(dbnoTime);
             this.player.setHealth(0.5f);
             this.player.setForcedPose(Pose.SLEEPING);
             resetNearbyTargetingMobs();
@@ -949,9 +943,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         if (feed_victim == -1) {
             feedBiteTickCounter = 0;
         }
-        if (wing_counter > 0) {
-            --wing_counter;
-        }
         if (remainingBarkTicks > 0) {
             --remainingBarkTicks;
         }
@@ -1067,11 +1058,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         activateVision(id == -1 ? null : unlockedVisions.get(id));
     }
 
-    public void triggerWings() {
-        this.wing_counter = 1200;
-        this.sync(true);
-    }
-
     public void tryResurrect() {
         if (this.getDbnoTimer() == 0) {
             this.setDBNOTimer(-1);
@@ -1100,11 +1086,12 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         if (this.isDBNO()) {
             //Reset dbno state before killing the player in case something is canceling the death event
             this.setDBNOTimer(-1);
+            Component msg = this.dbnoMessage;
             this.dbnoMessage = null;
             this.player.setForcedPose(null);
             this.player.refreshDimensions();
             this.sync(true);
-            this.player.hurt(DamageSource.GENERIC, 10000);
+            this.player.hurt(new DBNODamageSource(msg), 10000);
         }
     }
 
@@ -1213,9 +1200,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                 }
             }
         }
-        if (nbt.contains(KEY_WING_COUNTER)) {
-            wing_counter = nbt.getInt(KEY_WING_COUNTER);
-        }
         if (nbt.contains(KEY_DBNO_MSG)) {
             dbnoMessage = Component.Serializer.fromJson(nbt.getString(KEY_DBNO_MSG));
         }
@@ -1257,7 +1241,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         nbt.putInt(KEY_FANGS, getFangType());
         nbt.putBoolean(KEY_GLOWING_EYES, getGlowingEyes());
         nbt.putInt(KEY_FEED_VICTIM_ID, feed_victim);
-        nbt.putInt(KEY_WING_COUNTER, wing_counter);
         bloodStats.writeUpdate(nbt);
         actionHandler.writeUpdateForClient(nbt);
         skillHandler.writeUpdateForClient(nbt);

@@ -49,9 +49,9 @@ dependencies {
             version: "${project.minecraft_version}-${project.forge_version}"
     ])
     //Don't export dependencies to pom as their deobfuscated version would be used which cannot be found in dependent projects
-    compileOnly fg.deobf("mezz.jei:jei-1.19-common-api:${project.jei_version}") //API for compile
-    compileOnly fg.deobf("mezz.jei:jei-1.19-forge-api:${project.jei_version}") //API for compile
-    runtimeOnly fg.deobf("mezz.jei:jei-1.19-forge:${project.jei_version}") //Full for runtime
+    compileOnly fg.deobf("mezz.jei:jei-1.19.2-common-api:${project.jei_version}") //API for compile
+    compileOnly fg.deobf("mezz.jei:jei-1.19.2-forge-api:${project.jei_version}") //API for compile
+    runtimeOnly fg.deobf("mezz.jei:jei-1.19.2-forge:${project.jei_version}") //Full for runtime
     compileOnly fg.deobf("de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}") //For compile (not exported to POM)
     runtimeOnly fg.deobf("de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}") //For runtime (not exported to POM)
 
@@ -73,6 +73,11 @@ dependencies {
     // Repurposed structures
 //    runtimeOnly fg.deobf("com.telepathicgrunt:RepurposedStructures:5.0.4+1.18.2")
 //    runtimeOnly fg.deobf("com.telepathicgrunt:FeatureNBTDeadlockBeGone-Forge:2.0.0+1.18.2")
+
+    // Player revive - Only enable for testing
+//    runtimeOnly fg.deobf("curse.maven:player-revive-266890:4009481")
+//    runtimeOnly fg.deobf("curse.maven:creative-core-257814:3999672")
+
 }
 
 minecraft {
