@@ -32,7 +32,7 @@ public class ModOils {
     public static final RegistryObject<EffectWeaponOil> SLOW_FALLING = OILS.register("slow_falling", () -> new EffectWeaponOil(Effects.SLOW_FALLING, 200, 20));
     public static final RegistryObject<EffectWeaponOil> LUCK = OILS.register("luck", () -> new EffectWeaponOil(Effects.LUCK, 200, 20));
     public static final RegistryObject<EffectWeaponOil> HARM = OILS.register("harm", () -> new EffectWeaponOil(Effects.HARM, 1, 5));
-    public static final RegistryObject<SmeltingOil> SMELT = OILS.register("smelt", () -> new SmeltingOil(0x123456, 10));
+    public static final RegistryObject<SmeltingOil> SMELT = OILS.register("smelt", () -> new SmeltingOil(0x123456, 30));
     public static final RegistryObject<IOil> TELEPORT = OILS.register("teleport", () -> new Oil(0x0b4d42));
     public static final RegistryObject<EvasionOil> EVASION = OILS.register("evasion", () -> new EvasionOil(0x888800, 60));
 
