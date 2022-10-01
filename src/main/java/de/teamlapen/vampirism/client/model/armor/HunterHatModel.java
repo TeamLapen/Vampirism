@@ -25,13 +25,13 @@ public class HunterHatModel extends VampirismArmorModel {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition part = mesh.getRoot();
         if (type == 1) {
-            part.addOrReplaceChild(HAT_TOP, CubeListBuilder.create().texOffs(0, 31).mirror().addBox(-4, -14, -4, 8, 5, 8), PartPose.offset(0, p_170683_, 0));
-            part.addOrReplaceChild(HAT_RIM, CubeListBuilder.create().texOffs(0, 35).mirror().addBox(-6, -9, -6, 12, 1, 12), PartPose.offset(0, p_170683_, 0));
+            part.addOrReplaceChild(HAT_TOP, CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -14.0F, -4.0F, 8.0F, 5.0F, 8.0F), PartPose.offset(0, p_170683_, 0));
+            part.addOrReplaceChild(HAT_RIM, CubeListBuilder.create().texOffs(0, 13).addBox(-6.0F, -9.0F, -6.0F, 12.0F, 1.0F, 12.0F), PartPose.offset(0, p_170683_, 0));
         } else {
-            part.addOrReplaceChild(HAT_TOP, CubeListBuilder.create().texOffs(0, 31).mirror().addBox(-4, -12, -4, 8, 3, 8), PartPose.offset(0, p_170683_, 0));
-            part.addOrReplaceChild(HAT_RIM, CubeListBuilder.create().texOffs(0, 31).mirror().addBox(-8, -9, -8, 16, 1, 16), PartPose.offset(0, p_170683_, 0));
+            part.addOrReplaceChild(HAT_TOP, CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -12.0F, -4.0F, 8.0F, 3.0F, 8.0F), PartPose.offset(0.0F, p_170683_, 0.0F));
+            part.addOrReplaceChild(HAT_RIM, CubeListBuilder.create().texOffs(0, 17).addBox(-8.0F, -9.0F, -8.0F, 16.0F, 1.0F, 16.0F), PartPose.offset(0.0F, p_170683_, 0.0F));
         }
-        return LayerDefinition.create(mesh, 128, 64);
+        return LayerDefinition.create(mesh, 64, 64);
     }
 
     private static HunterHatModel hat0;
