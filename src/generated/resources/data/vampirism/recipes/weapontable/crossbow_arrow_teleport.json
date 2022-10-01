@@ -1,10 +1,10 @@
 {
-  "type": "vampirism:shaped_crafting_weapontable",
-  "key": {
-    "X": {
+  "type": "vampirism:shapeless_crafting_weapontable",
+  "ingredients": [
+    {
       "item": "vampirism:crossbow_arrow_normal"
     },
-    "Y": {
+    {
       "type": "vampirism:nbt",
       "count": 1,
       "item": "vampirism:oil_bottle",
@@ -12,16 +12,10 @@
         "oil": "vampirism:teleport"
       }
     }
-  },
-  "lava": 2,
-  "level": 1,
-  "pattern": [
-    " X ",
-    "XYX",
-    " X "
   ],
+  "lava": 1,
+  "level": 1,
   "result": {
-    "count": 4,
     "item": "vampirism:crossbow_arrow_teleport"
   },
   "skill": []
