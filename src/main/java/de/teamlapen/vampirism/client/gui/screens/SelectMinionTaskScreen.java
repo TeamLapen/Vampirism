@@ -1,11 +1,16 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import de.teamlapen.lib.lib.client.gui.GuiPieMenu;
-import de.teamlapen.lib.util.Color;
+import com.google.common.collect.Lists;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.client.core.ModKeys;
+import de.teamlapen.lib.lib.client.gui.screens.radialmenu.GuiRadialMenu;
+import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenu;
+import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenuSlot;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.network.ServerboundSelectMinionTaskPacket;
@@ -20,85 +25,56 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.function.Consumer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @OnlyIn(Dist.CLIENT)
-public class SelectMinionTaskScreen extends GuiPieMenu<SelectMinionTaskScreen.Entry> {
+public class SelectMinionTaskScreen extends SwitchingRadialMenu<SelectMinionTaskScreen.Entry> {
 
-
-    public SelectMinionTaskScreen() {
-        super(Color.GRAY, Component.translatable("text.vampirism.minion.give_order"));
+    public SelectMinionTaskScreen(IFactionPlayerHandler playerHandler) {
+        this(playerHandler, ModKeys.MINION);
     }
 
-    @Override
-    public boolean keyPressed(int key, int scancode, int modifiers) {
-        if (key == GLFW.GLFW_KEY_SPACE) {
-            if (Minecraft.getInstance().player.isAlive()) {
-                FactionPlayerHandler.getCurrentFactionPlayer(Minecraft.getInstance().player).ifPresent(f -> {
-                    Minecraft.getInstance().setScreen(new SelectActionScreen(f));
-                });
-            }
-        }
-        return super.keyPressed(key, scancode, modifiers);
+    public SelectMinionTaskScreen(IFactionPlayerHandler playerHandler, KeyMapping keyMapping) {
+        super(getRadialMenu(playerHandler), keyMapping, (mapping) -> playerHandler.getCurrentFactionPlayer().map(player -> new SelectActionScreen(player, mapping)).orElse(null));
     }
 
-    @Override
-    public boolean keyReleased(int key, int scancode, int modifiers) {
-        if (ModKeys.MINION.matches(key, scancode) || ModKeys.ACTION.matches(key, scancode)) {
-            this.onClose();
-            if (getSelectedElement() >= 0) {
-                this.onElementSelected(elements.get(getSelectedElement()));
-            }
-        }
-        return false;
+    private static RadialMenu<Entry> getRadialMenu(IFactionPlayerHandler playerHandler) {
+        List<RadialMenuSlot<Entry>> parts = getParts(playerHandler);
+        return new RadialMenu<>(i -> parts.get(i).primarySlotIcon().onSelected.run(), parts, SelectMinionTaskScreen::drawActionPart, 0);
     }
 
-    @Override
-    protected ResourceLocation getIconLoc(@NotNull Entry item) {
-        return item.getIconLoc();
+    private static void drawActionPart(Entry t, PoseStack stack, int posX, int posY, int size, boolean transparent) {
+        ResourceLocation texture = t.getIconLoc();
+        RenderSystem.setShaderTexture(0, texture);
+        blit(stack, posX, posY, 0, 0, 0, 16, 16, 16, 16);
     }
 
-    @Override
-    protected @NotNull KeyMapping getMenuKeyBinding() {
-        return ModKeys.MINION;
+    private static List<RadialMenuSlot<Entry>> getParts(IFactionPlayerHandler playerHandler) {
+        List<Entry> entries = PlayerMinionController.getAvailableTasks(playerHandler).stream().map(Entry::new).collect(Collectors.toList());
+        entries.add(new Entry(Component.translatable("text.vampirism.minion.call_single"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/recall_single.png"), (SelectMinionTaskScreen::callSingle)));
+        entries.add(new Entry(Component.translatable("text.vampirism.minion.call_all"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/recall.png"), (SelectMinionTaskScreen::callAll)));
+        entries.add(new Entry(Component.translatable("text.vampirism.minion.respawn"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/respawn.png"), (SelectMinionTaskScreen::callRespawn)));
+        return entries.stream().map(entry -> new RadialMenuSlot<>(entry.text.getString(), entry)).toList();
     }
 
-    @Override
-    protected Component getName(@NotNull Entry item) {
-        return item.getText();
-    }
-
-
-    @Override
-    protected void onElementSelected(@NotNull Entry id) {
-        id.onSelected(this);
-    }
-
-    @Override
-    protected void onGuiInit() {
-        this.elements.clear();
-        FactionPlayerHandler.getOpt(minecraft.player).ifPresent(fp -> elements.addAll(PlayerMinionController.getAvailableTasks(fp).stream().map(Entry::new).toList()));
-        this.elements.add(new Entry(Component.translatable("action.vampirism.cancel"), new ResourceLocation(REFERENCE.MODID, "textures/actions/cancel.png"), (GuiPieMenu::onClose)));
-        this.elements.add(new Entry(Component.translatable("text.vampirism.minion.call_single"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/recall_single.png"), (SelectMinionTaskScreen::callSingle)));
-        this.elements.add(new Entry(Component.translatable("text.vampirism.minion.call_all"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/recall.png"), (SelectMinionTaskScreen::callAll)));
-        this.elements.add(new Entry(Component.translatable("text.vampirism.minion.respawn"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/respawn.png"), (SelectMinionTaskScreen::callRespawn)));
-    }
-
-    private void callAll() {
+    private static void callAll() {
         VampirismMod.dispatcher.sendToServer(new ServerboundSelectMinionTaskPacket(-1, ServerboundSelectMinionTaskPacket.RECALL));
 
     }
 
-    private void callRespawn() {
+    private static void callRespawn() {
         VampirismMod.dispatcher.sendToServer(new ServerboundSelectMinionTaskPacket(-1, ServerboundSelectMinionTaskPacket.RESPAWN));
 
     }
 
-    private void callSingle() {
+    private static void callSingle() {
         VampirismMod.dispatcher.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.SHOW_MINION_CALL_SELECTION));
     }
 
-    private void sendTask(IMinionTask<?, ?> task) {
+    private static void sendTask(IMinionTask<?, ?> task) {
         VampirismMod.dispatcher.sendToServer(new ServerboundSelectMinionTaskPacket(-1, RegUtil.id(task)));
     }
 
@@ -106,13 +82,13 @@ public class SelectMinionTaskScreen extends GuiPieMenu<SelectMinionTaskScreen.En
 
         private final Component text;
         private final ResourceLocation loc;
-        private final Consumer<SelectMinionTaskScreen> onSelected;
+        private final Runnable onSelected;
 
         public Entry(@NotNull IMinionTask<?, ?> task) {
-            this(task.getName(), new ResourceLocation(RegUtil.id(task).getNamespace(), "textures/minion_tasks/" + RegUtil.id(task).getPath() + ".png"), (screen -> screen.sendTask(task)));
+            this(task.getName(), new ResourceLocation(RegUtil.id(task).getNamespace(), "textures/minion_tasks/" + RegUtil.id(task).getPath() + ".png"), (() -> sendTask(task)));
         }
 
-        public Entry(Component text, ResourceLocation icon, Consumer<SelectMinionTaskScreen> onSelected) {
+        public Entry(Component text, ResourceLocation icon, Runnable onSelected) {
             this.text = text;
             this.loc = icon;
             this.onSelected = onSelected;
@@ -125,11 +101,6 @@ public class SelectMinionTaskScreen extends GuiPieMenu<SelectMinionTaskScreen.En
         public Component getText() {
             return text;
         }
-
-        public void onSelected(SelectMinionTaskScreen screen) {
-            this.onSelected.accept(screen);
-        }
-
     }
 
 }
