@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.model.armor.HunterHatModel;
-import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.Model;
 import net.minecraft.core.particles.ParticleTypes;
@@ -36,7 +36,7 @@ public class HunterHatItem extends VampirismHunterArmorItem {
 
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-        return "vampirism:textures/entity/hunter_extra.png";
+        return "vampirism:textures/models/armor/" + RegUtil.id(this).getPath() + ".png";
     }
 
     @OnlyIn(Dist.CLIENT)
