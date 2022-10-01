@@ -179,9 +179,10 @@ public class ModKeys {
     }
 
     private void openMinionTaskMenu() {
-        if (!Minecraft.getInstance().player.isSpectator() &&  FactionPlayerHandler.getOpt(mc.player).map(FactionPlayerHandler::getLordLevel).orElse(0) > 0) {
-            Minecraft.getInstance().setScreen(new SelectMinionTaskScreen());
-        }
+        if(Minecraft.getInstance().player.isSpectator()) return;
+        FactionPlayerHandler.getOpt(mc.player).filter(p -> p.getLordLevel() > 0).ifPresent(p -> {
+            Minecraft.getInstance().setScreen(new SelectMinionTaskScreen(p));
+        });
     }
 
     private void toggleAction(int id) {

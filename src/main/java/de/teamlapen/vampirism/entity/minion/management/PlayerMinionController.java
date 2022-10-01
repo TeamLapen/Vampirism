@@ -68,6 +68,9 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
     private final static Logger LOGGER = LogManager.getLogger();
 
     public static @NotNull List<IMinionTask<?, ?>> getAvailableTasks(@NotNull ILordPlayer player) {
+        if (player.getLordFaction() == null) {
+            return new ArrayList<>();
+        }
         return RegUtil.values(ModRegistries.MINION_TASKS).stream().filter(t -> t.isAvailable(player.getLordFaction(), player)).collect(Collectors.toList());
     }
 
