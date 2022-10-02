@@ -31,7 +31,9 @@ import net.minecraft.stats.Stats;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.apache.commons.lang3.tuple.Pair;
@@ -367,7 +369,7 @@ public class TaskManager implements ITaskManager {
             case ITEMS -> {
                 ItemStack stack = ((ItemRequirement) requirement).getItemStack();
                 neededStat = stack.getCount();
-                actualStat = UtilLib.countItemWithNBT(this.player.getInventory(), stack);
+                actualStat = countItem(this.player.getInventory(), stack);
             }
             case BOOLEAN -> {
                 if (!(Boolean) requirement.getStat(this.factionPlayer)) return 0;
@@ -449,6 +451,23 @@ public class TaskManager implements ITaskManager {
             }
             return false;
         });
+    }
+
+    private static int countItem(Inventory inventory, ItemStack stack) {
+        int i = 0;
+
+        for(int j = 0; j < inventory.getContainerSize(); ++j) {
+            ItemStack itemstack = inventory.getItem(j);
+            if (ItemStack.isSame(itemstack, stack) && checkPotionEqual(itemstack, stack)) {
+                i += itemstack.getCount();
+            }
+        }
+
+        return i;
+    }
+
+    public static boolean checkPotionEqual(ItemStack stack1, ItemStack stack2) {
+        return PotionUtils.getPotion(stack1) == PotionUtils.getPotion(stack2);
     }
 
     // save/load -------------------------------------------------------------------------------------------------------
