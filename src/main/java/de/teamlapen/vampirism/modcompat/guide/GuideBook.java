@@ -596,6 +596,14 @@ public class GuideBook implements IGuideBook {
         List<IPage> infection = PageHelper.pagesForLongText(translateComponent(base1_9 + "infection.text"));
         v1_9.addAll(infection);
 
+        //crossbows
+        List<IPage> crossbows = PageHelper.pagesForLongText(translateComponent(base1_9 + "crossbows.text"));
+        v1_9.addAll(crossbows);
+
+        //curing creatures
+        List<IPage> curing = PageHelper.pagesForLongText(translateComponent(base1_9 + "curing.text"));
+        v1_9.addAll(curing);
+
         return new EntryResourceLocation(v1_9, new StringTextComponent("Vampirism 1.9"), new ResourceLocation("textures/item/writable_book.png"));
     }
 
