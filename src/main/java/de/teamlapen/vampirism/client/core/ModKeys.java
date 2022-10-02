@@ -3,13 +3,11 @@ package de.teamlapen.vampirism.client.core;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.platform.InputConstants;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.client.gui.screens.SelectActionScreen;
 import de.teamlapen.vampirism.client.gui.screens.SelectMinionTaskScreen;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
@@ -162,11 +160,8 @@ public class ModKeys {
     }
 
     private void openActionMenu() {
-        if (mc.player.isAlive()  && !mc.player.isSpectator()) {
-            IPlayableFaction<?> faction = VampirismPlayerAttributes.get(mc.player).faction;
-            if (faction != null) {
-                Minecraft.getInstance().setScreen(new SelectActionScreen(faction.getPlayerCapability(mc.player).orElseThrow(IllegalStateException::new)));
-            }
+        if (mc.player.isAlive() && !mc.player.isSpectator()) {
+            SelectActionScreen.show();
         }
     }
 
@@ -181,7 +176,7 @@ public class ModKeys {
     private void openMinionTaskMenu() {
         if(Minecraft.getInstance().player.isSpectator()) return;
         FactionPlayerHandler.getOpt(mc.player).filter(p -> p.getLordLevel() > 0).ifPresent(p -> {
-            Minecraft.getInstance().setScreen(new SelectMinionTaskScreen(p));
+            SelectMinionTaskScreen.show();
         });
     }
 
