@@ -19,6 +19,7 @@ import de.teamlapen.vampirism.network.ClientboundTaskPacket;
 import de.teamlapen.vampirism.network.ClientboundTaskStatusPacket;
 import de.teamlapen.vampirism.network.ServerboundTaskActionPacket;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.OilUtils;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -458,7 +459,7 @@ public class TaskManager implements ITaskManager {
 
         for(int j = 0; j < inventory.getContainerSize(); ++j) {
             ItemStack itemstack = inventory.getItem(j);
-            if (ItemStack.isSame(itemstack, stack) && checkPotionEqual(itemstack, stack)) {
+            if (ItemStack.isSame(itemstack, stack) && checkPotionEqual(itemstack, stack) && checkOilEqual(itemstack, stack)) {
                 i += itemstack.getCount();
             }
         }
@@ -468,6 +469,10 @@ public class TaskManager implements ITaskManager {
 
     public static boolean checkPotionEqual(ItemStack stack1, ItemStack stack2) {
         return PotionUtils.getPotion(stack1) == PotionUtils.getPotion(stack2);
+    }
+
+    public static boolean checkOilEqual(ItemStack stack1, ItemStack stack2) {
+        return OilUtils.getOil(stack1) == OilUtils.getOil(stack2);
     }
 
     // save/load -------------------------------------------------------------------------------------------------------
