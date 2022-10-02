@@ -19,16 +19,19 @@ import de.teamlapen.vampirism.player.tasks.req.ItemRequirement;
 import de.teamlapen.vampirism.player.tasks.reward.ItemRewardInstance;
 import de.teamlapen.vampirism.player.tasks.reward.LordLevelReward;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.OilUtils;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.potion.PotionUtils;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.ResourceLocation;
@@ -456,7 +459,7 @@ public class TaskManager implements ITaskManager {
             case ITEMS:
                 ItemStack stack = ((ItemRequirement) requirement).getItemStack();
                 neededStat = stack.getCount();
-                actualStat = UtilLib.countItemWithNBT(this.player.inventory, stack);
+                actualStat = countItem(this.player.inventory, stack);
                 break;
             case BOOLEAN:
                 if (!(Boolean) requirement.getStat(this.factionPlayer)) return 0;
@@ -537,6 +540,27 @@ public class TaskManager implements ITaskManager {
             }
             return false;
         });
+    }
+
+    private static int countItem(IInventory inventory, ItemStack stack) {
+        int i = 0;
+
+        for(int j = 0; j < inventory.getContainerSize(); ++j) {
+            ItemStack itemstack = inventory.getItem(j);
+            if (ItemStack.isSame(itemstack, stack) && checkPotionEqual(itemstack, stack) && checkOilEqual(itemstack, stack)) {
+                i += itemstack.getCount();
+            }
+        }
+
+        return i;
+    }
+
+    public static boolean checkPotionEqual(ItemStack stack1, ItemStack stack2) {
+        return PotionUtils.getPotion(stack1) == PotionUtils.getPotion(stack2);
+    }
+
+    public static boolean checkOilEqual(ItemStack stack1, ItemStack stack2) {
+        return OilUtils.getOil(stack1) == OilUtils.getOil(stack2);
     }
 
     // save/load -------------------------------------------------------------------------------------------------------
