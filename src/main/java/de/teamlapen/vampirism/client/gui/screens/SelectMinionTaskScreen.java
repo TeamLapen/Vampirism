@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
@@ -8,7 +7,6 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.client.core.ModKeys;
-import de.teamlapen.lib.lib.client.gui.screens.radialmenu.GuiRadialMenu;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenu;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenuSlot;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -23,26 +21,39 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.glfw.GLFW;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @OnlyIn(Dist.CLIENT)
 public class SelectMinionTaskScreen extends SwitchingRadialMenu<SelectMinionTaskScreen.Entry> {
 
-    public SelectMinionTaskScreen(IFactionPlayerHandler playerHandler) {
-        this(playerHandler, ModKeys.MINION);
+    private SelectMinionTaskScreen(Collection<Entry> entries, KeyMapping keyMapping) {
+        super(getRadialMenu(entries), keyMapping, SelectActionScreen::show);
     }
 
-    public SelectMinionTaskScreen(IFactionPlayerHandler playerHandler, KeyMapping keyMapping) {
-        super(getRadialMenu(playerHandler), keyMapping, (mapping) -> playerHandler.getCurrentFactionPlayer().map(player -> new SelectActionScreen(player, mapping)).orElse(null));
+    public static void show() {
+        show(ModKeys.MINION);
     }
 
-    private static RadialMenu<Entry> getRadialMenu(IFactionPlayerHandler playerHandler) {
-        List<RadialMenuSlot<Entry>> parts = getParts(playerHandler);
+    public static void show(KeyMapping mapping) {
+        FactionPlayerHandler.getOpt(Minecraft.getInstance().player).filter(p -> p.getLordLevel() > 0).ifPresent(p -> {
+            Collection<Entry> tasks = getTasks(p);
+            Minecraft.getInstance().setScreen(new SelectMinionTaskScreen(tasks, mapping));
+        });
+    }
+
+    private static List<Entry> getTasks(IFactionPlayerHandler playerHandler) {
+        List<Entry> entries = PlayerMinionController.getAvailableTasks(playerHandler).stream().map(Entry::new).collect(Collectors.toList());
+        entries.add(new Entry(Component.translatable("text.vampirism.minion.call_single"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/recall_single.png"), (SelectMinionTaskScreen::callSingle)));
+        entries.add(new Entry(Component.translatable("text.vampirism.minion.call_all"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/recall.png"), (SelectMinionTaskScreen::callAll)));
+        entries.add(new Entry(Component.translatable("text.vampirism.minion.respawn"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/respawn.png"), (SelectMinionTaskScreen::callRespawn)));
+        return entries;
+    }
+
+    private static RadialMenu<Entry> getRadialMenu(Collection<Entry> playerHandler) {
+        List<RadialMenuSlot<Entry>> parts = playerHandler.stream().map(entry -> new RadialMenuSlot<>(entry.text.getString(), entry)).toList();
         return new RadialMenu<>(i -> parts.get(i).primarySlotIcon().onSelected.run(), parts, SelectMinionTaskScreen::drawActionPart, 0);
     }
 
@@ -52,13 +63,7 @@ public class SelectMinionTaskScreen extends SwitchingRadialMenu<SelectMinionTask
         blit(stack, posX, posY, 0, 0, 0, 16, 16, 16, 16);
     }
 
-    private static List<RadialMenuSlot<Entry>> getParts(IFactionPlayerHandler playerHandler) {
-        List<Entry> entries = PlayerMinionController.getAvailableTasks(playerHandler).stream().map(Entry::new).collect(Collectors.toList());
-        entries.add(new Entry(Component.translatable("text.vampirism.minion.call_single"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/recall_single.png"), (SelectMinionTaskScreen::callSingle)));
-        entries.add(new Entry(Component.translatable("text.vampirism.minion.call_all"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/recall.png"), (SelectMinionTaskScreen::callAll)));
-        entries.add(new Entry(Component.translatable("text.vampirism.minion.respawn"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/respawn.png"), (SelectMinionTaskScreen::callRespawn)));
-        return entries.stream().map(entry -> new RadialMenuSlot<>(entry.text.getString(), entry)).toList();
-    }
+
 
     private static void callAll() {
         VampirismMod.dispatcher.sendToServer(new ServerboundSelectMinionTaskPacket(-1, ServerboundSelectMinionTaskPacket.RECALL));
