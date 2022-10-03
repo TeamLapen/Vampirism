@@ -14,57 +14,56 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class ModParticles {
     public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, REFERENCE.MODID);
 
     public static final RegistryObject<ParticleType<FlyingBloodParticleData>> FLYING_BLOOD = PARTICLE_TYPES.register("flying_blood", () -> new ParticleType<>(false, FlyingBloodParticleData.DESERIALIZER) {
 
-                @Nonnull
-                @Override
-                public Codec<FlyingBloodParticleData> codec() {
-                    return FlyingBloodParticleData.CODEC;
-                }
-            });
+        @NotNull
+        @Override
+        public Codec<FlyingBloodParticleData> codec() {
+            return FlyingBloodParticleData.CODEC;
+        }
+    });
     public static final RegistryObject<ParticleType<FlyingBloodEntityParticleData>> FLYING_BLOOD_ENTITY = PARTICLE_TYPES.register("flying_blood_entity", () -> new ParticleType<>(false, FlyingBloodEntityParticleData.DESERIALIZER) {
 
-                @Nonnull
-                @Override
-                public Codec<FlyingBloodEntityParticleData> codec() {
-                    return FlyingBloodEntityParticleData.CODEC;
-                }
-            });
+        @NotNull
+        @Override
+        public Codec<FlyingBloodEntityParticleData> codec() {
+            return FlyingBloodEntityParticleData.CODEC;
+        }
+    });
     public static final RegistryObject<ParticleType<GenericParticleData>> GENERIC = PARTICLE_TYPES.register("generic", () -> new ParticleType<>(false, GenericParticleData.DESERIALIZER) {
 
-                @Nonnull
-                @Override
-                public Codec<GenericParticleData> codec() {
-                    return GenericParticleData.CODEC;
-                }
-            });
+        @NotNull
+        @Override
+        public Codec<GenericParticleData> codec() {
+            return GenericParticleData.CODEC;
+        }
+    });
 
-    static void registerParticles(IEventBus bus) {
+    static void register(IEventBus bus) {
         PARTICLE_TYPES.register(bus);
     }
 
-    public static void spawnParticlesClient(Level worldIn, ParticleOptions particle, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, int count, double maxDist, RandomSource rand) {
+    public static void spawnParticlesClient(Level worldIn, @NotNull ParticleOptions particle, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, int count, double maxDist, @NotNull RandomSource rand) {
         assert !(worldIn instanceof ServerLevel) : "Calling spawnParticlesClient on ServerWorld is pointless";
         for (int i = 0; i < count; i++) {
             worldIn.addParticle(particle, x + maxDist * (2 * rand.nextDouble() - 1), y + (2 * rand.nextDouble() - 1) * maxDist, z + (2 * rand.nextDouble() - 1) * maxDist, xSpeed, ySpeed, zSpeed);
         }
     }
 
-    public static void spawnParticlesClient(Level worldIn, ParticleOptions particle, double x, double y, double z, int count, double maxDist, RandomSource rand) {
+    public static void spawnParticlesClient(Level worldIn, @NotNull ParticleOptions particle, double x, double y, double z, int count, double maxDist, @NotNull RandomSource rand) {
         spawnParticlesClient(worldIn, particle, x, y, z, 0, 0, 0, count, maxDist, rand);
     }
 
-    public static void spawnParticleClient(Level worldIn, ParticleOptions particle, double x, double y, double z) {
+    public static void spawnParticleClient(@NotNull Level worldIn, @NotNull ParticleOptions particle, double x, double y, double z) {
         spawnParticleClient(worldIn, particle, x, y, z, 0, 0, 0);
     }
 
-    public static void spawnParticleClient(Level worldIn, ParticleOptions particle, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+    public static void spawnParticleClient(@NotNull Level worldIn, @NotNull ParticleOptions particle, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
         assert !(worldIn instanceof ServerLevel) : "Calling spawnParticleClient on ServerWorld is pointless";
         worldIn.addParticle(particle, x, y, z, xSpeed, ySpeed, zSpeed);
     }
@@ -80,7 +79,7 @@ public class ModParticles {
      * @param speed         Direction is randomized but multiplied by x/y/zOffset
      * @return Number of players this has been sent to.
      */
-    public static int spawnParticlesServer(Level worldIn, ParticleOptions particle, double posX, double posY, double posZ, int particleCount, double xOffset, double yOffset, double zOffset, double speed) {
+    public static int spawnParticlesServer(Level worldIn, @NotNull ParticleOptions particle, double posX, double posY, double posZ, int particleCount, double xOffset, double yOffset, double zOffset, double speed) {
         assert worldIn instanceof ServerLevel : "Calling spawnParticlesServer on client side is pointless";
         if (worldIn instanceof ServerLevel) {
             return ((ServerLevel) worldIn).sendParticles(particle, posX, posY, posZ, particleCount, xOffset, yOffset, zOffset, speed);

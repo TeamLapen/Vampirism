@@ -23,7 +23,7 @@ public class ModAttributes {
      */
     public static final RegistryObject<RangedAttribute> BLOOD_EXHAUSTION = ATTRIBUTES.register("blood_exhaustion", () -> (RangedAttribute) new RangedAttribute("vampirism.blood_exhaustion", 1.0, 0.0, 10).setSyncable(true));
 
-    static void registerAttributes(IEventBus bus) {
+    static void register(IEventBus bus) {
         ATTRIBUTES.register(bus);
     }
 

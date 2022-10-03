@@ -1,22 +1,30 @@
 package de.teamlapen.vampirism.client.core;
 
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.blockentity.AlchemicalCauldronBlockEntity;
 import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.blocks.TotemTopBlock;
-import de.teamlapen.vampirism.client.render.tiles.*;
+import de.teamlapen.vampirism.client.renderer.blockentity.*;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModTiles;
-import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.world.level.GrassColor;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
+import java.util.Comparator;
+
+import static net.minecraft.world.inventory.InventoryMenu.BLOCK_ATLAS;
 
 /**
  * Handles all block render registration including TileEntities
@@ -24,12 +32,15 @@ import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 @OnlyIn(Dist.CLIENT)
 public class ModBlocksRender {
 
+    public static final Material[] COFFIN_TEXTURES = Arrays.stream(DyeColor.values()).sorted(Comparator.comparingInt(DyeColor::getId)).map((dye) -> {
+        return new Material(BLOCK_ATLAS, new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_" + dye.getName()));
+    }).toArray(Material[]::new);
 
     public static void register() {
         registerRenderType();
     }
 
-    public static void registerBlockColors(RegisterColorHandlersEvent.Block event) {
+    static void registerBlockColors(RegisterColorHandlersEvent.@NotNull Block event) {
         event.register((state, worldIn, pos, tintIndex) -> {
             if (tintIndex == 1) {
                 return 0x9966FF;
@@ -55,12 +66,10 @@ public class ModBlocksRender {
             }
             return 0xFFFFFF;
         }, TotemTopBlock.getBlocks().toArray(new TotemTopBlock[0]));
-        event.register((state, worldIn, pos, tintIndex) -> 0x1E1F1F, ModBlocks.VAMPIRE_SPRUCE_LEAVES.get());
-        event.register((state, worldIn, pos, tintIndex) -> 0x2e0606, ModBlocks.BLOODY_SPRUCE_LEAVES.get());
-        event.register((state, worldIn, pos, tintIndex) -> worldIn != null && pos != null ? BiomeColors.getAverageGrassColor(worldIn, pos) : GrassColor.get(0.5D, 1.0D), ModBlocks.CURSED_GRASS_BLOCK.get());
+        event.register((state, worldIn, pos, tintIndex) -> 0x1E1F1F, ModBlocks.DARK_SPRUCE_LEAVES.get());
     }
 
-    public static void registerBlockEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+    static void registerBlockEntityRenderers(EntityRenderersEvent.@NotNull RegisterRenderers event) {
         event.registerBlockEntityRenderer(ModTiles.COFFIN.get(), CoffinBESR::new);
         event.registerBlockEntityRenderer(ModTiles.ALTAR_INFUSION.get(), AltarInfusionBESR::new);
         event.registerBlockEntityRenderer(ModTiles.BLOOD_PEDESTAL.get(), PedestalBESR::new);
@@ -69,7 +78,6 @@ public class ModBlocksRender {
     }
 
     private static void registerRenderType() {
-        RenderType cutout = RenderType.cutout();
         ItemBlockRenderTypes.setRenderLayer(ModFluids.IMPURE_BLOOD.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(ModFluids.BLOOD.get(), RenderType.translucent());
     }

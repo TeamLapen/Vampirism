@@ -33,4 +33,20 @@ public class VIngameOverlays {
      */
     public static IGuiOverlay FACTION_LEVEL_ELEMENT;
     public static final ResourceLocation FACTION_LEVEL_ID = new ResourceLocation("vampirism", "faction_level");
+
+    /**
+     * Action cooldown element
+     * <br>
+     * Is rendered in the lower left corner
+     */
+    public static IGuiOverlay ACTION_COOLDOWN_ELEMENT;
+    public static final ResourceLocation ACTION_COOLDOWN_ID = new ResourceLocation("vampirism", "action_cooldown");
+
+    /**
+     * Action duration element
+     * <br>
+     * Is rendered in the lower right corner
+     */
+    public static IGuiOverlay ACTION_DURATION_ELEMENT;
+    public static final ResourceLocation ACTION_DURATION_ID = new ResourceLocation("vampirism", "action_duration");
 }

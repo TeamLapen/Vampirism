@@ -16,11 +16,11 @@
               "block": "vampirism:med_chair",
               "condition": "minecraft:block_state_property",
               "properties": {
-                "part": "top"
+                "part": "bottom"
               }
             }
           ],
-          "name": "vampirism:item_med_chair"
+          "name": "vampirism:med_chair"
         }
       ],
       "rolls": 1.0

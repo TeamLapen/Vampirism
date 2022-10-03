@@ -7,9 +7,8 @@ import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.api.entity.convertible.ICurableConvertedCreature;
 import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModTags;
-import de.teamlapen.vampirism.entity.goals.AttackMeleeNoSunGoal;
+import de.teamlapen.vampirism.entity.ai.goals.AttackMeleeNoSunGoal;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -39,9 +38,9 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.UUID;
 
 /**
@@ -53,17 +52,17 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     private static final EntityDataAccessor<Boolean> CONVERTING = SynchedEntityData.defineId(ConvertedCreatureEntity.class, EntityDataSerializers.BOOLEAN);
 
 
-    public static boolean spawnPredicate(EntityType<? extends ConvertedCreatureEntity<?>> entityType, LevelAccessor iWorld, MobSpawnType spawnReason, BlockPos blockPos, RandomSource random) {
-        return (iWorld.getBlockState(blockPos.below()).getBlock() == Blocks.GRASS_BLOCK || iWorld.getBlockState(blockPos.below()).is(ModTags.Blocks.CURSEDEARTH)) && iWorld.getRawBrightness(blockPos, 0) > 8;
+    public static boolean spawnPredicate(EntityType<? extends ConvertedCreatureEntity<?>> entityType, @NotNull LevelAccessor iWorld, MobSpawnType spawnReason, @NotNull BlockPos blockPos, RandomSource random) {
+        return (iWorld.getBlockState(blockPos.below()).getBlock() == Blocks.GRASS_BLOCK || iWorld.getBlockState(blockPos.below()).is(ModTags.Blocks.CURSED_EARTH)) && iWorld.getRawBrightness(blockPos, 0) > 8;
     }
 
-    private T entityCreature;
+    private @Nullable T entityCreature;
     private boolean entityChanged = false;
     private boolean canDespawn = false;
     @Nullable
     private Component name;
     private int conversionTime;
-    private UUID conversationStarter;
+    private @Nullable UUID conversationStarter;
 
     public ConvertedCreatureEntity(EntityType<? extends ConvertedCreatureEntity> type, Level world) {
         super(type, world, false);
@@ -72,7 +71,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
     @Override
-    public void addAdditionalSaveData(@Nonnull CompoundTag nbt) {
+    public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         writeOldEntityToNBT(nbt);
         nbt.putBoolean("converter_canDespawn", canDespawn);
@@ -127,10 +126,6 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
             entityCreature.yBodyRot = this.yBodyRot;
             entityCreature.yBodyRotO = this.yBodyRotO;
             entityCreature.deathTime = this.deathTime;
-
-//            if (world.isRemote) {
-//                entityCreature.setPacketCoordinates(this.positionOffset()); //Careful not available on server, so if needed we have to use a proxy here
-//            }
         }
         if (entityChanged) {
             this.updateEntityAttributes();
@@ -144,7 +139,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
     @Override
-    protected Component getTypeName() {
+    protected @NotNull Component getTypeName() {
         if (name == null) {
             this.name = Component.translatable("entity.vampirism.vampire").append(" ").append((nil() ? super.getTypeName() : entityCreature.getName()));
         }
@@ -163,7 +158,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
     @Override
-    public void loadUpdateFromNBT(CompoundTag nbt) {
+    public void loadUpdateFromNBT(@NotNull CompoundTag nbt) {
         if (nbt.contains("entity_old")) {
             //noinspection unchecked
             setEntityCreature((T) EntityType.create(nbt.getCompound("entity_old"), getCommandSenderWorld()).orElse(null));
@@ -171,7 +166,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
     @Override
-    public void readAdditionalSaveData(@Nonnull CompoundTag nbt) {
+    public void readAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
         if (nbt.contains("entity_old")) {
             //noinspection unchecked
@@ -218,7 +213,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     /**
      * Set the old creature (the one before conversion)
      */
-    public void setEntityCreature(T creature) {
+    public void setEntityCreature(@Nullable T creature) {
         if ((creature == null && entityCreature != null)) {
             entityChanged = true;
             entityCreature = null;
@@ -236,7 +231,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
     @Override
-    public void startConverting(@Nullable UUID conversionStarterIn, int conversionTimeIn, @Nonnull PathfinderMob entity) {
+    public void startConverting(@Nullable UUID conversionStarterIn, int conversionTimeIn, @NotNull PathfinderMob entity) {
         ICurableConvertedCreature.super.startConverting(conversionStarterIn, conversionTimeIn, entity);
         this.conversationStarter = conversionStarterIn;
         this.conversionTime = conversionTimeIn;
@@ -244,7 +239,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
 
     @Nullable
     @Override
-    public ItemEntity spawnAtLocation(ItemStack stack, float offsetY) {
+    public ItemEntity spawnAtLocation(@NotNull ItemStack stack, float offsetY) {
         ItemStack actualDrop = stack;
         Item item = stack.getItem();
         if (item.isEdible()) {
@@ -255,7 +250,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
         return super.spawnAtLocation(actualDrop, offsetY);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String toString() {
         return "[" + super.toString() + " representing " + entityCreature + "]";
@@ -271,7 +266,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
     @Override
-    public void writeFullUpdateToNBT(CompoundTag nbt) {
+    public void writeFullUpdateToNBT(@NotNull CompoundTag nbt) {
         writeOldEntityToNBT(nbt);
 
     }
@@ -301,11 +296,11 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
     @Override
-    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
+    protected @NotNull EntityType<?> getIMobTypeOpt(boolean iMob) {
         return iMob ? ModEntities.CONVERTED_CREATURE_IMOB.get() : ModEntities.CONVERTED_CREATURE.get();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     protected ResourceLocation getDefaultLootTable() {
         if (entityCreature != null) {
@@ -318,12 +313,14 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
         return entityCreature == null;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    protected InteractionResult mobInteract(Player player, @Nonnull InteractionHand hand) {
+    protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (stack.getItem() != ModItems.CURE_APPLE.get()) return super.mobInteract(player, hand);
-        return interactWithCureItem(player, stack, this);
+        if (stack.getItem() == Items.GOLDEN_APPLE){
+            return interactWithCureItem(player, stack, this);
+        }
+        return super.mobInteract(player, hand);
     }
 
     @Override
@@ -368,7 +365,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     /**
      * Write the old entity to nbt
      */
-    private void writeOldEntityToNBT(CompoundTag nbt) {
+    private void writeOldEntityToNBT(@NotNull CompoundTag nbt) {
         if (!nil()) {
             try {
                 CompoundTag entity = new CompoundTag();
@@ -385,7 +382,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
     @Override
-    public boolean canBeLeashed(@Nonnull Player player) {
+    public boolean canBeLeashed(@NotNull Player player) {
         return true;
     }
 

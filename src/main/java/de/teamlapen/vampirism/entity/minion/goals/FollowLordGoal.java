@@ -1,11 +1,13 @@
 package de.teamlapen.vampirism.entity.minion.goals;
 
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
-import de.teamlapen.vampirism.entity.goals.MoveToPositionGoal;
+import de.teamlapen.vampirism.entity.ai.goals.MoveToPositionGoal;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -13,10 +15,10 @@ import java.util.Optional;
 public class FollowLordGoal extends MoveToPositionGoal<MinionEntity<?>> {
 
 
-    private ILordPlayer lord;
+    private @Nullable ILordPlayer lord;
 
 
-    public FollowLordGoal(MinionEntity<?> entity, double followSpeedIn) {
+    public FollowLordGoal(@NotNull MinionEntity<?> entity, double followSpeedIn) {
         super(entity, followSpeedIn, 5, 15, true, true);
     }
 
@@ -27,8 +29,9 @@ public class FollowLordGoal extends MoveToPositionGoal<MinionEntity<?>> {
 
     @Override
     public boolean canUse() {
-        if (this.entity.getCurrentTask().filter(task -> task.getTask() == MinionTasks.FOLLOW_LORD.get() || task.getTask() == MinionTasks.PROTECT_LORD.get()).isEmpty())
+        if (this.entity.getCurrentTask().filter(task -> task.getTask() == MinionTasks.FOLLOW_LORD.get() || task.getTask() == MinionTasks.PROTECT_LORD.get()).isEmpty()) {
             return false;
+        }
         Optional<ILordPlayer> lord = this.entity.getLordOpt();
         if (lord.isEmpty()) {
             return false;
@@ -49,12 +52,12 @@ public class FollowLordGoal extends MoveToPositionGoal<MinionEntity<?>> {
     }
 
     @Override
-    protected Vec3 getLookPosition() {
+    protected @NotNull Vec3 getLookPosition() {
         return lord.getPlayer().getEyePosition(1);
     }
 
     @Override
-    protected Vec3i getTargetPosition() {
+    protected @NotNull Vec3i getTargetPosition() {
         return lord.getPlayer().blockPosition();
     }
 

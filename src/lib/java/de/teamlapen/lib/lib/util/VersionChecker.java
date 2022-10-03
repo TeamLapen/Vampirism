@@ -12,9 +12,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.maven.artifact.versioning.ArtifactVersion;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.*;
@@ -33,24 +33,13 @@ public class VersionChecker implements Runnable {
     private final static Logger LOGGER = LogManager.getLogger();
     private static final int MAX_HTTP_REDIRECTS = Integer.getInteger("http.maxRedirects", 20);
 
-
-    /**
-     * Use the other one
-     */
-    @Deprecated
-    public static VersionInfo executeVersionCheck(String updateUrl, ArtifactVersion currentVersion) {
-        VersionChecker checker = new VersionChecker(updateUrl, currentVersion, false);
-        new Thread(checker).start();
-        return checker.versionInfo;
-    }
-
     /**
      * Execute an async version check.
      *
      * @param stats if to send very basic stats
      * @return a version info object, which is update when the check is finished
      */
-    public static VersionInfo executeVersionCheck(String updateUrl, ArtifactVersion currentVersion, boolean stats) {
+    public static VersionInfo executeVersionCheck(String updateUrl, @NotNull ArtifactVersion currentVersion, boolean stats) {
         VersionChecker checker = new VersionChecker(updateUrl, currentVersion, stats);
         new Thread(checker).start();
         return checker.versionInfo;
@@ -58,10 +47,10 @@ public class VersionChecker implements Runnable {
 
     private final boolean stats;
     private final String UPDATE_FILE_URL;
-    private final VersionInfo versionInfo;
+    private final @NotNull VersionInfo versionInfo;
     private final ArtifactVersion currentVersion;
 
-    protected VersionChecker(String update_file_url, ArtifactVersion currentVersion, boolean stats) {
+    protected VersionChecker(String update_file_url, @NotNull ArtifactVersion currentVersion, boolean stats) {
         UPDATE_FILE_URL = update_file_url;
         this.currentVersion = currentVersion;
         versionInfo = new VersionInfo(currentVersion);
@@ -171,7 +160,7 @@ public class VersionChecker implements Runnable {
 
     }
 
-    private String getStatsString() {
+    private @NotNull String getStatsString() {
         return "?" +
                 "current=" + URLEncoder.encode(currentVersion.getMajorVersion() + "." + currentVersion.getMinorVersion() + "." + currentVersion.getIncrementalVersion(), StandardCharsets.UTF_8) +
                 '&' +
@@ -217,18 +206,18 @@ public class VersionChecker implements Runnable {
         private boolean checked = false;
         private String homePage = "";
 
-        public VersionInfo(ArtifactVersion current) {
+        public VersionInfo(@NotNull ArtifactVersion current) {
             currentVersion = Version.from(current);
         }
 
         public
-        @Nonnull
+        @NotNull
         Version getCurrentVersion() {
             return currentVersion;
         }
 
         public
-        @Nonnull
+        @NotNull
         String getHomePage() {
             return homePage;
         }
@@ -254,7 +243,7 @@ public class VersionChecker implements Runnable {
      */
     public static class Version implements Comparable<Version> {
 
-        static Version from(@Nonnull ArtifactVersion version) {
+        static @NotNull Version from(@NotNull ArtifactVersion version) {
             try {
                 String extra = null;
                 String qualifier = version.getQualifier();
@@ -283,7 +272,7 @@ public class VersionChecker implements Runnable {
             }
         }
 
-        static Version parse(String s) {
+        static @NotNull Version parse(@NotNull String s) {
             return from(new DefaultArtifactVersion(s));
         }
 
@@ -309,7 +298,7 @@ public class VersionChecker implements Runnable {
          * 1 if the given version is older, 0 if they are equal and -1 if the given version is newer
          */
         @Override
-        public int compareTo(@Nonnull Version version) {
+        public int compareTo(@NotNull Version version) {
             if (version.main > this.main) return -1;
             if (version.main < this.main) return 1;
             if (version.major > this.major) return -1;
@@ -360,7 +349,7 @@ public class VersionChecker implements Runnable {
         }
 
         @Override
-        public String toString() {
+        public @NotNull String toString() {
             return "Version{" +
                     "main=" + main +
                     ", major=" + major +
@@ -374,7 +363,7 @@ public class VersionChecker implements Runnable {
         /**
          * two if the given version is older, 0 if they are equal and -1 if the two is newer
          */
-        private int compareDate(String one, String two) {
+        private int compareDate(@NotNull String one, @NotNull String two) {
             try {
                 String[] ones = one.split("-");
                 String[] twos = two.split("-");
@@ -401,7 +390,7 @@ public class VersionChecker implements Runnable {
             /**
              * 1 if the given type is less recommend, 0 if equal, -1 if the given type is more recommend
              */
-            public int compare(TYPE type) {
+            public int compare(@NotNull TYPE type) {
                 return Integer.compare(type.ORDER, this.ORDER);
             }
         }

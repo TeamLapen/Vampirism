@@ -5,8 +5,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import net.minecraft.world.level.LevelAccessor;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Implemented by all vampire entities
@@ -38,7 +37,7 @@ public interface IVampire extends IFactionEntity {
      */
     void drinkBlood(int amt, float saturationMod, boolean useRemaining);
 
-    @Nonnull
+    @NotNull
     @Override
     default IFaction<?> getFaction() {
         return VReference.VAMPIRE_FACTION;
@@ -59,7 +58,7 @@ public interface IVampire extends IFactionEntity {
      *
      * @return The strength of the garlic or {@link EnumStrength#NONE}
      */
-    @Nonnull
+    @NotNull
     default EnumStrength isGettingGarlicDamage(LevelAccessor world) {
         return isGettingGarlicDamage(world, false);
     }
@@ -74,7 +73,7 @@ public interface IVampire extends IFactionEntity {
      * @param forceRefresh Don't use cached value
      * @return The strength of the garlic or {@link EnumStrength#NONE}
      */
-    @Nonnull
+    @NotNull
     EnumStrength isGettingGarlicDamage(LevelAccessor iWorld, boolean forceRefresh);
 
     /**

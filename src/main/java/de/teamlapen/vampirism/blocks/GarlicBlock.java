@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.entity.DamageHandler;
+import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
@@ -19,8 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Garlic Plant
@@ -32,7 +31,7 @@ import javax.annotation.Nonnull;
 public class GarlicBlock extends CropBlock {
     private static final VoxelShape[] shape = makeShape();
 
-    private static VoxelShape[] makeShape() {
+    private static VoxelShape @NotNull [] makeShape() {
         return new VoxelShape[]{
                 Block.box(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D),
                 Block.box(0.0D, 0.0D, 0.0D, 16.0D, 3.0D, 16.0D),
@@ -50,24 +49,23 @@ public class GarlicBlock extends CropBlock {
     }
 
     @Override
-    public void entityInside(BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull Entity entity) {
+    public void entityInside(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Entity entity) {
         if (state.getValue(AGE) > 5 && Helper.isVampire(entity)) {
-            if(entity instanceof Player){
-                VReference.VAMPIRE_FACTION.getPlayerCapability((Player) entity).ifPresent( vamp -> DamageHandler.affectVampireGarlicDirect(vamp, EnumStrength.WEAK));
-            }
-            else if(entity instanceof IVampire){
+            if (entity instanceof Player) {
+                VReference.VAMPIRE_FACTION.getPlayerCapability((Player) entity).ifPresent(vamp -> DamageHandler.affectVampireGarlicDirect(vamp, EnumStrength.WEAK));
+            } else if (entity instanceof IVampire) {
                 DamageHandler.affectVampireGarlicDirect((IVampire) entity, EnumStrength.WEAK);
             }
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public VoxelShape getShape(BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
+    public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         return shape[state.getValue(this.getAgeProperty())];
     }
 
-    @Nonnull
+    @NotNull
     @Override
     protected ItemLike getBaseSeedId() {
         return ModItems.ITEM_GARLIC.get();

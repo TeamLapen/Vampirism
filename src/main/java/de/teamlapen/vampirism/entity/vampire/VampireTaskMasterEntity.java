@@ -4,12 +4,12 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.entity.IDefaultTaskMasterEntity;
-import de.teamlapen.vampirism.entity.goals.FleeSunVampireGoal;
-import de.teamlapen.vampirism.entity.goals.ForceLookEntityGoal;
-import de.teamlapen.vampirism.entity.goals.LookAtClosestVisibleGoal;
-import de.teamlapen.vampirism.entity.goals.RestrictSunVampireGoal;
+import de.teamlapen.vampirism.entity.ai.goals.FleeSunVampireGoal;
+import de.teamlapen.vampirism.entity.ai.goals.ForceLookEntityGoal;
+import de.teamlapen.vampirism.entity.ai.goals.LookAtClosestVisibleGoal;
+import de.teamlapen.vampirism.entity.ai.goals.RestrictSunVampireGoal;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
-import de.teamlapen.vampirism.inventory.container.TaskBoardContainer;
+import de.teamlapen.vampirism.inventory.TaskBoardMenu;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
@@ -35,16 +35,16 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Optional;
 
 public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefaultTaskMasterEntity {
 
     private static final EntityDataAccessor<String> BIOME_TYPE = SynchedEntityData.defineId(VampireTaskMasterEntity.class, EntityDataSerializers.STRING);
 
-    public static AttributeSupplier.Builder getAttributeBuilder() {
+    public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
         return VampireBaseEntity.getAttributeBuilder()
                 .add(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.VAMPIRE_MAX_HEALTH)
                 .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.VAMPIRE_ATTACK_DAMAGE)
@@ -62,31 +62,31 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefau
     @Override
     public void aiStep() {
         super.aiStep();
-        if (interactor != null && !(interactor.isAlive() && interactor.containerMenu instanceof TaskBoardContainer)) {
+        if (interactor != null && !(interactor.isAlive() && interactor.containerMenu instanceof TaskBoardMenu)) {
             this.interactor = null;
         }
     }
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(@Nonnull ServerLevelAccessor worldIn, @Nonnull DifficultyInstance difficultyIn, @Nonnull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
         SpawnGroupData data = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
         this.setBiomeType(VillagerType.byBiome(worldIn.getBiome(this.blockPosition())));
         return data;
     }
 
     @Override
-    public VillagerType getBiomeType() {
+    public @NotNull VillagerType getBiomeType() {
         String key = this.entityData.get(BIOME_TYPE);
         ResourceLocation id = new ResourceLocation(key);
         return Registry.VILLAGER_TYPE.get(id);
     }
 
-    protected void setBiomeType(VillagerType type) {
+    protected void setBiomeType(@NotNull VillagerType type) {
         this.entityData.set(BIOME_TYPE, Registry.VILLAGER_TYPE.getKey(type).toString());
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Optional<Player> getForceLookTarget() {
         return Optional.ofNullable(this.interactor);
@@ -109,11 +109,12 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefau
         this.entityData.define(BIOME_TYPE, Registry.VILLAGER_TYPE.getDefaultKey().toString());
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    protected InteractionResult mobInteract(@Nonnull Player playerEntity, @Nonnull InteractionHand hand) {
-        if (this.level.isClientSide)
+    protected InteractionResult mobInteract(@NotNull Player playerEntity, @NotNull InteractionHand hand) {
+        if (this.level.isClientSide) {
             return Helper.isVampire(playerEntity) ? InteractionResult.SUCCESS : InteractionResult.PASS;
+        }
         if (Helper.isVampire(playerEntity) && interactor == null) {
             if (this.processInteraction(playerEntity, this)) {
                 this.getNavigation().stop();

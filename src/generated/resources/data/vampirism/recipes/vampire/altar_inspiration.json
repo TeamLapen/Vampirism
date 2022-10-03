@@ -2,19 +2,16 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "X": {
-      "tag": "forge:glass"
+      "tag": "minecraft:planks"
     },
     "Y": {
-      "item": "minecraft:glass_bottle"
-    },
-    "Z": {
-      "tag": "forge:ingots/iron"
+      "item": "vampirism:blood_container"
     }
   },
   "pattern": [
-    " X ",
+    "X X",
     "XYX",
-    "ZZZ"
+    "XXX"
   ],
   "result": {
     "item": "vampirism:altar_inspiration"

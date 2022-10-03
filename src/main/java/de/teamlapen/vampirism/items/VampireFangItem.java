@@ -14,19 +14,16 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-
-import javax.annotation.Nonnull;
-
-import net.minecraft.world.item.Item.Properties;
+import org.jetbrains.annotations.NotNull;
 
 public class VampireFangItem extends Item {
     public VampireFangItem() {
         super(new Properties().tab(VampirismMod.creativeTab));
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, @Nonnull InteractionHand handIn) {
+    public InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
 
         ItemStack stack = playerIn.getItemInHand(handIn);
         if (!worldIn.isClientSide) {

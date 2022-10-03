@@ -18,6 +18,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 
 public class GiveAccessoriesCommand extends BasicCommand {
@@ -37,7 +38,7 @@ public class GiveAccessoriesCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static <Z extends Item & IRefinementItem> int give(CommandContext<CommandSourceStack> context, ServerPlayer asPlayer, int number, IRefinementSet set) {
+    private static <Z extends Item & IRefinementItem> int give(@NotNull CommandContext<CommandSourceStack> context, @NotNull ServerPlayer asPlayer, int number, @NotNull IRefinementSet set) {
         IFaction<?> faction = set.getFaction();
         if (faction instanceof PlayableFaction<?>) { // should always be true
             Z i = ((PlayableFaction<?>) faction).getRefinementItem(IRefinementItem.AccessorySlotType.values()[number - 1]);
@@ -53,13 +54,13 @@ public class GiveAccessoriesCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int help(CommandContext<CommandSourceStack> context) {
+    private static int help(@NotNull CommandContext<CommandSourceStack> context) {
         context.getSource().sendSuccess(Component.translatable("command.vampirism.test.give_accessories.help"), false);
         return 0;
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static <T extends IFactionPlayer<T>> int random(CommandContext<CommandSourceStack> context, ServerPlayer entity, int amount) {
+    private static <T extends IFactionPlayer<T>> int random(@NotNull CommandContext<CommandSourceStack> context, @NotNull ServerPlayer entity, int amount) {
         IFaction<?> faction = VampirismAPI.factionRegistry().getFaction(entity);
         if (faction instanceof PlayableFaction<?>) {
             for (int i = 0; i < amount; ++i) {

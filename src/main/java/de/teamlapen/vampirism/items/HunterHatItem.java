@@ -26,7 +26,7 @@ import java.util.function.Consumer;
 /**
  * Simple headwear that look like a hunter head
  */
-public class HunterHatItem extends VampirismHunterArmor {
+public class HunterHatItem extends VampirismHunterArmorItem {
     private final int type;
 
     public HunterHatItem(int type) {
@@ -41,7 +41,7 @@ public class HunterHatItem extends VampirismHunterArmor {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+    public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
         consumer.accept(new IClientItemExtensions() {
             @Override
             public @NotNull Model getGenericArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<?> original) {
@@ -51,6 +51,7 @@ public class HunterHatItem extends VampirismHunterArmor {
     }
 
     private String descriptionId;
+
     @Override
     @NotNull
     protected String getOrCreateDescriptionId() {

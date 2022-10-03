@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.effects;
 
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
-import de.teamlapen.vampirism.blockentity.TotemHelper;
-import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
+import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
+import de.teamlapen.vampirism.util.TotemHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Difficulty;
@@ -14,9 +14,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * does not extend {@link VampirismEffect} so other mods can use this too
@@ -30,7 +29,7 @@ public abstract class BadOmenEffect extends MobEffect {
      * @param offender Killer entity
      * @param victim   The killed faction entity
      */
-    public static void handlePotentialBannerKill(@Nullable Entity offender, IFactionEntity victim) {
+    public static void handlePotentialBannerKill(@Nullable Entity offender, @NotNull IFactionEntity victim) {
         if (offender instanceof Player player) {
             IFaction<?> faction = victim.getFaction();
             if (faction.getVillageData().isBanner(victim.getRepresentingEntity().getItemBySlot(EquipmentSlot.HEAD))) {
@@ -56,7 +55,7 @@ public abstract class BadOmenEffect extends MobEffect {
     public abstract IFaction<?> getFaction();
 
     @Override
-    public void applyEffectTick(@Nonnull LivingEntity entityLivingBaseIn, int amplifier) {
+    public void applyEffectTick(@NotNull LivingEntity entityLivingBaseIn, int amplifier) {
         if (entityLivingBaseIn instanceof ServerPlayer playerEntity && !entityLivingBaseIn.isSpectator()) {
             ServerLevel serverWorld = playerEntity.getLevel();
             if (serverWorld.getDifficulty() == Difficulty.PEACEFUL) {

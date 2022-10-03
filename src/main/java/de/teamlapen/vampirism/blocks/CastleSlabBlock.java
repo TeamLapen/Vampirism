@@ -10,9 +10,9 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class CastleSlabBlock extends SlabBlock {
@@ -25,7 +25,7 @@ public class CastleSlabBlock extends SlabBlock {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(@Nonnull ItemStack stack, @Nullable BlockGetter player, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag advanced) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable BlockGetter player, @NotNull List<Component> tooltip, @NotNull TooltipFlag advanced) {
         super.appendHoverText(stack, player, tooltip, advanced);
         tooltip.add(Component.translatable("block.vampirism.castle_block" + (variant == CastleBricksBlock.EnumVariant.DARK_STONE ? ".no_spawn" : ".vampire_spawn")).withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY));
 

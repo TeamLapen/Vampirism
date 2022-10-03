@@ -25,20 +25,21 @@ import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.hunter.BasicHunterEntity;
+import de.teamlapen.vampirism.entity.player.hunter.HunterLevelingConf;
+import de.teamlapen.vampirism.entity.player.hunter.actions.HunterActions;
+import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.entity.player.vampire.VampireLevelingConf;
+import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
-import de.teamlapen.vampirism.inventory.recipes.AlchemicalCauldronRecipe;
-import de.teamlapen.vampirism.inventory.recipes.ShapedWeaponTableRecipe;
-import de.teamlapen.vampirism.inventory.recipes.ShapelessWeaponTableRecipe;
 import de.teamlapen.vampirism.items.BloodBottleItem;
 import de.teamlapen.vampirism.modcompat.guide.pages.PagePotionTableMix;
 import de.teamlapen.vampirism.modcompat.guide.pages.PageTable;
 import de.teamlapen.vampirism.modcompat.guide.recipes.AlchemicalCauldronRecipeRenderer;
 import de.teamlapen.vampirism.modcompat.guide.recipes.ShapedWeaponTableRecipeRenderer;
 import de.teamlapen.vampirism.modcompat.guide.recipes.ShapelessWeaponTableRecipeRenderer;
-import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
-import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
-import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
-import de.teamlapen.vampirism.player.vampire.VampireLevelingConf;
+import de.teamlapen.vampirism.recipes.AlchemicalCauldronRecipe;
+import de.teamlapen.vampirism.recipes.ShapedWeaponTableRecipe;
+import de.teamlapen.vampirism.recipes.ShapelessWeaponTableRecipe;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
@@ -52,8 +53,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.net.URI;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -66,7 +68,7 @@ public class GuideBook implements IGuideBook {
     @SuppressWarnings("FieldCanBeLocal")
     private static Book guideBook;
 
-    static void buildCategories(List<CategoryAbstract> categories) {
+    static void buildCategories(@NotNull List<CategoryAbstract> categories) {
         LOGGER.debug("Building content");
         long start = System.currentTimeMillis();
         BookHelper helper = new BookHelper.Builder(REFERENCE.MODID).setBaseKey("guide.vampirism").setLocalizer(GuideBook::translateComponent).setRecipeRendererSupplier(GuideBook::getRenderer).build();
@@ -100,7 +102,7 @@ public class GuideBook implements IGuideBook {
 
 
     @SuppressWarnings("CollectionAddAllCanBeReplacedWithConstructor")
-    private static Map<ResourceLocation, EntryAbstract> buildOverview(BookHelper helper) {
+    private static @NotNull Map<ResourceLocation, EntryAbstract> buildOverview(@NotNull BookHelper helper) {
         Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.overview.";
 
@@ -145,16 +147,16 @@ public class GuideBook implements IGuideBook {
         return entries;
     }
 
-    private static String loc(Block b) {
+    private static String loc(@NotNull Block b) {
         return UtilLib.translate(b.getDescriptionId());
     }
 
-    private static String loc(Item i) {
+    private static String loc(@NotNull Item i) {
         return UtilLib.translate(i.getDescriptionId());
     }
 
     @SuppressWarnings("CollectionAddAllCanBeReplacedWithConstructor")
-    private static Map<ResourceLocation, EntryAbstract> buildVampire(BookHelper helper) {
+    private static @NotNull Map<ResourceLocation, EntryAbstract> buildVampire(@NotNull BookHelper helper) {
         Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.vampire.";
 
@@ -163,6 +165,7 @@ public class GuideBook implements IGuideBook {
         gettingStarted.addAll(PageHelper.pagesForLongText(translateComponent(base + "getting_started.as_vampire")));
         gettingStarted.addAll(PageHelper.pagesForLongText(translateComponent(base + "getting_started.zombie")));
         gettingStarted.addAll(PageHelper.pagesForLongText(translateComponent(base + "getting_started.blood", Component.translatable(ModKeys.SUCK.saveString()))));
+        gettingStarted.addAll(PageHelper.pagesForLongText(translateComponent(base + "getting_started.infecting", VampireActions.INFECT.get().getName())));
         gettingStarted.addAll(PageHelper.pagesForLongText(FormattedText.composite(translateComponent(base + "getting_started.level"), translateComponent(base + "getting_started.level2"))));
 
         entries.put(new ResourceLocation(base + "getting_started"), new EntryText(gettingStarted, translateComponent(base + "getting_started")));
@@ -261,7 +264,7 @@ public class GuideBook implements IGuideBook {
     }
 
     @SuppressWarnings("CollectionAddAllCanBeReplacedWithConstructor")
-    private static Map<ResourceLocation, EntryAbstract> buildHunter(BookHelper helper) {
+    private static @NotNull Map<ResourceLocation, EntryAbstract> buildHunter(@NotNull BookHelper helper) {
         Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.hunter.";
 
@@ -356,7 +359,7 @@ public class GuideBook implements IGuideBook {
         return entries;
     }
 
-    private static Map<ResourceLocation, EntryAbstract> buildCreatures(BookHelper helper) {
+    private static @NotNull Map<ResourceLocation, EntryAbstract> buildCreatures(@NotNull BookHelper helper) {
         Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.entity.";
 
@@ -419,7 +422,7 @@ public class GuideBook implements IGuideBook {
         return entries;
     }
 
-    private static Map<ResourceLocation, EntryAbstract> buildWorld(BookHelper helper) {
+    private static @NotNull Map<ResourceLocation, EntryAbstract> buildWorld(@NotNull BookHelper helper) {
         Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.world.";
 
@@ -433,7 +436,7 @@ public class GuideBook implements IGuideBook {
         return entries;
     }
 
-    private static Map<ResourceLocation, EntryAbstract> buildItems(BookHelper helper) {
+    private static @NotNull Map<ResourceLocation, EntryAbstract> buildItems(@NotNull BookHelper helper) {
         Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.items.";
         //General
@@ -464,18 +467,18 @@ public class GuideBook implements IGuideBook {
         helper.info(ModItems.STAKE.get()).setFormats(((int) (VampirismConfig.BALANCE.hsInstantKill1MaxHealth.get() * 100)) + "%").recipes("hunter/stake").build(entries);
         helper.info(ModItems.BASIC_CROSSBOW.get(), ModItems.ENHANCED_CROSSBOW.get(), ModItems.BASIC_DOUBLE_CROSSBOW.get(), ModItems.ENHANCED_DOUBLE_CROSSBOW.get(), ModItems.BASIC_TECH_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get()).setFormats(loc(ModItems.CROSSBOW_ARROW_NORMAL.get()), loc(ModItems.TECH_CROSSBOW_AMMO_PACKAGE.get())).setLinks(new ResourceLocation("guide.vampirism.items.crossbow_arrow_normal")).recipes("weapontable/basic_crossbow", "weapontable/enhanced_crossbow", "weapontable/basic_double_crossbow", "weapontable/enhanced_double_crossbow", "weapontable/basic_tech_crossbow", "weapontable/enhanced_tech_crossbow", "weapontable/tech_crossbow_ammo_package").useCustomEntryName().setKeyName("crossbows").build(entries);
         helper.info(ModItems.CROSSBOW_ARROW_NORMAL.get(), ModItems.CROSSBOW_ARROW_SPITFIRE.get(), ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get()).recipes("hunter/crossbow_arrow_normal", "weapontable/crossbow_arrow_spitfire", "weapontable/crossbow_arrow_vampire_killer").build(entries);
-        helper.info(ModItems.HOLY_WATER_BOTTLE_NORMAL.get(), ModItems.HOLY_WATER_BOTTLE_ENHANCED.get(), ModItems.HOLY_WATER_BOTTLE_ULTIMATE.get()).setLinks(new ResourceLocation("guide.vampirism.hunter.vamp_slayer"), new ResourceLocation("guide.vampirism.items.holy_salt")).setFormats(loc(ModItems.HOLY_SALT_WATER.get()), loc(ModItems.HOLY_SALT_WATER.get()), loc(ModItems.HOLY_SALT.get())).brewingItems(ModItems.HOLY_SALT_WATER.get(), ModItems.HOLY_WATER_SPLASH_BOTTLE_NORMAL.get()).setKeyName("holy_water_bottle").build(entries);
-        helper.info(ModItems.HOLY_SALT.get()).setLinks(new ResourceLocation("guide.vampirism.items.holy_water_bottle")).setFormats(loc(ModItems.PURE_SALT.get()), loc(ModItems.PURE_SALT.get()), loc(ModBlocks.ALCHEMICAL_CAULDRON.get())).recipes("alchemical_cauldron/pure_salt").build(entries);
+        helper.info(ModItems.HOLY_WATER_BOTTLE_NORMAL.get(), ModItems.HOLY_WATER_BOTTLE_ENHANCED.get(), ModItems.HOLY_WATER_BOTTLE_ULTIMATE.get()).setLinks(new ResourceLocation("guide.vampirism.hunter.vamp_slayer"), new ResourceLocation("guide.vampirism.items.pure_salt")).setFormats(loc(ModItems.PURE_SALT_WATER.get()), loc(ModItems.PURE_SALT_WATER.get()), loc(ModItems.PURE_SALT.get())).brewingItems(ModItems.PURE_SALT_WATER.get(), ModItems.HOLY_WATER_SPLASH_BOTTLE_NORMAL.get()).setKeyName("holy_water_bottle").build(entries);
+        helper.info(ModItems.PURE_SALT.get()).setLinks(new ResourceLocation("guide.vampirism.items.holy_water_bottle")).setFormats(loc(ModItems.PURE_SALT.get()), loc(ModItems.PURE_SALT.get()), loc(ModBlocks.ALCHEMICAL_CAULDRON.get())).recipes("alchemical_cauldron/pure_salt").build(entries);
         helper.info(ModItems.ITEM_ALCHEMICAL_FIRE.get()).setLinks(new ResourceLocation("guide.vampirism.items.crossbow_arrow_normal")).recipes("alchemical_cauldron/alchemical_fire_4", "alchemical_cauldron/alchemical_fire_5", "alchemical_cauldron/alchemical_fire_6").build(entries);
         helper.info(ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE.get()).recipes("weapontable/armor_of_swiftness_chest_normal", "weapontable/armor_of_swiftness_legs_normal", "weapontable/armor_of_swiftness_head_normal", "weapontable/armor_of_swiftness_feet_normal", "weapontable/armor_of_swiftness_chest_enhanced", "weapontable/armor_of_swiftness_legs_enhanced", "weapontable/armor_of_swiftness_head_enhanced", "weapontable/armor_of_swiftness_feet_enhanced").build(entries);
         helper.info(ModItems.HUNTER_COAT_CHEST_NORMAL.get(), ModItems.HUNTER_COAT_CHEST_ENHANCED.get(), ModItems.HUNTER_COAT_CHEST_ENHANCED.get(), ModItems.HUNTER_COAT_LEGS_NORMAL.get(), ModItems.HUNTER_COAT_LEGS_ENHANCED.get(), ModItems.HUNTER_COAT_LEGS_ULTIMATE.get(), ModItems.HUNTER_COAT_HEAD_NORMAL.get(), ModItems.HUNTER_COAT_HEAD_ENHANCED.get(), ModItems.HUNTER_COAT_HEAD_ULTIMATE.get(), ModItems.HUNTER_COAT_FEET_NORMAL.get(), ModItems.HUNTER_COAT_FEET_ENHANCED.get(), ModItems.HUNTER_COAT_FEET_ULTIMATE.get()).recipes("weapontable/hunter_coat_chest_normal", "weapontable/hunter_coat_legs_normal", "weapontable/hunter_coat_head_normal", "weapontable/hunter_coat_feet_normal", "weapontable/hunter_coat_chest_enhanced", "weapontable/hunter_coat_legs_enhanced", "weapontable/hunter_coat_head_enhanced", "weapontable/hunter_coat_feet_enhanced").build(entries);
-        helper.info(ModItems.OBSIDIAN_ARMOR_CHEST_NORMAL.get(), ModItems.OBSIDIAN_ARMOR_CHEST_ENHANCED.get(), ModItems.OBSIDIAN_ARMOR_CHEST_ENHANCED.get(), ModItems.OBSIDIAN_ARMOR_LEGS_NORMAL.get(), ModItems.OBSIDIAN_ARMOR_LEGS_ENHANCED.get(), ModItems.OBSIDIAN_ARMOR_LEGS_ULTIMATE.get(), ModItems.OBSIDIAN_ARMOR_HEAD_NORMAL.get(), ModItems.OBSIDIAN_ARMOR_HEAD_ENHANCED.get(), ModItems.OBSIDIAN_ARMOR_HEAD_ULTIMATE.get(), ModItems.OBSIDIAN_ARMOR_FEET_NORMAL.get(), ModItems.OBSIDIAN_ARMOR_FEET_ENHANCED.get(), ModItems.OBSIDIAN_ARMOR_FEET_ULTIMATE.get()).recipes("weapontable/obsidian_armor_chest_normal", "weapontable/obsidian_armor_legs_normal", "weapontable/obsidian_armor_head_normal", "weapontable/obsidian_armor_feet_normal", "weapontable/obsidian_armor_chest_enhanced", "weapontable/obsidian_armor_legs_enhanced", "weapontable/obsidian_armor_head_enhanced", "weapontable/obsidian_armor_feet_enhanced").build(entries);
         helper.info(ModItems.HUNTER_AXE_NORMAL.get(), ModItems.HUNTER_AXE_ENHANCED.get(), ModItems.HUNTER_AXE_ULTIMATE.get()).recipes("weapontable/hunter_axe_normal", "weapontable/hunter_axe_enhanced").build(entries);
         helper.info(ModItems.HUNTER_MINION_EQUIPMENT.get(), ModItems.HUNTER_MINION_UPGRADE_SIMPLE.get(), ModItems.HUNTER_MINION_UPGRADE_ENHANCED.get(), ModItems.HUNTER_MINION_UPGRADE_SPECIAL.get()).setFormats(loc(ModItems.HUNTER_MINION_EQUIPMENT.get()), loc(ModItems.HUNTER_MINION_UPGRADE_SIMPLE.get()), ModItems.HUNTER_MINION_UPGRADE_SIMPLE.get().getMinLevel() + 1, ModItems.HUNTER_MINION_UPGRADE_SIMPLE.get().getMaxLevel() + 1, loc(ModItems.HUNTER_MINION_UPGRADE_ENHANCED.get()), ModItems.HUNTER_MINION_UPGRADE_ENHANCED.get().getMinLevel() + 1, ModItems.HUNTER_MINION_UPGRADE_ENHANCED.get().getMaxLevel() + 1, loc(ModItems.HUNTER_MINION_UPGRADE_SPECIAL.get()), ModItems.HUNTER_MINION_UPGRADE_SPECIAL.get().getMinLevel() + 1, ModItems.HUNTER_MINION_UPGRADE_SPECIAL.get().getMaxLevel() + 1, translate(ModEntities.TASK_MASTER_HUNTER.get().getDescriptionId())).setLinks(new ResourceLocation("guide.vampirism.entity.taskmaster"), new ResourceLocation("guide.vampirism.hunter.lord")).build(entries);
+        helper.info(ModItems.CRUCIFIX_NORMAL.get(), ModItems.CRUCIFIX_ENHANCED.get(), ModItems.CRUCIFIX_ULTIMATE.get()).setKeyName("crucifix").recipes("hunter/crucifix","weapontable/crucifix_enhanced", "weapontable/crucifix_ultimate").build(entries);
         return entries;
     }
 
-    private static Map<ResourceLocation, EntryAbstract> buildBlocks(BookHelper helper) {
+    private static @NotNull Map<ResourceLocation, EntryAbstract> buildBlocks(@NotNull BookHelper helper) {
         Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.blocks.";
         //General
@@ -485,10 +488,10 @@ public class GuideBook implements IGuideBook {
         helper.info(ModBlocks.BLOOD_CONTAINER.get()).recipes("vampire/blood_container").build(entries);
         helper.info(ModBlocks.ALTAR_INSPIRATION.get()).setLinks(new ResourceLocation("guide.vampirism.vampire.leveling")).recipes("vampire/altar_inspiration").build(entries);
         helper.info(ModBlocks.ALTAR_INFUSION.get()).setLinks(new ResourceLocation("guide.vampirism.vampire.leveling")).recipes("vampire/altar_infusion", "vampire/altar_pillar", "vampire/altar_tip").build(entries);
-        helper.info(ModBlocks.COFFIN.get()).recipes("vampire/coffin").build(entries);
+        helper.info(ModBlocks.coffin_red.get()).recipes("vampire/coffin_red").build(entries);
         helper.info(ModBlocks.ALTAR_CLEANSING.get()).build(entries);
         //Hunter
-        helper.info(true, new ItemStack(ModItems.ITEM_MED_CHAIR.get())).setFormats(loc(ModItems.INJECTION_GARLIC.get()), loc(ModItems.INJECTION_SANGUINARE.get())).recipes("hunter/item_med_chair").build(entries);
+        helper.info(true, new ItemStack(ModBlocks.MED_CHAIR.get())).setFormats(loc(ModItems.INJECTION_GARLIC.get()), loc(ModItems.INJECTION_SANGUINARE.get())).recipes("hunter/item_med_chair").build(entries);
         helper.info(ModBlocks.HUNTER_TABLE.get()).setFormats(loc(ModItems.HUNTER_INTEL_0.get())).setLinks(new ResourceLocation("guide.vampirism.hunter.leveling"), new ResourceLocation("guide.vampirism.items.hunter_intel")).recipes("hunter/hunter_table").build(entries);
         helper.info(ModBlocks.WEAPON_TABLE.get()).recipes("hunter/weapon_table").build(entries);
         helper.info(ModBlocks.ALCHEMICAL_CAULDRON.get()).recipes("hunter/alchemical_cauldron").build(entries);
@@ -501,6 +504,8 @@ public class GuideBook implements IGuideBook {
         helper.info(ModBlocks.TOTEM_TOP_CRAFTED.get(), ModBlocks.TOTEM_TOP.get()).setLinks(new ResourceLocation("guide.vampirism.blocks.totem_base"), new ResourceLocation("guide.vampirism.world.villages")).build(entries);
         helper.info(ModBlocks.TOTEM_BASE.get()).recipes("general/totem_base").setLinks(new ResourceLocation("guide.vampirism.blocks.totem_top_crafted"), new ResourceLocation("guide.vampirism.world.villages")).build(entries);
         helper.info(ModBlocks.POTION_TABLE.get()).recipes("hunter/potion_table").customPages(generatePotionMixes()).build(entries);
+        ItemStack activatedOil = ModItems.OIL_BOTTLE.get().withOil(ModOils.VAMPIRE_BLOOD.get());
+        helper.info(ModBlocks.ALCHEMY_TABLE.get()).recipes("alchemy_table").setFormats(ModItems.OIL_BOTTLE.get().getName(activatedOil)).build(entries);
 
         List<IPage> decorativeBlocks = new ArrayList<>(PageHelper.pagesForLongText(translateComponent(base + "decorative.text"), ModItems.ITEM_CANDELABRA.get()));
         decorativeBlocks.add(helper.getRecipePage(new ResourceLocation(REFERENCE.MODID, "vampire/candelabra")));
@@ -515,14 +520,15 @@ public class GuideBook implements IGuideBook {
         return entries;
     }
 
-    public static Map<ResourceLocation, EntryAbstract> buildChangelog(BookHelper helper) {
+    public static @NotNull Map<ResourceLocation, EntryAbstract> buildChangelog(BookHelper helper) {
         Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.changelog.";
         entries.put(new ResourceLocation(base + "v1_8"), buildChangelog1_8());
+        entries.put(new ResourceLocation(base + "v1_9"), buildChangelog1_9());
         return entries;
     }
 
-    public static EntryAbstract buildChangelog1_8() {
+    public static @NotNull EntryAbstract buildChangelog1_8() {
         String base = "guide.vampirism.changelog.";
         String base1_8 = base + "v1_8.";
 
@@ -561,10 +567,52 @@ public class GuideBook implements IGuideBook {
         //misc
         List<IPage> misc = PageHelper.pagesForLongText(translateComponent(base1_8 + "misc.text"));
         v1_8.addAll(misc);
-        return new EntryResourceLocation(v1_8, translateComponent(base + "v1_8"), new ResourceLocation("textures/item/writable_book.png"));
+        return new EntryResourceLocation(v1_8, Component.literal("Vampirism 1.8"), new ResourceLocation("textures/item/writable_book.png"));
     }
 
-    private static IPage[] generatePotionMixes() {
+    public static EntryAbstract buildChangelog1_9() {
+        String base = "guide.vampirism.changelog.";
+        String base1_9 = base + "v1_9.";
+
+        //Vampirism 1.9
+        List<IPage> v1_9 = new ArrayList<>(PageHelper.pagesForLongText(translateComponent(base1_9 + "overview.text")));
+
+        //general
+        List<IPage> general = PageHelper.pagesForLongText(translateComponent(base1_9 + "general.text"));
+        v1_9.addAll(general);
+
+        //weapon oils
+        List<IPage> oils = PageHelper.pagesForLongText(translateComponent(base1_9 + "oils.text"));
+        v1_9.addAll(oils);
+
+        //lord skills
+        List<IPage> skills = PageHelper.pagesForLongText(translateComponent(base1_9 + "skills.text"));
+        v1_9.addAll(skills);
+
+        //item blessing
+        List<IPage> blessing = PageHelper.pagesForLongText(translateComponent(base1_9 + "blessing.text"));
+        v1_9.addAll(blessing);
+
+        //crucifix
+        List<IPage> crucifix = PageHelper.pagesForLongText(translateComponent(base1_9 + "crucifix.text"));
+        v1_9.addAll(crucifix);
+
+        //vampire infection
+        List<IPage> infection = PageHelper.pagesForLongText(translateComponent(base1_9 + "infection.text"));
+        v1_9.addAll(infection);
+
+        //crossbows
+        List<IPage> crossbows = PageHelper.pagesForLongText(translateComponent(base1_9 + "crossbows.text"));
+        v1_9.addAll(crossbows);
+
+        //curing creatures
+        List<IPage> curing = PageHelper.pagesForLongText(translateComponent(base1_9 + "curing.text"));
+        v1_9.addAll(curing);
+
+        return new EntryResourceLocation(v1_9, Component.literal("Vampirism 1.9"), new ResourceLocation("textures/item/writable_book.png"));
+    }
+
+    private static IPage @NotNull [] generatePotionMixes() {
         IPage[] pages = new IPage[6];
         pages[0] = new PagePotionTableMix(HunterSkills.DURABLE_BREWING.get().getName(), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.durable && !mix.concentrated && !mix.efficient).toArray(ExtendedPotionMix[]::new));
         pages[1] = new PagePotionTableMix(HunterSkills.CONCENTRATED_BREWING.get().getName(), VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.concentrated && !mix.durable && !mix.efficient).toArray(ExtendedPotionMix[]::new));
@@ -575,12 +623,12 @@ public class GuideBook implements IGuideBook {
         return pages;
     }
 
-    public static MutableComponent translateComponent(String key, Object... format) {
+    public static @NotNull MutableComponent translateComponent(String key, Object... format) {
         String result = UtilLib.translate(key, format);
         return Component.literal(result.replaceAll("\\\\n", Matcher.quoteReplacement("\n"))); //Fix legacy newlines. //Probably shouldn't use new StringTextComponent here, but don't want to rewrite everything
     }
 
-    public static String translate(String key, Object... format) {
+    public static @NotNull String translate(String key, Object... format) {
         String result = UtilLib.translate(key, format);
         return result.replaceAll("\\\\n", Matcher.quoteReplacement("\n"));
     }

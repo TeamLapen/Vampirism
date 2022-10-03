@@ -6,8 +6,8 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -16,7 +16,7 @@ import java.util.List;
 public interface IItemWithTier extends ItemLike {
 
     @OnlyIn(Dist.CLIENT)
-    default void addTierInformation(List<Component> tooltip) {
+    default void addTierInformation(@NotNull List<Component> tooltip) {
         TIER t = getVampirismTier();
         if (t != TIER.NORMAL) {
             ChatFormatting format = t == TIER.ENHANCED ? ChatFormatting.YELLOW : ChatFormatting.AQUA;
@@ -38,11 +38,11 @@ public interface IItemWithTier extends ItemLike {
             this.name = name;
         }
 
-        public String getName() {
+        public @NotNull String getName() {
             return this.getSerializedName();
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public String getSerializedName() {
             return name;

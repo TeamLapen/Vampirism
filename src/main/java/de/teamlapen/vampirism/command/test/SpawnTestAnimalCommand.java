@@ -7,6 +7,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Cow;
+import org.jetbrains.annotations.NotNull;
 
 public class SpawnTestAnimalCommand extends BasicCommand {
 
@@ -17,7 +18,7 @@ public class SpawnTestAnimalCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int spawnTestAnimal(ServerPlayer asPlayer) {
+    private static int spawnTestAnimal(@NotNull ServerPlayer asPlayer) {
         Cow cow = EntityType.COW.create(asPlayer.getCommandSenderWorld());
         cow.setHealth(cow.getMaxHealth() / 4.2f);
         cow.copyPosition(asPlayer);

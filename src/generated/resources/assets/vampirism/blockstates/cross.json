@@ -1,17 +1,32 @@
 {
   "variants": {
-    "facing=east": {
+    "facing=east,part=main": {
       "model": "vampirism:block/cross",
       "y": 90
     },
-    "facing=north": {
+    "facing=east,part=sub": {
+      "model": "vampirism:block/cross",
+      "y": 90
+    },
+    "facing=north,part=main": {
       "model": "vampirism:block/cross"
     },
-    "facing=south": {
+    "facing=north,part=sub": {
+      "model": "vampirism:block/cross"
+    },
+    "facing=south,part=main": {
       "model": "vampirism:block/cross",
       "y": 180
     },
-    "facing=west": {
+    "facing=south,part=sub": {
+      "model": "vampirism:block/cross",
+      "y": 180
+    },
+    "facing=west,part=main": {
+      "model": "vampirism:block/cross",
+      "y": 270
+    },
+    "facing=west,part=sub": {
       "model": "vampirism:block/cross",
       "y": 270
     }

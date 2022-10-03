@@ -7,12 +7,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 public class IMCHandler {
     private final static Logger LOGGER = LogManager.getLogger();
     public static boolean requestedToDisableBloodbar = false;
 
-    public static void handleInterModMessage(InterModProcessEvent event) {
+    public static void handleInterModMessage(@NotNull InterModProcessEvent event) {
         IVampirismEntityRegistry entityRegistry = VampirismAPI.entityRegistry();
         ISundamageRegistry sundamageRegistry = VampirismAPI.sundamageRegistry();
         event.getIMCStream("nosundamage-biome"::equals).forEach(msg -> {

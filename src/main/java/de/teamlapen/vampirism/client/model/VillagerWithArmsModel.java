@@ -13,8 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Villager Model with usable arms
@@ -24,10 +23,10 @@ public class VillagerWithArmsModel<T extends Mob> extends VillagerModel<T> imple
     private static final String RIGHT_ARM = "right_arm";
     private static final String LEFT_ARM = "left_arm";
 
-    private final ModelPart leftArm;
-    private final ModelPart rightArm;
+    private final @NotNull ModelPart leftArm;
+    private final @NotNull ModelPart rightArm;
 
-    public static LayerDefinition createLayer(float scale) {
+    public static @NotNull LayerDefinition createLayer(float scale) {
         MeshDefinition mesh = VillagerModel.createBodyModel();
         PartDefinition root = mesh.getRoot();
         CubeDeformation def = new CubeDeformation(scale);
@@ -36,7 +35,7 @@ public class VillagerWithArmsModel<T extends Mob> extends VillagerModel<T> imple
         return LayerDefinition.create(mesh, 64, 64);
     }
 
-    public VillagerWithArmsModel(ModelPart part) {
+    public VillagerWithArmsModel(@NotNull ModelPart part) {
         super(part);
         this.leftArm = part.getChild(LEFT_ARM);
         this.rightArm = part.getChild(RIGHT_ARM);
@@ -45,7 +44,7 @@ public class VillagerWithArmsModel<T extends Mob> extends VillagerModel<T> imple
 
 
     @Override
-    public void setupAnim(@Nonnull T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(@NotNull T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         super.setupAnim(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
         this.leftArm.setPos(4, 3, -1);
         this.rightArm.setPos(-4, 3, -1);
@@ -67,7 +66,7 @@ public class VillagerWithArmsModel<T extends Mob> extends VillagerModel<T> imple
     }
 
     @Override
-    public void translateToHand(@Nonnull HumanoidArm handSide, @Nonnull PoseStack matrixStack) {
+    public void translateToHand(@NotNull HumanoidArm handSide, @NotNull PoseStack matrixStack) {
         float f = handSide == HumanoidArm.RIGHT ? 1.0F : -1.0F;
         ModelPart arm = getArmForSide(handSide);
         arm.x += f;
@@ -80,7 +79,7 @@ public class VillagerWithArmsModel<T extends Mob> extends VillagerModel<T> imple
         return side == HumanoidArm.LEFT ? this.leftArm : this.rightArm;
     }
 
-    protected HumanoidArm getMainHand(Entity entityIn) {
+    protected @NotNull HumanoidArm getMainHand(Entity entityIn) {
         return entityIn instanceof LivingEntity ? ((LivingEntity) entityIn).getMainArm() : HumanoidArm.RIGHT;
     }
 }

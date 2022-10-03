@@ -21,8 +21,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class PagePotionTableMix extends Page {
     private final static Logger LOGGER = LogManager.getLogger();
     private static final SubTexture POTION_GRID = new SubTexture(new ResourceLocation("vampirismguide", "textures/gui/potion_table.png"), 0, 0, 89, 75);
     private final Component description;
-    private final ExtendedPotionMix[] recipes;
+    private final ExtendedPotionMix @NotNull [] recipes;
     private long lastCycle = -1L;
     private ItemStack input;
     private ItemStack output;
@@ -39,13 +39,13 @@ public class PagePotionTableMix extends Page {
     private ItemStack in2;
     private int recipeCycle;
     private int currentIngredient1Index;
-    @Nonnull
-    private ItemStack[] ingredients1 = new ItemStack[0];
+    @NotNull
+    private ItemStack @NotNull [] ingredients1 = new ItemStack[0];
     private int currentIngredient2Index;
-    @Nonnull
-    private ItemStack[] ingredients2 = new ItemStack[0];
+    @NotNull
+    private ItemStack @NotNull [] ingredients2 = new ItemStack[0];
 
-    public PagePotionTableMix(Component description, ExtendedPotionMix... recipes) {
+    public PagePotionTableMix(Component description, ExtendedPotionMix @NotNull ... recipes) {
         assert recipes.length > 0;
         this.description = description;
         this.recipes = recipes;
@@ -54,13 +54,13 @@ public class PagePotionTableMix extends Page {
         in2 = ingredients2[0];
     }
 
-    public PagePotionTableMix(Component description, List<ExtendedPotionMix> recipes) {
+    public PagePotionTableMix(Component description, @NotNull List<ExtendedPotionMix> recipes) {
         this(description, recipes.toArray(new ExtendedPotionMix[0]));
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void draw(PoseStack stack, Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen guiBase, Font fontRendererObj) {
+    public void draw(@NotNull PoseStack stack, Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, @NotNull BaseScreen guiBase, Font fontRendererObj) {
         //Update cycle
         long time = guiBase.getMinecraft().level != null ? guiBase.getMinecraft().level.getGameTime() : 0L;
         if (this.lastCycle < 0L || this.lastCycle < time - 60L) {
@@ -123,7 +123,7 @@ public class PagePotionTableMix extends Page {
         in2 = ingredients2[currentIngredient2Index];
     }
 
-    private void deriveItemStacks(ExtendedPotionMix recipe) {
+    private void deriveItemStacks(@NotNull ExtendedPotionMix recipe) {
         input = PotionUtils.setPotion(new ItemStack(Items.POTION), recipe.input.get());
         output = PotionUtils.setPotion(new ItemStack(Items.POTION), recipe.output.get());
         ingredients1 = recipe.reagent1.map(Ingredient::getItems).stream().flatMap(Arrays::stream).map(ItemStack::copy).peek(stack -> stack.setCount(recipe.reagent1Count)).toArray(ItemStack[]::new);

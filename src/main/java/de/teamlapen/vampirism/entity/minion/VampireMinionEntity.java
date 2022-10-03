@@ -7,23 +7,26 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
+import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
-import de.teamlapen.vampirism.client.gui.VampireMinionAppearanceScreen;
-import de.teamlapen.vampirism.client.gui.VampireMinionStatsScreen;
+import de.teamlapen.vampirism.client.gui.screens.VampireMinionAppearanceScreen;
+import de.teamlapen.vampirism.client.gui.screens.VampireMinionStatsScreen;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModAttributes;
 import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.VampirismEntity;
-import de.teamlapen.vampirism.entity.goals.FleeSunVampireGoal;
-import de.teamlapen.vampirism.entity.goals.RestrictSunVampireGoal;
+import de.teamlapen.vampirism.entity.ai.goals.FleeSunVampireGoal;
+import de.teamlapen.vampirism.entity.ai.goals.RestrictSunVampireGoal;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
+import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.entity.vampire.BasicVampireEntity;
 import de.teamlapen.vampirism.items.BloodBottleItem;
 import de.teamlapen.vampirism.items.MinionUpgradeItem;
-import de.teamlapen.vampirism.items.VampirismItemBloodFood;
+import de.teamlapen.vampirism.items.VampirismItemBloodFoodItem;
+import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
@@ -50,8 +53,8 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 
@@ -61,12 +64,12 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         MinionData.registerDataType(VampireMinionEntity.VampireMinionData.ID, VampireMinionEntity.VampireMinionData::new);
     }
 
-    public static AttributeSupplier.Builder getAttributeBuilder() {
+    public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
         return BasicVampireEntity.getAttributeBuilder();
     }
 
     private boolean sundamageCache;
-    private EnumStrength garlicCache = EnumStrength.NONE;
+    private @NotNull EnumStrength garlicCache = EnumStrength.NONE;
 
     public VampireMinionEntity(EntityType<? extends VampirismEntity> type, Level world) {
         super(type, world, VampirismAPI.factionRegistry().getPredicate(VReference.VAMPIRE_FACTION, true, true, true, false, null).or(e -> !(e instanceof IFactionEntity) && e instanceof Enemy && !(e instanceof Zombie) && !(e instanceof Skeleton) && !(e instanceof Creeper)));
@@ -83,12 +86,12 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     }
 
     @Override
-    public List<IMinionTask<?, ?>> getAvailableTasks() {
+    public @NotNull List<IMinionTask<?, ?>> getAvailableTasks() {
         return Lists.newArrayList(MinionTasks.FOLLOW_LORD.get(), MinionTasks.STAY.get(), MinionTasks.DEFEND_AREA.get(), MinionTasks.COLLECT_BLOOD.get(), MinionTasks.PROTECT_LORD.get());
     }
 
     @Override
-    public LivingEntity getRepresentingEntity() {
+    public @NotNull LivingEntity getRepresentingEntity() {
         return this;
     }
 
@@ -103,7 +106,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         return this.getMinionData().map(d -> d.minionSkin).orElse(false);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public EnumStrength isGettingGarlicDamage(LevelAccessor iWorld, boolean forceRefresh) {
         if (forceRefresh) {
@@ -140,9 +143,9 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         super.aiStep();
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public ItemStack eat(@Nonnull Level world, @Nonnull ItemStack stack) {
+    public ItemStack eat(@NotNull Level world, @NotNull ItemStack stack) {
         return stack;
     }
 
@@ -195,18 +198,18 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     }
 
     @Override
-    protected boolean canConsume(ItemStack stack) {
+    protected boolean canConsume(@NotNull ItemStack stack) {
         if (!super.canConsume(stack)) return false;
-        if ((stack.isEdible() && !(stack.getItem() instanceof VampirismItemBloodFood))) return false;
+        if ((stack.isEdible() && !(stack.getItem() instanceof VampirismItemBloodFoodItem))) return false;
         boolean fullHealth = this.getHealth() == this.getMaxHealth();
-        if (fullHealth && (stack.isEdible() && stack.getItem() instanceof VampirismItemBloodFood)) return false;
+        if (fullHealth && (stack.isEdible() && stack.getItem() instanceof VampirismItemBloodFoodItem)) return false;
         if (stack.getItem() instanceof BloodBottleItem && stack.getDamageValue() == 0) return false;
         return !fullHealth || !(stack.getItem() instanceof BloodBottleItem);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    protected InteractionResult mobInteract(@Nonnull Player player, @Nonnull InteractionHand hand) {
+    protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (!this.level.isClientSide() && isLord(player) && minionData != null) {
             ItemStack heldItem = player.getItemInHand(hand);
             if (heldItem.getItem() instanceof MinionUpgradeItem && ((MinionUpgradeItem) heldItem.getItem()).getFaction() == this.getFaction()) {
@@ -226,7 +229,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     }
 
     @Override
-    protected void onMinionDataReceived(@Nonnull VampireMinionData data) {
+    protected void onMinionDataReceived(@NotNull VampireMinionData data) {
         super.onMinionDataReceived(data);
         updateAttributes();
     }
@@ -240,9 +243,10 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     }
 
     private void updateAttributes() {
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.MINION_MAX_HEALTH + BalanceMobProps.mobProps.MINION_MAX_HEALTH_PL * getMinionData().map(VampireMinionData::getHealthLevel).orElse(0));
-        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE + BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE_PL * getMinionData().map(VampireMinionData::getStrengthLevel).orElse(0));
-        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_SPEED + 0.05 * getMinionData().map(VampireMinionData::getSpeedLevel).orElse(0));
+        float statsMultiplier = getLordOpt().flatMap(lord -> ((IFactionPlayerHandler) lord).getCurrentFactionPlayer()).map(player -> ((IFactionPlayer<?>) player).getSkillHandler().isSkillEnabled(VampireSkills.MINION_STATS_INCREASE.get())).orElse(false) ? 1.2f : 1;
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.MINION_MAX_HEALTH + BalanceMobProps.mobProps.MINION_MAX_HEALTH_PL * getMinionData().map(VampireMinionData::getHealthLevel).orElse(0) * statsMultiplier);
+        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE + BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE_PL * getMinionData().map(VampireMinionData::getStrengthLevel).orElse(0) * statsMultiplier);
+        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_SPEED + 0.05 * getMinionData().map(VampireMinionData::getSpeedLevel).orElse(0) * statsMultiplier);
     }
 
     public static class VampireMinionData extends MinionData {
@@ -278,7 +282,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         @Override
-        public void deserializeNBT(CompoundTag nbt) {
+        public void deserializeNBT(@NotNull CompoundTag nbt) {
             super.deserializeNBT(nbt);
             type = nbt.getInt("vampire_type");
             level = nbt.getInt("level");
@@ -291,7 +295,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         @Override
-        public MutableComponent getFormattedName() {
+        public @NotNull MutableComponent getFormattedName() {
             return super.getFormattedName().withStyle(style -> style.withColor(VReference.VAMPIRE_FACTION.getChatColor()));
         }
 
@@ -326,7 +330,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         @Override
-        public void handleMinionAppearanceConfig(String newName, int... data) {
+        public void handleMinionAppearanceConfig(String newName, int @NotNull ... data) {
             this.setName(newName);
             if (data.length >= 2) {
                 this.type = data[0];
@@ -353,7 +357,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         @Override
-        public void serializeNBT(CompoundTag tag) {
+        public void serializeNBT(@NotNull CompoundTag tag) {
             super.serializeNBT(tag);
             tag.putInt("vampire_type", type);
             tag.putInt("level", level);
@@ -377,7 +381,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         @Override
-        public boolean upgradeStat(int statId, MinionEntity<?> entity) {
+        public boolean upgradeStat(int statId, @NotNull MinionEntity<?> entity) {
             if (super.upgradeStat(statId, entity)) return true;
             if (getRemainingStatPoints() == 0) {
                 LOGGER.warn("Cannot upgrade minion stat as no stat points are left");

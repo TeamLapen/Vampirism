@@ -20,9 +20,9 @@ import net.minecraftforge.fml.util.thread.EffectiveSide;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,14 +44,14 @@ public class VampirismWorld implements IVampirismWorld {
      * Always prefer #getOpt
      */
     @Deprecated
-    public static VampirismWorld get(Level world) {
+    public static @NotNull VampirismWorld get(@NotNull Level world) {
         return (VampirismWorld) world.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get VampirismWorld from World " + world));
     }
 
     /**
      * Return a LazyOptional, but print a warning message if not present.
      */
-    public static LazyOptional<VampirismWorld> getOpt(@Nonnull Level world) {
+    public static @NotNull LazyOptional<VampirismWorld> getOpt(@NotNull Level world) {
         LazyOptional<VampirismWorld> opt = world.getCapability(CAP, null).cast();
         if (!opt.isPresent()) {
             LOGGER.warn("Cannot get world capability. This might break mod functionality.", new Throwable().fillInStackTrace());
@@ -59,7 +59,7 @@ public class VampirismWorld implements IVampirismWorld {
         return opt;
     }
 
-    public static ICapabilityProvider createNewCapability(final Level world) {
+    public static @NotNull ICapabilityProvider createNewCapability(final @NotNull Level world) {
         return new ICapabilitySerializable<CompoundTag>() {
 
             final VampirismWorld inst = new VampirismWorld(world);
@@ -70,15 +70,15 @@ public class VampirismWorld implements IVampirismWorld {
                 inst.loadNBTData(nbt);
             }
 
-            @Nonnull
+            @NotNull
             @Override
-            public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, Direction facing) {
+            public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, Direction facing) {
 
                 return CAP.orEmpty(capability, opt);
             }
 
             @Override
-            public CompoundTag serializeNBT() {
+            public @NotNull CompoundTag serializeNBT() {
                 CompoundTag tag = new CompoundTag();
                 inst.saveNBTData(tag);
                 return tag;
@@ -92,13 +92,13 @@ public class VampirismWorld implements IVampirismWorld {
 
     // VampireFog
     @SuppressWarnings("FieldCanBeLocal")
-    @Nonnull
+    @NotNull
     private final Level world;
     // Garlic Handler ------------
     private final HashMap<ChunkPos, EnumStrength> strengthHashMap = Maps.newHashMap();
     private final HashMap<Integer, Emitter> emitterHashMap = Maps.newHashMap();
 
-    public VampirismWorld(@Nonnull Level world) {
+    public VampirismWorld(@NotNull Level world) {
         this.world = world;
     }
 
@@ -108,7 +108,7 @@ public class VampirismWorld implements IVampirismWorld {
         emitterHashMap.clear();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public EnumStrength getStrengthAtChunk(ChunkPos pos) {
         EnumStrength s = strengthHashMap.get(pos);
@@ -116,11 +116,11 @@ public class VampirismWorld implements IVampirismWorld {
     }
 
     @Override
-    public boolean isInsideArtificialVampireFogArea(BlockPos blockPos) {
+    public boolean isInsideArtificialVampireFogArea(@NotNull BlockPos blockPos) {
         return Stream.concat(fogAreas.entrySet().stream(), tmpFogAreas.entrySet().stream()).anyMatch(entry -> entry.getValue().isInside(blockPos));
     }
 
-    public void printDebug(CommandSourceStack sender) {
+    public void printDebug(@NotNull CommandSourceStack sender) {
         for (Emitter e : emitterHashMap.values()) {
             sender.sendSuccess(Component.literal("E: " + e.toString()), true);
         }
@@ -130,7 +130,7 @@ public class VampirismWorld implements IVampirismWorld {
     }
 
     @Override
-    public int registerGarlicBlock(EnumStrength strength, ChunkPos... pos) {
+    public int registerGarlicBlock(EnumStrength strength, ChunkPos @NotNull ... pos) {
         for (ChunkPos p : pos) {
             if (p == null) {
                 throw new IllegalArgumentException("Garlic emitter position should not be null");
@@ -157,7 +157,7 @@ public class VampirismWorld implements IVampirismWorld {
     }
 
     @Override
-    public void updateArtificialFogBoundingBox(@Nonnull BlockPos totemPos, @Nullable AABB box) {
+    public void updateArtificialFogBoundingBox(@NotNull BlockPos totemPos, @Nullable AABB box) {
         if (box == null) {
             fogAreas.remove(totemPos);
             updateTemporaryArtificialFog(totemPos, null);
@@ -167,7 +167,7 @@ public class VampirismWorld implements IVampirismWorld {
     }
 
     @Override
-    public void updateTemporaryArtificialFog(@Nonnull BlockPos totemPos, @Nullable AABB box) {
+    public void updateTemporaryArtificialFog(@NotNull BlockPos totemPos, @Nullable AABB box) {
         if (box == null) {
             tmpFogAreas.remove(totemPos);
         } else {
@@ -203,7 +203,7 @@ public class VampirismWorld implements IVampirismWorld {
     private record Emitter(EnumStrength strength, ChunkPos[] pos) {
 
         @Override
-        public String toString() {
+        public @NotNull String toString() {
             return "Emitter{" +
                     "pos=" + Arrays.toString(pos) +
                     ", strength=" + strength +

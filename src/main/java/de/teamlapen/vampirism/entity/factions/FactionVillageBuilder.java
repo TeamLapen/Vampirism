@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -30,51 +31,51 @@ public class FactionVillageBuilder implements IFactionVillageBuilder {
     Supplier<? extends Block> craftedTotem = () -> Blocks.AIR;
 
     @Override
-    public IFactionVillageBuilder badOmenEffect(Supplier<MobEffect> badOmenEffect) {
+    public @NotNull IFactionVillageBuilder badOmenEffect(Supplier<MobEffect> badOmenEffect) {
         this.badOmenEffect = badOmenEffect;
         return this;
     }
 
     @Override
-    public IFactionVillageBuilder banner(Supplier<ItemStack> bannerItem) {
+    public @NotNull IFactionVillageBuilder banner(Supplier<ItemStack> bannerItem) {
         this.bannerStack = bannerItem;
         return this;
     }
 
     @Override
-    public IFactionVillageBuilder captureEntities(List<CaptureEntityEntry<?>> captureEntities) {
+    public @NotNull IFactionVillageBuilder captureEntities(List<CaptureEntityEntry<?>> captureEntities) {
         this.captureEntities = captureEntities;
         return this;
     }
 
     @Override
-    public IFactionVillageBuilder factionVillagerProfession(Supplier<VillagerProfession> profession) {
+    public @NotNull IFactionVillageBuilder factionVillagerProfession(Supplier<VillagerProfession> profession) {
         this.factionVillageProfession = profession;
         return this;
     }
 
     @Override
-    public IFactionVillageBuilder guardSuperClass(Class<? extends Mob> clazz) {
+    public @NotNull IFactionVillageBuilder guardSuperClass(Class<? extends Mob> clazz) {
         this.guardSuperClass = clazz;
         return this;
     }
 
     @Override
-    public <Z extends Entity & ITaskMasterEntity> IFactionVillageBuilder taskMaster(Supplier<EntityType<Z>> taskmaster) {
+    public <Z extends Entity & ITaskMasterEntity> @NotNull IFactionVillageBuilder taskMaster(Supplier<EntityType<Z>> taskmaster) {
         //noinspection unchecked
         this.taskMasterEntity = (Supplier<EntityType<? extends ITaskMasterEntity>>) (Object) taskmaster;
         return this;
     }
 
     @Override
-    public IFactionVillageBuilder totem(Supplier<? extends Block> fragile, Supplier<? extends Block> crafted) {
+    public @NotNull IFactionVillageBuilder totem(Supplier<? extends Block> fragile, Supplier<? extends Block> crafted) {
         this.fragileTotem = fragile;
         this.craftedTotem = crafted;
         return this;
     }
 
     @Override
-    public IFactionVillage build() {
+    public @NotNull IFactionVillage build() {
         return new FactionVillage(this);
     }
 }

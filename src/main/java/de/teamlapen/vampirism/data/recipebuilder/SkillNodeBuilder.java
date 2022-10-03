@@ -4,44 +4,48 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Arrays;
 import java.util.function.Consumer;
 
-@ParametersAreNonnullByDefault
 public class SkillNodeBuilder {
 
-    public static SkillNodeBuilder skill(ResourceLocation parent, ISkill<?>... skills) {
+    public static @NotNull SkillNodeBuilder skill(@NotNull ResourceLocation parent, @NotNull ISkill<?>... skills) {
         return new SkillNodeBuilder(parent, skills);
     }
 
-    @SafeVarargs
-    public static SkillNodeBuilder hunter(ResourceLocation parent, ISkill<IHunterPlayer>... skills) {
+    public static SkillNodeBuilder hunter(@NotNull ResourceLocation parent, @NotNull ISkill<?>... skills) {
+        assertFactionSkills(VReference.HUNTER_FACTION, skills);
         return skill(parent, skills).faction(VReference.HUNTER_FACTION);
     }
 
-    @SafeVarargs
-    public static SkillNodeBuilder vampire(ResourceLocation parent, ISkill<IVampirePlayer>... skills) {
+    public static SkillNodeBuilder vampire(@NotNull ResourceLocation parent, @NotNull ISkill<?>... skills) {
+        assertFactionSkills(VReference.VAMPIRE_FACTION, skills);
         return skill(parent, skills).faction(VReference.VAMPIRE_FACTION);
     }
 
-    private final ResourceLocation parent;
+    public static void assertFactionSkills(IPlayableFaction<?> faction, ISkill<?>... skills) {
+        if(Arrays.stream(skills).anyMatch(skill -> skill.getFaction().filter(f -> f != faction).isPresent())){
+            throw new IllegalArgumentException("Illegal skill for faction. Skills must be for the same or any faction");
+        }
+    }
+
+    private final @NotNull ResourceLocation parent;
     private final ISkill<?>[] skills;
     private ResourceLocation faction;
     private ResourceLocation[] lockingSkillNodes;
 
-    public SkillNodeBuilder(ResourceLocation parent, ISkill<?>... skills) {
+    public SkillNodeBuilder(@NotNull ResourceLocation parent, @NotNull ISkill<?>... skills) {
         this.parent = parent;
         this.skills = skills;
         this.lockingSkillNodes = new ResourceLocation[0];
     }
 
-    public ResourceLocation build(Consumer<FinishedSkillNode> consumer, ResourceLocation id) {
+    public @NotNull ResourceLocation build(@NotNull Consumer<FinishedSkillNode> consumer, @NotNull ResourceLocation id) {
         if (faction != null) {
             id = new ResourceLocation(id.getNamespace(), faction.getPath() + "/" + id.getPath());
         }
@@ -50,17 +54,17 @@ public class SkillNodeBuilder {
         return id;
     }
 
-    public SkillNodeBuilder faction(IPlayableFaction<?> faction) {
+    public @NotNull SkillNodeBuilder faction(@NotNull IPlayableFaction<?> faction) {
         this.faction = faction.getID();
         return this;
     }
 
-    public SkillNodeBuilder lockingNodes(ResourceLocation... skillNodes) {
+    public @NotNull SkillNodeBuilder lockingNodes(@NotNull ResourceLocation... skillNodes) {
         this.lockingSkillNodes = skillNodes;
         return this;
     }
 
-    private void validate(ResourceLocation id) {
+    private void validate(@NotNull ResourceLocation id) {
         if (this.skills.length == 0) {
             throw new IllegalStateException("No skills defined for skill node " + id + "!");
         }
@@ -68,12 +72,12 @@ public class SkillNodeBuilder {
 
     @SuppressWarnings("ClassCanBeRecord")
     private static class Result implements FinishedSkillNode {
-        private final ResourceLocation parent;
+        private final @NotNull ResourceLocation parent;
         private final ISkill<?>[] skills;
-        private final ResourceLocation id;
+        private final @NotNull ResourceLocation id;
         private final ResourceLocation[] lockingSkillNodes;
 
-        public Result(ResourceLocation id, ResourceLocation parent, ISkill<?>[] skills, ResourceLocation[] lockingSkillNodes) {
+        public Result(@NotNull ResourceLocation id, @NotNull ResourceLocation parent, @NotNull ISkill<?>[] skills, @NotNull ResourceLocation[] lockingSkillNodes) {
             this.id = id;
             this.parent = parent;
             this.skills = skills;
@@ -81,16 +85,16 @@ public class SkillNodeBuilder {
         }
 
         @Override
-        public ResourceLocation getID() {
+        public @NotNull ResourceLocation getID() {
             return id;
         }
 
         @Override
-        public void serialize(JsonObject json) {
+        public void serialize(@NotNull JsonObject json) {
             json.addProperty("parent", parent.toString());
             JsonArray array = new JsonArray();
             for (ISkill<?> skill : this.skills) {
-                array.add(RegUtil.id(skill) .toString());
+                array.add(RegUtil.id(skill).toString());
             }
             json.add("skills", array);
             if (lockingSkillNodes.length > 0) {

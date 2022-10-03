@@ -10,6 +10,8 @@ public interface IBiteableEntity {
 
 
     /**
+     * Called when a vampire tries to suck blood (not infect)
+     *
      * @param biter The biting entity
      * @return If the entity currently can be bitten
      */
@@ -38,4 +40,21 @@ public interface IBiteableEntity {
      * @return Amount of blood that should be added
      */
     int onBite(IVampire biter);
+
+    /**
+     * @return Whether this creatures can be turned in general and whether the given vampire is able to do so
+     */
+    default boolean canBeInfected(IVampire vampire) {
+        return false;
+    }
+
+    /**
+     * Try to infect/convert this entity. This method initially checks {@link #canBeInfected(IVampire)} so you do not need to do this beforehand.
+     *
+     * @param vampire The vampire trying to infect the entity
+     * @return Whether the entity was successfully infected
+     */
+    default boolean tryInfect(IVampire vampire) {
+        return false;
+    }
 }

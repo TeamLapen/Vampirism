@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.ThrowableItemEntity;
+import de.teamlapen.vampirism.util.DamageHandler;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -17,9 +17,9 @@ import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -34,7 +34,7 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
     }
 
     @Override
-    public void onImpact(ThrowableItemEntity entity, ItemStack stack, HitResult result, boolean remote) {
+    public void onImpact(@NotNull ThrowableItemEntity entity, ItemStack stack, @NotNull HitResult result, boolean remote) {
         TIER tier = getVampirismTier();
         if (!remote) {
             AABB axisalignedbb = entity.getBoundingBox().inflate(4.0D, 2.0D, 4.0D);
@@ -53,9 +53,9 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
     }
 
 
-    @Nonnull
+    @NotNull
     @Override
-    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, @Nonnull InteractionHand handIn) {
+    public InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
 
 

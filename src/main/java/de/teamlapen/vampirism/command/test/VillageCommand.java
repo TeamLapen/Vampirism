@@ -4,12 +4,13 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
-import de.teamlapen.vampirism.blockentity.TotemHelper;
 import de.teamlapen.vampirism.command.arguments.FactionArgument;
+import de.teamlapen.vampirism.util.TotemHelper;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
+import org.jetbrains.annotations.NotNull;
 
 public class VillageCommand extends BasicCommand {
 
@@ -25,13 +26,13 @@ public class VillageCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int capture(CommandSourceStack source, ServerPlayer player, IFaction<?> faction) {
+    private static int capture(@NotNull CommandSourceStack source, @NotNull ServerPlayer player, IFaction<?> faction) {
         source.sendSuccess(TotemHelper.forceFactionCommand(faction, player), true);
         return 0;
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int abort(CommandSourceStack source) {
+    private static int abort(@NotNull CommandSourceStack source) {
         TotemHelper.getTotemNearPos(source.getLevel(), new BlockPos(source.getPosition()), true).ifPresent(TotemBlockEntity::breakCapture);
         return 0;
     }

@@ -2,15 +2,16 @@ package de.teamlapen.vampirism.proxy;
 
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.blockentity.GarlicDiffuserBlockEntity;
+import de.teamlapen.vampirism.entity.player.skills.SkillTree;
 import de.teamlapen.vampirism.network.*;
-import de.teamlapen.vampirism.player.skills.SkillTree;
+import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -45,22 +46,16 @@ public interface IProxy extends IInitListener {
      */
     SkillTree getSkillTree(boolean client);
 
-    default void handleActionBindingPacket(ActionBindingPacket msg, Player playerEntity) {
+    default void handleBloodValuePacket(ClientboundBloodValuePacket msg) {
     }
 
-    default void handleAppearancePacket(Player player, AppearancePacket msg) {
+    default void handlePlayEventPacket(ClientboundPlayEventPacket msg) {
     }
 
-    default void handleBloodValuePacket(BloodValuePacket msg) {
+    default void handleRequestMinionSelect(ClientboundRequestMinionSelectPacket.Action action, List<Pair<Integer, Component>> minions) {
     }
 
-    default void handlePlayEventPacket(PlayEventPacket msg) {
-    }
-
-    default void handleRequestMinionSelect(RequestMinionSelectPacket.Action action, List<Pair<Integer, Component>> minions) {
-    }
-
-    default void handleSkillTreePacket(SkillTreePacket msg) {
+    default void handleSkillTreePacket(ClientboundSkillTreePacket msg) {
     }
 
     /**
@@ -68,25 +63,19 @@ public interface IProxy extends IInitListener {
      */
     void handleSleepClient(Player player);
 
-    default void handleTaskActionPacket(TaskActionPacket msg, Player playerEntity) {
+    default void handleTaskPacket(ClientboundTaskPacket msg) {
     }
 
-    default void handleTaskPacket(TaskPacket msg) {
+    default void handleTaskStatusPacket(ClientboundTaskStatusPacket msg) {
     }
 
-    default void handleTaskStatusPacket(TaskStatusPacket msg) {
+    default void handleUpdateMultiBossInfoPacket(ClientboundUpdateMultiBossEventPacket msg) {
     }
 
-    default void handleUpdateMultiBossInfoPacket(MultiBossEventPacket msg) {
-    }
-
-    default void handleVampireBookPacket(OpenVampireBookPacket msg) {
+    default void handleVampireBookPacket(VampireBookManager.BookInfo msg) {
     }
 
     void renderScreenFullColor(int ticksOn, int ticksOff, int color);
-
-    default void resetSkillScreenCache() {
-    }
 
     /**
      * Shows a DBNO state with the given death message if the passed player is the client player

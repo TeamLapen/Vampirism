@@ -33,6 +33,7 @@ import net.minecraftforge.common.world.ForgeBiomeModifiers;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,10 +43,10 @@ public class BiomeGenerator {
 
     private final DataGenerator gen;
     private final ExistingFileHelper exFileHelper;
-    private final RegistryOps<JsonElement> ops;
-    private final Registry<Biome> biomes;
-    private final Registry<PlacedFeature> placedFeatures;
-    private final Registry<Structure> structures;
+    private final @NotNull RegistryOps<JsonElement> ops;
+    private final @NotNull Registry<Biome> biomes;
+    private final @NotNull Registry<PlacedFeature> placedFeatures;
+    private final @NotNull Registry<Structure> structures;
 
     public BiomeGenerator(DataGenerator gen, ExistingFileHelper exFileHelper) {
         this.gen = gen;
@@ -57,46 +58,46 @@ public class BiomeGenerator {
         this.structures = this.ops.registry(Registry.STRUCTURE_REGISTRY).orElseThrow();
     }
 
-    public static void register(GatherDataEvent event, DataGenerator generator) {
+    public static void register(@NotNull GatherDataEvent event, @NotNull DataGenerator generator) {
         BiomeGenerator biomeGenerator = new BiomeGenerator(generator, event.getExistingFileHelper());
         generator.addProvider(event.includeServer(), biomeGenerator.modifierGenerator());
         generator.addProvider(event.includeServer(), biomeGenerator.structureSetGenerator());
     }
 
-    public JsonCodecProvider<BiomeModifier> modifierGenerator() {
+    public @NotNull JsonCodecProvider<BiomeModifier> modifierGenerator() {
         return JsonCodecProvider.forDatapackRegistry(this.gen, this.exFileHelper, REFERENCE.MODID, this.ops, ForgeRegistries.Keys.BIOME_MODIFIERS, getBiomeModifier());
     }
-    
-    public JsonCodecProvider<StructureSet> structureSetGenerator() {
+
+    public @NotNull JsonCodecProvider<StructureSet> structureSetGenerator() {
         return JsonCodecProvider.forDatapackRegistry(this.gen, this.exFileHelper, REFERENCE.MODID, this.ops, Registry.STRUCTURE_SET_REGISTRY, getStructureSets());
     }
 
-    private Map<ResourceLocation, BiomeModifier> getBiomeModifier() {
+    private @NotNull Map<ResourceLocation, BiomeModifier> getBiomeModifier() {
         Map<ResourceLocation, BiomeModifier> data = new HashMap<>();
-        data.put(new ResourceLocation(REFERENCE.MODID, "spawn/vampire_spawns"), ExtendedAddSpawnsBiomeModifier.singleSpawn(biome(ModTags.Biomes.HasSpawn.VAMPIRE), biome(ModTags.Biomes.NoSpawn.VAMPIRE), new ExtendedAddSpawnsBiomeModifier.ExtendedSpawnData(ModEntities.VAMPIRE.get(), 80,1,3, MobCategory.MONSTER)));
-        data.put(new ResourceLocation(REFERENCE.MODID, "spawn/advanced_vampire_spawns"),  ExtendedAddSpawnsBiomeModifier.singleSpawn(biome(ModTags.Biomes.HasSpawn.ADVANCED_VAMPIRE), biome(ModTags.Biomes.NoSpawn.ADVANCED_VAMPIRE), new ExtendedAddSpawnsBiomeModifier.ExtendedSpawnData(ModEntities.ADVANCED_VAMPIRE.get(), 25,1,3, MobCategory.MONSTER)));
-        data.put(new ResourceLocation(REFERENCE.MODID, "spawn/hunter_spawns"), ForgeBiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(biome(ModTags.Biomes.HasSpawn.HUNTER), new MobSpawnSettings.SpawnerData(ModEntities.HUNTER.get(), 0,1,3)));
-        data.put(new ResourceLocation(REFERENCE.MODID, "spawn/advanced_hunter_spawns"), ForgeBiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(biome(ModTags.Biomes.HasSpawn.ADVANCED_HUNTER), new MobSpawnSettings.SpawnerData(ModEntities.ADVANCED_HUNTER.get(), 0,1,1)));
+        data.put(new ResourceLocation(REFERENCE.MODID, "spawn/vampire_spawns"), ExtendedAddSpawnsBiomeModifier.singleSpawn(biome(ModTags.Biomes.HasSpawn.VAMPIRE), biome(ModTags.Biomes.NoSpawn.VAMPIRE), new ExtendedAddSpawnsBiomeModifier.ExtendedSpawnData(ModEntities.VAMPIRE.get(), 80, 1, 3, MobCategory.MONSTER)));
+        data.put(new ResourceLocation(REFERENCE.MODID, "spawn/advanced_vampire_spawns"), ExtendedAddSpawnsBiomeModifier.singleSpawn(biome(ModTags.Biomes.HasSpawn.ADVANCED_VAMPIRE), biome(ModTags.Biomes.NoSpawn.ADVANCED_VAMPIRE), new ExtendedAddSpawnsBiomeModifier.ExtendedSpawnData(ModEntities.ADVANCED_VAMPIRE.get(), 25, 1, 3, MobCategory.MONSTER)));
+        data.put(new ResourceLocation(REFERENCE.MODID, "spawn/hunter_spawns"), ForgeBiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(biome(ModTags.Biomes.HasSpawn.HUNTER), new MobSpawnSettings.SpawnerData(ModEntities.HUNTER.get(), 0, 1, 3)));
+        data.put(new ResourceLocation(REFERENCE.MODID, "spawn/advanced_hunter_spawns"), ForgeBiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(biome(ModTags.Biomes.HasSpawn.ADVANCED_HUNTER), new MobSpawnSettings.SpawnerData(ModEntities.ADVANCED_HUNTER.get(), 0, 1, 1)));
 
         data.put(new ResourceLocation(REFERENCE.MODID, "feature/vampire_dungeon"), new ForgeBiomeModifiers.AddFeaturesBiomeModifier(biome(ModTags.Biomes.HasStructure.VAMPIRE_DUNGEON), placedFeature(VampirismFeatures.VAMPIRE_DUNGEON_PLACED), GenerationStep.Decoration.UNDERGROUND_STRUCTURES));
         return data;
     }
-    
-    private Map<ResourceLocation, StructureSet> getStructureSets() {
+
+    private @NotNull Map<ResourceLocation, StructureSet> getStructureSets() {
         Map<ResourceLocation, StructureSet> data = new HashMap<>();
-        data.put(new ResourceLocation(REFERENCE.MODID, "hunter_camp"), new StructureSet(structure(ModFeatures.HUNTER_CAMP_KEY), new RandomSpreadStructurePlacement(9,4, RandomSpreadType.LINEAR, 1724616580)));
+        data.put(new ResourceLocation(REFERENCE.MODID, "hunter_camp"), new StructureSet(structure(ModFeatures.HUNTER_CAMP_KEY), new RandomSpreadStructurePlacement(9, 4, RandomSpreadType.LINEAR, 1724616580)));
         return data;
     }
 
-    private HolderSet<Biome> biome(TagKey<Biome> key) {
+    private @NotNull HolderSet<Biome> biome(@NotNull TagKey<Biome> key) {
         return biomes.getOrCreateTag(key);
     }
 
-    private HolderSet<PlacedFeature> placedFeature(@SuppressWarnings("SameParameterValue") RegistryObject<PlacedFeature> placedFeature) {
+    private @NotNull HolderSet<PlacedFeature> placedFeature(@SuppressWarnings("SameParameterValue") @NotNull RegistryObject<PlacedFeature> placedFeature) {
         return HolderSet.direct(this.placedFeatures.getHolderOrThrow(Objects.requireNonNull(placedFeature.getKey())));
     }
-    
-    private Holder<Structure> structure(@SuppressWarnings("SameParameterValue") ResourceKey<Structure> structure) {
+
+    private @NotNull Holder<Structure> structure(@SuppressWarnings("SameParameterValue") ResourceKey<Structure> structure) {
         return this.structures.getHolderOrThrow(Objects.requireNonNull(structure));
     }
 }

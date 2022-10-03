@@ -14,8 +14,8 @@ import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.Set;
 
@@ -39,28 +39,28 @@ public class ModLootTables {
     public static final ResourceLocation stronghold_library = registerInject("stronghold_library");
     private static int injected = 0;
 
-    static ResourceLocation registerInject(String resourceName) {
+    static @NotNull ResourceLocation registerInject(String resourceName) {
         ResourceLocation registryName = register("inject/" + resourceName);
         INJECTION_TABLES.put(resourceName, registryName);
         return registryName;
     }
 
-    static ResourceLocation register(String resourceName) {
+    static @NotNull ResourceLocation register(@NotNull String resourceName) {
         return register(new ResourceLocation(REFERENCE.MODID, resourceName));
     }
 
-    static ResourceLocation register(@Nonnull ResourceLocation resourceLocation) {
+    static @NotNull ResourceLocation register(@NotNull ResourceLocation resourceLocation) {
         LOOT_TABLES.add(resourceLocation);
         return resourceLocation;
     }
 
-    public static Set<ResourceLocation> getLootTables() {
+    public static @NotNull Set<ResourceLocation> getLootTables() {
         return ImmutableSet.copyOf(LOOT_TABLES);
     }
 
 
     @SubscribeEvent
-    public static void onLootLoad(LootTableLoadEvent event) {
+    public static void onLootLoad(@NotNull LootTableLoadEvent event) {
         String prefix = "minecraft:chests/";
         String name = event.getName().toString();
         if (name.startsWith(prefix)) {
@@ -76,7 +76,7 @@ public class ModLootTables {
         }
     }
 
-    private static LootPool getInjectPool(String entryName) {
+    private static @NotNull LootPool getInjectPool(String entryName) {
         LootPoolEntryContainer.Builder<?> entryBuilder = LootTableReference.lootTableReference(INJECTION_TABLES.get(entryName)).setWeight(1);
         return LootPool.lootPool().name("vampirism_inject_pool").setBonusRolls(UniformGenerator.between(0, 1)).setRolls(ConstantValue.exactly(1)).add(entryBuilder).build();
     }
@@ -87,6 +87,6 @@ public class ModLootTables {
     public static int checkAndResetInsertedAll() {
         int i = injected;
         injected = 0;
-        return Math.max(0, INJECTION_TABLES.size()-i); //Sponge loads the loot tables for all worlds at start. Which makes this test not work anyway.
+        return Math.max(0, INJECTION_TABLES.size() - i); //Sponge loads the loot tables for all worlds at start. Which makes this test not work anyway.
     }
 }

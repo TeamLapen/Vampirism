@@ -7,6 +7,7 @@ import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Adds additional methods to vanilla Gui
@@ -19,7 +20,7 @@ public class ExtendedGui extends GuiComponent {
      * topColor, bottomColor
      * Similar to fillGradient, but with gradient on the horizontal axis
      */
-    protected void fillGradient2(PoseStack stack, int left, int top, int right, int bottom, int startColor, int endColor) {
+    protected void fillGradient2(@NotNull PoseStack stack, int left, int top, int right, int bottom, int startColor, int endColor) {
         Matrix4f matrix = stack.last().pose();
         float f = (float) (startColor >> 24 & 255) / 255.0F;
         float f1 = (float) (startColor >> 16 & 255) / 255.0F;

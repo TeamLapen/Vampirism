@@ -2,27 +2,38 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.core.ModItems;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-
-import javax.annotation.Nonnull;
-
-import de.teamlapen.vampirism.api.items.IRefinementItem.AccessorySlotType;
-import net.minecraft.world.item.Item.Properties;
+import org.jetbrains.annotations.NotNull;
 
 public class VampireRefinementItem extends RefinementItem {
 
-    public VampireRefinementItem(Properties properties, AccessorySlotType type) {
+    public VampireRefinementItem(@NotNull Properties properties, AccessorySlotType type) {
         super(properties, type);
     }
 
-    @Nonnull
     @Override
-    public IFaction<?> getExclusiveFaction(@Nonnull ItemStack stack) {
+    public void fillItemCategory(@NotNull CreativeModeTab itemGroup, @NotNull NonNullList<ItemStack> items) {
+        if (this.allowedIn(itemGroup)) {
+            ItemStack stack = new ItemStack(this);
+            IRefinementSet set = getRandomRefinementForItem(this.getExclusiveFaction(stack), this);
+            if (set != null) {
+                this.applyRefinementSet(stack, set);
+            }
+            items.add(stack);
+        }
+    }
+
+    @NotNull
+    @Override
+    public IFaction<?> getExclusiveFaction(@NotNull ItemStack stack) {
         return VReference.VAMPIRE_FACTION;
     }
 
-    public static RefinementItem getItemForType(AccessorySlotType type) {
+    public static @NotNull RefinementItem getItemForType(@NotNull AccessorySlotType type) {
         return switch (type) {
             case AMULET -> ModItems.AMULET.get();
             case RING -> ModItems.RING.get();

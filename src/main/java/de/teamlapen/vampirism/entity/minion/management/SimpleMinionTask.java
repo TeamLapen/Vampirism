@@ -4,8 +4,8 @@ import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class SimpleMinionTask extends DefaultMinionTask<IMinionTask.NoDesc<MinionData>, MinionData> {
 
@@ -23,7 +23,7 @@ public class SimpleMinionTask extends DefaultMinionTask<IMinionTask.NoDesc<Minio
     }
 
     @Override
-    public NoDesc<MinionData> readFromNBT(CompoundTag nbt) {
+    public @NotNull NoDesc<MinionData> readFromNBT(CompoundTag nbt) {
         return new NoDesc<>(this);
     }
 }

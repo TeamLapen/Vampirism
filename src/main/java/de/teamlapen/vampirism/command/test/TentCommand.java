@@ -11,6 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import org.jetbrains.annotations.NotNull;
 
 public class TentCommand extends BasicCommand {
 
@@ -23,7 +24,7 @@ public class TentCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int tent(CommandSourceStack commandSource, ServerPlayer asPlayer, boolean advanced) {
+    private static int tent(@NotNull CommandSourceStack commandSource, @NotNull ServerPlayer asPlayer, boolean advanced) {
         HitResult result = UtilLib.getPlayerLookingSpot(asPlayer, 5);
         if (result.getType() == HitResult.Type.BLOCK) {
 

@@ -24,7 +24,6 @@ import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -55,26 +54,26 @@ public class BakedBloodContainerModel implements IDynamicBakedModel {
         this.baseModel = baseModel;
     }
 
-    public BakedBloodContainerModel(BakedModel baseModel, FluidStack stack) {
+    public BakedBloodContainerModel(BakedModel baseModel, @NotNull FluidStack stack) {
         this.baseModel = baseModel;
         this.impure = stack.getFluid().equals(ModFluids.IMPURE_BLOOD.get());
         this.fluidLevel = Mth.clamp(stack.getAmount() / BloodContainerBlockEntity.LEVEL_AMOUNT, 1, FLUID_LEVELS) - 1;
         item = true;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public TextureAtlasSprite getParticleIcon() {
         return baseModel.getParticleIcon();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ItemOverrides getOverrides() {
         return overrideList;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ItemTransforms getTransforms() {
         return baseModel.getTransforms();
@@ -131,7 +130,7 @@ public class BakedBloodContainerModel implements IDynamicBakedModel {
         }
 
         @Override
-        public BakedModel resolve(@Nonnull BakedModel originalModel, @Nonnull ItemStack stack, ClientLevel world, LivingEntity entity, int p) {
+        public BakedModel resolve(@NotNull BakedModel originalModel, @NotNull ItemStack stack, ClientLevel world, LivingEntity entity, int p) {
             if (originalModel instanceof BakedBloodContainerModel) {
                 if (stack.hasTag() && stack.getTag().contains("fluid")) {
                     FluidStack fluid = FluidStack.loadFluidStackFromNBT(stack.getTag().getCompound("fluid"));

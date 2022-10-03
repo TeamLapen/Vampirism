@@ -17,9 +17,9 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.LazyOptional;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -30,7 +30,7 @@ public interface IFactionLevelItem<T extends IFactionPlayer<T>> extends IFaction
 
     @SuppressWarnings("RedundantCast")
     @OnlyIn(Dist.CLIENT)
-    default void addFactionLevelToolTip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn, @Nullable Player player) {
+    default void addFactionLevelToolTip(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, TooltipFlag flagIn, @Nullable Player player) {
         ChatFormatting factionC = ChatFormatting.DARK_RED;
         ChatFormatting levelC = ChatFormatting.DARK_RED;
         ChatFormatting skillC = ChatFormatting.DARK_RED;
@@ -66,11 +66,11 @@ public interface IFactionLevelItem<T extends IFactionPlayer<T>> extends IFaction
     /**
      * @return The level the player has to be to use this item
      */
-    int getMinLevel(@Nonnull ItemStack stack);
+    int getMinLevel(@NotNull ItemStack stack);
 
     /**
      * @return The skill required to use this or null if none
      */
     @Nullable
-    ISkill<T> getRequiredSkill(@Nonnull ItemStack stack);
+    ISkill<T> getRequiredSkill(@NotNull ItemStack stack);
 }

@@ -4,11 +4,15 @@ import de.teamlapen.lib.lib.data.BaseItemModelGenerator;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,7 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class ItemModelGenerator extends BaseItemModelGenerator {
-    public ItemModelGenerator(DataGenerator generator, ExistingFileHelper existingFileHelper) {
+    public ItemModelGenerator(@NotNull DataGenerator generator, @NotNull ExistingFileHelper existingFileHelper) {
         super(generator, REFERENCE.MODID, existingFileHelper);
     }
 
@@ -41,20 +45,39 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             add(ModBlocks.BLOOD_SIEVE.get());
             add(ModBlocks.ALTAR_CLEANSING.get());
             add(ModBlocks.CURSED_EARTH.get());
-            add(ModBlocks.HUNTER_TABLE.get());
             add(ModBlocks.SUNSCREEN_BEACON.get());
             add(ModBlocks.TOTEM_TOP.get());
-            add(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE.get());
-            add(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER.get());
             add(ModBlocks.VAMPIRE_ORCHID.get());
-            add(ModBlocks.BLOODY_SPRUCE_LOG.get());
             add(ModBlocks.CHANDELIER.get());
             add(ModBlocks.CROSS.get());
             add(ModBlocks.TOMBSTONE1.get());
             add(ModBlocks.TOMBSTONE2.get());
             add(ModBlocks.TOMBSTONE3.get());
             add(ModBlocks.GRAVE_CAGE.get());
-            add(ModBlocks.CURSED_GRASS_BLOCK.get());
+            add(ModBlocks.CURSED_GRASS.get());
+            add(ModBlocks.DARK_SPRUCE_LOG.get());
+            add(ModBlocks.CURSED_ROOTS.get());
+            add(ModBlocks.CURSED_SPRUCE_LOG.get());
+            add(ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get());
+            add(ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get());
+            add(ModBlocks.DARK_SPRUCE_PLANKS.get());
+            add(ModBlocks.CURSED_SPRUCE_PLANKS.get());
+            add(ModBlocks.DARK_SPRUCE_STAIRS.get());
+            add(ModBlocks.CURSED_SPRUCE_STAIRS.get());
+            add(ModBlocks.DARK_SPRUCE_WOOD.get());
+            add(ModBlocks.CURSED_SPRUCE_WOOD.get());
+            add(ModBlocks.STRIPPED_DARK_SPRUCE_WOOD.get());
+            add(ModBlocks.STRIPPED_CURSED_SPRUCE_WOOD.get());
+            add(ModBlocks.DARK_SPRUCE_PRESSURE_PLACE.get());
+            add(ModBlocks.CURSED_SPRUCE_PRESSURE_PLACE.get());
+            add(ModBlocks.DARK_SPRUCE_BUTTON.get());
+            add(ModBlocks.CURSED_SPRUCE_BUTTON.get());
+            add(ModBlocks.DARK_SPRUCE_SLAB.get());
+            add(ModBlocks.CURSED_SPRUCE_SLAB.get());
+            add(ModBlocks.DARK_SPRUCE_FENCE_GATE.get());
+            add(ModBlocks.CURSED_SPRUCE_FENCE_GATE.get());
+            add(ModBlocks.VAMPIRE_RACK.get());
+            add(ModBlocks.THRONE.get());
         }};
         Set<Item> items = new HashSet<>() {{
             add(ModItems.HUNTER_COAT_CHEST_NORMAL.get());
@@ -73,25 +96,12 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             add(ModItems.IMPURE_BLOOD_BUCKET.get());
             add(ModItems.BLOOD_INFUSED_ENHANCED_IRON_INGOT.get());
             add(ModItems.BLOOD_INFUSED_IRON_INGOT.get());
-            add(ModItems.HOLY_SALT.get());
-            add(ModItems.HOLY_SALT_WATER.get());
+            add(ModItems.PURE_SALT.get());
+            add(ModItems.PURE_SALT_WATER.get());
             add(ModItems.HUMAN_HEART.get());
             add(ModItems.INJECTION_EMPTY.get());
             add(ModItems.INJECTION_GARLIC.get());
             add(ModItems.INJECTION_SANGUINARE.get());
-            add(ModItems.INJECTION_ZOMBIE_BLOOD.get());
-            add(ModItems.OBSIDIAN_ARMOR_CHEST_NORMAL.get());
-            add(ModItems.OBSIDIAN_ARMOR_CHEST_ENHANCED.get());
-            add(ModItems.OBSIDIAN_ARMOR_CHEST_ULTIMATE.get());
-            add(ModItems.OBSIDIAN_ARMOR_FEET_NORMAL.get());
-            add(ModItems.OBSIDIAN_ARMOR_FEET_ENHANCED.get());
-            add(ModItems.OBSIDIAN_ARMOR_FEET_ULTIMATE.get());
-            add(ModItems.OBSIDIAN_ARMOR_HEAD_NORMAL.get());
-            add(ModItems.OBSIDIAN_ARMOR_HEAD_ENHANCED.get());
-            add(ModItems.OBSIDIAN_ARMOR_HEAD_ULTIMATE.get());
-            add(ModItems.OBSIDIAN_ARMOR_LEGS_NORMAL.get());
-            add(ModItems.OBSIDIAN_ARMOR_LEGS_ENHANCED.get());
-            add(ModItems.OBSIDIAN_ARMOR_LEGS_ULTIMATE.get());
             add(ModItems.PURIFIED_GARLIC.get());
             add(ModItems.SOUL_ORB_VAMPIRE.get());
             add(ModItems.TECH_CROSSBOW_AMMO_PACKAGE.get());
@@ -118,12 +128,15 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             add(ModItems.HUNTER_MINION_UPGRADE_ENHANCED.get());
             add(ModItems.HUNTER_MINION_UPGRADE_SPECIAL.get());
             add(ModItems.OBLIVION_POTION.get());
-            add(ModItems.CURE_APPLE.get());
             add(ModItems.VAMPIRE_CLOTHING_HAT.get());
             add(ModItems.VAMPIRE_CLOTHING_BOOTS.get());
             add(ModItems.VAMPIRE_CLOTHING_LEGS.get());
             add(ModItems.VAMPIRE_CLOTHING_CROWN.get());
             add(ModItems.GARLIC_FINDER.get());
+            add(ModItems.DARK_SPRUCE_BOAT.get());
+            add(ModItems.CURSED_SPRUCE_BOAT.get());
+            add(ModItems.DARK_SPRUCE_CHEST_BOAT.get());
+            add(ModItems.CURSED_SPRUCE_CHEST_BOAT.get());
         }};
         Map<Item, ResourceLocation> itemsWithTexture = new HashMap<>() {{
             put(ModItems.HOLY_WATER_BOTTLE_NORMAL.get(), modLoc("item/holy_water_normal"));
@@ -137,10 +150,12 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             put(ModItems.HUNTER_HAT_HEAD_1.get(), modLoc("item/hunter_hat_1"));
             put(ModItems.ITEM_ALCHEMICAL_FIRE.get(), modLoc("item/alchemical_fire"));
             put(ModItems.ITEM_GARLIC.get(), modLoc("item/garlic"));
-            put(ModItems.ITEM_MED_CHAIR.get(), modLoc("item/med_chair"));
+            put(ModBlocks.MED_CHAIR.get().asItem(), modLoc("item/med_chair"));
             put(ModItems.ITEM_TENT_SPAWNER.get(), modLoc("item/item_tent"));
-            put(ModItems.PURE_SALT.get(), modLoc("item/holy_salt"));
             put(ModItems.VAMPIRE_BOOK.get(), modLoc("item/vampire_book"));
+            put(ModBlocks.CURSED_BARK.get().asItem(), modLoc("block/cursed_bark"));
+            put(ModItems.DARK_SPRUCE_SIGN.get(), modLoc("item/dark_spruce_sign"));
+            put(ModItems.CURSED_SPRUCE_SIGN.get(), modLoc("item/cursed_spruce_sign"));
         }};
 
         blocks.forEach(this::block);
@@ -153,11 +168,10 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
 
         block(ModBlocks.HUNTER_TABLE.get(), "hunter_table/hunter_table");
 
-        withExistingParent(ModBlocks.BLOODY_SPRUCE_LEAVES.get(), mcLoc("block/oak_leaves"));
-        withExistingParent(ModBlocks.VAMPIRE_SPRUCE_LEAVES.get(), mcLoc("block/oak_leaves"));
+        withExistingParent(ModBlocks.DARK_SPRUCE_LEAVES.get(), mcLoc("block/oak_leaves"));
 
-        withExistingParent(ModBlocks.BLOODY_SPRUCE_SAPLING.get(), mcLoc("item/generated")).texture("layer0", REFERENCE.MODID + ":block/" + ModBlocks.BLOODY_SPRUCE_SAPLING.getId().getPath());
-        withExistingParent(ModBlocks.VAMPIRE_SPRUCE_SAPLING.get(), mcLoc("item/generated")).texture("layer0", REFERENCE.MODID + ":block/" + ModBlocks.VAMPIRE_SPRUCE_SAPLING.getId().getPath());
+        withExistingParent(ModBlocks.DARK_SPRUCE_SAPLING.get(), mcLoc("item/generated")).texture("layer0", REFERENCE.MODID + ":block/dark_spruce_sapling");
+        withExistingParent(ModBlocks.CURSED_SPRUCE_SAPLING.get(), mcLoc("item/generated")).texture("layer0", REFERENCE.MODID + ":block/cursed_spruce_sapling");
 
         withExistingParent(ModBlocks.ALCHEMICAL_FIRE.get(), modLoc("block/fire_side"));
         withExistingParent(ModBlocks.ALTAR_INSPIRATION.get(), modLoc("block/altar_inspiration/altar_inspiration"));
@@ -166,26 +180,23 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
         withExistingParent(ModItems.CROSSBOW_ARROW_NORMAL.get(), modLoc("item/crossbow_arrow"));
         withExistingParent(ModItems.CROSSBOW_ARROW_SPITFIRE.get(), modLoc("item/crossbow_arrow"));
         withExistingParent(ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get(), modLoc("item/crossbow_arrow"));
+        withExistingParent(ModItems.CROSSBOW_ARROW_TELEPORT.get(), modLoc("item/crossbow_arrow"));
 
-        item("armor_of_swiftness_chest", mcLoc("item/leather_chestplate"), modLoc("item/swiftness_chest_overlay"));
-        withExistingParent(ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL.get(), modLoc("item/armor_of_swiftness_chest"));
-        withExistingParent(ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED.get(), modLoc("item/armor_of_swiftness_chest"));
-        withExistingParent(ModItems.ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE.get(), modLoc("item/armor_of_swiftness_chest"));
+        item(ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL.get(), modLoc("item/armor_of_swiftness_chest_normal"), modLoc("item/armor_of_swiftness_chest_normal_overlay"));
+        item(ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED.get(), modLoc("item/armor_of_swiftness_chest_enhanced"), modLoc("item/armor_of_swiftness_chest_enhanced_overlay"));
+        item(ModItems.ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE.get(), modLoc("item/armor_of_swiftness_chest_ultimate"), modLoc("item/armor_of_swiftness_chest_ultimate_overlay"));
 
-        item("armor_of_swiftness_feet", mcLoc("item/leather_boots"), modLoc("item/swiftness_feet_overlay"));
-        withExistingParent(ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL.get(), modLoc("item/armor_of_swiftness_feet"));
-        withExistingParent(ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED.get(), modLoc("item/armor_of_swiftness_feet"));
-        withExistingParent(ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE.get(), modLoc("item/armor_of_swiftness_feet"));
+        item(ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL.get(), modLoc("item/armor_of_swiftness_feet_normal"), modLoc("item/armor_of_swiftness_feet_normal_overlay"));
+        item(ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED.get(), modLoc("item/armor_of_swiftness_feet_enhanced"), modLoc("item/armor_of_swiftness_feet_enhanced_overlay"));
+        item(ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE.get(), modLoc("item/armor_of_swiftness_feet_ultimate"), modLoc("item/armor_of_swiftness_feet_ultimate_overlay"));
 
-        item("armor_of_swiftness_head", mcLoc("item/leather_helmet"), modLoc("item/swiftness_head_overlay"));
-        withExistingParent(ModItems.ARMOR_OF_SWIFTNESS_HEAD_NORMAL.get(), modLoc("item/armor_of_swiftness_head"));
-        withExistingParent(ModItems.ARMOR_OF_SWIFTNESS_HEAD_ENHANCED.get(), modLoc("item/armor_of_swiftness_head"));
-        withExistingParent(ModItems.ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE.get(), modLoc("item/armor_of_swiftness_head"));
+        item(ModItems.ARMOR_OF_SWIFTNESS_HEAD_NORMAL.get(), modLoc("item/armor_of_swiftness_head_normal"), modLoc("item/armor_of_swiftness_head_normal_overlay"));
+        item(ModItems.ARMOR_OF_SWIFTNESS_HEAD_ENHANCED.get(), modLoc("item/armor_of_swiftness_head_enhanced"), modLoc("item/armor_of_swiftness_head_enhanced_overlay"));
+        item(ModItems.ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE.get(), modLoc("item/armor_of_swiftness_head_ultimate"), modLoc("item/armor_of_swiftness_head_ultimate_overlay"));
 
-        item("armor_of_swiftness_legs", mcLoc("item/leather_leggings"), modLoc("item/swiftness_legs_overlay"));
-        withExistingParent(ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL.get(), modLoc("item/armor_of_swiftness_legs"));
-        withExistingParent(ModItems.ARMOR_OF_SWIFTNESS_LEGS_ENHANCED.get(), modLoc("item/armor_of_swiftness_legs"));
-        withExistingParent(ModItems.ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE.get(), modLoc("item/armor_of_swiftness_legs"));
+        item(ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL.get(), modLoc("item/armor_of_swiftness_legs_normal"), modLoc("item/armor_of_swiftness_legs_normal_overlay"));
+        item(ModItems.ARMOR_OF_SWIFTNESS_LEGS_ENHANCED.get(), modLoc("item/armor_of_swiftness_legs_enhanced"), modLoc("item/armor_of_swiftness_legs_enhanced_overlay"));
+        item(ModItems.ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE.get(), modLoc("item/armor_of_swiftness_legs_ultimate"), modLoc("item/armor_of_swiftness_legs_ultimate_overlay"));
 
         withExistingParent(ModItems.ADVANCED_VAMPIRE_HUNTER_SPAWN_EGG.get(), mcLoc("item/template_spawn_egg"));
         withExistingParent(ModItems.ADVANCED_VAMPIRE_SPAWN_EGG.get(), mcLoc("item/template_spawn_egg"));
@@ -194,17 +205,13 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
         withExistingParent(ModItems.VAMPIRE_SPAWN_EGG.get(), mcLoc("item/template_spawn_egg"));
         withExistingParent(ModItems.VAMPIRE_HUNTER_SPAWN_EGG.get(), mcLoc("item/template_spawn_egg"));
 
-        withExistingParent(ModItems.BASIC_CROSSBOW.get(), modLoc("item/crossbow")).texture("texture", "item/crossbow");
-        withExistingParent(ModItems.BASIC_DOUBLE_CROSSBOW.get(), modLoc("item/double_crossbow")).texture("texture", "item/crossbow");
-        withExistingParent(ModItems.BASIC_TECH_CROSSBOW.get(), modLoc("item/tech_crossbow")).texture("extra", "item/tech_crossbow_extra");
+        withExistingParent(ModItems.BASIC_CROSSBOW.get(), modLoc("item/crossbow")).texture("texture", "item/crossbow").texture("string", "item/crossbow_part_string").texture("arrow", "item/crossbow_part_arrow").override().predicate(modLoc("charged"), 0.01f).model(withExistingParent("basic_crossbow_unloaded", modLoc("item/crossbow_unloaded")).texture("texture", "item/crossbow").texture("string", "item/crossbow_part_string_unloaded"));
+        withExistingParent(ModItems.BASIC_DOUBLE_CROSSBOW.get(), modLoc("item/double_crossbow")).texture("texture", "item/crossbow_double").texture("string", "item/crossbow_part_double_string").texture("arrows", "item/crossbow_part_arrows").override().predicate(modLoc("charged"), 0.01f).model(withExistingParent("basic_double_crossbow_unloaded", modLoc("item/double_crossbow_unloaded")).texture("texture", "item/crossbow_double").texture("string", "item/crossbow_part_double_string_unloaded"));
+        withExistingParent(ModItems.BASIC_TECH_CROSSBOW.get(), modLoc("item/tech_crossbow")).texture("texture", "item/tech_crossbow").texture("string", "item/crossbow_part_tech_string").override().predicate(modLoc("charged"), 0.01f).model(withExistingParent("basic_tech_crossbow_unloaded", modLoc("item/tech_crossbow_unloaded")).texture("texture", "item/tech_crossbow").texture("string", "item/crossbow_part_tech_string_unloaded"));
 
-        withExistingParent(ModItems.BASIC_CROSSBOW.get(), modLoc("item/crossbow")).texture("texture", "item/crossbow");
-        withExistingParent(ModItems.BASIC_DOUBLE_CROSSBOW.get(), modLoc("item/double_crossbow")).texture("texture", "item/crossbow");
-        withExistingParent(ModItems.BASIC_TECH_CROSSBOW.get(), modLoc("item/tech_crossbow")).texture("extra", "item/tech_crossbow_extra");
-
-        withExistingParent(ModItems.ENHANCED_CROSSBOW.get(), modLoc("item/crossbow")).texture("texture", "item/enhanced_crossbow");
-        withExistingParent(ModItems.ENHANCED_DOUBLE_CROSSBOW.get(), modLoc("item/double_crossbow")).texture("texture", "item/enhanced_crossbow");
-        withExistingParent(ModItems.ENHANCED_TECH_CROSSBOW.get(), modLoc("item/tech_crossbow")).texture("extra", "item/tech_crossbow_extra_enhanced");
+        withExistingParent(ModItems.ENHANCED_CROSSBOW.get(), modLoc("item/crossbow")).texture("texture", "item/crossbow_enhanced").texture("string", "item/crossbow_part_string").texture("arrow", "item/crossbow_part_arrow").override().predicate(modLoc("charged"), 0.01f).model(withExistingParent("enhanced_crossbow_unloaded", modLoc("item/crossbow_unloaded")).texture("texture", "item/crossbow_enhanced").texture("string", "item/crossbow_part_string_unloaded"));
+        withExistingParent(ModItems.ENHANCED_DOUBLE_CROSSBOW.get(), modLoc("item/double_crossbow")).texture("texture", "item/crossbow_double_enhanced").texture("string", "item/crossbow_part_double_string").texture("arrows", "item/crossbow_part_arrows").override().predicate(modLoc("charged"), 0.01f).model(withExistingParent("enhanced_double_crossbow_unloaded", modLoc("item/double_crossbow_unloaded")).texture("texture", "item/crossbow_double_enhanced").texture("string", "item/crossbow_part_double_string_unloaded"));
+        withExistingParent(ModItems.ENHANCED_TECH_CROSSBOW.get(), modLoc("item/tech_crossbow")).texture("texture", "item/tech_crossbow_enhanced").texture("string", "item/crossbow_part_tech_string").override().predicate(modLoc("charged"), 0.01f).model(withExistingParent("enhanced_tech_crossbow_unloaded", modLoc("item/tech_crossbow_unloaded")).texture("texture", "item/tech_crossbow_enhanced").texture("string", "item/crossbow_part_tech_string_unloaded"));
 
         withExistingParent(ModItems.GARLIC_DIFFUSER_CORE_IMPROVED.get(), ModItems.GARLIC_DIFFUSER_CORE.get()).texture("texture", "block/garlic_diffuser_inside_improved");
 
@@ -237,6 +244,10 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
 
         withExistingParent(ModItems.ITEM_CANDELABRA.get(), modLoc("block/candelabra"));
 
+        withExistingParent(ModItems.CRUCIFIX_NORMAL.get(), modLoc("item/crucifix")).texture("texture", "item/crucifix_wooden");
+        withExistingParent(ModItems.CRUCIFIX_ENHANCED.get(), modLoc("item/crucifix")).texture("texture", "item/crucifix_iron");
+        withExistingParent(ModItems.CRUCIFIX_ULTIMATE.get(), modLoc("item/crucifix")).texture("texture", "item/crucifix_gold");
+
 
         singleTexture("blood_bottle", mcLoc("item/generated"), "layer0", modLoc("item/blood_bottle_0"))
                 .override().predicate(mcLoc("damage"), 0f).model(withExistingParent("blood_bottle_0", mcLoc("item/generated")).texture("layer0", modLoc("item/blood_bottle_0"))).end()
@@ -249,6 +260,33 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
                 .override().predicate(mcLoc("damage"), 0.77f).model(withExistingParent("blood_bottle_7", mcLoc("item/generated")).texture("layer0", modLoc("item/blood_bottle_7"))).end()
                 .override().predicate(mcLoc("damage"), 0.88f).model(withExistingParent("blood_bottle_8", mcLoc("item/generated")).texture("layer0", modLoc("item/blood_bottle_8"))).end()
                 .override().predicate(mcLoc("damage"), 0.99f).model(withExistingParent("blood_bottle_9", mcLoc("item/generated")).texture("layer0", modLoc("item/blood_bottle_9"))).end();
+
+        withExistingParent(ModBlocks.DARK_SPRUCE_TRAPDOOR.get(), modLoc("block/dark_spruce_trapdoor_bottom"));
+        withExistingParent(ModBlocks.CURSED_SPRUCE_TRAPDOOR.get(), modLoc("block/cursed_spruce_trapdoor_bottom"));
+
+        item(ModBlocks.DARK_SPRUCE_DOOR.get().asItem(), modLoc("item/dark_spruce_door"));
+        item(ModBlocks.CURSED_SPRUCE_DOOR.get().asItem(), modLoc("item/cursed_spruce_door"));
+
+        withExistingParent(ModBlocks.DARK_SPRUCE_BUTTON.get().asItem(), modLoc("block/dark_spruce_button_inventory"));
+        withExistingParent(ModBlocks.CURSED_SPRUCE_BUTTON.get().asItem(), modLoc("block/cursed_spruce_button_inventory"));
+        withExistingParent(ModBlocks.DARK_SPRUCE_FENCE.get().asItem(), modLoc("block/dark_spruce_fence_inventory"));
+        withExistingParent(ModBlocks.CURSED_SPRUCE_FENCE.get().asItem(), modLoc("block/cursed_spruce_fence_inventory"));
+
+        withExistingParent(ModBlocks.HUNTER_TABLE.get(), modLoc("block/hunter_table/hunter_table"));
+
+        for (DyeColor dye : DyeColor.values()) {
+            getBuilder("coffin_" + dye.getName()).parent(new ModelFile.UncheckedModelFile(REFERENCE.MODID + ":block/coffin/coffin_bottom_" + dye.getName()))
+                    .transforms()
+                    .transform(ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND).rotation(30, 160, 0).translation(-1, 0, 1).scale(0.23f, 0.23f, 0.23f).end()
+                    .transform(ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND).rotation(30, 160, 0).translation(0, 0, 3).scale(0.375f, 0.375f, 0.375f).end()
+                    .transform(ItemTransforms.TransformType.GUI).rotation(30, 160, 0).translation(-1, -1, -4).scale(0.5325f, 0.5325f, 0.5325f).end()
+                    .transform(ItemTransforms.TransformType.GROUND).rotation(0, 0, 0).translation(0, 2, -2).scale(0.25f, 0.25f, 0.25f).end()
+                    .transform(ItemTransforms.TransformType.HEAD).rotation(0, 180, 0).translation(0, 2, -8).scale(1, 1, 1).end()
+                    .transform(ItemTransforms.TransformType.FIXED).rotation(270, 0, 0).translation(0, -4, -4).scale(0.5f, 0.5f, 0.5f).end()
+                    .end();
+        }
+        this.item(ModItems.OIL_BOTTLE.get(), modLoc("item/oil_bottle"), modLoc("item/oil_bottle_overlay"));
+        withExistingParent(ModBlocks.ALCHEMY_TABLE.get(), modLoc("block/alchemy_table/alchemy_table"));
     }
 
 }

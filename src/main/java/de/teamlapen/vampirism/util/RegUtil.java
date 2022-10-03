@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
+import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -18,149 +19,170 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.function.Supplier;
 
 public class RegUtil {
 
-    public static ResourceLocation id(IAction<?> action) {
+    public static ResourceLocation id(@NotNull IAction<?> action) {
         return ModRegistries.ACTIONS.get().getKey(action);
     }
-    public static ResourceLocation id(ISkill<?> skill) {
+
+    public static ResourceLocation id(@NotNull ISkill<?> skill) {
         return ModRegistries.SKILLS.get().getKey(skill);
     }
 
-    public static ResourceLocation id(IMinionTask<?,?> minionTask) {
+    public static ResourceLocation id(@NotNull IMinionTask<?, ?> minionTask) {
         return ModRegistries.MINION_TASKS.get().getKey(minionTask);
     }
-    public static ResourceLocation id(IEntityAction entityAction) {
+
+    public static ResourceLocation id(@NotNull IEntityAction entityAction) {
         return ModRegistries.ENTITY_ACTIONS.get().getKey(entityAction);
     }
-    public static ResourceLocation id(Task skill) {
+
+    public static ResourceLocation id(@NotNull Task skill) {
         return ModRegistries.TASKS.get().getKey(skill);
     }
 
-    public static ResourceLocation id(IRefinement refinement) {
+    public static ResourceLocation id(@NotNull IRefinement refinement) {
         return ModRegistries.REFINEMENTS.get().getKey(refinement);
     }
 
-    public static ResourceLocation id(IRefinementSet refinementSet) {
+    public static ResourceLocation id(@NotNull IRefinementSet refinementSet) {
         return ModRegistries.REFINEMENT_SETS.get().getKey(refinementSet);
     }
 
-    public static ResourceLocation id(Item item) {
+    public static ResourceLocation id(@NotNull Item item) {
         return ForgeRegistries.ITEMS.getKey(item);
     }
 
-    public static ResourceLocation id(Block block) {
+    public static ResourceLocation id(@NotNull Block block) {
         return ForgeRegistries.BLOCKS.getKey(block);
     }
-    public static ResourceLocation id(Fluid block) {
+
+    public static ResourceLocation id(@NotNull Fluid block) {
         return ForgeRegistries.FLUIDS.getKey(block);
     }
-    public static ResourceLocation id(EntityType<?> type) {
+
+    public static ResourceLocation id(@NotNull EntityType<?> type) {
         return ForgeRegistries.ENTITY_TYPES.getKey(type);
     }
 
-    public static ResourceLocation id(Biome type) {
+    public static ResourceLocation id(@NotNull Biome type) {
         return ForgeRegistries.BIOMES.getKey(type);
     }
-    public static ResourceLocation id(Enchantment type) {
+
+    public static ResourceLocation id(@NotNull Enchantment type) {
         return ForgeRegistries.ENCHANTMENTS.getKey(type);
     }
-    public static ResourceLocation id(VillagerProfession profession) {
+
+    public static ResourceLocation id(@NotNull VillagerProfession profession) {
         return ForgeRegistries.VILLAGER_PROFESSIONS.getKey(profession);
     }
 
+    public static ResourceLocation id(@NotNull IOil oil) {
+        return ModRegistries.OILS.get().getKey(oil);
+    }
 
 
-    public static boolean has(IAction<?> action) {
+    public static boolean has(@NotNull IAction<?> action) {
         return ModRegistries.ACTIONS.get().containsValue(action);
     }
-    public static boolean has(ISkill<?> skill) {
+
+    public static boolean has(@NotNull ISkill<?> skill) {
         return ModRegistries.SKILLS.get().containsValue(skill);
     }
 
-    public static boolean has(IMinionTask<?,?> minionTask) {
+    public static boolean has(@NotNull IMinionTask<?, ?> minionTask) {
         return ModRegistries.MINION_TASKS.get().containsValue(minionTask);
     }
-    public static boolean has(IEntityAction entityAction) {
+
+    public static boolean has(@NotNull IEntityAction entityAction) {
         return ModRegistries.ENTITY_ACTIONS.get().containsValue(entityAction);
     }
-    public static boolean has(Task skill) {
+
+    public static boolean has(@NotNull Task skill) {
         return ModRegistries.TASKS.get().containsValue(skill);
     }
 
-    public static boolean has(IRefinement refinement) {
+    public static boolean has(@NotNull IRefinement refinement) {
         return ModRegistries.REFINEMENTS.get().containsValue(refinement);
     }
 
-    public static boolean has(IRefinementSet refinementSet) {
+    public static boolean has(@NotNull IRefinementSet refinementSet) {
         return ModRegistries.REFINEMENT_SETS.get().containsValue(refinementSet);
     }
 
-    public static boolean has(Item item) {
+    public static boolean has(@NotNull Item item) {
         return ForgeRegistries.ITEMS.containsValue(item);
     }
 
-    public static boolean has(Block block) {
+    public static boolean has(@NotNull Block block) {
         return ForgeRegistries.BLOCKS.containsValue(block);
     }
 
-    public static IAction<?> getAction(ResourceLocation id) {
+
+    public static IAction<?> getAction(@NotNull ResourceLocation id) {
         return get(ModRegistries.ACTIONS.get(), id);
     }
 
-    public static ISkill<?> getSkill(ResourceLocation id) {
+    public static ISkill<?> getSkill(@NotNull ResourceLocation id) {
         return get(ModRegistries.SKILLS.get(), id);
     }
 
-    public static IMinionTask<?,?> getMinionTask(ResourceLocation id) {
+    public static IMinionTask<?, ?> getMinionTask(@NotNull ResourceLocation id) {
         return get(ModRegistries.MINION_TASKS.get(), id);
     }
 
-    public static IEntityAction getEntityAction(ResourceLocation id) {
+    public static IEntityAction getEntityAction(@NotNull ResourceLocation id) {
         return get(ModRegistries.ENTITY_ACTIONS.get(), id);
     }
 
-    public static Task getTask(ResourceLocation id) {
+    public static Task getTask(@NotNull ResourceLocation id) {
         return get(ModRegistries.TASKS.get(), id);
     }
 
-    public static IRefinement getRefinement(ResourceLocation id) {
+    public static IRefinement getRefinement(@NotNull ResourceLocation id) {
         return get(ModRegistries.REFINEMENTS.get(), id);
     }
 
-    public static IRefinementSet getRefinementSet(ResourceLocation id) {
+    public static IRefinementSet getRefinementSet(@NotNull ResourceLocation id) {
         return get(ModRegistries.REFINEMENT_SETS.get(), id);
     }
 
+    public static IOil getOil(@NotNull ResourceLocation id) {
+        return get(ModRegistries.OILS.get(), id);
+    }
 
 
-    public static <T> T get(Supplier<IForgeRegistry<T>> registrySupplier, ResourceLocation id) {
+    public static <T> T get(@NotNull Supplier<IForgeRegistry<T>> registrySupplier,@NotNull  ResourceLocation id) {
         return registrySupplier.get().getValue(id);
     }
 
-    public static <T> T get(IForgeRegistry<T> registry, ResourceLocation id) {
+    public static <T> T get(@NotNull IForgeRegistry<T> registry,@NotNull  ResourceLocation id) {
         return registry.getValue(id);
     }
 
 
-
-    public static <T> T has(Supplier<IForgeRegistry<T>> registrySupplier, ResourceLocation id) {
-        return registrySupplier.get().getValue(id);
+    public static <T> boolean has(@NotNull Supplier<IForgeRegistry<T>> registrySupplier,@NotNull  ResourceLocation id) {
+        return registrySupplier.get().containsKey(id);
     }
 
-    public static <T> Collection<T> values(Supplier<IForgeRegistry<T>> registrySupplier) {
+    public static <T> boolean has(@NotNull IForgeRegistry<T> registry,@NotNull  ResourceLocation id) {
+        return registry.containsKey(id);
+    }
+
+    public static <T> @NotNull Collection<T> values(@NotNull Supplier<IForgeRegistry<T>> registrySupplier) {
         return registrySupplier.get().getValues();
     }
 
-    public static <T> Collection<T> values(IForgeRegistry<T> registry) {
+    public static <T> @NotNull Collection<T> values(@NotNull IForgeRegistry<T> registry) {
         return registry.getValues();
     }
 
-    public static <T> Collection<ResourceLocation> keys(Supplier<IForgeRegistry<T>> registry) {
+    public static <T> @NotNull Collection<ResourceLocation> keys(@NotNull Supplier<IForgeRegistry<T>> registry) {
         return registry.get().getKeys();
     }
 

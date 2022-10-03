@@ -4,14 +4,9 @@
     "X": {
       "item": "minecraft:brown_wool"
     },
-    "Y": [
-      {
-        "item": "vampirism:human_heart"
-      },
-      {
-        "item": "vampirism:weak_human_heart"
-      }
-    ]
+    "Y": {
+      "tag": "vampirism:heart"
+    }
   },
   "pattern": [
     "XYX",

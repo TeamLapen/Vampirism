@@ -5,8 +5,8 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.player.vampire.VampireLevelingConf;
-import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.entity.player.vampire.VampireLevelingConf;
+import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -24,9 +24,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class PureBloodItem extends Item {
@@ -34,7 +33,7 @@ public class PureBloodItem extends Item {
     public static final int COUNT = 5;
     private final static Logger LOGGER = LogManager.getLogger();
 
-    public static Item getBloodItemForLevel(int level) {
+    public static @NotNull Item getBloodItemForLevel(int level) {
         switch (level) {
             case 0:
                 return ModItems.PURE_BLOOD_0.get();
@@ -61,13 +60,13 @@ public class PureBloodItem extends Item {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         tooltip.add(Component.translatable("item.vampirism.pure_blood.purity").append(Component.literal(": " + (level + 1 + "/" + COUNT))).withStyle(ChatFormatting.RED));
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public ItemStack finishUsingItem(@Nonnull ItemStack stack, @Nonnull Level worldIn, @Nonnull LivingEntity entityLiving) {
+    public ItemStack finishUsingItem(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull LivingEntity entityLiving) {
         if (entityLiving instanceof Player) {
             VampirePlayer.getOpt((Player) entityLiving).ifPresent(v -> {
                 v.drinkBlood(50, 0.3f, false);
@@ -82,24 +81,24 @@ public class PureBloodItem extends Item {
         return this.level;
     }
 
-    public Component getCustomName() {
+    public @NotNull Component getCustomName() {
         return Component.translatable(this.getOrCreateDescriptionId()).append(Component.literal(" " + (level + 1)));
     }
 
     @Override
-    public int getUseDuration(@Nonnull ItemStack stack) {
+    public int getUseDuration(@NotNull ItemStack stack) {
         return 30;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public UseAnim getUseAnimation(@Nonnull ItemStack stack) {
+    public UseAnim getUseAnimation(@NotNull ItemStack stack) {
         return UseAnim.DRINK;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public InteractionResultHolder<ItemStack> use(@Nonnull Level worldIn, @Nonnull Player playerIn, @Nonnull InteractionHand handIn) {
+    public InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
         int playerLevel = VampirismAPI.getFactionPlayerHandler(playerIn).map(fph -> fph.getCurrentLevel(VReference.VAMPIRE_FACTION)).orElse(0);
         if (VampireLevelingConf.getInstance().isLevelValidForAltarInfusion(playerLevel)) {
             int pureLevel = VampireLevelingConf.getInstance().getAltarInfusionRequirements(playerLevel).pureBloodLevel();
@@ -112,6 +111,7 @@ public class PureBloodItem extends Item {
 
 
     private String descriptionId;
+
     @Override
     @NotNull
     protected String getOrCreateDescriptionId() {

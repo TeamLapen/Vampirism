@@ -1,14 +1,14 @@
 package de.teamlapen.vampirism.api.entity.minion;
 
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.registries.ObjectHolder;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -45,7 +45,7 @@ public interface IMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends
      * @param player  The lord player entity if loaded
      * @return Whether the task can currently be given by the lord player
      */
-    default boolean isAvailable(IFaction<?> faction, @Nullable ILordPlayer player) {
+    default boolean isAvailable(IPlayableFaction<?> faction, @Nullable ILordPlayer player) {
         return true;
     }
 
@@ -63,7 +63,7 @@ public interface IMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends
      * @param minionGetter Getter for the minion entity. Only use if necessary as it's a costly operation. Optional can be empty if there is an issue.
      * @param minionData   The minion data.
      */
-    default void tickActive(T desc, @Nonnull Supplier<Optional<IMinionEntity>> minionGetter, @Nonnull Q minionData) {
+    default void tickActive(T desc, @NotNull Supplier<Optional<IMinionEntity>> minionGetter, @NotNull Q minionData) {
         this.tickBackground(desc, minionData);
     }
 
@@ -75,7 +75,7 @@ public interface IMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends
      * @param desc       Task description
      * @param minionData The minion data
      */
-    default void tickBackground(T desc, @Nonnull Q minionData) {
+    default void tickBackground(T desc, @NotNull Q minionData) {
     }
 
 

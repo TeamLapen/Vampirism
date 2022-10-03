@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.lib.util.WeightedRandomItem;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -8,13 +7,14 @@ import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.player.refinements.RefinementSet;
+import de.teamlapen.vampirism.entity.player.refinements.RefinementSet;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -24,9 +24,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,10 +35,10 @@ public abstract class RefinementItem extends Item implements IRefinementItem {
     public static final int MAX_DAMAGE = 500;
     private static final RandomSource RANDOM = RandomSource.create();
 
-    public static ItemStack getRandomRefinementItem(IPlayableFaction<?> faction) {
-        List<WeightedRandomItem<IRefinementSet>> sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream().filter(set -> set.getFaction() == faction).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
+    public static @NotNull ItemStack getRandomRefinementItem(@NotNull IPlayableFaction<?> faction) {
+        List< WeightedEntry.Wrapper<IRefinementSet>> sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream().filter(set -> set.getFaction() == faction).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
         if (sets.isEmpty()) return ItemStack.EMPTY;
-        IRefinementSet s = WeightedRandom.getRandomItem(RANDOM, sets).map(WeightedRandomItem::getItem).orElseGet(()->sets.get(0).getItem());
+        IRefinementSet s = WeightedRandom.getRandomItem(RANDOM, sets).map(WeightedEntry.Wrapper::getData).orElseGet(() -> sets.get(0).getData());
         AccessorySlotType t = s.getSlotType().orElseGet(() -> switch (RANDOM.nextInt(3)) {
             case 0 -> AccessorySlotType.OBI_BELT;
             case 1 -> AccessorySlotType.RING;
@@ -52,21 +52,21 @@ public abstract class RefinementItem extends Item implements IRefinementItem {
         return ItemStack.EMPTY;
     }
 
-    public static IRefinementSet getRandomRefinementForItem(@Nullable IFaction<?> faction, IRefinementItem stack) {
-        List<WeightedRandomItem<IRefinementSet>> sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream().filter(set -> faction == null || set.getFaction() == faction).filter(set -> set.getSlotType().map(s -> s == stack.getSlotType()).orElse(true)).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
+    public static @Nullable IRefinementSet getRandomRefinementForItem(@Nullable IFaction<?> faction, @NotNull IRefinementItem stack) {
+        List<WeightedEntry.Wrapper<IRefinementSet>> sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream().filter(set -> faction == null || set.getFaction() == faction).filter(set -> set.getSlotType().map(s -> s == stack.getSlotType()).orElse(true)).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
         if (sets.isEmpty()) return null;
-        return WeightedRandom.getRandomItem(RANDOM, sets).map(WeightedRandomItem::getItem).orElse(null);
+        return WeightedRandom.getRandomItem(RANDOM, sets).map(WeightedEntry.Wrapper::getData).orElse(null);
     }
 
     private final AccessorySlotType type;
 
-    public RefinementItem(Properties properties, AccessorySlotType type) {
+    public RefinementItem(@NotNull Properties properties, AccessorySlotType type) {
         super(properties.defaultDurability(MAX_DAMAGE).setNoRepair());
         this.type = type;
     }
 
     @Override
-    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         IRefinementSet set = getRefinementSet(stack);
         if (set != null) {
@@ -75,7 +75,7 @@ public abstract class RefinementItem extends Item implements IRefinementItem {
     }
 
     @Override
-    public boolean applyRefinementSet(ItemStack stack, IRefinementSet set) {
+    public boolean applyRefinementSet(@NotNull ItemStack stack, @NotNull IRefinementSet set) {
         if (set.getSlotType().map(t -> t == type).orElse(true)) {
             CompoundTag tag = stack.getOrCreateTag();
             tag.putString("refinement_set", RegUtil.id(set).toString());
@@ -84,9 +84,9 @@ public abstract class RefinementItem extends Item implements IRefinementItem {
         return false;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public Component getName(@Nonnull ItemStack stack) {
+    public Component getName(@NotNull ItemStack stack) {
         IRefinementSet set = getRefinementSet(stack);
         if (set == null) {
             return super.getName(stack);
@@ -96,7 +96,7 @@ public abstract class RefinementItem extends Item implements IRefinementItem {
 
     @Nullable
     @Override
-    public IRefinementSet getRefinementSet(ItemStack stack) {
+    public IRefinementSet getRefinementSet(@NotNull ItemStack stack) {
         String refinementsNBT = stack.getOrCreateTag().getString("refinement_set");
         return RegUtil.getRefinementSet(new ResourceLocation(refinementsNBT));
     }
@@ -107,13 +107,13 @@ public abstract class RefinementItem extends Item implements IRefinementItem {
     }
 
     @Override
-    public boolean isEnchantable(@Nonnull ItemStack stack) {
+    public boolean isEnchantable(@NotNull ItemStack stack) {
         return false;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public InteractionResultHolder<ItemStack> use(Level worldIn, @Nonnull Player playerIn, @Nonnull InteractionHand handIn) {
+    public InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
         if (!worldIn.isClientSide()) {
             ItemStack stack = playerIn.getItemInHand(handIn);
             if (FactionPlayerHandler.getOpt(playerIn).map(v -> v).flatMap(FactionPlayerHandler::getCurrentFactionPlayer).map(IFactionPlayer::getSkillHandler).map(sh -> sh.equipRefinementItem(stack)).orElse(false)) {

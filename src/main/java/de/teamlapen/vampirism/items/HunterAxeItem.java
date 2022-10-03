@@ -16,14 +16,14 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class HunterAxeItem extends VampirismHunterWeapon implements IItemWithTier {
+public class HunterAxeItem extends VampirismHunterWeaponItem implements IItemWithTier {
 
     private final TIER tier;
 
@@ -35,28 +35,28 @@ public class HunterAxeItem extends VampirismHunterWeapon implements IItemWithTie
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         addTierInformation(tooltip);
         tooltip.add(Component.translatable("text.vampirism.deals_more_damage_to", Math.round((getVampireMult() - 1) * 100), VReference.VAMPIRE_FACTION.getNamePlural()).withStyle(ChatFormatting.GRAY));
     }
 
     @Override
-    public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
+    public void fillItemCategory(@NotNull CreativeModeTab group, @NotNull NonNullList<ItemStack> items) {
         if (this.allowedIn(group)) {
             items.add(getEnchantedStack());
         }
     }
 
     @Override
-    public float getDamageMultiplierForFaction(@Nonnull ItemStack stack) {
+    public float getDamageMultiplierForFaction(@NotNull ItemStack stack) {
         return getVampireMult();
     }
 
     /**
      * @return An {@link ItemStack} with the correct knockback enchantment applied
      */
-    public ItemStack getEnchantedStack() {
+    public @NotNull ItemStack getEnchantedStack() {
         ItemStack stack = new ItemStack(this);
         Map<Enchantment, Integer> map = new HashMap<>();
         map.put(Enchantments.KNOCKBACK, getKnockback());
@@ -65,7 +65,7 @@ public class HunterAxeItem extends VampirismHunterWeapon implements IItemWithTie
     }
 
     @Override
-    public int getMinLevel(@Nonnull ItemStack stack) {
+    public int getMinLevel(@NotNull ItemStack stack) {
         return getMinLevel();
     }
 
@@ -75,7 +75,7 @@ public class HunterAxeItem extends VampirismHunterWeapon implements IItemWithTie
     }
 
     @Override
-    public boolean isFoil(@Nonnull ItemStack stack) {
+    public boolean isFoil(@NotNull ItemStack stack) {
         return false;
     }
 

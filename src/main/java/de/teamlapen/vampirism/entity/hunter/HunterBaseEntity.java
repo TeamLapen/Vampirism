@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.entity.hunter;
 
-import de.teamlapen.vampirism.advancements.VampireActionTrigger;
+import de.teamlapen.vampirism.advancements.critereon.VampireActionCriterionTrigger;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModEffects;
@@ -19,15 +19,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.AABB;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Base class for all vampire hunter
  */
 public abstract class HunterBaseEntity extends VampirismEntity implements IHunterMob, Npc/*mainly for JourneyMap*/ {
 
-    public static boolean spawnPredicateHunter(EntityType<? extends HunterBaseEntity> entityType, LevelAccessor world, MobSpawnType spawnReason, BlockPos blockPos, RandomSource random) {
+    public static boolean spawnPredicateHunter(@NotNull EntityType<? extends HunterBaseEntity> entityType, @NotNull LevelAccessor world, MobSpawnType spawnReason, @NotNull BlockPos blockPos, RandomSource random) {
         return world.getDifficulty() != Difficulty.PEACEFUL && Mob.checkMobSpawnRules(entityType, world, spawnReason, blockPos, random);
     }
 
@@ -48,19 +47,19 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
     }
 
     @Override
-    public LivingEntity getRepresentingEntity() {
+    public @NotNull LivingEntity getRepresentingEntity() {
         return this;
     }
 
     @Override
-    public void die(@Nonnull DamageSource cause) {
+    public void die(@NotNull DamageSource cause) {
         super.die(cause);
         if (cause.getEntity() instanceof ServerPlayer && Helper.isVampire(((Player) cause.getEntity())) && this.getEffect(ModEffects.FREEZE.get()) != null) {
-            ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger(((ServerPlayer) cause.getEntity()), VampireActionTrigger.Action.KILL_FROZEN_HUNTER);
+            ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger(((ServerPlayer) cause.getEntity()), VampireActionCriterionTrigger.Action.KILL_FROZEN_HUNTER);
         }
     }
 
-    public void makeCampHunter(BlockPos pos) {
+    public void makeCampHunter(@NotNull BlockPos pos) {
         super.setHome(new AABB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1).inflate(10));
         this.setMoveTowardsRestriction(MOVE_TO_RESTRICT_PRIO, true);
     }
@@ -76,7 +75,7 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
      *
      * @return If player was cured
      */
-    protected boolean tryCureSanguinare(Player entity) {
+    protected boolean tryCureSanguinare(@NotNull Player entity) {
         if (!this.level.isClientSide && entity.hasEffect(ModEffects.SANGUINARE.get())) {
             entity.removeEffect(ModEffects.SANGUINARE.get());
             entity.sendSystemMessage(Component.translatable("text.vampirism.hunter.cured_sanguinare"));

@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskReward;
 import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.player.tasks.reward.ItemReward;
+import de.teamlapen.vampirism.entity.player.tasks.reward.ItemReward;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
@@ -27,19 +27,17 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-
 public class TaskRecipeCategory implements IRecipeCategory<Task> {
-    private final IDrawable background;
-    private final IDrawable icon;
+    private final @NotNull IDrawable background;
+    private final @NotNull IDrawable icon;
 
-    public TaskRecipeCategory(IGuiHelper guiHelper) {
+    public TaskRecipeCategory(@NotNull IGuiHelper guiHelper) {
         this.background = guiHelper.drawableBuilder(new ResourceLocation("jei", "textures/gui/slot.png"), 0, 0, 18, 18).setTextureSize(18, 18).addPadding(14, 90, 75, 75).build();
         this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModItems.VAMPIRE_FANG.get()));
     }
 
     @Override
-    public void draw(Task task, @NotNull IRecipeSlotsView recipeSlotsView, @Nonnull PoseStack stack, double mouseX, double mouseY) {
+    public void draw(@NotNull Task task, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull PoseStack stack, double mouseX, double mouseY) {
         Minecraft minecraft = Minecraft.getInstance();
         int x = 4;
         int y = 40;
@@ -63,19 +61,19 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
 
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IDrawable getBackground() {
         return background;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IDrawable getIcon() {
         return icon;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Component getTitle() {
         return Component.translatable("text.vampirism.task.reward");
@@ -87,7 +85,7 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
     }
 
     @Override
-    public void setRecipe(@NotNull IRecipeLayoutBuilder builder, Task recipe, @NotNull IFocusGroup focuses) {
+    public void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull Task recipe, @NotNull IFocusGroup focuses) {
         TaskReward reward = recipe.getReward();
         if (reward instanceof ItemReward itemReward) {
             IRecipeSlotBuilder output = builder.addSlot(RecipeIngredientRole.OUTPUT, 76, 15);

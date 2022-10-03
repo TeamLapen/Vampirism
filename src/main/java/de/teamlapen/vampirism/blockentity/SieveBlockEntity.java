@@ -23,20 +23,19 @@ import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class SieveBlockEntity extends BlockEntity implements FluidTankWithListener.IFluidTankListener {
 
 
-    private final LazyOptional<IFluidHandler> cap;
-    private final FluidTankWithListener tank;
+    private final @NotNull LazyOptional<IFluidHandler> cap;
+    private final @NotNull FluidTankWithListener tank;
     private int cooldownPull = 0;
     private int cooldownProcess = 0;
     private boolean active;
 
-    public SieveBlockEntity(BlockPos pos, BlockState state) {
+    public SieveBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         super(ModTiles.SIEVE.get(), pos, state);
         tank = new FilteringFluidTank(2 * FluidType.BUCKET_VOLUME).setListener(this);
         tank.setDrainable(false);
@@ -44,10 +43,11 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
     }
 
     @Override
-    @Nonnull
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing) {
-        if ((facing != Direction.DOWN) && capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+    @NotNull
+    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction facing) {
+        if ((facing != Direction.DOWN) && capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
             return cap.cast();
+        }
         return super.getCapability(capability, facing);
     }
 
@@ -56,7 +56,7 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public CompoundTag getUpdateTag() {
         CompoundTag nbt = new CompoundTag();
@@ -70,7 +70,7 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
     }
 
     @Override
-    public void load(@Nonnull CompoundTag tag) {
+    public void load(@NotNull CompoundTag tag) {
         super.load(tag);
         tank.readFromNBT(tag);
         cooldownProcess = tag.getInt("cooldown_process");
@@ -79,11 +79,12 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+    public void onDataPacket(Connection net, @NotNull ClientboundBlockEntityDataPacket pkt) {
         boolean old = active;
         active = pkt.getTag().getBoolean("active");
-        if (active != old && level != null)
+        if (active != old && level != null) {
             this.level.sendBlockUpdated(getBlockPos(), level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
+        }
 
     }
 
@@ -93,14 +94,14 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
     }
 
     @Override
-    public void saveAdditional(@Nonnull CompoundTag compound) {
+    public void saveAdditional(@NotNull CompoundTag compound) {
         super.saveAdditional(compound);
         tank.writeToNBT(compound);
         compound.putInt("cooldown_process", this.cooldownProcess);
         compound.putInt("cooldown_pull", this.cooldownPull);
     }
 
-    public static void tick(Level level, BlockPos pos, BlockState state, SieveBlockEntity blockEntity) {
+    public static void tick(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull SieveBlockEntity blockEntity) {
         //Process content
         if (--blockEntity.cooldownProcess < 0) {
             blockEntity.cooldownProcess = 15;
@@ -128,11 +129,12 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
 
     }
 
-    private void setActive(boolean active, BlockState blockState) {
+    private void setActive(boolean active, @NotNull BlockState blockState) {
         if (this.active != active) {
             this.active = active;
-            if (this.level != null && blockState.getBlock() == ModBlocks.BLOOD_SIEVE.get())
+            if (this.level != null && blockState.getBlock() == ModBlocks.BLOOD_SIEVE.get()) {
                 this.level.setBlockAndUpdate(getBlockPos(), blockState.setValue(SieveBlock.PROPERTY_ACTIVE, active));
+            }
         }
     }
 
@@ -143,9 +145,10 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
         }
 
         @Override
-        public int fill(FluidStack resource, FluidAction action) {
-            if (!BloodConversionRegistry.existsBloodValue(resource.getFluid()))
+        public int fill(@NotNull FluidStack resource, @NotNull FluidAction action) {
+            if (!BloodConversionRegistry.existsBloodValue(resource.getFluid())) {
                 return 0;
+            }
             FluidStack converted = BloodConversionRegistry.getBloodFromFluid(resource);
             int filled = super.fill(converted, action);
             if (action.execute()) SieveBlockEntity.this.cooldownPull = 10;

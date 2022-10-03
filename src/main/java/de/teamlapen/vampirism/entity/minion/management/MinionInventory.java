@@ -11,8 +11,8 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 
@@ -34,7 +34,7 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
     }
 
     @Override
-    public void addItemStack(@Nonnull ItemStack stack) {
+    public void addItemStack(@NotNull ItemStack stack) {
 
         while (!stack.isEmpty()) {
             int slot = InventoryHelper.getFirstSuitableSlotToAdd(inventory, this.getContainerSize() - 6 /*access only main inventory*/, stack, this.getMaxStackSize());
@@ -56,18 +56,21 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
 
     }
 
-    public void damageArmor(DamageSource source, float damage, MinionEntity<?> entity) {
+    public void damageArmor(@NotNull DamageSource source, float damage, @NotNull MinionEntity<?> entity) {
         if (damage > 0) {
-            damage = damage / 4.0F;
-            if (damage < 1.0F) {
+            damage = damage / 6.0F;
+            if (damage < 1.0F && damage >= 0.5f) {
                 damage = 1.0F;
             }
-
-            for (int i = 0; i < this.inventoryArmor.size(); ++i) {
-                ItemStack itemstack = this.inventoryArmor.get(i);
-                if (itemstack.getItem() instanceof ArmorItem) {
-                    final int i_final = i;
-                    itemstack.hurtAndBreak((int) damage, entity, (e) -> e.broadcastBreakEvent(EquipmentSlot.byTypeAndIndex(EquipmentSlot.Type.ARMOR, i_final)));
+            if (damage >= 1) {
+                for (int i = 0; i < this.inventoryArmor.size(); ++i) {
+                    ItemStack itemstack = this.inventoryArmor.get(i);
+                    if ((!source.isFire() || !itemstack.getItem().isFireResistant()) && itemstack.getItem() instanceof ArmorItem) {
+                        final int i_final = i;
+                        itemstack.hurtAndBreak((int) damage, entity, (e) -> {
+                            e.broadcastBreakEvent(EquipmentSlot.byTypeAndIndex(EquipmentSlot.Type.ARMOR, i_final));
+                        });
+                    }
                 }
             }
 
@@ -84,23 +87,28 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
         return availableSize;
     }
 
-    public MinionInventory setAvailableSize(int newSize) {
+    public @NotNull MinionInventory setAvailableSize(int newSize) {
         assert newSize == 9 || newSize == 12 || newSize == 15;
         this.availableSize = newSize;
         return this;
     }
 
     @Override
-    public NonNullList<ItemStack> getInventoryArmor() {
+    public @NotNull NonNullList<ItemStack> getInventoryArmor() {
         return inventoryArmor;
     }
 
     @Override
-    public NonNullList<ItemStack> getInventoryHands() {
+    public @NotNull NonNullList<ItemStack> getInventoryHands() {
         return inventoryHands;
     }
 
-    @Nonnull
+    @Override
+    public List<NonNullList<ItemStack>> getAllInventorys() {
+        return allInventories;
+    }
+
+    @NotNull
     @Override
     public ItemStack getItem(int index) {
         assert index >= 0;
@@ -114,7 +122,7 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
         return ItemStack.EMPTY;
     }
 
-    public void read(ListTag nbtTagListIn) {
+    public void read(@NotNull ListTag nbtTagListIn) {
         this.inventory.clear();
         this.inventoryArmor.clear();
         this.inventoryHands.clear();
@@ -158,14 +166,14 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
         return true;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ItemStack removeItem(int index, int count) {
         ItemStack s = getItem(index);
         return !s.isEmpty() && count > 0 ? s.split(count) : ItemStack.EMPTY;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ItemStack removeItemNoUpdate(int index) {
         ItemStack s = getItem(index);
@@ -181,7 +189,7 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
     }
 
     @Override
-    public void setItem(int index, @Nonnull ItemStack stack) {
+    public void setItem(int index, @NotNull ItemStack stack) {
         assert index >= 0;
         if (index < 2) {
             inventoryHands.set(index, stack);
@@ -193,11 +201,11 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
     }
 
     @Override
-    public boolean stillValid(@Nonnull Player player) {
+    public boolean stillValid(@NotNull Player player) {
         return true;
     }
 
-    public ListTag write(ListTag nbt) {
+    public ListTag write(@NotNull ListTag nbt) {
         for (int i = 0; i < this.inventoryHands.size(); ++i) {
             if (!this.inventoryHands.get(i).isEmpty()) {
                 CompoundTag compoundnbt = new CompoundTag();

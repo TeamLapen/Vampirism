@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api.entity.player.vampire;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 /**

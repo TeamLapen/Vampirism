@@ -6,19 +6,18 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 
 @OnlyIn(Dist.CLIENT)
 public class RenderAreaParticleCloud extends EntityRenderer<BasicAreaParticleCloud> {
-    public RenderAreaParticleCloud(EntityRendererProvider.Context context) {
+    public RenderAreaParticleCloud(EntityRendererProvider.@NotNull Context context) {
         super(context);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public ResourceLocation getTextureLocation(@Nonnull BasicAreaParticleCloud entity) {
+    public ResourceLocation getTextureLocation(@NotNull BasicAreaParticleCloud entity) {
         return null;
     }
 }

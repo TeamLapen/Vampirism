@@ -10,7 +10,7 @@ import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.VampirismVillagerEntity;
-import de.teamlapen.vampirism.entity.goals.DefendVillageGoal;
+import de.teamlapen.vampirism.entity.ai.goals.DefendVillageGoal;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -32,9 +32,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Villager that is equipped with a fork and hunts vampires
@@ -45,7 +44,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
      *
      * @param villager Is not modified or removed
      */
-    public static AggressiveVillagerEntity makeHunter(@Nonnull Villager villager) {
+    public static @NotNull AggressiveVillagerEntity makeHunter(@NotNull Villager villager) {
         AggressiveVillagerEntity hunter = ModEntities.VILLAGER_ANGRY.get().create(villager.level);
         assert hunter != null;
         CompoundTag nbt = new CompoundTag();
@@ -59,7 +58,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
         return hunter;
     }
 
-    public static AttributeSupplier.Builder getAttributeBuilder() {
+    public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
         return VampirismVillagerEntity.getAttributeBuilder()
                 .add(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.HUNTER_VILLAGER_MAX_HEALTH)
                 .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.HUNTER_VILLAGER_ATTACK_DAMAGE)
@@ -92,7 +91,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     }
 
     @Override
-    public LivingEntity getRepresentingEntity() {
+    public @NotNull LivingEntity getRepresentingEntity() {
         return this;
     }
 
@@ -113,14 +112,14 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     }
 
     @Override
-    public SpawnGroupData finalizeSpawn(@Nonnull ServerLevelAccessor worldIn, @Nonnull DifficultyInstance difficultyIn, @Nonnull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
         SpawnGroupData data = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
         this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(ModItems.PITCHFORK.get()));
         return data;
     }
 
     @Override
-    public void refreshBrain(@Nonnull ServerLevel serverWorldIn) {
+    public void refreshBrain(@NotNull ServerLevel serverWorldIn) {
     }
 
     @Override
@@ -135,14 +134,14 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
         UtilLib.replaceEntity(this, villager);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     protected Component getTypeName() {
         return this.getType().getDescription(); //Don't use profession as part of the translation key
     }
 
     @Override
-    protected void registerBrainGoals(@Nonnull Brain<Villager> brainIn) {
+    protected void registerBrainGoals(@NotNull Brain<Villager> brainIn) {
     }
 
     @Override

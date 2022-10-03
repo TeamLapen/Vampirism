@@ -2,9 +2,10 @@ package de.teamlapen.vampirism.world;
 
 import com.google.common.collect.Lists;
 import de.teamlapen.lib.util.Color;
-import de.teamlapen.vampirism.network.MultiBossEventPacket;
+import de.teamlapen.vampirism.network.ClientboundUpdateMultiBossEventPacket;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.BossEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,12 +27,12 @@ public class MultiBossEvent {
         this.entries = new HashMap<>();
     }
 
-    public MultiBossEvent(MultiBossEventPacket packet) {
-        this.uniqueId = packet.getUniqueId();
-        this.name = packet.getName();
-        this.colors = packet.getColors();
-        this.entries = packet.getEntries();
-        this.overlay = packet.getOverlay();
+    public MultiBossEvent(@NotNull ClientboundUpdateMultiBossEventPacket packet) {
+        this.uniqueId = packet.uniqueId();
+        this.name = packet.name();
+        this.colors = packet.colors();
+        this.entries = packet.entries();
+        this.overlay = packet.overlay();
     }
 
     public void clear() {
@@ -77,7 +78,7 @@ public class MultiBossEvent {
         this.entries.put(color, perc);
     }
 
-    public void setPercentage(float... perc) {
+    public void setPercentage(float @NotNull ... perc) {
         for (int i = 0; i < perc.length; i++) {
             if (this.colors.size() >= i + 1) {
                 this.entries.put(this.colors.get(i), perc[i]);
@@ -85,11 +86,11 @@ public class MultiBossEvent {
         }
     }
 
-    public void updateFromPackage(MultiBossEventPacket packet) {
-        switch (packet.getOperation()) {
-            case UPDATE_NAME -> this.name = packet.getName();
-            case UPDATE_PROGRESS -> this.entries = packet.getEntries();
-            case UPDATE_STYLE -> this.overlay = packet.getOverlay();
+    public void updateFromPackage(@NotNull ClientboundUpdateMultiBossEventPacket packet) {
+        switch (packet.operation()) {
+            case UPDATE_NAME -> this.name = packet.name();
+            case UPDATE_PROGRESS -> this.entries = packet.entries();
+            case UPDATE_STYLE -> this.overlay = packet.overlay();
         }
     }
 }

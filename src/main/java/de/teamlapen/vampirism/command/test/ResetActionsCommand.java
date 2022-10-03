@@ -10,6 +10,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +26,7 @@ public class ResetActionsCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int resetActions(CommandSourceStack commandSource, List<ServerPlayer> players) {
+    private static int resetActions(@NotNull CommandSourceStack commandSource, @NotNull List<ServerPlayer> players) {
         for (ServerPlayer player : players) {
             if (!player.isAlive()) continue;
             FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentFactionPlayer).orElseGet(Optional::empty).ifPresent(factionPlayer -> {

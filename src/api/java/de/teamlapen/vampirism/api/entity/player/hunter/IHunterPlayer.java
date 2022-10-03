@@ -4,8 +4,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Interface for the hunter player data
@@ -18,7 +17,7 @@ public interface IHunterPlayer extends IFactionPlayer<IHunterPlayer>, IHunter {
      */
     void breakDisguise();
 
-    @Nonnull
+    @NotNull
     @Override
     default IPlayableFaction<IHunterPlayer> getFaction() {
         return VReference.HUNTER_FACTION;

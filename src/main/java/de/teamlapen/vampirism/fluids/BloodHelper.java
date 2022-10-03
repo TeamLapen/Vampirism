@@ -15,8 +15,8 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -29,14 +29,14 @@ public class BloodHelper {
     /**
      * Checks if the given stack can store blood
      */
-    public static boolean canStoreBlood(@Nonnull ItemStack stack) {
+    public static boolean canStoreBlood(@NotNull ItemStack stack) {
         return fill(stack, 1000, IFluidHandler.FluidAction.SIMULATE) > 0;
     }
 
     /**
      * Returns the first glass bottle stack on the players hotbar
      */
-    public static ItemStack getGlassBottleInHotbar(Inventory inventory) {
+    public static @NotNull ItemStack getGlassBottleInHotbar(@NotNull Inventory inventory) {
         int hotbarSize = Inventory.getSelectionSize();
         for (int i = 0; i < hotbarSize; i++) {
             ItemStack itemStack = inventory.getItem(i);
@@ -50,17 +50,17 @@ public class BloodHelper {
     /**
      * Returns the amount of blood stored in the given stack
      */
-    public static int getBlood(@Nonnull ItemStack stack) {
+    public static int getBlood(@NotNull ItemStack stack) {
         return FluidUtil.getFluidContained(stack).map(FluidStack::getAmount).orElse(0);
 
     }
 
-    public static int getBlood(@Nonnull IFluidHandler cap) {
+    public static int getBlood(@NotNull IFluidHandler cap) {
         FluidStack stack = cap.drain(new FluidStack(ModFluids.BLOOD.get(), Integer.MAX_VALUE), IFluidHandler.FluidAction.SIMULATE);
         return stack.getAmount();
     }
 
-    public static int getBlood(@Nonnull LazyOptional<IFluidHandler> opt) {
+    public static int getBlood(@NotNull LazyOptional<IFluidHandler> opt) {
         return opt.map(handler -> {
             FluidStack stack = handler.drain(new FluidStack(ModFluids.BLOOD.get(), Integer.MAX_VALUE), IFluidHandler.FluidAction.SIMULATE);
             return stack.getAmount();
@@ -75,7 +75,7 @@ public class BloodHelper {
      * @param updateContainer Is called with the (new) container item after draining
      * @return Drained amount
      */
-    public static int drain(@Nonnull ItemStack stack, int amount, IFluidHandler.FluidAction action, boolean exact, Consumer<ItemStack> updateContainer) {
+    public static int drain(@NotNull ItemStack stack, int amount, IFluidHandler.@NotNull FluidAction action, boolean exact, @NotNull Consumer<ItemStack> updateContainer) {
         if (exact && action.execute()) {
             if (drain(stack, amount, IFluidHandler.FluidAction.SIMULATE, false, updateContainer) != amount) return 0;
         }
@@ -86,7 +86,7 @@ public class BloodHelper {
         }).orElse(0);
     }
 
-    public static int fill(@Nonnull ItemStack stack, int amount, IFluidHandler.FluidAction action) {
+    public static int fill(@NotNull ItemStack stack, int amount, IFluidHandler.FluidAction action) {
         return FluidUtil.getFluidHandler(stack).map(handler -> handler.fill(new FluidStack(ModFluids.BLOOD.get(), amount), action)).orElse(0);
     }
 
@@ -96,7 +96,7 @@ public class BloodHelper {
      * @param amt Fluid amount in mB
      * @return Blood amount that could not be filled
      */
-    public static int fillBloodIntoInventory(Player player, int amt) {
+    public static int fillBloodIntoInventory(@NotNull Player player, int amt) {
         if (amt <= 0) return 0;
         ItemStack stack = ItemStack.EMPTY;
         int hotbarSize = Inventory.getSelectionSize();
@@ -149,7 +149,7 @@ public class BloodHelper {
 
     }
 
-    public static boolean hasFeedingAdapterInHotbar(Inventory inventory) {
+    public static boolean hasFeedingAdapterInHotbar(@NotNull Inventory inventory) {
         int hotbarSize = Inventory.getSelectionSize();
         for (int i = 0; i < hotbarSize; i++) {
             ItemStack itemStack = inventory.getItem(i);
@@ -160,7 +160,7 @@ public class BloodHelper {
         return false;
     }
 
-    public static ItemStack getBloodContainerInInventory(Inventory inventory, boolean allowFull, boolean allowEmpty) {
+    public static @NotNull ItemStack getBloodContainerInInventory(@NotNull Inventory inventory, boolean allowFull, boolean allowEmpty) {
         for (int i = 0; i < inventory.getContainerSize(); i++) {
             ItemStack stack = inventory.getItem(i);
             FluidStack content = BloodContainerBlock.getFluidFromItemStack(stack);

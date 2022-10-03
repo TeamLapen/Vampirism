@@ -3,17 +3,19 @@ package de.teamlapen.vampirism.client.core;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
+import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.items.ArmorOfSwiftnessItem;
 import de.teamlapen.vampirism.items.CrossbowArrowItem;
-import net.minecraft.client.Minecraft;
+import de.teamlapen.vampirism.util.OilUtils;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CrossbowItem;
+import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.Stream;
 
@@ -24,29 +26,17 @@ import java.util.stream.Stream;
 public class ModItemsRender {
 
     public static void registerItemModelPropertyUnsafe() {
-        Stream.of(ModItems.BASIC_CROSSBOW.get(), ModItems.BASIC_DOUBLE_CROSSBOW.get(), ModItems.ENHANCED_CROSSBOW.get(), ModItems.ENHANCED_DOUBLE_CROSSBOW.get(), ModItems.BASIC_TECH_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get()).forEach(item -> {
-            ItemProperties.register(item, new ResourceLocation(REFERENCE.MODID, "charged"), (stack, world, entity, value) -> {
-                if (entity == null) {
-                    return 0.0F;
-                } else {
-                    return entity.getUseItem() != stack && entity instanceof Player ? ((Player) entity).getCooldowns().getCooldownPercent(stack.getItem(), Minecraft.getInstance().getFrameTime()) : 0.0F;
-                }
+        Stream.of(ModItems.BASIC_CROSSBOW.get(),ModItems.BASIC_DOUBLE_CROSSBOW.get(),ModItems.ENHANCED_CROSSBOW.get(), ModItems.ENHANCED_DOUBLE_CROSSBOW.get(),ModItems.BASIC_TECH_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get()).forEach(item -> {
+            ItemProperties.register(item, new ResourceLocation(REFERENCE.MODID, "charged"), (stack, world, entity, tint) -> {
+                return CrossbowItem.isCharged(stack) ? 0.0f : 1.0f;
             });
         });
     }
 
-    public static void registerColors(RegisterColorHandlersEvent.Item event) {
+    static void registerColors(RegisterColorHandlersEvent.@NotNull Item event) {
         // Swiftness armor
         event.register((stack, tintIndex) -> {
-            if (tintIndex == 0) {
-                return 10511680;
-            } else {
-                return switch (((ArmorOfSwiftnessItem) stack.getItem()).getVampirismTier()) {
-                    case ENHANCED -> 0x007CFF;
-                    case ULTIMATE -> 0x07F8FF;
-                    default -> 0xFFF100;
-                };
-            }
+            return tintIndex > 0 ? -1 : ((DyeableLeatherItem) stack.getItem()).getColor(stack);
         }, ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE.get());
         //Crossbow arrow
         event.register((stack, tintIndex) -> {
@@ -54,9 +44,10 @@ public class ModItemsRender {
                 return ((CrossbowArrowItem) stack.getItem()).getType().color;
             }
             return 0xFFFFFF;
-        }, ModItems.CROSSBOW_ARROW_NORMAL.get(), ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get(), ModItems.CROSSBOW_ARROW_SPITFIRE.get());
-        event.register((state, tintIndex) -> 0x1E1F1F, ModBlocks.VAMPIRE_SPRUCE_LEAVES.get());
-        event.register((state, tintIndex) -> 0x2e0606, ModBlocks.BLOODY_SPRUCE_LEAVES.get());
+        }, ModItems.CROSSBOW_ARROW_NORMAL.get(), ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get(), ModItems.CROSSBOW_ARROW_SPITFIRE.get(), ModItems.CROSSBOW_ARROW_TELEPORT.get());
+        event.register((state, tintIndex) -> {
+            return 0x1E1F1F;
+        }, ModBlocks.DARK_SPRUCE_LEAVES.get());
         event.register((stack, tintIndex) -> {
             if (tintIndex == 1) {
                 if (stack.getItem() instanceof IRefinementItem) {
@@ -69,11 +60,11 @@ public class ModItemsRender {
             return 0xFFFFFF;
         }, ModItems.AMULET.get(), ModItems.RING.get(), ModItems.OBI_BELT.get());
         event.register((stack, tintIndex) -> {
-            if (tintIndex == 0) {
-                return 0x2c2132;
-            } else {
-                return 0xFFFFFF;
+            if (tintIndex == 1) {
+                IOil oil = OilUtils.getOil(stack);
+                return oil.getColor();
             }
-        }, ModBlocks.CURSED_GRASS_BLOCK.get());
+            return 0xFFFFFF;
+        }, ModItems.OIL_BOTTLE.get());
     }
 }

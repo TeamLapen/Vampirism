@@ -10,8 +10,8 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.particle.GenericParticleData;
-import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.world.VampirismWorld;
 import net.minecraft.core.BlockPos;
@@ -35,9 +35,9 @@ import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.server.ServerLifecycleHooks;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Arrays;
 
 /**
@@ -45,15 +45,15 @@ import java.util.Arrays;
  */
 public abstract class VampirismEntity extends PathfinderMob implements IEntityWithHome, IVampirismEntity {
 
-    public static boolean spawnPredicateVampireFog(LevelAccessor world, BlockPos blockPos) {
+    public static boolean spawnPredicateVampireFog(@NotNull LevelAccessor world, @NotNull BlockPos blockPos) {
         return world.getBiome(blockPos).is(ModTags.Biomes.IS_VAMPIRE_BIOME) || (world instanceof Level && VampirismWorld.getOpt((Level) world).map(vh -> vh.isInsideArtificialVampireFogArea(blockPos)).orElse(false));
     }
 
-    public static AttributeSupplier.Builder getAttributeBuilder() {
+    public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
         return PathfinderMob.createLivingAttributes().add(Attributes.ATTACK_DAMAGE).add(Attributes.FOLLOW_RANGE, 16).add(Attributes.ATTACK_KNOCKBACK);
     }
 
-    private final Goal moveTowardsRestriction;
+    private final @NotNull Goal moveTowardsRestriction;
     protected boolean hasArms = true;
     protected boolean peaceful = false;
     /**
@@ -70,13 +70,13 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
     private int randomTickDivider;
     private boolean doImobConversion = false;
 
-    public VampirismEntity(EntityType<? extends VampirismEntity> type, Level world) {
+    public VampirismEntity(@NotNull EntityType<? extends VampirismEntity> type, @NotNull Level world) {
         super(type, world);
         moveTowardsRestriction = new MoveTowardsRestrictionGoal(this, 1.0F);
     }
 
     @Override
-    public void addAdditionalSaveData(@Nonnull CompoundTag nbt) {
+    public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         if (saveHome && home != null) {
             int[] h = {(int) home.minX, (int) home.minY, (int) home.minZ, (int) home.maxX, (int) home.maxY, (int) home.maxZ};
@@ -102,7 +102,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
     }
 
     @Override
-    public boolean checkSpawnRules(@Nonnull LevelAccessor worldIn, @Nonnull MobSpawnType spawnReasonIn) {
+    public boolean checkSpawnRules(@NotNull LevelAccessor worldIn, @NotNull MobSpawnType spawnReasonIn) {
         return (peaceful || worldIn.getDifficulty() != Difficulty.PEACEFUL) && super.checkSpawnRules(worldIn, spawnReasonIn);
     }
 
@@ -115,7 +115,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
     }
 
     @Override
-    public BlockPos getHomePosition() {
+    public @NotNull BlockPos getHomePosition() {
         return getRestrictCenter();
     }
 
@@ -125,12 +125,12 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
     }
 
     @Override
-    public boolean isWithinRestriction(@Nonnull BlockPos pos) {
+    public boolean isWithinRestriction(@NotNull BlockPos pos) {
         return this.isWithinHomeDistance(pos);
     }
 
     @Override
-    public void readAdditionalSaveData(@Nonnull CompoundTag nbt) {
+    public void readAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
         if (nbt.contains("home")) {
             saveHome = true;
@@ -143,7 +143,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
     }
 
     @Override
-    public void restrictTo(@Nonnull BlockPos pos, int distance) {
+    public void restrictTo(@NotNull BlockPos pos, int distance) {
         this.setHomeArea(pos, distance);
     }
 
@@ -162,7 +162,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
     }
 
     @Override
-    public void setHomeArea(BlockPos pos, int r) {
+    public void setHomeArea(@NotNull BlockPos pos, int r) {
         this.setHome(new AABB(pos.offset(-r, -r, -r), pos.offset(r, r, r)));
     }
 
@@ -210,7 +210,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
         return SoundEvents.HOSTILE_DEATH;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public LivingEntity.Fallsounds getFallSounds() {
         return new LivingEntity.Fallsounds(SoundEvents.HOSTILE_SMALL_FALL, SoundEvents.HOSTILE_BIG_FALL);
@@ -226,29 +226,28 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
      * @param iMob Whether we want the iMob or non iMob variant
      * @return Must be LivingEntity type
      */
-    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
+    protected @NotNull EntityType<?> getIMobTypeOpt(boolean iMob) {
         return this.getType();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     protected SoundEvent getSwimSound() {
         return SoundEvents.HOSTILE_SWIM;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     protected SoundEvent getSwimSplashSound() {
         return SoundEvents.HOSTILE_SPLASH;
     }
 
-    protected boolean isLowLightLevel(LevelAccessor iWorld) {
+    protected boolean isLowLightLevel(@NotNull LevelAccessor iWorld) {
         //copy of Monster#isDarkEnoughToSSpawn, but not requiring server level
         BlockPos blockpos = new BlockPos(this.getX(), this.getBoundingBox().minY, this.getZ());
         if (iWorld.getBrightness(LightLayer.SKY, blockpos) > this.random.nextInt(32)) {
             return false;
-        }
-        else if(iWorld.getBrightness(LightLayer.BLOCK, blockpos) > 0){
+        } else if (iWorld.getBrightness(LightLayer.BLOCK, blockpos) > 0) {
             return false;
         } else {
             int i = iWorld.getMaxLocalRawBrightness(blockpos);
@@ -284,8 +283,9 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
      */
     protected void setMoveTowardsRestriction(int prio, boolean active) {
         if (moveTowardsRestrictionAdded) {
-            if (active && moveTowardsRestrictionPrio == prio)
+            if (active && moveTowardsRestrictionPrio == prio) {
                 return;
+            }
             this.goalSelector.removeGoal(moveTowardsRestriction);
             moveTowardsRestrictionAdded = false;
         }
@@ -352,7 +352,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
     }
 
     @Override
-    public boolean canBeLeashed(@Nonnull Player player) {
+    public boolean canBeLeashed(@NotNull Player player) {
         return false;
     }
 }

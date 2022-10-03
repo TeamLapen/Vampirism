@@ -3,9 +3,8 @@ package de.teamlapen.vampirism.api.world;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.AABB;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface IVampirismWorld extends IGarlicChunkHandler {
 
@@ -28,7 +27,7 @@ public interface IVampirismWorld extends IGarlicChunkHandler {
      * @param sourcePos position of the fog generating block
      * @param area      new bounding box of the fog protected area or null if the area should be removed
      */
-    void updateArtificialFogBoundingBox(@Nonnull BlockPos sourcePos, @Nullable AABB area);
+    void updateArtificialFogBoundingBox(@NotNull BlockPos sourcePos, @Nullable AABB area);
 
     /**
      * adds/updates/removes the bounding box of a temporary event
@@ -36,5 +35,5 @@ public interface IVampirismWorld extends IGarlicChunkHandler {
      * @param sourcePos position of the fog generating event
      * @param area      new bounding box of the fog protected area or null if the area should be removed
      */
-    void updateTemporaryArtificialFog(@Nonnull BlockPos sourcePos, @Nullable AABB area);
+    void updateTemporaryArtificialFog(@NotNull BlockPos sourcePos, @Nullable AABB area);
 }

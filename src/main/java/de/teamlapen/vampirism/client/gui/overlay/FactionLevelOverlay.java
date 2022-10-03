@@ -8,12 +8,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import org.jetbrains.annotations.NotNull;
 
 public class FactionLevelOverlay extends GuiComponent implements IGuiOverlay {
     private final Minecraft mc = Minecraft.getInstance();
 
     @Override
-    public void render(ForgeGui gui, PoseStack mStack, float partialTicks, int width, int height) {
+    public void render(@NotNull ForgeGui gui, @NotNull PoseStack mStack, float partialTicks, int width, int height) {
         if (this.mc.player != null && this.mc.player.isAlive() && !this.mc.player.isRidingJumpable() && !this.mc.options.hideGui) {
             gui.setupOverlayRenderState(true, false);
 

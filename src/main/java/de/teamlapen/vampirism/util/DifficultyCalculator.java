@@ -11,9 +11,9 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.util.thread.EffectiveSide;
 import net.minecraftforge.server.ServerLifecycleHooks;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -28,7 +28,7 @@ public class DifficultyCalculator {
      */
     private static
     @Nullable
-    Difficulty calculateDifficulty(List<? extends Player> playerList) {
+    Difficulty calculateDifficulty(@Nullable List<? extends Player> playerList) {
         if (playerList == null || playerList.isEmpty()) return null;
         int min = Integer.MAX_VALUE;
         int max = 0;
@@ -37,7 +37,7 @@ public class DifficultyCalculator {
             if (!p.isAlive()) continue;
             LazyOptional<FactionPlayerHandler> handler = FactionPlayerHandler.getOpt(p);
             int pLevel = handler.map(FactionPlayerHandler::getCurrentLevel).orElse(0);
-            if ( pLevel == 0) {
+            if (pLevel == 0) {
                 min = 0;
                 continue;
             }
@@ -58,7 +58,7 @@ public class DifficultyCalculator {
      *
      * @return A difficulty level based on the world's player's faction levels
      */
-    public static Difficulty getWorldDifficulty(Level w) {
+    public static @Nullable Difficulty getWorldDifficulty(@NotNull Level w) {
         return calculateDifficulty(w.players());
     }
 
@@ -67,7 +67,7 @@ public class DifficultyCalculator {
      *
      * @return A difficulty level based on the faction level of all players in the specified area
      */
-    public static Difficulty getLocalDifficulty(Level w, BlockPos center, int radius) {
+    public static @Nullable Difficulty getLocalDifficulty(@NotNull Level w, @NotNull BlockPos center, int radius) {
 
         List<Player> list = w.getEntitiesOfClass(Player.class, UtilLib.createBB(center, radius, true));
         return calculateDifficulty(list);
@@ -79,7 +79,7 @@ public class DifficultyCalculator {
      *
      * @return A difficulty level based on the server's player's faction levels
      */
-    public static Difficulty getGlobalDifficulty() {
+    public static @Nullable Difficulty getGlobalDifficulty() {
         if (EffectiveSide.get() == LogicalSide.CLIENT) {
             throw new IllegalStateException("You can only use this method on server side");
         }
@@ -91,8 +91,8 @@ public class DifficultyCalculator {
      * ONLY CALLED SERVER SIDE
      */
     public static
-    @Nonnull
-    Difficulty findDifficultyForPos(Level world, BlockPos pos, int radius) {
+    @NotNull
+    Difficulty findDifficultyForPos(@NotNull Level world, @NotNull BlockPos pos, int radius) {
         Difficulty d = getLocalDifficulty(world, pos, radius);
         if (d == null) {
             d = getWorldDifficulty(world);

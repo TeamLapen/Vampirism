@@ -13,6 +13,7 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -28,16 +29,16 @@ public class ModFluids {
             .descriptionId(ModList.get().isLoaded(REFERENCE.INTEGRATIONS_MODID) ? "fluid.vampirism.blood.vampirism" : "fluid.vampirism.blood")) {
 
         @Override
-        public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
+        public void initializeClient(@NotNull Consumer<IClientFluidTypeExtensions> consumer) {
             consumer.accept(new IClientFluidTypeExtensions() {
 
                 @Override
-                public ResourceLocation getStillTexture() {
+                public @NotNull ResourceLocation getStillTexture() {
                     return new ResourceLocation(REFERENCE.MODID, "block/blood_still");
                 }
 
                 @Override
-                public ResourceLocation getFlowingTexture() {
+                public @NotNull ResourceLocation getFlowingTexture() {
                     return new ResourceLocation(REFERENCE.MODID, "block/blood_flow");
                 }
 
@@ -57,16 +58,16 @@ public class ModFluids {
             .descriptionId(ModList.get().isLoaded(REFERENCE.INTEGRATIONS_MODID) ? "fluid.vampirism.blood.vampirism" : "fluid.vampirism.blood")) {
 
         @Override
-        public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
+        public void initializeClient(@NotNull Consumer<IClientFluidTypeExtensions> consumer) {
             consumer.accept(new IClientFluidTypeExtensions() {
 
                 @Override
-                public ResourceLocation getStillTexture() {
+                public @NotNull ResourceLocation getStillTexture() {
                     return new ResourceLocation(REFERENCE.MODID, "block/impure_blood_still");
                 }
 
                 @Override
-                public ResourceLocation getFlowingTexture() {
+                public @NotNull ResourceLocation getFlowingTexture() {
                     return new ResourceLocation(REFERENCE.MODID, "block/impure_blood_flow");
                 }
 
@@ -80,7 +81,7 @@ public class ModFluids {
     public static final RegistryObject<Fluid> BLOOD = FLUIDS.register("blood", BloodFluid::new);
     public static final RegistryObject<Fluid> IMPURE_BLOOD = FLUIDS.register("impure_blood", ImpureBloodFluid::new);
 
-    static void registerFluids(IEventBus bus) {
+    static void register(IEventBus bus) {
         FLUIDS.register(bus);
         FLUID_TYPES.register(bus);
     }

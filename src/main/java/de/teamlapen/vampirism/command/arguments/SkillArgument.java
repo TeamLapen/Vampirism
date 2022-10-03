@@ -14,6 +14,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -23,11 +24,11 @@ public class SkillArgument implements ArgumentType<ISkill<?>> {
     public static final DynamicCommandExceptionType SKILL_NOT_FOUND = new DynamicCommandExceptionType((particle) -> Component.translatable("command.vampirism.argument.skill.notfound", particle));
     private static final Collection<String> EXAMPLES = Arrays.asList("skill", "modid:skill");
 
-    public static SkillArgument skills() {
+    public static @NotNull SkillArgument skills() {
         return new SkillArgument();
     }
 
-    public static ISkill<?> getSkill(CommandContext<CommandSourceStack> context, String name) {
+    public static ISkill<?> getSkill(@NotNull CommandContext<CommandSourceStack> context, String name) {
         return context.getArgument(name, ISkill.class);
     }
 
@@ -37,16 +38,17 @@ public class SkillArgument implements ArgumentType<ISkill<?>> {
     }
 
     @Override
-    public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
+    public <S> @NotNull CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, @NotNull SuggestionsBuilder builder) {
         return SharedSuggestionProvider.suggestResource(RegUtil.keys(ModRegistries.SKILLS), builder);
     }
 
     @Override
-    public ISkill<?> parse(StringReader reader) throws CommandSyntaxException {
+    public @NotNull ISkill<?> parse(@NotNull StringReader reader) throws CommandSyntaxException {
         ResourceLocation id = ResourceLocation.read(reader);
         ISkill<?> skill = RegUtil.getSkill(id);
-        if (skill == null)
+        if (skill == null) {
             throw SKILL_NOT_FOUND.create(id);
+        }
         return skill;
     }
 }

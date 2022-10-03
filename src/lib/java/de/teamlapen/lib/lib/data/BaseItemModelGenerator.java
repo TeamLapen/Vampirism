@@ -9,12 +9,11 @@ import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class BaseItemModelGenerator extends ItemModelProvider {
 
-    public BaseItemModelGenerator(DataGenerator generator, String modid, ExistingFileHelper existingFileHelper) {
+    public BaseItemModelGenerator(@NotNull DataGenerator generator, @NotNull String modid, @NotNull ExistingFileHelper existingFileHelper) {
         super(generator, modid, existingFileHelper);
     }
 
@@ -25,7 +24,7 @@ public abstract class BaseItemModelGenerator extends ItemModelProvider {
      */
     @SuppressWarnings("ConstantConditions")
     public ItemModelBuilder block(Block name) {
-        return block(name, ForgeRegistries.BLOCKS.getKey(name) .getPath());
+        return block(name, ForgeRegistries.BLOCKS.getKey(name).getPath());
     }
 
     /**
@@ -37,13 +36,13 @@ public abstract class BaseItemModelGenerator extends ItemModelProvider {
     @SuppressWarnings("ConstantConditions")
     public ItemModelBuilder block(Block name, String path) {
         try {
-            return super.withExistingParent(ForgeRegistries.BLOCKS.getKey(name) .getPath(), this.modid + ":block/" + path);
+            return super.withExistingParent(ForgeRegistries.BLOCKS.getKey(name).getPath(), this.modid + ":block/" + path);
         } catch (IllegalStateException e) {
-            return getBuilder(ForgeRegistries.BLOCKS.getKey(name) .getPath()).parent(new ModelFile.UncheckedModelFile(this.modid + ":block/" + path));
+            return getBuilder(ForgeRegistries.BLOCKS.getKey(name).getPath()).parent(new ModelFile.UncheckedModelFile(this.modid + ":block/" + path));
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String getName() {
         return this.modid + " Item Models";
@@ -77,7 +76,7 @@ public abstract class BaseItemModelGenerator extends ItemModelProvider {
      * @param item    the item for the {@link ItemModelBuilder}
      * @param texture all layers for the model
      */
-    public ItemModelBuilder item(String item, ResourceLocation... texture) {
+    public ItemModelBuilder item(String item, ResourceLocation @NotNull ... texture) {
         ItemModelBuilder model = withExistingParent(item, mcLoc("item/generated"));
         for (int i = 0; i < texture.length; i++) {
             model.texture("layer" + i, texture[i]);
@@ -85,20 +84,20 @@ public abstract class BaseItemModelGenerator extends ItemModelProvider {
         return model;
     }
 
-    @Nonnull
+    @NotNull
     public ItemModelBuilder withExistingParent(Item name, Item parent) {
         return this.withExistingParent(name, ForgeRegistries.ITEMS.getKey(parent));
     }
 
     @SuppressWarnings({"UnusedReturnValue", "ConstantConditions"})
-    @Nonnull
+    @NotNull
     public ItemModelBuilder withExistingParent(Block name, ResourceLocation parent) {
-        return super.withExistingParent(ForgeRegistries.BLOCKS.getKey(name) .getPath(), parent);
+        return super.withExistingParent(ForgeRegistries.BLOCKS.getKey(name).getPath(), parent);
     }
 
     @SuppressWarnings("ConstantConditions")
-    @Nonnull
+    @NotNull
     public ItemModelBuilder withExistingParent(Item name, ResourceLocation parent) {
-        return super.withExistingParent(ForgeRegistries.ITEMS.getKey(name) .getPath(), parent);
+        return super.withExistingParent(ForgeRegistries.ITEMS.getKey(name).getPath(), parent);
     }
 }

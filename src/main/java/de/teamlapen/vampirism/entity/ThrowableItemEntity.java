@@ -19,8 +19,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(
         value = Dist.CLIENT,
@@ -31,16 +30,16 @@ public class ThrowableItemEntity extends ThrowableProjectile implements ItemSupp
     private final static Logger LOGGER = LogManager.getLogger(ThrowableItemEntity.class);
     private static final EntityDataAccessor<ItemStack> ITEM = SynchedEntityData.defineId(ThrowableItemEntity.class, EntityDataSerializers.ITEM_STACK);
 
-    public ThrowableItemEntity(EntityType<? extends ThrowableItemEntity> type, Level worldIn) {
+    public ThrowableItemEntity(@NotNull EntityType<? extends ThrowableItemEntity> type, @NotNull Level worldIn) {
         super(type, worldIn);
     }
 
-    public ThrowableItemEntity(Level worldIn, LivingEntity thrower) {
+    public ThrowableItemEntity(@NotNull Level worldIn, @NotNull LivingEntity thrower) {
         super(ModEntities.THROWABLE_ITEM.get(), thrower, worldIn);
     }
 
     @Override
-    public void addAdditionalSaveData(@Nonnull CompoundTag compound) {
+    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         ItemStack stack = getItem();
         if (!stack.isEmpty()) {
@@ -48,7 +47,7 @@ public class ThrowableItemEntity extends ThrowableProjectile implements ItemSupp
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
@@ -58,7 +57,7 @@ public class ThrowableItemEntity extends ThrowableProjectile implements ItemSupp
      * @return Itemstack represented by this entity. Corresponding item is instance of {@link IVampirismThrowableItem}
      */
     public
-    @Nonnull
+    @NotNull
     ItemStack getItem() {
         return this.getEntityData().get(ITEM);
     }
@@ -69,14 +68,15 @@ public class ThrowableItemEntity extends ThrowableProjectile implements ItemSupp
      *
      * @param stack Corresponding item has to be instance of {@link IVampirismThrowableItem}
      */
-    public void setItem(@Nonnull ItemStack stack) {
-        if (!stack.isEmpty() && !(stack.getItem() instanceof IVampirismThrowableItem))
+    public void setItem(@NotNull ItemStack stack) {
+        if (!stack.isEmpty() && !(stack.getItem() instanceof IVampirismThrowableItem)) {
             throw new IllegalArgumentException("EntityThrowable only accepts IVampirismThrowableItem, but not " + stack);
+        }
         this.getEntityData().set(ITEM, stack);
     }
 
     @Override
-    public void readAdditionalSaveData(@Nonnull CompoundTag compound) {
+    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         ItemStack stack = ItemStack.of(compound.getCompound("thrownItem"));
         if (stack.isEmpty()) {
@@ -96,7 +96,7 @@ public class ThrowableItemEntity extends ThrowableProjectile implements ItemSupp
     }
 
     @Override
-    protected void onHit(@Nonnull HitResult result) {
+    protected void onHit(@NotNull HitResult result) {
         ItemStack stack = getItem();
         if (!stack.isEmpty()) {
             Item item = stack.getItem();

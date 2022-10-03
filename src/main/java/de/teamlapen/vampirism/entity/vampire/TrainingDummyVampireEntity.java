@@ -8,8 +8,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 
 public class TrainingDummyVampireEntity extends BasicVampireEntity {
@@ -24,7 +23,7 @@ public class TrainingDummyVampireEntity extends BasicVampireEntity {
     }
 
     @Override
-    public boolean hurt(@Nonnull DamageSource damageSource, float amount) {
+    public boolean hurt(@NotNull DamageSource damageSource, float amount) {
         if (!this.level.isClientSide) {
             this.level.getNearbyPlayers(PREDICATE, this, this.getBoundingBox().inflate(40)).forEach(p -> p.displayClientMessage(Component.literal("Damage " + amount + " from " + damageSource.msgId), false));
             if (this.startTicks != 0) this.damageTaken += amount;
@@ -34,20 +33,20 @@ public class TrainingDummyVampireEntity extends BasicVampireEntity {
     }
 
     @Override
-    public void convertToMinion(Player lord) {
+    public void convertToMinion(@NotNull Player lord) {
         super.convertToMinion(lord);
     }
 
     @Override
-    protected void actuallyHurt(DamageSource damageSrc, float damageAmount) {
+    protected void actuallyHurt(@NotNull DamageSource damageSrc, float damageAmount) {
         if (damageSrc.isBypassInvul()) {
             super.actuallyHurt(damageSrc, damageAmount);
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    protected InteractionResult mobInteract(@Nonnull Player player, @Nonnull InteractionHand hand) { //processInteract
+    protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) { //processInteract
         if (!this.level.isClientSide && hand == InteractionHand.MAIN_HAND) {
             if (startTicks == 0) {
                 player.displayClientMessage(Component.literal("Start recording"), false);

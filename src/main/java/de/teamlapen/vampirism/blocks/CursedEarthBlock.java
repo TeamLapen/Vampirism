@@ -20,25 +20,22 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.IPlantable;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class CursedEarthBlock extends VampirismBlock {
 
     public CursedEarthBlock() {
-        super(Properties.of(Material.DIRT, MaterialColor.WARPED_HYPHAE).strength(0.5f, 2.0f).sound(SoundType.GRAVEL));
+        super(Properties.of(Material.DIRT, MaterialColor.TERRACOTTA_BROWN).strength(0.5f, 2.0f).sound(SoundType.GRAVEL));
 
     }
 
     @Override
-    public boolean canSustainPlant(@Nonnull BlockState state, @Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nonnull Direction direction, @Nonnull IPlantable plantable) {
+    public boolean canSustainPlant(@NotNull BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos, @NotNull Direction direction, @NotNull IPlantable plantable) {
         return plantable instanceof BushBlock || plantable.getPlantType(world, pos).equals(VReference.VAMPIRE_PLANT_TYPE);
     }
 
-
-    @Nonnull
     @Override
-    public InteractionResult use(@Nonnull BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, Player player, @Nonnull InteractionHand handIn, @Nonnull BlockHitResult hit) {
+    public @NotNull InteractionResult use(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
         ItemStack heldItemStack = player.getItemInHand(handIn);
         Item heldItem = heldItemStack.getItem();
         if (heldItem instanceof HolyWaterBottleItem) {

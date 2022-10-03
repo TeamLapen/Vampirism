@@ -1,11 +1,23 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_iron": {
+    "has_blood_container": {
       "conditions": {
         "items": [
           {
-            "tag": "forge:ingots/iron"
+            "items": [
+              "vampirism:blood_container"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_planks": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "minecraft:planks"
           }
         ]
       },
@@ -20,7 +32,8 @@
   },
   "requirements": [
     [
-      "has_iron",
+      "has_planks",
+      "has_blood_container",
       "has_the_recipe"
     ]
   ],

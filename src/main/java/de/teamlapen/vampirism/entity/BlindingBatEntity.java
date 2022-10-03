@@ -23,8 +23,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -32,7 +32,7 @@ import java.util.List;
  */
 public class BlindingBatEntity extends Bat {
 
-    public static boolean spawnPredicate(EntityType<? extends BlindingBatEntity> entityType, LevelAccessor iWorld, MobSpawnType spawnReason, BlockPos blockPos, RandomSource random) {
+    public static boolean spawnPredicate(@NotNull EntityType<? extends BlindingBatEntity> entityType, @NotNull LevelAccessor iWorld, MobSpawnType spawnReason, @NotNull BlockPos blockPos, @NotNull RandomSource random) {
         if (iWorld.getBiome(blockPos).is(ModTags.Biomes.IS_VAMPIRE_BIOME)) {
             return true;
         }
@@ -55,12 +55,12 @@ public class BlindingBatEntity extends Bat {
     private boolean targeting;
     private boolean targetingMob = false;
 
-    public BlindingBatEntity(EntityType<? extends BlindingBatEntity> type, Level worldIn) {
+    public BlindingBatEntity(@NotNull EntityType<? extends BlindingBatEntity> type, @NotNull Level worldIn) {
         super(type, worldIn);
     }
 
     @Override
-    public boolean checkSpawnRules(LevelAccessor worldIn, @Nonnull MobSpawnType spawnReasonIn) {
+    public boolean checkSpawnRules(@NotNull LevelAccessor worldIn, @NotNull MobSpawnType spawnReasonIn) {
         return worldIn.isUnobstructed(this, Shapes.create(this.getBoundingBox())) && worldIn.isUnobstructed(this) && !worldIn.containsAnyLiquid(this.getBoundingBox()); //Check no entity collision
     }
 

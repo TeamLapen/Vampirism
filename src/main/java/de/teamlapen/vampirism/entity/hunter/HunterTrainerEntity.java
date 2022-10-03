@@ -3,11 +3,11 @@ package de.teamlapen.vampirism.entity.hunter;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.ICaptureIgnore;
 import de.teamlapen.vampirism.entity.VampirismEntity;
-import de.teamlapen.vampirism.entity.goals.ForceLookEntityGoal;
+import de.teamlapen.vampirism.entity.ai.goals.ForceLookEntityGoal;
+import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
+import de.teamlapen.vampirism.entity.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
-import de.teamlapen.vampirism.inventory.container.HunterTrainerContainer;
-import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
-import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
+import de.teamlapen.vampirism.inventory.HunterTrainerMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -28,8 +28,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 import java.util.Optional;
 
 /**
@@ -39,7 +40,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
     private static final Component name = Component.translatable("container.huntertrainer");
     private static final int MOVE_TO_RESTRICT_PRIO = 3;
 
-    public static AttributeSupplier.Builder getAttributeBuilder() {
+    public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
         return VampirismEntity.getAttributeBuilder()
                 .add(Attributes.MAX_HEALTH, 300)
                 .add(Attributes.ATTACK_DAMAGE, 19)
@@ -47,7 +48,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
                 .add(Attributes.FOLLOW_RANGE, 5);
     }
 
-    private Player trainee;
+    private @Nullable Player trainee;
     private boolean shouldCreateHome;
 
     public HunterTrainerEntity(EntityType<? extends HunterTrainerEntity> type, Level world) {
@@ -60,7 +61,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
     }
 
     @Override
-    public void addAdditionalSaveData(@Nonnull CompoundTag nbt) {
+    public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putBoolean("createHome", this.shouldCreateHome);
     }
@@ -68,27 +69,27 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
     @Override
     public void aiStep() {
         super.aiStep();
-        if (trainee != null && !(trainee.containerMenu instanceof HunterTrainerContainer)) {
+        if (trainee != null && !(trainee.containerMenu instanceof HunterTrainerMenu)) {
             this.trainee = null;
         }
     }
 
     @Override
-    public boolean hurt(@Nonnull DamageSource source, float amount) {
+    public boolean hurt(@NotNull DamageSource source, float amount) {
         return super.hurt(source, amount);
     }
 
     /**
      * @return The player which has the trainings gui open.
      */
-    @Nonnull
+    @NotNull
     @Override
     public Optional<Player> getForceLookTarget() {
         return Optional.ofNullable(trainee);
     }
 
     @Override
-    public void readAdditionalSaveData(@Nonnull CompoundTag nbt) {
+    public void readAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
         if (nbt.contains("createHome") && (this.shouldCreateHome = nbt.getBoolean("createHome"))) {
             if (this.getRestrictCenter().equals(BlockPos.ZERO)) {
@@ -113,9 +114,9 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
         return true;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    protected InteractionResult mobInteract(@Nonnull Player player, @Nonnull InteractionHand hand) {
+    protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (tryCureSanguinare(player)) return InteractionResult.SUCCESS;
         ItemStack stack = player.getItemInHand(hand);
         boolean flag = !stack.isEmpty() && stack.getItem() instanceof SpawnEggItem;
@@ -126,7 +127,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
                 int levelCorrect = HunterLevelingConf.instance().isLevelValidForTrainer(lvl + 1);
                 if (levelCorrect == 0) {
                     if (trainee == null) {
-                        player.openMenu(new SimpleMenuProvider((id, playerInventory, playerEntity) -> new HunterTrainerContainer(id, playerInventory, this), name));
+                        player.openMenu(new SimpleMenuProvider((id, playerInventory, playerEntity) -> new HunterTrainerMenu(id, playerInventory, this), name));
                         this.trainee = player;
                         this.getNavigation().stop();
                     } else {

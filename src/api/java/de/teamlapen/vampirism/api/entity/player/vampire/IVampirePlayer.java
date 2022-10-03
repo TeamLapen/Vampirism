@@ -8,9 +8,8 @@ import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Interface for the player vampire data.
@@ -43,13 +42,13 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
     /**
      * @return The bite type which would be applied to the give entity
      */
-    @Nonnull
+    @NotNull
     BITE_TYPE determineBiteType(LivingEntity entity);
 
     /**
      * @return The players vampire skill handler
      */
-    @Nonnull
+    @NotNull
     IActionHandler<IVampirePlayer> getActionHandler();
 
     /**
@@ -63,10 +62,10 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
     /**
      * @return The players blood stats (similar to food stats)
      */
-    @Nonnull
+    @NotNull
     IBloodStats getBloodStats();
 
-    @Nonnull
+    @NotNull
     @Override
     default IPlayableFaction<IVampirePlayer> getFaction() {
         return VReference.VAMPIRE_FACTION;
@@ -79,6 +78,7 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
 
     /**
      * TODO should this method be used somewhere?
+     *
      * @return Whether automatically filling blood into bottles is enabled or not.
      */
     @SuppressWarnings("SameReturnValue")
@@ -101,13 +101,13 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
     /**
      * Locks the vision again, preventing the player from using it
      */
-    void unUnlockVision(@Nonnull IVampireVision vision);
+    void unUnlockVision(@NotNull IVampireVision vision);
 
     /**
      * Unlocks the given vision, so the player can activate it.
      * Is not saved to nbt
      */
-    void unlockVision(@Nonnull IVampireVision vision);
+    void unlockVision(@NotNull IVampireVision vision);
 
     enum BITE_TYPE {
         SUCK_BLOOD_CREATURE, SUCK_BLOOD_PLAYER, SUCK_BLOOD, NONE, HUNTER_CREATURE

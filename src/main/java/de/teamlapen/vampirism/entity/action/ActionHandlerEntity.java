@@ -10,8 +10,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -31,7 +32,7 @@ public class ActionHandlerEntity<T extends PathfinderMob & IEntityActionUser> im
     private IEntityAction action;
     private boolean isPlayerTarget;
 
-    public ActionHandlerEntity(T entityIn) {
+    public ActionHandlerEntity(@NotNull T entityIn) {
         this.entity = entityIn;
         this.availableActions = entityIn.getAvailableActions();
     }
@@ -71,7 +72,7 @@ public class ActionHandlerEntity<T extends PathfinderMob & IEntityActionUser> im
         return isPlayerTarget;
     }
 
-    public void read(CompoundTag nbt) {
+    public void read(@NotNull CompoundTag nbt) {
         if (nbt.contains("activeAction")) {
             deactivateAction(RegUtil.getEntityAction(new ResourceLocation(nbt.getString("activeAction"))));
             isPlayerTarget = true;
@@ -85,7 +86,7 @@ public class ActionHandlerEntity<T extends PathfinderMob & IEntityActionUser> im
         preActivation = -1;
     }
 
-    public void write(CompoundTag nbt) {
+    public void write(@NotNull CompoundTag nbt) {
         if (isPlayerTarget() && action != null) {
             nbt.putString("activeAction", RegUtil.id(action).toString());
         }

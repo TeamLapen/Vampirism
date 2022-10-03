@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.core;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
-import de.teamlapen.vampirism.player.refinements.Refinement;
+import de.teamlapen.vampirism.entity.player.refinements.Refinement;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -68,9 +68,10 @@ public class ModRefinements {
     public static final RegistryObject<Refinement> FREEZE_DURATION = REFINEMENTS.register("freeze_duration", Refinement::new);
     public static final RegistryObject<Refinement> BLOOD_CHARGE_SPEED = REFINEMENTS.register("blood_charge_speed", Refinement::new);
     public static final RegistryObject<Refinement> SWORD_TRAINED_AMOUNT = REFINEMENTS.register("sword_trained_amount", Refinement::new);
+    public static final RegistryObject<Refinement> CRUCIFIX_RESISTANT = REFINEMENTS.register("crucifix_resistant", Refinement::new);
 
 
-    public static void registerRefinements(IEventBus bus) {
+    public static void register(IEventBus bus) {
         REFINEMENTS.register(bus);
     }
 }

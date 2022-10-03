@@ -9,8 +9,8 @@ import net.minecraft.world.item.Item;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -24,14 +24,16 @@ public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> imp
     private final NonNullSupplier<Capability<T>> playerCapabilitySupplier;
     private final BiFunction<Integer, Boolean, Component> lordTitleFunction;
     private final Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot;
+    private final boolean hasLordSkills;
 
-    PlayableFaction(FactionRegistry.PlayableFactionBuilder<T> builder) {
+    PlayableFaction(FactionRegistry.@NotNull PlayableFactionBuilder<T> builder) {
         super(builder);
         this.highestLevel = builder.highestLevel;
         this.highestLordLevel = builder.highestLordLevel;
         this.playerCapabilitySupplier = builder.playerCapabilitySupplier;
         this.lordTitleFunction = builder.lordTitleFunction;
         this.refinementItemBySlot = builder.refinementItemBySlot;
+        this.hasLordSkills = builder.hasLordSkills;
     }
 
     @Override
@@ -49,7 +51,12 @@ public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> imp
         return highestLevel;
     }
 
-    @Nonnull
+    @Override
+    public boolean hasLordSkills() {
+        return this.hasLordSkills;
+    }
+
+    @NotNull
     @Override
     public Component getLordTitle(int level, boolean female) {
         assert level <= highestLordLevel;
@@ -57,7 +64,7 @@ public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> imp
     }
 
     @Override
-    public LazyOptional<T> getPlayerCapability(Player player) {
+    public @NotNull LazyOptional<T> getPlayerCapability(@NotNull Player player) {
         return player.getCapability(playerCapabilitySupplier.get(), null);
     }
 
@@ -74,7 +81,7 @@ public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> imp
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return "PlayableFaction{" +
                 "id='" + id + '\'' +
                 '}';

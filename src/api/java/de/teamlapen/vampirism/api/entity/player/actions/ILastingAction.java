@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api.entity.player.actions;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import net.minecraft.world.entity.player.Player;
 
 /**
  * Action with a duration which is updated every tick
@@ -37,4 +38,11 @@ public interface ILastingAction<T extends IFactionPlayer<T>> extends IAction<T> 
      * @return if true the lasting action is cancelled
      */
     boolean onUpdate(T player);
+
+    /**
+     * @return if the action's duration should be rendered in the HUD
+     */
+    default boolean showHudDuration(Player player) {
+        return false;
+    }
 }

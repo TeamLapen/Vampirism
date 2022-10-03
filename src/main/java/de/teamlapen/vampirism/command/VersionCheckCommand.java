@@ -11,6 +11,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -20,12 +21,12 @@ public class VersionCheckCommand extends BasicCommand {
         return setup(Commands.literal("checkForUpdate"));
     }
 
-    private static ArgumentBuilder<CommandSourceStack, ?> setup(ArgumentBuilder<CommandSourceStack, ?> builder) {
+    private static ArgumentBuilder<CommandSourceStack, ?> setup(@NotNull ArgumentBuilder<CommandSourceStack, ?> builder) {
         return builder.requires(context -> context.hasPermission(PERMISSION_LEVEL_ALL))
                 .executes(VersionCheckCommand::changelog);
     }
 
-    private static int changelog(CommandContext<CommandSourceStack> context) {
+    private static int changelog(@NotNull CommandContext<CommandSourceStack> context) {
         if (!VampirismMod.instance.getVersionInfo().isNewVersionAvailable()) {
             context.getSource().sendSuccess(Component.translatable("command.vampirism.base.changelog.newversion"), false);
             return 0;

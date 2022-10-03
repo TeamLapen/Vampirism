@@ -4,8 +4,8 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.core.ModFluids;
+import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.fluids.BloodHelper;
-import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -16,8 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class FeedingAdapterItem extends Item {
 
@@ -26,14 +25,14 @@ public class FeedingAdapterItem extends Item {
     }
 
 
-    @Nonnull
+    @NotNull
     @Override
-    public UseAnim getUseAnimation(@Nonnull ItemStack stack) {
+    public UseAnim getUseAnimation(@NotNull ItemStack stack) {
         return UseAnim.DRINK;
     }
 
     @Override
-    public int getUseDuration(@Nonnull ItemStack stack) {
+    public int getUseDuration(@NotNull ItemStack stack) {
         return 15;
     }
 
@@ -65,9 +64,9 @@ public class FeedingAdapterItem extends Item {
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public InteractionResultHolder<ItemStack> use(@Nonnull Level worldIn, Player playerIn, @Nonnull InteractionHand handIn) {
+    public InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         return VampirePlayer.getOpt(playerIn).map(vampire -> {
             if (vampire.getLevel() == 0) return new InteractionResultHolder<>(InteractionResult.PASS, stack);

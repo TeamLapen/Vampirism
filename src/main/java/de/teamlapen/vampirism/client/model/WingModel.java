@@ -12,8 +12,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 
 
@@ -23,12 +23,12 @@ public class WingModel<T extends LivingEntity> extends AgeableListModel<T> {
     private static final String WING_LEFT = "wing_left";
     private static final String WING_LEFT2 = "wing_left2";
 
-    public final ModelPart wingRight;
-    public final ModelPart wingLeft;
-    public final ModelPart wingRight2;
-    public final ModelPart wingLeft2;
+    public final @NotNull ModelPart wingRight;
+    public final @NotNull ModelPart wingLeft;
+    public final @NotNull ModelPart wingRight2;
+    public final @NotNull ModelPart wingLeft2;
 
-    public static LayerDefinition createLayer() {
+    public static @NotNull LayerDefinition createLayer() {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition part = mesh.getRoot();
         PartDefinition wingr = part.addOrReplaceChild(WING_RIGHT, CubeListBuilder.create().texOffs(0, 46).addBox(-18, -6, 0, 18, 18, 0), PartPose.offsetAndRotation(0.2f, 2.5f, 2, 0.136659280431156F, 0.5462880558742251F, 0.27314402793711257F));
@@ -40,7 +40,7 @@ public class WingModel<T extends LivingEntity> extends AgeableListModel<T> {
     }
 
 
-    public WingModel(ModelPart part) {
+    public WingModel(@NotNull ModelPart part) {
         wingRight = part.getChild(WING_RIGHT);
         wingRight2 = wingRight.getChild(WING_RIGHT2);
         wingLeft = part.getChild(WING_LEFT);
@@ -49,7 +49,7 @@ public class WingModel<T extends LivingEntity> extends AgeableListModel<T> {
 
     }
 
-    public void copyRotationFromBody(ModelPart body) {
+    public void copyRotationFromBody(@NotNull ModelPart body) {
         this.wingLeft.yRot = body.yRot;
         this.wingLeft2.yRot = body.yRot;
         this.wingRight.yRot = body.yRot;
@@ -61,7 +61,7 @@ public class WingModel<T extends LivingEntity> extends AgeableListModel<T> {
     }
 
     @Override
-    public void prepareMobModel(T entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
+    public void prepareMobModel(@NotNull T entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
         if (entityIn.isShiftKeyDown()) {
             this.wingRight.y = 3.0f;
             this.wingLeft.y = 3.0f;
@@ -80,29 +80,29 @@ public class WingModel<T extends LivingEntity> extends AgeableListModel<T> {
     /**
      * This is a helper function from Tabula to set the rotation of model parts
      */
-    public void setRotateAngle(ModelPart ModelRenderer, float x, float y, float z) {
+    public void setRotateAngle(@NotNull ModelPart ModelRenderer, float x, float y, float z) {
         ModelRenderer.xRot = x;
         ModelRenderer.yRot = y;
         ModelRenderer.zRot = z;
     }
 
     @Override
-    public void setupAnim(@Nonnull T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(@NotNull T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 
     }
 
-    @Nonnull
+    @NotNull
     @Override
     protected Iterable<ModelPart> bodyParts() {
         return ImmutableList.of(this.wingLeft, this.wingRight);
     }
 
-    protected HumanoidArm getSwingingSide(T entity) {
+    protected @NotNull HumanoidArm getSwingingSide(@NotNull T entity) {
         HumanoidArm handside = entity.getMainArm();
         return entity.swingingArm == InteractionHand.MAIN_HAND ? handside : handside.getOpposite();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     protected Iterable<ModelPart> headParts() {
         return Collections.emptyList();

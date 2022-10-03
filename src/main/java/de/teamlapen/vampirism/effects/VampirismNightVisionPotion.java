@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.effects;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import de.teamlapen.vampirism.api.effects.IHiddenEffectInstance;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
 import net.minecraft.world.effect.MobEffect;
@@ -11,6 +12,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientMobEffectExtensions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -27,16 +29,16 @@ public class VampirismNightVisionPotion extends MobEffect {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void initializeClient(Consumer<IClientMobEffectExtensions> consumer) {
+    public void initializeClient(@NotNull Consumer<IClientMobEffectExtensions> consumer) {
         consumer.accept(new IClientMobEffectExtensions() {
             @Override
             public boolean isVisibleInInventory(MobEffectInstance instance) {
-                return !(instance instanceof VampireNightVisionEffectInstance);
+                return !(instance instanceof IHiddenEffectInstance);
             }
 
             @Override
             public boolean isVisibleInGui(MobEffectInstance instance) {
-                return !(instance instanceof VampireNightVisionEffectInstance);
+                return !(instance instanceof IHiddenEffectInstance);
             }
 
             @Override

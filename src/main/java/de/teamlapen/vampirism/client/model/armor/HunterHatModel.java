@@ -12,6 +12,7 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 
 @OnlyIn(Dist.CLIENT)
@@ -20,7 +21,7 @@ public class HunterHatModel extends VampirismArmorModel {
     private static final String HAT_TOP = "hat_top";
     private static final String HAT_RIM = "hat_rim";
 
-    public static LayerDefinition createLayer(float p_170683_, int type) {
+    public static @NotNull LayerDefinition createLayer(float p_170683_, int type) {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition part = mesh.getRoot();
         if (type == 1) {
@@ -35,8 +36,8 @@ public class HunterHatModel extends VampirismArmorModel {
 
     private static HunterHatModel hat0;
     private static HunterHatModel hat1;
-    private final ModelPart hatTop;
-    private final ModelPart hatRim;
+    private final @NotNull ModelPart hatTop;
+    private final @NotNull ModelPart hatRim;
 
     public static HunterHatModel getAdjustedInstance0(HumanoidModel<?> wearerModel) {
         if (hat0 == null) {
@@ -55,7 +56,7 @@ public class HunterHatModel extends VampirismArmorModel {
     }
 
 
-    public HunterHatModel(ModelPart part) {
+    public HunterHatModel(@NotNull ModelPart part) {
         super();
         this.hatTop = part.getChild(HAT_TOP);
         this.hatRim = part.getChild(HAT_RIM);
@@ -63,7 +64,7 @@ public class HunterHatModel extends VampirismArmorModel {
 
 
     @Override
-    protected Iterable<ModelPart> getHeadModels() {
+    protected @NotNull Iterable<ModelPart> getHeadModels() {
         return ImmutableList.of(hatTop, hatRim);
     }
 }

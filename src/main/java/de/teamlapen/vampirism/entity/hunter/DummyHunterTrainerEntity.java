@@ -16,8 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Hunter Trainer which allows Hunter players to level up
@@ -51,9 +50,9 @@ public class DummyHunterTrainerEntity extends VampirismEntity implements ICaptur
         this.setMoveTowardsRestriction(MOVE_TO_RESTRICT_PRIO, true);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    protected InteractionResult mobInteract(Player player, @Nonnull InteractionHand hand) {
+    protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         boolean flag = !stack.isEmpty() && stack.getItem() instanceof SpawnEggItem;
 

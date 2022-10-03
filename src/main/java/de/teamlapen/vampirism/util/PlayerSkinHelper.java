@@ -11,6 +11,8 @@ import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -33,7 +35,7 @@ public class PlayerSkinHelper {
      * @param input    GameProfile containing at least the players name
      * @param callback Will be called with the populated profile. Might be called outside the main thread
      */
-    public static void updateGameProfileAsync(final GameProfile input, Consumer<GameProfile> callback) {
+    public static void updateGameProfileAsync(final @Nullable GameProfile input, @NotNull Consumer<GameProfile> callback) {
         if (input != null) {
             if (input.isComplete() && input.getProperties().containsKey("textures")) {
                 callback.accept(input);
@@ -59,7 +61,7 @@ public class PlayerSkinHelper {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static void obtainPlayerSkinPropertiesAsync(final GameProfile input, Consumer<Pair<ResourceLocation, Boolean>> callback) {
+    public static void obtainPlayerSkinPropertiesAsync(final GameProfile input, @NotNull Consumer<Pair<ResourceLocation, Boolean>> callback) {
         updateGameProfileAsync(input, p -> {
             ResourceLocation loc;
             boolean alex;

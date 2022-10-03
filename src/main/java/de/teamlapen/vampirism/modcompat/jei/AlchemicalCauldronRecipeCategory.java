@@ -6,7 +6,7 @@ import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.inventory.recipes.AlchemicalCauldronRecipe;
+import de.teamlapen.vampirism.recipes.AlchemicalCauldronRecipe;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -26,20 +26,18 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-
 
 public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<AlchemicalCauldronRecipe> {
     private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/alchemical_cauldron.png");
-    private final Component localizedName;
-    private final IDrawable background;
-    private final IDrawable icon;
-    private final IDrawableAnimated flame;
-    private final IDrawableAnimated arrow;
-    private final IDrawableAnimated bubbles;
+    private final @NotNull Component localizedName;
+    private final @NotNull IDrawable background;
+    private final @NotNull IDrawable icon;
+    private final @NotNull IDrawableAnimated flame;
+    private final @NotNull IDrawableAnimated arrow;
+    private final @NotNull IDrawableAnimated bubbles;
 
 
-    AlchemicalCauldronRecipeCategory(IGuiHelper guiHelper) {
+    AlchemicalCauldronRecipeCategory(@NotNull IGuiHelper guiHelper) {
         this.localizedName = Component.translatable(ModBlocks.ALCHEMICAL_CAULDRON.get().getDescriptionId());
         this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.ALCHEMICAL_CAULDRON.get()));
         this.background = guiHelper.drawableBuilder(BACKGROUND, 38, 10, 120, 70).addPadding(0, 33, 0, 0).build();
@@ -56,7 +54,7 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
     }
 
     @Override
-    public void draw(AlchemicalCauldronRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @Nonnull PoseStack stack, double mouseX, double mouseY) {
+    public void draw(@NotNull AlchemicalCauldronRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull PoseStack stack, double mouseX, double mouseY) {
         this.flame.draw(stack, 19, 27);
         this.arrow.draw(stack, 41, 25);
         this.bubbles.draw(stack, 104, 19);
@@ -79,13 +77,13 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
     }
 
 
-    @Nonnull
+    @NotNull
     @Override
     public IDrawable getBackground() {
         return this.background;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IDrawable getIcon() {
         return this.icon;
@@ -96,14 +94,14 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
         return VampirismJEIPlugin.ALCHEMICAL_CAULDRON;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Component getTitle() {
         return this.localizedName;
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, AlchemicalCauldronRecipe recipe, @NotNull IFocusGroup focuses) {
+    public void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull AlchemicalCauldronRecipe recipe, @NotNull IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.INPUT, 6, 7).addIngredients(recipe.getFluid().map(in -> in, fl -> Ingredient.of(fl.getFluid().getBucket())));
         builder.addSlot(RecipeIngredientRole.INPUT, 30, 7).addIngredients(recipe.getIngredient());
         builder.addSlot(RecipeIngredientRole.OUTPUT, 78, 25).addItemStack(recipe.getResultItem());

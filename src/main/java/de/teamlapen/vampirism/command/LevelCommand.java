@@ -13,6 +13,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
@@ -36,7 +37,7 @@ public class LevelCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int setLevel(CommandContext<CommandSourceStack> context, IPlayableFaction<?> faction, int level, Collection<ServerPlayer> players) {
+    private static int setLevel(@NotNull CommandContext<CommandSourceStack> context, @NotNull IPlayableFaction<?> faction, int level, @NotNull Collection<ServerPlayer> players) {
         for (ServerPlayer player : players) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             if (level == 0 && !handler.canLeaveFaction()) {
@@ -54,7 +55,7 @@ public class LevelCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int leaveFaction(Collection<ServerPlayer> players) {
+    private static int leaveFaction(@NotNull Collection<ServerPlayer> players) {
         for (ServerPlayer player : players) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             handler.setFactionAndLevel(null, 0);

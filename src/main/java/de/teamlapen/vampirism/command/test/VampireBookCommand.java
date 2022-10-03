@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
+import org.jetbrains.annotations.NotNull;
 
 public class VampireBookCommand extends BasicCommand {
 
@@ -16,8 +17,8 @@ public class VampireBookCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int vampireBook(ServerPlayer asPlayer) {
-        asPlayer.getInventory().add(VampireBookManager.getInstance().getRandomBook(asPlayer.getRandom()));
+    private static int vampireBook(@NotNull ServerPlayer asPlayer) {
+        asPlayer.getInventory().add(VampireBookManager.getInstance().getRandomBookItem(asPlayer.getRandom()));
         return 0;
     }
 }

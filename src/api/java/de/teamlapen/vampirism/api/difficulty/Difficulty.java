@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.api.difficulty;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Represents a calculated difficulty level.
  * The used difficulty levels are in percentage of the max reachable level.
@@ -20,7 +22,7 @@ public class Difficulty {
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return "Difficulty: min_" + minPercLevel + " max_" + maxPercLevel + " avg_" + avgPercLevel;
     }
 }

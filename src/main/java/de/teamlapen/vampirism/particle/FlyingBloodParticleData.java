@@ -12,8 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class FlyingBloodParticleData implements ParticleOptions {
 
@@ -31,13 +30,13 @@ public class FlyingBloodParticleData implements ParticleOptions {
             .apply(p_239803_0_, (a, d, x, y, z, t) -> new FlyingBloodParticleData(ModParticles.FLYING_BLOOD.get(), a, d, x, y, z, new ResourceLocation(t))));
 
     public static final ParticleOptions.Deserializer<FlyingBloodParticleData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
-        @Nonnull
-        public FlyingBloodParticleData fromCommand(@Nonnull ParticleType<FlyingBloodParticleData> particleTypeIn, StringReader reader) throws CommandSyntaxException {
+        @NotNull
+        public FlyingBloodParticleData fromCommand(@NotNull ParticleType<FlyingBloodParticleData> particleTypeIn, @NotNull StringReader reader) throws CommandSyntaxException {
             return new FlyingBloodParticleData(particleTypeIn, reader.readInt(), reader.readBoolean(), reader.readDouble(), reader.readDouble(), reader.readDouble(), ResourceLocation.read(reader));
         }
 
-        @Nonnull
-        public FlyingBloodParticleData fromNetwork(@Nonnull ParticleType<FlyingBloodParticleData> particleTypeIn, FriendlyByteBuf buffer) {
+        @NotNull
+        public FlyingBloodParticleData fromNetwork(@NotNull ParticleType<FlyingBloodParticleData> particleTypeIn, @NotNull FriendlyByteBuf buffer) {
             return new FlyingBloodParticleData(particleTypeIn, buffer.readVarInt(), buffer.readBoolean(), buffer.readDouble(), buffer.readDouble(), buffer.readDouble(), buffer.readResourceLocation());
         }
     };
@@ -69,7 +68,7 @@ public class FlyingBloodParticleData implements ParticleOptions {
     }
 
     @Override
-    public void writeToNetwork(FriendlyByteBuf buffer) {
+    public void writeToNetwork(@NotNull FriendlyByteBuf buffer) {
         buffer.writeVarInt(maxAge);
         buffer.writeBoolean(direct);
         buffer.writeDouble(targetX);
@@ -95,7 +94,7 @@ public class FlyingBloodParticleData implements ParticleOptions {
         return texture;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ParticleType<?> getType() {
         return particleType;
@@ -106,7 +105,7 @@ public class FlyingBloodParticleData implements ParticleOptions {
         return direct;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String writeToString() {
         return ForgeRegistries.PARTICLE_TYPES.getKey(this.getType()) + " " + maxAge + " " + texture;

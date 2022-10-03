@@ -4,8 +4,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.PathfinderMob;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents an entity faction (e.g. Vampires)
@@ -45,7 +44,7 @@ public interface IFaction<T extends IFactionEntity> {
      *
      * @return the village data class
      */
-    @Nonnull
+    @NotNull
     IFactionVillage getVillageData();
 
     boolean isEntityOfFaction(PathfinderMob creature);

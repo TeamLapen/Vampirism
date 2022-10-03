@@ -8,13 +8,16 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.VisibleForDebug;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,18 +26,18 @@ public class MinionWorldData extends SavedData {
     private final static Logger LOGGER = LogManager.getLogger();
     private final static String ID = "vampirism-minion-data";
 
-    @Nonnull
-    public static MinionWorldData getData(ServerLevel world) {
+    @NotNull
+    public static MinionWorldData getData(@NotNull ServerLevel world) {
         return getData(world.getServer());
     }
 
-    @Nonnull
-    public static MinionWorldData getData(final MinecraftServer server) {
+    @NotNull
+    public static MinionWorldData getData(final @NotNull MinecraftServer server) {
         return server.getLevel(Level.OVERWORLD).getDataStorage().computeIfAbsent((data) -> MinionWorldData.load(server, data), () -> new MinionWorldData(server), ID);
     }
 
 
-    @Nonnull
+    @NotNull
     public static Optional<MinionWorldData> getData(Level world) {
         if (world instanceof ServerLevel) {
             return Optional.of(getData(((ServerLevel) world).getServer()));
@@ -55,8 +58,8 @@ public class MinionWorldData extends SavedData {
         return controllers.get(lordID);
     }
 
-    @Nonnull
-    public PlayerMinionController getOrCreateController(FactionPlayerHandler lord) {
+    @NotNull
+    public PlayerMinionController getOrCreateController(@NotNull FactionPlayerHandler lord) {
         UUID id = lord.getPlayer().getUUID();
         if (controllers.containsKey(id)) {
             return controllers.get(id);
@@ -76,12 +79,12 @@ public class MinionWorldData extends SavedData {
     /**
      * Only for debugging. Removes controller from saved data not from entities. Reload world afterwards
      */
-    @Deprecated
+    @VisibleForDebug
     public void purgeController(UUID lordID) {
         controllers.remove(lordID);
     }
 
-    public static MinionWorldData load(MinecraftServer server, CompoundTag nbt) {
+    public static @NotNull MinionWorldData load(@NotNull MinecraftServer server, @NotNull CompoundTag nbt) {
         MinionWorldData data = new MinionWorldData(server);
         ListTag all = nbt.getList("controllers", 10);
         for (Tag inbt : all) {
@@ -101,9 +104,9 @@ public class MinionWorldData extends SavedData {
         controllers.object2ObjectEntrySet().fastForEach(entry -> entry.getValue().tick());
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    public CompoundTag save(@NotNull CompoundTag compound) {
         ListTag all = new ListTag();
         controllers.object2ObjectEntrySet().fastForEach((entry) -> {
             if (entry.getValue().hasMinions()) {
@@ -114,5 +117,9 @@ public class MinionWorldData extends SavedData {
         });
         compound.put("controllers", all);
         return compound;
+    }
+
+    public Map<UUID, PlayerMinionController> getControllers() {
+        return Collections.unmodifiableMap(controllers);
     }
 }

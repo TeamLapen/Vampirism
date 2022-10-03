@@ -13,8 +13,7 @@ import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkHooks;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Only spawns particles, similar to {@link net.minecraft.world.entity.AreaEffectCloud}
@@ -31,7 +30,7 @@ public class BasicAreaParticleCloud extends Entity {
     private int waitTime;
     private float radiusPerTick;
 
-    public BasicAreaParticleCloud(EntityType type, Level worldIn) {
+    public BasicAreaParticleCloud(@NotNull EntityType type, @NotNull Level worldIn) {
         super(type, worldIn);
         this.duration = 60;
         this.waitTime = 0;
@@ -40,7 +39,7 @@ public class BasicAreaParticleCloud extends Entity {
         this.setRadius(3);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
@@ -62,11 +61,11 @@ public class BasicAreaParticleCloud extends Entity {
         this.duration = duration;
     }
 
-    public ParticleOptions getParticle() {
+    public @NotNull ParticleOptions getParticle() {
         return this.getEntityData().get(PARTICLE);
     }
 
-    public void setParticle(ParticleOptions particleData) {
+    public void setParticle(@NotNull ParticleOptions particleData) {
         this.getEntityData().set(PARTICLE, particleData);
     }
 
@@ -104,7 +103,7 @@ public class BasicAreaParticleCloud extends Entity {
     }
 
     @Override
-    public boolean save(@Nonnull CompoundTag compound) {
+    public boolean save(@NotNull CompoundTag compound) {
         return false;
     }
 
@@ -113,7 +112,7 @@ public class BasicAreaParticleCloud extends Entity {
     }
 
     @Override
-    public boolean saveAsPassenger(@Nonnull CompoundTag compound) {
+    public boolean saveAsPassenger(@NotNull CompoundTag compound) {
         return false;
     }
 
@@ -175,7 +174,7 @@ public class BasicAreaParticleCloud extends Entity {
     }
 
     @Override
-    protected void addAdditionalSaveData(@Nonnull CompoundTag compound) {
+    protected void addAdditionalSaveData(@NotNull CompoundTag compound) {
 
     }
 
@@ -190,7 +189,7 @@ public class BasicAreaParticleCloud extends Entity {
     }
 
     @Override
-    protected void readAdditionalSaveData(@Nonnull CompoundTag compound) {
+    protected void readAdditionalSaveData(@NotNull CompoundTag compound) {
 
     }
 }

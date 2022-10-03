@@ -4,6 +4,7 @@ import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.lib.lib.util.LogUtil;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.advancements.critereon.FactionCriterionTrigger;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -15,9 +16,10 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
-import de.teamlapen.vampirism.player.IVampirismPlayer;
-import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
-import de.teamlapen.vampirism.player.tasks.reward.LordLevelReward;
+import de.teamlapen.vampirism.entity.player.IVampirismPlayer;
+import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
+import de.teamlapen.vampirism.entity.player.tasks.reward.LordLevelReward;
+import de.teamlapen.vampirism.misc.VampirismLogger;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.RegUtil;
 import de.teamlapen.vampirism.util.ScoreboardUtil;
@@ -38,9 +40,9 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.api.Event;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -48,8 +50,9 @@ import java.util.Optional;
  * Extended entity property that handles factions and levels for the player
  */
 public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapabilityInst, IFactionPlayerHandler {
-    private final static Logger LOGGER = LogManager.getLogger(FactionPlayerHandler.class);
-    public static final Capability<IFactionPlayerHandler> CAP = CapabilityManager.get(new CapabilityToken<>(){});
+    private final static Logger LOGGER = LogManager.getLogger();
+    public static final Capability<IFactionPlayerHandler> CAP = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
     /**
      * Must check Entity#isAlive before
@@ -57,14 +60,14 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
      * Always prefer using #getOpt
      */
     @Deprecated
-    public static FactionPlayerHandler get(Player player) {
+    public static @NotNull FactionPlayerHandler get(@NotNull Player player) {
         return (FactionPlayerHandler) player.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get FactionPlayerHandler from EntityPlayer " + player));
     }
 
     /**
      * Return a LazyOptional, but print a warning message if not present.
      */
-    public static LazyOptional<FactionPlayerHandler> getOpt(@Nonnull Player player) {
+    public static @NotNull LazyOptional<FactionPlayerHandler> getOpt(@NotNull Player player) {
         LazyOptional<FactionPlayerHandler> opt = player.getCapability(CAP, null).cast();
         if (!opt.isPresent()) {
             LOGGER.warn("Cannot get Faction player capability. This might break mod functionality.", new Throwable().fillInStackTrace());
@@ -75,7 +78,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     /**
      * Resolves the FactionPlayerHandler capability (prints a warning message if not present) and returns an Optional of the current IFactionPlayer instance
      */
-    public static Optional<? extends IFactionPlayer<?>> getCurrentFactionPlayer(@Nonnull Player player){
+    public static @NotNull Optional<? extends IFactionPlayer<?>> getCurrentFactionPlayer(@NotNull Player player) {
         LazyOptional<FactionPlayerHandler> opt = player.getCapability(CAP, null).cast();
         if (!opt.isPresent()) {
             LOGGER.warn("Cannot get Faction player capability. This might break mod functionality.", new Throwable().fillInStackTrace());
@@ -84,27 +87,26 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
 
-
-    public static ICapabilityProvider createNewCapability(final Player player) {
+    public static @NotNull ICapabilityProvider createNewCapability(final Player player) {
         return new ICapabilitySerializable<CompoundTag>() {
 
             final FactionPlayerHandler inst = new FactionPlayerHandler(player);
             final LazyOptional<IFactionPlayerHandler> opt = LazyOptional.of(() -> inst);
 
             @Override
-            public void deserializeNBT(CompoundTag nbt) {
+            public void deserializeNBT(@NotNull CompoundTag nbt) {
                 inst.loadNBTData(nbt);
             }
 
-            @Nonnull
+            @NotNull
             @Override
-            public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, Direction facing) {
+            public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, Direction facing) {
 
                 return CAP.orEmpty(capability, opt);
             }
 
             @Override
-            public CompoundTag serializeNBT() {
+            public @NotNull CompoundTag serializeNBT() {
                 CompoundTag tag = new CompoundTag();
                 inst.saveNBTData(tag);
                 return tag;
@@ -113,9 +115,9 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     private final Player player;
-    @Nonnull
+    @NotNull
     private final Int2ObjectMap<IAction<?>> boundActions = new Int2ObjectArrayMap<>();
-    private IPlayableFaction<?> currentFaction = null;
+    private @Nullable IPlayableFaction<?> currentFaction = null;
     private int currentLevel = 0;
     private int currentLordLevel = 0;
     /**
@@ -146,7 +148,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     /**
      * Make sure the player caps are valid (call #reviveCaps if dead)
      */
-    public void copyFrom(Player old) {
+    public void copyFrom(@NotNull Player old) {
         FactionPlayerHandler oldP = get(old);
         currentFaction = oldP.currentFaction;
         currentLevel = oldP.currentLevel;
@@ -167,7 +169,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     @Override
-    public ResourceLocation getCapKey() {
+    public @NotNull ResourceLocation getCapKey() {
         return REFERENCE.FACTION_PLAYER_HANDLER_KEY;
     }
 
@@ -177,7 +179,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         return currentFaction;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Optional<? extends IFactionPlayer<?>> getCurrentFactionPlayer() {
         return currentFaction == null ? Optional.empty() : currentFaction.getPlayerCapability(player).map(Optional::of).orElse(Optional.empty());
@@ -219,7 +221,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         return currentLordLevel * VampirismConfig.BALANCE.miMinionPerLordLevel.get();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Player getPlayer() {
         return player;
@@ -236,14 +238,14 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     @Override
-    public void joinFaction(@Nonnull IPlayableFaction<?> faction) {
+    public void joinFaction(@NotNull IPlayableFaction<?> faction) {
         if (canJoin(faction)) {
             setFactionAndLevel(faction, 1);
         }
     }
 
     @Override
-    public void loadUpdateFromNBT(CompoundTag nbt) {
+    public void loadUpdateFromNBT(@NotNull CompoundTag nbt) {
         IPlayableFaction<?> old = currentFaction;
         int oldLevel = currentLevel;
         String f = nbt.getString("faction");
@@ -359,21 +361,36 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         if (currentLordLevel != newLordLevel) {
             this.setLordLevel(newLordLevel, false);
         }
+        this.updateSkillTypes();
         updateCache();
         notifyFaction(old, oldLevel);
-        if (old != currentFaction || oldLevel != currentLevel) {
-            VampirismEventFactory.fireFactionLevelChangedEvent(this, old, oldLevel, currentFaction, currentLevel);
+        if (this.player instanceof ServerPlayer && !(currentFaction == old && oldLevel == currentLevel)) {
+            if (old == currentFaction) {
+                VampirismLogger.info(VampirismLogger.LEVEL, "{} has new faction level {} {}, was {}", this.player.getName().getString(), currentFaction.getID(), currentLevel, oldLevel);
+            } else if (currentFaction != null) {
+                VampirismLogger.info(VampirismLogger.LEVEL, "{} is now in faction {} {}", this.player.getName().getString(), currentFaction.getID(), currentLevel);
+            } else {
+                VampirismLogger.info(VampirismLogger.LEVEL, "{} has now no level", this.player.getName().getString());
+            }
+        }
+        if(old != currentFaction || oldLevel != currentLevel){
+            VampirismEventFactory.fireFactionLevelChangedEvent(this,old,oldLevel,currentFaction,currentLevel);
         }
         sync(!Objects.equals(old, currentFaction));
-        if (player instanceof ServerPlayer) {
-            ModAdvancements.TRIGGER_FACTION.trigger((ServerPlayer) player, currentFaction, currentLevel, currentLordLevel);
+        if (player instanceof ServerPlayer serverPlayer) {
+            if (old != faction) {
+                ModAdvancements.TRIGGER_FACTION.revokeAll(serverPlayer);
+            } else if (oldLevel > level) {
+                ModAdvancements.TRIGGER_FACTION.revokeLevel(serverPlayer, faction, FactionCriterionTrigger.Type.LEVEL, level);
+            }
+            ModAdvancements.TRIGGER_FACTION.trigger(serverPlayer, currentFaction, currentLevel, currentLordLevel);
         }
         return true;
 
     }
 
     @Override
-    public boolean setFactionLevel(@Nonnull IPlayableFaction<?> faction, int level) {
+    public boolean setFactionLevel(@NotNull IPlayableFaction<?> faction, int level) {
         return faction.equals(currentFaction) && setFactionAndLevel(faction, level);
     }
 
@@ -395,7 +412,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     @Override
-    public void writeFullUpdateToNBT(CompoundTag nbt) {
+    public void writeFullUpdateToNBT(@NotNull CompoundTag nbt) {
         nbt.putString("faction", currentFaction == null ? "null" : currentFaction.getID().toString());
         nbt.putInt("level", currentLevel);
         nbt.putInt("lord_level", currentLordLevel);
@@ -403,7 +420,18 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         this.writeBoundActions(nbt);
     }
 
-    private IPlayableFaction<?> getFactionFromKey(ResourceLocation key) {
+    @Override
+    public void leaveFaction(boolean die) {
+        IFaction<?> oldFaction = currentFaction;
+        if (oldFaction == null) return;
+        setFactionAndLevel(null, 0);
+        player.displayClientMessage(Component.translatable("command.vampirism.base.level.successful", player.getName(), oldFaction.getName(), 0), true);
+        if (die) {
+            player.hurt(DamageSource.MAGIC, 1000);
+        }
+    }
+
+    private @Nullable IPlayableFaction<?> getFactionFromKey(ResourceLocation key) {
         for (IPlayableFaction<?> p : VampirismAPI.factionRegistry().getPlayableFactions()) {
             if (p.getID().equals(key)) {
                 return p;
@@ -412,25 +440,20 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         return null;
     }
 
-    private void loadBoundActions(CompoundTag nbt) {
-        if (nbt.contains("bound1")) {
-            this.boundActions.put(1, RegUtil.getAction(new ResourceLocation(nbt.getString("bound1"))));
-        }
-        if (nbt.contains("bound2")) {
-            this.boundActions.put(2, RegUtil.getAction(new ResourceLocation(nbt.getString("bound2"))));
-        }
-        if (nbt.contains("bound3")) {
-            this.boundActions.put(3, RegUtil.getAction(new ResourceLocation(nbt.getString("bound3"))));
-        }
+    private void loadBoundActions(@NotNull CompoundTag nbt) {
         CompoundTag bounds = nbt.getCompound("bound_actions");
         for (String s : bounds.getAllKeys()) {
             int id = Integer.parseInt(s);
             IAction<?> action = RegUtil.getAction(new ResourceLocation(bounds.getString(s)));
-            this.boundActions.put(id, action);
+            if (action == null) {
+                LOGGER.warn("Cannot find bound action {}", bounds.getString(s));
+            } else {
+                this.boundActions.put(id, action);
+            }
         }
     }
 
-    private void loadNBTData(CompoundTag nbt) {
+    private void loadNBTData(@NotNull CompoundTag nbt) {
         if (nbt.contains("faction")) {
             currentFaction = getFactionFromKey(new ResourceLocation(nbt.getString("faction")));
             if (currentFaction == null) {
@@ -438,6 +461,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             } else {
                 currentLevel = Math.min(nbt.getInt("level"), this.currentFaction.getHighestReachableLevel());
                 currentLordLevel = Math.min(nbt.getInt("lord_level"), this.currentFaction.getHighestLordLevel());
+                this.updateSkillTypes();
                 updateCache();
                 notifyFaction(null, 0);
             }
@@ -449,13 +473,18 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         updateCache();
     }
 
+    private void updateSkillTypes() {
+        this.getCurrentFactionPlayer().ifPresent(a -> a.getSkillHandler().enableRootSkills());
+    }
+
     /**
      * Notify faction about changes.
      * {@link FactionPlayerHandler#currentFaction} and {@link FactionPlayerHandler#currentLevel} will be used as the new ones
      */
-    private void notifyFaction(IPlayableFaction<?> oldFaction, int oldLevel) {
+    private void notifyFaction(@Nullable IPlayableFaction<?> oldFaction, int oldLevel) {
         if (oldFaction != null && !oldFaction.equals(currentFaction)) {
             LOGGER.debug(LogUtil.FACTION, "{} is leaving faction {}", this.player.getName().getString(), oldFaction.getID());
+            VampirismLogger.info(VampirismLogger.LEVEL, "{} is leaving faction {}", this.player.getName().getString(), oldFaction.getID());
             oldFaction.getPlayerCapability(player).ifPresent(c -> c.onLevelChanged(0, oldLevel));
         }
         if (currentFaction != null) {
@@ -465,7 +494,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.FACTION_CRITERIA, currentFaction == null ? 0 : currentFaction.getID().hashCode());
     }
 
-    private void saveNBTData(CompoundTag nbt) {
+    private void saveNBTData(@NotNull CompoundTag nbt) {
         //Don't forget to also add things to copyFrom !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         if (currentFaction != null) {
             nbt.putString("faction", currentFaction.getID().toString());
@@ -479,6 +508,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     private boolean setLordLevel(int level, boolean sync) {
+        int oldLevel = this.currentLordLevel;
         if (level > 0 && (currentFaction == null || currentLevel != currentFaction.getHighestReachableLevel() || level > currentFaction.getHighestLordLevel())) {
             return false;
         }
@@ -488,6 +518,9 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         }
 
         this.currentLordLevel = level;
+        if (this.currentLordLevel > 0) {
+            this.updateSkillTypes();
+        }
         this.updateCache();
         MinionWorldData.getData(player.level).ifPresent(data -> {
             PlayerMinionController c = data.getController(this.player.getUUID());
@@ -496,12 +529,17 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             }
         });
         if (level == 0) {
-            LOGGER.debug(LogUtil.FACTION, "Resetting lord level for {}", this.player.getName());
+            LOGGER.debug(LogUtil.FACTION, "Resetting lord level for {}", this.player.getName().getString());
+            VampirismLogger.info(VampirismLogger.LORD_LEVEL, "Resetting lord level for {}", this.player.getName().getString());
         } else {
-            LOGGER.debug(LogUtil.FACTION, "{} has now lord level {}", this.player.getName(), level);
+            LOGGER.debug(LogUtil.FACTION, "{} has now lord level {}", this.player.getName().getString(), level);
+            VampirismLogger.info(VampirismLogger.LORD_LEVEL, "{} has now lord level {}", this.player.getName().getString(), level);
         }
-        if (player instanceof ServerPlayer) {
-            ModAdvancements.TRIGGER_FACTION.trigger((ServerPlayer) player, currentFaction, currentLevel, currentLordLevel);
+        if (player instanceof ServerPlayer serverPlayer) {
+            if (currentLordLevel < oldLevel){
+                ModAdvancements.TRIGGER_FACTION.revokeLevel(serverPlayer, currentFaction, FactionCriterionTrigger.Type.LORD, currentLordLevel);
+            }
+            ModAdvancements.TRIGGER_FACTION.trigger(serverPlayer, currentFaction, currentLevel, currentLordLevel);
         }
         if (sync) sync(false);
         return true;
@@ -520,7 +558,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         atts.faction = this.currentFaction;
     }
 
-    private void writeBoundActions(CompoundTag nbt) {
+    private void writeBoundActions(@NotNull CompoundTag nbt) {
         CompoundTag bounds = new CompoundTag();
         for (Int2ObjectMap.Entry<IAction<?>> entry : this.boundActions.int2ObjectEntrySet()) {
             bounds.putString(String.valueOf(entry.getIntKey()), RegUtil.id(entry.getValue()).toString());

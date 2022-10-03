@@ -1,5 +1,7 @@
-Vampirism for Minecraft 1.19 - Latest branch [![](http://cf.way2muchnoise.eu/short_233029_downloads.svg)](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire) [![Build Status](https://github.com/TeamLapen/Vampirism/workflows/Java%20CI/badge.svg?branch=1.16)](https://github.com/TeamLapen/Vampirism/actions) [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) [![Discord Server](https://img.shields.io/discord/430326060635258881)](https://discord.gg/wuamm4P) [![Crowdin](https://badges.crowdin.net/vampirism/localized.svg)](https://crowdin.com/project/vampirism)
+Vampirism for Minecraft 1.19 - Latest branch 
 ============================================
+[![](http://cf.way2muchnoise.eu/short_233029_downloads.svg)](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire) [![](https://img.shields.io/modrinth/dt/jVZ0F1wn?label=Modrinth)](https://modrinth.com/mod/vampirism) [![Build Status](https://github.com/TeamLapen/Vampirism/workflows/Java%20CI/badge.svg?branch=1.16)](https://github.com/TeamLapen/Vampirism/actions) [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) [![Discord Server](https://img.shields.io/discord/430326060635258881)](https://discord.gg/wuamm4P) [![Crowdin](https://badges.crowdin.net/vampirism/localized.svg)](https://crowdin.com/project/vampirism)
+
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://maxanier.de)  
 
 **Very WIP**
@@ -19,6 +21,20 @@ For a more detailed description head over to the Minecraft Forum or the Cursefor
 [Help to translate](https://crowdin.com/project/vampirism)   
 [Short feature overview](https://teamlapen.github.io/Vampirism/)   
 
+## Issues
+https://github.com/TeamLapen/Vampirism/issues
+Please use the appropriate template when creating an issue.
+
+The following labeling scheme is used:
+- *unconfirmed*: Awaiting triage or bug not reproduced yet
+- *discussion*: Looking for feedback
+- *enhancement*: Any minor tweak that can be introduced in minor releases
+- *feature*: Any change that takes more time to implement and test
+- *1.12-1.***: Affecting only a specific MC version
+- *v1.8-v1.**: Bug affecting or enhancement targeting a specific Vamprism release branch
+- *latest*: Bug affecting or enhancement targeting the latest (potentially unreleased) Vampirism branch
+
+
 ## People
 - [maxanier](https://maxanier.de)
 - [Cheaterpaul](https://github.com/Cheaterpaul)
@@ -27,7 +43,7 @@ For a more detailed description head over to the Minecraft Forum or the Cursefor
 - [xXvPendragonvXx](https://github.com/PendragonII) _Community/Official Server_
 
 ## Special Thanks to
-- PixelEyeStudios _Models/Textures_
+- TheRebelT _Models/Textures_
 - TinkerHatWill _Textures_
 - Alis _Textures_
 - dimensionpainter _Textures_
@@ -41,9 +57,15 @@ For a more detailed description head over to the Minecraft Forum or the Cursefor
 - XxKidDowdallxX _Textures_
 - F_Spade _Textures_
 - Matheo _Lore_
+- special_krab _Lore_
 - cournualllama2 _Lore_
 - Random _Textures/Models_
 - Shumnik _Textures/Models_
+- BugraaK _Textures/Models_
+- MrVityaTrash _Textures_
+- FrostedOver _Textures_
+- Grid _Textures_
+- T_Corvus _Textures_
 
 ## API
 Vampirism has an API you can use to add blood values to your mod's creatures or make them convertible and more.
@@ -169,11 +191,23 @@ If you want to use them in a resource/texture pack, you must credit the Vampiris
 ```
 
 ##### Sounds
+
 This mod uses these sounds from freesound:  
-DST-VampireMonk.mp3 by Striderjapan -- http://www.freesound.org/people/Striderjapan/sounds/141368/ -- License: CC Attribution  
+DST-VampireMonk.mp3 by Striderjapan -- http://www.freesound.org/people/Striderjapan/sounds/141368/ -- License: CC
+Attribution  
 vampire bites by Bernuy -- http://www.freesound.org/people/Bernuy/sounds/268501/ -- License: CC Attribution  
 bow02.ogg by Erdie https://www.freesound.org/people/Erdie/sounds/65734/ -- Licence: CC Attribution  
 the swarm v31m3 by Setuniman https://www.freesound.org/people/Setuniman/sounds/130695/ -- Licence: CC Attribution  
 Boiling Towel by unfa https://www.freesound.org/people/unfa/sounds/174499/ -- Licence: CC Attribution  
-Pepper mill grinds pepper by Black_River_Phonogram https://freesound.org/people/Black_River_Phonogram/sounds/424605/ -- Licence: CC0  
-Slimey by Nebulasnails https://freesound.org/people/nebulasnails/sounds/495116/ -- Licence: CC0  
+Pepper mill grinds pepper by Black_River_Phonogram https://freesound.org/people/Black_River_Phonogram/sounds/424605/ --
+Licence: CC0  
+Slimey by Nebulasnails https://freesound.org/people/nebulasnails/sounds/495116/ -- Licence: CC0
+blood_sucker by Bernuy https://freesound.org/people/Bernuy/sounds/268499/ -- Licence: CC Attribution
+Organ Ambience, Calm, A by InspectorJ https://freesound.org/people/InspectorJ/sounds/411991/ -- License CC Attribution
+
+
+##### Sit functionality - `sit` package
+
+The code under `de.teamlapen.vampirism.sit` is adapted from bl4ckscor4's Sit mod and licensed under GNU GPLv3 (see
+LICENSE.txt in that directory)
+

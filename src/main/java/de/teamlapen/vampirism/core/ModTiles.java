@@ -2,7 +2,9 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.blockentity.*;
+import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.blocks.TotemTopBlock;
+import de.teamlapen.vampirism.mixin.TileEntityTypeAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -11,13 +13,17 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class ModTiles {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, REFERENCE.MODID);
 
     public static final RegistryObject<BlockEntityType<TentBlockEntity>> TENT = BLOCK_ENTITY_TYPES.register("tent", () -> create(TentBlockEntity::new, ModBlocks.TENT_MAIN.get()));
-    public static final RegistryObject<BlockEntityType<CoffinBlockEntity>> COFFIN = BLOCK_ENTITY_TYPES.register("coffin", () -> create(CoffinBlockEntity::new, ModBlocks.COFFIN.get()));
+    public static final RegistryObject<BlockEntityType<CoffinBlockEntity>> COFFIN = BLOCK_ENTITY_TYPES.register("coffin", () -> create(CoffinBlockEntity::new, CoffinBlock.COFFIN_BLOCKS.values().toArray(new Block[0])));
     public static final RegistryObject<BlockEntityType<AltarInfusionBlockEntity>> ALTAR_INFUSION = BLOCK_ENTITY_TYPES.register("altar_infusion", () -> create(AltarInfusionBlockEntity::new, ModBlocks.ALTAR_INFUSION.get()));
     public static final RegistryObject<BlockEntityType<BloodContainerBlockEntity>> BLOOD_CONTAINER = BLOCK_ENTITY_TYPES.register("blood_container", () -> create(BloodContainerBlockEntity::new, ModBlocks.BLOOD_CONTAINER.get()));
     public static final RegistryObject<BlockEntityType<AltarInspirationBlockEntity>> ALTAR_INSPIRATION = BLOCK_ENTITY_TYPES.register("altar_inspiration", () -> create(AltarInspirationBlockEntity::new, ModBlocks.ALTAR_INSPIRATION.get()));
@@ -29,16 +35,26 @@ public class ModTiles {
     public static final RegistryObject<BlockEntityType<SieveBlockEntity>> SIEVE = BLOCK_ENTITY_TYPES.register("sieve", () -> create(SieveBlockEntity::new, ModBlocks.BLOOD_SIEVE.get()));
     public static final RegistryObject<BlockEntityType<TotemBlockEntity>> TOTEM = BLOCK_ENTITY_TYPES.register("totem", () -> create(TotemBlockEntity::new, TotemTopBlock.getBlocks().toArray(new TotemTopBlock[0])));
     public static final RegistryObject<BlockEntityType<PotionTableBlockEntity>> POTION_TABLE = BLOCK_ENTITY_TYPES.register("potion_table", () -> create(PotionTableBlockEntity::new, ModBlocks.POTION_TABLE.get()));
+    public static final RegistryObject<BlockEntityType<AlchemyTableBlockEntity>> ALCHEMICAL_TABLE = BLOCK_ENTITY_TYPES.register("alchemical_table", () -> create(AlchemyTableBlockEntity::new, ModBlocks.ALCHEMY_TABLE.get()));
 
-    static void registerTiles(IEventBus bus) {
+    static void register(IEventBus bus) {
         BLOCK_ENTITY_TYPES.register(bus);
     }
 
-    private static <T extends BlockEntity> BlockEntityType<T> create(BlockEntityType.BlockEntitySupplier<T> factoryIn, Block... blocks) {
+    private static <T extends BlockEntity> @NotNull BlockEntityType<T> create(BlockEntityType.@NotNull BlockEntitySupplier<T> factoryIn, Block... blocks) {
         return BlockEntityType.Builder.of(factoryIn, blocks).build(null);
     }
 
-    public static void fixMappings(MissingMappingsEvent event) {
+    public static void registerTileExtensionsUnsafe() {
+        Set<Block> blocks = new HashSet<>(((TileEntityTypeAccessor) BlockEntityType.SIGN).getValidBlocks());
+        blocks.add(ModBlocks.DARK_SPRUCE_SIGN.get());
+        blocks.add(ModBlocks.CURSED_SPRUCE_SIGN.get());
+        blocks.add(ModBlocks.DARK_SPRUCE_WALL_SIGN.get());
+        blocks.add(ModBlocks.CURSED_SPRUCE_WALL_SIGN.get());
+        ((TileEntityTypeAccessor) BlockEntityType.SIGN).setValidBlocks(blocks);
+    }
+
+    public static void fixMappings(@NotNull MissingMappingsEvent event) {
         event.getAllMappings(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES).forEach(missingMapping -> {
             //noinspection SwitchStatementWithTooFewBranches
             switch (missingMapping.getKey().toString()) {

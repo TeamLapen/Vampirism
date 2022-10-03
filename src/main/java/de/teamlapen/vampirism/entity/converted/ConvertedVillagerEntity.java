@@ -11,12 +11,11 @@ import de.teamlapen.vampirism.api.entity.convertible.ICurableConvertedCreature;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModVillage;
-import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.VampirismVillagerEntity;
+import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.villager.Trades;
-import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.nbt.CompoundTag;
@@ -44,11 +43,12 @@ import net.minecraft.world.entity.ai.village.ReputationEventType;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
@@ -56,7 +56,7 @@ import java.util.UUID;
  * Vampire Villager
  */
 public class ConvertedVillagerEntity extends VampirismVillagerEntity implements ICurableConvertedCreature<Villager> {
-    public static final List<SensorType<? extends Sensor<? super Villager>>> SENSOR_TYPES;
+    public static final @NotNull List<SensorType<? extends Sensor<? super Villager>>> SENSOR_TYPES;
     private static final EntityDataAccessor<Boolean> CONVERTING = SynchedEntityData.defineId(ConvertedVillagerEntity.class, EntityDataSerializers.BOOLEAN);
 
     static {
@@ -65,18 +65,18 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
         SENSOR_TYPES.add(ModVillage.VAMPIRE_VILLAGER_HOSTILES.get());
     }
 
-    private EnumStrength garlicCache = EnumStrength.NONE;
+    private @NotNull EnumStrength garlicCache = EnumStrength.NONE;
     private boolean sundamageCache;
     private int bloodTimer = 0;
     private int conversionTime;
-    private UUID conversationStarter;
+    private @Nullable UUID conversationStarter;
 
     public ConvertedVillagerEntity(EntityType<? extends ConvertedVillagerEntity> type, Level worldIn) {
         super(type, worldIn);
     }
 
     @Override
-    public void addAdditionalSaveData(@Nonnull CompoundTag compound) {
+    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putInt("ConversionTime", this.isConverting(this) ? this.conversionTime : -1);
         if (this.conversationStarter != null) {
@@ -117,7 +117,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     }
 
     @Override
-    public Villager cureEntity(ServerLevel world, PathfinderMob entity, EntityType<Villager> newType) {
+    public @NotNull Villager cureEntity(@NotNull ServerLevel world, @NotNull PathfinderMob entity, @NotNull EntityType<Villager> newType) {
         Villager villager = ICurableConvertedCreature.super.cureEntity(world, entity, newType);
         villager.setVillagerData(this.getVillagerData());
         villager.setGossips(this.getGossips().store(NbtOps.INSTANCE).getValue());
@@ -134,7 +134,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     }
 
     @Override
-    public boolean doHurtTarget(@Nonnull Entity entity) {
+    public boolean doHurtTarget(@NotNull Entity entity) {
         if (!level.isClientSide && wantsBlood() && entity instanceof Player && !Helper.isHunter(entity) && !UtilLib.canReallySee((LivingEntity) entity, this, true)) {
             int amt = VampirePlayer.getOpt((Player) entity).map(vampire -> vampire.onBite(this)).orElse(0);
             drinkBlood(amt, IBloodStats.MEDIUM_SATURATION);
@@ -155,12 +155,12 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     }
 
     @Override
-    public LivingEntity getRepresentingEntity() {
+    public @NotNull LivingEntity getRepresentingEntity() {
         return this;
     }
 
     @Override
-    protected Component getTypeName() {
+    protected @NotNull Component getTypeName() {
         ResourceLocation profName = RegUtil.id(this.getVillagerData().getProfession());
         return Component.translatable(EntityType.VILLAGER.getDescriptionId() + '.' + (!"minecraft".equals(profName.getNamespace()) ? profName.getNamespace() + '.' : "") + profName.getPath());
     }
@@ -172,7 +172,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public EnumStrength isGettingGarlicDamage(LevelAccessor iWorld, boolean forceRefresh) {
         if (forceRefresh) {
@@ -192,16 +192,18 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
         return false;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public InteractionResult mobInteract(Player player, @Nonnull InteractionHand hand) {
+    public InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (stack.getItem() != ModItems.CURE_APPLE.get()) return super.mobInteract(player, hand);
-        return interactWithCureItem(player, stack, this);
+        if (stack.getItem() == Items.GOLDEN_APPLE) {
+            return interactWithCureItem(player, stack, this);
+        }
+        return super.mobInteract(player, hand);
     }
 
     @Override
-    public void readAdditionalSaveData(@Nonnull CompoundTag compound) {
+    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         if (compound.contains("ConversionTime", 99) && compound.getInt("ConversionTime") > -1) {
             this.startConverting(compound.hasUUID("ConversionPlayer") ? compound.getUUID("ConversionPlayer") : null, compound.getInt("ConversionTime"), this);
@@ -209,14 +211,14 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     }
 
     @Override
-    public void startConverting(@Nullable UUID conversionStarterIn, int conversionTimeIn, @Nonnull PathfinderMob entity) {
+    public void startConverting(@Nullable UUID conversionStarterIn, int conversionTimeIn, @NotNull PathfinderMob entity) {
         ICurableConvertedCreature.super.startConverting(conversionStarterIn, conversionTimeIn, entity);
         this.conversationStarter = conversionStarterIn;
         this.conversionTime = conversionTimeIn;
     }
 
     @Override
-    public void registerBrainGoals(@Nonnull Brain<Villager> brain) {
+    public void registerBrainGoals(@NotNull Brain<Villager> brain) {
         super.registerBrainGoals(brain);
         if (!this.isBaby()) {
             brain.setSchedule(ModVillage.CONVERTED_DEFAULT.get());
@@ -245,9 +247,9 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     /**
      * copied from {@link Villager#makeBrain(Dynamic)} but with {@link #SENSOR_TYPES}, where {@link SensorType#VILLAGER_HOSTILES} is replaced by {@link ModVillage#VAMPIRE_VILLAGER_HOSTILES}
      */
-    @Nonnull
+    @NotNull
     @Override
-    protected Brain<?> makeBrain(@Nonnull Dynamic<?> dynamicIn) {
+    protected Brain<?> makeBrain(@NotNull Dynamic<?> dynamicIn) {
         Brain<Villager> brain = Brain.provider(MEMORY_TYPES, SENSOR_TYPES).makeBrain(dynamicIn);
         this.registerBrainGoals(brain);
         return brain;
@@ -264,7 +266,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     public static class ConvertingHandler implements IConvertingHandler<Villager> {
 
         @Override
-        public IConvertedCreature<Villager> createFrom(Villager entity) {
+        public IConvertedCreature<Villager> createFrom(@NotNull Villager entity) {
             CompoundTag nbt = new CompoundTag();
             entity.saveWithoutId(nbt);
             ConvertedVillagerEntity converted = ModEntities.VILLAGER_CONVERTED.get().create(entity.level);

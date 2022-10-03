@@ -5,11 +5,11 @@ import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireBaron;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.entity.ai.goals.AttackRangedDarkBloodGoal;
+import de.teamlapen.vampirism.entity.ai.goals.FleeGarlicVampireGoal;
+import de.teamlapen.vampirism.entity.ai.goals.LookAtClosestVisibleGoal;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.entity.goals.AttackRangedDarkBloodGoal;
-import de.teamlapen.vampirism.entity.goals.FleeGarlicVampireGoal;
-import de.teamlapen.vampirism.entity.goals.LookAtClosestVisibleGoal;
-import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
+import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -40,9 +40,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Vampire that spawns in the vampire forest, has minions and drops pure blood
@@ -55,11 +54,11 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     private static final EntityDataAccessor<Boolean> LADY = SynchedEntityData.defineId(VampireBaronEntity.class, EntityDataSerializers.BOOLEAN);
     private final static int ENRAGED_TRANSITION_TIME = 15;
 
-    public static boolean spawnPredicateBaron(EntityType<? extends VampireBaronEntity> entityType, LevelAccessor world, MobSpawnType spawnReason, BlockPos blockPos, RandomSource random) {
+    public static boolean spawnPredicateBaron(@NotNull EntityType<? extends VampireBaronEntity> entityType, @NotNull LevelAccessor world, MobSpawnType spawnReason, @NotNull BlockPos blockPos, RandomSource random) {
         return world.getBiome(blockPos).is(ModTags.Biomes.IS_VAMPIRE_BIOME) && world.getDifficulty() != net.minecraft.world.Difficulty.PEACEFUL && Mob.checkMobSpawnRules(entityType, world, spawnReason, blockPos, random);
     }
 
-    public static AttributeSupplier.Builder getAttributeBuilder() {
+    public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
         return VampireBaseEntity.getAttributeBuilder()
                 .add(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.VAMPIRE_BARON_MAX_HEALTH)
                 .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.VAMPIRE_BARON_ATTACK_DAMAGE)
@@ -90,7 +89,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public void addAdditionalSaveData(@Nonnull CompoundTag nbt) {
+    public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putInt("level", getEntityLevel());
         nbt.putBoolean("lady", isLady());
@@ -139,16 +138,12 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public boolean checkSpawnRules(@Nonnull LevelAccessor worldIn, @Nonnull MobSpawnType spawnReasonIn) {
+    public boolean checkSpawnRules(@NotNull LevelAccessor worldIn, @NotNull MobSpawnType spawnReasonIn) {
         int i = Mth.floor(this.getBoundingBox().minY);
         //Only spawn on the surface
         if (i < 60) return false;
-//        CastlePositionData data = CastlePositionData.get(world);
-//        if (data.isPosAt(MathHelper.floor_double(posX), MathHelper.floor_double(posZ))) {
-//            return false;
-//        }
         BlockPos blockpos = new BlockPos(this.getX(), this.getBoundingBox().minY, this.getZ());
-        return worldIn.getBlockState(blockpos.below()).is(ModTags.Blocks.CURSEDEARTH) && super.checkSpawnRules(worldIn, spawnReasonIn);
+        return worldIn.getBlockState(blockpos.below()).is(ModTags.Blocks.CURSED_EARTH) && super.checkSpawnRules(worldIn, spawnReasonIn);
     }
 
     @Override
@@ -157,7 +152,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public boolean doHurtTarget(@Nonnull Entity entity) {
+    public boolean doHurtTarget(@NotNull Entity entity) {
         boolean flag = super.doHurtTarget(entity);
         if (flag && entity instanceof LivingEntity) {
             float tm = 1f;
@@ -182,7 +177,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(@Nonnull ServerLevelAccessor worldIn, @Nonnull DifficultyInstance difficultyIn, @Nonnull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
         this.getEntityData().set(LADY, this.getRandom().nextBoolean());
         return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
@@ -239,7 +234,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public LivingEntity getRepresentingEntity() {
+    public @NotNull LivingEntity getRepresentingEntity() {
         return this;
     }
 
@@ -258,7 +253,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public boolean hurt(@Nonnull DamageSource damageSource, float amount) {
+    public boolean hurt(@NotNull DamageSource damageSource, float amount) {
         attackDecisionCounter++;
         return super.hurt(damageSource, amount);
     }
@@ -276,7 +271,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public boolean wasKilled(@Nonnull ServerLevel world, @Nonnull LivingEntity entity) {
+    public boolean wasKilled(@NotNull ServerLevel world, @NotNull LivingEntity entity) {
         boolean result = super.wasKilled(world, entity);
         if (entity instanceof VampireBaronEntity) {
             this.setHealth(this.getMaxHealth());
@@ -285,7 +280,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public void readAdditionalSaveData(@Nonnull CompoundTag nbt) {
+    public void readAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
         setEntityLevel(nbt.contains("level") ? Mth.clamp(nbt.getInt("level"), 0, MAX_LEVEL) : -1);
         this.getEntityData().set(LADY, nbt.getBoolean("lady"));
@@ -303,7 +298,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public int suggestEntityLevel(Difficulty d) {
+    public int suggestEntityLevel(@NotNull Difficulty d) {
         int avg = Math.round(((d.avgPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * MAX_LEVEL);
         int max = Math.round(((d.maxPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * MAX_LEVEL);
         int min = Math.round(((d.minPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * (MAX_LEVEL));
@@ -377,7 +372,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
 
     private class BaronAIAttackMelee extends MeleeAttackGoal {
 
-        BaronAIAttackMelee(PathfinderMob creature, double speedIn) {
+        BaronAIAttackMelee(@NotNull PathfinderMob creature, double speedIn) {
             super(creature, speedIn, false);
         }
 

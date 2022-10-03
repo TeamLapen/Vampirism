@@ -14,9 +14,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class CastleBricksBlock extends VampirismBlock {
@@ -29,7 +29,7 @@ public class CastleBricksBlock extends VampirismBlock {
     }
 
     @Override
-    public void animateTick(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull RandomSource rand) {
+    public void animateTick(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull RandomSource rand) {
         if (!CastleStairsBlock.isStairs(state) && variant == EnumVariant.DARK_BRICK_BLOODY) {
             if (rand.nextInt(180) == 0) {
                 world.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), ModSounds.AMBIENT_CASTLE.get(), SoundSource.AMBIENT, 0.8F, 1.0F, false);
@@ -39,7 +39,7 @@ public class CastleBricksBlock extends VampirismBlock {
     }
 
     @Override
-    public void appendHoverText(@Nonnull ItemStack stack, @Nullable BlockGetter world, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag advanced) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable BlockGetter world, @NotNull List<Component> tooltip, @NotNull TooltipFlag advanced) {
         super.appendHoverText(stack, world, tooltip, advanced);
         tooltip.add(Component.translatable("block.vampirism.castle_block" + (variant == EnumVariant.DARK_STONE ? ".no_spawn" : ".vampire_spawn")).withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY));
     }
@@ -62,11 +62,11 @@ public class CastleBricksBlock extends VampirismBlock {
             this.name = name;
         }
 
-        public String getName() {
+        public @NotNull String getName() {
             return this.getSerializedName();
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public String getSerializedName() {
             return this.name;

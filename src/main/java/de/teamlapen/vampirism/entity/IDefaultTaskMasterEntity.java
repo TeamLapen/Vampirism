@@ -2,14 +2,15 @@ package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.api.entity.ITaskMasterEntity;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.entity.ai.goals.ForceLookEntityGoal;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.entity.goals.ForceLookEntityGoal;
-import de.teamlapen.vampirism.inventory.container.TaskBoardContainer;
+import de.teamlapen.vampirism.inventory.TaskBoardMenu;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.VillagerType;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.OptionalInt;
@@ -24,9 +25,9 @@ public interface IDefaultTaskMasterEntity extends ForceLookEntityGoal.TaskOwner,
      */
     VillagerType getBiomeType();
 
-    default boolean processInteraction(Player playerEntity, Entity entity) {
+    default boolean processInteraction(@NotNull Player playerEntity, @NotNull Entity entity) {
         if (FactionPlayerHandler.getOpt(playerEntity).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).map(IFactionPlayer::getTaskManager).map(taskManager -> taskManager.hasAvailableTasks(entity.getUUID())).orElse(false)) {
-            OptionalInt containerIdOpt = playerEntity.openMenu(new SimpleMenuProvider((containerId, playerInventory, player) -> new TaskBoardContainer(containerId, playerInventory), entity.getDisplayName().plainCopy()));
+            OptionalInt containerIdOpt = playerEntity.openMenu(new SimpleMenuProvider((containerId, playerInventory, player) -> new TaskBoardMenu(containerId, playerInventory), entity.getDisplayName().plainCopy()));
             if (containerIdOpt.isPresent()) {
                 FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(iFactionPlayer -> {
                     iFactionPlayer.getTaskManager().openTaskMasterScreen(entity.getUUID());

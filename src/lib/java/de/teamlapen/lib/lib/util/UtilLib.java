@@ -29,6 +29,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -54,9 +55,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -70,19 +71,19 @@ public class UtilLib {
     private final static Logger LOGGER = LogManager.getLogger();
     private final static Pattern oldFormatPattern = Pattern.compile("%[sd]");
 
-    public static String entityToString(Entity e) {
+    public static @NotNull String entityToString(@Nullable Entity e) {
         if (e == null) {
             return "Entity is null";
         }
         return e.toString();
     }
 
-    public static boolean doesBlockHaveSolidTopSurface(Level worldIn, BlockPos pos) {
+    public static boolean doesBlockHaveSolidTopSurface(@NotNull Level worldIn, @NotNull BlockPos pos) {
         return worldIn.getBlockState(pos).isFaceSturdy(worldIn, pos, Direction.UP);
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static void drawTexturedModalRect(Matrix4f matrix, float zLevel, int x, int y, int textureX, int textureY, int width, int height, int texWidth, int texHeight) {
+    public static void drawTexturedModalRect(@NotNull Matrix4f matrix, float zLevel, int x, int y, int textureX, int textureY, int width, int height, int texWidth, int texHeight) {
         float f = 1 / (float) texWidth;
         float f1 = 1 / (float) texHeight;
         Tesselator tesselator = Tesselator.getInstance();
@@ -101,7 +102,7 @@ public class UtilLib {
      * @param restriction Max distance or 0 for player reach distance or -1 for not restricted
      * @return The position as a MovingObjectPosition, null if not existent cf: https ://github.com/bspkrs/bspkrsCore/blob/master/src/main/java/bspkrs /util/CommonUtils.java
      */
-    public static HitResult getPlayerLookingSpot(Player player, double restriction) {
+    public static @NotNull HitResult getPlayerLookingSpot(@NotNull Player player, double restriction) {
         float scale = 1.0F;
         float pitch = player.xRotO + (player.getXRot() - player.xRotO) * scale;
         float yaw = player.yRotO + (player.getYRot() - player.yRotO) * scale;
@@ -126,7 +127,7 @@ public class UtilLib {
         return player.getCommandSenderWorld().clip(new ClipContext(vector1, vector2, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
     }
 
-    public static BlockPos getRandomPosInBox(Level w, AABB box) {
+    public static @NotNull BlockPos getRandomPosInBox(@NotNull Level w, @NotNull AABB box) {
         int x = (int) box.minX + w.random.nextInt((int) (box.maxX - box.minX) + 1);
         int z = (int) box.minZ + w.random.nextInt((int) (box.maxZ - box.minZ) + 1);
         int y = w.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z) + 5;
@@ -144,7 +145,7 @@ public class UtilLib {
     /**
      * @return Number of chunks loaded by players
      */
-    public static int countPlayerLoadedChunks(Level world) {
+    public static int countPlayerLoadedChunks(@NotNull Level world) {
         List<ChunkPos> chunks = Lists.newArrayList();
         int i = 0;
 
@@ -178,8 +179,8 @@ public class UtilLib {
      * @param mainHand If main hand position
      * @return Absolute position in the world
      */
-    public static @Nonnull
-    Vec3 getItemPosition(LivingEntity entity, boolean mainHand) {
+    public static @NotNull
+    Vec3 getItemPosition(@NotNull LivingEntity entity, boolean mainHand) {
         boolean left = (mainHand ? entity.getMainArm() : entity.getMainArm().getOpposite()) == HumanoidArm.LEFT;
         boolean firstPerson = entity instanceof Player player && player.isLocalPlayer() && Minecraft.getInstance().options.getCameraType().isFirstPerson();
         Vec3 dir = firstPerson ? entity.getForward() : Vec3.directionFromRotation(new Vec2(entity.getXRot(), entity.yBodyRot));
@@ -188,7 +189,7 @@ public class UtilLib {
 
     }
 
-    public static <T extends Mob> Entity spawnEntityBehindEntity(LivingEntity entity, EntityType<T> toSpawn, MobSpawnType reason) {
+    public static <T extends Mob> @Nullable Entity spawnEntityBehindEntity(@NotNull LivingEntity entity, @NotNull EntityType<T> toSpawn, @NotNull MobSpawnType reason) {
 
         BlockPos behind = getPositionBehindEntity(entity, 2);
         Mob e = toSpawn.create(entity.getCommandSenderWorld());
@@ -215,13 +216,13 @@ public class UtilLib {
     /**
      * Call {@link Mob#finalizeSpawn(ServerLevelAccessor, DifficultyInstance, MobSpawnType, SpawnGroupData, CompoundTag)} if applicable
      */
-    private static void onInitialSpawn(ServerLevel level, Entity e, MobSpawnType reason) {
+    private static void onInitialSpawn(@NotNull ServerLevel level, Entity e, @NotNull MobSpawnType reason) {
         if (e instanceof Mob mob) {
             mob.finalizeSpawn(level, e.getCommandSenderWorld().getCurrentDifficultyAt(e.blockPosition()), reason, null, null);
         }
     }
 
-    public static BlockPos getPositionBehindEntity(LivingEntity p, float distance) {
+    public static @NotNull BlockPos getPositionBehindEntity(@NotNull LivingEntity p, float distance) {
         float yaw = p.yHeadRot;
         float cosYaw = Mth.cos(-yaw * 0.017453292F - (float) Math.PI);
         float sinYaw = Mth.sin(-yaw * 0.017453292F - (float) Math.PI);
@@ -239,7 +240,7 @@ public class UtilLib {
      * @param reason          Spawn reason
      * @return Successful spawn
      */
-    public static boolean spawnEntityInWorld(ServerLevel world, AABB box, Entity e, int maxTry, @Nonnull List<? extends LivingEntity> avoidedEntities, MobSpawnType reason) {
+    public static boolean spawnEntityInWorld(@NotNull ServerLevel world, @NotNull AABB box, @NotNull Entity e, int maxTry, @NotNull List<? extends LivingEntity> avoidedEntities, @NotNull MobSpawnType reason) {
         if (!world.hasChunksAt((int) box.minX, (int) box.minY, (int) box.minZ, (int) box.maxX, (int) box.maxY, (int) box.maxZ)) {
             return false;
         }
@@ -251,7 +252,7 @@ public class UtilLib {
             if (world.noCollision(new AABB(c))) {
                 if (world.isAreaLoaded(c, 5) && NaturalSpawner.isSpawnPositionOk(SpawnPlacements.getPlacementType(e.getType()), world, c, e.getType())) {//I see no other way
                     e.setPos(c.getX(), c.getY() + 0.2, c.getZ());
-                    if (SpawnPlacements.checkSpawnRules(e.getType(), world, reason, c, world.getRandom())  && !(e instanceof Mob) || (((Mob) e).checkSpawnRules(world, reason) && ((Mob) e).checkSpawnObstruction(e.getCommandSenderWorld()))) {
+                    if (SpawnPlacements.checkSpawnRules(e.getType(), world, reason, c, world.getRandom()) && !(e instanceof Mob) || (((Mob) e).checkSpawnRules(world, reason) && ((Mob) e).checkSpawnObstruction(e.getCommandSenderWorld()))) {
                         backupPos = c; //Store the location in case we do not find a better one
                         for (LivingEntity p : avoidedEntities) {
 
@@ -287,7 +288,7 @@ public class UtilLib {
      * @return The spawned creature or null if not successful
      */
     @Nullable
-    public static Entity spawnEntityInWorld(ServerLevel world, AABB box, EntityType<?> entityType, int maxTry, @Nonnull List<? extends LivingEntity> avoidedEntities, MobSpawnType reason) {
+    public static Entity spawnEntityInWorld(@NotNull ServerLevel world, @NotNull AABB box, @NotNull EntityType<?> entityType, int maxTry, @NotNull List<? extends LivingEntity> avoidedEntities, @NotNull MobSpawnType reason) {
         Entity e = entityType.create(world);
         if (spawnEntityInWorld(world, box, e, maxTry, avoidedEntities, reason)) {
             return e;
@@ -305,7 +306,7 @@ public class UtilLib {
      * @param sound If a teleport sound should be played
      * @return Whether the teleport was successful or not
      */
-    public static boolean teleportTo(Mob entity, double x, double y, double z, boolean sound) {
+    public static boolean teleportTo(@NotNull Mob entity, double x, double y, double z, boolean sound) {
         double d3 = entity.getX();
         double d4 = entity.getY();
         double d5 = entity.getZ();
@@ -320,9 +321,9 @@ public class UtilLib {
 
             while (!flag1 && blockPos.getY() > 0) {
                 BlockState blockState = entity.getCommandSenderWorld().getBlockState(blockPos.below());
-                if (blockState.getMaterial().blocksMotion())
+                if (blockState.getMaterial().blocksMotion()) {
                     flag1 = true;
-                else {
+                } else {
                     entity.setPosRaw(x, --ty, z);
                     blockPos = blockPos.below();
                 }
@@ -331,8 +332,9 @@ public class UtilLib {
             if (flag1) {
                 entity.setPos(entity.getX(), entity.getY(), entity.getZ());
 
-                if (entity.getCommandSenderWorld().noCollision(entity) && !entity.getCommandSenderWorld().containsAnyLiquid(entity.getBoundingBox()))
+                if (entity.getCommandSenderWorld().noCollision(entity) && !entity.getCommandSenderWorld().containsAnyLiquid(entity.getBoundingBox())) {
                     flag = true;
+                }
             }
         }
 
@@ -365,7 +367,7 @@ public class UtilLib {
     /**
      * Spawn multiple particles, with a small offset between
      */
-    public static void spawnParticles(Level world, ParticleOptions particle, double xCoord, double yCoord, double zCoord, double xSpeed, double ySpeed, double zSpeed, int amount, float maxOffset) {
+    public static void spawnParticles(@NotNull Level world, @NotNull ParticleOptions particle, double xCoord, double yCoord, double zCoord, double xSpeed, double ySpeed, double zSpeed, int amount, float maxOffset) {
         double x = xCoord;
         double y = yCoord;
         double z = zCoord;
@@ -378,7 +380,7 @@ public class UtilLib {
         }
     }
 
-    public static void spawnParticlesAroundEntity(LivingEntity e, ParticleOptions particle, double maxDistance, int amount) {
+    public static void spawnParticlesAroundEntity(@NotNull LivingEntity e, @NotNull ParticleOptions particle, double maxDistance, int amount) {
 
 
         short short1 = (short) amount;
@@ -398,7 +400,7 @@ public class UtilLib {
      * Sends the component message to all players except the given one.
      * Only use on server or common side
      */
-    public static void sendMessageToAllExcept(Player player, Component message) {
+    public static void sendMessageToAllExcept(Player player, @NotNull Component message) {
         for (Player o : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
             if (!o.equals(player)) {
                 o.sendSystemMessage(message);
@@ -406,7 +408,7 @@ public class UtilLib {
         }
     }
 
-    public static void sendMessageToAll(Component message) {
+    public static void sendMessageToAll(@NotNull Component message) {
         sendMessageToAllExcept(null, message);
     }
 
@@ -415,7 +417,7 @@ public class UtilLib {
      *
      * @param alsoRaytrace Raytrace first
      */
-    public static boolean canReallySee(LivingEntity entity, LivingEntity target, boolean alsoRaytrace) {
+    public static boolean canReallySee(@NotNull LivingEntity entity, @NotNull LivingEntity target, boolean alsoRaytrace) {
         if (alsoRaytrace && !entity.hasLineOfSight(target)) {
             return false;
         }
@@ -435,7 +437,7 @@ public class UtilLib {
      * Stores the given pos with in the compoundtag using base.
      * Can be retrieved again with {@link UtilLib#readPos(CompoundTag, String)}
      */
-    public static void write(CompoundTag nbt, String base, BlockPos pos) {
+    public static void write(@NotNull CompoundTag nbt, String base, @NotNull BlockPos pos) {
         nbt.putInt(base + "_x", pos.getX());
         nbt.putInt(base + "_y", pos.getY());
         nbt.putInt(base + "_z", pos.getZ());
@@ -444,14 +446,14 @@ public class UtilLib {
     /**
      * Reads a position written by {@link UtilLib#write(CompoundTag, String, BlockPos)}.
      */
-    public static BlockPos readPos(CompoundTag nbt, String base) {
+    public static @NotNull BlockPos readPos(@NotNull CompoundTag nbt, String base) {
         return new BlockPos(nbt.getInt(base + "_x"), nbt.getInt(base + "_y"), nbt.getInt(base + "_z"));
     }
 
     /**
      * Prefixes each of the strings with the given prefix
      */
-    public static String[] prefix(String prefix, String... strings) {
+    public static String @NotNull [] prefix(String prefix, String @NotNull ... strings) {
         String[] result = new String[strings.length];
         for (int i = 0; i < strings.length; i++) {
             result[i] = prefix + strings[i];
@@ -462,7 +464,7 @@ public class UtilLib {
     /**
      * Creates a predicate which checks for the given class
      */
-    public static <T> Predicate<T> getPredicateForClass(final Class<T> clazz) {
+    public static <T> @NotNull Predicate<T> getPredicateForClass(final @NotNull Class<T> clazz) {
         return clazz::isInstance;
     }
 
@@ -471,18 +473,18 @@ public class UtilLib {
      *
      * @param fullY If it should reach from yDisplay 0 to 265 or use the distance for yDisplay as well
      */
-    public static AABB createBB(BlockPos center, int distance, boolean fullY) {
+    public static @NotNull AABB createBB(@NotNull BlockPos center, int distance, boolean fullY) {
         return new AABB(center.getX() - distance, fullY ? 0 : center.getY() - distance, center.getZ() - distance, center.getX() + distance, fullY ? 256 : center.getY() + distance, center.getZ() + distance);
     }
 
-    public static boolean isNonNull(Object... objects) {
+    public static boolean isNonNull(Object @NotNull ... objects) {
         for (Object o : objects) {
             if (o == null) return false;
         }
         return true;
     }
 
-    public static boolean isPlayerOp(Player player) {
+    public static boolean isPlayerOp(@NotNull Player player) {
         return ServerLifecycleHooks.getCurrentServer().getPlayerList().getOps().get(player.getGameProfile()) != null;
     }
 
@@ -490,7 +492,7 @@ public class UtilLib {
         return ServerLifecycleHooks.getCurrentServer() != null;
     }
 
-    public static String translate(String key, Object... format) {
+    public static @Nullable String translate(String key, Object @NotNull ... format) {
         String pattern = ForgeI18n.getPattern(key);
         if (format.length == 0) {
             return pattern;
@@ -506,7 +508,7 @@ public class UtilLib {
 
     }
 
-    private static String replaceDeprecatedFormatter(String text) {
+    private static @NotNull String replaceDeprecatedFormatter(@NotNull String text) {
         StringBuilder sb = null;
         Matcher m = oldFormatPattern.matcher(text);
         int i = 0;
@@ -532,7 +534,7 @@ public class UtilLib {
      * Rotate voxel. Credits to JTK222|Lukas
      * Cache the result
      */
-    public static VoxelShape rotateShape(VoxelShape shape, RotationAmount rotation) {
+    public static @NotNull VoxelShape rotateShape(@NotNull VoxelShape shape, RotationAmount rotation) {
         Set<VoxelShape> rotatedShapes = new HashSet<>();
 
         shape.forAllBoxes((x1, y1, z1, x2, y2, z2) -> {
@@ -541,58 +543,102 @@ public class UtilLib {
             z1 = (z1 * 16) - 8;
             z2 = (z2 * 16) - 8;
 
-            if (rotation == RotationAmount.NINETY)
+            if (rotation == RotationAmount.NINETY) {
                 rotatedShapes.add(blockBox(8 - z1, y1 * 16, 8 + x1, 8 - z2, y2 * 16, 8 + x2));
-            else if (rotation == RotationAmount.HUNDRED_EIGHTY)
+            } else if (rotation == RotationAmount.HUNDRED_EIGHTY) {
                 rotatedShapes.add(blockBox(8 - x1, y1 * 16, 8 - z1, 8 - x2, y2 * 16, 8 - z2));
-            else if (rotation == RotationAmount.TWO_HUNDRED_SEVENTY)
+            } else if (rotation == RotationAmount.TWO_HUNDRED_SEVENTY) {
                 rotatedShapes.add(blockBox(8 + z1, y1 * 16, 8 - x1, 8 + z2, y2 * 16, 8 - x2));
+            }
         });
 
         return rotatedShapes.stream().reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElseGet(() -> Block.box(0, 0, 0, 16, 16, 16));
     }
 
-    public static VoxelShape blockBox(double pX1, double pY1, double pZ1, double pX2, double pY2, double pZ2) {
+    /**
+     * modifies the rolls or pitch of the shape by 90 degree
+     */
+    public static @NotNull VoxelShape rollShape(@NotNull VoxelShape shape, @NotNull Direction direction) {
+        Set<VoxelShape> rotatedShapes = new HashSet<>();
+        shape.forAllBoxes((x1, y1, z1, x2, y2, z2) -> {
+            double yMin;
+            double yMax;
+            double zMin;
+            double zMax;
+            y1 = (y1 * 16) - 8;
+            y2 = (y2 * 16) - 8;
+            z1 = (z1 * 16) - 8;
+            z2 = (z2 * 16) - 8;
+            switch (direction) {
+                case NORTH -> {
+                    z1 = 8 - z1;
+                    z2 = 8 - z2;
+                    y1 = 8 + y1;
+                    y2 = 8 + y2;
+                    yMin = Math.min(y1, y2);
+                    yMax = Math.max(y1, y2);
+                    zMin = Math.min(z1, z2);
+                    zMax = Math.max(z1, z2);
+                    rotatedShapes.add(Block.box(x1 * 16, zMin, yMin, x2 * 16, zMax, yMax));
+                }
+                case SOUTH -> {
+                    z1 = 8 + z1;
+                    z2 = 8 + z2;
+                    y1 = 8 - y1;
+                    y2 = 8 - y2;
+                    yMin = Math.min(y1, y2);
+                    yMax = Math.max(y1, y2);
+                    zMin = Math.min(z1, z2);
+                    zMax = Math.max(z1, z2);
+                    rotatedShapes.add(Block.box(x1 * 16, zMin, yMin, x2 * 16, zMax, yMax));
+                }
+            }
+
+        });
+        return rotatedShapes.stream().reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElseGet(() -> Block.box(0, 0, 0, 16, 16, 16));
+    }
+
+    public static @NotNull VoxelShape blockBox(double pX1, double pY1, double pZ1, double pX2, double pY2, double pZ2) {
         return Block.box(Math.min(pX1, pX2), Math.min(pY1, pY2), Math.min(pZ1, pZ2), Math.max(pX1, pX2), Math.max(pY1, pY2), Math.max(pZ1, pZ2));
     }
 
     @Nullable
-    public static StructureStart getStructureStartAt(Entity entity, Structure s) {
+    public static StructureStart getStructureStartAt(@NotNull Entity entity, @NotNull Structure s) {
         return getStructureStartAt(entity.getCommandSenderWorld(), entity.blockPosition(), s);
     }
 
-    @Nonnull
-    public static Optional<StructureStart> getStructureStartAt(Entity entity, TagKey<Structure> s) {
+    @NotNull
+    public static Optional<StructureStart> getStructureStartAt(@NotNull Entity entity, @NotNull TagKey<Structure> s) {
         return getStructureStartAt(entity.getCommandSenderWorld(), entity.blockPosition(), s);
     }
 
-    public static boolean isInsideStructure(Level w, BlockPos p, Structure s) {
+    public static boolean isInsideStructure(Level w, @NotNull BlockPos p, @NotNull Structure s) {
         StructureStart start = getStructureStartAt(w, p, s);
         return start != null && start.isValid();
     }
 
-    public static boolean isInsideStructure(Level w, BlockPos p, TagKey<Structure> s) {
-        return getStructureStartAt(w,p,s).isPresent();
+    public static boolean isInsideStructure(Level w, @NotNull BlockPos p, @NotNull TagKey<Structure> s) {
+        return getStructureStartAt(w, p, s).isPresent();
     }
 
-    public static boolean isInsideStructure(Entity entity,  Structure s) {
+    public static boolean isInsideStructure(@NotNull Entity entity, @NotNull Structure s) {
         StructureStart start = getStructureStartAt(entity, s);
         return start != null && start.isValid();
     }
 
-    public static boolean isInsideStructure(Entity entity, TagKey<Structure> structures) {
+    public static boolean isInsideStructure(@NotNull Entity entity, @NotNull TagKey<Structure> structures) {
         return getStructureStartAt(entity, structures).isPresent();
     }
 
     @Nullable
-    public static StructureStart getStructureStartAt(Level level, BlockPos pos, Structure s) {
+    public static StructureStart getStructureStartAt(Level level, @NotNull BlockPos pos, @NotNull Structure s) {
         if (level instanceof ServerLevel serverLevel && serverLevel.isLoaded(pos)) {
             return getStructureStartAt(serverLevel, pos, s);
         }
         return null;
     }
 
-    public static Optional<StructureStart> getStructureStartAt(Level level, BlockPos pos, TagKey<Structure> structureTag) {
+    public static @NotNull Optional<StructureStart> getStructureStartAt(Level level, @NotNull BlockPos pos, @NotNull TagKey<Structure> structureTag) {
         if (level instanceof ServerLevel serverLevel && serverLevel.isLoaded(pos)) {
             Registry<Structure> registry = serverLevel.registryAccess().registryOrThrow(Registry.STRUCTURE_REGISTRY);
             return serverLevel.structureManager().startsForStructure(new ChunkPos(pos), structure -> {
@@ -602,9 +648,9 @@ public class UtilLib {
         return Optional.empty();
     }
 
-    public static StructureStart getStructureStartAt(ServerLevel w, BlockPos pos, Structure structure){
-        for(StructureStart structurestart : w.structureManager().startsForStructure(SectionPos.of(pos), structure)){
-            if(structurestart.getBoundingBox().isInside(pos)){
+    public static @NotNull StructureStart getStructureStartAt(@NotNull ServerLevel w, @NotNull BlockPos pos, @NotNull Structure structure) {
+        for (StructureStart structurestart : w.structureManager().startsForStructure(SectionPos.of(pos), structure)) {
+            if (structurestart.getBoundingBox().isInside(pos)) {
                 return structurestart;
             }
         }
@@ -618,7 +664,7 @@ public class UtilLib {
      *
      * @return The stacks NBT Tag
      */
-    public static CompoundTag checkNBT(ItemStack stack) {
+    public static @Nullable CompoundTag checkNBT(@NotNull ItemStack stack) {
         if (!stack.hasTag()) {
             stack.setTag(new CompoundTag());
         }
@@ -632,33 +678,33 @@ public class UtilLib {
         return new float[]{(float) i / 255.0F, (float) j / 255.0F, (float) k / 255.0F};
     }
 
-    @Nonnull
-    public static int[] bbToInt(@Nonnull AABB bb) {
+    @NotNull
+    public static int[] bbToInt(@NotNull AABB bb) {
         return new int[]{(int) bb.minX, (int) bb.minY, (int) bb.minZ, (int) bb.maxX, (int) bb.maxY, (int) bb.maxZ};
     }
 
-    @Nonnull
-    public static int[] mbToInt(@Nonnull BoundingBox bb) {
+    @NotNull
+    public static int[] mbToInt(@NotNull BoundingBox bb) {
         return new int[]{bb.minX(), bb.minY(), bb.minZ(), bb.maxX(), bb.maxY(), bb.maxZ()};
     }
 
-    @Nonnull
-    public static AABB intToBB(@Nonnull int[] array) {
+    @NotNull
+    public static AABB intToBB(@NotNull int @NotNull [] array) {
         return new AABB(array[0], array[1], array[2], array[3], array[4], array[5]);
     }
 
-    @Nonnull
-    public static BoundingBox intToMB(@Nonnull int[] array) {
+    @NotNull
+    public static BoundingBox intToMB(@NotNull int @NotNull [] array) {
         return new BoundingBox(array[0], array[1], array[2], array[3], array[4], array[5]);
     }
 
-    @Nonnull
-    public static BoundingBox AABBtoMB(@Nonnull AABB bb) {
+    @NotNull
+    public static BoundingBox AABBtoMB(@NotNull AABB bb) {
         return new BoundingBox((int) bb.minX, (int) bb.minY, (int) bb.minZ, (int) bb.maxX, (int) bb.maxY, (int) bb.maxZ);
     }
 
-    @Nonnull
-    public static AABB MBtoAABB(@Nonnull BoundingBox bb) {
+    @NotNull
+    public static AABB MBtoAABB(@NotNull BoundingBox bb) {
         return new AABB(bb.minX(), bb.minY(), bb.minZ(), bb.maxX(), bb.maxY(), bb.maxZ());
     }
 
@@ -667,7 +713,7 @@ public class UtilLib {
      *
      * @return The height of the rendered text
      */
-    public static int renderMultiLine(Font fontRenderer, PoseStack stack, Component text, int textLength, int x, int y, int color) {
+    public static int renderMultiLine(@NotNull Font fontRenderer, @NotNull PoseStack stack, @NotNull Component text, int textLength, int x, int y, int color) {
         int d = 0;
         for (FormattedCharSequence sequence : fontRenderer.split(text, textLength)) {
             fontRenderer.draw(stack, sequence, x, y + d, color);
@@ -677,15 +723,15 @@ public class UtilLib {
     }
 
     @Nullable
-    public static DyeColor getColorForItem(Item item) {
-        if (!item.builtInRegistryHolder().is(Tags.Items.DYES) ) return null;
+    public static DyeColor getColorForItem(@NotNull Item item) {
+        if (!item.builtInRegistryHolder().is(Tags.Items.DYES)) return null;
         Optional<DyeColor> color = Arrays.stream(DyeColor.values()).filter(dye -> item.builtInRegistryHolder().is(dye.getTag())).findFirst();
         if (color.isPresent()) return color.get();
         LOGGER.warn("Could not determine color of {}", ForgeRegistries.ITEMS.getKey(item));
         return null;
     }
 
-    public static boolean isValidResourceLocation(String loc) {
+    public static boolean isValidResourceLocation(@NotNull String loc) {
         return ResourceLocation.tryParse(loc) != null;
     }
 
@@ -695,7 +741,7 @@ public class UtilLib {
      * @param old         To be removed
      * @param replacement To be added
      */
-    public static void replaceEntity(LivingEntity old, LivingEntity replacement) {
+    public static void replaceEntity(@NotNull LivingEntity old, @NotNull LivingEntity replacement) {
         Level w = old.getCommandSenderWorld();
         MinecraftForge.EVENT_BUS.post(new LivingConversionEvent.Post(old, replacement));
         w.addFreshEntity(replacement);
@@ -707,10 +753,20 @@ public class UtilLib {
      * It isn't a {@link SortedSet} but should keep the order anyway
      */
     @SafeVarargs
-    public static <T> Set<T> newSortedSet(T... elements) {
+    public static <T> @NotNull Set<T> newSortedSet(T... elements) {
         Set<T> s = new LinkedHashSet<>();
         Collections.addAll(s, elements);
         return s;
+    }
+
+    public static boolean matchesItem(@NotNull Ingredient ingredient, @NotNull ItemStack searchStack) {
+        return Arrays.stream(ingredient.getItems()).anyMatch(stack -> {
+            if (!stack.sameItem(searchStack)) return false;
+            if (stack.getTag() != null) {
+                return stack.areShareTagsEqual(searchStack);
+            }
+            return true;
+        });
     }
 
     public enum RotationAmount {
@@ -719,7 +775,7 @@ public class UtilLib {
         TWO_HUNDRED_SEVENTY
     }
 
-    public static int countItemWithNBT(Inventory inventory, ItemStack stack) {
+    public static int countItemWithNBT(@NotNull Inventory inventory, @NotNull ItemStack stack) {
         int i = 0;
 
         for (int j = 0; j < inventory.getContainerSize(); ++j) {
@@ -732,4 +788,8 @@ public class UtilLib {
         return i;
     }
 
+
+    public static @NotNull ResourceLocation amend(@NotNull ResourceLocation original, String amendment) {
+        return new ResourceLocation(original.getNamespace(), original.getPath() + amendment);
+    }
 }

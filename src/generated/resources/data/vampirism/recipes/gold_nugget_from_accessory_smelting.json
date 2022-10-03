@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 0.1,
+  "ingredient": [
+    {
+      "item": "vampirism:amulet"
+    },
+    {
+      "item": "vampirism:ring"
+    }
+  ],
+  "result": "minecraft:gold_nugget"
+}

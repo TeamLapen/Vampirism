@@ -11,6 +11,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import org.jetbrains.annotations.NotNull;
 
 public class BindActionCommand extends BasicCommand {
 
@@ -25,8 +26,8 @@ public class BindActionCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int bindAction(CommandContext<CommandSourceStack> context, ServerPlayer asPlayer, int number, IAction<?> action) {
-        FactionPlayerHandler.getOpt(asPlayer).ifPresent(fp-> {
+    private static int bindAction(@NotNull CommandContext<CommandSourceStack> context, @NotNull ServerPlayer asPlayer, int number, @NotNull IAction<?> action) {
+        FactionPlayerHandler.getOpt(asPlayer).ifPresent(fp -> {
             fp.setBoundAction(number, action, true, true);
             context.getSource().sendSuccess(Component.translatable("command.vampirism.base.bind_action.success", action.getName(), number), false);
         });
@@ -34,7 +35,7 @@ public class BindActionCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int help(CommandContext<CommandSourceStack> context) {
+    private static int help(@NotNull CommandContext<CommandSourceStack> context) {
         context.getSource().sendSuccess(Component.translatable("command.vampirism.base.bind_action.help"), false);
         return 0;
     }

@@ -8,9 +8,10 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 public interface IFactionVillage {
@@ -20,30 +21,30 @@ public interface IFactionVillage {
     @Nullable
     MobEffect getBadOmenEffect();
 
-    @Nonnull
+    @NotNull
     ItemStack getBanner();
 
     List<CaptureEntityEntry<?>> getCaptureEntries();
 
-    @Nonnull
+    @NotNull
     VillagerProfession getFactionVillageProfession();
 
-    @Nonnull
+    @NotNull
     Class<? extends Mob> getGuardSuperClass();
 
     @Nullable
     EntityType<? extends ITaskMasterEntity> getTaskMasterEntity();
 
-    @Nonnull
+    @NotNull
     Block getTotemTopBlock(boolean crafted);
 
-    boolean isBanner(@Nonnull ItemStack stack);
+    boolean isBanner(@NotNull ItemStack stack);
 
     /**
      * @deprecated internal use only
      */
-    @Deprecated
-    default IFactionVillage build() {
+    @ApiStatus.Internal
+    default @NotNull IFactionVillage build() {
         return this;
     }
 }

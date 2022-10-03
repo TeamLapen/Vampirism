@@ -5,8 +5,8 @@ import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
-import de.teamlapen.vampirism.entity.action.hunter.GarlicAOFEntityAction;
-import de.teamlapen.vampirism.entity.action.vampire.*;
+import de.teamlapen.vampirism.entity.hunter.action.GarlicAOFEntityAction;
+import de.teamlapen.vampirism.entity.vampire.action.*;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
@@ -31,7 +31,7 @@ public class EntityActions {
     public static final RegistryObject<GarlicAOFEntityAction<?>> ENTITY_GARLIC_AREAOFEFFECT = ENTITY_ACTIONS.register("entity_garlic_areaofeffect", () -> new GarlicAOFEntityAction<>(EntityActionTier.High, EntityClassType.Caster));
     public static final RegistryObject<IgnoreSunDamageEntityAction<?>> ENTITY_IGNORESUNDAMAGE = ENTITY_ACTIONS.register("entity_ignoresundamage", () -> new IgnoreSunDamageEntityAction<>(EntityActionTier.High, EntityClassType.Fighter));
 
-    public static void registerDefaultActions(IEventBus bus) {
+    public static void register(IEventBus bus) {
         ENTITY_ACTIONS.register(bus);
     }
 }

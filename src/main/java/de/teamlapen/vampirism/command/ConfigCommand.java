@@ -24,6 +24,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -75,10 +76,15 @@ public class ConfigCommand extends BasicCommand {
                                 .then(Commands.literal("dimension")
                                         .executes(context -> enforceDimension(context.getSource().getPlayerOrException()))
                                         .then(Commands.argument("dimension", DimensionArgument.dimension())
-                                                .executes(context -> enforceDimension(context.getSource().getPlayerOrException(), DimensionArgument.getDimension(context, "dimension")))))));
+                                                .executes(context -> enforceDimension(context.getSource().getPlayerOrException(), DimensionArgument.getDimension(context, "dimension")))))))
+                .then(Commands.literal("bat-dimension-blacklist")
+                        .then(Commands.argument("dimension", DimensionArgument.dimension())
+                                .executes(context -> batBlacklistDimension(context.getSource().getPlayerOrException(), DimensionArgument.getDimension(context, "dimension")))
+                        )
+                );
     }
 
-    private static int blacklistEntity(ServerPlayer player) throws CommandSyntaxException {
+    private static int blacklistEntity(@NotNull ServerPlayer player) throws CommandSyntaxException {
         Vec3 vec3d = player.getEyePosition(1.0F);
         double d0 = 50;
 
@@ -97,36 +103,40 @@ public class ConfigCommand extends BasicCommand {
         }
     }
 
-    private static int blacklistEntity(ServerPlayer player, ResourceLocation entity) {
+    private static int blacklistEntity(@NotNull ServerPlayer player, @NotNull ResourceLocation entity) {
         return modifyList(player, entity, VampirismConfig.SERVER.blacklistedBloodEntity, "command.vampirism.base.config.entity.blacklisted", "command.vampirism.base.config.entity.not_blacklisted");
     }
 
-    private static int blacklistBiome(ServerPlayer player) {
+    private static int blacklistBiome(@NotNull ServerPlayer player) {
         return blacklistBiome(player, player.getCommandSenderWorld().getBiome(player.blockPosition()).unwrap().map(ResourceKey::location, RegUtil::id));
     }
 
-    private static int blacklistBiome(ServerPlayer player, ResourceLocation biome) {
+    private static int blacklistBiome(@NotNull ServerPlayer player, @NotNull ResourceLocation biome) {
         return modifyList(player, biome, VampirismConfig.SERVER.sundamageDisabledBiomes, "command.vampirism.base.config.biome.blacklisted", "command.vampirism.base.config.biome.not_blacklisted");
     }
 
-    private static int blacklistDimension(ServerPlayer player) {
+    private static int blacklistDimension(@NotNull ServerPlayer player) {
         return blacklistDimension(player, player.getLevel());
     }
 
-    private static int blacklistDimension(ServerPlayer player, ServerLevel dimension) {
+    private static int blacklistDimension(@NotNull ServerPlayer player, @NotNull ServerLevel dimension) {
         return modifyList(player, dimension.dimension().location(), VampirismConfig.SERVER.sundamageDimensionsOverrideNegative, "command.vampirism.base.config.dimension.blacklisted", "command.vampirism.base.config.dimension.not_blacklisted");
     }
 
-    private static int enforceDimension(ServerPlayer player) {
+    private static int enforceDimension(@NotNull ServerPlayer player) {
         return enforceDimension(player, player.getLevel());
     }
 
-    private static int enforceDimension(ServerPlayer player, ServerLevel dimension) {
+    private static int enforceDimension(@NotNull ServerPlayer player, @NotNull ServerLevel dimension) {
         return modifyList(player, dimension.dimension().location(), VampirismConfig.SERVER.sundamageDimensionsOverridePositive, "command.vampirism.base.config.dimension.enforced", "command.vampirism.base.config.dimension.not_enforced");
     }
 
+    private static int batBlacklistDimension(@NotNull ServerPlayer player, @NotNull ServerLevel dim) {
+        return modifyList(player, dim.dimension().location(), VampirismConfig.SERVER.batDimensionBlacklist, "command.vampirism.base.config.bat_dim.blacklisted", "command.vampirism.base.config.bat_dim.not_blacklisted");
+    }
+
     @SuppressWarnings("SameReturnValue")
-    private static int modifyList(ServerPlayer player, ResourceLocation id, ForgeConfigSpec.ConfigValue<List<? extends String>> configList, String blacklist, String not_blacklist) {
+    private static int modifyList(@NotNull ServerPlayer player, @NotNull ResourceLocation id, ForgeConfigSpec.@NotNull ConfigValue<List<? extends String>> configList, @NotNull String blacklist, @NotNull String not_blacklist) {
         List<? extends String> list = configList.get();
         if (!list.contains(id.toString())) {
             //noinspection unchecked

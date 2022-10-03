@@ -6,8 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.util.LazyOptional;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents one playable faction (e.g. Vampire Player)
@@ -31,7 +30,7 @@ public interface IPlayableFaction<T extends IFactionPlayer<T>> extends IFaction<
      * @param female Female version
      * @return A text component representing the title of the player at the given lord level. empty if level==0
      */
-    @Nonnull
+    @NotNull
     Component getLordTitle(int level, boolean female);
 
     /**
@@ -50,5 +49,10 @@ public interface IPlayableFaction<T extends IFactionPlayer<T>> extends IFaction<
      * @throws NullPointerException if there are no accessories available
      */
     <Z extends Item & IRefinementItem> Z getRefinementItem(IRefinementItem.AccessorySlotType type);
+
+    /**
+     * @return If the faction has lord skills
+     */
+    boolean hasLordSkills();
 
 }

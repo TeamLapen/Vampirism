@@ -12,8 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class GenericParticleData implements ParticleOptions {
 
@@ -30,13 +29,13 @@ public class GenericParticleData implements ParticleOptions {
 
 
     public static final ParticleOptions.Deserializer<GenericParticleData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
-        @Nonnull
-        public GenericParticleData fromCommand(@Nonnull ParticleType<GenericParticleData> particleTypeIn, @Nonnull StringReader reader) throws CommandSyntaxException {
+        @NotNull
+        public GenericParticleData fromCommand(@NotNull ParticleType<GenericParticleData> particleTypeIn, @NotNull StringReader reader) throws CommandSyntaxException {
             return new GenericParticleData(particleTypeIn, ResourceLocation.read(reader), reader.readInt(), reader.readInt());
         }
 
-        @Nonnull
-        public GenericParticleData fromNetwork(@Nonnull ParticleType<GenericParticleData> particleTypeIn, FriendlyByteBuf buffer) {
+        @NotNull
+        public GenericParticleData fromNetwork(@NotNull ParticleType<GenericParticleData> particleTypeIn, @NotNull FriendlyByteBuf buffer) {
             return new GenericParticleData(particleTypeIn, buffer.readResourceLocation(), buffer.readVarInt(), buffer.readVarInt(), buffer.readFloat());
         }
     };
@@ -69,7 +68,7 @@ public class GenericParticleData implements ParticleOptions {
     }
 
     @Override
-    public void writeToNetwork(FriendlyByteBuf packetBuffer) {
+    public void writeToNetwork(@NotNull FriendlyByteBuf packetBuffer) {
         packetBuffer.writeResourceLocation(texture);
         packetBuffer.writeVarInt(maxAge);
         packetBuffer.writeVarInt(color);
@@ -86,13 +85,13 @@ public class GenericParticleData implements ParticleOptions {
         return texture;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ParticleType<?> getType() {
         return particleType;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String writeToString() {
         return ForgeRegistries.PARTICLE_TYPES.getKey(this.getType()) + " " + texture + " " + maxAge + " " + color;

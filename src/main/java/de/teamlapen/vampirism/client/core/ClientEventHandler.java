@@ -4,15 +4,19 @@ import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.items.oil.IArmorOil;
+import de.teamlapen.vampirism.api.items.oil.IWeaponOil;
 import de.teamlapen.vampirism.client.model.blocks.BakedAltarInspirationModel;
 import de.teamlapen.vampirism.client.model.blocks.BakedBloodContainerModel;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.effects.VampirismPotion;
-import de.teamlapen.vampirism.player.LevelAttributeModifier;
+import de.teamlapen.vampirism.entity.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.proxy.ClientProxy;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.OilUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.resources.model.BakedModel;
@@ -25,11 +29,14 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.ComputeFovModifierEvent;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.ModelEvent.BakingCompleted;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -37,6 +44,7 @@ import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -48,8 +56,8 @@ import java.util.Map;
 public class ClientEventHandler {
     private final static Logger LOGGER = LogManager.getLogger();
 
-    @SubscribeEvent
-    public static void onModelBakeEvent(BakingCompleted event) {
+
+    static void onModelBakeEvent(@NotNull BakingCompleted event) {
         /*
          * Not really a clean solution but it works
          * Bake each model, then replace the fluid texture with impure blood, then bake it again.
@@ -61,6 +69,7 @@ public class ClientEventHandler {
                 UnbakedModel model = event.getModelBakery().getModel(loc);
                 BakedBloodContainerModel.BLOOD_FLUID_MODELS[x] = model.bake(event.getModelBakery(), event.getModelBakery().getAtlasSet()::getSprite, BlockModelRotation.X0_Y0, loc);
                 if (model instanceof BlockModel) {
+                    //noinspection UnstableApiUsage
                     ((BlockModel) model).textureMap.put("fluid", Either.left(ForgeHooksClient.getBlockMaterial(IClientFluidTypeExtensions.of(ModFluids.IMPURE_BLOOD.get()).getStillTexture())));
                     BakedBloodContainerModel.IMPURE_BLOOD_FLUID_MODELS[x] = model.bake(event.getModelBakery(), event.getModelBakery().getAtlasSet()::getSprite, BlockModelRotation.X0_Y0, loc);
                 } else {
@@ -120,19 +129,20 @@ public class ClientEventHandler {
     }
 
     @SubscribeEvent
-    public void onFovOffsetUpdate(ComputeFovModifierEvent event) {
+    public void onFovOffsetUpdate(@NotNull ComputeFovModifierEvent event) {
         if (VampirismConfig.CLIENT.disableFovChange.get() && Helper.isVampire(event.getPlayer())) {
             AttributeInstance speed = event.getPlayer().getAttribute(Attributes.MOVEMENT_SPEED);
             AttributeModifier vampirespeed = speed.getModifier(LevelAttributeModifier.getUUID(Attributes.MOVEMENT_SPEED));
-            if (vampirespeed == null)
+            if (vampirespeed == null) {
                 return;
+            }
             //removes speed buffs, add speed buffs without the vampire speed
             event.setNewFovModifier((float) (((double) (event.getFovModifier()) * ((vampirespeed.getAmount() + 1) * (double) (event.getPlayer().getAbilities().getWalkingSpeed()) + speed.getValue())) / ((vampirespeed.getAmount() + 1) * ((double) (event.getPlayer().getAbilities().getWalkingSpeed()) + speed.getValue()))));
         }
     }
 
     @SubscribeEvent
-    public void onToolTip(ItemTooltipEvent event) {
+    public void onToolTip(@NotNull ItemTooltipEvent event) {
         if (VampirismPotion.isHunterPotion(event.getItemStack(), true).map(Potion::getEffects).map(effectInstances -> effectInstances.stream().map(MobEffectInstance::getEffect).anyMatch(MobEffect::isBeneficial)).orElse(false) && (event.getEntity() == null || !Helper.isHunter(event.getEntity()))) {
             event.getToolTip().add(Component.translatable("text.vampirism.hunter_potion.deadly").withStyle(ChatFormatting.DARK_RED));
         }
@@ -142,5 +152,43 @@ public class ClientEventHandler {
     @SubscribeEvent
     public void onWorldClosed(LevelEvent.Unload event) {
         ((ClientProxy) VampirismMod.proxy).clearBossBarOverlay();
+    }
+
+    static void onModelRegistry(@NotNull ModelEvent.RegisterAdditional event) {
+        for (DyeColor dye : DyeColor.values()) {
+            event.register(new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_bottom_" + dye.getName()));
+            event.register(new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_top_" + dye.getName()));
+            event.register(new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_" + dye.getName()));
+        }
+    }
+
+    @SubscribeEvent
+    public void onItemToolTip(@NotNull ItemTooltipEvent event) {
+        OilUtils.getAppliedOilStatus(event.getItemStack()).map(pair -> {
+            if (event.getEntity() != null && !Helper.isHunter(event.getEntity())) {
+                if (pair.getLeft() instanceof IArmorOil) {
+                    return Component.translatable("text.vampirism.poisonous_to_non", VReference.HUNTER_FACTION.getNamePlural()).withStyle(ChatFormatting.DARK_RED);
+                } else if (pair.getLeft() instanceof IWeaponOil) {
+                    return VReference.HUNTER_FACTION.getNamePlural().plainCopy().withStyle(ChatFormatting.DARK_RED);
+                }
+            } else {
+                return pair.getLeft().getToolTipLine(event.getItemStack(), pair.getKey(), pair.getValue(), event.getFlags()).orElse(null);
+            }
+            return null;
+        }).ifPresent(tooltipLine -> {
+            int position = 1;
+            int flags = getHideFlags(event.getItemStack());
+            if (shouldShowInTooltip(flags, ItemStack.TooltipPart.ADDITIONAL)) ++position;
+
+            event.getToolTip().add(position, tooltipLine);
+        });
+    }
+
+    private static boolean shouldShowInTooltip(int p_242394_0_, @NotNull ItemStack.TooltipPart p_242394_1_) {
+        return (p_242394_0_ & p_242394_1_.getMask()) == 0;
+    }
+
+    private int getHideFlags(@NotNull ItemStack stack) {
+        return stack.hasTag() && stack.getTag().contains("HideFlags", 99) ? stack.getTag().getInt("HideFlags") : 0;
     }
 }

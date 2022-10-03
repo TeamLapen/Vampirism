@@ -19,8 +19,8 @@ import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Random;
 
 /**
@@ -34,7 +34,7 @@ public class BloodContainerBlockEntity extends net.minecraftforge.fluids.capabil
     public static final ModelProperty<Integer> FLUID_LEVEL_PROP = new ModelProperty<>();
     public static final ModelProperty<Boolean> FLUID_IMPURE = new ModelProperty<>();
 
-    public static void setBloodValue(BlockGetter worldIn, Random randomIn, BlockPos blockPosIn) {
+    public static void setBloodValue(@NotNull BlockGetter worldIn, @NotNull Random randomIn, @NotNull BlockPos blockPosIn) {
         BlockEntity blockEntity = worldIn.getBlockEntity(blockPosIn);
         if (blockEntity instanceof BloodContainerBlockEntity bloodContainer) {
             bloodContainer.setFluidStack(new FluidStack(ModFluids.BLOOD.get(), BloodBottleFluidHandler.getAdjustedAmount((int) (CAPACITY * randomIn.nextFloat()))));
@@ -44,18 +44,18 @@ public class BloodContainerBlockEntity extends net.minecraftforge.fluids.capabil
     private int lastSyncedAmount = Integer.MIN_VALUE;
     private ModelData modelData;
 
-    public BloodContainerBlockEntity(BlockPos pos, BlockState state) {
+    public BloodContainerBlockEntity(@NotNull BlockPos pos, BlockState state) {
         super(ModTiles.BLOOD_CONTAINER.get(), pos, state);
         this.tank = new FluidTankWithListener(CAPACITY, fluidStack -> ModFluids.BLOOD.get().isSame(fluidStack.getFluid()) || ModFluids.IMPURE_BLOOD.get().isSame(fluidStack.getFluid())).setListener(this);
 
     }
 
-    @Nonnull
+    @NotNull
     public FluidStack getFluid() {
         return tank.getFluid();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ModelData getModelData() {
         if (modelData == null) updateModelData(false);
@@ -69,7 +69,7 @@ public class BloodContainerBlockEntity extends net.minecraftforge.fluids.capabil
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public CompoundTag getUpdateTag() {
         CompoundTag tag = this.saveWithoutMetadata();
@@ -102,8 +102,9 @@ public class BloodContainerBlockEntity extends net.minecraftforge.fluids.capabil
     @Override
     public void setChanged() {
         if (level != null) {
-            if (level.isClientSide)
+            if (level.isClientSide) {
                 updateModelData(true);
+            }
             level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
             super.setChanged();
         }

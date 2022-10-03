@@ -17,13 +17,12 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class FirePlaceBlock extends VampirismBlock {
     private static final VoxelShape shape = makeShape();
 
-    private static VoxelShape makeShape() {
+    private static @NotNull VoxelShape makeShape() {
         return Block.box(0, 0.01, 0, 16, 4, 16);
     }
 
@@ -35,7 +34,7 @@ public class FirePlaceBlock extends VampirismBlock {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void animateTick(@Nonnull BlockState stateIn, @Nonnull Level worldIn, @Nonnull BlockPos pos, RandomSource rand) {
+    public void animateTick(@NotNull BlockState stateIn, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull RandomSource rand) {
         if (rand.nextInt(24) == 0) {
             worldIn.playLocalSound((float) pos.getX() + 0.5F, (float) pos.getY() + 0.5F, (float) pos.getZ() + 0.5F, SoundEvents.FIRE_AMBIENT, SoundSource.BLOCKS, 1.0F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.3F, false);
         }
@@ -50,19 +49,19 @@ public class FirePlaceBlock extends VampirismBlock {
 
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
+    public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         return shape;
     }
 
     @Override
-    public boolean canSurvive(@Nonnull BlockState state, LevelReader worldIn, BlockPos pos) {
+    public boolean canSurvive(@NotNull BlockState state, @NotNull LevelReader worldIn, @NotNull BlockPos pos) {
         return worldIn.getBlockState(pos.below()).isFaceSturdy(worldIn, pos.below(), Direction.UP);
     }
 
     @Override
-    public void onNeighborChange(BlockState state, LevelReader world, BlockPos pos, BlockPos neighbor) {
+    public void onNeighborChange(@NotNull BlockState state, @NotNull LevelReader world, @NotNull BlockPos pos, BlockPos neighbor) {
         if (!canSurvive(state, world, pos)) {
             if (world instanceof LevelWriter) {
                 ((LevelWriter) world).destroyBlock(pos, true);

@@ -5,21 +5,22 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 public class Task {
 
-    @Nonnull
+    @NotNull
     private final Variant variant;
-    @Nullable
-    private final IPlayableFaction<?> faction;
-    @Nonnull
+    @NotNull
+    private final Supplier<IPlayableFaction<?>> faction;
+    @NotNull
     private final TaskRequirement requirements;
-    @Nonnull
+    @NotNull
     private final TaskReward rewards;
-    @Nonnull
+    @NotNull
     private final TaskUnlocker[] unlocker;
     private final boolean useDescription;
     @Nullable
@@ -51,7 +52,7 @@ public class Task {
      * @param unlocker       the unlocker to unlock the task for completion
      * @param useDescription whether the task should display a description of not
      */
-    public Task(@Nonnull Variant variant, @Nullable IPlayableFaction<?> faction, @Nonnull TaskRequirement requirements, @Nonnull TaskReward rewards, @Nonnull TaskUnlocker[] unlocker, boolean useDescription) {
+    public Task(@NotNull Variant variant, @NotNull Supplier<IPlayableFaction<?>> faction, @NotNull TaskRequirement requirements, @NotNull TaskReward rewards, @NotNull TaskUnlocker[] unlocker, boolean useDescription) {
         this.variant = variant;
         this.faction = faction;
         this.requirements = requirements;
@@ -60,42 +61,42 @@ public class Task {
         this.unlocker = unlocker;
     }
 
-    @Nonnull
+    @NotNull
     public Component getDescription() {
         return this.desc != null ? this.desc : (this.desc = Component.translatable(this.getDescriptionKey()));
     }
 
-    @Nonnull
+    @NotNull
     public String getDescriptionKey() {
         return this.descKey != null ? this.descKey : (this.descKey = (this.translationKey != null ? this.translationKey : getTranslationKey()) + ".desc");
     }
 
     @Nullable
     public IPlayableFaction<?> getFaction() {
-        return faction;
+        return this.faction.get();
     }
 
-    @Nonnull
+    @NotNull
     public TaskRequirement getRequirement() {
         return this.requirements;
     }
 
-    @Nonnull
+    @NotNull
     public TaskReward getReward() {
         return this.rewards;
     }
 
-    @Nonnull
+    @NotNull
     public Component getTranslation() {
         return this.translation != null ? this.translation : (this.translation = Component.translatable(this.getTranslationKey()));
     }
 
-    @Nonnull
+    @NotNull
     public String getTranslationKey() {
         return this.translationKey != null ? this.translationKey : (this.translationKey = Util.makeDescriptionId("task", this.getRegistryName()));
     }
 
-    @Nonnull
+    @NotNull
     public TaskUnlocker[] getUnlocker() {
         return unlocker;
     }
@@ -108,7 +109,7 @@ public class Task {
         return useDescription;
     }
 
-    private ResourceLocation getRegistryName() {
+    private @Nullable ResourceLocation getRegistryName() {
         return VampirismRegistries.TASKS.get().getKey(this);
     }
 

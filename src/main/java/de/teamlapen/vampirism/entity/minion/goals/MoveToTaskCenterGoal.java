@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.entity.minion.goals;
 
 
-import de.teamlapen.vampirism.entity.goals.MoveToPositionGoal;
+import de.teamlapen.vampirism.entity.ai.goals.MoveToPositionGoal;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.DefendAreaTask;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
@@ -9,6 +9,8 @@ import de.teamlapen.vampirism.entity.minion.management.StayTask;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -16,14 +18,14 @@ import java.util.Optional;
 public class MoveToTaskCenterGoal extends MoveToPositionGoal<MinionEntity<?>> {
 
 
-    private BlockPos target;
+    private @Nullable BlockPos target;
 
 
-    public MoveToTaskCenterGoal(MinionEntity<?> entity) {
+    public MoveToTaskCenterGoal(@NotNull MinionEntity<?> entity) {
         super(entity, 1, 1, 10, true, false);
     }
 
-    public Optional<BlockPos> getTargetPos() {
+    public @NotNull Optional<BlockPos> getTargetPos() {
         return entity.getCurrentTask().map(desc -> {
             if (desc.getTask() == MinionTasks.DEFEND_AREA.get()) {
                 return ((DefendAreaTask.Desc) desc).center;
@@ -51,7 +53,7 @@ public class MoveToTaskCenterGoal extends MoveToPositionGoal<MinionEntity<?>> {
     }
 
     @Override
-    protected Vec3 getLookPosition() {
+    protected @NotNull Vec3 getLookPosition() {
         return Vec3.ZERO;
     }
 

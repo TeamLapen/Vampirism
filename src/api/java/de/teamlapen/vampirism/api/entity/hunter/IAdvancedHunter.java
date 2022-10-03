@@ -3,8 +3,7 @@ package de.teamlapen.vampirism.api.entity.hunter;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
 import net.minecraft.world.phys.AABB;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Advanced vampire hunter

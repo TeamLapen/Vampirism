@@ -9,8 +9,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
 import org.apache.maven.artifact.versioning.VersionRange;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -33,14 +34,14 @@ public class ModCompatLoader implements IInitListener {
      *
      * @param compat The compat to add
      */
-    public void addModCompat(IModCompat compat) {
+    public void addModCompat(@NotNull IModCompat compat) {
         if (availableModCompats == null) {
             throw new IllegalStateException("Add mod compats BEFORE init (" + compat.getModID() + ")");
         }
         availableModCompats.add(compat);
     }
 
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
+    public void buildConfig(ForgeConfigSpec.@NotNull Builder builder) {
         builder.push("Compatibility");
         assert availableModCompats != null;
         for (IModCompat c : availableModCompats) {
@@ -58,11 +59,11 @@ public class ModCompatLoader implements IInitListener {
         return availableModCompats;
     }
 
-    public List<IModCompat> getIncompatibleCompats() {
+    public @NotNull List<IModCompat> getIncompatibleCompats() {
         return ImmutableList.copyOf(incompatibleCompats);
     }
 
-    public List<IModCompat> getLoadedModCompats() {
+    public @NotNull List<IModCompat> getLoadedModCompats() {
         return ImmutableList.copyOf(loadedModCompats);
     }
 
@@ -87,11 +88,11 @@ public class ModCompatLoader implements IInitListener {
     }
 
 
-    private boolean isModLoaded(IModCompat modCompat) {
+    private boolean isModLoaded(@NotNull IModCompat modCompat) {
         return ModList.get().isLoaded(modCompat.getModID());
     }
 
-    private boolean isVersionOk(IModCompat modCompat) {
+    private boolean isVersionOk(@NotNull IModCompat modCompat) {
         Optional<? extends ModContainer> mod = ModList.get().getModContainerById(modCompat.getModID());
         if (mod.isPresent()) {
             String s = modCompat.getAcceptedVersionRange();

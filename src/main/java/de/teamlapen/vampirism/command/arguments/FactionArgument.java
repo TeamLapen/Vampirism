@@ -32,19 +32,19 @@ public class FactionArgument implements ArgumentType<IFaction<?>> {
     private static final DynamicCommandExceptionType FACTION_NOT_FOUND = new DynamicCommandExceptionType((id) -> Component.translatable("command.vampirism.argument.faction.notfound", id));
     private static final DynamicCommandExceptionType FACTION_NOT_PLAYABLE = new DynamicCommandExceptionType((id) -> Component.translatable("command.vampirism.argument.faction.notplayable", id));
 
-    public static IFaction<?> getFaction(CommandContext<CommandSourceStack> context, String id) {
+    public static IFaction<?> getFaction(@NotNull CommandContext<CommandSourceStack> context, String id) {
         return (IFaction<?>) context.getArgument(id, IFaction.class);
     }
 
-    public static IPlayableFaction<?> getPlayableFaction(CommandContext<CommandSourceStack> context, String id) {
+    public static IPlayableFaction<?> getPlayableFaction(@NotNull CommandContext<CommandSourceStack> context, String id) {
         return (IPlayableFaction<?>) context.getArgument(id, IFaction.class);
     }
 
-    public static FactionArgument playableFactions() {
+    public static @NotNull FactionArgument playableFactions() {
         return new FactionArgument(true);
     }
 
-    public static FactionArgument factions() {
+    public static @NotNull FactionArgument factions() {
         return new FactionArgument(false);
     }
 
@@ -60,12 +60,12 @@ public class FactionArgument implements ArgumentType<IFaction<?>> {
     }
 
     @Override
-    public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        return SharedSuggestionProvider.suggest(Arrays.stream(this.onlyPlayableFactions ? VampirismAPI.factionRegistry().getPlayableFactions(): VampirismAPI.factionRegistry().getFactions()).map(i -> i.getID().toString()), builder);
+    public <S> @NotNull CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, @NotNull SuggestionsBuilder builder) {
+        return SharedSuggestionProvider.suggest(Arrays.stream(this.onlyPlayableFactions ? VampirismAPI.factionRegistry().getPlayableFactions() : VampirismAPI.factionRegistry().getFactions()).map(i -> i.getID().toString()), builder);
     }
 
     @Override
-    public IFaction<?> parse(StringReader reader) throws CommandSyntaxException {
+    public @NotNull IFaction<?> parse(@NotNull StringReader reader) throws CommandSyntaxException {
         ResourceLocation id = ResourceLocation.read(reader);
         IFaction<?> faction = VampirismAPI.factionRegistry().getFactionByID(id);
         if (faction == null) throw FACTION_NOT_FOUND.create(id);
@@ -75,13 +75,13 @@ public class FactionArgument implements ArgumentType<IFaction<?>> {
 
     public static class Info implements ArgumentTypeInfo<FactionArgument, Info.Template> {
         @Override
-        public void serializeToNetwork(Template template, FriendlyByteBuf buffer) {
+        public void serializeToNetwork(@NotNull Template template, @NotNull FriendlyByteBuf buffer) {
             buffer.writeBoolean(template.onlyPlayableFaction);
         }
 
         @NotNull
         @Override
-        public  Template deserializeFromNetwork(FriendlyByteBuf buffer) {
+        public Template deserializeFromNetwork(@NotNull FriendlyByteBuf buffer) {
             return new Template(buffer.readBoolean());
         }
 
@@ -106,7 +106,7 @@ public class FactionArgument implements ArgumentType<IFaction<?>> {
 
             @NotNull
             @Override
-            public  FactionArgument instantiate(@NotNull CommandBuildContext context) {
+            public FactionArgument instantiate(@NotNull CommandBuildContext context) {
                 return new FactionArgument(this.onlyPlayableFaction);
             }
 

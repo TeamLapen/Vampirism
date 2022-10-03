@@ -9,15 +9,12 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
-import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.BalanceMobProps;
-import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.effects.SanguinareEffect;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
-import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -28,9 +25,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.function.Function;
 
 /**
@@ -41,17 +38,18 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     private final static String KEY_BLOOD = "bloodLevel";
     private final static String KEY_MAX_BLOOD = "maxBlood";
     private final static String POISONOUS_BLOOD = "poisonousBlood";
-    public static final Capability<IExtendedCreatureVampirism> CAP = CapabilityManager.get(new CapabilityToken<>(){});
+    public static final Capability<IExtendedCreatureVampirism> CAP = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
 
-    public static LazyOptional<IExtendedCreatureVampirism> getSafe(Entity mob) {
+    public static @NotNull LazyOptional<IExtendedCreatureVampirism> getSafe(@NotNull Entity mob) {
         return mob.getCapability(CAP);
     }
 
-    static <Q extends PathfinderMob> ICapabilityProvider createNewCapability(final Q creature) {
+    static <Q extends PathfinderMob> @NotNull ICapabilityProvider createNewCapability(final Q creature) {
         return new ICapabilitySerializable<CompoundTag>() {
 
-            final Function<Q, IExtendedCreatureVampirism> constructor = VampirismAPI.entityRegistry().getCustomExtendedCreatureConstructor(creature);
+            final @Nullable Function<Q, IExtendedCreatureVampirism> constructor = VampirismAPI.entityRegistry().getCustomExtendedCreatureConstructor(creature);
             final IExtendedCreatureVampirism inst = constructor == null ? new ExtendedCreature(creature) : constructor.apply(creature);
             final LazyOptional<IExtendedCreatureVampirism> opt = LazyOptional.of(() -> inst);
 
@@ -61,14 +59,14 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
                 inst.loadData(nbt);
             }
 
-            @Nonnull
+            @NotNull
             @Override
-            public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, Direction facing) {
+            public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, Direction facing) {
                 return CAP.orEmpty(capability, opt);
             }
 
             @Override
-            public CompoundTag serializeNBT() {
+            public @NotNull CompoundTag serializeNBT() {
                 CompoundTag tag = new CompoundTag();
                 inst.saveData(tag);
                 return tag;
@@ -89,6 +87,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
      * If this is -1, this entity never had any blood and this value cannot be changed
      */
     private int blood;
+    private int remainingBarkTicks;
 
     public ExtendedCreature(PathfinderMob entity) {
         this.entity = entity;
@@ -112,6 +111,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         return getBlood() > 0;
     }
 
+    @Override
     public boolean canBecomeVampire() {
         return canBecomeVampire;
     }
@@ -142,7 +142,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     }
 
     @Override
-    public ResourceLocation getCapKey() {
+    public @NotNull ResourceLocation getCapKey() {
         return REFERENCE.EXTENDED_CREATURE_KEY;
     }
 
@@ -175,7 +175,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     }
 
     @Override
-    public void loadUpdateFromNBT(CompoundTag nbt) {
+    public void loadUpdateFromNBT(@NotNull CompoundTag nbt) {
         if (nbt.contains(KEY_BLOOD)) {
             setBlood(nbt.getInt(KEY_BLOOD));
         }
@@ -202,6 +202,20 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     }
 
     @Override
+    public boolean canBeInfected(IVampire vampire) {
+        return canBecomeVampire && !hasPoisonousBlood();
+    }
+
+    @Override
+    public boolean tryInfect(IVampire vampire) {
+        if (canBeInfected(vampire)) {
+            SanguinareEffect.addRandom(entity, false);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public int onBite(IVampire biter) {
         if (getBlood() <= 0) return 0;
         int amt = Math.max(1, (getMaxBlood() / (biter instanceof VampirePlayer ? 6 : 2)));
@@ -213,21 +227,8 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
             }
         }
         blood -= amt;
-        boolean killed = false;
-        boolean converted = false;
         if (blood == 0) {
-            if (canBecomeVampire && entity.getRandom().nextBoolean()) {
-                if (VampirismConfig.SERVER.infectCreaturesSanguinare.get()) {
-                    SanguinareEffect.addRandom(entity, false);
-                } else {
-                    makeVampire();
-                }
-                converted = true;
-
-            } else {
-                entity.hurt(VReference.NO_BLOOD, 1000);
-                killed = true;
-            }
+            entity.hurt(VReference.NO_BLOOD, 1000);
         }
 
         this.sync();
@@ -245,9 +246,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
                 amt = 2 * amt;
             }
         }
-        if (converted && biter instanceof IVampirePlayer) {
-            ((IVampirePlayer) biter).getRepresentingPlayer().awardStat(ModStats.infected_creatures);
-        }
+
         return amt;
     }
 
@@ -257,6 +256,14 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
             poisonousBlood = poisonous;
             sync();
         }
+    }
+
+    public int getRemainingBarkTicks() {
+        return remainingBarkTicks;
+    }
+
+    public void increaseRemainingBarkTicks(int additionalBarkTicks) {
+        this.remainingBarkTicks += additionalBarkTicks;
     }
 
     @Override
@@ -287,22 +294,25 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
                 markForBloodCalculation = false;
             }
         }
+        if (this.remainingBarkTicks > 0) {
+            --this.remainingBarkTicks;
+        }
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return super.toString() + " for entity (" + entity.toString() + ") [B" + blood + ",MB" + maxBlood + ",CV" + canBecomeVampire + "]";
     }
 
     @Override
-    public void writeFullUpdateToNBT(CompoundTag nbt) {
+    public void writeFullUpdateToNBT(@NotNull CompoundTag nbt) {
         nbt.putInt(KEY_BLOOD, getBlood());
         nbt.putInt(KEY_MAX_BLOOD, getBlood());
         nbt.putBoolean(POISONOUS_BLOOD, hasPoisonousBlood());
     }
 
     @Override
-    public void loadData(CompoundTag compound) {
+    public void loadData(@NotNull CompoundTag compound) {
         if (compound.contains(KEY_MAX_BLOOD)) {
             setMaxBlood(compound.getInt(KEY_MAX_BLOOD));
         }
@@ -315,7 +325,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     }
 
     @Override
-    public void saveData(CompoundTag compound) {
+    public void saveData(@NotNull CompoundTag compound) {
         compound.putInt(KEY_BLOOD, blood);
         compound.putInt(KEY_MAX_BLOOD, maxBlood);
         compound.putBoolean(POISONOUS_BLOOD, poisonousBlood);
@@ -325,7 +335,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         HelperLib.sync(this, getEntity(), false);
     }
 
-    private void sync(CompoundTag data) {
+    private void sync(@NotNull CompoundTag data) {
         HelperLib.sync(this, data, getEntity(), false);
 
     }

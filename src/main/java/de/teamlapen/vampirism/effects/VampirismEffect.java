@@ -1,14 +1,14 @@
 package de.teamlapen.vampirism.effects;
 
 import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,7 +16,7 @@ import java.util.List;
  * Base class for Vampirism's potions
  */
 public class VampirismEffect extends MobEffect {
-    public VampirismEffect(MobEffectCategory effectType, int potionColor) {
+    public VampirismEffect(@NotNull MobEffectCategory effectType, int potionColor) {
         super(effectType, potionColor);
     }
 
@@ -26,7 +26,7 @@ public class VampirismEffect extends MobEffect {
     }
 
     @Override
-    public void applyEffectTick(@Nonnull LivingEntity entityLivingBaseIn, int amplifier) {
+    public void applyEffectTick(@NotNull LivingEntity entityLivingBaseIn, int amplifier) {
         if (this == ModEffects.ARMOR_REGENERATION.get()) {
             if (entityLivingBaseIn instanceof Player && entityLivingBaseIn.isAlive()) {
                 VampirePlayer.getOpt((Player) entityLivingBaseIn).ifPresent(VampirePlayer::requestNaturalArmorUpdate);

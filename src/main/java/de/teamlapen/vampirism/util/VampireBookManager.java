@@ -1,105 +1,129 @@
 package de.teamlapen.vampirism.util;
 
-import com.google.common.io.ByteStreams;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
+
+import com.google.common.collect.Lists;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModItems;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.TagParser;
+import de.teamlapen.vampirism.items.VampireBookItem;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
-/**
- * Handles loading of texts for ancient vampire books
- */
 public class VampireBookManager {
-    private final static Logger LOGGER = LogManager.getLogger();
-    private static final VampireBookManager ourInstance = new VampireBookManager();
+    private static final Logger LOGGER = LogManager.getLogger();
 
-    public static VampireBookManager getInstance() {
-        return ourInstance;
+    private static VampireBookManager instance;
+
+    public static @NotNull VampireBookManager getInstance() {
+        if (instance == null) {
+            instance = new VampireBookManager();
+        }
+        return instance;
     }
-
-    private final Map<String, CompoundTag> booksById = new HashMap<>();
-    private CompoundTag[] bookTags = null;
 
     private VampireBookManager() {
+
     }
 
-    public Optional<CompoundTag> getBookData(String id) {
-        CompoundTag nbt = booksById.get(id);
-        return Optional.ofNullable(nbt);
+    private final Map<String, BookContext> idToBook = new HashMap<>();
+    private final List<BookContext> nonUnique = new ArrayList<>();
+    private final BookContext DUMMY = new BookContext(new BookInfo("Unknown", "Unknown", "Failed to load"), "error", false);
+    private final BookContext OLD = new BookContext(new BookInfo("Unknown", "Unknown", "☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰"), OLD_ID, false);
+    public final static String OLD_ID = "old";
+
+    public BookInfo getBookById(String id) {
+        return idToBook.getOrDefault(id, DUMMY).book;
     }
 
-    /**
-     * Return a vampire book with a randomly selected text and title
-     */
-    public ItemStack getRandomBook(RandomSource rnd) {
+    public BookContext getBookContextById(String id) {
+        return idToBook.getOrDefault(id, DUMMY);
+    }
+
+    public BookContext getRandomBook(@NotNull RandomSource rng) {
+        return nonUnique.size() > 0 ? nonUnique.get(rng.nextInt(nonUnique.size())) : DUMMY;
+    }
+
+    public @NotNull ItemStack getRandomBookItem(@NotNull RandomSource rng) {
         ItemStack book = new ItemStack(ModItems.VAMPIRE_BOOK.get(), 1);
-        book.setTag(getRandomBookData(rnd));
+        book.setTag(VampireBookItem.createTagFromContext(getRandomBook(rng)));
         return book;
     }
 
-    @Nonnull
-    public CompoundTag getRandomBookData(RandomSource rnd) {
-        return (bookTags == null || bookTags.length == 0) ? new CompoundTag() : bookTags[rnd.nextInt(bookTags.length)];
-    }
-
     public void init() {
-        InputStream inputStream = null;
-        try {
-            inputStream = VampirismMod.class.getResourceAsStream("/vampireBooks.txt");
+        try (InputStream inputStream = VampirismMod.class.getResourceAsStream("/vampireBooks.json")) {
             if (inputStream == null) {
-                throw new IOException("Could not find 'vampireBooks.txt' in resources");
+                throw new IOException("Could not find 'vampireBooks.json' in resources");
             }
-            String data = new String(ByteStreams.toByteArray(inputStream));
-
-            parseBooks(data);
-        } catch (CommandSyntaxException e) {
-            LOGGER.warn("----------------------------------------");
-            LOGGER.error("Failed to convert vampire books to NBT", e);
-            LOGGER.warn("----------------------------------------");
-        } catch (IOException e) {
-            LOGGER.error("Failed to read vampire books from resources", e);
-        } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    LOGGER.error("Failed to close InputStream", e);
+            try (Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
+                JsonElement jsonElement = JsonParser.parseReader(reader);
+                List<BookContext> books = Lists.newArrayList(BookContext.CODEC.listOf().parse(new Dynamic<>(JsonOps.INSTANCE, jsonElement)).getOrThrow(false, LOGGER::error));
+                idToBook.clear();
+                idToBook.put(OLD_ID, OLD);
+                for (BookContext b : books) {
+                    idToBook.put(b.id, b);
+                    if (!b.unique) {
+                        nonUnique.add(b);
+                    }
                 }
+            }
+        } catch (Exception e) {
+            LOGGER.warn("----------------------------------------");
+            LOGGER.error("Failed to load vampire books from JSON", e);
+            LOGGER.warn("----------------------------------------");
+            if (VampirismMod.inDev) {
+                throw new RuntimeException(e);
             }
         }
     }
 
-    private void parseBooks(String data) throws CommandSyntaxException {
-        ArrayList<CompoundTag> books = new ArrayList<>();
-        String[] lines = data.split("\n");
-        for (String line : lines) {
-            String id = null;
-            if (line.startsWith("id")) {
-                int pos = line.indexOf(':');
-                if (pos != -1) {
-                    id = line.substring(2, pos);
-                    line = line.substring(pos + 1);
-                }
-            }
-            CompoundTag nbt = TagParser.parseTag(line);
-            books.add(nbt);
-            if (id != null) {
-                booksById.put(id, nbt);
-            }
+    public record BookContext(BookInfo book, String id, boolean unique, String... tags) {
+        @SuppressWarnings("CodeBlock2Expr")
+        public static final Codec<BookContext> CODEC = RecordCodecBuilder.create((item) -> {
+            return item.group(BookInfo.CODEC.fieldOf("book").forGetter((bookContext) -> {
+                return bookContext.book;
+            }), Codec.STRING.fieldOf("id").forGetter((bookContext) -> {
+                return bookContext.id;
+            }), Codec.BOOL.fieldOf("unique").orElse(false).forGetter((bookContext) -> {
+                return bookContext.unique;
+            }), Codec.STRING.listOf().fieldOf("tags").forGetter((bookContext) -> {
+                return Arrays.asList(bookContext.tags);
+            })).apply(item, BookContext::new);
+        });
+
+        public BookContext(BookInfo book, String id, Boolean unique, @NotNull List<String> tags) {
+            this(book, id, unique, tags.toArray(new String[0]));
         }
-        bookTags = books.toArray(new CompoundTag[0]);
+    }
+
+    public record BookInfo(String title, String author, String... content) {
+        @SuppressWarnings("CodeBlock2Expr")
+        public static final Codec<BookInfo> CODEC = RecordCodecBuilder.create((item) -> {
+            return item.group(Codec.STRING.fieldOf("title").forGetter((bookInfo) -> {
+                return bookInfo.title;
+            }), Codec.STRING.fieldOf("author").forGetter((bookInfo) -> {
+                return bookInfo.author;
+            }), Codec.STRING.listOf().fieldOf("content").forGetter((bookInfo) -> {
+                return Arrays.asList(bookInfo.content);
+            })).apply(item, BookInfo::new);
+        });
+
+        public BookInfo(String title, String author, @NotNull List<String> content) {
+            this(title, author, content.toArray(new String[0]));
+        }
     }
 }

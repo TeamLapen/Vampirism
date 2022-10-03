@@ -2,8 +2,7 @@ package de.teamlapen.lib.lib.util;
 
 
 import net.minecraftforge.common.ForgeConfigSpec;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Handles compatibility for a single mod.

@@ -23,6 +23,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,7 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe> extend
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void draw(PoseStack stack, Book book, CategoryAbstract categoryAbstract, EntryAbstract entryAbstract, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen baseScreen, Font fontRenderer, IngredientCycler ingredientCycler) {
+    public void draw(@NotNull PoseStack stack, Book book, CategoryAbstract categoryAbstract, EntryAbstract entryAbstract, int guiLeft, int guiTop, int mouseX, int mouseY, @NotNull BaseScreen baseScreen, @NotNull Font fontRenderer, IngredientCycler ingredientCycler) {
 
 
         CRAFTING_GRID.draw(stack, guiLeft + 62, guiTop + 43);
@@ -68,7 +69,7 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe> extend
         if (recipe.getRequiredSkills().length > 0) {
             FormattedText newLine = Component.literal("\n");
             List<FormattedText> skills = new ArrayList<>();
-            skills.add(Component.translatable("gui.vampirism.hunter_weapon_table.skill", "\n"));
+            skills.add(Component.translatable("gui.vampirism.skill_required", "\n"));
             for (ISkill<?> skill : recipe.getRequiredSkills()) {
                 skills.add(skill.getName().copy().withStyle(ChatFormatting.ITALIC));
                 skills.add(newLine);

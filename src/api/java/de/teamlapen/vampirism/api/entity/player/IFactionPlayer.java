@@ -9,9 +9,9 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskManager;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
 /**
@@ -42,7 +42,7 @@ public interface IFactionPlayer<T extends IFactionPlayer<T>> extends IFactionEnt
     /**
      * @return the faction this faction player belongs to
      */
-    @Nonnull
+    @NotNull
     IPlayableFaction<T> getFaction();
 
     /**
@@ -69,9 +69,9 @@ public interface IFactionPlayer<T extends IFactionPlayer<T>> extends IFactionEnt
     Player getRepresentingPlayer();
 
     /**
-     * null on client & @Nonnull on server
+     * null on client & @NotNull on server
      */
-    @Nonnull
+    @NotNull
     ITaskManager getTaskManager();
 
     /**
@@ -99,6 +99,7 @@ public interface IFactionPlayer<T extends IFactionPlayer<T>> extends IFactionEnt
     /**
      * @return The skill handler for this player
      */
+    @NotNull
     ISkillHandler<T> getSkillHandler();
 
     IActionHandler<T> getActionHandler();

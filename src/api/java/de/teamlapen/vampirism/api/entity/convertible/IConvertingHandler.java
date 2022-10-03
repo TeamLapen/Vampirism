@@ -2,8 +2,7 @@ package de.teamlapen.vampirism.api.entity.convertible;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Handles conversion of entities

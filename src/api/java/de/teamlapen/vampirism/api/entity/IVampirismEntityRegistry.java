@@ -8,8 +8,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -70,8 +70,7 @@ public interface IVampirismEntityRegistry {
     /**
      * @return The custom constructor registered for the given entity's class. Can be null if none is registered
      */
-    @Nullable
-    <T extends PathfinderMob> Function<T, IExtendedCreatureVampirism> getCustomExtendedCreatureConstructor(T entity);
+    @Nullable <T extends PathfinderMob> Function<T, IExtendedCreatureVampirism> getCustomExtendedCreatureConstructor(T entity);
 
     /**
      * Check the biteable entry for the given creature.

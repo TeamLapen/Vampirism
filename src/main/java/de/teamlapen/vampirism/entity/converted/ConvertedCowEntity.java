@@ -12,16 +12,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class ConvertedCowEntity extends ConvertedCreatureEntity<Cow> {
     public ConvertedCowEntity(EntityType<? extends ConvertedCreatureEntity> type, Level world) {
         super(type, world);
     }
 
-    @Nonnull
-    public InteractionResult mobInteract(Player player, @Nonnull InteractionHand hand) {
+    @NotNull
+    public InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         if (itemstack.getItem() == Items.BUCKET && !this.isBaby()) {
             player.playSound(SoundEvents.COW_MILK, 1.0F, 1.0F);
@@ -39,7 +38,7 @@ public class ConvertedCowEntity extends ConvertedCreatureEntity<Cow> {
         }
 
         @Override
-        public ConvertedCreatureEntity<Cow> createFrom(Cow entity) {
+        public ConvertedCreatureEntity<Cow> createFrom(@NotNull Cow entity) {
             return Helper.createEntity(ModEntities.CONVERTED_COW.get(), entity.getCommandSenderWorld()).map(creature -> {
                 this.copyImportantStuff(creature, entity);
                 return creature;

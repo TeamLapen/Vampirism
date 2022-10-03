@@ -7,8 +7,9 @@ import de.maxanier.guideapi.api.impl.abstraction.EntryAbstract;
 import de.maxanier.guideapi.api.util.GuiHelper;
 import de.maxanier.guideapi.api.util.IngredientCycler;
 import de.maxanier.guideapi.gui.BaseScreen;
-import de.teamlapen.vampirism.inventory.recipes.ShapedWeaponTableRecipe;
+import de.teamlapen.vampirism.recipes.ShapedWeaponTableRecipe;
 import net.minecraft.client.gui.Font;
+import org.jetbrains.annotations.NotNull;
 
 public class ShapedWeaponTableRecipeRenderer extends BasicWeaponTableRecipeRenderer<ShapedWeaponTableRecipe> {
     public ShapedWeaponTableRecipeRenderer(ShapedWeaponTableRecipe recipe) {
@@ -16,7 +17,7 @@ public class ShapedWeaponTableRecipeRenderer extends BasicWeaponTableRecipeRende
     }
 
     @Override
-    public void draw(PoseStack stack, Book book, CategoryAbstract categoryAbstract, EntryAbstract entryAbstract, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen baseScreen, Font fontRenderer, IngredientCycler ingredientCycler) {
+    public void draw(@NotNull PoseStack stack, Book book, CategoryAbstract categoryAbstract, EntryAbstract entryAbstract, int guiLeft, int guiTop, int mouseX, int mouseY, @NotNull BaseScreen baseScreen, @NotNull Font fontRenderer, @NotNull IngredientCycler ingredientCycler) {
         super.draw(stack, book, categoryAbstract, entryAbstract, guiLeft, guiTop, mouseX, mouseY, baseScreen, fontRenderer, ingredientCycler);
         for (int y = 0; y < recipe.getRecipeHeight(); y++) {
             for (int x = 0; x < recipe.getRecipeWidth(); x++) {

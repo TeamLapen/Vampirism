@@ -3,9 +3,8 @@ package de.teamlapen.vampirism.api.entity.player;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Interface for the player lord related data.
@@ -26,6 +25,6 @@ public interface ILordPlayer {
     @Nullable
     Component getLordTitle();
 
-    @Nonnull
+    @NotNull
     Player getPlayer();
 }

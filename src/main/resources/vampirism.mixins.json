@@ -6,22 +6,29 @@
   "mixins": [
     "AbstractFurnaceBlockEntityAccessor",
     "ArmorItemAccessor",
+    "CrossbowItemMixin",
+    "IngredientAccessor",
+    "ItemMixin",
     "LivingEntityAccessor",
     "MixinBellBlock",
-    "MixinEffectInstance",
     "MixinEntity",
     "MixinEntityPredicate",
     "MixinJigsawPlacer",
     "MixinLivingEntity",
+    "MixinMobEffectInstance",
+    "MixinMobEntity",
     "MixinPlayerEntity",
     "MixinPotionBrewing",
     "MultiNoiseBiomeSourcePresetAccessor",
+    "PlayerAdvancementsAccessor",
     "RecipeManagerAccessor",
-    "SurfaceRuleDataMixin"
+    "SurfaceRuleDataMixin",
+    "TileEntityTypeAccessor"
   ],
   "client": [
     "client.AgeableModelAccessor",
-    "client.BossOverlayGuiAccessor"
+    "client.BossOverlayGuiAccessor",
+    "client.SheetsMixin"
   ],
   "injectors": {
     "defaultRequire": 1

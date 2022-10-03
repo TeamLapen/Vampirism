@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.api.entity.player.task;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -15,13 +15,13 @@ public class TaskRequirement {
     private final int size;
     private final boolean hasStatBasedReq;
 
-    public TaskRequirement(Map<Type, List<Requirement<?>>> requirements) {
+    public TaskRequirement(@NotNull Map<Type, List<Requirement<?>>> requirements) {
         this.requirements = requirements;
         this.size = requirements.values().stream().mapToInt(List::size).sum();
         this.hasStatBasedReq = requirements.keySet().stream().anyMatch(Type::isStatBased);
     }
 
-    public List<Requirement<?>> getAll() {
+    public @NotNull List<Requirement<?>> getAll() {
         return this.requirements.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
     }
 
@@ -98,7 +98,7 @@ public class TaskRequirement {
             return 1;
         }
 
-        @Nonnull
+        @NotNull
         ResourceLocation getId();
 
         /**
@@ -106,10 +106,10 @@ public class TaskRequirement {
          * @return the stat the needs to be achieved with {@link #getAmount(IFactionPlayer)} to complete the requirement
          * @throws ClassCastException if Object is not applicant for the {@link #getType()}
          */
-        @Nonnull
+        @NotNull
         T getStat(IFactionPlayer<?> player);
 
-        @Nonnull
+        @NotNull
         default Type getType() {
             return Type.BOOLEAN;
         }

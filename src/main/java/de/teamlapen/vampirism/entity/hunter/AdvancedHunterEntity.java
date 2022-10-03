@@ -13,8 +13,8 @@ import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.VampirismEntity;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
-import de.teamlapen.vampirism.entity.goals.AttackVillageGoal;
-import de.teamlapen.vampirism.entity.goals.DefendVillageGoal;
+import de.teamlapen.vampirism.entity.ai.goals.AttackVillageGoal;
+import de.teamlapen.vampirism.entity.ai.goals.DefendVillageGoal;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.util.IPlayerOverlay;
 import de.teamlapen.vampirism.util.PlayerSkinHelper;
@@ -48,9 +48,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Optional;
 
 /**
@@ -64,18 +64,19 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     private static final int MAX_LEVEL = 1;
     private static final int MOVE_TO_RESTRICT_PRIO = 3;
 
-    public static AttributeSupplier.Builder getAttributeBuilder() {
+    public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
         return VampirismEntity.getAttributeBuilder()
                 .add(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.ADVANCED_HUNTER_MAX_HEALTH)
                 .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.ADVANCED_HUNTER_ATTACK_DAMAGE)
                 .add(Attributes.MOVEMENT_SPEED, BalanceMobProps.mobProps.ADVANCED_HUNTER_SPEED);
     }
+
     /**
      * available actions for AI task & task
      */
-    private final ActionHandlerEntity<?> entityActionHandler;
+    private final @NotNull ActionHandlerEntity<?> entityActionHandler;
     private final EntityClassType entityclass;
-    private final EntityActionTier entitytier;
+    private final @NotNull EntityActionTier entitytier;
     /**
      * Overlay player texture and if slim (true)
      */
@@ -107,7 +108,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    public void addAdditionalSaveData(@Nonnull CompoundTag nbt) {
+    public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putInt("level", getEntityLevel());
         nbt.putInt("type", getHunterType());
@@ -149,7 +150,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    public boolean doHurtTarget(@Nonnull Entity entity) {
+    public boolean doHurtTarget(@NotNull Entity entity) {
         boolean flag = super.doHurtTarget(entity);
         if (flag && this.getMainHandItem().isEmpty()) {
             this.swing(InteractionHand.MAIN_HAND);  //Swing stake if nothing else is held
@@ -157,7 +158,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         return flag;
     }
 
-    public Optional<String> getBookLootId() {
+    public @NotNull Optional<String> getBookLootId() {
         return Optional.ofNullable(lootBookId);
     }
 
@@ -204,7 +205,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         return MAX_LEVEL;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Component getName() {
         String senderName = this.getEntityData().get(NAME);
@@ -252,7 +253,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    public void readAdditionalSaveData(@Nonnull CompoundTag tagCompund) {
+    public void readAdditionalSaveData(@NotNull CompoundTag tagCompund) {
         super.readAdditionalSaveData(tagCompund);
         if (tagCompund.contains("level")) {
             setEntityLevel(tagCompund.getInt("level"));
@@ -296,7 +297,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    public int suggestEntityLevel(Difficulty d) {
+    public int suggestEntityLevel(@NotNull Difficulty d) {
         if (random.nextBoolean()) {
             return (int) (d.avgPercLevel * MAX_LEVEL / 100F);
         }
@@ -322,13 +323,13 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
+    protected @NotNull EntityType<?> getIMobTypeOpt(boolean iMob) {
         return iMob ? ModEntities.ADVANCED_HUNTER_IMOB.get() : ModEntities.ADVANCED_HUNTER.get();
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    protected InteractionResult mobInteract(@Nonnull Player player, @Nonnull InteractionHand hand) { //processInteract
+    protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) { //processInteract
         if (hand == InteractionHand.MAIN_HAND && tryCureSanguinare(player)) return InteractionResult.SUCCESS;
         return super.mobInteract(player, hand);
     }

@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.api.entity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.AABB;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Extends {@link net.minecraft.world.entity.PathfinderMob} home system with a way to set more accurate home positions
@@ -34,7 +34,7 @@ public interface IEntityWithHome {
     /**
      * Checks if the given position i within the entity's home area
      */
-    default boolean isWithinHomeDistance(BlockPos pos) {
+    default boolean isWithinHomeDistance(@NotNull BlockPos pos) {
         return this.isWithinHomeDistance(pos.getX(), pos.getY(), pos.getZ());
     }
 

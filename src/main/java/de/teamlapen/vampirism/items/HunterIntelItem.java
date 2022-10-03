@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
+import de.teamlapen.vampirism.entity.player.hunter.HunterLevelingConf;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -14,9 +14,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -27,11 +26,11 @@ public class HunterIntelItem extends Item {
 
     private final static Logger LOGGER = LogManager.getLogger();
 
-    public static HunterIntelItem getIntelForExactlyLevel(int level) {
+    public static @NotNull HunterIntelItem getIntelForExactlyLevel(int level) {
         return getIntelForLevel(level - 5);
     }
 
-    public static HunterIntelItem getIntelForLevel(int level) {
+    public static @NotNull HunterIntelItem getIntelForLevel(int level) {
         switch (level) {
             case 0:
                 return ModItems.HUNTER_INTEL_0.get();
@@ -70,14 +69,14 @@ public class HunterIntelItem extends Item {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltips, @Nonnull TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltips, @NotNull TooltipFlag flagIn) {
         if (this.tooltip == null) {
             this.tooltip = Component.translatable("text.vampirism.for_up_to_level").append(Component.literal(": " + (level + 5))).withStyle(ChatFormatting.RED);
         }
         tooltips.add(this.tooltip);
     }
 
-    public Component getCustomName() {
+    public @NotNull Component getCustomName() {
         return Component.translatable(this.getOrCreateDescriptionId()).append(Component.literal(" ")).append(Component.translatable("text.vampirism.for_up_to_level").append(Component.literal(" " + (level + 5))));
     }
 
@@ -89,11 +88,12 @@ public class HunterIntelItem extends Item {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public boolean isFoil(@Nonnull ItemStack stack) {
+    public boolean isFoil(@NotNull ItemStack stack) {
         return true;
     }
 
     private String descriptionId;
+
     @Override
     @NotNull
     protected String getOrCreateDescriptionId() {

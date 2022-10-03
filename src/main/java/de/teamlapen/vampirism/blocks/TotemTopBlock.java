@@ -26,14 +26,12 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 /**
  * Top of a two block multiblock structure.
@@ -46,11 +44,11 @@ public class TotemTopBlock extends BaseEntityBlock {
     private static final List<TotemTopBlock> blocks = new ArrayList<>();
     private static final VoxelShape shape = makeShape();
 
-    public static List<TotemTopBlock> getBlocks() {
+    public static @NotNull List<TotemTopBlock> getBlocks() {
         return Collections.unmodifiableList(blocks);
     }
 
-    private static VoxelShape makeShape() {
+    private static @NotNull VoxelShape makeShape() {
         VoxelShape a = Block.box(3, 0, 3, 13, 10, 13);
         VoxelShape b = Block.box(1, 1, 1, 15, 9, 15);
         return Shapes.or(a, b);
@@ -74,9 +72,9 @@ public class TotemTopBlock extends BaseEntityBlock {
         return false;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public RenderShape getRenderShape(@Nonnull BlockState state) {
+    public RenderShape getRenderShape(@NotNull BlockState state) {
         return RenderShape.MODEL;
     }
 
@@ -86,7 +84,7 @@ public class TotemTopBlock extends BaseEntityBlock {
     }
 
     @Override
-    public void neighborChanged(@Nonnull BlockState state, Level worldIn, @Nonnull BlockPos pos, @Nonnull Block blockIn, @Nonnull BlockPos fromPos, boolean isMoving) {
+    public void neighborChanged(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Block blockIn, @NotNull BlockPos fromPos, boolean isMoving) {
         if (worldIn.isClientSide) return;
         BlockEntity tile = worldIn.getBlockEntity(pos);
         if (tile instanceof TotemBlockEntity) {
@@ -95,9 +93,9 @@ public class TotemTopBlock extends BaseEntityBlock {
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
+    public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         return shape;
     }
 
@@ -107,20 +105,20 @@ public class TotemTopBlock extends BaseEntityBlock {
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
+    public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         return ModTiles.TOTEM.get().create(pos, state);
     }
 
     @Override
-    public void onRemove(@Nonnull BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull BlockState newState, boolean isMoving) {
         if (!(newState.getBlock() instanceof TotemTopBlock)) {
             worldIn.removeBlockEntity(pos);
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public InteractionResult use(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
+    public InteractionResult use(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         if (world.isClientSide) return InteractionResult.SUCCESS;
         TotemBlockEntity t = getTile(world, pos);
         if (t != null && world.getBlockState(pos.below()).getBlock().equals(ModBlocks.TOTEM_BASE.get())) {
@@ -131,7 +129,7 @@ public class TotemTopBlock extends BaseEntityBlock {
     }
 
     @Override
-    public boolean onDestroyedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+    public boolean onDestroyedByPlayer(BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Player player, boolean willHarvest, FluidState fluid) {
         TotemBlockEntity tile = getTile(world, pos);
         if (tile != null) {
             if (!tile.canPlayerRemoveBlock(player)) {
@@ -149,7 +147,7 @@ public class TotemTopBlock extends BaseEntityBlock {
     }
 
     @Nullable
-    private TotemBlockEntity getTile(Level world, BlockPos pos) {
+    private TotemBlockEntity getTile(@NotNull Level world, @NotNull BlockPos pos) {
         BlockEntity tile = world.getBlockEntity(pos);
         if (tile instanceof TotemBlockEntity) return (TotemBlockEntity) tile;
         return null;
@@ -157,7 +155,7 @@ public class TotemTopBlock extends BaseEntityBlock {
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
         return createTickerHelper(type, ModTiles.TOTEM.get(), level.isClientSide() ? TotemBlockEntity::clientTick : TotemBlockEntity::serverTick);
     }
 }

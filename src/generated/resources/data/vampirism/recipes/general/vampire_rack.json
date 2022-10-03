@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "item": "vampirism:vampire_fang"
+    },
+    "B": {
+      "item": "minecraft:glass_bottle"
+    },
+    "C": {
+      "item": "minecraft:honeycomb"
+    },
+    "X": {
+      "tag": "minecraft:planks"
+    },
+    "Y": {
+      "item": "minecraft:book"
+    }
+  },
+  "pattern": [
+    "XYX",
+    "ABC",
+    "XYX"
+  ],
+  "result": {
+    "item": "vampirism:vampire_rack"
+  }
+}

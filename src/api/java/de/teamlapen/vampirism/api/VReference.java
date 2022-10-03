@@ -43,16 +43,17 @@ public class VReference {
     /**
      * Hunter creatures are of this creature type. But when they are counted for spawning they belong to {@link MobCategory#MONSTER}
      */
-    public static MobCategory HUNTER_CREATURE_TYPE;
+    public static MobCategory HUNTER_CREATURE_TYPE = MobCategory.create("vampirism_hunter", "vampirism_hunter", 25, false, false, 128);
     /**
      * Vampire creatures are of this creature type. But when they are counted for spawning they belong to {@link MobCategory#MONSTER}
      */
-    public static MobCategory VAMPIRE_CREATURE_TYPE;
+    public static MobCategory VAMPIRE_CREATURE_TYPE = MobCategory.create("vampirism_vampire", "vampirism_vampire", 30, false, false, 128);
     /**
      * Vampire creatures have this creature attribute.
      * Don't know why this exists alongside EnumCreatureType, but this is used by enchantments
      */
-    public static MobType VAMPIRE_CREATURE_ATTRIBUTE;
+    @SuppressWarnings("InstantiationOfUtilityClass")
+    public static MobType VAMPIRE_CREATURE_ATTRIBUTE = new MobType();
     /**
      * Vampire Player Faction
      * Filled during pre-init.

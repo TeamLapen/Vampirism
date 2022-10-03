@@ -12,9 +12,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -28,27 +27,27 @@ public class HolyWaterBottleItem extends Item implements IItemWithTier, IFaction
         this(tier, new Properties().tab(VampirismMod.creativeTab));
     }
 
-    protected HolyWaterBottleItem(TIER tier, Properties props) {
+    protected HolyWaterBottleItem(TIER tier, @NotNull Properties props) {
         super(props);
         this.tier = tier;
     }
 
     @Override
-    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         addTierInformation(tooltip);
     }
 
     @Nullable
     @Override
-    public IFaction<?> getExclusiveFaction(@Nonnull ItemStack stack) {
+    public IFaction<?> getExclusiveFaction(@NotNull ItemStack stack) {
         return VReference.HUNTER_FACTION;
     }
 
     /**
      * Converts the tier of this bottle into the strength of the applied holy water
      */
-    public EnumStrength getStrength(TIER tier) {
+    public @NotNull EnumStrength getStrength(@NotNull TIER tier) {
         return switch (tier) {
             case NORMAL -> EnumStrength.WEAK;
             case ENHANCED -> EnumStrength.MEDIUM;
@@ -63,6 +62,7 @@ public class HolyWaterBottleItem extends Item implements IItemWithTier, IFaction
 
 
     private String descriptionId;
+
     @Override
     @NotNull
     protected String getOrCreateDescriptionId() {

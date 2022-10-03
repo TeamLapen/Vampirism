@@ -1,11 +1,12 @@
 package de.teamlapen.lib;
 
 import de.teamlapen.lib.lib.network.ISyncable;
+import de.teamlapen.lib.network.ClientboundUpdateEntityPacket;
 import de.teamlapen.lib.network.IMessage;
-import de.teamlapen.lib.network.UpdateEntityPacket;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * General Helper library
@@ -16,9 +17,9 @@ public class HelperLib {
      * Syncs the entity to players tracking this entity.
      * Entity has to implement {@link ISyncable}
      */
-    public static <T extends Entity & ISyncable> void sync(T entity) {
+    public static <T extends Entity & ISyncable> void sync(@NotNull T entity) {
         if (!entity.getCommandSenderWorld().isClientSide) {
-            IMessage m = UpdateEntityPacket.create(entity);
+            IMessage m = ClientboundUpdateEntityPacket.create(entity);
             VampLib.dispatcher.sendToAllTrackingPlayers(m, entity);
         }
 
@@ -28,9 +29,9 @@ public class HelperLib {
      * Syncs the entity to players tracking this entity using the given data
      * Entity has to implement {@link ISyncable}
      */
-    public static <T extends Entity & ISyncable> void sync(T entity, CompoundTag data) {
+    public static <T extends Entity & ISyncable> void sync(@NotNull T entity, CompoundTag data) {
         if (!entity.getCommandSenderWorld().isClientSide) {
-            IMessage m = UpdateEntityPacket.create(entity, data);
+            IMessage m = ClientboundUpdateEntityPacket.create(entity, data);
             VampLib.dispatcher.sendToAllTrackingPlayers(m, entity);
         }
 
@@ -43,9 +44,9 @@ public class HelperLib {
      * <p>
      * CAREFUL: If this is a player, and it is not connected yet, no message is sent, but no exception is thrown.
      */
-    public static void sync(ISyncable.ISyncableEntityCapabilityInst cap, Entity entity, boolean all) {
+    public static void sync(ISyncable.@NotNull ISyncableEntityCapabilityInst cap, @NotNull Entity entity, boolean all) {
         if (!entity.getCommandSenderWorld().isClientSide) {
-            IMessage m = UpdateEntityPacket.create(cap);
+            IMessage m = ClientboundUpdateEntityPacket.create(cap);
             if (entity instanceof ServerPlayer player && !all) {
                 //noinspection ConstantConditions
                 if (player.connection != null) {
@@ -66,9 +67,9 @@ public class HelperLib {
      * <p>
      * CAREFUL: If this is a player, and it is not connected yet, no message is sent, but no exception is thrown.
      */
-    public static void sync(ISyncable.ISyncableEntityCapabilityInst cap, CompoundTag data, Entity entity, boolean all) {
+    public static void sync(ISyncable.@NotNull ISyncableEntityCapabilityInst cap, @NotNull CompoundTag data, @NotNull Entity entity, boolean all) {
         if (!entity.getCommandSenderWorld().isClientSide) {
-            IMessage m = UpdateEntityPacket.create(cap, data);
+            IMessage m = ClientboundUpdateEntityPacket.create(cap, data);
             if (entity instanceof ServerPlayer player && !all) {
                 //noinspection ConstantConditions
                 if (player.connection != null) {

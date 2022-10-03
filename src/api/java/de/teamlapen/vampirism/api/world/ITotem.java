@@ -6,9 +6,9 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Optional;
 
 /**
@@ -39,20 +39,20 @@ public interface ITotem {
      *
      * @return level of the totem
      */
-    default Level getTileWorld() {
+    default @Nullable Level getTileWorld() {
         return ((BlockEntity) this).getLevel();
     }
 
     /**
      * @return area of the village
      */
-    @Nonnull
+    @NotNull
     AABB getVillageArea();
 
     /**
      * @return reduced area of the village
      */
-    @Nonnull
+    @NotNull
     AABB getVillageAreaReduced();
 
     /**

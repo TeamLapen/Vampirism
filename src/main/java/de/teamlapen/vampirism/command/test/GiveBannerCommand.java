@@ -7,8 +7,7 @@ import de.teamlapen.vampirism.command.arguments.FactionArgument;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class GiveBannerCommand extends BasicCommand {
 
@@ -21,7 +20,7 @@ public class GiveBannerCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int giveBannerItem(@Nonnull IFaction<?> faction, @Nonnull ServerPlayer player) {
+    private static int giveBannerItem(@NotNull IFaction<?> faction, @NotNull ServerPlayer player) {
         player.addItem(faction.getVillageData().getBanner());
         return 0;
     }

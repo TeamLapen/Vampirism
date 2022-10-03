@@ -21,9 +21,9 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -41,7 +41,7 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
     private boolean gothrough;
     private int maxTicks = 40;
 
-    public DarkBloodProjectileEntity(EntityType<? extends DarkBloodProjectileEntity> type, Level worldIn) {
+    public DarkBloodProjectileEntity(@NotNull EntityType<? extends DarkBloodProjectileEntity> type, @NotNull Level worldIn) {
         super(type, worldIn);
     }
 
@@ -49,19 +49,19 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
      * Copies the location from shooter.
      * Adds a small random to the motion
      */
-    public DarkBloodProjectileEntity(Level worldIn, LivingEntity shooter, double accelX, double accelY, double accelZ) {
+    public DarkBloodProjectileEntity(@NotNull Level worldIn, @NotNull LivingEntity shooter, double accelX, double accelY, double accelZ) {
         super(ModEntities.DARK_BLOOD_PROJECTILE.get(), shooter, accelX, accelY, accelZ, worldIn);
     }
 
     /**
      * Does not add a small random to the motion
      */
-    public DarkBloodProjectileEntity(Level worldIn, double x, double y, double z, double accelX, double accelY, double accelZ) {
+    public DarkBloodProjectileEntity(@NotNull Level worldIn, double x, double y, double z, double accelX, double accelY, double accelZ) {
         super(ModEntities.DARK_BLOOD_PROJECTILE.get(), x, y, z, accelX, accelY, accelZ, worldIn);
     }
 
     @Override
-    public void addAdditionalSaveData(@Nonnull CompoundTag compound) {
+    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putFloat("direct_damage", directDamage);
         compound.putFloat("indirect_damage", indirectDamage);
@@ -102,7 +102,7 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
         this.excludeShooter = true;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
@@ -114,7 +114,7 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
     }
 
     @Override
-    public boolean hurt(@Nonnull DamageSource source, float amount) {
+    public boolean hurt(@NotNull DamageSource source, float amount) {
         return false;
     }
 
@@ -144,7 +144,7 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
     }
 
     @Override
-    public void readAdditionalSaveData(@Nonnull CompoundTag compound) {
+    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         this.directDamage = compound.getFloat("direct_damage");
         this.indirectDamage = compound.getFloat("indirect_damage");
@@ -187,14 +187,14 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
         this.motionFactor = factor;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     protected ParticleOptions getTrailParticle() {
         return ParticleTypes.UNDERWATER;
     }
 
     @Override
-    protected void onHit(@Nonnull HitResult result) {
+    protected void onHit(@NotNull HitResult result) {
         if (!this.level.isClientSide) {
             if (initialNoClip && this.tickCount > 20) {
                 if (result.getType() == HitResult.Type.BLOCK) {
@@ -221,7 +221,7 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
         return false;
     }
 
-    private void hitEntity(Entity entity) {
+    private void hitEntity(@NotNull Entity entity) {
         entity.hurt(DamageSource.indirectMagic(this, getOwner()), directDamage);
         if (entity instanceof LivingEntity) {
             if (this.random.nextInt(3) == 0) {

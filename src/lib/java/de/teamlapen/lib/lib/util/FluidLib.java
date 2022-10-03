@@ -7,9 +7,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Fluid related helper methods
@@ -32,11 +31,11 @@ public class FluidLib {
     }
 
 
-    public static LazyOptional<IFluidHandlerItem> getFluidItemCap(@Nonnull ItemStack stack) {
+    public static @NotNull LazyOptional<IFluidHandlerItem> getFluidItemCap(@NotNull ItemStack stack) {
         return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
     }
 
-    public static int getFluidAmount(@Nonnull IFluidHandler handler, @Nullable Fluid f) {
+    public static int getFluidAmount(@NotNull IFluidHandler handler, @Nullable Fluid f) {
         FluidStack s = f == null ? handler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE) : handler.drain(new FluidStack(f, Integer.MAX_VALUE), IFluidHandler.FluidAction.SIMULATE);
         return s.getAmount();
     }

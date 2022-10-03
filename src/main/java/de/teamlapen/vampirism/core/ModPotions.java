@@ -18,6 +18,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
@@ -38,7 +39,6 @@ public class ModPotions {
     public static final RegistryObject<HunterPotion> VERY_STRONG_POISON = POTIONS.register("very_strong_poison", () -> new HunterPotion("poison", new MobEffectInstance(MobEffects.POISON, 432, 2)));
     public static final RegistryObject<HunterPotion> LONG_STRONG_POISON = POTIONS.register("long_strong_poison", () -> new HunterPotion("poison", new MobEffectInstance(MobEffects.POISON, 1200, 1)));
     public static final RegistryObject<HunterPotion> VERY_LONG_POISON = POTIONS.register("very_long_poison", () -> new HunterPotion("poison", new MobEffectInstance(MobEffects.POISON, 18000)));
-    public static final RegistryObject<HunterPotion> VERY_STRONG_HARMING = POTIONS.register("very_strong_harming", () -> new HunterPotion("harming", new MobEffectInstance(MobEffects.HARM, 1, 2)));
     public static final RegistryObject<HunterPotion> VERY_STRONG_HEALING = POTIONS.register("very_strong_healing", () -> new HunterPotion("healing", new MobEffectInstance(MobEffects.HEAL, 1, 2)));
     public static final RegistryObject<HunterPotion> VERY_LONG_WATER_BREATHING = POTIONS.register("very_long_water_breathing", () -> new HunterPotion("water_breathing", new MobEffectInstance(MobEffects.WATER_BREATHING, 96000)));
     public static final RegistryObject<HunterPotion> VERY_STRONG_SLOWNESS = POTIONS.register("very_strong_slowness", () -> new HunterPotion("slowness", new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 400, 5)));
@@ -56,12 +56,6 @@ public class ModPotions {
     public static final RegistryObject<HunterPotion> NAUSEA = POTIONS.register("nausea", () -> new HunterPotion(null, new MobEffectInstance(MobEffects.CONFUSION, 1200)));
     public static final RegistryObject<HunterPotion> LONG_NAUSEA = POTIONS.register("long_nausea", () -> new HunterPotion("nausea", new MobEffectInstance(MobEffects.CONFUSION, 2400)));
     public static final RegistryObject<HunterPotion> VERY_LONG_NAUSEA = POTIONS.register("very_long_nausea", () -> new HunterPotion("nausea", new MobEffectInstance(MobEffects.CONFUSION, 24000)));
-    public static final RegistryObject<HunterPotion> THIRST = POTIONS.register("thirst", () -> new HunterPotion(null, new MobEffectInstance(ModEffects.THIRST.get(), 1200)));
-    public static final RegistryObject<HunterPotion> LONG_THIRST = POTIONS.register("long_thirst", () -> new HunterPotion("thirst", new MobEffectInstance(ModEffects.THIRST.get(), 4800)));
-    public static final RegistryObject<HunterPotion> STRONG_THIRST = POTIONS.register("strong_thirst", () -> new HunterPotion("thirst", new MobEffectInstance(ModEffects.THIRST.get(), 400, 1)));
-    public static final RegistryObject<HunterPotion> VERY_LONG_THIRST = POTIONS.register("very_long_thirst", () -> new HunterPotion("thirst", new MobEffectInstance(ModEffects.THIRST.get(), 24000)));
-    public static final RegistryObject<HunterPotion> VERY_STRONG_THIRST = POTIONS.register("very_strong_thirst", () -> new HunterPotion("thirst", new MobEffectInstance(ModEffects.THIRST.get(), 1200, 2)));
-    public static final RegistryObject<HunterPotion> LONG_STRONG_THIRST = POTIONS.register("long_strong_thirst", () -> new HunterPotion("thirst", new MobEffectInstance(ModEffects.THIRST.get(), 9600, 1)));
     public static final RegistryObject<HunterPotion> BLINDNESS = POTIONS.register("blindness", () -> new HunterPotion(null, new MobEffectInstance(MobEffects.BLINDNESS, 1200)));
     public static final RegistryObject<HunterPotion> LONG_BLINDNESS = POTIONS.register("long_blindness", () -> new HunterPotion("blindness", new MobEffectInstance(MobEffects.BLINDNESS, 4800)));
     public static final RegistryObject<HunterPotion> VERY_LONG_BLINDNESS = POTIONS.register("very_long_blindness", () -> new HunterPotion("blindness", new MobEffectInstance(MobEffects.BLINDNESS, 24000)));
@@ -79,7 +73,7 @@ public class ModPotions {
     public static final RegistryObject<VampirismPotion> VAMPIRE_FIRE_RESISTANCE = POTIONS.register("vampire_fire_resistance", () -> new VampirismPotion(null, new MobEffectInstance(ModEffects.FIRE_PROTECTION.get(), 3600, 5)));
     public static final RegistryObject<VampirismPotion> LONG_VAMPIRE_FIRE_RESISTANCE = POTIONS.register("long_vampire_fire_resistance", () -> new VampirismPotion("vampire_fire_resistance", new MobEffectInstance(ModEffects.FIRE_PROTECTION.get(), 9600, 5)));
 
-    public static void registerPotions(IEventBus bus) {
+    public static void register(IEventBus bus) {
         POTIONS.register(bus);
     }
 
@@ -99,7 +93,6 @@ public class ModPotions {
         veryStrong(() -> Potions.STRONG_POISON, VERY_STRONG_POISON);
         veryDurable(VERY_STRONG_POISON, LONG_STRONG_POISON);
         veryStrong(VERY_LONG_POISON, LONG_STRONG_POISON);
-        veryStrong(() -> Potions.STRONG_HARMING, VERY_STRONG_HARMING);
         veryStrong(() -> Potions.STRONG_HEALING, VERY_STRONG_HEALING);
         veryDurable(() -> Potions.LONG_WATER_BREATHING, VERY_LONG_WATER_BREATHING);
         veryDurable(() -> Potions.LONG_SLOWNESS, VERY_LONG_SLOWNESS);
@@ -120,13 +113,6 @@ public class ModPotions {
         master(NAUSEA, () -> Ingredient.of(Tags.Items.MUSHROOMS), 32, 16);
         durable(NAUSEA, LONG_NAUSEA);
         veryDurable(LONG_NAUSEA, VERY_LONG_NAUSEA);
-        master(THIRST, () -> Ingredient.of(ModItems.VAMPIRE_FANG.get()), 10, 5);
-        durable(THIRST, LONG_THIRST);
-        strong(THIRST, STRONG_THIRST);
-        veryDurable(LONG_THIRST, VERY_LONG_THIRST);
-        veryStrong(STRONG_THIRST, VERY_STRONG_THIRST);
-        veryDurable(VERY_STRONG_THIRST, LONG_STRONG_THIRST);
-        veryStrong(VERY_LONG_THIRST, LONG_STRONG_THIRST);
         master(BLINDNESS, () -> Ingredient.of(Items.INK_SAC), 64, 32);
         durable(BLINDNESS, LONG_BLINDNESS);
         veryDurable(LONG_BLINDNESS, VERY_LONG_BLINDNESS);
@@ -163,11 +149,13 @@ public class ModPotions {
     }
 
 
-    public static void fixMappings(MissingMappingsEvent event) {
+    public static void fixMappings(@NotNull MissingMappingsEvent event) {
         event.getAllMappings(ForgeRegistries.Keys.POTIONS).forEach(missingMapping -> {
             switch (missingMapping.getKey().toString()) {
                 case "vampirism:long_strong_resistance", "vampirism:very_long_resistance" -> missingMapping.remap(ModPotions.LONG_RESISTANCE.get());
                 case "vampirism:very_strong_resistance" -> missingMapping.remap(ModPotions.STRONG_RESISTANCE.get());
+                case "vampirism:thirst", "vampirism:long_thirst", "vampirism:strong_thirst", "vampirism:very_long_thirst", "vampirism:very_strong_thirst", "vampirism:long_strong_thirst" -> missingMapping.ignore();
+                case "vampirism:very_strong_harming" -> missingMapping.remap(Potions.STRONG_HARMING);
             }
         });
     }

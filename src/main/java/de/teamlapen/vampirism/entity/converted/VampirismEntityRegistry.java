@@ -18,11 +18,13 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,25 +33,22 @@ import java.util.function.Function;
 public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     /**
      * Filled after ResourceManager reload (after 1 tick in game)
-     * Stores biteable entries
+     * Stores biteable values
      */
-    @Nonnull
+    @NotNull
     public static final BiteableEntryManager biteableEntryManager = new BiteableEntryManager();
     private static final Logger LOGGER = LogManager.getLogger();
     /**
      * Used to store convertible handlers after {@link FMLCommonSetupEvent}
      */
-    @Nonnull
+    @NotNull
     private final Map<EntityType<? extends PathfinderMob>, IConvertingHandler<?>> convertibles = new ConcurrentHashMap<>();
-    @Nonnull
+    @NotNull
     private final Map<EntityType<? extends PathfinderMob>, ResourceLocation> convertibleOverlay = new ConcurrentHashMap<>();
-    @Nonnull
-    private final Map<ResourceLocation, Integer> bloodValues = Maps.newHashMap();
     /**
      * Stores custom extended creature constructors after {@link InterModEnqueueEvent}
      */
-    private final Map<Class<? extends PathfinderMob>, Function<? extends PathfinderMob,IExtendedCreatureVampirism>> extendedCreatureConstructors = new ConcurrentHashMap<>();
-    private int bloodMultiplier = 100;
+    private final Map<Class<? extends PathfinderMob>, Function<? extends PathfinderMob, IExtendedCreatureVampirism>> extendedCreatureConstructors = new ConcurrentHashMap<>();
     private Function<IConvertingHandler.IDefaultHelper, IConvertingHandler<?>> defaultConvertingHandlerCreator;
 
     /**
@@ -71,7 +70,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
 
     @Override
     @ThreadSafeAPI
-    public void addConvertible(EntityType<? extends PathfinderMob> type, ResourceLocation overlay_loc, @Nonnull IConvertingHandler<?> handler) {
+    public void addConvertible(EntityType<? extends PathfinderMob> type, @Nullable ResourceLocation overlay_loc, @NotNull IConvertingHandler<?> handler) {
         if (finished) throw new IllegalStateException("Register convertibles during InterModEnqueueEvent");
         convertibles.put(type, handler);
 
@@ -87,12 +86,10 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
         extendedCreatureConstructors.put(clazz, constructor);
     }
 
-    public void applyNewResources(Map<ResourceLocation, Integer> valuesIn, int multiplier) {
-        this.bloodValues.putAll(valuesIn);
-        this.bloodMultiplier = multiplier;
+    public void applyNewResources(@NotNull Map<ResourceLocation, Float> valuesIn) {
+        Map<ResourceLocation, Float> values = Maps.newHashMap(valuesIn);
         Map<ResourceLocation, BiteableEntry> biteables = Maps.newHashMap();
         Set<ResourceLocation> blacklist = Sets.newHashSet();
-        float bloodValueMultiplier = bloodMultiplier / 10F;
         final IConvertingHandler<?> defaultHandler = defaultConvertingHandlerCreator.apply(null);
         for (Map.Entry<EntityType<? extends PathfinderMob>, IConvertingHandler<?>> entry : convertibles.entrySet()) {
             ResourceLocation id = RegUtil.id(entry.getKey());
@@ -100,19 +97,20 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
                 LOGGER.warn("Cannot register convertible {} since there is no EntityString for it", entry.getKey());
                 continue;
             }
-            Integer blood = valuesIn.remove(id);
-            if (blood == null) {
+            Float bloodF = values.remove(id);
+            if (bloodF == null) {
                 LOGGER.warn("Missing blood value for convertible creature {} ({})", entry.getKey().getDescription(), id);
                 continue;
             }
-            blood = Math.round(blood * bloodValueMultiplier);
+            int blood = Math.round(bloodF);
             LOGGER.debug("Registering convertible {} with blood {} and handler {}", entry.getKey().getDescription().getString(), blood, entry.getValue().getClass().getName());
             BiteableEntry biteEntry = new BiteableEntry(blood, (entry.getValue() == null ? defaultHandler : entry.getValue()));
             biteables.put(id, biteEntry);
         }
         LOGGER.info("Registered {} convertibles", biteables.size());
-        for (Map.Entry<ResourceLocation, Integer> entry : valuesIn.entrySet()) {
-            int blood = Math.abs(Math.round(entry.getValue() * bloodValueMultiplier));
+        for (Map.Entry<ResourceLocation, Float> entry : values.entrySet()) {
+            if (!RegUtil.has(ForgeRegistries.ENTITY_TYPES, entry.getKey())) continue;
+            int blood = Math.abs(Math.round(entry.getValue()));
             if (blood == 0) {
                 blacklist.add(entry.getKey());
             } else {
@@ -125,7 +123,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     @Override
     @Nullable
     @SuppressWarnings("unchecked")
-    public IConvertedCreature<?> convert(PathfinderMob entity) {
+    public IConvertedCreature<?> convert(@NotNull PathfinderMob entity) {
         BiteableEntry b = biteableEntryManager.get(entity);
         if (b != null && b.convertingHandler != null) {
             return ((IConvertingHandler<PathfinderMob>) b.convertingHandler).createFrom(entity);
@@ -138,16 +136,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
         finished = true;
     }
 
-    public int getBloodMultiplier() {
-        return bloodMultiplier;
-    }
-
-    @Nonnull
-    public Map<ResourceLocation, Integer> getBloodValues() {
-        return bloodValues;
-    }
-
-    @Nonnull
+    @NotNull
     @Override
     @OnlyIn(Dist.CLIENT)
     public Map<EntityType<? extends PathfinderMob>, ResourceLocation> getConvertibleOverlay() {
@@ -157,13 +146,13 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     @Nullable
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends PathfinderMob> Function<T, IExtendedCreatureVampirism> getCustomExtendedCreatureConstructor(T entity) {
+    public <T extends PathfinderMob> Function<T, IExtendedCreatureVampirism> getCustomExtendedCreatureConstructor(@NotNull T entity) {
         return (Function<T, IExtendedCreatureVampirism>) extendedCreatureConstructors.get(entity.getClass());
     }
 
     @Nullable
     @Override
-    public BiteableEntry getEntry(PathfinderMob creature) {
+    public BiteableEntry getEntry(@NotNull PathfinderMob creature) {
         return biteableEntryManager.get(creature);
     }
 
@@ -171,7 +160,9 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
      * Set the creator for Vampirism's default converting handler
      * FOR INTERNAL USAGE ONLY
      */
-    public void setDefaultConvertingHandlerCreator(Function<IConvertingHandler.IDefaultHelper, IConvertingHandler<?>> creator) {
-        defaultConvertingHandlerCreator = creator;
+    @ApiStatus.Internal
+    public VampirismEntityRegistry setDefaultConvertingHandlerCreator(Function<IConvertingHandler.IDefaultHelper, IConvertingHandler<?>> creator) {
+        this.defaultConvertingHandlerCreator = creator;
+        return this;
     }
 }

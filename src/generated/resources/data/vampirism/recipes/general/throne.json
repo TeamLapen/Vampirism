@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "X": {
+      "item": "minecraft:stick"
+    },
+    "Y": {
+      "item": "minecraft:red_carpet"
+    },
+    "Z": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "pattern": [
+    " YZ",
+    "YYZ",
+    "XZX"
+  ],
+  "result": {
+    "item": "vampirism:throne"
+  }
+}

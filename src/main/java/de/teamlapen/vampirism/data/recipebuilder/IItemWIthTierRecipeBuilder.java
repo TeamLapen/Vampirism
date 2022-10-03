@@ -12,21 +12,19 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-@ParametersAreNonnullByDefault
 public class IItemWIthTierRecipeBuilder extends ShapedRecipeBuilder {
-    public IItemWIthTierRecipeBuilder(ItemLike resultIn, int countIn) {
+    public IItemWIthTierRecipeBuilder(@NotNull ItemLike resultIn, int countIn) {
         super(resultIn, countIn);
     }
 
     @Override
-    public void save(Consumer<FinishedRecipe> consumerIn, ResourceLocation id) {
+    public void save(@NotNull Consumer<FinishedRecipe> consumerIn, @NotNull ResourceLocation id) {
         this.ensureValid(id);
         this.advancement.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id)).rewards(AdvancementRewards.Builder.recipe(id)).requirements(RequirementsStrategy.OR);
         consumerIn.accept(new Result(id, this.result, this.count, this.group == null ? "" : this.group, this.rows, this.key, this.advancement, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getItemCategory().getRecipeFolderName() + "/" + id.getPath())));
@@ -34,11 +32,11 @@ public class IItemWIthTierRecipeBuilder extends ShapedRecipeBuilder {
     }
 
     private static class Result extends ShapedRecipeBuilder.Result {
-        public Result(ResourceLocation idIn, Item resultIn, int countIn, String groupIn, List<String> patternIn, Map<Character, Ingredient> keyIn, Advancement.Builder advancementBuilderIn, ResourceLocation advancementIdIn) {
+        public Result(@NotNull ResourceLocation idIn, @NotNull Item resultIn, int countIn, @NotNull String groupIn, @NotNull List<String> patternIn, @NotNull Map<Character, Ingredient> keyIn, @NotNull Advancement.Builder advancementBuilderIn, @NotNull ResourceLocation advancementIdIn) {
             super(idIn, resultIn, countIn, groupIn, patternIn, keyIn, advancementBuilderIn, advancementIdIn);
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public RecipeSerializer<?> getType() {
             return ModRecipes.REPAIR_IITEMWITHTIER.get();

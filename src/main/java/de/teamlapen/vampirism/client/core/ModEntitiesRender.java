@@ -5,17 +5,15 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.client.model.*;
 import de.teamlapen.vampirism.client.model.armor.*;
-import de.teamlapen.vampirism.client.render.entities.*;
-import de.teamlapen.vampirism.client.render.layers.VampireEntityLayer;
-import de.teamlapen.vampirism.client.render.layers.VampirePlayerHeadLayer;
-import de.teamlapen.vampirism.client.render.layers.WingsLayer;
+import de.teamlapen.vampirism.client.renderer.entity.*;
+import de.teamlapen.vampirism.client.renderer.entity.layers.VampireEntityLayer;
+import de.teamlapen.vampirism.client.renderer.entity.layers.VampirePlayerHeadLayer;
+import de.teamlapen.vampirism.client.renderer.entity.layers.WingsLayer;
 import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.entity.IVampirismBoat;
+import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.PlayerModel;
-import net.minecraft.client.model.VillagerModel;
+import net.minecraft.client.model.*;
 import net.minecraft.client.model.geom.LayerDefinitions;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -34,6 +32,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -68,7 +67,7 @@ public class ModEntitiesRender {
     public static final ModelLayerLocation TASK_MASTER = new ModelLayerLocation(new ResourceLocation("vampirism:task_master"), "main");
 
 
-    public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
+    static void onRegisterRenderers(EntityRenderersEvent.@NotNull RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.BLINDING_BAT.get(), BatRenderer::new);
         event.registerEntityRenderer(ModEntities.CONVERTED_CREATURE_IMOB.get(), ConvertedCreatureRenderer::new);
         event.registerEntityRenderer(ModEntities.CONVERTED_CREATURE.get(), (ConvertedCreatureRenderer::new));
@@ -104,9 +103,12 @@ public class ModEntitiesRender {
         event.registerEntityRenderer(ModEntities.HUNTER_MINION.get(), (HunterMinionRenderer::new));
         event.registerEntityRenderer(ModEntities.TASK_MASTER_VAMPIRE.get(), (VampireTaskMasterRenderer::new));
         event.registerEntityRenderer(ModEntities.TASK_MASTER_HUNTER.get(), (HunterTaskMasterRenderer::new));
+        event.registerEntityRenderer(ModEntities.dummy_sit_entity.get(), DummyRenderer::new);
+        event.registerEntityRenderer(ModEntities.BOAT.get(), context -> new VampirismBoatRenderer(context, false));
+        event.registerEntityRenderer(ModEntities.CHEST_BOAT.get(), context -> new VampirismBoatRenderer(context, true));
     }
 
-    public static void onRegisterLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
+    static void onRegisterLayers(EntityRenderersEvent.@NotNull RegisterLayerDefinitions event) {
         event.registerLayerDefinition(HUNTER, BasicHunterModel::createBodyLayer);
         event.registerLayerDefinition(HUNTER_SLIM, BasicHunterModel::createSlimBodyLayer);
         event.registerLayerDefinition(COFFIN, CoffinModel::createLayer);
@@ -129,17 +131,25 @@ public class ModEntitiesRender {
         event.registerLayerDefinition(GENERIC_BIPED_ARMOR_INNER, () -> LayerDefinition.create(HumanoidModel.createMesh(LayerDefinitions.INNER_ARMOR_DEFORMATION, 0.0F), 64, 32));
         event.registerLayerDefinition(GENERIC_BIPED_ARMOR_OUTER, () -> LayerDefinition.create(HumanoidModel.createMesh(LayerDefinitions.OUTER_ARMOR_DEFORMATION, 0.0F), 64, 32));
         event.registerLayerDefinition(TASK_MASTER, () -> LayerDefinition.create(VillagerModel.createBodyModel(), 64, 64));
+
+        LayerDefinition boatDefinition = BoatModel.createBodyModel(false);
+        LayerDefinition chestBoatDefinition = BoatModel.createBodyModel(true);
+        for (IVampirismBoat.BoatType type : IVampirismBoat.BoatType.values()) {
+            event.registerLayerDefinition(createBoatModelName(type), () -> boatDefinition);
+            event.registerLayerDefinition(createChestBoatModelName(type), () -> chestBoatDefinition);
+        }
+
     }
 
-    public static void onAddLayers(EntityRenderersEvent.AddLayers event) {
+    static void onAddLayers(EntityRenderersEvent.@NotNull AddLayers event) {
         _onAddLayers(event);
     }
 
     @SuppressWarnings("unchecked")
-    private static <T extends Player, Q extends EntityModel<T>, Z extends HumanoidModel<T>, I extends LivingEntity, U extends EntityModel<I>> void _onAddLayers(EntityRenderersEvent.AddLayers event) {
+    private static <T extends Player, Q extends EntityModel<T>, Z extends HumanoidModel<T>, I extends LivingEntity, U extends EntityModel<I>> void _onAddLayers(EntityRenderersEvent.@NotNull AddLayers event) {
 
         for (String s : event.getSkins()) {
-            LivingEntityRenderer<T,Q> renderPlayer = event.getSkin(s);
+            LivingEntityRenderer<T, Q> renderPlayer = event.getSkin(s);
             if (renderPlayer != null && renderPlayer.getModel() instanceof HumanoidModel) {
                 LivingEntityRenderer<T, Z> renderPlayer2 = (LivingEntityRenderer<T, Z>) renderPlayer;
                 renderPlayer2.addLayer(new VampirePlayerHeadLayer<>(renderPlayer2));
@@ -147,13 +157,21 @@ public class ModEntitiesRender {
         }
         for (Map.Entry<EntityType<? extends PathfinderMob>, ResourceLocation> entry : VampirismAPI.entityRegistry().getConvertibleOverlay().entrySet()) {
             EntityType<? extends PathfinderMob> type = entry.getKey();
-            LivingEntityRenderer<I, U> render = (LivingEntityRenderer<I, U>)event.getRenderer(type);
+            LivingEntityRenderer<I, U> render = (LivingEntityRenderer<I, U>) event.getRenderer(type);
             if (render == null) {
                 LOGGER.error("Did not find renderer for {}", type);
                 continue;
             }
             render.addLayer(new VampireEntityLayer<>(render, entry.getValue(), true));
         }
+    }
+
+    public static @NotNull ModelLayerLocation createBoatModelName(IVampirismBoat.@NotNull BoatType type) {
+        return new ModelLayerLocation(new ResourceLocation(REFERENCE.MODID, "boat/" + type.getName()), "main");
+    }
+
+    public static @NotNull ModelLayerLocation createChestBoatModelName(IVampirismBoat.@NotNull BoatType type) {
+        return new ModelLayerLocation(new ResourceLocation(REFERENCE.MODID, "chest_boat/" + type.getName()), "main");
     }
 
 }

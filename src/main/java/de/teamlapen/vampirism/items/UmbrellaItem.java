@@ -10,14 +10,13 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-import net.minecraft.world.item.Item.Properties;
-
 public class UmbrellaItem extends Item {
     private static final UUID SPEED_MODIFIER = UUID.fromString("CB3F55D5-6A5C-4F18-A497-9C11A33DB5CF");
-    private final Multimap<Attribute, AttributeModifier> modifierMultimap;
+    private final @NotNull Multimap<Attribute, AttributeModifier> modifierMultimap;
 
     public UmbrellaItem() {
         super(new Properties().stacksTo(1).tab(VampirismMod.creativeTab));

@@ -3,8 +3,7 @@ package de.teamlapen.vampirism.api.entity;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import net.minecraft.world.phys.AABB;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 
 /**

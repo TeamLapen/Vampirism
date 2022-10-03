@@ -3,8 +3,7 @@ package de.teamlapen.vampirism.effects;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 
 public class VampirismPoisonEffect extends VampirismEffect {
@@ -16,7 +15,7 @@ public class VampirismPoisonEffect extends VampirismEffect {
     }
 
     @Override
-    public void applyEffectTick(@Nonnull LivingEntity entityLivingBaseIn, int amplifier) {
+    public void applyEffectTick(@NotNull LivingEntity entityLivingBaseIn, int amplifier) {
         if (entityLivingBaseIn.getHealth() > 1f || amplifier >= DEADLY_AMPLIFIER) {
             entityLivingBaseIn.hurt(DamageSource.MAGIC, amplifier + 1);
         }
@@ -25,9 +24,10 @@ public class VampirismPoisonEffect extends VampirismEffect {
     @Override
     public boolean isDurationEffectTick(int duration, int amplifier) {
         int j = 25 >> amplifier;
-        if (j > 0)
+        if (j > 0) {
             return duration % j == 0;
-        else
+        } else {
             return true;
+        }
     }
 }

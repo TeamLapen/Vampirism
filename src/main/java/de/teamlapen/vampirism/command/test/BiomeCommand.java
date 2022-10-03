@@ -8,6 +8,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import org.jetbrains.annotations.NotNull;
 
 public class BiomeCommand extends BasicCommand {
 
@@ -18,7 +19,7 @@ public class BiomeCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int biome(CommandSourceStack commandSource, ServerPlayer asPlayer) {
+    private static int biome(@NotNull CommandSourceStack commandSource, @NotNull ServerPlayer asPlayer) {
         ResourceLocation res = Helper.getBiomeId(asPlayer);
         commandSource.sendSuccess(Component.literal(res.toString()), true);
         return 0;

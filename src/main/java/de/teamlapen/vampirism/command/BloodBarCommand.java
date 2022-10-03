@@ -4,12 +4,13 @@ import com.google.common.collect.Lists;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.lib.lib.util.BasicCommand;
-import de.teamlapen.vampirism.player.FactionBasePlayer;
-import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.entity.player.FactionBasePlayer;
+import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.server.level.ServerPlayer;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
@@ -34,7 +35,7 @@ public class BloodBarCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int setBloodBar(int amount, Collection<ServerPlayer> player) {
+    private static int setBloodBar(int amount, @NotNull Collection<ServerPlayer> player) {
         player.stream().map(VampirePlayer::getOpt).filter(player1 -> player1.map(FactionBasePlayer::getLevel).orElse(0) > 0).forEach(player1 -> player1.ifPresent(vampire -> {
             vampire.useBlood(Integer.MAX_VALUE, true);
             vampire.drinkBlood(amount, 0, false);

@@ -9,6 +9,7 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class ClothingCrownModel extends VampirismArmorModel {
@@ -19,7 +20,7 @@ public class ClothingCrownModel extends VampirismArmorModel {
     private static final String BACK = "back";
 
 
-    public static LayerDefinition createLayer() {
+    public static @NotNull LayerDefinition createLayer() {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition part = mesh.getRoot();
         CubeDeformation def1 = new CubeDeformation(-0.2F, 0.1F, -0.1F);
@@ -59,12 +60,12 @@ public class ClothingCrownModel extends VampirismArmorModel {
         return instance;
     }
 
-    public final ModelPart front;
-    public final ModelPart back;
-    public final ModelPart left;
-    public final ModelPart right;
+    public final @NotNull ModelPart front;
+    public final @NotNull ModelPart back;
+    public final @NotNull ModelPart left;
+    public final @NotNull ModelPart right;
 
-    public ClothingCrownModel(ModelPart part) {
+    public ClothingCrownModel(@NotNull ModelPart part) {
         super();
         front = part.getChild(FRONT);
         back = part.getChild(BACK);
@@ -73,7 +74,7 @@ public class ClothingCrownModel extends VampirismArmorModel {
     }
 
     @Override
-    protected Iterable<ModelPart> getHeadModels() {
+    protected @NotNull Iterable<ModelPart> getHeadModels() {
         return ImmutableList.of(this.front, this.back, this.right, this.left);
     }
 }

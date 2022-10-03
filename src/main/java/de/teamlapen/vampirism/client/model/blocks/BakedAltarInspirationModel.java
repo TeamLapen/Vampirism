@@ -18,7 +18,6 @@ import net.minecraftforge.client.model.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -44,19 +43,19 @@ public class BakedAltarInspirationModel implements IDynamicBakedModel {
         this.baseModel = baseModel;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public TextureAtlasSprite getParticleIcon() {
         return baseModel.getParticleIcon();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ItemOverrides getOverrides() {
         return baseModel.getOverrides();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ItemTransforms getTransforms() {
         return baseModel.getTransforms();

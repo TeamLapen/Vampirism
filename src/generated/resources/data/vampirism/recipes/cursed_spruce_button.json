@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "wooden_button",
+  "ingredients": [
+    {
+      "item": "vampirism:cursed_spruce_planks"
+    }
+  ],
+  "result": {
+    "item": "vampirism:cursed_spruce_button"
+  }
+}

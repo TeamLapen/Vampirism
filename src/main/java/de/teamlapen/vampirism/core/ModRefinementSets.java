@@ -6,18 +6,19 @@ import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet.Rarity;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
-import de.teamlapen.vampirism.player.refinements.RefinementSet;
+import de.teamlapen.vampirism.entity.player.refinements.RefinementSet;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
 
 public class ModRefinementSets {
     public static final DeferredRegister<IRefinementSet> REFINEMENT_SETS = DeferredRegister.create(VampirismRegistries.REFINEMENT_SET_ID, REFERENCE.MODID);
 
-    public static void registerRefinementSets(IEventBus bus) {
+    public static void register(IEventBus bus) {
         REFINEMENT_SETS.register(bus);
     }
-    
+
     static {
         // Common refinement set
         {
@@ -111,6 +112,10 @@ public class ModRefinementSets {
             REFINEMENT_SETS.register("half_invulnerable_debuffed", () -> new RefinementSet.VampireRefinementSet(Rarity.RARE, 0xa96db7, ModRefinements.HALF_INVULNERABLE, ModRefinements.N_ARMOR1));
             REFINEMENT_SETS.register("summon_bats_debuffed", () -> new RefinementSet.VampireRefinementSet(Rarity.RARE, 0x8b8a91, ModRefinements.SUMMON_BATS, ModRefinements.N_HEALTH1));
             REFINEMENT_SETS.register("sun_screen_debuffed", () -> new RefinementSet.VampireRefinementSet(Rarity.RARE, 0xedc20b, ModRefinements.SUN_SCREEN, ModRefinements.N_ARMOR1));
+
+            //other
+            REFINEMENT_SETS.register("crucifix_resistant", () -> new RefinementSet.VampireRefinementSet(Rarity.UNCOMMON, 0x7DC2D1, ModRefinements.CRUCIFIX_RESISTANT));
+
         }
 
         // Epic refinement sets
@@ -131,6 +136,10 @@ public class ModRefinementSets {
             // de-buffed skill upgrades
             REFINEMENT_SETS.register("dark_blood_projectile_aoe_debuffed", () -> new RefinementSet.VampireRefinementSet(Rarity.EPIC, 0xe303ff, ModRefinements.DARK_BLOOD_PROJECTILE_AOE, ModRefinements.N_HEALTH1).onlyFor(IRefinementItem.AccessorySlotType.RING));
             REFINEMENT_SETS.register("rage_fury_debuffed", () -> new RefinementSet.VampireRefinementSet(Rarity.EPIC, 0xc10202, ModRefinements.RAGE_FURY, ModRefinements.N_ARMOR1));
+
+            //other
+            REFINEMENT_SETS.register("crucifix_resistant_speed", () -> new RefinementSet.VampireRefinementSet(Rarity.EPIC, 0x7D55D1, ModRefinements.CRUCIFIX_RESISTANT, ModRefinements.ATTACK_SPEED1));
+            REFINEMENT_SETS.register("crucifix_resistant_health", () -> new RefinementSet.VampireRefinementSet(Rarity.EPIC, 0x7D55D1, ModRefinements.CRUCIFIX_RESISTANT, ModRefinements.HEALTH2));
         }
         // Legendary refinement sets
         {
@@ -141,28 +150,28 @@ public class ModRefinementSets {
     }
 
     @SafeVarargs
-    private static IRefinementSet commonV(RegistryObject<? extends IRefinement>... refinements) {
+    private static @NotNull IRefinementSet commonV(RegistryObject<? extends IRefinement>... refinements) {
         return vampire(Rarity.COMMON, refinements);
     }
 
     @SafeVarargs
-    private static IRefinementSet uncommonV(RegistryObject<? extends IRefinement>... refinements) {
+    private static @NotNull IRefinementSet uncommonV(RegistryObject<? extends IRefinement>... refinements) {
         return vampire(Rarity.UNCOMMON, refinements);
     }
 
     @SafeVarargs
-    private static IRefinementSet rareV(RegistryObject<? extends IRefinement>... refinements) {
+    private static @NotNull IRefinementSet rareV(RegistryObject<? extends IRefinement>... refinements) {
         return vampire(Rarity.RARE, refinements);
     }
 
     @SafeVarargs
-    private static IRefinementSet epicV(RegistryObject<? extends IRefinement>... refinements) {
+    private static @NotNull IRefinementSet epicV(RegistryObject<? extends IRefinement>... refinements) {
         return vampire(Rarity.EPIC, refinements);
     }
 
     @SuppressWarnings("ConstantConditions")
     @SafeVarargs
-    private static RefinementSet vampire(Rarity rarity, RegistryObject<? extends IRefinement>... refinements) {
+    private static @NotNull RefinementSet vampire(@NotNull Rarity rarity, RegistryObject<? extends IRefinement>... refinements) {
         return new RefinementSet.VampireRefinementSet(rarity, rarity.color.getColor(), refinements);
     }
 }

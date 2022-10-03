@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModTiles;
-import de.teamlapen.vampirism.inventory.container.BloodGrinderContainer;
+import de.teamlapen.vampirism.inventory.BloodGrinderMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -30,15 +30,15 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class BloodGrinderBlockEntity extends InventoryBlockEntity {
 
 
-    private static List<ItemEntity> getCaptureItems(Level worldIn, BlockPos pos) {
+    private static @NotNull List<ItemEntity> getCaptureItems(@NotNull Level worldIn, @NotNull BlockPos pos) {
         int posX = pos.getX();
         int posY = pos.getY();
         int posZ = pos.getZ();
@@ -46,20 +46,20 @@ public class BloodGrinderBlockEntity extends InventoryBlockEntity {
     }
 
     //Used to provide ItemHandler compatibility
-    private final IItemHandler itemHandler;
-    private final LazyOptional<IItemHandler> itemHandlerOptional;
+    private final @NotNull IItemHandler itemHandler;
+    private final @NotNull LazyOptional<IItemHandler> itemHandlerOptional;
     private int cooldownPull = 0;
     private int cooldownProcess = 0;
 
-    public BloodGrinderBlockEntity(BlockPos pos, BlockState state) {
-        super(ModTiles.GRINDER.get(), pos, state, 1, BloodGrinderContainer.SELECTOR_INFOS);
+    public BloodGrinderBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
+        super(ModTiles.GRINDER.get(), pos, state, 1, BloodGrinderMenu.SELECTOR_INFOS);
         this.itemHandler = createWrapper();
         this.itemHandlerOptional = LazyOptional.of(() -> itemHandler);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         if ((side != Direction.DOWN) && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return itemHandlerOptional.cast();
         }
@@ -67,20 +67,20 @@ public class BloodGrinderBlockEntity extends InventoryBlockEntity {
     }
 
     @Override
-    public void load(@Nonnull CompoundTag tagCompound) {
+    public void load(@NotNull CompoundTag tagCompound) {
         super.load(tagCompound);
         cooldownPull = tagCompound.getInt("cooldown_pull");
         cooldownProcess = tagCompound.getInt("cooldown_process");
     }
 
     @Override
-    public void saveAdditional(@Nonnull CompoundTag compound) {
+    public void saveAdditional(@NotNull CompoundTag compound) {
         super.saveAdditional(compound);
         compound.putInt("cooldown_pull", cooldownPull);
         compound.putInt("cooldown_process", cooldownProcess);
     }
 
-    public static void serverTick(Level level, BlockPos pos, BlockState state, BloodGrinderBlockEntity blockEntity) {
+    public static void serverTick(@NotNull Level level, @NotNull BlockPos pos, BlockState state, @NotNull BloodGrinderBlockEntity blockEntity) {
         --blockEntity.cooldownPull;
         if (blockEntity.cooldownPull <= 0) {
             blockEntity.cooldownPull = 10;
@@ -99,19 +99,19 @@ public class BloodGrinderBlockEntity extends InventoryBlockEntity {
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    protected AbstractContainerMenu createMenu(int id, @Nonnull Inventory player) {
-        return new BloodGrinderContainer(id, player, this, ContainerLevelAccess.create(player.player.getCommandSenderWorld(), this.getBlockPos()));
+    protected AbstractContainerMenu createMenu(int id, @NotNull Inventory player) {
+        return new BloodGrinderMenu(id, player, this, ContainerLevelAccess.create(player.player.getCommandSenderWorld(), this.getBlockPos()));
     }
 
-    @Nonnull
+    @NotNull
     @Override
     protected Component getDefaultName() {
         return Component.translatable("tile.vampirism.blood_grinder");
     }
 
-    private static boolean pullItems(BloodGrinderBlockEntity blockEntity, Level level, BlockPos pos) {
+    private static boolean pullItems(@NotNull BloodGrinderBlockEntity blockEntity, @NotNull Level level, @NotNull BlockPos pos) {
 
         boolean flag = de.teamlapen.lib.lib.inventory.InventoryHelper.tryGetItemHandler(level, pos.above(), Direction.DOWN).map(pair -> {
             IItemHandler handler = pair.getLeft();

@@ -6,8 +6,9 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.player.skills.SkillHandler;
-import de.teamlapen.vampirism.player.skills.SkillNode;
+import de.teamlapen.vampirism.entity.player.skills.SkillHandler;
+import de.teamlapen.vampirism.entity.player.skills.SkillNode;
+import de.teamlapen.vampirism.misc.VampirismLogger;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -17,27 +18,27 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 public class OblivionEffect extends VampirismEffect implements EffectWithNoCounter {
 
-    private static final Logger LOGGER = LogManager.getLogger(FactionPlayerHandler.class);
+    private static final Logger LOGGER = LogManager.getLogger();
 
     public OblivionEffect() {
         super(MobEffectCategory.NEUTRAL, 0x4E9331);
     }
 
     @Override
-    public List<ItemStack> getCurativeItems() {
+    public @NotNull List<ItemStack> getCurativeItems() {
         return Collections.emptyList();
     }
 
     @Override
-    public void applyEffectTick(@Nonnull LivingEntity entityLivingBaseIn, int amplifier) {
+    public void applyEffectTick(@NotNull LivingEntity entityLivingBaseIn, int amplifier) {
         if (!entityLivingBaseIn.getCommandSenderWorld().isClientSide) {
             if (entityLivingBaseIn instanceof Player) {
                 entityLivingBaseIn.addEffect(new MobEffectInstance(MobEffects.CONFUSION, getTickDuration(amplifier), 5, false, false, false, null, Optional.empty()));
@@ -54,6 +55,7 @@ public class OblivionEffect extends VampirismEffect implements EffectWithNoCount
                         entityLivingBaseIn.removeEffect(ModEffects.OBLIVION.get());
                         ((Player) entityLivingBaseIn).displayClientMessage(Component.translatable("text.vampirism.skill.skills_reset"), true);
                         LOGGER.debug(LogUtil.FACTION, "Skills were reset for {}", entityLivingBaseIn.getName().getString());
+                        VampirismLogger.info(VampirismLogger.SKILLS, "Skills were reset for {}", entityLivingBaseIn.getName().getString());
                     }
                 });
             }

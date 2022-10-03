@@ -14,7 +14,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.function.Consumer;
 
 
@@ -23,7 +22,7 @@ public class ColoredVampireClothingItem extends VampireClothingItem {
     private final EnumClothingColor color;
     private final EnumModel model;
 
-    public ColoredVampireClothingItem(EquipmentSlot slotType, EnumModel model, String baseRegName, EnumClothingColor color) {
+    public ColoredVampireClothingItem(@NotNull EquipmentSlot slotType, EnumModel model, String baseRegName, EnumClothingColor color) {
         super(slotType);
         this.baseName = baseRegName;
         this.color = color;
@@ -32,7 +31,7 @@ public class ColoredVampireClothingItem extends VampireClothingItem {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+    public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
         consumer.accept(new IClientItemExtensions() {
                             @SuppressWarnings({"UnnecessaryDefault", "DuplicateBranchesInSwitch", "SwitchStatementWithTooFewBranches"})
                             public @NotNull Model getGenericArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<?> original) {
@@ -67,11 +66,11 @@ public class ColoredVampireClothingItem extends VampireClothingItem {
             this.name = nameIn;
         }
 
-        public String getName() {
+        public @NotNull String getName() {
             return getSerializedName();
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public String getSerializedName() {
             return this.name;

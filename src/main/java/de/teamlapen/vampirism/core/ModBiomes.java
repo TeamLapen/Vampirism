@@ -39,7 +39,7 @@ public class ModBiomes {
             ).apply(builder, ExtendedAddSpawnsBiomeModifier::new))
     );
 
-    static void registerBiomes(IEventBus bus) {
+    static void register(IEventBus bus) {
         BIOMES.register(bus);
         BIOME_MODIFIER_SERIALIZERS.register(bus);
         VampirismAPI.sundamageRegistry().addNoSundamageBiomes(VAMPIRE_FOREST.getKey().location());

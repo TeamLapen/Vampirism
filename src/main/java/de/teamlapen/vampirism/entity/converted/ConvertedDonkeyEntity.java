@@ -20,14 +20,13 @@ import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.animal.horse.Donkey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class ConvertedDonkeyEntity extends Donkey implements CurableConvertedCreature<Donkey, ConvertedDonkeyEntity> {
 
     private static final EntityDataAccessor<Boolean> CONVERTING = SynchedEntityData.defineId(ConvertedDonkeyEntity.class, EntityDataSerializers.BOOLEAN);
 
-    public static AttributeSupplier.Builder getAttributeBuilder() {
+    public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
         return AbstractHorse.createBaseHorseAttributes()
                 .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_DMG)
                 .add(ModAttributes.SUNDAMAGE.get(), BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
@@ -35,7 +34,7 @@ public class ConvertedDonkeyEntity extends Donkey implements CurableConvertedCre
 
     private final Data<Donkey> data = new Data<>();
 
-    public ConvertedDonkeyEntity(EntityType<? extends Donkey> type, Level worldIn) {
+    public ConvertedDonkeyEntity(@NotNull EntityType<? extends Donkey> type, @NotNull Level worldIn) {
         super(type, worldIn);
     }
 
@@ -50,17 +49,17 @@ public class ConvertedDonkeyEntity extends Donkey implements CurableConvertedCre
     }
 
     @Override
-    public InteractionResult mobInteractSuper(@Nonnull Player player, @Nonnull InteractionHand hand) {
+    public @NotNull InteractionResult mobInteractSuper(@NotNull Player player, @NotNull InteractionHand hand) {
         return super.mobInteract(player, hand);
     }
 
     @Override
-    public boolean hurtSuper(DamageSource damageSource, float amount) {
+    public boolean hurtSuper(@NotNull DamageSource damageSource, float amount) {
         return super.hurt(damageSource, amount);
     }
 
     @Override
-    public void addAdditionalSaveData(@Nonnull CompoundTag compound) {
+    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         this.addAdditionalSaveDataC(compound);
     }
@@ -72,7 +71,7 @@ public class ConvertedDonkeyEntity extends Donkey implements CurableConvertedCre
     }
 
     @Override
-    public void die(@Nonnull DamageSource cause) {
+    public void die(@NotNull DamageSource cause) {
         super.die(cause);
         dieC(cause);
     }
@@ -82,7 +81,7 @@ public class ConvertedDonkeyEntity extends Donkey implements CurableConvertedCre
         return CONVERTING;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public MobType getMobType() {
         return VReference.VAMPIRE_CREATURE_ATTRIBUTE;
@@ -90,22 +89,22 @@ public class ConvertedDonkeyEntity extends Donkey implements CurableConvertedCre
 
     @Override
     protected Component getTypeName() {
-        return this.getNameC(() -> Component.translatable("entity.donkey"));
+        return this.getNameC(EntityType.DONKEY::getDescription);
     }
 
     @Override
-    public boolean hurt(@Nonnull DamageSource damageSource, float amount) {
+    public boolean hurt(@NotNull DamageSource damageSource, float amount) {
         return this.hurtC(damageSource, amount);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public InteractionResult mobInteract(@Nonnull Player player, @Nonnull InteractionHand hand) {
+    public InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         return mobInteractC(player, hand);
     }
 
     @Override
-    public void readAdditionalSaveData(@Nonnull CompoundTag compound) {
+    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         readAdditionalSaveDataC(compound);
     }

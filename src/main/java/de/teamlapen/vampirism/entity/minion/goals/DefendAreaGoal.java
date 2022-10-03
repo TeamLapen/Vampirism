@@ -9,21 +9,22 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
 
 
 public class DefendAreaGoal extends TargetGoal {
 
-    private final MinionEntity<?> entity;
-    private final TargetingConditions predicate;
+    private final @NotNull MinionEntity<?> entity;
+    private final @NotNull TargetingConditions predicate;
     /**
      * Cache bb as long as {@link DefendAreaGoal#center} is unmodified
      */
     private AABB bb;
     private BlockPos center;
 
-    public DefendAreaGoal(MinionEntity<?> entity) {
+    public DefendAreaGoal(@NotNull MinionEntity<?> entity) {
         super(entity, false);
         this.entity = entity;
         this.setFlags(EnumSet.of(Goal.Flag.TARGET));

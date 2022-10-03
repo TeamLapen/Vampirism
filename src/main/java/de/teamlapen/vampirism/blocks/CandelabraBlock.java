@@ -12,13 +12,13 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.stream.Stream;
 
 
 public class CandelabraBlock extends VampirismHorizontalBlock {
-    private static VoxelShape makeCandelabraShape() {
+    private static @NotNull VoxelShape makeCandelabraShape() {
         return Stream.of(
                 Block.box(6, 0, 6, 10, 1, 10),
                 Block.box(6.5, 1, 6.5, 9.5, 2, 9.5),
@@ -38,13 +38,13 @@ public class CandelabraBlock extends VampirismHorizontalBlock {
     }
 
     @Override
-    public boolean canSurvive(@Nonnull BlockState state, @Nonnull LevelReader worldIn, BlockPos pos) {
+    public boolean canSurvive(@NotNull BlockState state, @NotNull LevelReader worldIn, @NotNull BlockPos pos) {
         return canSupportCenter(worldIn, pos.below(), Direction.UP);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public BlockState updateShape(@Nonnull BlockState stateIn, @Nonnull Direction facing, @Nonnull BlockState facingState, @Nonnull LevelAccessor worldIn, @Nonnull BlockPos currentPos, @Nonnull BlockPos facingPos) {
+    public BlockState updateShape(@NotNull BlockState stateIn, @NotNull Direction facing, @NotNull BlockState facingState, @NotNull LevelAccessor worldIn, @NotNull BlockPos currentPos, @NotNull BlockPos facingPos) {
         return facing == Direction.DOWN && !this.canSurvive(stateIn, worldIn, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 }

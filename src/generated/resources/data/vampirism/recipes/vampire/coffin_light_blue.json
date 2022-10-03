@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "X": {
+      "tag": "minecraft:planks"
+    },
+    "Y": {
+      "item": "minecraft:light_blue_wool"
+    }
+  },
+  "pattern": [
+    "XXX",
+    "YYY",
+    "XXX"
+  ],
+  "result": {
+    "item": "vampirism:coffin_light_blue"
+  }
+}

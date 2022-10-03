@@ -9,9 +9,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
 public class NBTIngredient extends Ingredient {
@@ -24,13 +24,12 @@ public class NBTIngredient extends Ingredient {
     }
 
     @Override
-    public boolean test(@Nullable ItemStack input)
-    {
+    public boolean test(@Nullable ItemStack input) {
         if (input == null) {
             return false;
         }
         for (ItemStack stack : stacks) {
-            if(stack.getItem() == input.getItem() && stack.getDamageValue() == input.getDamageValue() && stack.areShareTagsEqual(input)) {
+            if (stack.getItem() == input.getItem() && stack.getDamageValue() == input.getDamageValue() && stack.areShareTagsEqual(input)) {
                 return true;
             }
         }
@@ -38,18 +37,17 @@ public class NBTIngredient extends Ingredient {
     }
 
     @Override
-    public boolean isSimple()
-    {
+    public boolean isSimple() {
         return false;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IIngredientSerializer<? extends Ingredient> getSerializer() {
         return Serializer.INSTANCE;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public JsonElement toJson() {
         JsonObject json = new JsonObject();
@@ -80,9 +78,9 @@ public class NBTIngredient extends Ingredient {
     public static class Serializer implements IIngredientSerializer<NBTIngredient> {
         public static final Serializer INSTANCE = new Serializer();
 
-        @Nonnull
+        @NotNull
         @Override
-        public NBTIngredient parse(FriendlyByteBuf buffer) {
+        public NBTIngredient parse(@NotNull FriendlyByteBuf buffer) {
             int length = buffer.readVarInt();
             ItemStack[] stacks = new ItemStack[length];
             for (int i = 0; i < stacks.length; i++) {
@@ -91,9 +89,9 @@ public class NBTIngredient extends Ingredient {
             return new NBTIngredient(stacks);
         }
 
-        @Nonnull
+        @NotNull
         @Override
-        public NBTIngredient parse(@Nonnull JsonObject json) {
+        public NBTIngredient parse(@NotNull JsonObject json) {
             if (json.has("items")) {
                 JsonArray items = json.get("items").getAsJsonArray();
                 ItemStack[] stacks = new ItemStack[items.size()];
@@ -107,7 +105,7 @@ public class NBTIngredient extends Ingredient {
         }
 
         @Override
-        public void write(FriendlyByteBuf buffer, NBTIngredient ingredient) {
+        public void write(@NotNull FriendlyByteBuf buffer, @NotNull NBTIngredient ingredient) {
             buffer.writeVarInt(ingredient.stacks.length);
             for (ItemStack stack : ingredient.stacks) {
                 buffer.writeItem(stack);

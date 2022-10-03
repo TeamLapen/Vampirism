@@ -5,9 +5,9 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.blocks.GarlicDiffuserBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModTiles;
-import de.teamlapen.vampirism.entity.DamageHandler;
-import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
-import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
+import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.util.DamageHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -20,16 +20,15 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 public class GarlicDiffuserBlockEntity extends BlockEntity {
     private static final int FUEL_DURATION = 20 * 60 * 2;
     private int id;
     private EnumStrength strength = EnumStrength.MEDIUM;
-    private EnumStrength defaultStrength = EnumStrength.MEDIUM;
+    private @NotNull EnumStrength defaultStrength = EnumStrength.MEDIUM;
     private int r = 1;
     private boolean registered = false;
     private int fueled = 0;
@@ -38,7 +37,7 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
     private boolean initiateBootTimer = false;
 
 
-    public GarlicDiffuserBlockEntity(BlockPos pos, BlockState state) {
+    public GarlicDiffuserBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         super(ModTiles.GARLIC_DIFFUSER.get(), pos, state);
     }
 
@@ -72,7 +71,7 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
         return bootTimer == 0;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public CompoundTag getUpdateTag() {
         return this.saveWithoutMetadata();
@@ -81,12 +80,12 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
     /**
      * @return If inside effective distance
      */
-    public boolean isInRange(BlockPos pos) {
+    public boolean isInRange(@NotNull BlockPos pos) {
         return new ChunkPos(this.getBlockPos()).getChessboardDistance(new ChunkPos(pos)) <= r;
     }
 
     @Override
-    public void load(@Nonnull CompoundTag compound) {
+    public void load(@NotNull CompoundTag compound) {
         super.load(compound);
         r = compound.getInt("radius");
         defaultStrength = EnumStrength.getFromStrength(compound.getInt("strength"));
@@ -96,7 +95,7 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+    public void onDataPacket(Connection net, @NotNull ClientboundBlockEntityDataPacket pkt) {
         if (hasLevel()) {
             CompoundTag nbt = pkt.getTag();
             handleUpdateTag(nbt);
@@ -106,7 +105,7 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
         }
     }
 
-    public void onTouched(Player player) {
+    public void onTouched(@NotNull Player player) {
         if (VampirismPlayerAttributes.get(player).vampireLevel > 0) {
             VampirePlayer.getOpt(player).ifPresent(vampirePlayer -> DamageHandler.affectVampireGarlicDirect(vampirePlayer, strength));
         }
@@ -119,7 +118,7 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void saveAdditional(@Nonnull CompoundTag compound) {
+    public void saveAdditional(@NotNull CompoundTag compound) {
         super.saveAdditional(compound);
         compound.putInt("radius", r);
         compound.putInt("strength", defaultStrength.getStrength());
@@ -138,7 +137,7 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
         this.initiateBootTimer = true;
     }
 
-    public void setType(GarlicDiffuserBlock.Type type) {
+    public void setType(GarlicDiffuserBlock.@NotNull Type type) {
         switch (type) {
             case WEAK -> {
                 r = VampirismConfig.BALANCE.hsGarlicDiffuserWeakDist.get();
@@ -173,7 +172,7 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
     }
 
 
-    public static void tick(Level level, BlockPos pos, BlockState state, GarlicDiffuserBlockEntity blockEntity) {
+    public static void tick(Level level, BlockPos pos, BlockState state, @NotNull GarlicDiffuserBlockEntity blockEntity) {
         if (blockEntity.initiateBootTimer) {
             blockEntity.initiateBootTimer = false;
             int bootTime = VampirismConfig.BALANCE.garlicDiffuserStartupTime.get() * 20;

@@ -1,0 +1,37 @@
+{
+  "type": "vampirism:alchemical_table",
+  "ingredient": {
+    "type": "vampirism:nbt",
+    "count": 1,
+    "item": "vampirism:oil_bottle",
+    "nbt": {
+      "oil": "vampirism:vampire_blood"
+    }
+  },
+  "input": {
+    "type": "vampirism:nbt",
+    "items": [
+      {
+        "count": 1,
+        "item": "minecraft:potion",
+        "nbt": {
+          "Potion": "minecraft:slow_falling"
+        }
+      },
+      {
+        "count": 1,
+        "item": "minecraft:potion",
+        "nbt": {
+          "Potion": "minecraft:long_slow_falling"
+        }
+      }
+    ]
+  },
+  "result": {
+    "item": "vampirism:oil_bottle",
+    "nbt": {
+      "oil": "vampirism:slow_falling"
+    }
+  },
+  "skill": []
+}

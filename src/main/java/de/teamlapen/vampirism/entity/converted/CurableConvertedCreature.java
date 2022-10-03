@@ -8,10 +8,9 @@ import de.teamlapen.vampirism.api.entity.convertible.ICurableConvertedCreature;
 import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.core.ModAttributes;
 import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
-import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.SoulOrbEntity;
+import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -30,11 +29,12 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.LevelAccessor;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -42,14 +42,14 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
 
     class Data<T> {
         public boolean vulnerableToFire = true;
-        public EnumStrength garlicCache = EnumStrength.NONE;
+        public @NotNull EnumStrength garlicCache = EnumStrength.NONE;
         public T entityCreature;
         public boolean sundamageCache;
         public boolean dropSoul = false;
         @Nullable
         public Component name;
         public int conversionTime;
-        public UUID conversationStarter;
+        public @Nullable UUID conversationStarter;
     }
 
     Data<T> data();
@@ -73,12 +73,12 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
      * return in {@link PathfinderMob#mobInteract(Player, InteractionHand)}
      */
     @SuppressWarnings("JavadocReference")
-    default InteractionResult mobInteractC(@Nonnull Player player, @Nonnull InteractionHand hand) {
+    default InteractionResult mobInteractC(@NotNull Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (stack.getItem() != ModItems.CURE_APPLE.get()) {
-            return mobInteractSuper(player, hand);
+        if (stack.getItem() == Items.GOLDEN_APPLE) {
+            return interactWithCureItem(player, stack, ((PathfinderMob) this));
         }
-        return interactWithCureItem(player, stack, ((PathfinderMob) this));
+        return mobInteractSuper(player, hand);
     }
 
     @Override
@@ -90,7 +90,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
      * return in {@link net.minecraft.world.entity.PathfinderMob#getTypeName()} ()}
      */
     @SuppressWarnings("JavadocReference")
-    default Component getNameC(Supplier<Component> baseName) {
+    default @Nullable Component getNameC(@NotNull Supplier<Component> baseName) {
         if (data().name == null) {
             this.data().name = Component.translatable("entity.vampirism.vampire").append(baseName.get());
         }
@@ -106,11 +106,11 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
         }
     }
 
-    default boolean doesResistGarlic(EnumStrength strength) {
+    default boolean doesResistGarlic(@NotNull EnumStrength strength) {
         return !strength.isStrongerThan(EnumStrength.NONE);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     default EnumStrength isGettingGarlicDamage(LevelAccessor iWorld, boolean forceRefresh) {
         if (forceRefresh) {
@@ -121,8 +121,9 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
 
     @Override
     default boolean isGettingSundamage(LevelAccessor iWorld, boolean forceRefresh) {
-        if (!forceRefresh)
+        if (!forceRefresh) {
             return data().sundamageCache;
+        }
         return (data().sundamageCache = Helper.gettingSundamge(((PathfinderMob) this), iWorld, ((PathfinderMob) this).level.getProfiler()));
     }
 
@@ -134,7 +135,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     /**
      * call in {@link PathfinderMob#aiStep()}
      */
-    default void aiStepC(EntityType<T> originalType) {
+    default void aiStepC(@NotNull EntityType<T> originalType) {
         PathfinderMob entity = ((PathfinderMob) this);
         if (!entity.level.isClientSide && entity.isAlive() && this.isConverting(entity)) {
             --data().conversionTime;
@@ -168,7 +169,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     /**
      * call in {@link PathfinderMob#die(DamageSource)}
      */
-    default void dieC(DamageSource cause) {
+    default void dieC(@NotNull DamageSource cause) {
         if (cause.getDirectEntity() instanceof CrossbowArrowEntity && Helper.isHunter(cause.getEntity())) {
             data().dropSoul = true;
         } else if (cause.getDirectEntity() instanceof Player && Helper.isHunter(cause.getDirectEntity())) {
@@ -185,7 +186,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
      * call in {@link PathfinderMob#readAdditionalSaveData(CompoundTag)}
      */
     @SuppressWarnings("JavadocReference")
-    default void readAdditionalSaveDataC(@Nonnull CompoundTag compound) {
+    default void readAdditionalSaveDataC(@NotNull CompoundTag compound) {
         if (compound.contains("ConversionTime", 99) && compound.getInt("ConversionTime") > -1) {
             this.startConverting(compound.hasUUID("ConversionPlayer") ? compound.getUUID("ConversionPlayer") : null, compound.getInt("ConversionTime"), ((PathfinderMob) this));
         }
@@ -195,7 +196,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
      * call in {@link PathfinderMob#addAdditionalSaveData(CompoundTag)}}
      */
     @SuppressWarnings("JavadocReference")
-    default void addAdditionalSaveDataC(@Nonnull CompoundTag compound) {
+    default void addAdditionalSaveDataC(@NotNull CompoundTag compound) {
         compound.putInt("ConversionTime", this.isConverting(((PathfinderMob) this)) ? data().conversionTime : -1);
         if (data().conversationStarter != null) {
             compound.putUUID("ConversionPlayer", data().conversationStarter);
@@ -203,7 +204,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     }
 
     @Override
-    default void startConverting(@Nullable UUID conversionStarterIn, int conversionTimeIn, @Nonnull PathfinderMob entity) {
+    default void startConverting(@Nullable UUID conversionStarterIn, int conversionTimeIn, @NotNull PathfinderMob entity) {
         ICurableConvertedCreature.super.startConverting(conversionStarterIn, conversionTimeIn, entity);
         data().conversationStarter = conversionStarterIn;
         data().conversionTime = conversionTimeIn;
@@ -255,7 +256,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     }
 
     @Override
-    default LivingEntity getRepresentingEntity() {
+    default @NotNull LivingEntity getRepresentingEntity() {
         return ((PathfinderMob) this);
     }
 
@@ -268,7 +269,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
      * implement as super call for {@link PathfinderMob#mobInteract(Player, InteractionHand)}
      */
     @SuppressWarnings("JavadocReference")
-    InteractionResult mobInteractSuper(@Nonnull Player player, @Nonnull InteractionHand hand);
+    InteractionResult mobInteractSuper(@NotNull Player player, @NotNull InteractionHand hand);
 
     /**
      * implement as super call for {@link PathfinderMob#hurt(DamageSource, float)}

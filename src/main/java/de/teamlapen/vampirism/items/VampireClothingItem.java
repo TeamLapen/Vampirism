@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.RegUtil;
+import de.teamlapen.vampirism.util.VampirismArmorMaterials;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.Model;
 import net.minecraft.core.particles.ParticleTypes;
@@ -30,23 +31,20 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-import net.minecraft.world.item.Item.Properties;
-
 public class VampireClothingItem extends ArmorItem implements IFactionExclusiveItem {
 
-    public VampireClothingItem(EquipmentSlot slotType) {
-        super(ArmorMaterials.LEATHER, slotType, new Properties().defaultDurability(ArmorMaterials.IRON.getDurabilityForSlot(slotType)).tab(VampirismMod.creativeTab));
+    public VampireClothingItem(@NotNull EquipmentSlot slotType) {
+        super(VampirismArmorMaterials.VAMPIRE_CLOTH, slotType, new Properties().defaultDurability(ArmorMaterials.IRON.getDurabilityForSlot(slotType)).tab(VampirismMod.creativeTab));
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         Player playerEntity = VampirismMod.proxy.getClientPlayer();
         this.addFactionPoisonousToolTip(stack, worldIn, tooltip, flagIn, playerEntity);
     }
@@ -54,13 +52,13 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+    public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
         consumer.accept(new IClientItemExtensions() {
             @Override
             public @NotNull Model getGenericArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<?> original) {
                 return switch (RegUtil.id(VampireClothingItem.this).getPath()) {
                     case "vampire_clothing_crown" -> ClothingCrownModel.getAdjustedInstance(original);
-                    case "vampire_clothing_legs" ->  ClothingPantsModel.getAdjustedInstance(original);
+                    case "vampire_clothing_legs" -> ClothingPantsModel.getAdjustedInstance(original);
                     case "vampire_clothing_boots" -> ClothingBootsModel.getAdjustedInstance(original);
                     case "vampire_clothing_hat" -> VampireHatModel.getAdjustedInstance(original);
                     default -> DummyClothingModel.getAdjustedInstance(original);
@@ -70,18 +68,18 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
     }
 
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
+    public @Nullable String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
         return String.format(REFERENCE.MODID + ":textures/models/armor/%s.png", RegUtil.id(this).getPath());
     }
 
     @Nullable
     @Override
-    public IFaction<?> getExclusiveFaction(@Nonnull ItemStack stack) {
+    public IFaction<?> getExclusiveFaction(@NotNull ItemStack stack) {
         return VReference.VAMPIRE_FACTION;
     }
 
     @Override
-    public void onArmorTick(ItemStack stack, Level world, Player player) {
+    public void onArmorTick(ItemStack stack, Level world, @NotNull Player player) {
         super.onArmorTick(stack, world, player);
         if (player.tickCount % 16 == 8) {
             if (!Helper.isVampire(player)) {

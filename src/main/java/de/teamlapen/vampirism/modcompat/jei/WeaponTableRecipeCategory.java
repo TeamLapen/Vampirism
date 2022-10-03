@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.inventory.recipes.ShapelessWeaponTableRecipe;
+import de.teamlapen.vampirism.recipes.ShapelessWeaponTableRecipe;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
@@ -27,8 +27,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Recipe category for {@link IWeaponTableRecipe}
@@ -37,18 +36,18 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
 
     private final static ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/weapon_table_clean.png");
     private static final ItemStack lavaStack = new ItemStack(Items.LAVA_BUCKET);
-    private final Component localizedName;
-    private final IDrawable background;
-    private final IDrawable icon;
+    private final @NotNull Component localizedName;
+    private final @NotNull IDrawable background;
+    private final @NotNull IDrawable icon;
 
-    WeaponTableRecipeCategory(IGuiHelper guiHelper) {
+    WeaponTableRecipeCategory(@NotNull IGuiHelper guiHelper) {
         this.localizedName = Component.translatable(ModBlocks.WEAPON_TABLE.get().getDescriptionId());
         this.background = guiHelper.drawableBuilder(BACKGROUND, 32, 14, 134, 77).addPadding(0, 33, 0, 0).build();
         this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.WEAPON_TABLE.get()));
     }
 
     @Override
-    public void draw(IWeaponTableRecipe recipe, IRecipeSlotsView recipeSlotsView, @Nonnull PoseStack stack, double mouseX, double mouseY) {
+    public void draw(@NotNull IWeaponTableRecipe recipe, IRecipeSlotsView recipeSlotsView, @NotNull PoseStack stack, double mouseX, double mouseY) {
 
         int x = 2;
         int y = 80;
@@ -69,7 +68,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
         }
         ISkill<?>[] requiredSkills = recipe.getRequiredSkills();
         if (requiredSkills.length > 0) {
-            MutableComponent skillText = Component.translatable("gui.vampirism.hunter_weapon_table.skill", " ");
+            MutableComponent skillText = Component.translatable("gui.vampirism.skill_required", " ");
 
             for (ISkill<?> skill : recipe.getRequiredSkills()) {
                 skillText.append(skill.getName()).append(" ");
@@ -80,24 +79,24 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IDrawable getBackground() {
         return background;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IDrawable getIcon() {
         return icon;
     }
 
     @Override
-    public RecipeType<IWeaponTableRecipe> getRecipeType() {
+    public @NotNull RecipeType<IWeaponTableRecipe> getRecipeType() {
         return VampirismJEIPlugin.WEAPON_TABLE;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Component getTitle() {
         return localizedName;
@@ -105,7 +104,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, IWeaponTableRecipe recipe, IFocusGroup focuses) {
-        if (recipe instanceof ShapelessWeaponTableRecipe){
+        if (recipe instanceof ShapelessWeaponTableRecipe) {
             builder.setShapeless();
         }
         IRecipeSlotBuilder output = builder.addSlot(RecipeIngredientRole.OUTPUT, 112, 32);

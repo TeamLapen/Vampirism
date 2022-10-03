@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "chest_boat",
+  "ingredients": [
+    {
+      "item": "minecraft:chest"
+    },
+    {
+      "item": "vampirism:dark_spruce_planks"
+    }
+  ],
+  "result": {
+    "item": "vampirism:dark_spruce_chest_boat"
+  }
+}

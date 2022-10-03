@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api.entity.player.task;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.UUID;
 
 public interface ITaskManager {
@@ -13,7 +14,7 @@ public interface ITaskManager {
      * @param remove       whether the taskInstance should be removed from the taskInstance list
      * @implNote does not sync changes to the client
      */
-    void abortTask(UUID taskBoardId, @Nonnull UUID taskInstance, boolean remove);
+    void abortTask(UUID taskBoardId, @NotNull UUID taskInstance, boolean remove);
 
     /**
      * accepts the taskInstance, so that the TaskManger knows that the player is working on the Task at the taskInstance board
@@ -22,7 +23,7 @@ public interface ITaskManager {
      * @param taskInstance the accepted taskInstance
      * @implNote does not sync changes to the client
      */
-    void acceptTask(UUID taskBoardId, @Nonnull UUID taskInstance);
+    void acceptTask(UUID taskBoardId, @NotNull UUID taskInstance);
 
     /**
      * checks if the taskInstance is unlocked and can be completed
@@ -34,7 +35,7 @@ public interface ITaskManager {
      * @param taskInstance the taskInstance to complete
      * @implNote syncs changes to the client
      */
-    void completeTask(UUID taskBoardId, @Nonnull UUID taskInstance);
+    void completeTask(UUID taskBoardId, @NotNull UUID taskInstance);
 
     /**
      * checks if the task board has available tasks
@@ -52,7 +53,7 @@ public interface ITaskManager {
     void openTaskMasterScreen(UUID taskBoardId);
 
     /**
-     * sends task information to the vampirism container
+     * Open menu container and send task information to the vampirism container
      */
     void openVampirismMenu();
 
@@ -82,5 +83,5 @@ public interface ITaskManager {
      * @param task the task to check
      * @return whether the task has been completed or not
      */
-    boolean wasTaskCompleted(@Nonnull Task task);
+    boolean wasTaskCompleted(@NotNull Task task);
 }

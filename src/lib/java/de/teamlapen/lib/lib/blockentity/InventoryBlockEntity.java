@@ -1,6 +1,6 @@
 package de.teamlapen.lib.lib.blockentity;
 
-import de.teamlapen.lib.lib.inventory.InventoryContainer;
+import de.teamlapen.lib.lib.inventory.InventoryContainerMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -13,8 +13,7 @@ import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.wrapper.InvWrapper;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 
 /**
@@ -26,11 +25,11 @@ public abstract class InventoryBlockEntity extends BaseContainerBlockEntity impl
      * Maximal squared distance from which the player can access the inventory
      */
     protected final int MAX_DIST_SQRT = 64;
-    protected final NonNullList<ItemStack> inventorySlots;
-    protected InventoryContainer.SelectorInfo[] selectors;
+    protected final @NotNull NonNullList<ItemStack> inventorySlots;
+    protected InventoryContainerMenu.SelectorInfo[] selectors;
 
 
-    public InventoryBlockEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state, int size, InventoryContainer.SelectorInfo... selectorInfos) {
+    public InventoryBlockEntity(@NotNull BlockEntityType<?> tileEntityTypeIn, @NotNull BlockPos pos, @NotNull BlockState state, int size, InventoryContainerMenu.SelectorInfo @NotNull ... selectorInfos) {
         super(tileEntityTypeIn, pos, state);
         this.inventorySlots = NonNullList.withSize(size, ItemStack.EMPTY);
         if (selectorInfos.length != size) {
@@ -40,7 +39,7 @@ public abstract class InventoryBlockEntity extends BaseContainerBlockEntity impl
     }
 
     @Override
-    public boolean canPlaceItem(int slot, @Nonnull ItemStack stack) {
+    public boolean canPlaceItem(int slot, @NotNull ItemStack stack) {
         if (slot < 0 || slot >= selectors.length) return false;
         return selectors[slot].validate(stack);
     }
@@ -55,7 +54,7 @@ public abstract class InventoryBlockEntity extends BaseContainerBlockEntity impl
         return inventorySlots.size();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ItemStack getItem(int index) {
         return inventorySlots.get(index);
@@ -67,20 +66,20 @@ public abstract class InventoryBlockEntity extends BaseContainerBlockEntity impl
     }
 
     @Override
-    public void load(@Nonnull CompoundTag tagCompound) {
+    public void load(@NotNull CompoundTag tagCompound) {
         super.load(tagCompound);
         inventorySlots.clear();
         ContainerHelper.loadAllItems(tagCompound, this.inventorySlots);
 
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ItemStack removeItem(int slot, int amt) {
         return ContainerHelper.removeItem(inventorySlots, slot, amt);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ItemStack removeItemNoUpdate(int index) {
         return ContainerHelper.takeItem(inventorySlots, index);
@@ -93,7 +92,7 @@ public abstract class InventoryBlockEntity extends BaseContainerBlockEntity impl
     }
 
     @Override
-    public void setItem(int slot, @Nonnull ItemStack stack) {
+    public void setItem(int slot, @NotNull ItemStack stack) {
         inventorySlots.set(slot, stack);
         if (stack.getCount() > getMaxStackSize()) {
             stack.setCount(getMaxStackSize());
@@ -103,11 +102,11 @@ public abstract class InventoryBlockEntity extends BaseContainerBlockEntity impl
     }
 
     @Override
-    public void startOpen(@Nonnull Player player) {
+    public void startOpen(@NotNull Player player) {
     }
 
     @Override
-    public boolean stillValid(@Nonnull Player player) {
+    public boolean stillValid(@NotNull Player player) {
         if (!hasLevel()) return false;
         if (this.level.getBlockEntity(this.worldPosition) != this) {
             return false;
@@ -116,7 +115,7 @@ public abstract class InventoryBlockEntity extends BaseContainerBlockEntity impl
         }
     }
 
-    @Nonnull
+    @NotNull
     protected InvWrapper createWrapper() {
         return new SelectorInvWrapper(this);
     }

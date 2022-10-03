@@ -32,6 +32,7 @@ public interface IFactionVillageBuilder {
 
     /**
      * Supply a banner item that is equipped by entities to add a faction bad omen effect to the killer
+     *
      * @param bannerItem the banner itemstack
      * @return this builder
      */
@@ -42,7 +43,6 @@ public interface IFactionVillageBuilder {
      *
      * @param captureEntities entry list
      * @return this builder
-     *
      * @apiNote the entries should only contain entities of this faction
      */
     IFactionVillageBuilder captureEntities(List<CaptureEntityEntry<?>> captureEntities);

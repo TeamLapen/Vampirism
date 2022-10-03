@@ -1,26 +1,25 @@
 package de.teamlapen.vampirism.items.enchantment;
 
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.items.VampirismItemCrossbow;
+import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Makes tech crossbows use less arrows
  */
 public class EnchantmentArrowFrugality extends Enchantment {
-    public EnchantmentArrowFrugality(Rarity rarityIn) {
+    public EnchantmentArrowFrugality(@NotNull Rarity rarityIn) {
         super(rarityIn, VReference.CROSSBOW_ENCHANTMENT, new EquipmentSlot[]{EquipmentSlot.MAINHAND});
 
     }
 
     @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack) {
-        return !stack.isEmpty() && stack.getItem() instanceof VampirismItemCrossbow;
+    public boolean canApplyAtEnchantingTable(@NotNull ItemStack stack) {
+        return !stack.isEmpty() && stack.getItem() instanceof IVampirismCrossbow;
     }
 
     @Override
@@ -39,11 +38,11 @@ public class EnchantmentArrowFrugality extends Enchantment {
     }
 
     @Override
-    protected boolean checkCompatibility(@Nonnull Enchantment ench) {
+    protected boolean checkCompatibility(@NotNull Enchantment ench) {
         return super.checkCompatibility(ench) && ench != Enchantments.INFINITY_ARROWS;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     protected String getOrCreateDescriptionId() {
         return "enchantment.vampirism.arrow_frugality";

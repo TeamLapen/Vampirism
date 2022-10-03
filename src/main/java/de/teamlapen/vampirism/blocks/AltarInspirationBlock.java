@@ -10,7 +10,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -18,15 +17,15 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Altar of inspiration used for vampire levels 1-4
@@ -34,52 +33,42 @@ import javax.annotation.Nullable;
 public class AltarInspirationBlock extends VampirismBlockContainer {
     protected static final VoxelShape altarShape = makeShape();
 
-    private static VoxelShape makeShape() {
-        VoxelShape a = Block.box(0, 0, 0, 16, 2, 16);
-        VoxelShape b1 = Block.box(0, 0, 0, 1, 6, 1);
-        VoxelShape b2 = Block.box(15, 0, 0, 16, 6, 1);
-        VoxelShape b3 = Block.box(0, 0, 15, 1, 6, 16);
-        VoxelShape b4 = Block.box(15, 0, 15, 16, 6, 16);
-        VoxelShape c1 = Block.box(6, 2, 6, 10, 3, 10);
-        VoxelShape c2 = Block.box(5, 3, 5, 11, 4, 11);
-        VoxelShape c3 = Block.box(4, 4, 4, 12, 5, 12);
-        VoxelShape c4 = Block.box(3, 5, 3, 13, 6, 13);
-        VoxelShape c5 = Block.box(2, 6, 2, 14, 7, 14);
-        VoxelShape c6 = Block.box(1, 7, 1, 15, 9, 15);
-        VoxelShape c7 = Block.box(2, 9, 2, 14, 10, 14);
-        VoxelShape c8 = Block.box(3, 10, 3, 13, 11, 13);
-        VoxelShape c9 = Block.box(4, 11, 4, 12, 12, 12);
-        VoxelShape c10 = Block.box(5, 12, 5, 11, 13, 11);
-        VoxelShape c11 = Block.box(6, 13, 6, 10, 14, 10);
+    private static @NotNull VoxelShape makeShape() {
+        VoxelShape shape = Shapes.empty();
+        shape = Shapes.join(shape, Shapes.box(0.25, 0, 0.25, 0.75, 0.0625, 0.75), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.75, 0, 0.1875, 0.875, 0.75, 0.8125), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.13125, 0, 0.125, 0.86875, 0.75, 0.25), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.13125, 0, 0.75, 0.86875, 0.75, 0.875), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.125, 0, 0.1875, 0.25, 0.75, 0.8125), BooleanOp.OR);
 
-        return Shapes.or(a, b1, b2, b3, b4, c1, c2, c3, c4, c5, c5, c6, c7, c8, c9, c10, c11);
+        return shape;
     }
 
     public AltarInspirationBlock() {
-        super(Properties.of(Material.METAL).strength(2f).noOcclusion());
+        super(Properties.of(Material.METAL).strength(2f, 3f).noOcclusion());
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public RenderShape getRenderShape(@Nonnull BlockState state) {
+    public RenderShape getRenderShape(@NotNull BlockState state) {
         return RenderShape.MODEL;
     }
 
 
     @Override
-    public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
+    public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         return new AltarInspirationBlockEntity(pos, state);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
+    public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         return altarShape;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public InteractionResult use(@Nonnull BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
+    public InteractionResult use(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         ItemStack stack = player.getItemInHand(hand);
         if (!stack.isEmpty()) {
             LazyOptional<IFluidHandlerItem> opt = FluidLib.getFluidItemCap(stack);
@@ -102,7 +91,7 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
         return level.isClientSide() ? null : createTickerHelper(type, ModTiles.ALTAR_INSPIRATION.get(), AltarInspirationBlockEntity::serverTick);
     }
 }

@@ -18,9 +18,9 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
 
@@ -52,7 +52,7 @@ public abstract class GuiPieMenu<T> extends Screen {
      */
     private static final int CS = 100;
 
-    protected final ArrayList<T> elements;
+    protected final @NotNull ArrayList<T> elements;
     protected final Color backgroundColor;
 
     private int selectedElement = -1;
@@ -62,7 +62,7 @@ public abstract class GuiPieMenu<T> extends Screen {
      */
     private double radDiff;
 
-    public GuiPieMenu(Color backgroundColorIn, Component title) {
+    public GuiPieMenu(Color backgroundColorIn, @NotNull Component title) {
         super(title);
         this.passEvents = true;
         this.backgroundColor = backgroundColorIn;
@@ -112,7 +112,7 @@ public abstract class GuiPieMenu<T> extends Screen {
     }
 
     @Override
-    public void render(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         // Calculate center and radius of the skill cycle
         int cX = this.width / 2;
         int cY = this.height / 2;
@@ -122,8 +122,9 @@ public abstract class GuiPieMenu<T> extends Screen {
         // Check if the mouse is in bounds and whether its in the center or not
         double mouseRad = updateMouse(mouseX, mouseY, cX, cY, radius / 2);
         boolean center = (mouseX - cX) * (mouseX - cX) + (mouseY - cY) * (mouseY - cY) < (radius / 4) * (radius / 4);
-        if (center)
+        if (center) {
             selectedElement = -1;
+        }
         // Draw each skill
         for (int i = 0; i < elementCount; i++) {
             T element = elements.get(i);
@@ -142,11 +143,6 @@ public abstract class GuiPieMenu<T> extends Screen {
             // Draw box and, if selected, highlight
             Color col = this.getColor(element);
             RenderSystem.enableBlend();
-//            RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-//            RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_COLOR, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ZERO, GlStateManager.DestFactor.ONE);
-//            RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.DST_COLOR, GlStateManager.DestFactor.SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-//            RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
-//            RenderSystem.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE);
 
             RenderSystem.setShaderColor(col.getRed(), col.getGreen(), col.getBlue(), 0.5F);
             RenderSystem.setShaderTexture(0, WIDGETS);
@@ -199,7 +195,7 @@ public abstract class GuiPieMenu<T> extends Screen {
     /**
      * Draws a line between the given coordinates
      */
-    protected void drawLine(PoseStack stack, double x1, double y1, double x2, double y2) {
+    protected void drawLine(@NotNull PoseStack stack, double x1, double y1, double x2, double y2) {
         RenderSystem.disableTexture();
         BufferBuilder builder = Tesselator.getInstance().getBuilder();
         builder.begin(VertexFormat.Mode.LINES, DefaultVertexFormat.POSITION_COLOR);
@@ -218,7 +214,7 @@ public abstract class GuiPieMenu<T> extends Screen {
      *
      * @return Color
      */
-    @Nonnull
+    @NotNull
     protected Color getColor(T s) {
         return Color.WHITE;
     }
@@ -262,7 +258,7 @@ public abstract class GuiPieMenu<T> extends Screen {
      * @param cX CenterX
      * @param cY CenterY
      */
-    private void drawBackground(PoseStack stack, float cX, float cY) {
+    private void drawBackground(@NotNull PoseStack stack, float cX, float cY) {
         // Calculate the scale which has to be applied for the image to fit
         float scale = (this.height
                 / 2F + 16 + 16) / BGS;
@@ -310,7 +306,7 @@ public abstract class GuiPieMenu<T> extends Screen {
      *
      * @param rad The direction the arrow should point in radiant
      */
-    private void drawSelectedCenter(PoseStack stack, double cX, double cY, double rad) {
+    private void drawSelectedCenter(@NotNull PoseStack stack, double cX, double cY, double rad) {
 
         // Calculate rotation and scale
         double deg = Math.toDegrees(-rad);
@@ -347,7 +343,7 @@ public abstract class GuiPieMenu<T> extends Screen {
         stack.popPose();
     }
 
-    private void drawUnselectedCenter(PoseStack stack, double cX, double cY) {
+    private void drawUnselectedCenter(@NotNull PoseStack stack, double cX, double cY) {
 
         float scale = (this.height
         ) / 4F / CS;

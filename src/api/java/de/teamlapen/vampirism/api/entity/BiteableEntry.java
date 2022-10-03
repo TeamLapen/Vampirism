@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.api.entity;
 
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Stores max blood as well as information about converting for EntityCreature classes
@@ -19,7 +21,7 @@ public class BiteableEntry {
     /**
      * if {@link #convertible} is true, this stores the handler which should be used for conversion
      */
-    public final IConvertingHandler<?> convertingHandler;
+    public final @Nullable IConvertingHandler<?> convertingHandler;
 
     /**
      * Entry for a biteable and convertible creature
@@ -44,7 +46,7 @@ public class BiteableEntry {
         this.convertingHandler = null;
     }
 
-    public BiteableEntry modifyBloodValue(int blood) {
+    public @NotNull BiteableEntry modifyBloodValue(int blood) {
         return this.convertible ? new BiteableEntry(blood, this.convertingHandler) : new BiteableEntry(blood);
     }
 }

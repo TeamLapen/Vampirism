@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.core;
 
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
@@ -7,6 +8,8 @@ import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
+import de.teamlapen.vampirism.api.items.oil.IOil;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -25,6 +28,7 @@ public class ModRegistries {
     static final DeferredRegister<Task> DEFERRED_TASKS = DeferredRegister.create(TASK_ID, TASK_ID.location().getNamespace());
     static final DeferredRegister<IRefinement> DEFERRED_REFINEMENTS = DeferredRegister.create(REFINEMENT_ID, REFINEMENT_ID.location().getNamespace());
     static final DeferredRegister<IRefinementSet> DEFERRED_REFINEMENT_SETS = DeferredRegister.create(REFINEMENT_SET_ID, REFINEMENT_SET_ID.location().getNamespace());
+    static final DeferredRegister<IOil> DEFERRED_OILS = DeferredRegister.create(OILS_ID, OILS_ID.location().getNamespace());
 
     public static final Supplier<IForgeRegistry<ISkill<?>>> SKILLS = DEFERRED_SKILLS.makeRegistry(RegistryBuilder::new);
     public static final Supplier<IForgeRegistry<IAction<?>>> ACTIONS = DEFERRED_ACTIONS.makeRegistry(RegistryBuilder::new);
@@ -33,6 +37,7 @@ public class ModRegistries {
     public static final Supplier<IForgeRegistry<Task>> TASKS = DEFERRED_TASKS.makeRegistry(RegistryBuilder::new);
     public static final Supplier<IForgeRegistry<IRefinement>> REFINEMENTS = DEFERRED_REFINEMENTS.makeRegistry(RegistryBuilder::new);
     public static final Supplier<IForgeRegistry<IRefinementSet>> REFINEMENT_SETS = DEFERRED_REFINEMENT_SETS.makeRegistry(RegistryBuilder::new);
+    public static final Supplier<IForgeRegistry<IOil>> OILS = DEFERRED_OILS.makeRegistry(() -> new RegistryBuilder<IOil>().setDefaultKey(new ResourceLocation(REFERENCE.MODID, "empty")));
 
     static void init(IEventBus bus) {
         DEFERRED_SKILLS.register(bus);
@@ -42,6 +47,7 @@ public class ModRegistries {
         DEFERRED_TASKS.register(bus);
         DEFERRED_REFINEMENTS.register(bus);
         DEFERRED_REFINEMENT_SETS.register(bus);
+        DEFERRED_OILS.register(bus);
     }
 
 }

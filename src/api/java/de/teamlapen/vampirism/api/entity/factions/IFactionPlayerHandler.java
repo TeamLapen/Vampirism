@@ -4,9 +4,9 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Optional;
 
 /**
@@ -36,7 +36,7 @@ public interface IFactionPlayerHandler extends ILordPlayer {
     /**
      * @return The currently active faction player. Can be null
      */
-    @Nonnull
+    @NotNull
     Optional<? extends IFactionPlayer<?>> getCurrentFactionPlayer();
 
     /**
@@ -65,7 +65,7 @@ public interface IFactionPlayerHandler extends ILordPlayer {
     /**
      * @return The player represented by this handler
      */
-    @Nonnull
+    @NotNull
     Player getPlayer();
 
     /**
@@ -77,7 +77,7 @@ public interface IFactionPlayerHandler extends ILordPlayer {
      * Join the given faction and set the faction level to 1.
      * Only successful if {@link IFactionPlayerHandler#canJoin(IPlayableFaction)}
      */
-    void joinFaction(@Nonnull IPlayableFaction<?> faction);
+    void joinFaction(@NotNull IPlayableFaction<?> faction);
 
     /**
      * Should be called if the entity attacked.
@@ -100,7 +100,7 @@ public interface IFactionPlayerHandler extends ILordPlayer {
      *
      * @return If successful
      */
-    boolean setFactionLevel(@Nonnull IPlayableFaction<?> faction, int level);
+    boolean setFactionLevel(@NotNull IPlayableFaction<?> faction, int level);
 
     /**
      * Set the players lord level.
@@ -109,4 +109,11 @@ public interface IFactionPlayerHandler extends ILordPlayer {
      * @return if successful
      */
     boolean setLordLevel(int level);
+
+    /**
+     * Leave the current faction (if in any) by setting current faction to null and level to 0.
+     *
+     * @param die Whether to attack the player with deadly damage
+     */
+    void leaveFaction(boolean die);
 }

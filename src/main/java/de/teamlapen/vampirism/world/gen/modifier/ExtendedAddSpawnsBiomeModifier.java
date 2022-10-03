@@ -13,30 +13,28 @@ import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraftforge.common.world.BiomeModifier;
 import net.minecraftforge.common.world.MobSpawnSettingsBuilder;
 import net.minecraftforge.common.world.ModifiableBiomeInfo;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public record ExtendedAddSpawnsBiomeModifier(HolderSet<Biome> biomes, HolderSet<Biome> excludedBiomes, List<ExtendedSpawnData> spawners ) implements BiomeModifier {
+public record ExtendedAddSpawnsBiomeModifier(HolderSet<Biome> biomes, HolderSet<Biome> excludedBiomes, List<ExtendedSpawnData> spawners) implements BiomeModifier {
 
-    public static ExtendedAddSpawnsBiomeModifier singleSpawn(HolderSet<Biome> biomes, HolderSet<Biome> excludedBiomes, ExtendedSpawnData spawner)
-    {
+    public static @NotNull ExtendedAddSpawnsBiomeModifier singleSpawn(HolderSet<Biome> biomes, HolderSet<Biome> excludedBiomes, @NotNull ExtendedSpawnData spawner) {
         return new ExtendedAddSpawnsBiomeModifier(biomes, excludedBiomes, List.of(spawner));
     }
 
     @Override
-    public void modify(Holder<Biome> biome, Phase phase, ModifiableBiomeInfo.BiomeInfo.Builder builder) {
-        if (phase == Phase.ADD && this.biomes.contains(biome) && !this.excludedBiomes.contains(biome))
-        {
+    public void modify(@NotNull Holder<Biome> biome, Phase phase, ModifiableBiomeInfo.BiomeInfo.@NotNull Builder builder) {
+        if (phase == Phase.ADD && this.biomes.contains(biome) && !this.excludedBiomes.contains(biome)) {
             MobSpawnSettingsBuilder spawns = builder.getMobSpawnSettings();
-            for (ExtendedSpawnData spawner : this.spawners)
-            {
+            for (ExtendedSpawnData spawner : this.spawners) {
                 spawns.addSpawn(spawner.category, spawner);
             }
         }
     }
 
     @Override
-    public Codec<? extends BiomeModifier> codec() {
+    public @NotNull Codec<? extends BiomeModifier> codec() {
         return ModBiomes.ADD_SPAWNS_BIOME_MODIFIER_TYPE.get();
     }
 
@@ -52,17 +50,17 @@ public record ExtendedAddSpawnsBiomeModifier(HolderSet<Biome> biomes, HolderSet<
 
         private final MobCategory category;
 
-        public ExtendedSpawnData(MobSpawnSettings.SpawnerData data, MobCategory category) {
+        public ExtendedSpawnData(MobSpawnSettings.@NotNull SpawnerData data, MobCategory category) {
             super(data.type, data.getWeight(), data.minCount, data.maxCount);
             this.category = category;
         }
 
-        public ExtendedSpawnData(EntityType<?> type, int weight, int minCount, int maxCount, MobCategory category) {
+        public ExtendedSpawnData(@NotNull EntityType<?> type, int weight, int minCount, int maxCount, MobCategory category) {
             super(type, weight, minCount, maxCount);
             this.category = category;
         }
 
-        public ExtendedSpawnData(EntityType<?> type, Weight weight, int minCount, int maxCount, MobCategory category) {
+        public ExtendedSpawnData(@NotNull EntityType<?> type, @NotNull Weight weight, int minCount, int maxCount, MobCategory category) {
             super(type, weight, minCount, maxCount);
             this.category = category;
         }

@@ -10,6 +10,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.util.LazyOptional;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -29,7 +31,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
         return name == null ? name = Component.translatable(getTranslationKey()) : name;
     }
 
-    public DefaultSkill<T> setName(Component name) {
+    public @NotNull DefaultSkill<T> setName(Component name) {
         this.name = name;
         return this;
     }
@@ -51,7 +53,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
     }
 
     @Override
-    public final void onDisable(T player) {
+    public final void onDisable(@NotNull T player) {
         removeAttributesModifiersFromEntity(player.getRepresentingPlayer());
         player.getActionHandler().relockActions(getActions());
         if (this.getFaction().map(f -> f.getFactionPlayerInterface().isInstance(player)).orElse(true)) {
@@ -62,7 +64,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
     }
 
     @Override
-    public final void onEnable(T player) {
+    public final void onEnable(@NotNull T player) {
         applyAttributesModifiersToEntity(player.getRepresentingPlayer());
 
         player.getActionHandler().unlockActions(getActions());
@@ -74,13 +76,13 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
     }
 
 
-    public DefaultSkill<T> registerAttributeModifier(Attribute attribute, String uuid, double amount, AttributeModifier.Operation operation) {
+    public @NotNull DefaultSkill<T> registerAttributeModifier(Attribute attribute, @NotNull String uuid, double amount, AttributeModifier.@NotNull Operation operation) {
         final AttributeModifier attributemodifier = new AttributeModifier(UUID.fromString(uuid), this.getRegistryName().toString(), amount, operation);
         this.attributeModifierMap.put(attribute, LazyOptional.of(() -> attributemodifier));
         return this;
     }
 
-    public DefaultSkill<T> registerAttributeModifier(Attribute attribute, String uuid, Supplier<Double> amountSupplier, AttributeModifier.Operation operation) {
+    public @NotNull DefaultSkill<T> registerAttributeModifier(Attribute attribute, @NotNull String uuid, @NotNull Supplier<Double> amountSupplier, AttributeModifier.@NotNull Operation operation) {
         this.attributeModifierMap.put(attribute, LazyOptional.of(() -> new AttributeModifier(UUID.fromString(uuid), this.getRegistryName().toString(), amountSupplier.get(), operation)));
         return this;
     }
@@ -92,7 +94,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return getRegistryName() + "(" + getClass().getSimpleName() + ")";
     }
 
@@ -115,7 +117,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
     protected void onEnabled(T player) {
     }
 
-    private void applyAttributesModifiersToEntity(Player player) {
+    private void applyAttributesModifiersToEntity(@NotNull Player player) {
         for (Map.Entry<Attribute, LazyOptional<AttributeModifier>> entry : this.attributeModifierMap.entrySet()) {
             AttributeInstance instance = player.getAttribute(entry.getKey());
 
@@ -127,17 +129,18 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
         }
     }
 
-    private Collection<IAction<T>> getActions() {
+    private @NotNull Collection<IAction<T>> getActions() {
         Collection<IAction<T>> collection = new ArrayList<>();
         getActions(collection);
         collection.forEach((iAction -> {
-            if (iAction.getFaction().isPresent() && iAction.getFaction().get() != this.getFaction().orElse(null))
+            if (iAction.getFaction().isPresent() && iAction.getFaction().get() != this.getFaction().orElse(null)) {
                 throw new IllegalArgumentException("Can't register action of faction " + iAction.getFaction().map(Object::toString).orElse(null) + " for skill of faction" + this.getFaction().map(Object::toString).orElse("all"));
-            }));
+            }
+        }));
         return collection;
     }
 
-    private void removeAttributesModifiersFromEntity(Player player) {
+    private void removeAttributesModifiersFromEntity(@NotNull Player player) {
         for (Map.Entry<Attribute, LazyOptional<AttributeModifier>> entry : this.attributeModifierMap.entrySet()) {
             AttributeInstance attribute = player.getAttribute(entry.getKey());
 
@@ -147,7 +150,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
         }
     }
 
-    private ResourceLocation getRegistryName() {
+    private @Nullable ResourceLocation getRegistryName() {
         return VampirismRegistries.SKILLS.get().getKey(this);
     }
 

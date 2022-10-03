@@ -17,6 +17,7 @@ import net.minecraft.world.level.levelgen.SurfaceRules;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,14 +39,14 @@ public class OverworldModifications {
      * @param b The point to check
      * @return Whether all parameters of point are completely contained inside outer
      */
-    private static boolean intersects(Climate.ParameterPoint a, Climate.ParameterPoint b) {
+    private static boolean intersects(Climate.@NotNull ParameterPoint a, Climate.@NotNull ParameterPoint b) {
         return intersects(a.temperature(), b.temperature()) && intersects(a.humidity(), b.humidity()) && intersects(a.continentalness(), b.continentalness()) && intersects(a.erosion(), b.erosion()) && intersects(a.depth(), b.depth()) && intersects(a.weirdness(), b.weirdness());
     }
 
     /**
      * @return Whether point is completely contained inside outer
      */
-    private static boolean intersects(Climate.Parameter a, Climate.Parameter b) {
+    private static boolean intersects(Climate.@NotNull Parameter a, Climate.@NotNull Parameter b) {
         return (a.max() > b.min() && a.min() < b.max()) || (a.max() == a.min() && b.max() == b.min() && a.max() == b.max());
     }
 
@@ -118,10 +119,10 @@ public class OverworldModifications {
         ((MultiNoiseBiomeSourcePresetAccessor) MultiNoiseBiomeSource.Preset.OVERWORLD).setPresetSupplier_vampirism(wrapperParameterSourceFunction);
     }
 
-    public static SurfaceRules.RuleSource buildOverworldSurfaceRules() {
+    public static SurfaceRules.@NotNull RuleSource buildOverworldSurfaceRules() {
         //Any blocks here must be available before block registration, so they must be initialized statically
         SurfaceRules.RuleSource cursed_earth = new CustomBlockRuleSource(new ResourceLocation(REFERENCE.MODID, "cursed_earth"));
-        SurfaceRules.RuleSource grass = new CustomBlockRuleSource(new ResourceLocation(REFERENCE.MODID, "cursed_grass_block"));
+        SurfaceRules.RuleSource grass = new CustomBlockRuleSource(new ResourceLocation(REFERENCE.MODID, "cursed_grass"));
         SurfaceRules.ConditionSource inVampireBiome = SurfaceRules.isBiome(ModBiomes.VAMPIRE_FOREST.getKey());
         SurfaceRules.RuleSource vampireForestTopLayer = SurfaceRules.ifTrue(inVampireBiome, grass);
         SurfaceRules.RuleSource vampireForestBaseLayer = SurfaceRules.ifTrue(inVampireBiome, cursed_earth);
@@ -141,12 +142,12 @@ public class OverworldModifications {
             Registry.register(Registry.RULE, new ResourceLocation(REFERENCE.MODID, "block_id"), CODEC.codec());
         }
 
-        public SurfaceRules.SurfaceRule apply(SurfaceRules.Context p_189523_) {
+        public SurfaceRules.@NotNull SurfaceRule apply(SurfaceRules.Context p_189523_) {
             return (p_189774_, p_189775_, p_189776_) -> ForgeRegistries.BLOCKS.getValue(block_id).defaultBlockState();
         }
 
         @Override
-        public KeyDispatchDataCodec<? extends SurfaceRules.RuleSource> codec() {
+        public @NotNull KeyDispatchDataCodec<? extends SurfaceRules.RuleSource> codec() {
             return CODEC;
         }
     }

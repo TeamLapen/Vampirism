@@ -17,7 +17,7 @@ public class VampirismArmorModel extends Model {
         super(RenderType::entityCutoutNoCull);
     }
 
-    public void copyFromHumanoid(HumanoidModel<?> wearerModel) {
+    public void copyFromHumanoid(@NotNull HumanoidModel<?> wearerModel) {
         getBodyModels().forEach(p -> p.copyFrom(wearerModel.body));
         getHeadModels().forEach(p -> p.copyFrom(wearerModel.head));
         getRightLegModels().forEach(p -> p.copyFrom(wearerModel.rightLeg));
@@ -36,27 +36,27 @@ public class VampirismArmorModel extends Model {
         this.getLeftArmModels().forEach((modelPart) -> modelPart.render(poseStack, buffer, pPackedLight, pPackedOverlay, pRed, pGreen, pBlue, pAlpha));
     }
 
-    protected Iterable<ModelPart> getBodyModels() {
+    protected @NotNull Iterable<ModelPart> getBodyModels() {
         return Collections.emptyList();
     }
 
-    protected Iterable<ModelPart> getHeadModels() {
+    protected @NotNull Iterable<ModelPart> getHeadModels() {
         return Collections.emptyList();
     }
 
-    protected Iterable<ModelPart> getLeftLegModels() {
+    protected @NotNull Iterable<ModelPart> getLeftLegModels() {
         return Collections.emptyList();
     }
 
-    protected Iterable<ModelPart> getRightLegModels() {
+    protected @NotNull Iterable<ModelPart> getRightLegModels() {
         return Collections.emptyList();
     }
 
-    protected Iterable<ModelPart> getRightArmModels() {
+    protected @NotNull Iterable<ModelPart> getRightArmModels() {
         return Collections.emptyList();
     }
 
-    protected Iterable<ModelPart> getLeftArmModels() {
+    protected @NotNull Iterable<ModelPart> getLeftArmModels() {
         return Collections.emptyList();
     }
 }

@@ -4,11 +4,14 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
+import de.teamlapen.vampirism.command.arguments.MinionArgument;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
+import de.teamlapen.vampirism.entity.player.lord.skills.LordSkills;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.nbt.CompoundTag;
@@ -28,9 +31,9 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -63,30 +66,30 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
 
     private final static Logger LOGGER = LogManager.getLogger();
 
-    public static List<IMinionTask<?, ?>> getAvailableTasks(ILordPlayer player) {
+    public static @NotNull List<IMinionTask<?, ?>> getAvailableTasks(@NotNull ILordPlayer player) {
         return RegUtil.values(ModRegistries.MINION_TASKS).stream().filter(t -> t.isAvailable(player.getLordFaction(), player)).collect(Collectors.toList());
     }
 
     private final Random rng = new Random();
-    @Nonnull
+    @NotNull
     private final MinecraftServer server;
-    @Nonnull
+    @NotNull
     private final UUID lordID;
     private int maxMinions;
     @Nullable
     private IPlayableFaction<?> faction;
-    @Nonnull
-    private MinionInfo[] minions = new MinionInfo[0];
+    @NotNull
+    private MinionInfo @NotNull [] minions = new MinionInfo[0];
     @SuppressWarnings("unchecked")
-    @Nonnull
-    private Optional<Integer>[] minionTokens = new Optional[0];
+    @NotNull
+    private Optional<Integer> @NotNull [] minionTokens = new Optional[0];
 
-    public PlayerMinionController(@Nonnull MinecraftServer server, @Nonnull UUID lordID) {
+    public PlayerMinionController(@NotNull MinecraftServer server, @NotNull UUID lordID) {
         this.server = server;
         this.lordID = lordID;
     }
 
-    public void activateTask(int minionID, IMinionTask<?, MinionData> task) {
+    public void activateTask(int minionID, @NotNull IMinionTask<?, MinionData> task) {
         if (minionID >= minions.length) {
             LOGGER.warn("Trying to activate a task for a non-existent minion {}", minionID);
         } else {
@@ -128,7 +131,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
      * @param entity wrapper entity
      */
     @Nullable
-    public <T extends MinionData> T checkoutMinion(int id, int token, MinionEntity<T> entity) {
+    public <T extends MinionData> T checkoutMinion(int id, int token, @NotNull MinionEntity<T> entity) {
         MinionInfo i = getMinionInfo(id, token);
         if (i != null) {
             int entityId = entity.getId();
@@ -171,7 +174,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
      * Allow interacting with the minion data directly regardless of checkout.
      * DO NOT use to get references of the data or anything inside.
      */
-    public <T> Optional<T> contactMinionData(int id, Function<MinionData, T> function) {
+    public <T> @NotNull Optional<T> contactMinionData(int id, @NotNull Function<MinionData, T> function) {
         if (id >= 0 && id < minions.length) {
             return Optional.of(function.apply(minions[id].data));
         }
@@ -188,7 +191,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
     }
 
     @Nullable
-    public MinionEntity<?> createMinionEntityAtPlayer(int id, Player p) {
+    public MinionEntity<?> createMinionEntityAtPlayer(int id, @NotNull Player p) {
         assert id >= 0;
         EntityType<? extends MinionEntity<?>> type = minions[id].minionType;
         if (type == null) {
@@ -218,7 +221,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
      *
      * @return minion slot id or -1 if no free minion slot
      */
-    public int createNewMinionSlot(MinionData data, EntityType<? extends MinionEntity<?>> minionType) {
+    public int createNewMinionSlot(@NotNull MinionData data, EntityType<? extends MinionEntity<?>> minionType) {
         int i = minions.length;
         if (i < maxMinions) {
             MinionInfo[] n = Arrays.copyOf(minions, i + 1);
@@ -233,7 +236,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
+    public void deserializeNBT(@NotNull CompoundTag nbt) {
         IFaction<?> f = VampirismAPI.factionRegistry().getFactionByID(new ResourceLocation(nbt.getString("faction")));
         if (!(f instanceof IPlayableFaction)) {
             this.maxMinions = 0;
@@ -275,7 +278,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
         this.minionTokens = tokens;
     }
 
-    public Collection<Integer> getCallableMinions() {
+    public @NotNull Collection<Integer> getCallableMinions() {
         List<Integer> ids = new ArrayList<>();
         for (int i = 0; i < minions.length; i++) {
             if (!minions[i].isStillRecovering()) {
@@ -285,18 +288,18 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
         return ids;
     }
 
-    public List<MutableComponent> getRecoveringMinionNames() {
+    public @NotNull List<MutableComponent> getRecoveringMinionNames() {
         return Arrays.stream(this.minions).filter(MinionInfo::isStillRecovering).map(i -> i.data).map(MinionData::getFormattedName).collect(Collectors.toList());
     }
 
-    public UUID getUUID() {
+    public @NotNull UUID getUUID() {
         return this.lordID;
     }
 
     /**
      * @return A collection of currently unclaimed and non-dead minion slots
      */
-    public Collection<Integer> getUnclaimedMinions() {
+    public @NotNull Collection<Integer> getUnclaimedMinions() {
         List<Integer> ids = new ArrayList<>();
         for (int i = 0; i < minionTokens.length; i++) {
             if (minionTokens[i].isEmpty()) {
@@ -338,6 +341,13 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
         if (i != null) {
             i.checkin();
             i.deathCooldown = 20 * VampirismConfig.BALANCE.miDeathRecoveryTime.get();
+            getLord().ifPresent(player -> {
+                player.getLordFaction().getPlayerCapability(player.getPlayer()).map(IFactionPlayer::getSkillHandler).ifPresent(s -> {
+                    if (s.isSkillEnabled(LordSkills.MINION_RECOVERY.get())) {
+                        i.deathCooldown *= 0.8;
+                    }
+                });
+            });
             if (id < minionTokens.length) {
                 minionTokens[id] = Optional.empty();
             }
@@ -363,7 +373,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
      * @param force Include minions with locked task
      * @return A list of minions ids that can be reclaimed
      */
-    public Collection<Integer> recallMinions(boolean force) {
+    public @NotNull Collection<Integer> recallMinions(boolean force) {
         List<Integer> ids = new ArrayList<>(minions.length);
         for (MinionInfo minion : minions) {
             if ((force || !minion.data.isTaskLocked()) && recallMinion(minion)) {
@@ -374,7 +384,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public CompoundTag serializeNBT() {
+    public @NotNull CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
         nbt.putInt("max_minions", maxMinions);
         if (faction != null) {
@@ -440,7 +450,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
         }
     }
 
-    private void activateTask(MinionInfo info, IMinionTask<?, MinionData> task) {
+    private void activateTask(@NotNull MinionInfo info, @NotNull IMinionTask<?, MinionData> task) {
         @Nullable
         IMinionTask.IMinionTaskDesc<MinionData> desc = task.activateTask(getLordPlayer().orElse(null), getMinionEntity(info).orElse(null), info.data);
         if (desc == null) {
@@ -452,15 +462,15 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
         }
     }
 
-    private LazyOptional<? extends ILordPlayer> getLord() {
+    private @NotNull LazyOptional<? extends ILordPlayer> getLord() {
         return getLordPlayer().map(FactionPlayerHandler::getOpt).orElse(LazyOptional.empty());
     }
 
-    private Optional<Player> getLordPlayer() {
+    private @NotNull Optional<Player> getLordPlayer() {
         return Optional.ofNullable(server.getPlayerList().getPlayer(lordID));
     }
 
-    private Optional<MinionEntity<?>> getMinionEntity(MinionInfo info) {
+    private @NotNull Optional<MinionEntity<?>> getMinionEntity(@NotNull MinionInfo info) {
         if (info.isActive()) {
             assert info.dimension != null;
             Level w = server.getLevel(info.dimension);
@@ -480,8 +490,9 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
     private MinionInfo getMinionInfo(int id, int token) {
         assert minions.length == minionTokens.length;
         if (id < minions.length) {
-            if (minionTokens[id].map(t -> t == token).orElse(false))
+            if (minionTokens[id].map(t -> t == token).orElse(false)) {
                 return minions[id];
+            }
         }
         return null;
     }
@@ -491,7 +502,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
      *
      * @return If minion can be reclaimed (isAlive)
      */
-    private boolean recallMinion(MinionInfo i) {
+    private boolean recallMinion(@NotNull MinionInfo i) {
         contactMinion(i.minionID, MinionEntity::recallMinion);
         if (i.isActive()) {
             LOGGER.debug("Minion still active after recall");
@@ -503,7 +514,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
     }
 
     @SuppressWarnings("unchecked")
-    private <Q extends IMinionTask.IMinionTaskDesc<MinionData>, T extends IMinionTask<Q, MinionData>> void tickTask(T task, IMinionTask.IMinionTaskDesc<MinionData> desc, MinionInfo info) {
+    private <Q extends IMinionTask.IMinionTaskDesc<MinionData>, T extends IMinionTask<Q, MinionData>> void tickTask(@NotNull T task, IMinionTask.IMinionTaskDesc<MinionData> desc, @NotNull MinionInfo info) {
         if (info.isActive()) {
             task.tickActive((Q) desc, () -> getMinionEntity(info).map(m -> m), info.data);
         } else {
@@ -512,9 +523,20 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
         }
     }
 
+    /**
+     * creates a collection of id for all minions that are unique identifier to be used safely in commands
+     * <br>
+     * since the player is not necessarily available because the player might not be connected the players name is needed as parameter
+     * @param playerName the players name
+     * @return collection of minion ids
+     */
+    public Collection<MinionArgument.MinionId> getMinionIdForName(String playerName) {
+        return Arrays.stream(minions).map(i -> new MinionArgument.MinionId(playerName, i.minionID, i.data.getFormattedName().getString())).collect(Collectors.toList());
+    }
+
     private static class MinionInfo {
         final int minionID;
-        @Nonnull
+        @NotNull
         final MinionData data;
         @Nullable
         final EntityType<? extends MinionEntity<?>> minionType;
@@ -523,7 +545,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
         @Nullable
         ResourceKey<Level> dimension;
 
-        private MinionInfo(int id, @Nonnull MinionData data, @Nullable EntityType<? extends MinionEntity<?>> minionType) {
+        private MinionInfo(int id, @NotNull MinionData data, @Nullable EntityType<? extends MinionEntity<?>> minionType) {
             this.minionID = id;
             this.data = data;
             this.minionType = minionType;

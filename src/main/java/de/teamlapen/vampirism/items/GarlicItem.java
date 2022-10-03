@@ -15,9 +15,8 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.PlantType;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Item for the garlic plant
@@ -30,12 +29,12 @@ public class GarlicItem extends Item implements IPlantable, IFactionExclusiveIte
 
     @Nullable
     @Override
-    public IFaction<?> getExclusiveFaction(@Nonnull ItemStack stack) {
+    public IFaction<?> getExclusiveFaction(@NotNull ItemStack stack) {
         return VReference.HUNTER_FACTION;
     }
 
     @Override
-    public BlockState getPlant(BlockGetter world, BlockPos pos) {
+    public @NotNull BlockState getPlant(BlockGetter world, BlockPos pos) {
         return ModBlocks.GARLIC.get().defaultBlockState();
     }
 
@@ -45,9 +44,9 @@ public class GarlicItem extends Item implements IPlantable, IFactionExclusiveIte
     }
 
 
-    @Nonnull
+    @NotNull
     @Override
-    public InteractionResult useOn(UseOnContext ctx) {
+    public InteractionResult useOn(@NotNull UseOnContext ctx) {
         ItemStack stack = ctx.getItemInHand();
         BlockPos pos = ctx.getClickedPos();
         if (ctx.getClickedFace() != Direction.UP) {

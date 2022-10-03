@@ -15,9 +15,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -27,7 +27,7 @@ import java.util.List;
 public class ConvertedSheepEntity extends ConvertedCreatureEntity<Sheep> implements net.minecraftforge.common.IForgeShearable {
     private final static EntityDataAccessor<Byte> COAT = SynchedEntityData.defineId(ConvertedSheepEntity.class, EntityDataSerializers.BYTE);
 
-    private Boolean lastSheared = null;
+    private @Nullable Boolean lastSheared = null;
 
     public ConvertedSheepEntity(EntityType<? extends ConvertedSheepEntity> type, Level world) {
         super(type, world);
@@ -45,12 +45,12 @@ public class ConvertedSheepEntity extends ConvertedCreatureEntity<Sheep> impleme
     }
 
     @Override
-    public void addAdditionalSaveData(@Nonnull CompoundTag nbt) {
+    public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putBoolean("Sheared", this.getSheared());
     }
 
-    public DyeColor getFleeceColor() {
+    public @NotNull DyeColor getFleeceColor() {
         return nil() ? DyeColor.WHITE : this.getOldCreature().getColor();
     }
 
@@ -69,13 +69,13 @@ public class ConvertedSheepEntity extends ConvertedCreatureEntity<Sheep> impleme
     }
 
     @Override
-    public boolean isShearable(@Nonnull ItemStack item, Level world, BlockPos pos) {
+    public boolean isShearable(@NotNull ItemStack item, Level world, BlockPos pos) {
         return !getSheared() && !isBaby();
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public List<ItemStack> onSheared(@Nullable Player player, @Nonnull ItemStack item, Level world, BlockPos pos, int fortune) {
+    public List<ItemStack> onSheared(@Nullable Player player, @NotNull ItemStack item, @NotNull Level world, BlockPos pos, int fortune) {
         java.util.List<ItemStack> ret = new java.util.ArrayList<>();
         if (!world.isClientSide()) {
             this.setSheared(true);
@@ -90,7 +90,7 @@ public class ConvertedSheepEntity extends ConvertedCreatureEntity<Sheep> impleme
     }
 
     @Override
-    public void readAdditionalSaveData(@Nonnull CompoundTag nbt) {
+    public void readAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
         this.setSheared(nbt.getBoolean("Sheared"));
     }
@@ -108,7 +108,7 @@ public class ConvertedSheepEntity extends ConvertedCreatureEntity<Sheep> impleme
         }
 
         @Override
-        public ConvertedCreatureEntity<Sheep> createFrom(Sheep entity) {
+        public ConvertedCreatureEntity<Sheep> createFrom(@NotNull Sheep entity) {
             return Helper.createEntity(ModEntities.CONVERTED_SHEEP.get(), entity.getCommandSenderWorld()).map(creature -> {
                 this.copyImportantStuff(creature, entity);
                 creature.setSheared(entity.isSheared());

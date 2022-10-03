@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.inventory.container.WeaponTableContainer;
-import de.teamlapen.vampirism.player.hunter.HunterPlayer;
-import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.inventory.WeaponTableMenu;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -32,9 +32,8 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.network.NetworkHooks;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class WeaponTableBlock extends VampirismHorizontalBlock {
     public static final int MAX_LAVA = 5;
@@ -42,7 +41,7 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
     public static final IntegerProperty LAVA = IntegerProperty.create("lava", 0, MAX_LAVA);
     private static final Component name = Component.translatable("gui.vampirism.hunter_weapon_table");
 
-    private static VoxelShape makeShape() {
+    private static @NotNull VoxelShape makeShape() {
         VoxelShape a = Block.box(3, 0, 0, 13, 2, 8);
         VoxelShape b = Block.box(4, 2, 1, 12, 3, 7);
         VoxelShape c = Block.box(5, 3, 2, 11, 6, 6);
@@ -73,13 +72,13 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
 
     @Nullable
     @Override
-    public MenuProvider getMenuProvider(@Nonnull BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos) {
-        return new SimpleMenuProvider((id, playerInventory, playerEntity) -> new WeaponTableContainer(id, playerInventory, ContainerLevelAccess.create(worldIn, pos)), name);
+    public MenuProvider getMenuProvider(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos) {
+        return new SimpleMenuProvider((id, playerInventory, playerEntity) -> new WeaponTableMenu(id, playerInventory, ContainerLevelAccess.create(worldIn, pos)), name);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public InteractionResult use(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
+    public InteractionResult use(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         if (!world.isClientSide) {
             int fluid = world.getBlockState(pos).getValue(LAVA);
             boolean flag = false;
@@ -107,7 +106,7 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
             if (!flag) {
 
                 if (canUse(player) && player instanceof ServerPlayer) {
-                    NetworkHooks.openScreen((ServerPlayer) player, new SimpleMenuProvider((id, playerInventory, playerIn) -> new WeaponTableContainer(id, playerInventory, ContainerLevelAccess.create(playerIn.level, pos)), name), pos);
+                    NetworkHooks.openScreen((ServerPlayer) player, new SimpleMenuProvider((id, playerInventory, playerIn) -> new WeaponTableMenu(id, playerInventory, ContainerLevelAccess.create(playerIn.level, pos)), name), pos);
                 } else {
                     player.displayClientMessage(Component.translatable("text.vampirism.weapon_table.cannot_use"), true);
                 }
@@ -117,14 +116,14 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> builder) {
         builder.add(LAVA, FACING);
     }
 
     /**
      * @return If the given player is allowed to use this.
      */
-    private boolean canUse(Player player) {
+    private boolean canUse(@NotNull Player player) {
         if (Helper.isHunter(player)) {
             return HunterPlayer.getOpt(player).map(HunterPlayer::getSkillHandler).map(handler -> handler.isSkillEnabled(HunterSkills.WEAPON_TABLE.get())).orElse(false);
         }

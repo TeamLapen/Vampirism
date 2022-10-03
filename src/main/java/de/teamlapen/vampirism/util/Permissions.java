@@ -9,6 +9,7 @@ import net.minecraftforge.server.permission.events.PermissionGatherEvent;
 import net.minecraftforge.server.permission.nodes.PermissionDynamicContextKey;
 import net.minecraftforge.server.permission.nodes.PermissionNode;
 import net.minecraftforge.server.permission.nodes.PermissionTypes;
+import org.jetbrains.annotations.NotNull;
 
 public class Permissions {
     public static final PermissionNode<Boolean> GENERAL_CHECK = new PermissionNode<>(REFERENCE.MODID, "check", PermissionTypes.BOOLEAN, ((player, playerUUID, context) -> true));
@@ -21,11 +22,11 @@ public class Permissions {
 
 
     @SubscribeEvent
-    public static void registerNodes(PermissionGatherEvent.Nodes event) {
+    public static void registerNodes(PermissionGatherEvent.@NotNull Nodes event) {
         event.addNodes(GENERAL_CHECK, FEED, FEED_PLAYER, INFECT_PLAYER, ACTION);
     }
 
-    public static boolean isPvpEnabled(Player player) {
+    public static boolean isPvpEnabled(@NotNull Player player) {
         if (!player.getCommandSenderWorld().isClientSide) {
             return ServerLifecycleHooks.getCurrentServer().isPvpAllowed();
         }

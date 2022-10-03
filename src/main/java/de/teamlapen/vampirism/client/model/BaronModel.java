@@ -14,8 +14,7 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * VampirismBaronLord - RebelT
@@ -38,25 +37,25 @@ public class BaronModel extends AgeableListModel<VampireBaronEntity> implements 
     private static final String CLAWS_RIGHT = "claws_right";
     private static final String CLAWS_LEFT = "claws_left";
 
-    protected final ModelPart body;
-    protected final ModelPart headOverlay;
-    protected final ModelPart legRightOverlay;
-    protected final ModelPart legLeftOverlay;
-    protected final ModelPart armRightOverlay;
-    protected final ModelPart armLeftOverlay;
-    protected final ModelPart bodyOverlay;
-    protected final ModelPart head;
-    protected final ModelPart armRight;
-    protected final ModelPart armLeft;
-    protected final ModelPart legRight;
-    protected final ModelPart legLeft;
-    protected final ModelPart clawsRight;
-    protected final ModelPart clawsLeft;
+    protected final @NotNull ModelPart body;
+    protected final @NotNull ModelPart headOverlay;
+    protected final @NotNull ModelPart legRightOverlay;
+    protected final @NotNull ModelPart legLeftOverlay;
+    protected final @NotNull ModelPart armRightOverlay;
+    protected final @NotNull ModelPart armLeftOverlay;
+    protected final @NotNull ModelPart bodyOverlay;
+    protected final @NotNull ModelPart head;
+    protected final @NotNull ModelPart armRight;
+    protected final @NotNull ModelPart armLeft;
+    protected final @NotNull ModelPart legRight;
+    protected final @NotNull ModelPart legLeft;
+    protected final @NotNull ModelPart clawsRight;
+    protected final @NotNull ModelPart clawsLeft;
 
     protected final HumanoidModel.ArmPose leftArmPose = HumanoidModel.ArmPose.EMPTY;
     protected final HumanoidModel.ArmPose rightArmPose = HumanoidModel.ArmPose.EMPTY;
 
-    public static LayerDefinition createLayer() {
+    public static @NotNull LayerDefinition createLayer() {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition part = mesh.getRoot();
         CubeDeformation DEFORM_OVERLAY = new CubeDeformation(0.2f);
@@ -79,7 +78,7 @@ public class BaronModel extends AgeableListModel<VampireBaronEntity> implements 
 
     }
 
-    public BaronModel(ModelPart part) {
+    public BaronModel(@NotNull ModelPart part) {
         this.body = part.getChild(BODY);
         this.headOverlay = part.getChild(HEAD_OVERLAY);
         this.legRightOverlay = part.getChild(LEG_RIGHT_OVERLAY);
@@ -98,14 +97,14 @@ public class BaronModel extends AgeableListModel<VampireBaronEntity> implements 
     }
 
 
-    @Nonnull
+    @NotNull
     @Override
     public ModelPart getHead() {
         return head;
     }
 
     @Override
-    public void setupAnim(@Nonnull VampireBaronEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(@NotNull VampireBaronEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.head.yRot = netHeadYaw * ((float) Math.PI / 180f);
 
         this.body.yRot = 0.0F;
@@ -203,7 +202,7 @@ public class BaronModel extends AgeableListModel<VampireBaronEntity> implements 
     }
 
     @Override
-    public void translateToHand(@Nonnull HumanoidArm sideIn, @Nonnull PoseStack matrixStackIn) {
+    public void translateToHand(@NotNull HumanoidArm sideIn, @NotNull PoseStack matrixStackIn) {
         this.getArmForSide(sideIn).translateAndRotate(matrixStackIn);
     }
 
@@ -211,18 +210,18 @@ public class BaronModel extends AgeableListModel<VampireBaronEntity> implements 
         return side == HumanoidArm.LEFT ? this.armLeft : this.armRight;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     protected Iterable<ModelPart> bodyParts() {
         return ImmutableList.of(this.headOverlay, this.body, this.bodyOverlay, this.armLeftOverlay, this.armRightOverlay, this.legLeftOverlay, this.legRightOverlay);
     }
 
-    protected HumanoidArm getSwingingSide(VampireBaronEntity entity) {
+    protected @NotNull HumanoidArm getSwingingSide(@NotNull VampireBaronEntity entity) {
         HumanoidArm handside = entity.getMainArm();
         return entity.swingingArm == InteractionHand.MAIN_HAND ? handside : handside.getOpposite();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     protected Iterable<ModelPart> headParts() {
         return ImmutableList.of(head);

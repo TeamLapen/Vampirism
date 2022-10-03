@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -13,6 +14,8 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -36,11 +39,11 @@ public class VampirismConfig {
      */
     public static final Common COMMON;
 
-    public static final BalanceConfig BALANCE;
+    public static final @NotNull BalanceConfig BALANCE;
     private static final ForgeConfigSpec clientSpec;
     private static final ForgeConfigSpec serverSpec;
     private static final ForgeConfigSpec commonSpec;
-    private static BalanceBuilder balanceBuilder;
+    private static @Nullable BalanceBuilder balanceBuilder;
 
     static {
         final Pair<Client, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Client::new);
@@ -71,9 +74,10 @@ public class VampirismConfig {
     }
 
     @ThreadSafeAPI
-    public static <T extends BalanceBuilder.Conf> void addBalanceModification(String key, Consumer<T> modifier) {
-        if (balanceBuilder == null)
+    public static <T extends BalanceBuilder.Conf> void addBalanceModification(@NotNull String key, @NotNull Consumer<T> modifier) {
+        if (balanceBuilder == null) {
             throw new IllegalStateException("Must add balance modifications during mod construction");
+        }
         balanceBuilder.addBalanceModifier(key, modifier);
     }
 
@@ -104,7 +108,7 @@ public class VampirismConfig {
     }
 
     @SubscribeEvent
-    public static void onLoad(final ModConfigEvent.Loading configEvent) {
+    public static void onLoad(final ModConfigEvent.@NotNull Loading configEvent) {
         if (configEvent.getConfig().getType() == ModConfig.Type.SERVER) {
             ((SundamageRegistry) VampirismAPI.sundamageRegistry()).reloadConfiguration();
 
@@ -112,7 +116,7 @@ public class VampirismConfig {
     }
 
     @SubscribeEvent
-    public static void onReload(final ModConfigEvent.Reloading configEvent) {
+    public static void onReload(final ModConfigEvent.@NotNull Reloading configEvent) {
         if (configEvent.getConfig().getType() == ModConfig.Type.SERVER) {
             ((SundamageRegistry) VampirismAPI.sundamageRegistry()).reloadConfiguration();
         }
@@ -125,7 +129,6 @@ public class VampirismConfig {
     public static class Server {
 
         public final ForgeConfigSpec.BooleanValue enforceRenderForestFog;
-        public final ForgeConfigSpec.BooleanValue batModeInEnd;
         public final ForgeConfigSpec.BooleanValue unlockAllSkills;
         public final ForgeConfigSpec.BooleanValue pvpOnlyBetweenFactions;
         public final ForgeConfigSpec.BooleanValue pvpOnlyBetweenFactionsIncludeHumans;
@@ -138,11 +141,13 @@ public class VampirismConfig {
         public final ForgeConfigSpec.EnumValue<IMobOptions> entityIMob;
         public final ForgeConfigSpec.BooleanValue infectCreaturesSanguinare;
         public final ForgeConfigSpec.BooleanValue preventRenderingDebugBoundingBoxes;
+        public final ForgeConfigSpec.BooleanValue allowVillageDestroyBlocks;
 
         public final ForgeConfigSpec.BooleanValue sundamageUnknownDimension;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> sundamageDimensionsOverridePositive;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> sundamageDimensionsOverrideNegative;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> sundamageDisabledBiomes;
+        public final ForgeConfigSpec.ConfigValue<List<? extends String>> batDimensionBlacklist;
 
 
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> blacklistedBloodEntity;
@@ -156,12 +161,11 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue infoAboutGuideAPI;
 
 
-        Server(ForgeConfigSpec.Builder builder) {
+        Server(ForgeConfigSpec.@NotNull Builder builder) {
             builder.comment("Server configuration settings")
                     .push("server");
 
             enforceRenderForestFog = builder.comment("Prevent clients from disabling the vampire forest fog").define("enforceForestFog", true);
-            batModeInEnd = builder.comment("If vampires can convert to a bat in the End").define("batModeInEnd", false);
             pvpOnlyBetweenFactions = builder.comment("If PVP should only be allowed between factions. PVP has to be enabled in the server properties for this. Not guaranteed to always protect player from teammates").define("pvpOnlyBetweenFactions", false);
             pvpOnlyBetweenFactionsIncludeHumans = builder.comment("If pvpOnlyBetweenFactions is enabled, this decides whether human players can be attacked and attack others").define("pvpOnlyBetweenFactionsIncludeHumans", false);
             sunscreenBeaconDistance = builder.comment("Block radius the sunscreen beacon affects").defineInRange("sunscreenBeaconDistance", 32, 1, 40000);
@@ -173,6 +177,8 @@ public class VampirismConfig {
             entityIMob = builder.comment("Changes if entities are recognized as hostile by other mods. See https://github.com/TeamLapen/Vampirism/issues/199. Smart falls back to Never on servers ").defineEnum("entitiesIMob", IMobOptions.SMART);
             infectCreaturesSanguinare = builder.comment("If enabled, creatures are infected with Sanguinare Vampirism first instead of immediately being converted to a vampire when their blood is sucked dry").define("infectCreaturesSanguinare", false);
             preventRenderingDebugBoundingBoxes = builder.comment("Prevent players from enabling the rendering of debug bounding boxes. This can allow them to see certain entities they are not supposed to see (e.g. disguised hunter").define("preventDebugBoundingBoxes", false);
+            batDimensionBlacklist = builder.comment("Prevent vampire players to transform into a bat").defineList("batDimensionBlacklist", Collections.singletonList(Level.END.location().toString()), string -> string instanceof String && UtilLib.isValidResourceLocation(((String) string)));
+            allowVillageDestroyBlocks = builder.comment("Allow players to destroy point of interest blocks in faction villages if they no not have the faction village").define("allowVillageDestroyBlocks", false);
 
             builder.push("sundamage");
             sundamageUnknownDimension = builder.comment("Whether vampires should receive sundamage in unknown dimensions").define("sundamageUnknownDimension", false);
@@ -227,8 +233,10 @@ public class VampirismConfig {
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> actionOrder;
         public final ForgeConfigSpec.BooleanValue disableFovChange;
         public final ForgeConfigSpec.BooleanValue disableBloodVisionRendering;
+        public final ForgeConfigSpec.BooleanValue disableHudActionCooldownRendering;
+        public final ForgeConfigSpec.BooleanValue disableHudActionDurationRendering;
 
-        Client(ForgeConfigSpec.Builder builder) {
+        Client(ForgeConfigSpec.@NotNull Builder builder) {
             builder.comment("Client configuration settings")
                     .push("client");
 
@@ -252,6 +260,8 @@ public class VampirismConfig {
             actionOrder = builder.comment("Action Order in Select Action Screen (reset with \"\"), unnamed actions will appended").defineList("actionOrder", Collections.emptyList(), string -> string instanceof String && UtilLib.isValidResourceLocation(((String) string)));
             disableFovChange = builder.comment("Disable the FOV change caused by the speed buf for vampire players").define("disableFovChange", false);
             disableBloodVisionRendering = builder.comment("Disable the effect of blood vision. It can still be unlocked and activated but does not have any effect").define("disableBloodVisionRendering", false);
+            disableHudActionCooldownRendering = builder.comment("Disable the rendering of the action cooldowns in the HUD").define("disableHudActionCooldownRendering", false);
+            disableHudActionDurationRendering = builder.comment("Disable the rendering of the action durations in the HUD").define("disableHudActionDurationRendering", false);
 
             builder.pop();
 
@@ -274,6 +284,7 @@ public class VampirismConfig {
         //Common server
         public final ForgeConfigSpec.BooleanValue autoConvertGlassBottles;
         public final ForgeConfigSpec.BooleanValue umbrella;
+        public final ForgeConfigSpec.BooleanValue enableFactionLogging;
 
         //World
         public final ForgeConfigSpec.BooleanValue addVampireForestToOverworld;
@@ -288,8 +299,7 @@ public class VampirismConfig {
         public final ForgeConfigSpec.IntValue villageHunterTrainerWeight;
 
 
-
-        Common(ForgeConfigSpec.Builder builder) {
+        Common(ForgeConfigSpec.@NotNull Builder builder) {
             builder.comment("Common configuration settings. Most other configuration can be found in the world (server)configuration folder")
                     .push("common");
             versionCheck = builder.comment("Check for new versions of Vampirism on startup").define("versionCheck", true);
@@ -305,10 +315,11 @@ public class VampirismConfig {
                     .push("common-server");
             autoConvertGlassBottles = builder.comment("Whether glass bottles should be automatically be converted to blood bottles when needed").define("autoConvertGlassBottles", true);
             umbrella = builder.comment("If enabled adds a craftable umbrella that can be used to slowly walk though sunlight without taking damage").define("umbrella", false);
+            enableFactionLogging = builder.comment("Enable a custom vampirism log file that logs specific faction actions", "Requires restart").define("enableFactionLogging", false);
 
             builder.comment("Settings here require a game restart").push("world");
             addVampireForestToOverworld = builder.comment("Whether to inject the vampire forest into the default overworld generation and to replace some Taiga areas").define("addVampireForestToOverworld", true);
-            vampireForestWeight_terrablender = builder.comment("Only considered if terrablender installed. Heigher values increase Vampirism region weight (likelyhood to appear)").defineInRange("vampireForestWeight_terrablender", 2,1, 1000);
+            vampireForestWeight_terrablender = builder.comment("Only considered if terrablender installed. Heigher values increase Vampirism region weight (likelyhood to appear)").defineInRange("vampireForestWeight_terrablender", 2, 1, 1000);
             enableHunterTentGeneration = builder.comment("Control hunter camp generation. If disabled you should set hunterSpawnChance to 75.").define("enableHunterTentGeneration", true);
             useVanillaCampfire = builder.comment("Use the vanilla campfire block instead of Vampirism's much cooler one").define("useVanillaCampfire", false);
 

@@ -7,13 +7,14 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Handle all sound related stuff
  */
 public class ModSounds {
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, REFERENCE.MODID);
-    
+
     public static final RegistryObject<SoundEvent> ENTITY_VAMPIRE_SCREAM = create("entity_vampire_scream");
     public static final RegistryObject<SoundEvent> PLAYER_BITE = create("player_bite");
     public static final RegistryObject<SoundEvent> AMBIENT_CASTLE = create("ambient_castle");
@@ -23,13 +24,15 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> BOILING = create("boiling");
     public static final RegistryObject<SoundEvent> GRINDER = create("grinder");
     public static final RegistryObject<SoundEvent> TASK_COMPLETE = create("task_complete");
+    public static final RegistryObject<SoundEvent> PLAYER_FEEDING = create("player.feeding");
+    public static final RegistryObject<SoundEvent> BLESSING_MUSIC = create("blessing_music");
 
 
-    static void registerSounds(IEventBus bus) {
+    static void register(IEventBus bus) {
         SOUND_EVENTS.register(bus);
     }
 
-    private static RegistryObject<SoundEvent> create(String soundNameIn) {
+    private static RegistryObject<SoundEvent> create(@NotNull String soundNameIn) {
         ResourceLocation resourcelocation = new ResourceLocation(REFERENCE.MODID, soundNameIn);
         return SOUND_EVENTS.register(soundNameIn, () -> new SoundEvent(resourcelocation));
     }

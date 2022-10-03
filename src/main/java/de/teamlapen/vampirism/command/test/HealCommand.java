@@ -5,6 +5,7 @@ import de.teamlapen.lib.lib.util.BasicCommand;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
+import org.jetbrains.annotations.NotNull;
 
 public class HealCommand extends BasicCommand {
 
@@ -15,7 +16,7 @@ public class HealCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int heal(ServerPlayer asPlayer) {
+    private static int heal(@NotNull ServerPlayer asPlayer) {
         asPlayer.heal(10000);
         return 0;
     }

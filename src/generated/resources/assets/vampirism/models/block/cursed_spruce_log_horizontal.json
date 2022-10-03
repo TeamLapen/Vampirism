@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column_horizontal",
+  "textures": {
+    "end": "vampirism:block/cursed_spruce_log_top",
+    "side": "vampirism:block/cursed_spruce_log"
+  }
+}

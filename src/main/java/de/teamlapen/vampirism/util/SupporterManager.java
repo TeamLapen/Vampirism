@@ -7,8 +7,9 @@ import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.util.RandomSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ConnectException;
@@ -40,7 +41,7 @@ public class SupporterManager {
     /**
      * Returns a randomly picked hunter
      */
-    public Supporter getRandomHunter(RandomSource rnd) {
+    public Supporter getRandomHunter(@NotNull RandomSource rnd) {
         if (supporters[1].length > 0) {
             return supporters[1][rnd.nextInt(supporters[1].length)];
         }
@@ -50,7 +51,7 @@ public class SupporterManager {
     /**
      * Returns a randomly picked vampire
      */
-    public Supporter getRandomVampire(RandomSource rnd) {
+    public Supporter getRandomVampire(@NotNull RandomSource rnd) {
         if (supporters[0].length > 0) {
             return supporters[0][rnd.nextInt(supporters[0].length)];
         }
@@ -68,7 +69,7 @@ public class SupporterManager {
         thread.start();
     }
 
-    private String getDebugString() {
+    private @NotNull String getDebugString() {
         return "Vampires: " + Arrays.toString(supporters[0]) + " Hunters: " + Arrays.toString(supporters[1]);
     }
 
@@ -105,7 +106,7 @@ public class SupporterManager {
         }
     }
 
-    private Supporter parseSupporter(JsonObject object) {
+    private @NotNull Supporter parseSupporter(@NotNull JsonObject object) {
         String name = null;
         String texture = null;
         String bookId = null;
@@ -127,7 +128,7 @@ public class SupporterManager {
 
     private
     @Nullable
-    Supporter[][] retrieveSupporter(String data) {
+    Supporter[] @Nullable [] retrieveSupporter(@NotNull String data) {
 
         try {
             Supporter[][] supporters = new Supporter[2][];

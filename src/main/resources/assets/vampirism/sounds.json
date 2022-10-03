@@ -12,6 +12,15 @@
       "vampirism:entity/vampire/bite_long"
     ]
   },
+  "player.feeding": {
+    "category": "player",
+    "sounds": [
+      {
+        "stream": true,
+        "name": "vampirism:entity/vampire/feeding"
+      }
+    ]
+  },
   "ambient.scary": {
     "category": "ambient",
     "sounds": [
@@ -76,6 +85,12 @@
     "category": "master",
     "sounds": [
       "vampirism:fx/task_complete"
+    ]
+  },
+  "blessing_music": {
+    "category": "player",
+    "sounds": [
+      "vampirism:fx/church_organ"
     ]
   }
 }

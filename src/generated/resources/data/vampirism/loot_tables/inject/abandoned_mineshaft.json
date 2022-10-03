@@ -202,11 +202,6 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "vampirism:holy_salt",
-          "weight": 50
-        },
-        {
-          "type": "minecraft:item",
           "name": "vampirism:holy_water_bottle_normal",
           "weight": 20
         },
@@ -221,7 +216,7 @@
           "weight": 10
         }
       ],
-      "name": "holy_Water",
+      "name": "holy_water",
       "rolls": 2.0
     },
     {

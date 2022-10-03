@@ -7,8 +7,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Objects;
 
 /**
@@ -51,7 +51,7 @@ public abstract class AbstractPacketDispatcher {
     /**
      * Send this message to the specified player.
      */
-    public final void sendTo(@Nonnull IMessage message, ServerPlayer player) {
+    public final void sendTo(@NotNull IMessage message, ServerPlayer player) {
         Objects.requireNonNull(message);
         dispatcher.send(PacketDistributor.PLAYER.with(() -> player), message);
         //dispatcher.sendTo(message, player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);

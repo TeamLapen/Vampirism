@@ -1,9 +1,10 @@
 package de.teamlapen.vampirism.core;
 
-import de.teamlapen.vampirism.advancements.*;
+import de.teamlapen.vampirism.advancements.critereon.*;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.CriterionTriggerInstance;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Actual advancements are loaded from assets (JSON)
@@ -11,15 +12,15 @@ import net.minecraft.advancements.CriterionTriggerInstance;
  */
 public class ModAdvancements {
 
-    public static final TriggerFaction TRIGGER_FACTION = register(new TriggerFaction());
-    public static final VampireActionTrigger TRIGGER_VAMPIRE_ACTION = register(new VampireActionTrigger());
-    public static final HunterActionTrigger TRIGGER_HUNTER_ACTION = register(new HunterActionTrigger());
-    public static final SkillUnlockedTrigger TRIGGER_SKILL_UNLOCKED = register(new SkillUnlockedTrigger());
-    public static final MinionTaskTrigger TRIGGER_MINION_ACTION = register(new MinionTaskTrigger());
-    public static final CuredVampireVillagerTrigger TRIGGER_CURED_VAMPIRE_VILLAGER = register(new CuredVampireVillagerTrigger());
+    public static final FactionCriterionTrigger TRIGGER_FACTION = register(new FactionCriterionTrigger());
+    public static final VampireActionCriterionTrigger TRIGGER_VAMPIRE_ACTION = register(new VampireActionCriterionTrigger());
+    public static final HunterActionCriterionTrigger TRIGGER_HUNTER_ACTION = register(new HunterActionCriterionTrigger());
+    public static final SkillUnlockedCriterionTrigger TRIGGER_SKILL_UNLOCKED = register(new SkillUnlockedCriterionTrigger());
+    public static final MinionTaskCriterionTrigger TRIGGER_MINION_ACTION = register(new MinionTaskCriterionTrigger());
+    public static final CuredVampireVillagerCriterionTrigger TRIGGER_CURED_VAMPIRE_VILLAGER = register(new CuredVampireVillagerCriterionTrigger());
 
 
-    private static <Z extends CriterionTriggerInstance, T extends CriterionTrigger<Z>> T register(T trigger) {
+    private static <Z extends CriterionTriggerInstance, T extends CriterionTrigger<Z>> @NotNull T register(@NotNull T trigger) {
         return CriteriaTriggers.register(trigger);
     }
 

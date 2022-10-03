@@ -2,11 +2,14 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.blocks.BushBlock;
 import de.teamlapen.vampirism.blocks.*;
-import de.teamlapen.vampirism.items.CoffinItem;
 import de.teamlapen.vampirism.util.BlockVoxelshapes;
+import de.teamlapen.vampirism.world.gen.CursedSpruceTree;
+import de.teamlapen.vampirism.world.gen.DarkSpruceTreeGrower;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -17,6 +20,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 import java.util.function.Function;
@@ -53,7 +57,6 @@ public class ModBlocks {
     public static final RegistryObject<CastleStairsBlock> CASTLE_STAIRS_DARK_STONE = registerWithItem("castle_stairs_dark_stone", () -> new CastleStairsBlock(() -> CASTLE_BLOCK_DARK_STONE.get().defaultBlockState(), CastleBricksBlock.EnumVariant.DARK_STONE));
     public static final RegistryObject<CastleStairsBlock> CASTLE_STAIRS_PURPLE_BRICK = registerWithItem("castle_stairs_purple_brick", () -> new CastleStairsBlock(() -> CASTLE_BLOCK_PURPLE_BRICK.get().defaultBlockState(), CastleBricksBlock.EnumVariant.PURPLE_BRICK));
     public static final RegistryObject<AltarCleansingBlock> ALTAR_CLEANSING = registerWithItem("altar_cleansing", AltarCleansingBlock::new);
-    public static final RegistryObject<CoffinBlock> COFFIN = registerWithItem("coffin", CoffinBlock::new, CoffinItem::new);
     public static final RegistryObject<CursedEarthBlock> CURSED_EARTH = registerWithItem("cursed_earth", CursedEarthBlock::new);
     public static final RegistryObject<FirePlaceBlock> FIRE_PLACE = registerWithItem("fire_place", FirePlaceBlock::new);
     public static final RegistryObject<GarlicBlock> GARLIC = BLOCKS.register("garlic", GarlicBlock::new);
@@ -61,43 +64,98 @@ public class ModBlocks {
     public static final RegistryObject<GarlicDiffuserBlock> GARLIC_DIFFUSER_NORMAL = registerWithItem("garlic_diffuser_normal", () -> new GarlicDiffuserBlock(GarlicDiffuserBlock.Type.NORMAL));
     public static final RegistryObject<GarlicDiffuserBlock> GARLIC_DIFFUSER_WEAK = registerWithItem("garlic_diffuser_weak", () -> new GarlicDiffuserBlock(GarlicDiffuserBlock.Type.WEAK));
     public static final RegistryObject<HunterTableBlock> HUNTER_TABLE = registerWithItem("hunter_table", HunterTableBlock::new);
-    public static final RegistryObject<MedChairBlock> MED_CHAIR = BLOCKS.register("med_chair", MedChairBlock::new);
+    public static final RegistryObject<MedChairBlock> MED_CHAIR = registerWithItem("med_chair", MedChairBlock::new);
     public static final RegistryObject<SunscreenBeaconBlock> SUNSCREEN_BEACON = registerWithItem("sunscreen_beacon", SunscreenBeaconBlock::new);
     public static final RegistryObject<TentBlock> TENT = BLOCKS.register("tent", TentBlock::new);
     public static final RegistryObject<TentMainBlock> TENT_MAIN = BLOCKS.register("tent_main", TentMainBlock::new);
     public static final RegistryObject<TotemBaseBlock> TOTEM_BASE = registerWithItem("totem_base", TotemBaseBlock::new);
     public static final RegistryObject<TotemTopBlock> TOTEM_TOP = registerWithItem("totem_top", () -> new TotemTopBlock(false, new ResourceLocation("none")));
-    public static final RegistryObject<TotemTopBlock> TOTEM_TOP_VAMPIRISM_VAMPIRE = registerWithItem("totem_top_vampirism_vampire", () -> new TotemTopBlock(false, REFERENCE.VAMPIRE_PLAYER_KEY));
-    public static final RegistryObject<TotemTopBlock> TOTEM_TOP_VAMPIRISM_HUNTER = registerWithItem("totem_top_vampirism_hunter", () -> new TotemTopBlock(false, REFERENCE.HUNTER_PLAYER_KEY));
+    public static final RegistryObject<TotemTopBlock> TOTEM_TOP_VAMPIRISM_VAMPIRE = BLOCKS.register("totem_top_vampirism_vampire", () -> new TotemTopBlock(false, REFERENCE.VAMPIRE_PLAYER_KEY));
+    public static final RegistryObject<TotemTopBlock> TOTEM_TOP_VAMPIRISM_HUNTER = BLOCKS.register("totem_top_vampirism_hunter", () -> new TotemTopBlock(false, REFERENCE.HUNTER_PLAYER_KEY));
     public static final RegistryObject<TotemTopBlock> TOTEM_TOP_CRAFTED = registerWithItem("totem_top_crafted", () -> new TotemTopBlock(true, new ResourceLocation("none")));
     public static final RegistryObject<TotemTopBlock> TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED = BLOCKS.register("totem_top_vampirism_vampire_crafted", () -> new TotemTopBlock(true, REFERENCE.VAMPIRE_PLAYER_KEY));
     public static final RegistryObject<TotemTopBlock> TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED = BLOCKS.register("totem_top_vampirism_hunter_crafted", () -> new TotemTopBlock(true, REFERENCE.HUNTER_PLAYER_KEY));
     public static final RegistryObject<VampirismFlowerBlock> VAMPIRE_ORCHID = registerWithItem("vampire_orchid", () -> new VampirismFlowerBlock(VampirismFlowerBlock.TYPE.ORCHID));
     public static final RegistryObject<FlowerPotBlock> POTTED_VAMPIRE_ORCHID = BLOCKS.register("potted_vampire_orchid", () -> {
-                FlowerPotBlock block = new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, VAMPIRE_ORCHID, Block.Properties.of(Material.DECORATION).instabreak().noOcclusion());
-                ((FlowerPotBlock)Blocks.FLOWER_POT).addPlant(VAMPIRE_ORCHID.getId(), () -> block);
-                return block;
-            });
+        FlowerPotBlock block = new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, VAMPIRE_ORCHID, Block.Properties.of(Material.DECORATION).instabreak().noOcclusion());
+        ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(VAMPIRE_ORCHID.getId(), () -> block);
+        return block;
+    });
     public static final RegistryObject<WeaponTableBlock> WEAPON_TABLE = registerWithItem("weapon_table", WeaponTableBlock::new);
     public static final RegistryObject<PotionTableBlock> POTION_TABLE = registerWithItem("potion_table", PotionTableBlock::new);
-    public static final RegistryObject<RotatedPillarBlock> BLOODY_SPRUCE_LOG = registerWithItem("bloody_spruce_log", () -> {
-            RotatedPillarBlock log = Blocks.log(MaterialColor.PODZOL, MaterialColor.COLOR_BROWN);
-            ((FireBlock) Blocks.FIRE).setFlammable(log, 5, 5);
-            return log;
-        });
-    public static final RegistryObject<BloodySpruceLeavesBlock> VAMPIRE_SPRUCE_LEAVES = registerWithItem("vampire_spruce_leaves", BloodySpruceLeavesBlock::new);
-    public static final RegistryObject<BloodySpruceLeavesBlock> BLOODY_SPRUCE_LEAVES = registerWithItem("bloody_spruce_leaves", BloodySpruceLeavesBlock::new);
-    public static final RegistryObject<BloodySpruceSaplingBlock> BLOODY_SPRUCE_SAPLING = registerWithItem("bloody_spruce_sapling", BloodySpruceSaplingBlock::new);
-    public static final RegistryObject<VampireSpruceSaplingBlock> VAMPIRE_SPRUCE_SAPLING = registerWithItem("vampire_spruce_sapling", VampireSpruceSaplingBlock::new);
+    public static final RegistryObject<DarkSpruceLeavesBlock> DARK_SPRUCE_LEAVES = registerWithItem("vampire_spruce_leaves", DarkSpruceLeavesBlock::new);
     public static final RegistryObject<VampirismBlock> CHANDELIER = registerWithItem("chandelier", ChandelierBlock::new);
     public static final RegistryObject<VampirismBlock> CANDELABRA = BLOCKS.register("candelabra", CandelabraBlock::new);
     public static final RegistryObject<VampirismBlock> CANDELABRA_WALL = BLOCKS.register("candelabra_wall", CandelabraWallBlock::new);
-    public static final RegistryObject<VampirismBlock> CROSS = registerWithItem("cross", CrossBlock::new);
+    public static final RegistryObject<VampirismBlock> CROSS = registerWithItem("cross", () -> new VampirismSplitBlock(BlockBehaviour.Properties.of(Material.WOOD).strength(2, 3), BlockVoxelshapes.crossBottom, BlockVoxelshapes.crossTop, true).markDecorativeBlock());
     public static final RegistryObject<VampirismBlock> TOMBSTONE1 = registerWithItem("tombstone1", () -> new VampirismHorizontalBlock(BlockBehaviour.Properties.of(Material.STONE).strength(2, 6), BlockVoxelshapes.tomb1).markDecorativeBlock());
     public static final RegistryObject<VampirismBlock> TOMBSTONE2 = registerWithItem("tombstone2", () -> new VampirismHorizontalBlock(BlockBehaviour.Properties.of(Material.STONE).strength(2, 6), BlockVoxelshapes.tomb2).markDecorativeBlock());
     public static final RegistryObject<VampirismBlock> TOMBSTONE3 = registerWithItem("tombstone3", () -> new VampirismHorizontalBlock(BlockBehaviour.Properties.of(Material.STONE).strength(2, 6), BlockVoxelshapes.tomb3).markDecorativeBlock());
     public static final RegistryObject<VampirismBlock> GRAVE_CAGE = registerWithItem("grave_cage", () -> new VampirismHorizontalBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL).strength(6, 8).requiresCorrectToolForDrops().sound(SoundType.METAL), BlockVoxelshapes.grave_cage).markDecorativeBlock());
-    public static final RegistryObject<CursedGrassBlock> CURSED_GRASS_BLOCK = registerWithItem("cursed_grass_block", CursedGrassBlock::new);
+    public static final RegistryObject<CursedGrass> CURSED_GRASS = registerWithItem("cursed_grass", () -> new CursedGrass(BlockBehaviour.Properties.of(Material.GRASS, MaterialColor.COLOR_BLACK).randomTicks().strength(0.6F).sound(SoundType.GRASS)));
+    public static final RegistryObject<BushBlock> CURSED_ROOTS = registerWithItem("cursed_roots", () -> {
+        BushBlock bush = new BushBlock(BlockBehaviour.Properties.of(Material.REPLACEABLE_PLANT, MaterialColor.COLOR_RED).noCollission().instabreak().sound(SoundType.GRASS));
+        ((FireBlock) Blocks.FIRE).setFlammable(bush, 60, 100);
+        return bush;
+    });
+    public static final RegistryObject<Block> POTTED_CURSED_ROOTS = BLOCKS.register("potted_cursed_roots", () -> {
+        FlowerPotBlock block = new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, CURSED_ROOTS, Block.Properties.of(Material.DECORATION).instabreak().noOcclusion());
+        ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(CURSED_ROOTS.getId(), () -> block);
+        return block;
+    });
+    public static final RegistryObject<Block> DARK_SPRUCE_PLANKS = registerWithItem("dark_spruce_planks", () -> new Block(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_GRAY).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
+    public static final RegistryObject<Block> CURSED_SPRUCE_PLANKS = registerWithItem("cursed_spruce_planks", () -> new Block(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.CRIMSON_HYPHAE).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
+    public static final RegistryObject<RotatedPillarBlock> DARK_SPRUCE_LOG = registerWithItem("dark_spruce_log", () -> new LogBlock(MaterialColor.COLOR_BLACK, MaterialColor.COLOR_BLACK));
+    public static final RegistryObject<RotatedPillarBlock> CURSED_SPRUCE_LOG = registerWithItem("cursed_spruce_log", CursedSpruceBlock::new);
+    public static final RegistryObject<SaplingBlock> DARK_SPRUCE_SAPLING = registerWithItem("dark_spruce_sapling", () -> new SaplingBlock(new DarkSpruceTreeGrower(), BlockBehaviour.Properties.of(Material.PLANT, MaterialColor.COLOR_BLACK).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<SaplingBlock> CURSED_SPRUCE_SAPLING = registerWithItem("cursed_spruce_sapling", () -> new SaplingBlock(new CursedSpruceTree(), BlockBehaviour.Properties.of(Material.PLANT, MaterialColor.COLOR_BLACK).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<CursedBarkBlock> CURSED_BARK = registerWithItem("cursed_bark", CursedBarkBlock::new);
+    public static final RegistryObject<RotatedPillarBlock> STRIPPED_DARK_SPRUCE_LOG = registerWithItem("stripped_dark_spruce_log", () -> new LogBlock(MaterialColor.COLOR_BLACK, MaterialColor.COLOR_GRAY));
+    public static final RegistryObject<RotatedPillarBlock> STRIPPED_CURSED_SPRUCE_LOG = registerWithItem("stripped_cursed_spruce_log", () -> new LogBlock(MaterialColor.COLOR_BLACK, MaterialColor.CRIMSON_HYPHAE));
+    public static final RegistryObject<DoorBlock> DARK_SPRUCE_DOOR = registerWithItem("dark_spruce_door", () -> new DoorBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_GRAY).strength(3.0F).sound(SoundType.WOOD).noOcclusion()));
+    public static final RegistryObject<DoorBlock> CURSED_SPRUCE_DOOR = registerWithItem("cursed_spruce_door", () -> new DoorBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.CRIMSON_HYPHAE).strength(3.0F).sound(SoundType.WOOD).noOcclusion()));
+    public static final RegistryObject<TrapDoorBlock> DARK_SPRUCE_TRAPDOOR = registerWithItem("dark_spruce_trapdoor", () -> new TrapDoorBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_GRAY).strength(3.0F).sound(SoundType.WOOD).noOcclusion().isValidSpawn((p_61031_, p_61032_, p_61033_, p_61034_) -> false)));
+    public static final RegistryObject<TrapDoorBlock> CURSED_SPRUCE_TRAPDOOR = registerWithItem("cursed_spruce_trapdoor", () -> new TrapDoorBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.CRIMSON_HYPHAE).strength(3.0F).sound(SoundType.WOOD).noOcclusion().isValidSpawn((p_61031_, p_61032_, p_61033_, p_61034_) -> false)));
+    public static final RegistryObject<StairBlock> DARK_SPRUCE_STAIRS = registerWithItem("dark_spruce_stairs", () -> new StairBlock(() -> DARK_SPRUCE_PLANKS.get().defaultBlockState(), BlockBehaviour.Properties.copy(DARK_SPRUCE_PLANKS.get())));
+    public static final RegistryObject<StairBlock> CURSED_SPRUCE_STAIRS = registerWithItem("cursed_spruce_stairs", () -> new StairBlock(() -> CURSED_SPRUCE_PLANKS.get().defaultBlockState(), BlockBehaviour.Properties.copy(CURSED_SPRUCE_PLANKS.get())));
+    public static final RegistryObject<LogBlock> DARK_SPRUCE_WOOD = registerWithItem("dark_spruce_wood", () -> new LogBlock(MaterialColor.COLOR_BLACK, MaterialColor.COLOR_BLACK));
+    public static final RegistryObject<LogBlock> CURSED_SPRUCE_WOOD = registerWithItem("cursed_spruce_wood", CursedSpruceBlock::new);
+    public static final RegistryObject<LogBlock> STRIPPED_DARK_SPRUCE_WOOD = registerWithItem("stripped_dark_spruce_wood", () -> new LogBlock(MaterialColor.COLOR_BLACK, MaterialColor.COLOR_GRAY));
+    public static final RegistryObject<LogBlock> STRIPPED_CURSED_SPRUCE_WOOD = registerWithItem("stripped_cursed_spruce_wood", () -> new LogBlock(MaterialColor.COLOR_BLACK, MaterialColor.CRIMSON_HYPHAE));
+    public static final RegistryObject<StandingSignBlock> DARK_SPRUCE_SIGN = BLOCKS.register("dark_spruce_sign", () -> new StandingSignBlock(BlockBehaviour.Properties.of(Material.WOOD, DARK_SPRUCE_LOG.get().defaultMaterialColor()).noCollission().strength(1.0F).sound(SoundType.WOOD), LogBlock.dark_spruce));
+    public static final RegistryObject<StandingSignBlock> CURSED_SPRUCE_SIGN = BLOCKS.register("cursed_spruce_sign", () -> new StandingSignBlock(BlockBehaviour.Properties.of(Material.WOOD, CURSED_SPRUCE_LOG.get().defaultMaterialColor()).noCollission().strength(1.0F).sound(SoundType.WOOD), LogBlock.cursed_spruce));
+    public static final RegistryObject<WallSignBlock> DARK_SPRUCE_WALL_SIGN = BLOCKS.register("dark_spruce_wall_sign", () -> new WallSignBlock(BlockBehaviour.Properties.of(Material.WOOD, DARK_SPRUCE_LOG.get().defaultMaterialColor()).noCollission().strength(1.0F).sound(SoundType.WOOD).lootFrom(DARK_SPRUCE_SIGN), LogBlock.dark_spruce));
+    public static final RegistryObject<WallSignBlock> CURSED_SPRUCE_WALL_SIGN = BLOCKS.register("cursed_spruce_wall_sign", () -> new WallSignBlock(BlockBehaviour.Properties.of(Material.WOOD, CURSED_SPRUCE_LOG.get().defaultMaterialColor()).noCollission().strength(1.0F).sound(SoundType.WOOD).lootFrom(CURSED_SPRUCE_SIGN), LogBlock.dark_spruce));
+    public static final RegistryObject<PressurePlateBlock> DARK_SPRUCE_PRESSURE_PLACE = registerWithItem("dark_spruce_pressure_place", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.of(Material.WOOD, DARK_SPRUCE_PLANKS.get().defaultMaterialColor()).noCollission().strength(0.5F).sound(SoundType.WOOD)));
+    public static final RegistryObject<PressurePlateBlock> CURSED_SPRUCE_PRESSURE_PLACE = registerWithItem("cursed_spruce_pressure_place", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.of(Material.WOOD, CURSED_SPRUCE_PLANKS.get().defaultMaterialColor()).noCollission().strength(0.5F).sound(SoundType.WOOD)));
+    public static final RegistryObject<WoodButtonBlock> DARK_SPRUCE_BUTTON = registerWithItem("dark_spruce_button", () -> new WoodButtonBlock(BlockBehaviour.Properties.of(Material.DECORATION).noCollission().strength(0.5F).sound(SoundType.WOOD)));
+    public static final RegistryObject<WoodButtonBlock> CURSED_SPRUCE_BUTTON = registerWithItem("cursed_spruce_button", () -> new WoodButtonBlock(BlockBehaviour.Properties.of(Material.DECORATION).noCollission().strength(0.5F).sound(SoundType.WOOD)));
+    public static final RegistryObject<SlabBlock> DARK_SPRUCE_SLAB = registerWithItem("dark_spruce_slab", () -> new SlabBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_GRAY).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
+    public static final RegistryObject<SlabBlock> CURSED_SPRUCE_SLAB = registerWithItem("cursed_spruce_slab", () -> new SlabBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.CRIMSON_HYPHAE).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
+    public static final RegistryObject<FenceGateBlock> DARK_SPRUCE_FENCE_GATE = registerWithItem("dark_spruce_fence_gate", () -> new FenceGateBlock(BlockBehaviour.Properties.of(Material.WOOD, DARK_SPRUCE_PLANKS.get().defaultMaterialColor()).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
+    public static final RegistryObject<FenceGateBlock> CURSED_SPRUCE_FENCE_GATE = registerWithItem("cursed_spruce_fence_gate", () -> new FenceGateBlock(BlockBehaviour.Properties.of(Material.WOOD, CURSED_SPRUCE_PLANKS.get().defaultMaterialColor()).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
+    public static final RegistryObject<FenceBlock> DARK_SPRUCE_FENCE = registerWithItem("dark_spruce_fence", () -> new FenceBlock(BlockBehaviour.Properties.of(Material.WOOD, DARK_SPRUCE_PLANKS.get().defaultMaterialColor()).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
+    public static final RegistryObject<FenceBlock> CURSED_SPRUCE_FENCE = registerWithItem("cursed_spruce_fence", () -> new FenceBlock(BlockBehaviour.Properties.of(Material.WOOD, CURSED_SPRUCE_PLANKS.get().defaultMaterialColor()).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
+    public static final RegistryObject<VampirismBlock> VAMPIRE_RACK = registerWithItem("vampire_rack", () -> new VampirismHorizontalBlock(BlockBehaviour.Properties.of(Material.WOOD).strength(2, 3), BlockVoxelshapes.vampire_rack).markDecorativeBlock());
+    public static final RegistryObject<VampirismBlock> THRONE = registerWithItem("throne", ThroneBlock::new);
+    public static final RegistryObject<CoffinBlock> coffin_white = registerWithItem("coffin_white", () -> new CoffinBlock(DyeColor.WHITE));
+    public static final RegistryObject<CoffinBlock> coffin_orange = registerWithItem("coffin_orange", () -> new CoffinBlock(DyeColor.ORANGE));
+    public static final RegistryObject<CoffinBlock> coffin_magenta = registerWithItem("coffin_magenta", () -> new CoffinBlock(DyeColor.MAGENTA));
+    public static final RegistryObject<CoffinBlock> coffin_light_blue = registerWithItem("coffin_light_blue", () -> new CoffinBlock(DyeColor.LIGHT_BLUE));
+    public static final RegistryObject<CoffinBlock> coffin_yellow = registerWithItem("coffin_yellow", () -> new CoffinBlock(DyeColor.YELLOW));
+    public static final RegistryObject<CoffinBlock> coffin_lime = registerWithItem("coffin_lime", () -> new CoffinBlock(DyeColor.LIME));
+    public static final RegistryObject<CoffinBlock> coffin_pink = registerWithItem("coffin_pink", () -> new CoffinBlock(DyeColor.PINK));
+    public static final RegistryObject<CoffinBlock> coffin_gray = registerWithItem("coffin_gray", () -> new CoffinBlock(DyeColor.GRAY));
+    public static final RegistryObject<CoffinBlock> coffin_light_gray = registerWithItem("coffin_light_gray", () -> new CoffinBlock(DyeColor.LIGHT_GRAY));
+    public static final RegistryObject<CoffinBlock> coffin_cyan = registerWithItem("coffin_cyan", () -> new CoffinBlock(DyeColor.CYAN));
+    public static final RegistryObject<CoffinBlock> coffin_purple = registerWithItem("coffin_purple", () -> new CoffinBlock(DyeColor.PURPLE));
+    public static final RegistryObject<CoffinBlock> coffin_blue = registerWithItem("coffin_blue", () -> new CoffinBlock(DyeColor.BLUE));
+    public static final RegistryObject<CoffinBlock> coffin_brown = registerWithItem("coffin_brown", () -> new CoffinBlock(DyeColor.BROWN));
+    public static final RegistryObject<CoffinBlock> coffin_green = registerWithItem("coffin_green", () -> new CoffinBlock(DyeColor.GREEN));
+    public static final RegistryObject<CoffinBlock> coffin_red = registerWithItem("coffin_red", () -> new CoffinBlock(DyeColor.RED));
+    public static final RegistryObject<CoffinBlock> coffin_black = registerWithItem("coffin_black", () -> new CoffinBlock(DyeColor.BLACK));
+    public static final RegistryObject<AlchemyTableBlock> ALCHEMY_TABLE = registerWithItem("alchemy_table", AlchemyTableBlock::new);
+
 
     /**
      * TUTORIAL:
@@ -112,15 +170,15 @@ public class ModBlocks {
      * - Run genData (twice?)
      */
     @SuppressWarnings("JavadocReference")
-    private static <T extends Block> RegistryObject<T> registerWithItem(String name, Supplier<T> supplier, Item.Properties properties) {
+    private static <T extends Block> RegistryObject<T> registerWithItem(String name, Supplier<T> supplier, Item.@NotNull Properties properties) {
         RegistryObject<T> block = BLOCKS.register(name, supplier);
-        ModItems.ITEMS.register(name, ()->new BlockItem(block.get(), properties));
+        ModItems.ITEMS.register(name, () -> new BlockItem(block.get(), properties));
         return block;
     }
 
-    private static <T extends Block, R extends Item> RegistryObject<T> registerWithItem(String name, Supplier<T> supplier, Function<T, R> itemMaker) {
+    private static <T extends Block, R extends Item> RegistryObject<T> registerWithItem(String name, Supplier<T> supplier, @NotNull Function<T, R> itemMaker) {
         RegistryObject<T> block = BLOCKS.register(name, supplier);
-        ModItems.ITEMS.register(name, ()->itemMaker.apply(block.get()));
+        ModItems.ITEMS.register(name, () -> itemMaker.apply(block.get()));
         return block;
     }
 
@@ -128,7 +186,7 @@ public class ModBlocks {
         return registerWithItem(name, supplier, new Item.Properties().tab(VampirismMod.creativeTab));
     }
 
-    public static void fixMappings(MissingMappingsEvent event) {
+    public static void fixMappings(@NotNull MissingMappingsEvent event) {
         event.getAllMappings(ForgeRegistries.Keys.BLOCKS).forEach(missingMapping -> {
             switch (missingMapping.getKey().toString()) {
                 case "vampirism:blood_potion_table" -> missingMapping.remap(ModBlocks.POTION_TABLE.get());
@@ -136,15 +194,18 @@ public class ModBlocks {
                 case "vampirism:garlic_beacon_weak" -> missingMapping.remap(ModBlocks.GARLIC_DIFFUSER_WEAK.get());
                 case "vampirism:garlic_beacon_improved" -> missingMapping.remap(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get());
                 case "vampirism:church_altar" -> missingMapping.remap(ModBlocks.ALTAR_CLEANSING.get());
+                case "vampirism:vampire_spruce_leaves", "vampirism:bloody_spruce_leaves" -> missingMapping.remap(ModBlocks.DARK_SPRUCE_LEAVES.get());
+                case "vampirism:bloody_spruce_log" -> missingMapping.remap(ModBlocks.CURSED_SPRUCE_LOG.get());
+                case "vampirism:cursed_grass_block" -> missingMapping.remap(ModBlocks.CURSED_GRASS.get());
             }
         });
     }
 
-    public static Set<Block> getAllBlocks() {
+    public static @NotNull Set<Block> getAllBlocks() {
         return BLOCKS.getEntries().stream().map(RegistryObject::get).collect(Collectors.toUnmodifiableSet());
     }
 
-    public static void registerBlocks(IEventBus bus) {
+    public static void register(IEventBus bus) {
         BLOCKS.register(bus);
     }
 }

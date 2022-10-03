@@ -7,8 +7,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.NonNullSupplier;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
 /**
@@ -64,9 +64,9 @@ public interface IFactionRegistry {
     /**
      * Creates a faction builder.
      *
-     * @param id                       Faction id e.g. for level command
-     * @param entityInterface          Interface all entities implement
-     * @param <T>                      Interface all entities implement
+     * @param id              Faction id e.g. for level command
+     * @param entityInterface Interface all entities implement
+     * @param <T>             Interface all entities implement
      * @return a faction builder
      */
     @ThreadSafeAPI

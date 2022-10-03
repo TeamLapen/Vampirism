@@ -4,21 +4,22 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.modcompat.IMCHandler;
-import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import org.jetbrains.annotations.NotNull;
 
 public class BloodBarOverlay extends GuiComponent implements IGuiOverlay {
     private final ResourceLocation icons = new ResourceLocation(REFERENCE.MODID + ":textures/gui/icons.png");
     private final Minecraft mc = Minecraft.getInstance();
 
     @Override
-    public void render(ForgeGui gui, PoseStack stack, float partialTicks, int width, int height) {
+    public void render(ForgeGui gui, @NotNull PoseStack stack, float partialTicks, int width, int height) {
         if (this.mc.player != null && Helper.isVampire(this.mc.player) && !IMCHandler.requestedToDisableBloodbar) {
             if (this.mc.gameMode.hasExperience() && this.mc.player.isAlive()) {
                 VampirePlayer.getOpt(this.mc.player).map(VampirePlayer::getBloodStats).ifPresent(stats -> {

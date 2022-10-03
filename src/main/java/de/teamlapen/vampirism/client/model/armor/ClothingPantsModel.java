@@ -9,6 +9,7 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class ClothingPantsModel extends VampirismArmorModel {
@@ -27,7 +28,7 @@ public class ClothingPantsModel extends VampirismArmorModel {
         return instance;
     }
 
-    public static LayerDefinition createLayer() {
+    public static @NotNull LayerDefinition createLayer() {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition part = mesh.getRoot();
         CubeDeformation def = new CubeDeformation(0.25f);
@@ -37,11 +38,11 @@ public class ClothingPantsModel extends VampirismArmorModel {
         return LayerDefinition.create(mesh, 32, 32);
     }
 
-    public final ModelPart rightLeg;
-    public final ModelPart leftLeg;
-    public final ModelPart belt;
+    public final @NotNull ModelPart rightLeg;
+    public final @NotNull ModelPart leftLeg;
+    public final @NotNull ModelPart belt;
 
-    public ClothingPantsModel(ModelPart part) {
+    public ClothingPantsModel(@NotNull ModelPart part) {
         super();
         this.belt = part.getChild(BELT);
         this.leftLeg = part.getChild(LEFT_LEG);
@@ -50,17 +51,17 @@ public class ClothingPantsModel extends VampirismArmorModel {
     }
 
     @Override
-    protected Iterable<ModelPart> getBodyModels() {
+    protected @NotNull Iterable<ModelPart> getBodyModels() {
         return ImmutableList.of(this.belt);
     }
 
     @Override
-    protected Iterable<ModelPart> getLeftLegModels() {
+    protected @NotNull Iterable<ModelPart> getLeftLegModels() {
         return ImmutableList.of(this.leftLeg);
     }
 
     @Override
-    protected Iterable<ModelPart> getRightLegModels() {
+    protected @NotNull Iterable<ModelPart> getRightLegModels() {
         return ImmutableList.of(this.rightLeg);
     }
 }

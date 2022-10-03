@@ -18,16 +18,15 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class SieveBlock extends VampirismBlockContainer {
 
     public static final BooleanProperty PROPERTY_ACTIVE = BooleanProperty.create("active");
     protected static final VoxelShape sieveShape = makeShape();
 
-    private static VoxelShape makeShape() {
+    private static @NotNull VoxelShape makeShape() {
         VoxelShape a = Block.box(1, 0, 1, 15, 1, 15);
         VoxelShape b = Block.box(2, 1, 2, 14, 2, 14);
         VoxelShape c = Block.box(5, 2, 5, 11, 12, 11);
@@ -43,32 +42,32 @@ public class SieveBlock extends VampirismBlockContainer {
         this.registerDefaultState(this.getStateDefinition().any().setValue(PROPERTY_ACTIVE, false));
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public RenderShape getRenderShape(@Nonnull BlockState state) {
+    public RenderShape getRenderShape(@NotNull BlockState state) {
         return RenderShape.MODEL;
     }
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
+    public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         return new SieveBlockEntity(pos, state);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
+    public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         return sieveShape;
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> builder) {
         builder.add(PROPERTY_ACTIVE);
     }
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
         return createTickerHelper(type, ModTiles.SIEVE.get(), SieveBlockEntity::tick);
     }
 }
