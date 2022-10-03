@@ -8,8 +8,8 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 const config = {
   title: 'Vampirism',
   tagline: 'Wiki',
-  url: 'https://teamlapen.github.io',
-  baseUrl: '/Vampirism/',
+  url: 'https://wiki.vampirism.dev',
+  baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
