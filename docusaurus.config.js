@@ -153,7 +153,7 @@ const config = {
         { name: 'keywords', content: 'minecraft, vampirism, forge, wiki' },
         { name: 'twitter:card', content: 'summary' }
       ],
-      image: 'img/vampirism-title.svg',
+      image: 'img/vampirism-title.png',
     }),
 };
 
