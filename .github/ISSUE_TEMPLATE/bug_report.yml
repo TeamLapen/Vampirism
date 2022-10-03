@@ -1,0 +1,88 @@
+name: Bug Report
+description: Create a report to help us improve
+title: "[Bug]: "
+labels: [ "bug", "unconfirmed" ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+        Please make sure to add all required information.
+  - type: dropdown
+    id: minecraft-version
+    attributes:
+      label: Minecraft Version
+      options:
+        - 1.12.x
+        - 1.14.x
+        - 1.15.x
+        - 1.16.x
+        - 1.17.x
+        - 1.18.x
+        - 1.19.x
+    validations:
+      required: true
+  - type: input
+    id: forge-version
+    attributes:
+      label: Forge Version
+      placeholder: 36.2.2
+    validations:
+      required: true
+  - type: input
+    id: vampirism-version
+    attributes:
+      label: Vampirism Version
+      placeholder: 1.8.3
+    validations:
+      required: true
+  - type: input
+    id: modpack
+    attributes:
+      label: Modpack
+      description: If running a public modpack, please link it here
+  - type: dropdown
+    id: side
+    attributes:
+      label: Singleplayer/Multiplayer
+      description: If this happened in singleplayer or on a server
+      options:
+        - Singleplayer
+        - Server
+        - Both
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Please describe what happened or what you expected instead
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Please copy and paste any relevant log output. If your game crashes, this must be a crash-report
+      placeholder: |
+        If crashed either crash-xxx-server.txt or crash-xxx-client.txt
+        Otherwise logs/debug.log
+      render: shell
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduce steps
+      description: Please describe how to reproduce your issue
+      placeholder: |
+        1. Load singleplayer world
+        2. Become vampire level 5
+        3. Do x
+    validations:
+      required: false
+  - type: textarea
+    id: other-version
+    attributes:
+      label: Other relevant mods
+      description: List any other interesting mods and their version here
+    validations:
+      required: false

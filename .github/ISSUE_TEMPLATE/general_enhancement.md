@@ -1,6 +1,6 @@
 ---
 name: General enhancement/TODO
-about: Don't use, unless suggest something unrelated to mod functionality (like mod documentation or code style)
+about: Don't use, unless suggest something unrelated to mod functionality (like mod documentation or codestyle)
 title: ''
 labels: unconfirmed, TODO
 assignees: ''

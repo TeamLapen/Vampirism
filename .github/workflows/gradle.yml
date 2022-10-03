@@ -3,11 +3,11 @@ name: Gradle Build
 on:
   push:
     branches:
-      - '1.18*'
+      - '1.19*'
       - 'feature/*'
   pull_request:
     branches:
-      - '1.18*'
+      - '1.19*'
       - 'feature/*'
 
 jobs:
@@ -27,14 +27,3 @@ jobs:
         run: ./gradlew
       - name: Build
         run: ./gradlew build
-      - name: Notify IRC
-        uses: rectalogic/notify-irc@v1
-        with:
-          server: irc.esper.net
-          channel: vampirism
-          nickname: vampirism-builds
-          message: |
-            ${{ github.repository }} - (${{ github.ref }} - ${{ github.sha }}): ${{ github.actor }}: ${{ job.status }}
-            Change view : https://github.com/${{ github.repository }}/commit/${{ github.sha }}
-            Build details : https://github.com/${{ github.repository }}/commit/${{ github.sha }}/checks
-        if: always()

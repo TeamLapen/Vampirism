@@ -1,0 +1,29 @@
+name: Feature request
+description: Suggest an idea for this mod
+title: "[Feature]: "
+labels: [ "discussion", "enhancement", "feature", "unconfirmed" ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please describe your suggestions as specific as possible. This increases the chance this will be considered.
+        This may include suggesting crafting recipes, item names or places in skill tree if applicable.
+  - type: textarea
+    id: what
+    attributes:
+      label: What?
+      description: What would you like to have changed or added to Vampirism
+      placeholder: Tell us what you want to see!
+    validations:
+      required: true
+  - type: textarea
+    id: balanced
+    attributes:
+      label: Mod experience
+      description: Does this affect the mod balance in a positive or negative way?
+  - type: textarea
+    id: help
+    attributes:
+      label: Contributions
+      description: Can you provide additional resources?
+      placeholder: Textures, models, etc.

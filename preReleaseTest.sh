@@ -38,11 +38,11 @@ echo -e "\nrepositories{ maven{ url='$dir/.m2' }}" >> build.gradle
 werewolves_success=$?
 
 #Integrations
-#git clone https://github.com/TeamLapen/VampirismIntegrations.git "$dir/integrations"
-#cd "$dir/integrations" || exit
-#git checkout "origin/$branch_name"
-#echo -e "\nrepositories{ maven{ url='$dir/.m2' }}" >> build.gradle
-#./gradlew build -Pvampirism_version="$version" -Pvampirism_mcversion="$mc_version"
+git clone https://github.com/TeamLapen/VampirismIntegrations.git "$dir/integrations"
+cd "$dir/integrations" || exit
+git checkout "origin/$branch_name"
+echo -e "\nrepositories{ maven{ url='$dir/.m2' }}" >> build.gradle
+./gradlew build -Pvampirism_version="$version" -Pvampirism_mcversion="$mc_version"
 integrations_success=0
 
 if [ $werewolves_success -eq 0 ] && [ $integrations_success -eq 0 ];
