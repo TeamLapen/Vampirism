@@ -93,7 +93,7 @@ public class VampirismMod {
         }
     };
     public static VampirismMod instance;
-    public static final IProxy proxy = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> ServerProxy::new);
+    public static final IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
     public static boolean inDev = false;
     public static boolean inDataGen = false;
 
