@@ -19,6 +19,7 @@ body:
         - 1.16.x
         - 1.17.x
         - 1.18.x
+        - 1.19.x
     validations:
       required: true
   - type: input
@@ -66,7 +67,7 @@ body:
       placeholder: |
         If crashed either crash-xxx-server.txt or crash-xxx-client.txt
         Otherwise logs/debug.log
-      render: Shell
+      render: shell
   - type: textarea
     id: reproduce
     attributes:

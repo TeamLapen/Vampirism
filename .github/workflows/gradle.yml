@@ -3,11 +3,11 @@ name: Gradle Build
 on:
   push:
     branches:
-      - '1.18*'
+      - '1.19*'
       - 'feature/*'
   pull_request:
     branches:
-      - '1.18*'
+      - '1.19*'
       - 'feature/*'
 
 jobs:

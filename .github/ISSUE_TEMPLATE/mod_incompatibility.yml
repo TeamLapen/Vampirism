@@ -19,6 +19,7 @@ body:
         - 1.16.x
         - 1.17.x
         - 1.18.x
+        - 1.19.x
     validations:
       required: true
   - type: input
@@ -76,4 +77,4 @@ body:
     attributes:
       label: Relevant log output
       description: Please copy and paste any relevant log output. If your game crashes, this must be a crash-report
-      render: Shell
+      render: shell
