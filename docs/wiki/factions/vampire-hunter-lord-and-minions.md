@@ -8,12 +8,17 @@ As a lord you are able to obtain and control minions.
 To become a lord you have to fulfill a certain task for your faction. You can accept and complete it at any vampire/hunter representative.
 
 ### Ranks
-There are different ranks that determine how many minions you can command.
-**Vampires**
-"Baron(ess)" -> "Viscount(ess)" -> "Count(ess)" -> "Duke/Duchess" -> "Prince(ss)"
-The gender used is determined based on your skin t**ype (steve -> male, alex -> female), but this can be changed using ("/vampirism title-gender <true/false>").  
-**Hunter**
-"Lieutenant" -> "Captain" -> "Major" -> "Colonel"-> "Brigadier"
+
+
+| Level | Hunter Title | Vampire Title   |
+|-------|--------------|-----------------|
+| 1     | Lieutenant   | Baron(ess)      |
+| 2     | Captain      | Viscount(ess)   |
+| 3     | Major        | Count(ess)      |
+| 4     | Colonel      | Duke/Duchess    |
+| 5     | Brigadier    | Prince(ss)      |
+
+The gender used is determined based on your skin type (steve -> male, alex -> female), but this can be changed using [`/vampirism title-gender <true/false>`](../commands.md#title-gender).
 
 ### Minions
 Minions have an inventory that can be used to store items but also to equip the minion with weapons and armor. 
@@ -29,7 +34,7 @@ As a lord you can bind a vampire NPC to you by right-clicking it with a vampire 
 You can improve the capabilities of your minion using vampire minion upgrades.
 #### Hunter
 As a hunter lord you can recruit hunter NPCs by giving them basic hunter minion equipment. However, not all hunters are willing to serve somebody, so you have to look for weaker ones.
-You can upgrade their equipment and improve their capabilities using hunter minion upgrades.**
+You can upgrade their equipment and improve their capabilities using hunter minion upgrades.
 
 ##### Tasks
 At the time of writing there are the following tasks:
