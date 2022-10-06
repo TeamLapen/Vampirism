@@ -2,13 +2,11 @@ Vampirism for Minecraft 1.19 - Latest branch
 ============================================
 [![](http://cf.way2muchnoise.eu/short_233029_downloads.svg)](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire) [![](https://img.shields.io/modrinth/dt/jVZ0F1wn?label=Modrinth)](https://modrinth.com/mod/vampirism) [![Build Status](https://github.com/TeamLapen/Vampirism/workflows/Java%20CI/badge.svg?branch=1.16)](https://github.com/TeamLapen/Vampirism/actions) [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) [![Discord Server](https://img.shields.io/discord/430326060635258881)](https://discord.gg/wuamm4P) [![Crowdin](https://badges.crowdin.net/vampirism/localized.svg)](https://crowdin.com/project/vampirism)
 
-[![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://maxanier.de)  
-
-**Very WIP**
+[![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://maxanier.de)
 
 ## Mod Description
 
-Vampires are fast, strong and blood-thirsty entities, which do not like the sun, but don't fear the night, and the best thing is: You can become one!
+Vampires are fast, strong and bloodthirsty entities, which do not like the sun, but don't fear the night, and the best thing is: You can become one!
 
 This mod allows you to become a vampire with all its benefits and drawbacks.
 
@@ -18,8 +16,9 @@ For a more detailed description head over to the Minecraft Forum or the Cursefor
 ## Links
 [Downloads on CurseForge](https://www.curseforge.com/minecraft/mc-mods/vampirism-become-a-vampire/files)   
 [Downloads on Modrinth](https://modrinth.com/mod/vampirism/versions)   
-[Help to translate](https://crowdin.com/project/vampirism)   
-[Short feature overview](https://teamlapen.github.io/Vampirism/)   
+[Help to translate](https://translate.vampirism.dev)   
+[Short feature overview](https://wiki.vampirism.dev/blog/vampirism-an-overview)   
+[Official Wiki](https://wiki.vampirism.dev/docs/wiki/intro)
 
 ## Issues
 https://github.com/TeamLapen/Vampirism/issues
@@ -37,7 +36,7 @@ The following labeling scheme is used:
 
 ## People
 - [maxanier](https://maxanier.de)
-- [Cheaterpaul](https://github.com/Cheaterpaul)
+- [Cheaterpaul](https://paube.de)
 - [1LiterZinalco](https://chimute.org/) _Triage/Support/Community/Official Server/Art_
 - [Piklach](https://twitter.com/Piklach) _Community/Official Server_
 - [xXvPendragonvXx](https://github.com/PendragonII) _Community/Official Server_
