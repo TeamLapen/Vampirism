@@ -39,6 +39,7 @@ import de.teamlapen.vampirism.entity.player.vampire.BloodVision;
 import de.teamlapen.vampirism.entity.player.vampire.NightVision;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.items.VampireRefinementItem;
+import de.teamlapen.vampirism.items.crossbow.CrossbowArrowHandler;
 import de.teamlapen.vampirism.misc.VampirismLogger;
 import de.teamlapen.vampirism.modcompat.IMCHandler;
 import de.teamlapen.vampirism.modcompat.terrablender.TerraBlenderCompat;
@@ -261,6 +262,7 @@ public class VampirismMod {
         if (inDev) {
             Tests.runBackgroundTests();
         }
+        CrossbowArrowHandler.collectCrossbowArrows();
     }
 
     private void setup(final @NotNull FMLCommonSetupEvent event) {

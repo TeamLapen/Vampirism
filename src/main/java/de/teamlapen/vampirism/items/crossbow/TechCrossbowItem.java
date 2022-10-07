@@ -129,4 +129,9 @@ public class TechCrossbowItem extends VampirismCrossbowItem {
     public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
         return enchantment != Enchantments.QUICK_CHARGE && enchantment != Enchantments.INFINITY_ARROWS && super.canApplyAtEnchantingTable(stack, enchantment);
     }
+
+    @Override
+    public boolean canSelectAmmunition(ItemStack crossbow) {
+        return false;
+    }
 }

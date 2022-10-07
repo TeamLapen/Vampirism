@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.client.gui.screens.SelectActionRadialScreen;
+import de.teamlapen.vampirism.client.gui.screens.SelectAmmoScreen;
 import de.teamlapen.vampirism.client.gui.screens.SelectMinionTaskRadialScreen;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
@@ -65,6 +66,7 @@ public class ModKeys {
     private static final String ACTIVATE_ACTION8 = "keys.vampirism.action8";
     private static final String ACTIVATE_ACTION9 = "keys.vampirism.action9";
     private static final String MINION_TASK = "keys.vampirism.minion_task";
+    private static final String SELECT_AMMO_NAME = "keys.vampirism.select_ammo";
 
     public static final KeyMapping SUCK = new KeyMapping(SUCK_BLOOD, KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, CATEGORY);
     public static final KeyMapping ACTION = new KeyMapping(TOGGLE_ACTIONS, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R, CATEGORY);//Middle Mouse -98
@@ -80,6 +82,7 @@ public class ModKeys {
     public static final KeyMapping ACTION8 = new KeyMapping(ACTIVATE_ACTION8, KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
     public static final KeyMapping ACTION9 = new KeyMapping(ACTIVATE_ACTION9, KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
     public static final KeyMapping MINION = new KeyMapping(MINION_TASK, KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
+    public static final KeyMapping SELECT_AMMO = new KeyMapping(SELECT_AMMO_NAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_C, CATEGORY);
 
     public static final Map<Integer, KeyMapping> ACTION_KEYS = Map.of(1,ACTION1, 2,ACTION2, 3,ACTION3, 4,ACTION4, 5,ACTION5, 6,ACTION6, 7,ACTION7, 8,ACTION8, 9,ACTION9);
 
@@ -89,6 +92,7 @@ public class ModKeys {
         event.register(VAMPIRISM_MENU);
         event.register(VISION);
         event.register(MINION);
+        event.register(SELECT_AMMO);
         ACTION_KEYS.forEach((i, k) -> event.register(k));
     }
 
@@ -104,6 +108,7 @@ public class ModKeys {
         keyMappingActions.put(VAMPIRISM_MENU, this::openVampirismMenu);
         keyMappingActions.put(VISION, this::switchVision);
         keyMappingActions.put(MINION, this::openMinionTaskMenu);
+        keyMappingActions.put(SELECT_AMMO, this::selectAmmo);
         ACTION_KEYS.forEach((i, key) -> keyMappingActions.put(key, () -> toggleAction(i)));
         this.keyMappingActions = keyMappingActions.build();
         this.mc = Minecraft.getInstance();
@@ -204,6 +209,11 @@ public class ModKeys {
                 VampirismMod.dispatcher.sendToServer(ServerboundToggleActionPacket.createFromRaytrace(RegUtil.id(action), Minecraft.getInstance().hitResult));
             }
         }
+    }
 
+    private void selectAmmo() {
+        if (mc.player.isAlive()) {
+            SelectAmmoScreen.show();
+        }
     }
 }
