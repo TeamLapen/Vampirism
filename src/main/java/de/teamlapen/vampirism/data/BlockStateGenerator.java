@@ -303,34 +303,22 @@ public class BlockStateGenerator extends BlockStateProvider {
     private void createCursedBark() {
         ModelFile side = models().getExistingFile(new ResourceLocation(REFERENCE.MODID, "cursed_bark_side"));
         ModelFile side2 = models().getExistingFile(new ResourceLocation(REFERENCE.MODID, "cursed_bark_side_2"));
-        VariantBlockStateBuilder bark = getVariantBuilder(ModBlocks.CURSED_BARK.get())
-                .partialState().with(CursedBarkBlock.FACING, Direction.NORTH).with(CursedBarkBlock.FACING2, Direction.NORTH).with(CursedBarkBlock.AXIS, Direction.Axis.Y).modelForState().modelFile(side).addModel()
-                .partialState().with(CursedBarkBlock.FACING, Direction.WEST).with(CursedBarkBlock.FACING2, Direction.WEST).with(CursedBarkBlock.AXIS, Direction.Axis.Y).modelForState().modelFile(side).rotationY(270).addModel()
-                .partialState().with(CursedBarkBlock.FACING, Direction.SOUTH).with(CursedBarkBlock.FACING2, Direction.SOUTH).with(CursedBarkBlock.AXIS, Direction.Axis.Y).modelForState().modelFile(side).rotationY(180).addModel()
-                .partialState().with(CursedBarkBlock.FACING, Direction.EAST).with(CursedBarkBlock.FACING2, Direction.EAST).with(CursedBarkBlock.AXIS, Direction.Axis.Y).modelForState().modelFile(side).rotationY(90).addModel()
-                .partialState().with(CursedBarkBlock.FACING, Direction.UP).with(CursedBarkBlock.FACING2, Direction.UP).with(CursedBarkBlock.AXIS, Direction.Axis.Y).modelForState().modelFile(side).rotationX(270).addModel()
-                .partialState().with(CursedBarkBlock.FACING, Direction.DOWN).with(CursedBarkBlock.FACING2, Direction.DOWN).with(CursedBarkBlock.AXIS, Direction.Axis.Y).modelForState().modelFile(side).rotationX(90).addModel()
+        MultiPartBlockStateBuilder builder = getMultipartBuilder(ModBlocks.DIRECT_CURSED_BARK.get())
+                .part().modelFile(side).rotationY(90).addModel().condition(DirectCursedBarkBlock.EAST_TYPE, DirectCursedBarkBlock.Type.VERTICAL).end()
+                .part().modelFile(side).addModel().condition(DirectCursedBarkBlock.NORTH_TYPE, DirectCursedBarkBlock.Type.VERTICAL).end()
+                .part().modelFile(side).rotationY(270).addModel().condition(DirectCursedBarkBlock.WEST_TYPE, DirectCursedBarkBlock.Type.VERTICAL).end()
+                .part().modelFile(side).rotationY(180).addModel().condition(DirectCursedBarkBlock.SOUTH_TYPE, DirectCursedBarkBlock.Type.VERTICAL).end()
+                .part().modelFile(side).rotationX(270).addModel().condition(DirectCursedBarkBlock.UP_TYPE, DirectCursedBarkBlock.Type.VERTICAL).end()
+                .part().modelFile(side).rotationX(90).addModel().condition(DirectCursedBarkBlock.DOWN_TYPE, DirectCursedBarkBlock.Type.VERTICAL).end()
 
-                .partialState().with(CursedBarkBlock.FACING, Direction.NORTH).with(CursedBarkBlock.FACING2, Direction.NORTH).with(CursedBarkBlock.AXIS, Direction.Axis.X).modelForState().modelFile(side2).rotationX(180).rotationY(180).addModel()
-                .partialState().with(CursedBarkBlock.FACING, Direction.WEST).with(CursedBarkBlock.FACING2, Direction.WEST).with(CursedBarkBlock.AXIS, Direction.Axis.X).modelForState().modelFile(side2).rotationY(270).rotationX(90).addModel()
-                .partialState().with(CursedBarkBlock.FACING, Direction.SOUTH).with(CursedBarkBlock.FACING2, Direction.SOUTH).with(CursedBarkBlock.AXIS, Direction.Axis.X).modelForState().modelFile(side2).rotationY(180).rotationX(0).addModel()
-                .partialState().with(CursedBarkBlock.FACING, Direction.EAST).with(CursedBarkBlock.FACING2, Direction.EAST).with(CursedBarkBlock.AXIS, Direction.Axis.X).modelForState().modelFile(side2).rotationY(90).rotationX(90).addModel()
-                .partialState().with(CursedBarkBlock.FACING, Direction.UP).with(CursedBarkBlock.FACING2, Direction.UP).with(CursedBarkBlock.AXIS, Direction.Axis.X).modelForState().modelFile(side2).rotationX(270).rotationY(180).addModel()
-                .partialState().with(CursedBarkBlock.FACING, Direction.DOWN).with(CursedBarkBlock.FACING2, Direction.DOWN).with(CursedBarkBlock.AXIS, Direction.Axis.X).modelForState().modelFile(side2).rotationX(90).rotationY(180).addModel()
-
-                .partialState().with(CursedBarkBlock.FACING, Direction.NORTH).with(CursedBarkBlock.FACING2, Direction.NORTH).with(CursedBarkBlock.AXIS, Direction.Axis.Z).modelForState().modelFile(side2).rotationX(90).addModel()
-                .partialState().with(CursedBarkBlock.FACING, Direction.WEST).with(CursedBarkBlock.FACING2, Direction.WEST).with(CursedBarkBlock.AXIS, Direction.Axis.Z).modelForState().modelFile(side2).rotationY(90).rotationX(180).addModel()
-                .partialState().with(CursedBarkBlock.FACING, Direction.SOUTH).with(CursedBarkBlock.FACING2, Direction.SOUTH).with(CursedBarkBlock.AXIS, Direction.Axis.Z).modelForState().modelFile(side2).rotationY(180).rotationX(90).addModel()
-                .partialState().with(CursedBarkBlock.FACING, Direction.EAST).with(CursedBarkBlock.FACING2, Direction.EAST).with(CursedBarkBlock.AXIS, Direction.Axis.Z).modelForState().modelFile(side2).rotationY(90).addModel()
-                .partialState().with(CursedBarkBlock.FACING, Direction.UP).with(CursedBarkBlock.FACING2, Direction.UP).with(CursedBarkBlock.AXIS, Direction.Axis.Z).modelForState().modelFile(side2).rotationX(270).rotationY(90).addModel()
-                .partialState().with(CursedBarkBlock.FACING, Direction.DOWN).with(CursedBarkBlock.FACING2, Direction.DOWN).with(CursedBarkBlock.AXIS, Direction.Axis.Z).modelForState().modelFile(side2).rotationX(90).rotationY(90).addModel();
-        ModelFile empty = models().getBuilder("vampirism:cursed_bark_empty");
-        for (Direction direction : Direction.values()) {
-            for (Direction direction1 : Direction.values()) {
-                if (direction == direction1) continue;
-                bark.partialState().with(CursedBarkBlock.FACING, direction).with(CursedBarkBlock.FACING2, direction1).modelForState().modelFile(empty).addModel();
-            }
-        }
+                .part().modelFile(side2).rotationY(90).addModel().condition(DirectCursedBarkBlock.EAST_TYPE, DirectCursedBarkBlock.Type.HORIZONTAL).end()
+                .part().modelFile(side2).rotationX(180).rotationY(180).addModel().condition(DirectCursedBarkBlock.NORTH_TYPE, DirectCursedBarkBlock.Type.HORIZONTAL).end()
+                .part().modelFile(side2).rotationY(270).addModel().condition(DirectCursedBarkBlock.WEST_TYPE, DirectCursedBarkBlock.Type.HORIZONTAL).end()
+                .part().modelFile(side2).rotationY(180).addModel().condition(DirectCursedBarkBlock.SOUTH_TYPE, DirectCursedBarkBlock.Type.HORIZONTAL).end()
+                .part().modelFile(side2).rotationX(270).addModel().condition(DirectCursedBarkBlock.UP_TYPE, DirectCursedBarkBlock.Type.HORIZONTAL).end()
+                .part().modelFile(side2).rotationX(90).rotationY(180).addModel().condition(DirectCursedBarkBlock.DOWN_TYPE, DirectCursedBarkBlock.Type.HORIZONTAL).end()
+                ;
+        simpleBlock(ModBlocks.DIAGONAL_CURSED_BARK.get(), models().getBuilder("vampirism:cursed_bark_empty"));
     }
 
     private void button(Block block, @NotNull ResourceLocation texture) {

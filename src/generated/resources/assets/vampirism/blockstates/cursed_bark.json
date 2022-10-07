@@ -1,174 +1,113 @@
 {
-  "variants": {
-    "axis=x,facing=down,facing_2=down": {
-      "model": "vampirism:block/cursed_bark_side_2",
-      "x": 90,
-      "y": 180
+  "multipart": [
+    {
+      "apply": {
+        "model": "vampirism:block/cursed_bark_side",
+        "y": 90
+      },
+      "when": {
+        "east_type": "vertical"
+      }
     },
-    "axis=x,facing=east,facing_2=east": {
-      "model": "vampirism:block/cursed_bark_side_2",
-      "x": 90,
-      "y": 90
+    {
+      "apply": {
+        "model": "vampirism:block/cursed_bark_side"
+      },
+      "when": {
+        "north_type": "vertical"
+      }
     },
-    "axis=x,facing=north,facing_2=north": {
-      "model": "vampirism:block/cursed_bark_side_2",
-      "x": 180,
-      "y": 180
+    {
+      "apply": {
+        "model": "vampirism:block/cursed_bark_side",
+        "y": 270
+      },
+      "when": {
+        "west_type": "vertical"
+      }
     },
-    "axis=x,facing=south,facing_2=south": {
-      "model": "vampirism:block/cursed_bark_side_2",
-      "y": 180
+    {
+      "apply": {
+        "model": "vampirism:block/cursed_bark_side",
+        "y": 180
+      },
+      "when": {
+        "south_type": "vertical"
+      }
     },
-    "axis=x,facing=up,facing_2=up": {
-      "model": "vampirism:block/cursed_bark_side_2",
-      "x": 270,
-      "y": 180
+    {
+      "apply": {
+        "model": "vampirism:block/cursed_bark_side",
+        "x": 270
+      },
+      "when": {
+        "up_type": "vertical"
+      }
     },
-    "axis=x,facing=west,facing_2=west": {
-      "model": "vampirism:block/cursed_bark_side_2",
-      "x": 90,
-      "y": 270
+    {
+      "apply": {
+        "model": "vampirism:block/cursed_bark_side",
+        "x": 90
+      },
+      "when": {
+        "down_type": "vertical"
+      }
     },
-    "axis=y,facing=down,facing_2=down": {
-      "model": "vampirism:block/cursed_bark_side",
-      "x": 90
+    {
+      "apply": {
+        "model": "vampirism:block/cursed_bark_side_2",
+        "y": 90
+      },
+      "when": {
+        "east_type": "horizontal"
+      }
     },
-    "axis=y,facing=east,facing_2=east": {
-      "model": "vampirism:block/cursed_bark_side",
-      "y": 90
+    {
+      "apply": {
+        "model": "vampirism:block/cursed_bark_side_2",
+        "x": 180,
+        "y": 180
+      },
+      "when": {
+        "north_type": "horizontal"
+      }
     },
-    "axis=y,facing=north,facing_2=north": {
-      "model": "vampirism:block/cursed_bark_side"
+    {
+      "apply": {
+        "model": "vampirism:block/cursed_bark_side_2",
+        "y": 270
+      },
+      "when": {
+        "west_type": "horizontal"
+      }
     },
-    "axis=y,facing=south,facing_2=south": {
-      "model": "vampirism:block/cursed_bark_side",
-      "y": 180
+    {
+      "apply": {
+        "model": "vampirism:block/cursed_bark_side_2",
+        "y": 180
+      },
+      "when": {
+        "south_type": "horizontal"
+      }
     },
-    "axis=y,facing=up,facing_2=up": {
-      "model": "vampirism:block/cursed_bark_side",
-      "x": 270
+    {
+      "apply": {
+        "model": "vampirism:block/cursed_bark_side_2",
+        "x": 270
+      },
+      "when": {
+        "up_type": "horizontal"
+      }
     },
-    "axis=y,facing=west,facing_2=west": {
-      "model": "vampirism:block/cursed_bark_side",
-      "y": 270
-    },
-    "axis=z,facing=down,facing_2=down": {
-      "model": "vampirism:block/cursed_bark_side_2",
-      "x": 90,
-      "y": 90
-    },
-    "axis=z,facing=east,facing_2=east": {
-      "model": "vampirism:block/cursed_bark_side_2",
-      "y": 90
-    },
-    "axis=z,facing=north,facing_2=north": {
-      "model": "vampirism:block/cursed_bark_side_2",
-      "x": 90
-    },
-    "axis=z,facing=south,facing_2=south": {
-      "model": "vampirism:block/cursed_bark_side_2",
-      "x": 90,
-      "y": 180
-    },
-    "axis=z,facing=up,facing_2=up": {
-      "model": "vampirism:block/cursed_bark_side_2",
-      "x": 270,
-      "y": 90
-    },
-    "axis=z,facing=west,facing_2=west": {
-      "model": "vampirism:block/cursed_bark_side_2",
-      "x": 180,
-      "y": 90
-    },
-    "facing=down,facing_2=east": {
-      "model": "vampirism:block/cursed_bark_empty"
-    },
-    "facing=down,facing_2=north": {
-      "model": "vampirism:block/cursed_bark_empty"
-    },
-    "facing=down,facing_2=south": {
-      "model": "vampirism:block/cursed_bark_empty"
-    },
-    "facing=down,facing_2=up": {
-      "model": "vampirism:block/cursed_bark_empty"
-    },
-    "facing=down,facing_2=west": {
-      "model": "vampirism:block/cursed_bark_empty"
-    },
-    "facing=east,facing_2=down": {
-      "model": "vampirism:block/cursed_bark_empty"
-    },
-    "facing=east,facing_2=north": {
-      "model": "vampirism:block/cursed_bark_empty"
-    },
-    "facing=east,facing_2=south": {
-      "model": "vampirism:block/cursed_bark_empty"
-    },
-    "facing=east,facing_2=up": {
-      "model": "vampirism:block/cursed_bark_empty"
-    },
-    "facing=east,facing_2=west": {
-      "model": "vampirism:block/cursed_bark_empty"
-    },
-    "facing=north,facing_2=down": {
-      "model": "vampirism:block/cursed_bark_empty"
-    },
-    "facing=north,facing_2=east": {
-      "model": "vampirism:block/cursed_bark_empty"
-    },
-    "facing=north,facing_2=south": {
-      "model": "vampirism:block/cursed_bark_empty"
-    },
-    "facing=north,facing_2=up": {
-      "model": "vampirism:block/cursed_bark_empty"
-    },
-    "facing=north,facing_2=west": {
-      "model": "vampirism:block/cursed_bark_empty"
-    },
-    "facing=south,facing_2=down": {
-      "model": "vampirism:block/cursed_bark_empty"
-    },
-    "facing=south,facing_2=east": {
-      "model": "vampirism:block/cursed_bark_empty"
-    },
-    "facing=south,facing_2=north": {
-      "model": "vampirism:block/cursed_bark_empty"
-    },
-    "facing=south,facing_2=up": {
-      "model": "vampirism:block/cursed_bark_empty"
-    },
-    "facing=south,facing_2=west": {
-      "model": "vampirism:block/cursed_bark_empty"
-    },
-    "facing=up,facing_2=down": {
-      "model": "vampirism:block/cursed_bark_empty"
-    },
-    "facing=up,facing_2=east": {
-      "model": "vampirism:block/cursed_bark_empty"
-    },
-    "facing=up,facing_2=north": {
-      "model": "vampirism:block/cursed_bark_empty"
-    },
-    "facing=up,facing_2=south": {
-      "model": "vampirism:block/cursed_bark_empty"
-    },
-    "facing=up,facing_2=west": {
-      "model": "vampirism:block/cursed_bark_empty"
-    },
-    "facing=west,facing_2=down": {
-      "model": "vampirism:block/cursed_bark_empty"
-    },
-    "facing=west,facing_2=east": {
-      "model": "vampirism:block/cursed_bark_empty"
-    },
-    "facing=west,facing_2=north": {
-      "model": "vampirism:block/cursed_bark_empty"
-    },
-    "facing=west,facing_2=south": {
-      "model": "vampirism:block/cursed_bark_empty"
-    },
-    "facing=west,facing_2=up": {
-      "model": "vampirism:block/cursed_bark_empty"
+    {
+      "apply": {
+        "model": "vampirism:block/cursed_bark_side_2",
+        "x": 90,
+        "y": 180
+      },
+      "when": {
+        "down_type": "horizontal"
+      }
     }
-  }
+  ]
 }

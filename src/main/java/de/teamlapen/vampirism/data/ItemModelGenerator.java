@@ -153,7 +153,7 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             put(ModBlocks.MED_CHAIR.get().asItem(), modLoc("item/med_chair"));
             put(ModItems.ITEM_TENT_SPAWNER.get(), modLoc("item/item_tent"));
             put(ModItems.VAMPIRE_BOOK.get(), modLoc("item/vampire_book"));
-            put(ModBlocks.CURSED_BARK.get().asItem(), modLoc("block/cursed_bark"));
+            put(ModBlocks.DIRECT_CURSED_BARK.get().asItem(), modLoc("block/cursed_bark"));
             put(ModItems.DARK_SPRUCE_SIGN.get(), modLoc("item/dark_spruce_sign"));
             put(ModItems.CURSED_SPRUCE_SIGN.get(), modLoc("item/cursed_spruce_sign"));
         }};

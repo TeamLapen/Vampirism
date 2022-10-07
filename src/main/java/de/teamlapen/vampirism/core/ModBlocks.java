@@ -109,7 +109,8 @@ public class ModBlocks {
     public static final RegistryObject<RotatedPillarBlock> CURSED_SPRUCE_LOG = registerWithItem("cursed_spruce_log", CursedSpruceBlock::new);
     public static final RegistryObject<SaplingBlock> DARK_SPRUCE_SAPLING = registerWithItem("dark_spruce_sapling", () -> new SaplingBlock(new DarkSpruceTreeGrower(), BlockBehaviour.Properties.of(Material.PLANT, MaterialColor.COLOR_BLACK).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)));
     public static final RegistryObject<SaplingBlock> CURSED_SPRUCE_SAPLING = registerWithItem("cursed_spruce_sapling", () -> new SaplingBlock(new CursedSpruceTree(), BlockBehaviour.Properties.of(Material.PLANT, MaterialColor.COLOR_BLACK).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)));
-    public static final RegistryObject<CursedBarkBlock> CURSED_BARK = registerWithItem("cursed_bark", CursedBarkBlock::new);
+    public static final RegistryObject<DirectCursedBarkBlock> DIRECT_CURSED_BARK = registerWithItem("direct_cursed_bark", DirectCursedBarkBlock::new);
+    public static final RegistryObject<DiagonalCursedBarkBlock> DIAGONAL_CURSED_BARK = BLOCKS.register("diagonal_cursed_bark", DiagonalCursedBarkBlock::new);
     public static final RegistryObject<RotatedPillarBlock> STRIPPED_DARK_SPRUCE_LOG = registerWithItem("stripped_dark_spruce_log", () -> new LogBlock(MaterialColor.COLOR_BLACK, MaterialColor.COLOR_GRAY));
     public static final RegistryObject<RotatedPillarBlock> STRIPPED_CURSED_SPRUCE_LOG = registerWithItem("stripped_cursed_spruce_log", () -> new LogBlock(MaterialColor.COLOR_BLACK, MaterialColor.CRIMSON_HYPHAE));
     public static final RegistryObject<DoorBlock> DARK_SPRUCE_DOOR = registerWithItem("dark_spruce_door", () -> new DoorBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_GRAY).strength(3.0F).sound(SoundType.WOOD).noOcclusion()));
@@ -197,6 +198,7 @@ public class ModBlocks {
                 case "vampirism:vampire_spruce_leaves", "vampirism:bloody_spruce_leaves" -> missingMapping.remap(ModBlocks.DARK_SPRUCE_LEAVES.get());
                 case "vampirism:bloody_spruce_log" -> missingMapping.remap(ModBlocks.CURSED_SPRUCE_LOG.get());
                 case "vampirism:cursed_grass_block" -> missingMapping.remap(ModBlocks.CURSED_GRASS.get());
+                case "cursed_bark" -> missingMapping.ignore();
             }
         });
     }

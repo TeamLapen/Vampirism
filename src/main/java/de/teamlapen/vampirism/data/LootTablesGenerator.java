@@ -296,7 +296,7 @@ public class LootTablesGenerator extends LootTableProvider {
             this.dropSelf(ModBlocks.DARK_SPRUCE_LOG.get());
             this.dropPottedContents(ModBlocks.POTTED_CURSED_ROOTS.get());
             this.dropSelf(ModBlocks.CURSED_SPRUCE_LOG.get());
-            this.add(ModBlocks.CURSED_BARK.get(), noDrop());
+            this.add(ModBlocks.DIRECT_CURSED_BARK.get(), noDrop());
             this.dropSelf(ModBlocks.DARK_SPRUCE_STAIRS.get());
             this.dropSelf(ModBlocks.CURSED_SPRUCE_STAIRS.get());
             this.dropSelf(ModBlocks.DARK_SPRUCE_WOOD.get());
@@ -321,6 +321,7 @@ public class LootTablesGenerator extends LootTableProvider {
             this.dropSelf(ModBlocks.VAMPIRE_RACK.get());
             this.add(ModBlocks.THRONE.get(), (p_218567_0_) -> createSinglePropConditionTable(p_218567_0_, VampirismSplitBlock.PART, VampirismSplitBlock.Part.MAIN));
             this.dropSelf(ModBlocks.ALCHEMY_TABLE.get());
+            this.add(ModBlocks.DIAGONAL_CURSED_BARK.get(), noDrop());
         }
 
         @NotNull

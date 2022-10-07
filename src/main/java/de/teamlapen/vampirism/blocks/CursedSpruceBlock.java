@@ -24,37 +24,85 @@ public class CursedSpruceBlock extends LogBlock {
 
     @Override
     public void randomTick(@NotNull BlockState state, @NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull RandomSource random) {
+        DirectCursedBarkBlock.Type type = null;
         List<Direction> directions = Arrays.stream(Direction.values()).collect(Collectors.toList());
-        if (state.getBlock() != ModBlocks.CURSED_SPRUCE_WOOD.get()) {
+        Direction direction = null;
+        if (state.getBlock() == ModBlocks.CURSED_SPRUCE_LOG.get()) {
             switch (state.getValue(AXIS)) {
                 case X -> {
                     directions.remove(Direction.WEST);
                     directions.remove(Direction.EAST);
+                    direction = directions.get(random.nextInt(directions.size()));
+                    type = DirectCursedBarkBlock.Type.HORIZONTAL;
                 }
                 case Y -> {
                     directions.remove(Direction.UP);
                     directions.remove(Direction.DOWN);
+                    direction = directions.get(random.nextInt(directions.size()));
+                    type = DirectCursedBarkBlock.Type.VERTICAL;
                 }
                 case Z -> {
                     directions.remove(Direction.NORTH);
                     directions.remove(Direction.SOUTH);
+                    direction = directions.get(random.nextInt(directions.size()));
+                    if (direction.getAxis() == Direction.Axis.X) {
+                        type = DirectCursedBarkBlock.Type.HORIZONTAL;
+                    } else {
+                        type = DirectCursedBarkBlock.Type.VERTICAL;
+                    }
                 }
             }
-        }
-        Direction mainsDirection = directions.get(random.nextInt(directions.size()));
-        directions.remove(mainsDirection.getOpposite());
-        Direction secondaryDirection = directions.get(random.nextInt(directions.size()));
-        BlockPos pos1 = pos.relative(mainsDirection);
-        if (mainsDirection != secondaryDirection) {
-            if (level.getBlockState(pos1).getBlock() == ModBlocks.CURSED_BARK.get()) {
-                pos1 = pos1.relative(secondaryDirection);
-            } else {
-                return;
+        } else if(state.getBlock() == ModBlocks.CURSED_SPRUCE_WOOD.get()) {
+            direction = directions.get(random.nextInt(directions.size()));
+            switch (state.getValue(AXIS)) {
+                case X -> {
+                    if (direction.getAxis() == Direction.Axis.X) {
+                        type = DirectCursedBarkBlock.Type.VERTICAL;
+                    } else {
+                        type = DirectCursedBarkBlock.Type.HORIZONTAL;
+                    }
+                }
+                case Y -> type = DirectCursedBarkBlock.Type.VERTICAL;
+                case Z -> {
+                    if (direction.getAxis() == Direction.Axis.X) {
+                        type = DirectCursedBarkBlock.Type.HORIZONTAL;
+                    } else {
+                        type = DirectCursedBarkBlock.Type.VERTICAL;
+                    }
+                }
             }
+        } else {
+            return;
         }
+        BlockPos pos1 = pos.relative(direction);
+
         BlockState state1 = level.getBlockState(pos1);
-        if (state1.isAir() || (state1.getBlock() == ModBlocks.CURSED_BARK.get() && state1.getValue(CursedBarkBlock.FACING) != state1.getValue(CursedBarkBlock.FACING2))) {
-            level.setBlock(pos1, ModBlocks.CURSED_BARK.get().defaultBlockState().setValue(CursedBarkBlock.FACING, mainsDirection.getOpposite()).setValue(CursedBarkBlock.FACING2, secondaryDirection.getOpposite()).setValue(CursedBarkBlock.AXIS, state.getValue(AXIS)), 3);
+        if (state1.isAir() || state1.is(ModBlocks.DIAGONAL_CURSED_BARK.get())) {
+            state1 = ModBlocks.DIRECT_CURSED_BARK.get().defaultBlockState();
+            level.setBlockAndUpdate(pos1, state1.setValue(DirectCursedBarkBlock.SIDE_MAP.get(direction.getOpposite()), type));
+        } else if(state1.is(ModBlocks.DIRECT_CURSED_BARK.get())) {
+
+        } else {
+            return;
+        }
+        if (state1.is(ModBlocks.DIRECT_CURSED_BARK.get())) {
+            directions = Arrays.stream(Direction.values()).collect(Collectors.toList());
+            directions.remove(direction);
+            directions.remove(direction.getOpposite());
+            for (Direction direction1 : directions) {
+                BlockState state2 = level.getBlockState(pos.relative(direction1));
+                if (state2.is(ModBlocks.DIRECT_CURSED_BARK.get())) {
+                    if (state2.getValue(DirectCursedBarkBlock.SIDE_MAP.get(direction1.getOpposite())) != DirectCursedBarkBlock.Type.NONE) {
+                        BlockState diagonalState = level.getBlockState(pos1.relative(direction1));
+                        if (diagonalState.isAir()) {
+                            diagonalState = ModBlocks.DIAGONAL_CURSED_BARK.get().defaultBlockState();
+                        }
+                        if (diagonalState.is(ModBlocks.DIAGONAL_CURSED_BARK.get())) {
+                            level.setBlockAndUpdate(pos1.relative(direction1), diagonalState.setValue(DiagonalCursedBarkBlock.PROPERTY_TABLE.get(direction.getOpposite(), direction1.getOpposite()), true));
+                        }
+                    }
+                }
+            }
         }
     }
 }
