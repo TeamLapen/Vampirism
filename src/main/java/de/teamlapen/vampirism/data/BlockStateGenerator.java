@@ -34,12 +34,6 @@ public class BlockStateGenerator extends BlockStateProvider {
         ResourceLocation cutout_mipped = new ResourceLocation("cutout_mipped");
         ResourceLocation translucent = new ResourceLocation("translucent");
         //models
-        models().withExistingParent("fire_side_alt0", modLoc("block/fire_side_alt")).texture("particle", mcLoc("block/fire_0")).texture("fire", mcLoc("block/fire_0"));
-        models().withExistingParent("fire_side_alt1", modLoc("block/fire_side_alt")).texture("particle", mcLoc("block/fire_1")).texture("fire", mcLoc("block/fire_1"));
-        models().withExistingParent("fire_side0", modLoc("block/fire_side")).texture("particle", mcLoc("block/fire_0")).texture("fire", mcLoc("block/fire_0"));
-        models().withExistingParent("fire_side1", modLoc("block/fire_side")).texture("particle", mcLoc("block/fire_1")).texture("fire", mcLoc("block/fire_1"));
-        models().withExistingParent("fire_floor0", modLoc("block/fire_floor")).texture("particle", mcLoc("block/fire_0")).texture("fire", mcLoc("block/fire_0"));
-        models().withExistingParent("fire_floor1", modLoc("block/fire_floor")).texture("particle", mcLoc("block/fire_1")).texture("fire", mcLoc("block/fire_1"));
         ModelFile dark_spruce_sapling = models().cross("dark_spruce_sapling", modLoc("block/dark_spruce_sapling")).renderType(cutout);
         ModelFile cursed_spruce_sapling = models().cross("cursed_spruce_sapling", modLoc("block/cursed_spruce_sapling")).renderType(cutout);
 
@@ -117,13 +111,18 @@ public class BlockStateGenerator extends BlockStateProvider {
         getVariantBuilder(ModBlocks.MED_CHAIR.get()).forAllStates(blockState -> ConfiguredModel.builder().modelFile(models().getExistingFile(modLoc(blockState.getValue(MedChairBlock.PART) == MedChairBlock.EnumPart.TOP ? "block/medchairhead" : "block/medchairbase"))).rotationY(((int) blockState.getValue(MedChairBlock.FACING).toYRot() + 180) % 360).build());
 
         //multiparts
-
+        BlockModelBuilder fire_side_alt0 = models().withExistingParent("fire_side_alt0", modLoc("block/fire_side_alt")).renderType(cutout).texture("particle", mcLoc("block/fire_0")).texture("fire", mcLoc("block/fire_0"));
+        BlockModelBuilder fire_side_alt1 = models().withExistingParent("fire_side_alt1", modLoc("block/fire_side_alt")).renderType(cutout).texture("particle", mcLoc("block/fire_1")).texture("fire", mcLoc("block/fire_1"));
+        BlockModelBuilder fire_side0 = models().withExistingParent("fire_side0", modLoc("block/fire_side")).renderType(cutout).texture("particle", mcLoc("block/fire_0")).texture("fire", mcLoc("block/fire_0"));
+        BlockModelBuilder fire_side1 =models().withExistingParent("fire_side1", modLoc("block/fire_side")).renderType(cutout).texture("particle", mcLoc("block/fire_1")).texture("fire", mcLoc("block/fire_1"));
+        BlockModelBuilder fire_floor0 = models().withExistingParent("fire_floor0", modLoc("block/fire_floor")).renderType(cutout).texture("particle", mcLoc("block/fire_0")).texture("fire", mcLoc("block/fire_0"));
+        BlockModelBuilder fire_floor1 = models().withExistingParent("fire_floor1", modLoc("block/fire_floor")).renderType(cutout).texture("particle", mcLoc("block/fire_1")).texture("fire", mcLoc("block/fire_1"));
         getMultipartBuilder(ModBlocks.ALCHEMICAL_FIRE.get())
-                .part().modelFile(models().getExistingFile(modLoc("block/fire_floor0"))).nextModel().modelFile(models().getExistingFile(modLoc("block/fire_floor1"))).addModel().end()
-                .part().modelFile(models().getExistingFile(modLoc("block/fire_side0"))).nextModel().modelFile(models().getExistingFile(modLoc("block/fire_side1"))).nextModel().modelFile(models().getExistingFile(modLoc("block/fire_side_alt0"))).nextModel().modelFile(models().getExistingFile(modLoc("block/fire_side_alt1"))).addModel().end()
-                .part().modelFile(models().getExistingFile(modLoc("block/fire_side0"))).rotationY(90).nextModel().modelFile(models().getExistingFile(modLoc("block/fire_side1"))).rotationY(90).nextModel().modelFile(models().getExistingFile(modLoc("block/fire_side_alt0"))).rotationY(90).nextModel().modelFile(models().getExistingFile(modLoc("block/fire_side_alt1"))).rotationY(90).addModel().end()
-                .part().modelFile(models().getExistingFile(modLoc("block/fire_side0"))).rotationY(180).nextModel().modelFile(models().getExistingFile(modLoc("block/fire_side1"))).rotationY(180).nextModel().modelFile(models().getExistingFile(modLoc("block/fire_side_alt0"))).rotationY(180).nextModel().modelFile(models().getExistingFile(modLoc("block/fire_side_alt1"))).rotationY(180).addModel().end()
-                .part().modelFile(models().getExistingFile(modLoc("block/fire_side0"))).rotationY(270).nextModel().modelFile(models().getExistingFile(modLoc("block/fire_side1"))).rotationY(270).nextModel().modelFile(models().getExistingFile(modLoc("block/fire_side_alt0"))).rotationY(270).nextModel().modelFile(models().getExistingFile(modLoc("block/fire_side_alt1"))).rotationY(270).addModel().end();
+                .part().modelFile(fire_floor0).nextModel().modelFile(fire_floor1).addModel().end()
+                .part().modelFile(fire_side0).nextModel().modelFile(fire_side1).nextModel().modelFile(fire_side_alt0).nextModel().modelFile(fire_side_alt1).addModel().end()
+                .part().modelFile(fire_side0).rotationY(90).nextModel().modelFile(fire_side1).rotationY(90).nextModel().modelFile(fire_side_alt0).rotationY(90).nextModel().modelFile(fire_side_alt1).rotationY(90).addModel().end()
+                .part().modelFile(fire_side0).rotationY(180).nextModel().modelFile(fire_side1).rotationY(180).nextModel().modelFile(fire_side_alt0).rotationY(180).nextModel().modelFile(fire_side_alt1).rotationY(180).addModel().end()
+                .part().modelFile(fire_side0).rotationY(270).nextModel().modelFile(fire_side1).rotationY(270).nextModel().modelFile(fire_side_alt0).rotationY(270).nextModel().modelFile(fire_side_alt1).rotationY(270).addModel().end();
 
         ModelFile cauldronLiquid = models().getExistingFile(modLoc("block/alchemy_cauldron_liquid"));
         ModelFile cauldronLiquidBoiling = models().getBuilder("cauldron_boiling").parent(cauldronLiquid).texture("liquid", modLoc("block/blank_liquid_boiling"));
