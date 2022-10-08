@@ -1,5 +1,6 @@
 {
   "parent": "vampirism:block/fire_side",
+  "render_type": "minecraft:cutout",
   "textures": {
     "fire": "minecraft:block/fire_1",
     "particle": "minecraft:block/fire_1"

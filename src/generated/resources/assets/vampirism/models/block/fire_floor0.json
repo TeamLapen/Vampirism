@@ -1,5 +1,6 @@
 {
   "parent": "vampirism:block/fire_floor",
+  "render_type": "minecraft:cutout",
   "textures": {
     "fire": "minecraft:block/fire_0",
     "particle": "minecraft:block/fire_0"
