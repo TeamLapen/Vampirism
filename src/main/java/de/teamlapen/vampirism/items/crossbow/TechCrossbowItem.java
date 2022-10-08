@@ -21,6 +21,7 @@ import net.minecraftforge.common.Tags;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 public class TechCrossbowItem extends VampirismCrossbowItem {
@@ -133,5 +134,10 @@ public class TechCrossbowItem extends VampirismCrossbowItem {
     @Override
     public boolean canSelectAmmunition(ItemStack crossbow) {
         return false;
+    }
+
+    @Override
+    public Optional<Item> getAmmunition(ItemStack crossbow) {
+        return Optional.empty();
     }
 }

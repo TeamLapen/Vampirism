@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.core.ModEnchantments;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.mixin.CrossbowItemMixin;
 import de.teamlapen.vampirism.util.RegUtil;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -54,7 +55,14 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> tooltips, @NotNull TooltipFlag flag) {
         super.appendHoverText(stack, level, tooltips, flag);
+        this.addAmmunitionTypeHoverText(stack, level, tooltips, flag);
         this.addFactionToolTips(stack, level, tooltips, flag,  VampirismMod.proxy.getClientPlayer());
+    }
+
+    protected void addAmmunitionTypeHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> tooltips, @NotNull TooltipFlag flag) {
+        getAmmunition(stack).ifPresent(ammunition -> {
+            tooltips.add(Component.translatable("text.vampirism.crossbow.ammo_type").append(" ").append(ammunition.getName(stack)).withStyle(ChatFormatting.GRAY));
+        });
     }
 
     @Override
@@ -82,7 +90,7 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
     }
 
     @Override
-    public @org.jetbrains.annotations.Nullable IFaction<?> getExclusiveFaction(@NotNull ItemStack stack) {
+    public @Nullable IFaction<?> getExclusiveFaction(@NotNull ItemStack stack) {
         return  VReference.HUNTER_FACTION;
     }
 
