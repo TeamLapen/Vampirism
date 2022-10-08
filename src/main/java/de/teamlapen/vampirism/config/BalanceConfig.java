@@ -188,6 +188,7 @@ public class BalanceConfig {
     public final ForgeConfigSpec.DoubleValue miResourceCooldownOfflineMult;
     public final ForgeConfigSpec.IntValue miDeathRecoveryTime;
     public final ForgeConfigSpec.IntValue miMinionPerLordLevel;
+    public final ForgeConfigSpec.IntValue miEquipmentRepairAmount;
 
     public final ForgeConfigSpec.DoubleValue vrSwordTrainingSpeedMod;
     public final ForgeConfigSpec.IntValue vrBloodChargeSpeedMod;
@@ -412,6 +413,7 @@ public class BalanceConfig {
         miResourceCooldownOfflineMult = builder.comment("Cooldown multiplier for collect resource task types while player is offline").defineInRange("resourceCooldownOfflineMult", 20D, 1D, 100000D);
         miDeathRecoveryTime = builder.comment("Time in seconds a minion needs to recover from death.").defineInRange("deathRecoveryTime", 220, 1, Integer.MAX_VALUE / 100);
         miMinionPerLordLevel = builder.comment("How many minions a player can have per lord level. Probably don't want to go very high").defineInRange("minionPerLordLevel", 1, 0, 100);
+        miEquipmentRepairAmount = builder.comment("How much the equipments should be repaired on minion resource tasks").defineInRange("equipmentRepairAmount", 10, 1, Integer.MAX_VALUE);
 
         builder.category("vampire_refinements", "vr");
         vrSwordTrainingSpeedMod = builder.defineInRange("swordTrainingSpeedMod", 1.2D, 1D, Integer.MAX_VALUE);

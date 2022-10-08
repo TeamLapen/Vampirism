@@ -21,13 +21,13 @@ import java.util.function.Supplier;
 public abstract class DefaultMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends IMinionData> implements IMinionTask<T, Q> {
 
     private Component name;
-    private final Supplier<? extends ISkill<?>> requiredSkill;
+    private final @NotNull Supplier<? extends ISkill<?>> requiredSkill;
 
     public DefaultMinionTask() {
         this(() -> null);
     }
 
-    public DefaultMinionTask(Supplier<? extends ISkill<?>> requiredSkill) {
+    public DefaultMinionTask(@NotNull Supplier<? extends ISkill<?>> requiredSkill) {
         this.requiredSkill = requiredSkill;
     }
 
