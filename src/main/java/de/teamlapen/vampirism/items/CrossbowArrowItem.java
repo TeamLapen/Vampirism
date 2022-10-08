@@ -84,6 +84,7 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
         if (this.type == EnumArrowType.SPITFIRE) {
             arrowEntity.setSecondsOnFire(100);
         }
+        arrowEntity.pickup = type == EnumArrowType.NORMAL ? AbstractArrowEntity.PickupStatus.ALLOWED : AbstractArrowEntity.PickupStatus.DISALLOWED;
         return arrowEntity;
     }
 
