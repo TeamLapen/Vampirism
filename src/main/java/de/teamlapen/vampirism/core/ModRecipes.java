@@ -35,6 +35,7 @@ public class ModRecipes {
     public static final RegistryObject<IRecipeSerializer<AlchemicalCauldronRecipe>> ALCHEMICAL_CAULDRON = register("alchemical_cauldron", AlchemicalCauldronRecipe.Serializer::new);
     public static final RegistryObject<IRecipeSerializer<AlchemyTableRecipe>> ALCHEMICAL_TABLE = register("alchemical_table", AlchemyTableRecipe.Serializer::new);
     public static final RegistryObject<SpecialRecipeSerializer<ApplicableOilRecipe>> APPLICABLE_OIL = register("applicable_oil", () -> new SpecialRecipeSerializer<>(ApplicableOilRecipe::new));
+    public static final RegistryObject<SpecialRecipeSerializer<CleanOilRecipe>> CLEAN_OIL = register("clean_oil", () -> new SpecialRecipeSerializer<>(CleanOilRecipe::new));
 
     public static final IConditionSerializer<?> CONFIG_CONDITION = CraftingHelper.register(new ConfigCondition.Serializer());
 
