@@ -407,6 +407,7 @@ public class RecipesGenerator extends RecipeProvider {
         SimpleCookingRecipeBuilder.blasting(Ingredient.of(amulet, ring), Items.GOLD_NUGGET, 0.1f, 100).unlockedBy("has_amulet", has(amulet)).unlockedBy("has_ring", has(ring)).save(consumer, new ResourceLocation(REFERENCE.MODID, "gold_nugget_from_accessory_blasting"));
         ShapelessRecipeBuilder.shapeless(leather).requires(obi_belt).unlockedBy("has_obi_belt", has(obi_belt)).save(consumer, new ResourceLocation(REFERENCE.MODID, "leather_from_obi_belt"));
         ShapedRecipeBuilder.shaped(ModBlocks.ALCHEMY_TABLE.get()).pattern("B  ").pattern("BBB").pattern("P P").define('B', basalt).define('P', planks).unlockedBy("has_basalt", has(basalt)).unlockedBy("has_planks", has(planks)).save(consumer);
+        SpecialRecipeBuilder.special(ModRecipes.CLEAN_OIL.get()).save(consumer, REFERENCE.MODID+":clean_oil");
     }
 
     private @NotNull JsonObject enchantment(int level, Enchantment enchantment) {

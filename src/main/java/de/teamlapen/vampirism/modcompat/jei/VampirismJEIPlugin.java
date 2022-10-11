@@ -38,6 +38,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -126,6 +127,7 @@ public class VampirismJEIPlugin implements IModPlugin {
         registration.addRecipes(ALCHEMY_TABLE, recipeManager.byType(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).values().stream().toList());
         registration.addRecipes(RecipeTypes.CRAFTING, getApplicableOilRecipes());
         registration.addRecipes(BLESSING, BlessableItem.getBlessableRecipes());
+        registration.addRecipes(RecipeTypes.CRAFTING, getCleanOilRecipes());
     }
 
     @Override
@@ -183,5 +185,13 @@ public class VampirismJEIPlugin implements IModPlugin {
                         .map(Item::getDefaultInstance)
                         .filter(oil::canBeApplied)
                         .map(stack -> new ShapelessRecipe(new ResourceLocation(REFERENCE.MODID, (RegUtil.id(oil).toString() + RegUtil.id(stack.getItem()).toString()).replace(':', '_')), "", OilUtils.setAppliedOil(stack.copy(), oil), NonNullList.of(Ingredient.EMPTY, Ingredient.of(stack), Ingredient.of(OilUtils.createOilItem(oil)))))).collect(Collectors.toList());
+    }
+
+    private @NotNull List<CraftingRecipe> getCleanOilRecipes() {
+        return getApplicableOilRecipes().stream().map(recipe -> {
+            ItemStack item = recipe.getResultItem();
+            IApplicableOil oil = OilUtils.getAppliedOil(item).get();
+            return new ShapelessRecipe(new ResourceLocation(REFERENCE.MODID, ("clean_" + RegUtil.id(oil).toString() + "_from_" + RegUtil.id(item.getItem()).toString()).replace(':', '_')), "", OilUtils.removeAppliedOil(item.copy()), NonNullList.of(Ingredient.EMPTY, Ingredient.of(Items.PAPER), Ingredient.of(item)));
+        }).collect(Collectors.toList());
     }
 }
