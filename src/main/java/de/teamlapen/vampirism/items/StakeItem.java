@@ -16,14 +16,19 @@ import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 /**
  * Does almost no damage, but can one hit kill vampire from behind when used by skilled hunters
@@ -82,5 +87,11 @@ public class StakeItem extends VampirismSwordItem implements IVampireFinisher, I
         }
 
         return super.hurtEnemy(stack, target, attacker);
+    }
+
+    @Override
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        this.addFactionPoisonousToolTip(stack, worldIn, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());
     }
 }

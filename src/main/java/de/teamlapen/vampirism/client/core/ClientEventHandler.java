@@ -5,6 +5,7 @@ import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.oil.IArmorOil;
 import de.teamlapen.vampirism.api.items.oil.IWeaponOil;
 import de.teamlapen.vampirism.client.model.blocks.BakedAltarInspirationModel;
@@ -166,6 +167,9 @@ public class ClientEventHandler {
     public void onItemToolTip(@NotNull ItemTooltipEvent event) {
         OilUtils.getAppliedOilStatus(event.getItemStack()).map(pair -> {
             if (event.getEntity() != null && !Helper.isHunter(event.getEntity())) {
+                if (event.getItemStack().getItem() instanceof IFactionExclusiveItem && ((IFactionExclusiveItem) event.getItemStack().getItem()).getExclusiveFaction(event.getItemStack()) == VReference.HUNTER_FACTION) {
+                    return null;
+                }
                 if (pair.getLeft() instanceof IArmorOil) {
                     return Component.translatable("text.vampirism.poisonous_to_non", VReference.HUNTER_FACTION.getNamePlural()).withStyle(ChatFormatting.DARK_RED);
                 } else if (pair.getLeft() instanceof IWeaponOil) {
