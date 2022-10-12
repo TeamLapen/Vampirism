@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.recipes;
 
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.IOilItem;
 import de.teamlapen.vampirism.api.items.oil.IApplicableOil;
 import de.teamlapen.vampirism.api.items.oil.IOil;
@@ -38,7 +40,7 @@ public class ApplicableOilRecipe extends CustomRecipe {
                 }
             }
         }
-        return oil != null && tool != null && oil.canBeApplied(tool);
+        return oil != null && tool != null && (!(tool.getItem() instanceof IFactionExclusiveItem) || ((IFactionExclusiveItem) tool.getItem()).getExclusiveFaction(tool) == VReference.HUNTER_FACTION) && oil.canBeApplied(tool);
     }
 
     @NotNull
