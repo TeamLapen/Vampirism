@@ -3,7 +3,9 @@ package de.teamlapen.vampirism.modcompat.jei;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.oil.IApplicableOil;
 import de.teamlapen.vampirism.client.gui.AlchemicalCauldronScreen;
 import de.teamlapen.vampirism.client.gui.AlchemyTableScreen;
@@ -176,6 +178,7 @@ public class VampirismJEIPlugin implements IModPlugin {
                 .filter(IApplicableOil.class::isInstance)
                 .map(IApplicableOil.class::cast)
                 .flatMap(oil -> ForgeRegistries.ITEMS.getValues().stream()
+                        .filter(item -> (!(item instanceof IFactionExclusiveItem) || ((IFactionExclusiveItem) item).getExclusiveFaction() == VReference.HUNTER_FACTION))
                         .map(Item::getDefaultInstance)
                         .filter(oil::canBeApplied)
                         .map(stack -> new ShapelessRecipe(new ResourceLocation(REFERENCE.MODID, (oil.getRegistryName().toString() + stack.getItem().getRegistryName().toString()).replace(':', '_')), "", OilUtils.setAppliedOil(stack.copy(), oil), NonNullList.of(Ingredient.EMPTY, Ingredient.of(stack), Ingredient.of(OilUtils.createOilItem(oil))))
