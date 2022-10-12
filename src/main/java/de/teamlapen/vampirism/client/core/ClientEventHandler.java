@@ -5,6 +5,7 @@ import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.oil.IArmorOil;
 import de.teamlapen.vampirism.api.items.oil.IWeaponOil;
 import de.teamlapen.vampirism.client.model.blocks.BakedAltarInspirationModel;
@@ -201,10 +202,13 @@ public class ClientEventHandler {
         OilUtils.getAppliedOilStatus(event.getItemStack()).ifPresent(pair -> {
             ITextComponent tooltipLine = null;
             if (event.getPlayer() != null && !Helper.isHunter(event.getPlayer())) {
+                if (event.getItemStack().getItem() instanceof IFactionExclusiveItem && ((IFactionExclusiveItem) event.getItemStack().getItem()).getExclusiveFaction() == VReference.HUNTER_FACTION) {
+                    return;
+                }
                 if (pair.getLeft() instanceof IArmorOil) {
                     tooltipLine = new TranslationTextComponent("text.vampirism.poisonous_to_non", VReference.HUNTER_FACTION.getNamePlural()).withStyle(TextFormatting.DARK_RED);
                 } else if (pair.getLeft() instanceof IWeaponOil) {
-                    tooltipLine =VReference.HUNTER_FACTION.getNamePlural().plainCopy().withStyle(TextFormatting.DARK_RED);
+                    tooltipLine = VReference.HUNTER_FACTION.getNamePlural().plainCopy().withStyle(TextFormatting.DARK_RED);
                 }
             } else {
                 tooltipLine = pair.getLeft().getToolTipLine(event.getItemStack(), pair.getKey(), pair.getValue(), event.getFlags()).orElse(null);
