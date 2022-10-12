@@ -40,8 +40,7 @@ import {
     hunterMinionBindingImage,
     hunterMinionUpgradeImages,
     infectedAppleImage,
-    injectionImages, obsidianArmorEnhancedImages,
-    obsidianArmorNormalImages, obsidianArmorUltimateImages,
+    injectionImages,
     pitchforkImage,
     potionOfOblivionImage,
     pureBloodImages,
@@ -84,10 +83,7 @@ import {
     hunterCoatEnhancedRecipes,
     hunterCoatNormalRecipes,
     hunterHatRecipes, hunterIntelRecipes, hunterMinionBindingRecipes, hunterMinionUpgradesRecipes,
-    infestedAppleRecipes,
-    injectionRecipes,
-    obsidianArmorEnhancedRecipes,
-    obsidianArmorNormalRecipes,
+    infestedAppleRecipes, injectionCraftingRecipes,
     pitchforkRecipes,
     potionOfOblivionRecipes, pureBloodRecipes, pureSaltRecipes,
     purifiedGarlicRecipes, soulOrbRecipes, splashHolyWaterRecipes,
@@ -160,6 +156,9 @@ The Spitfire Arrows create alchemical fire on impact.
 
 ### Vampire Killer
 Kills low level vampires NPC instantly.
+
+### Teleport
+Teleports player on impact
 </Items>
 <Item title="Crossbow Clip" img={crossbowClipImage} source={crossbowArrowClipRecipes}>
 
@@ -246,8 +245,6 @@ Simply kill mobs
 
 <Items title="Holy Water" img={holyWaterImages} source={holyWaterRecipes}></Items>
 <Items title="Splash Holy Water" img={splashHolyWaterImages} source={splashHolyWaterRecipes}></Items>
-<Item title="Blessed Salt" img={holySaltImage} source={holySaltRecipes}></Item>
-<Item title="Blessed Salt Water" img={holySaltWaterImage} source={holySaltWaterRecipes}></Item>
 <Item title="Human Heart" img={humanHeartImage} source={humanHeartRecipes}></Item>
 <Item title="Weak Human Heart" img={weakHumanHeartImage}></Item>
 <TieredItem title="Hunter Axe" tiers={ [
@@ -288,7 +285,7 @@ Simply kill mobs
 
 Cure vampiric creatures. For details see [here](../other/vampiric-creatures.md#curing-creatures).
 </Item>
-<Items title="Injection" img={injectionImages} source={injectionRecipes()}/>
+<Items title="Injection" img={injectionImages} source={injectionCraftingRecipes}/>
 <Item title="Vampire Minion Binding" img={vampireMinionBindingImage} source={vampireMinionBindingRecipes}>
 
 With a Minion Equipment you can hire weak Vampire entities as your minions.
@@ -306,28 +303,11 @@ Increase minion level by 1. While you need better Minion Upgrades to reach highe
 Increase minion level by 1. While you need better Minion Upgrades to reach higher minion levels, each Minion Upgrade is eligible for two level.
 </Items>
 
-<TieredItem title="Obsidian Armor of Hell"  tiers={[
-    {
-        title: "Normal",
-        img: obsidianArmorNormalImages,
-        source: obsidianArmorNormalRecipes
-    },
-    {
-        title: "Enhanced",
-        img: obsidianArmorEnhancedImages,
-        source: obsidianArmorEnhancedRecipes
-    },
-    {
-        title: "Ultimate",
-        img: obsidianArmorUltimateImages
-    }
-]}></TieredItem>
 <Item title="Pitchfork" img={pitchforkImage} source={pitchforkRecipes}></Item>
 <Item title="Potion of Oblivion" img={potionOfOblivionImage} source={potionOfOblivionRecipes}>
 
 On consumption reset all learned skills over time.
 </Item>
-<Item title="Pure Salt" img={pureSaltImage} source={pureSaltRecipes}></Item>
 <Items title="Pure Blood" img={pureBloodImages} source={pureBloodRecipes}></Items>
 <Item title="Purified Garlic" img={purifiedGarlicImage} source={purifiedGarlicRecipes}></Item>
 <Item title="Soul Orb" img={soulOrbImage} source={soulOrbRecipes}></Item>
