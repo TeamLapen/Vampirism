@@ -3,8 +3,20 @@ sidebar_position: 6
 title: Effects
 ---
 
-import {Effect, EffectC} from "@site/src/components/Effects";
+import {EffectInternal } from "@site/src/components/Effects";
 import oblivion from '../assets/effects/oblivion.png';
+
+export const baseUrl = 'https://raw.githubusercontent.com/TeamLapen/Vampirism/'
+export const baseCommit = '4bf2c73fb860a23de225edbae9c0b1c1ead3dd1a'
+export const effectPath = '/src/main/resources/assets/vampirism/textures/mob_effect/'
+
+export const Effect = ({children, title, icon, commit=baseCommit}) => (
+    <EffectInternal title={title} icon={baseUrl.concat(commit).concat(effectPath).concat(icon)} children={children}/>
+);
+
+export const EffectC = ({children, title, icon}) => (
+    <EffectInternal title={title} children={children} icon={icon}/>
+);
 
 <Effect title="Sanguinare Vampiris" icon="sanguinare.png" >
 Sanguinare Vampiris turns you into a vampire after one minecraft day.
