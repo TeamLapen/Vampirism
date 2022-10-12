@@ -21,6 +21,7 @@ import armorOfSwiftnessFeetUltimate from './swiftness-feet-ultimate.png'
 import crossbowArrow from './crossbow-arrow.png'
 import crossbowSpitfire from './crossbow-arrow-spitfire.png'
 import crossbowVampireKiller from './crossbow-arrow-vampire-killer.png'
+import crossbowTeleport from './crossbow-arrow-teleport.png'
 import heartSeekerNormal from './heart-seeker-normal.png'
 import heartSeekerEnhanced from './heart-seeker-enhanced.png'
 import heartSeekerUltimate from './heart-seeker-ultimate.png'
@@ -33,7 +34,7 @@ import umbrella from './umbrella.png'
 import stake from './stake.png'
 import pitchfork from './pitchfork.png'
 
-export const baseUrl = "https://raw.githubusercontent.com/TeamLapen/Vampirism/4bf2c73fb860a23de225edbae9c0b1c1ead3dd1a/src/main/resources/assets/vampirism/textures/item/"
+export const baseUrl = "https://raw.githubusercontent.com/TeamLapen/Vampirism/79f223a6fdb23e206dc25e11a94ba02fa9306902/src/main/resources/assets/vampirism/textures/item/"
 
 export function image(imageName) {
     return baseUrl + imageName;
@@ -234,6 +235,7 @@ export const crossbowImages = [
 export const crossbowArrowImage = crossbowArrow
 export const crossbowArrowSpitfireImage = crossbowSpitfire
 export const crossbowArrowVampireKillerImage = crossbowVampireKiller
+export const crossbowArrowTeleport = crossbowTeleport
 export const crossbowArrowImages = [
     {
         src: crossbowArrowImage,
@@ -246,6 +248,10 @@ export const crossbowArrowImages = [
     {
         src: crossbowArrowVampireKillerImage,
         alt: "crossbow arrow vampire killer",
+    },
+    {
+        src: crossbowArrowTeleport,
+        alt: "crossbow arrow teleport",
     }
 ]
 export const crossbowClipImage = image("tech_crossbow_ammo_package.png")
@@ -384,7 +390,6 @@ export const infectedAppleImage = image("cure_apple.png")
 export const injectionEmptyImage = image("injection_empty.png")
 export const injectionGarlicImage = image("injection_garlic.png")
 export const injectionSanguinemImage = image("injection_sanguinare.png")
-export const injectionZombieBloodImage = image("injection_zombie_blood.png")
 export const injectionImages = [
     {
         src: injectionEmptyImage,
@@ -397,10 +402,6 @@ export const injectionImages = [
     {
         src: injectionSanguinemImage,
         alt: "injection sanguinem",
-    },
-    {
-        src: injectionZombieBloodImage,
-        alt: "injection zombie blood",
     }
 ]
 export const vampireMinionBindingImage = image("vampire_minion_binding.png")
@@ -437,72 +438,6 @@ export const hunterMinionUpgradeImages = [
     {
         src: hunterMinionUpgradeSpecialImage,
         alt: "hunter minion upgrade special",
-    }
-]
-export const obsidianArmorHeadImage = image("obsidian_armor_head_normal.png")
-export const obsidianArmorChestImage = image("obsidian_armor_chest_normal.png")
-export const obsidianArmorLegsImage = image("obsidian_armor_legs_normal.png")
-export const obsidianArmorFeetImage = image("obsidian_armor_feet_normal.png")
-export const obsidianArmorNormalImages = [
-    {
-        src: obsidianArmorHeadImage,
-        alt: "obsidian armor head",
-    },
-    {
-        src: obsidianArmorChestImage,
-        alt: "obsidian armor chest",
-    },
-    {
-        src: obsidianArmorLegsImage,
-        alt: "obsidian armor legs",
-    },
-    {
-        src: obsidianArmorFeetImage,
-        alt: "obsidian armor feet",
-    }
-]
-export const obsidianArmorHeadEnhancedImage = image("obsidian_armor_head_enhanced.png")
-export const obsidianArmorChestEnhancedImage = image("obsidian_armor_chest_enhanced.png")
-export const obsidianArmorLegsEnhancedImage = image("obsidian_armor_legs_enhanced.png")
-export const obsidianArmorFeetEnhancedImage = image("obsidian_armor_feet_enhanced.png")
-export const obsidianArmorEnhancedImages = [
-    {
-        src: obsidianArmorHeadEnhancedImage,
-        alt: "obsidian armor head enhanced",
-    },
-    {
-        src: obsidianArmorChestEnhancedImage,
-        alt: "obsidian armor chest enhanced",
-    },
-    {
-        src: obsidianArmorLegsEnhancedImage,
-        alt: "obsidian armor legs enhanced",
-    },
-    {
-        src: obsidianArmorFeetEnhancedImage,
-        alt: "obsidian armor feet enhanced",
-    }
-]
-export const obsidianArmorHeadUltimateImage = image("obsidian_armor_head_ultimate.png")
-export const obsidianArmorChestUltimateImage = image("obsidian_armor_chest_ultimate.png")
-export const obsidianArmorLegsUltimateImage = image("obsidian_armor_legs_ultimate.png")
-export const obsidianArmorFeetUltimateImage = image("obsidian_armor_feet_ultimate.png")
-export const obsidianArmorUltimateImages = [
-    {
-        src: obsidianArmorHeadUltimateImage,
-        alt: "obsidian armor head ultimate",
-    },
-    {
-        src: obsidianArmorChestUltimateImage,
-        alt: "obsidian armor chest ultimate",
-    },
-    {
-        src: obsidianArmorLegsUltimateImage,
-        alt: "obsidian armor legs ultimate",
-    },
-    {
-        src: obsidianArmorFeetUltimateImage,
-        alt: "obsidian armor feet ultimate",
     }
 ]
 export const pitchforkImage = pitchfork

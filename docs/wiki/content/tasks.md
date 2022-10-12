@@ -23,7 +23,6 @@ Items to acquire:
 - Hunter Minion Bindings
 - Hunter Minion Upgrades
 - Diamonds
-- Ultimate Obsidian Armor
 - Vampire Blood Bottle
 
 ## Vampire Tasks

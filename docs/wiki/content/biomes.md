@@ -20,7 +20,7 @@ Because of the vampire friendly territory all vampire creatures feel at home esp
 
 ![](../assets/biome/bloody_spruce_tree.png)
 
-### Vampire Orchid
+### [Vampire Orchid](./blocks#vampire-orchid)
 
 ![](../assets/biome/vampire_orchids.png)
 ## Fauna

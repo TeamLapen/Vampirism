@@ -72,14 +72,6 @@ import {
     injectionEmptyRecipe,
     injectionGarlicRecipe,
     injectionSanguinemRecipe,
-    obsidianBootsEnhancedRecipe,
-    obsidianBootsRecipe,
-    obsidianChestEnhancedRecipe,
-    obsidianChestRecipe,
-    obsidianHeadEnhancedRecipe,
-    obsidianHeadRecipe,
-    obsidianLegsEnhancedRecipe,
-    obsidianLegsRecipe,
     pitchForkRecipe,
     potionTableRecipe, pureSaltRecipe,
     purifiedGarlicRecipe,
@@ -184,16 +176,6 @@ export const garlicFinderRecipes = craftingRecipe(garlicFinderRecipe)
 export const hunterHatRecipes = craftingRecipes([hunterHat1Recipe, hunterHat2Recipe], "Weapon Table")
 export const infestedAppleRecipes = craftingRecipe(infestedAppleRecipe)
 export const injectionCraftingRecipes = craftingRecipes([injectionEmptyRecipe, injectionGarlicRecipe, injectionSanguinemRecipe])
-export const injectionWorldRecipe = [
-    {
-        type: "list",
-        title: "World",
-        source: ["Interact with a zombie while holding a Syringe"]
-    }
-];
-export function injectionRecipes() {
-    return sumSource([injectionCraftingRecipes, injectionWorldRecipe])
-}
 export const pitchforkRecipes = craftingRecipe(pitchForkRecipe, "Weapon Table")
 export const purifiedGarlicRecipes = craftingRecipe(purifiedGarlicRecipe)
 export const hunterAxeNormalRecipes = craftingRecipe(hunterAxeRecipe, "Weapon Table")
@@ -210,8 +192,6 @@ export const potionOfOblivionRecipes = [
         source: ["Can be acquired through several Tasks for village representatives"]
     }
 ];
-export const obsidianArmorNormalRecipes = craftingRecipes([obsidianHeadRecipe, obsidianChestRecipe, obsidianLegsRecipe, obsidianBootsRecipe], "Weapon Table")
-export const obsidianArmorEnhancedRecipes = craftingRecipes([obsidianHeadEnhancedRecipe, obsidianChestEnhancedRecipe, obsidianLegsEnhancedRecipe, obsidianBootsEnhancedRecipe], "Weapon Table")
 export const hunterCoatNormalRecipes = craftingRecipes([hunterHeadRecipe, hunterChestRecipe, hunterLegsRecipe, hunterBootsRecipe], "Weapon Table")
 export const hunterCoatEnhancedRecipes = craftingRecipes([hunterHeadEnhancedRecipe, hunterChestEnhancedRecipe, hunterLegsEnhancedRecipe, hunterBootsEnhancedRecipe], "Weapon Table")
 
