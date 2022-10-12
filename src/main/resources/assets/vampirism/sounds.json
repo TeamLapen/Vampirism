@@ -1,11 +1,11 @@
 {
-  "entity.vampire.scream": {
+  "entity_vampire_scream": {
     "category": "hostile",
     "sounds": [
       "vampirism:entity/vampire/scream"
     ]
   },
-  "player.bite": {
+  "player_bite": {
     "category": "player",
     "sounds": [
       "vampirism:entity/vampire/bite",
@@ -30,7 +30,7 @@
       }
     ]
   },
-  "ambient.castle": {
+  "ambient_castle": {
     "category": "ambient",
     "sounds": [
       {
@@ -90,7 +90,10 @@
   "blessing_music": {
     "category": "player",
     "sounds": [
-      "vampirism:fx/church_organ"
+      {
+        "name": "vampirism:fx/church_organ",
+        "stream": true
+      }
     ]
   }
 }

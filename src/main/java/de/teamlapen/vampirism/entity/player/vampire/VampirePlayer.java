@@ -1190,7 +1190,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             feed_victim = nbt.getInt(KEY_FEED_VICTIM_ID);
             if (feed_victim != -1) {
                 if (feedingSoundReference == null || !feedingSoundReference.isPlaying()) {
-                    feedingSoundReference = VampLib.proxy.createSoundReference(ModSounds.PLAYER_FEEDING.get(), SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 1, 1);
+                    feedingSoundReference = VampLib.proxy.createSoundReference(ModSounds.PLAYER_FEEDING.get(), SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 0.8f, 1);
                     feedingSoundReference.startPlaying();
                 }
             } else {
