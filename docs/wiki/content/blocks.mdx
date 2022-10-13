@@ -14,20 +14,19 @@ import {
     bloodGrinderImage,
     bloodPedestralImage,
     bloodSieveImages,
-    bloodySpruceLeavesImage,
     candelabraImages,
     chandelierImage,
     churchAltarImage,
-    coffinImage,
+    coffinImages,
     crossImage,
     cursedDirtImage,
-    darkSpruceLeavesImage,
-    darkSpruceSaplingImage, firePlaceImage,
+    cursedGrassImages,
+    spruceSaplingImages, firePlaceImage,
     garlicDiffuserImage,
     garlicImages,
     hunterTableImages,
     injectionChairImage,
-    potionTableImage, spruceLeavesImages, stoneBrickImages, stoneSlapImages, stoneStairImages,
+    potionTableImage, spruceLeavesImage, stoneBrickImages, stoneSlapImages, stoneStairImages,
     sunscreenBeaconImage,
     totemImages,
     vampireOrchidImage, weaponTableImages
@@ -40,12 +39,13 @@ import {
     bloodGrinderRecipes,
     bloodPedestalRecipes,
     bloodSieveRecipes,
-    bloodySpruceSaplingRecipes,
+    spruceSaplingRecipes,
     candelabraRecipes,
     chandelierRecipes,
     coffinRecipes,
     crossRecipes,
     cursedEarthRecipes,
+    cursedGrassRecipes,
     firePlaceRecipes,
     garlicBlockRecipes,
     garlicDiffuserRecipes,
@@ -58,8 +58,11 @@ import {
     stoneStairsRecipes,
     vampireOrchidRecipes,
     villageTotemRecipes,
-    weaponTableRecipes
+    weaponTableRecipes,
+    alchemyTableRecipes
 } from "./_recipes.mdx";
+
+import alchemyTable from "../assets/blocks/alchemy_table.png";
 
 <Blocks img={alchemicalCauldronImages} title="Alchemical Cauldron" source={alchemicalTableRecipes}>
     The Alchemical Cauldron is a processing block in which hunter can brew with the help of a fire source. It requires some sort of fluid (depending on the recipe) to process items.
@@ -94,27 +97,32 @@ With the Pedestal you can charge Vampire Swords with blood if placed on top of a
 
 The Blood Sieve produces drinkable Blood from Impure Blood.
 </Blocks>
-<Block img={darkSpruceSaplingImage} title="Bloody Spruce Sapling" source={bloodySpruceSaplingRecipes}>
+<Blocks img={spruceSaplingImages} title="Spruce Saplings" source={spruceSaplingRecipes}>
 
 Sapling for the Bloody Spruce Tree.
-</Block>
+</Blocks>
 <Blocks img={candelabraImages} title="Candelabra" source={candelabraRecipes} >
     <Decorative></Decorative>
 </Blocks>
 <Block img={chandelierImage} title="Chandelier" source={chandelierRecipes}>
     <Decorative></Decorative>
 </Block>
-<Block img={coffinImage} title="Coffin" source={coffinRecipes}>
+<Blocks img={coffinImages} title="Coffin" source={coffinRecipes}>
 
 Vampires can sleep in Coffins to skip the day.
-</Block>
+</Blocks>
 <Block img={crossImage} title="Cross" source={crossRecipes}>
     <Decorative></Decorative>
 </Block>
-<Block img={cursedDirtImage} title="Cursed Earth" source={cursedEarthRecipes}>
+<Block img={cursedDirtImage} title="Cursed Dirt" source={cursedEarthRecipes}>
 
-Ground block in the [Vampirism Forest](../content/biomes.md#vampire-forest)
+Found in the [Vampirism Forest](../content/biomes#vampire-forest)
 </Block>
+
+<Blocks img={cursedGrassImages} title="Cursed Grass" source={cursedGrassRecipes}>
+
+Found in the [Vampirism Forest](../content/biomes#vampire-forest)
+</Blocks>
 <Block img={firePlaceImage} title="Fire Place" source={firePlaceRecipes}>
     <Decorative></Decorative>
 </Block>
@@ -134,9 +142,10 @@ The Hunter Table is use to craft [Hunter Intel](../content/items.mdx#hunter-inte
 
 At an Injection Chair you can use [Injections](../content/items.mdx#injections).
 </Block>
-<Blocks img={spruceLeavesImages} title="Spruce Leaves" source={spruceLeavesRecipes}>
-    Leaves for the dark spruce trees and bloody spruce trees.
-</Blocks>
+<Block img={spruceLeavesImage} title="Dark Spruce Leaves" source={spruceLeavesRecipes}>
+
+Leaves for the dark spruce trees and the cursed spruce trees.
+</Block>
 <Block img={potionTableImage} title="Potion Table" source={potionTableRecipes}></Block>
 <Blocks img={stoneBrickImages} title="Stone Bricks" source={stoneBricksRecipes}>
 <Decorative></Decorative>
@@ -168,3 +177,6 @@ Totems are used to control villages for a faction. See [Faction Raids](../factio
 <Blocks img={weaponTableImages} title="Weapon Table" source={weaponTableRecipes}>
     Weapon Tables are extended Crafting Tables that are abe to craft advanced weapons, but require Lava to work.
 </Blocks>
+<Block img={alchemyTable} title="Alchemy Table" source={alchemyTableRecipes}>
+    The Alchemy Table is used in the creation of weapon oils.
+</Block>
