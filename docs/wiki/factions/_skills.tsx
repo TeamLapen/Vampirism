@@ -2,7 +2,7 @@ import React from "react";
 import {SkillOrAction} from "@site/src/components/Skills";
 
 export const baseUrl = 'https://raw.githubusercontent.com/TeamLapen/Vampirism/'
-export const baseCommit = '4bf2c73fb860a23de225edbae9c0b1c1ead3dd1a'
+export const baseCommit = '1c387d7c7553fe70d789d1f9f34530d745e330b0'
 export const skillPath = '/src/main/resources/assets/vampirism/textures/skills/'
 export const actionPath = '/src/main/resources/assets/vampirism/textures/actions/'
 
