@@ -63,6 +63,11 @@ const config = {
         },
         items: [
           {
+            href: 'https://vampirism.dev',
+            label: 'Website',
+            position: 'left',
+          },
+          {
             type: 'doc',
             docId: 'wiki/intro',
             position: 'left',
