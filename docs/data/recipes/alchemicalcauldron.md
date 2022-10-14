@@ -11,6 +11,7 @@ The Alchemical Cauldron can only be used by Hunter Player that have unlocked the
 Recipes can be made for the [Alchemical Cauldron](../../wiki/content/blocks.mdx#alchemical-cauldron).
 
 ## Recipe
+You can take a look at the default recipes [here](https://github.com/TeamLapen/Vampirism/blob/7a90925e3859acd964f0ef948c1f914791494dfa/src/generated/resources/data/vampirism/recipes/alchemical_cauldron).
 
 ```json title="cauldron.json"
 {
@@ -42,3 +43,27 @@ Recipes can be made for the [Alchemical Cauldron](../../wiki/content/blocks.mdx#
 - `cookTime`: The cooking time of the recipe. Default is 200.
 - `experience`: The experience gained by the recipe. Default is 0.2.
 - `reqLevel`: The faction level the recipe requires. Default is 1.
+
+
+## Craft Tweaker
+
+Alchemical Cauldron recipes can be added or changed using Craft Tweaker. But this requires [Vampirism Integration](https://www.curseforge.com/minecraft/mc-mods/vampirism-integrations) to be installed.
+
+The recipe type id is `alchemical_cauldron`
+
+### Adding Recipes
+```zenscript
+<recipetype:vampirism:alchemical_cauldron>.addRecipe(<recipe-path>, <result-item> , <ingredient>, <item-input>, <required-level>, <cooktime>, <exp>, <required skills>);
+
+<recipetype:vampirism:alchemical_cauldron>.addRecipe(<recipe-path>, <result-item> , <ingredient>, <fluid-input>, <required-level>, <cooktime>, <exp>, <required skills>);
+```
+
+- `recipe-path`: String
+- `result-item`: ItemStack
+- `ingredient`: Ingredient
+- `item-input`: Ingredient
+- `fluid-input`: FluidStack
+- `required-level`: int
+- `cooktime`: int
+- `exp`: int
+- `required skills`: Skill Bracket array

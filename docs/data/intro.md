@@ -17,5 +17,7 @@ Also make sure you are familiar with the namespace concept. If you want to modif
 Besides the already mentioned vanilla contents you can also customize:
 - Player Skill Trees
 - Blood Values
-- Alchemical Cauldron Recipes
-- Weapon Table Recipes
+- Recipes
+  - Alchemical Cauldron Recipes (+ Craft Tweaker support)
+  - Weapon Table Recipes (+ Craft Tweaker support)
+  - Alchemy Table Recipes
