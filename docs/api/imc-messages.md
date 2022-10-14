@@ -7,7 +7,7 @@ Inter-Mod-Communication messages are a system provided by Forge/FML which allows
 Mods can send messages to other mods in InterModEnqueueEvent containing a key and a value (String, int, CompoundNBT ...) and the receiving mod can parse them in InterModProcessEvent.  
 
 Thereby they are a lightweight alternative to using another mods API, but far less powerful.  
-They should be sent during init using `InterModComms#send`.  
+They should be sent during the `InterModelEnqueuEvent` using `InterModComms#send`.  
 
 ## Vampirism's Messages
 With Vampirism, you can send the following messages to Vampirism for better compatibility between your mod and Vampirism:

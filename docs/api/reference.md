@@ -16,9 +16,17 @@ this includes e.g. the faction objects of vampires and hunters, attributes, Dama
 
 ## Vampirism Forge Registries
 
-Currently, Vampirism's custom forge registries are not accessible through the API. They are not declared in the API [ModRegistries](https://github.com/TeamLapen/Vampirism/blob/4bf2c73fb860a23de225edbae9c0b1c1ead3dd1a/src/main/java/de/teamlapen/vampirism/core/ModRegistries.java).  
+#### Minecraft 1.19
+
+All custom registries are using the [VampirismRegistries](https://github.com/TeamLapen/Vampirism/blob/4ea422de4d01b52d07b6d9b8e0c536394ae5d515/src/api/java/de/teamlapen/vampirism/api/VampirismRegistries.java#L25) class
+to store the registry key. The class also offers registry supplier which result should be stored if they are used frequently.
+
+#### Minecraft 1.16-1.18
+Vampirism's custom forge registries are not accessible through the API. They are not declared in the API [ModRegistries](https://github.com/TeamLapen/Vampirism/blob/4bf2c73fb860a23de225edbae9c0b1c1ead3dd1a/src/main/java/de/teamlapen/vampirism/core/ModRegistries.java).  
 But you can get them from the RegistryManager with `RegistryManager.ACTIVE.getRegistry(...)`. Either use the RegistryEntry class or the resource location of the registry.
 
+
+### Registries
 Following registries are currently available:
 
 | Name            | Resourcelocation           | Class                                                                                                                                                                                       |
