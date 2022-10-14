@@ -3,15 +3,15 @@
   "values": [
     {
       "id": "minecraft:cow",
-      "value": 100
+      "value": 10
     },
     {
       "id": "minecraft:pig",
-      "value": 50
+      "value": 5
     },
     {
       "id": "minecraft:sheep",
-      "value": 50
+      "value": 5
     },
     {
       "id": "minecraft:chicken",
@@ -19,31 +19,31 @@
     },
     {
       "id": "minecraft:rabbit",
-      "value": 20
+      "value": 2
     },
     {
       "id": "minecraft:wolf",
-      "value": 50
+      "value": 5
     },
     {
       "id": "minecraft:mooshroom",
-      "value": 100
+      "value": 10
     },
     {
       "id": "minecraft:ocelot",
-      "value": 40
+      "value": 4
     },
     {
       "id": "minecraft:horse",
-      "value": 130
+      "value": 13
     },
     {
       "id": "minecraft:donkey",
-      "value": 130
+      "value": 13
     },
     {
       "id": "minecraft:mule",
-      "value": 130
+      "value": 13
     },
     {
       "id": "minecraft:parrot",
@@ -51,7 +51,7 @@
     },
     {
       "id": "minecraft:llama",
-      "value": 100
+      "value": 10
     },
     {
       "id": "minecraft:bee",
@@ -59,31 +59,31 @@
     },
     {
       "id": "minecraft:villager",
-      "value": 150
+      "value": 15
     },
     {
       "id": "minecraft:polar_bear",
-      "value": 100
+      "value": 10
     },
     {
       "id": "minecraft:trader_llama",
-      "value": 100
+      "value": 10
     },
     {
       "id": "minecraft:panda",
-      "value": 130
+      "value": 13
     },
     {
       "id": "minecraft:cat",
-      "value": 30
+      "value": 3
     },
     {
       "id": "minecraft:turtle",
-      "value": 50
+      "value": 5
     },
     {
       "id": "minecraft:fox",
-      "value": 40
+      "value": 4
     },
     {
       "id": "minecraft:skeleton_horse",

@@ -4,19 +4,19 @@
   "values": [
     {
       "id": "twilightforest:bighorn_sheep",
-      "value": 50
+      "value": 5
     },
     {
       "id": "twilightforest:wild_boar",
-      "value": 50
+      "value": 5
     },
     {
       "id": "twilightforest:deer",
-      "value": 50
+      "value": 5
     },
     {
       "id": "twilightforest:bunny",
-      "value": 20
+      "value": 2
     }
   ]
 }
