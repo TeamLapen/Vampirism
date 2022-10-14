@@ -1,9 +1,9 @@
 {
   "replace": "false",
   "values": {
-    "mca:entityhuman": 150,
-    "mca:entityvillagermca": 150,
-    "mca:male_villager": 150,
-    "mca:female_villager": 150
+    "mca:entityhuman": 15,
+    "mca:entityvillagermca": 15,
+    "mca:male_villager": 15,
+    "mca:female_villager": 15
   }
 }

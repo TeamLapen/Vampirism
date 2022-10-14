@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": {
-    "iceandfire:snowvillager": 150,
+    "iceandfire:snowvillager": 15,
     "iceandfire:dragon_skull": 0,
     "iceandfire:mob_skull": 0
   }

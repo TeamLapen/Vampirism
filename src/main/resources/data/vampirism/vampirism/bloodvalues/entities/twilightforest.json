@@ -2,9 +2,9 @@
   "author": "iamtpage",
   "replace": false,
   "values": {
-    "twilightforest:bighorn_sheep": 50,
-    "twilightforest:wild_boar": 50,
-    "twilightforest:deer": 50,
-    "twilightforest:bunny": 20
+    "twilightforest:bighorn_sheep": 5,
+    "twilightforest:wild_boar": 5,
+    "twilightforest:deer": 5,
+    "twilightforest:bunny": 2
   }
 }
