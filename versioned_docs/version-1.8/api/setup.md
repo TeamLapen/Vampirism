@@ -47,7 +47,7 @@ property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/ou
 ```
 
 Should this not work you can try to disable the refmap by adding `property 'mixin.env.disableRefMap', 'true'`.  
-If you still run into issues with mixins you can also set `mixin.env.ignoreRequired to `true`. However, not all of Vampirism will work correctly then.
+If you still run into issues with mixins you can also set `mixin.env.ignoreRequired` to `true`. However, not all of Vampirism will work correctly then.
 
 ## Examples
 

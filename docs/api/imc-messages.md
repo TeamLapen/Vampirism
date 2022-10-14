@@ -16,14 +16,14 @@ Find the parsing code [here](https://github.com/TeamLapen/Vampirism/blob/4bf2c73
 #### No-Sundamage Biome
 Disable sun damage for a biome of yours.
 ```
-key: "nosundamge-biome"
+key: "nosundamage-biome"
 payload: registry name of the biome as ResourceLocation
 ```
   
 Configuration per dimension id is only available per API as they might not be assigned during init.
 
 #### Disable Blood Bar
-YOu can request to disable the replacement of the food bar with the blood bar.
+You can request to disable the replacement of the food bar with the blood bar.
 ```
 key: disable-blood-bar
 payload: none
