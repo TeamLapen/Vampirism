@@ -117,12 +117,15 @@ Following commands requires the player to be admin
 ### Skill
 
 `/vampirism skill <skill> [<force>]`  
-`/vampirism skill disableall`
+`/vampirism skill disableall`  
+`/vampirism skill enableall`
 
 - `<skill>`: the skill id
 - `<force>`: `true` or `false`
 
 Unlock skills by command instead of the skill gui. If force is set skill point cap is ignored.
+
+The `enableall` option will unlock every visible skill. That includes skills that are mutual exclusive with other skills. 
 
 ### Config
 `/vampirism config`
