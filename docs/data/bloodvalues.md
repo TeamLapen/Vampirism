@@ -5,60 +5,63 @@ title: Blood Values
 
 Blood values can be configured for items, entities and fluids.
 
-## Items
-Item blood values are use in the grinder to determine the amount of impure blood they produce.
+## Types
+### Items
+Item blood values are used by the [Grinder](../wiki/content/blocks#grinder) to determine the amount of impure blood of an item when grinding it.
+A configured value of `20` means that the grinder will produce 20mb impure blood when grinding the item.
 
-#### Location
-Item blood values are placed in the `data/<modid>/vampirism_blood_values/items` folder.
+File location : `data/<your-modid>/vampirism/bloodvalues/items/<file-id>.json`
 
-#### Schema
-```text title="<modid>.txt"
-multiplier=100
+### Entities
+Entity blood values are relevant for biting creatures as Vampire. It determines the amount of blood the creature has or if it has no blood at all.
+A configured value of `10` means that the creature can fill 10 half-blood / 5 blood in the blood bar.
+A value of `0` means that the creature cannot be bitten.
 
-<item-id>=<value>
-<item-id>=<value>
-<item-id>=<value>
-<item-id>=<value>
+File location : `data/<your-modid>/vampirism/bloodvalues/entities/<file-id>.json`
+
+### Fluids
+Fluid blood values are conversion rates from other fluids to blood. It is used by the [Blood Sieve](../wiki/content/blocks#blood-sieve) to transform [Impure Blood](../wiki/content/fluids#impure-blood) into [Blood](../wiki/content/fluids#blood).
+But this also support third party fluids if configured. A configured value of `0.75` means that 1 bucket of the fluid is converted to 0.75 buckets of blood.
+
+File location : `data/<your-modid>/vampirism/bloodvalues/fluids/<file-id>.json`
+
+## Schema
+All types share the same schema:
+
+##### Minecraft 1.16
+```json title="<fileid>.json"
+{
+  "replace": false,
+  "values": {
+    "<item_id>": <blood_value>,
+    "<item_id>": <blood_value>,
+    "<item_id>": <blood_value>,
+    "<item_id>": <blood_value>
+  }
+}
 ```
-- `multiplier`: The multiplier for the specified blood values. The pre-specified value is 100 (and no need to override)
-- `<item-id>`: The registry id of the item.
-- `<value>`: The integer blood value in mb.
+- `<item-id>`: The registry id of the type.
+- `<blood_value>`: The floating point blood value.
 
-## Entities
-Entity blood values are used for the amount of blood an entity will have. This is used for drinking from entities or to mark them as undrinkable from.
-
-#### Location
-Entity blood values are placed in the `data/<modid>/vampirism_blood_values/entities` folder.
-
-#### Schema
-```text title="<modid>.txt"
-multiplier=10
-
-<entity-id>=<value>
-<entity-id>=<value>
-<entity-id>=<value>
-<entity-id>=<value>
+##### Minecraft 1.19
+```json title="<fileid>.json"
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "<item_id>",
+      "value": <blood_value>
+    },
+    {
+      "id": "<item_id>",
+      "value": <blood_value>
+    },
+    {
+      "id": "<item_id>",
+      "value": <blood_value>
+    }
+  ]
+}
 ```
-- `multiplier`: The multiplier for the specified blood values. It is decided by 10 before multiplying. The pre-specified value is 10 (and no need to override)
-- `<entity-id>`: The registry id of the entity.
-- `<value>`: The integer blood value.
-
-## Fluids
-Fluid blood values are used by the [Blood Grinder](../wiki/content/fluids.md#blood) to determine how the conversion rate of a fluid is to blood. For [Impure Blood](../wiki/content/fluids.md#impure-blood) this is 0.75.
-
-#### Location
-Fluid blood values are placed in the `data/<modid>/vampirism_blood_values/fluids` folder.
-
-### Schema
-
-```text title="<modid>.txt"
-divider=100
-
-<fluid-id>=<value>
-<fluid-id>=<value>
-<fluid-id>=<value>
-<fluid-id>=<value>
-```
-- `divider`: The divider for the conversion rate that is applied to all values after loading. The pre-specified value is 100 (and no need to override)
-- `<fluid-id>`: The registry name of the fluid.
-- `<value>`: The conversion rate of the fluid to blood. As integer percentage considering the divider.
+- `<item-id>`: The registry id of the type.
+- `<blood_value>`: The floating point blood value.
