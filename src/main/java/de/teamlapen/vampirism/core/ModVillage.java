@@ -150,7 +150,7 @@ public class ModVillage {
                 },
                 2, new VillagerTrades.ItemListing[]{
                         new Trades.ItemsForHeart(new Trades.Price(25, 30), ModItems.PURE_BLOOD_1.get(), new Trades.Price(1, 1), 10, 1),
-                        new Trades.ItemsForHeart(new Trades.Price(1, 5), ModBlocks.coffin_red.get(), new Trades.Price(1, 1), 2, 2),
+                        new Trades.ItemsForHeart(new Trades.Price(1, 5), ModBlocks.COFFIN_RED.get(), new Trades.Price(1, 1), 2, 2),
                         new Trades.ItemsForHeart(new Trades.Price(10, 25), ModItems.BLOOD_INFUSED_IRON_INGOT.get(), new Trades.Price(1, 3))
                 },
                 3, new VillagerTrades.ItemListing[]{

@@ -278,7 +278,7 @@ public class ModItems {
                 case "vampirism:item_med_chair" -> missingMapping.remap(ModBlocks.MED_CHAIR.get().asItem());
                 case "vampirism:bloody_spruce_log" -> missingMapping.remap(ModBlocks.CURSED_SPRUCE_LOG.get().asItem());
                 case "vampirism:bloody_spruce_leaves" -> missingMapping.remap(ModBlocks.DARK_SPRUCE_LEAVES.get().asItem());
-                case "vampirism:coffin" -> missingMapping.remap(ModBlocks.coffin_red.get().asItem());
+                case "vampirism:coffin" -> missingMapping.remap(ModBlocks.COFFIN_RED.get().asItem());
                 case "vampirism:holy_salt_water" -> missingMapping.remap(PURE_SALT_WATER.get());
                 case "vampirism:holy_salt" -> missingMapping.remap(PURE_SALT.get());
                 case "vampirism:injection_zombie_blood" -> missingMapping.remap(Items.APPLE);

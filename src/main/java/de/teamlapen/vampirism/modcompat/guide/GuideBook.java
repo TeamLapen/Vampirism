@@ -488,7 +488,7 @@ public class GuideBook implements IGuideBook {
         helper.info(ModBlocks.BLOOD_CONTAINER.get()).recipes("vampire/blood_container").build(entries);
         helper.info(ModBlocks.ALTAR_INSPIRATION.get()).setLinks(new ResourceLocation("guide.vampirism.vampire.leveling")).recipes("vampire/altar_inspiration").build(entries);
         helper.info(ModBlocks.ALTAR_INFUSION.get()).setLinks(new ResourceLocation("guide.vampirism.vampire.leveling")).recipes("vampire/altar_infusion", "vampire/altar_pillar", "vampire/altar_tip").build(entries);
-        helper.info(ModBlocks.coffin_red.get()).recipes("vampire/coffin_red").build(entries);
+        helper.info(ModBlocks.COFFIN_RED.get()).recipes("vampire/coffin_red").build(entries);
         helper.info(ModBlocks.ALTAR_CLEANSING.get()).build(entries);
         //Hunter
         helper.info(true, new ItemStack(ModBlocks.MED_CHAIR.get())).setFormats(loc(ModItems.INJECTION_GARLIC.get()), loc(ModItems.INJECTION_SANGUINARE.get())).recipes("hunter/item_med_chair").build(entries);
