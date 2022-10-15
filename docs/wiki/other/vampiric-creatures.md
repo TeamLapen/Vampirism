@@ -18,13 +18,8 @@ At time of writing following creatures can be turned: Cow, Llama, Cat, Panda, Pi
 If there is no vampiric version of the creature the creature just dies as soon as they do not have blood left.
 
 # Curing creatures
-Curing vampiric creatures is nearly the same as curing a Zombie villager.
-But instead of a Golden Apple you need an Infected Apple. 
+Curing vampiric creatures is the same as curing a Zombie villager.
 
-You must weaken the creature with an **weakness potion** and right click the creature with an **Infested Apple**
-
-![cure apple recipe](https://i.ibb.co/9YK2hwV/cure-apple.png)
-
-The infected apple is craftable with **7 Gold Nuggets**, **1 Apple** and **1 Zombie Blood Injection**
-
-The **Zombie Blood Injection** can be optained by interacting with a zombie while holding an **Empty Injection**
+1) apply the weakness effect to the creature  
+2) right-click the creature with a golden apple  
+3) wait for the creature to be cured  
