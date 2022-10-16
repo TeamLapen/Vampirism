@@ -25,7 +25,7 @@ Because of the vampire friendly territory all vampire creatures feel at home esp
 ![](../assets/biome/vampire_orchids.png)
 ## Fauna
 
-- [Vampire](./entities/vampire)
+- [Basic Vampire](./entities/vampire#basic-vampire)
 - [Vampire Baron](./entities/baron)
 - [Blinding Bat](./entities/blinding_bat)
 - [Vampiric Creature](./entities/bitten_animal)

@@ -15,7 +15,7 @@ Creatures can be turned by either a vampire player or other vampire entities. Wh
 
 At time of writing following creatures can be turned: Cow, Llama, Cat, Panda, Pig, Polarbear, Rabbit, Sheep, Villager, Horse
 
-If there is no vampiric version of the creature the creature just dies as soon as they do not have blood left.
+If there is no vampiric version of the creature, the creature just dies as soon as they do not have blood left.
 
 # Curing creatures
 Curing vampiric creatures is the same as curing a Zombie villager.
