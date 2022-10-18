@@ -47,7 +47,6 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             add(ModBlocks.CURSED_EARTH.get());
             add(ModBlocks.SUNSCREEN_BEACON.get());
             add(ModBlocks.TOTEM_TOP.get());
-            add(ModBlocks.VAMPIRE_ORCHID.get());
             add(ModBlocks.CHANDELIER.get());
             add(ModBlocks.CROSS.get());
             add(ModBlocks.TOMBSTONE1.get());
@@ -56,7 +55,6 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             add(ModBlocks.GRAVE_CAGE.get());
             add(ModBlocks.CURSED_GRASS.get());
             add(ModBlocks.DARK_SPRUCE_LOG.get());
-            add(ModBlocks.CURSED_ROOTS.get());
             add(ModBlocks.CURSED_SPRUCE_LOG.get());
             add(ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get());
             add(ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get());
@@ -171,6 +169,9 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
 
         withExistingParent(ModBlocks.DARK_SPRUCE_SAPLING.get(), mcLoc("item/generated")).texture("layer0", REFERENCE.MODID + ":block/dark_spruce_sapling");
         withExistingParent(ModBlocks.CURSED_SPRUCE_SAPLING.get(), mcLoc("item/generated")).texture("layer0", REFERENCE.MODID + ":block/cursed_spruce_sapling");
+
+        withExistingParent(ModBlocks.CURSED_ROOTS.get().asItem(), mcLoc("item/generated")).texture("layer0", REFERENCE.MODID + ":block/cursed_roots");
+        withExistingParent(ModBlocks.VAMPIRE_ORCHID.get().asItem(), mcLoc("item/generated")).texture("layer0", REFERENCE.MODID + ":block/vampire_orchid");
 
         withExistingParent(ModBlocks.ALCHEMICAL_FIRE.get(), modLoc("block/fire_side"));
         withExistingParent(ModBlocks.ALTAR_INSPIRATION.get(), modLoc("block/altar_inspiration/altar_inspiration"));
