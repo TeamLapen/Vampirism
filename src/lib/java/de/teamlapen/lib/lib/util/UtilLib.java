@@ -59,6 +59,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -791,5 +792,15 @@ public class UtilLib {
 
     public static @NotNull ResourceLocation amend(@NotNull ResourceLocation original, String amendment) {
         return new ResourceLocation(original.getNamespace(), original.getPath() + amendment);
+    }
+
+    public static void forEachBlockPos(AABB area, Consumer<BlockPos> action) {
+        for (double x = area.minX; x <= area.maxX; x++) {
+            for (double y = area.minY; y <= area.maxY; y++) {
+                for (double z = area.minZ; z <=  area.maxZ; z++) {
+                    action.accept(new BlockPos(x, y, z));
+                }
+            }
+        }
     }
 }

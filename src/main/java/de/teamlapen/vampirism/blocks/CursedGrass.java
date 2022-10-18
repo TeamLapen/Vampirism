@@ -1,9 +1,12 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.blocks.HolyWaterEffectConsumer;
+import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.HolyWaterBottleItem;
+import de.teamlapen.vampirism.items.HolyWaterSplashBottleItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -31,7 +34,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class CursedGrass extends SpreadingSnowyDirtBlock implements BonemealableBlock {
+public class CursedGrass extends SpreadingSnowyDirtBlock implements BonemealableBlock, HolyWaterEffectConsumer {
 
     public CursedGrass(@NotNull Properties properties) {
         super(properties);
@@ -123,14 +126,19 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
     public InteractionResult use(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
         ItemStack heldItemStack = player.getItemInHand(handIn);
         Item heldItem = heldItemStack.getItem();
-        if (heldItem instanceof HolyWaterBottleItem) {
+        if (heldItem instanceof HolyWaterBottleItem&& !(heldItem instanceof HolyWaterSplashBottleItem)) {
             int uses = heldItem == ModItems.HOLY_WATER_BOTTLE_ULTIMATE.get() ? 100 : (heldItem == ModItems.HOLY_WATER_BOTTLE_ENHANCED.get() ? 50 : 25);
-            if (player.getRandom().nextInt(uses) == 0) {
+            if (!player.getAbilities().instabuild && player.getRandom().nextInt(uses) == 0) {
                 heldItemStack.setCount(heldItemStack.getCount() - 1);
             }
             worldIn.setBlockAndUpdate(pos, Blocks.GRASS_BLOCK.defaultBlockState());
             return InteractionResult.SUCCESS;
         }
         return super.use(state, worldIn, pos, player, handIn, hit);
+    }
+
+    @Override
+    public void onHolyWaterEffect(Level level, BlockState state, BlockPos pos, ItemStack holyWaterStack, IItemWithTier.TIER tier) {
+        level.setBlockAndUpdate(pos, Blocks.GRASS_BLOCK.defaultBlockState());
     }
 }
