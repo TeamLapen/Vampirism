@@ -56,6 +56,7 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             add(ModBlocks.CURSED_GRASS.get());
             add(ModBlocks.DARK_SPRUCE_LOG.get());
             add(ModBlocks.CURSED_SPRUCE_LOG.get());
+            add(ModBlocks.CURSED_SPRUCE_LOG_CURED.get());
             add(ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get());
             add(ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get());
             add(ModBlocks.DARK_SPRUCE_PLANKS.get());
@@ -64,6 +65,7 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             add(ModBlocks.CURSED_SPRUCE_STAIRS.get());
             add(ModBlocks.DARK_SPRUCE_WOOD.get());
             add(ModBlocks.CURSED_SPRUCE_WOOD.get());
+            add(ModBlocks.CURSED_SPRUCE_WOOD_CURED.get());
             add(ModBlocks.STRIPPED_DARK_SPRUCE_WOOD.get());
             add(ModBlocks.STRIPPED_CURSED_SPRUCE_WOOD.get());
             add(ModBlocks.DARK_SPRUCE_PRESSURE_PLACE.get());

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.blocks;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
+import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
@@ -71,7 +72,7 @@ public class DirectCursedBarkBlock extends CursedBarkBlock {
 
     private boolean canAttachTo(@NotNull BlockGetter blockReader, @NotNull BlockPos pos, @NotNull Direction direction) {
         BlockState blockstate = blockReader.getBlockState(pos);
-        return blockstate.isFaceSturdy(blockReader, pos, direction);
+        return blockstate.getBlock() instanceof CursedSpruceBlock cursedSpruce && !cursedSpruce.isCured();
     }
 
     @Override

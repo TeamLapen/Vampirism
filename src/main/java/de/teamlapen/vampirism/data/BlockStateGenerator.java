@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.data;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -10,6 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.PressurePlateBlock;
+import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.WoodButtonBlock;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -281,8 +283,10 @@ public class BlockStateGenerator extends BlockStateProvider {
 
         logBlock(ModBlocks.DARK_SPRUCE_LOG.get());
         logBlock(ModBlocks.CURSED_SPRUCE_LOG.get());
+        axisBlock(ModBlocks.CURSED_SPRUCE_LOG_CURED.get(), blockTexture(ModBlocks.CURSED_SPRUCE_LOG.get()), UtilLib.amend(blockTexture(ModBlocks.CURSED_SPRUCE_LOG.get()), "_top"));
         axisBlock(ModBlocks.DARK_SPRUCE_WOOD.get(), blockTexture(ModBlocks.DARK_SPRUCE_LOG.get()), blockTexture(ModBlocks.DARK_SPRUCE_LOG.get()));
         axisBlock(ModBlocks.CURSED_SPRUCE_WOOD.get(), blockTexture(ModBlocks.CURSED_SPRUCE_LOG.get()), blockTexture(ModBlocks.CURSED_SPRUCE_LOG.get()));
+        axisBlock(ModBlocks.CURSED_SPRUCE_WOOD_CURED.get(), blockTexture(ModBlocks.CURSED_SPRUCE_LOG.get()), blockTexture(ModBlocks.CURSED_SPRUCE_LOG.get()));
         logBlock(ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get());
         logBlock(ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get());
         axisBlock(ModBlocks.STRIPPED_DARK_SPRUCE_WOOD.get(), blockTexture(ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get()), blockTexture(ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get()));

@@ -1,8 +1,10 @@
 {
   "values": [
     "vampirism:cursed_spruce_log",
+    "vampirism:cursed_spruce_log_cured",
     "vampirism:stripped_cursed_spruce_log",
     "vampirism:cursed_spruce_wood",
+    "vampirism:cursed_spruce_wood_cured",
     "vampirism:stripped_cursed_spruce_wood"
   ]
 }

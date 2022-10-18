@@ -296,11 +296,13 @@ public class LootTablesGenerator extends LootTableProvider {
             this.dropSelf(ModBlocks.DARK_SPRUCE_LOG.get());
             this.dropPottedContents(ModBlocks.POTTED_CURSED_ROOTS.get());
             this.dropSelf(ModBlocks.CURSED_SPRUCE_LOG.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_LOG_CURED.get());
             this.add(ModBlocks.DIRECT_CURSED_BARK.get(), noDrop());
             this.dropSelf(ModBlocks.DARK_SPRUCE_STAIRS.get());
             this.dropSelf(ModBlocks.CURSED_SPRUCE_STAIRS.get());
             this.dropSelf(ModBlocks.DARK_SPRUCE_WOOD.get());
             this.dropSelf(ModBlocks.CURSED_SPRUCE_WOOD.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_WOOD_CURED.get());
             this.dropSelf(ModBlocks.STRIPPED_DARK_SPRUCE_WOOD.get());
             this.dropSelf(ModBlocks.STRIPPED_CURSED_SPRUCE_WOOD.get());
             this.dropSelf(ModBlocks.DARK_SPRUCE_SIGN.get());
