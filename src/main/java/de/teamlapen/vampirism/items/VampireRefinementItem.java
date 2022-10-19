@@ -131,8 +131,13 @@ public class VampireRefinementItem extends Item implements IRefinementItem { //T
     @Nullable
     @Override
     public IRefinementSet getRefinementSet(ItemStack stack) {
-        String refinementsNBT = stack.getOrCreateTag().getString("refinement_set");
-        return ModRegistries.REFINEMENT_SETS.getValue(new ResourceLocation(refinementsNBT));
+        if (stack.hasTag()) {
+            //noinspection DataFlowIssue
+            String refinementsNBT = stack.getTag().getString("refinement_set");
+            return ModRegistries.REFINEMENT_SETS.getValue(new ResourceLocation(refinementsNBT));
+        } else {
+            return null;
+        }
     }
 
     @Override

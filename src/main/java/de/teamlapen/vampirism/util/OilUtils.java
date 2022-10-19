@@ -53,25 +53,30 @@ public class OilUtils {
     }
 
     public static boolean reduceAppliedOilDuration(@Nonnull ItemStack stack, IApplicableOil oil, int durationReduction) {
-        CompoundNBT compound = stack.getOrCreateTag().getCompound("applied_oil");
-        if (compound.getString("oil").equals(oil.getRegistryName().toString())) {
-            int duration = compound.getInt("duration") -durationReduction;
-            if (duration <= 0) {
-                removeAppliedOil(stack);
-                return true;
-            } else {
-                compound.putInt("duration", duration);
-                return false;
+        if(stack.hasTag()) {
+            CompoundNBT compound = stack.getOrCreateTag().getCompound("applied_oil");
+            if (compound.getString("oil").equals(oil.getRegistryName().toString())) {
+                int duration = compound.getInt("duration") - durationReduction;
+                if (duration <= 0) {
+                    removeAppliedOil(stack);
+                    return true;
+                } else {
+                    compound.putInt("duration", duration);
+                    return false;
+                }
             }
         }
         return true;
     }
 
     public static boolean hasAppliedOil(@Nonnull ItemStack stack) {
-        return stack.getOrCreateTag().getCompound("applied_oil").contains("oil");
+        return stack.hasTag() && stack.getOrCreateTag().getCompound("applied_oil").contains("oil");
     }
 
     public static Optional<Pair<IApplicableOil, Integer>> getAppliedOilStatus(@Nonnull ItemStack stack) {
+        if (!stack.hasTag()) {
+            return Optional.empty();
+        }
         CompoundNBT compound = stack.getOrCreateTag().getCompound("applied_oil");
         if (compound.contains("oil")) {
             IOil oil = ModRegistries.OILS.getValue(new ResourceLocation(compound.getString("oil")));
@@ -88,7 +93,9 @@ public class OilUtils {
     }
 
     public static ItemStack removeAppliedOil(@Nonnull ItemStack stack) {
-        stack.getOrCreateTag().remove("applied_oil");
+        if (stack.hasTag()) {
+            stack.getOrCreateTag().remove("applied_oil");
+        }
         return stack;
     }
 
