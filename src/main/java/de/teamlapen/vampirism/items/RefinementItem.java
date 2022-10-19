@@ -97,8 +97,12 @@ public abstract class RefinementItem extends Item implements IRefinementItem {
     @Nullable
     @Override
     public IRefinementSet getRefinementSet(@NotNull ItemStack stack) {
-        String refinementsNBT = stack.getOrCreateTag().getString("refinement_set");
-        return RegUtil.getRefinementSet(new ResourceLocation(refinementsNBT));
+        if (stack.hasTag()) {
+            String refinementsNBT = stack.getTag().getString("refinement_set");
+            return RegUtil.getRefinementSet(new ResourceLocation(refinementsNBT));
+        } else {
+            return null;
+        }
     }
 
     @Override
