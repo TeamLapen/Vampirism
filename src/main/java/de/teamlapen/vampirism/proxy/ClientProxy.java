@@ -63,14 +63,15 @@ public class ClientProxy extends CommonProxy {
     private final ClientSkillTreeManager skillTreeManager = new ClientSkillTreeManager();
     private VampirismHUDOverlay overlay;
     private CustomBossEventOverlay bossInfoOverlay;
+    private RenderHandler renderHandler;
 
     public ClientProxy() {
         //Minecraft.instance is null during runData.
         //noinspection ConstantConditions
         if (Minecraft.getInstance() != null) {
-            RenderHandler renderHandler = new RenderHandler(Minecraft.getInstance());
-            MinecraftForge.EVENT_BUS.register(renderHandler);
-            ((ReloadableResourceManager) Minecraft.getInstance().getResourceManager()).registerReloadListener(renderHandler); // Must be added before initial resource manager load
+            this.renderHandler = new RenderHandler(Minecraft.getInstance());
+            MinecraftForge.EVENT_BUS.register(this.renderHandler);
+            ((ReloadableResourceManager) Minecraft.getInstance().getResourceManager()).registerReloadListener(this.renderHandler); // Must be added before initial resource manager load
         }
     }
 
@@ -265,5 +266,10 @@ public class ClientProxy extends CommonProxy {
             }
 
         });
+    }
+
+    @Override
+    public void endBloodVisionBatch() {
+        this.renderHandler.endBloodVisionBatch();
     }
 }

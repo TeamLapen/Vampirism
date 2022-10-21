@@ -86,4 +86,8 @@ public interface IProxy extends IInitListener {
     default void setupAPIClient() {
     }
 
+    default void endBloodVisionBatch() {
+
+    }
+
 }

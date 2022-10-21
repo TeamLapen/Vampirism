@@ -28,6 +28,7 @@
   "client": [
     "client.AgeableModelAccessor",
     "client.BossOverlayGuiAccessor",
+    "client.LevelRendererMixin",
     "client.SheetsMixin"
   ],
   "injectors": {
