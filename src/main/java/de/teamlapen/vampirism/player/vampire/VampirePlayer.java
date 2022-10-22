@@ -653,7 +653,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public boolean onDeadlyHit(DamageSource source) {
-        if (getLevel() > 0 && !this.player.hasEffect(ModEffects.NEONATAL.get()) && !Helper.canKillVampires(source)) {
+        if (getLevel() > 0 && !this.player.hasEffect(ModEffects.NEONATAL.get()) && !Helper.canKillVampires(source) && !Helper.isDBNODisabledForCompat(this.player)) {
             this.setDBNOTimer(getDbnoDuration());
             this.player.setHealth(0.5f);
             this.player.setForcedPose(Pose.SLEEPING);

@@ -43,6 +43,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.*;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.logging.log4j.LogManager;
@@ -334,6 +335,14 @@ public class Helper {
             }
         }
         return true;
+    }
+
+    public static boolean isDBNODisabledForCompat(Entity t){
+        if(!t.level.isClientSide() && ModList.get().isLoaded("playerrevive") && t.getServer()!= null && t.getServer().isPublished()){
+            LOGGER.warn("Disabled DBNO due to soft-lock bug together with PlayerRevive. Uninstall PlayerRevive if you want to use DBNO");
+            return true;
+        }
+        return false;
     }
 
 }
