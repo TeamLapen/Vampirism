@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -144,7 +145,7 @@ public class BalanceBuilder {
      * @return null, for drop-in replacement
      */
     @SuppressWarnings("SameReturnValue")
-    public ForgeConfigSpec.@Nullable BooleanValue define(String name, boolean defaultValue) {
+    public ForgeConfigSpec.@UnknownNullability BooleanValue define(String name, boolean defaultValue) {
         add(new BalanceBuilder.BoolConf(name, defaultValue));
         return null;
     }
@@ -153,7 +154,7 @@ public class BalanceBuilder {
      * @return null, for drop-in replacement
      */
     @SuppressWarnings("SameReturnValue")
-    public ForgeConfigSpec.@Nullable IntValue defineInRange(String name, int def, int min, int max) {
+    public ForgeConfigSpec.@UnknownNullability IntValue defineInRange(String name, int def, int min, int max) {
         add(new BalanceBuilder.IntConf(name, def, min, max));
         return null;
     }
@@ -162,7 +163,7 @@ public class BalanceBuilder {
      * @return null, for drop-in replacement
      */
     @SuppressWarnings("SameReturnValue")
-    public ForgeConfigSpec.@Nullable DoubleValue defineInRange(String name, double def, double min, double max) {
+    public ForgeConfigSpec.@UnknownNullability  DoubleValue defineInRange(String name, double def, double min, double max) {
         add(new BalanceBuilder.DoubleConf(name, def, min, max));
         return null;
     }
@@ -171,7 +172,7 @@ public class BalanceBuilder {
      * @return null, for drop-in replacement
      */
     @SuppressWarnings("SameReturnValue")
-    public ForgeConfigSpec.@Nullable ConfigValue<List<? extends String>> defineList(String name, @NotNull List<String> defaultValues, Predicate<Object> validator) {
+    public ForgeConfigSpec.@UnknownNullability ConfigValue<List<? extends String>> defineList(String name, @NotNull List<String> defaultValues, Predicate<Object> validator) {
         add(new BalanceBuilder.StringList(name, defaultValues, validator));
         return null;
     }

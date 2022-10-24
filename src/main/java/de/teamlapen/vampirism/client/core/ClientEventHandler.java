@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.oil.IArmorOil;
+import de.teamlapen.vampirism.api.items.oil.IToolOil;
 import de.teamlapen.vampirism.api.items.oil.IWeaponOil;
 import de.teamlapen.vampirism.client.model.blocks.BakedAltarInspirationModel;
 import de.teamlapen.vampirism.client.model.blocks.BakedBloodContainerModel;
@@ -172,7 +173,7 @@ public class ClientEventHandler {
                 }
                 if (pair.getLeft() instanceof IArmorOil) {
                     return Component.translatable("text.vampirism.poisonous_to_non", VReference.HUNTER_FACTION.getNamePlural()).withStyle(ChatFormatting.DARK_RED);
-                } else if (pair.getLeft() instanceof IWeaponOil) {
+                } else if (pair.getLeft() instanceof IWeaponOil || pair.getLeft() instanceof IToolOil) {
                     return VReference.HUNTER_FACTION.getNamePlural().plainCopy().withStyle(ChatFormatting.DARK_RED);
                 }
             } else {
@@ -184,7 +185,7 @@ public class ClientEventHandler {
             int flags = getHideFlags(event.getItemStack());
             if (shouldShowInTooltip(flags, ItemStack.TooltipPart.ADDITIONAL)) ++position;
 
-            event.getToolTip().add(position, tooltipLine);
+            event.getToolTip().add(Math.min(event.getToolTip().size(), position), tooltipLine);
         });
     }
 
