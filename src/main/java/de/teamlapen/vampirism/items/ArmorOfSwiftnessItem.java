@@ -68,8 +68,8 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmorItem implements II
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         addTierInformation(tooltip);
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
     }
 
     @Override

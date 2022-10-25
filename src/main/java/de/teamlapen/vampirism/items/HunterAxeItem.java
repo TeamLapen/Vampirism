@@ -36,9 +36,9 @@ public class HunterAxeItem extends VampirismHunterWeaponItem implements IItemWit
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         addTierInformation(tooltip);
         tooltip.add(Component.translatable("text.vampirism.deals_more_damage_to", Math.round((getVampireMult() - 1) * 100), VReference.VAMPIRE_FACTION.getNamePlural()).withStyle(ChatFormatting.GRAY));
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
     }
 
     @Override

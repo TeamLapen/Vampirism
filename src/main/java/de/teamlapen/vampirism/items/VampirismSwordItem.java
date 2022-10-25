@@ -38,7 +38,6 @@ public class VampirismSwordItem extends SwordItem {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if (flagIn.isAdvanced()) {
             tooltip.add(Component.literal("ModDamage: " + getAttackDamage(stack)).withStyle(ChatFormatting.GRAY));
             tooltip.add(Component.literal("ModSpeed: " + getAttackSpeed(stack)).withStyle(ChatFormatting.GRAY));

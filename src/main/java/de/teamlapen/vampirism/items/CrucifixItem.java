@@ -97,11 +97,8 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        addTierInformation(tooltip);
-        Player playerEntity = VampirismMod.proxy.getClientPlayer();
-        this.addFactionPoisonousToolTip(stack, worldIn, tooltip, flagIn, playerEntity);
-
+        this.addTierInformation(tooltip);
+        this.addFactionToolTips(stack, worldIn, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());
     }
 
     @Override

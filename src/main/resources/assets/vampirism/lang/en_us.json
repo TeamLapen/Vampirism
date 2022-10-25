@@ -96,6 +96,8 @@
   "text.vampirism.oils.cannot_use": "You can not handle oiled items",
   "text.vampirism.skills.level": "Level Skills",
   "text.vampirism.skills.lord": "Lord Skills",
+  "text.vampirism.faction_specifics": "Faction specifics:",
+  "text.vampirism.faction_only": " only",
   "__comment": "block interaction texts",
   "text.vampirism.med_chair_other_faction": "You cannot become a Hunter since you already are a %s",
   "__comment": "faction item texts",

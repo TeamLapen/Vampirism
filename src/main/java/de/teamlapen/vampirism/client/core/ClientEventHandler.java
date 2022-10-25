@@ -20,6 +20,7 @@ import de.teamlapen.vampirism.proxy.ClientProxy;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.OilUtils;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.BlockModelRotation;
@@ -49,7 +50,9 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Handle general client side events
@@ -164,28 +167,31 @@ public class ClientEventHandler {
         }
     }
 
+    /**
+     * This event will handle all items except {@link de.teamlapen.vampirism.api.items.IFactionLevelItem}s. Their oil 
+     * @param event
+     */
     @SubscribeEvent
     public void onItemToolTip(@NotNull ItemTooltipEvent event) {
-        OilUtils.getAppliedOilStatus(event.getItemStack()).map(pair -> {
-            if (event.getEntity() != null && !Helper.isHunter(event.getEntity())) {
-                if (event.getItemStack().getItem() instanceof IFactionExclusiveItem && ((IFactionExclusiveItem) event.getItemStack().getItem()).getExclusiveFaction(event.getItemStack()) == VReference.HUNTER_FACTION) {
-                    return null;
-                }
-                if (pair.getLeft() instanceof IArmorOil) {
-                    return Component.translatable("text.vampirism.poisonous_to_non", VReference.HUNTER_FACTION.getNamePlural()).withStyle(ChatFormatting.DARK_RED);
-                } else if (pair.getLeft() instanceof IWeaponOil || pair.getLeft() instanceof IToolOil) {
-                    return VReference.HUNTER_FACTION.getNamePlural().plainCopy().withStyle(ChatFormatting.DARK_RED);
-                }
-            } else {
-                return pair.getLeft().getToolTipLine(event.getItemStack(), pair.getKey(), pair.getValue(), event.getFlags()).orElse(null);
-            }
-            return null;
-        }).ifPresent(tooltipLine -> {
+        if (event.getItemStack().getItem() instanceof IFactionExclusiveItem) return;
+        OilUtils.getAppliedOilStatus(event.getItemStack()).ifPresent(oil -> {
+            List<Component> toolTips = event.getToolTip();
             int position = 1;
             int flags = getHideFlags(event.getItemStack());
-            if (shouldShowInTooltip(flags, ItemStack.TooltipPart.ADDITIONAL)) ++position;
-
-            event.getToolTip().add(Math.min(event.getToolTip().size(), position), tooltipLine);
+            if (shouldShowInTooltip(flags, ItemStack.TooltipPart.ADDITIONAL)) {
+                ArrayList<Component> additionalComponents = new ArrayList<>();
+                event.getItemStack().getItem().appendHoverText(event.getItemStack(), Minecraft.getInstance().player == null ? null : Minecraft.getInstance().player.level, additionalComponents, event.getFlags());
+                position += additionalComponents.size();
+                Optional<Component> oilTooltip = oil.getKey().getToolTipLine(event.getItemStack(), oil.getKey(), oil.getValue(), event.getFlags());
+                if (oilTooltip.isPresent()) {
+                    toolTips.add(position++, oilTooltip.get());
+                }
+            }
+            List<Component> factionToolTips = new ArrayList<>();
+            factionToolTips.add(Component.empty());
+            factionToolTips.add(Component.translatable("text.vampirism.faction_specifics").withStyle(ChatFormatting.GRAY));
+            factionToolTips.add(Component.translatable(" ").append(VReference.HUNTER_FACTION.getName()).append(Component.translatable("text.vampirism.faction_only")).withStyle(Minecraft.getInstance().player != null ? Helper.isHunter(Minecraft.getInstance().player) ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED : ChatFormatting.GRAY));
+            toolTips.addAll(Math.min(event.getToolTip().size(), position), factionToolTips);
         });
     }
 

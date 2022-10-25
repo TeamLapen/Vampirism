@@ -28,40 +28,30 @@ import java.util.List;
  */
 public interface IFactionLevelItem<T extends IFactionPlayer<T>> extends IFactionExclusiveItem {
 
-    @SuppressWarnings("RedundantCast")
     @OnlyIn(Dist.CLIENT)
+    @Deprecated(since = "1.9", forRemoval = true)
     default void addFactionLevelToolTip(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, TooltipFlag flagIn, @Nullable Player player) {
-        ChatFormatting factionC = ChatFormatting.DARK_RED;
-        ChatFormatting levelC = ChatFormatting.DARK_RED;
-        ChatFormatting skillC = ChatFormatting.DARK_RED;
+        addFactionToolTips(stack, worldIn, tooltip, flagIn, player);
+    }
 
+    @Override
+    default void addFactionToolTips(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, TooltipFlag flagIn, @Nullable Player player) {
         LazyOptional<IFactionPlayerHandler> playerHandler = player != null && player.isAlive() ? VampirismAPI.getFactionPlayerHandler(player) : LazyOptional.empty();
 
-        IFaction<?> usingFaction = getExclusiveFaction(stack);
+        IFactionExclusiveItem.super.addFactionToolTips(stack, worldIn, tooltip, flagIn, player);
+
+        boolean correctFaction = playerHandler.map(f -> f.isInFaction(getExclusiveFaction(stack))).orElse(false);
+        int minLevel = getMinLevel(stack);
+        if (minLevel > 1) {
+            tooltip.add(Component.translatable(" Required Level:").append(" ").append(String.valueOf(minLevel)).withStyle(correctFaction ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED));
+        }
         ISkill<T> requiredSkill = getRequiredSkill(stack);
-        int reqLevel = getMinLevel(stack);
-        if ((Boolean) playerHandler.map(p -> p.isInFaction(usingFaction)).orElse(false)) {
-            factionC = ChatFormatting.GREEN;
-            if (playerHandler.map(IFactionPlayerHandler::getCurrentLevel).orElse(0) >= reqLevel) {
-                levelC = ChatFormatting.GREEN;
-            }
-            if ((Boolean) playerHandler.map(IFactionPlayerHandler::getCurrentFactionPlayer).flatMap(a -> a.map(b -> b.getSkillHandler().isSkillEnabled(requiredSkill))).orElse(false)) {
-                skillC = ChatFormatting.GREEN;
-            }
-        }
-
-
-        if (usingFaction == null && getMinLevel(stack) == 0) return;
-        MutableComponent string = Component.literal("").append(usingFaction == null ? Component.translatable("text.vampirism.all") : usingFaction.getNamePlural()).withStyle(factionC);
-        if (getMinLevel(stack) > 0) {
-            string.append(Component.literal("@" + getMinLevel(stack)).withStyle(levelC));
-        }
-        tooltip.add(string);
-        ISkill<T> reqSkill = this.getRequiredSkill(stack);
-        if (reqSkill != null) {
-            tooltip.add(Component.translatable("text.vampirism.required_skill", reqSkill.getName()).withStyle(skillC));
+        if (requiredSkill != null) {
+            tooltip.add(Component.literal(" ").append(Component.translatable("text.vampirism.required_skill").append(requiredSkill.getName())).withStyle(correctFaction && playerHandler.map(IFactionPlayerHandler::getCurrentFactionPlayer).flatMap(p -> p.map(d-> d.getSkillHandler().isSkillEnabled(requiredSkill))).orElse(false) ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED));
         }
     }
+
+
 
     /**
      * @return The level the player has to be to use this item
