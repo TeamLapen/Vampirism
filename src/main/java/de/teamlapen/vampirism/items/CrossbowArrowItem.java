@@ -51,8 +51,10 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
         switch (type) {
             case SPITFIRE:
                 textComponents.add(new TranslationTextComponent("item.vampirism.crossbow_arrow_spitfire.tooltip").withStyle(TextFormatting.GRAY));
+                break;
             case VAMPIRE_KILLER:
                 textComponents.add(new TranslationTextComponent("item.vampirism.crossbow_arrow_vampire_killer.tooltip").withStyle(TextFormatting.GRAY));
+                break;
             case TELEPORT:
                 textComponents.add(new TranslationTextComponent("item.vampirism.crossbow_arrow_teleport.tooltip").withStyle(TextFormatting.GRAY));
                 break;
