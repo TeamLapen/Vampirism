@@ -50,7 +50,7 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
     @Override
     public void appendHoverText(@Nonnull ItemStack stack, @Nullable World level, @Nonnull List<ITextComponent> tooltips, @Nonnull ITooltipFlag flag) {
         super.appendHoverText(stack, level, tooltips, flag);
-        this.addFactionLevelToolTip(stack, level, tooltips, flag,  VampirismMod.proxy.getClientPlayer());
+        this.addFactionToolTips(stack, level, tooltips, flag,  VampirismMod.proxy.getClientPlayer());
     }
 
     @Override

@@ -42,8 +42,7 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        PlayerEntity playerEntity = VampirismMod.proxy.getClientPlayer();
-        this.addFactionPoisonousToolTip(stack, worldIn, tooltip, flagIn, playerEntity);
+        this.addFactionExclusiveToolTips(stack, worldIn, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());
     }
 
     @Nullable

@@ -68,12 +68,13 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        this.addFactionLevelToolTip(stack, worldIn, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());
         float charged = getCharged(stack);
         float trained = getTrained(stack, VampirismMod.proxy.getClientPlayer());
         tooltip.add(new TranslationTextComponent("text.vampirism.sword_charged").append(new StringTextComponent(" " + ((int) Math.ceil(charged * 100f)) + "%")).withStyle(TextFormatting.DARK_AQUA));
         tooltip.add(new TranslationTextComponent("text.vampirism.sword_trained").append(new StringTextComponent(" " + ((int) Math.ceil(trained * 100f)) + "%")).withStyle(TextFormatting.DARK_AQUA));
+
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        this.addFactionLevelToolTip(stack, worldIn, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());
     }
 
     @Override

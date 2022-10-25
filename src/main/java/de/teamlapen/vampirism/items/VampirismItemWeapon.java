@@ -38,7 +38,6 @@ public class VampirismItemWeapon extends SwordItem {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if (flagIn.isAdvanced()) {
             tooltip.add(new StringTextComponent("ModDamage: " + getAttackDamage(stack)).withStyle(TextFormatting.GRAY));
             tooltip.add(new StringTextComponent("ModSpeed: " + getAttackSpeed(stack)).withStyle(TextFormatting.GRAY));

@@ -14,12 +14,14 @@ import de.teamlapen.vampirism.client.model.blocks.BakedBloodContainerModel;
 import de.teamlapen.vampirism.client.model.blocks.BakedWeaponTableModel;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.effects.VampirismPotion;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.proxy.ClientProxy;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.OilUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.BlockModel;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.IUnbakedModel;
@@ -34,6 +36,7 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -49,8 +52,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
+import javax.xml.soap.Text;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Handle general client side events
@@ -198,30 +205,31 @@ public class ClientEventHandler {
         }
     }
 
+    /**
+     * This event will handle all items except {@link de.teamlapen.vampirism.api.items.IFactionLevelItem}s. Their oil
+     * @param event
+     */
     @SubscribeEvent
-    public void onItemToolTip(ItemTooltipEvent event) {
-        OilUtils.getAppliedOilStatus(event.getItemStack()).ifPresent(pair -> {
-            ITextComponent tooltipLine = null;
-            if (event.getPlayer() != null && !Helper.isHunter(event.getPlayer())) {
-                if (event.getItemStack().getItem() instanceof IFactionExclusiveItem && ((IFactionExclusiveItem) event.getItemStack().getItem()).getExclusiveFaction() == VReference.HUNTER_FACTION) {
-                    return;
+    public void onItemToolTip(@Nonnull ItemTooltipEvent event) {
+        if (event.getItemStack().getItem() instanceof IFactionExclusiveItem) return;
+        OilUtils.getAppliedOilStatus(event.getItemStack()).ifPresent(oil -> {
+            List<ITextComponent> toolTips = event.getToolTip();
+            int position = 1;
+            int flags = getHideFlags(event.getItemStack());
+            if (shouldShowInTooltip(flags, ItemStack.TooltipDisplayFlags.ADDITIONAL)) {
+                ArrayList<ITextComponent> additionalComponents = new ArrayList<>();
+                event.getItemStack().getItem().appendHoverText(event.getItemStack(), Minecraft.getInstance().player == null ? null : Minecraft.getInstance().player.level, additionalComponents, event.getFlags());
+                position += additionalComponents.size();
+                Optional<ITextComponent> oilTooltip = oil.getKey().getToolTipLine(event.getItemStack(), oil.getKey(), oil.getValue(), event.getFlags());
+                if (oilTooltip.isPresent()) {
+                    toolTips.add(position++, oilTooltip.get());
                 }
-                if (pair.getLeft() instanceof IArmorOil) {
-                    tooltipLine = new TranslationTextComponent("text.vampirism.poisonous_to_non", VReference.HUNTER_FACTION.getNamePlural()).withStyle(TextFormatting.DARK_RED);
-                } else if (pair.getLeft() instanceof IWeaponOil || pair.getLeft() instanceof IToolOil) {
-                    tooltipLine = VReference.HUNTER_FACTION.getNamePlural().plainCopy().withStyle(TextFormatting.DARK_RED);
-                }
-            } else {
-                tooltipLine = pair.getLeft().getToolTipLine(event.getItemStack(), pair.getKey(), pair.getValue(), event.getFlags()).orElse(null);
             }
-
-            if (tooltipLine != null) {
-                int position = 1;
-                int flags = getHideFlags(event.getItemStack());
-                if (shouldShowInTooltip(flags, ItemStack.TooltipDisplayFlags.ADDITIONAL)) ++position;
-
-                event.getToolTip().add(Math.min(event.getToolTip().size(), position), tooltipLine);
-            }
+            List<ITextComponent> factionToolTips = new ArrayList<>();
+            factionToolTips.add(StringTextComponent.EMPTY);
+            factionToolTips.add(new TranslationTextComponent("text.vampirism.faction_specifics").withStyle(TextFormatting.GRAY));
+            factionToolTips.add(new TranslationTextComponent(" ").append(VReference.HUNTER_FACTION.getName()).append(new TranslationTextComponent("text.vampirism.faction_only")).withStyle(Minecraft.getInstance().player != null ? Helper.isHunter(Minecraft.getInstance().player) ? TextFormatting.DARK_GREEN : TextFormatting.DARK_RED : TextFormatting.GRAY));
+            toolTips.addAll(Math.min(event.getToolTip().size(), position), factionToolTips);
         });
     }
 

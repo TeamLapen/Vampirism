@@ -93,6 +93,6 @@ public class StakeItem extends VampirismItemWeapon implements IVampireFinisher, 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        this.addFactionPoisonousToolTip(stack, worldIn, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());
+        this.addFactionExclusiveToolTips(stack, worldIn, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());
     }
 }

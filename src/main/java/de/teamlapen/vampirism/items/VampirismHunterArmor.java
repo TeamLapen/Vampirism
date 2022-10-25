@@ -44,9 +44,7 @@ public abstract class VampirismHunterArmor extends ArmorItem implements IFaction
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        PlayerEntity player = VampirismMod.proxy.getClientPlayer();
-        addFactionPoisonousToolTip(stack, worldIn, tooltip, flagIn, player);
+        this.addFactionExclusiveToolTips(stack, worldIn, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());
     }
 
     @Override

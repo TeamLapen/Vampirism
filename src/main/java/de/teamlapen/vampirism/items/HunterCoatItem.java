@@ -52,8 +52,8 @@ public class HunterCoatItem extends VampirismHunterArmor implements IItemWithTie
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         addTierInformation(tooltip);
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
     }
 
     @Override

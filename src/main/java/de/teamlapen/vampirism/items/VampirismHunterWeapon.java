@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
 import de.teamlapen.vampirism.api.items.IVampireFinisher;
+import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.IItemTier;
@@ -25,7 +26,7 @@ import java.util.List;
 /**
  * Basic sword for vampire hunters
  */
-public abstract class VampirismHunterWeapon extends VampirismItemWeapon implements IFactionLevelItem, IFactionSlayerItem, IVampireFinisher, IFactionExclusiveItem {
+public abstract class VampirismHunterWeapon extends VampirismItemWeapon implements IFactionLevelItem<HunterPlayer>, IFactionSlayerItem, IVampireFinisher, IFactionExclusiveItem {
 
 
     public VampirismHunterWeapon(IItemTier material, int attackDamage, float attackSpeed, Properties props) {
@@ -36,10 +37,7 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        if (getUsingFaction(stack) != null || getMinLevel(stack) > 0 || getRequiredSkill(stack) != null) {
-            PlayerEntity player = VampirismMod.proxy.getClientPlayer();
-            addFactionLevelToolTip(stack, worldIn, tooltip, flagIn, player);
-        }
+        addFactionToolTips(stack, worldIn, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());
     }
 
 
