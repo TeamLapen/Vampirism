@@ -26,8 +26,9 @@ public class VampirismPoisonEffect extends VampirismEffect {
 
     @Override
     public void applyEffectTick(@NotNull LivingEntity entityLivingBaseIn, int amplifier) {
-        if (entityLivingBaseIn.getHealth() > 1f || amplifier >= DEADLY_AMPLIFIER) {
-            entityLivingBaseIn.hurt(DamageSource.MAGIC, Math.min( Math.max(0, entityLivingBaseIn.getHealth() - 0.5f), amplifier + 1));
+        float damage = amplifier >= DEADLY_AMPLIFIER ? amplifier : Math.min(entityLivingBaseIn.getHealth() - 1, amplifier);
+        if (damage > 0) {
+            entityLivingBaseIn.hurt(DamageSource.MAGIC, damage);
         }
     }
 
