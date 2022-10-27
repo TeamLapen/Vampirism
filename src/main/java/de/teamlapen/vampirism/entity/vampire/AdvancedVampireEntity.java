@@ -5,6 +5,7 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
+import de.teamlapen.vampirism.api.entity.VampireBookLootProvider;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.vampire.IAdvancedVampire;
@@ -55,7 +56,7 @@ import java.util.Optional;
 /**
  * Advanced vampire. Is strong. Represents supporters
  */
-public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvancedVampire, IPlayerOverlay, IEntityActionUser {
+public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvancedVampire, IPlayerOverlay, IEntityActionUser, VampireBookLootProvider {
     private static final EntityDataAccessor<Integer> LEVEL = SynchedEntityData.defineId(AdvancedVampireEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(AdvancedVampireEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<String> NAME = SynchedEntityData.defineId(AdvancedVampireEntity.class, EntityDataSerializers.STRING);
@@ -156,6 +157,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         }
     }
 
+    @Override
     public @NotNull Optional<String> getBookLootId() {
         return Optional.ofNullable(lootBookId);
     }
