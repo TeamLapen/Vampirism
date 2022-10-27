@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.world.loot.*;
+import de.teamlapen.vampirism.world.loot.conditions.FactionCondition;
 import net.minecraft.loot.LootConditionType;
 import net.minecraft.loot.LootFunctionType;
 import net.minecraft.util.ResourceLocation;

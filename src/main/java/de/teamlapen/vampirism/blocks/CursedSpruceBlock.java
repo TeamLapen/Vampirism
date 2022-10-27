@@ -10,13 +10,15 @@ import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class CursedSpruceBlock extends LogBlock {
+public class CursedSpruceBlock extends StrippableLogBlock {
 
-    public CursedSpruceBlock() {
-        super(AbstractBlock.Properties.of(Material.WOOD, (p_235431_2_) -> MaterialColor.CRIMSON_HYPHAE).strength(2.0F).sound(SoundType.WOOD).randomTicks());
+    public CursedSpruceBlock(@Nullable Supplier<? extends LogBlock> strippedBlock) {
+        super(AbstractBlock.Properties.of(Material.WOOD, (p_235431_2_) -> MaterialColor.CRIMSON_HYPHAE).strength(2.0F).sound(SoundType.WOOD).randomTicks(), strippedBlock);
     }
 
     @Override
