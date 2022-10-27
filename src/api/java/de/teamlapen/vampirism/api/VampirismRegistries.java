@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.items.oil.IOil;
+import de.teamlapen.vampirism.api.util.CachedSupplier;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -33,14 +34,14 @@ public class VampirismRegistries {
     public static final ResourceKey<Registry<IRefinementSet>> REFINEMENT_SET_ID = key("vampirism:refinement_set");
     public static final ResourceKey<Registry<IOil>> OILS_ID = key("vampirism:oil");
 
-    public static final Supplier<IForgeRegistry<ISkill<?>>> SKILLS = () -> RegistryManager.ACTIVE.getRegistry(SKILLS_ID);
-    public static final Supplier<IForgeRegistry<IAction<?>>> ACTIONS = () -> RegistryManager.ACTIVE.getRegistry(ACTIONS_ID);
-    public static final Supplier<IForgeRegistry<IEntityAction>> ENTITY_ACTIONS = () -> RegistryManager.ACTIVE.getRegistry(ENTITY_ACTIONS_ID);
-    public static final Supplier<IForgeRegistry<IMinionTask<?, ?>>> MINION_TASKS = () -> RegistryManager.ACTIVE.getRegistry(MINION_TASKS_ID);
-    public static final Supplier<IForgeRegistry<Task>> TASKS = () -> RegistryManager.ACTIVE.getRegistry(TASK_ID);
-    public static final Supplier<IForgeRegistry<IRefinement>> REFINEMENTS = () -> RegistryManager.ACTIVE.getRegistry(REFINEMENT_ID);
-    public static final Supplier<IForgeRegistry<IRefinementSet>> REFINEMENT_SETS = () -> RegistryManager.ACTIVE.getRegistry(REFINEMENT_SET_ID);
-    public static final Supplier<IForgeRegistry<IOil>> OILS = () -> RegistryManager.ACTIVE.getRegistry(OILS_ID);
+    public static final Supplier<IForgeRegistry<ISkill<?>>> SKILLS = new CachedSupplier<>(() -> RegistryManager.ACTIVE.getRegistry(SKILLS_ID));
+    public static final Supplier<IForgeRegistry<IAction<?>>> ACTIONS = new CachedSupplier<>(() -> RegistryManager.ACTIVE.getRegistry(ACTIONS_ID));
+    public static final Supplier<IForgeRegistry<IEntityAction>> ENTITY_ACTIONS = new CachedSupplier<>(() -> RegistryManager.ACTIVE.getRegistry(ENTITY_ACTIONS_ID));
+    public static final Supplier<IForgeRegistry<IMinionTask<?, ?>>> MINION_TASKS = new CachedSupplier<>(() -> RegistryManager.ACTIVE.getRegistry(MINION_TASKS_ID));
+    public static final Supplier<IForgeRegistry<Task>> TASKS = new CachedSupplier<>(() -> RegistryManager.ACTIVE.getRegistry(TASK_ID));
+    public static final Supplier<IForgeRegistry<IRefinement>> REFINEMENTS = new CachedSupplier<>(() -> RegistryManager.ACTIVE.getRegistry(REFINEMENT_ID));
+    public static final Supplier<IForgeRegistry<IRefinementSet>> REFINEMENT_SETS = new CachedSupplier<>(() -> RegistryManager.ACTIVE.getRegistry(REFINEMENT_SET_ID));
+    public static final Supplier<IForgeRegistry<IOil>> OILS = new CachedSupplier<>(() -> RegistryManager.ACTIVE.getRegistry(OILS_ID));
 
     private static <T> @NotNull ResourceKey<Registry<T>> key(@NotNull String name) {
         return ResourceKey.createRegistryKey(new ResourceLocation(name));
