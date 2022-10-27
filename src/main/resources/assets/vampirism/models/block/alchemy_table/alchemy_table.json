@@ -3,7 +3,7 @@
 	"textures": {
 		"0": "block/dark_oak_log",
 		"3": "block/basalt_top",
-		"particle": "block/dark_oak_log"
+		"particle": "block/basalt_top"
 	},
 	"render_type": "minecraft:cutout",
 	"elements": [
