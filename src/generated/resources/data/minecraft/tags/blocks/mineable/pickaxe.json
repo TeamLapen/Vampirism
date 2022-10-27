@@ -1,16 +1,30 @@
 {
   "values": [
-    "vampirism:altar_inspiration",
     "vampirism:altar_pillar",
     "vampirism:altar_tip",
+    "vampirism:totem_base",
     "vampirism:blood_pedestal",
     "vampirism:altar_infusion",
+    "vampirism:weapon_table",
     "vampirism:grave_cage",
     "vampirism:tombstone1",
     "vampirism:tombstone2",
     "vampirism:tombstone3",
+    "vampirism:blood_grinder",
+    "vampirism:fire_place",
+    "vampirism:grave_cage",
+    "vampirism:alchemical_cauldron",
+    "vampirism:med_chair",
+    "vampirism:garlic_diffuser_weak",
+    "vampirism:garlic_diffuser_normal",
+    "vampirism:garlic_diffuser_improved",
+    "vampirism:chandelier",
+    "vampirism:candelabra",
+    "vampirism:candelabra_wall",
+    "vampirism:alchemy_table",
     "#vampirism:castle_block",
     "#vampirism:castle_slaps",
-    "#vampirism:castle_stairs"
+    "#vampirism:castle_stairs",
+    "#vampirism:totem_top"
   ]
 }

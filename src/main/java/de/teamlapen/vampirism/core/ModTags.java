@@ -32,6 +32,10 @@ public class ModTags {
         public static final TagKey<Block> CASTLE_SLAPS = tag("castle_slaps");
         public static final TagKey<Block> DARK_SPRUCE_LOG = tag("dark_spruce_log");
         public static final TagKey<Block> CURSED_SPRUCE_LOG = tag("cursed_spruce_log");
+        public static final TagKey<Block> TOTEM_TOP_CRAFTED = tag("totem_top_crafted");
+        public static final TagKey<Block> TOTEM_TOP_FRAGILE = tag("totem_top_fragile");
+        public static final TagKey<Block> TOTEM_TOP = tag("totem_top");
+        public static final TagKey<Block> COFFIN = tag("coffin");
 
         private static @NotNull TagKey<Block> tag(@NotNull ResourceLocation resourceLocation) {
             return BlockTags.create(resourceLocation);

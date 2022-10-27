@@ -1,0 +1,10 @@
+{
+  "values": [
+    "vampirism:totem_base",
+    "vampirism:altar_infusion",
+    "vampirism:garlic_diffuser_weak",
+    "vampirism:garlic_diffuser_normal",
+    "vampirism:garlic_diffuser_improved",
+    "#vampirism:totem_top_crafted"
+  ]
+}

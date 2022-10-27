@@ -1,6 +1,12 @@
 {
   "values": [
     "vampirism:blood_pedestal",
-    "vampirism:altar_infusion"
+    "vampirism:blood_grinder",
+    "vampirism:weapon_table",
+    "vampirism:altar_infusion",
+    "vampirism:alchemical_cauldron",
+    "vampirism:candelabra",
+    "vampirism:candelabra_wall",
+    "vampirism:alchemy_table"
   ]
 }

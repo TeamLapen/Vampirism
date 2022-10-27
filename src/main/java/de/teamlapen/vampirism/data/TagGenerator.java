@@ -43,6 +43,7 @@ public class TagGenerator {
             return REFERENCE.MODID + " " + super.getName();
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         protected void addTags() {
             tag(BlockTags.DIRT).add(ModBlocks.CURSED_EARTH.get(), ModBlocks.CURSED_GRASS.get());
@@ -54,13 +55,88 @@ public class TagGenerator {
             tag(BlockTags.SLABS).addTag(ModTags.Blocks.CASTLE_SLAPS);
             tag(BlockTags.FLOWER_POTS).add(ModBlocks.POTTED_VAMPIRE_ORCHID.get());
 
-            //Tool types
-            tag(BlockTags.MINEABLE_WITH_SHOVEL).add(ModBlocks.CURSED_EARTH.get(), ModBlocks.CURSED_GRASS.get());
-            //noinspection unchecked
-            tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ModBlocks.ALTAR_INSPIRATION.get(), ModBlocks.ALTAR_PILLAR.get(), ModBlocks.ALTAR_TIP.get(), ModBlocks.BLOOD_PEDESTAL.get(), ModBlocks.ALTAR_INFUSION.get(), ModBlocks.GRAVE_CAGE.get(), ModBlocks.TOMBSTONE1.get(), ModBlocks.TOMBSTONE2.get(), ModBlocks.TOMBSTONE3.get()).addTags(ModTags.Blocks.CASTLE_BLOCK, ModTags.Blocks.CASTLE_SLAPS, ModTags.Blocks.CASTLE_STAIRS);
+            // Tool Types
+            tag(BlockTags.MINEABLE_WITH_SHOVEL)
+                    .add(ModBlocks.CURSED_EARTH.get())
+                    .add(ModBlocks.CURSED_GRASS.get())
+            ;
+            tag(BlockTags.MINEABLE_WITH_PICKAXE)
+                    .add(ModBlocks.ALTAR_PILLAR.get())
+                    .add(ModBlocks.ALTAR_TIP.get())
+                    .add(ModBlocks.TOTEM_BASE.get())
+                    .add(ModBlocks.BLOOD_PEDESTAL.get())
+                    .add(ModBlocks.ALTAR_INFUSION.get())
+                    .add(ModBlocks.WEAPON_TABLE.get())
+                    .add(ModBlocks.GRAVE_CAGE.get())
+                    .add(ModBlocks.TOMBSTONE1.get())
+                    .add(ModBlocks.TOMBSTONE2.get())
+                    .add(ModBlocks.TOMBSTONE3.get())
+                    .add(ModBlocks.BLOOD_GRINDER.get())
+                    .add(ModBlocks.FIRE_PLACE.get())
+                    .add(ModBlocks.GRAVE_CAGE.get())
+                    .add(ModBlocks.ALCHEMICAL_CAULDRON.get())
+                    .add(ModBlocks.MED_CHAIR.get())
+                    .add(ModBlocks.GARLIC_DIFFUSER_WEAK.get())
+                    .add(ModBlocks.GARLIC_DIFFUSER_NORMAL.get())
+                    .add(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get())
+                    .add(ModBlocks.CHANDELIER.get())
+                    .add(ModBlocks.CANDELABRA.get())
+                    .add(ModBlocks.CANDELABRA_WALL.get())
+                    .add(ModBlocks.ALCHEMY_TABLE.get())
+                    .addTag(ModTags.Blocks.CASTLE_BLOCK)
+                    .addTag(ModTags.Blocks.CASTLE_SLAPS)
+                    .addTag(ModTags.Blocks.CASTLE_STAIRS)
+                    .addTag(ModTags.Blocks.TOTEM_TOP)
+            ;
+            tag(BlockTags.MINEABLE_WITH_AXE)
+                    .add(ModBlocks.ALTAR_INSPIRATION.get())
+                    .add(ModBlocks.HUNTER_TABLE.get())
+                    .add(ModBlocks.BLOOD_SIEVE.get())
+                    .add(ModBlocks.ALTAR_CLEANSING.get())
+                    .add(ModBlocks.DARK_SPRUCE_SIGN.get())
+                    .add(ModBlocks.DARK_SPRUCE_WALL_SIGN.get())
+                    .add(ModBlocks.CURSED_SPRUCE_SIGN.get())
+                    .add(ModBlocks.CURSED_SPRUCE_WALL_SIGN.get())
+                    .add(ModBlocks.BLOOD_CONTAINER.get())
+                    .add(ModBlocks.POTION_TABLE.get())
+                    .add(ModBlocks.CROSS.get())
+                    .add(ModBlocks.DARK_SPRUCE_DOOR.get())
+                    .add(ModBlocks.CURSED_SPRUCE_DOOR.get())
+                    .add(ModBlocks.DARK_SPRUCE_TRAPDOOR.get())
+                    .add(ModBlocks.CURSED_SPRUCE_TRAPDOOR.get())
+                    .add(ModBlocks.DARK_SPRUCE_FENCE_GATE.get())
+                    .add(ModBlocks.CURSED_SPRUCE_FENCE_GATE.get())
+                    .add(ModBlocks.VAMPIRE_RACK.get())
+                    .add(ModBlocks.THRONE.get())
+                    .addTag(ModTags.Blocks.COFFIN)
+            ;
 
-            tag(BlockTags.NEEDS_STONE_TOOL).add(ModBlocks.ALTAR_INSPIRATION.get(), ModBlocks.ALTAR_TIP.get());
-            tag(BlockTags.NEEDS_IRON_TOOL).add(ModBlocks.BLOOD_PEDESTAL.get(), ModBlocks.ALTAR_INFUSION.get());
+            // Tool Tiers
+            tag(BlockTags.NEEDS_STONE_TOOL)
+                    .add(ModBlocks.ALTAR_TIP.get())
+                    .add(ModBlocks.GRAVE_CAGE.get())
+                    .add(ModBlocks.MED_CHAIR.get())
+                    .add(ModBlocks.MED_CHAIR.get())
+                    .add(ModBlocks.CHANDELIER.get())
+            ;
+            tag(BlockTags.NEEDS_IRON_TOOL)
+                    .add(ModBlocks.BLOOD_PEDESTAL.get())
+                    .add(ModBlocks.BLOOD_GRINDER.get())
+                    .add(ModBlocks.WEAPON_TABLE.get())
+                    .add(ModBlocks.ALTAR_INFUSION.get())
+                    .add(ModBlocks.ALCHEMICAL_CAULDRON.get())
+                    .add(ModBlocks.CANDELABRA.get())
+                    .add(ModBlocks.CANDELABRA_WALL.get())
+                    .add(ModBlocks.ALCHEMY_TABLE.get())
+            ;
+            tag(BlockTags.NEEDS_DIAMOND_TOOL)
+                    .add(ModBlocks.TOTEM_BASE.get())
+                    .add(ModBlocks.ALTAR_INFUSION.get())
+                    .add(ModBlocks.GARLIC_DIFFUSER_WEAK.get())
+                    .add(ModBlocks.GARLIC_DIFFUSER_NORMAL.get())
+                    .add(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get())
+                    .addTag(ModTags.Blocks.TOTEM_TOP_CRAFTED)
+            ;
 
             tag(ModTags.Blocks.DARK_SPRUCE_LOG).add(ModBlocks.DARK_SPRUCE_LOG.get(), ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get(), ModBlocks.DARK_SPRUCE_WOOD.get(), ModBlocks.STRIPPED_DARK_SPRUCE_WOOD.get());
             tag(ModTags.Blocks.CURSED_SPRUCE_LOG).add(ModBlocks.CURSED_SPRUCE_LOG.get(), ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get(), ModBlocks.CURSED_SPRUCE_WOOD.get(), ModBlocks.STRIPPED_CURSED_SPRUCE_WOOD.get());
@@ -78,6 +154,10 @@ public class TagGenerator {
             tag(BlockTags.WOODEN_PRESSURE_PLATES).add(ModBlocks.DARK_SPRUCE_PRESSURE_PLACE.get(), ModBlocks.CURSED_SPRUCE_PRESSURE_PLACE.get());
             tag(BlockTags.WOODEN_DOORS).add(ModBlocks.DARK_SPRUCE_DOOR.get(), ModBlocks.CURSED_SPRUCE_DOOR.get());
             tag(BlockTags.WOODEN_TRAPDOORS).add(ModBlocks.DARK_SPRUCE_TRAPDOOR.get(), ModBlocks.CURSED_SPRUCE_TRAPDOOR.get());
+            tag(ModTags.Blocks.TOTEM_TOP_FRAGILE).add(ModBlocks.TOTEM_TOP.get(), ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER.get(), ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE.get());
+            tag(ModTags.Blocks.TOTEM_TOP_CRAFTED).add(ModBlocks.TOTEM_TOP_CRAFTED.get(), ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED.get(), ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED.get());
+            tag(ModTags.Blocks.TOTEM_TOP).addTag(ModTags.Blocks.TOTEM_TOP_FRAGILE).addTag(ModTags.Blocks.TOTEM_TOP_CRAFTED);
+            tag(ModTags.Blocks.COFFIN).add(ModBlocks.COFFIN_RED.get()).add(ModBlocks.COFFIN_BLUE.get()).add(ModBlocks.COFFIN_GREEN.get()).add(ModBlocks.COFFIN_BROWN.get()).add(ModBlocks.COFFIN_BLACK.get()).add(ModBlocks.COFFIN_GRAY.get()).add(ModBlocks.COFFIN_LIGHT_BLUE.get()).add(ModBlocks.COFFIN_WHITE.get()).add(ModBlocks.COFFIN_LIGHT_GRAY.get()).add(ModBlocks.COFFIN_CYAN.get()).add(ModBlocks.COFFIN_PURPLE.get()).add(ModBlocks.COFFIN_PINK.get()).add(ModBlocks.COFFIN_LIME.get()).add(ModBlocks.COFFIN_YELLOW.get()).add(ModBlocks.COFFIN_ORANGE.get()).add(ModBlocks.COFFIN_MAGENTA.get());
         }
     }
 
