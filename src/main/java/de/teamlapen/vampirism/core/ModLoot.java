@@ -22,6 +22,7 @@ public class ModLoot {
     public static LootConditionType adjustable_level;
     public static LootConditionType is_tent_spawner;
     public static LootConditionType with_oil_item;
+    public static LootConditionType faction;
 
     public static GlobalLootModifierSerializer<?> smelting;
 
@@ -37,6 +38,7 @@ public class ModLoot {
         adjustable_level = Registry.register(Registry.LOOT_CONDITION_TYPE, new ResourceLocation(REFERENCE.MODID, "adjustable_level"), new LootConditionType(new AdjustableLevelCondition.Serializer()));
         is_tent_spawner = Registry.register(Registry.LOOT_CONDITION_TYPE, new ResourceLocation(REFERENCE.MODID, "is_tent_spawner"), new LootConditionType(new TentSpawnerCondition.Serializer()));
         with_oil_item = Registry.register(Registry.LOOT_CONDITION_TYPE, new ResourceLocation(REFERENCE.MODID, "with_oil_item"), new LootConditionType(new OilItemCondition.Serializer()));
+        faction = Registry.register(Registry.LOOT_CONDITION_TYPE, new ResourceLocation(REFERENCE.MODID, "faction"), new LootConditionType(new FactionCondition.Serializer()));
     }
 
     static void registerLootModifier(IForgeRegistry<GlobalLootModifierSerializer<?>> event) {
