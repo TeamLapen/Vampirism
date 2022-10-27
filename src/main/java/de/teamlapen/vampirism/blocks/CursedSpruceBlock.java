@@ -5,21 +5,28 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
+import net.minecraftforge.common.ToolAction;
+import net.minecraftforge.common.ToolActions;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class CursedSpruceBlock extends LogBlock {
+public class CursedSpruceBlock extends StrippableLogBlock {
 
-    public CursedSpruceBlock() {
-        super(BlockBehaviour.Properties.of(Material.WOOD, (p_235431_2_) -> MaterialColor.CRIMSON_HYPHAE).strength(2.0F).sound(SoundType.WOOD).randomTicks());
+    public CursedSpruceBlock(@Nullable Supplier<? extends LogBlock> strippedBlock) {
+        super(BlockBehaviour.Properties.of(Material.WOOD, (p_235431_2_) -> MaterialColor.CRIMSON_HYPHAE).strength(2.0F).sound(SoundType.WOOD).randomTicks(), strippedBlock);
     }
 
     @Override
