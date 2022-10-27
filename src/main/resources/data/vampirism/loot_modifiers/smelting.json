@@ -4,7 +4,14 @@
     {
       "condition": "vampirism:with_oil_item",
       "predicate": {
-        "oil": "vampirism:smelt_oil"
+        "oil": "vampirism:smelt"
+      }
+    },
+    {
+      "condition": "vampirism:faction",
+      "predicate": {
+        "type": "FACTION",
+        "faction": "vampirism:hunter"
       }
     }
   ]

@@ -37,7 +37,7 @@ public class ModRegistries {
     public static final Supplier<IForgeRegistry<Task>> TASKS = DEFERRED_TASKS.makeRegistry(RegistryBuilder::new);
     public static final Supplier<IForgeRegistry<IRefinement>> REFINEMENTS = DEFERRED_REFINEMENTS.makeRegistry(RegistryBuilder::new);
     public static final Supplier<IForgeRegistry<IRefinementSet>> REFINEMENT_SETS = DEFERRED_REFINEMENT_SETS.makeRegistry(RegistryBuilder::new);
-    public static final Supplier<IForgeRegistry<IOil>> OILS = DEFERRED_OILS.makeRegistry(() -> new RegistryBuilder<IOil>().setDefaultKey(new ResourceLocation(REFERENCE.MODID, "empty")));
+    public static final Supplier<IForgeRegistry<IOil>> OILS = DEFERRED_OILS.makeRegistry(RegistryBuilder::new);
 
     static void init(IEventBus bus) {
         DEFERRED_SKILLS.register(bus);

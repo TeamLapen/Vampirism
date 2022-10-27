@@ -3,10 +3,7 @@ package de.teamlapen.vampirism.core;
 import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.world.loot.SmeltItemLootModifier;
-import de.teamlapen.vampirism.world.loot.conditions.AdjustableLevelCondition;
-import de.teamlapen.vampirism.world.loot.conditions.OilItemCondition;
-import de.teamlapen.vampirism.world.loot.conditions.StakeCondition;
-import de.teamlapen.vampirism.world.loot.conditions.TentSpawnerCondition;
+import de.teamlapen.vampirism.world.loot.conditions.*;
 import de.teamlapen.vampirism.world.loot.functions.AddBookNbtFunction;
 import de.teamlapen.vampirism.world.loot.functions.RefinementSetFunction;
 import de.teamlapen.vampirism.world.loot.functions.SetItemBloodChargeFunction;
@@ -33,6 +30,7 @@ public class ModLoot {
     public static final RegistryObject<LootItemConditionType> adjustable_level = LOOT_CONDITION_TYPES.register("adjustable_level", () -> new LootItemConditionType(new AdjustableLevelCondition.Serializer()));
     public static final RegistryObject<LootItemConditionType> is_tent_spawner = LOOT_CONDITION_TYPES.register("is_tent_spawner", () -> new LootItemConditionType(new TentSpawnerCondition.Serializer()));
     public static final RegistryObject<LootItemConditionType> with_oil_item = LOOT_CONDITION_TYPES.register("with_oil_item", () -> new LootItemConditionType(new OilItemCondition.Serializer()));
+    public static final RegistryObject<LootItemConditionType> faction = LOOT_CONDITION_TYPES.register("faction", () -> new LootItemConditionType(new FactionCondition.Serializer()));
 
     public static final RegistryObject<Codec<SmeltItemLootModifier>> smelting = GLOBAL_LOOT_MODIFIER.register("smelting", () -> SmeltItemLootModifier.CODEC);
 
