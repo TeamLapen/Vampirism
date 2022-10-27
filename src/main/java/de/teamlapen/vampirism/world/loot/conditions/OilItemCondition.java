@@ -5,8 +5,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.core.ModLoot;
-import de.teamlapen.vampirism.core.ModOils;
-import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.util.OilUtils;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.resources.ResourceLocation;
@@ -28,7 +26,7 @@ public class OilItemCondition implements LootItemCondition {
     @NotNull
     @Override
     public LootItemConditionType getType() {
-        return ModLoot.with_oil_item.get();
+        return ModLoot.WITH_OIL_ITEM.get();
     }
 
     @Override

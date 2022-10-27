@@ -59,6 +59,6 @@ public class SmeltItemLootModifier extends LootModifier {
 
     @Override
     public @NotNull Codec<? extends IGlobalLootModifier> codec() {
-        return ModLoot.smelting.get();
+        return ModLoot.SMELTING.get();
     }
 }
