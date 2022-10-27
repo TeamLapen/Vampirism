@@ -6,7 +6,8 @@
     128
   ],
   "textures": {
-    "3": "vampirism:block/vampire_rack"
+    "3": "vampirism:block/vampire_rack",
+    "particle": "vampirism:block/vampire_rack"
   },
   "elements": [
     {
