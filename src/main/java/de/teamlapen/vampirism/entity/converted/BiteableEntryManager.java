@@ -110,7 +110,8 @@ public class BiteableEntryManager {
         ResourceLocation id = EntityType.getKey(type);
         if (isConfigBlackListed(id)) return null;
         if (biteableEntries.containsKey(id)) return biteableEntries.get(id);
-        return calculated.getOrDefault(id, null);
+        BiteableEntry entry = calculated.get(id);
+        return entry != null ? entry : calculate(creature);
     }
 
     /**
