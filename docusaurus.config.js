@@ -44,6 +44,9 @@ const config = {
         blog: {
           showReadingTime: true,
           editUrl: 'https://github.com/TeamLapen/Vampirism/tree/gh-pages/',
+          blogTitle: 'Vampirism Blog',
+          blogSidebarCount: 'ALL',
+          blogSidebarTitle: 'All posts',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
