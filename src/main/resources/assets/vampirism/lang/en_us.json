@@ -13,6 +13,7 @@
   "text.vampirism.need_item_to_use": "You need \"%s\" to use this",
   "text.vampirism.immune_to": "You are immune to ",
   "text.vampirism.required_skill": "Required Skill: %s",
+  "text.vampirism.required_level": "Required Level: %s",
   "text.vampirism.from_behind": "From behind.",
   "text.vampirism.unknown": "Unknown",
   "text.vampirism.i_am_busy_right_now": "I’m busy right now",

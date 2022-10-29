@@ -43,11 +43,11 @@ public interface IFactionLevelItem<T extends IFactionPlayer<T>> extends IFaction
         boolean correctFaction = playerHandler.map(f -> f.isInFaction(getExclusiveFaction(stack))).orElse(false);
         int minLevel = getMinLevel(stack);
         if (minLevel > 1) {
-            tooltip.add(Component.translatable(" Required Level:").append(" ").append(String.valueOf(minLevel)).withStyle(correctFaction ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED));
+            tooltip.add(Component.literal(" ").append(Component.translatable("text.vampirism.required_level", String.valueOf(minLevel))).withStyle(correctFaction ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED));
         }
         ISkill<T> requiredSkill = getRequiredSkill(stack);
         if (requiredSkill != null) {
-            tooltip.add(Component.literal(" ").append(Component.translatable("text.vampirism.required_skill").append(requiredSkill.getName())).withStyle(correctFaction && playerHandler.map(IFactionPlayerHandler::getCurrentFactionPlayer).flatMap(p -> p.map(d-> d.getSkillHandler().isSkillEnabled(requiredSkill))).orElse(false) ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED));
+            tooltip.add(Component.literal(" ").append(Component.translatable("text.vampirism.required_skill", requiredSkill.getName())).withStyle(correctFaction && playerHandler.map(IFactionPlayerHandler::getCurrentFactionPlayer).flatMap(p -> p.map(d-> d.getSkillHandler().isSkillEnabled(requiredSkill))).orElse(false) ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED));
         }
     }
 
