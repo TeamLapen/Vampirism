@@ -1,28 +1,25 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.vampirism.VampirismMod;
+import  de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayerSpecialAttribute;
-import de.teamlapen.vampirism.util.VampirismArmorMaterials;
+import de.teamlapen.vampirism.util.ArmorMaterial;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Tuple;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class HunterCoatItem extends VampirismHunterArmorItem implements IItemWithTier {
 
@@ -45,49 +42,15 @@ public class HunterCoatItem extends VampirismHunterArmorItem implements IItemWit
         return IItemWithTier.TIER.values()[minLevel];
     }
 
-    private static final int[] DAMAGE_REDUCTION_ULTIMATE = new int[]{3, 7, 9, 3};
-    private static final int[] DAMAGE_REDUCTION_ENHANCED = new int[]{3, 6, 8, 3};
-    private static final int[] DAMAGE_REDUCTION_NORMAL = new int[]{2, 5, 6, 2};
-
-
-    private static @NotNull Map<Attribute, Tuple<Double, AttributeModifier.Operation>> getModifiers(@NotNull EquipmentSlot slot, @NotNull TIER tier) {
-        HashMap<Attribute, Tuple<Double, AttributeModifier.Operation>> map = new HashMap<>();
-        int slot1 = slot.getIndex();
-        int damageReduction = switch (tier) {
-            case ULTIMATE -> DAMAGE_REDUCTION_ULTIMATE[slot1];
-            case ENHANCED -> DAMAGE_REDUCTION_ENHANCED[slot1];
-            default -> DAMAGE_REDUCTION_NORMAL[slot1];
-        };
-        map.put(Attributes.ARMOR, new Tuple<>((double) damageReduction, AttributeModifier.Operation.ADDITION));
-        map.put(Attributes.ARMOR_TOUGHNESS, new Tuple<>(2.0, AttributeModifier.Operation.ADDITION));
-        return map;
-    }
+    public static final ArmorMaterial.Tiered NORMAL = new ArmorMaterial.Tiered("hunter_coat", TIER.NORMAL, 17, new int[]{2, 5, 6, 2}, 10, SoundEvents.ARMOR_EQUIP_IRON, 2, 0, () -> Ingredient.of(Tags.Items.INGOTS_IRON));
+    public static final ArmorMaterial.Tiered ENHANCED = new ArmorMaterial.Tiered("hunter_coat_enhanced", TIER.ENHANCED, 25, new int[]{3, 6, 8, 3}, 10, SoundEvents.ARMOR_EQUIP_IRON, 2, 0, () -> Ingredient.of(Tags.Items.INGOTS_IRON));
+    public static final ArmorMaterial.Tiered ULTIMATE = new ArmorMaterial.Tiered("hunter_coat_ultimate", TIER.ULTIMATE, 33, new int[]{3, 7, 9, 3}, 10, SoundEvents.ARMOR_EQUIP_IRON, 2, 0, () -> Ingredient.of(Tags.Items.GEMS_DIAMOND));
 
     private final @NotNull TIER tier;
 
-    private static int getDamageReduction(int slot, @NotNull TIER tier) {
-        return switch (tier) {
-            case ULTIMATE -> DAMAGE_REDUCTION_ULTIMATE[slot];
-            case ENHANCED -> DAMAGE_REDUCTION_ENHANCED[slot];
-            default -> DAMAGE_REDUCTION_NORMAL[slot];
-        };
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        addTierInformation(tooltip);
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-    }
-
-    @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-        return switch (getVampirismTier()) {
-            case ENHANCED -> getTextureLocation("hunter_coat_enhanced", slot, type);
-            case ULTIMATE -> getTextureLocation("hunter_coat_ultimate", slot, type);
-            default -> getTextureLocation("hunter_coat", slot, type);
-        };
-
+    public HunterCoatItem(@NotNull EquipmentSlot equipmentSlotIn, @NotNull ArmorMaterial.Tiered material) {
+        super(material, equipmentSlotIn, new Properties().tab(VampirismMod.creativeTab), new HashMap<>());
+        this.tier = material.getTier();
     }
 
     @Override
@@ -95,8 +58,10 @@ public class HunterCoatItem extends VampirismHunterArmorItem implements IItemWit
         return tier;
     }
 
-    public HunterCoatItem(@NotNull EquipmentSlot equipmentSlotIn, @NotNull TIER tier) {
-        super(VampirismArmorMaterials.MASTERLY_IRON, equipmentSlotIn, new Properties().tab(VampirismMod.creativeTab), getModifiers(equipmentSlotIn, tier));
-        this.tier = tier;
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+        addTierInformation(tooltip);
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
     }
 }

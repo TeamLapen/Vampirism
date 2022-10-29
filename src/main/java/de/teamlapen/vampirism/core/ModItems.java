@@ -43,22 +43,22 @@ public class ModItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, REFERENCE.MODID);
 
     //Items
-    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_ENHANCED = ITEMS.register("armor_of_swiftness_chest_enhanced", () -> new ArmorOfSwiftnessItem(EquipmentSlot.CHEST, IItemWithTier.TIER.ENHANCED));
-    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_NORMAL = ITEMS.register("armor_of_swiftness_chest_normal", () -> new ArmorOfSwiftnessItem(EquipmentSlot.CHEST, IItemWithTier.TIER.NORMAL));
-    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE = ITEMS.register("armor_of_swiftness_chest_ultimate", () -> new ArmorOfSwiftnessItem(EquipmentSlot.CHEST, IItemWithTier.TIER.ULTIMATE));
-    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_ENHANCED = ITEMS.register("armor_of_swiftness_feet_enhanced", () -> new ArmorOfSwiftnessItem(EquipmentSlot.FEET, IItemWithTier.TIER.ENHANCED));
-    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_NORMAL = ITEMS.register("armor_of_swiftness_feet_normal", () -> new ArmorOfSwiftnessItem(EquipmentSlot.FEET, IItemWithTier.TIER.NORMAL));
-    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_ULTIMATE = ITEMS.register("armor_of_swiftness_feet_ultimate", () -> new ArmorOfSwiftnessItem(EquipmentSlot.FEET, IItemWithTier.TIER.ULTIMATE));
-    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_HEAD_ENHANCED = ITEMS.register("armor_of_swiftness_head_enhanced", () -> new ArmorOfSwiftnessItem(EquipmentSlot.HEAD, IItemWithTier.TIER.ENHANCED));
-    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_HEAD_NORMAL = ITEMS.register("armor_of_swiftness_head_normal", () -> new ArmorOfSwiftnessItem(EquipmentSlot.HEAD, IItemWithTier.TIER.NORMAL));
-    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE = ITEMS.register("armor_of_swiftness_head_ultimate", () -> new ArmorOfSwiftnessItem(EquipmentSlot.HEAD, IItemWithTier.TIER.ULTIMATE));
-    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_ENHANCED = ITEMS.register("armor_of_swiftness_legs_enhanced", () -> new ArmorOfSwiftnessItem(EquipmentSlot.LEGS, IItemWithTier.TIER.ENHANCED));
-    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_NORMAL = ITEMS.register("armor_of_swiftness_legs_normal", () -> new ArmorOfSwiftnessItem(EquipmentSlot.LEGS, IItemWithTier.TIER.NORMAL));
-    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE = ITEMS.register("armor_of_swiftness_legs_ultimate", () -> new ArmorOfSwiftnessItem(EquipmentSlot.LEGS, IItemWithTier.TIER.ULTIMATE));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_ENHANCED = ITEMS.register("armor_of_swiftness_chest_enhanced", () -> new ArmorOfSwiftnessItem(EquipmentSlot.CHEST, ArmorOfSwiftnessItem.ENHANCED));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_NORMAL = ITEMS.register("armor_of_swiftness_chest_normal", () -> new ArmorOfSwiftnessItem(EquipmentSlot.CHEST, ArmorOfSwiftnessItem.NORMAL));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE = ITEMS.register("armor_of_swiftness_chest_ultimate", () -> new ArmorOfSwiftnessItem(EquipmentSlot.CHEST, ArmorOfSwiftnessItem.ULTIMATE));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_ENHANCED = ITEMS.register("armor_of_swiftness_feet_enhanced", () -> new ArmorOfSwiftnessItem(EquipmentSlot.FEET, ArmorOfSwiftnessItem.ENHANCED));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_NORMAL = ITEMS.register("armor_of_swiftness_feet_normal", () -> new ArmorOfSwiftnessItem(EquipmentSlot.FEET, ArmorOfSwiftnessItem.NORMAL));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_ULTIMATE = ITEMS.register("armor_of_swiftness_feet_ultimate", () -> new ArmorOfSwiftnessItem(EquipmentSlot.FEET, ArmorOfSwiftnessItem.ULTIMATE));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_HEAD_ENHANCED = ITEMS.register("armor_of_swiftness_head_enhanced", () -> new ArmorOfSwiftnessItem(EquipmentSlot.HEAD, ArmorOfSwiftnessItem.ENHANCED));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_HEAD_NORMAL = ITEMS.register("armor_of_swiftness_head_normal", () -> new ArmorOfSwiftnessItem(EquipmentSlot.HEAD, ArmorOfSwiftnessItem.NORMAL));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE = ITEMS.register("armor_of_swiftness_head_ultimate", () -> new ArmorOfSwiftnessItem(EquipmentSlot.HEAD, ArmorOfSwiftnessItem.ULTIMATE));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_ENHANCED = ITEMS.register("armor_of_swiftness_legs_enhanced", () -> new ArmorOfSwiftnessItem(EquipmentSlot.LEGS, ArmorOfSwiftnessItem.ENHANCED));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_NORMAL = ITEMS.register("armor_of_swiftness_legs_normal", () -> new ArmorOfSwiftnessItem(EquipmentSlot.LEGS, ArmorOfSwiftnessItem.NORMAL));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE = ITEMS.register("armor_of_swiftness_legs_ultimate", () -> new ArmorOfSwiftnessItem(EquipmentSlot.LEGS, ArmorOfSwiftnessItem.ULTIMATE));
 
-    public static final RegistryObject<SingleCrossbowItem> BASIC_CROSSBOW = ITEMS.register("basic_crossbow", () -> new SingleCrossbowItem(creativeTabProps().defaultDurability(300), 1,20,Tiers.WOOD));
-    public static final RegistryObject<DoubleCrossbowItem> BASIC_DOUBLE_CROSSBOW = ITEMS.register("basic_double_crossbow", () -> new DoubleCrossbowItem(creativeTabProps().durability(300),1,20,Tiers.WOOD));
-    public static final RegistryObject<TechCrossbowItem> BASIC_TECH_CROSSBOW = ITEMS.register("basic_tech_crossbow", () -> new TechCrossbowItem(creativeTabProps().durability(300),1.6F, 40, Tiers.DIAMOND));
+    public static final RegistryObject<SingleCrossbowItem> BASIC_CROSSBOW = ITEMS.register("basic_crossbow", () -> new SingleCrossbowItem(creativeTabProps().defaultDurability(465), 1,20, Tiers.WOOD));
+    public static final RegistryObject<DoubleCrossbowItem> BASIC_DOUBLE_CROSSBOW = ITEMS.register("basic_double_crossbow", () -> new DoubleCrossbowItem(creativeTabProps().durability(465),1,20, Tiers.WOOD));
+    public static final RegistryObject<TechCrossbowItem> BASIC_TECH_CROSSBOW = ITEMS.register("basic_tech_crossbow", () -> new TechCrossbowItem(creativeTabProps().durability(930),1.6F, 40, Tiers.DIAMOND));
 
     public static final RegistryObject<BloodBottleItem> BLOOD_BOTTLE = ITEMS.register("blood_bottle", BloodBottleItem::new);
     public static final RegistryObject<BucketItem> BLOOD_BUCKET = ITEMS.register("blood_bucket", () -> new BucketItem(ModFluids.BLOOD, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(CreativeModeTab.TAB_MISC)));
@@ -70,20 +70,20 @@ public class ModItems {
     public static final RegistryObject<CrossbowArrowItem> CROSSBOW_ARROW_VAMPIRE_KILLER = ITEMS.register("crossbow_arrow_vampire_killer", () -> new CrossbowArrowItem(CrossbowArrowItem.EnumArrowType.VAMPIRE_KILLER));
     public static final RegistryObject<CrossbowArrowItem> CROSSBOW_ARROW_TELEPORT = ITEMS.register("crossbow_arrow_teleport", () -> new CrossbowArrowItem(CrossbowArrowItem.EnumArrowType.TELEPORT));
 
-    public static final RegistryObject<SingleCrossbowItem> ENHANCED_CROSSBOW = ITEMS.register("enhanced_crossbow", () -> new SingleCrossbowItem(creativeTabProps().durability(250), 1.5F, 15, Tiers.IRON));
-    public static final RegistryObject<DoubleCrossbowItem> ENHANCED_DOUBLE_CROSSBOW = ITEMS.register("enhanced_double_crossbow", () -> new DoubleCrossbowItem(creativeTabProps().durability(350),1.5F, 15, Tiers.IRON));
-    public static final RegistryObject<TechCrossbowItem> ENHANCED_TECH_CROSSBOW = ITEMS.register("enhanced_tech_crossbow", () -> new TechCrossbowItem(creativeTabProps().durability(450), 1.7F, 30, Tiers.DIAMOND));
+    public static final RegistryObject<SingleCrossbowItem> ENHANCED_CROSSBOW = ITEMS.register("enhanced_crossbow", () -> new SingleCrossbowItem(creativeTabProps().durability(930), 1.5F, 15, Tiers.IRON));
+    public static final RegistryObject<DoubleCrossbowItem> ENHANCED_DOUBLE_CROSSBOW = ITEMS.register("enhanced_double_crossbow", () -> new DoubleCrossbowItem(creativeTabProps().durability(930),1.5F, 15, Tiers.IRON));
+    public static final RegistryObject<TechCrossbowItem> ENHANCED_TECH_CROSSBOW = ITEMS.register("enhanced_tech_crossbow", () -> new TechCrossbowItem(creativeTabProps().durability(1860), 1.7F, 30, Tiers.DIAMOND));
 
     public static final RegistryObject<Item> GARLIC_DIFFUSER_CORE = ITEMS.register("garlic_diffuser_core", () -> new Item(creativeTabProps()));
     public static final RegistryObject<Item> GARLIC_DIFFUSER_CORE_IMPROVED = ITEMS.register("garlic_diffuser_core_improved", () -> new Item(creativeTabProps()));
 
-    public static final RegistryObject<HeartSeekerItem> HEART_SEEKER_ENHANCED = ITEMS.register("heart_seeker_enhanced", () -> new HeartSeekerItem(IItemWithTier.TIER.ENHANCED));
-    public static final RegistryObject<HeartSeekerItem> HEART_SEEKER_NORMAL = ITEMS.register("heart_seeker_normal", () -> new HeartSeekerItem(IItemWithTier.TIER.NORMAL));
-    public static final RegistryObject<HeartSeekerItem> HEART_SEEKER_ULTIMATE = ITEMS.register("heart_seeker_ultimate", () -> new HeartSeekerItem(IItemWithTier.TIER.ULTIMATE));
+    public static final RegistryObject<HeartSeekerItem> HEART_SEEKER_ENHANCED = ITEMS.register("heart_seeker_enhanced", () -> new HeartSeekerItem(HeartSeekerItem.ENHANCED));
+    public static final RegistryObject<HeartSeekerItem> HEART_SEEKER_NORMAL = ITEMS.register("heart_seeker_normal", () -> new HeartSeekerItem(HeartSeekerItem.NORMAL));
+    public static final RegistryObject<HeartSeekerItem> HEART_SEEKER_ULTIMATE = ITEMS.register("heart_seeker_ultimate", () -> new HeartSeekerItem(HeartSeekerItem.ULTIMATE));
 
-    public static final RegistryObject<HeartStrikerItem> HEART_STRIKER_ENHANCED = ITEMS.register("heart_striker_enhanced", () -> new HeartStrikerItem(IItemWithTier.TIER.ENHANCED));
-    public static final RegistryObject<HeartStrikerItem> HEART_STRIKER_NORMAL = ITEMS.register("heart_striker_normal", () -> new HeartStrikerItem(IItemWithTier.TIER.NORMAL));
-    public static final RegistryObject<HeartStrikerItem> HEART_STRIKER_ULTIMATE = ITEMS.register("heart_striker_ultimate", () -> new HeartStrikerItem(IItemWithTier.TIER.ULTIMATE));
+    public static final RegistryObject<HeartStrikerItem> HEART_STRIKER_ENHANCED = ITEMS.register("heart_striker_enhanced", () -> new HeartStrikerItem(HeartStrikerItem.ENHANCED));
+    public static final RegistryObject<HeartStrikerItem> HEART_STRIKER_NORMAL = ITEMS.register("heart_striker_normal", () -> new HeartStrikerItem(HeartStrikerItem.NORMAL));
+    public static final RegistryObject<HeartStrikerItem> HEART_STRIKER_ULTIMATE = ITEMS.register("heart_striker_ultimate", () -> new HeartStrikerItem(HeartStrikerItem.ULTIMATE));
 
     public static final RegistryObject<HolyWaterBottleItem> HOLY_WATER_BOTTLE_ENHANCED = ITEMS.register("holy_water_bottle_enhanced", () -> new HolyWaterBottleItem(IItemWithTier.TIER.ENHANCED));
     public static final RegistryObject<HolyWaterBottleItem> HOLY_WATER_BOTTLE_NORMAL = ITEMS.register("holy_water_bottle_normal", () -> new HolyWaterBottleItem(IItemWithTier.TIER.NORMAL));
@@ -99,22 +99,22 @@ public class ModItems {
         }
     });
 
-    public static final RegistryObject<HunterAxeItem> HUNTER_AXE_ENHANCED = ITEMS.register("hunter_axe_enhanced", () -> new HunterAxeItem(IItemWithTier.TIER.ENHANCED));
-    public static final RegistryObject<HunterAxeItem> HUNTER_AXE_NORMAL = ITEMS.register("hunter_axe_normal", () -> new HunterAxeItem(IItemWithTier.TIER.NORMAL));
-    public static final RegistryObject<HunterAxeItem> HUNTER_AXE_ULTIMATE = ITEMS.register("hunter_axe_ultimate", () -> new HunterAxeItem(IItemWithTier.TIER.ULTIMATE));
+    public static final RegistryObject<HunterAxeItem> HUNTER_AXE_ENHANCED = ITEMS.register("hunter_axe_enhanced", () -> new HunterAxeItem(HunterAxeItem.ENHANCED));
+    public static final RegistryObject<HunterAxeItem> HUNTER_AXE_NORMAL = ITEMS.register("hunter_axe_normal", () -> new HunterAxeItem(HunterAxeItem.NORMAL));
+    public static final RegistryObject<HunterAxeItem> HUNTER_AXE_ULTIMATE = ITEMS.register("hunter_axe_ultimate", () -> new HunterAxeItem(HunterAxeItem.ULTIMATE));
 
-    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_CHEST_ENHANCED = ITEMS.register("hunter_coat_chest_enhanced", () -> new HunterCoatItem(EquipmentSlot.CHEST, IItemWithTier.TIER.ENHANCED));
-    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_CHEST_NORMAL = ITEMS.register("hunter_coat_chest_normal", () -> new HunterCoatItem(EquipmentSlot.CHEST, IItemWithTier.TIER.NORMAL));
-    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_CHEST_ULTIMATE = ITEMS.register("hunter_coat_chest_ultimate", () -> new HunterCoatItem(EquipmentSlot.CHEST, IItemWithTier.TIER.ULTIMATE));
-    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_FEET_ENHANCED = ITEMS.register("hunter_coat_feet_enhanced", () -> new HunterCoatItem(EquipmentSlot.FEET, IItemWithTier.TIER.ENHANCED));
-    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_FEET_NORMAL = ITEMS.register("hunter_coat_feet_normal", () -> new HunterCoatItem(EquipmentSlot.FEET, IItemWithTier.TIER.NORMAL));
-    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_FEET_ULTIMATE = ITEMS.register("hunter_coat_feet_ultimate", () -> new HunterCoatItem(EquipmentSlot.FEET, IItemWithTier.TIER.ULTIMATE));
-    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_HEAD_ENHANCED = ITEMS.register("hunter_coat_head_enhanced", () -> new HunterCoatItem(EquipmentSlot.HEAD, IItemWithTier.TIER.ENHANCED));
-    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_HEAD_NORMAL = ITEMS.register("hunter_coat_head_normal", () -> new HunterCoatItem(EquipmentSlot.HEAD, IItemWithTier.TIER.NORMAL));
-    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_HEAD_ULTIMATE = ITEMS.register("hunter_coat_head_ultimate", () -> new HunterCoatItem(EquipmentSlot.HEAD, IItemWithTier.TIER.ULTIMATE));
-    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_LEGS_ENHANCED = ITEMS.register("hunter_coat_legs_enhanced", () -> new HunterCoatItem(EquipmentSlot.LEGS, IItemWithTier.TIER.ENHANCED));
-    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_LEGS_NORMAL = ITEMS.register("hunter_coat_legs_normal", () -> new HunterCoatItem(EquipmentSlot.LEGS, IItemWithTier.TIER.NORMAL));
-    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_LEGS_ULTIMATE = ITEMS.register("hunter_coat_legs_ultimate", () -> new HunterCoatItem(EquipmentSlot.LEGS, IItemWithTier.TIER.ULTIMATE));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_CHEST_ENHANCED = ITEMS.register("hunter_coat_chest_enhanced", () -> new HunterCoatItem(EquipmentSlot.CHEST, HunterCoatItem.ENHANCED));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_CHEST_NORMAL = ITEMS.register("hunter_coat_chest_normal", () -> new HunterCoatItem(EquipmentSlot.CHEST, HunterCoatItem.NORMAL));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_CHEST_ULTIMATE = ITEMS.register("hunter_coat_chest_ultimate", () -> new HunterCoatItem(EquipmentSlot.CHEST, HunterCoatItem.ULTIMATE));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_FEET_ENHANCED = ITEMS.register("hunter_coat_feet_enhanced", () -> new HunterCoatItem(EquipmentSlot.FEET, HunterCoatItem.ENHANCED));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_FEET_NORMAL = ITEMS.register("hunter_coat_feet_normal", () -> new HunterCoatItem(EquipmentSlot.FEET, HunterCoatItem.NORMAL));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_FEET_ULTIMATE = ITEMS.register("hunter_coat_feet_ultimate", () -> new HunterCoatItem(EquipmentSlot.FEET, HunterCoatItem.ULTIMATE));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_HEAD_ENHANCED = ITEMS.register("hunter_coat_head_enhanced", () -> new HunterCoatItem(EquipmentSlot.HEAD, HunterCoatItem.ENHANCED));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_HEAD_NORMAL = ITEMS.register("hunter_coat_head_normal", () -> new HunterCoatItem(EquipmentSlot.HEAD, HunterCoatItem.NORMAL));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_HEAD_ULTIMATE = ITEMS.register("hunter_coat_head_ultimate", () -> new HunterCoatItem(EquipmentSlot.HEAD, HunterCoatItem.ULTIMATE));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_LEGS_ENHANCED = ITEMS.register("hunter_coat_legs_enhanced", () -> new HunterCoatItem(EquipmentSlot.LEGS, HunterCoatItem.ENHANCED));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_LEGS_NORMAL = ITEMS.register("hunter_coat_legs_normal", () -> new HunterCoatItem(EquipmentSlot.LEGS, HunterCoatItem.NORMAL));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_LEGS_ULTIMATE = ITEMS.register("hunter_coat_legs_ultimate", () -> new HunterCoatItem(EquipmentSlot.LEGS, HunterCoatItem.ULTIMATE));
 
     public static final RegistryObject<HunterHatItem> HUNTER_HAT_HEAD_0 = ITEMS.register("hunter_hat_head_0", () -> new HunterHatItem(0));
     public static final RegistryObject<HunterHatItem> HUNTER_HAT_HEAD_1 = ITEMS.register("hunter_hat_head_1", () -> new HunterHatItem(1));

@@ -24,35 +24,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class VampirismSwordItem extends SwordItem {
-    private final float attackDamage;
-    private final float attackSpeed;
     private String translation_key;
 
 
     public VampirismSwordItem(@NotNull Tier material, int attackDamageIn, float attackSpeedIn, @NotNull Properties builder) {
         super(material, attackDamageIn, attackSpeedIn, builder);
-        this.attackDamage = attackDamageIn;
-        this.attackSpeed = attackSpeedIn;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        if (flagIn.isAdvanced()) {
-            tooltip.add(Component.literal("ModDamage: " + getAttackDamage(stack)).withStyle(ChatFormatting.GRAY));
-            tooltip.add(Component.literal("ModSpeed: " + getAttackSpeed(stack)).withStyle(ChatFormatting.GRAY));
-        }
-    }
-
-    @Override
-    public @NotNull Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot equipmentSlot, ItemStack stack) {
-        Multimap<Attribute, AttributeModifier> multimap = HashMultimap.create();
-        if (equipmentSlot == EquipmentSlot.MAINHAND) {
-            multimap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", getAttackDamage(stack), AttributeModifier.Operation.ADDITION));
-            multimap.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", getAttackSpeed(stack), AttributeModifier.Operation.ADDITION));
-        }
-
-        return multimap;
     }
 
     @Override
@@ -61,17 +37,6 @@ public class VampirismSwordItem extends SwordItem {
             return false;
         }
         return super.canApplyAtEnchantingTable(stack, enchantment);
-    }
-
-    protected float getAttackDamage(ItemStack stack) {
-        return attackDamage;
-    }
-
-    /**
-     * This is effectively an attack slowness. The more negative the value, the lower the attack speed
-     */
-    protected float getAttackSpeed(ItemStack stack) {
-        return attackSpeed;
     }
 
     @NotNull

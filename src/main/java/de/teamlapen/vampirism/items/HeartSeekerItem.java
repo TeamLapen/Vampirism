@@ -4,40 +4,40 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.util.ToolMaterial;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 public class HeartSeekerItem extends VampirismVampireSwordItem implements IItemWithTier {
-    private final static int[] DAMAGE_TIER = {7, 8, 9};
-    private final static float[] UNTRAINED_SPEED_TIER = {-3.6f, -3.5f, -3.4f};
-    private final static float[] TRAINED_SPEED_TIER = {-2.2f, -2.1f, -2f};
+
+    public static final VampireSwordMaterial NORMAL = new VampireSwordMaterial(TIER.NORMAL,2, 500, -3.6f, 3.0F, 14, () -> Ingredient.of(ModItems.BLOOD_INFUSED_IRON_INGOT.get()), 1.4f);
+    public static final VampireSwordMaterial ENHANCED = new VampireSwordMaterial(TIER.ENHANCED,2, 1750, -3.5f, 4.0F, 14, () -> Ingredient.of(ModItems.BLOOD_INFUSED_ENHANCED_IRON_INGOT.get()), 1.4f);
+    public static final VampireSwordMaterial ULTIMATE = new VampireSwordMaterial(TIER.ULTIMATE,2, 2500, -3.4f, 5.0F, 14, () -> Ingredient.of(ModItems.BLOOD_INFUSED_ENHANCED_IRON_INGOT.get()), 1.4f);
+
     private final @NotNull TIER tier;
 
-    public HeartSeekerItem(@NotNull TIER tier) {
-        super(Tiers.IRON, DAMAGE_TIER[tier.ordinal()], UNTRAINED_SPEED_TIER[tier.ordinal()], TRAINED_SPEED_TIER[tier.ordinal()], new Properties().tab(VampirismMod.creativeTab).durability(2500));
-        this.tier = tier;
+    public HeartSeekerItem(@NotNull VampireSwordMaterial material) {
+        super(material, 3, new Properties().tab(VampirismMod.creativeTab));
+        this.tier = material.getTier();
     }
-
 
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         addTierInformation(tooltip);
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-    }
-
-    @Override
-    public boolean isValidRepairItem(@NotNull ItemStack toRepair, @NotNull ItemStack repair) {
-        return (this.getVampirismTier() == TIER.NORMAL ? ModItems.BLOOD_INFUSED_IRON_INGOT.get() : ModItems.BLOOD_INFUSED_ENHANCED_IRON_INGOT.get()).equals(repair.getItem()) || super.isValidRepairItem(toRepair, repair);
     }
 
     @Override
@@ -59,5 +59,4 @@ public class HeartSeekerItem extends VampirismVampireSwordItem implements IItemW
     protected float getChargingFactor(ItemStack stack) {
         return (float) (VampirismConfig.BALANCE.vampireSwordChargingFactor.get() * 2f / (getVampirismTier().ordinal() + 2f));
     }
-
 }
