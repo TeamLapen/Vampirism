@@ -32,9 +32,9 @@ import java.util.function.Supplier;
 
 public class ArmorOfSwiftnessItem extends VampirismHunterArmorItem implements IItemWithTier, DyeableLeatherItem {
 
-    public static final SwiftnessArmorMaterial NORMAL = new SwiftnessArmorMaterial("armor_of_swiftness_normal", TIER.NORMAL,15, new int[]{1, 2, 3, 1}, 12, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> Ingredient.of(Tags.Items.LEATHER), 0.035f);
-    public static final SwiftnessArmorMaterial ENHANCED = new SwiftnessArmorMaterial("armor_of_swiftness_enhanced", TIER.ENHANCED,20, new int[]{2, 5, 6, 2}, 12, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> Ingredient.of(Tags.Items.LEATHER),0.075f);
-    public static final SwiftnessArmorMaterial ULTIMATE = new SwiftnessArmorMaterial("armor_of_swiftness_ultimate", TIER.ULTIMATE,25, new int[]{3, 6, 8, 3}, 12, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> Ingredient.of(Tags.Items.LEATHER), 0.1f);
+    public static final SwiftnessArmorMaterial NORMAL = new SwiftnessArmorMaterial("vampirism:armor_of_swiftness_normal", TIER.NORMAL,15, new int[]{1, 2, 3, 1}, 12, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> Ingredient.of(Tags.Items.LEATHER), 0.035f);
+    public static final SwiftnessArmorMaterial ENHANCED = new SwiftnessArmorMaterial("vampirism:armor_of_swiftness_enhanced", TIER.ENHANCED,20, new int[]{2, 5, 6, 2}, 12, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> Ingredient.of(Tags.Items.LEATHER),0.075f);
+    public static final SwiftnessArmorMaterial ULTIMATE = new SwiftnessArmorMaterial("vampirism:armor_of_swiftness_ultimate", TIER.ULTIMATE,25, new int[]{3, 6, 8, 3}, 12, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> Ingredient.of(Tags.Items.LEATHER), 0.1f);
 
     private final @NotNull TIER tier;
 

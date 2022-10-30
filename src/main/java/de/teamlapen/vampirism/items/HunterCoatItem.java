@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.entity.player.hunter.HunterPlayerSpecialAttribute;
 import de.teamlapen.vampirism.util.ArmorMaterial;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -42,9 +43,9 @@ public class HunterCoatItem extends VampirismHunterArmorItem implements IItemWit
         return IItemWithTier.TIER.values()[minLevel];
     }
 
-    public static final ArmorMaterial.Tiered NORMAL = new ArmorMaterial.Tiered("hunter_coat", TIER.NORMAL, 17, new int[]{2, 5, 6, 2}, 10, SoundEvents.ARMOR_EQUIP_IRON, 2, 0, () -> Ingredient.of(Tags.Items.INGOTS_IRON));
-    public static final ArmorMaterial.Tiered ENHANCED = new ArmorMaterial.Tiered("hunter_coat_enhanced", TIER.ENHANCED, 25, new int[]{3, 6, 8, 3}, 10, SoundEvents.ARMOR_EQUIP_IRON, 2, 0, () -> Ingredient.of(Tags.Items.INGOTS_IRON));
-    public static final ArmorMaterial.Tiered ULTIMATE = new ArmorMaterial.Tiered("hunter_coat_ultimate", TIER.ULTIMATE, 33, new int[]{3, 7, 9, 3}, 10, SoundEvents.ARMOR_EQUIP_IRON, 2, 0, () -> Ingredient.of(Tags.Items.GEMS_DIAMOND));
+    public static final ArmorMaterial.Tiered NORMAL = new ArmorMaterial.Tiered("vampirism:hunter_coat", TIER.NORMAL, 17, new int[]{2, 5, 6, 2}, 10, SoundEvents.ARMOR_EQUIP_IRON, 2, 0, () -> Ingredient.of(Tags.Items.INGOTS_IRON));
+    public static final ArmorMaterial.Tiered ENHANCED = new ArmorMaterial.Tiered("vampirism:hunter_coat_enhanced", TIER.ENHANCED, 25, new int[]{3, 6, 8, 3}, 10, SoundEvents.ARMOR_EQUIP_IRON, 2, 0, () -> Ingredient.of(Tags.Items.INGOTS_IRON));
+    public static final ArmorMaterial.Tiered ULTIMATE = new ArmorMaterial.Tiered("vampirism:hunter_coat_ultimate", TIER.ULTIMATE, 33, new int[]{3, 7, 9, 3}, 10, SoundEvents.ARMOR_EQUIP_IRON, 2, 0, () -> Ingredient.of(Tags.Items.GEMS_DIAMOND));
 
     private final @NotNull TIER tier;
 

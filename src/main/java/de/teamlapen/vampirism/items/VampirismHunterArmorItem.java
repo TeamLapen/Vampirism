@@ -43,7 +43,8 @@ public abstract class VampirismHunterArmorItem extends ArmorItem implements IFac
     public VampirismHunterArmorItem(@NotNull ArmorMaterial materialIn, @NotNull EquipmentSlot equipmentSlotIn, Item.@NotNull Properties props, @NotNull Map<Attribute, Tuple<Double, AttributeModifier.Operation>> modifiers) {
         super(materialIn, equipmentSlotIn, props);
 
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
+        builder.putAll(getDefaultAttributeModifiers(equipmentSlotIn));
         for (Map.Entry<Attribute, Tuple<Double, AttributeModifier.Operation>> modifier : modifiers.entrySet()) {
             builder.put(modifier.getKey(), new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Vampirism armor modifier", modifier.getValue().getA(), modifier.getValue().getB()));
         }
