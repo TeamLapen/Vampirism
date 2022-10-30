@@ -33,10 +33,10 @@ public class SitUtil {
      * @param blockPos  The position at which to add the entity
      * @param entity    The entity to add
      * @param playerPos The position of the player who is sitting down. Used for correctly positioning the player after dismounting
-     * @return true if the entity was added, false otherwhise. This is always false on the client.
+     * @return true if the entity was added, false otherwise. This is always false on the client.
      */
     public static boolean addSitEntity(@NotNull Level level, BlockPos blockPos, SitEntity entity, BlockPos playerPos) {
-        if (!level.isClientSide) {
+        if (!level.isClientSide && playerPos != null) {
             ResourceLocation id = getDimensionTypeId(level);
 
             if (!OCCUPIED.containsKey(id)) {
@@ -129,7 +129,7 @@ public class SitUtil {
      * Checks whether a player is sitting anywhere
      *
      * @param player The player to check
-     * @return true if the given player is sitting anywhere, false otherwhise
+     * @return true if the given player is sitting anywhere, false otherwise
      */
     public static boolean isPlayerSitting(@NotNull Player player) {
         for (ResourceLocation i : OCCUPIED.keySet()) {
