@@ -21,7 +21,6 @@ public class RegenVampireAction extends DefaultVampireAction {
         Player player = vampire.getRepresentingPlayer();
         int dur = VampirismConfig.BALANCE.vaRegenerationDuration.get() * 20;
         player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, dur, vampire.getSkillHandler().isRefinementEquipped(ModRefinements.REGENERATION.get()) ? 1 : 0));
-        player.addEffect(new MobEffectInstance(MobEffects.HUNGER, dur, 2));
         return true;
     }
 

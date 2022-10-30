@@ -101,7 +101,7 @@ public class HunterAxeItem extends VampirismHunterWeaponItem implements IItemWit
 
     private float getVampireMult() {
         return switch (tier) {
-            case ULTIMATE -> 1.5F;
+            case ULTIMATE -> 1.3F;
             case ENHANCED -> 1.3F;
             default -> 1.2F;
         };
