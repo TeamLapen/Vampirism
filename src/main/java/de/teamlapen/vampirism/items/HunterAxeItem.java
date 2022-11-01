@@ -105,7 +105,6 @@ public class HunterAxeItem extends VampirismHunterWeapon implements IItemWithTie
     private float getVampireMult() {
         switch (tier) {
             case ULTIMATE:
-                return 1.5F;
             case ENHANCED:
                 return 1.3F;
             default:
