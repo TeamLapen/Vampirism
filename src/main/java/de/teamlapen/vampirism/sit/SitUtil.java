@@ -34,7 +34,7 @@ public class SitUtil {
      * @return true if the entity was added, false otherwhise. This is always false on the client.
      */
     public static boolean addSitEntity(World world, BlockPos blockPos, SitEntity entity, BlockPos playerPos) {
-        if (!world.isClientSide) {
+        if (!world.isClientSide && playerPos != null) {
             ResourceLocation id = getDimensionTypeId(world);
 
             if (!OCCUPIED.containsKey(id))
