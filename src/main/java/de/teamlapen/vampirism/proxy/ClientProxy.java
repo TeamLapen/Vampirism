@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.client.VIngameOverlays;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.blockentity.GarlicDiffuserBlockEntity;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
+import de.teamlapen.vampirism.blocks.LogBlock;
 import de.teamlapen.vampirism.blocks.TentBlock;
 import de.teamlapen.vampirism.client.core.*;
 import de.teamlapen.vampirism.client.gui.ScreenEventHandler;
@@ -22,6 +23,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.InBedChatScreen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.TerrainParticle;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.texture.AtlasSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -198,6 +201,10 @@ public class ClientProxy extends CommonProxy {
                 registerSubscriptions();
                 ActionSelectScreen.loadActionOrder();
                 ModBlocksRender.register();
+                event.enqueueWork(() -> {
+                    Sheets.addWoodType(LogBlock.dark_spruce);
+                    Sheets.addWoodType(LogBlock.cursed_spruce);
+                });
             }
             case LOAD_COMPLETE -> {
                 event.enqueueWork(ModItemsRender::registerItemModelPropertyUnsafe);
