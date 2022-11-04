@@ -34,10 +34,11 @@ const config = {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl: 'https://github.com/TeamLapen/Vampirism/tree/gh-pages/',
+          lastVersion: 'current',
           versions: {
             current: {
               /** this value must be changed if a new version is released */
-                label: '1.9',
+              label: '1.9',
             }
           }
         },
