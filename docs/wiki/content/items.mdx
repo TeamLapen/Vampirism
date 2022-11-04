@@ -15,7 +15,7 @@ import {
     bloodInfusedIronIngotImages,
     crossbowArrowImages,
     crossbowClipImage,
-    crossbowImages,
+    crossbowImages, crucifixEnhancedImage, crucifixNormalImage, crucifixUltimateImage,
     feedingAdapterImage,
     garlicBreadImage,
     garlicFinderImage,
@@ -36,7 +36,7 @@ import {
     hunterHeadImages,
     hunterIntelImage,
     hunterMinionBindingImage,
-    hunterMinionUpgradeImages,
+    hunterMinionUpgradeImages, image,
     injectionImages,
     pitchforkImage,
     potionOfOblivionImage,
@@ -51,7 +51,7 @@ import {
     vampireClothLegsImage, vampireFangImage,
     vampireMinionBindingImage,
     vampireMinionUpgradeImages,
-    weakHumanHeartImage
+    weakHumanHeartImage,
 } from "../assets/images/_images.mdx";
 import {
     accessoriesRecipes,
@@ -225,7 +225,7 @@ Simply kill mobs
         img: [{src: heartStrikerUltimateImage}],
         source: heartStrikerUltimateRecipes
     }
-]}>
+]} imageHeight={200}>
 
 Heart Striker are Vampire swords that can be trained to become better, but require blood to work.
 <details><summary>Charge & Train</summary>
@@ -338,3 +338,33 @@ Stylish vampire clothing that provides minimal protection but can be fully encha
 <Item title="Vampire Fang" img={vampireFangImage} source={vampireFangRecipes}/>
 <Item title="Vampire Blood" img={vampireBloodImage} source={vampireBloodRecipes}/>
 <Item title="Vampire Book" img={vampireBookImage} source={vampireBookRecipes}/>
+<TieredItem title={"Crucifix"} tiers={
+  [
+      {
+          title: "Wooden Crucifix",
+          img: [{src: crucifixNormalImage}]
+      },
+      {
+          title: "Iron Crucifix",
+          img: [{src: crucifixEnhancedImage}]
+      },
+      {
+          title: "Golden Crucifix",
+          img: [{src: crucifixUltimateImage}]
+      },
+  ]
+}/>
+<Items title={"Dark Spruce Boat"} img=
+    {
+        [
+            {src: image("dark_spruce_boat.png")},
+            {src: image("dark_spruce_chest_boat.png")},
+        ]
+    }/>
+<Items title={"Cursed Spruce Boat"} img=
+    {
+        [
+            {src: image("cursed_spruce_boat.png")},
+            {src: image("cursed_spruce_chest_boat.png")},
+        ]
+    }/>
