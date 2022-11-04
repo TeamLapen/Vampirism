@@ -73,6 +73,28 @@ import coffinPink from './coffin_pink.png'
 import coffinCyan from './coffin_cyan.png'
 import cursedGrass from './cursed_grass.png'
 import cursedGrassSnowy from './cursed_grass_snow.png'
+import smallTombstone from './small_tombstone.png'
+import tombstone from './tombstone.png'
+import largeTombstone from './large_tombstone.png'
+import throne from './throne.png'
+import vampireRack from './vampire_rack.png'
+import graveCage from './grave_cage.png'
+import cursedSpruceLog from './cursed_spruce_log.png'
+import cursedSpruceWood from './cursed_spruce_wood.png'
+import cursedSprucePlanks from './cursed_spruce_planks.png'
+import cursedStrippedSpruceLog from './stripped_cursed_spruce_log.png'
+import cursedStrippedSpruceWood from './stripped_cursed_spruce_wood.png'
+import darkSpruceLog from './dark_spruce_log.png'
+import darkSpruceWood from './dark_spruce_wood.png'
+import darkSprucePlanks from './dark_spruce_planks.png'
+import darkStrippedSpruceLog from './stripped_dark_spruce_log.png'
+import darkStrippedSpruceWood from './stripped_dark_spruce_wood.png'
+
+export const baseUrl = "https://raw.githubusercontent.com/TeamLapen/Vampirism/0a0cc4b5017ec2ec217740f0408633a6d28774cc/src/main/resources/assets/vampirism/textures/block/"
+
+export function blockImage(imageName) {
+    return baseUrl + imageName;
+}
 
 export const coffinImages = [coffin, coffinBlue, coffinGreen, coffinRed, coffinYellow, coffinPurple, coffinOrange, coffinBlack, coffinWhite, coffinBrown, coffinGray, coffinLightBlue, coffinLightGray, coffinLime, coffinMagenta, coffinPink, coffinCyan]
 export const alchemicalCauldronImage = alchemicalCauldron
@@ -144,3 +166,9 @@ export const stoneStairImages = [darkStairsImage, darkStoneBrickStairsImage, pur
 export const spruceLeavesImage = darkSpruceLeavesImage
 export const firePlaceImage = firePlace
 export const cursedGrassImages  = [cursedGrass, cursedGrassSnowy]
+export const tombstoneImages = [smallTombstone, tombstone, largeTombstone]
+export const throneImage = throne
+export const vampireRackImage = vampireRack
+export const graveCageImage = graveCage
+export const darkSpruceWoodItems = [darkSpruceLog, darkSpruceWood, darkStrippedSpruceLog, darkStrippedSpruceWood, darkSprucePlanks]
+export const cursedSpruceWoodItems = [cursedSpruceLog, cursedSpruceWood, cursedStrippedSpruceLog, cursedStrippedSpruceWood, cursedSprucePlanks]

@@ -21,15 +21,27 @@ import {
     crossImage,
     cursedDirtImage,
     cursedGrassImages,
-    spruceSaplingImages, firePlaceImage,
+    spruceSaplingImages,
+    firePlaceImage,
     garlicDiffuserImage,
     garlicImages,
     hunterTableImages,
     injectionChairImage,
-    potionTableImage, spruceLeavesImage, stoneBrickImages, stoneSlapImages, stoneStairImages,
+    potionTableImage,
+    spruceLeavesImage,
+    stoneBrickImages,
+    stoneSlapImages,
+    stoneStairImages,
     sunscreenBeaconImage,
     totemImages,
-    vampireOrchidImage, weaponTableImages
+    vampireOrchidImage,
+    weaponTableImages,
+    throneImage,
+    vampireRackImage,
+    tombstoneImages,
+    graveCageImage,
+    blockImage,
+    darkSpruceWoodItems, cursedSpruceWoodItems
 } from "../assets/blocks/_blocks.mdx";
 import {
     alchemicalTableRecipes, altarOfCleansingRecipes, altarOfInfusionRecipes, altarOfInspirationRecipes,
@@ -180,3 +192,24 @@ Totems are used to control villages for a faction. See [Faction Raids](../factio
 <Block img={alchemyTable} title="Alchemy Table" source={alchemyTableRecipes}>
     The Alchemy Table is used in the creation of weapon oils.
 </Block>
+<Blocks title="Tombstones" img={tombstoneImages}>
+    <Decorative></Decorative>
+</Blocks>
+<Block title="Grave Cage" img={graveCageImage}>
+    <Decorative></Decorative>
+</Block>
+<Block title="Vampire Rack" img={vampireRackImage}>
+    <Decorative></Decorative>
+</Block>
+<Block title="Throne" img={throneImage}>
+    <Decorative></Decorative>
+</Block>
+<Blocks title="Dark Spruce Wood Items" img={darkSpruceWoodItems}>
+
+</Blocks>
+<Blocks title="Cursed Spruce Wood Items" img={cursedSpruceWoodItems}>
+
+Cursed Spruce Logs and Wood will ge gradually covered with Cursed Bark which will suck blood from nearby entities.
+</Blocks>
+
+<Block title="Cursed Roots" img={blockImage("cursed_roots.png")}></Block>
