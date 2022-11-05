@@ -953,7 +953,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     public void onUpdatePlayer(TickEvent.Phase phase) {
         if (phase == TickEvent.Phase.END) {
             //update sleeping pose
-            if (getLevel() > 0) {
+            if (getLevel() > 0 && player.level.isClientSide()) {
                 VampirismMod.proxy.handleSleepClient(player);
             }
 
