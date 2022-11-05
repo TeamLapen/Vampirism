@@ -332,7 +332,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         compound.putBoolean(POISONOUS_BLOOD, poisonousBlood);
     }
 
-    private void sync() {
+    public void sync() {
         HelperLib.sync(this, getEntity(), false);
     }
 
