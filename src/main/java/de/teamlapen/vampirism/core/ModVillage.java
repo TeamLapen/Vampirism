@@ -74,7 +74,7 @@ public class ModVillage {
                         new Trades.ItemsForSouls(new Trades.Price(25, 35), ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL.get(), new Trades.Price(1, 1), 7, 1),
                         new Trades.ItemsForSouls(new Trades.Price(10, 15), ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL.get(), new Trades.Price(1, 1), 5, 1),
                         new Trades.ItemsForSouls(new Trades.Price(20, 30), ModItems.ARMOR_OF_SWIFTNESS_HEAD_NORMAL.get(), new Trades.Price(1, 1), 6, 1),
-                        new Trades.BiomeMapForEmeralds(5, ModBiomes.VAMPIRE_FOREST.getKey(), 3, 2)
+                        new Trades.VampireForestMapTrade(5, 3, 2)
                 },
                 2, new VillagerTrades.ItemListing[]{
                         new Trades.ItemsForSouls(new Trades.Price(25, 45), Items.DIAMOND, new Trades.Price(1, 1), 2, 5),
@@ -146,7 +146,7 @@ public class ModVillage {
                         new Trades.ItemsForHeart(new Trades.Price(10, 15), ModItems.PURE_BLOOD_0.get(), new Trades.Price(1, 1)),
                         new Trades.BloodBottleForHeart(new Trades.Price(3, 12), new Trades.Price(1, 15), 9),
                         new VillagerTrades.EmeraldForItems(ModBlocks.VAMPIRE_ORCHID.get(), 4, 1, 3),
-                        new Trades.BiomeMapForEmeralds(5, ModBiomes.VAMPIRE_FOREST.getKey(), 3, 2)
+                        new Trades.VampireForestMapTrade(5, 3, 2)
                 },
                 2, new VillagerTrades.ItemListing[]{
                         new Trades.ItemsForHeart(new Trades.Price(25, 30), ModItems.PURE_BLOOD_1.get(), new Trades.Price(1, 1), 10, 1),

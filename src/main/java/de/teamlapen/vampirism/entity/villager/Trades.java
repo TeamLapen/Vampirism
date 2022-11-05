@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.villager;
 
 import com.mojang.datafixers.util.Pair;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.entity.converted.ConvertedVillagerEntity;
 import de.teamlapen.vampirism.items.BloodBottleItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -173,40 +174,34 @@ public class Trades {
         }
     }
 
-    public static class BiomeMapForEmeralds implements VillagerTrades.ItemListing {
+    /**
+     * Provides a trade selling a map to the nearest vampire forest for emeralds.
+     * Only works for {@link ConvertedVillagerEntity}, otherwise it will create a null offer
+     */
+    public static class VampireForestMapTrade implements VillagerTrades.ItemListing {
         private final int emeraldCost;
-        private final ResourceKey<Biome> destination;
         private final int maxUses;
         private final int villagerXp;
 
-        public BiomeMapForEmeralds(int pEmeraldCost, ResourceKey<Biome> pDestination, int pMaxUses, int pVillagerXp) {
+        public VampireForestMapTrade(int pEmeraldCost, int pMaxUses, int pVillagerXp) {
             this.emeraldCost = pEmeraldCost;
-            this.destination = pDestination;
             this.maxUses = pMaxUses;
             this.villagerXp = pVillagerXp;
         }
 
         @Nullable
         public MerchantOffer getOffer(@NotNull Entity pTrader, RandomSource pRand) {
-            if (!(pTrader.level instanceof ServerLevel serverlevel)) {
-                return null;
-            } else {
-                Biome biome = serverlevel.getServer().registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getOptional(destination).orElse(null);
-                if (biome == null) {
-                    LogManager.getLogger().warn("Cannot find destination biome in registry{}", destination);
-                    return null;
-                }
-                Pair<BlockPos, Holder<Biome>> blockpos = serverlevel.findClosestBiome3d(b -> b.is(destination), pTrader.blockPosition(), 2400, 8, 16); //TOD check
-                if (blockpos != null) {
-                    ItemStack itemstack = MapItem.create(serverlevel, blockpos.getFirst().getX(), blockpos.getFirst().getZ(), (byte) 3, true, true);
-                    MapItem.renderBiomePreviewMap(serverlevel, itemstack);
-                    MapItemSavedData.addTargetDecoration(itemstack, blockpos.getFirst(), "+", MapDecoration.Type.TARGET_POINT);
-                    itemstack.setHoverName(Component.translatable("biome." + destination.location().getNamespace() + "." + destination.location().getPath()));
+            if (pTrader instanceof ConvertedVillagerEntity convertedVillager && pTrader.level instanceof ServerLevel serverLevel){
+                //This may block for a short amount of time if the vampire villager has not completed its forest search yet
+                return convertedVillager.getClosestVampireForest().map(blockPos -> {
+                    ItemStack itemstack = MapItem.create(pTrader.level, blockPos.getX(), blockPos.getZ(), (byte) 3, true, true);
+                    MapItem.renderBiomePreviewMap(serverLevel, itemstack);
+                    MapItemSavedData.addTargetDecoration(itemstack, blockPos, "+", MapDecoration.Type.TARGET_POINT);
+                    itemstack.setHoverName(Component.translatable("biome.vampirism.vampire_forest"));
                     return new MerchantOffer(new ItemStack(Items.EMERALD, this.emeraldCost), new ItemStack(Items.COMPASS), itemstack, this.maxUses, this.villagerXp, 0.2F);
-                } else {
-                    return null;
-                }
+                }).orElse(null);
             }
+            return null;
         }
     }
 
