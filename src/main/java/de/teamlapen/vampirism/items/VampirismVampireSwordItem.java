@@ -160,8 +160,8 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
         if (attacker instanceof Player && !Helper.isVampire(target)) {
             double relTh = VampirismConfig.BALANCE.vsSwordFinisherMaxHealth.get() * VampirePlayer.getOpt((Player) attacker).map(VampirePlayer::getSkillHandler).map(h -> h.isSkillEnabled(VampireSkills.SWORD_FINISHER.get()) ? (h.isRefinementEquipped(ModRefinements.SWORD_FINISHER.get()) ? VampirismConfig.BALANCE.vrSwordFinisherThresholdMod.get() : 1d) : 0d).orElse(0d);
             if (relTh > 0 && target.getHealth() <= target.getMaxHealth() * relTh) {
-                DamageSource dmg = DamageSource.playerAttack((Player) attacker).bypassArmor();
-                target.hurt(dmg, 10000F);
+                DamageSource dmg = DamageSource.playerAttack((Player) attacker);
+                target.hurt(dmg.bypassArmor(), 10000F);
                 Vec3 center = Vec3.atLowerCornerOf(target.blockPosition());
                 center.add(0, target.getBbHeight() / 2d, 0);
                 ModParticles.spawnParticlesServer(target.level, new GenericParticleData(ModParticles.GENERIC.get(), new ResourceLocation("minecraft", "effect_4"), 12, 0xE02020), center.x, center.y, center.z, 15, 0.5, 0.5, 0.5, 0);

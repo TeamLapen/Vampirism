@@ -16,6 +16,8 @@ public class DBNODamageSource extends DamageSource {
     public DBNODamageSource(@Nonnull Component originalSource) {
         super("vampirism_dbno");
         this.originalSource = originalSource;
+        this.bypassArmor();
+        this.bypassEnchantments();
     }
 
     @Nonnull
