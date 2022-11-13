@@ -24,6 +24,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -90,17 +91,19 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
     }
 
     public void activateTask(int minionID, @NotNull IMinionTask<?, MinionData> task) {
-        if (minionID >= minions.length) {
-            LOGGER.warn("Trying to activate a task for a non-existent minion {}", minionID);
-        } else {
-            if (minionID < 0) {
-                for (MinionInfo i : minions) {
-                    if (!i.data.isTaskLocked()) {
-                        activateTask(i, task);
-                    }
-                }
+        if (!this.getLordPlayer().map(LivingEntity::isSpectator).orElse(false)) {
+            if (minionID >= minions.length) {
+                LOGGER.warn("Trying to activate a task for a non-existent minion {}", minionID);
             } else {
-                activateTask(minions[minionID], task);
+                if (minionID < 0) {
+                    for (MinionInfo i : minions) {
+                        if (!i.data.isTaskLocked()) {
+                            activateTask(i, task);
+                        }
+                    }
+                } else {
+                    activateTask(minions[minionID], task);
+                }
             }
         }
     }

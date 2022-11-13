@@ -56,6 +56,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ThrowablePotionItem;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -506,6 +507,13 @@ public class ModPlayerEventHandler {
                 event.setResult(Event.Result.ALLOW);
                 event.setDamageModifier(event.getDamageModifier() + (event.getOldDamageModifier() * (item.getDamageMultiplierForFaction(stack) - 1)));
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerGameMode(PlayerEvent.PlayerChangeGameModeEvent event) {
+        if (event.getNewGameMode() == GameType.SPECTATOR) {
+            FactionPlayerHandler.getOpt(event.getEntity()).ifPresent(handler -> handler.getCurrentFactionPlayer().ifPresent(factionPlayer -> factionPlayer.getActionHandler().deactivateAllActions()));
         }
     }
 }
