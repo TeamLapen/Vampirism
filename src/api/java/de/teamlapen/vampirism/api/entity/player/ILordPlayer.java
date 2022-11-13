@@ -27,4 +27,9 @@ public interface ILordPlayer {
 
     @NotNull
     Player getPlayer();
+
+    /**
+     * If the lord titles should use female versions (if available)
+     */
+    boolean useFemaleLordTitle();
 }

@@ -1031,6 +1031,9 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                 this.setEyeType(data[1]);
                 if (data.length > 2) {
                     this.setGlowingEyes(data[2] > 0);
+                    if (data.length > 3) {
+                        FactionPlayerHandler.getOpt(this.player).ifPresent(handler -> handler.setTitleGender(data[3] > 0));
+                    }
                 }
             }
         }

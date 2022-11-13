@@ -217,6 +217,11 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         return currentLordLevel == 0 || currentFaction == null ? null : currentFaction.getLordTitle(currentLordLevel, titleGender != null && titleGender);
     }
 
+    @Override
+    public boolean useFemaleLordTitle() {
+        return this.titleGender != null && this.titleGender;
+    }
+
     public int getMaxMinions() {
         return currentLordLevel * VampirismConfig.BALANCE.miMinionPerLordLevel.get();
     }
