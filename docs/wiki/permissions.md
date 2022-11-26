@@ -5,6 +5,10 @@ title: Permissions
 
 Vampirism utilizes Forge's permissions system for a few actions. Thereby it should be compatible with Forge based permission mods as well as SpongeForge's permission system.
 
+### Allow Everything
+
+If you do not want to bother with Vampirism's permissions, you can simply give the `vampirism.*` permission to all players.
+
 ### Available permissions
 - `vampirism.check` Should be given to all players. Used to check if the permission system works
 - `vampirism.bite.attack` Attack a mob by biting
@@ -12,4 +16,4 @@ Vampirism utilizes Forge's permissions system for a few actions. Thereby it shou
 - `vampirism.bite.feed` Feed from an animal
 - `vampirism.bite.feed.player` Feed from a player
 - `vampirism.infect.player` Infect a player with sanguinare vampirism by biting
-- `vampirism.action.*` Allow a player to use the specific action (e.b. `vampirism.action.vampirism.bat)
+- `vampirism.action.*` Allow a player to use the specific action (e.b. `vampirism.action.vampirism.bat`)

@@ -32,6 +32,10 @@ As a vampire look for an [Altar of Cleansing](content/blocks.mdx#altar-of-cleans
 #### How do I get vampire books
 Vampire books can be found around the world (e.g. in mineshafts or vampire dungeons). They have cryptic names and content.
 
+#### Only player with the OP role can do certain actions (biting/using action/infecting)
+Then you need to give the players the appropriate permissions in your permission plugin. See [Permissions](./permissions.md)
+Should you not use any permission plugin this is most likely a bug in the server software, and you need to add a permission plugin yourself.
+
 ### I have another question
 1) Checkout this wiki  
 2) Make sure you have [Guide-API-VP](https://www.curseforge.com/minecraft/mc-mods/guide-api-village-and-pillage/) (1.14+) 
