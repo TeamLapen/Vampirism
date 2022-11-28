@@ -26,4 +26,7 @@ In a Hunter Village, all villager are protected against vampire bites by poisono
 ## Faction Representative
 
 In a controlled village a [Faction Representative](../../content/entities/village_representative) will eventually spawn. The representative is not a Villager, but a task giver for interested faction player.
-He gives out tasks that require the player to complete different actions or collect items. The representative is also relevant in becoming a [Lord](../vampire-hunter-lord-and-minions)
+He gives out tasks that require the player to complete different actions or collect items. The representative is also relevant in becoming a [Lord](../vampire-hunter-lord-and-minions).
+
+
+It is important to note that the normal task are bound to the representative, which means that if the representative dies, the tasks can no longer be submitted even if the task is completed. This does not apply to unique tasks, which are available at all representatives of the faction.

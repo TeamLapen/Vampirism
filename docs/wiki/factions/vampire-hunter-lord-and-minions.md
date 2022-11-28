@@ -9,7 +9,6 @@ To become a lord you have to fulfill a certain task for your faction. You can ac
 
 ### Ranks
 
-
 | Level | Hunter Title | Vampire Title   |
 |-------|--------------|-----------------|
 | 1     | Lieutenant   | Baron(ess)      |
@@ -20,6 +19,9 @@ To become a lord you have to fulfill a certain task for your faction. You can ac
 
 The gender used is determined based on your skin type (steve -> male, alex -> female), but this can be changed using [`/vampirism title-gender <true/false>`](../commands.md#title-gender).
 
+### Leveling
+
+To become a lord or to level up as lord you need to complete special tasks for [Village Representatives](../content/entities/village_representative).
 ### Minions
 Minions have an inventory that can be used to store items but also to equip the minion with weapons and armor. 
 Furthermore, their appearance can be changed, and you can assign them a new name.
@@ -38,4 +40,8 @@ You can upgrade their equipment and improve their capabilities using hunter mini
 
 ##### Tasks
 At the time of writing there are the following tasks:
-Follow lord, defend lord, defend area, stay, collect resources/blood.
+- Follow lord
+- Defend lord
+- Defend area
+- Stay
+- Collect resources/blood.
