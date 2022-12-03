@@ -82,10 +82,10 @@ public class ModEntityEventHandler {
             }
         }
         if (target != null) {
-            e.targetSelector.removeGoal(target);
             @SuppressWarnings("unchecked")
             EntityType<? extends T> type = (EntityType<? extends T>) e.getType();
             if (typeCheck.test(type)) {
+                e.targetSelector.removeGoal(target);
                 e.targetSelector.addGoal(attackPriority, replacement.apply(e, nonVampireCheck));
             }
         } else {
