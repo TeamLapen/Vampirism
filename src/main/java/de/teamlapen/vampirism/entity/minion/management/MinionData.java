@@ -217,8 +217,11 @@ public class MinionData implements INBTSerializable<CompoundTag>, IMinionData {
 
     /**
      * Called on server side to upgrade a stat of the given id
+     * <p>
+     * @param  statId values:<br>
+     * -1: reset all stats<br>
+     * -2: update attributes<br>
      *
-     * @param statId -1 if stats are to be reset
      * @return if attributes where changed and a sync is required
      */
     public boolean upgradeStat(int statId, @NotNull MinionEntity<?> entity) {

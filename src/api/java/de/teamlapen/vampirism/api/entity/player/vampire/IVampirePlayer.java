@@ -109,6 +109,11 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
      */
     void unlockVision(@NotNull IVampireVision vision);
 
+    /**
+     * updates attributes of all minions
+     */
+    void updateMinionAttributes();
+
     enum BITE_TYPE {
         SUCK_BLOOD_CREATURE, SUCK_BLOOD_PLAYER, SUCK_BLOOD, NONE, HUNTER_CREATURE
     }

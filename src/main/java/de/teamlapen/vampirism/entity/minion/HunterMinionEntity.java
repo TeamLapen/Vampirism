@@ -51,6 +51,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.annotation.Inherited;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -187,10 +188,10 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         if (this.level.isClientSide()) return;
     }
 
-    private void updateAttributes() {
+    public void updateAttributes() {
         float statsMultiplier = getLordOpt().flatMap(lord -> ((IFactionPlayerHandler) lord).getCurrentFactionPlayer()).map(player -> player.getSkillHandler().isSkillEnabled(HunterSkills.MINION_STATS_INCREASE.get())).orElse(false) ? 1.2f : 1f;
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.MINION_MAX_HEALTH + BalanceMobProps.mobProps.MINION_MAX_HEALTH_PL * getMinionData().map(HunterMinionData::getHealthLevel).orElse(0) * statsMultiplier);
-        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE + BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE_PL * getMinionData().map(HunterMinionData::getStrengthLevel).orElse(0) * statsMultiplier);
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue((BalanceMobProps.mobProps.MINION_MAX_HEALTH + BalanceMobProps.mobProps.MINION_MAX_HEALTH_PL * getMinionData().map(HunterMinionData::getHealthLevel).orElse(0)) * statsMultiplier);
+        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue((BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE + BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE_PL * getMinionData().map(HunterMinionData::getStrengthLevel).orElse(0)) * statsMultiplier);
         this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_SPEED * statsMultiplier);
     }
 
@@ -391,6 +392,19 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             return levelup;
         }
 
+        /**
+         * Called on server side to upgrade a stat of the given id
+         * <p>
+         * @param  statId values: <br>
+         * -1: reset all stats <br>
+         * -2: update attributes <br>
+         * 0:
+         * 1:
+         * 3:
+         *
+         *
+         * @return if attributes where changed and a sync is required
+         */
         @Override
         public boolean upgradeStat(int statId, @NotNull MinionEntity<?> entity) {
             if (super.upgradeStat(statId, entity)) return true;

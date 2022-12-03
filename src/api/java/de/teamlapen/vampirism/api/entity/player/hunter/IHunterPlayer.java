@@ -22,4 +22,9 @@ public interface IHunterPlayer extends IFactionPlayer<IHunterPlayer>, IHunter {
     default IPlayableFaction<IHunterPlayer> getFaction() {
         return VReference.HUNTER_FACTION;
     }
+
+    /**
+     * updates attributes of all minions
+     */
+    void updateMinionAttributes();
 }
