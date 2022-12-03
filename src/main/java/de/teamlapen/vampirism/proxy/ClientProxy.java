@@ -152,14 +152,8 @@ public class ClientProxy extends CommonProxy {
         if (player.isSleeping()) {
             player.getSleepingPos().ifPresent(pos -> {
                 if (player.level.getBlockState(pos).getBlock() instanceof TentBlock) {
-                    if (Minecraft.getInstance().screen instanceof InBedChatScreen && !(Minecraft.getInstance().screen instanceof SleepInMultiplayerModScreen)) {
-                        Minecraft.getInstance().setScreen(new SleepInMultiplayerModScreen("text.vampirism.tent.stop_sleeping"));
-                    }
                     TentBlock.setTentSleepPosition(player, pos, player.level.getBlockState(pos).getValue(POSITION), player.level.getBlockState(pos).getValue(FACING));
                 } else if (player.level.getBlockState(pos).getBlock() instanceof CoffinBlock) {
-                    if (Minecraft.getInstance().screen instanceof InBedChatScreen && !(Minecraft.getInstance().screen instanceof SleepInMultiplayerModScreen)) {
-                        Minecraft.getInstance().setScreen(new SleepInMultiplayerModScreen("text.vampirism.coffin.stop_sleeping"));
-                    }
                     CoffinBlock.setCoffinSleepPosition(player, pos, player.level.getBlockState(pos));
                 }
             });
