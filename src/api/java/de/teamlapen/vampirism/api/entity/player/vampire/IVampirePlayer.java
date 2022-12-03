@@ -112,7 +112,7 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
     /**
      * updates attributes of all minions
      */
-    void updateMinionAttributes();
+    void updateMinionAttributes(boolean increasedStats);
 
     enum BITE_TYPE {
         SUCK_BLOOD_CREATURE, SUCK_BLOOD_PLAYER, SUCK_BLOOD, NONE, HUNTER_CREATURE

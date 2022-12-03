@@ -328,9 +328,9 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
     }
 
     @Override
-    public void updateMinionAttributes() {
+    public void updateMinionAttributes(boolean increasedStats) {
         MinionWorldData.getData(this.player.level).flatMap(a -> FactionPlayerHandler.getOpt(this.player).map(a::getOrCreateController)).ifPresent(controller -> controller.contactMinions((minion) -> {
-            ((HunterMinionEntity)minion).updateAttributes();
+            (minion.getMinionData()).ifPresent(b -> ((HunterMinionEntity.HunterMinionData)b).setIncreasedStats(increasedStats));
             HelperLib.sync(minion);
         }));
     }

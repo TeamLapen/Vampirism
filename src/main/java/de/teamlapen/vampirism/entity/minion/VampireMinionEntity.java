@@ -243,7 +243,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     }
 
     public void updateAttributes() {
-        float statsMultiplier = getLordOpt().flatMap(lord -> ((IFactionPlayerHandler) lord).getCurrentFactionPlayer()).map(player -> ((IFactionPlayer<?>) player).getSkillHandler().isSkillEnabled(VampireSkills.MINION_STATS_INCREASE.get())).orElse(false) ? 1.2f : 1;
+        float statsMultiplier = this.getMinionData().filter(d -> d.hasIncreasedStats).map(a -> 1.2f).orElse(1f);
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue((BalanceMobProps.mobProps.MINION_MAX_HEALTH + BalanceMobProps.mobProps.MINION_MAX_HEALTH_PL * getMinionData().map(VampireMinionData::getHealthLevel).orElse(0)) * statsMultiplier);
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue((BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE + BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE_PL * getMinionData().map(VampireMinionData::getStrengthLevel).orElse(0)) * statsMultiplier);
         this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue((BalanceMobProps.mobProps.VAMPIRE_SPEED + 0.05 * getMinionData().map(VampireMinionData::getSpeedLevel).orElse(0)) * statsMultiplier);
@@ -269,6 +269,8 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         private int strengthLevel;
         private int speedLevel;
 
+        private boolean hasIncreasedStats;
+
         public VampireMinionData(String name, int type, boolean useLordSkin) {
             super(name, 9);
             this.type = type;
@@ -292,6 +294,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
             strengthLevel = nbt.getInt("l_str");
             speedLevel = nbt.getInt("l_spe");
             minionSkin = nbt.getBoolean("ms");
+            hasIncreasedStats = nbt.getBoolean("hasIncreasedStats");
         }
 
         @Override
@@ -367,6 +370,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
             tag.putInt("l_str", strengthLevel);
             tag.putInt("l_spe", speedLevel);
             tag.putBoolean("ms", minionSkin);
+            tag.putBoolean("hasIncreasedStats", hasIncreasedStats);
         }
 
         /**
@@ -417,6 +421,10 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
                     return false;
                 }
             }
+        }
+
+        public void setIncreasedStats(boolean hasIncreasedStats) {
+            this.hasIncreasedStats = hasIncreasedStats;
         }
 
         @Override

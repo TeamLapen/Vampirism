@@ -1469,9 +1469,9 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     @Override
-    public void updateMinionAttributes() {
+    public void updateMinionAttributes(boolean enabled) {
         MinionWorldData.getData(this.player.level).flatMap(a -> FactionPlayerHandler.getOpt(this.player).map(a::getOrCreateController)).ifPresent(controller -> controller.contactMinions((minion) -> {
-            ((VampireMinionEntity) minion).updateAttributes();
+            (minion.getMinionData()).ifPresent(b -> ((VampireMinionEntity.VampireMinionData)b).setIncreasedStats(enabled));
             HelperLib.sync(minion);
         }));
     }

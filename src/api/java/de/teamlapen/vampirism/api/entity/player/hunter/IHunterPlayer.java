@@ -26,5 +26,5 @@ public interface IHunterPlayer extends IFactionPlayer<IHunterPlayer>, IHunter {
     /**
      * updates attributes of all minions
      */
-    void updateMinionAttributes();
+    void updateMinionAttributes(boolean increasedStats);
 }

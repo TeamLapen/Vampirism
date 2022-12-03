@@ -81,7 +81,7 @@ public class HunterSkills {
     public static final RegistryObject<ISkill<IHunterPlayer>> CRUCIFIX_WIELDER = SKILLS.register("crucifix_wielder", () -> new VampirismSkill.SimpleHunterSkill(true));
     public static final RegistryObject<ISkill<IHunterPlayer>> ULTIMATE_CRUCIFIX = SKILLS.register("ultimate_crucifix", () -> new VampirismSkill.SimpleHunterSkill(true));
     public static final RegistryObject<ISkill<IHunterPlayer>> MINION_COLLECT = SKILLS.register("hunter_minion_collect", () -> new VampirismSkill.LordHunterSkill(true));
-    public static final RegistryObject<ISkill<IHunterPlayer>> MINION_STATS_INCREASE = SKILLS.register("hunter_minion_stats_increase", () -> new VampirismSkill.LordHunterSkill(true).setToggleActions(IHunterPlayer::updateMinionAttributes, IHunterPlayer::updateMinionAttributes));
+    public static final RegistryObject<ISkill<IHunterPlayer>> MINION_STATS_INCREASE = SKILLS.register("hunter_minion_stats_increase", () -> new VampirismSkill.LordHunterSkill(true).setToggleActions(hunter -> hunter.updateMinionAttributes(true), hunter -> hunter.updateMinionAttributes(false)));
     public static final RegistryObject<ISkill<IHunterPlayer>> MINION_TECH_CROSSBOWS = SKILLS.register("minion_tech_crossbows", () -> new VampirismSkill.LordHunterSkill(true));
 
     static {

@@ -79,7 +79,7 @@ public class VampireSkills {
     public static final RegistryObject<ISkill<IVampirePlayer>> DBNO_DURATION = SKILLS.register("dbno_duration", () -> new VampirismSkill.SimpleVampireSkill(true));
     public static final RegistryObject<ISkill<IVampirePlayer>> HISSING = SKILLS.register("hissing", () -> new ActionSkill<>(VampireActions.HISSING, true));
     public static final RegistryObject<ISkill<IVampirePlayer>> MINION_COLLECT = SKILLS.register("vampire_minion_collect", () -> new VampirismSkill.LordVampireSkill(true));
-    public static final RegistryObject<ISkill<IVampirePlayer>> MINION_STATS_INCREASE = SKILLS.register("vampire_minion_stats_increase", () -> new VampirismSkill.LordVampireSkill(true).setToggleActions(IVampirePlayer::updateMinionAttributes, IVampirePlayer::updateMinionAttributes));
+    public static final RegistryObject<ISkill<IVampirePlayer>> MINION_STATS_INCREASE = SKILLS.register("vampire_minion_stats_increase", () -> new VampirismSkill.LordVampireSkill(true).setToggleActions(vampire -> vampire.updateMinionAttributes(true), vampire -> vampire.updateMinionAttributes(false)));
 
     @ApiStatus.Internal
     public static void register(IEventBus bus) {

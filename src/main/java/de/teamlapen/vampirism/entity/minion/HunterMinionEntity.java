@@ -189,7 +189,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     }
 
     public void updateAttributes() {
-        float statsMultiplier = getLordOpt().flatMap(lord -> ((IFactionPlayerHandler) lord).getCurrentFactionPlayer()).map(player -> player.getSkillHandler().isSkillEnabled(HunterSkills.MINION_STATS_INCREASE.get())).orElse(false) ? 1.2f : 1f;
+        float statsMultiplier = this.getMinionData().filter(d -> d.hasIncreasedStats).map(a -> 1.2f).orElse(1f);
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue((BalanceMobProps.mobProps.MINION_MAX_HEALTH + BalanceMobProps.mobProps.MINION_MAX_HEALTH_PL * getMinionData().map(HunterMinionData::getHealthLevel).orElse(0)) * statsMultiplier);
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue((BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE + BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE_PL * getMinionData().map(HunterMinionData::getStrengthLevel).orElse(0)) * statsMultiplier);
         this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_SPEED * statsMultiplier);
@@ -275,6 +275,8 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         private int strengthLevel;
         private int resourceEfficiencyLevel;
 
+        private boolean hasIncreasedStats;
+
         public HunterMinionData(String name, int type, int hat, boolean useLordSkin) {
             super(name, 9);
             this.type = type;
@@ -300,7 +302,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             strengthLevel = nbt.getInt("l_str");
             resourceEfficiencyLevel = nbt.getInt("l_res");
             minionSkin = nbt.getBoolean("ms");
-
+            hasIncreasedStats = nbt.getBoolean("hasIncreasedStats");
         }
 
         @Override
@@ -378,7 +380,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             tag.putInt("l_res", resourceEfficiencyLevel);
             tag.putBoolean("use_lord_skin", useLordSkin);
             tag.putBoolean("ms", minionSkin);
-
+            tag.putBoolean("hasIncreasedStats", hasIncreasedStats);
         }
 
         /**
@@ -398,10 +400,10 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
          * @param  statId values: <br>
          * -1: reset all stats <br>
          * -2: update attributes <br>
-         * 0:
-         * 1:
-         * 3:
-         *
+         * 0: increases inventory level <br>
+         * 1: increases health level <br>
+         * 2: increases strength level <br>
+         * 3: increases resource efficiency level <br>
          *
          * @return if attributes where changed and a sync is required
          */
@@ -443,6 +445,10 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
                     return false;
                 }
             }
+        }
+
+        public void setIncreasedStats(boolean hasIncreasedStats) {
+            this.hasIncreasedStats = hasIncreasedStats;
         }
 
         @Override
