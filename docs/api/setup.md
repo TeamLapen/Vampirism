@@ -10,7 +10,7 @@ To use the Vampirism API in your dev environment, you need to add the following 
 repositories {
     maven {
         name = 'Vampirism'
-        url = "https://maven.maxanier.de"
+        url = "https://maven.maxanier.de/releases"
     }
 }
 dependencies {
