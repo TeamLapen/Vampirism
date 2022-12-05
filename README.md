@@ -74,7 +74,7 @@ You should be able to include it with the following in your `build.gradle`:
 repositories {
     //Maven repo for Vampirism
     maven {
-        url = "https://maven.maxanier.de"
+        url = "https://maven.maxanier.de/releases"
     }
 }
 dependencies {
