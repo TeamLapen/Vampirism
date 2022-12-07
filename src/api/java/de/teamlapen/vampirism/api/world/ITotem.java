@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api.world;
 
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
@@ -59,5 +60,9 @@ public interface ITotem {
      * @return whether a running raid was triggered by a faction BadOmen effect
      */
     boolean isRaidTriggeredByBadOmen();
+
+    default Optional<BlockPos> getVampireForestLocation() {
+        return Optional.empty();
+    }
 
 }

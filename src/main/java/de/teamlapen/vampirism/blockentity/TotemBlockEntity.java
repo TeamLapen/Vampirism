@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blockentity;
 
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import de.teamlapen.lib.lib.util.UtilLib;
@@ -35,7 +36,9 @@ import de.teamlapen.vampirism.util.TotemHelper;
 import de.teamlapen.vampirism.util.VampirismEventFactory;
 import de.teamlapen.vampirism.world.ServerMultiBossEvent;
 import de.teamlapen.vampirism.world.VampirismWorld;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -43,6 +46,7 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -63,6 +67,7 @@ import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -81,6 +86,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 
 import static de.teamlapen.vampirism.util.TotemHelper.*;
@@ -144,6 +151,8 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     private float beamRenderScale;
     private float[] baseColors = DyeColor.WHITE.getTextureDiffuseColors();
     private float[] progressColor = DyeColor.WHITE.getTextureDiffuseColors();
+    @Nullable
+    private CompletableFuture<BlockPos> closestVampireForest = null;
 
     public TotemBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         super(ModTiles.TOTEM.get(), pos, state);
@@ -749,6 +758,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         if (time % 12000 == 0) {
             blockEntity.updateVillageArea();
         }
+        setupVampireForestSearch(blockEntity, (ServerLevel) level, pos);
 
         //Capture
         if (blockEntity.capturingFaction != null) {
@@ -1264,6 +1274,27 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         }
         this.villageArea = totem;
         this.villageAreaReduced = totem.inflate(-30, -10, -30);
+    }
+
+    private static void setupVampireForestSearch(final @NotNull TotemBlockEntity blockEntity, final @NotNull ServerLevel level, final @NotNull BlockPos center) {
+        if (blockEntity.closestVampireForest == null) {
+            final ResourceKey<Biome> biomeId = ModBiomes.VAMPIRE_FOREST.getKey();
+            blockEntity.closestVampireForest = CompletableFuture.supplyAsync(Util.wrapThreadWithTaskName("Find vampire forest", () -> {
+                Stopwatch stopwatch = Stopwatch.createStarted(Util.TICKER);
+                com.mojang.datafixers.util.Pair<BlockPos, Holder<Biome>> location = level.findClosestBiome3d(b -> b.is(biomeId), center, 5000, 8, 16);
+                LOGGER.debug("Looking for vampire forest took {}s", (double)stopwatch.stop().elapsed(TimeUnit.MILLISECONDS) / 1000.0D);
+                return location == null ? null : location.getFirst();
+            }), Util.backgroundExecutor()).handle((result, exception) -> result);
+        }
+    }
+
+    @Override
+    public Optional<BlockPos> getVampireForestLocation() {
+        if (this.closestVampireForest == null || !this.closestVampireForest.isDone()) {
+            return Optional.empty();
+        } else {
+            return Optional.ofNullable(this.closestVampireForest.join());
+        }
     }
 
     private enum CAPTURE_PHASE {

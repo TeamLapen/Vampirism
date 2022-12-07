@@ -1,19 +1,16 @@
 package de.teamlapen.vampirism.entity.converted;
 
-import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Dynamic;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.api.entity.convertible.ICurableConvertedCreature;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
+import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.core.ModAdvancements;
-import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModVillage;
 import de.teamlapen.vampirism.entity.VampirismVillagerEntity;
@@ -22,23 +19,18 @@ import de.teamlapen.vampirism.entity.villager.Trades;
 import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.RegUtil;
-import net.minecraft.Util;
+import de.teamlapen.vampirism.util.TotemHelper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderSet;
-import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -55,23 +47,17 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.levelgen.FlatLevelSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Vampire Villager
@@ -94,12 +80,6 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     private int bloodTimer = 0;
     private int conversionTime;
     private @Nullable UUID conversationStarter;
-    /**
-     * Can hold a completable future that asynchronously searches for the closest vampire forest.
-     * For vampire expert profession villagers on server side this is initiated in aiTick
-     */
-    @Nullable
-    private CompletableFuture<BlockPos> closestVampireForest = null;
 
     public ConvertedVillagerEntity(EntityType<? extends ConvertedVillagerEntity> type, Level worldIn) {
         super(type, worldIn);
@@ -137,22 +117,6 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
                 DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(level), this.tickCount);
             }
         }
-
-        //Trigger an asynchronous search for the vampire forest, if we are a server-side vampire expert and the search has not been initiated yet
-        if(closestVampireForest == null && !this.isClientSide() && getVillagerData().getProfession() == ModVillage.VAMPIRE_EXPERT.get() && this.level instanceof ServerLevel){
-            final ServerLevel world = (ServerLevel) this.level;
-            final BlockPos center = this.blockPosition();
-            final ResourceKey<Biome> biomeId = ModBiomes.VAMPIRE_FOREST.getKey();
-            if(biomeId != null){
-                closestVampireForest = CompletableFuture.supplyAsync(Util.wrapThreadWithTaskName("Find vampire forest", () -> {
-                    Stopwatch stopwatch = Stopwatch.createStarted(Util.TICKER);
-                    Pair<BlockPos, Holder<Biome>> location = world.findClosestBiome3d(b -> b.is(biomeId), center, 2400, 8, 16);
-                    LOGGER.debug("Looking for vampire forest took {}s", (double)stopwatch.stop().elapsed(TimeUnit.MILLISECONDS) / 1000.0D);
-                    return location == null ? null : location.getFirst();
-                }), Util.backgroundExecutor()); //Not sure if the timeout is actually working
-            }
-
-        }
         bloodTimer++;
         super.aiStep();
     }
@@ -163,15 +127,8 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
      * For all other villagers it returns an empty optional
      * @return The location of the closest vampire forest if available
      */
-    public Optional<BlockPos> getClosestVampireForest(){
-        if(closestVampireForest != null && closestVampireForest.isDone()){
-            try {
-                return Optional.ofNullable(closestVampireForest.get());
-            } catch (InterruptedException | ExecutionException e) {
-                LOGGER.error("Failed to obtain closest vampire forest asynchronously",e);
-            }
-        }
-        return Optional.empty();
+    public Optional<BlockPos> getClosestVampireForest(Level level, BlockPos blockPos) {
+        return level instanceof ServerLevel serverLevel ? TotemHelper.getTotemNearPos(serverLevel, blockPos, true).flatMap(TotemBlockEntity::getVampireForestLocation) : Optional.empty();
     }
 
     @Override
