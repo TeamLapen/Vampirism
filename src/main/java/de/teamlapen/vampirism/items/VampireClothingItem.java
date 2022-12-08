@@ -13,7 +13,6 @@ import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.util.ArmorMaterial;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.RegUtil;
-import de.teamlapen.vampirism.util.VampirismArmorMaterials;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.Model;
 import net.minecraft.core.particles.ParticleTypes;
