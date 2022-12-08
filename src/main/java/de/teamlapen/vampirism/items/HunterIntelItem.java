@@ -31,32 +31,22 @@ public class HunterIntelItem extends Item {
     }
 
     public static @NotNull HunterIntelItem getIntelForLevel(int level) {
-        switch (level) {
-            case 0:
-                return ModItems.HUNTER_INTEL_0.get();
-            case 1:
-                return ModItems.HUNTER_INTEL_1.get();
-            case 2:
-                return ModItems.HUNTER_INTEL_2.get();
-            case 3:
-                return ModItems.HUNTER_INTEL_3.get();
-            case 4:
-                return ModItems.HUNTER_INTEL_4.get();
-            case 5:
-                return ModItems.HUNTER_INTEL_5.get();
-            case 6:
-                return ModItems.HUNTER_INTEL_6.get();
-            case 7:
-                return ModItems.HUNTER_INTEL_7.get();
-            case 8:
-                return ModItems.HUNTER_INTEL_8.get();
-            case 9:
-                return ModItems.HUNTER_INTEL_9.get();
-            default:
+        return switch (level) {
+            case 0 -> ModItems.HUNTER_INTEL_0.get();
+            case 1 -> ModItems.HUNTER_INTEL_1.get();
+            case 2 -> ModItems.HUNTER_INTEL_2.get();
+            case 3 -> ModItems.HUNTER_INTEL_3.get();
+            case 4 -> ModItems.HUNTER_INTEL_4.get();
+            case 5 -> ModItems.HUNTER_INTEL_5.get();
+            case 6 -> ModItems.HUNTER_INTEL_6.get();
+            case 7 -> ModItems.HUNTER_INTEL_7.get();
+            case 8 -> ModItems.HUNTER_INTEL_8.get();
+            case 9 -> ModItems.HUNTER_INTEL_9.get();
+            default -> {
                 LOGGER.warn("HunterIntel of level {} does not exist", level);
-                return ModItems.HUNTER_INTEL_9.get();
-
-        }
+                yield ModItems.HUNTER_INTEL_9.get();
+            }
+        };
     }
 
     private final int level;

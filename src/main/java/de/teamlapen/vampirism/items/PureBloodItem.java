@@ -34,21 +34,17 @@ public class PureBloodItem extends Item {
     private final static Logger LOGGER = LogManager.getLogger();
 
     public static @NotNull Item getBloodItemForLevel(int level) {
-        switch (level) {
-            case 0:
-                return ModItems.PURE_BLOOD_0.get();
-            case 1:
-                return ModItems.PURE_BLOOD_1.get();
-            case 2:
-                return ModItems.PURE_BLOOD_2.get();
-            case 3:
-                return ModItems.PURE_BLOOD_3.get();
-            case 4:
-                return ModItems.PURE_BLOOD_4.get();
-            default:
+        return switch (level) {
+            case 0 -> ModItems.PURE_BLOOD_0.get();
+            case 1 -> ModItems.PURE_BLOOD_1.get();
+            case 2 -> ModItems.PURE_BLOOD_2.get();
+            case 3 -> ModItems.PURE_BLOOD_3.get();
+            case 4 -> ModItems.PURE_BLOOD_4.get();
+            default -> {
                 LOGGER.warn("Pure blood of level {} does not exist", level);
-                return ModItems.PURE_BLOOD_4.get();
-        }
+                yield  ModItems.PURE_BLOOD_4.get();
+            }
+        };
     }
 
     private final int level;

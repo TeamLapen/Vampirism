@@ -236,28 +236,29 @@ public class CoffinBlock extends VampirismBlockContainer {
             double x;
             double z;
             switch (state.getValue(HORIZONTAL_FACING)) {
-                case NORTH:
+                case NORTH -> {
                     x = 0.5;
                     z = 0.3;
                     player.yBodyRot = player.yHeadRot = 0;
-                    break;
-                case EAST:
+                }
+                case EAST -> {
                     x = 0.7;
                     z = 0.5;
                     player.yBodyRot = player.yHeadRot = 90;
-                    break;
-                case SOUTH:
+                }
+                case SOUTH -> {
                     x = 0.5;
                     z = 0.7;
                     player.yBodyRot = player.yHeadRot = 180;
-                    break;
-                case WEST:
+                }
+                case WEST -> {
                     x = 0.3;
                     z = 0.5;
                     player.yBodyRot = player.yHeadRot = 270;
-                    break;
-                default:
+                }
+                default -> {
                     return;
+                }
             }
             player.setPos(blockPos.getX() + x, blockPos.getY() - 1, blockPos.getZ() + z);
             player.setBoundingBox(new AABB(blockPos.getX() + x - 0.2, blockPos.getY() - 0.8, blockPos.getZ() + z - 0.2, blockPos.getX() + x + 0.2, blockPos.getY() + 0.4, blockPos.getZ() + z + 0.2));

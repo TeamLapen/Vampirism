@@ -665,7 +665,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
             this.abortCapture();
         } else {
             switch (this.phase) {
-                case PHASE_1_NEUTRAL:
+                case PHASE_1_NEUTRAL -> {
                     if (this.captureTimer >= VampirismConfig.BALANCE.viPhase1Duration.get()) {
                         this.captureTimer = 1;
                         this.setupPhase2();
@@ -677,8 +677,8 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
                             }
                         }
                     }
-                    break;
-                case PHASE_1_OPPOSITE:
+                }
+                case PHASE_1_OPPOSITE -> {
                     if (captureTimer >= VampirismConfig.BALANCE.viPhase1Duration.get()) {
                         captureTimer = 1;
                         this.setupPhase2();
@@ -694,8 +694,8 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
                             }
                         }
                     }
-                    break;
-                case PHASE_2:
+                }
+                case PHASE_2 -> {
                     if (currentDefender == 0) {
                         captureTimer++;
                         if (captureTimer > 4) {
@@ -709,9 +709,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
                     } else {
                         captureTimer = 1;
                     }
-                    break;
-                default:
-                    break;
+                }
             }
             this.handleBossBar(defenderMaxHealth, defenderHealth, attackerMaxHealth, attackerHealth);
         }

@@ -159,26 +159,19 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
     }
 
     protected double determineSlowdown(int entityTier) {
-        switch (tier) {
-            case NORMAL:
-                return entityTier > 1 ? 0.1 : 0.5;
-            case ENHANCED:
-                return entityTier > 2 ? 0.1 : 0.5;
-            case ULTIMATE:
-                return entityTier > 3 ? 0.3 : 0.5;
-        }
-        return 0;
+        return switch (tier) {
+            case NORMAL -> entityTier > 1 ? 0.1 : 0.5;
+            case ENHANCED -> entityTier > 2 ? 0.1 : 0.5;
+            case ULTIMATE -> entityTier > 3 ? 0.3 : 0.5;
+        };
     }
 
     protected int getRange(ItemStack stack) {
-        switch (tier) {
-            case ENHANCED:
-                return 8;
-            case ULTIMATE:
-                return 10;
-            default:
-                return 4;
-        }
+        return switch (tier) {
+            case ENHANCED -> 8;
+            case ULTIMATE -> 10;
+            default -> 4;
+        };
     }
 
     @Override

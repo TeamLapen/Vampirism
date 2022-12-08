@@ -90,7 +90,7 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
     public void onHitBlock(ItemStack arrow, @NotNull BlockPos blockPos, IEntityCrossbowArrow arrowEntity, @Nullable Entity shootingEntity) {
         CrossbowArrowEntity entity = (CrossbowArrowEntity) arrowEntity;
         switch (type) {
-            case SPITFIRE:
+            case SPITFIRE -> {
                 for (int dx = -1; dx < 2; dx++) {
                     for (int dy = -2; dy < 2; dy++) {
                         for (int dz = -1; dz < 2; dz++) {
@@ -103,8 +103,8 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
                         }
                     }
                 }
-                break;
-            case TELEPORT:
+            }
+            case TELEPORT -> {
                 if (shootingEntity != null) {
                     if (!shootingEntity.level.isClientSide && shootingEntity.isAlive()) {
                         if (shootingEntity instanceof ServerPlayer player) {
@@ -124,7 +124,7 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
                         }
                     }
                 }
-                break;
+            }
         }
     }
 

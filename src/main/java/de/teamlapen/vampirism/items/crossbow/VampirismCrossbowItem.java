@@ -154,9 +154,8 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
                 projectileentity.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
             }
 
-            if (p_220016_1_ instanceof CrossbowAttackMob) {
-                CrossbowAttackMob icrossbowuser = (CrossbowAttackMob)p_220016_1_;
-                icrossbowuser.shootCrossbowProjectile(icrossbowuser.getTarget(), p_220016_3_, projectileentity, p_220016_9_);
+            if (p_220016_1_ instanceof CrossbowAttackMob crossbowUser) {
+                crossbowUser.shootCrossbowProjectile(crossbowUser.getTarget(), p_220016_3_, projectileentity, p_220016_9_);
             } else {
                 Vec3 vector3d1 = p_220016_1_.getUpVector(1.0F);
                 Quaternion quaternion = new Quaternion(new Vector3f(vector3d1), p_220016_9_, true);
