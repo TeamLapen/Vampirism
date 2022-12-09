@@ -28,7 +28,7 @@ public class AdjustableLevelCondition implements LootItemCondition {
     @NotNull
     @Override
     public LootItemConditionType getType() {
-        return ModLoot.ADJUSTABLE_LEVEL.get();
+        return ModLoot.ADJUSTABLE_LEVEL;
     }
 
     @Override

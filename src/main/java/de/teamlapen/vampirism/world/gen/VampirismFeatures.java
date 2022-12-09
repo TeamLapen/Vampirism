@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.world.gen.structure.huntercamp.HunterCampPieces;
 import de.teamlapen.vampirism.world.gen.structure.templatesystem.BiomeTopBlockProcessor;
 import de.teamlapen.vampirism.world.gen.structure.templatesystem.RandomStructureProcessor;
 import net.minecraft.core.HolderGetter;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.data.worldgen.features.FeatureUtils;
@@ -34,6 +35,7 @@ import net.minecraft.world.level.levelgen.placement.*;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.TagMatchTest;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
@@ -49,13 +51,12 @@ public class VampirismFeatures {
     public static final DeferredRegister<StructurePieceType> STRUCTURE_PIECES = DeferredRegister.create(Registries.STRUCTURE_PIECE, REFERENCE.MODID);
     public static final DeferredRegister<StructureProcessorType<?>> STRUCTURE_PROCESSOR_TYPES = DeferredRegister.create(Registries.STRUCTURE_PROCESSOR, REFERENCE.MODID);
 
+    public static final StructurePieceType HUNTER_CAMP_FIREPLACE = (StructurePieceType.ContextlessType) HunterCampPieces.Fireplace::new;
+    public static final StructurePieceType HUNTER_CAMP_TENT = (StructurePieceType.ContextlessType) HunterCampPieces.Tent::new;
+    public static final StructurePieceType HUNTER_CAMP_SPECIAL = (StructurePieceType.ContextlessType) HunterCampPieces.SpecialBlock::new;
 
-    public static final RegistryObject<StructurePieceType> HUNTER_CAMP_FIREPLACE = STRUCTURE_PIECES.register("hunter_camp_fireplace", () -> (StructurePieceType.ContextlessType) HunterCampPieces.Fireplace::new);
-    public static final RegistryObject<StructurePieceType> HUNTER_CAMP_TENT = STRUCTURE_PIECES.register("hunter_camp_tent", () -> (StructurePieceType.ContextlessType) HunterCampPieces.Tent::new);
-    public static final RegistryObject<StructurePieceType> HUNTER_CAMP_SPECIAL = STRUCTURE_PIECES.register("hunter_camp_craftingtable", () -> (StructurePieceType.ContextlessType) HunterCampPieces.SpecialBlock::new);
-
-    public static final RegistryObject<StructureProcessorType<RandomStructureProcessor>> RANDOM_SELECTOR = STRUCTURE_PROCESSOR_TYPES.register("random_selector", () -> () -> RandomStructureProcessor.CODEC);
-    public static final RegistryObject<StructureProcessorType<BiomeTopBlockProcessor>> BIOME_BASED = STRUCTURE_PROCESSOR_TYPES.register("biome_based", () -> () -> BiomeTopBlockProcessor.CODEC);
+    public static final StructureProcessorType<RandomStructureProcessor> RANDOM_SELECTOR = () -> RandomStructureProcessor.CODEC;
+    public static final StructureProcessorType<BiomeTopBlockProcessor> BIOME_BASED = () -> BiomeTopBlockProcessor.CODEC;
 
     public static final ResourceKey<ConfiguredFeature<?, ?>> VAMPIRE_FLOWER = createConfiguredKey("vampire_flower");
     public static final ResourceKey<ConfiguredFeature<?, ?>> CURSED_ROOT = createConfiguredKey("cursed_root");
@@ -82,6 +83,18 @@ public class VampirismFeatures {
     public static void register(IEventBus ctx) {
         STRUCTURE_PIECES.register(ctx);
         STRUCTURE_PROCESSOR_TYPES.register(ctx);
+    }
+
+    public static <T> void registerStructureProcessorTypes(Registry<StructureProcessorType<?>> vanillaRegistry) {
+        Registry.register(vanillaRegistry, "vampirism:random_selector", RANDOM_SELECTOR);
+        Registry.register(vanillaRegistry, "vampirism:biome_based", BIOME_BASED);
+
+    }
+
+    public static <T> void registerStructurePieceTypes(Registry<StructurePieceType> vanillaRegistry) {
+        Registry.register(vanillaRegistry, "vampirism:hunter_camp_fireplace", HUNTER_CAMP_FIREPLACE);
+        Registry.register(vanillaRegistry, "vampirism:hunter_camp_tent", HUNTER_CAMP_TENT);
+        Registry.register(vanillaRegistry, "vampirism:hunter_camp_craftingtable", HUNTER_CAMP_SPECIAL);
     }
 
     private static ResourceKey<ConfiguredFeature<?, ?>> createConfiguredKey(String name) {

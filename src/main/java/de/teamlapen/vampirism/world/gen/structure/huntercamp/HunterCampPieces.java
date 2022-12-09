@@ -82,12 +82,12 @@ public abstract class HunterCampPieces extends StructurePiece {
         private boolean advanced;
 
         public Fireplace(@NotNull RandomSource random, int x, int y, int z) {
-            super(VampirismFeatures.HUNTER_CAMP_FIREPLACE.get(), 0, x, y, z);
+            super(VampirismFeatures.HUNTER_CAMP_FIREPLACE, 0, x, y, z);
             this.setOrientation(Direction.Plane.HORIZONTAL.getRandomDirection(random));
         }
 
         public Fireplace(@NotNull CompoundTag nbt) {
-            super(VampirismFeatures.HUNTER_CAMP_FIREPLACE.get(), nbt);
+            super(VampirismFeatures.HUNTER_CAMP_FIREPLACE, nbt);
             advanced = nbt.getBoolean("advanced");
             specialComponentAdd = nbt.getBoolean("specialComponentAdd");
         }
@@ -175,14 +175,14 @@ public abstract class HunterCampPieces extends StructurePiece {
         private int mirror;
 
         public Tent(int x, int y, int z, @NotNull Direction direction, boolean advanced) {
-            super(VampirismFeatures.HUNTER_CAMP_TENT.get(), 1, x, y, z);
+            super(VampirismFeatures.HUNTER_CAMP_TENT, 1, x, y, z);
             this.setOrientation(direction);
             this.direction = direction;
             this.advanced = advanced;
         }
 
         public Tent(@NotNull CompoundTag nbt) {
-            super(VampirismFeatures.HUNTER_CAMP_TENT.get(), nbt);
+            super(VampirismFeatures.HUNTER_CAMP_TENT, nbt);
             direction = Direction.from2DDataValue(nbt.getInt("direction"));
             mirror = nbt.getInt("mirror");
             advanced = nbt.getBoolean("advanced");
@@ -286,14 +286,14 @@ public abstract class HunterCampPieces extends StructurePiece {
         private final boolean advanced;
 
         public SpecialBlock(int x, int y, int z, Direction direction, boolean advanced) {
-            super(VampirismFeatures.HUNTER_CAMP_SPECIAL.get(), 2, x, y, z);
+            super(VampirismFeatures.HUNTER_CAMP_SPECIAL, 2, x, y, z);
             this.setOrientation(direction);
             this.direction = direction;
             this.advanced = advanced;
         }
 
         public SpecialBlock(@NotNull CompoundTag compoundNBT) {
-            super(VampirismFeatures.HUNTER_CAMP_SPECIAL.get(), compoundNBT);
+            super(VampirismFeatures.HUNTER_CAMP_SPECIAL, compoundNBT);
             this.direction = Direction.from2DDataValue(compoundNBT.getInt("dir"));
             this.advanced = compoundNBT.getBoolean("advanced");
         }

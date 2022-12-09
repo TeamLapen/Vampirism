@@ -28,7 +28,7 @@ public class StakeCondition implements LootItemCondition {
     @NotNull
     @Override
     public LootItemConditionType getType() {
-        return ModLoot.WITH_STAKE.get();
+        return ModLoot.WITH_STAKE;
     }
 
     @Override

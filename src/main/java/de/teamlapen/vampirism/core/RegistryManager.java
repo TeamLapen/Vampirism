@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.misc.VampirismDispenseBoatBehavior;
 import de.teamlapen.vampirism.world.gen.VampirismFeatures;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraftforge.common.MinecraftForge;
@@ -119,10 +120,20 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
-    public void onRegisterEffects(@NotNull RegisterEvent event) {
+    public void onRegister(@NotNull RegisterEvent event) {
         if (event.getRegistryKey().equals(ForgeRegistries.Keys.MOB_EFFECTS)) {
             //noinspection ConstantConditions,unchecked
             ModEffects.replaceEffects((IForgeRegistry<MobEffect>) (Object) event.getForgeRegistry()); //TODO 1.19 check
+        } else if (event.getRegistryKey().equals(Registries.LOOT_FUNCTION_TYPE)) {
+            ModLoot.registerLootFunctionTypes(event.getVanillaRegistry());
+        } else if (event.getRegistryKey().equals(Registries.LOOT_CONDITION_TYPE)) {
+            ModLoot.registerLootConditionsTypes(event.getVanillaRegistry());
+        } else if (event.getRegistryKey().equals(Registries.STRUCTURE_PROCESSOR)) {
+            VampirismFeatures.registerStructureProcessorTypes(event.getVanillaRegistry());
+        } else if (event.getRegistryKey().equals(Registries.STRUCTURE_PIECE)) {
+            VampirismFeatures.registerStructurePieceTypes(event.getVanillaRegistry());
+        } else if (event.getRegistryKey().equals(Registries.STRUCTURE_TYPE)) {
+            ModFeatures.registerStructureTypes(event.getVanillaRegistry());
         }
     }
 }

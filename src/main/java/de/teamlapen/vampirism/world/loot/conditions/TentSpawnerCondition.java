@@ -23,7 +23,7 @@ public class TentSpawnerCondition implements LootItemCondition {
     @NotNull
     @Override
     public LootItemConditionType getType() {
-        return ModLoot.IS_TENT_SPAWNER.get();
+        return ModLoot.IS_TENT_SPAWNER;
     }
 
     @Override

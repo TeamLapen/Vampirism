@@ -30,12 +30,11 @@ import net.minecraftforge.registries.RegistryObject;
  */
 public class ModFeatures {
     public static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(ForgeRegistries.FEATURES, REFERENCE.MODID);
-    public static final DeferredRegister<StructureType<?>> STRUCTURE_TYPES = DeferredRegister.create(Registries.STRUCTURE_TYPE, REFERENCE.MODID);
     public static final DeferredRegister<TreeDecoratorType<?>> TREE_DECORATOR = DeferredRegister.create(ForgeRegistries.TREE_DECORATOR_TYPES, REFERENCE.MODID);
 
     public static final ResourceKey<Structure> HUNTER_CAMP = ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(REFERENCE.MODID, "hunter_camp"));
 
-    public static final RegistryObject<StructureType<HunterCampStructure>> HUNTER_CAMP_TYPE = STRUCTURE_TYPES.register("hunter_camp", () -> () -> HunterCampStructure.CODEC);
+    public static final StructureType<HunterCampStructure> HUNTER_CAMP_TYPE = () -> HunterCampStructure.CODEC;
 
     public static final RegistryObject<VampireDungeonFeature> VAMPIRE_DUNGEON = FEATURES.register("vampire_dungeon", () -> new VampireDungeonFeature(NoneFeatureConfiguration.CODEC));
 
@@ -43,8 +42,11 @@ public class ModFeatures {
 
     static void register(IEventBus bus) {
         FEATURES.register(bus);
-        STRUCTURE_TYPES.register(bus);
         TREE_DECORATOR.register(bus);
+    }
+
+    public static <T> void registerStructureTypes(Registry<StructureType<?>> vanillaRegistry) {
+        Registry.register(vanillaRegistry, HUNTER_CAMP.location(), HUNTER_CAMP_TYPE);
     }
 
     public static void createStructures(BootstapContext<Structure> context) {

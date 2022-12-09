@@ -48,7 +48,7 @@ public class RandomStructureProcessor extends RuleProcessor {
     @NotNull
     @Override
     protected StructureProcessorType<?> getType() {
-        return VampirismFeatures.RANDOM_SELECTOR.get();
+        return VampirismFeatures.RANDOM_SELECTOR;
     }
 
 }
