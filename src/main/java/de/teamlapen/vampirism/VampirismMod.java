@@ -53,13 +53,13 @@ import de.teamlapen.vampirism.world.biome.OverworldModifications;
 import de.teamlapen.vampirism.world.gen.VanillaStructureModifications;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.AddReloadListenerEvent;
@@ -113,7 +113,6 @@ public class VampirismMod {
         modbus.addListener(this::enqueueIMC);
         modbus.addListener(this::processIMC);
         modbus.addListener(this::loadComplete);
-        modbus.addListener(this::gatherData);
         modbus.addListener(this::registerCapabilities);
         modbus.addListener(this::finalizeConfiguration);
 
@@ -195,29 +194,9 @@ public class VampirismMod {
         ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).finishRegistration();
     }
 
-    private void gatherData(final @NotNull GatherDataEvent event) {
-        registryManager.onGatherData(event);
-
-        DataGenerator gen = event.getGenerator();
-        PackOutput packOutput = gen.getPackOutput();
-        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
-        ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
-
-        ModBlockFamilies.init();
-        TagGenerator.register(gen, event, packOutput, lookupProvider, existingFileHelper);
-        gen.addProvider(event.includeServer(), new LootTablesGenerator(packOutput));
-        gen.addProvider(event.includeServer(), new AdvancementGenerator(packOutput, lookupProvider, existingFileHelper));
-        gen.addProvider(event.includeServer(), new RecipesGenerator(packOutput));
-        gen.addProvider(event.includeServer(), new ModSkillNodeProvider(packOutput));
-        BiomeGenerator.register(event, gen);
-
-        gen.addProvider(event.includeClient(), new BlockStateGenerator(gen, event.getExistingFileHelper()));
-        gen.addProvider(event.includeClient(), new ItemModelGenerator(gen, event.getExistingFileHelper()));
-    }
-
     private void loadComplete(final @NotNull FMLLoadCompleteEvent event) {
         onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
-        event.enqueueWork(OverworldModifications::addBiomesToOverworldUnsafe);
+//        event.enqueueWork(OverworldModifications::addBiomesToOverworldUnsafe);
         VampirismAPI.skillManager().registerSkillType(SkillType.LEVEL);
         VampirismAPI.skillManager().registerSkillType(SkillType.LORD);
         DistExecutor.safeRunWhenOn(Dist.DEDICATED_SERVER, () -> VampirismLogger::init);
@@ -292,7 +271,7 @@ public class VampirismMod {
         VampireBookManager.getInstance().init();
         ModEntitySelectors.registerSelectors();
         event.enqueueWork(TerraBlenderCompat::registerBiomeProviderIfPresentUnsafe);
-        VanillaStructureModifications.addVillageStructures(RegistryAccess.EMPTY);
+//        VanillaStructureModifications.addVillageStructures(RegistryAccess.EMPTY);
 
     }
 

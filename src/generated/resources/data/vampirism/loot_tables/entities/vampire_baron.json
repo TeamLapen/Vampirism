@@ -8,7 +8,7 @@
           "condition": "minecraft:killed_by_player"
         },
         {
-          "condition": "vampirism:adjustable_level",
+          "condition": "vampirism:with_stake",
           "entity": "this",
           "level": 0
         }
@@ -29,7 +29,7 @@
           "condition": "minecraft:killed_by_player"
         },
         {
-          "condition": "vampirism:adjustable_level",
+          "condition": "vampirism:with_stake",
           "entity": "this",
           "level": 1
         }
@@ -50,7 +50,7 @@
           "condition": "minecraft:killed_by_player"
         },
         {
-          "condition": "vampirism:adjustable_level",
+          "condition": "vampirism:with_stake",
           "entity": "this",
           "level": 2
         }
@@ -71,7 +71,7 @@
           "condition": "minecraft:killed_by_player"
         },
         {
-          "condition": "vampirism:adjustable_level",
+          "condition": "vampirism:with_stake",
           "entity": "this",
           "level": 3
         }
@@ -92,7 +92,7 @@
           "condition": "minecraft:killed_by_player"
         },
         {
-          "condition": "vampirism:adjustable_level",
+          "condition": "vampirism:with_stake",
           "entity": "this",
           "level": 4
         }

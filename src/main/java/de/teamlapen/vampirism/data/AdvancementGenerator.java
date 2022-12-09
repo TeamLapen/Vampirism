@@ -30,7 +30,7 @@ public class AdvancementGenerator extends AdvancementProvider {
     }
 
     private interface VampirismAdvancementSubProvider {
-        void m_245571_(@NotNull Advancement root, @NotNull HolderLookup.Provider holderProvider, @NotNull Consumer<Advancement> consumer);
+        void generate(@NotNull Advancement root, @NotNull HolderLookup.Provider holderProvider, @NotNull Consumer<Advancement> consumer);
     }
 
     private static class VampirismAdvancements implements AdvancementSubProvider {
@@ -45,24 +45,8 @@ public class AdvancementGenerator extends AdvancementProvider {
                     .addCriterion("second", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.ITEM_GARLIC.get()))
                     .requirements(RequirementsStrategy.OR)
                     .save(consumer, REFERENCE.MODID + ":main/root");
-            Advancement vampire_forest = Advancement.Builder.advancement()
-                    .display(Items.OAK_LOG, Component.translatable("advancement.vampirism.vampire_forest"), Component.translatable("advancement.vampirism.vampire_forest.desc"), null, FrameType.TASK, true, true, true)
-                    .parent(root)
-                    .addCriterion("main", PlayerTrigger.TriggerInstance.located(LocationPredicate.inBiome(ModBiomes.VAMPIRE_FOREST.getKey())))
-                    .requirements(RequirementsStrategy.OR)
-                    .save(consumer, REFERENCE.MODID + ":main/vampire_forest");
-            Advancement ancient_knowledge = Advancement.Builder.advancement()
-                    .display(ModItems.VAMPIRE_BOOK.get(), Component.translatable("advancement.vampirism.ancient_knowledge"), Component.translatable("advancement.vampirism.ancient_knowledge.desc"), null, FrameType.TASK, true, true, true)
-                    .parent(vampire_forest)
-                    .addCriterion("blood_container", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.VAMPIRE_BOOK.get()))
-                    .save(consumer, REFERENCE.MODID + ":main/ancient_knowledge");
-            Advancement regicide = Advancement.Builder.advancement()
-                    .display(ModItems.PURE_BLOOD_0.get(), Component.translatable("advancement.vampirism.regicide"), Component.translatable("advancement.vampirism.regicide.desc"), null, FrameType.CHALLENGE, true, true, true)
-                    .parent(vampire_forest)
-                    .addCriterion("main", KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().of(ModEntities.VAMPIRE_BARON.get())))
-                    .save(consumer, REFERENCE.MODID + ":main/regicide");
 
-            this.subProvider.forEach(provider -> provider.m_245571_(root, holderProvider, consumer));
+            this.subProvider.forEach(provider -> provider.generate(root, holderProvider, consumer));
         }
 
     }
@@ -71,7 +55,7 @@ public class AdvancementGenerator extends AdvancementProvider {
 
         @SuppressWarnings("unused")
         @Override
-        public void m_245571_(@NotNull Advancement root, HolderLookup.@NotNull Provider holderProvider, @NotNull Consumer<Advancement> consumer) {
+        public void generate(@NotNull Advancement root, HolderLookup.@NotNull Provider holderProvider, @NotNull Consumer<Advancement> consumer) {
             Advancement become_hunter = Advancement.Builder.advancement()
                     .display(ModItems.ITEM_GARLIC.get(), Component.translatable("advancement.vampirism.become_hunter"), Component.translatable("advancement.vampirism.become_hunter.desc"), null, FrameType.TASK, true, false, false)
                     .parent(root)
@@ -119,11 +103,11 @@ public class AdvancementGenerator extends AdvancementProvider {
 
         @SuppressWarnings("unused")
         @Override
-        public void m_245571_(@NotNull Advancement root, HolderLookup.@NotNull Provider holderProvider, @NotNull Consumer<Advancement> consumer) {
+        public void generate(@NotNull Advancement root, HolderLookup.@NotNull Provider holderProvider, @NotNull Consumer<Advancement> consumer) {
             Advancement vampire_forest = Advancement.Builder.advancement()
                     .display(Items.OAK_LOG, Component.translatable("advancement.vampirism.vampire_forest"), Component.translatable("advancement.vampirism.vampire_forest.desc"), null, FrameType.TASK, true, true, true)
                     .parent(root)
-                    .addCriterion("main", PlayerTrigger.TriggerInstance.located(LocationPredicate.inBiome(ModBiomes.VAMPIRE_FOREST.getKey())))
+                    .addCriterion("main", PlayerTrigger.TriggerInstance.located(LocationPredicate.inBiome(ModBiomes.VAMPIRE_FOREST)))
                     .requirements(RequirementsStrategy.OR)
                     .save(consumer, REFERENCE.MODID + ":main/vampire_forest");
             Advancement ancient_knowledge = Advancement.Builder.advancement()
@@ -143,7 +127,7 @@ public class AdvancementGenerator extends AdvancementProvider {
 
         @SuppressWarnings("unused")
         @Override
-        public void m_245571_(@NotNull Advancement root, HolderLookup.@NotNull Provider holderProvider, @NotNull Consumer<Advancement> consumer) {
+        public void generate(@NotNull Advancement root, HolderLookup.@NotNull Provider holderProvider, @NotNull Consumer<Advancement> consumer) {
             Advancement become_vampire = Advancement.Builder.advancement()
                     .display(ModItems.VAMPIRE_FANG.get(), Component.translatable("advancement.vampirism.become_vampire"), Component.translatable("advancement.vampirism.become_vampire.desc"), null, FrameType.TASK, true, false, false)
                     .parent(root)
@@ -204,7 +188,7 @@ public class AdvancementGenerator extends AdvancementProvider {
     private static class MinionAdvancements implements VampirismAdvancementSubProvider {
 
         @Override
-        public void m_245571_(@NotNull Advancement root, HolderLookup.@NotNull Provider holderProvider, @NotNull Consumer<Advancement> consumer) {
+        public void generate(@NotNull Advancement root, HolderLookup.@NotNull Provider holderProvider, @NotNull Consumer<Advancement> consumer) {
             Advancement become_lord = Advancement.Builder.advancement()
                     .display(Items.PAPER, Component.translatable("advancement.vampirism.become_lord"), Component.translatable("advancement.vampirism.become_lord.desc"), null, FrameType.TASK, true, true, true)
                     .parent(root)

@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
+import java.util.stream.Stream;
 
 public class LootTablesGenerator extends LootTableProvider {
 
@@ -73,6 +74,10 @@ public class LootTablesGenerator extends LootTableProvider {
             super(FeatureFlags.REGISTRY.allFlags());
         }
 
+        @Override
+        protected @NotNull Stream<EntityType<?>> getKnownEntityTypes() {
+            return ModEntities.getAllEntities().stream();
+        }
 
         @Override
         public void generate() {

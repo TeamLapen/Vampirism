@@ -27,7 +27,7 @@ public class HunterCampStructure extends Structure {
     @NotNull
     @Override
     public StructureType<?> type() {
-        return ModFeatures.HUNTER_CAMP.get();
+        return ModFeatures.HUNTER_CAMP_TYPE.get();
     }
 
     private static <C extends FeatureConfiguration> void generatePieces(@NotNull StructurePiecesBuilder structurePiecesBuilder, @NotNull GenerationContext cContext) {

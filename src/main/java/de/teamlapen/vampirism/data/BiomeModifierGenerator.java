@@ -8,11 +8,7 @@ import de.teamlapen.vampirism.core.ModFeatures;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.world.gen.VampirismFeatures;
 import de.teamlapen.vampirism.world.gen.modifier.ExtendedAddSpawnsBiomeModifier;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderSet;
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.RegistryOps;
@@ -34,34 +30,32 @@ import net.minecraftforge.common.world.BiomeModifier;
 import net.minecraftforge.common.world.ForgeBiomeModifiers;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class BiomeGenerator {
+public class BiomeModifierGenerator {
 
     private final DataGenerator gen;
     private final ExistingFileHelper exFileHelper;
     private final @NotNull RegistryOps<JsonElement> ops;
-    private final @NotNull Registry<Biome> biomes;
-    private final @NotNull Registry<PlacedFeature> placedFeatures;
-    private final @NotNull Registry<Structure> structures;
+    private final @NotNull HolderLookup.RegistryLookup<Biome> biomes;
+    private final @NotNull HolderLookup.RegistryLookup<PlacedFeature> placedFeatures;
+    private final @NotNull HolderLookup.RegistryLookup<Structure> structures;
 
-    public BiomeGenerator(DataGenerator gen, ExistingFileHelper exFileHelper) {
+    public BiomeModifierGenerator(DataGenerator gen, ExistingFileHelper exFileHelper, HolderLookup.Provider lookupProvider) {
         this.gen = gen;
         this.exFileHelper = exFileHelper;
-        RegistryAccess access = RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY);
-        this.ops = RegistryOps.create(JsonOps.INSTANCE, access);
-        this.biomes = access.registryOrThrow(Registries.BIOME);
-        this.placedFeatures = access.registryOrThrow(Registries.PLACED_FEATURE);
-        this.structures = access.registryOrThrow(Registries.STRUCTURE);
+        this.ops = RegistryOps.create(JsonOps.INSTANCE, lookupProvider);
+        this.biomes = lookupProvider.lookupOrThrow(Registries.BIOME);
+        this.placedFeatures = lookupProvider.lookupOrThrow(Registries.PLACED_FEATURE);
+        this.structures = lookupProvider.lookupOrThrow(Registries.STRUCTURE);
     }
 
-    public static void register(@NotNull GatherDataEvent event, @NotNull DataGenerator generator) {
-        BiomeGenerator biomeGenerator = new BiomeGenerator(generator, event.getExistingFileHelper());
+    public static void register(@NotNull GatherDataEvent event, @NotNull DataGenerator generator, HolderLookup.Provider lookupProvider) {
+        BiomeModifierGenerator biomeGenerator = new BiomeModifierGenerator(generator, event.getExistingFileHelper(), lookupProvider);
         generator.addProvider(event.includeServer(), biomeGenerator.modifierGenerator());
         generator.addProvider(event.includeServer(), biomeGenerator.structureSetGenerator());
     }
@@ -87,19 +81,19 @@ public class BiomeGenerator {
 
     private @NotNull Map<ResourceLocation, StructureSet> getStructureSets() {
         Map<ResourceLocation, StructureSet> data = new HashMap<>();
-        data.put(new ResourceLocation(REFERENCE.MODID, "hunter_camp"), new StructureSet(structure(ModFeatures.HUNTER_CAMP_KEY), new RandomSpreadStructurePlacement(9, 4, RandomSpreadType.LINEAR, 1724616580)));
+        data.put(new ResourceLocation(REFERENCE.MODID, "hunter_camp"), new StructureSet(structure(ModFeatures.HUNTER_CAMP), new RandomSpreadStructurePlacement(9, 4, RandomSpreadType.LINEAR, 1724616580)));
         return data;
     }
 
     private @NotNull HolderSet<Biome> biome(@NotNull TagKey<Biome> key) {
-        return biomes.getOrCreateTag(key);
+        return biomes.getOrThrow(key);
     }
 
-    private @NotNull HolderSet<PlacedFeature> placedFeature(@SuppressWarnings("SameParameterValue") @NotNull RegistryObject<PlacedFeature> placedFeature) {
-        return HolderSet.direct(this.placedFeatures.getHolderOrThrow((Objects.requireNonNull(placedFeature.getKey()))));
+    private @NotNull HolderSet<PlacedFeature> placedFeature(@SuppressWarnings("SameParameterValue") @NotNull ResourceKey<PlacedFeature> placedFeature) {
+        return HolderSet.direct(this.placedFeatures.getOrThrow(Objects.requireNonNull(placedFeature)));
     }
 
     private @NotNull Holder<Structure> structure(@SuppressWarnings("SameParameterValue") ResourceKey<Structure> structure) {
-        return this.structures.getHolderOrThrow(Objects.requireNonNull(structure));
+        return this.structures.getOrThrow(Objects.requireNonNull(structure));
     }
 }

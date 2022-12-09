@@ -1,8 +1,8 @@
-/*
 package de.teamlapen.vampirism.world.biome;
 
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.world.gen.VampirismFeatures;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.data.worldgen.BiomeDefaultFeatures;
 import net.minecraft.data.worldgen.Carvers;
 import net.minecraft.data.worldgen.placement.MiscOverworldPlacements;
@@ -12,11 +12,13 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.*;
 import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import org.jetbrains.annotations.NotNull;
 
 public class VampirismBiomes {
 
-    public static @NotNull Biome createVampireForest() {
+    public static @NotNull Biome createVampireForest(HolderGetter<PlacedFeature> featureGetter, HolderGetter<ConfiguredWorldCarver<?>> carverGetter) {
         MobSpawnSettings.Builder mobSpawnBuilder = new MobSpawnSettings.Builder();
         mobSpawnBuilder.creatureGenerationProbability(0.25f);
         mobSpawnBuilder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.VAMPIRE.get(), 35, 1, 3));
@@ -27,13 +29,13 @@ public class VampirismBiomes {
         BiomeSpecialEffects.Builder biomeSpecialEffectsBuilder = new BiomeSpecialEffects.Builder().waterColor(0x670717).waterFogColor(0x670717).fogColor(0x171717).skyColor(0x131313).foliageColorOverride(0x101010).grassColorOverride(0x101010)
                 .ambientMoodSound(new AmbientMoodSettings(SoundEvents.AMBIENT_CRIMSON_FOREST_MOOD, 6000, 8, 2.0D))
                 .ambientAdditionsSound(new AmbientAdditionsSettings(SoundEvents.AMBIENT_CRIMSON_FOREST_ADDITIONS, 0.0111D))
-                .backgroundMusic(Musics.m_263184_(SoundEvents.MUSIC_BIOME_CRIMSON_FOREST));
+                .backgroundMusic(Musics.createGameMusic(SoundEvents.MUSIC_BIOME_CRIMSON_FOREST));
 
-        return prepareVampireForestBuilder(mobSpawnBuilder, biomeSpecialEffectsBuilder).build();
+        return prepareVampireForestBuilder(featureGetter, carverGetter, mobSpawnBuilder, biomeSpecialEffectsBuilder).build();
     }
 
-    public static Biome.@NotNull BiomeBuilder prepareVampireForestBuilder(MobSpawnSettings.@NotNull Builder spawnBuilder, BiomeSpecialEffects.@NotNull Builder ambienceBuilder) {
-        BiomeGenerationSettings.Builder builder = new BiomeGenerationSettings.Builder();
+    public static Biome.@NotNull BiomeBuilder prepareVampireForestBuilder(HolderGetter<PlacedFeature> featureGetter, HolderGetter<ConfiguredWorldCarver<?>> carverGetter, MobSpawnSettings.@NotNull Builder spawnBuilder, BiomeSpecialEffects.@NotNull Builder ambienceBuilder) {
+        BiomeGenerationSettings.Builder builder = new BiomeGenerationSettings.Builder(featureGetter, carverGetter);
         BiomeDefaultFeatures.addDefaultCarversAndLakes(builder); //carver
         addModdedWaterLake(builder);
 
@@ -53,37 +55,36 @@ public class VampirismBiomes {
 
 
     public static void addVampireFlower(BiomeGenerationSettings.@NotNull Builder builder) {
-        builder.m_255419_(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.VAMPIRE_FLOWER_PLACED.getHolder().orElseThrow());
+        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.VAMPIRE_FLOWER_PLACED);
     }
 
     public static void addWaterSprings(BiomeGenerationSettings.@NotNull Builder builder) {
-        builder.m_255155_(GenerationStep.Decoration.FLUID_SPRINGS, MiscOverworldPlacements.SPRING_WATER);
+        builder.addFeature(GenerationStep.Decoration.FLUID_SPRINGS, MiscOverworldPlacements.SPRING_WATER);
     }
 
     public static void addModdedWaterLake(BiomeGenerationSettings.@NotNull Builder builder) {
-        builder.m_255419_(GenerationStep.Decoration.LAKES, VampirismFeatures.WATER_LAKE_PLACED.getHolder().orElseThrow());
+        builder.addFeature(GenerationStep.Decoration.LAKES, VampirismFeatures.WATER_LAKE_PLACED);
     }
 
     public static void addVampireTrees(BiomeGenerationSettings.@NotNull Builder builder) {
-        builder.m_255419_(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.VAMPIRE_TREES_PLACED.getHolder().orElseThrow());
+        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.VAMPIRE_TREES_PLACED);
     }
 
     public static void addUndergroundVariety(BiomeGenerationSettings.@NotNull Builder builder) {
-        builder.m_255155_(GenerationStep.Decoration.UNDERGROUND_DECORATION, OrePlacements.ORE_GRAVEL);
-        builder.m_255419_(GenerationStep.Decoration.UNDERGROUND_DECORATION, VampirismFeatures.ORE_CURSED_DIRT_PLACED.getHolder().orElseThrow());
-        builder.m_255419_(GenerationStep.Decoration.UNDERGROUND_DECORATION, VampirismFeatures.ORE_DARK_STONE_LOWER_PLACED.getHolder().orElseThrow());
-        builder.m_255419_(GenerationStep.Decoration.UNDERGROUND_DECORATION, VampirismFeatures.ORE_DARK_STONE_UPPER_PLACED.getHolder().orElseThrow());
+        builder.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, OrePlacements.ORE_GRAVEL);
+        builder.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, VampirismFeatures.ORE_CURSED_DIRT_PLACED);
+        builder.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, VampirismFeatures.ORE_DARK_STONE_LOWER_PLACED);
+        builder.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, VampirismFeatures.ORE_DARK_STONE_UPPER_PLACED);
     }
 
     public static void addBushPatch(BiomeGenerationSettings.@NotNull Builder builder) {
-        builder.m_255419_(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.CURSED_ROOT_PLACED.getHolder().orElseThrow());
-        builder.m_255419_(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.FOREST_GRASS_PLACED.getHolder().orElseThrow());
+        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.CURSED_ROOT_PLACED);
+        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.FOREST_GRASS_PLACED);
     }
 
     public static void addDefaultCarversWithoutLakes(BiomeGenerationSettings.@NotNull Builder builder) {
-        builder.m_255308_(GenerationStep.Carving.AIR, Carvers.CAVE);
-        builder.m_255308_(GenerationStep.Carving.AIR, Carvers.CAVE_EXTRA_UNDERGROUND);
-        builder.m_255308_(GenerationStep.Carving.AIR, Carvers.CANYON);
+        builder.addCarver(GenerationStep.Carving.AIR, Carvers.CAVE);
+        builder.addCarver(GenerationStep.Carving.AIR, Carvers.CAVE_EXTRA_UNDERGROUND);
+        builder.addCarver(GenerationStep.Carving.AIR, Carvers.CANYON);
     }
 }
-*/

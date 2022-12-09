@@ -1,5 +1,6 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
+  "category": "misc",
   "key": {
     "W": {
       "tag": "forge:gems/diamond"

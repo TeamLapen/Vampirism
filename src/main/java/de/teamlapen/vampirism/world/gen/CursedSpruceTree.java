@@ -13,6 +13,6 @@ public class CursedSpruceTree extends AbstractTreeGrower {
     @Nullable
     @Override
     protected ResourceKey<ConfiguredFeature<?, ?>> getConfiguredFeature(@NotNull RandomSource randomIn, boolean largeHive) {
-        return (ResourceKey<ConfiguredFeature<?, ?>>) (Object)VampirismFeatures.CURSED_SPRUCE_TREE.getKey();
+        return VampirismFeatures.CURSED_SPRUCE_TREE;
     }
 }

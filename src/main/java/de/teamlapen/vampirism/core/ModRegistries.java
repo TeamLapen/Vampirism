@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.core;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
@@ -9,7 +8,13 @@ import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.items.oil.IOil;
-import net.minecraft.resources.ResourceLocation;
+import de.teamlapen.vampirism.world.gen.VampirismFeatures;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.RegistrySetBuilder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -39,6 +44,14 @@ public class ModRegistries {
     public static final Supplier<IForgeRegistry<IRefinementSet>> REFINEMENT_SETS = DEFERRED_REFINEMENT_SETS.makeRegistry(RegistryBuilder::new);
     public static final Supplier<IForgeRegistry<IOil>> OILS = DEFERRED_OILS.makeRegistry(RegistryBuilder::new);
 
+    public static final RegistrySetBuilder DATA_BUILDER = new RegistrySetBuilder()
+            .add(Registries.BIOME, ModBiomes::createBiomes)
+            .add(Registries.CONFIGURED_FEATURE, VampirismFeatures::createConfiguredFeatures)
+            .add(Registries.PLACED_FEATURE, VampirismFeatures::createPlacedFeatures)
+            .add(Registries.STRUCTURE, ModFeatures::createStructures)
+            .add(Registries.PROCESSOR_LIST, ModStructures::createStructureProcessorLists)
+            .add(Registries.TEMPLATE_POOL, ModStructures::createStructurePoolTemplates);
+
     static void init(IEventBus bus) {
         DEFERRED_SKILLS.register(bus);
         DEFERRED_ACTIONS.register(bus);
@@ -48,6 +61,14 @@ public class ModRegistries {
         DEFERRED_REFINEMENTS.register(bus);
         DEFERRED_REFINEMENT_SETS.register(bus);
         DEFERRED_OILS.register(bus);
+    }
+
+    public static HolderLookup.Provider createLookup(HolderLookup.Provider parentProvider) {
+        return DATA_BUILDER.buildPatch(RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY), parentProvider);
+    }
+
+    public static HolderLookup.Provider createLookup() {
+        return createLookup(VanillaRegistries.createLookup());
     }
 
 }

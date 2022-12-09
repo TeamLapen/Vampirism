@@ -1,5 +1,6 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
+  "category": "misc",
   "key": {
     "X": {
       "tag": "forge:ingots/iron"

@@ -8,11 +8,9 @@ import de.teamlapen.vampirism.world.gen.VanillaStructureModifications;
 import de.teamlapen.vampirism.world.gen.feature.VampireDungeonFeature;
 import de.teamlapen.vampirism.world.gen.feature.treedecorators.TrunkCursedVineDecorator;
 import de.teamlapen.vampirism.world.gen.structure.huntercamp.HunterCampStructure;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.*;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
@@ -33,16 +31,12 @@ import net.minecraftforge.registries.RegistryObject;
 public class ModFeatures {
     public static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(ForgeRegistries.FEATURES, REFERENCE.MODID);
     public static final DeferredRegister<StructureType<?>> STRUCTURE_TYPES = DeferredRegister.create(Registries.STRUCTURE_TYPE, REFERENCE.MODID);
-    public static final DeferredRegister<Structure> STRUCTURES = DeferredRegister.create(Registries.STRUCTURE, REFERENCE.MODID);
     public static final DeferredRegister<TreeDecoratorType<?>> TREE_DECORATOR = DeferredRegister.create(ForgeRegistries.TREE_DECORATOR_TYPES, REFERENCE.MODID);
 
-    public static final ResourceKey<Structure> HUNTER_CAMP_KEY = ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(REFERENCE.MODID, "hunter_camp"));
-    public static final RegistryObject<StructureType<HunterCampStructure>> HUNTER_CAMP = STRUCTURE_TYPES.register("hunter_camp", () -> () -> HunterCampStructure.CODEC);
-    public static final RegistryObject<HunterCampStructure> HUNTER_CAMP_S = STRUCTURES.register("hunter_camp", () -> {
-        HolderSet.Named<Biome> holders = RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY).registryOrThrow(Registries.BIOME).asLookup().getOrThrow(ModTags.Biomes.HasStructure.HUNTER_TENT); //TODO 1.19 recheck
-        return new HunterCampStructure(StructuresAccessor.structure(holders, TerrainAdjustment.NONE));
-    });
-    //features
+    public static final ResourceKey<Structure> HUNTER_CAMP = ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(REFERENCE.MODID, "hunter_camp"));
+
+    public static final RegistryObject<StructureType<HunterCampStructure>> HUNTER_CAMP_TYPE = STRUCTURE_TYPES.register("hunter_camp", () -> () -> HunterCampStructure.CODEC);
+
     public static final RegistryObject<VampireDungeonFeature> VAMPIRE_DUNGEON = FEATURES.register("vampire_dungeon", () -> new VampireDungeonFeature(NoneFeatureConfiguration.CODEC));
 
     public static final RegistryObject<TreeDecoratorType<TrunkCursedVineDecorator>> trunk_cursed_vine = TREE_DECORATOR.register("trunk_cursed_vine", () -> new TreeDecoratorType<>(TrunkCursedVineDecorator.CODEC));
@@ -53,8 +47,9 @@ public class ModFeatures {
         TREE_DECORATOR.register(bus);
     }
 
-    @SuppressWarnings("EmptyMethod")
-    public static void init() {
-    }
+    public static void createStructures(BootstapContext<Structure> context) {
+        HolderGetter<Biome> lookup = context.lookup(Registries.BIOME);
 
+        context.register(ModFeatures.HUNTER_CAMP, new HunterCampStructure(StructuresAccessor.structure(lookup.getOrThrow(ModTags.Biomes.HasStructure.HUNTER_TENT), TerrainAdjustment.NONE)));
+    }
 }

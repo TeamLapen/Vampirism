@@ -28,8 +28,7 @@
     "StructuresAccessor",
     "SurfaceRuleDataMixin",
     "TileEntityTypeAccessor",
-    "VanillaBlockLootAccessor",
-    "VanillaRegistriesAccessor"
+    "VanillaBlockLootAccessor"
   ],
   "client": [
     "client.AgeableModelAccessor",

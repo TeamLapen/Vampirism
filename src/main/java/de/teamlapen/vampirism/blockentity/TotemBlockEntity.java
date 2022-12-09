@@ -1276,7 +1276,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
 
     private static void setupVampireForestSearch(final @NotNull TotemBlockEntity blockEntity, final @NotNull ServerLevel level, final @NotNull BlockPos center) {
         if (blockEntity.closestVampireForest == null) {
-            final ResourceKey<Biome> biomeId = ModBiomes.VAMPIRE_FOREST.getKey();
+            final ResourceKey<Biome> biomeId = ModBiomes.VAMPIRE_FOREST;
             blockEntity.closestVampireForest = CompletableFuture.supplyAsync(Util.wrapThreadWithTaskName("Find vampire forest", () -> {
                 Stopwatch stopwatch = Stopwatch.createStarted(Util.TICKER);
                 com.mojang.datafixers.util.Pair<BlockPos, Holder<Biome>> location = level.findClosestBiome3d(b -> b.is(biomeId), center, 5000, 8, 16);

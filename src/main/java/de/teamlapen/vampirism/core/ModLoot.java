@@ -35,7 +35,6 @@ public class ModLoot {
 
     public static final RegistryObject<Codec<SmeltItemLootModifier>> SMELTING = GLOBAL_LOOT_MODIFIER.register("smelting", () -> SmeltItemLootModifier.CODEC);
 
-
     public static void register(IEventBus bus) {
         LOOT_FUNCTION_TYPES.register(bus);
         LOOT_CONDITION_TYPES.register(bus);
