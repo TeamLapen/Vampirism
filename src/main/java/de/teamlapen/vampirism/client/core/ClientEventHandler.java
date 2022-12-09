@@ -23,9 +23,8 @@ import de.teamlapen.vampirism.util.OilUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BlockModel;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.BlockModelRotation;
-import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.resources.model.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
@@ -39,6 +38,7 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ForgeHooksClient;
@@ -73,10 +73,11 @@ public class ClientEventHandler {
          * Bake each model, then replace the fluid texture with impure blood, then bake it again.
          * Use {@link BakedBloodContainerModel} to render to appropriate one
          */
-        try {
+        /*try { TODO 1.19 readd
             for (int x = 0; x < BakedBloodContainerModel.FLUID_LEVELS; x++) {
                 ResourceLocation loc = new ResourceLocation(REFERENCE.MODID, "block/blood_container/fluid_" + (x + 1));
                 UnbakedModel model = event.getModelBakery().getModel(loc);
+                AtlasSet.StitchResult s;
                 BakedBloodContainerModel.BLOOD_FLUID_MODELS[x] = model.bake(event.getModelBakery(), event.getModelBakery().getAtlasSet()::getSprite, BlockModelRotation.X0_Y0, loc);
                 if (model instanceof BlockModel) {
                     //noinspection UnstableApiUsage
@@ -107,9 +108,9 @@ public class ClientEventHandler {
             }
         } catch (Exception e) {
             LOGGER.error("Failed to load fluid models for blood container", e);
-        }
+        }*/
 
-        try {
+        /*try { TODO 1.19 readd
             for (int x = 0; x < BakedAltarInspirationModel.FLUID_LEVELS; x++) {
                 ResourceLocation loc = new ResourceLocation(REFERENCE.MODID, "block/altar_inspiration/blood" + (x + 1));
                 UnbakedModel model = event.getModelBakery().getModel(loc);
@@ -135,7 +136,7 @@ public class ClientEventHandler {
             }
         } catch (Exception e) {
             LOGGER.error("Failed to load fluid models for altar inspiration", e);
-        }
+        }*/
     }
 
     @SubscribeEvent

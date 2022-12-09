@@ -21,9 +21,15 @@
     "MixinPotionBrewing",
     "MultiNoiseBiomeSourcePresetAccessor",
     "PlayerAdvancementsAccessor",
+    "ProcessorListsAccessor",
     "RecipeManagerAccessor",
+    "ShapedRecipeBuilderAccessor",
+    "ShapelessRecipeBuilderAccessor",
+    "StructuresAccessor",
     "SurfaceRuleDataMixin",
-    "TileEntityTypeAccessor"
+    "TileEntityTypeAccessor",
+    "VanillaBlockLootAccessor",
+    "VanillaRegistriesAccessor"
   ],
   "client": [
     "client.AgeableModelAccessor",

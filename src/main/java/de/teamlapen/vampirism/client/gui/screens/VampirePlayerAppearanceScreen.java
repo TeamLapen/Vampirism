@@ -73,8 +73,8 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
 
         this.eyeList = this.addRenderableWidget(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 30 + 19, 99, 100, 20, REFERENCE.EYE_TYPE_COUNT, Component.translatable("gui.vampirism.appearance.eye"), this::eye, this::hoverEye).scrollSpeed(2));
         this.fangList = this.addRenderableWidget(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 50 + 19, 99, 80, 20, REFERENCE.FANG_TYPE_COUNT, Component.translatable("gui.vampirism.appearance.fang"), this::fang, this::hoverFang));
-        this.eyeButton = this.addRenderableWidget(new ExtendedButton(eyeList.x, eyeList.y - 20, eyeList.getWidth() + 1, 20, Component.literal(""), (b) -> this.setEyeListVisibility(!eyeList.visible)));
-        this.fangButton = this.addRenderableWidget(new ExtendedButton(fangList.x, fangList.y - 20, fangList.getWidth() + 1, 20, Component.literal(""), (b) -> this.setFangListVisibility(!fangList.visible)));
+        this.eyeButton = this.addRenderableWidget(new ExtendedButton(eyeList.getX(), eyeList.getY() - 20, eyeList.getWidth() + 1, 20, Component.literal(""), (b) -> this.setEyeListVisibility(!eyeList.visible)));
+        this.fangButton = this.addRenderableWidget(new ExtendedButton(fangList.getX(), fangList.getY() - 20, fangList.getWidth() + 1, 20, Component.literal(""), (b) -> this.setFangListVisibility(!fangList.visible)));
         this.glowingEyesButton = this.addRenderableWidget(new Checkbox(this.guiLeft + 20, this.guiTop + 70, 99, 20, Component.translatable("gui.vampirism.appearance.glowing_eye"), glowingEyes) {
             @Override
             public void onPress() {

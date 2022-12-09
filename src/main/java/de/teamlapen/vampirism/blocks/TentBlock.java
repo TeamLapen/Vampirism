@@ -323,7 +323,8 @@ public class TentBlock extends VampirismBlock {
                 world.removeBlock(blockpos, false);
             }
 
-            world.explode(null, DamageSource.badRespawnPointExplosion(), null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, Explosion.BlockInteraction.DESTROY);
+            Vec3 vec3 = pos.getCenter();
+            world.explode(null, DamageSource.badRespawnPointExplosion(vec3), null, vec3, 5.0F, true, Level.ExplosionInteraction.BLOCK);
             return InteractionResult.SUCCESS;
         } else if (blockState.getValue(OCCUPIED)) {
             player.displayClientMessage(Component.translatable("text.vampirism.tent.occupied"), true);

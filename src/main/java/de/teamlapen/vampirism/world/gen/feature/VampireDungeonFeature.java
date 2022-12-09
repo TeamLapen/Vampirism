@@ -134,7 +134,7 @@ public class VampireDungeonFeature extends MonsterRoomFeature {
             this.safeSetBlock(worldgenlevel, blockpos, Blocks.SPAWNER.defaultBlockState(), predicate);
             BlockEntity blockentity = worldgenlevel.getBlockEntity(blockpos);
             if (blockentity instanceof SpawnerBlockEntity) {
-                ((SpawnerBlockEntity) blockentity).getSpawner().setEntityId(ModEntities.VAMPIRE.get());
+                ((SpawnerBlockEntity) blockentity).getSpawner().setEntityId(ModEntities.VAMPIRE.get(), null, randomsource, blockpos);
             } else {
                 LOGGER.error("Failed to fetch mob spawner entity at ({}, {}, {})", blockpos.getX(), blockpos.getY(), blockpos.getZ());
             }

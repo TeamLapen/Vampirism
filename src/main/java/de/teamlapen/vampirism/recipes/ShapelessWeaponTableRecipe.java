@@ -14,10 +14,7 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,6 +23,7 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
     protected static final int MAX_WIDTH = 4;
     protected static final int MAX_HEIGHT = 4;
 
+    private final @NotNull CraftingBookCategory category;
     private final @NotNull ResourceLocation id;
     private final @NotNull String group;
     private final @NotNull NonNullList<Ingredient> recipeItems;
@@ -35,7 +33,8 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
     private final int requiredLava;
     private final boolean isSimple;
 
-    public ShapelessWeaponTableRecipe(@NotNull ResourceLocation recipeId, @NotNull String group, @NotNull NonNullList<Ingredient> ingredients, @NotNull ItemStack result, int level, int lava, @NotNull ISkill<IHunterPlayer>[] skills) {
+    public ShapelessWeaponTableRecipe(@NotNull CraftingBookCategory category, @NotNull ResourceLocation recipeId, @NotNull String group, @NotNull NonNullList<Ingredient> ingredients, @NotNull ItemStack result, int level, int lava, @NotNull ISkill<IHunterPlayer>[] skills) {
+        this.category = category;
         this.id = recipeId;
         this.group = group;
         this.recipeItems = ingredients;
@@ -131,11 +130,17 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
 
     }
 
+    @Override
+    public @NotNull CraftingBookCategory category() {
+        return this.category;
+    }
+
     public static class Serializer implements RecipeSerializer<ShapelessWeaponTableRecipe> {
         @NotNull
         @Override
         public ShapelessWeaponTableRecipe fromJson(@NotNull ResourceLocation recipeId, @NotNull JsonObject json) {
             String group = GsonHelper.getAsString(json, "group", "");
+            CraftingBookCategory craftingbookcategory = CraftingBookCategory.CODEC.byName(GsonHelper.getAsString(json, "category", (String)null), CraftingBookCategory.MISC);
             NonNullList<Ingredient> ingredients = VampirismRecipeHelper.readIngredients(GsonHelper.getAsJsonArray(json, "ingredients"));
             int level = GsonHelper.getAsInt(json, "level", 1);
             ISkill<?>[] skills = VampirismRecipeHelper.deserializeSkills(GsonHelper.getAsJsonArray(json, "skill", null));
@@ -147,13 +152,14 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
             } else {
                 ItemStack result = net.minecraftforge.common.crafting.CraftingHelper.getItemStack(GsonHelper.getAsJsonObject(json, "result"), true);
                 //noinspection unchecked
-                return new ShapelessWeaponTableRecipe(recipeId, group, ingredients, result, level, lava, (ISkill<IHunterPlayer>[]) skills);
+                return new ShapelessWeaponTableRecipe(craftingbookcategory, recipeId, group, ingredients, result, level, lava, (ISkill<IHunterPlayer>[]) skills);
             }
         }
 
         @Override
         public ShapelessWeaponTableRecipe fromNetwork(@NotNull ResourceLocation recipeId, @NotNull FriendlyByteBuf buffer) {
             String group = buffer.readUtf(32767);
+            CraftingBookCategory craftingbookcategory = buffer.readEnum(CraftingBookCategory.class);
             NonNullList<Ingredient> ingredients = NonNullList.withSize(buffer.readVarInt(), Ingredient.EMPTY);
             ingredients.replaceAll(ignored -> Ingredient.fromNetwork(buffer));
             ItemStack result = buffer.readItem();
@@ -164,12 +170,13 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
                 skills[i] = RegUtil.getSkill(new ResourceLocation(buffer.readUtf(32767)));
             }
             //noinspection unchecked
-            return new ShapelessWeaponTableRecipe(recipeId, group, ingredients, result, level, lava, (ISkill<IHunterPlayer>[]) skills);
+            return new ShapelessWeaponTableRecipe(craftingbookcategory, recipeId, group, ingredients, result, level, lava, (ISkill<IHunterPlayer>[]) skills);
         }
 
         @Override
         public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull ShapelessWeaponTableRecipe recipe) {
             buffer.writeUtf(recipe.group);
+            buffer.writeEnum(recipe.category);
             buffer.writeVarInt(recipe.recipeItems.size());
             for (Ingredient ingredient : recipe.recipeItems) {
                 ingredient.toNetwork(buffer);

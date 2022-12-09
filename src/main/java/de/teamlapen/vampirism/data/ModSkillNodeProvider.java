@@ -1,57 +1,24 @@
 package de.teamlapen.vampirism.data;
 
-import com.google.common.collect.Sets;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.data.recipebuilder.FinishedSkillNode;
 import de.teamlapen.vampirism.data.recipebuilder.SkillNodeBuilder;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.entity.player.lord.skills.LordSkills;
 import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
-import net.minecraft.data.CachedOutput;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DataProvider;
+import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Set;
 import java.util.function.Consumer;
 
-public class SkillNodeGenerator implements DataProvider {
+public class ModSkillNodeProvider extends SkillNodeProvider {
 
-    private static final Logger LOGGER = LogManager.getLogger();
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    protected final DataGenerator generator;
-
-    public SkillNodeGenerator(DataGenerator generatorIn) {
-        this.generator = generatorIn;
+    public ModSkillNodeProvider(PackOutput packOutput) {
+        super(packOutput, REFERENCE.MODID);
     }
 
     @Override
-    public void run(@NotNull CachedOutput cache) {
-        Path path = this.generator.getOutputFolder();
-        Set<ResourceLocation> set = Sets.newHashSet();
-        this.registerSkillNodes((node) -> {
-            if (!set.add(node.getID())) {
-                throw new IllegalStateException("Duplicate skill node " + node.getID());
-            } else {
-                this.saveSkillNode(cache, node.getSkillNodeJson(), path.resolve("data/" + node.getID().getNamespace() + "/vampirismskillnodes/" + node.getID().getPath() + ".json"));
-            }
-        });
-    }
-
-    @NotNull
-    @Override
-    public String getName() {
-        return "Vampirism skillnode generator";
-    }
-
     protected void registerSkillNodes(@NotNull Consumer<FinishedSkillNode> consumer) {
         //hunter
         {
@@ -120,21 +87,6 @@ public class SkillNodeGenerator implements DataProvider {
             ResourceLocation lord_3 = SkillNodeBuilder.vampire(modId("vampire_lord"), LordSkills.LORD_SPEED.get(), LordSkills.LORD_ATTACK_SPEED.get()).build(consumer, modId("lord_3"));
             ResourceLocation lord_4 = SkillNodeBuilder.vampire(modId("vampire_lord"), VampireSkills.MINION_COLLECT.get()).build(consumer, modId("lord_4"));
             ResourceLocation lord_5 = SkillNodeBuilder.vampire(modId("vampire_lord"), LordSkills.MINION_RECOVERY.get()).build(consumer, modId("lord_5"));
-
-        }
-
-    }
-
-    private @NotNull ResourceLocation modId(@NotNull String string) {
-        return new ResourceLocation(REFERENCE.MODID, string);
-    }
-
-    private void saveSkillNode(@NotNull CachedOutput cache, JsonObject nodeJson, @NotNull Path path) {
-        try {
-            DataProvider.saveStable(cache, nodeJson, path);
-        } catch (IOException ioExeption) {
-            LOGGER.error("Couldn't save skill node {}", path, ioExeption);
         }
     }
-
 }

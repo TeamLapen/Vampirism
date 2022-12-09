@@ -9,6 +9,8 @@ import de.teamlapen.vampirism.inventory.TaskBoardMenu;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -30,6 +32,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -74,11 +77,11 @@ public class HunterTaskMasterEntity extends HunterBaseEntity implements IDefault
     public @NotNull VillagerType getBiomeType() {
         String key = this.entityData.get(BIOME_TYPE);
         ResourceLocation id = new ResourceLocation(key);
-        return Registry.VILLAGER_TYPE.get(id);
+        return BuiltInRegistries.VILLAGER_TYPE.get(id);
     }
 
     protected void setBiomeType(@NotNull VillagerType type) {
-        this.entityData.set(BIOME_TYPE, Registry.VILLAGER_TYPE.getKey(type).toString());
+        this.entityData.set(BIOME_TYPE, BuiltInRegistries.VILLAGER_TYPE.getKey(type).toString());
     }
 
     @NotNull
@@ -101,7 +104,7 @@ public class HunterTaskMasterEntity extends HunterBaseEntity implements IDefault
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(BIOME_TYPE, Registry.VILLAGER_TYPE.getDefaultKey().toString());
+        this.entityData.define(BIOME_TYPE, BuiltInRegistries.VILLAGER_TYPE.getDefaultKey().toString());
     }
 
     @NotNull

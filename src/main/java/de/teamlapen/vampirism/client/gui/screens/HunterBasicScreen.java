@@ -13,6 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -36,7 +37,7 @@ public class HunterBasicScreen extends AbstractContainerScreen<HunterBasicMenu> 
         int wid = this.font.width(name) + 5;
         int i = (this.imageWidth - wid) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        addRenderableWidget(buttonLevelup = new Button(this.leftPos + i, j + 50, wid, 20, name, (context) -> {
+        addRenderableWidget(buttonLevelup = new ExtendedButton(this.leftPos + i, j + 50, wid, 20, name, (context) -> {
             VampirismMod.dispatcher.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.BASIC_HUNTER_LEVELUP));
             this.onClose();
         }));

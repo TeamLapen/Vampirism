@@ -39,16 +39,16 @@ public class VampirismBoatEntity extends Boat implements IVampirismBoat {
      */
     @Deprecated
     @Override
-    public void setType(@NotNull Type type) {
+    public void setVariant(@NotNull Type pBoatType) {
     }
+
 
     /**
      * @deprecated use {@link #getBType()}
      */
-    @NotNull
     @Deprecated
     @Override
-    public Type getBoatType() {
+    public @NotNull Type getVariant() {
         return Type.OAK;
     }
 
@@ -63,11 +63,11 @@ public class VampirismBoatEntity extends Boat implements IVampirismBoat {
         this.entityData.set(DATA_ID_TYPE, type.ordinal());
     }
 
-    @NotNull
+    /*@NotNull //TODO 1.19 recheck
     @Override
     public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
-    }
+    }*/
 
     @NotNull
     @Override

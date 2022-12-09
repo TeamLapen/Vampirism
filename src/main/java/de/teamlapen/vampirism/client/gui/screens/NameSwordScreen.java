@@ -14,6 +14,7 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.gui.widget.ExtendedButton;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -48,7 +49,7 @@ public class NameSwordScreen extends Screen {
     @Override
     public void init() {
         super.init();
-        this.addRenderableWidget(new Button(this.width / 2 - 155, this.height / 6 + 96, 150, 20, this.yes, (context) -> {
+        this.addRenderableWidget(new ExtendedButton(this.width / 2 - 155, this.height / 6 + 96, 150, 20, this.yes, (context) -> {
             if (!StringUtils.isBlank(nameField.getValue())) {
                 NameSwordScreen.this.sword.setHoverName(Component.literal(nameField.getValue()));
                 VampirismMod.dispatcher.sendToServer(new ServerboundNameItemPacket(nameField.getValue()));
@@ -56,7 +57,7 @@ public class NameSwordScreen extends Screen {
             this.minecraft.setScreen(null);
             this.minecraft.setWindowActive(true);
         }));
-        this.addRenderableWidget(new Button(this.width / 2 - 155 + 160, this.height / 6 + 96, 150, 20, this.no, (context) -> {
+        this.addRenderableWidget(new ExtendedButton(this.width / 2 - 155 + 160, this.height / 6 + 96, 150, 20, this.no, (context) -> {
             VampirismMod.dispatcher.sendToServer(new ServerboundNameItemPacket(VampirismVampireSwordItem.DO_NOT_NAME_STRING));
             this.minecraft.setScreen(null);
             this.minecraft.setWindowActive(true);

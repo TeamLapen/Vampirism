@@ -16,6 +16,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -36,7 +37,7 @@ import org.jetbrains.annotations.Nullable;
  * Currently the only thing that can interact with the players bloodstats.
  * Can only store blood in {@link BloodBottleItem#capacity} tenth units.
  */
-public class BloodBottleItem extends Item implements IFactionExclusiveItem {
+public class BloodBottleItem extends Item implements IFactionExclusiveItem, CreativeModeTab.DisplayItemsGenerator {
 
     public static final int AMOUNT = 9;
     private static final int MULTIPLIER = VReference.FOOD_TO_FLUID_BLOOD;
@@ -52,7 +53,7 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem {
      * Set's the registry name and the unlocalized name
      */
     public BloodBottleItem() {
-        super(new Properties().defaultDurability(AMOUNT).tab(VampirismMod.creativeTab).setNoRepair());
+        super(new Properties().defaultDurability(AMOUNT).setNoRepair());
     }
 
     @Override
@@ -60,15 +61,19 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem {
         BlockEntity t = world.getBlockEntity(pos);
         return t != null && t.getCapability(ForgeCapabilities.FLUID_HANDLER).isPresent();
     }
-
     @Override
-    public void fillItemCategory(@NotNull CreativeModeTab group, @NotNull NonNullList<ItemStack> list) {
-        super.fillItemCategory(group, list);
-        if (this.allowedIn(group)) {
-            ItemStack stack = new ItemStack(ModItems.BLOOD_BOTTLE.get());
-            stack.setDamageValue(9);
-            list.add(stack);
+    public void accept(@NotNull FeatureFlagSet featureSet, CreativeModeTab.@NotNull Output output, boolean hasPermission) {
+        for (int i = 0; i < BloodBottleItem.AMOUNT; i++) {
+            ItemStack stack = getDefaultInstance();
+            stack.setDamageValue(i);
+            output.accept(stack, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
         }
+        ItemStack stack0 = getDefaultInstance();
+        stack0.setDamageValue(0);
+        output.accept(stack0, CreativeModeTab.TabVisibility.PARENT_TAB_ONLY);
+        ItemStack stack9 = getDefaultInstance();
+        stack9.setDamageValue(BloodBottleItem.AMOUNT);
+        output.accept(stack9, CreativeModeTab.TabVisibility.PARENT_TAB_ONLY);
     }
 
     @Nullable

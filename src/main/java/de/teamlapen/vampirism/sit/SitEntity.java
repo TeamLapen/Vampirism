@@ -71,8 +71,9 @@ public class SitEntity extends Entity {
         super.recreateFromPacket(p_146866_);
     }
 
+    /*@NotNull //TODO 1.19 recheck
     @Override
     public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
-    }
+    }*/
 }

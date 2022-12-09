@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFeatures;
+import de.teamlapen.vampirism.mixin.VanillaRegistriesAccessor;
 import de.teamlapen.vampirism.world.gen.feature.VampireDungeonFeature;
 import de.teamlapen.vampirism.world.gen.feature.treedecorators.TrunkCursedVineDecorator;
 import de.teamlapen.vampirism.world.gen.structure.huntercamp.HunterCampPieces;
@@ -11,11 +12,15 @@ import de.teamlapen.vampirism.world.gen.structure.templatesystem.BiomeTopBlockPr
 import de.teamlapen.vampirism.world.gen.structure.templatesystem.RandomStructureProcessor;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.data.worldgen.features.OreFeatures;
 import net.minecraft.data.worldgen.features.VegetationFeatures;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.data.worldgen.placement.VegetationPlacements;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
@@ -30,7 +35,9 @@ import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvi
 import net.minecraft.world.level.levelgen.feature.trunkplacers.StraightTrunkPlacer;
 import net.minecraft.world.level.levelgen.placement.*;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
+import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
+import net.minecraft.world.level.levelgen.structure.templatesystem.TagMatchTest;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
@@ -44,10 +51,10 @@ import static net.minecraft.data.worldgen.placement.OrePlacements.rareOrePlaceme
 
 public class VampirismFeatures {
 
-    public static final DeferredRegister<PlacedFeature> PLACED_FEATURES = DeferredRegister.create(Registry.PLACED_FEATURE_REGISTRY, REFERENCE.MODID);
-    public static final DeferredRegister<ConfiguredFeature<?, ?>> CONFIGURED_FEATURES = DeferredRegister.create(Registry.CONFIGURED_FEATURE_REGISTRY, REFERENCE.MODID);
-    public static final DeferredRegister<StructurePieceType> STRUCTURE_PIECES = DeferredRegister.create(Registry.STRUCTURE_PIECE_REGISTRY, REFERENCE.MODID);
-    public static final DeferredRegister<StructureProcessorType<?>> STRUCTURE_PROCESSOR_TYPES = DeferredRegister.create(Registry.STRUCTURE_PROCESSOR_REGISTRY, REFERENCE.MODID);
+    public static final DeferredRegister<PlacedFeature> PLACED_FEATURES = DeferredRegister.create(Registries.PLACED_FEATURE, REFERENCE.MODID);
+    public static final DeferredRegister<ConfiguredFeature<?, ?>> CONFIGURED_FEATURES = DeferredRegister.create(Registries.CONFIGURED_FEATURE, REFERENCE.MODID);
+    public static final DeferredRegister<StructurePieceType> STRUCTURE_PIECES = DeferredRegister.create(Registries.STRUCTURE_PIECE, REFERENCE.MODID);
+    public static final DeferredRegister<StructureProcessorType<?>> STRUCTURE_PROCESSOR_TYPES = DeferredRegister.create(Registries.STRUCTURE_PROCESSOR, REFERENCE.MODID);
 
     public static void register(IEventBus ctx) {
         PLACED_FEATURES.register(ctx);
@@ -79,13 +86,16 @@ public class VampirismFeatures {
     public static final RegistryObject<ConfiguredFeature<RandomFeatureConfiguration, Feature<RandomFeatureConfiguration>>> VAMPIRE_TREES = CONFIGURED_FEATURES.register("vampire_trees_placed", () -> new ConfiguredFeature<>(Feature.RANDOM_SELECTOR, new RandomFeatureConfiguration(List.of(new WeightedPlacedFeature(getHolder(CURSED_SPRUCE_TREE_PLACED), 0.3f)), getHolder(DARK_SPRUCE_TREE_PLACED))));
     public static final RegistryObject<PlacedFeature> VAMPIRE_TREES_PLACED = PLACED_FEATURES.register("vampire_trees", () -> new PlacedFeature(getHolder(VAMPIRE_TREES), VegetationPlacements.treePlacement(PlacementUtils.countExtra(10, 0.1f, 1))));
 
-    public static final RegistryObject<PlacedFeature> FOREST_GRASS_PLACED = PLACED_FEATURES.register("forest_grass", () -> new PlacedFeature(Holder.hackyErase(VegetationFeatures.PATCH_GRASS), VegetationPlacements.worldSurfaceSquaredWithCount(2)));
+    public static final RegistryObject<PlacedFeature> FOREST_GRASS_PLACED = PLACED_FEATURES.register("forest_grass", () -> {
+        var holder = VanillaRegistries.createLookup().lookupOrThrow(Registries.CONFIGURED_FEATURE).getOrThrow(VegetationFeatures.PATCH_GRASS);
+        return new PlacedFeature(holder, VegetationPlacements.worldSurfaceSquaredWithCount(2));
+    });
 
-    public static final RegistryObject<ConfiguredFeature<?, ?>> ORE_DARK_STONE = CONFIGURED_FEATURES.register("ore_dark_stone", () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(OreFeatures.NATURAL_STONE, ModBlocks.CASTLE_BLOCK_DARK_STONE.get().defaultBlockState(), 64)));
+    public static final RegistryObject<ConfiguredFeature<?, ?>> ORE_DARK_STONE = CONFIGURED_FEATURES.register("ore_dark_stone", () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(new TagMatchTest(BlockTags.BASE_STONE_OVERWORLD), ModBlocks.CASTLE_BLOCK_DARK_STONE.get().defaultBlockState(), 64)));
     public static final RegistryObject<PlacedFeature> ORE_DARK_STONE_UPPER_PLACED = PLACED_FEATURES.register("ore_dark_stone_upper", () -> new PlacedFeature(getHolder(ORE_DARK_STONE), rareOrePlacement(6, HeightRangePlacement.uniform(VerticalAnchor.absolute(64), VerticalAnchor.absolute(128)))));
     public static final RegistryObject<PlacedFeature> ORE_DARK_STONE_LOWER_PLACED = PLACED_FEATURES.register("ore_dark_stone_lower", () -> new PlacedFeature(getHolder(ORE_DARK_STONE), commonOrePlacement(2, HeightRangePlacement.uniform(VerticalAnchor.absolute(0), VerticalAnchor.absolute(60)))));
 
-    public static final RegistryObject<ConfiguredFeature<?, ?>> ORE_CURSED_DIRT = CONFIGURED_FEATURES.register("ore_cursed_dirt", () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(OreFeatures.NATURAL_STONE, ModBlocks.CURSED_EARTH.get().defaultBlockState(), 33)));
+    public static final RegistryObject<ConfiguredFeature<?, ?>> ORE_CURSED_DIRT = CONFIGURED_FEATURES.register("ore_cursed_dirt", () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(new TagMatchTest(BlockTags.BASE_STONE_OVERWORLD), ModBlocks.CURSED_EARTH.get().defaultBlockState(), 33)));
     public static final RegistryObject<PlacedFeature> ORE_CURSED_DIRT_PLACED = PLACED_FEATURES.register("ore_cursed_dirt", () -> new PlacedFeature(getHolder(ORE_CURSED_DIRT), commonOrePlacement(7, HeightRangePlacement.uniform(VerticalAnchor.absolute(0), VerticalAnchor.absolute(160)))));
 
     //structure pieces

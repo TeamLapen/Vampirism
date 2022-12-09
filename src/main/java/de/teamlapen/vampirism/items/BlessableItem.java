@@ -66,7 +66,7 @@ public class BlessableItem extends Item {
     }
 
     public BlessableItem(@NotNull Properties properties, Supplier<Item> blessedItem, @Nullable Supplier<Item> enhancedBlessedItem) {
-        super(properties.tab(VampirismMod.creativeTab));
+        super(properties);
         this.blessedItem = blessedItem;
         this.enhancedBlessedItem = enhancedBlessedItem;
         BLESSABLE_ITEMS.add(this);

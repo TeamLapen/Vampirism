@@ -2,15 +2,13 @@ package de.teamlapen.lib.lib.util;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
-import net.minecraft.core.SectionPos;
+import net.minecraft.core.*;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -57,6 +55,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -640,7 +639,7 @@ public class UtilLib {
 
     public static @NotNull Optional<StructureStart> getStructureStartAt(Level level, @NotNull BlockPos pos, @NotNull TagKey<Structure> structureTag) {
         if (level instanceof ServerLevel serverLevel && serverLevel.isLoaded(pos)) {
-            Registry<Structure> registry = serverLevel.registryAccess().registryOrThrow(Registry.STRUCTURE_REGISTRY);
+            Registry<Structure> registry = serverLevel.registryAccess().registryOrThrow(Registries.STRUCTURE);
             return serverLevel.structureManager().startsForStructure(new ChunkPos(pos), structure -> {
                 return registry.getHolder(registry.getId(structure)).map(a -> a.is(structureTag)).orElse(false);
             }).stream().findFirst();

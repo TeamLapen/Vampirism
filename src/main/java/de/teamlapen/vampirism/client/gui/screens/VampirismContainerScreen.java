@@ -122,7 +122,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
 
         this.oldMouseX = mouseX;
         this.oldMouseY = mouseY;
-        this.list.renderToolTip(matrixStack, mouseX, mouseY);
+//        this.list.renderToolTip(matrixStack, mouseX, mouseY); //TODO 1.19 readd tooltip
         this.renderTooltip(matrixStack, mouseX, mouseY);
         if (this.menu.areRefinementsAvailable()) {
             this.renderHoveredRefinementTooltip(matrixStack, mouseX, mouseY);
@@ -151,22 +151,16 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
             if (this.minecraft.player.isAlive() && VampirismPlayerAttributes.get(this.minecraft.player).faction != null) {
                 Minecraft.getInstance().setScreen(new SkillsScreen(FactionPlayerHandler.getCurrentFactionPlayer(this.minecraft.player).orElse(null), this));
             }
-        }, (button, matrixStack, mouseX, mouseY) -> {
-            this.renderTooltip(matrixStack, Component.translatable("gui.vampirism.vampirism_menu.skill_screen"), mouseX, mouseY);
-        }, Component.empty()));
+        }, Component.empty())); //TODO add tooltip
 
         this.addRenderableWidget(new ImageButton(this.leftPos + 26, this.topPos + 90, 20, 20, 0, 205, 20, BACKGROUND, 256, 256, (context) -> {
             IPlayableFaction<?> factionNew = VampirismPlayerAttributes.get(this.minecraft.player).faction;
             Minecraft.getInstance().setScreen(new ActionSelectScreen<>(new Color(factionNew.getColor()), true));
-        }, (button, matrixStack, mouseX, mouseY) -> {
-            this.renderTooltip(matrixStack, Component.translatable("gui.vampirism.vampirism_menu.edit_actions"), mouseX, mouseY);
-        }, Component.empty()));
+        }, Component.empty())); //TODO add tooltip
 
         Button appearanceButton = this.addRenderableWidget(new ImageButton(this.leftPos + 47, this.topPos + 90, 20, 20, 20, 205, 20, BACKGROUND, 256, 256, (context) -> {
             Minecraft.getInstance().setScreen(new VampirePlayerAppearanceScreen(this));
-        }, (button1, matrixStack, mouseX, mouseY) -> {
-            this.renderTooltip(matrixStack, Component.translatable("gui.vampirism.vampirism_menu.appearance_menu"), mouseX, mouseY);
-        }, Component.empty()));
+        }, Component.empty())); //TODO add tooltip
         if (!Helper.isVampire(minecraft.player)) {
             appearanceButton.active = false;
             appearanceButton.visible = false;
@@ -178,9 +172,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
                 Button xButton = this.addRenderableWidget(new ImageButton(this.getGuiLeft() + slot.x + 16 - 5, this.getGuiTop() + slot.y + 16 - 5, 5, 5, 60, 205, 0, BACKGROUND_REFINEMENTS, 256, 256, (button) -> {
                     VampirismMod.dispatcher.sendToServer(new ServerboundDeleteRefinementPacket(IRefinementItem.AccessorySlotType.values()[slot.index]));
                     refinementList.set(slot.index, ItemStack.EMPTY);
-                }, (button12, matrixStack, xPos, yPos) -> {
-                    VampirismContainerScreen.this.renderTooltip(matrixStack, Component.translatable("gui.vampirism.vampirism_menu.destroy_item").withStyle(ChatFormatting.RED), xPos, yPos);
-                }, Component.empty()) {
+                }, Component.empty()) { //TODO add tooltip
                     @Override
                     public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
                         this.visible = !refinementList.get(slot.index).isEmpty() && VampirismContainerScreen.this.draggingItem.isEmpty() && overSlot(slot, mouseX, mouseY);
@@ -242,13 +234,13 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
         public TaskItem(@NotNull ITaskInstance item, @NotNull ScrollableListWithDummyWidget<ITaskInstance> list, boolean isDummy, VampirismContainerScreen screen, IFactionPlayer<?> factionPlayer) {
             super(item, list, isDummy, screen, factionPlayer);
             if (!item.isUnique()) {
-                this.button = new ImageButton(0, 0, 8, 11, 0, 229, 11, TASKMASTER_GUI_TEXTURE, 256, 256, this::onClick, this::onTooltip, Component.empty());
+                this.button = new ImageButton(0, 0, 8, 11, 0, 229, 11, TASKMASTER_GUI_TEXTURE, 256, 256, this::onClick, Component.empty()); //TODO 1.19 tooltip rendering
             }
         }
 
         @Override
         public boolean onClick(double mouseX, double mouseY) {
-            if (this.button != null && !this.isDummy && mouseX > this.button.x && mouseX < this.button.x + this.button.getWidth() && mouseY > this.button.y && mouseY < this.button.y + this.button.getHeight()) {
+            if (this.button != null && !this.isDummy && mouseX > this.button.getX() && mouseX < this.button.getX() + this.button.getWidth() && mouseY > this.button.getY() && mouseY < this.button.getY() + this.button.getHeight()) {
                 this.button.onClick(mouseX, mouseY);
                 return true;
             } else {
@@ -260,8 +252,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
         public void renderItem(@NotNull PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel) {
             super.renderItem(matrixStack, x, y, listWidth, listHeight, itemHeight, mouseX, mouseY, partialTicks, zLevel);
             if (this.button != null) {
-                this.button.x = x + listWidth - 13;
-                this.button.y = y + 1;
+                this.button.setPosition(x + listWidth - 13, y+1);
                 this.button.render(matrixStack, mouseX, mouseY, partialTicks);
             }
         }
@@ -269,7 +260,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
         @Override
         public void renderItemToolTip(@NotNull PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float zLevel) {
             if (this.button != null && this.button.isHoveredOrFocused()) {
-                this.button.renderToolTip(matrixStack, mouseX, mouseY);
+                //TODO 1.19 tooltip rendering
             } else {
                 super.renderItemToolTip(matrixStack, x, y, listWidth, listHeight, itemHeight, mouseX, mouseY, zLevel);
             }

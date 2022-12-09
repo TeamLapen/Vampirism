@@ -121,8 +121,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
             }
         }
         //render task button
-        this.taskButton.x = x + listWidth - 17;
-        this.taskButton.y = y + 4;
+        this.taskButton.setPosition(x + listWidth - 17, y + 4);
         this.taskButton.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
@@ -142,7 +141,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
                 this.renderRequirementTool(matrixStack, this.item, requirements.get(i), mouseX, mouseY);
             }
         }
-        this.taskButton.renderToolTip(matrixStack, mouseX, mouseY);
+//        this.taskButton.renderToolTip(matrixStack, mouseX, mouseY); //TODO 1.19 readd tooltip
     }
 
     @Override
@@ -335,7 +334,7 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
 
         @Override
         public void onClick(double mouseX, double mouseY) {
-            if (mouseX > this.x && mouseX < this.x + this.width && mouseY > this.y && mouseY < this.y + this.height) {
+            if (mouseX > this.getX() && mouseX < this.getX() + this.width && mouseY > this.getY() && mouseY < this.getY() + this.height) {
                 super.onClick(mouseX, mouseY);
             }
         }
@@ -351,18 +350,18 @@ public class TaskItem<T extends Screen & ExtendedScreen> extends ScrollableListW
                 default -> 204;
             };
 
-            blit(mStack, this.x, this.y, (float) j, (float) (this.isHovered ? 13 : 0), this.width, this.height, 256, 256);
+            blit(mStack, this.getX(), this.getY(), (float) j, (float) (this.isHovered ? 13 : 0), this.width, this.height, 256, 256);
             RenderSystem.disableDepthTest();
 
         }
 
-        @Override
+        /*@Override //TODO 1.19 re-add tooltip
         public void renderToolTip(@NotNull PoseStack mStack, int mouseX, int mouseY) {
             if (this.isHovered && this.visible) {
                 TaskMenu.TaskAction action = TaskItem.this.screen.getTaskContainer().buttonAction(TaskItem.this.item);
                 TaskItem.this.screen.renderTooltip(mStack, Component.translatable(action.getTranslationKey()), mouseX, mouseY);
             }
-        }
+        }*/
     }
 
 }

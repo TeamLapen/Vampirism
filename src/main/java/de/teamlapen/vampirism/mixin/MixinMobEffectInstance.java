@@ -61,12 +61,12 @@ public abstract class MixinMobEffectInstance implements EffectInstanceWithSource
         this.duration = 1;
     }
 
-    @Inject(method = "isNoCounter", at = @At("HEAD"), cancellable = true)
+    /*@Inject(method = "isNoCounter", at = @At("HEAD"), cancellable = true) //TODO 1.19 readd
     private void isNoCounter(CallbackInfoReturnable<Boolean> cir) {
         if (this.effect instanceof EffectWithNoCounter) {
             cir.setReturnValue(true);
         }
-    }
+    }*/
 
     @Inject(method = "update(Lnet/minecraft/world/effect/MobEffectInstance;)Z", at = @At(value = "JUMP", ordinal = 2))
     private void copySource(@NotNull MobEffectInstance other, CallbackInfoReturnable<Boolean> cir) {

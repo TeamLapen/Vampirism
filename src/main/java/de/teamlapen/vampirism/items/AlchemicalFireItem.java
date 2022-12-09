@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class AlchemicalFireItem extends Item {
     public AlchemicalFireItem() {
-        super(new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties());
     }
 
 

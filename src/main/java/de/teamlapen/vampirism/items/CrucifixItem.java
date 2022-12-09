@@ -53,7 +53,7 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
     private static final Set<CrucifixItem> all_crucifix = Collections.synchronizedSet(new HashSet<>());
 
     public CrucifixItem(IItemWithTier.TIER tier) {
-        super(new Properties().tab(VampirismMod.creativeTab).stacksTo(1));
+        super(new Properties().stacksTo(1));
         this.tier = tier;
         all_crucifix.add(this);
     }

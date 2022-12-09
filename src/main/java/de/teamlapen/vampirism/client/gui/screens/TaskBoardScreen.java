@@ -60,7 +60,7 @@ public class TaskBoardScreen extends AbstractContainerScreen<TaskBoardMenu> impl
     @Override
     public void render(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
-        this.list.renderToolTip(matrixStack, mouseX, mouseY);
+//        this.list.renderToolTip(matrixStack, mouseX, mouseY); //TODO 1.19 re-add tooltip
     }
 
     public @NotNull Collection<ITaskInstance> taskSupplier() {

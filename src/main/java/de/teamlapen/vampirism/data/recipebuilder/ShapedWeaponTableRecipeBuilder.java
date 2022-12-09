@@ -6,16 +6,19 @@ import de.teamlapen.vampirism.advancements.critereon.SkillUnlockedCriterionTrigg
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.mixin.ShapedRecipeBuilderAccessor;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.RequirementsStrategy;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
 import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
@@ -28,16 +31,16 @@ import java.util.function.Consumer;
 
 public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
 
-    public static @NotNull ShapedWeaponTableRecipeBuilder shapedWeaponTable(@NotNull ItemLike item) {
-        return new ShapedWeaponTableRecipeBuilder(item, 1, null);
+    public static @NotNull ShapedWeaponTableRecipeBuilder shapedWeaponTable(@NotNull RecipeCategory category, @NotNull ItemLike item) {
+        return new ShapedWeaponTableRecipeBuilder(category, item, 1, null);
     }
 
-    public static @NotNull ShapedWeaponTableRecipeBuilder shapedWeaponTable(@NotNull ItemLike item, int count) {
-        return new ShapedWeaponTableRecipeBuilder(item, count, null);
+    public static @NotNull ShapedWeaponTableRecipeBuilder shapedWeaponTable(@NotNull RecipeCategory category, @NotNull ItemLike item, int count) {
+        return new ShapedWeaponTableRecipeBuilder(category, item, count, null);
     }
 
-    public static @NotNull ShapedWeaponTableRecipeBuilder shapedWeaponTable(@NotNull ItemLike item, int count, @NotNull JsonObject nbt) {
-        return new ShapedWeaponTableRecipeBuilder(item, count, nbt);
+    public static @NotNull ShapedWeaponTableRecipeBuilder shapedWeaponTable(@NotNull RecipeCategory category, @NotNull ItemLike item, int count, @NotNull JsonObject nbt) {
+        return new ShapedWeaponTableRecipeBuilder(category, item, count, nbt);
     }
 
     private final @Nullable JsonObject extraNbt;
@@ -45,8 +48,8 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
     private ISkill<?>[] skills;
     private int level = 1;
 
-    public ShapedWeaponTableRecipeBuilder(@NotNull ItemLike item, int count, @Nullable JsonObject extraNbt) {
-        super(item, count);
+    public ShapedWeaponTableRecipeBuilder(@NotNull RecipeCategory category, @NotNull ItemLike item, int count, @Nullable JsonObject extraNbt) {
+        super(category, item, count);
         this.extraNbt = extraNbt;
     }
 
@@ -100,7 +103,7 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
                 .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id))
                 .rewards(net.minecraft.advancements.AdvancementRewards.Builder.recipe(id))
                 .requirements(RequirementsStrategy.OR);
-        consumer.accept(new Result(id, this.result, this.count, this.group == null ? "" : this.group, this.rows, this.key, this.advancement, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getItemCategory().getRecipeFolderName() + "/" + id.getPath()), this.lava, this.skills != null ? this.skills : new ISkill[]{}, this.level, this.extraNbt));
+        consumer.accept(new Result(id, this.result, this.count, this.group == null ? "" : this.group, determineBookCategory(((ShapedRecipeBuilderAccessor)this).getRecipeCategory()), this.rows, this.key, this.advancement, id.withPath("recipes/" + ((ShapedRecipeBuilderAccessor)this).getRecipeCategory().getFolderName() + "/" + id.getPath()), this.lava, this.skills != null ? this.skills : new ISkill[]{}, this.level, this.extraNbt));
     }
 
     @NotNull
@@ -120,8 +123,8 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
         private final int level;
         private final @Nullable JsonObject extraNbt;
 
-        public Result(@NotNull ResourceLocation id, @NotNull Item item, int count, @NotNull String group, @NotNull List<String> pattern, @NotNull Map<Character, Ingredient> ingredients, @NotNull Advancement.Builder advancementBuilder, @NotNull ResourceLocation advancementId, int lava, @NotNull ISkill<?>[] skills, int level, @Nullable JsonObject extraNbt) {
-            super(id, item, count, group, pattern, ingredients, advancementBuilder, advancementId);
+        public Result(@NotNull ResourceLocation id, @NotNull Item item, int count, @NotNull String group, CraftingBookCategory category, @NotNull List<String> pattern, @NotNull Map<Character, Ingredient> ingredients, @NotNull Advancement.Builder advancementBuilder, @NotNull ResourceLocation advancementId, int lava, @NotNull ISkill<?>[] skills, int level, @Nullable JsonObject extraNbt) {
+            super(id, item, count, group, category, pattern, ingredients, advancementBuilder, advancementId);
             this.lava = lava;
             this.skills = skills;
             this.level = level;

@@ -29,7 +29,7 @@ public class HeartSeekerItem extends VampirismVampireSwordItem implements IItemW
     private final @NotNull TIER tier;
 
     public HeartSeekerItem(@NotNull VampireSwordMaterial material) {
-        super(material, 3, new Properties().tab(VampirismMod.creativeTab));
+        super(material, 3, new Properties());
         this.tier = material.getTier();
     }
 

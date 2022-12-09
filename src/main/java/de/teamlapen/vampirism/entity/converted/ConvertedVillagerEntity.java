@@ -140,7 +140,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     public @NotNull Villager cureEntity(@NotNull ServerLevel world, @NotNull PathfinderMob entity, @NotNull EntityType<Villager> newType) {
         Villager villager = ICurableConvertedCreature.super.cureEntity(world, entity, newType);
         villager.setVillagerData(this.getVillagerData());
-        villager.setGossips(this.getGossips().store(NbtOps.INSTANCE).getValue());
+        villager.setGossips(this.getGossips().store(NbtOps.INSTANCE));
         villager.setOffers(this.getOffers());
         villager.setVillagerXp(this.getVillagerXp());
         if (this.conversationStarter != null) {

@@ -18,6 +18,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -83,31 +84,29 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
         this.statButtons.clear();
         this.guiLeft = (this.width - this.xSize) / 2;
         this.guiTop = (this.height - this.ySize) / 2;
-        this.addRenderableWidget(new Button(this.guiLeft + this.xSize - 80 - 20, this.guiTop + 152, 80, 20, Component.translatable("gui.done"), (context) -> {
+        this.addRenderableWidget(new ExtendedButton(this.guiLeft + this.xSize - 80 - 20, this.guiTop + 152, 80, 20, Component.translatable("gui.done"), (context) -> {
             this.onClose();
         }));
         if (backScreen != null) {
-            this.addRenderableWidget(new Button(this.guiLeft + 20, this.guiTop + 152, 80, 20, Component.translatable("gui.back"), (context) -> {
+            this.addRenderableWidget(new ExtendedButton(this.guiLeft + 20, this.guiTop + 152, 80, 20, Component.translatable("gui.back"), (context) -> {
                 Minecraft.getInstance().setScreen(this.backScreen);
             }));
         }
         for (int i = 0; i < statCount; i++) {
             int finalI = i;
-            Button button = this.addRenderableWidget(new Button(guiLeft + 225, guiTop + 43 + 26 * i, 20, 20, Component.literal("+"), (b) -> VampirismMod.dispatcher.sendToServer(new ServerboundUpgradeMinionStatPacket(entity.getId(), finalI))));
+            Button button = this.addRenderableWidget(new ExtendedButton(guiLeft + 225, guiTop + 43 + 26 * i, 20, 20, Component.literal("+"), (b) -> VampirismMod.dispatcher.sendToServer(new ServerboundUpgradeMinionStatPacket(entity.getId(), finalI))));
             statButtons.add(button);
             button.visible = false;
         }
 
-        reset = this.addRenderableWidget(new ImageButton(this.guiLeft + 225, this.guiTop + 8, 20, 20, 0, 0, 20, RESET, 20, 40, (context) -> {
+        reset = this.addRenderableWidget(new ImageButton(this.guiLeft + 225, this.guiTop + 8, 20, 20, 0, 0, 20, RESET, 20, 40, (context) -> { //TODO 1.19 tooltip rendering
             VampirismMod.dispatcher.sendToServer(new ServerboundUpgradeMinionStatPacket(entity.getId(), -1));
             getOblivionPotion().ifPresent(stack -> stack.shrink(1));//server syncs after the screen is closed
-        }, (button, matrixStack, mouseX, mouseY) -> {
-            MinionStatsScreen.this.renderTooltip(matrixStack, button.getMessage(), mouseX, mouseY);
         }, Component.translatable("text.vampirism.minion_screen.reset_stats", ModItems.OBLIVION_POTION.get().getDescription())) {
             @Override
             public void render(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
                 if (this.visible) {
-                    this.isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
+                    this.isHovered = mouseX >= this.getX() && mouseY >= this.getY() && mouseX < this.getX() + this.width && mouseY < this.getY() + this.height;
                     if (!this.active) {
                         RenderSystem.setShaderColor(0.65f, 0.65f, 0.65f, 1);
                     }

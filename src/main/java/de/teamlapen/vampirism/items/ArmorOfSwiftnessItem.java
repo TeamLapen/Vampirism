@@ -45,7 +45,7 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmorItem implements II
     }
 
     public ArmorOfSwiftnessItem(@NotNull EquipmentSlot equipmentSlotIn, @NotNull SwiftnessArmorMaterial material) {
-        super(material, equipmentSlotIn, new Item.Properties().tab(VampirismMod.creativeTab), getModifiers(equipmentSlotIn, material));
+        super(material, equipmentSlotIn, new Item.Properties(), getModifiers(equipmentSlotIn, material));
         this.tier = material.getTier();
     }
 

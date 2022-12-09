@@ -64,6 +64,14 @@ public class VampireBookManager {
         return book;
     }
 
+    public @NotNull Collection<ItemStack> getAllBookItems() {
+        List<ItemStack> list = new ArrayList<>();
+        this.nonUnique.forEach(context -> {
+            list.add(ModItems.VAMPIRE_BOOK.get().contentInstance(context));
+        });
+        return list;
+    }
+
     public void init() {
         try (InputStream inputStream = VampirismMod.class.getResourceAsStream("/vampireBooks.json")) {
             if (inputStream == null) {

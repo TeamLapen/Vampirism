@@ -20,7 +20,7 @@ public class InjectionItem extends Item {
     private final TYPE type;
 
     public InjectionItem(TYPE type) {
-        super(new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties());
         this.type = type;
     }
 

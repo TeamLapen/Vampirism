@@ -30,7 +30,7 @@ import java.util.List;
 public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements ThrowableItemEntity.IVampirismThrowableItem {
 
     public HolyWaterSplashBottleItem(TIER tier) {
-        super(tier, new Properties().tab(VampirismMod.creativeTab));
+        super(tier, new Properties());
     }
 
     @Override

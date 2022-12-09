@@ -20,7 +20,7 @@ public class MinionUpgradeItem extends Item {
     private final IFaction<?> faction;
 
     public MinionUpgradeItem(int minLevel, int maxLevel, IFaction<?> faction) {
-        super(new Item.Properties().tab(VampirismMod.creativeTab));
+        super(new Item.Properties());
         this.faction = faction;
         this.maxLevel = maxLevel;
         this.minLevel = minLevel;

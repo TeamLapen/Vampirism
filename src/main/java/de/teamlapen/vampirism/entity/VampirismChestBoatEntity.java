@@ -39,7 +39,7 @@ public class VampirismChestBoatEntity extends ChestBoat implements IVampirismBoa
      */
     @Deprecated
     @Override
-    public void setType(@NotNull Type type) {
+    public void setVariant(@NotNull Type pBoatType) {
     }
 
     /**
@@ -48,7 +48,7 @@ public class VampirismChestBoatEntity extends ChestBoat implements IVampirismBoa
     @NotNull
     @Deprecated
     @Override
-    public Type getBoatType() {
+    public Type getVariant() {
         return Type.OAK;
     }
 
@@ -63,11 +63,11 @@ public class VampirismChestBoatEntity extends ChestBoat implements IVampirismBoa
         this.entityData.set(DATA_ID_TYPE, type.ordinal());
     }
 
-    @NotNull
+    /*@NotNull //TODO 1.19 recheck
     @Override
     public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
-    }
+    }*/
 
     @NotNull
     @Override

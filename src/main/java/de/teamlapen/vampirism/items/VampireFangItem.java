@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class VampireFangItem extends Item {
     public VampireFangItem() {
-        super(new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties());
     }
 
     @NotNull

@@ -12,6 +12,8 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
@@ -51,11 +53,11 @@ public class BiomeGenerator {
     public BiomeGenerator(DataGenerator gen, ExistingFileHelper exFileHelper) {
         this.gen = gen;
         this.exFileHelper = exFileHelper;
-        RegistryAccess access = RegistryAccess.builtinCopy();
+        RegistryAccess access = RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY);
         this.ops = RegistryOps.create(JsonOps.INSTANCE, access);
-        this.biomes = this.ops.registry(Registry.BIOME_REGISTRY).orElseThrow();
-        this.placedFeatures = this.ops.registry(Registry.PLACED_FEATURE_REGISTRY).orElseThrow();
-        this.structures = this.ops.registry(Registry.STRUCTURE_REGISTRY).orElseThrow();
+        this.biomes = access.registryOrThrow(Registries.BIOME);
+        this.placedFeatures = access.registryOrThrow(Registries.PLACED_FEATURE);
+        this.structures = access.registryOrThrow(Registries.STRUCTURE);
     }
 
     public static void register(@NotNull GatherDataEvent event, @NotNull DataGenerator generator) {
@@ -69,7 +71,7 @@ public class BiomeGenerator {
     }
 
     public @NotNull JsonCodecProvider<StructureSet> structureSetGenerator() {
-        return JsonCodecProvider.forDatapackRegistry(this.gen, this.exFileHelper, REFERENCE.MODID, this.ops, Registry.STRUCTURE_SET_REGISTRY, getStructureSets());
+        return JsonCodecProvider.forDatapackRegistry(this.gen, this.exFileHelper, REFERENCE.MODID, this.ops, Registries.STRUCTURE_SET, getStructureSets());
     }
 
     private @NotNull Map<ResourceLocation, BiomeModifier> getBiomeModifier() {
@@ -94,7 +96,7 @@ public class BiomeGenerator {
     }
 
     private @NotNull HolderSet<PlacedFeature> placedFeature(@SuppressWarnings("SameParameterValue") @NotNull RegistryObject<PlacedFeature> placedFeature) {
-        return HolderSet.direct(this.placedFeatures.getHolderOrThrow(Objects.requireNonNull(placedFeature.getKey())));
+        return HolderSet.direct(this.placedFeatures.getHolderOrThrow((Objects.requireNonNull(placedFeature.getKey()))));
     }
 
     private @NotNull Holder<Structure> structure(@SuppressWarnings("SameParameterValue") ResourceKey<Structure> structure) {

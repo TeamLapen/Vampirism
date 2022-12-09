@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 public interface FinishedSkillNode {
     ResourceLocation getID();
 
-    default @NotNull JsonObject getSkillNodeJson() {
+    default @NotNull JsonObject serializeSkillNode() {
         JsonObject jsonObject = new JsonObject();
         this.serialize(jsonObject);
         return jsonObject;

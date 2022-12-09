@@ -71,7 +71,7 @@ public class TentItem extends Item {
     private final boolean spawner;
 
     public TentItem(boolean spawner) {
-        super(new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties());
         this.spawner = spawner;
     }
 

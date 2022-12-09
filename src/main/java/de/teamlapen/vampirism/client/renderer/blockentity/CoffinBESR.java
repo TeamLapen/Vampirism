@@ -1,8 +1,7 @@
 package de.teamlapen.vampirism.client.renderer.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.blockentity.CoffinBlockEntity;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
@@ -25,6 +24,8 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Quaternionf;
+import org.joml.Quaternionfc;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
@@ -56,33 +57,33 @@ public class CoffinBESR extends VampirismBESR<CoffinBlockEntity> {
         switch (direction) {
             case EAST -> {
                 if (vertical) {
-                    matrixStack.mulPose(new Quaternion(new Vector3f(0, 0, 1), 90, true));
+                    matrixStack.mulPose(Axis.ZP.rotationDegrees(90));
                     matrixStack.translate(0, -1, 0);
                 }
-                matrixStack.mulPose(new Quaternion(new Vector3f(0, 1, 0), 90, true));
+                matrixStack.mulPose(Axis.YP.rotationDegrees(90));
                 matrixStack.translate(-1, 0, -1);
             }
             case WEST -> {
                 if (vertical) {
-                    matrixStack.mulPose(new Quaternion(new Vector3f(0, 0, 1), -90, true));
+                    matrixStack.mulPose(Axis.ZN.rotationDegrees(90));
                     matrixStack.translate(-1, 0, 0);
                 }
-                matrixStack.mulPose(new Quaternion(new Vector3f(0, 1, 0), -90, true));
+                matrixStack.mulPose(Axis.YN.rotationDegrees(90));
                 matrixStack.translate(0, 0, -2);
             }
             case SOUTH -> {
                 if (vertical) {
-                    matrixStack.mulPose(new Quaternion(new Vector3f(1, 0, 0), -90, true));
+                    matrixStack.mulPose(Axis.XN.rotationDegrees(90));
                     matrixStack.translate(0, -1, 0);
                 }
                 matrixStack.translate(0, 0, -1);
             }
             case NORTH -> {
                 if (vertical) {
-                    matrixStack.mulPose(new Quaternion(new Vector3f(1, 0, 0), 90, true));
+                    matrixStack.mulPose(Axis.XP.rotationDegrees(90));
                     matrixStack.translate(0, 0, -1);
                 }
-                matrixStack.mulPose(new Quaternion(new Vector3f(0, 1, 0), 180, true));
+                matrixStack.mulPose(Axis.YP.rotationDegrees(180));
                 matrixStack.translate(-1, 0, -2);
             }
         }
@@ -95,10 +96,10 @@ public class CoffinBESR extends VampirismBESR<CoffinBlockEntity> {
 
         matrixStack.pushPose();
         if (vertical) {
-            matrixStack.mulPose(new Quaternion(new Vector3f(0, 0, 1), 80 * tile.lidPos, true));
+            matrixStack.mulPose(Axis.ZP.rotationDegrees(80 * tile.lidPos));
             matrixStack.translate(0, -0.5 * tile.lidPos, 0);
         } else {
-            matrixStack.mulPose(new Quaternion(new Vector3f(0, 1, 0), -35 * tile.lidPos, true));
+            matrixStack.mulPose(Axis.YN.rotationDegrees(35 * tile.lidPos));
             matrixStack.translate(0, 0, -0.5 * tile.lidPos);
         }
 

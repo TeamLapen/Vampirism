@@ -20,6 +20,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -38,11 +39,11 @@ public class HunterTrainerScreen extends AbstractContainerScreen<HunterTrainerMe
     public void init() {
         super.init();
         Component name = Component.translatable("text.vampirism.level_up");
-        this.addRenderableWidget(this.buttonLevelup = new Button(this.leftPos + 120, this.topPos + 24, this.font.width(name) + 5, 20, name, (context) -> {
+        this.addRenderableWidget(this.buttonLevelup = new ExtendedButton(this.leftPos + 120, this.topPos + 24, this.font.width(name) + 5, 20, name, (context) -> {
             VampirismMod.dispatcher.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.TRAINER_LEVELUP));
             Player player = Minecraft.getInstance().player;
             UtilLib.spawnParticles(player.getCommandSenderWorld(), ParticleTypes.ENCHANT, player.getX(), player.getY(), player.getZ(), 1, 1, 1, 100, 1);
-            player.playSound(SoundEvents.NOTE_BLOCK_HARP, 4.0F, (1.0F + (player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.2F) * 0.7F);
+            player.playSound(SoundEvents.NOTE_BLOCK_HARP.get(), 4.0F, (1.0F + (player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.2F) * 0.7F);
             this.onClose();
         }));
         this.buttonLevelup.active = false;

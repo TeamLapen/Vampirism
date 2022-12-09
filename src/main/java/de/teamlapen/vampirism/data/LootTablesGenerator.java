@@ -1,14 +1,13 @@
 package de.teamlapen.vampirism.data;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
-import com.mojang.datafixers.util.Pair;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModLootTables;
+import de.teamlapen.vampirism.mixin.VanillaBlockLootAccessor;
 import de.teamlapen.vampirism.world.loot.conditions.AdjustableLevelCondition;
 import de.teamlapen.vampirism.world.loot.conditions.StakeCondition;
 import de.teamlapen.vampirism.world.loot.conditions.TentSpawnerCondition;
@@ -16,54 +15,48 @@ import de.teamlapen.vampirism.world.loot.functions.AddBookNbtFunction;
 import de.teamlapen.vampirism.world.loot.functions.RefinementSetFunction;
 import de.teamlapen.vampirism.world.loot.functions.SetItemBloodChargeFunction;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.loot.BlockLoot;
-import net.minecraft.data.loot.EntityLoot;
+import net.minecraft.data.PackOutput;
+import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.data.loot.EntityLootSubProvider;
 import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.data.loot.LootTableSubProvider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.flag.FeatureFlagSet;
+import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CarrotBlock;
+import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.storage.loot.*;
 import net.minecraft.world.level.storage.loot.entries.EmptyLootItem;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.*;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemKilledByPlayerCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceWithLootingCondition;
+import net.minecraft.world.level.storage.loot.predicates.*;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class LootTablesGenerator extends LootTableProvider {
 
     /**
-     * copied from {@link BlockLoot}
+     * copied from {@link net.minecraft.data.loot.packs.VanillaBlockLoot}
      */
     public static final float[] DEFAULT_SAPLING_DROP_RATES = new float[]{0.05F, 0.0625F, 0.083333336F, 0.1F};
 
 
-    public LootTablesGenerator(@NotNull DataGenerator dataGeneratorIn) {
-        super(dataGeneratorIn);
-    }
-
-    @NotNull
-    @Override
-    protected List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootContextParamSet>> getTables() {
-
-        return ImmutableList.of(Pair.of(ModEntityLootTables::new, LootContextParamSets.ENTITY), Pair.of(ModChestLootTables::new, LootContextParamSets.CHEST), Pair.of(ModBlockLootTables::new, LootContextParamSets.BLOCK), Pair.of(InjectLootTables::new, LootContextParamSets.CHEST));
+    public LootTablesGenerator(PackOutput output) {
+        super(output, ModLootTables.getLootTables(), List.of(new SubProviderEntry(ModEntityLootTables::new, LootContextParamSets.ENTITY), new SubProviderEntry(ModChestLootTables::new, LootContextParamSets.CHEST), new SubProviderEntry(ModBlockLootTables::new, LootContextParamSets.BLOCK), new SubProviderEntry(InjectLootTables::new, LootContextParamSets.CHEST)));
     }
 
     @Override
@@ -74,9 +67,15 @@ public class LootTablesGenerator extends LootTableProvider {
         map.forEach((resourceLocation, lootTable) -> LootTables.validate(validationtracker, resourceLocation, lootTable));
     }
 
-    private static class ModEntityLootTables extends EntityLoot {
+    private static class ModEntityLootTables extends EntityLootSubProvider {
+
+        protected ModEntityLootTables() {
+            super(FeatureFlags.REGISTRY.allFlags());
+        }
+
+
         @Override
-        protected void addTables() {
+        public void generate() {
             CompoundTag splash = new CompoundTag();
             splash.putBoolean("splash", true);
 
@@ -151,17 +150,11 @@ public class LootTablesGenerator extends LootTableProvider {
             this.add(ModEntities.VAMPIRE_MINION.get(), LootTable.lootTable());
             this.add(ModEntities.HUNTER_MINION.get(), LootTable.lootTable());
         }
-
-        @NotNull
-        @Override
-        protected Iterable<EntityType<?>> getKnownEntities() {
-            return ModEntities.getAllEntities();
-        }
     }
 
-    private static class ModChestLootTables implements Consumer<BiConsumer<ResourceLocation, LootTable.Builder>> {
+    private static class ModChestLootTables implements LootTableSubProvider {
         @Override
-        public void accept(@NotNull BiConsumer<ResourceLocation, LootTable.Builder> consumer) {
+        public void generate(@NotNull BiConsumer<ResourceLocation, LootTable.Builder> consumer) {
             consumer.accept(ModLootTables.chest_hunter_trainer, LootTable.lootTable()
                     .withPool(LootPool.lootPool().name("main").setRolls(UniformGenerator.between(5, 9))
                             .add(LootItem.lootTableItem(Items.IRON_INGOT).setWeight(40))
@@ -210,9 +203,14 @@ public class LootTablesGenerator extends LootTableProvider {
         }
     }
 
-    private static class ModBlockLootTables extends BlockLoot {
+    private static class ModBlockLootTables extends BlockLootSubProvider {
+
+        protected ModBlockLootTables() {
+            super(VanillaBlockLootAccessor.getEXPLOSION_RESISTANT(), FeatureFlags.REGISTRY.allFlags());
+        }
+
         @Override
-        protected void addTables() {
+        protected void generate() {
             this.dropSelf(ModBlocks.ALCHEMICAL_CAULDRON.get());
             this.dropSelf(ModBlocks.ALTAR_INFUSION.get());
             this.dropSelf(ModBlocks.ALTAR_INSPIRATION.get());
@@ -246,8 +244,8 @@ public class LootTablesGenerator extends LootTableProvider {
             this.dropSelf(ModBlocks.CURSED_SPRUCE_PLANKS.get());
             this.dropSelf(ModBlocks.DARK_SPRUCE_TRAPDOOR.get());
             this.dropSelf(ModBlocks.CURSED_SPRUCE_TRAPDOOR.get());
-            this.add(ModBlocks.DARK_SPRUCE_DOOR.get(), BlockLoot::createDoorTable);
-            this.add(ModBlocks.CURSED_SPRUCE_DOOR.get(), BlockLoot::createDoorTable);
+            this.add(ModBlocks.DARK_SPRUCE_DOOR.get(), this::createDoorTable);
+            this.add(ModBlocks.CURSED_SPRUCE_DOOR.get(), this::createDoorTable);
             this.dropSelf(ModBlocks.ALTAR_CLEANSING.get());
             this.dropSelf(ModBlocks.CURSED_EARTH.get());
             this.dropSelf(ModBlocks.FIRE_PLACE.get());
@@ -331,9 +329,9 @@ public class LootTablesGenerator extends LootTableProvider {
         }
     }
 
-    private static class InjectLootTables implements Consumer<BiConsumer<ResourceLocation, LootTable.Builder>> {
+    private static class InjectLootTables implements LootTableSubProvider {
         @Override
-        public void accept(@NotNull BiConsumer<ResourceLocation, LootTable.Builder> consumer) {
+        public void generate(@NotNull BiConsumer<ResourceLocation, LootTable.Builder> consumer) {
             consumer.accept(ModLootTables.abandoned_mineshaft, LootTable.lootTable()
                     .withPool(LootPool.lootPool().name("main").setRolls(UniformGenerator.between(0f, 4f))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_FANG.get()).setWeight(20))
@@ -428,5 +426,4 @@ public class LootTablesGenerator extends LootTableProvider {
             );
         }
     }
-
 }

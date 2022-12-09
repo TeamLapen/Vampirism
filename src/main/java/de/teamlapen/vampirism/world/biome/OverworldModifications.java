@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.mixin.MultiNoiseBiomeSourcePresetAccessor;
 import de.teamlapen.vampirism.modcompat.terrablender.TerraBlenderCompat;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.KeyDispatchDataCodec;
 import net.minecraft.world.level.biome.Biome;
@@ -109,7 +110,7 @@ public class OverworldModifications {
 
             LOGGER.info("Adding biome {} to ParameterPoints {} in Preset.OVERWORLD", ModBiomes.VAMPIRE_FOREST.getKey().location(), Arrays.toString(forestPoints));
             for (Climate.ParameterPoint forestPoint : forestPoints) {
-                biomes.add(Pair.of(forestPoint, registry.getOrCreateHolderOrThrow(ModBiomes.VAMPIRE_FOREST.getKey())));
+                biomes.add(Pair.of(forestPoint, registry.getHolderOrThrow(ModBiomes.VAMPIRE_FOREST.getKey())));
             }
 
             return new Climate.ParameterList<>(biomes);
@@ -139,7 +140,7 @@ public class OverworldModifications {
         static final KeyDispatchDataCodec<CustomBlockRuleSource> CODEC = KeyDispatchDataCodec.of(ResourceLocation.CODEC.xmap(CustomBlockRuleSource::new, CustomBlockRuleSource::block_id).fieldOf("block_id").codec());
 
         static {
-            Registry.register(Registry.RULE, new ResourceLocation(REFERENCE.MODID, "block_id"), CODEC.codec());
+            Registry.register(BuiltInRegistries.MATERIAL_RULE, new ResourceLocation(REFERENCE.MODID, "block_id"), CODEC.codec());
         }
 
         public SurfaceRules.@NotNull SurfaceRule apply(SurfaceRules.Context p_189523_) {

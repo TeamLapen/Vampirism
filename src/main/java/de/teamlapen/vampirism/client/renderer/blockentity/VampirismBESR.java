@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.renderer.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
@@ -27,6 +27,6 @@ abstract class VampirismBESR<T extends BlockEntity> implements BlockEntityRender
         if (tile.getLevel() != null) {
             dir = tile.getLevel().getBlockState(tile.getBlockPos()).getValue(HorizontalDirectionalBlock.FACING);
         }
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees((dir.get2DDataValue() - 2) * -90));
+        matrixStack.mulPose(Axis.YP.rotationDegrees((dir.get2DDataValue() - 2) * -90));
     }
 }

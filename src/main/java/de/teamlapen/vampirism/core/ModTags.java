@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
@@ -98,7 +99,7 @@ public class ModTags {
         public static final TagKey<EntityType<?>> ZOMBIES = tag("zombies");
 
         private static @NotNull TagKey<EntityType<?>> tag(@NotNull ResourceLocation resourceLocation) {
-            return TagKey.create(Registry.ENTITY_TYPE_REGISTRY, resourceLocation);
+            return TagKey.create(Registries.ENTITY_TYPE, resourceLocation);
         }
 
         private static @NotNull TagKey<EntityType<?>> tag(@NotNull String name) {
@@ -145,7 +146,7 @@ public class ModTags {
         }
 
         private static @NotNull TagKey<Biome> tag(@NotNull String name) {
-            return TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(REFERENCE.MODID, name));
+            return TagKey.create(Registries.BIOME, new ResourceLocation(REFERENCE.MODID, name));
         }
     }
 
@@ -155,7 +156,7 @@ public class ModTags {
         public static final TagKey<PoiType> IS_HUNTER = tag("is_hunter");
 
         private static @NotNull TagKey<PoiType> tag(@NotNull String name) {
-            return TagKey.create(Registry.POINT_OF_INTEREST_TYPE_REGISTRY, new ResourceLocation(REFERENCE.MODID, name));
+            return TagKey.create(Registries.POINT_OF_INTEREST_TYPE, new ResourceLocation(REFERENCE.MODID, name));
         }
     }
 
@@ -165,7 +166,7 @@ public class ModTags {
         public static final TagKey<VillagerProfession> IS_HUNTER = tag("is_hunter");
 
         private static @NotNull TagKey<VillagerProfession> tag(@NotNull String name) {
-            return TagKey.create(Registry.VILLAGER_PROFESSION_REGISTRY, new ResourceLocation(REFERENCE.MODID, name));
+            return TagKey.create(Registries.VILLAGER_PROFESSION, new ResourceLocation(REFERENCE.MODID, name));
         }
     }
 }

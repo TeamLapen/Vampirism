@@ -7,6 +7,7 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Mob;
 import org.apache.commons.lang3.tuple.Pair;
@@ -33,7 +34,7 @@ public abstract class DualBipedRenderer<T extends Mob, M extends HumanoidModel<T
     @NotNull
     @Override
     public ResourceLocation getTextureLocation(@NotNull T entity) {
-        return currentTexture != null ? currentTexture : super.getTextureLocation(entity);
+        return currentTexture != null ? currentTexture : DefaultPlayerSkin.getDefaultSkin(); //TODO 1.19 maybe include all textures
     }
 
     @Override

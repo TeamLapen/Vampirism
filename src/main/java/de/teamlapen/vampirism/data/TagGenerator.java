@@ -2,8 +2,10 @@ package de.teamlapen.vampirism.data;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.*;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.*;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
@@ -14,27 +16,31 @@ import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.data.BlockTagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.concurrent.CompletableFuture;
+
 public class TagGenerator {
 
-    public static void register(@NotNull GatherDataEvent event, @NotNull DataGenerator generator) {
-        BlockTagsProvider blockTagsProvider = new ModBlockTagsProvider(generator, event.getExistingFileHelper());
-        generator.addProvider(event.includeServer(), blockTagsProvider);
-        generator.addProvider(event.includeServer(), new ModItemTagsProvider(generator, blockTagsProvider, event.getExistingFileHelper()));
-        generator.addProvider(event.includeServer(), new ModEntityTypeTagsProvider(generator, event.getExistingFileHelper()));
-        generator.addProvider(event.includeServer(), new ModFluidTagsProvider(generator, event.getExistingFileHelper()));
-        generator.addProvider(event.includeServer(), new ModBiomeTagsProvider(generator, event.getExistingFileHelper()));
-        generator.addProvider(event.includeServer(), new ModPoiTypeProvider(generator, event.getExistingFileHelper()));
-        generator.addProvider(event.includeServer(), new ModVillageProfessionProvider(generator, event.getExistingFileHelper()));
+    public static void register(DataGenerator gen, @NotNull GatherDataEvent event, PackOutput output, CompletableFuture<HolderLookup.Provider> future, ExistingFileHelper existingFileHelper) {
+        BlockTagsProvider blockTagsProvider = new ModBlockTagsProvider(output, future, existingFileHelper);
+        gen.addProvider(event.includeServer(), blockTagsProvider);
+        gen.addProvider(event.includeServer(), new ModItemTagsProvider(output, future, existingFileHelper, blockTagsProvider));
+        gen.addProvider(event.includeServer(), new ModEntityTypeTagsProvider(output, future, existingFileHelper));
+        gen.addProvider(event.includeServer(), new ModFluidTagsProvider(output, future, existingFileHelper));
+        gen.addProvider(event.includeServer(), new ModBiomeTagsProvider(output, future, existingFileHelper));
+        gen.addProvider(event.includeServer(), new ModPoiTypeProvider(output, future, existingFileHelper));
+        gen.addProvider(event.includeServer(), new ModVillageProfessionProvider(output, future, existingFileHelper));
     }
 
     public static class ModBlockTagsProvider extends BlockTagsProvider {
-        public ModBlockTagsProvider(@NotNull DataGenerator dataGenerator, ExistingFileHelper helper) {
-            super(dataGenerator, REFERENCE.MODID, helper);
+        public ModBlockTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
+            super(output, lookupProvider, REFERENCE.MODID, existingFileHelper);
         }
 
         @NotNull
@@ -45,7 +51,7 @@ public class TagGenerator {
 
         @SuppressWarnings("unchecked")
         @Override
-        protected void addTags() {
+        protected void addTags(HolderLookup.Provider holderLookup) {
             tag(BlockTags.DIRT).add(ModBlocks.CURSED_EARTH.get(), ModBlocks.CURSED_GRASS.get());
             tag(ModTags.Blocks.CURSED_EARTH).add(ModBlocks.CURSED_EARTH.get(), ModBlocks.CURSED_GRASS.get());
             tag(ModTags.Blocks.CASTLE_BLOCK).add(ModBlocks.CASTLE_BLOCK_DARK_BRICK.get(), ModBlocks.CASTLE_BLOCK_DARK_BRICK_BLOODY.get(), ModBlocks.CASTLE_BLOCK_DARK_STONE.get(), ModBlocks.CASTLE_BLOCK_NORMAL_BRICK.get(), ModBlocks.CASTLE_BLOCK_PURPLE_BRICK.get());
@@ -162,8 +168,8 @@ public class TagGenerator {
     }
 
     public static class ModItemTagsProvider extends ItemTagsProvider {
-        public ModItemTagsProvider(@NotNull DataGenerator dataGenerator, @NotNull BlockTagsProvider blockTagsProvider, ExistingFileHelper helper) {
-            super(dataGenerator, blockTagsProvider, REFERENCE.MODID, helper);
+        public ModItemTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper, @NotNull BlockTagsProvider blockTagsProvider) {
+            super(output, lookupProvider, blockTagsProvider, REFERENCE.MODID, existingFileHelper);
         }
 
         @NotNull
@@ -173,7 +179,7 @@ public class TagGenerator {
         }
 
         @Override
-        protected void addTags() {
+        protected void addTags(HolderLookup.@NotNull Provider holderProvider) {
             copy(ModTags.Blocks.CASTLE_BLOCK, ModTags.Items.CASTLE_BLOCK);
             copy(ModTags.Blocks.CASTLE_STAIRS, ModTags.Items.CASTLE_STAIRS);
             copy(ModTags.Blocks.CASTLE_SLAPS, ModTags.Items.CASTLE_SLAPS);
@@ -213,12 +219,12 @@ public class TagGenerator {
     }
 
     public static class ModEntityTypeTagsProvider extends EntityTypeTagsProvider {
-        public ModEntityTypeTagsProvider(@NotNull DataGenerator dataGenerator, ExistingFileHelper helper) {
-            super(dataGenerator, REFERENCE.MODID, helper);
+        public ModEntityTypeTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
+            super(output, lookupProvider, REFERENCE.MODID, existingFileHelper);
         }
 
         @Override
-        protected void addTags() {
+        protected void addTags(HolderLookup.Provider holderLookup) {
             tag(ModTags.Entities.HUNTER).add(ModEntities.HUNTER.get(), ModEntities.HUNTER_IMOB.get(), ModEntities.ADVANCED_HUNTER.get(), ModEntities.ADVANCED_HUNTER_IMOB.get(), ModEntities.HUNTER_TRAINER.get(), ModEntities.HUNTER_TRAINER.get(), ModEntities.HUNTER_TRAINER_DUMMY.get(), ModEntities.TASK_MASTER_HUNTER.get());
             tag(ModTags.Entities.VAMPIRE).add(ModEntities.VAMPIRE.get(), ModEntities.VAMPIRE_IMOB.get(), ModEntities.ADVANCED_VAMPIRE.get(), ModEntities.ADVANCED_VAMPIRE_IMOB.get(), ModEntities.VAMPIRE_BARON.get(), ModEntities.TASK_MASTER_VAMPIRE.get());
             tag(ModTags.Entities.ADVANCED_HUNTER).add(ModEntities.ADVANCED_HUNTER.get(), ModEntities.ADVANCED_HUNTER_IMOB.get());
@@ -228,8 +234,8 @@ public class TagGenerator {
     }
 
     public static class ModFluidTagsProvider extends FluidTagsProvider {
-        public ModFluidTagsProvider(@NotNull DataGenerator generatorIn, ExistingFileHelper helper) {
-            super(generatorIn, REFERENCE.MODID, helper);
+        public ModFluidTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
+            super(output, lookupProvider, REFERENCE.MODID, existingFileHelper);
         }
 
         @NotNull
@@ -239,7 +245,7 @@ public class TagGenerator {
         }
 
         @Override
-        protected void addTags() {
+        protected void addTags(HolderLookup.Provider holderLookup) {
             tag(ModTags.Fluids.BLOOD).add(ModFluids.BLOOD.get());
             tag(ModTags.Fluids.IMPURE_BLOOD).add(ModFluids.IMPURE_BLOOD.get());
         }
@@ -247,13 +253,13 @@ public class TagGenerator {
 
     public static class ModBiomeTagsProvider extends BiomeTagsProvider {
 
-        public ModBiomeTagsProvider(@NotNull DataGenerator generator, @Nullable ExistingFileHelper existingFileHelper) {
-            super(generator, REFERENCE.MODID, existingFileHelper);
+        public ModBiomeTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
+            super(output, lookupProvider, REFERENCE.MODID, existingFileHelper);
         }
 
         @SuppressWarnings("unchecked")
         @Override
-        protected void addTags() {
+        protected void addTags(HolderLookup.@NotNull Provider holderProvider) {
             tag(ModTags.Biomes.HasStructure.HUNTER_TENT).addTags(BiomeTags.IS_BADLANDS, BiomeTags.IS_FOREST, BiomeTags.IS_TAIGA).add(Biomes.PLAINS, Biomes.DESERT, Biomes.MEADOW, Biomes.SNOWY_PLAINS, Biomes.SPARSE_JUNGLE);
             tag(ModTags.Biomes.IS_FACTION_BIOME).addTags(ModTags.Biomes.IS_VAMPIRE_BIOME);
             tag(ModTags.Biomes.IS_VAMPIRE_BIOME).add(ModBiomes.VAMPIRE_FOREST.getKey());
@@ -277,31 +283,31 @@ public class TagGenerator {
 
     public static class ModPoiTypeProvider extends PoiTypeTagsProvider {
 
-        public ModPoiTypeProvider(@NotNull DataGenerator p_236434_, @Nullable ExistingFileHelper existingFileHelper) {
-            super(p_236434_, REFERENCE.MODID, existingFileHelper);
+        public ModPoiTypeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
+            super(output, lookupProvider, REFERENCE.MODID, existingFileHelper);
         }
 
         @Override
-        protected void addTags() {
-            tag(ModTags.PoiTypes.HAS_FACTION).add(ModVillage.NO_FACTION_TOTEM.get(), ModVillage.HUNTER_TOTEM.get(), ModVillage.VAMPIRE_TOTEM.get());
-            tag(ModTags.PoiTypes.IS_HUNTER).add(ModVillage.HUNTER_TOTEM.get());
-            tag(ModTags.PoiTypes.IS_VAMPIRE).add(ModVillage.VAMPIRE_TOTEM.get());
-            tag(PoiTypeTags.ACQUIRABLE_JOB_SITE).add(ModVillage.HUNTER_TOTEM.get(), ModVillage.VAMPIRE_TOTEM.get());
-            tag(PoiTypeTags.VILLAGE).add(ModVillage.NO_FACTION_TOTEM.get(), ModVillage.HUNTER_TOTEM.get(), ModVillage.VAMPIRE_TOTEM.get());
+        protected void addTags(HolderLookup.@NotNull Provider holderProvider) {
+            tag(ModTags.PoiTypes.HAS_FACTION).add(ModVillage.NO_FACTION_TOTEM.getKey(), ModVillage.HUNTER_TOTEM.getKey(), ModVillage.VAMPIRE_TOTEM.getKey());
+            tag(ModTags.PoiTypes.IS_HUNTER).add(ModVillage.HUNTER_TOTEM.getKey());
+            tag(ModTags.PoiTypes.IS_VAMPIRE).add(ModVillage.VAMPIRE_TOTEM.getKey());
+            tag(PoiTypeTags.ACQUIRABLE_JOB_SITE).add(ModVillage.HUNTER_TOTEM.getKey(), ModVillage.VAMPIRE_TOTEM.getKey());
+            tag(PoiTypeTags.VILLAGE).add(ModVillage.NO_FACTION_TOTEM.getKey(), ModVillage.HUNTER_TOTEM.getKey(), ModVillage.VAMPIRE_TOTEM.getKey());
         }
     }
 
     public static class ModVillageProfessionProvider extends TagsProvider<VillagerProfession> {
 
-        public ModVillageProfessionProvider(@NotNull DataGenerator p_236434_, @Nullable ExistingFileHelper existingFileHelper) {
-            super(p_236434_, Registry.VILLAGER_PROFESSION, REFERENCE.MODID, existingFileHelper);
+        public ModVillageProfessionProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
+            super(output, ForgeRegistries.Keys.VILLAGER_PROFESSIONS, lookupProvider, REFERENCE.MODID, existingFileHelper);
         }
 
         @Override
-        protected void addTags() {
-            tag(ModTags.Professions.HAS_FACTION).add(ModVillage.HUNTER_EXPERT.get(), ModVillage.VAMPIRE_EXPERT.get());
-            tag(ModTags.Professions.IS_VAMPIRE).add(ModVillage.VAMPIRE_EXPERT.get());
-            tag(ModTags.Professions.IS_HUNTER).add(ModVillage.HUNTER_EXPERT.get());
+        protected void addTags(HolderLookup.@NotNull Provider holderProvider) {
+            tag(ModTags.Professions.HAS_FACTION).add(ModVillage.HUNTER_EXPERT.getKey(), ModVillage.VAMPIRE_EXPERT.getKey());
+            tag(ModTags.Professions.IS_VAMPIRE).add(ModVillage.VAMPIRE_EXPERT.getKey());
+            tag(ModTags.Professions.IS_HUNTER).add(ModVillage.HUNTER_EXPERT.getKey());
         }
     }
 }

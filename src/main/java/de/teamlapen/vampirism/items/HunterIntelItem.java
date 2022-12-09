@@ -53,7 +53,7 @@ public class HunterIntelItem extends Item {
     private Component tooltip;
 
     public HunterIntelItem(int level) {
-        super(new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties());
         this.level = level;
     }
 

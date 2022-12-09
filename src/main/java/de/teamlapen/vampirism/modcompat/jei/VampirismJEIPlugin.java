@@ -36,16 +36,14 @@ import mezz.jei.api.registration.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.NonNullList;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Tiers;
-import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.world.item.crafting.ShapelessRecipe;
+import net.minecraft.world.item.crafting.*;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
@@ -187,14 +185,14 @@ public class VampirismJEIPlugin implements IModPlugin {
                         .map(Item::getDefaultInstance)
                         .filter(item -> (!(item.getItem() instanceof IFactionExclusiveItem) || ((IFactionExclusiveItem) item.getItem()).getExclusiveFaction(item) == VReference.HUNTER_FACTION))
                         .filter(oil::canBeApplied)
-                        .map(stack -> new ShapelessRecipe(new ResourceLocation(REFERENCE.MODID, (RegUtil.id(oil).toString() + RegUtil.id(stack.getItem()).toString()).replace(':', '_')), "", OilUtils.setAppliedOil(stack.copy(), oil), NonNullList.of(Ingredient.EMPTY, Ingredient.of(stack), Ingredient.of(OilUtils.createOilItem(oil)))))).collect(Collectors.toList());
+                        .map(stack -> new ShapelessRecipe(new ResourceLocation(REFERENCE.MODID, (RegUtil.id(oil).toString() + RegUtil.id(stack.getItem()).toString()).replace(':', '_')), "", CraftingBookCategory.EQUIPMENT, OilUtils.setAppliedOil(stack.copy(), oil), NonNullList.of(Ingredient.EMPTY, Ingredient.of(stack), Ingredient.of(OilUtils.createOilItem(oil)))))).collect(Collectors.toList());
     }
 
     private @NotNull List<CraftingRecipe> getCleanOilRecipes() {
         return getApplicableOilRecipes().stream().map(recipe -> {
             ItemStack item = recipe.getResultItem();
             IApplicableOil oil = OilUtils.getAppliedOil(item).get();
-            return new ShapelessRecipe(new ResourceLocation(REFERENCE.MODID, ("clean_" + RegUtil.id(oil).toString() + "_from_" + RegUtil.id(item.getItem()).toString()).replace(':', '_')), "", OilUtils.removeAppliedOil(item.copy()), NonNullList.of(Ingredient.EMPTY, Ingredient.of(Items.PAPER), Ingredient.of(item)));
+            return new ShapelessRecipe(new ResourceLocation(REFERENCE.MODID, ("clean_" + RegUtil.id(oil).toString() + "_from_" + RegUtil.id(item.getItem()).toString()).replace(':', '_')), "", CraftingBookCategory.EQUIPMENT, OilUtils.removeAppliedOil(item.copy()), NonNullList.of(Ingredient.EMPTY, Ingredient.of(Items.PAPER), Ingredient.of(item)));
         }).collect(Collectors.toList());
     }
 }

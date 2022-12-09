@@ -19,7 +19,7 @@ public class UmbrellaItem extends Item {
     private final @NotNull Multimap<Attribute, AttributeModifier> modifierMultimap;
 
     public UmbrellaItem() {
-        super(new Properties().stacksTo(1).tab(VampirismMod.creativeTab));
+        super(new Properties().stacksTo(1));
 
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         builder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(SPEED_MODIFIER, "Umbrella modifier", -0.35, AttributeModifier.Operation.MULTIPLY_BASE));

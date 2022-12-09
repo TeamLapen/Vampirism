@@ -6,7 +6,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.world.biome.OverworldModifications;
-import de.teamlapen.vampirism.world.biome.VampirismBiomes;
 import de.teamlapen.vampirism.world.gen.modifier.ExtendedAddSpawnsBiomeModifier;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.level.biome.Biome;
@@ -26,7 +25,7 @@ public class ModBiomes {
     public static final DeferredRegister<Biome> BIOMES = DeferredRegister.create(ForgeRegistries.BIOMES, REFERENCE.MODID);
     public static final DeferredRegister<Codec<? extends BiomeModifier>> BIOME_MODIFIER_SERIALIZERS = DeferredRegister.create(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, REFERENCE.MODID);
 
-    public static final RegistryObject<Biome> VAMPIRE_FOREST = BIOMES.register("vampire_forest", VampirismBiomes::createVampireForest);
+    public static final RegistryObject<Biome> VAMPIRE_FOREST = BIOMES.register("vampire_forest", () -> null);
 
     public static final RegistryObject<Codec<ExtendedAddSpawnsBiomeModifier>> ADD_SPAWNS_BIOME_MODIFIER_TYPE = BIOME_MODIFIER_SERIALIZERS.register("extended_add_spawns", () ->
             RecordCodecBuilder.create(builder -> builder.group(

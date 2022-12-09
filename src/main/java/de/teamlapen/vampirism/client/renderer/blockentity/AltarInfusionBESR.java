@@ -2,9 +2,7 @@ package de.teamlapen.vampirism.client.renderer.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.blockentity.AltarInfusionBlockEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -18,6 +16,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 
 /**
  * Renders the beams for the altar of infusion
@@ -69,8 +69,8 @@ public class AltarInfusionBESR extends VampirismBESR<AltarInfusionBlockEntity> {
         float distFlat = Mth.sqrt(dx * dx + dz * dz);
         float dist = Mth.sqrt(dx * dx + dy * dy + dz * dz);
         matrixStack.pushPose();
-        matrixStack.mulPose(Vector3f.YP.rotation((float) (-Math.atan2(dz, dx)) - ((float) Math.PI / 2F)));
-        matrixStack.mulPose(Vector3f.XP.rotation((float) (-Math.atan2(distFlat, dy)) - ((float) Math.PI / 2F)));
+        matrixStack.mulPose(Axis.YP.rotation(((float) (-Math.atan2(dz, dx)) - ((float) Math.PI / 2F))));
+        matrixStack.mulPose(Axis.XP.rotation((float) (-Math.atan2(distFlat, dy)) - ((float) Math.PI / 2F)));
         VertexConsumer ivertexbuilder = renderTypeBuffer.getBuffer(RenderType.entitySmoothCutout(beacon ? beaconBeamTexture : enderDragonCrystalBeamTextures));
         float f2 = partialTicks * 0.05f;
         float f3 = dist / 32.0F + partialTicks * 0.05f;

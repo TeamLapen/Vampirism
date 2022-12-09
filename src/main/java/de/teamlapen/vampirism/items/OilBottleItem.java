@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -19,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class OilBottleItem extends Item implements IOilItem {
+public class OilBottleItem extends Item implements IOilItem, CreativeModeTab.DisplayItemsGenerator {
 
     public OilBottleItem(@NotNull Properties properties) {
         super(properties);
@@ -49,12 +50,10 @@ public class OilBottleItem extends Item implements IOilItem {
     }
 
     @Override
-    public void fillItemCategory(@NotNull CreativeModeTab itemGroup, @NotNull NonNullList<ItemStack> items) {
-        if (this.allowedIn(itemGroup)) {
-            for (IOil value : RegUtil.values(ModRegistries.OILS)) {
-                if (value == ModOils.EMPTY.get()) continue;
-                items.add(OilUtils.setOil(new ItemStack(this), value));
-            }
+    public void accept(@NotNull FeatureFlagSet featureFlagSet, CreativeModeTab.@NotNull Output output, boolean hasPermission) {
+        for (IOil value : RegUtil.values(ModRegistries.OILS)) {
+            if (value == ModOils.EMPTY.get()) continue;
+            output.accept(OilUtils.setOil(new ItemStack(this), value));
         }
     }
 

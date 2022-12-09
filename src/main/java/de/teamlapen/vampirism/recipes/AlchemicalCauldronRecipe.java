@@ -7,12 +7,14 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.util.RegUtil;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
+import net.minecraft.world.item.crafting.CookingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
@@ -31,8 +33,8 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
     private final ISkill<?>[] skills;
     private final int reqLevel;
 
-    public AlchemicalCauldronRecipe(@NotNull ResourceLocation idIn, @NotNull String groupIn, @NotNull Ingredient ingredientIn, Either<Ingredient, FluidStack> fluidIn, @NotNull ItemStack resultIn, @NotNull ISkill<?>[] skillsIn, int reqLevelIn, int cookTimeIn, float exp) {
-        super(ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get(), idIn, groupIn, ingredientIn, resultIn, exp, cookTimeIn);
+    public AlchemicalCauldronRecipe(@NotNull ResourceLocation idIn, @NotNull String groupIn, CookingBookCategory category, @NotNull Ingredient ingredientIn, Either<Ingredient, FluidStack> fluidIn, @NotNull ItemStack resultIn, @NotNull ISkill<?>[] skillsIn, int reqLevelIn, int cookTimeIn, float exp) {
+        super(ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get(), idIn, groupIn, category, ingredientIn, resultIn, exp, cookTimeIn);
         this.fluid = fluidIn;
         this.skills = skillsIn;
         this.reqLevel = reqLevelIn;
@@ -100,6 +102,7 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
         @Override
         public AlchemicalCauldronRecipe fromJson(@NotNull ResourceLocation recipeId, @NotNull JsonObject json) {
             String group = GsonHelper.getAsString(json, "group", "");
+            CookingBookCategory category = CookingBookCategory.CODEC.byName(GsonHelper.getAsString(json, "category", (String)null), CookingBookCategory.MISC);
             Ingredient ingredients = Ingredient.fromJson(GsonHelper.isArrayNode(json, "ingredient") ? GsonHelper.getAsJsonArray(json, "ingredient") : GsonHelper.getAsJsonObject(json, "ingredient"));
             int level = GsonHelper.getAsInt(json, "level", 1);
             ISkill<?>[] skills = VampirismRecipeHelper.deserializeSkills(GsonHelper.getAsJsonArray(json, "skill", null));
@@ -107,12 +110,13 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
             Either<Ingredient, FluidStack> fluid = VampirismRecipeHelper.getFluidOrItem(json);
             int cookTime = GsonHelper.getAsInt(json, "cookTime", 200);
             float exp = GsonHelper.getAsFloat(json, "experience", 0.2F);
-            return new AlchemicalCauldronRecipe(recipeId, group, ingredients, fluid, result, skills, level, cookTime, exp);
+            return new AlchemicalCauldronRecipe(recipeId, group, category, ingredients, fluid, result, skills, level, cookTime, exp);
         }
 
         @Override
         public AlchemicalCauldronRecipe fromNetwork(@NotNull ResourceLocation recipeId, @NotNull FriendlyByteBuf buffer) {
             String group = buffer.readUtf(32767);
+            CookingBookCategory cookingbookcategory = buffer.readEnum(CookingBookCategory.class);
             ItemStack result = buffer.readItem();
             Ingredient ingredient = Ingredient.fromNetwork(buffer);
             Either<Ingredient, FluidStack> fluid;
@@ -128,12 +132,13 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
             for (int i = 0; i < skills.length; i++) {
                 skills[i] = RegUtil.getSkill(buffer.readResourceLocation());
             }
-            return new AlchemicalCauldronRecipe(recipeId, group, ingredient, fluid, result, skills, level, cookingtime, exp);
+            return new AlchemicalCauldronRecipe(recipeId, group, cookingbookcategory, ingredient, fluid, result, skills, level, cookingtime, exp);
         }
 
         @Override
         public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull AlchemicalCauldronRecipe recipe) {
             buffer.writeUtf(recipe.group);
+            buffer.writeEnum(recipe.category());
             buffer.writeItem(recipe.result);
             recipe.ingredient.toNetwork(buffer);
             if (recipe.fluid.left().isPresent()) {

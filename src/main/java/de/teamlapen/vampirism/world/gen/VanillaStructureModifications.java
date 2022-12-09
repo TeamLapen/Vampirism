@@ -8,15 +8,19 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.blocks.TotemTopBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.mixin.ProcessorListsAccessor;
+import de.teamlapen.vampirism.mixin.VanillaRegistriesAccessor;
 import de.teamlapen.vampirism.util.MixinHooks;
 import de.teamlapen.vampirism.world.gen.structure.templatesystem.BiomeTopBlockProcessor;
 import de.teamlapen.vampirism.world.gen.structure.templatesystem.RandomBlockStateRule;
 import de.teamlapen.vampirism.world.gen.structure.templatesystem.RandomStructureProcessor;
-import net.minecraft.core.Holder;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.core.*;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.registries.VanillaRegistries;
+import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.data.worldgen.Pools;
 import net.minecraft.data.worldgen.ProcessorLists;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -40,10 +44,32 @@ import java.util.stream.Collectors;
  */
 public class VanillaStructureModifications {
 
-    public static void createJigsawPool() {
-        setupSingleJigsawPieceGeneration();
-        Pools.register(new StructureTemplatePool(new ResourceLocation("vampirism", "village/entities/hunter_trainer"), new ResourceLocation("empty"), Lists.newArrayList(Pair.of(singleJigsawPieceFunction("village/entities/hunter_trainer"), 1)), StructureTemplatePool.Projection.RIGID));
+    public static void setup() {
+        createJigsawPool();
+        createStructureProcessorLists();
     }
+
+    private static void createStructureProcessorLists() {
+        VanillaRegistriesAccessor.getBuilder().add(Registries.PROCESSOR_LIST, VanillaStructureModifications::structureProcessorListProvider);
+    }
+
+    private static void createJigsawPool() {
+        setupSingleJigsawPieceGeneration();
+        VanillaRegistriesAccessor.getBuilder().add(Registries.TEMPLATE_POOL, VanillaStructureModifications::structureTemplatePoolProvider);
+    }
+
+    private static <T> void structureProcessorListProvider(BootstapContext<StructureProcessorList> bootstapContext) {
+        StructureProcessor factionProcessor = new RandomStructureProcessor(ImmutableList.of(new RandomBlockStateRule(new RandomBlockMatchTest(ModBlocks.TOTEM_TOP.get(), (VampirismConfig.COMMON.villageTotemFactionChance.get()).floatValue()), AlwaysTrueTest.INSTANCE, ModBlocks.TOTEM_TOP.get().defaultBlockState(), TotemTopBlock.getBlocks().stream().filter((totemx) -> totemx != ModBlocks.TOTEM_TOP.get() && !totemx.isCrafted()).map(Block::defaultBlockState).collect(Collectors.toList()))));
+        StructureProcessor biomeTopBlockProcessor = new BiomeTopBlockProcessor(Blocks.DIRT.defaultBlockState());
+        bootstapContext.register(ResourceKey.create(Registries.PROCESSOR_LIST, new ResourceLocation(REFERENCE.MODID, "totem_faction")), new StructureProcessorList(ImmutableList.of(factionProcessor, biomeTopBlockProcessor)));
+    }
+
+    private static void structureTemplatePoolProvider(BootstapContext<StructureTemplatePool> bootstapContext) {
+        HolderGetter<StructureTemplatePool> holderGetter = bootstapContext.lookup(Registries.TEMPLATE_POOL);
+        Holder<StructureTemplatePool> empty = holderGetter.getOrThrow(Pools.EMPTY);
+        Pools.register(bootstapContext, "vampirism:village/entities/hunter_trainer", new StructureTemplatePool(empty ,Lists.newArrayList(Pair.of(singleJigsawPieceFunction("village/entities/hunter_trainer"), 1)), StructureTemplatePool.Projection.RIGID));
+    }
+
 
     public static void addVillageStructures(@NotNull RegistryAccess dynamicRegistries) {
         addHunterTrainerHouse(dynamicRegistries, getDefaultPools());
@@ -94,7 +120,7 @@ public class VanillaStructureModifications {
         // return if temples should not be modified
         if (!VampirismConfig.COMMON.villageReplaceTemples.get()) return;
         // get jigsaw registry
-        dynamicRegistries.registry(BuiltinRegistries.TEMPLATE_POOL.key()).ifPresent(jigsawRegistry -> {
+        dynamicRegistries.registry(Registries.TEMPLATE_POOL).ifPresent(jigsawRegistry -> {
             // for every desired pools
             patternReplacements.forEach((pool, replacements) ->
                     // get the pool if present
@@ -147,13 +173,13 @@ public class VanillaStructureModifications {
      */
     private static void addHunterTrainerHouse(@NotNull RegistryAccess reg, @NotNull Map<ResourceLocation, VanillaStructureModifications.BiomeType> pools) {
         // get jigsaw registry
-        reg.registry(BuiltinRegistries.TEMPLATE_POOL.key()).ifPresent(patternRegistry -> {
+        reg.registry(Registries.TEMPLATE_POOL).ifPresent(patternRegistry -> {
             // for every desired pools
             pools.forEach((pool, type) -> {
                 // get the pool if present
                 patternRegistry.getOptional(pool).ifPresent(pattern -> {
                     // create trainer house piece with desired village type
-                    StructurePoolElement piece = singleJigsawPiece("village/" + type.path + "/houses/hunter_trainer", ProcessorLists.EMPTY);
+                    StructurePoolElement piece = singleJigsawPiece("village/" + type.path + "/houses/hunter_trainer");
                     // add hunter trainer house with weight
                     for (int i = 0; i < VampirismConfig.COMMON.villageHunterTrainerWeight.get(); i++) {
                         pattern.templates.add(piece);
@@ -171,14 +197,12 @@ public class VanillaStructureModifications {
     }
 
     private static void addTotem(@NotNull RegistryAccess reg, @NotNull Map<ResourceLocation, VanillaStructureModifications.BiomeType> pools) {
-        StructureProcessor factionProcessor = new RandomStructureProcessor(ImmutableList.of(new RandomBlockStateRule(new RandomBlockMatchTest(ModBlocks.TOTEM_TOP.get(), (VampirismConfig.COMMON.villageTotemFactionChance.get()).floatValue()), AlwaysTrueTest.INSTANCE, ModBlocks.TOTEM_TOP.get().defaultBlockState(), TotemTopBlock.getBlocks().stream().filter((totemx) -> totemx != ModBlocks.TOTEM_TOP.get() && !totemx.isCrafted()).map(Block::defaultBlockState).collect(Collectors.toList()))));
-        StructureProcessor biomeTopBlockProcessor = new BiomeTopBlockProcessor(Blocks.DIRT.defaultBlockState());
-        Holder<StructureProcessorList> TOTEM_FACTION_PROCESSOR = registerStructureProcessor("totem_faction", ImmutableList.of(factionProcessor, biomeTopBlockProcessor));
+        ResourceKey<StructureProcessorList> TOTEM_FACTION_PROCESSOR = ResourceKey.create(Registries.PROCESSOR_LIST, new ResourceLocation(REFERENCE.MODID, "totem_faction"));
 
 
         StructurePoolElement totem = singleJigsawPiece("village/totem", TOTEM_FACTION_PROCESSOR);
 
-        reg.registry(BuiltinRegistries.TEMPLATE_POOL.key()).ifPresent((patternRegistry) -> pools.forEach((pool, type) -> {
+        reg.registry(Registries.TEMPLATE_POOL).ifPresent((patternRegistry) -> pools.forEach((pool, type) -> {
             // get the pool if present
             patternRegistry.getOptional(pool).ifPresent((pattern) -> {
                 // add totem with weight
@@ -195,26 +219,22 @@ public class VanillaStructureModifications {
         }));
     }
 
-    private static @NotNull Holder<StructureProcessorList> registerStructureProcessor(@NotNull String pId, @NotNull ImmutableList<StructureProcessor> pProcessors) {
-        ResourceLocation resourcelocation = new ResourceLocation(REFERENCE.MODID, pId);
-        StructureProcessorList structureprocessorlist = new StructureProcessorList(pProcessors);
-        return BuiltinRegistries.register(BuiltinRegistries.PROCESSOR_LIST, resourcelocation, structureprocessorlist);
-    }
-
     private static SinglePoolElement singleJigsawPiece(@NotNull String path) {
-        return singleJigsawPiece(path, ProcessorLists.EMPTY);
+        return singleJigsawPiece(path, ProcessorListsAccessor.getEmpty());
     }
 
-    private static SinglePoolElement singleJigsawPiece(@NotNull String path, @NotNull Holder<StructureProcessorList> processors) {
-        return SinglePoolElement.single("vampirism:" + path, processors).apply(StructureTemplatePool.Projection.RIGID);
+    private static SinglePoolElement singleJigsawPiece(@NotNull String path, @NotNull ResourceKey<StructureProcessorList> processors) {
+        var holder = VanillaRegistries.createLookup().lookupOrThrow(Registries.PROCESSOR_LIST).getOrThrow(processors);
+        return SinglePoolElement.single("vampirism:" + path, holder).apply(StructureTemplatePool.Projection.RIGID);
     }
 
     private static @NotNull Function<StructureTemplatePool.Projection, SinglePoolElement> singleJigsawPieceFunction(@NotNull String path) {
-        return singleJigsawPieceFunction(path, ProcessorLists.EMPTY);
+        return singleJigsawPieceFunction(path, ProcessorListsAccessor.getEmpty());
     }
 
-    private static @NotNull Function<StructureTemplatePool.Projection, SinglePoolElement> singleJigsawPieceFunction(@NotNull String path, @NotNull Holder<StructureProcessorList> processors) {
-        return SinglePoolElement.single("vampirism:" + path, processors);
+    private static @NotNull Function<StructureTemplatePool.Projection, SinglePoolElement> singleJigsawPieceFunction(@NotNull String path, @NotNull ResourceKey<StructureProcessorList> processors) {
+        var holder = VanillaRegistries.createLookup().lookupOrThrow(Registries.PROCESSOR_LIST).getOrThrow(processors);
+        return SinglePoolElement.single("vampirism:" + path, holder);
     }
 
     private static @NotNull String singleJigsawString(String resourceLocation) {

@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 public class GarlicItem extends Item implements IPlantable, IFactionExclusiveItem {
 
     public GarlicItem() {
-        super(new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties());
     }
 
     @Nullable

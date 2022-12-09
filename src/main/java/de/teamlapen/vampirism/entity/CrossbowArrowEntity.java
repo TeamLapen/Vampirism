@@ -57,11 +57,11 @@ public class CrossbowArrowEntity extends AbstractArrow implements IEntityCrossbo
         return arrowStack.getItem() instanceof CrossbowArrowItem ? ((CrossbowArrowItem) arrowStack.getItem()).getType() : CrossbowArrowItem.EnumArrowType.NORMAL;
     }
 
-    @NotNull
+    /*@NotNull //TODO 1.19 recheck
     @Override
     public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
-    }
+    }*/
 
     public @NotNull RandomSource getRNG() {
         return this.random;

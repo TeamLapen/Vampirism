@@ -15,6 +15,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -41,7 +42,7 @@ import java.util.List;
 /**
  * Tileentity container that can store liquids.
  */
-public class BloodContainerBlock extends VampirismBlockContainer {
+public class BloodContainerBlock extends VampirismBlockContainer implements CreativeModeTab.DisplayItemsGenerator {
     protected static final VoxelShape containerShape = Block.box(2, 0, 2, 14, 16, 14);
     private final static Logger LOGGER = LogManager.getLogger();
 
@@ -84,12 +85,13 @@ public class BloodContainerBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public void fillItemCategory(@NotNull CreativeModeTab group, @NotNull NonNullList<ItemStack> items) {
-        super.fillItemCategory(group, items);
+    public void accept(FeatureFlagSet p_259204_, CreativeModeTab.Output p_259752_, boolean p_260123_) {
         ItemStack stack = new ItemStack(this, 1);
+        p_259752_.accept(stack);
+        stack = stack.copy();
         FluidStack fluid = new FluidStack(ModFluids.BLOOD.get(), BloodContainerBlockEntity.CAPACITY);
         stack.addTagElement("fluid", fluid.writeToNBT(new CompoundTag()));
-        items.add(stack);
+        p_259752_.accept(stack);
     }
 
     @NotNull

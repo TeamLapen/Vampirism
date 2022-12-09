@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.entity.ISundamageRegistry;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -68,13 +69,13 @@ public class SundamageRegistry implements ISundamageRegistry {
         List<? extends String> negative = VampirismConfig.SERVER.sundamageDimensionsOverrideNegative.get();
         for (String s : negative) {
             ResourceLocation id = new ResourceLocation(s); //Should be safe because config validates values?
-            ResourceKey<Level> key = ResourceKey.create(Registry.DIMENSION_REGISTRY, id);
+            ResourceKey<Level> key = ResourceKey.create(Registries.DIMENSION, id);
             sundamageConfiguredDims.put(key, false);
         }
         List<? extends String> positive = VampirismConfig.SERVER.sundamageDimensionsOverridePositive.get();
         for (String s : positive) {
             ResourceLocation id = new ResourceLocation(s); //Should be safe because config validates values?
-            ResourceKey<Level> key = ResourceKey.create(Registry.DIMENSION_REGISTRY, id);
+            ResourceKey<Level> key = ResourceKey.create(Registries.DIMENSION, id);
             sundamageConfiguredDims.put(key, true);
         }
 

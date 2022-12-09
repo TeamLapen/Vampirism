@@ -52,14 +52,15 @@ import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.biome.OverworldModifications;
 import de.teamlapen.vampirism.world.gen.VanillaStructureModifications;
 import net.minecraft.ChatFormatting;
-import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.data.PackOutput;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -75,6 +76,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Main class for Vampirism
@@ -85,13 +87,6 @@ public class VampirismMod {
     private static final Logger LOGGER = LogManager.getLogger();
 
     public static final AbstractPacketDispatcher dispatcher = new ModPacketDispatcher();
-    public static final CreativeModeTab creativeTab = new CreativeModeTab(REFERENCE.MODID) {
-        @NotNull
-        @Override
-        public ItemStack makeIcon() {
-            return new ItemStack(ModItems.VAMPIRE_FANG.get());
-        }
-    };
     public static VampirismMod instance;
     public static final IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
     public static boolean inDev = false;
@@ -140,8 +135,7 @@ public class VampirismMod {
         if (OptifineHandler.isOptifineLoaded()) {
             LOGGER.warn("Using Optifine. Expect visual glitches and reduces blood vision functionality if using shaders.");
         }
-        VanillaStructureModifications.createJigsawPool();
-
+        VanillaStructureModifications.setup();
     }
 
     public VersionChecker.VersionInfo getVersionInfo() {
@@ -203,18 +197,22 @@ public class VampirismMod {
 
     private void gatherData(final @NotNull GatherDataEvent event) {
         registryManager.onGatherData(event);
+
         DataGenerator gen = event.getGenerator();
+        PackOutput packOutput = gen.getPackOutput();
+        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+        ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
 
         ModBlockFamilies.init();
-        TagGenerator.register(event, gen);
-        gen.addProvider(event.includeServer(), new LootTablesGenerator(gen));
-        gen.addProvider(event.includeServer(), new AdvancementGenerator(gen));
-        gen.addProvider(event.includeServer(), new RecipesGenerator(gen));
-        gen.addProvider(event.includeServer(), new SkillNodeGenerator(gen));
+        TagGenerator.register(gen, event, packOutput, lookupProvider, existingFileHelper);
+        gen.addProvider(event.includeServer(), new LootTablesGenerator(packOutput));
+        gen.addProvider(event.includeServer(), new AdvancementGenerator(packOutput, lookupProvider, existingFileHelper));
+        gen.addProvider(event.includeServer(), new RecipesGenerator(packOutput));
+        gen.addProvider(event.includeServer(), new ModSkillNodeProvider(packOutput));
         BiomeGenerator.register(event, gen);
 
-        gen.addProvider(event.includeClient(), new BlockStateGenerator(event.getGenerator(), event.getExistingFileHelper()));
-        gen.addProvider(event.includeClient(), new ItemModelGenerator(event.getGenerator(), event.getExistingFileHelper()));
+        gen.addProvider(event.includeClient(), new BlockStateGenerator(gen, event.getExistingFileHelper()));
+        gen.addProvider(event.includeClient(), new ItemModelGenerator(gen, event.getExistingFileHelper()));
     }
 
     private void loadComplete(final @NotNull FMLLoadCompleteEvent event) {
@@ -294,7 +292,7 @@ public class VampirismMod {
         VampireBookManager.getInstance().init();
         ModEntitySelectors.registerSelectors();
         event.enqueueWork(TerraBlenderCompat::registerBiomeProviderIfPresentUnsafe);
-        VanillaStructureModifications.addVillageStructures(BuiltinRegistries.ACCESS);
+        VanillaStructureModifications.addVillageStructures(RegistryAccess.EMPTY);
 
     }
 

@@ -261,11 +261,11 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         return Optional.ofNullable(interactingPlayer);
     }
 
-    @NotNull
+    /*@NotNull //TODO 1.19 recheck
     @Override
     public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
-    }
+    }*/
 
     @Override
     public @NotNull Optional<IMinionInventory> getInventory() {

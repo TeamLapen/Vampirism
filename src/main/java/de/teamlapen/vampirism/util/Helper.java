@@ -26,6 +26,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.DoubleTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceKey;
@@ -218,7 +219,7 @@ public class Helper {
     }
 
     public static ResourceLocation getBiomeId(@NotNull CommonLevelAccessor world, @NotNull Holder<Biome> biome) {
-        return biome.unwrap().map(ResourceKey::location, b -> world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getKey(b));
+        return biome.unwrap().map(ResourceKey::location, b -> world.registryAccess().registryOrThrow(Registries.BIOME).getKey(b));
     }
 
     /**

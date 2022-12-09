@@ -9,8 +9,8 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
-import net.minecraft.world.level.block.WoodButtonBlock;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.client.model.generators.*;
@@ -22,7 +22,6 @@ import java.util.function.Consumer;
 
 
 public class BlockStateGenerator extends BlockStateProvider {
-
 
     public BlockStateGenerator(@NotNull DataGenerator gen, @NotNull ExistingFileHelper exFileHelper) {
         super(gen, REFERENCE.MODID, exFileHelper);
@@ -327,32 +326,32 @@ public class BlockStateGenerator extends BlockStateProvider {
         ModelFile button_pressed = models().withExistingParent("block/" + id.getPath() + "_pressed", new ResourceLocation("block/button_pressed")).texture("texture", texture.getPath());
         ModelFile button_inventory = models().withExistingParent("block/" + id.getPath() + "_inventory", new ResourceLocation("block/button_inventory")).texture("texture", texture.getPath());
         getVariantBuilder(block)
-                .partialState().with(WoodButtonBlock.FACE, AttachFace.CEILING).with(WoodButtonBlock.FACING, Direction.EAST).with(WoodButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(270).rotationX(180).addModel()
-                .partialState().with(WoodButtonBlock.FACE, AttachFace.CEILING).with(WoodButtonBlock.FACING, Direction.EAST).with(WoodButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationY(270).rotationX(180).addModel()
-                .partialState().with(WoodButtonBlock.FACE, AttachFace.CEILING).with(WoodButtonBlock.FACING, Direction.NORTH).with(WoodButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(180).rotationX(180).addModel()
-                .partialState().with(WoodButtonBlock.FACE, AttachFace.CEILING).with(WoodButtonBlock.FACING, Direction.NORTH).with(WoodButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationY(180).rotationX(180).addModel()
-                .partialState().with(WoodButtonBlock.FACE, AttachFace.CEILING).with(WoodButtonBlock.FACING, Direction.SOUTH).with(WoodButtonBlock.POWERED, false).modelForState().modelFile(button).rotationX(180).addModel()
-                .partialState().with(WoodButtonBlock.FACE, AttachFace.CEILING).with(WoodButtonBlock.FACING, Direction.SOUTH).with(WoodButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationX(180).addModel()
-                .partialState().with(WoodButtonBlock.FACE, AttachFace.CEILING).with(WoodButtonBlock.FACING, Direction.WEST).with(WoodButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(90).rotationX(180).addModel()
-                .partialState().with(WoodButtonBlock.FACE, AttachFace.CEILING).with(WoodButtonBlock.FACING, Direction.WEST).with(WoodButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationX(90).rotationX(180).addModel()
+                .partialState().with(ButtonBlock.FACE, AttachFace.CEILING).with(ButtonBlock.FACING, Direction.EAST).with(ButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(270).rotationX(180).addModel()
+                .partialState().with(ButtonBlock.FACE, AttachFace.CEILING).with(ButtonBlock.FACING, Direction.EAST).with(ButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationY(270).rotationX(180).addModel()
+                .partialState().with(ButtonBlock.FACE, AttachFace.CEILING).with(ButtonBlock.FACING, Direction.NORTH).with(ButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(180).rotationX(180).addModel()
+                .partialState().with(ButtonBlock.FACE, AttachFace.CEILING).with(ButtonBlock.FACING, Direction.NORTH).with(ButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationY(180).rotationX(180).addModel()
+                .partialState().with(ButtonBlock.FACE, AttachFace.CEILING).with(ButtonBlock.FACING, Direction.SOUTH).with(ButtonBlock.POWERED, false).modelForState().modelFile(button).rotationX(180).addModel()
+                .partialState().with(ButtonBlock.FACE, AttachFace.CEILING).with(ButtonBlock.FACING, Direction.SOUTH).with(ButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationX(180).addModel()
+                .partialState().with(ButtonBlock.FACE, AttachFace.CEILING).with(ButtonBlock.FACING, Direction.WEST).with(ButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(90).rotationX(180).addModel()
+                .partialState().with(ButtonBlock.FACE, AttachFace.CEILING).with(ButtonBlock.FACING, Direction.WEST).with(ButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationX(90).rotationX(180).addModel()
 
-                .partialState().with(WoodButtonBlock.FACE, AttachFace.FLOOR).with(WoodButtonBlock.FACING, Direction.EAST).with(WoodButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(90).addModel()
-                .partialState().with(WoodButtonBlock.FACE, AttachFace.FLOOR).with(WoodButtonBlock.FACING, Direction.EAST).with(WoodButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationY(90).addModel()
-                .partialState().with(WoodButtonBlock.FACE, AttachFace.FLOOR).with(WoodButtonBlock.FACING, Direction.NORTH).with(WoodButtonBlock.POWERED, false).modelForState().modelFile(button).addModel()
-                .partialState().with(WoodButtonBlock.FACE, AttachFace.FLOOR).with(WoodButtonBlock.FACING, Direction.NORTH).with(WoodButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).addModel()
-                .partialState().with(WoodButtonBlock.FACE, AttachFace.FLOOR).with(WoodButtonBlock.FACING, Direction.SOUTH).with(WoodButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(180).addModel()
-                .partialState().with(WoodButtonBlock.FACE, AttachFace.FLOOR).with(WoodButtonBlock.FACING, Direction.SOUTH).with(WoodButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationY(180).addModel()
-                .partialState().with(WoodButtonBlock.FACE, AttachFace.FLOOR).with(WoodButtonBlock.FACING, Direction.WEST).with(WoodButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(270).addModel()
-                .partialState().with(WoodButtonBlock.FACE, AttachFace.FLOOR).with(WoodButtonBlock.FACING, Direction.WEST).with(WoodButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationX(270).addModel()
+                .partialState().with(ButtonBlock.FACE, AttachFace.FLOOR).with(ButtonBlock.FACING, Direction.EAST).with(ButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(90).addModel()
+                .partialState().with(ButtonBlock.FACE, AttachFace.FLOOR).with(ButtonBlock.FACING, Direction.EAST).with(ButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationY(90).addModel()
+                .partialState().with(ButtonBlock.FACE, AttachFace.FLOOR).with(ButtonBlock.FACING, Direction.NORTH).with(ButtonBlock.POWERED, false).modelForState().modelFile(button).addModel()
+                .partialState().with(ButtonBlock.FACE, AttachFace.FLOOR).with(ButtonBlock.FACING, Direction.NORTH).with(ButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).addModel()
+                .partialState().with(ButtonBlock.FACE, AttachFace.FLOOR).with(ButtonBlock.FACING, Direction.SOUTH).with(ButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(180).addModel()
+                .partialState().with(ButtonBlock.FACE, AttachFace.FLOOR).with(ButtonBlock.FACING, Direction.SOUTH).with(ButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationY(180).addModel()
+                .partialState().with(ButtonBlock.FACE, AttachFace.FLOOR).with(ButtonBlock.FACING, Direction.WEST).with(ButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(270).addModel()
+                .partialState().with(ButtonBlock.FACE, AttachFace.FLOOR).with(ButtonBlock.FACING, Direction.WEST).with(ButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationX(270).addModel()
 
-                .partialState().with(WoodButtonBlock.FACE, AttachFace.WALL).with(WoodButtonBlock.FACING, Direction.EAST).with(WoodButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(90).rotationX(90).uvLock(true).addModel()
-                .partialState().with(WoodButtonBlock.FACE, AttachFace.WALL).with(WoodButtonBlock.FACING, Direction.EAST).with(WoodButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationY(90).rotationX(90).uvLock(true).addModel()
-                .partialState().with(WoodButtonBlock.FACE, AttachFace.WALL).with(WoodButtonBlock.FACING, Direction.NORTH).with(WoodButtonBlock.POWERED, false).modelForState().modelFile(button).rotationX(90).uvLock(true).addModel()
-                .partialState().with(WoodButtonBlock.FACE, AttachFace.WALL).with(WoodButtonBlock.FACING, Direction.NORTH).with(WoodButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationX(90).uvLock(true).addModel()
-                .partialState().with(WoodButtonBlock.FACE, AttachFace.WALL).with(WoodButtonBlock.FACING, Direction.SOUTH).with(WoodButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(180).rotationX(90).uvLock(true).addModel()
-                .partialState().with(WoodButtonBlock.FACE, AttachFace.WALL).with(WoodButtonBlock.FACING, Direction.SOUTH).with(WoodButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationY(180).rotationX(90).uvLock(true).addModel()
-                .partialState().with(WoodButtonBlock.FACE, AttachFace.WALL).with(WoodButtonBlock.FACING, Direction.WEST).with(WoodButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(270).rotationX(90).uvLock(true).addModel()
-                .partialState().with(WoodButtonBlock.FACE, AttachFace.WALL).with(WoodButtonBlock.FACING, Direction.WEST).with(WoodButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationY(270).rotationX(90).uvLock(true).addModel()
+                .partialState().with(ButtonBlock.FACE, AttachFace.WALL).with(ButtonBlock.FACING, Direction.EAST).with(ButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(90).rotationX(90).uvLock(true).addModel()
+                .partialState().with(ButtonBlock.FACE, AttachFace.WALL).with(ButtonBlock.FACING, Direction.EAST).with(ButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationY(90).rotationX(90).uvLock(true).addModel()
+                .partialState().with(ButtonBlock.FACE, AttachFace.WALL).with(ButtonBlock.FACING, Direction.NORTH).with(ButtonBlock.POWERED, false).modelForState().modelFile(button).rotationX(90).uvLock(true).addModel()
+                .partialState().with(ButtonBlock.FACE, AttachFace.WALL).with(ButtonBlock.FACING, Direction.NORTH).with(ButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationX(90).uvLock(true).addModel()
+                .partialState().with(ButtonBlock.FACE, AttachFace.WALL).with(ButtonBlock.FACING, Direction.SOUTH).with(ButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(180).rotationX(90).uvLock(true).addModel()
+                .partialState().with(ButtonBlock.FACE, AttachFace.WALL).with(ButtonBlock.FACING, Direction.SOUTH).with(ButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationY(180).rotationX(90).uvLock(true).addModel()
+                .partialState().with(ButtonBlock.FACE, AttachFace.WALL).with(ButtonBlock.FACING, Direction.WEST).with(ButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(270).rotationX(90).uvLock(true).addModel()
+                .partialState().with(ButtonBlock.FACE, AttachFace.WALL).with(ButtonBlock.FACING, Direction.WEST).with(ButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationY(270).rotationX(90).uvLock(true).addModel()
         ;
     }
 

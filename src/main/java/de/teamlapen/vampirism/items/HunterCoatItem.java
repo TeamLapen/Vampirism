@@ -50,7 +50,7 @@ public class HunterCoatItem extends VampirismHunterArmorItem implements IItemWit
     private final @NotNull TIER tier;
 
     public HunterCoatItem(@NotNull EquipmentSlot equipmentSlotIn, @NotNull ArmorMaterial.Tiered material) {
-        super(material, equipmentSlotIn, new Properties().tab(VampirismMod.creativeTab), new HashMap<>());
+        super(material, equipmentSlotIn, new Properties(), new HashMap<>());
         this.tier = material.getTier();
     }
 

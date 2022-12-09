@@ -14,6 +14,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
@@ -21,9 +22,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.List;
 
-public class VampireBookItem extends Item {
+public class VampireBookItem extends Item implements CreativeModeTab.DisplayItemsGenerator {
 
     public static boolean validBookTagContents(@NotNull CompoundTag nbt) {
         if (!WritableBookItem.makeSureTagIsValid(nbt)) {
@@ -37,7 +39,7 @@ public class VampireBookItem extends Item {
     }
 
     public VampireBookItem() {
-        super(new Properties().rarity(Rarity.UNCOMMON).stacksTo(1).tab(VampirismMod.creativeTab));
+        super(new Properties().rarity(Rarity.UNCOMMON).stacksTo(1));
     }
 
     @Override
@@ -56,10 +58,16 @@ public class VampireBookItem extends Item {
     }
 
     @Override
-    public void fillItemCategory(@NotNull CreativeModeTab group, @NotNull NonNullList<ItemStack> items) {
-        if (this.allowedIn(group)) {
-            items.add(VampireBookManager.getInstance().getRandomBookItem(RandomSource.create()));
-        }
+    public void accept(@NotNull FeatureFlagSet featureFlagSet, CreativeModeTab.@NotNull Output output, boolean hasPermission) { //TODO 1.19 check if this is to much
+        Collection<ItemStack> items = VampireBookManager.getInstance().getAllBookItems();
+        items.stream().findAny().ifPresent(stack -> output.accept(stack, CreativeModeTab.TabVisibility.PARENT_TAB_ONLY));
+        items.forEach(stack -> output.accept(stack, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY));
+    }
+
+    public ItemStack contentInstance(VampireBookManager.BookContext context) {
+        ItemStack stack = getDefaultInstance();
+        stack.setTag(VampireBookItem.createTagFromContext(context));
+        return stack;
     }
 
     @NotNull

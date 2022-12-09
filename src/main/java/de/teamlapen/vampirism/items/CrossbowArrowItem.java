@@ -39,7 +39,7 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
 
 
     public CrossbowArrowItem(EnumArrowType type) {
-        super(new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties());
         this.type = type;
     }
 

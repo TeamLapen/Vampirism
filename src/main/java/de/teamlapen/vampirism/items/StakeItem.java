@@ -61,7 +61,7 @@ public class StakeItem extends VampirismSwordItem implements IVampireFinisher, I
     }
 
     public StakeItem() {
-        super(Tiers.WOOD, 1, -1, new Properties().tab(VampirismMod.creativeTab));
+        super(Tiers.WOOD, 1, -1, new Properties());
     }
 
     @Nullable

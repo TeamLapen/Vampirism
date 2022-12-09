@@ -47,11 +47,11 @@ public class ThrowableItemEntity extends ThrowableProjectile implements ItemSupp
         }
     }
 
-    @NotNull
+    /*@NotNull //TODO 1.19 recheck
     @Override
     public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
-    }
+    }*/
 
     /**
      * @return Itemstack represented by this entity. Corresponding item is instance of {@link IVampirismThrowableItem}

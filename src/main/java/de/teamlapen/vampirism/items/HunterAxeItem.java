@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.util.ToolMaterial;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -24,7 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class HunterAxeItem extends VampirismHunterWeaponItem implements IItemWithTier {
+public class HunterAxeItem extends VampirismHunterWeaponItem implements IItemWithTier, CreativeModeTab.DisplayItemsGenerator {
 
     public static final ToolMaterial.Tiered NORMAL = new ToolMaterial.Tiered(TIER.NORMAL,2, 250, 3.6f, 7.0F, 14, () -> Ingredient.of(Tags.Items.INGOTS_IRON));
     public static final ToolMaterial.Tiered ENHANCED = new ToolMaterial.Tiered(TIER.ENHANCED,2, 1561, 3.6f, 7.0F, 14, () -> Ingredient.of(Tags.Items.GEMS_DIAMOND));
@@ -33,7 +34,7 @@ public class HunterAxeItem extends VampirismHunterWeaponItem implements IItemWit
     private final TIER tier;
 
     public HunterAxeItem(ToolMaterial.Tiered material) {
-        super(material, 3, -2.9f, new Properties().tab(VampirismMod.creativeTab));
+        super(material, 3, -2.9f, new Properties());
         this.tier = material.getTier();
     }
 
@@ -46,10 +47,9 @@ public class HunterAxeItem extends VampirismHunterWeaponItem implements IItemWit
     }
 
     @Override
-    public void fillItemCategory(@NotNull CreativeModeTab group, @NotNull NonNullList<ItemStack> items) {
-        if (this.allowedIn(group)) {
-            items.add(getEnchantedStack());
-        }
+    public void accept(FeatureFlagSet featureFlagSet, CreativeModeTab.Output output, boolean hasPermission) {
+        output.accept(getDefaultInstance());
+        output.accept(getEnchantedStack());
     }
 
     @Override

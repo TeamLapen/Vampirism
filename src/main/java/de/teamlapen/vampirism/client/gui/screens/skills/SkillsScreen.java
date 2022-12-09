@@ -27,6 +27,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.system.NonnullDefault;
@@ -99,11 +100,11 @@ public class SkillsScreen extends Screen {
         }
 
         if (this.backScreen != null) {
-            this.addRenderableWidget(new Button(guiLeft + 4, guiTop + 194, 80, 20, Component.translatable("gui.back"), (context) -> {
+            this.addRenderableWidget(new ExtendedButton(guiLeft + 4, guiTop + 194, 80, 20, Component.translatable("gui.back"), (context) -> {
                 this.minecraft.setScreen(this.backScreen);
             }));
         }
-        this.addRenderableWidget(new Button(guiLeft + 168, guiTop + 194, 80, 20, Component.translatable("gui.done"), (context) -> {
+        this.addRenderableWidget(new ExtendedButton(guiLeft + 168, guiTop + 194, 80, 20, Component.translatable("gui.done"), (context) -> {
             this.minecraft.setScreen(null);
         }));
         FactionPlayerHandler.getOpt(minecraft.player).ifPresent(fph -> {
@@ -111,18 +112,12 @@ public class SkillsScreen extends Screen {
 
                 boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
 
-                resetSkills = this.addRenderableWidget(new Button(guiLeft + 85, guiTop + 194, 80, 20, Component.translatable("text.vampirism.skill.resetall"), (context) -> {
+                resetSkills = this.addRenderableWidget(new ExtendedButton(guiLeft + 85, guiTop + 194, 80, 20, Component.translatable("text.vampirism.skill.resetall"), (context) -> {
                     VampirismMod.dispatcher.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.RESET_SKILLS));
                     InventoryHelper.removeItemFromInventory(factionPlayer.getRepresentingPlayer().getInventory(), new ItemStack(ModItems.OBLIVION_POTION.get())); //server syncs after the screen is closed
                     if ((factionPlayer.getLevel() < 2 || minecraft.player.getInventory().countItem(ModItems.OBLIVION_POTION.get()) <= 1) && !test) {
                         context.active = false;
-                    }
-                }, (button, stack, mouseX, mouseY) -> {
-                    if (button.active) {
-                        SkillsScreen.this.renderTooltip(stack, Component.translatable("text.vampirism.skills.reset_consume", ModItems.OBLIVION_POTION.get().getDescription()), mouseX, mouseY);
-                    } else {
-                        SkillsScreen.this.renderTooltip(stack, Component.translatable("text.vampirism.skills.reset_req", ModItems.OBLIVION_POTION.get().getDescription()), mouseX, mouseY);
-                    }
+                    } //TODO 1.19 add tooltip
                 }));
                 if ((factionPlayer.getLevel() < 2 || minecraft.player.getInventory().countItem(ModItems.OBLIVION_POTION.get()) <= 0) && !test) {
                     resetSkills.active = false;
@@ -267,7 +262,7 @@ public class SkillsScreen extends Screen {
                 VampirismMod.dispatcher.sendToServer(new ServerboundUnlockSkillPacket(RegUtil.id(selected)));
                 playSoundEffect(SoundEvents.PLAYER_LEVELUP, 0.7F);
             } else {
-                playSoundEffect(SoundEvents.NOTE_BLOCK_BASS, 0.5F);
+                playSoundEffect(SoundEvents.NOTE_BLOCK_BASS.get(), 0.5F);
             }
         }
     }

@@ -50,7 +50,7 @@ public class PureBloodItem extends Item {
     private final int level;
 
     public PureBloodItem(int level) {
-        super(new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties());
         this.level = level;
     }
 

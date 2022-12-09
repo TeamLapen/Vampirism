@@ -102,11 +102,11 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
         this.excludeShooter = true;
     }
 
-    @NotNull
+    /*@NotNull //TODO 1.19 recheck
     @Override
     public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
-    }
+    }*/
 
     @Override
     public float getPickRadius() {

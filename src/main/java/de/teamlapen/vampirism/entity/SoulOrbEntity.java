@@ -59,11 +59,11 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
         super(type, worldIn);
     }
 
-    @NotNull
+    /*@NotNull //TODO 1.19 recheck
     @Override
     public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
-    }
+    }*/
 
     public @NotNull VARIANT getVariant() {
         return VARIANT.valueOf(getEntityData().get(TYPE_PARAMETER));
