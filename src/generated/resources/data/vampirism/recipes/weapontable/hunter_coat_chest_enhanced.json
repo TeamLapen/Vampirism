@@ -1,6 +1,6 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
-  "category": "misc",
+  "category": "equipment",
   "key": {
     "W": {
       "item": "vampirism:vampire_fang"

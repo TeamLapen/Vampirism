@@ -1,6 +1,6 @@
 {
   "type": "vampirism:shapeless_crafting_weapontable",
-  "category": "misc",
+  "category": "equipment",
   "ingredients": [
     {
       "item": "vampirism:crossbow_arrow_normal"

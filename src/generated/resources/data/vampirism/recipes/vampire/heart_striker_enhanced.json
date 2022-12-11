@@ -1,6 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
+  "category": "equipment",
   "key": {
     "X": {
       "item": "vampirism:blood_infused_enhanced_iron_ingot"
