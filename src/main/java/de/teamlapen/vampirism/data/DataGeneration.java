@@ -32,7 +32,7 @@ public class DataGeneration {
         generator.addProvider(event.includeServer(), new AdvancementGenerator(packOutput, lookupProviderFuture, existingFileHelper));
         generator.addProvider(event.includeServer(), new RecipesGenerator(packOutput));
         generator.addProvider(event.includeServer(), new ModSkillNodeProvider(packOutput));
-//        BiomeModifierGenerator.register(event, generator, lookupProvider);
+//        BiomeModifierGenerator.register(event, generator, lookupProvider); //TODO 1.19 re-add when possible
         generator.addProvider(event.includeClient(), new BlockStateGenerator(generator, existingFileHelper));
         generator.addProvider(event.includeClient(), new ItemModelGenerator(generator, existingFileHelper));
     }

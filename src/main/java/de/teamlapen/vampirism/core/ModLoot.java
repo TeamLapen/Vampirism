@@ -41,13 +41,13 @@ public class ModLoot {
         GLOBAL_LOOT_MODIFIER.register(bus);
     }
 
-    public static <T> void registerLootFunctionTypes(Registry<LootItemFunctionType> vanillaRegistry) {
+    public static <T> void registerLootFunctionTypes(Registry<LootItemFunctionType> vanillaRegistry) { //TODO 1.19 revert to registry objects
         Registry.register(vanillaRegistry, "vampirism:add_book_nbt", ADD_BOOK_NBT);
         Registry.register(vanillaRegistry, "vampirism:set_item_blood_charge", SET_ITEM_BLOOD_CHARGE);
         Registry.register(vanillaRegistry, "vampirism:add_refinement_set", ADD_REFINEMENT_SET);
     }
 
-    public static <T> void registerLootConditionsTypes(Registry<LootItemConditionType> vanillaRegistry) {
+    public static <T> void registerLootConditionsTypes(Registry<LootItemConditionType> vanillaRegistry) { //TODO 1.19 revert to registry objects
         Registry.register(vanillaRegistry, "vampirism:with_stake", WITH_STAKE);
         Registry.register(vanillaRegistry, "vampirism:with_stake", ADJUSTABLE_LEVEL);
         Registry.register(vanillaRegistry, "vampirism:is_tent_spawner", IS_TENT_SPAWNER);

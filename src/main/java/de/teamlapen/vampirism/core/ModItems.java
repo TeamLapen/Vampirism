@@ -27,6 +27,8 @@ import net.minecraftforge.common.brewing.BrewingRecipe;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.MissingMappingsEvent;
@@ -41,6 +43,7 @@ import java.util.function.Supplier;
 /**
  * Handles all item registrations and reference.
  */
+@Mod.EventBusSubscriber(modid = REFERENCE.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 @SuppressWarnings("unused")
 public class ModItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, REFERENCE.MODID);
@@ -61,26 +64,26 @@ public class ModItems {
     public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_NORMAL = register("armor_of_swiftness_legs_normal", () -> new ArmorOfSwiftnessItem(EquipmentSlot.LEGS, ArmorOfSwiftnessItem.NORMAL));
     public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE = register("armor_of_swiftness_legs_ultimate", () -> new ArmorOfSwiftnessItem(EquipmentSlot.LEGS, ArmorOfSwiftnessItem.ULTIMATE));
 
-    public static final RegistryObject<SingleCrossbowItem> BASIC_CROSSBOW = register("basic_crossbow", () -> new SingleCrossbowItem(creativeTabProps().defaultDurability(465), 1,20, Tiers.WOOD));
-    public static final RegistryObject<DoubleCrossbowItem> BASIC_DOUBLE_CROSSBOW = register("basic_double_crossbow", () -> new DoubleCrossbowItem(creativeTabProps().durability(465),1,20, Tiers.WOOD));
-    public static final RegistryObject<TechCrossbowItem> BASIC_TECH_CROSSBOW = register("basic_tech_crossbow", () -> new TechCrossbowItem(creativeTabProps().durability(930),1.6F, 40, Tiers.DIAMOND));
+    public static final RegistryObject<SingleCrossbowItem> BASIC_CROSSBOW = register("basic_crossbow", () -> new SingleCrossbowItem(props().defaultDurability(465), 1,20, Tiers.WOOD));
+    public static final RegistryObject<DoubleCrossbowItem> BASIC_DOUBLE_CROSSBOW = register("basic_double_crossbow", () -> new DoubleCrossbowItem(props().durability(465),1,20, Tiers.WOOD));
+    public static final RegistryObject<TechCrossbowItem> BASIC_TECH_CROSSBOW = register("basic_tech_crossbow", () -> new TechCrossbowItem(props().durability(930),1.6F, 40, Tiers.DIAMOND));
 
     public static final RegistryObject<BloodBottleItem> BLOOD_BOTTLE = ITEMS.register("blood_bottle", BloodBottleItem::new);
     public static final RegistryObject<BucketItem> BLOOD_BUCKET = register("blood_bucket", CreativeModeTabs.TOOLS_AND_UTILITIES, () -> new BucketItem(ModFluids.BLOOD, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
-    public static final RegistryObject<Item> BLOOD_INFUSED_IRON_INGOT = register("blood_infused_iron_ingot", () -> new Item(creativeTabProps()));
-    public static final RegistryObject<Item> BLOOD_INFUSED_ENHANCED_IRON_INGOT = register("blood_infused_enhanced_iron_ingot", () -> new Item(creativeTabProps()));
+    public static final RegistryObject<Item> BLOOD_INFUSED_IRON_INGOT = register("blood_infused_iron_ingot", () -> new Item(props()));
+    public static final RegistryObject<Item> BLOOD_INFUSED_ENHANCED_IRON_INGOT = register("blood_infused_enhanced_iron_ingot", () -> new Item(props()));
 
     public static final RegistryObject<CrossbowArrowItem> CROSSBOW_ARROW_NORMAL = register("crossbow_arrow_normal", () -> new CrossbowArrowItem(CrossbowArrowItem.EnumArrowType.NORMAL));
     public static final RegistryObject<CrossbowArrowItem> CROSSBOW_ARROW_SPITFIRE = register("crossbow_arrow_spitfire", () -> new CrossbowArrowItem(CrossbowArrowItem.EnumArrowType.SPITFIRE));
     public static final RegistryObject<CrossbowArrowItem> CROSSBOW_ARROW_VAMPIRE_KILLER = register("crossbow_arrow_vampire_killer", () -> new CrossbowArrowItem(CrossbowArrowItem.EnumArrowType.VAMPIRE_KILLER));
     public static final RegistryObject<CrossbowArrowItem> CROSSBOW_ARROW_TELEPORT = register("crossbow_arrow_teleport", () -> new CrossbowArrowItem(CrossbowArrowItem.EnumArrowType.TELEPORT));
 
-    public static final RegistryObject<SingleCrossbowItem> ENHANCED_CROSSBOW = register("enhanced_crossbow", () -> new SingleCrossbowItem(creativeTabProps().durability(930), 1.5F, 15, Tiers.IRON));
-    public static final RegistryObject<DoubleCrossbowItem> ENHANCED_DOUBLE_CROSSBOW = register("enhanced_double_crossbow", () -> new DoubleCrossbowItem(creativeTabProps().durability(930),1.5F, 15, Tiers.IRON));
-    public static final RegistryObject<TechCrossbowItem> ENHANCED_TECH_CROSSBOW = register("enhanced_tech_crossbow", () -> new TechCrossbowItem(creativeTabProps().durability(1860), 1.7F, 30, Tiers.DIAMOND));
+    public static final RegistryObject<SingleCrossbowItem> ENHANCED_CROSSBOW = register("enhanced_crossbow", () -> new SingleCrossbowItem(props().durability(930), 1.5F, 15, Tiers.IRON));
+    public static final RegistryObject<DoubleCrossbowItem> ENHANCED_DOUBLE_CROSSBOW = register("enhanced_double_crossbow", () -> new DoubleCrossbowItem(props().durability(930),1.5F, 15, Tiers.IRON));
+    public static final RegistryObject<TechCrossbowItem> ENHANCED_TECH_CROSSBOW = register("enhanced_tech_crossbow", () -> new TechCrossbowItem(props().durability(1860), 1.7F, 30, Tiers.DIAMOND));
 
-    public static final RegistryObject<Item> GARLIC_DIFFUSER_CORE = register("garlic_diffuser_core", () -> new Item(creativeTabProps()));
-    public static final RegistryObject<Item> GARLIC_DIFFUSER_CORE_IMPROVED = register("garlic_diffuser_core_improved", () -> new Item(creativeTabProps()));
+    public static final RegistryObject<Item> GARLIC_DIFFUSER_CORE = register("garlic_diffuser_core", () -> new Item(props()));
+    public static final RegistryObject<Item> GARLIC_DIFFUSER_CORE_IMPROVED = register("garlic_diffuser_core_improved", () -> new Item(props()));
 
     public static final RegistryObject<HeartSeekerItem> HEART_SEEKER_ENHANCED = register("heart_seeker_enhanced", () -> new HeartSeekerItem(HeartSeekerItem.ENHANCED));
     public static final RegistryObject<HeartSeekerItem> HEART_SEEKER_NORMAL = register("heart_seeker_normal", () -> new HeartSeekerItem(HeartSeekerItem.NORMAL));
@@ -157,9 +160,9 @@ public class ModItems {
     public static final RegistryObject<PureBloodItem> PURE_BLOOD_3 = register("pure_blood_3", () -> new PureBloodItem(3));
     public static final RegistryObject<PureBloodItem> PURE_BLOOD_4 = register("pure_blood_4", () -> new PureBloodItem(4));
 
-    public static final RegistryObject<Item> PURIFIED_GARLIC = register("purified_garlic", () -> new Item(creativeTabProps()));
-    public static final RegistryObject<Item> PURE_SALT = register("pure_salt", () -> new Item(creativeTabProps()));
-    public static final RegistryObject<Item> SOUL_ORB_VAMPIRE = register("soul_orb_vampire", () -> new Item(creativeTabProps()));
+    public static final RegistryObject<Item> PURIFIED_GARLIC = register("purified_garlic", () -> new Item(props()));
+    public static final RegistryObject<Item> PURE_SALT = register("pure_salt", () -> new Item(props()));
+    public static final RegistryObject<Item> SOUL_ORB_VAMPIRE = register("soul_orb_vampire", () -> new Item(props()));
 
     public static final RegistryObject<StakeItem> STAKE = register("stake", StakeItem::new);
     public static final RegistryObject<Item> TECH_CROSSBOW_AMMO_PACKAGE = register("tech_crossbow_ammo_package", () -> new ArrowContainer(new Item.Properties(), CROSSBOW_ARROW_NORMAL,12) {
@@ -190,28 +193,28 @@ public class ModItems {
 
     public static final RegistryObject<UmbrellaItem> UMBRELLA = register("umbrella", UmbrellaItem::new);
 
-    public static final RegistryObject<Item> HUNTER_MINION_EQUIPMENT = register("hunter_minion_equipment", () -> new Item(creativeTabProps()));
+    public static final RegistryObject<Item> HUNTER_MINION_EQUIPMENT = register("hunter_minion_equipment", () -> new Item(props()));
     public static final RegistryObject<MinionUpgradeItem> HUNTER_MINION_UPGRADE_SIMPLE = register("hunter_minion_upgrade_simple", () -> new MinionUpgradeItem(1, 2, VReference.HUNTER_FACTION));
     public static final RegistryObject<MinionUpgradeItem> HUNTER_MINION_UPGRADE_ENHANCED = register("hunter_minion_upgrade_enhanced", () -> new MinionUpgradeItem(3, 4, VReference.HUNTER_FACTION));
     public static final RegistryObject<MinionUpgradeItem> HUNTER_MINION_UPGRADE_SPECIAL = register("hunter_minion_upgrade_special", () -> new MinionUpgradeItem(5, 6, VReference.HUNTER_FACTION));
     public static final RegistryObject<FeedingAdapterItem> FEEDING_ADAPTER = register("feeding_adapter", FeedingAdapterItem::new);
-    public static final RegistryObject<Item> VAMPIRE_MINION_BINDING = register("vampire_minion_binding", () -> new Item(creativeTabProps()));
+    public static final RegistryObject<Item> VAMPIRE_MINION_BINDING = register("vampire_minion_binding", () -> new Item(props()));
     public static final RegistryObject<MinionUpgradeItem> VAMPIRE_MINION_UPGRADE_SIMPLE = register("vampire_minion_upgrade_simple", () -> new MinionUpgradeItem(1, 2, VReference.VAMPIRE_FACTION));
     public static final RegistryObject<MinionUpgradeItem> VAMPIRE_MINION_UPGRADE_ENHANCED = register("vampire_minion_upgrade_enhanced", () -> new MinionUpgradeItem(3, 4, VReference.VAMPIRE_FACTION));
     public static final RegistryObject<MinionUpgradeItem> VAMPIRE_MINION_UPGRADE_SPECIAL = register("vampire_minion_upgrade_special", () -> new MinionUpgradeItem(5, 6, VReference.VAMPIRE_FACTION));
 
-    public static final RegistryObject<OblivionItem> OBLIVION_POTION = register("oblivion_potion", () -> new OblivionItem(creativeTabProps()));
+    public static final RegistryObject<OblivionItem> OBLIVION_POTION = register("oblivion_potion", () -> new OblivionItem(props()));
 
-    public static final RegistryObject<RefinementItem> AMULET = register("amulet", () -> new VampireRefinementItem(creativeTabProps(), IRefinementItem.AccessorySlotType.AMULET));
-    public static final RegistryObject<RefinementItem> RING = register("ring", () -> new VampireRefinementItem(creativeTabProps(), IRefinementItem.AccessorySlotType.RING));
-    public static final RegistryObject<RefinementItem> OBI_BELT = register("obi_belt", () -> new VampireRefinementItem(creativeTabProps(), IRefinementItem.AccessorySlotType.OBI_BELT));
+    public static final RegistryObject<RefinementItem> AMULET = register("amulet", () -> new VampireRefinementItem(props(), IRefinementItem.AccessorySlotType.AMULET));
+    public static final RegistryObject<RefinementItem> RING = register("ring", () -> new VampireRefinementItem(props(), IRefinementItem.AccessorySlotType.RING));
+    public static final RegistryObject<RefinementItem> OBI_BELT = register("obi_belt", () -> new VampireRefinementItem(props(), IRefinementItem.AccessorySlotType.OBI_BELT));
 
     public static final RegistryObject<VampireClothingItem> VAMPIRE_CLOTHING_CROWN = register("vampire_clothing_crown", () -> new VampireClothingItem(EquipmentSlot.HEAD));
     public static final RegistryObject<VampireClothingItem> VAMPIRE_CLOTHING_LEGS = register("vampire_clothing_legs", () -> new VampireClothingItem(EquipmentSlot.LEGS));
     public static final RegistryObject<VampireClothingItem> VAMPIRE_CLOTHING_BOOTS = register("vampire_clothing_boots", () -> new VampireClothingItem(EquipmentSlot.FEET));
     public static final RegistryObject<VampireClothingItem> VAMPIRE_CLOTHING_HAT = register("vampire_clothing_hat", () -> new VampireClothingItem(EquipmentSlot.HEAD));
 
-    public static final RegistryObject<Item> GARLIC_FINDER = register("garlic_finder", () -> new Item(creativeTabProps().rarity(Rarity.RARE)));
+    public static final RegistryObject<Item> GARLIC_FINDER = register("garlic_finder", () -> new Item(props().rarity(Rarity.RARE)));
 
     public static final RegistryObject<StandingAndWallBlockItem> ITEM_CANDELABRA = register("item_candelabra", () -> new StandingAndWallBlockItem(ModBlocks.CANDELABRA.get(), ModBlocks.CANDELABRA_WALL.get(), new Item.Properties(), Direction.DOWN));
     public static final RegistryObject<SignItem> DARK_SPRUCE_SIGN = register("dark_spruce_sign", () -> new SignItem((new Item.Properties()).stacksTo(16), ModBlocks.DARK_SPRUCE_SIGN.get(), ModBlocks.DARK_SPRUCE_WALL_SIGN.get()));
@@ -221,12 +224,12 @@ public class ModItems {
     public static final RegistryObject<CrucifixItem> CRUCIFIX_ENHANCED = register("crucifix_enhanced", () -> new CrucifixItem(IItemWithTier.TIER.ENHANCED));
     public static final RegistryObject<CrucifixItem> CRUCIFIX_ULTIMATE = register("crucifix_ultimate", () -> new CrucifixItem(IItemWithTier.TIER.ULTIMATE));
 
-    public static final RegistryObject<VampirismBoatItem> DARK_SPRUCE_BOAT = register("dark_spruce_boat", () -> new VampirismBoatItem(IVampirismBoat.BoatType.DARK_SPRUCE, false, creativeTabProps().stacksTo(1)));
-    public static final RegistryObject<VampirismBoatItem> CURSED_SPRUCE_BOAT = register("cursed_spruce_boat", () -> new VampirismBoatItem(IVampirismBoat.BoatType.CURSED_SPRUCE, false, creativeTabProps().stacksTo(1)));
-    public static final RegistryObject<VampirismBoatItem> DARK_SPRUCE_CHEST_BOAT = register("dark_spruce_chest_boat", () -> new VampirismBoatItem(IVampirismBoat.BoatType.DARK_SPRUCE, true, creativeTabProps().stacksTo(1)));
-    public static final RegistryObject<VampirismBoatItem> CURSED_SPRUCE_CHEST_BOAT = register("cursed_spruce_chest_boat", () -> new VampirismBoatItem(IVampirismBoat.BoatType.CURSED_SPRUCE, true, creativeTabProps().stacksTo(1)));
+    public static final RegistryObject<VampirismBoatItem> DARK_SPRUCE_BOAT = register("dark_spruce_boat", () -> new VampirismBoatItem(IVampirismBoat.BoatType.DARK_SPRUCE, false, props().stacksTo(1)));
+    public static final RegistryObject<VampirismBoatItem> CURSED_SPRUCE_BOAT = register("cursed_spruce_boat", () -> new VampirismBoatItem(IVampirismBoat.BoatType.CURSED_SPRUCE, false, props().stacksTo(1)));
+    public static final RegistryObject<VampirismBoatItem> DARK_SPRUCE_CHEST_BOAT = register("dark_spruce_chest_boat", () -> new VampirismBoatItem(IVampirismBoat.BoatType.DARK_SPRUCE, true, props().stacksTo(1)));
+    public static final RegistryObject<VampirismBoatItem> CURSED_SPRUCE_CHEST_BOAT = register("cursed_spruce_chest_boat", () -> new VampirismBoatItem(IVampirismBoat.BoatType.CURSED_SPRUCE, true, props().stacksTo(1)));
 
-    public static final RegistryObject<OilBottleItem> OIL_BOTTLE = register("oil_bottle", () -> new OilBottleItem(creativeTabProps().stacksTo(1)));
+    public static final RegistryObject<OilBottleItem> OIL_BOTTLE = register("oil_bottle", () -> new OilBottleItem(props().stacksTo(1)));
 
     static void registerCraftingRecipes() {
         // Brewing
@@ -279,10 +282,11 @@ public class ModItems {
         }
     }
 
-    private static Item.@NotNull Properties creativeTabProps() {
+    private static Item.@NotNull Properties props() {
         return new Item.Properties();
     }
 
+    @SubscribeEvent
     public static void registerCreativeTabItems(CreativeModeTabEvent.BuildContents event) {
         CREATIVE_TAB_ITEMS.forEach((tab, items) -> {
             if (event.getTab() == tab) {
@@ -291,6 +295,7 @@ public class ModItems {
         });
     }
 
+    @SubscribeEvent
     public static void registerCreativeTab(CreativeModeTabEvent.Register event) {
         VReference.VAMPIRISM_TAB = event.registerCreativeModeTab(new ResourceLocation(REFERENCE.MODID, "default"), builder -> {
             builder.title(Component.translatable("itemGroup.vampirism"))

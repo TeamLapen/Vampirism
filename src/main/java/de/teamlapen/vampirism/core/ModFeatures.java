@@ -45,7 +45,7 @@ public class ModFeatures {
         TREE_DECORATOR.register(bus);
     }
 
-    public static <T> void registerStructureTypes(Registry<StructureType<?>> vanillaRegistry) {
+    public static void registerStructureTypes(Registry<StructureType<?>> vanillaRegistry) {  //TODO 1.19 revert to registry objects
         Registry.register(vanillaRegistry, HUNTER_CAMP.location(), HUNTER_CAMP_TYPE);
     }
 

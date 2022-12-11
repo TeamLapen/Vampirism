@@ -85,13 +85,13 @@ public class VampirismFeatures {
         STRUCTURE_PROCESSOR_TYPES.register(ctx);
     }
 
-    public static <T> void registerStructureProcessorTypes(Registry<StructureProcessorType<?>> vanillaRegistry) {
+    public static void registerStructureProcessorTypes(Registry<StructureProcessorType<?>> vanillaRegistry) {  //TODO 1.19 revert to registry objects
         Registry.register(vanillaRegistry, "vampirism:random_selector", RANDOM_SELECTOR);
         Registry.register(vanillaRegistry, "vampirism:biome_based", BIOME_BASED);
 
     }
 
-    public static <T> void registerStructurePieceTypes(Registry<StructurePieceType> vanillaRegistry) {
+    public static void registerStructurePieceTypes(Registry<StructurePieceType> vanillaRegistry) {  //TODO 1.19 revert to registry objects
         Registry.register(vanillaRegistry, "vampirism:hunter_camp_fireplace", HUNTER_CAMP_FIREPLACE);
         Registry.register(vanillaRegistry, "vampirism:hunter_camp_tent", HUNTER_CAMP_TENT);
         Registry.register(vanillaRegistry, "vampirism:hunter_camp_craftingtable", HUNTER_CAMP_SPECIAL);
