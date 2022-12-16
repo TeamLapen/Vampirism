@@ -39,7 +39,7 @@ public class RefinementSetFunction extends LootItemConditionalFunction {
     @NotNull
     @Override
     public LootItemFunctionType getType() {
-        return ModLoot.ADD_REFINEMENT_SET;
+        return ModLoot.ADD_REFINEMENT_SET.get();
     }
 
     @NotNull

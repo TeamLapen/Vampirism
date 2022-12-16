@@ -45,7 +45,7 @@ public class FactionCondition implements LootItemCondition {
 
     @Override
     public @NotNull LootItemConditionType getType() {
-        return ModLoot.FACTION;
+        return ModLoot.FACTION.get();
     }
 
     @Override

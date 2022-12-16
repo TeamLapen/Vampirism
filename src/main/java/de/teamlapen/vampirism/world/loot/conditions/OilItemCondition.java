@@ -26,7 +26,7 @@ public class OilItemCondition implements LootItemCondition {
     @NotNull
     @Override
     public LootItemConditionType getType() {
-        return ModLoot.WITH_OIL_ITEM;
+        return ModLoot.WITH_OIL_ITEM.get();
     }
 
     @Override
