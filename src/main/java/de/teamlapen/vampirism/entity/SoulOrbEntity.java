@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -59,11 +60,11 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
         super(type, worldIn);
     }
 
-    /*@NotNull //TODO 1.19 recheck
+    @NotNull
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
-    }*/
+    }
 
     public @NotNull VARIANT getVariant() {
         return VARIANT.valueOf(getEntityData().get(TYPE_PARAMETER));

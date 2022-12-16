@@ -28,6 +28,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -261,11 +262,11 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         return Optional.ofNullable(interactingPlayer);
     }
 
-    /*@NotNull //TODO 1.19 recheck
+    @NotNull
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
-    }*/
+    }
 
     @Override
     public @NotNull Optional<IMinionInventory> getInventory() {
