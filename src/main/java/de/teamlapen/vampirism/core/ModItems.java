@@ -21,29 +21,29 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.common.brewing.BrewingRecipe;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.registries.RegistryObject;
 import org.apache.logging.log4j.LogManager;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * Handles all item registrations and reference.
  */
-@Mod.EventBusSubscriber(modid = REFERENCE.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 @SuppressWarnings("unused")
 public class ModItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, REFERENCE.MODID);
@@ -282,34 +282,20 @@ public class ModItems {
         }
     }
 
+    public static Set<ItemLike> getAllVampirismTabItems() {
+        return VAMPIRISM_TAB_ITEMS.stream().map(RegistryObject::get).collect(Collectors.toSet());
+    }
+
     private static Item.@NotNull Properties props() {
         return new Item.Properties();
     }
 
-    @SubscribeEvent
-    public static void registerCreativeTabItems(CreativeModeTabEvent.BuildContents event) {
+    @ApiStatus.Internal
+    public static void registerOtherCreativeTabItems(CreativeModeTabEvent.BuildContents event) {
         CREATIVE_TAB_ITEMS.forEach((tab, items) -> {
             if (event.getTab() == tab) {
                 items.forEach(item -> event.accept(item.get()));
             }
-        });
-    }
-
-    @SubscribeEvent
-    public static void registerCreativeTab(CreativeModeTabEvent.Register event) {
-        VReference.VAMPIRISM_TAB = event.registerCreativeModeTab(new ResourceLocation(REFERENCE.MODID, "default"), builder -> {
-            builder.title(Component.translatable("itemGroup.vampirism"))
-                    .icon(() ->  VAMPIRE_FANG.get().getDefaultInstance())
-                    .displayItems((featureFlags, output, hasPermission) -> {
-                        VAMPIRISM_TAB_ITEMS.forEach(supplier -> {
-                            Item item = supplier.get();
-                            if (item instanceof CreativeModeTab.DisplayItemsGenerator generator) {
-                                generator.accept(featureFlags, output, hasPermission);
-                            } else {
-                                output.accept(item);
-                            }
-                        });
-                    });
         });
     }
 

@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.fluids.BloodHelper;
+import de.teamlapen.vampirism.misc.VampirismCreativeTab;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -21,6 +22,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -32,12 +34,14 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Consumer;
+
 /**
  * Stores blood
  * Currently the only thing that can interact with the players bloodstats.
  * Can only store blood in {@link BloodBottleItem#capacity} tenth units.
  */
-public class BloodBottleItem extends Item implements IFactionExclusiveItem, CreativeModeTab.DisplayItemsGenerator {
+public class BloodBottleItem extends Item implements IFactionExclusiveItem, VampirismCreativeTab.CreativeTabItemProvider {
 
     public static final int AMOUNT = 9;
     private static final int MULTIPLIER = VReference.FOOD_TO_FLUID_BLOOD;
@@ -61,8 +65,9 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem, Crea
         BlockEntity t = world.getBlockEntity(pos);
         return t != null && t.getCapability(ForgeCapabilities.FLUID_HANDLER).isPresent();
     }
+
     @Override
-    public void accept(@NotNull FeatureFlagSet featureSet, CreativeModeTab.@NotNull Output output, boolean hasPermission) {
+    public void generateCreativeTab(@NotNull FeatureFlagSet featureSet, CreativeModeTab.@NotNull Output output, boolean hasPermission) {
         for (int i = 0; i < BloodBottleItem.AMOUNT; i++) {
             ItemStack stack = getDefaultInstance();
             stack.setDamageValue(i);

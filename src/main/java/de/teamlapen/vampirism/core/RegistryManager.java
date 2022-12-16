@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.core;
 
+import com.sun.jdi.VMOutOfMemoryException;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.entity.IVampirismBoat;
 import de.teamlapen.vampirism.entity.action.EntityActions;

@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.misc.VampirismCreativeTab;
 import de.teamlapen.vampirism.util.ToolMaterial;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
@@ -25,7 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class HunterAxeItem extends VampirismHunterWeaponItem implements IItemWithTier, CreativeModeTab.DisplayItemsGenerator {
+public class HunterAxeItem extends VampirismHunterWeaponItem implements IItemWithTier, VampirismCreativeTab.CreativeTabItemProvider {
 
     public static final ToolMaterial.Tiered NORMAL = new ToolMaterial.Tiered(TIER.NORMAL,2, 250, 3.6f, 7.0F, 14, () -> Ingredient.of(Tags.Items.INGOTS_IRON));
     public static final ToolMaterial.Tiered ENHANCED = new ToolMaterial.Tiered(TIER.ENHANCED,2, 1561, 3.6f, 7.0F, 14, () -> Ingredient.of(Tags.Items.GEMS_DIAMOND));
@@ -47,7 +48,7 @@ public class HunterAxeItem extends VampirismHunterWeaponItem implements IItemWit
     }
 
     @Override
-    public void accept(FeatureFlagSet featureFlagSet, CreativeModeTab.Output output, boolean hasPermission) {
+    public void generateCreativeTab(FeatureFlagSet featureFlagSet, CreativeModeTab.Output output, boolean hasPermission) {
         output.accept(getDefaultInstance());
         output.accept(getEnchantedStack());
     }

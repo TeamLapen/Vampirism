@@ -20,7 +20,6 @@ import de.teamlapen.vampirism.client.core.ClientRegistryHandler;
 import de.teamlapen.vampirism.config.BloodValues;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
-import de.teamlapen.vampirism.data.*;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.ModEntityEventHandler;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
@@ -49,19 +48,12 @@ import de.teamlapen.vampirism.recipes.ExtendedBrewingRecipeRegistry;
 import de.teamlapen.vampirism.sit.SitHandler;
 import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.util.*;
-import de.teamlapen.vampirism.world.biome.OverworldModifications;
 import de.teamlapen.vampirism.world.gen.VanillaStructureModifications;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.PackOutput;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -76,7 +68,6 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * Main class for Vampirism
@@ -130,6 +121,7 @@ public class VampirismMod {
 
         prepareAPI();
         RegistryManager.setupRegistries(modbus);
+        modbus.addListener(ModItems::registerOtherCreativeTabItems);
 
         if (OptifineHandler.isOptifineLoaded()) {
             LOGGER.warn("Using Optifine. Expect visual glitches and reduces blood vision functionality if using shaders.");

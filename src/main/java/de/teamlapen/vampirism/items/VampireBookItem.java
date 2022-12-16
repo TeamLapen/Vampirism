@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.misc.VampirismCreativeTab;
 import de.teamlapen.vampirism.network.ClientboundOpenVampireBookPacket;
 import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.ChatFormatting;
@@ -25,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.List;
 
-public class VampireBookItem extends Item implements CreativeModeTab.DisplayItemsGenerator {
+public class VampireBookItem extends Item implements VampirismCreativeTab.CreativeTabItemProvider {
 
     public static boolean validBookTagContents(@NotNull CompoundTag nbt) {
         if (!WritableBookItem.makeSureTagIsValid(nbt)) {
@@ -58,7 +59,7 @@ public class VampireBookItem extends Item implements CreativeModeTab.DisplayItem
     }
 
     @Override
-    public void accept(@NotNull FeatureFlagSet featureFlagSet, CreativeModeTab.@NotNull Output output, boolean hasPermission) { //TODO 1.19 check if this is to much
+    public void generateCreativeTab(FeatureFlagSet featureFlagSet, CreativeModeTab.Output output, boolean hasPermission) {
         Collection<ItemStack> items = VampireBookManager.getInstance().getAllBookItems();
         items.stream().findAny().ifPresent(stack -> output.accept(stack, CreativeModeTab.TabVisibility.PARENT_TAB_ONLY));
         items.forEach(stack -> output.accept(stack, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY));

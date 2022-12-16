@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.misc.VampirismCreativeTab;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -42,7 +43,7 @@ import java.util.List;
 /**
  * Tileentity container that can store liquids.
  */
-public class BloodContainerBlock extends VampirismBlockContainer implements CreativeModeTab.DisplayItemsGenerator {
+public class BloodContainerBlock extends VampirismBlockContainer implements VampirismCreativeTab.CreativeTabItemProvider {
     protected static final VoxelShape containerShape = Block.box(2, 0, 2, 14, 16, 14);
     private final static Logger LOGGER = LogManager.getLogger();
 
@@ -85,14 +86,15 @@ public class BloodContainerBlock extends VampirismBlockContainer implements Crea
     }
 
     @Override
-    public void accept(FeatureFlagSet p_259204_, CreativeModeTab.Output p_259752_, boolean p_260123_) {
+    public void generateCreativeTab(FeatureFlagSet featureFlagSet, CreativeModeTab.Output output, boolean hasPermission) {
         ItemStack stack = new ItemStack(this, 1);
-        p_259752_.accept(stack);
+        output.accept(stack);
         stack = stack.copy();
         FluidStack fluid = new FluidStack(ModFluids.BLOOD.get(), BloodContainerBlockEntity.CAPACITY);
         stack.addTagElement("fluid", fluid.writeToNBT(new CompoundTag()));
-        p_259752_.accept(stack);
+        output.accept(stack);
     }
+
 
     @NotNull
     @Override

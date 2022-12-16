@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.refinements.RefinementSet;
+import de.teamlapen.vampirism.misc.VampirismCreativeTab;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -34,7 +35,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-public abstract class RefinementItem extends Item implements IRefinementItem, CreativeModeTab.DisplayItemsGenerator {
+public abstract class RefinementItem extends Item implements IRefinementItem, VampirismCreativeTab.CreativeTabItemProvider {
 
     public static final int MAX_DAMAGE = 500;
     private static final RandomSource RANDOM = RandomSource.create();
@@ -133,7 +134,7 @@ public abstract class RefinementItem extends Item implements IRefinementItem, Cr
     }
 
     @Override
-    public void accept(@NotNull FeatureFlagSet featureFlagSet, CreativeModeTab.@NotNull Output output, boolean hasPermissions) { //TODO 1.19 check if this is to much
+    public void generateCreativeTab(FeatureFlagSet featureFlagSet, CreativeModeTab.Output output, boolean hasPermission) {
         ItemStack stack = getDefaultInstance();
         StreamSupport.stream(VampirismRegistries.REFINEMENT_SETS.get().spliterator(), false).filter(set ->  getExclusiveFaction(stack) == null || set.getFaction() == getExclusiveFaction(stack)).filter(set -> set.getSlotType().map(s -> s == getSlotType()).orElse(true)).map(set -> {
             ItemStack s = stack.copy();
