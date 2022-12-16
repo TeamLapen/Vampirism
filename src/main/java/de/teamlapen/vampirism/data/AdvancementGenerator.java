@@ -25,8 +25,8 @@ import java.util.function.Consumer;
 
 public class AdvancementGenerator extends AdvancementProvider {
 
-    public AdvancementGenerator(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider, ExistingFileHelper existingFileHelper) {
-        super(packOutput, lookupProvider, List.of(new VampirismAdvancements()), existingFileHelper);
+    public AdvancementGenerator(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(packOutput, lookupProvider, List.of(new VampirismAdvancements()));
     }
 
     private interface VampirismAdvancementSubProvider {

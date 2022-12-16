@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.world.gen.modifier.ExtendedAddSpawnsBiomeModifier;
 import net.minecraft.core.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -38,15 +39,15 @@ import java.util.Objects;
 
 public class BiomeModifierGenerator {
 
-    private final DataGenerator gen;
+    private final PackOutput packOutput;
     private final ExistingFileHelper exFileHelper;
     private final @NotNull RegistryOps<JsonElement> ops;
     private final @NotNull HolderLookup.RegistryLookup<Biome> biomes;
     private final @NotNull HolderLookup.RegistryLookup<PlacedFeature> placedFeatures;
     private final @NotNull HolderLookup.RegistryLookup<Structure> structures;
 
-    public BiomeModifierGenerator(DataGenerator gen, ExistingFileHelper exFileHelper, HolderLookup.Provider lookupProvider) {
-        this.gen = gen;
+    public BiomeModifierGenerator(PackOutput packOutput, ExistingFileHelper exFileHelper, HolderLookup.Provider lookupProvider) {
+        this.packOutput = packOutput;
         this.exFileHelper = exFileHelper;
         this.ops = RegistryOps.create(JsonOps.INSTANCE, lookupProvider);
         this.biomes = lookupProvider.lookupOrThrow(Registries.BIOME);
@@ -54,18 +55,18 @@ public class BiomeModifierGenerator {
         this.structures = lookupProvider.lookupOrThrow(Registries.STRUCTURE);
     }
 
-    public static void register(@NotNull GatherDataEvent event, @NotNull DataGenerator generator, HolderLookup.Provider lookupProvider) {
-        BiomeModifierGenerator biomeGenerator = new BiomeModifierGenerator(generator, event.getExistingFileHelper(), lookupProvider);
+    public static void register(@NotNull GatherDataEvent event, @NotNull DataGenerator generator, PackOutput packOutput, HolderLookup.Provider lookupProvider) {
+        BiomeModifierGenerator biomeGenerator = new BiomeModifierGenerator(packOutput, event.getExistingFileHelper(), lookupProvider);
         generator.addProvider(event.includeServer(), biomeGenerator.modifierGenerator());
         generator.addProvider(event.includeServer(), biomeGenerator.structureSetGenerator());
     }
 
     public @NotNull JsonCodecProvider<BiomeModifier> modifierGenerator() {
-        return JsonCodecProvider.forDatapackRegistry(this.gen, this.exFileHelper, REFERENCE.MODID, this.ops, ForgeRegistries.Keys.BIOME_MODIFIERS, getBiomeModifier());
+        return JsonCodecProvider.forDatapackRegistry(this.packOutput, this.exFileHelper, REFERENCE.MODID, this.ops, ForgeRegistries.Keys.BIOME_MODIFIERS, getBiomeModifier());
     }
 
     public @NotNull JsonCodecProvider<StructureSet> structureSetGenerator() {
-        return JsonCodecProvider.forDatapackRegistry(this.gen, this.exFileHelper, REFERENCE.MODID, this.ops, Registries.STRUCTURE_SET, getStructureSets());
+        return JsonCodecProvider.forDatapackRegistry(this.packOutput, this.exFileHelper, REFERENCE.MODID, this.ops, Registries.STRUCTURE_SET, getStructureSets());
     }
 
     private @NotNull Map<ResourceLocation, BiomeModifier> getBiomeModifier() {

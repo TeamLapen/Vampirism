@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
@@ -23,8 +24,8 @@ import java.util.function.Consumer;
 
 public class BlockStateGenerator extends BlockStateProvider {
 
-    public BlockStateGenerator(@NotNull DataGenerator gen, @NotNull ExistingFileHelper exFileHelper) {
-        super(gen, REFERENCE.MODID, exFileHelper);
+    public BlockStateGenerator(@NotNull PackOutput packOutput, @NotNull ExistingFileHelper exFileHelper) {
+        super(packOutput, REFERENCE.MODID, exFileHelper);
     }
 
     @Override

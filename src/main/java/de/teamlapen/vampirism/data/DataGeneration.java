@@ -29,11 +29,11 @@ public class DataGeneration {
         generator.addProvider(event.includeServer(), new DatapackBuiltinEntriesProvider(packOutput, ModRegistries::createLookup));
         TagGenerator.register(generator, event, packOutput, lookupProviderFuture, existingFileHelper);
         generator.addProvider(event.includeServer(), new LootTablesGenerator(packOutput));
-        generator.addProvider(event.includeServer(), new AdvancementGenerator(packOutput, lookupProviderFuture, existingFileHelper));
+        generator.addProvider(event.includeServer(), new AdvancementGenerator(packOutput, lookupProviderFuture));
         generator.addProvider(event.includeServer(), new RecipesGenerator(packOutput));
         generator.addProvider(event.includeServer(), new ModSkillNodeProvider(packOutput));
 //        BiomeModifierGenerator.register(event, generator, lookupProvider); //TODO 1.19 re-add when possible
-        generator.addProvider(event.includeClient(), new BlockStateGenerator(generator, existingFileHelper));
-        generator.addProvider(event.includeClient(), new ItemModelGenerator(generator, existingFileHelper));
+        generator.addProvider(event.includeClient(), new BlockStateGenerator(packOutput, existingFileHelper));
+        generator.addProvider(event.includeClient(), new ItemModelGenerator(packOutput, existingFileHelper));
     }
 }

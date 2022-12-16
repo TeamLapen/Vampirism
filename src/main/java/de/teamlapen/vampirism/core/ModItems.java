@@ -290,7 +290,7 @@ public class ModItems {
     public static void registerCreativeTabItems(CreativeModeTabEvent.BuildContents event) {
         CREATIVE_TAB_ITEMS.forEach((tab, items) -> {
             if (event.getTab() == tab) {
-                items.forEach(item -> event.registerSimple(tab, item.get()));
+                items.forEach(item -> event.accept(item.get()));
             }
         });
     }
