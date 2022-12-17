@@ -23,6 +23,7 @@ import de.teamlapen.vampirism.util.OilUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BlockModel;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.network.chat.Component;
@@ -67,31 +68,39 @@ public class ClientEventHandler {
     private final static Logger LOGGER = LogManager.getLogger();
 
 
-    static void onModelBakeEvent(@NotNull BakingCompleted event) {
+    static void onModelBakeRequest(ModelEvent.RegisterAdditional event){
+
+        for (int x = 0; x < BakedBloodContainerModel.FLUID_LEVELS; x++) {
+            event.register(new ResourceLocation(REFERENCE.MODID, "block/blood_container/blood_" + (x + 1)));
+            event.register(new ResourceLocation(REFERENCE.MODID, "block/blood_container/impure_blood_" + (x + 1)));
+        }
+
+        for (int x = 0; x < BakedAltarInspirationModel.FLUID_LEVELS; x++) {
+            event.register(new ResourceLocation(REFERENCE.MODID, "block/altar_inspiration/blood" + (x + 1)));
+        }
+
+        }
+    static void onModelBakeEvent(@NotNull ModelEvent.ModifyBakingResult event) {
         /*
          * Not really a clean solution but it works
-         * Bake each model, then replace the fluid texture with impure blood, then bake it again.
-         * Use {@link BakedBloodContainerModel} to render to appropriate one
+         * We have one model file for each fluid and fill level. It is requested to be loaded in {@link onModelBakeRequest}. Here we gather these and store them in {@link BakedBloodContainerModel} which is used to render to appropriate one
+         * Might be worth looking into Forge's {@link DynamicFluidContainerModel}
          */
-        /*try { TODO 1.19 readd
+        try {
             for (int x = 0; x < BakedBloodContainerModel.FLUID_LEVELS; x++) {
-                ResourceLocation loc = new ResourceLocation(REFERENCE.MODID, "block/blood_container/fluid_" + (x + 1));
-                UnbakedModel model = event.getModelBakery().getModel(loc);
-                AtlasSet.StitchResult s;
-                BakedBloodContainerModel.BLOOD_FLUID_MODELS[x] = model.bake(event.getModelBakery(), event.getModelBakery().getAtlasSet()::getSprite, BlockModelRotation.X0_Y0, loc);
-                if (model instanceof BlockModel) {
-                    //noinspection UnstableApiUsage
-                    ((BlockModel) model).textureMap.put("fluid", Either.left(ForgeHooksClient.getBlockMaterial(IClientFluidTypeExtensions.of(ModFluids.IMPURE_BLOOD.get()).getStillTexture())));
-                    BakedBloodContainerModel.IMPURE_BLOOD_FLUID_MODELS[x] = model.bake(event.getModelBakery(), event.getModelBakery().getAtlasSet()::getSprite, BlockModelRotation.X0_Y0, loc);
-                } else {
-                    LOGGER.error("Cannot apply impure blood texture to blood container model {}", model);
-                    BakedBloodContainerModel.IMPURE_BLOOD_FLUID_MODELS[x] = BakedBloodContainerModel.BLOOD_FLUID_MODELS[x];
-                }
+                ResourceLocation loc = new ResourceLocation(REFERENCE.MODID, "block/blood_container/blood_" + (x + 1));
+                ResourceLocation locImpure = new ResourceLocation(REFERENCE.MODID, "block/blood_container/impure_blood_" + (x + 1));
+
+                BakedBloodContainerModel.BLOOD_FLUID_MODELS[x] = event.getModels().get(loc);
+                BakedBloodContainerModel.IMPURE_BLOOD_FLUID_MODELS[x] = event.getModels().get(locImpure);
             }
             Map<ResourceLocation, BakedModel> registry = event.getModels();
             ArrayList<ResourceLocation> modelLocations = Lists.newArrayList();
 
             for (ResourceLocation modelLoc : registry.keySet()) {
+                if(modelLoc.getPath().contains("fluid")){
+                    LOGGER.info(modelLoc);
+                }
                 if (modelLoc.getNamespace().equals(REFERENCE.MODID) && modelLoc.getPath().equals(ModBlocks.BLOOD_CONTAINER.getId().getPath())) {
                     modelLocations.add(modelLoc);
                 }
@@ -108,13 +117,12 @@ public class ClientEventHandler {
             }
         } catch (Exception e) {
             LOGGER.error("Failed to load fluid models for blood container", e);
-        }*/
+        }
 
-        /*try { TODO 1.19 readd
+        try {
             for (int x = 0; x < BakedAltarInspirationModel.FLUID_LEVELS; x++) {
                 ResourceLocation loc = new ResourceLocation(REFERENCE.MODID, "block/altar_inspiration/blood" + (x + 1));
-                UnbakedModel model = event.getModelBakery().getModel(loc);
-                BakedAltarInspirationModel.FLUID_MODELS[x] = model.bake(event.getModelBakery(), event.getModelBakery().getAtlasSet()::getSprite, BlockModelRotation.X0_Y0, loc);
+                BakedAltarInspirationModel.FLUID_MODELS[x] = event.getModels().get(loc);
             }
             Map<ResourceLocation, BakedModel> registry = event.getModels();
             ArrayList<ResourceLocation> modelLocations = Lists.newArrayList();
@@ -125,8 +133,6 @@ public class ClientEventHandler {
                 }
             }
 
-            // replace the registered tank block variants with TankModelFactories
-
             BakedModel registeredModel;
             BakedModel newModel;
             for (ResourceLocation loc : modelLocations) {
@@ -136,7 +142,7 @@ public class ClientEventHandler {
             }
         } catch (Exception e) {
             LOGGER.error("Failed to load fluid models for altar inspiration", e);
-        }*/
+        }
     }
 
     @SubscribeEvent
