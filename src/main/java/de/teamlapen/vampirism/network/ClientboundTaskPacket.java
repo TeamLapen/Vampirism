@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 public record ClientboundTaskPacket(int containerId,
                                     Map<UUID, TaskManager.TaskWrapper> taskWrappers,
                                     Map<UUID, Set<UUID>> completableTasks,
-                                    Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements) implements IMessage {
+                                    Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements) implements IMessage.IClientBoundMessage {
 
     public static void encode(@NotNull ClientboundTaskPacket msg, @NotNull FriendlyByteBuf buffer) {
         buffer.writeVarInt(msg.containerId);

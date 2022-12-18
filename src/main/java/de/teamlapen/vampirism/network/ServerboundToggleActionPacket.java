@@ -31,7 +31,7 @@ import java.util.function.Supplier;
  * @param actionId the id of the action that was toggled
  * @param target   The target the player was looking at when activating the action.
  */
-public record ServerboundToggleActionPacket(ResourceLocation actionId, @Nullable Either<Integer, BlockPos> target) implements IMessage {
+public record ServerboundToggleActionPacket(ResourceLocation actionId, @Nullable Either<Integer, BlockPos> target) implements IMessage.IServerBoundMessage {
     private static final Logger LOGGER = LogManager.getLogger();
 
     public static @NotNull ServerboundToggleActionPacket createFromRaytrace(ResourceLocation action, @Nullable HitResult traceResult) {

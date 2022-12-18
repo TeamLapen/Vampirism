@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Supplier;
 
 
-public record ServerboundToggleMinionTaskLock(int minionID) implements IMessage {
+public record ServerboundToggleMinionTaskLock(int minionID) implements IMessage.IServerBoundMessage {
     static void encode(@NotNull ServerboundToggleMinionTaskLock msg, @NotNull FriendlyByteBuf buf) {
         buf.writeVarInt(msg.minionID);
     }

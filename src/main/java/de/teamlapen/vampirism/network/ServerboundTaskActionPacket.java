@@ -13,7 +13,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 public record ServerboundTaskActionPacket(UUID task, UUID entityId,
-                                          TaskMenu.TaskAction action) implements IMessage {
+                                          TaskMenu.TaskAction action) implements IMessage.IServerBoundMessage {
 
     static void encode(@NotNull ServerboundTaskActionPacket msg, @NotNull FriendlyByteBuf buf) {
         buf.writeUUID(msg.task);

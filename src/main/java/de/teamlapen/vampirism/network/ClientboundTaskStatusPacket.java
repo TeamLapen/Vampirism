@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 public record ClientboundTaskStatusPacket(Set<ITaskInstance> available,
                                           Set<UUID> completableTasks,
                                           Map<UUID, Map<ResourceLocation, Integer>> completedRequirements,
-                                          int containerId, UUID taskBoardId) implements IMessage {
+                                          int containerId, UUID taskBoardId) implements IMessage.IClientBoundMessage {
 
     static void encode(@NotNull ClientboundTaskStatusPacket msg, @NotNull FriendlyByteBuf buf) {
         buf.writeUtf(msg.taskBoardId.toString());

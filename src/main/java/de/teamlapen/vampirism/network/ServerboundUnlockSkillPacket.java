@@ -23,7 +23,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 
-public record ServerboundUnlockSkillPacket(ResourceLocation skillId) implements IMessage {
+public record ServerboundUnlockSkillPacket(ResourceLocation skillId) implements IMessage.IServerBoundMessage {
     private static final Logger LOGGER = LogManager.getLogger();
 
     static void encode(@NotNull ServerboundUnlockSkillPacket msg, @NotNull FriendlyByteBuf buf) {

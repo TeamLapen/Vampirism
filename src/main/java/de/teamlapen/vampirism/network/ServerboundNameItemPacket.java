@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Supplier;
 
 
-public record ServerboundNameItemPacket(String name) implements IMessage {
+public record ServerboundNameItemPacket(String name) implements IMessage.IServerBoundMessage {
     static void encode(@NotNull ServerboundNameItemPacket msg, @NotNull FriendlyByteBuf buf) {
         buf.writeUtf(msg.name);
     }

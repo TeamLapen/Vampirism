@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 
-public record ServerboundSelectMinionTaskPacket(int minionID, ResourceLocation taskID) implements IMessage {
+public record ServerboundSelectMinionTaskPacket(int minionID, ResourceLocation taskID) implements IMessage.IServerBoundMessage {
     public final static ResourceLocation RECALL = new ResourceLocation(REFERENCE.MODID, "recall");
     public final static ResourceLocation RESPAWN = new ResourceLocation(REFERENCE.MODID, "respawn");
     private static final Logger LOGGER = LogManager.getLogger();

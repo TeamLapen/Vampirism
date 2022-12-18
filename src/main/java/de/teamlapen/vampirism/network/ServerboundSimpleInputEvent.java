@@ -23,7 +23,7 @@ import java.util.function.Supplier;
 /**
  * Collection of simple input events that do not need any additional information
  */
-public record ServerboundSimpleInputEvent(Type type) implements IMessage {
+public record ServerboundSimpleInputEvent(Type type) implements IMessage.IServerBoundMessage {
 
     static void encode(@NotNull ServerboundSimpleInputEvent msg, @NotNull FriendlyByteBuf buf) {
         buf.writeEnum(msg.type);
@@ -61,7 +61,7 @@ public record ServerboundSimpleInputEvent(Type type) implements IMessage {
                         ((HunterBasicMenu) player.containerMenu).onLevelUpClicked();
                     }
                 }
-                case SHOW_MINION_CALL_SELECTION -> ClientboundRequestMinionSelectPacket.createRequestForPlayer(player, ClientboundRequestMinionSelectPacket.Action.CALL).ifPresent(VampirismMod.dispatcher::sendToServer);
+                case SHOW_MINION_CALL_SELECTION -> ClientboundRequestMinionSelectPacket.createRequestForPlayer(player, ClientboundRequestMinionSelectPacket.Action.CALL).ifPresent(a -> VampirismMod.dispatcher.sendTo(a, player));
                 case VAMPIRISM_MENU -> factionPlayerOpt.ifPresent(fPlayer -> fPlayer.getTaskManager().openVampirismMenu());
                 case RESURRECT -> VampirePlayer.getOpt(player).ifPresent(VampirePlayer::tryResurrect);
                 case GIVE_UP -> VampirePlayer.getOpt(player).ifPresent(VampirePlayer::giveUpDBNO);

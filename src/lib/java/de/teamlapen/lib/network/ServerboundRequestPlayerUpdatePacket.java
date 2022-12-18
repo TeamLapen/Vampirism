@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 /**
  * Request an update packet for the players {@link ISyncable.ISyncableEntityCapabilityInst} (e.g. on World join)
  */
-public class ServerboundRequestPlayerUpdatePacket implements IMessage {
+public class ServerboundRequestPlayerUpdatePacket implements IMessage.IServerBoundMessage {
 
     @SuppressWarnings("EmptyMethod")
     static void encode(ServerboundRequestPlayerUpdatePacket msg, FriendlyByteBuf buf) {

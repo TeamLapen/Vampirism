@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.function.Supplier;
 
-public record ClientboundUpdateMultiBossEventPacket(UUID uniqueId, OperationType operation, List<Color> colors, Map<Color, Float> entries, Component name, BossEvent.BossBarOverlay overlay) implements IMessage {
+public record ClientboundUpdateMultiBossEventPacket(UUID uniqueId, OperationType operation, List<Color> colors, Map<Color, Float> entries, Component name, BossEvent.BossBarOverlay overlay) implements IMessage.IClientBoundMessage {
     static void encode(@NotNull ClientboundUpdateMultiBossEventPacket msg, @NotNull FriendlyByteBuf buf) {
         buf.writeUUID(msg.uniqueId);
         buf.writeEnum(msg.operation);

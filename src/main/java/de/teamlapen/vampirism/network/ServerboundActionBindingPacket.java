@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
-public record ServerboundActionBindingPacket(int actionBindingId, IAction<?> action) implements IMessage {
+public record ServerboundActionBindingPacket(int actionBindingId, IAction<?> action) implements IMessage.IServerBoundMessage {
 
     static void encode(final @NotNull ServerboundActionBindingPacket msg, @NotNull FriendlyByteBuf buf) {
         buf.writeVarInt(msg.actionBindingId);

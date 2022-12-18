@@ -19,7 +19,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 
-public record ClientboundRequestMinionSelectPacket(Action action, List<Pair<Integer, Component>> minions) implements IMessage {
+public record ClientboundRequestMinionSelectPacket(Action action, List<Pair<Integer, Component>> minions) implements IMessage.IClientBoundMessage {
 
     /**
      * Create a minion selection request that can be sent to the client (player).

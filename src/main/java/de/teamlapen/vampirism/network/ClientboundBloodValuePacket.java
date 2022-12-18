@@ -12,7 +12,7 @@ import java.lang.reflect.Array;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public record ClientboundBloodValuePacket(Map<ResourceLocation, Float>[] values) implements IMessage {
+public record ClientboundBloodValuePacket(Map<ResourceLocation, Float>[] values) implements IMessage.IClientBoundMessage {
 
     static void encode(@NotNull ClientboundBloodValuePacket msg, @NotNull FriendlyByteBuf buf) {
         for (Map<ResourceLocation, Float> e : msg.values) {

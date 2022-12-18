@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public record ClientboundSkillTreePacket(Map<ResourceLocation, SkillNode.Builder> nodes) implements IMessage {
+public record ClientboundSkillTreePacket(Map<ResourceLocation, SkillNode.Builder> nodes) implements IMessage.IClientBoundMessage {
     static void encode(@NotNull ClientboundSkillTreePacket msg, @NotNull FriendlyByteBuf buf) {
         buf.writeVarInt(msg.nodes.size());
         for (Map.Entry<ResourceLocation, SkillNode.Builder> e : msg.nodes.entrySet()) {

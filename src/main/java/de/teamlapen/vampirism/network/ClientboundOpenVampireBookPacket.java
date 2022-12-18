@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 /**
  * open a vampire book on client
  */
-public record ClientboundOpenVampireBookPacket(String bookId) implements IMessage {
+public record ClientboundOpenVampireBookPacket(String bookId) implements IMessage.IClientBoundMessage {
     public static void handle(final @NotNull ClientboundOpenVampireBookPacket msg, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> VampirismMod.proxy.handleVampireBookPacket(VampireBookManager.getInstance().getBookById(msg.bookId)));
