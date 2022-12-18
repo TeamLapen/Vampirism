@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.network.ServerboundUpgradeMinionStatPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -99,7 +100,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
             button.visible = false;
         }
 
-        reset = this.addRenderableWidget(new ImageButton(this.guiLeft + 225, this.guiTop + 8, 20, 20, 0, 0, 20, RESET, 20, 40, (context) -> { //TODO 1.19 tooltip rendering
+        reset = this.addRenderableWidget(new ImageButton(this.guiLeft + 225, this.guiTop + 8, 20, 20, 0, 0, 20, RESET, 20, 40, (context) -> {
             VampirismMod.dispatcher.sendToServer(new ServerboundUpgradeMinionStatPacket(entity.getId(), -1));
             getOblivionPotion().ifPresent(stack -> stack.shrink(1));//server syncs after the screen is closed
         }, Component.translatable("text.vampirism.minion_screen.reset_stats", ModItems.OBLIVION_POTION.get().getDescription())) {
@@ -115,6 +116,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
             }
 
         });
+        reset.setTooltip(Tooltip.create(Component.translatable("text.vampirism.minion_screen.reset_stats")));
         reset.active = false;
     }
 

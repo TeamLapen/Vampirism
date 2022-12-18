@@ -24,6 +24,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -147,20 +148,23 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
         }
         this.addRenderableWidget(list = new ScrollableListWithDummyWidget<>(this.leftPos + 83, this.topPos + 7, 145, 104, 21, this::refreshTasks, (item, list1, isDummy) -> new TaskItem(item, list1, isDummy, this, this.factionPlayer)));
 
-        this.addRenderableWidget(new ImageButton(this.leftPos + 5, this.topPos + 90, 20, 20, 40, 205, 20, BACKGROUND, 256, 256, context -> {
+        var button1 = this.addRenderableWidget(new ImageButton(this.leftPos + 5, this.topPos + 90, 20, 20, 40, 205, 20, BACKGROUND, 256, 256, context -> {
             if (this.minecraft.player.isAlive() && VampirismPlayerAttributes.get(this.minecraft.player).faction != null) {
                 Minecraft.getInstance().setScreen(new SkillsScreen(FactionPlayerHandler.getCurrentFactionPlayer(this.minecraft.player).orElse(null), this));
             }
-        }, Component.empty())); //TODO add tooltip
+        }, Component.empty()));
+        button1.setTooltip(Tooltip.create(Component.translatable("gui.vampirism.vampirism_menu.skill_screen")));
 
-        this.addRenderableWidget(new ImageButton(this.leftPos + 26, this.topPos + 90, 20, 20, 0, 205, 20, BACKGROUND, 256, 256, (context) -> {
+        var button2 = this.addRenderableWidget(new ImageButton(this.leftPos + 26, this.topPos + 90, 20, 20, 0, 205, 20, BACKGROUND, 256, 256, (context) -> {
             IPlayableFaction<?> factionNew = VampirismPlayerAttributes.get(this.minecraft.player).faction;
             Minecraft.getInstance().setScreen(new ActionSelectScreen<>(new Color(factionNew.getColor()), true));
-        }, Component.empty())); //TODO add tooltip
+        }, Component.empty()));
+        button2.setTooltip(Tooltip.create(Component.translatable("gui.vampirism.vampirism_menu.edit_actions")));
 
         Button appearanceButton = this.addRenderableWidget(new ImageButton(this.leftPos + 47, this.topPos + 90, 20, 20, 20, 205, 20, BACKGROUND, 256, 256, (context) -> {
             Minecraft.getInstance().setScreen(new VampirePlayerAppearanceScreen(this));
-        }, Component.empty())); //TODO add tooltip
+        }, Component.empty()));
+        appearanceButton.setTooltip(Tooltip.create(Component.translatable("gui.vampirism.vampirism_menu.appearance_menu")));
         if (!Helper.isVampire(minecraft.player)) {
             appearanceButton.active = false;
             appearanceButton.visible = false;
@@ -172,7 +176,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
                 Button xButton = this.addRenderableWidget(new ImageButton(this.getGuiLeft() + slot.x + 16 - 5, this.getGuiTop() + slot.y + 16 - 5, 5, 5, 60, 205, 0, BACKGROUND_REFINEMENTS, 256, 256, (button) -> {
                     VampirismMod.dispatcher.sendToServer(new ServerboundDeleteRefinementPacket(IRefinementItem.AccessorySlotType.values()[slot.index]));
                     refinementList.set(slot.index, ItemStack.EMPTY);
-                }, Component.empty()) { //TODO add tooltip
+                }, Component.empty()) {
                     @Override
                     public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
                         this.visible = !refinementList.get(slot.index).isEmpty() && VampirismContainerScreen.this.draggingItem.isEmpty() && overSlot(slot, mouseX, mouseY);
@@ -185,6 +189,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
                         return slot.x <= mouseX && slot.x + 16 > mouseX && slot.y <= mouseY && slot.y + 16 > mouseY;
                     }
                 });
+                xButton.setTooltip(Tooltip.create(Component.translatable("gui.vampirism.vampirism_menu.destroy_item").withStyle(ChatFormatting.RED)));
                 refinementRemoveButtons.put(slot.getSlotIndex(), xButton);
             }
         }

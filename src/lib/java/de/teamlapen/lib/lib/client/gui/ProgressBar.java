@@ -6,8 +6,8 @@ import de.teamlapen.lib.LIBREFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -18,13 +18,11 @@ import org.jetbrains.annotations.NotNull;
 public class ProgressBar extends AbstractWidget {
 
     private static final ResourceLocation WIDGETS = new ResourceLocation(LIBREFERENCE.MODID, "textures/gui/widgets.png");
-    private final Screen screen;
     private float progress = 0;
     private int color = 0xFFFFFF;
 
-    public ProgressBar(Screen screen, int x, int y, int width, @NotNull Component title) {
+    public ProgressBar( int x, int y, int width, @NotNull Component title) {
         super(x, y, width, 20, title);
-        this.screen = screen;
     }
 
     @Override
@@ -44,18 +42,8 @@ public class ProgressBar extends AbstractWidget {
         int j = getFGColor();
         drawCenteredString(matrixStack, font, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, j | Mth.ceil(this.alpha * 255.0F) << 24);
 
-        if (isHovered) {
-            //renderToolTip(matrixStack, mouseX, mouseY); //TODO 1.19 readd
-        }
+        setTooltip(Tooltip.create(Component.literal("" + ((int) (progress * 100f)) + "%")));
     }
-
-    /*@Override //TODO 1.19 re-add
-    public void renderToolTip(@NotNull PoseStack matrixStack, int mouseX, int mouseY) {
-        if (this.active) {
-            screen.renderTooltip(matrixStack, Component.literal("" + ((int) (progress * 100f)) + "%"), mouseX, mouseY);
-        }
-
-    }*/
 
     public void setColor(int color) {
         this.color = color;

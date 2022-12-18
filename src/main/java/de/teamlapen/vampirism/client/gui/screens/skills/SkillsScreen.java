@@ -18,6 +18,7 @@ import de.teamlapen.vampirism.network.ServerboundUnlockSkillPacket;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -117,10 +118,13 @@ public class SkillsScreen extends Screen {
                     InventoryHelper.removeItemFromInventory(factionPlayer.getRepresentingPlayer().getInventory(), new ItemStack(ModItems.OBLIVION_POTION.get())); //server syncs after the screen is closed
                     if ((factionPlayer.getLevel() < 2 || minecraft.player.getInventory().countItem(ModItems.OBLIVION_POTION.get()) <= 1) && !test) {
                         context.active = false;
-                    } //TODO 1.19 add tooltip
+                    }
                 }));
                 if ((factionPlayer.getLevel() < 2 || minecraft.player.getInventory().countItem(ModItems.OBLIVION_POTION.get()) <= 0) && !test) {
                     resetSkills.active = false;
+                    resetSkills.setTooltip(Tooltip.create(Component.translatable("text.vampirism.skills.reset_consume", ModItems.OBLIVION_POTION.get().getDescription())));
+                } else {
+                    resetSkills.setTooltip(Tooltip.create(Component.translatable("text.vampirism.skills.reset_req", ModItems.OBLIVION_POTION.get().getDescription())));
                 }
             });
 
