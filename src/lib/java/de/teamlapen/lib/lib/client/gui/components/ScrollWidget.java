@@ -80,7 +80,8 @@ public class ScrollWidget<T> extends AbstractScrollWidget {
     @Override
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
         boolean result = super.mouseClicked(pMouseX, pMouseY, pButton);
-        if (!result && (result = this.withinContentAreaPoint(pMouseX, pMouseY))) {
+        if (this.visible && !result && (result = this.withinContentAreaPoint(pMouseX, pMouseY))) {
+            pMouseY += this.scrollAmount();
             this.content.mouseClicked(pMouseX, pMouseY, pButton);
         }
         return result;

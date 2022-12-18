@@ -63,7 +63,7 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
         this.lockActionButton.setLocked(this.menu.isTaskLocked());
         List<Component> taskNames = Arrays.stream(menu.getAvailableTasks()).map(IMinionTask::getName).toList();
 
-        this.taskList = this.addRenderableWidget(new SimpleButtonScrollWidget(this.leftPos + 119, this.topPos + 19 + 19, 88, Math.min(3 * 18, taskNames.size() * 18) + 2, taskNames, this::selectTask));
+        this.taskList = this.addRenderableWidget(SimpleButtonScrollWidget.builder(this.leftPos + 119, this.topPos + 19 + 19, 88, Math.min(3 * 18, taskNames.size() * 18) + 2).setComponents(taskNames).setButtonClickConsumer(this::selectTask).build());
         this.taskList.visible = false;
         this.taskButton = this.addRenderableWidget(new ExtendedButton(this.leftPos + 119, this.topPos + 19, 88, 20, getActiveTaskName(), (button -> this.taskList.visible = !this.taskList.visible)));
     }

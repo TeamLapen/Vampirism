@@ -40,7 +40,7 @@ public class SelectMinionScreen extends Screen {
     protected void init() {
         int w = 100;
         int maxH = 5;
-        this.addRenderableWidget(new SimpleButtonScrollWidget((this.width - w) / 2, (this.height - maxH * 18 + 2) / 2, w, Math.min(maxH * 18, 18 * minionNames.size()) +2, this.minionNames, SelectMinionScreen.this::onMinionSelected));
+        this.addRenderableWidget(SimpleButtonScrollWidget.builder((this.width - w) / 2, (this.height - maxH * 18 + 2) / 2, w, Math.min(maxH * 18, 18 * minionNames.size()) +2).setComponents(this.minionNames).setButtonClickConsumer(SelectMinionScreen.this::onMinionSelected).build());
     }
 
     private void onMinionSelected(int id) {
