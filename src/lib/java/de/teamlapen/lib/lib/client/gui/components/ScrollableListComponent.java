@@ -20,7 +20,9 @@ import java.util.function.Supplier;
  * This Widget does everything by itself except:
  * - {@link #mouseDragged(double, double, int, double, double)} must be called in {@link net.minecraft.client.gui.screens.Screen#mouseDragged(double, double, int, double, double)}
  * - {@link #renderToolTip(PoseStack, int, int)} must be called in {@link net.minecraft.client.gui.screens.Screen#render(PoseStack, int, int, float)}
+ * @deprecated use {@link de.teamlapen.lib.lib.client.gui.components.SimpleButtonScrollWidget} instead
  */
+@Deprecated
 public class ScrollableListComponent<T> extends ExtendedButton {
 
     private static final ResourceLocation MISC = new ResourceLocation(LIBREFERENCE.MODID, "textures/gui/misc.png");

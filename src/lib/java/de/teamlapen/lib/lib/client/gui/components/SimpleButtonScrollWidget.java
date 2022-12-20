@@ -6,54 +6,17 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.joml.Vector2dc;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.function.*;
 
-public class SimpleButtonScrollWidget extends ScrollWidget<Component> {
+public class SimpleButtonScrollWidget extends ScrollWidget<Component, SimpleButtonScrollWidget.ModifiedButton> {
 
-    private final List<Component> components;
-    private final @Nullable Consumer<Integer> buttonClickConsumer;
-    private final @Nullable BiConsumer<Integer, Boolean> buttonHoverConsumer;
-
-    public SimpleButtonScrollWidget(int pX, int pY, int pWidth, int pHeight, List<Component> buttonTexts, @Nullable Consumer<Integer> buttonClickConsumer, @Nullable BiConsumer<Integer, Boolean> buttonHoverConsumer) {
-        super(pX, pY, pWidth - 8, pHeight);
-        this.components = buttonTexts;
-        this.buttonHoverConsumer = buttonHoverConsumer;
-        this.buttonClickConsumer = buttonClickConsumer;
-        Font font = Minecraft.getInstance().font;
-        this.updateContent((s, x, y, width, isXYInside) -> {
-            if (buttonHoverConsumer != null) {
-                return new HoverButton(x, y, width, 18, s, font, isXYInside, this::onButtonClick, this::onButtonHover);
-            } else {
-                return new ModifiedButton(x, y, width, 18, s, font, isXYInside, this::onButtonClick);
-            }
-        }, builder -> {
-            for (Component text : buttonTexts) {
-                builder.addWidget(text);
-            }
-        });
-    }
-
-    private void onButtonClick(Component component) {
-        if (this.buttonClickConsumer != null) {
-            int index = components.indexOf(component);
-            this.buttonClickConsumer.accept(index);
-        }
-
-    }
-
-    private void onButtonHover(Component component, boolean isHovered) {
-        if (this.buttonHoverConsumer != null) {
-            int index = components.indexOf(component);
-            this.buttonHoverConsumer.accept(index, isHovered);
-        }
+    public SimpleButtonScrollWidget(int pX, int pY, int pWidth, int pHeight, WidgetFactory<Component, SimpleButtonScrollWidget.ModifiedButton> widgetFactory, Consumer<ContentBuilder<Component, SimpleButtonScrollWidget.ModifiedButton>> contentSupplier, Component emptyText) {
+        super(pX, pY, pWidth - 8, pHeight, widgetFactory, contentSupplier, emptyText);
     }
 
     @Override
@@ -65,46 +28,13 @@ public class SimpleButtonScrollWidget extends ScrollWidget<Component> {
         return new Builder(x, y, width, height);
     }
 
-    public static class Builder {
-        private int x;
-        private int y;
-        private int width;
-        private int height;
+    public static class Builder extends ScrollWidget.Builder<Component, SimpleButtonScrollWidget.ModifiedButton>{
         private List<Component> components;
         private Consumer<Integer> buttonClickConsumer;
         private BiConsumer<Integer, Boolean> buttonHoverConsumer;
 
         protected Builder(int x, int y, int width, int height) {
-            this.x = x;
-            this.y = y;
-            this.width = width;
-            this.height = height;
-        }
-
-        public Builder setX(int x) {
-            this.x = x;
-            return this;
-        }
-
-        public Builder setY(int y) {
-            this.y = y;
-            return this;
-        }
-
-        public Builder setPosition(int x, int y) {
-            this.x = x;
-            this.y = y;
-            return this;
-        }
-
-        public Builder setWidth(int width) {
-            this.width = width;
-            return this;
-        }
-
-        public Builder setHeight(int height) {
-            this.height = height;
-            return this;
+            super(x, y, width, height);
         }
 
         public Builder setComponents(List<Component> components) {
@@ -136,34 +66,69 @@ public class SimpleButtonScrollWidget extends ScrollWidget<Component> {
             return this;
         }
 
+        @Override
+        public ScrollWidget.Builder<Component, ModifiedButton> widgetFactory(WidgetFactory<Component, ModifiedButton> widgetFactory) {
+            throw new UnsupportedOperationException("Cannot set content supplier for this builder");
+        }
+
+        @Override
+        public ScrollWidget.Builder<Component, ModifiedButton> contentSupplier(Consumer<ContentBuilder<Component, ModifiedButton>> contentSupplier) {
+            throw new UnsupportedOperationException("Cannot set content supplier for this builder");
+        }
+
+        @Override
+        public Builder emptyText(Component emptyText) {
+            super.emptyText(emptyText);
+            return this;
+        }
+
+        private void onButtonClick(Component component) {
+            if (this.buttonClickConsumer != null) {
+                int index = components.indexOf(component);
+                this.buttonClickConsumer.accept(index);
+            }
+
+        }
+
+        private void onButtonHover(Component component, boolean isHovered) {
+            if (this.buttonHoverConsumer != null) {
+                int index = components.indexOf(component);
+                this.buttonHoverConsumer.accept(index, isHovered);
+            }
+        }
+
+        private ModifiedButton simpleWidgetFactory(Component s, int x, int y, int width, Supplier<Vector2dc> c, Consumer<ModifiedButton> v) {
+            Font font = Minecraft.getInstance().font;
+            if (buttonHoverConsumer != null) {
+                return new HoverButton(x, y, width, 18, s, font, Builder.this::onButtonClick, Builder.this::onButtonHover);
+            } else {
+                return new ModifiedButton(x, y, width, 18, s, font, Builder.this::onButtonClick);
+            }
+        }
+
+        private void buildContent(ContentBuilder<Component, ModifiedButton> builder) {
+            for (Component text : this.components) {
+                builder.addWidget(text);
+            }
+        }
+
         public SimpleButtonScrollWidget build() {
-            return new SimpleButtonScrollWidget(x, y, width, height, components, buttonClickConsumer, buttonHoverConsumer);
+            return new SimpleButtonScrollWidget(this.x, this.y, this.width, this.height, this::simpleWidgetFactory, this::buildContent, this.emptyText);
         }
     }
 
-    private static class ModifiedButton extends ExtendedButton {
+    protected static class ModifiedButton extends ExtendedButton implements ItemWidget<Component> {
 
-        private final BiFunction<Integer, Integer, Boolean> isXYInside;
+        private final Component component;
 
-        public ModifiedButton(int xPos, int yPos, int width, int height, Component text, Font font, BiFunction<Integer, Integer, Boolean> isXYInside, Consumer<Component> onClick) {
+        public ModifiedButton(int xPos, int yPos, int width, int height, Component text, Font font, Consumer<Component> onClick) {
             super(xPos, yPos, width, height, text, (i) -> onClick.accept(text));
-            this.isXYInside = isXYInside;
+            this.component = text;
         }
 
         @Override
-        public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-            this.isHovered = this.isHovered && this.isXYInside.apply(mouseX, mouseY);
-            super.renderButton(poseStack, mouseX, mouseY, partialTick);
-        }
-
-        @Override
-        protected boolean clicked(double pMouseX, double pMouseY) {
-            return super.clicked(pMouseX, pMouseY) && this.isXYInside.apply((int) pMouseX, (int) pMouseY);
-        }
-
-        @Override
-        public void onClick(double pMouseX, double pMouseY) {
-            super.onClick(pMouseX, pMouseY);
+        public Component getItem() {
+            return this.component;
         }
     }
 
@@ -172,8 +137,8 @@ public class SimpleButtonScrollWidget extends ScrollWidget<Component> {
         private final BiConsumer<Component, Boolean> onHover;
         private boolean hoverActive;
 
-        public HoverButton(int xPos, int yPos, int width, int height, Component text, Font font, BiFunction<Integer, Integer, Boolean> isXYInside, Consumer<Component> onClick, BiConsumer<Component, Boolean> onHover) {
-            super(xPos, yPos, width, height, text, font, isXYInside, onClick);
+        public HoverButton(int xPos, int yPos, int width, int height, Component text, Font font, Consumer<Component> onClick, BiConsumer<Component, Boolean> onHover) {
+            super(xPos, yPos, width, height, text, font, onClick);
             this.onHover = onHover;
         }
 

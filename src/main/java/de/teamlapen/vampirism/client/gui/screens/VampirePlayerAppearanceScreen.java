@@ -2,8 +2,6 @@ package de.teamlapen.vampirism.client.gui.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.lib.lib.client.gui.components.ScrollableArrayTextComponentList;
-import de.teamlapen.lib.lib.client.gui.components.ScrollableListComponent;
 import de.teamlapen.lib.lib.client.gui.components.SimpleButtonScrollWidget;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.REFERENCE;
@@ -21,7 +19,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.widget.ExtendedButton;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
