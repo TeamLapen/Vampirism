@@ -1,0 +1,10 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": "#vampirism:has_spawn/hunter",
+  "spawners": {
+    "type": "vampirism:hunter",
+    "maxCount": 3,
+    "minCount": 1,
+    "weight": 0
+  }
+}

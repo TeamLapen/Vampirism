@@ -23,6 +23,7 @@
     "PlayerAdvancementsAccessor",
     "ProcessorListsAccessor",
     "RecipeManagerAccessor",
+    "RegistriesDatapackGeneratorAccessor",
     "ShapedRecipeBuilderAccessor",
     "ShapelessRecipeBuilderAccessor",
     "StructuresAccessor",

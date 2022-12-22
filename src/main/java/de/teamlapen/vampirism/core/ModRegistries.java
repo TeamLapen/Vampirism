@@ -17,6 +17,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 
@@ -50,7 +51,10 @@ public class ModRegistries {
             .add(Registries.PLACED_FEATURE, VampirismFeatures::createPlacedFeatures)
             .add(Registries.STRUCTURE, ModFeatures::createStructures)
             .add(Registries.PROCESSOR_LIST, ModStructures::createStructureProcessorLists)
-            .add(Registries.TEMPLATE_POOL, ModStructures::createStructurePoolTemplates);
+            .add(Registries.TEMPLATE_POOL, ModStructures::createStructurePoolTemplates)
+            .add(Registries.STRUCTURE_SET, VampirismFeatures::createStructureSets)
+            .add(ForgeRegistries.Keys.BIOME_MODIFIERS, VampirismFeatures::createBiomeModifier)
+            ;
 
     static void init(IEventBus bus) {
         DEFERRED_SKILLS.register(bus);
@@ -61,14 +65,6 @@ public class ModRegistries {
         DEFERRED_REFINEMENTS.register(bus);
         DEFERRED_REFINEMENT_SETS.register(bus);
         DEFERRED_OILS.register(bus);
-    }
-
-    public static HolderLookup.Provider createLookup(HolderLookup.Provider parentProvider) {
-        return DATA_BUILDER.buildPatch(RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY), parentProvider);
-    }
-
-    public static HolderLookup.Provider createLookup() {
-        return createLookup(VanillaRegistries.createLookup());
     }
 
 }
