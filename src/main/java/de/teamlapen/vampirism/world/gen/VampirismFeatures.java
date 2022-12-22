@@ -1,11 +1,13 @@
 package de.teamlapen.vampirism.world.gen;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModFeatures;
 import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.world.biome.OverworldModifications;
 import de.teamlapen.vampirism.world.gen.feature.treedecorators.TrunkCursedVineDecorator;
 import de.teamlapen.vampirism.world.gen.modifier.ExtendedAddSpawnsBiomeModifier;
 import de.teamlapen.vampirism.world.gen.structure.huntercamp.HunterCampPieces;
@@ -28,6 +30,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.SurfaceRules;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;

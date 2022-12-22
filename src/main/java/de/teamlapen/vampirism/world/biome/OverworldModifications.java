@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Pair;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBiomes;
+import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.mixin.MultiNoiseBiomeSourcePresetAccessor;
 import de.teamlapen.vampirism.modcompat.terrablender.TerraBlenderCompat;
 import net.minecraft.core.Holder;
@@ -122,8 +123,8 @@ public class OverworldModifications {
 
     public static SurfaceRules.@NotNull RuleSource buildOverworldSurfaceRules() {
         //Any blocks here must be available before block registration, so they must be initialized statically
-        SurfaceRules.RuleSource cursed_earth = new CustomBlockRuleSource(new ResourceLocation(REFERENCE.MODID, "cursed_earth"));
-        SurfaceRules.RuleSource grass = new CustomBlockRuleSource(new ResourceLocation(REFERENCE.MODID, "cursed_grass"));
+        SurfaceRules.RuleSource cursed_earth = new SurfaceRules.BlockRuleSource(ModBlocks.CURSED_EARTH.get().defaultBlockState());
+        SurfaceRules.RuleSource grass = new SurfaceRules.BlockRuleSource(ModBlocks.CURSED_GRASS.get().defaultBlockState());
         SurfaceRules.ConditionSource inVampireBiome = SurfaceRules.isBiome(ModBiomes.VAMPIRE_FOREST);
         SurfaceRules.RuleSource vampireForestTopLayer = SurfaceRules.ifTrue(inVampireBiome, grass);
         SurfaceRules.RuleSource vampireForestBaseLayer = SurfaceRules.ifTrue(inVampireBiome, cursed_earth);
@@ -134,22 +135,5 @@ public class OverworldModifications {
                                 SurfaceRules.ifTrue(SurfaceRules.UNDER_FLOOR, SurfaceRules.ifTrue(SurfaceRules.waterBlockCheck(-1, 0), SurfaceRules.sequence(vampireForestBaseLayer)))
                         ))
         );
-    }
-
-    record CustomBlockRuleSource(ResourceLocation block_id) implements SurfaceRules.RuleSource {
-        static final KeyDispatchDataCodec<CustomBlockRuleSource> CODEC = KeyDispatchDataCodec.of(ResourceLocation.CODEC.xmap(CustomBlockRuleSource::new, CustomBlockRuleSource::block_id).fieldOf("block_id").codec());
-
-        static {
-            Registry.register(BuiltInRegistries.MATERIAL_RULE, new ResourceLocation(REFERENCE.MODID, "block_id"), CODEC.codec());
-        }
-
-        public SurfaceRules.@NotNull SurfaceRule apply(SurfaceRules.Context p_189523_) {
-            return (p_189774_, p_189775_, p_189776_) -> ForgeRegistries.BLOCKS.getValue(block_id).defaultBlockState();
-        }
-
-        @Override
-        public @NotNull KeyDispatchDataCodec<? extends SurfaceRules.RuleSource> codec() {
-            return CODEC;
-        }
     }
 }

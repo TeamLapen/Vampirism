@@ -20,6 +20,7 @@
     "MixinPlayerEntity",
     "MixinPotionBrewing",
     "MultiNoiseBiomeSourcePresetAccessor",
+    "NoiseGeneratorSettingsMixin",
     "PlayerAdvancementsAccessor",
     "ProcessorListsAccessor",
     "RecipeManagerAccessor",
@@ -27,7 +28,6 @@
     "ShapedRecipeBuilderAccessor",
     "ShapelessRecipeBuilderAccessor",
     "StructuresAccessor",
-    "SurfaceRuleDataMixin",
     "TileEntityTypeAccessor",
     "VanillaBlockLootAccessor"
   ],
