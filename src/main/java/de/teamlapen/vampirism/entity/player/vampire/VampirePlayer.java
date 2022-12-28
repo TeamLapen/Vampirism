@@ -25,7 +25,6 @@ import de.teamlapen.vampirism.effects.SanguinareEffect;
 import de.teamlapen.vampirism.effects.VampireNightVisionEffectInstance;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.entity.player.FactionBasePlayer;
 import de.teamlapen.vampirism.entity.player.IVampirismPlayer;
@@ -40,7 +39,7 @@ import de.teamlapen.vampirism.items.VampirismHunterArmorItem;
 import de.teamlapen.vampirism.mixin.ArmorItemAccessor;
 import de.teamlapen.vampirism.modcompat.PlayerReviveHelper;
 import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
-import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleData;
+import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleOptions;
 import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.core.BlockPos;
@@ -1456,7 +1455,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         e.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 7, false, false));
         player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 25, 4, false, false));
 
-        ModParticles.spawnParticlesServer(player.level, new FlyingBloodEntityParticleData(ModParticles.FLYING_BLOOD_ENTITY.get(), player.getId(), true), e.getX(), e.getY() + e.getEyeHeight() / 2, e.getZ(), 10, 0.1f, 0.1f, 0.1f, 0);
+        ModParticles.spawnParticlesServer(player.level, new FlyingBloodEntityParticleOptions(player.getId(), true), e.getX(), e.getY() + e.getEyeHeight() / 2, e.getZ(), 10, 0.1f, 0.1f, 0.1f, 0);
 
         if (!biteFeed(e)) {
             endFeeding(true);

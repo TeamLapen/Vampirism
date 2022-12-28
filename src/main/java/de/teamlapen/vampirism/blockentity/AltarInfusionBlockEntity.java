@@ -15,7 +15,7 @@ import de.teamlapen.vampirism.entity.player.vampire.VampireLevelingConf;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.inventory.AltarInfusionMenu;
 import de.teamlapen.vampirism.items.PureBloodItem;
-import de.teamlapen.vampirism.particle.FlyingBloodParticleData;
+import de.teamlapen.vampirism.particle.FlyingBloodParticleOptions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -246,7 +246,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
         this.setChanged();
         if (!this.level.isClientSide) {
             for (BlockPos pTip : tips) {
-                ModParticles.spawnParticlesServer(level, new FlyingBloodParticleData(ModParticles.FLYING_BLOOD.get(), 60, false, pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5), worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5, 3, 0.1, 0.1, 0.1, 0);
+                ModParticles.spawnParticlesServer(level, new FlyingBloodParticleOptions(60, false, pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5), worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5, 3, 0.1, 0.1, 0.1, 0);
             }
             BlockState state = this.level.getBlockState(getBlockPos());
             this.level.sendBlockUpdated(getBlockPos(), state, state, 3); //Notify client about started ritual
@@ -276,7 +276,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
                 if (runningTick % 15 == 0) {
                     BlockPos pos = getBlockPos();
                     for (BlockPos pTip : tips) {
-                        ModParticles.spawnParticlesClient(level, new FlyingBloodParticleData(ModParticles.FLYING_BLOOD.get(), 60, false, pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0, 5, 0.1, RandomSource.create());
+                        ModParticles.spawnParticlesClient(level, new FlyingBloodParticleOptions(60, false, pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0, 5, 0.1, RandomSource.create());
                     }
                 }
             }

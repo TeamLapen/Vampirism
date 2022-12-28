@@ -2,9 +2,9 @@ package de.teamlapen.vampirism.core;
 
 import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleData;
-import de.teamlapen.vampirism.particle.FlyingBloodParticleData;
-import de.teamlapen.vampirism.particle.GenericParticleData;
+import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleOptions;
+import de.teamlapen.vampirism.particle.FlyingBloodParticleOptions;
+import de.teamlapen.vampirism.particle.GenericParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.server.level.ServerLevel;
@@ -19,28 +19,28 @@ import org.jetbrains.annotations.NotNull;
 public class ModParticles {
     public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, REFERENCE.MODID);
 
-    public static final RegistryObject<ParticleType<FlyingBloodParticleData>> FLYING_BLOOD = PARTICLE_TYPES.register("flying_blood", () -> new ParticleType<>(false, FlyingBloodParticleData.DESERIALIZER) {
+    public static final RegistryObject<ParticleType<FlyingBloodParticleOptions>> FLYING_BLOOD = PARTICLE_TYPES.register("flying_blood", () -> new ParticleType<>(false, FlyingBloodParticleOptions.DESERIALIZER) {
 
         @NotNull
         @Override
-        public Codec<FlyingBloodParticleData> codec() {
-            return FlyingBloodParticleData.CODEC;
+        public Codec<FlyingBloodParticleOptions> codec() {
+            return FlyingBloodParticleOptions.CODEC;
         }
     });
-    public static final RegistryObject<ParticleType<FlyingBloodEntityParticleData>> FLYING_BLOOD_ENTITY = PARTICLE_TYPES.register("flying_blood_entity", () -> new ParticleType<>(false, FlyingBloodEntityParticleData.DESERIALIZER) {
+    public static final RegistryObject<ParticleType<FlyingBloodEntityParticleOptions>> FLYING_BLOOD_ENTITY = PARTICLE_TYPES.register("flying_blood_entity", () -> new ParticleType<>(false, FlyingBloodEntityParticleOptions.DESERIALIZER) {
 
         @NotNull
         @Override
-        public Codec<FlyingBloodEntityParticleData> codec() {
-            return FlyingBloodEntityParticleData.CODEC;
+        public Codec<FlyingBloodEntityParticleOptions> codec() {
+            return FlyingBloodEntityParticleOptions.CODEC;
         }
     });
-    public static final RegistryObject<ParticleType<GenericParticleData>> GENERIC = PARTICLE_TYPES.register("generic", () -> new ParticleType<>(false, GenericParticleData.DESERIALIZER) {
+    public static final RegistryObject<ParticleType<GenericParticleOptions>> GENERIC = PARTICLE_TYPES.register("generic", () -> new ParticleType<>(false, GenericParticleOptions.DESERIALIZER) {
 
         @NotNull
         @Override
-        public Codec<GenericParticleData> codec() {
-            return GenericParticleData.CODEC;
+        public Codec<GenericParticleOptions> codec() {
+            return GenericParticleOptions.CODEC;
         }
     });
 

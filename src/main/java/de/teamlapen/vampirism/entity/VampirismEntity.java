@@ -11,7 +11,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
-import de.teamlapen.vampirism.particle.GenericParticleData;
+import de.teamlapen.vampirism.particle.GenericParticleOptions;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.world.VampirismWorld;
 import net.minecraft.core.BlockPos;
@@ -307,7 +307,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
      */
     protected void teleportAway() {
         this.setInvisible(true);
-        ModParticles.spawnParticlesServer(this.level, new GenericParticleData(ModParticles.GENERIC.get(), new ResourceLocation("minecraft", "effect_6"), 10, 0x0A0A0A, 0.6F), this.getX(), this.getY(), this.getZ(), 20, 1, 1, 1, 0);
+        ModParticles.spawnParticlesServer(this.level, new GenericParticleOptions(new ResourceLocation("minecraft", "effect_6"), 10, 0x0A0A0A, 0.6F), this.getX(), this.getY(), this.getZ(), 20, 1, 1, 1, 0);
         this.playSound(SoundEvents.ENDERMAN_TELEPORT, 1, 1);
         this.discard();
     }

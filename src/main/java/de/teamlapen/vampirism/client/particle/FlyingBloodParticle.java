@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.particle;
 
-import de.teamlapen.vampirism.particle.FlyingBloodParticleData;
+import de.teamlapen.vampirism.particle.FlyingBloodParticleOptions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
@@ -82,13 +82,13 @@ public class FlyingBloodParticle extends TextureSheetParticle {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static class Factory implements ParticleProvider<FlyingBloodParticleData> {
+    public static class Factory implements ParticleProvider<FlyingBloodParticleOptions> {
 
 
         @Nullable
         @Override
-        public Particle createParticle(@NotNull FlyingBloodParticleData typeIn, @NotNull ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-            return new FlyingBloodParticle(worldIn, x, y, z, typeIn.getTargetX(), typeIn.getTargetY(), typeIn.getTargetZ(), typeIn.getMaxAge(), typeIn.isDirect(), typeIn.getTexturePos());
+        public Particle createParticle(@NotNull FlyingBloodParticleOptions typeIn, @NotNull ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+            return new FlyingBloodParticle(worldIn, x, y, z, typeIn.targetX(), typeIn.targetY(), typeIn.targetZ(), typeIn.getMaxAge(), typeIn.direct(), typeIn.texture());
         }
     }
 }

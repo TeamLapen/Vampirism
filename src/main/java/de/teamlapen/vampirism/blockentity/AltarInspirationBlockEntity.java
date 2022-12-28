@@ -10,7 +10,7 @@ import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.entity.player.vampire.VampireLevelingConf;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.items.BloodBottleFluidHandler;
-import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleData;
+import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleOptions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -129,7 +129,7 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
             return;
         }
         if (!p.level.isClientSide) {
-            ModParticles.spawnParticlesServer(p.level, new FlyingBloodEntityParticleData(ModParticles.FLYING_BLOOD_ENTITY.get(), p.getId(), false), this.worldPosition.getX() + 0.5, this.worldPosition.getY() + 1, this.worldPosition.getZ() + 0.5, 40, 0.1F, 0.1f, 0.1f, 0);
+            ModParticles.spawnParticlesServer(p.level, new FlyingBloodEntityParticleOptions(p.getId(), false), this.worldPosition.getX() + 0.5, this.worldPosition.getY() + 1, this.worldPosition.getZ() + 0.5, 40, 0.1F, 0.1f, 0.1f, 0);
         } else {
             ((InternalTank) tank).doDrain(neededBlood, IFluidHandler.FluidAction.EXECUTE);
         }

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.particle;
 
-import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleData;
+import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleOptions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
@@ -85,16 +85,16 @@ public class FlyingBloodEntityParticle extends TextureSheetParticle {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static class Factory implements ParticleProvider<FlyingBloodEntityParticleData> {
+    public static class Factory implements ParticleProvider<FlyingBloodEntityParticleOptions> {
         @Nullable
         @Override
-        public Particle createParticle(@NotNull FlyingBloodEntityParticleData typeIn, @NotNull ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-            Entity e = worldIn.getEntity(typeIn.getEntityID());
+        public Particle createParticle(@NotNull FlyingBloodEntityParticleOptions typeIn, @NotNull ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+            Entity e = worldIn.getEntity(typeIn.entity());
             if (e == null) {
-                LOGGER.warn("Could not find entity {} for flying blood particle", typeIn.getEntityID());
+                LOGGER.warn("Could not find entity {} for flying blood particle", typeIn.entity());
                 return null;
             }
-            return new FlyingBloodEntityParticle(worldIn, x, y, z, e, typeIn.getDirect());
+            return new FlyingBloodEntityParticle(worldIn, x, y, z, e, typeIn.direct());
         }
     }
 

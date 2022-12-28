@@ -30,7 +30,7 @@ import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.entity.hunter.HunterTrainerEntity;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
-import de.teamlapen.vampirism.particle.GenericParticleData;
+import de.teamlapen.vampirism.particle.GenericParticleOptions;
 import de.teamlapen.vampirism.util.RegUtil;
 import de.teamlapen.vampirism.util.TotemHelper;
 import de.teamlapen.vampirism.util.VampirismEventFactory;
@@ -558,7 +558,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
 
     public static void clientTick(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull TotemBlockEntity blockEntity) {
         if (level.getGameTime() % 10 == 7 && blockEntity.controllingFaction != null) {
-            ModParticles.spawnParticlesClient(level, new GenericParticleData(ModParticles.GENERIC.get(), new ResourceLocation("minecraft", "generic_4"), 20, blockEntity.controllingFaction.getColor(), 0.2F), pos.getX(), pos.getY(), pos.getZ(), 3, 30, level.random);
+            ModParticles.spawnParticlesClient(level, new GenericParticleOptions(new ResourceLocation("minecraft", "generic_4"), 20, blockEntity.controllingFaction.getColor(), 0.2F), pos.getX(), pos.getY(), pos.getZ(), 3, 30, level.random);
         }
     }
 
