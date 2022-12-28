@@ -47,7 +47,7 @@ public class FlyingBloodParticle extends TextureSheetParticle {
             this.zd = (this.level.random.nextDouble() / 10 - 0.05) + wayZ / lifetime;
         }
 
-        this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(new ResourceLocation(particleId.getNamespace(), "particle/" + particleId.getPath())));
+        this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(particleId));
     }
 
     @NotNull

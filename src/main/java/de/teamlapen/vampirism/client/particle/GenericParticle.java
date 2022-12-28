@@ -28,7 +28,7 @@ public class GenericParticle extends TextureSheetParticle {
         if ((color >> 24 & 255) != 0) { //Only use alpha value if !=0.
             this.alpha = (color >> 24 & 255) / 255.0F;
         }
-        this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(new ResourceLocation(texture.getNamespace(), "particle/" + texture.getPath())));
+        this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(texture));
     }
 
     @NotNull

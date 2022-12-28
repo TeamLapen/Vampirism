@@ -50,7 +50,7 @@ public class FlyingBloodEntityParticle extends TextureSheetParticle {
             this.yd = (this.level.random.nextDouble() + 0.2);
             this.zd = (this.level.random.nextDouble() - 0.5);
         }
-        this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(new ResourceLocation("minecraft", "particle/critical_hit")));
+        this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(new ResourceLocation("minecraft", "critical_hit")));
         //this.tick();
     }
 
