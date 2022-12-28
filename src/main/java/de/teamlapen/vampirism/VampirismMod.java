@@ -57,6 +57,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
@@ -117,6 +118,7 @@ public class VampirismMod {
         MinecraftForge.EVENT_BUS.register(SitHandler.class);
         MinecraftForge.EVENT_BUS.addListener(this::onCommandsRegister);
         MinecraftForge.EVENT_BUS.addListener(this::onAddReloadListenerEvent);
+        MinecraftForge.EVENT_BUS.addListener(this::onServerStarting);
 
         VampirismConfig.init();
 
@@ -173,6 +175,10 @@ public class VampirismMod {
         event.register(IHunterPlayer.class);
         event.register(IVampirePlayer.class);
         event.register(IVampirismWorld.class);
+    }
+
+    private void onServerStarting(@NotNull ServerAboutToStartEvent event) {
+        VanillaStructureModifications.addVillageStructures(event.getServer().registryAccess());
     }
 
     private void finalizeConfiguration(RegisterEvent event) {

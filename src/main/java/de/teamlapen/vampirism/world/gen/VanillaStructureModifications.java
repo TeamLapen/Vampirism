@@ -1,40 +1,25 @@
 package de.teamlapen.vampirism.world.gen;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.blocks.TotemTopBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.mixin.ProcessorListsAccessor;
 import de.teamlapen.vampirism.util.MixinHooks;
-import de.teamlapen.vampirism.world.gen.structure.templatesystem.BiomeTopBlockProcessor;
-import de.teamlapen.vampirism.world.gen.structure.templatesystem.RandomBlockStateRule;
-import de.teamlapen.vampirism.world.gen.structure.templatesystem.RandomStructureProcessor;
 import net.minecraft.core.*;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.registries.VanillaRegistries;
-import net.minecraft.data.worldgen.BootstapContext;
-import net.minecraft.data.worldgen.Pools;
 import net.minecraft.data.worldgen.ProcessorLists;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
-import net.minecraft.world.level.levelgen.structure.templatesystem.AlwaysTrueTest;
-import net.minecraft.world.level.levelgen.structure.templatesystem.RandomBlockMatchTest;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * Vanilla structures are modified in the following ways:
@@ -44,10 +29,6 @@ import java.util.stream.Collectors;
 public class VanillaStructureModifications {
 
     public static void setup() {
-        createJigsawPool();
-    }
-
-    private static void createJigsawPool() {
         setupSingleJigsawPieceGeneration();
     }
 
