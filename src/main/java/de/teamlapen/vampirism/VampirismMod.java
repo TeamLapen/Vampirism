@@ -48,6 +48,7 @@ import de.teamlapen.vampirism.recipes.ExtendedBrewingRecipeRegistry;
 import de.teamlapen.vampirism.sit.SitHandler;
 import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.util.*;
+import de.teamlapen.vampirism.world.biome.OverworldModifications;
 import de.teamlapen.vampirism.world.gen.VanillaStructureModifications;
 import net.minecraft.ChatFormatting;
 import net.minecraftforge.api.distmarker.Dist;
@@ -188,7 +189,7 @@ public class VampirismMod {
 
     private void loadComplete(final @NotNull FMLLoadCompleteEvent event) {
         onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
-//        event.enqueueWork(OverworldModifications::addBiomesToOverworldUnsafe);
+        event.enqueueWork(OverworldModifications::addBiomesToOverworldUnsafe);
         VampirismAPI.skillManager().registerSkillType(SkillType.LEVEL);
         VampirismAPI.skillManager().registerSkillType(SkillType.LORD);
         DistExecutor.safeRunWhenOn(Dist.DEDICATED_SERVER, () -> VampirismLogger::init);

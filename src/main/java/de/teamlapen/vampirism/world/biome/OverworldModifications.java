@@ -1,22 +1,17 @@
 package de.teamlapen.vampirism.world.biome;
 
 import com.mojang.datafixers.util.Pair;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.mixin.MultiNoiseBiomeSourcePresetAccessor;
 import de.teamlapen.vampirism.modcompat.terrablender.TerraBlenderCompat;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.KeyDispatchDataCodec;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.biome.MultiNoiseBiomeSource;
 import net.minecraft.world.level.levelgen.SurfaceRules;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +24,7 @@ import java.util.function.Function;
 
 /**
  * Overworld is modified in the following ways:
- * 1) New surface rules. These are added via a Mixin hook ({@link de.teamlapen.vampirism.mixin.SurfaceRuleDataMixin} on static init. And later on via TerraBlender, if installed
+ * 1) New surface rules. These are added via a Mixin hook ({@link de.teamlapen.vampirism.mixin.NoiseGeneratorSettingsMixin} on static init. And later on via TerraBlender, if installed
  * 2) The overworld BiomeSource preset is modified on load complete, if TerraBlender is not installed, to include the vampirism forest. If TerraBlender is installed this is done via TerraBlender in common setup in {@link de.teamlapen.vampirism.modcompat.terrablender.TerraBlenderRegistration}
  */
 public class OverworldModifications {
@@ -71,10 +66,10 @@ public class OverworldModifications {
          * Create a wrapper function for the parameterSource function, which calls the original one and then modifies the result
          */
 
-        final Function<Registry<Biome>, Climate.ParameterList<Holder<Biome>>> originalParameterSourceFunction = ((MultiNoiseBiomeSourcePresetAccessor) MultiNoiseBiomeSource.Preset.OVERWORLD).getPresetSupplier_vampirism();
+        final Function<HolderGetter<Biome>, Climate.ParameterList<Holder<Biome>>> originalParameterSourceFunction = ((MultiNoiseBiomeSourcePresetAccessor) MultiNoiseBiomeSource.Preset.OVERWORLD).getPresetSupplier_vampirism();
 
 
-        Function<Registry<Biome>, Climate.ParameterList<Holder<Biome>>> wrapperParameterSourceFunction = (registry) -> {
+        Function<HolderGetter<Biome>, Climate.ParameterList<Holder<Biome>>> wrapperParameterSourceFunction = (registry) -> {
             //Create copy of vanilla list
             Climate.ParameterList<Holder<Biome>> vanillaList = originalParameterSourceFunction.apply(registry);
             List<Pair<Climate.ParameterPoint, Holder<Biome>>> biomes = new ArrayList<>(vanillaList.values());
@@ -111,7 +106,7 @@ public class OverworldModifications {
 
             LOGGER.info("Adding biome {} to ParameterPoints {} in Preset.OVERWORLD", ModBiomes.VAMPIRE_FOREST.location(), Arrays.toString(forestPoints));
             for (Climate.ParameterPoint forestPoint : forestPoints) {
-                biomes.add(Pair.of(forestPoint, registry.getHolderOrThrow(ModBiomes.VAMPIRE_FOREST)));
+                biomes.add(Pair.of(forestPoint, registry.getOrThrow(ModBiomes.VAMPIRE_FOREST)));
             }
 
             return new Climate.ParameterList<>(biomes);
