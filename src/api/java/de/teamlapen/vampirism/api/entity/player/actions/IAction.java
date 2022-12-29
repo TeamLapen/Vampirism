@@ -68,7 +68,34 @@ public interface IAction<T extends IFactionPlayer<T>> {
     }
 
     enum PERM {
-        ALLOWED, DISABLED, NOT_UNLOCKED, DISALLOWED, COOLDOWN//Cooldown should not be used by the skill itself, but only by the {@link IActionHandler}
+        /**
+         * The player can use the action
+         */
+        ALLOWED,
+        /**
+         * The action is disabled in the config
+         */
+        DISABLED,
+        /**
+         * The player does not have the action unlocked
+         */
+        NOT_UNLOCKED,
+        /**
+         * The player is not in the position to use the action.
+         * <p>
+         * This is the case if the player is in spectator mode or the action rejects the player
+         */
+        DISALLOWED,
+        /**
+         * The action is on cooldown and cannot be used.
+         * <p>
+         * Cooldown should not be used by the skill itself, but only by the {@link IActionHandler}
+         */
+        COOLDOWN,
+        /**
+         * The user does not have the correct permission to use the action {@link de.teamlapen.vampirism.util.Permissions#ACTION}
+         */
+        PERMISSION_DISALLOWED
     }
 
     /**
