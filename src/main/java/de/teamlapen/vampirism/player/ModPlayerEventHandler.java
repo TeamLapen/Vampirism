@@ -61,6 +61,7 @@ import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.village.PointOfInterestType;
+import net.minecraft.world.GameType;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.LazyOptional;
@@ -509,6 +510,13 @@ public class ModPlayerEventHandler {
                 event.setResult(Event.Result.ALLOW);
                 event.setDamageModifier(event.getDamageModifier() + (event.getOldDamageModifier() * (item.getDamageMultiplierForFaction(stack)-1)));
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerGameMode(PlayerEvent.PlayerChangeGameModeEvent event) {
+        if (event.getNewGameMode() == GameType.SPECTATOR) {
+            FactionPlayerHandler.getOpt(event.getPlayer()).ifPresent(handler -> handler.getCurrentFactionPlayer().ifPresent(factionPlayer -> factionPlayer.getActionHandler().deactivateAllActions()));
         }
     }
 }

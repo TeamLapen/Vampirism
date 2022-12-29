@@ -140,7 +140,7 @@ public class ModKeys { //TODO 1.17 revamp to skip using the KEY enum for getting
                 }
             }
         } else if (keyPressed == KEY.ACTION) {
-            if (Minecraft.getInstance().player.isAlive()) {
+            if (Minecraft.getInstance().player.isAlive() && !Minecraft.getInstance().player.isSpectator()) {
                 IPlayableFaction<?> faction = VampirismPlayerAttributes.get(Minecraft.getInstance().player).faction;
                 if (faction != null) {
                     Minecraft.getInstance().setScreen(new SelectActionScreen(faction.getColor(), false));
@@ -160,7 +160,7 @@ public class ModKeys { //TODO 1.17 revamp to skip using the KEY enum for getting
                 }
             }
 
-        } else if (keyPressed == KEY.ACTION2) {
+        } else if (keyPressed == KEY.ACTION2 && !Minecraft.getInstance().player.isSpectator()) {
             long t = System.currentTimeMillis();
             if (t - lastAction2Trigger > ACTION_BUTTON_COOLDOWN) {
                 lastAction2Trigger = System.currentTimeMillis();
@@ -170,7 +170,7 @@ public class ModKeys { //TODO 1.17 revamp to skip using the KEY enum for getting
                 }
             }
 
-        } else if (keyPressed == KEY.ACTION3) {
+        } else if (keyPressed == KEY.ACTION3 && !Minecraft.getInstance().player.isSpectator()) {
             long t = System.currentTimeMillis();
             if (t - lastAction3Trigger > ACTION_BUTTON_COOLDOWN) {
                 lastAction3Trigger = System.currentTimeMillis();
@@ -180,7 +180,7 @@ public class ModKeys { //TODO 1.17 revamp to skip using the KEY enum for getting
                 }
             }
 
-        } else if (keyPressed == KEY.MINION) {
+        } else if (keyPressed == KEY.MINION && !Minecraft.getInstance().player.isSpectator()) {
             if (FactionPlayerHandler.getOpt(Minecraft.getInstance().player).map(FactionPlayerHandler::getLordLevel).orElse(0) > 0) {
                 Minecraft.getInstance().setScreen(new SelectMinionTaskScreen());
             }

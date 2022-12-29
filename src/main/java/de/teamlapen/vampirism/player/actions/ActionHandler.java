@@ -270,6 +270,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
         } else if (cooldownTimers.containsKey(id)) {
             return IAction.PERM.COOLDOWN;
         } else {
+            if (this.player.getRepresentingPlayer().isSpectator()) return IAction.PERM.DISALLOWED;
             if (!isActionUnlocked(action)) return IAction.PERM.NOT_UNLOCKED;
             if (!isActionAllowedPermission(action)) return IAction.PERM.DISALLOWED;
             IAction.PERM r = action.canUse(player);

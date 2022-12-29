@@ -89,6 +89,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
     }
 
     public void activateTask(int minionID, IMinionTask<?, MinionData> task) {
+        if(getLordPlayer().map(PlayerEntity::isSpectator).orElse(false))return;
         if (minionID >= minions.length) {
             LOGGER.warn("Trying to activate a task for a non-existent minion {}", minionID);
         } else {
