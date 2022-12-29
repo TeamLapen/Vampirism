@@ -272,7 +272,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
         } else {
             if (this.player.getRepresentingPlayer().isSpectator()) return IAction.PERM.DISALLOWED;
             if (!isActionUnlocked(action)) return IAction.PERM.NOT_UNLOCKED;
-            if (!isActionAllowedPermission(action)) return IAction.PERM.DISALLOWED;
+            if (!isActionAllowedPermission(action)) return IAction.PERM.PERMISSION_DISALLOWED;
             IAction.PERM r = action.canUse(player);
             if (r == IAction.PERM.ALLOWED) {
                 if (action.onActivated(player, context)) {

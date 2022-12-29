@@ -103,6 +103,10 @@ public class CToggleActionPacket implements IMessage {
                             break;
                         case DISALLOWED:
                             player.displayClientMessage(new TranslationTextComponent("text.vampirism.action.disallowed"), true);
+                            break;
+                        case PERMISSION_DISALLOWED:
+                            player.displayClientMessage(new TranslationTextComponent("text.vampirism.action.permission_disallowed"), false);
+                            break;
                         default://Everything alright
                     }
                 } else {

@@ -89,7 +89,7 @@ public interface IAction extends IForgeRegistryEntry<IAction> {
     }
 
     enum PERM {
-        ALLOWED, DISABLED, NOT_UNLOCKED, DISALLOWED, COOLDOWN//Cooldown should not be used by the skill itself, but only by the {@link IActionHandler}
+        ALLOWED, DISABLED, NOT_UNLOCKED, DISALLOWED, COOLDOWN, PERMISSION_DISALLOWED//Cooldown should not be used by the skill itself, but only by the {@link IActionHandler}
     }
 
     /**

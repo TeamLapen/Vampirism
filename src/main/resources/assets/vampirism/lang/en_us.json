@@ -1270,5 +1270,6 @@
   "oil.vampirism.evasion": "Evasion",
   "__commend": "Oil description",
   "oil.vampirism.smelt.desc": "Can be used on Pickaxes to auto smelt destroyed blocks",
-  "oil.vampirism.evasion.desc": "Increases evasion chances when applied to armor"
+  "oil.vampirism.evasion.desc": "Increases evasion chances when applied to armor",
+  "text.vampirism.action.permission_disallowed": "You do not have the permission to use this action"
 }
