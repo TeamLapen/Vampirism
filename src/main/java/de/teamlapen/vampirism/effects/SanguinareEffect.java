@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.effects;
 
 import com.google.common.base.Preconditions;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.effect.EffectWithNoCounter;
 import de.teamlapen.vampirism.config.BalanceMobProps;
@@ -8,6 +9,8 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -79,6 +82,14 @@ public class SanguinareEffect extends VampirismEffect implements EffectWithNoCou
             @Override
             public boolean isVisibleInGui(MobEffectInstance instance) {
                 return false;
+            }
+
+            @Override
+            public boolean renderInventoryText(MobEffectInstance instance, EffectRenderingInventoryScreen<?> screen, PoseStack poseStack, int x, int y, int blitOffset) {
+                Component component = screen.getEffectName(instance);
+                screen.font.drawShadow(poseStack, component, (float)(x + 10 + 18), (float)(y + 6), 16777215);
+                screen.font.drawShadow(poseStack, "**:**", (float)(x + 10 + 18), (float)(y + 6 + 10), 8355711);
+                return true;
             }
         });
     }
