@@ -20,7 +20,7 @@ import java.util.function.Supplier;
  * This Widget does everything by itself except:
  * - {@link #mouseDragged(double, double, int, double, double)} must be called in {@link net.minecraft.client.gui.screens.Screen#mouseDragged(double, double, int, double, double)}
  * - {@link #renderToolTip(PoseStack, int, int)} must be called in {@link net.minecraft.client.gui.screens.Screen#render(PoseStack, int, int, float)}
- * @deprecated use {@link de.teamlapen.lib.lib.client.gui.components.SimpleButtonScrollWidget} instead
+ * @deprecated list does no longer has tooltips. use {@link de.teamlapen.lib.lib.client.gui.components.SimpleButtonScrollWidget} instead
  */
 @Deprecated
 public class ScrollableListComponent<T> extends ExtendedButton {
@@ -169,29 +169,7 @@ public class ScrollableListComponent<T> extends ExtendedButton {
         RenderSystem.depthFunc(515);
         RenderSystem.disableDepthTest();
         matrixStack.popPose();
-
-//        this.renderToolTip(matrixStack, mouseX, mouseY); //TODO 1.19 add tooltip
     }
-
-    /*@Override // TODO 1.19 add tooltips
-    public void renderToolTip(@NotNull PoseStack matrixStack, int mouseX, int mouseY) {
-        if (mouseX > this.getX() && mouseX < this.getX() + this.width && mouseY > this.getY() && mouseY < this.getY() + this.height + 1) {
-
-            int itemHeight = this.itemHeight; // only 1 pixel between items
-            for (int i = 0; i < this.listItems.size(); i++) {
-
-                int y = i * itemHeight - scrolled;
-
-                if (y < -itemHeight) {
-                    continue;
-                }
-
-                ListItem<T> item = this.listItems.get(i);
-                item.preRenderToolTip(matrixStack, this.getX(), this.getY() + y + 1, this.width - scrollerWidth, this.height, this.itemHeight, mouseX, mouseY, this.getBlitOffset());
-
-            }
-        }
-    }*/
 
     public ScrollableListComponent<T> scrollSpeed(double scrollSpeed) {
         this.scrollSpeed = scrollSpeed;

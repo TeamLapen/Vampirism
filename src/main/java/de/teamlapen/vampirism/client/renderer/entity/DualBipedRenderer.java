@@ -34,7 +34,7 @@ public abstract class DualBipedRenderer<T extends Mob, M extends HumanoidModel<T
     @NotNull
     @Override
     public ResourceLocation getTextureLocation(@NotNull T entity) {
-        return currentTexture != null ? currentTexture : DefaultPlayerSkin.getDefaultSkin(); //TODO 1.19 maybe include all textures
+        return currentTexture != null ? currentTexture : DefaultPlayerSkin.getDefaultSkin(); //Steve texture is used as fallback
     }
 
     @Override

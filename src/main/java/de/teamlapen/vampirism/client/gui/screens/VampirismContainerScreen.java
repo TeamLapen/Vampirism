@@ -244,7 +244,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
         public TaskInstanceWidgetExt(int pX, int pY, int pWidth, ITaskInstance taskInstance, Supplier<Vector2dc> scrollAmount, Consumer<TaskInstanceWidget> onClick, Screen screen, TaskMenu menu, IFactionPlayer<?> factionPlayer) {
             super(pX, pY, pWidth, taskInstance, scrollAmount, onClick, screen, menu, factionPlayer);
             if (!taskInstance.isUnique()) {
-                this.button = new ImageButton(0, 0, 8, 11, 0, 229, 11, TASKMASTER_GUI_TEXTURE, 256, 256, this::clickLocator, Component.empty()); //TODO 1.19 tooltip rendering
+                this.button = new ImageButton(0, 0, 8, 11, 0, 229, 11, TASKMASTER_GUI_TEXTURE, 256, 256, this::clickLocator, Component.empty());
             }
         }
 

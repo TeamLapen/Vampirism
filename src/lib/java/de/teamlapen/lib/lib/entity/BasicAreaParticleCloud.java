@@ -40,11 +40,10 @@ public class BasicAreaParticleCloud extends Entity {
         this.setRadius(3);
     }
 
-    /*@NotNull //TODO 1.19 recheck
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
-    }*/
+    }
 
     public int getColor() {
         return this.getEntityData().get(COLOR);
