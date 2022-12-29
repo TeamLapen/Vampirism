@@ -26,6 +26,7 @@ import de.teamlapen.vampirism.effects.VampireNightVisionEffectInstance;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.fluids.BloodHelper;
 import de.teamlapen.vampirism.items.VampirismHunterArmor;
 import de.teamlapen.vampirism.mixin.ArmorItemAccessor;
@@ -42,6 +43,7 @@ import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Permissions;
 import de.teamlapen.vampirism.util.ScoreboardUtil;
+import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -1475,6 +1477,14 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
         if (!(e.distanceTo(player) <= player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue() + 1) || e.getHealth() == 0f)
             endFeeding(true);
+    }
+
+    @Override
+    public void updateMinionAttributes(boolean enabled) {
+        MinionWorldData.getData(this.player.level).flatMap(a -> FactionPlayerHandler.getOpt(this.player).map(a::getOrCreateController)).ifPresent(controller -> controller.contactMinions((minion) -> {
+            (minion.getMinionData()).ifPresent(b -> ((VampireMinionEntity.VampireMinionData)b).setIncreasedStats(enabled));
+            HelperLib.sync(minion);
+        }));
     }
 
     private static class Storage implements Capability.IStorage<IVampirePlayer> {

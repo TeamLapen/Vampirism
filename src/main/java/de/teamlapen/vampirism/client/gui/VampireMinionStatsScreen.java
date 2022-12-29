@@ -51,9 +51,9 @@ public class VampireMinionStatsScreen extends MinionStatsScreen<VampireMinionEnt
     protected void renderStats(MatrixStack mStack, VampireMinionEntity.VampireMinionData data) {
         renderLevelRow(mStack, data.getLevel() + 1, VampireMinionEntity.VampireMinionData.MAX_LEVEL + 1);
         renderStatRow(mStack, 0, inventoryLevel, new StringTextComponent("" + data.getInventorySize()), data.getInventoryLevel() + 1, VampireMinionEntity.VampireMinionData.MAX_LEVEL_INVENTORY + 1);
-        renderStatRow(mStack, 1, healthLevel, new StringTextComponent("" + entity.getAttribute(Attributes.MAX_HEALTH).getBaseValue()), data.getHealthLevel() + 1, VampireMinionEntity.VampireMinionData.MAX_LEVEL_HEALTH + 1);
-        renderStatRow(mStack, 2, strengthLevel, new StringTextComponent("" + entity.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue()), data.getStrengthLevel() + 1, VampireMinionEntity.VampireMinionData.MAX_LEVEL_STRENGTH + 1);
-        renderStatRow(mStack, 3, speedLevel, new StringTextComponent("" + entity.getAttribute(Attributes.MOVEMENT_SPEED).getBaseValue()), data.getSpeedLevel() + 1, VampireMinionEntity.VampireMinionData.MAX_LEVEL_SPEED + 1);
+        renderStatRow(mStack, 1, healthLevel, new StringTextComponent(String.format("%.1f", entity.getAttribute(Attributes.MAX_HEALTH).getBaseValue())), data.getHealthLevel() + 1, VampireMinionEntity.VampireMinionData.MAX_LEVEL_HEALTH + 1);
+        renderStatRow(mStack, 2, strengthLevel, new StringTextComponent(String.format("%.1f", entity.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue())), data.getStrengthLevel() + 1, VampireMinionEntity.VampireMinionData.MAX_LEVEL_STRENGTH + 1);
+        renderStatRow(mStack, 3, speedLevel, new StringTextComponent(String.format("%.1f", entity.getAttribute(Attributes.MOVEMENT_SPEED).getBaseValue())), data.getSpeedLevel() + 1, VampireMinionEntity.VampireMinionData.MAX_LEVEL_SPEED + 1);
 
     }
 }

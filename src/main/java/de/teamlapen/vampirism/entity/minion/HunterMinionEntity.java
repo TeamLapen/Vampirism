@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
-import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.hunter.IVampirismCrossbowUser;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
@@ -192,10 +191,10 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         if (this.level.isClientSide()) return;
     }
 
-    private void updateAttributes() {
-        float statsMultiplier = getLordOpt().flatMap(lord -> ((IFactionPlayerHandler) lord).getCurrentFactionPlayer()).map(player -> player.getSkillHandler().isSkillEnabled(HunterSkills.HUNTER_MINION_STATS_INCREASE.get())).orElse(false)?1.2f:1f;
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.MINION_MAX_HEALTH + BalanceMobProps.mobProps.MINION_MAX_HEALTH_PL * getMinionData().map(HunterMinionData::getHealthLevel).orElse(0) * statsMultiplier);
-        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE + BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE_PL * getMinionData().map(HunterMinionData::getStrengthLevel).orElse(0) * statsMultiplier);
+    public void updateAttributes() {
+        float statsMultiplier = this.getMinionData().filter(d -> d.hasIncreasedStats).map(a -> 1.2f).orElse(1f);
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue((BalanceMobProps.mobProps.MINION_MAX_HEALTH + BalanceMobProps.mobProps.MINION_MAX_HEALTH_PL * getMinionData().map(HunterMinionData::getHealthLevel).orElse(0)) * statsMultiplier);
+        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue((BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE + BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE_PL * getMinionData().map(HunterMinionData::getStrengthLevel).orElse(0)) * statsMultiplier);
         this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_SPEED * statsMultiplier);
     }
 
@@ -279,6 +278,8 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         private int strengthLevel;
         private int resourceEfficiencyLevel;
 
+        private boolean hasIncreasedStats;
+
         public HunterMinionData(String name, int type, int hat, boolean useLordSkin) {
             super(name, 9);
             this.type = type;
@@ -304,6 +305,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             strengthLevel = nbt.getInt("l_str");
             resourceEfficiencyLevel = nbt.getInt("l_res");
             minionSkin = nbt.getBoolean("ms");
+            hasIncreasedStats = nbt.getBoolean("hasIncreasedStats");
 
         }
 
@@ -382,6 +384,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             tag.putInt("l_res", resourceEfficiencyLevel);
             tag.putBoolean("use_lord_skin", useLordSkin);
             tag.putBoolean("ms", minionSkin);
+            tag.putBoolean("hasIncreasedStats", hasIncreasedStats);
 
         }
 
@@ -430,6 +433,10 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
                     LOGGER.warn("Cannot upgrade minion stat {} as it does not exist", statId);
                     return false;
             }
+        }
+
+        public void setIncreasedStats(boolean hasIncreasedStats) {
+            this.hasIncreasedStats = hasIncreasedStats;
         }
 
         @Override

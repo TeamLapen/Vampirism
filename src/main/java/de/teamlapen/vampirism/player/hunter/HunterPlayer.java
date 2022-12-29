@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.player.hunter;
 
+import de.teamlapen.lib.HelperLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.VampireActionTrigger;
@@ -12,6 +13,8 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.player.IVampirismPlayer;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
@@ -23,6 +26,7 @@ import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.OilUtils;
 import de.teamlapen.vampirism.util.ScoreboardUtil;
+import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -322,6 +326,14 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
         super.writeFullUpdate(nbt);
         actionHandler.writeUpdateForClient(nbt);
         skillHandler.writeUpdateForClient(nbt);
+    }
+
+    @Override
+    public void updateMinionAttributes(boolean increasedStats) {
+        MinionWorldData.getData(this.player.level).flatMap(a -> FactionPlayerHandler.getOpt(this.player).map(a::getOrCreateController)).ifPresent(controller -> controller.contactMinions((minion) -> {
+            (minion.getMinionData()).ifPresent(b -> ((HunterMinionEntity.HunterMinionData)b).setIncreasedStats(increasedStats));
+            HelperLib.sync(minion);
+        }));
     }
 
     private static class Storage implements Capability.IStorage<IHunterPlayer> {

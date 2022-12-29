@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
-import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.client.gui.VampireMinionAppearanceScreen;
@@ -25,7 +24,6 @@ import de.teamlapen.vampirism.entity.vampire.BasicVampireEntity;
 import de.teamlapen.vampirism.items.BloodBottleItem;
 import de.teamlapen.vampirism.items.MinionUpgradeItem;
 import de.teamlapen.vampirism.items.VampirismItemBloodFood;
-import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;
@@ -246,11 +244,11 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         this.goalSelector.addGoal(8, new FleeSunVampireGoal<>(this, 1, true));
     }
 
-    private void updateAttributes() {
-        float statsMultiplier = getLordOpt().flatMap(lord -> ((IFactionPlayerHandler) lord).getCurrentFactionPlayer()).map(player -> player.getSkillHandler().isSkillEnabled(VampireSkills.VAMPIRE_MINION_STATS_INCREASE.get())).orElse(false)?1.2f:1;
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.MINION_MAX_HEALTH + BalanceMobProps.mobProps.MINION_MAX_HEALTH_PL * getMinionData().map(VampireMinionData::getHealthLevel).orElse(0) * statsMultiplier);
-        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE + BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE_PL * getMinionData().map(VampireMinionData::getStrengthLevel).orElse(0) * statsMultiplier);
-        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_SPEED + 0.05 * getMinionData().map(VampireMinionData::getSpeedLevel).orElse(0) * statsMultiplier);
+    public void updateAttributes() {
+        float statsMultiplier = this.getMinionData().filter(d -> d.hasIncreasedStats).map(a -> 1.2f).orElse(1f);
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue((BalanceMobProps.mobProps.MINION_MAX_HEALTH + BalanceMobProps.mobProps.MINION_MAX_HEALTH_PL * getMinionData().map(VampireMinionData::getHealthLevel).orElse(0)) * statsMultiplier);
+        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue((BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE + BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE_PL * getMinionData().map(VampireMinionData::getStrengthLevel).orElse(0)) * statsMultiplier);
+        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue((BalanceMobProps.mobProps.VAMPIRE_SPEED + 0.05 * getMinionData().map(VampireMinionData::getSpeedLevel).orElse(0) )* statsMultiplier);
     }
 
     public static class VampireMinionData extends MinionData {
@@ -272,6 +270,8 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         private int healthLevel;
         private int strengthLevel;
         private int speedLevel;
+
+        private boolean hasIncreasedStats;
 
         public VampireMinionData(String name, int type, boolean useLordSkin) {
             super(name, 9);
@@ -296,6 +296,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
             strengthLevel = nbt.getInt("l_str");
             speedLevel = nbt.getInt("l_spe");
             minionSkin = nbt.getBoolean("ms");
+            hasIncreasedStats = nbt.getBoolean("hasIncreasedStats");
         }
 
         @Override
@@ -371,6 +372,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
             tag.putInt("l_str", strengthLevel);
             tag.putInt("l_spe", speedLevel);
             tag.putBoolean("ms", minionSkin);
+            tag.putBoolean("hasIncreasedStats", hasIncreasedStats);
         }
 
         /**
@@ -417,6 +419,10 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
                     LOGGER.warn("Cannot upgrade minion stat {} as it does not exist", statId);
                     return false;
             }
+        }
+
+        public void setIncreasedStats(boolean hasIncreasedStats) {
+            this.hasIncreasedStats = hasIncreasedStats;
         }
 
         @Override

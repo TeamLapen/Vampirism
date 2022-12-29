@@ -33,6 +33,11 @@ class HunterPlayerDefaultImpl implements IHunterPlayer {
     }
 
     @Override
+    public void updateMinionAttributes(boolean increasedStats) {
+
+    }
+
+    @Override
     public boolean canLeaveFaction() {
         return false;
     }

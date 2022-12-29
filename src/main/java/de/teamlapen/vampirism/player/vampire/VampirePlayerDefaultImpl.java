@@ -215,6 +215,11 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
     }
 
     @Override
+    public void updateMinionAttributes(boolean increasedStats) {
+
+    }
+
+    @Override
     public boolean useBlood(int amt, boolean allowPartial) {
         return false;
     }

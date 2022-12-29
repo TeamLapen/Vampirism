@@ -84,7 +84,7 @@ public class HunterSkills {
     public static final RegistryObject<ISkill> CRUCIFIX_WIELDER = SKILLS.register("crucifix_wielder", () -> new VampirismSkill.SimpleHunterSkill(true));
     public static final RegistryObject<ISkill> ULTIMATE_CRUCIFIX = SKILLS.register("ultimate_crucifix", () -> new VampirismSkill.SimpleHunterSkill(true));
 
-    public static final RegistryObject<ISkill> HUNTER_MINION_STATS_INCREASE = SKILLS.register("hunter_minion_stats_increase", () -> new VampirismSkill.LordHunterSkill(true));
+    public static final RegistryObject<ISkill> HUNTER_MINION_STATS_INCREASE = SKILLS.register("hunter_minion_stats_increase", () -> new VampirismSkill.LordHunterSkill(true).setToggleActions(hunter -> hunter.updateMinionAttributes(true), hunter -> hunter.updateMinionAttributes(false)));
     public static final RegistryObject<ISkill> HUNTER_LORD_SPEED = SKILLS.register("hunter_lord_speed", () -> new ActionSkill<IHunterPlayer>(HunterActions.HUNTER_LORD_SPEED.get(), SkillType.LORD,true));
     public static final RegistryObject<ISkill> HUNTER_LORD_ATTACK_SPEED = SKILLS.register("hunter_lord_attack_speed", () -> new ActionSkill<IHunterPlayer>(HunterActions.HUNTER_LORD_ATTACK_SPEED.get(),SkillType.LORD,true));
     public static final RegistryObject<ISkill> HUNTER_MINION_COLLECT = SKILLS.register("hunter_minion_collect", () -> new VampirismSkill.LordHunterSkill(true));
