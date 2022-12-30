@@ -132,20 +132,16 @@ publishing {
     }
 }
 
-import com.modrinth.minotaur.TaskModrinthUpload
 
 // Make sure it runs after build!
-task modrinth (type: TaskModrinthUpload){
-    onlyIf {
-        project.hasProperty("MODRINTH_API") // Only attempt to run this task if the MODRINTH variable is set, otherwise SKIP it
-    }
+modrinth{
     if (project.type == "beta") {
-        versionType = 'BETA'
+        versionType = 'beta'
         //changelog = new File("resources/changelog/${project.version}.txt").text
     } else if (project.type == "release") {
-        versionType = 'RELEASE'
+        versionType = 'release'
     } else {
-        versionType = 'ALPHA'
+        versionType = 'alpha'
         changelog = "This version should not be used in your 'productive' world. It contains the latest features, but also the latest bugs.\n Probably not all features are finished.\n To see what might have changed visit our Github page and browse the latest commits."
     }
     token = findProperty("MODRINTH_API") ?: "DUMMY"
@@ -153,8 +149,8 @@ task modrinth (type: TaskModrinthUpload){
     versionName = "Vampirism-${project.minecraft_version}-${project.mod_version}"
     versionNumber = "${project.minecraft_version}-${project.mod_version}"
     uploadFile = jar
-    addGameVersion(project.minecraft_version)
-    addLoader('forge')
+    gameVersions = [project.minecraft_version]
+    loaders = ["forge"]
 }
 
 

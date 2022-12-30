@@ -15,7 +15,7 @@ repositories {
         url = "../../MinecraftForge/repo/"
     }
     maven {
-        url = "https://maxanier.de/maven2"
+        url = "https://maven.maxanier.de/releases"
     }
     maven {
         url "https://nexus.resourcefulbees.com/repository/maven-public/"
