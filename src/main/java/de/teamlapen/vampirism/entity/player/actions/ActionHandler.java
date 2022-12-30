@@ -82,6 +82,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             action.onDeactivated(player);
         }
         this.activeTimers.clear();
+        dirty = true;
     }
 
     @Override
