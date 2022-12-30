@@ -161,11 +161,11 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
             if (m2 != null) {
                 armorToughnessAttributeInst.removeModifier(m2);
             }
+            boolean spectator = player.isSpectator();
+            boolean creative = player.isCreative();
+            player.abilities.mayfly = spectator || creative;
+            player.abilities.flying = spectator;
 
-            if (!player.abilities.instabuild) {
-                player.abilities.mayfly = false;
-            }
-            player.abilities.flying = false;
             setFlightSpeed(player, 0.05F);
         }
         player.onUpdateAbilities();

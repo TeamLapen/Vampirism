@@ -79,6 +79,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
             action.onDeactivated(player);
         }
         this.activeTimers.clear();
+        dirty = true;
     }
 
     @Override
@@ -325,7 +326,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
      * Update the actions
      * Should only be called by the corresponding Capability instance
      *
-     * @return If a sync is recommend, only relevant on server side
+     * @return If a sync is recommended, only relevant on server side
      */
     public boolean updateActions() {
         //First update cooldown timers so active actions that become deactivated are not ticked.
