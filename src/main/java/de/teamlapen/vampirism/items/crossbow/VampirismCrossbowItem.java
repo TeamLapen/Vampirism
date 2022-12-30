@@ -166,6 +166,9 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
             p_220016_3_.hurtAndBreak(1, p_220016_1_, (p_220017_1_) -> {
                 p_220017_1_.broadcastBreakEvent(p_220016_2_);
             });
+            if(isInfinit(p_220016_3_)){
+                projectileentity.pickup = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
+            }
             p_220016_0_.addFreshEntity(projectileentity);
             p_220016_0_.playSound((PlayerEntity)null, p_220016_1_.getX(), p_220016_1_.getY(), p_220016_1_.getZ(), SoundEvents.CROSSBOW_SHOOT, SoundCategory.PLAYERS, 1.0F, p_220016_5_);
         }
