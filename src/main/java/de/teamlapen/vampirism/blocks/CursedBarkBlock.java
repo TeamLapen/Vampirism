@@ -1,8 +1,5 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.effects.SanguinareEffect;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
@@ -13,7 +10,6 @@ import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
@@ -31,8 +27,6 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashSet;
-import java.util.Set;
 
 public class CursedBarkBlock extends Block {
 
@@ -75,6 +69,7 @@ public class CursedBarkBlock extends Block {
                 ExtendedCreature.getSafe(entity).ifPresent(creature -> {
                     if (((ExtendedCreature) creature).getRemainingBarkTicks() == 0) {
                         creature.setBlood(creature.getBlood() - 1);
+                        ((ExtendedCreature)creature).sync();
                         ((ExtendedCreature) creature).increaseRemainingBarkTicks(40);
                     }
 
