@@ -27,13 +27,12 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.StructureTags;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -44,6 +43,7 @@ import net.minecraft.world.entity.monster.PatrollingMonster;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -310,13 +310,22 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        SupporterManager.Supporter supporter = SupporterManager.getInstance().getRandomHunter(random);
         this.getEntityData().define(LEVEL, -1);
-        this.getEntityData().define(TYPE, supporter.typeId());
-        this.getEntityData().define(NAME, supporter.senderName() == null ? "none" : supporter.senderName());
-        this.getEntityData().define(TEXTURE, supporter.textureName() == null ? "none" : supporter.textureName());
-        this.lootBookId = supporter.bookID();
+        this.getEntityData().define(TYPE, 0);
+        this.getEntityData().define(NAME, "none");
+        this.getEntityData().define(TEXTURE, "none");
+    }
 
+    @Nullable
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
+        SupporterManager.Supporter supporter = SupporterManager.getInstance().getRandomHunter(random);
+        this.getEntityData().set(TYPE, supporter.typeId());
+        this.getEntityData().set(TYPE, supporter.typeId());
+        this.getEntityData().set(NAME, supporter.senderName() == null ? "none" : supporter.senderName());
+        this.getEntityData().set(TEXTURE, supporter.textureName() == null ? "none" : supporter.textureName());
+        this.lootBookId = supporter.bookID();
+        return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
     }
 
     @Override
