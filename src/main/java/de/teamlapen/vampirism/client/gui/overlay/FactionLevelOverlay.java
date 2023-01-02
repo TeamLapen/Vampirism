@@ -15,7 +15,7 @@ public class FactionLevelOverlay extends GuiComponent implements IGuiOverlay {
 
     @Override
     public void render(@NotNull ForgeGui gui, @NotNull PoseStack mStack, float partialTicks, int width, int height) {
-        if (this.mc.player != null && this.mc.player.isAlive() && this.mc.player.jumpableVehicle() != null && !this.mc.options.hideGui) {
+        if (this.mc.player != null && this.mc.player.isAlive() && this.mc.player.jumpableVehicle() == null && !this.mc.options.hideGui) {
             gui.setupOverlayRenderState(true, false);
 
             FactionPlayerHandler.getOpt(this.mc.player).ifPresent(handler -> {
