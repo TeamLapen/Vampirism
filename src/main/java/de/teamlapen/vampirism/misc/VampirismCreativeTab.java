@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.misc;
 
+import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.items.oil.IOil;
@@ -10,19 +11,11 @@ import de.teamlapen.vampirism.util.OilUtils;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.Block;
 import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.RegistryObject;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.Set;
 import java.util.function.Consumer;
 
 import static de.teamlapen.vampirism.core.ModBlocks.*;
@@ -41,26 +34,16 @@ public class VampirismCreativeTab {
         VReference.VAMPIRISM_TAB = event.registerCreativeModeTab(new ResourceLocation(REFERENCE.MODID, "default"), BUILDER);
     }
 
-    public static class VampirismDisplayItemGenerator implements CreativeModeTab.DisplayItemsGenerator {
+    public static class VampirismDisplayItemGenerator extends ModDisplayItemGenerator {
 
-        private CreativeModeTab.Output output;
-        @SuppressWarnings("FieldCanBeLocal")
-        private FeatureFlagSet featureFlagSet;
-        @SuppressWarnings("FieldCanBeLocal")
-        private boolean hasPermission;
-        private Set<ItemLike> items;
+        public VampirismDisplayItemGenerator() {
+            super(ModItems.getAllVampirismTabItems());
+        }
 
         @Override
-        public void accept(@NotNull FeatureFlagSet featureFlagSet, CreativeModeTab.@NotNull Output output, boolean hasPermission) {
-            this.output = output;
-            this.featureFlagSet = featureFlagSet;
-            this.hasPermission = hasPermission;
-            this.items = ModItems.getAllVampirismTabItems();
-            
+        protected void addItemsToOutput() {
             addItems();
             addBlocks();
-
-            items.forEach(output::accept);
         }
 
         private void addItems() {
@@ -337,33 +320,5 @@ public class VampirismCreativeTab {
             addItem(CRUCIFIX_ENHANCED);
             addItem(CRUCIFIX_ULTIMATE);
         }
-
-
-        private void add(ItemLike item) {
-            this.items.remove(item);
-            output.accept(item);
-        }
-
-        private void add(ItemStack item) {
-            this.items.remove(item.getItem());
-            output.accept(item);
-        }
-
-        private void addItem(RegistryObject<? extends Item> item) {
-            add(item.get());
-        }
-
-        private void addBlock(RegistryObject<? extends Block> item) {
-            add(item.get());
-        }
-
-        private <T extends ItemLike & CreativeTabItemProvider> void addGen(RegistryObject<T> item) {
-            this.items.remove(item.get());
-            item.get().generateCreativeTab(featureFlagSet, output, hasPermission);
-        }
-    }
-    
-    public interface CreativeTabItemProvider {
-        void generateCreativeTab(FeatureFlagSet featureFlagSet, CreativeModeTab.Output output, boolean hasPermission);
     }
 }

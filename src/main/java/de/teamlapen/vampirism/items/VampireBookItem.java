@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.misc.VampirismCreativeTab;
 import de.teamlapen.vampirism.network.ClientboundOpenVampireBookPacket;
@@ -26,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.List;
 
-public class VampireBookItem extends Item implements VampirismCreativeTab.CreativeTabItemProvider {
+public class VampireBookItem extends Item implements ModDisplayItemGenerator.CreativeTabItemProvider {
 
     public static boolean validBookTagContents(@NotNull CompoundTag nbt) {
         if (!WritableBookItem.makeSureTagIsValid(nbt)) {
