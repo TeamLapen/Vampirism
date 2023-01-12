@@ -20,6 +20,7 @@ import de.teamlapen.vampirism.inventory.VampirismMenu;
 import de.teamlapen.vampirism.network.*;
 import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.TerrainParticle;
 import net.minecraft.client.renderer.Sheets;
@@ -82,17 +83,17 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void displayGarlicBeaconScreen(GarlicDiffuserBlockEntity tile, Component title) {
-        Minecraft.getInstance().setScreen(new GarlicDiffuserScreen(tile, title));
+        openScreen(new GarlicDiffuserScreen(tile, title));
     }
 
     @Override
     public void displayNameSwordScreen(ItemStack stack) {
-        Minecraft.getInstance().setScreen(new NameSwordScreen(stack));
+        openScreen(new NameSwordScreen(stack));
     }
 
     @Override
     public void displayRevertBackScreen() {
-        Minecraft.getInstance().setScreen(new RevertBackScreen());
+        openScreen(new RevertBackScreen());
     }
 
     @Nullable
@@ -137,7 +138,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void handleRequestMinionSelect(ClientboundRequestMinionSelectPacket.Action action, @NotNull List<Pair<Integer, Component>> minions) {
-        Minecraft.getInstance().setScreen(new SelectMinionScreen(action, minions));
+        openScreen(new SelectMinionScreen(action, minions));
     }
 
     @Override
@@ -181,7 +182,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void handleVampireBookPacket(VampireBookManager.@NotNull BookInfo bookInfo) {
-        Minecraft.getInstance().setScreen(new VampireBookScreen(bookInfo));
+        openScreen(new VampireBookScreen(bookInfo));
     }
 
     @Override
@@ -216,7 +217,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void showDBNOScreen(@NotNull Player playerEntity, @Nullable Component deathMessage) {
         if (playerEntity == Minecraft.getInstance().player && !playerEntity.isDeadOrDying()) {
-            Minecraft.getInstance().setScreen(new DBNOScreen(deathMessage));
+            openScreen(new DBNOScreen(deathMessage));
         }
     }
 
@@ -270,5 +271,13 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void endBloodVisionBatch() {
         this.renderHandler.endBloodVisionBatch();
+    }
+
+    public static void runOnRenderThread(Runnable runnable) {
+        Minecraft.getInstance().execute(runnable);
+    }
+
+    public static void openScreen(Screen screen) {
+        runOnRenderThread(() -> Minecraft.getInstance().setScreen(screen));
     }
 }
