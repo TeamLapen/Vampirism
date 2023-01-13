@@ -27,22 +27,13 @@ import java.util.List;
 import java.util.function.Function;
 
 /**
- * For new dynamic registry related things see {@link VampirismBiomes} and {@link OverworldModifications}
+ * For new dynamic registry related things see {@link VampirismBiomes} and {@link OverworldModifications} {@link de.teamlapen.vampirism.world.gen.VampirismFeatures}
  */
 public class ModBiomes {
 
     public static final DeferredRegister<Codec<? extends BiomeModifier>> BIOME_MODIFIER_SERIALIZERS = DeferredRegister.create(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, REFERENCE.MODID);
 
-    public static final RegistryObject<Codec<ExtendedAddSpawnsBiomeModifier>> ADD_SPAWNS_BIOME_MODIFIER_TYPE = BIOME_MODIFIER_SERIALIZERS.register("extended_add_spawns", () ->
-            RecordCodecBuilder.create(builder -> builder.group(
-                    Biome.LIST_CODEC.fieldOf("biomes").forGetter(ExtendedAddSpawnsBiomeModifier::biomes),
-                    Biome.LIST_CODEC.fieldOf("excludedBiomes").forGetter(ExtendedAddSpawnsBiomeModifier::excludedBiomes),
-                    new ExtraCodecs.EitherCodec<>(ExtendedAddSpawnsBiomeModifier.ExtendedSpawnData.CODEC.listOf(), ExtendedAddSpawnsBiomeModifier.ExtendedSpawnData.CODEC).xmap(
-                            either -> either.map(Function.identity(), List::of), // convert list/singleton to list when decoding
-                            list -> list.size() == 1 ? Either.right(list.get(0)) : Either.left(list) // convert list to singleton/list when encoding
-                    ).fieldOf("spawners").forGetter(ExtendedAddSpawnsBiomeModifier::spawners)
-            ).apply(builder, ExtendedAddSpawnsBiomeModifier::new))
-    );
+    public static final RegistryObject<Codec<ExtendedAddSpawnsBiomeModifier>> ADD_SPAWNS_BIOME_MODIFIER_TYPE = BIOME_MODIFIER_SERIALIZERS.register("extended_add_spawns", () -> ExtendedAddSpawnsBiomeModifier.CODEC);
 
     public static final ResourceKey<Biome> VAMPIRE_FOREST = ResourceKey.create(Registries.BIOME, new ResourceLocation(REFERENCE.MODID, "vampire_forest"));
 
