@@ -6,6 +6,7 @@ title: Blood Values
 Blood values can be configured for items, entities and fluids.
 
 ## Types
+In the following context the `file-id` is an identified for your file that is relevant if you want to  override values. This works similar to the tag system. Creating the file `vampirism.json` and setting `replace` to `true` will remove all values that vampirism sets in `vamprism.json` and adds your values.
 ### Items
 Item blood values are used by the [Grinder](../wiki/content/blocks#grinder) to determine the amount of impure blood of an item when grinding it.
 A configured value of `20` means that the grinder will produce 20mb impure blood when grinding the item.
