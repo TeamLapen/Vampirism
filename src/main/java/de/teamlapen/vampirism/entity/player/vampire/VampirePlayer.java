@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.player.vampire;
 
+import com.mojang.serialization.Codec;
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
@@ -47,6 +48,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -173,7 +175,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     private final @NotNull BloodStats bloodStats;
     private final @NotNull ActionHandler<IVampirePlayer> actionHandler;
     private final @NotNull SkillHandler<IVampirePlayer> skillHandler;
-    private final List<IVampireVision> unlockedVisions = new ArrayList<>();
     private boolean sundamage_cache = false;
     private @NotNull EnumStrength garlic_cache = EnumStrength.NONE;
     private int ticksInSun = 0;
@@ -214,7 +215,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
     @Override
     public void activateVision(@Nullable IVampireVision vision) {
-        if (vision != null && !isRemote() && (VampirismAPI.vampireVisionRegistry()).getIdOfVision(vision) == -1) {
+        if (vision != null && !isRemote() && (VampirismAPI.vampireVisionRegistry()).getVisionId(vision) != null) {
             throw new IllegalArgumentException("You have to register the vision first: " + vision);
         }
         this.vision.activate(vision);
@@ -1024,12 +1025,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
      * Switch to the next vision
      */
     public void switchVision() {
-        int id = this.vision.visionId;
-        id++;
-        if (id > unlockedVisions.size() - 1) {
-            id = -1;
-        }
-        activateVision(id == -1 ? null : unlockedVisions.get(id));
+        this.vision.switchVision();
     }
 
     public void tryResurrect() {
@@ -1071,16 +1067,12 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
     @Override
     public void unUnlockVision(@NotNull IVampireVision vision) {
-        this.vision.deactivate(vision);
-        unlockedVisions.remove(vision);
+        this.vision.lockVision(vision);
     }
 
     @Override
     public void unlockVision(@NotNull IVampireVision vision) {
-        if ((VampirismAPI.vampireVisionRegistry()).getIdOfVision(vision) == -1) {
-            throw new IllegalArgumentException("You have to register the vision first: " + vision);
-        }
-        unlockedVisions.add(vision);
+        this.vision.unlockVision(vision);
     }
 
     public void updateNaturalArmor(int lvl) {
@@ -1436,15 +1428,15 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     private class VisionStatus {
-
-        private int visionId = -1;
+        private final SortedSet<IVampireVision> unlockedVisions = new TreeSet<>(Comparator.comparing(o -> VampirismAPI.vampireVisionRegistry().getVisionId(o)));
+        private ResourceLocation visionId;
         private IVampireVision vision;
 
         public void deactivate() {
             if (vision != null) {
                 vision.onDeactivated(VampirePlayer.this);
                 vision = null;
-                visionId = -1;
+                visionId = null;
             }
         }
 
@@ -1463,6 +1455,28 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             }
         }
 
+        private void switchVision() {
+            List<IVampireVision> visions = VampirismAPI.vampireVisionRegistry().getVisions();
+            int newIndex;
+            if (this.vision != null) {
+                newIndex = visions.indexOf(this.vision) + 1;
+            } else {
+                newIndex = 0;
+            }
+            var newVision = newIndex == visions.size() ? null : visions.get(++newIndex);
+            activate(newVision);
+        }
+
+        public void unlockVision(IVampireVision vision) {
+            VampirismAPI.vampireVisionRegistry().getVisionId(vision);
+            this.unlockedVisions.add(vision);
+        }
+
+        public void lockVision(IVampireVision vision) {
+            this.deactivate(vision);
+            this.unlockedVisions.remove(vision);
+        }
+
         public void activate(@Nullable IVampireVision vision) {
             if (this.vision != null && this.vision == vision) {
                 return;
@@ -1477,10 +1491,10 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                 } else if (VampirePlayer.this.player.isAddedToWorld()) {
                     VampirePlayer.this.player.displayClientMessage(Component.translatable("Vision is disabled by config"),true);
                 }
-                this.visionId = VampirismAPI.vampireVisionRegistry().getIdOfVision(vision);
+                this.visionId = VampirismAPI.vampireVisionRegistry().getVisionId(vision);
             } else {
                 this.vision = null;
-                this.visionId = -1;
+                this.visionId = null;
             }
 
             if (!isRemote() && player.isAddedToWorld()) {
@@ -1492,16 +1506,40 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
         private @NotNull CompoundTag createTag() {
             CompoundTag tag = new CompoundTag();
-            tag.putInt(this.vision != null ? "vision": "visionId", this.visionId);
+            if (this.visionId == null) {
+                tag.putBoolean("hasVision", false);
+            } else {
+                tag.putBoolean("hasVision", true);
+                tag.putString(this.vision != null ? "vision": "visionId", this.visionId.toString());
+            }
             return tag;
         }
 
         private void readTag(@NotNull CompoundTag tag) {
-            if (tag.contains("vision")) {
-                this.activate(VampirismAPI.vampireVisionRegistry().getVisionOfId(tag.getInt("vision")));
-            } else if(tag.contains("visionId")) {
+            if (tag.getBoolean("hasVision")) {
+                if (tag.contains("vision")) {
+                    // legacy support for integer ids
+                    if (tag.contains("vision", Tag.TAG_INT)) {
+                        //noinspection removal
+                        this.activate(VampirismAPI.vampireVisionRegistry().getVisionOfId(tag.getInt("vision")));
+                    } else if (tag.contains("vision", Tag.TAG_STRING)) {
+                        this.activate(VampirismAPI.vampireVisionRegistry().getVision(new ResourceLocation(tag.getString("vision"))));
+                    }
+                } else if(tag.contains("visionId")) {
+                    this.deactivate();
+                    //legacy support for integer ids
+                    if (tag.contains("visionId", Tag.TAG_INT)) {
+                        //noinspection removal
+                        this.visionId = VampirismAPI.vampireVisionRegistry().getIdForId(tag.getInt("visionId"));
+
+                    } else if (tag.contains("visionId", Tag.TAG_STRING)) {
+                        this.visionId = new ResourceLocation(tag.getString("visionId"));
+                    }
+                }
+            } else {
                 this.deactivate();
-                this.visionId = tag.getInt("visionId");
+                this.vision = null;
+                this.visionId = null;
             }
         }
 
