@@ -39,4 +39,9 @@ public class BloodVision implements IVampireVision {
     public void tick(IVampirePlayer player) {
 
     }
+
+    @Override
+    public boolean isEnabled() {
+        return !VampirismConfig.BALANCE.vpBloodVisionDisabled.get();
+    }
 }

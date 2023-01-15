@@ -179,7 +179,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     private int ticksInSun = 0;
     private int remainingBarkTicks = 0;
     private boolean wasDead = false;
-    private @Nullable IVampireVision activatedVision = null;
+    private @NotNull VisionStatus vision = new VisionStatus();
     private int feed_victim = -1;
     /**
      * Holds a sound reference (client side only) for the feeding sound while feed_victim!=-1
@@ -217,20 +217,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         if (vision != null && !isRemote() && (VampirismAPI.vampireVisionRegistry()).getIdOfVision(vision) == -1) {
             throw new IllegalArgumentException("You have to register the vision first: " + vision);
         }
-        if (!Objects.equals(activatedVision, vision)) {
-            if (activatedVision != null) {
-                activatedVision.onDeactivated(this);
-            }
-            activatedVision = vision;
-            if (vision != null) {
-                vision.onActivated(this);
-            }
-            if (!isRemote() && player.isAddedToWorld()) {
-                CompoundTag nbt = new CompoundTag();
-                nbt.putInt(KEY_VISION, activatedVision == null ? -1 : (VampirismAPI.vampireVisionRegistry()).getIdOfVision(activatedVision));
-                this.sync(nbt, false);
-            }
-        }
+        this.vision.activate(vision);
 
     }
 
@@ -403,7 +390,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     @Nullable
     @Override
     public IVampireVision getActiveVision() {
-        return activatedVision;
+        return this.vision.vision;
     }
 
     @Override
@@ -594,12 +581,9 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         actionHandler.loadFromNbt(nbt);
         skillHandler.loadFromNbt(nbt);
         if (nbt.getBoolean(KEY_WAS_DBNO)) wasDBNO = true;
-        IVampireVision vision = null;
-        if (nbt.contains(KEY_VISION)) { //Must be after loading skillHandler due to night vision skill being automatically activated
-            vision = (VampirismAPI.vampireVisionRegistry()).getVisionOfId(nbt.getInt(KEY_VISION));
+        if (nbt.contains(KEY_VISION, CompoundTag.TAG_COMPOUND)) { //Must be after loading skillHandler due to night vision skill being automatically activated
+            this.vision.readTag(nbt.getCompound(KEY_VISION));
         }
-        activatedVision = vision;
-
     }
 
     @Override
@@ -846,9 +830,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             sundamage_cache = false;
             garlic_cache = EnumStrength.NONE;
         }
-        if (activatedVision != null) {
-            activatedVision.tick(this);
-        }
+        this.vision.tick();
 
         if (!isRemote()) {
             if (level > 0) {
@@ -977,9 +959,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         nbt.putBoolean(KEY_GLOWING_EYES, getGlowingEyes());
         actionHandler.saveToNbt(nbt);
         skillHandler.saveToNbt(nbt);
-        if (activatedVision != null) {
-            nbt.putInt(KEY_VISION, (VampirismAPI.vampireVisionRegistry()).getIdOfVision(activatedVision));
-        }
+        nbt.put(KEY_VISION, this.vision.createTag());
         if (isDBNO()) nbt.putBoolean(KEY_WAS_DBNO, true);
     }
 
@@ -1044,10 +1024,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
      * Switch to the next vision
      */
     public void switchVision() {
-        int id = -1;
-        if (activatedVision != null) {
-            id = unlockedVisions.indexOf(activatedVision);
-        }
+        int id = this.vision.visionId;
         id++;
         if (id > unlockedVisions.size() - 1) {
             id = -1;
@@ -1094,9 +1071,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
     @Override
     public void unUnlockVision(@NotNull IVampireVision vision) {
-        if (vision.equals(activatedVision)) {
-            activateVision(null);
-        }
+        this.vision.deactivate(vision);
         unlockedVisions.remove(vision);
     }
 
@@ -1216,18 +1191,8 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         bloodStats.loadUpdate(nbt);
         actionHandler.readUpdateFromServer(nbt);
         skillHandler.readUpdateFromServer(nbt);
-        if (nbt.contains(KEY_VISION)) {
-            int id = nbt.getInt(KEY_VISION);
-            IVampireVision vision;
-            if (id == -1) {
-                vision = null;
-            } else {
-                vision = (VampirismAPI.vampireVisionRegistry()).getVisionOfId(id);
-                if (vision == null) {
-                    LOGGER.warn("Failed to find vision with id {}", id);
-                }
-            }
-            activateVision(vision);
+        if (nbt.contains(KEY_VISION, CompoundTag.TAG_COMPOUND)) {
+            this.vision.readTag(nbt.getCompound(KEY_VISION));
         }
     }
 
@@ -1241,7 +1206,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         bloodStats.writeUpdate(nbt);
         actionHandler.writeUpdateForClient(nbt);
         skillHandler.writeUpdateForClient(nbt);
-        nbt.putInt(KEY_VISION, activatedVision == null ? -1 : (VampirismAPI.vampireVisionRegistry()).getIdOfVision(activatedVision));
+        nbt.put(KEY_VISION, this.vision.createTag());
         nbt.putInt(KEY_DBNO_TIMER, getDbnoTimer());
         if (dbnoMessage != null) nbt.putString(KEY_DBNO_MSG, Component.Serializer.toJson(dbnoMessage));
     }
@@ -1468,5 +1433,77 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             (minion.getMinionData()).ifPresent(b -> ((VampireMinionEntity.VampireMinionData)b).setIncreasedStats(enabled));
             HelperLib.sync(minion);
         }));
+    }
+
+    private class VisionStatus {
+
+        private int visionId = -1;
+        private IVampireVision vision;
+
+        public void deactivate() {
+            if (vision != null) {
+                vision.onDeactivated(VampirePlayer.this);
+                vision = null;
+                visionId = -1;
+            }
+        }
+
+        public void deactivate(IVampireVision vision) {
+            if (this.vision == vision) {
+                deactivate();
+            }
+        }
+
+        private void tick() {
+            if (this.vision != null) {
+                this.vision.tick(VampirePlayer.this);
+                if (!this.vision.isEnabled()) {
+                    deactivate();
+                }
+            }
+        }
+
+        public void activate(@Nullable IVampireVision vision) {
+            if (this.vision != null && this.vision == vision) {
+                return;
+            }
+            if (this.vision != null) {
+                deactivate();
+            }
+            if (vision != null) {
+                if (vision.isEnabled()) {
+                    this.vision = vision;
+                    this.vision.onActivated(VampirePlayer.this);
+                } else if (VampirePlayer.this.player.isAddedToWorld()) {
+                    VampirePlayer.this.player.displayClientMessage(Component.translatable("Vision is disabled by config"),true);
+                }
+                this.visionId = VampirismAPI.vampireVisionRegistry().getIdOfVision(vision);
+            } else {
+                this.vision = null;
+                this.visionId = -1;
+            }
+
+            if (!isRemote() && player.isAddedToWorld()) {
+                CompoundTag tag = new CompoundTag();
+                tag.put(KEY_VISION, createTag());
+                VampirePlayer.this.sync(tag, false);
+            }
+        }
+
+        private @NotNull CompoundTag createTag() {
+            CompoundTag tag = new CompoundTag();
+            tag.putInt(this.vision != null ? "vision": "visionId", this.visionId);
+            return tag;
+        }
+
+        private void readTag(@NotNull CompoundTag tag) {
+            if (tag.contains("vision")) {
+                this.activate(VampirismAPI.vampireVisionRegistry().getVisionOfId(tag.getInt("vision")));
+            } else if(tag.contains("visionId")) {
+                this.deactivate();
+                this.visionId = tag.getInt("visionId");
+            }
+        }
+
     }
 }
