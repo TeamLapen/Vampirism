@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.player.vampire;
 
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.effects.VampireNightVisionEffectInstance;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -46,5 +47,10 @@ public class NightVision implements IVampireVision {
 
             }
         }
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return !VampirismConfig.BALANCE.vpNightVisionDisabled.get();
     }
 }

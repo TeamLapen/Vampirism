@@ -139,6 +139,8 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue vpNaturalArmorIncrease;
     public final ForgeConfigSpec.IntValue vpNaturalArmorToughnessIncrease;
     public final ForgeConfigSpec.BooleanValue vpArmorPenalty;
+    public final ForgeConfigSpec.BooleanValue vpNightVisionDisabled;
+    public final ForgeConfigSpec.BooleanValue vpBloodVisionDisabled;
 
 
     public final ForgeConfigSpec.IntValue vaFreezeCooldown;
@@ -360,6 +362,9 @@ public class BalanceConfig {
         vpNaturalArmorIncrease = builder.comment("The amount of natural armor a max level vampire has in addition to the base value").defineInRange("naturalArmorIncrease", 10, 0, 100);
         vpNaturalArmorToughnessIncrease = builder.comment("The amount of natural armor toughness a max level vampire has").defineInRange("naturalArmorToughnessIncrease", 8, 0, 100);
         vpArmorPenalty = builder.comment("Whether vampire have a reduced speed and attack boost when wearing heavy armor").define("armorPenalty", true);
+        vpNightVisionDisabled = builder.comment("Disable vampire night vision").define("nightVisionDisabled", false);
+        vpBloodVisionDisabled = builder.comment("Disable vampire blood vision").define("bloodVisionDisabled", false);
+
 
         //Vampire actions
         builder.category("vampireActions", "va");
