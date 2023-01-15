@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.MobType;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.PlantType;
@@ -66,4 +67,6 @@ public class VReference {
     public static IPlayableFaction<IHunterPlayer> HUNTER_FACTION;
     public static IVampireVision vision_nightVision;
     public static IVampireVision vision_bloodVision;
+
+    public static CreativeModeTab VAMPIRISM_TAB;
 }

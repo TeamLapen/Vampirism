@@ -156,6 +156,11 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
         return biteableEntryManager.get(creature);
     }
 
+    @Override
+    public @Nullable BiteableEntry getOrCreateEntry(PathfinderMob creature) {
+        return biteableEntryManager.getOrCalculate(creature);
+    }
+
     /**
      * Set the creator for Vampirism's default converting handler
      * FOR INTERNAL USAGE ONLY

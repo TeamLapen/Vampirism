@@ -2,11 +2,12 @@ package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModParticles;
-import de.teamlapen.vampirism.particle.GenericParticleData;
+import de.teamlapen.vampirism.particle.GenericParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -89,8 +90,8 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
             }
         }
         if (!this.level.isClientSide) {
-            ModParticles.spawnParticlesServer(this.level, new GenericParticleData(ModParticles.GENERIC.get(), new ResourceLocation("minecraft", "spell_1"), 7, 0xA01010, 0.2F), this.getX(), this.getY(), this.getZ(), 40, 1, 1, 1, 0);
-            ModParticles.spawnParticlesServer(this.level, new GenericParticleData(ModParticles.GENERIC.get(), new ResourceLocation("minecraft", "spell_6"), 10, 0x700505), this.getX(), this.getY(), this.getZ(), 15, 1, 1, 1, 0);
+            ModParticles.spawnParticlesServer(this.level, new GenericParticleOptions(new ResourceLocation("minecraft", "spell_1"), 7, 0xA01010, 0.2F), this.getX(), this.getY(), this.getZ(), 40, 1, 1, 1, 0);
+            ModParticles.spawnParticlesServer(this.level, new GenericParticleOptions(new ResourceLocation("minecraft", "spell_6"), 10, 0x700505), this.getX(), this.getY(), this.getZ(), 15, 1, 1, 1, 0);
         }
         this.discard();
     }
@@ -104,7 +105,7 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
 
     @NotNull
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
@@ -158,10 +159,10 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
         super.tick();
         if (this.level.isClientSide) {
             Vec3 center = this.position();
-            ModParticles.spawnParticlesClient(this.level, new GenericParticleData(ModParticles.GENERIC.get(), new ResourceLocation("minecraft", "spell_4"), 4, 0xA01010, 0f), center.x, center.y, center.z, 5, getPickRadius(), this.random);
+            ModParticles.spawnParticlesClient(this.level, new GenericParticleOptions(new ResourceLocation("minecraft", "spell_4"), 4, 0xA01010, 0f), center.x, center.y, center.z, 5, getPickRadius(), this.random);
 
             if (this.tickCount % 3 == 0) {
-                ModParticles.spawnParticleClient(this.level, new GenericParticleData(ModParticles.GENERIC.get(), new ResourceLocation("minecraft", "effect_4"), 12, 0xC01010, 0.4F), center.x, center.y, center.z);
+                ModParticles.spawnParticleClient(this.level, new GenericParticleOptions(new ResourceLocation("minecraft", "effect_4"), 12, 0xC01010, 0.4F), center.x, center.y, center.z);
             }
         }
 

@@ -58,31 +58,22 @@ public class HunterLevelingConf {
         if (isLevelValidForTrainer(targetLevel) != 0) {
             throw new IllegalArgumentException("Cannot use the trainer with the given target level " + targetLevel);
         }
-        switch (targetLevel) {
+        return switch (targetLevel) {
             //iron,gold
-            case 5:
-                return new int[]{5, 0};
-            case 6:
-                return new int[]{10, 0};
-            case 7:
-                return new int[]{15, 0};
-            case 8:
-                return new int[]{40, 0};
-            case 9:
-            case 11:
-                return new int[]{20, 10};
-            case 10:
-                return new int[]{20, 20};
-            case 12:
-                return new int[]{30, 10};
-            case 13:
-                return new int[]{40, 20};
-            case 14:
-                return new int[]{40, 40};
-            default:
+            case 5 -> new int[]{5, 0};
+            case 6 -> new int[]{10, 0};
+            case 7 -> new int[]{15, 0};
+            case 8 -> new int[]{40, 0};
+            case 9, 11 -> new int[]{20, 10};
+            case 10 -> new int[]{20, 20};
+            case 12 -> new int[]{30, 10};
+            case 13 -> new int[]{40, 20};
+            case 14 -> new int[]{40, 40};
+            default -> {
                 LOGGER.warn("Something is wrong with the hunter levels");
-        }
-        return null;//Should never be reached
+                yield null;
+            }
+        };
     }
 
     /**

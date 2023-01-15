@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.advancements.critereon.SkillUnlockedCriterionTrigg
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.mixin.ShapelessRecipeBuilderAccessor;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
@@ -13,10 +14,12 @@ import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.RequirementsStrategy;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
 import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
@@ -28,20 +31,20 @@ import java.util.function.Consumer;
 
 public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
 
-    public static @NotNull ShapelessWeaponTableRecipeBuilder shapelessWeaponTable(@NotNull ItemLike result, int count) {
-        return new ShapelessWeaponTableRecipeBuilder(result, count);
+    public static @NotNull ShapelessWeaponTableRecipeBuilder shapelessWeaponTable(@NotNull RecipeCategory category, @NotNull ItemLike result, int count) {
+        return new ShapelessWeaponTableRecipeBuilder(category, result, count);
     }
 
-    public static @NotNull ShapelessWeaponTableRecipeBuilder shapelessWeaponTable(@NotNull ItemLike result) {
-        return new ShapelessWeaponTableRecipeBuilder(result, 1);
+    public static @NotNull ShapelessWeaponTableRecipeBuilder shapelessWeaponTable(@NotNull RecipeCategory category, @NotNull ItemLike result) {
+        return new ShapelessWeaponTableRecipeBuilder(category, result, 1);
     }
 
     private int lava = 1;
     private ISkill<?>[] skills;
     private int level = 1;
 
-    public ShapelessWeaponTableRecipeBuilder(@NotNull ItemLike resultIn, int countIn) {
-        super(resultIn, countIn);
+    public ShapelessWeaponTableRecipeBuilder(@NotNull RecipeCategory category,@NotNull ItemLike resultIn, int countIn) {
+        super(category, resultIn, countIn);
     }
 
     @NotNull
@@ -90,7 +93,7 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
                 .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id))
                 .rewards(AdvancementRewards.Builder.recipe(id))
                 .requirements(RequirementsStrategy.OR);
-        consumerIn.accept(new Result(id, this.result, this.count, this.group == null ? "" : this.group, this.ingredients, this.advancement, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getItemCategory().getRecipeFolderName() + "/" + id.getPath()), this.lava, this.skills != null ? this.skills : new ISkill[]{}, this.level));
+        consumerIn.accept(new Result(id, this.result, this.count, this.group == null ? "" : this.group, determineBookCategory(((ShapelessRecipeBuilderAccessor) this).getRecipeCategory()), this.ingredients, this.advancement, id.withPath("recipes/" +  ((ShapelessRecipeBuilderAccessor) this).getRecipeCategory().getFolderName() + "/" + id.getPath()), this.lava, this.skills != null ? this.skills : new ISkill[]{}, this.level));
     }
 
     public @NotNull ShapelessWeaponTableRecipeBuilder lava(int amount) {
@@ -119,8 +122,8 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
         private final ISkill<?>[] skills;
         private final int level;
 
-        public Result(@NotNull ResourceLocation idIn, @NotNull Item resultIn, int countIn, @NotNull String groupIn, @NotNull List<Ingredient> ingredientsIn, @NotNull Advancement.Builder advancementBuilderIn, @NotNull ResourceLocation advancementIdIn, int lavaIn, @NotNull ISkill<?>[] skillsIn, int levelIn) {
-            super(idIn, resultIn, countIn, groupIn, ingredientsIn, advancementBuilderIn, advancementIdIn);
+        public Result(@NotNull ResourceLocation idIn, @NotNull Item resultIn, int countIn, @NotNull String groupIn, @NotNull CraftingBookCategory category,  @NotNull List<Ingredient> ingredientsIn, @NotNull Advancement.Builder advancementBuilderIn, @NotNull ResourceLocation advancementIdIn, int lavaIn, @NotNull ISkill<?>[] skillsIn, int levelIn) {
+            super(idIn, resultIn, countIn, groupIn, category, ingredientsIn, advancementBuilderIn, advancementIdIn);
             this.lava = lavaIn;
             this.skills = skillsIn;
             this.level = levelIn;

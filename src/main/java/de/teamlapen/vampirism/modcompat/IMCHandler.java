@@ -17,17 +17,17 @@ public class IMCHandler {
         IVampirismEntityRegistry entityRegistry = VampirismAPI.entityRegistry();
         ISundamageRegistry sundamageRegistry = VampirismAPI.sundamageRegistry();
         event.getIMCStream("nosundamage-biome"::equals).forEach(msg -> {
-            Object value = msg.getMessageSupplier().get();
+            Object value = msg.messageSupplier().get();
             if (value instanceof ResourceLocation) {
-                LOGGER.info("Received no sundamage biome {} from {}", value, msg.getSenderModId());
+                LOGGER.info("Received no sundamage biome {} from {}", value, msg.senderModId());
                 sundamageRegistry.addNoSundamageBiomes((ResourceLocation) value);
             } else {
-                LOGGER.error("Received invalid nosundamage-biome thing {} from {}", value, msg.getSenderModId());
+                LOGGER.error("Received invalid nosundamage-biome thing {} from {}", value, msg.senderModId());
             }
         });
         event.getIMCStream("disable-blood-bar"::equals).findAny().ifPresent((a) -> {
             requestedToDisableBloodbar = true;
-            LOGGER.warn("{} requested to not render the vampire blood bar", a.getSenderModId());
+            LOGGER.warn("{} requested to not render the vampire blood bar", a.senderModId());
         });
     }
 }

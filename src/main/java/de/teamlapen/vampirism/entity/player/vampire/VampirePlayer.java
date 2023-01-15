@@ -25,6 +25,7 @@ import de.teamlapen.vampirism.effects.SanguinareEffect;
 import de.teamlapen.vampirism.effects.VampireNightVisionEffectInstance;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.entity.player.FactionBasePlayer;
 import de.teamlapen.vampirism.entity.player.IVampirismPlayer;
 import de.teamlapen.vampirism.entity.player.LevelAttributeModifier;
@@ -38,8 +39,9 @@ import de.teamlapen.vampirism.items.VampirismHunterArmorItem;
 import de.teamlapen.vampirism.mixin.ArmorItemAccessor;
 import de.teamlapen.vampirism.modcompat.PlayerReviveHelper;
 import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
-import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleData;
+import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleOptions;
 import de.teamlapen.vampirism.util.*;
+import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ItemParticleOption;
@@ -77,7 +79,6 @@ import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.logging.log4j.LogManager;
@@ -1274,7 +1275,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         int need = Math.min(8, bloodStats.getMaxBlood() - bloodStats.getBloodLevel());
         if (ModBlocks.BLOOD_CONTAINER.get() == blockState.getBlock()) {
             if (tileEntity != null) {
-                tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).ifPresent(handler -> {
+                tileEntity.getCapability(ForgeCapabilities.FLUID_HANDLER).ifPresent(handler -> {
                     int blood = 0;
 
                     FluidStack drainable = handler.drain(new FluidStack(ModFluids.BLOOD.get(), need * VReference.FOOD_TO_FLUID_BLOOD), IFluidHandler.FluidAction.SIMULATE);
@@ -1450,7 +1451,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         e.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 7, false, false));
         player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 25, 4, false, false));
 
-        ModParticles.spawnParticlesServer(player.level, new FlyingBloodEntityParticleData(ModParticles.FLYING_BLOOD_ENTITY.get(), player.getId(), true), e.getX(), e.getY() + e.getEyeHeight() / 2, e.getZ(), 10, 0.1f, 0.1f, 0.1f, 0);
+        ModParticles.spawnParticlesServer(player.level, new FlyingBloodEntityParticleOptions(player.getId(), true), e.getX(), e.getY() + e.getEyeHeight() / 2, e.getZ(), 10, 0.1f, 0.1f, 0.1f, 0);
 
         if (!biteFeed(e)) {
             endFeeding(true);
@@ -1459,5 +1460,13 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         if (!(e.distanceTo(player) <= player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue() + 1) || e.getHealth() == 0f) {
             endFeeding(true);
         }
+    }
+
+    @Override
+    public void updateMinionAttributes(boolean enabled) {
+        MinionWorldData.getData(this.player.level).flatMap(a -> FactionPlayerHandler.getOpt(this.player).map(a::getOrCreateController)).ifPresent(controller -> controller.contactMinions((minion) -> {
+            (minion.getMinionData()).ifPresent(b -> ((VampireMinionEntity.VampireMinionData)b).setIncreasedStats(enabled));
+            HelperLib.sync(minion);
+        }));
     }
 }

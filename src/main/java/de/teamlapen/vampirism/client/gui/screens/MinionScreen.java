@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.gui.screens;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.lib.client.gui.components.ScrollableArrayTextComponentList;
+import de.teamlapen.lib.lib.client.gui.components.SimpleButtonScrollWidget;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.inventory.MinionContainer;
@@ -19,17 +20,14 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @OnlyIn(Dist.CLIENT)
 public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
 
     private static final ResourceLocation GUI_TEXTURE = new ResourceLocation(REFERENCE.MODID, "textures/gui/minion_inventory.png");
     private final int extraSlots;
-    private ScrollableArrayTextComponentList taskList;
+    private SimpleButtonScrollWidget taskList;
     private Button taskButton;
     private Button appearanceButton;
     private Button statButton;
@@ -63,9 +61,9 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
         this.lockActionButton = this.addRenderableWidget(new LockIconButton(this.leftPos + 99, this.topPos + 19, this::toggleActionLock));
         this.statButton = this.addRenderableWidget(new ImageButton(this.leftPos + 6, this.topPos + 40, 18, 18, 220, 0, 18, GUI_TEXTURE, this::onStatsPressed));
         this.lockActionButton.setLocked(this.menu.isTaskLocked());
-        Component[] taskNames = Arrays.stream(menu.getAvailableTasks()).map(IMinionTask::getName).toArray(Component[]::new);
+        List<Component> taskNames = Arrays.stream(menu.getAvailableTasks()).map(IMinionTask::getName).toList();
 
-        this.taskList = this.addRenderableWidget(new ScrollableArrayTextComponentList(this.leftPos + 120, this.topPos + 19 + 19, 86, Math.min(3 * 20, taskNames.length * 20), 20, () -> taskNames, this::selectTask).scrollSpeed(2D));
+        this.taskList = this.addRenderableWidget(SimpleButtonScrollWidget.builder(this.leftPos + 119, this.topPos + 19 + 19, 88, Math.min(3 * 18, taskNames.size() * 18) + 2).setComponents(taskNames).setButtonClickConsumer(this::selectTask).build());
         this.taskList.visible = false;
         this.taskButton = this.addRenderableWidget(new ExtendedButton(this.leftPos + 119, this.topPos + 19, 88, 20, getActiveTaskName(), (button -> this.taskList.visible = !this.taskList.visible)));
     }

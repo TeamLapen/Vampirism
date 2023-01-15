@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.world.gen;
 
 
 import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.grower.AbstractTreeGrower;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -13,7 +14,7 @@ public class DarkSpruceTreeGrower extends AbstractTreeGrower {
 
     @Nullable
     @Override
-    protected Holder<? extends ConfiguredFeature<?, ?>> getConfiguredFeature(@NotNull RandomSource random, boolean p_222911_) {
-        return VampirismFeatures.DARK_SPRUCE_TREE.getHolder().get();
+    protected ResourceKey<ConfiguredFeature<?, ?>> getConfiguredFeature(@NotNull RandomSource random, boolean p_222911_) {
+        return VampirismFeatures.DARK_SPRUCE_TREE;
     }
 }

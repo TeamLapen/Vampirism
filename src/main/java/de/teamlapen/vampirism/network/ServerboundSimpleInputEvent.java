@@ -23,7 +23,7 @@ import java.util.function.Supplier;
 /**
  * Collection of simple input events that do not need any additional information
  */
-public record ServerboundSimpleInputEvent(Type type) implements IMessage {
+public record ServerboundSimpleInputEvent(Type type) implements IMessage.IServerBoundMessage {
 
     static void encode(@NotNull ServerboundSimpleInputEvent msg, @NotNull FriendlyByteBuf buf) {
         buf.writeEnum(msg.type);
@@ -42,43 +42,29 @@ public record ServerboundSimpleInputEvent(Type type) implements IMessage {
             Optional<? extends IFactionPlayer<?>> factionPlayerOpt = FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentFactionPlayer).orElseGet(Optional::empty);
             //Try to keep this simple
             switch (msg.type) {
-                case FINISH_SUCK_BLOOD:
-                    VampirePlayer.getOpt(player).ifPresent(vampire -> vampire.endFeeding(true));
-                    break;
-                case RESET_SKILLS:
+                case FINISH_SUCK_BLOOD -> VampirePlayer.getOpt(player).ifPresent(vampire -> vampire.endFeeding(true));
+                case RESET_SKILLS -> {
                     InventoryHelper.removeItemFromInventory(player.getInventory(), new ItemStack(ModItems.OBLIVION_POTION.get()));
                     factionPlayerOpt.ifPresent(OblivionItem::applyEffect);
-                    break;
-                case REVERT_BACK:
-                    FactionPlayerHandler.getOpt(player).ifPresent(handler -> {
-                        handler.leaveFaction(!player.server.isHardcore());
-                    });
-                    break;
-                case TOGGLE_VAMPIRE_VISION:
-                    VampirePlayer.getOpt(player).ifPresent(VampirePlayer::switchVision);
-                    break;
-                case TRAINER_LEVELUP:
+                }
+                case REVERT_BACK -> FactionPlayerHandler.getOpt(player).ifPresent(handler -> {
+                    handler.leaveFaction(!player.server.isHardcore());
+                });
+                case TOGGLE_VAMPIRE_VISION -> VampirePlayer.getOpt(player).ifPresent(VampirePlayer::switchVision);
+                case TRAINER_LEVELUP -> {
                     if (player.containerMenu instanceof HunterTrainerMenu) {
                         ((HunterTrainerMenu) player.containerMenu).onLevelupClicked();
                     }
-                    break;
-                case BASIC_HUNTER_LEVELUP:
+                }
+                case BASIC_HUNTER_LEVELUP -> {
                     if (player.containerMenu instanceof HunterBasicMenu) {
                         ((HunterBasicMenu) player.containerMenu).onLevelUpClicked();
                     }
-                    break;
-                case SHOW_MINION_CALL_SELECTION:
-                    ClientboundRequestMinionSelectPacket.createRequestForPlayer(player, ClientboundRequestMinionSelectPacket.Action.CALL).ifPresent(VampirismMod.dispatcher::sendToServer);
-                    break;
-                case VAMPIRISM_MENU:
-                    factionPlayerOpt.ifPresent(fPlayer -> fPlayer.getTaskManager().openVampirismMenu());
-                    break;
-                case RESURRECT:
-                    VampirePlayer.getOpt(player).ifPresent(VampirePlayer::tryResurrect);
-                    break;
-                case GIVE_UP:
-                    VampirePlayer.getOpt(player).ifPresent(VampirePlayer::giveUpDBNO);
-                    break;
+                }
+                case SHOW_MINION_CALL_SELECTION -> ClientboundRequestMinionSelectPacket.createRequestForPlayer(player, ClientboundRequestMinionSelectPacket.Action.CALL).ifPresent(a -> VampirismMod.dispatcher.sendTo(a, player));
+                case VAMPIRISM_MENU -> factionPlayerOpt.ifPresent(fPlayer -> fPlayer.getTaskManager().openVampirismMenu());
+                case RESURRECT -> VampirePlayer.getOpt(player).ifPresent(VampirePlayer::tryResurrect);
+                case GIVE_UP -> VampirePlayer.getOpt(player).ifPresent(VampirePlayer::giveUpDBNO);
             }
         });
         ctx.setPacketHandled(true);

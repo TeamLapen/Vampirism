@@ -1,5 +1,6 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
+  "category": "equipment",
   "key": {
     "A": {
       "item": "vampirism:stake"

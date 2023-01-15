@@ -24,7 +24,7 @@ public class HolyWaterBottleItem extends Item implements IItemWithTier, IFaction
     private final TIER tier;
 
     public HolyWaterBottleItem(TIER tier) {
-        this(tier, new Properties().tab(VampirismMod.creativeTab));
+        this(tier, new Properties());
     }
 
     protected HolyWaterBottleItem(TIER tier, @NotNull Properties props) {

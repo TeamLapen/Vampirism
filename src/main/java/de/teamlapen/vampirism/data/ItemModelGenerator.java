@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -20,8 +21,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class ItemModelGenerator extends BaseItemModelGenerator {
-    public ItemModelGenerator(@NotNull DataGenerator generator, @NotNull ExistingFileHelper existingFileHelper) {
-        super(generator, REFERENCE.MODID, existingFileHelper);
+    public ItemModelGenerator(@NotNull PackOutput packOutput, @NotNull ExistingFileHelper existingFileHelper) {
+        super(packOutput, REFERENCE.MODID, existingFileHelper);
     }
 
     @Override

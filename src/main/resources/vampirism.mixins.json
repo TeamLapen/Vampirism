@@ -20,14 +20,21 @@
     "MixinPlayerEntity",
     "MixinPotionBrewing",
     "MultiNoiseBiomeSourcePresetAccessor",
+    "NoiseGeneratorSettingsMixin",
     "PlayerAdvancementsAccessor",
+    "ProcessorListsAccessor",
     "RecipeManagerAccessor",
-    "SurfaceRuleDataMixin",
-    "TileEntityTypeAccessor"
+    "RegistriesDatapackGeneratorAccessor",
+    "ShapedRecipeBuilderAccessor",
+    "ShapelessRecipeBuilderAccessor",
+    "StructuresAccessor",
+    "TileEntityTypeAccessor",
+    "VanillaBlockLootAccessor"
   ],
   "client": [
     "client.AgeableModelAccessor",
     "client.BossOverlayGuiAccessor",
+    "client.LevelRendererMixin",
     "client.SheetsMixin"
   ],
   "injectors": {

@@ -13,7 +13,10 @@ import java.util.function.Supplier;
  * This dummy element is capable to be rendered differently.
  *
  * @param <T> item that should be presented by a list entry
+ *
+ * @deprecated use {@link de.teamlapen.lib.lib.client.gui.components.SimpleButtonScrollWidget} instead
  */
+@Deprecated
 public class ScrollableListWithDummyWidget<T> extends ScrollableListComponent<T> {
 
     @NotNull

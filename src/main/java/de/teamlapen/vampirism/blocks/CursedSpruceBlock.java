@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.api.blocks.HolyWaterEffectConsumer;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
+import de.teamlapen.vampirism.api.blocks.HolyWaterEffectConsumer;
 import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -9,43 +10,45 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
+import net.minecraftforge.common.ToolAction;
+import net.minecraftforge.common.ToolActions;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class CursedSpruceBlock extends LogBlock implements HolyWaterEffectConsumer {
+public class CursedSpruceBlock extends StrippableLogBlock implements HolyWaterEffectConsumer {
 
-    private final Supplier<CursedSpruceBlock> curedBlockSupplier;
+    private final Supplier<? extends CursedSpruceBlock> curedBlockSupplier;
 
-    public CursedSpruceBlock(Supplier<CursedSpruceBlock> curedBlockSupplier) {
-        super(BlockBehaviour.Properties.of(Material.WOOD, (p_235431_2_) -> MaterialColor.CRIMSON_HYPHAE).strength(2.0F).sound(SoundType.WOOD).randomTicks());
+    public CursedSpruceBlock(@NotNull Supplier<? extends LogBlock> strippedBlock, Supplier<? extends CursedSpruceBlock> curedBlockSupplier) {
+        super(BlockBehaviour.Properties.of(Material.WOOD, (p_235431_2_) -> MaterialColor.CRIMSON_HYPHAE).strength(2.0F).sound(SoundType.WOOD).randomTicks(), strippedBlock);
         this.curedBlockSupplier = curedBlockSupplier;
     }
 
-    public CursedSpruceBlock() {
-        super(BlockBehaviour.Properties.of(Material.WOOD, (p_235431_2_) -> MaterialColor.CRIMSON_HYPHAE).strength(2.0F).sound(SoundType.WOOD));
-        this.curedBlockSupplier = null;
+    public CursedSpruceBlock(@NotNull Supplier<? extends LogBlock> strippedBlock) {
+        this(strippedBlock, null);
     }
 
     public boolean isCured() {
-        return curedBlockSupplier == null;
+        return this.curedBlockSupplier == null;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public void onHolyWaterEffect(Level level, BlockState state, BlockPos pos, ItemStack holyWaterStack, IItemWithTier.TIER tier) {
-        if (curedBlockSupplier != null) {
-            BlockState newState = curedBlockSupplier.get().defaultBlockState();
+        if (this.curedBlockSupplier != null) {
+            BlockState newState = this.curedBlockSupplier.get().defaultBlockState();
             state.getValues().keySet().forEach((@SuppressWarnings("rawtypes") Property property) -> {
                 newState.setValue(property, state.getValue(property));
             });
@@ -59,7 +62,7 @@ public class CursedSpruceBlock extends LogBlock implements HolyWaterEffectConsum
         List<Direction> directions = Arrays.stream(Direction.values()).collect(Collectors.toList());
         Direction direction = null;
         if (state.getBlock() == ModBlocks.CURSED_SPRUCE_LOG.get()) {
-            switch (state.getValue(AXIS)) {
+            switch (state.getValue(RotatedPillarBlock.AXIS)) {
                 case X -> {
                     directions.remove(Direction.WEST);
                     directions.remove(Direction.EAST);
@@ -85,7 +88,7 @@ public class CursedSpruceBlock extends LogBlock implements HolyWaterEffectConsum
             }
         } else if(state.getBlock() == ModBlocks.CURSED_SPRUCE_WOOD.get()) {
             direction = directions.get(random.nextInt(directions.size()));
-            switch (state.getValue(AXIS)) {
+            switch (state.getValue(RotatedPillarBlock.AXIS)) {
                 case X -> {
                     if (direction.getAxis() == Direction.Axis.X) {
                         type = DirectCursedBarkBlock.Type.VERTICAL;

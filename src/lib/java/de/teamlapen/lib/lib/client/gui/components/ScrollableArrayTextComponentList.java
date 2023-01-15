@@ -15,6 +15,10 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+/**
+ * @deprecated use {@link de.teamlapen.lib.lib.client.gui.components.SimpleButtonScrollWidget} instead
+ */
+@Deprecated
 public class ScrollableArrayTextComponentList extends ScrollableListComponent<Pair<Integer, Component>> {
 
     private static @NotNull Collection<Pair<Integer, Component>> getItems(@NotNull Supplier<Component[]> baseValueSupplier) {

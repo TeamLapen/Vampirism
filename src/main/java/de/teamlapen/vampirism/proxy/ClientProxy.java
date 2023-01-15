@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.client.VIngameOverlays;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.blockentity.GarlicDiffuserBlockEntity;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
+import de.teamlapen.vampirism.blocks.LogBlock;
 import de.teamlapen.vampirism.blocks.TentBlock;
 import de.teamlapen.vampirism.client.core.*;
 import de.teamlapen.vampirism.client.gui.ScreenEventHandler;
@@ -19,9 +20,10 @@ import de.teamlapen.vampirism.inventory.VampirismMenu;
 import de.teamlapen.vampirism.network.*;
 import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.InBedChatScreen;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.TerrainParticle;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -63,14 +65,15 @@ public class ClientProxy extends CommonProxy {
     private final ClientSkillTreeManager skillTreeManager = new ClientSkillTreeManager();
     private VampirismHUDOverlay overlay;
     private CustomBossEventOverlay bossInfoOverlay;
+    private RenderHandler renderHandler;
 
     public ClientProxy() {
         //Minecraft.instance is null during runData.
         //noinspection ConstantConditions
         if (Minecraft.getInstance() != null) {
-            RenderHandler renderHandler = new RenderHandler(Minecraft.getInstance());
-            MinecraftForge.EVENT_BUS.register(renderHandler);
-            ((ReloadableResourceManager) Minecraft.getInstance().getResourceManager()).registerReloadListener(renderHandler); // Must be added before initial resource manager load
+            this.renderHandler = new RenderHandler(Minecraft.getInstance());
+            MinecraftForge.EVENT_BUS.register(this.renderHandler);
+            ((ReloadableResourceManager) Minecraft.getInstance().getResourceManager()).registerReloadListener(this.renderHandler); // Must be added before initial resource manager load
         }
     }
 
@@ -80,17 +83,17 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void displayGarlicBeaconScreen(GarlicDiffuserBlockEntity tile, Component title) {
-        Minecraft.getInstance().setScreen(new GarlicDiffuserScreen(tile, title));
+        openScreen(new GarlicDiffuserScreen(tile, title));
     }
 
     @Override
     public void displayNameSwordScreen(ItemStack stack) {
-        Minecraft.getInstance().setScreen(new NameSwordScreen(stack));
+        openScreen(new NameSwordScreen(stack));
     }
 
     @Override
     public void displayRevertBackScreen() {
-        Minecraft.getInstance().setScreen(new RevertBackScreen());
+        openScreen(new RevertBackScreen());
     }
 
     @Nullable
@@ -135,7 +138,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void handleRequestMinionSelect(ClientboundRequestMinionSelectPacket.Action action, @NotNull List<Pair<Integer, Component>> minions) {
-        Minecraft.getInstance().setScreen(new SelectMinionScreen(action, minions));
+        openScreen(new SelectMinionScreen(action, minions));
     }
 
     @Override
@@ -148,14 +151,8 @@ public class ClientProxy extends CommonProxy {
         if (player.isSleeping()) {
             player.getSleepingPos().ifPresent(pos -> {
                 if (player.level.getBlockState(pos).getBlock() instanceof TentBlock) {
-                    if (Minecraft.getInstance().screen instanceof InBedChatScreen && !(Minecraft.getInstance().screen instanceof SleepInMultiplayerModScreen)) {
-                        Minecraft.getInstance().setScreen(new SleepInMultiplayerModScreen("text.vampirism.tent.stop_sleeping"));
-                    }
                     TentBlock.setTentSleepPosition(player, pos, player.level.getBlockState(pos).getValue(POSITION), player.level.getBlockState(pos).getValue(FACING));
                 } else if (player.level.getBlockState(pos).getBlock() instanceof CoffinBlock) {
-                    if (Minecraft.getInstance().screen instanceof InBedChatScreen && !(Minecraft.getInstance().screen instanceof SleepInMultiplayerModScreen)) {
-                        Minecraft.getInstance().setScreen(new SleepInMultiplayerModScreen("text.vampirism.coffin.stop_sleeping"));
-                    }
                     CoffinBlock.setCoffinSleepPosition(player, pos, player.level.getBlockState(pos));
                 }
             });
@@ -185,7 +182,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void handleVampireBookPacket(VampireBookManager.@NotNull BookInfo bookInfo) {
-        Minecraft.getInstance().setScreen(new VampireBookScreen(bookInfo));
+        openScreen(new VampireBookScreen(bookInfo));
     }
 
     @Override
@@ -197,6 +194,10 @@ public class ClientProxy extends CommonProxy {
                 registerSubscriptions();
                 ActionSelectScreen.loadActionOrder();
                 ModBlocksRender.register();
+                event.enqueueWork(() -> {
+                    Sheets.addWoodType(LogBlock.dark_spruce);
+                    Sheets.addWoodType(LogBlock.cursed_spruce);
+                });
             }
             case LOAD_COMPLETE -> {
                 event.enqueueWork(ModItemsRender::registerItemModelPropertyUnsafe);
@@ -216,7 +217,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void showDBNOScreen(@NotNull Player playerEntity, @Nullable Component deathMessage) {
         if (playerEntity == Minecraft.getInstance().player && !playerEntity.isDeadOrDying()) {
-            Minecraft.getInstance().setScreen(new DBNOScreen(deathMessage));
+            openScreen(new DBNOScreen(deathMessage));
         }
     }
 
@@ -265,5 +266,18 @@ public class ClientProxy extends CommonProxy {
             }
 
         });
+    }
+
+    @Override
+    public void endBloodVisionBatch() {
+        this.renderHandler.endBloodVisionBatch();
+    }
+
+    public static void runOnRenderThread(Runnable runnable) {
+        Minecraft.getInstance().execute(runnable);
+    }
+
+    public static void openScreen(Screen screen) {
+        runOnRenderThread(() -> Minecraft.getInstance().setScreen(screen));
     }
 }

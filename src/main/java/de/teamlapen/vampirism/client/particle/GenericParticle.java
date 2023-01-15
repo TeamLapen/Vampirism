@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.particle;
 
-import de.teamlapen.vampirism.particle.GenericParticleData;
+import de.teamlapen.vampirism.particle.GenericParticleOptions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
@@ -28,7 +28,7 @@ public class GenericParticle extends TextureSheetParticle {
         if ((color >> 24 & 255) != 0) { //Only use alpha value if !=0.
             this.alpha = (color >> 24 & 255) / 255.0F;
         }
-        this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(new ResourceLocation(texture.getNamespace(), "particle/" + texture.getPath())));
+        this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(texture));
     }
 
     @NotNull
@@ -38,11 +38,11 @@ public class GenericParticle extends TextureSheetParticle {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static class Factory implements ParticleProvider<GenericParticleData> {
+    public static class Factory implements ParticleProvider<GenericParticleOptions> {
         @Nullable
         @Override
-        public Particle createParticle(@NotNull GenericParticleData typeIn, @NotNull ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-            return new GenericParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, typeIn.getTexturePos(), typeIn.getMaxAge(), typeIn.getColor(), typeIn.getSpeed());
+        public Particle createParticle(@NotNull GenericParticleOptions typeIn, @NotNull ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+            return new GenericParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, typeIn.texture(), typeIn.maxAge(), typeIn.color(), typeIn.speed());
         }
     }
 }

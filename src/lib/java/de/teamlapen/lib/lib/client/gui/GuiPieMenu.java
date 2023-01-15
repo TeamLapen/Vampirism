@@ -3,8 +3,7 @@ package de.teamlapen.lib.lib.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import de.teamlapen.lib.LIBREFERENCE;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.util.Color;
@@ -19,6 +18,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -201,10 +201,8 @@ public abstract class GuiPieMenu<T> extends Screen {
         builder.begin(VertexFormat.Mode.LINES, DefaultVertexFormat.POSITION_COLOR);
         RenderSystem.lineWidth(2F);
 
-        builder.vertex(stack.last().pose(), (float) x1, (float) y1, this.getBlitOffset
-                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).endVertex();
-        builder.vertex(stack.last().pose(), (float) x2, (float) y2, this.getBlitOffset
-                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).endVertex();
+        builder.vertex(stack.last().pose(), (float) x1, (float) y1, this.getBlitOffset()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).endVertex();
+        builder.vertex(stack.last().pose(), (float) x2, (float) y2, this.getBlitOffset()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).endVertex();
         Tesselator.getInstance().end();
         RenderSystem.enableTexture();
     }
@@ -276,14 +274,10 @@ public abstract class GuiPieMenu<T> extends Screen {
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder builder = tesselator.getBuilder();
         builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
-        builder.vertex(matrix, BGS / 2f, BGS / 2f, this.getBlitOffset
-                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(1, 1).endVertex();
-        builder.vertex(matrix, BGS / 2f, -BGS / 2f, this.getBlitOffset
-                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(1, 0).endVertex();
-        builder.vertex(matrix, -BGS / 2f, -BGS / 2f, this.getBlitOffset
-                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(0, 0).endVertex();
-        builder.vertex(matrix, -BGS / 2f, BGS / 2f, this.getBlitOffset
-                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(0, 1).endVertex();
+        builder.vertex(matrix, BGS / 2f, BGS / 2f, this.getBlitOffset()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(1, 1).endVertex();
+        builder.vertex(matrix, BGS / 2f, -BGS / 2f, this.getBlitOffset()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(1, 0).endVertex();
+        builder.vertex(matrix, -BGS / 2f, -BGS / 2f, this.getBlitOffset()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(0, 0).endVertex();
+        builder.vertex(matrix, -BGS / 2f, BGS / 2f, this.getBlitOffset()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(0, 1).endVertex();
         tesselator.end();
 
 
@@ -318,7 +312,7 @@ public abstract class GuiPieMenu<T> extends Screen {
         stack.translate(cX, cY, this.getBlitOffset
                 ());
         stack.scale(scale, scale, 1);
-        stack.mulPose(Vector3f.ZP.rotationDegrees((float) deg));
+        stack.mulPose(Axis.ZP.rotationDegrees((float) deg));
 
         // Draw
         Matrix4f matrix = stack.last().pose();
@@ -328,14 +322,10 @@ public abstract class GuiPieMenu<T> extends Screen {
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder builder = tesselator.getBuilder();
         builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
-        builder.vertex(matrix, CS / 2f, CS / 2f, this.getBlitOffset
-                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(0.5f, 1).endVertex();
-        builder.vertex(matrix, CS / 2f, -CS / 2f, this.getBlitOffset
-                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(0.5f, 0).endVertex();
-        builder.vertex(matrix, -CS / 2f, -CS / 2f, this.getBlitOffset
-                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(0, 0).endVertex();
-        builder.vertex(matrix, -CS / 2f, CS / 2f, this.getBlitOffset
-                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(0, 1).endVertex();
+        builder.vertex(matrix, CS / 2f, CS / 2f, this.getBlitOffset()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(0.5f, 1).endVertex();
+        builder.vertex(matrix, CS / 2f, -CS / 2f, this.getBlitOffset()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(0.5f, 0).endVertex();
+        builder.vertex(matrix, -CS / 2f, -CS / 2f, this.getBlitOffset()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(0, 0).endVertex();
+        builder.vertex(matrix, -CS / 2f, CS / 2f, this.getBlitOffset()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(0, 1).endVertex();
         tesselator.end();
 
 
@@ -365,14 +355,10 @@ public abstract class GuiPieMenu<T> extends Screen {
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder builder = tesselator.getBuilder();
         builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
-        builder.vertex(matrix, CS / 2f, CS / 2f, this.getBlitOffset
-                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(1, 1).endVertex();
-        builder.vertex(matrix, CS / 2f, -CS / 2f, this.getBlitOffset
-                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(1, 0).endVertex();
-        builder.vertex(matrix, -CS / 2f, -CS / 2f, this.getBlitOffset
-                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(0.5f, 0).endVertex();
-        builder.vertex(matrix, -CS / 2f, CS / 2f, this.getBlitOffset
-                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(0.5f, 1).endVertex();
+        builder.vertex(matrix, CS / 2f, CS / 2f, this.getBlitOffset()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(1, 1).endVertex();
+        builder.vertex(matrix, CS / 2f, -CS / 2f, this.getBlitOffset()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(1, 0).endVertex();
+        builder.vertex(matrix, -CS / 2f, -CS / 2f, this.getBlitOffset()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(0.5f, 0).endVertex();
+        builder.vertex(matrix, -CS / 2f, CS / 2f, this.getBlitOffset()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).uv(0.5f, 1).endVertex();
         tesselator.end();
 
 

@@ -432,7 +432,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         setFactionAndLevel(null, 0);
         player.displayClientMessage(Component.translatable("command.vampirism.base.level.successful", player.getName(), oldFaction.getName(), 0), true);
         if (die) {
-            player.hurt(DamageSource.MAGIC, 1000);
+            player.hurt(DamageSource.GENERIC, 10000);
         }
     }
 

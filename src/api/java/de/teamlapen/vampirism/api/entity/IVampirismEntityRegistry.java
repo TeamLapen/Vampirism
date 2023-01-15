@@ -73,12 +73,17 @@ public interface IVampirismEntityRegistry {
     @Nullable <T extends PathfinderMob> Function<T, IExtendedCreatureVampirism> getCustomExtendedCreatureConstructor(T entity);
 
     /**
-     * Check the biteable entry for the given creature.
-     * If it is null, it tries to automatically calculate a blood value depending on size if applicable and not disabled
-     * (and store it for that entity registration)
-     * <p>
-     * Returns null otherwise
+     * @return the existing bitable entry or null if there is none, or they are not yet initialized
      */
     @Nullable
     BiteableEntry getEntry(PathfinderMob creature);
+
+    /**
+     * Checks if there exists a bitable entry for the given creature. {@see #getEntry(PathfinderMob)}.
+     * If not it tries to automatically calculate a blood value depending on size if applicable and not disabled
+     *
+     * @return a biteable entry or null if the entity is blacklisted, or they are not yet initialized
+     */
+    @Nullable
+    BiteableEntry getOrCreateEntry(PathfinderMob creature);
 }

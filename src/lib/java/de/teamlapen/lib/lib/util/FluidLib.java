@@ -2,9 +2,9 @@ package de.teamlapen.lib.lib.util;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +32,7 @@ public class FluidLib {
 
 
     public static @NotNull LazyOptional<IFluidHandlerItem> getFluidItemCap(@NotNull ItemStack stack) {
-        return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
+        return stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM, null);
     }
 
     public static int getFluidAmount(@NotNull IFluidHandler handler, @Nullable Fluid f) {

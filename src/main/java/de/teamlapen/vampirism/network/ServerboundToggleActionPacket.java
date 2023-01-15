@@ -31,7 +31,7 @@ import java.util.function.Supplier;
  * @param actionId the id of the action that was toggled
  * @param target   The target the player was looking at when activating the action.
  */
-public record ServerboundToggleActionPacket(ResourceLocation actionId, @Nullable Either<Integer, BlockPos> target) implements IMessage {
+public record ServerboundToggleActionPacket(ResourceLocation actionId, @Nullable Either<Integer, BlockPos> target) implements IMessage.IServerBoundMessage {
     private static final Logger LOGGER = LogManager.getLogger();
 
     public static @NotNull ServerboundToggleActionPacket createFromRaytrace(ResourceLocation action, @Nullable HitResult traceResult) {
@@ -96,18 +96,24 @@ public record ServerboundToggleActionPacket(ResourceLocation actionId, @Nullable
                 if (action != null) {
                     IAction.PERM r = actionHandler.toggleAction(action, context);
                     switch (r) {
-                        case NOT_UNLOCKED:
+                        case NOT_UNLOCKED: {
                             player.displayClientMessage(Component.translatable("text.vampirism.action.not_unlocked"), true);
-                            break;
-                        case DISABLED:
+                        }
+                        case DISABLED: {
                             player.displayClientMessage(Component.translatable("text.vampirism.action.deactivated_by_serveradmin"), false);
-                            break;
-                        case COOLDOWN:
+                        }
+                        case COOLDOWN: {
                             player.displayClientMessage(Component.translatable("text.vampirism.action.cooldown_not_over"), true);
-                            break;
-                        case DISALLOWED:
+                        }
+                        case DISALLOWED: {
                             player.displayClientMessage(Component.translatable("text.vampirism.action.disallowed"), true);
-                        default://Everything alright
+                        }
+                        case PERMISSION_DISALLOWED: {
+                            player.displayClientMessage(Component.translatable("text.vampirism.action.permission_disallowed"), false);
+                        }
+                        default: {
+                            //Everything alright
+                        }
                     }
                 } else {
                     LOGGER.error("Failed to find action with id {}", msg.actionId);

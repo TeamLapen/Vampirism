@@ -56,10 +56,12 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ThrowablePotionItem;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityEvent;
@@ -72,7 +74,6 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
@@ -368,7 +369,7 @@ public class ModPlayerEventHandler {
                     if (glassBottle && state.hasBlockEntity()) {
                         BlockEntity entity = event.getLevel().getBlockEntity(event.getPos());
                         if (entity != null) {
-                            convert = entity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, event.getFace()).map(fluidHandler -> {
+                            convert = entity.getCapability(ForgeCapabilities.FLUID_HANDLER, event.getFace()).map(fluidHandler -> {
                                 boolean flag = false;
                                 FluidStack drain = fluidHandler.drain(new FluidStack(ModFluids.BLOOD.get(), 1000), IFluidHandler.FluidAction.SIMULATE);
                                 if (drain.getAmount() >= BloodBottleFluidHandler.MULTIPLIER) {
@@ -506,6 +507,13 @@ public class ModPlayerEventHandler {
                 event.setResult(Event.Result.ALLOW);
                 event.setDamageModifier(event.getDamageModifier() + (event.getOldDamageModifier() * (item.getDamageMultiplierForFaction(stack) - 1)));
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerGameMode(PlayerEvent.PlayerChangeGameModeEvent event) {
+        if (event.getNewGameMode() == GameType.SPECTATOR) {
+            FactionPlayerHandler.getOpt(event.getEntity()).ifPresent(handler -> handler.getCurrentFactionPlayer().ifPresent(factionPlayer -> factionPlayer.getActionHandler().deactivateAllActions()));
         }
     }
 }

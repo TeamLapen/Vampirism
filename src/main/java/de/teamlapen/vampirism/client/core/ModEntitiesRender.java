@@ -132,8 +132,8 @@ public class ModEntitiesRender {
         event.registerLayerDefinition(GENERIC_BIPED_ARMOR_OUTER, () -> LayerDefinition.create(HumanoidModel.createMesh(LayerDefinitions.OUTER_ARMOR_DEFORMATION, 0.0F), 64, 32));
         event.registerLayerDefinition(TASK_MASTER, () -> LayerDefinition.create(VillagerModel.createBodyModel(), 64, 64));
 
-        LayerDefinition boatDefinition = BoatModel.createBodyModel(false);
-        LayerDefinition chestBoatDefinition = BoatModel.createBodyModel(true);
+        LayerDefinition boatDefinition = BoatModel.createBodyModel();
+        LayerDefinition chestBoatDefinition = ChestBoatModel.createBodyModel();
         for (IVampirismBoat.BoatType type : IVampirismBoat.BoatType.values()) {
             event.registerLayerDefinition(createBoatModelName(type), () -> boatDefinition);
             event.registerLayerDefinition(createChestBoatModelName(type), () -> chestBoatDefinition);

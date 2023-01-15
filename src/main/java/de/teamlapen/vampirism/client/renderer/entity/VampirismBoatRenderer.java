@@ -6,6 +6,8 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.entity.IVampirismBoat;
 import net.minecraft.client.model.BoatModel;
+import net.minecraft.client.model.ChestBoatModel;
+import net.minecraft.client.model.ListModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.entity.BoatRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -17,7 +19,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public class VampirismBoatRenderer extends BoatRenderer {
-    private final Map<IVampirismBoat.BoatType, Pair<ResourceLocation, BoatModel>> boatResources;
+    private final Map<IVampirismBoat.BoatType, Pair<ResourceLocation, ListModel<Boat>>> boatResources;
 
     public VampirismBoatRenderer(EntityRendererProvider.@NotNull Context context, boolean hasChest) {
         super(context, hasChest);
@@ -27,8 +29,7 @@ public class VampirismBoatRenderer extends BoatRenderer {
     }
 
     private @NotNull BoatModel createBoatModel(EntityRendererProvider.@NotNull Context context, IVampirismBoat.@NotNull BoatType type, boolean hasChest) {
-        ModelLayerLocation modellayerlocation = hasChest ? ModEntitiesRender.createChestBoatModelName(type) : ModEntitiesRender.createBoatModelName(type);
-        return new BoatModel(context.bakeLayer(modellayerlocation), hasChest);
+        return hasChest ? new ChestBoatModel(context.bakeLayer(ModEntitiesRender.createChestBoatModelName(type))) : new BoatModel(context.bakeLayer(ModEntitiesRender.createBoatModelName(type)));
     }
 
     public @NotNull String getTextureLocation(IVampirismBoat.@NotNull BoatType type, boolean hasChest) {
@@ -37,7 +38,7 @@ public class VampirismBoatRenderer extends BoatRenderer {
 
     @NotNull
     @Override
-    public Pair<ResourceLocation, BoatModel> getModelWithLocation(@NotNull Boat boat) {
+    public Pair<ResourceLocation, ListModel<Boat>> getModelWithLocation(@NotNull Boat boat) {
         return this.boatResources.get(((IVampirismBoat) boat).getBType());
     }
 }

@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
-public record ClientboundPlayEventPacket(int type, BlockPos pos, int stateId) implements IMessage {
+public record ClientboundPlayEventPacket(int type, BlockPos pos, int stateId) implements IMessage.IClientBoundMessage {
 
     static void encode(@NotNull ClientboundPlayEventPacket msg, @NotNull FriendlyByteBuf buf) {
         buf.writeVarInt(msg.type);

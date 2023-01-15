@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FireBlock;
@@ -13,8 +14,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class LogBlock extends RotatedPillarBlock {
 
-    public static final WoodType dark_spruce = WoodType.register(WoodType.create("vampirism:dark_spruce"));
-    public static final WoodType cursed_spruce = WoodType.register(WoodType.create("vampirism:cursed_spruce"));
+    public static final WoodType dark_spruce = WoodType.register(WoodType.create(REFERENCE.MODID + ":dark_spruce"));
+    public static final WoodType cursed_spruce = WoodType.register(WoodType.create(REFERENCE.MODID + ":cursed_spruce"));
 
     public LogBlock(BlockBehaviour.@NotNull Properties properties) {
         super(properties);

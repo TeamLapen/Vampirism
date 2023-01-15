@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 
-public record ServerboundDeleteRefinementPacket(IRefinementItem.AccessorySlotType slot) implements IMessage {
+public record ServerboundDeleteRefinementPacket(IRefinementItem.AccessorySlotType slot) implements IMessage.IServerBoundMessage {
 
     static void encode(@NotNull ServerboundDeleteRefinementPacket msg, @NotNull FriendlyByteBuf buf) {
         buf.writeEnum(msg.slot);

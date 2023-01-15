@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 public class GarlicBreadItem extends Item implements IFactionExclusiveItem {
 
     public GarlicBreadItem() {
-        super(new Properties().food((new FoodProperties.Builder()).nutrition(6).saturationMod(0.7F).build()).tab(CreativeModeTab.TAB_FOOD));
+        super(new Properties().food((new FoodProperties.Builder()).nutrition(6).saturationMod(0.7F).build()));
     }
 
     @Nullable

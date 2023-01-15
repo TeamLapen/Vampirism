@@ -13,6 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,7 +27,6 @@ public class AppearanceScreen<T extends LivingEntity> extends Screen {
     protected final T entity;
     protected final int xSize = 256;
     protected final int ySize = 177;
-    private final List<Button> buttons = Lists.newArrayList();
     @Nullable
     private final Screen backScreen;
     protected int guiLeft;
@@ -36,16 +36,6 @@ public class AppearanceScreen<T extends LivingEntity> extends Screen {
         super(titleIn);
         this.entity = entity;
         this.backScreen = backScreen;
-    }
-
-    @Override
-    public boolean mouseDragged(double p_mouseDragged_1_, double p_mouseDragged_3_, int p_mouseDragged_5_, double p_mouseDragged_6_, double p_mouseDragged_8_) {
-        for (Button button : this.buttons) {
-            if (button.visible && button.mouseDragged(p_mouseDragged_1_, p_mouseDragged_3_, p_mouseDragged_5_, p_mouseDragged_6_, p_mouseDragged_8_)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override
@@ -59,21 +49,16 @@ public class AppearanceScreen<T extends LivingEntity> extends Screen {
         InventoryScreen.renderEntityInInventory(this.guiLeft + 200, this.guiTop + 145, 60, (float) (this.guiLeft + 200) - mouseX, (float) (this.guiTop + 45) - mouseY, this.entity);
 
         super.render(mStack, mouseX, mouseY, partialTicks);
-
-        for (Button button : this.buttons) {
-            button.render(mStack, mouseX, mouseY, partialTicks);
-        }
     }
 
     @Override
     protected void init() {
-        this.buttons.clear();
         this.guiLeft = (this.width - this.xSize) / 2;
         this.guiTop = (this.height - this.ySize) / 2;
 
-        this.addRenderableWidget(new Button(this.guiLeft + this.xSize - 80 - 10, this.guiTop + 152, 80, 20, Component.translatable("gui.done"), (context) -> this.onClose()));
+        this.addRenderableWidget(new ExtendedButton(this.guiLeft + this.xSize - 80 - 10, this.guiTop + 152, 80, 20, Component.translatable("gui.done"), (context) -> this.onClose()));
         if (this.backScreen != null) {
-            this.addRenderableWidget(new Button(this.guiLeft + 10, this.guiTop + 152, 80, 20, Component.translatable("gui.back"), (context) -> {
+            this.addRenderableWidget(new ExtendedButton(this.guiLeft + 10, this.guiTop + 152, 80, 20, Component.translatable("gui.back"), (context) -> {
                 if (this.minecraft != null) this.minecraft.setScreen(this.backScreen);
             }));
         }

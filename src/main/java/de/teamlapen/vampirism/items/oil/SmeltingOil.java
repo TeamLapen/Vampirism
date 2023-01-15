@@ -1,24 +1,31 @@
 package de.teamlapen.vampirism.items.oil;
 
+import de.teamlapen.vampirism.api.items.oil.IToolOil;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.DiggerItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PickaxeItem;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class SmeltingOil extends ApplicableOil {
+public class SmeltingOil extends ApplicableOil implements IToolOil { //TODO create pickaxe/shovel/axe superclass if necessary
 
     public SmeltingOil(int color, int maxDuration) {
         super(color, maxDuration);
     }
 
     @Override
-    public boolean canBeApplied(@NotNull ItemStack stack) {
-        return stack.getItem() instanceof PickaxeItem && stack.is(ModTags.Items.APPLICABLE_OIL_PICKAXE) == VampirismConfig.BALANCE.itApplicableOilPickaxeReverse.get();
+    public boolean isCorrectTool(ItemStack stack) {
+        return stack.getItem() instanceof PickaxeItem;
+    }
+
+    @Override
+    public boolean isOilAllowedOnTool(ItemStack stack) {
+        return stack.is(ModTags.Items.APPLICABLE_OIL_PICKAXE) == VampirismConfig.BALANCE.itApplicableOilPickaxeReverse.get();
     }
 
     @Override

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.vampirism.api.client.VIngameOverlays;
 import de.teamlapen.vampirism.client.gui.screens.*;
+import de.teamlapen.vampirism.client.gui.screens.taskboard.TaskBoardScreen;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.inventory.HunterTableMenu;
 import net.minecraft.client.gui.screens.MenuScreens;

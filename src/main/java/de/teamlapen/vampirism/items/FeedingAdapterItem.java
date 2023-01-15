@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 public class FeedingAdapterItem extends Item {
 
     public FeedingAdapterItem() {
-        super(new Item.Properties().stacksTo(1).tab(VampirismMod.creativeTab));
+        super(new Item.Properties().stacksTo(1));
     }
 
 

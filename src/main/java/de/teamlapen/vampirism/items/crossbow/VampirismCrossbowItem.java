@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.items.crossbow;
 
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -27,6 +25,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -51,7 +51,7 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
     @Override
     public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level level, @Nonnull List<Component> tooltips, @Nonnull TooltipFlag flag) {
         super.appendHoverText(stack, level, tooltips, flag);
-        this.addFactionLevelToolTip(stack, level, tooltips, flag,  VampirismMod.proxy.getClientPlayer());
+        this.addFactionToolTips(stack, level, tooltips, flag,  VampirismMod.proxy.getClientPlayer());
     }
 
     @Override
@@ -154,21 +154,23 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
                 projectileentity.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
             }
 
-            if (p_220016_1_ instanceof CrossbowAttackMob) {
-                CrossbowAttackMob icrossbowuser = (CrossbowAttackMob)p_220016_1_;
-                icrossbowuser.shootCrossbowProjectile(icrossbowuser.getTarget(), p_220016_3_, projectileentity, p_220016_9_);
+            if (p_220016_1_ instanceof CrossbowAttackMob crossbowUser) {
+                crossbowUser.shootCrossbowProjectile(crossbowUser.getTarget(), p_220016_3_, projectileentity, p_220016_9_);
             } else {
-                Vec3 vector3d1 = p_220016_1_.getUpVector(1.0F);
-                Quaternion quaternion = new Quaternion(new Vector3f(vector3d1), p_220016_9_, true);
-                Vec3 vector3d = p_220016_1_.getViewVector(1.0F);
-                Vector3f vector3f = new Vector3f(vector3d);
-                vector3f.transform(quaternion);
-                projectileentity.shoot((double)vector3f.x(), (double)vector3f.y(), (double)vector3f.z(), p_220016_7_, p_220016_8_);
+                Vec3 vec31 = p_220016_1_.getUpVector(1.0F);
+                Quaternionf quaternionf = (new Quaternionf()).setAngleAxis(p_220016_9_ * ((float)Math.PI / 180F), vec31.x, vec31.y, vec31.z);
+                Vec3 vec3 = p_220016_1_.getViewVector(1.0F);
+                Vector3f vector3f = vec3.toVector3f().rotate(quaternionf);
+                projectileentity.shoot(vector3f.x(), vector3f.y(), vector3f.z(), p_220016_7_, p_220016_8_);
             }
 
             p_220016_3_.hurtAndBreak(1, p_220016_1_, (p_220017_1_) -> {
                 p_220017_1_.broadcastBreakEvent(p_220016_2_);
             });
+
+            if (isInfinit(p_220016_3_)) {
+                projectileentity.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+            }
             p_220016_0_.addFreshEntity(projectileentity);
             p_220016_0_.playSound((Player)null, p_220016_1_.getX(), p_220016_1_.getY(), p_220016_1_.getZ(), SoundEvents.CROSSBOW_SHOOT, SoundSource.PLAYERS, 1.0F, p_220016_5_);
         }

@@ -39,7 +39,7 @@ public class SetItemBloodChargeFunction extends LootItemConditionalFunction {
     @NotNull
     @Override
     public LootItemFunctionType getType() {
-        return ModLoot.set_item_blood_charge.get();
+        return ModLoot.SET_ITEM_BLOOD_CHARGE.get();
     }
 
     @NotNull

@@ -20,7 +20,9 @@ import java.util.function.Supplier;
  * This Widget does everything by itself except:
  * - {@link #mouseDragged(double, double, int, double, double)} must be called in {@link net.minecraft.client.gui.screens.Screen#mouseDragged(double, double, int, double, double)}
  * - {@link #renderToolTip(PoseStack, int, int)} must be called in {@link net.minecraft.client.gui.screens.Screen#render(PoseStack, int, int, float)}
+ * @deprecated list does no longer has tooltips. use {@link de.teamlapen.lib.lib.client.gui.components.SimpleButtonScrollWidget} instead
  */
+@Deprecated
 public class ScrollableListComponent<T> extends ExtendedButton {
 
     private static final ResourceLocation MISC = new ResourceLocation(LIBREFERENCE.MODID, "textures/gui/misc.png");
@@ -69,8 +71,8 @@ public class ScrollableListComponent<T> extends ExtendedButton {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (!this.visible) return false;
         this.scrolledD = this.scrolled;
-        if (mouseX > this.x && mouseX < this.x + this.width && mouseY > this.y && mouseY < this.y + this.height) {
-            if (mouseX > this.x + this.width - this.scrollerWidth) {
+        if (mouseX > this.getX() && mouseX < this.getX() + this.width && mouseY > this.getY() && mouseY < this.getY() + this.height) {
+            if (mouseX > this.getX() + this.width - this.scrollerWidth) {
                 this.scrollerClicked = true;
             } else {
                 for (int i = 0; i < this.listItems.size(); i++) {
@@ -83,7 +85,7 @@ public class ScrollableListComponent<T> extends ExtendedButton {
 
 
                     ListItem<T> item = this.listItems.get(i);
-                    if (mouseX > this.x + 1 && mouseX < this.x + this.width - this.scrollerWidth && mouseY > this.y + 1 + y && mouseY < this.y + 1 + y + this.itemHeight) {
+                    if (mouseX > this.getX() + 1 && mouseX < this.getX() + this.width - this.scrollerWidth && mouseY > this.getY() + 1 + y && mouseY < this.getY() + 1 + y + this.itemHeight) {
                         if (item.onClick(mouseX, mouseY)) {
                             return true;
                         }
@@ -146,9 +148,9 @@ public class ScrollableListComponent<T> extends ExtendedButton {
         matrixStack.translate(0.0F, 0.0F, -950.0F);
 
         RenderSystem.depthFunc(518);
-        matrixStack.translate(this.x, this.y, 0);
+        matrixStack.translate(this.getX(), this.getY(), 0);
         fill(matrixStack, this.width, this.height, 0, 0, -0xff0000);
-        matrixStack.translate(-x, -y, 0);
+        matrixStack.translate(-getX(), -getY(), 0);
         RenderSystem.depthFunc(515);
         RenderSystem.disableDepthTest();
 
@@ -167,28 +169,6 @@ public class ScrollableListComponent<T> extends ExtendedButton {
         RenderSystem.depthFunc(515);
         RenderSystem.disableDepthTest();
         matrixStack.popPose();
-
-        this.renderToolTip(matrixStack, mouseX, mouseY);
-    }
-
-    @Override
-    public void renderToolTip(@NotNull PoseStack matrixStack, int mouseX, int mouseY) {
-        if (mouseX > this.x && mouseX < this.x + this.width && mouseY > this.y && mouseY < this.y + this.height + 1) {
-
-            int itemHeight = this.itemHeight; // only 1 pixel between items
-            for (int i = 0; i < this.listItems.size(); i++) {
-
-                int y = i * itemHeight - scrolled;
-
-                if (y < -itemHeight) {
-                    continue;
-                }
-
-                ListItem<T> item = this.listItems.get(i);
-                item.preRenderToolTip(matrixStack, this.x, this.y + y + 1, this.width - scrollerWidth, this.height, this.itemHeight, mouseX, mouseY, this.getBlitOffset());
-
-            }
-        }
     }
 
     public ScrollableListComponent<T> scrollSpeed(double scrollSpeed) {
@@ -217,7 +197,7 @@ public class ScrollableListComponent<T> extends ExtendedButton {
     }
 
     private void renderBackground(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        ScreenUtils.blitWithBorder(matrixStack, new ResourceLocation("textures/gui/widgets.png"), x, y, 0, 46, this.width - this.scrollerWidth + 1, this.height, 200, 20, 3, 3, 3, 3, this.getBlitOffset());
+        ScreenUtils.blitWithBorder(matrixStack, new ResourceLocation("textures/gui/widgets.png"), this.getX(), this.getY(), 0, 46, this.width - this.scrollerWidth + 1, this.height, 200, 20, 3, 3, 3, 3, this.getBlitOffset());
     }
 
     private void renderItems(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
@@ -227,16 +207,16 @@ public class ScrollableListComponent<T> extends ExtendedButton {
             int y = i * itemHeight - scrolled;
 
             ListItem<T> item = this.listItems.get(i);
-            item.render(matrixStack, this.x + 1, this.y + 1 + y, this.width - scrollerWidth - 1, this.height, this.itemHeight, mouseX, mouseY, partialTicks, this.getBlitOffset());
+            item.render(matrixStack, this.getX() + 1, this.getY() + 1 + y, this.width - scrollerWidth - 1, this.height, this.itemHeight, mouseX, mouseY, partialTicks, this.getBlitOffset());
 
         }
         this.renderScrollBar(matrixStack, mouseX, mouseY, partialTicks);
-        this.hLine(matrixStack, this.x, this.x + width - 1, this.y, 0xff000000);
-        this.hLine(matrixStack, this.x, this.x + width - 1, this.y + height - 1, 0xff000000);
+        this.hLine(matrixStack, this.getX(), this.getX() + width - 1, this.getY(), 0xff000000);
+        this.hLine(matrixStack, this.getX(), this.getX() + width - 1, this.getY() + height - 1, 0xff000000);
     }
 
     private void renderScrollBar(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        ScreenUtils.blitWithBorder(matrixStack, MISC, this.x + this.width - this.scrollerWidth, this.y, 0, 0, 9, this.height, 9, 200, 2, getBlitOffset());
+        ScreenUtils.blitWithBorder(matrixStack, MISC, this.getX() + this.width - this.scrollerWidth, this.getY(), 0, 0, 9, this.height, 9, 200, 2, getBlitOffset());
         this.renderScroller(matrixStack, mouseX, mouseY, partialTicks);
     }
 
@@ -249,7 +229,7 @@ public class ScrollableListComponent<T> extends ExtendedButton {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1f);
         RenderSystem.setShaderTexture(0, MISC);
         int yMaxSize = Mth.clamp(this.itemHeight * this.listItems.size() - 2, 0, 27);
-        blit(matrixStack, this.x + this.width - this.scrollerWidth + 1, this.y + yOffset + 1, this.canScroll ? 9 : 16, 0, 7, yMaxSize);
+        blit(matrixStack, this.getX() + this.width - this.scrollerWidth + 1, this.getY() + yOffset + 1, this.canScroll ? 9 : 16, 0, 7, yMaxSize);
     }
 
     private void setCanScroll() {

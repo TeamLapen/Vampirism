@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
-public record ServerboundAppearancePacket(int entityId, String name, int... data) implements IMessage {
+public record ServerboundAppearancePacket(int entityId, String name, int... data) implements IMessage.IServerBoundMessage {
 
     static void encode(@NotNull ServerboundAppearancePacket msg, @NotNull FriendlyByteBuf buf) {
         buf.writeVarInt(msg.entityId);

@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.effects.SanguinareEffect;
@@ -10,6 +9,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class VampireFangItem extends Item {
     public VampireFangItem() {
-        super(new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties());
     }
 
     @NotNull
@@ -32,7 +32,7 @@ public class VampireFangItem extends Item {
             } else {
                 if (Helper.canBecomeVampire(playerIn)) {
                     SanguinareEffect.addRandom(playerIn, true);
-                    playerIn.addEffect(new MobEffectInstance(ModEffects.POISON.get(), 60));
+                    playerIn.addEffect(new MobEffectInstance(MobEffects.POISON, 60));
                 } else {
                     if (Helper.isVampire(playerIn)) {
                         playerIn.displayClientMessage(Component.translatable("text.vampirism.already_vampire"), true);

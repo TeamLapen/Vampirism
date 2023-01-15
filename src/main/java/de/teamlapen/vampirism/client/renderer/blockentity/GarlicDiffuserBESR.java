@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import de.teamlapen.vampirism.blockentity.GarlicDiffuserBlockEntity;
 import de.teamlapen.vampirism.core.ModItems;
 import net.minecraft.client.Minecraft;
@@ -40,7 +40,7 @@ public class GarlicDiffuserBESR extends VampirismBESR<GarlicDiffuserBlockEntity>
             matrixStackIn.translate(0.5D, 0.5D, 0.5D);
             matrixStackIn.scale(scale, scale, scale);
 
-            matrixStackIn.mulPose(Vector3f.YP.rotationDegrees((totalWorldTime + partialTicks) % 360));
+            matrixStackIn.mulPose(Axis.YP.rotationDegrees((totalWorldTime + partialTicks) % 360));
             matrixStackIn.translate(-0.5D, 0, -0.5);
             matrixStackIn.pushPose();
 

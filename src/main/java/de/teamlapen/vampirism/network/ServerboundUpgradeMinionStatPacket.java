@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Supplier;
 
 
-public record ServerboundUpgradeMinionStatPacket(int entityId, int statId) implements IMessage {
+public record ServerboundUpgradeMinionStatPacket(int entityId, int statId) implements IMessage.IServerBoundMessage {
 
     public static void handle(final @NotNull ServerboundUpgradeMinionStatPacket msg, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();

@@ -56,12 +56,6 @@ public class WeaponTableScreen extends AbstractContainerScreen<WeaponTableMenu> 
     }
 
     @Override
-    public void removed() {
-        this.recipeBookGui.removed();
-        super.removed();
-    }
-
-    @Override
     public void recipesUpdated() {
         this.recipeBookGui.recipesUpdated();
     }
@@ -107,7 +101,7 @@ public class WeaponTableScreen extends AbstractContainerScreen<WeaponTableMenu> 
             this.recipeBookGui.initVisuals();
             this.recipeBookGui.toggleVisibility();
             this.leftPos = this.recipeBookGui.updateScreenPosition(this.width, this.imageWidth - 18);
-            ((ImageButton) button).setPosition(this.leftPos + 5, this.height / 2 - 49);
+            button.setPosition(this.leftPos + 5, this.height / 2 - 49);
         }));
     }
 

@@ -34,10 +34,11 @@ public class VampireNightVisionEffectInstance extends MobEffectInstance implemen
         return "effect.vampirism.nightVision";
     }
 
-    @Override
+   /* @Override //TODO 1.19 readd
     public boolean isNoCounter() {
         return true;
-    }
+    }*/
+
 
     @NotNull
     @Override

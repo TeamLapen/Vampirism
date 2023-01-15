@@ -2,12 +2,21 @@ package de.teamlapen.vampirism.client.gui;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.blocks.CoffinBlock;
+import de.teamlapen.vampirism.blocks.TentBlock;
+import de.teamlapen.vampirism.client.gui.screens.SleepInMultiplayerModScreen;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.screens.InBedChatScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ScreenEvent;
@@ -16,6 +25,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
+
+import static de.teamlapen.vampirism.blocks.TentBlock.FACING;
+import static de.teamlapen.vampirism.blocks.TentBlock.POSITION;
 
 /**
  * Add a button to the inventory screen that allows opening the skill menu from there
@@ -48,5 +60,17 @@ public class ScreenEventHandler {
             });
             event.addListener(button);
         }
+        else if(event.getScreen() instanceof InBedChatScreen){
+            Player p = event.getScreen().getMinecraft().player;
+            if (p!= null && p.isSleeping()) {
+                GuiEventListener l = event.getScreen().children().get(1);
+                if (l instanceof AbstractWidget leaveButton) {
+                    p.getSleepingPos().map(pos -> p.level.getBlockState(pos).getBlock()).map(block -> block instanceof TentBlock ? "text.vampirism.tent.stop_sleeping" : (block instanceof CoffinBlock ? "text.vampirism.coffin.stop_sleeping" : null)).ifPresent(newText -> {
+                        leaveButton.setMessage(Component.translatable(newText));
+                    });
+                }
+            }
+        }
     }
+
 }

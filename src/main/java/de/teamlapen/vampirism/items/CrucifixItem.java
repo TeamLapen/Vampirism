@@ -53,7 +53,7 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
     private static final Set<CrucifixItem> all_crucifix = Collections.synchronizedSet(new HashSet<>());
 
     public CrucifixItem(IItemWithTier.TIER tier) {
-        super(new Properties().tab(VampirismMod.creativeTab).stacksTo(1));
+        super(new Properties().stacksTo(1));
         this.tier = tier;
         all_crucifix.add(this);
     }
@@ -97,11 +97,8 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        addTierInformation(tooltip);
-        Player playerEntity = VampirismMod.proxy.getClientPlayer();
-        this.addFactionPoisonousToolTip(stack, worldIn, tooltip, flagIn, playerEntity);
-
+        this.addTierInformation(tooltip);
+        this.addFactionToolTips(stack, worldIn, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());
     }
 
     @Override
@@ -162,26 +159,19 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
     }
 
     protected double determineSlowdown(int entityTier) {
-        switch (tier) {
-            case NORMAL:
-                return entityTier > 1 ? 0.1 : 0.5;
-            case ENHANCED:
-                return entityTier > 2 ? 0.1 : 0.5;
-            case ULTIMATE:
-                return entityTier > 3 ? 0.3 : 0.5;
-        }
-        return 0;
+        return switch (tier) {
+            case NORMAL -> entityTier > 1 ? 0.1 : 0.5;
+            case ENHANCED -> entityTier > 2 ? 0.1 : 0.5;
+            case ULTIMATE -> entityTier > 3 ? 0.3 : 0.5;
+        };
     }
 
     protected int getRange(ItemStack stack) {
-        switch (tier) {
-            case ENHANCED:
-                return 8;
-            case ULTIMATE:
-                return 10;
-            default:
-                return 4;
-        }
+        return switch (tier) {
+            case ENHANCED -> 8;
+            case ULTIMATE -> 10;
+            default -> 4;
+        };
     }
 
     @Override

@@ -43,7 +43,7 @@ public class TerraBlenderRegistration {
             this.addModifiedVanillaOverworldBiomes(mapper, builder -> {
                 List<Climate.ParameterPoint> points = new ArrayList<>(RegionUtils.getVanillaParameterPoints(Biomes.TAIGA));
                 points.addAll(RegionUtils.getVanillaParameterPoints(Biomes.FOREST));
-                points.forEach(point -> builder.replaceBiome(point, ModBiomes.VAMPIRE_FOREST.getKey()));
+                points.forEach(point -> builder.replaceBiome(point, ModBiomes.VAMPIRE_FOREST));
             });
         }
     }

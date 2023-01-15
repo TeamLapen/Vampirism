@@ -1,11 +1,13 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.blockentity.BloodContainerBlockEntity;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.misc.VampirismCreativeTab;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -15,6 +17,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -41,7 +44,7 @@ import java.util.List;
 /**
  * Tileentity container that can store liquids.
  */
-public class BloodContainerBlock extends VampirismBlockContainer {
+public class BloodContainerBlock extends VampirismBlockContainer implements ModDisplayItemGenerator.CreativeTabItemProvider {
     protected static final VoxelShape containerShape = Block.box(2, 0, 2, 14, 16, 14);
     private final static Logger LOGGER = LogManager.getLogger();
 
@@ -84,13 +87,15 @@ public class BloodContainerBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public void fillItemCategory(@NotNull CreativeModeTab group, @NotNull NonNullList<ItemStack> items) {
-        super.fillItemCategory(group, items);
+    public void generateCreativeTab(FeatureFlagSet featureFlagSet, CreativeModeTab.Output output, boolean hasPermission) {
         ItemStack stack = new ItemStack(this, 1);
+        output.accept(stack);
+        stack = stack.copy();
         FluidStack fluid = new FluidStack(ModFluids.BLOOD.get(), BloodContainerBlockEntity.CAPACITY);
         stack.addTagElement("fluid", fluid.writeToNBT(new CompoundTag()));
-        items.add(stack);
+        output.accept(stack);
     }
+
 
     @NotNull
     @Override

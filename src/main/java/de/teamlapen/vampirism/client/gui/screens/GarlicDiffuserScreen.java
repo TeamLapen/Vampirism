@@ -64,11 +64,11 @@ public class GarlicDiffuserScreen extends Screen {
         this.guiLeft = (this.width - this.xSize) / 2;
         this.guiTop = (this.height - this.ySize) / 2;
 
-        startupBar = this.addRenderableWidget(new ProgressBar(this, this.guiLeft + (xSize - 170) / 2, this.guiTop + 30, 170, Component.translatable("gui.vampirism.garlic_diffuser.startup")));
+        startupBar = this.addRenderableWidget(new ProgressBar(this.guiLeft + (xSize - 170) / 2, this.guiTop + 30, 170, Component.translatable("gui.vampirism.garlic_diffuser.startup")));
         startupBar.setColor(0xD0D0FF);
         startupBar.setFGColor(0xFFFFFF);
 
-        fueledTimer = this.addRenderableWidget(new ProgressBar(this, this.guiLeft + (xSize - 170) / 2, this.guiTop + 60, 170, Component.translatable("gui.vampirism.garlic_diffuser.fueled")));
+        fueledTimer = this.addRenderableWidget(new ProgressBar(this.guiLeft + (xSize - 170) / 2, this.guiTop + 60, 170, Component.translatable("gui.vampirism.garlic_diffuser.fueled")));
         fueledTimer.setColor(0xD0FFD0);
         fueledTimer.setFGColor(0xFFFFFF);
     }

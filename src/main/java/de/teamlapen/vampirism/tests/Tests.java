@@ -22,12 +22,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -103,7 +103,7 @@ public class Tests {
     private static boolean bloodFluidHandler(@NotNull TestInfo info) {
         info.world.setBlockAndUpdate(info.pos, ModBlocks.BLOOD_CONTAINER.get().defaultBlockState());
         BlockEntity t = info.world.getBlockEntity(info.pos);
-        LazyOptional<IFluidHandler> opt = t.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, Direction.getRandom(info.world.random));
+        LazyOptional<IFluidHandler> opt = t.getCapability(ForgeCapabilities.FLUID_HANDLER, Direction.getRandom(info.world.random));
         opt.ifPresent(handler -> handler.fill(new FluidStack(ModFluids.BLOOD.get(), 10000000), IFluidHandler.FluidAction.EXECUTE));
         int blood = BloodHelper.getBlood(opt);
         assert blood > 0 : "Could not fill blood container";

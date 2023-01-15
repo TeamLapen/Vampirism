@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.command;
 
+import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
@@ -8,10 +9,12 @@ import de.teamlapen.vampirism.command.arguments.BiomeArgument;
 import de.teamlapen.vampirism.command.arguments.ModSuggestionProvider;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.util.RegUtil;
+import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.DimensionArgument;
-import net.minecraft.commands.arguments.EntitySummonArgument;
+import net.minecraft.commands.arguments.ResourceArgument;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -38,7 +41,7 @@ public class ConfigCommand extends BasicCommand {
     private static final SimpleCommandExceptionType NO_SUN_DAMAGE_BLACKLIST_TYPE = new SimpleCommandExceptionType(Component.translatable("command.vampirism.base.config.sun_damage.blacklist.no_type"));
 
 
-    public static ArgumentBuilder<CommandSourceStack, ?> register() {
+    public static ArgumentBuilder<CommandSourceStack, ?> register(@NotNull CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext buildContext) {
         return Commands.literal("config")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
                 .executes(context -> {
@@ -54,8 +57,8 @@ public class ConfigCommand extends BasicCommand {
                                 })
                                 .then(Commands.literal("entity")
                                         .executes(context -> blacklistEntity(context.getSource().getPlayerOrException()))
-                                        .then(Commands.argument("entity", EntitySummonArgument.id()).suggests(ModSuggestionProvider.ENTITIES)
-                                                .executes(context -> blacklistEntity(context.getSource().getPlayerOrException(), EntitySummonArgument.getSummonableEntity(context, "entity")))))))
+                                        .then(Commands.argument("entity", ResourceArgument.resource(buildContext, Registries.ENTITY_TYPE)).suggests(ModSuggestionProvider.ENTITIES)
+                                                .executes(context -> blacklistEntity(context.getSource().getPlayerOrException(), ResourceArgument.getEntityType(context, "entity").key().location()))))))
                 .then(Commands.literal("sundamage")
                         .executes(context -> {
                             throw NO_SUN_DAMAGE_TYPE.create();

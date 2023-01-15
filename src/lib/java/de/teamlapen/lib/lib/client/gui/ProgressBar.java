@@ -6,8 +6,8 @@ import de.teamlapen.lib.LIBREFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -18,13 +18,11 @@ import org.jetbrains.annotations.NotNull;
 public class ProgressBar extends AbstractWidget {
 
     private static final ResourceLocation WIDGETS = new ResourceLocation(LIBREFERENCE.MODID, "textures/gui/widgets.png");
-    private final Screen screen;
     private float progress = 0;
     private int color = 0xFFFFFF;
 
-    public ProgressBar(Screen screen, int x, int y, int width, @NotNull Component title) {
+    public ProgressBar( int x, int y, int width, @NotNull Component title) {
         super(x, y, width, 20, title);
-        this.screen = screen;
     }
 
     @Override
@@ -35,26 +33,16 @@ public class ProgressBar extends AbstractWidget {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        ScreenUtils.blitWithBorder(matrixStack, WIDGETS, x, y, 0, 46 + i * 20, this.width, 20, 200, 20, 3, 0);
+        ScreenUtils.blitWithBorder(matrixStack, WIDGETS, this.getX(), this.getY(), 0, 46 + i * 20, this.width, 20, 200, 20, 3, 0);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor((color >> 16) / 256f, ((color >> 8) & 0xFF) / 256f, (color & 0xFF) / 256f, this.alpha);
         RenderSystem.setShaderTexture(0, WIDGETS);
-        if (this.active) blit(matrixStack, x + 3, y + 3, 0, 32, (int) ((progress) * (this.width - 6)), 14);
+        if (this.active) blit(matrixStack, this.getX() + 3, this.getY() + 3, 0, 32, (int) ((progress) * (this.width - 6)), 14);
         this.renderBg(matrixStack, minecraft, mouseX, mouseY);
         int j = getFGColor();
-        drawCenteredString(matrixStack, font, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, j | Mth.ceil(this.alpha * 255.0F) << 24);
+        drawCenteredString(matrixStack, font, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, j | Mth.ceil(this.alpha * 255.0F) << 24);
 
-        if (isHovered) {
-            renderToolTip(matrixStack, mouseX, mouseY);
-        }
-    }
-
-    @Override
-    public void renderToolTip(@NotNull PoseStack matrixStack, int mouseX, int mouseY) {
-        if (this.active) {
-            screen.renderTooltip(matrixStack, Component.literal("" + ((int) (progress * 100f)) + "%"), mouseX, mouseY);
-        }
-
+        setTooltip(Tooltip.create(Component.literal("" + ((int) (progress * 100f)) + "%")));
     }
 
     public void setColor(int color) {
@@ -66,7 +54,7 @@ public class ProgressBar extends AbstractWidget {
     }
 
     @Override
-    public void updateNarration(@NotNull NarrationElementOutput p_169152_) {
+    public void updateWidgetNarration(@NotNull NarrationElementOutput p_169152_) {
 
     }
 }

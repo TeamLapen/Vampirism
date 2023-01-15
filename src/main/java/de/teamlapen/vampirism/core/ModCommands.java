@@ -61,7 +61,7 @@ public class ModCommands {
                             .then(LevelUpCommand.register())
                             .then(GenderCommand.register())
                             .then(BloodBarCommand.register())
-                            .then(ConfigCommand.register())
+                            .then(ConfigCommand.register(dispatcher, buildContext))
                             .then(SkillCommand.register())
                             .then(MinionInventoryCommand.register(buildContext))
             );

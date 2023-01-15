@@ -1,0 +1,42 @@
+{
+  "processors": [
+    {
+      "processor_type": "vampirism:random_selector",
+      "rules": [
+        {
+          "default_state": {
+            "state": {
+              "Name": "vampirism:totem_top"
+            }
+          },
+          "input_predicate": {
+            "block": "vampirism:totem_top",
+            "predicate_type": "minecraft:random_block_match",
+            "probability": 0.6
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:always_true"
+          },
+          "states": [
+            {
+              "state": {
+                "Name": "vampirism:totem_top_vampirism_vampire"
+              }
+            },
+            {
+              "state": {
+                "Name": "vampirism:totem_top_vampirism_hunter"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "processor_type": "vampirism:biome_based",
+      "replace_block": {
+        "Name": "minecraft:dirt"
+      }
+    }
+  ]
+}

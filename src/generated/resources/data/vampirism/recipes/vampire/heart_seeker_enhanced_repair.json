@@ -1,5 +1,6 @@
 {
   "type": "vampirism:repair_iitemwithtier",
+  "category": "equipment",
   "key": {
     "X": {
       "item": "vampirism:blood_infused_enhanced_iron_ingot"

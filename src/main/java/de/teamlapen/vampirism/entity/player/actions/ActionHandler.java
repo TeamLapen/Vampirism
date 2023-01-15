@@ -82,6 +82,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             action.onDeactivated(player);
         }
         this.activeTimers.clear();
+        dirty = true;
     }
 
     @Override
@@ -275,8 +276,9 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
         } else if (cooldownTimers.containsKey(id)) {
             return IAction.PERM.COOLDOWN;
         } else {
+            if (this.player.getRepresentingPlayer().isSpectator()) return IAction.PERM.DISALLOWED;
             if (!isActionUnlocked(action)) return IAction.PERM.NOT_UNLOCKED;
-            if (!isActionAllowedPermission(action)) return IAction.PERM.DISALLOWED;
+            if (!isActionAllowedPermission(action)) return IAction.PERM.PERMISSION_DISALLOWED;
             IAction.PERM r = action.canUse(player);
             if (r == IAction.PERM.ALLOWED) {
                 if (action.onActivated(player, context)) {

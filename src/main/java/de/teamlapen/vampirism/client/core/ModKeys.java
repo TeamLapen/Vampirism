@@ -163,7 +163,7 @@ public class ModKeys {
     }
 
     private void openActionMenu() {
-        if (mc.player.isAlive()) {
+        if (mc.player.isAlive()  && !mc.player.isSpectator()) {
             IPlayableFaction<?> faction = VampirismPlayerAttributes.get(mc.player).faction;
             if (faction != null) {
                 Minecraft.getInstance().setScreen(new ActionSelectScreen<>(new Color(faction.getColor()), false));
@@ -180,7 +180,7 @@ public class ModKeys {
     }
 
     private void openMinionTaskMenu() {
-        if (FactionPlayerHandler.getOpt(mc.player).map(FactionPlayerHandler::getLordLevel).orElse(0) > 0) {
+        if (!Minecraft.getInstance().player.isSpectator() &&  FactionPlayerHandler.getOpt(mc.player).map(FactionPlayerHandler::getLordLevel).orElse(0) > 0) {
             Minecraft.getInstance().setScreen(new SelectMinionTaskScreen());
         }
     }

@@ -2,8 +2,7 @@ package de.teamlapen.vampirism.client.gui.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.lib.lib.client.gui.components.ScrollableArrayTextComponentList;
-import de.teamlapen.lib.lib.client.gui.components.ScrollableListComponent;
+import de.teamlapen.lib.lib.client.gui.components.SimpleButtonScrollWidget;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
@@ -21,7 +20,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.widget.ExtendedButton;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,8 +34,8 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
     private int eyeType;
     private boolean glowingEyes;
     private boolean titleGender;
-    private ScrollableListComponent<Pair<Integer, Component>> eyeList;
-    private ScrollableListComponent<Pair<Integer, Component>> fangList;
+    private SimpleButtonScrollWidget eyeList;
+    private SimpleButtonScrollWidget fangList;
     private ExtendedButton eyeButton;
     private ExtendedButton fangButton;
     private Checkbox glowingEyesButton;
@@ -76,18 +74,6 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
         this.glowingEyes = vampAtt.glowingEyes;
         this.titleGender = FactionPlayerHandler.getOpt(Minecraft.getInstance().player).map(FactionPlayerHandler::useFemaleLordTitle).orElse(false);
 
-        this.eyeList = this.addRenderableWidget(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 30 + 19, 99, 100, 20, REFERENCE.EYE_TYPE_COUNT, Component.translatable("gui.vampirism.appearance.eye"), this::eye, this::hoverEye).scrollSpeed(2));
-        this.fangList = this.addRenderableWidget(new ScrollableArrayTextComponentList(this.guiLeft + 20, this.guiTop + 50 + 19, 99, 80, 20, REFERENCE.FANG_TYPE_COUNT, Component.translatable("gui.vampirism.appearance.fang"), this::fang, this::hoverFang));
-        this.eyeButton = this.addRenderableWidget(new ExtendedButton(eyeList.x, eyeList.y - 20, eyeList.getWidth() + 1, 20, Component.literal(""), (b) -> this.setEyeListVisibility(!eyeList.visible)));
-        this.fangButton = this.addRenderableWidget(new ExtendedButton(fangList.x, fangList.y - 20, fangList.getWidth() + 1, 20, Component.literal(""), (b) -> this.setFangListVisibility(!fangList.visible)));
-        this.glowingEyesButton = this.addRenderableWidget(new Checkbox(this.guiLeft + 20, this.guiTop + 70, 99, 20, Component.translatable("gui.vampirism.appearance.glowing_eye"), glowingEyes) {
-            @Override
-            public void onPress() {
-                super.onPress();
-                glowingEyes = selected();
-                VampirePlayer.getOpt(entity).ifPresent(p -> p.setGlowingEyes(glowingEyes));
-            }
-        });
         this.titleGenderButton = this.addRenderableWidget(new Checkbox(this.guiLeft + 20, this.guiTop + 91, 99, 20, Component.translatable("gui.vampirism.appearance.title_gender"), this.titleGender) {
             @Override
             public void onPress() {
@@ -96,6 +82,21 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
                 FactionPlayerHandler.getOpt(entity).ifPresent(p -> p.setTitleGender(titleGender));
             }
         });
+        this.glowingEyesButton = this.addRenderableWidget(new Checkbox(this.guiLeft + 20, this.guiTop + 70, 99, 20, Component.translatable("gui.vampirism.appearance.glowing_eye"), glowingEyes) {
+            @Override
+            public void onPress() {
+                super.onPress();
+                glowingEyes = selected();
+                VampirePlayer.getOpt(entity).ifPresent(p -> p.setGlowingEyes(glowingEyes));
+            }
+        });
+
+        this.fangList = this.addRenderableWidget(SimpleButtonScrollWidget.builder(this.guiLeft + 20, this.guiTop + 50 + 19, 99, 80).setComponents(REFERENCE.FANG_TYPE_COUNT, type -> Component.translatable("gui.vampirism.appearance.fang").append(" "+type)).setButtonClickConsumer(this::fang).setButtonHoverConsumer(this::hoverFang).build());
+        this.fangButton = this.addRenderableWidget(new ExtendedButton(fangList.getX(), fangList.getY() - 20, fangList.getWidth(), 20, Component.literal(""), (b) -> this.setFangListVisibility(!fangList.visible)));
+
+        this.eyeList = this.addRenderableWidget(SimpleButtonScrollWidget.builder(this.guiLeft + 20, this.guiTop + 30 + 19, 99, 100).setComponents(REFERENCE.EYE_TYPE_COUNT, type -> Component.translatable("gui.vampirism.appearance.eye").append(" "+type)).setButtonClickConsumer(this::eye).setButtonHoverConsumer(this::hoverEye).build());
+        this.eyeButton = this.addRenderableWidget(new ExtendedButton(eyeList.getX(), eyeList.getY() - 20, eyeList.getWidth(), 20, Component.literal(""), (b) -> this.setEyeListVisibility(!eyeList.visible)));
+
         this.setEyeListVisibility(false);
         this.setFangListVisibility(false);
     }
@@ -146,7 +147,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
     }
 
     private void setEyeListVisibility(boolean show) {
-        eyeButton.setMessage(eyeList.getMessage().copy().append(" " + (eyeType + 1)));
+        eyeButton.setMessage(Component.translatable("gui.vampirism.appearance.eye").append(" " + (eyeType + 1)));
         this.eyeList.visible = show;
         this.fangButton.visible = !show;
         this.glowingEyesButton.visible = !show;
@@ -155,7 +156,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
     }
 
     private void setFangListVisibility(boolean show) {
-        fangButton.setMessage(fangList.getMessage().copy().append(" " + (fangType + 1)));
+        fangButton.setMessage(Component.translatable("gui.vampirism.appearance.fang").append(" " + (fangType + 1)));
         this.fangList.visible = show;
         this.glowingEyesButton.visible = !show;
         this.titleGenderButton.visible = !show;

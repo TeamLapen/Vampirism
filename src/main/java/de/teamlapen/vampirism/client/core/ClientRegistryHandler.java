@@ -10,6 +10,7 @@ public class ClientRegistryHandler {
     public static void init(){
         IEventBus modbus = FMLJavaModLoadingContext.get().getModEventBus();
 
+        modbus.addListener(ClientEventHandler::onModelBakeRequest);
         modbus.addListener(ClientEventHandler::onModelBakeEvent);
         modbus.addListener(ModEntitiesRender::onRegisterRenderers);
         modbus.addListener(ModEntitiesRender::onRegisterLayers);

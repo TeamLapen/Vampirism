@@ -1,20 +1,17 @@
 package de.teamlapen.vampirism.world.biome;
 
 import com.mojang.datafixers.util.Pair;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBiomes;
+import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.mixin.MultiNoiseBiomeSourcePresetAccessor;
 import de.teamlapen.vampirism.modcompat.terrablender.TerraBlenderCompat;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.KeyDispatchDataCodec;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.biome.MultiNoiseBiomeSource;
 import net.minecraft.world.level.levelgen.SurfaceRules;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -27,7 +24,7 @@ import java.util.function.Function;
 
 /**
  * Overworld is modified in the following ways:
- * 1) New surface rules. These are added via a Mixin hook ({@link de.teamlapen.vampirism.mixin.SurfaceRuleDataMixin} on static init. And later on via TerraBlender, if installed
+ * 1) New surface rules. These are added via a Mixin hook ({@link de.teamlapen.vampirism.mixin.NoiseGeneratorSettingsMixin} on static init. And later on via TerraBlender, if installed
  * 2) The overworld BiomeSource preset is modified on load complete, if TerraBlender is not installed, to include the vampirism forest. If TerraBlender is installed this is done via TerraBlender in common setup in {@link de.teamlapen.vampirism.modcompat.terrablender.TerraBlenderRegistration}
  */
 public class OverworldModifications {
@@ -69,10 +66,10 @@ public class OverworldModifications {
          * Create a wrapper function for the parameterSource function, which calls the original one and then modifies the result
          */
 
-        final Function<Registry<Biome>, Climate.ParameterList<Holder<Biome>>> originalParameterSourceFunction = ((MultiNoiseBiomeSourcePresetAccessor) MultiNoiseBiomeSource.Preset.OVERWORLD).getPresetSupplier_vampirism();
+        final Function<HolderGetter<Biome>, Climate.ParameterList<Holder<Biome>>> originalParameterSourceFunction = ((MultiNoiseBiomeSourcePresetAccessor) MultiNoiseBiomeSource.Preset.OVERWORLD).getPresetSupplier_vampirism();
 
 
-        Function<Registry<Biome>, Climate.ParameterList<Holder<Biome>>> wrapperParameterSourceFunction = (registry) -> {
+        Function<HolderGetter<Biome>, Climate.ParameterList<Holder<Biome>>> wrapperParameterSourceFunction = (registry) -> {
             //Create copy of vanilla list
             Climate.ParameterList<Holder<Biome>> vanillaList = originalParameterSourceFunction.apply(registry);
             List<Pair<Climate.ParameterPoint, Holder<Biome>>> biomes = new ArrayList<>(vanillaList.values());
@@ -107,9 +104,9 @@ public class OverworldModifications {
             LOGGER.debug("Removed a total of {} points from {}", removed, oldCount);
 
 
-            LOGGER.info("Adding biome {} to ParameterPoints {} in Preset.OVERWORLD", ModBiomes.VAMPIRE_FOREST.getKey().location(), Arrays.toString(forestPoints));
+            LOGGER.info("Adding biome {} to ParameterPoints {} in Preset.OVERWORLD", ModBiomes.VAMPIRE_FOREST.location(), Arrays.toString(forestPoints));
             for (Climate.ParameterPoint forestPoint : forestPoints) {
-                biomes.add(Pair.of(forestPoint, registry.getOrCreateHolderOrThrow(ModBiomes.VAMPIRE_FOREST.getKey())));
+                biomes.add(Pair.of(forestPoint, registry.getOrThrow(ModBiomes.VAMPIRE_FOREST)));
             }
 
             return new Climate.ParameterList<>(biomes);
@@ -121,9 +118,9 @@ public class OverworldModifications {
 
     public static SurfaceRules.@NotNull RuleSource buildOverworldSurfaceRules() {
         //Any blocks here must be available before block registration, so they must be initialized statically
-        SurfaceRules.RuleSource cursed_earth = new CustomBlockRuleSource(new ResourceLocation(REFERENCE.MODID, "cursed_earth"));
-        SurfaceRules.RuleSource grass = new CustomBlockRuleSource(new ResourceLocation(REFERENCE.MODID, "cursed_grass"));
-        SurfaceRules.ConditionSource inVampireBiome = SurfaceRules.isBiome(ModBiomes.VAMPIRE_FOREST.getKey());
+        SurfaceRules.RuleSource cursed_earth = new SurfaceRules.BlockRuleSource(ModBlocks.CURSED_EARTH.get().defaultBlockState());
+        SurfaceRules.RuleSource grass = new SurfaceRules.BlockRuleSource(ModBlocks.CURSED_GRASS.get().defaultBlockState());
+        SurfaceRules.ConditionSource inVampireBiome = SurfaceRules.isBiome(ModBiomes.VAMPIRE_FOREST);
         SurfaceRules.RuleSource vampireForestTopLayer = SurfaceRules.ifTrue(inVampireBiome, grass);
         SurfaceRules.RuleSource vampireForestBaseLayer = SurfaceRules.ifTrue(inVampireBiome, cursed_earth);
         return SurfaceRules.sequence(
@@ -133,22 +130,5 @@ public class OverworldModifications {
                                 SurfaceRules.ifTrue(SurfaceRules.UNDER_FLOOR, SurfaceRules.ifTrue(SurfaceRules.waterBlockCheck(-1, 0), SurfaceRules.sequence(vampireForestBaseLayer)))
                         ))
         );
-    }
-
-    record CustomBlockRuleSource(ResourceLocation block_id) implements SurfaceRules.RuleSource {
-        static final KeyDispatchDataCodec<CustomBlockRuleSource> CODEC = KeyDispatchDataCodec.of(ResourceLocation.CODEC.xmap(CustomBlockRuleSource::new, CustomBlockRuleSource::block_id).fieldOf("block_id").codec());
-
-        static {
-            Registry.register(Registry.RULE, new ResourceLocation(REFERENCE.MODID, "block_id"), CODEC.codec());
-        }
-
-        public SurfaceRules.@NotNull SurfaceRule apply(SurfaceRules.Context p_189523_) {
-            return (p_189774_, p_189775_, p_189776_) -> ForgeRegistries.BLOCKS.getValue(block_id).defaultBlockState();
-        }
-
-        @Override
-        public @NotNull KeyDispatchDataCodec<? extends SurfaceRules.RuleSource> codec() {
-            return CODEC;
-        }
     }
 }

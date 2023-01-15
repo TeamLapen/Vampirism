@@ -1,10 +1,12 @@
 package de.teamlapen.vampirism.world.gen.modifier;
 
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.core.ModBiomes;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.random.Weight;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -16,8 +18,18 @@ import net.minecraftforge.common.world.ModifiableBiomeInfo;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.function.Function;
 
 public record ExtendedAddSpawnsBiomeModifier(HolderSet<Biome> biomes, HolderSet<Biome> excludedBiomes, List<ExtendedSpawnData> spawners) implements BiomeModifier {
+
+    public static final Codec<ExtendedAddSpawnsBiomeModifier> CODEC = RecordCodecBuilder.create(builder -> builder.group(
+            Biome.LIST_CODEC.fieldOf("biomes").forGetter(ExtendedAddSpawnsBiomeModifier::biomes),
+            Biome.LIST_CODEC.fieldOf("excludedBiomes").forGetter(ExtendedAddSpawnsBiomeModifier::excludedBiomes),
+            new ExtraCodecs.EitherCodec<>(ExtendedAddSpawnsBiomeModifier.ExtendedSpawnData.CODEC.listOf(), ExtendedAddSpawnsBiomeModifier.ExtendedSpawnData.CODEC).xmap(
+                    either -> either.map(Function.identity(), List::of), // convert list/singleton to list when decoding
+                    list -> list.size() == 1 ? Either.right(list.get(0)) : Either.left(list) // convert list to singleton/list when encoding
+            ).fieldOf("spawners").forGetter(ExtendedAddSpawnsBiomeModifier::spawners)
+    ).apply(builder, ExtendedAddSpawnsBiomeModifier::new));
 
     public static @NotNull ExtendedAddSpawnsBiomeModifier singleSpawn(HolderSet<Biome> biomes, HolderSet<Biome> excludedBiomes, @NotNull ExtendedSpawnData spawner) {
         return new ExtendedAddSpawnsBiomeModifier(biomes, excludedBiomes, List.of(spawner));

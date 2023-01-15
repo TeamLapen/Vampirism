@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.data;
 
-import com.google.common.collect.ImmutableList;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.advancements.critereon.*;
 import de.teamlapen.vampirism.api.VReference;
@@ -8,40 +7,58 @@ import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.*;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.advancements.AdvancementProvider;
+import net.minecraft.data.advancements.AdvancementSubProvider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class AdvancementGenerator extends AdvancementProvider {
-    public AdvancementGenerator(@NotNull DataGenerator generatorIn) {
-        super(generatorIn);
-        MainAdvancements main = new MainAdvancements();
-        this.tabs = ImmutableList.of(main, new HunterAdvancements(main::getRoot), new VampireAdvancements(main::getRoot), new MinionAdvancements(main::getRoot));
+
+    public AdvancementGenerator(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(packOutput, lookupProvider, List.of(new VampirismAdvancements()));
     }
 
-    @SuppressWarnings("ClassCanBeRecord")
-    private static class HunterAdvancements implements Consumer<Consumer<Advancement>> {
+    private interface VampirismAdvancementSubProvider {
+        void generate(@NotNull Advancement root, @NotNull HolderLookup.Provider holderProvider, @NotNull Consumer<Advancement> consumer);
+    }
 
-        private final Supplier<Advancement> root;
+    private static class VampirismAdvancements implements AdvancementSubProvider {
 
-        public HunterAdvancements(Supplier<Advancement> root) {
-            this.root = root;
+        private final List<VampirismAdvancementSubProvider> subProvider = List.of(new MainAdvancements(), new HunterAdvancements(), new VampireAdvancements(), new MinionAdvancements());
+
+        @Override
+        public void generate(HolderLookup.@NotNull Provider holderProvider, @NotNull Consumer<Advancement> consumer) {
+            Advancement root = Advancement.Builder.advancement()
+                    .display(ModItems.VAMPIRE_FANG.get(), Component.translatable("advancement.vampirism"), Component.translatable("advancement.vampirism.desc"), new ResourceLocation(REFERENCE.MODID, "textures/block/castle_block_dark_brick.png"), FrameType.TASK, false, false, false) //TODO BREAKING: change background texture to "textures/gui/advancements/backgrounds/vampirism.png"
+                    .addCriterion("main", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.VAMPIRE_FANG.get()))
+                    .addCriterion("second", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.ITEM_GARLIC.get()))
+                    .requirements(RequirementsStrategy.OR)
+                    .save(consumer, REFERENCE.MODID + ":main/root");
+
+            this.subProvider.forEach(provider -> provider.generate(root, holderProvider, consumer));
         }
+
+    }
+
+    private static class HunterAdvancements implements VampirismAdvancementSubProvider {
 
         @SuppressWarnings("unused")
         @Override
-        public void accept(@NotNull Consumer<Advancement> consumer) {
+        public void generate(@NotNull Advancement root, HolderLookup.@NotNull Provider holderProvider, @NotNull Consumer<Advancement> consumer) {
             Advancement become_hunter = Advancement.Builder.advancement()
                     .display(ModItems.ITEM_GARLIC.get(), Component.translatable("advancement.vampirism.become_hunter"), Component.translatable("advancement.vampirism.become_hunter.desc"), null, FrameType.TASK, true, false, false)
-                    .parent(root.get())
+                    .parent(root)
                     .addCriterion("main", FactionCriterionTrigger.level(VReference.HUNTER_FACTION, 1))
                     .save(consumer, REFERENCE.MODID + ":hunter/become_hunter");
             Advancement stake = Advancement.Builder.advancement()
@@ -82,22 +99,15 @@ public class AdvancementGenerator extends AdvancementProvider {
         }
     }
 
-    private static class MainAdvancements implements Consumer<Consumer<Advancement>> {
-        Advancement root;
+    private static class MainAdvancements implements VampirismAdvancementSubProvider {
 
         @SuppressWarnings("unused")
         @Override
-        public void accept(@NotNull Consumer<Advancement> consumer) {
-            root = Advancement.Builder.advancement()
-                    .display(ModItems.VAMPIRE_FANG.get(), Component.translatable("advancement.vampirism"), Component.translatable("advancement.vampirism.desc"), new ResourceLocation(REFERENCE.MODID, "textures/block/castle_block_dark_brick.png"), FrameType.TASK, false, false, false) //TODO BREAKING: change background texture to "textures/gui/advancements/backgrounds/vampirism.png"
-                    .addCriterion("main", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.VAMPIRE_FANG.get()))
-                    .addCriterion("second", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.ITEM_GARLIC.get()))
-                    .requirements(RequirementsStrategy.OR)
-                    .save(consumer, REFERENCE.MODID + ":main/root");
+        public void generate(@NotNull Advancement root, HolderLookup.@NotNull Provider holderProvider, @NotNull Consumer<Advancement> consumer) {
             Advancement vampire_forest = Advancement.Builder.advancement()
                     .display(Items.OAK_LOG, Component.translatable("advancement.vampirism.vampire_forest"), Component.translatable("advancement.vampirism.vampire_forest.desc"), null, FrameType.TASK, true, true, true)
                     .parent(root)
-                    .addCriterion("main", PlayerTrigger.TriggerInstance.located(LocationPredicate.inBiome(ModBiomes.VAMPIRE_FOREST.getKey())))
+                    .addCriterion("main", PlayerTrigger.TriggerInstance.located(LocationPredicate.inBiome(ModBiomes.VAMPIRE_FOREST)))
                     .requirements(RequirementsStrategy.OR)
                     .save(consumer, REFERENCE.MODID + ":main/vampire_forest");
             Advancement ancient_knowledge = Advancement.Builder.advancement()
@@ -111,28 +121,16 @@ public class AdvancementGenerator extends AdvancementProvider {
                     .addCriterion("main", KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().of(ModEntities.VAMPIRE_BARON.get())))
                     .save(consumer, REFERENCE.MODID + ":main/regicide");
         }
-
-        public Advancement getRoot() {
-            return root;
-        }
-
     }
 
-    @SuppressWarnings("ClassCanBeRecord")
-    private static class VampireAdvancements implements Consumer<Consumer<Advancement>> {
-
-        private final Supplier<Advancement> root;
-
-        public VampireAdvancements(Supplier<Advancement> root) {
-            this.root = root;
-        }
+    private static class VampireAdvancements implements VampirismAdvancementSubProvider {
 
         @SuppressWarnings("unused")
         @Override
-        public void accept(@NotNull Consumer<Advancement> consumer) {
+        public void generate(@NotNull Advancement root, HolderLookup.@NotNull Provider holderProvider, @NotNull Consumer<Advancement> consumer) {
             Advancement become_vampire = Advancement.Builder.advancement()
                     .display(ModItems.VAMPIRE_FANG.get(), Component.translatable("advancement.vampirism.become_vampire"), Component.translatable("advancement.vampirism.become_vampire.desc"), null, FrameType.TASK, true, false, false)
-                    .parent(root.get())
+                    .parent(root)
                     .addCriterion("main", FactionCriterionTrigger.level(VReference.VAMPIRE_FACTION, 1))
                     .save(consumer, REFERENCE.MODID + ":vampire/become_vampire");
             Advancement bat = Advancement.Builder.advancement()
@@ -187,20 +185,13 @@ public class AdvancementGenerator extends AdvancementProvider {
         }
     }
 
-    @SuppressWarnings("ClassCanBeRecord")
-    private static class MinionAdvancements implements Consumer<Consumer<Advancement>> {
-
-        private final Supplier<Advancement> root;
-
-        public MinionAdvancements(Supplier<Advancement> root) {
-            this.root = root;
-        }
+    private static class MinionAdvancements implements VampirismAdvancementSubProvider {
 
         @Override
-        public void accept(@NotNull Consumer<Advancement> consumer) {
+        public void generate(@NotNull Advancement root, HolderLookup.@NotNull Provider holderProvider, @NotNull Consumer<Advancement> consumer) {
             Advancement become_lord = Advancement.Builder.advancement()
                     .display(Items.PAPER, Component.translatable("advancement.vampirism.become_lord"), Component.translatable("advancement.vampirism.become_lord.desc"), null, FrameType.TASK, true, true, true)
-                    .parent(root.get())
+                    .parent(root)
                     .addCriterion("level", FactionCriterionTrigger.lord(null, 1))
                     .save(consumer, REFERENCE.MODID + ":minion/become_lord");
             Advancement collect_blood = Advancement.Builder.advancement()

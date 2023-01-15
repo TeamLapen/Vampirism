@@ -342,10 +342,10 @@ public class VersionChecker implements Runnable {
         }
 
         /**
-         * @return If this is an alpha or test version
+         * @return If this is a test version
          */
         public boolean isTestVersion() {
-            return type == TYPE.ALPHA || type == TYPE.TEST;
+            return this.type == TYPE.TEST;
         }
 
         @Override

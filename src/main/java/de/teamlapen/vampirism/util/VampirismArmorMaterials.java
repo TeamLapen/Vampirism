@@ -13,7 +13,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
-
+/**
+ * @deprecated use the specific materials in {@link de.teamlapen.vampirism.items.ArmorOfSwiftnessItem}, {@link de.teamlapen.vampirism.items.HunterCoatItem} and {@link de.teamlapen.vampirism.items.VampireClothingItem}
+ */
+@Deprecated(forRemoval = true, since = "1.9")
 public enum VampirismArmorMaterials implements ArmorMaterial {
     MASTERLY_IRON("masterly_iron", 30, new int[]{2, 5, 6, 2}, 10, SoundEvents.ARMOR_EQUIP_IRON, 0, 0, () -> Ingredient.of(Tags.Items.INGOTS_IRON)),
     MASTERLY_LEATHER("masterly_leather", 20, new int[]{1, 2, 3, 1}, 12, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> Ingredient.of(Tags.Items.LEATHER)),

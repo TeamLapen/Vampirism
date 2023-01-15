@@ -285,16 +285,16 @@ public class RenderHandler implements ResourceManagerReloadListener {
             MixinHooks.enforcingGlowing_bloodVision = false;
             if (mc.level == null) return;
 
-            /*
-             * DO NOT USE partial ticks from event. They are bugged: https://github.com/MinecraftForge/MinecraftForge/issues/6380
-             */
-            float partialTicks = mc.getFrameTime();
-
-
             if (shouldRenderBloodVision() && !reducedBloodVision) {
-                this.blurShader.process(partialTicks);
-                if (this.bloodVisionBuffer != null) this.bloodVisionBuffer.endOutlineBatch();
+                this.blurShader.process(mc.getFrameTime());
+                this.mc.getMainRenderTarget().bindWrite(false);
             }
+        }
+    }
+
+    public void endBloodVisionBatch() {
+        if (shouldRenderBloodVision() && !reducedBloodVision) {
+            if (this.bloodVisionBuffer != null) this.bloodVisionBuffer.endOutlineBatch();
         }
     }
 

@@ -1,0 +1,126 @@
+{
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft:cave_extra_underground",
+      "minecraft:canyon"
+    ]
+  },
+  "creature_spawn_probability": 0.25,
+  "downfall": 0.0,
+  "effects": {
+    "additions_sound": {
+      "sound": "minecraft:ambient.crimson_forest.additions",
+      "tick_chance": 0.0111
+    },
+    "fog_color": 1513239,
+    "foliage_color": 1052688,
+    "grass_color": 1052688,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.crimson_forest.mood",
+      "tick_delay": 6000
+    },
+    "music": {
+      "max_delay": 24000,
+      "min_delay": 12000,
+      "replace_current_music": false,
+      "sound": "minecraft:music.nether.crimson_forest"
+    },
+    "sky_color": 1250067,
+    "water_color": 6752023,
+    "water_fog_color": 6752023
+  },
+  "features": [
+    [],
+    [
+      "minecraft:lake_lava_underground",
+      "minecraft:lake_lava_surface",
+      "vampirism:mod_lake_placed"
+    ],
+    [],
+    [],
+    [],
+    [],
+    [
+      "minecraft:ore_coal_upper",
+      "minecraft:ore_coal_lower",
+      "minecraft:ore_iron_upper",
+      "minecraft:ore_iron_middle",
+      "minecraft:ore_iron_small",
+      "minecraft:ore_gold",
+      "minecraft:ore_gold_lower",
+      "minecraft:ore_redstone",
+      "minecraft:ore_redstone_lower",
+      "minecraft:ore_diamond",
+      "minecraft:ore_diamond_large",
+      "minecraft:ore_diamond_buried",
+      "minecraft:ore_lapis",
+      "minecraft:ore_lapis_buried",
+      "minecraft:ore_copper",
+      "minecraft:underwater_magma",
+      "minecraft:disk_sand",
+      "minecraft:disk_clay",
+      "minecraft:disk_gravel"
+    ],
+    [
+      "minecraft:ore_gravel",
+      "vampirism:ore_cursed_dirt",
+      "vampirism:ore_dark_stone_lower",
+      "vampirism:ore_dark_stone_upper"
+    ],
+    [
+      "minecraft:spring_water"
+    ],
+    [
+      "vampirism:vampire_flower",
+      "vampirism:cursed_root",
+      "vampirism:forest_grass",
+      "minecraft:patch_grass_forest",
+      "vampirism:vampire_trees"
+    ]
+  ],
+  "precipitation": "none",
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [
+      {
+        "type": "vampirism:blinding_bat",
+        "maxCount": 4,
+        "minCount": 2,
+        "weight": 60
+      }
+    ],
+    "axolotls": [],
+    "creature": [
+      {
+        "type": "vampirism:dummy_creature",
+        "maxCount": 6,
+        "minCount": 3,
+        "weight": 80
+      }
+    ],
+    "misc": [],
+    "monster": [
+      {
+        "type": "vampirism:vampire",
+        "maxCount": 3,
+        "minCount": 1,
+        "weight": 35
+      },
+      {
+        "type": "vampirism:vampire_baron",
+        "maxCount": 1,
+        "minCount": 1,
+        "weight": 10
+      }
+    ],
+    "underground_water_creature": [],
+    "vampirism_hunter": [],
+    "vampirism_vampire": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": 0.3
+}

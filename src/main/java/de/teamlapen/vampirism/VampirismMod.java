@@ -20,7 +20,6 @@ import de.teamlapen.vampirism.client.core.ClientRegistryHandler;
 import de.teamlapen.vampirism.config.BloodValues;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
-import de.teamlapen.vampirism.data.*;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.ModEntityEventHandler;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
@@ -52,17 +51,13 @@ import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.biome.OverworldModifications;
 import de.teamlapen.vampirism.world.gen.VanillaStructureModifications;
 import net.minecraft.ChatFormatting;
-import net.minecraft.data.BuiltinRegistries;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
@@ -86,13 +81,6 @@ public class VampirismMod {
     private static final Logger LOGGER = LogManager.getLogger();
 
     public static final AbstractPacketDispatcher dispatcher = new ModPacketDispatcher();
-    public static final CreativeModeTab creativeTab = new CreativeModeTab(REFERENCE.MODID) {
-        @NotNull
-        @Override
-        public ItemStack makeIcon() {
-            return new ItemStack(ModItems.VAMPIRE_FANG.get());
-        }
-    };
     public static VampirismMod instance;
     public static final IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
     public static boolean inDev = false;
@@ -119,7 +107,6 @@ public class VampirismMod {
         modbus.addListener(this::enqueueIMC);
         modbus.addListener(this::processIMC);
         modbus.addListener(this::loadComplete);
-        modbus.addListener(this::gatherData);
         modbus.addListener(this::registerCapabilities);
         modbus.addListener(this::finalizeConfiguration);
 
@@ -132,17 +119,18 @@ public class VampirismMod {
         MinecraftForge.EVENT_BUS.register(SitHandler.class);
         MinecraftForge.EVENT_BUS.addListener(this::onCommandsRegister);
         MinecraftForge.EVENT_BUS.addListener(this::onAddReloadListenerEvent);
+        MinecraftForge.EVENT_BUS.addListener(this::onServerStarting);
 
         VampirismConfig.init();
 
         prepareAPI();
         RegistryManager.setupRegistries(modbus);
+        modbus.addListener(ModItems::registerOtherCreativeTabItems);
 
         if (OptifineHandler.isOptifineLoaded()) {
             LOGGER.warn("Using Optifine. Expect visual glitches and reduces blood vision functionality if using shaders.");
         }
-        VanillaStructureModifications.createJigsawPool();
-
+        VanillaStructureModifications.setup();
     }
 
     public VersionChecker.VersionInfo getVersionInfo() {
@@ -190,6 +178,10 @@ public class VampirismMod {
         event.register(IVampirismWorld.class);
     }
 
+    private void onServerStarting(@NotNull ServerAboutToStartEvent event) {
+        VanillaStructureModifications.addVillageStructures(event.getServer().registryAccess());
+    }
+
     private void finalizeConfiguration(RegisterEvent event) {
         VampirismConfig.finalizeAndRegisterConfig();
     }
@@ -200,22 +192,6 @@ public class VampirismMod {
     private void finishAPI() {
         ((FactionRegistry) VampirismAPI.factionRegistry()).finish();
         ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).finishRegistration();
-    }
-
-    private void gatherData(final @NotNull GatherDataEvent event) {
-        registryManager.onGatherData(event);
-        DataGenerator gen = event.getGenerator();
-
-        ModBlockFamilies.init();
-        TagGenerator.register(event, gen);
-        gen.addProvider(event.includeServer(), new LootTablesGenerator(gen));
-        gen.addProvider(event.includeServer(), new AdvancementGenerator(gen));
-        gen.addProvider(event.includeServer(), new RecipesGenerator(gen));
-        gen.addProvider(event.includeServer(), new SkillNodeGenerator(gen));
-        BiomeGenerator.register(event, gen);
-
-        gen.addProvider(event.includeClient(), new BlockStateGenerator(event.getGenerator(), event.getExistingFileHelper()));
-        gen.addProvider(event.includeClient(), new ItemModelGenerator(event.getGenerator(), event.getExistingFileHelper()));
     }
 
     private void loadComplete(final @NotNull FMLLoadCompleteEvent event) {
@@ -303,7 +279,7 @@ public class VampirismMod {
         VampireBookManager.getInstance().init();
         ModEntitySelectors.registerSelectors();
         event.enqueueWork(TerraBlenderCompat::registerBiomeProviderIfPresentUnsafe);
-        VanillaStructureModifications.addVillageStructures(BuiltinRegistries.ACCESS);
+//        VanillaStructureModifications.addVillageStructures(RegistryAccess.EMPTY);
 
     }
 

@@ -91,6 +91,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
 
     public ExtendedCreature(PathfinderMob entity) {
         this.entity = entity;
+        // We need to call getEntry and not getOrCreateEntry because the values can not be calculated until after the entity constructor has finished
         BiteableEntry entry = VampirismAPI.entityRegistry().getEntry(entity);
         if (entry != null && entry.blood > 0) {
             maxBlood = entry.blood;
@@ -331,7 +332,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         compound.putBoolean(POISONOUS_BLOOD, poisonousBlood);
     }
 
-    private void sync() {
+    public void sync() {
         HelperLib.sync(this, getEntity(), false);
     }
 

@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -72,7 +72,7 @@ public class InventoryHelper {
         if (state.hasBlockEntity()) {
             BlockEntity tile = world.getBlockEntity(pos);
             if (tile != null) {
-                return tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side).map(capability -> ImmutablePair.of(capability, tile));
+                return tile.getCapability(ForgeCapabilities.ITEM_HANDLER, side).map(capability -> ImmutablePair.of(capability, tile));
 
             }
         }

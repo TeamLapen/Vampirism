@@ -1,6 +1,7 @@
 package de.teamlapen.lib.lib.data;
 
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -13,8 +14,8 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class BaseItemModelGenerator extends ItemModelProvider {
 
-    public BaseItemModelGenerator(@NotNull DataGenerator generator, @NotNull String modid, @NotNull ExistingFileHelper existingFileHelper) {
-        super(generator, modid, existingFileHelper);
+    public BaseItemModelGenerator(@NotNull PackOutput packOutput, @NotNull String modid, @NotNull ExistingFileHelper existingFileHelper) {
+        super(packOutput, modid, existingFileHelper);
     }
 
     /**

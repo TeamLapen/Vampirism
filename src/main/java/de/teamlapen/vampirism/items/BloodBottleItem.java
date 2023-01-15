@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -8,6 +9,7 @@ import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.fluids.BloodHelper;
+import de.teamlapen.vampirism.misc.VampirismCreativeTab;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -16,27 +18,31 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Consumer;
 
 /**
  * Stores blood
  * Currently the only thing that can interact with the players bloodstats.
  * Can only store blood in {@link BloodBottleItem#capacity} tenth units.
  */
-public class BloodBottleItem extends Item implements IFactionExclusiveItem {
+public class BloodBottleItem extends Item implements IFactionExclusiveItem, ModDisplayItemGenerator.CreativeTabItemProvider {
 
     public static final int AMOUNT = 9;
     private static final int MULTIPLIER = VReference.FOOD_TO_FLUID_BLOOD;
@@ -52,23 +58,28 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem {
      * Set's the registry name and the unlocalized name
      */
     public BloodBottleItem() {
-        super(new Properties().defaultDurability(AMOUNT).tab(VampirismMod.creativeTab).setNoRepair());
+        super(new Properties().defaultDurability(AMOUNT).setNoRepair());
     }
 
     @Override
     public boolean doesSneakBypassUse(ItemStack stack, @NotNull LevelReader world, @NotNull BlockPos pos, Player player) {
         BlockEntity t = world.getBlockEntity(pos);
-        return t != null && t.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).isPresent();
+        return t != null && t.getCapability(ForgeCapabilities.FLUID_HANDLER).isPresent();
     }
 
     @Override
-    public void fillItemCategory(@NotNull CreativeModeTab group, @NotNull NonNullList<ItemStack> list) {
-        super.fillItemCategory(group, list);
-        if (this.allowedIn(group)) {
-            ItemStack stack = new ItemStack(ModItems.BLOOD_BOTTLE.get());
-            stack.setDamageValue(9);
-            list.add(stack);
+    public void generateCreativeTab(@NotNull FeatureFlagSet featureSet, CreativeModeTab.@NotNull Output output, boolean hasPermission) {
+        for (int i = 0; i < BloodBottleItem.AMOUNT; i++) {
+            ItemStack stack = getDefaultInstance();
+            stack.setDamageValue(i);
+            output.accept(stack, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
         }
+        ItemStack stack0 = getDefaultInstance();
+        stack0.setDamageValue(0);
+        output.accept(stack0, CreativeModeTab.TabVisibility.PARENT_TAB_ONLY);
+        ItemStack stack9 = getDefaultInstance();
+        stack9.setDamageValue(BloodBottleItem.AMOUNT);
+        output.accept(stack9, CreativeModeTab.TabVisibility.PARENT_TAB_ONLY);
     }
 
     @Nullable

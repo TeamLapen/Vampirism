@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -8,6 +10,7 @@ import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.refinements.RefinementSet;
+import de.teamlapen.vampirism.misc.VampirismCreativeTab;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -19,6 +22,8 @@ import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.flag.FeatureFlagSet;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -29,8 +34,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
-public abstract class RefinementItem extends Item implements IRefinementItem {
+public abstract class RefinementItem extends Item implements IRefinementItem, ModDisplayItemGenerator.CreativeTabItemProvider {
 
     public static final int MAX_DAMAGE = 500;
     private static final RandomSource RANDOM = RandomSource.create();
@@ -97,8 +103,12 @@ public abstract class RefinementItem extends Item implements IRefinementItem {
     @Nullable
     @Override
     public IRefinementSet getRefinementSet(@NotNull ItemStack stack) {
-        String refinementsNBT = stack.getOrCreateTag().getString("refinement_set");
-        return RegUtil.getRefinementSet(new ResourceLocation(refinementsNBT));
+        if (stack.hasTag()) {
+            String refinementsNBT = stack.getTag().getString("refinement_set");
+            return RegUtil.getRefinementSet(new ResourceLocation(refinementsNBT));
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -122,5 +132,18 @@ public abstract class RefinementItem extends Item implements IRefinementItem {
 
         }
         return super.use(worldIn, playerIn, handIn);
+    }
+
+    @Override
+    public void generateCreativeTab(FeatureFlagSet featureFlagSet, CreativeModeTab.Output output, boolean hasPermission) {
+        ItemStack stack = getDefaultInstance();
+        StreamSupport.stream(VampirismRegistries.REFINEMENT_SETS.get().spliterator(), false).filter(set ->  getExclusiveFaction(stack) == null || set.getFaction() == getExclusiveFaction(stack)).filter(set -> set.getSlotType().map(s -> s == getSlotType()).orElse(true)).map(set -> {
+            ItemStack s = stack.copy();
+            applyRefinementSet(s, set);
+            return s;
+        }).forEach(item -> {
+            output.accept(item, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+        });
+        output.accept(stack, CreativeModeTab.TabVisibility.PARENT_TAB_ONLY);
     }
 }

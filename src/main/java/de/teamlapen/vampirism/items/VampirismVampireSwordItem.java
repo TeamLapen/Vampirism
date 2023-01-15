@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.items;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
@@ -9,14 +11,16 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.items.IBloodChargeable;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
+import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.core.ModRefinements;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
-import de.teamlapen.vampirism.particle.FlyingBloodParticleData;
-import de.teamlapen.vampirism.particle.GenericParticleData;
+import de.teamlapen.vampirism.particle.FlyingBloodParticleOptions;
+import de.teamlapen.vampirism.particle.GenericParticleOptions;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.ToolMaterial;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.CompoundTag;
@@ -31,11 +35,15 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
@@ -47,8 +55,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Supplier;
 
-public abstract class VampirismVampireSwordItem extends VampirismSwordItem implements IBloodChargeable, IFactionExclusiveItem, IFactionLevelItem<IVampirePlayer> {
+public abstract class VampirismVampireSwordItem extends VampirismSwordItem implements IBloodChargeable, IFactionExclusiveItem, IFactionLevelItem<IVampirePlayer> { //TODO 1.20 rename to VampireSwordItem
 
 
     public static final String DO_NOT_NAME_STRING = "DO_NOT_NAME";
@@ -57,27 +66,25 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
      */
     private static final float minStrength = 0.2f;
     /**
-     * Minimal speed modifier
+     * Speed modifier on max training
      */
-    private final float trainedAttackSpeed;
-    private final float untrainedAttackSpeed;
+    private final float trainedAttackSpeedIncrease;
 
-
-    public VampirismVampireSwordItem(@NotNull Tiers material, int attackDamage, float untrainedAttackSpeed, float trainedAttackSpeed, @NotNull Properties prop) {
-        super(material, attackDamage, untrainedAttackSpeed, prop);
-        this.trainedAttackSpeed = trainedAttackSpeed;
-        this.untrainedAttackSpeed = untrainedAttackSpeed;
+    public VampirismVampireSwordItem(@NotNull VampireSwordMaterial material, int attackDamage, @NotNull Properties prop) {
+        super(material, attackDamage, material.getSpeed(), prop);
+        this.trainedAttackSpeedIncrease = material.getTrainedSpeedIncrease();
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        this.addFactionLevelToolTip(stack, worldIn, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());
         float charged = getCharged(stack);
         float trained = getTrained(stack, VampirismMod.proxy.getClientPlayer());
         tooltip.add(Component.translatable("text.vampirism.sword_charged").append(Component.literal(" " + ((int) Math.ceil(charged * 100f)) + "%")).withStyle(ChatFormatting.DARK_AQUA));
         tooltip.add(Component.translatable("text.vampirism.sword_trained").append(Component.literal(" " + ((int) Math.ceil(trained * 100f)) + "%")).withStyle(ChatFormatting.DARK_AQUA));
+
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        this.addFactionToolTips(stack, worldIn, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());
     }
 
     @Override
@@ -153,11 +160,11 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
         if (attacker instanceof Player && !Helper.isVampire(target)) {
             double relTh = VampirismConfig.BALANCE.vsSwordFinisherMaxHealth.get() * VampirePlayer.getOpt((Player) attacker).map(VampirePlayer::getSkillHandler).map(h -> h.isSkillEnabled(VampireSkills.SWORD_FINISHER.get()) ? (h.isRefinementEquipped(ModRefinements.SWORD_FINISHER.get()) ? VampirismConfig.BALANCE.vrSwordFinisherThresholdMod.get() : 1d) : 0d).orElse(0d);
             if (relTh > 0 && target.getHealth() <= target.getMaxHealth() * relTh) {
-                DamageSource dmg = DamageSource.playerAttack((Player) attacker).bypassArmor();
-                target.hurt(dmg, 10000F);
+                DamageSource dmg = DamageSource.playerAttack((Player) attacker);
+                target.hurt(dmg.bypassArmor(), 10000F);
                 Vec3 center = Vec3.atLowerCornerOf(target.blockPosition());
                 center.add(0, target.getBbHeight() / 2d, 0);
-                ModParticles.spawnParticlesServer(target.level, new GenericParticleData(ModParticles.GENERIC.get(), new ResourceLocation("minecraft", "effect_4"), 12, 0xE02020), center.x, center.y, center.z, 15, 0.5, 0.5, 0.5, 0);
+                ModParticles.spawnParticlesServer(target.level, new GenericParticleOptions(new ResourceLocation("minecraft", "effect_4"), 12, 0xE02020), center.x, center.y, center.z, 15, 0.5, 0.5, 0.5, 0);
             }
         }
         //Update training on kill
@@ -278,17 +285,21 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
     }
 
     @Override
-    protected final float getAttackDamage(@NotNull ItemStack stack) {
-        return super.getAttackDamage(stack) * getAttackDamageModifier(stack);
+    public @NotNull Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot equipmentSlot, ItemStack stack) {
+        Multimap<Attribute, AttributeModifier> multimap = HashMultimap.create();
+        if (equipmentSlot == EquipmentSlot.MAINHAND) {
+            multimap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", this.getDamage() + getAttackDamageModifier(stack), AttributeModifier.Operation.ADDITION));
+            multimap.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", this.getTier().getSpeed() + getSpeedModifier(stack) , AttributeModifier.Operation.ADDITION));
+        }
+        return multimap;
     }
 
     protected float getAttackDamageModifier(@NotNull ItemStack stack) {
         return getCharged(stack) > 0 ? 1f : minStrength;
     }
 
-    @Override
-    protected final float getAttackSpeed(@NotNull ItemStack stack) {
-        return untrainedAttackSpeed + (trainedAttackSpeed - untrainedAttackSpeed) * getTrained(stack);
+    protected float getSpeedModifier(@NotNull ItemStack stack) {
+        return getTrained(stack) * this.trainedAttackSpeedIncrease;
     }
 
     /**
@@ -350,7 +361,7 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
         Vec3 mainPos = UtilLib.getItemPosition(player, mainHand);
         for (int j = 0; j < 3; ++j) {
             Vec3 pos = mainPos.add((player.getRandom().nextFloat() - 0.5f) * 0.1f, (player.getRandom().nextFloat() - 0.3f) * 0.9f, (player.getRandom().nextFloat() - 0.5f) * 0.1f);
-            ModParticles.spawnParticleClient(player.getCommandSenderWorld(), new FlyingBloodParticleData(ModParticles.FLYING_BLOOD.get(), (int) (4.0F / (player.getRandom().nextFloat() * 0.9F + 0.1F)), true, pos.x + (player.getRandom().nextFloat() - 0.5D) * 0.1D, pos.y + (player.getRandom().nextFloat() - 0.5D) * 0.1D, pos.z + (player.getRandom().nextFloat() - 0.5D) * 0.1D, new ResourceLocation("minecraft", "glitter_1")), pos.x, pos.y, pos.z);
+            ModParticles.spawnParticleClient(player.getCommandSenderWorld(), new FlyingBloodParticleOptions((int) (4.0F / (player.getRandom().nextFloat() * 0.9F + 0.1F)), true, pos.x + (player.getRandom().nextFloat() - 0.5D) * 0.1D, pos.y + (player.getRandom().nextFloat() - 0.5D) * 0.1D, pos.z + (player.getRandom().nextFloat() - 0.5D) * 0.1D, new ResourceLocation("minecraft", "glitter_1")), pos.x, pos.y, pos.z);
         }
     }
 
@@ -360,6 +371,20 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
         if (player.getAttackAnim(1f) > 0f) return;
         pos = pos.add((player.getRandom().nextFloat() - 0.5f) * 0.1f, (player.getRandom().nextFloat() - 0.3f) * 0.9f, (player.getRandom().nextFloat() - 0.5f) * 0.1f);
         Vec3 playerPos = new Vec3((player).getX(), (player).getY() + player.getEyeHeight() - 0.2f, (player).getZ());
-        ModParticles.spawnParticleClient(player.getCommandSenderWorld(), new FlyingBloodParticleData(ModParticles.FLYING_BLOOD.get(), (int) (4.0F / (player.getRandom().nextFloat() * 0.6F + 0.1F)), true, pos.x, pos.y, pos.z), playerPos.x, playerPos.y, playerPos.z);
+        ModParticles.spawnParticleClient(player.getCommandSenderWorld(), new FlyingBloodParticleOptions((int) (4.0F / (player.getRandom().nextFloat() * 0.6F + 0.1F)), true, pos.x, pos.y, pos.z), playerPos.x, playerPos.y, playerPos.z);
+    }
+
+    public static class VampireSwordMaterial extends ToolMaterial.Tiered {
+
+        private final float trainedSpeedIncrease;
+
+        public VampireSwordMaterial(IItemWithTier.TIER tier, int level, int uses, float speed, float damage, int enchantmentValue, Supplier<Ingredient> repairIngredient, float trainedSpeedIncrease) {
+            super(tier, level, uses, speed, damage, enchantmentValue, repairIngredient);
+            this.trainedSpeedIncrease = trainedSpeedIncrease;
+        }
+
+        public float getTrainedSpeedIncrease() {
+            return trainedSpeedIncrease;
+        }
     }
 }

@@ -1,37 +1,25 @@
 package de.teamlapen.vampirism.world.gen;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.blocks.TotemTopBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.mixin.ProcessorListsAccessor;
 import de.teamlapen.vampirism.util.MixinHooks;
-import de.teamlapen.vampirism.world.gen.structure.templatesystem.BiomeTopBlockProcessor;
-import de.teamlapen.vampirism.world.gen.structure.templatesystem.RandomBlockStateRule;
-import de.teamlapen.vampirism.world.gen.structure.templatesystem.RandomStructureProcessor;
-import net.minecraft.core.Holder;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.data.BuiltinRegistries;
-import net.minecraft.data.worldgen.Pools;
+import net.minecraft.core.*;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.ProcessorLists;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
-import net.minecraft.world.level.levelgen.structure.templatesystem.AlwaysTrueTest;
-import net.minecraft.world.level.levelgen.structure.templatesystem.RandomBlockMatchTest;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * Vanilla structures are modified in the following ways:
@@ -40,15 +28,14 @@ import java.util.stream.Collectors;
  */
 public class VanillaStructureModifications {
 
-    public static void createJigsawPool() {
+    public static void setup() {
         setupSingleJigsawPieceGeneration();
-        Pools.register(new StructureTemplatePool(new ResourceLocation("vampirism", "village/entities/hunter_trainer"), new ResourceLocation("empty"), Lists.newArrayList(Pair.of(singleJigsawPieceFunction("village/entities/hunter_trainer"), 1)), StructureTemplatePool.Projection.RIGID));
     }
 
     public static void addVillageStructures(@NotNull RegistryAccess dynamicRegistries) {
         addHunterTrainerHouse(dynamicRegistries, getDefaultPools());
         addTotem(dynamicRegistries, getDefaultPools());
-        replaceTemples(dynamicRegistries, getTempleReplacements());
+        replaceTemples(dynamicRegistries, getTempleReplacements(dynamicRegistries.lookupOrThrow(Registries.PROCESSOR_LIST)));
     }
 
     /**
@@ -70,19 +57,19 @@ public class VanillaStructureModifications {
     /**
      * @return a map that maps {@link StructureTemplatePool}s that should be modified to a map that maps temple {@link StructurePoolElement}s to modified temple {@link StructurePoolElement}s
      */
-    private static @NotNull Map<ResourceLocation, Map<String, StructurePoolElement>> getTempleReplacements() {
+    private static @NotNull Map<ResourceLocation, Map<String, StructurePoolElement>> getTempleReplacements(@NotNull HolderGetter<StructureProcessorList> processorList) {
         return new HashMap<>() {
             {
-                this.put(new ResourceLocation("village/plains/houses"), ImmutableMap.of(VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/plains/houses/plains_temple_3"), VanillaStructureModifications.singleJigsawPiece("village/plains/houses/plains_temple_3", ProcessorLists.MOSSIFY_10_PERCENT), VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/plains/houses/plains_temple_4"), VanillaStructureModifications.singleJigsawPiece("village/plains/houses/plains_temple_4", ProcessorLists.MOSSIFY_10_PERCENT)));
-                this.put(new ResourceLocation("village/desert/houses"), ImmutableMap.of(VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/desert/houses/desert_temple_1"), VanillaStructureModifications.singleJigsawPiece("village/desert/houses/desert_temple_1"), VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/desert/houses/desert_temple_2"), VanillaStructureModifications.singleJigsawPiece("village/desert/houses/desert_temple_2")));
-                this.put(new ResourceLocation("village/savanna/houses"), ImmutableMap.of(VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/savanna/houses/savanna_temple_1"), VanillaStructureModifications.singleJigsawPiece("village/savanna/houses/savanna_temple_1"), VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/savanna/houses/savanna_temple_2"), VanillaStructureModifications.singleJigsawPiece("village/savanna/houses/savanna_temple_2")));
-                this.put(new ResourceLocation("village/taiga/houses"), ImmutableMap.of(VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/taiga/houses/taiga_temple_1"), VanillaStructureModifications.singleJigsawPiece("village/taiga/houses/taiga_temple_1", ProcessorLists.MOSSIFY_10_PERCENT)));
-                this.put(new ResourceLocation("village/snowy/houses"), ImmutableMap.of(VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/snowy/houses/snowy_temple_1"), VanillaStructureModifications.singleJigsawPiece("village/snowy/houses/snowy_temple_1")));
-                this.put(new ResourceLocation("village/plains/zombie/houses"), ImmutableMap.of(VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/plains/houses/plains_temple_3"), VanillaStructureModifications.singleJigsawPiece("village/plains/houses/plains_temple_3", ProcessorLists.ZOMBIE_PLAINS), VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/plains/houses/plains_temple_4"), VanillaStructureModifications.singleJigsawPiece("village/plains/houses/plains_temple_4", ProcessorLists.ZOMBIE_PLAINS)));
-                this.put(new ResourceLocation("village/desert/zombie/houses"), ImmutableMap.of(VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/desert/houses/desert_temple_1"), VanillaStructureModifications.singleJigsawPiece("village/desert/houses/desert_temple_1", ProcessorLists.ZOMBIE_DESERT), VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/desert/houses/desert_temple_2"), VanillaStructureModifications.singleJigsawPiece("village/desert/houses/desert_temple_2", ProcessorLists.ZOMBIE_DESERT)));
-                this.put(new ResourceLocation("village/savanna/zombie/houses"), ImmutableMap.of(VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/savanna/houses/savanna_temple_1"), VanillaStructureModifications.singleJigsawPiece("village/savanna/houses/savanna_temple_1", ProcessorLists.ZOMBIE_SAVANNA), VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/savanna/houses/savanna_temple_2"), VanillaStructureModifications.singleJigsawPiece("village/savanna/houses/savanna_temple_2", ProcessorLists.ZOMBIE_SAVANNA)));
-                this.put(new ResourceLocation("village/taiga/zombie/houses"), ImmutableMap.of(VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/taiga/zombie/houses/taiga_temple_1"), VanillaStructureModifications.singleJigsawPiece("village/taiga/houses/taiga_temple_1", ProcessorLists.ZOMBIE_TAIGA)));
-                this.put(new ResourceLocation("village/snowy/zombie/houses"), ImmutableMap.of(VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/snowy/houses/snowy_temple_1"), VanillaStructureModifications.singleJigsawPiece("village/snowy/houses/snowy_temple_1", ProcessorLists.ZOMBIE_SNOWY)));
+                this.put(new ResourceLocation("village/plains/houses"), ImmutableMap.of(VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/plains/houses/plains_temple_3"), VanillaStructureModifications.singleJigsawPiece(processorList,"village/plains/houses/plains_temple_3", ProcessorLists.MOSSIFY_10_PERCENT), VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/plains/houses/plains_temple_4"), VanillaStructureModifications.singleJigsawPiece(processorList,"village/plains/houses/plains_temple_4", ProcessorLists.MOSSIFY_10_PERCENT)));
+                this.put(new ResourceLocation("village/desert/houses"), ImmutableMap.of(VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/desert/houses/desert_temple_1"), VanillaStructureModifications.singleJigsawPiece(processorList,"village/desert/houses/desert_temple_1"), VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/desert/houses/desert_temple_2"), VanillaStructureModifications.singleJigsawPiece(processorList,"village/desert/houses/desert_temple_2")));
+                this.put(new ResourceLocation("village/savanna/houses"), ImmutableMap.of(VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/savanna/houses/savanna_temple_1"), VanillaStructureModifications.singleJigsawPiece(processorList,"village/savanna/houses/savanna_temple_1"), VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/savanna/houses/savanna_temple_2"), VanillaStructureModifications.singleJigsawPiece(processorList,"village/savanna/houses/savanna_temple_2")));
+                this.put(new ResourceLocation("village/taiga/houses"), ImmutableMap.of(VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/taiga/houses/taiga_temple_1"), VanillaStructureModifications.singleJigsawPiece(processorList,"village/taiga/houses/taiga_temple_1", ProcessorLists.MOSSIFY_10_PERCENT)));
+                this.put(new ResourceLocation("village/snowy/houses"), ImmutableMap.of(VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/snowy/houses/snowy_temple_1"), VanillaStructureModifications.singleJigsawPiece(processorList,"village/snowy/houses/snowy_temple_1")));
+                this.put(new ResourceLocation("village/plains/zombie/houses"), ImmutableMap.of(VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/plains/houses/plains_temple_3"), VanillaStructureModifications.singleJigsawPiece(processorList,"village/plains/houses/plains_temple_3", ProcessorLists.ZOMBIE_PLAINS), VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/plains/houses/plains_temple_4"), VanillaStructureModifications.singleJigsawPiece(processorList,"village/plains/houses/plains_temple_4", ProcessorLists.ZOMBIE_PLAINS)));
+                this.put(new ResourceLocation("village/desert/zombie/houses"), ImmutableMap.of(VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/desert/houses/desert_temple_1"), VanillaStructureModifications.singleJigsawPiece(processorList,"village/desert/houses/desert_temple_1", ProcessorLists.ZOMBIE_DESERT), VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/desert/houses/desert_temple_2"), VanillaStructureModifications.singleJigsawPiece(processorList,"village/desert/houses/desert_temple_2", ProcessorLists.ZOMBIE_DESERT)));
+                this.put(new ResourceLocation("village/savanna/zombie/houses"), ImmutableMap.of(VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/savanna/houses/savanna_temple_1"), VanillaStructureModifications.singleJigsawPiece(processorList,"village/savanna/houses/savanna_temple_1", ProcessorLists.ZOMBIE_SAVANNA), VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/savanna/houses/savanna_temple_2"), VanillaStructureModifications.singleJigsawPiece(processorList,"village/savanna/houses/savanna_temple_2", ProcessorLists.ZOMBIE_SAVANNA)));
+                this.put(new ResourceLocation("village/taiga/zombie/houses"), ImmutableMap.of(VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/taiga/zombie/houses/taiga_temple_1"), VanillaStructureModifications.singleJigsawPiece(processorList,"village/taiga/houses/taiga_temple_1", ProcessorLists.ZOMBIE_TAIGA)));
+                this.put(new ResourceLocation("village/snowy/zombie/houses"), ImmutableMap.of(VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/snowy/houses/snowy_temple_1"), VanillaStructureModifications.singleJigsawPiece(processorList,"village/snowy/houses/snowy_temple_1", ProcessorLists.ZOMBIE_SNOWY)));
             }
         };
     }
@@ -94,7 +81,7 @@ public class VanillaStructureModifications {
         // return if temples should not be modified
         if (!VampirismConfig.COMMON.villageReplaceTemples.get()) return;
         // get jigsaw registry
-        dynamicRegistries.registry(BuiltinRegistries.TEMPLATE_POOL.key()).ifPresent(jigsawRegistry -> {
+        dynamicRegistries.registry(Registries.TEMPLATE_POOL).ifPresent(jigsawRegistry -> {
             // for every desired pools
             patternReplacements.forEach((pool, replacements) ->
                     // get the pool if present
@@ -147,13 +134,13 @@ public class VanillaStructureModifications {
      */
     private static void addHunterTrainerHouse(@NotNull RegistryAccess reg, @NotNull Map<ResourceLocation, VanillaStructureModifications.BiomeType> pools) {
         // get jigsaw registry
-        reg.registry(BuiltinRegistries.TEMPLATE_POOL.key()).ifPresent(patternRegistry -> {
+        reg.registry(Registries.TEMPLATE_POOL).ifPresent(patternRegistry -> {
             // for every desired pools
             pools.forEach((pool, type) -> {
                 // get the pool if present
                 patternRegistry.getOptional(pool).ifPresent(pattern -> {
                     // create trainer house piece with desired village type
-                    StructurePoolElement piece = singleJigsawPiece("village/" + type.path + "/houses/hunter_trainer", ProcessorLists.EMPTY);
+                    StructurePoolElement piece = singleJigsawPiece(reg.lookupOrThrow(Registries.PROCESSOR_LIST), "village/" + type.path + "/houses/hunter_trainer");
                     // add hunter trainer house with weight
                     for (int i = 0; i < VampirismConfig.COMMON.villageHunterTrainerWeight.get(); i++) {
                         pattern.templates.add(piece);
@@ -171,14 +158,12 @@ public class VanillaStructureModifications {
     }
 
     private static void addTotem(@NotNull RegistryAccess reg, @NotNull Map<ResourceLocation, VanillaStructureModifications.BiomeType> pools) {
-        StructureProcessor factionProcessor = new RandomStructureProcessor(ImmutableList.of(new RandomBlockStateRule(new RandomBlockMatchTest(ModBlocks.TOTEM_TOP.get(), (VampirismConfig.COMMON.villageTotemFactionChance.get()).floatValue()), AlwaysTrueTest.INSTANCE, ModBlocks.TOTEM_TOP.get().defaultBlockState(), TotemTopBlock.getBlocks().stream().filter((totemx) -> totemx != ModBlocks.TOTEM_TOP.get() && !totemx.isCrafted()).map(Block::defaultBlockState).collect(Collectors.toList()))));
-        StructureProcessor biomeTopBlockProcessor = new BiomeTopBlockProcessor(Blocks.DIRT.defaultBlockState());
-        Holder<StructureProcessorList> TOTEM_FACTION_PROCESSOR = registerStructureProcessor("totem_faction", ImmutableList.of(factionProcessor, biomeTopBlockProcessor));
+        ResourceKey<StructureProcessorList> TOTEM_FACTION_PROCESSOR = ResourceKey.create(Registries.PROCESSOR_LIST, new ResourceLocation(REFERENCE.MODID, "totem_faction"));
 
 
-        StructurePoolElement totem = singleJigsawPiece("village/totem", TOTEM_FACTION_PROCESSOR);
+        StructurePoolElement totem = singleJigsawPiece(reg.lookupOrThrow(Registries.PROCESSOR_LIST),"village/totem", TOTEM_FACTION_PROCESSOR);
 
-        reg.registry(BuiltinRegistries.TEMPLATE_POOL.key()).ifPresent((patternRegistry) -> pools.forEach((pool, type) -> {
+        reg.registry(Registries.TEMPLATE_POOL).ifPresent((patternRegistry) -> pools.forEach((pool, type) -> {
             // get the pool if present
             patternRegistry.getOptional(pool).ifPresent((pattern) -> {
                 // add totem with weight
@@ -195,26 +180,22 @@ public class VanillaStructureModifications {
         }));
     }
 
-    private static @NotNull Holder<StructureProcessorList> registerStructureProcessor(@NotNull String pId, @NotNull ImmutableList<StructureProcessor> pProcessors) {
-        ResourceLocation resourcelocation = new ResourceLocation(REFERENCE.MODID, pId);
-        StructureProcessorList structureprocessorlist = new StructureProcessorList(pProcessors);
-        return BuiltinRegistries.register(BuiltinRegistries.PROCESSOR_LIST, resourcelocation, structureprocessorlist);
+    private static SinglePoolElement singleJigsawPiece(@NotNull HolderGetter<StructureProcessorList> processorList, @NotNull String path) {
+        return singleJigsawPiece(processorList, path, ProcessorListsAccessor.getEmpty());
     }
 
-    private static SinglePoolElement singleJigsawPiece(@NotNull String path) {
-        return singleJigsawPiece(path, ProcessorLists.EMPTY);
+    private static SinglePoolElement singleJigsawPiece(@NotNull HolderGetter<StructureProcessorList> processorList, @NotNull String path, @NotNull ResourceKey<StructureProcessorList> processors) {
+        var holder = processorList.getOrThrow(processors);
+        return SinglePoolElement.single("vampirism:" + path, holder).apply(StructureTemplatePool.Projection.RIGID);
     }
 
-    private static SinglePoolElement singleJigsawPiece(@NotNull String path, @NotNull Holder<StructureProcessorList> processors) {
-        return SinglePoolElement.single("vampirism:" + path, processors).apply(StructureTemplatePool.Projection.RIGID);
+    public static @NotNull Function<StructureTemplatePool.Projection, SinglePoolElement> singleJigsawPieceFunction(@NotNull HolderGetter<StructureProcessorList> processorList, @NotNull String path) {
+        return singleJigsawPieceFunction(processorList, path, ProcessorListsAccessor.getEmpty());
     }
 
-    private static @NotNull Function<StructureTemplatePool.Projection, SinglePoolElement> singleJigsawPieceFunction(@NotNull String path) {
-        return singleJigsawPieceFunction(path, ProcessorLists.EMPTY);
-    }
-
-    private static @NotNull Function<StructureTemplatePool.Projection, SinglePoolElement> singleJigsawPieceFunction(@NotNull String path, @NotNull Holder<StructureProcessorList> processors) {
-        return SinglePoolElement.single("vampirism:" + path, processors);
+    public static @NotNull Function<StructureTemplatePool.Projection, SinglePoolElement> singleJigsawPieceFunction(@NotNull HolderGetter<StructureProcessorList> processorList, @NotNull String path, @NotNull ResourceKey<StructureProcessorList> processors) {
+        var holder = processorList.getOrThrow(processors);
+        return SinglePoolElement.single("vampirism:" + path, holder);
     }
 
     private static @NotNull String singleJigsawString(String resourceLocation) {

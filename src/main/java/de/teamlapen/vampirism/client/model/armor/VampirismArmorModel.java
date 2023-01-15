@@ -23,7 +23,7 @@ public class VampirismArmorModel extends Model {
         getRightLegModels().forEach(p -> p.copyFrom(wearerModel.rightLeg));
         getLeftLegModels().forEach(p -> p.copyFrom(wearerModel.leftLeg));
         getRightArmModels().forEach(p -> p.copyFrom(wearerModel.rightArm));
-        getRightLegModels().forEach(p -> p.copyFrom(wearerModel.leftLeg));
+        getLeftArmModels().forEach(p -> p.copyFrom(wearerModel.leftArm));
     }
 
     @Override
@@ -32,8 +32,8 @@ public class VampirismArmorModel extends Model {
         this.getHeadModels().forEach((modelPart) -> modelPart.render(poseStack, buffer, pPackedLight, pPackedOverlay, pRed, pGreen, pBlue, pAlpha));
         this.getLeftLegModels().forEach((modelPart) -> modelPart.render(poseStack, buffer, pPackedLight, pPackedOverlay, pRed, pGreen, pBlue, pAlpha));
         this.getRightLegModels().forEach((modelPart) -> modelPart.render(poseStack, buffer, pPackedLight, pPackedOverlay, pRed, pGreen, pBlue, pAlpha));
-        this.getRightArmModels().forEach((modelPart) -> modelPart.render(poseStack, buffer, pPackedLight, pPackedOverlay, pRed, pGreen, pBlue, pAlpha));
         this.getLeftArmModels().forEach((modelPart) -> modelPart.render(poseStack, buffer, pPackedLight, pPackedOverlay, pRed, pGreen, pBlue, pAlpha));
+        this.getRightArmModels().forEach((modelPart) -> modelPart.render(poseStack, buffer, pPackedLight, pPackedOverlay, pRed, pGreen, pBlue, pAlpha));
     }
 
     protected @NotNull Iterable<ModelPart> getBodyModels() {
@@ -52,11 +52,11 @@ public class VampirismArmorModel extends Model {
         return Collections.emptyList();
     }
 
-    protected @NotNull Iterable<ModelPart> getRightArmModels() {
+    protected @NotNull Iterable<ModelPart> getLeftArmModels() {
         return Collections.emptyList();
     }
 
-    protected @NotNull Iterable<ModelPart> getLeftArmModels() {
+    protected @NotNull Iterable<ModelPart> getRightArmModels() {
         return Collections.emptyList();
     }
 }

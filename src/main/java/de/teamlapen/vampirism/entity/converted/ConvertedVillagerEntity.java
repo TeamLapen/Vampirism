@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.api.entity.convertible.ICurableConvertedCreature;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
+import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModVillage;
@@ -18,6 +19,8 @@ import de.teamlapen.vampirism.entity.villager.Trades;
 import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.RegUtil;
+import de.teamlapen.vampirism.util.TotemHelper;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
@@ -46,16 +49,23 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Vampire Villager
  */
 public class ConvertedVillagerEntity extends VampirismVillagerEntity implements ICurableConvertedCreature<Villager> {
+
+    private static final Logger LOGGER = LogManager.getLogger();
+
     public static final @NotNull List<SensorType<? extends Sensor<? super Villager>>> SENSOR_TYPES;
     private static final EntityDataAccessor<Boolean> CONVERTING = SynchedEntityData.defineId(ConvertedVillagerEntity.class, EntityDataSerializers.BOOLEAN);
 
@@ -111,6 +121,16 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
         super.aiStep();
     }
 
+    /**
+     *
+     * For vampire expert villagers on server side this will return an asynchronously found block pos (or empty if still searching).
+     * For all other villagers it returns an empty optional
+     * @return The location of the closest vampire forest if available
+     */
+    public Optional<BlockPos> getClosestVampireForest(Level level, BlockPos blockPos) {
+        return level instanceof ServerLevel serverLevel ? TotemHelper.getTotemNearPos(serverLevel, blockPos, true).flatMap(TotemBlockEntity::getVampireForestLocation) : Optional.empty();
+    }
+
     @Override
     public boolean doesResistGarlic(EnumStrength strength) {
         return false;
@@ -120,7 +140,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     public @NotNull Villager cureEntity(@NotNull ServerLevel world, @NotNull PathfinderMob entity, @NotNull EntityType<Villager> newType) {
         Villager villager = ICurableConvertedCreature.super.cureEntity(world, entity, newType);
         villager.setVillagerData(this.getVillagerData());
-        villager.setGossips(this.getGossips().store(NbtOps.INSTANCE).getValue());
+        villager.setGossips(this.getGossips().store(NbtOps.INSTANCE));
         villager.setOffers(this.getOffers());
         villager.setVillagerXp(this.getVillagerXp());
         if (this.conversationStarter != null) {

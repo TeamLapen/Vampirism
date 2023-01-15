@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.recipes;
 
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.IOilItem;
 import de.teamlapen.vampirism.api.items.oil.IApplicableOil;
 import de.teamlapen.vampirism.api.items.oil.IOil;
@@ -8,6 +10,7 @@ import de.teamlapen.vampirism.util.OilUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
@@ -15,8 +18,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class ApplicableOilRecipe extends CustomRecipe {
 
-    public ApplicableOilRecipe(@NotNull ResourceLocation id) {
-        super(id);
+    public ApplicableOilRecipe(@NotNull ResourceLocation id, CraftingBookCategory category) {
+        super(id, category);
     }
 
     @Override
@@ -38,7 +41,7 @@ public class ApplicableOilRecipe extends CustomRecipe {
                 }
             }
         }
-        return oil != null && tool != null && oil.canBeApplied(tool);
+        return oil != null && tool != null && (!(tool.getItem() instanceof IFactionExclusiveItem) || ((IFactionExclusiveItem) tool.getItem()).getExclusiveFaction(tool) == VReference.HUNTER_FACTION) && oil.canBeApplied(tool);
     }
 
     @NotNull

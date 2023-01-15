@@ -36,6 +36,7 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -209,8 +210,8 @@ public class CoffinBlock extends VampirismBlockContainer {
                 if (worldIn.getBlockState(blockpos).is(this)) {
                     worldIn.removeBlock(blockpos, false);
                 }
-
-                worldIn.explode(null, DamageSource.badRespawnPointExplosion(), null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, Explosion.BlockInteraction.DESTROY);
+                Vec3 vec3 = pos.getCenter();
+                worldIn.explode(null, DamageSource.badRespawnPointExplosion(vec3), null, vec3, 5.0F, true, Level.ExplosionInteraction.BLOCK);
                 return InteractionResult.CONSUME;
             } else if (state.getValue(BedBlock.OCCUPIED)) {
                 player.displayClientMessage(Component.translatable("text.vampirism.coffin.occupied"), true);
@@ -236,28 +237,29 @@ public class CoffinBlock extends VampirismBlockContainer {
             double x;
             double z;
             switch (state.getValue(HORIZONTAL_FACING)) {
-                case NORTH:
+                case NORTH -> {
                     x = 0.5;
                     z = 0.3;
                     player.yBodyRot = player.yHeadRot = 0;
-                    break;
-                case EAST:
+                }
+                case EAST -> {
                     x = 0.7;
                     z = 0.5;
                     player.yBodyRot = player.yHeadRot = 90;
-                    break;
-                case SOUTH:
+                }
+                case SOUTH -> {
                     x = 0.5;
                     z = 0.7;
                     player.yBodyRot = player.yHeadRot = 180;
-                    break;
-                case WEST:
+                }
+                case WEST -> {
                     x = 0.3;
                     z = 0.5;
                     player.yBodyRot = player.yHeadRot = 270;
-                    break;
-                default:
+                }
+                default -> {
                     return;
+                }
             }
             player.setPos(blockPos.getX() + x, blockPos.getY() - 1, blockPos.getZ() + z);
             player.setBoundingBox(new AABB(blockPos.getX() + x - 0.2, blockPos.getY() - 0.8, blockPos.getZ() + z - 0.2, blockPos.getX() + x + 0.2, blockPos.getY() + 0.4, blockPos.getZ() + z + 0.2));

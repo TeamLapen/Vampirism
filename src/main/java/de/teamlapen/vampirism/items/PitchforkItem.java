@@ -9,6 +9,6 @@ import net.minecraft.world.item.Tiers;
 public class PitchforkItem extends VampirismSwordItem {
 
     public PitchforkItem() {
-        super(Tiers.IRON, 6, -3, new Properties().tab(VampirismMod.creativeTab));
+        super(Tiers.IRON, 6, -3, new Properties());
     }
 }

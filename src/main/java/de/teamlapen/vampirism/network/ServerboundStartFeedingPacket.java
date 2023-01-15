@@ -16,7 +16,7 @@ import java.util.function.Supplier;
  * Client -> Server
  * Player has initiate feeding on an entity
  */
-public record ServerboundStartFeedingPacket(Either<Integer, BlockPos> target) implements IMessage {
+public record ServerboundStartFeedingPacket(Either<Integer, BlockPos> target) implements IMessage.IServerBoundMessage {
     static void encode(@NotNull ServerboundStartFeedingPacket msg, @NotNull FriendlyByteBuf buffer) {
         msg.target.ifLeft(entityID -> {
             buffer.writeBoolean(false);

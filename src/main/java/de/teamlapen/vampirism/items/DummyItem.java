@@ -5,6 +5,6 @@ import net.minecraft.world.item.Item;
 
 public class DummyItem extends Item {
     public DummyItem() {
-        super(new Item.Properties().tab(VampirismMod.creativeTab));
+        super(new Item.Properties());
     }
 }

@@ -3,10 +3,12 @@ package de.teamlapen.vampirism.recipes;
 import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.core.ModRecipes;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 public class ShapedItemWithTierRepair extends ShapedRecipe {
 
     public ShapedItemWithTierRepair(@NotNull ShapedRecipe shaped) {
-        super(shaped.getId(), shaped.getGroup(), shaped.getRecipeWidth(), shaped.getRecipeHeight(), shaped.getIngredients(), shaped.getResultItem());
+        super(shaped.getId(), shaped.getGroup(), CraftingBookCategory.EQUIPMENT, shaped.getRecipeWidth(), shaped.getRecipeHeight(), shaped.getIngredients(), shaped.getResultItem());
     }
 
     @NotNull

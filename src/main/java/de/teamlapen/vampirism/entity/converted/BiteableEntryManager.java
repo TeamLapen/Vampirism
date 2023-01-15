@@ -100,17 +100,37 @@ public class BiteableEntryManager {
     }
 
     /**
+     * returns an existing entry
+     *
      * @param creature for which a {@link BiteableEntry} is requested
      * @return {@code null} if resources aren't loaded or the creatures type is blacklisted.
      */
     @Nullable
     public BiteableEntry get(@NotNull PathfinderMob creature) {
         if (!initialized) return null;
-        EntityType<?> type = creature.getType();
-        ResourceLocation id = EntityType.getKey(type);
+        return get(EntityType.getKey(creature.getType()));
+    }
+
+    /**
+     * returns an existing entry or creates a new one
+     *
+     * @param creature for which a {@link BiteableEntry} is requested
+     * @return {@code null} if resources aren't loaded or the creatures type is blacklisted.
+     */
+    @Nullable
+    public BiteableEntry getOrCalculate(@NotNull PathfinderMob creature) {
+        if (!initialized) return null;
+        BiteableEntry entry = get(EntityType.getKey(creature.getType()));
+        if (entry == null) {
+            entry = calculate(creature);
+        }
+        return entry;
+    }
+
+    private BiteableEntry get(ResourceLocation id) {
         if (isConfigBlackListed(id)) return null;
         if (biteableEntries.containsKey(id)) return biteableEntries.get(id);
-        return calculated.getOrDefault(id, null);
+        return calculated.get(id);
     }
 
     /**

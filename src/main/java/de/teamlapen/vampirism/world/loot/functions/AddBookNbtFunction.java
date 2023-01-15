@@ -2,9 +2,8 @@ package de.teamlapen.vampirism.world.loot.functions;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
+import de.teamlapen.vampirism.api.entity.VampireBookLootProvider;
 import de.teamlapen.vampirism.core.ModLoot;
-import de.teamlapen.vampirism.entity.hunter.AdvancedHunterEntity;
-import de.teamlapen.vampirism.entity.vampire.AdvancedVampireEntity;
 import de.teamlapen.vampirism.items.VampireBookItem;
 import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.world.entity.Entity;
@@ -34,7 +33,7 @@ public class AddBookNbtFunction extends LootItemConditionalFunction {
     @NotNull
     @Override
     public LootItemFunctionType getType() {
-        return ModLoot.add_book_nbt.get();
+        return ModLoot.ADD_BOOK_NBT.get();
     }
 
     @NotNull
@@ -42,10 +41,8 @@ public class AddBookNbtFunction extends LootItemConditionalFunction {
     public ItemStack run(@NotNull ItemStack itemStack, @NotNull LootContext lootContext) {
         Entity victim = lootContext.getParamOrNull(LootContextParams.THIS_ENTITY);
         Optional<String> id = Optional.empty();
-        if (victim instanceof AdvancedHunterEntity) {
-            id = ((AdvancedHunterEntity) victim).getBookLootId();
-        } else if (victim instanceof AdvancedVampireEntity) {
-            id = ((AdvancedVampireEntity) victim).getBookLootId();
+        if (victim instanceof VampireBookLootProvider provider) {
+            id = provider.getBookLootId();
         }
         VampireBookManager.BookContext bookContext = id.map(VampireBookManager.getInstance()::getBookContextById).orElseGet(() -> VampireBookManager.getInstance().getRandomBook(lootContext.getRandom()));
         itemStack.setTag(VampireBookItem.createTagFromContext(bookContext));

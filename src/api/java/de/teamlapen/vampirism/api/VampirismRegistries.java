@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.api;
 
+import com.google.common.base.Suppliers;
 import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
@@ -18,8 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Supplier;
 
 /**
- * Registry keys for all Vampirism registries<br>
- * If you want to get a registry, use {@link RegistryManager#ACTIVE#getRegistry(ResourceKey)} or the supplier.<br>
+ * Registry keys for all Vampirism registries and registry access for api usages
  */
 @SuppressWarnings("unused")
 public class VampirismRegistries {
@@ -33,14 +33,14 @@ public class VampirismRegistries {
     public static final ResourceKey<Registry<IRefinementSet>> REFINEMENT_SET_ID = key("vampirism:refinement_set");
     public static final ResourceKey<Registry<IOil>> OILS_ID = key("vampirism:oil");
 
-    public static final Supplier<IForgeRegistry<ISkill<?>>> SKILLS = () -> RegistryManager.ACTIVE.getRegistry(SKILLS_ID);
-    public static final Supplier<IForgeRegistry<IAction<?>>> ACTIONS = () -> RegistryManager.ACTIVE.getRegistry(ACTIONS_ID);
-    public static final Supplier<IForgeRegistry<IEntityAction>> ENTITY_ACTIONS = () -> RegistryManager.ACTIVE.getRegistry(ENTITY_ACTIONS_ID);
-    public static final Supplier<IForgeRegistry<IMinionTask<?, ?>>> MINION_TASKS = () -> RegistryManager.ACTIVE.getRegistry(MINION_TASKS_ID);
-    public static final Supplier<IForgeRegistry<Task>> TASKS = () -> RegistryManager.ACTIVE.getRegistry(TASK_ID);
-    public static final Supplier<IForgeRegistry<IRefinement>> REFINEMENTS = () -> RegistryManager.ACTIVE.getRegistry(REFINEMENT_ID);
-    public static final Supplier<IForgeRegistry<IRefinementSet>> REFINEMENT_SETS = () -> RegistryManager.ACTIVE.getRegistry(REFINEMENT_SET_ID);
-    public static final Supplier<IForgeRegistry<IOil>> OILS = () -> RegistryManager.ACTIVE.getRegistry(OILS_ID);
+    public static final Supplier<IForgeRegistry<ISkill<?>>> SKILLS = Suppliers.memoize(() -> RegistryManager.ACTIVE.getRegistry(SKILLS_ID));
+    public static final Supplier<IForgeRegistry<IAction<?>>> ACTIONS = Suppliers.memoize(() -> RegistryManager.ACTIVE.getRegistry(ACTIONS_ID));
+    public static final Supplier<IForgeRegistry<IEntityAction>> ENTITY_ACTIONS = Suppliers.memoize(() -> RegistryManager.ACTIVE.getRegistry(ENTITY_ACTIONS_ID));
+    public static final Supplier<IForgeRegistry<IMinionTask<?, ?>>> MINION_TASKS = Suppliers.memoize(() -> RegistryManager.ACTIVE.getRegistry(MINION_TASKS_ID));
+    public static final Supplier<IForgeRegistry<Task>> TASKS = Suppliers.memoize(() -> RegistryManager.ACTIVE.getRegistry(TASK_ID));
+    public static final Supplier<IForgeRegistry<IRefinement>> REFINEMENTS = Suppliers.memoize(() -> RegistryManager.ACTIVE.getRegistry(REFINEMENT_ID));
+    public static final Supplier<IForgeRegistry<IRefinementSet>> REFINEMENT_SETS = Suppliers.memoize(() -> RegistryManager.ACTIVE.getRegistry(REFINEMENT_SET_ID));
+    public static final Supplier<IForgeRegistry<IOil>> OILS = Suppliers.memoize(() -> RegistryManager.ACTIVE.getRegistry(OILS_ID));
 
     private static <T> @NotNull ResourceKey<Registry<T>> key(@NotNull String name) {
         return ResourceKey.createRegistryKey(new ResourceLocation(name));

@@ -39,7 +39,7 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
 
 
     public CrossbowArrowItem(EnumArrowType type) {
-        super(new Properties().tab(VampirismMod.creativeTab));
+        super(new Properties());
         this.type = type;
     }
 
@@ -47,13 +47,9 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack itemStack, @Nullable Level world, List<Component> textComponents, TooltipFlag tooltipFlag) {
         switch (type) {
-            case SPITFIRE:
-                textComponents.add(Component.translatable("item.vampirism.crossbow_arrow_spitfire.tooltip").withStyle(ChatFormatting.GRAY));
-            case VAMPIRE_KILLER:
-                textComponents.add(Component.translatable("item.vampirism.crossbow_arrow_vampire_killer.tooltip").withStyle(ChatFormatting.GRAY));
-            case TELEPORT:
-                textComponents.add(Component.translatable("item.vampirism.crossbow_arrow_teleport.tooltip").withStyle(ChatFormatting.GRAY));
-                break;
+            case SPITFIRE -> textComponents.add(Component.translatable("item.vampirism.crossbow_arrow_spitfire.tooltip").withStyle(ChatFormatting.GRAY));
+            case VAMPIRE_KILLER -> textComponents.add(Component.translatable("item.vampirism.crossbow_arrow_vampire_killer.tooltip").withStyle(ChatFormatting.GRAY));
+            case TELEPORT -> textComponents.add(Component.translatable("item.vampirism.crossbow_arrow_teleport.tooltip").withStyle(ChatFormatting.GRAY));
         }
     }
 
@@ -94,7 +90,7 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
     public void onHitBlock(ItemStack arrow, @NotNull BlockPos blockPos, IEntityCrossbowArrow arrowEntity, @Nullable Entity shootingEntity) {
         CrossbowArrowEntity entity = (CrossbowArrowEntity) arrowEntity;
         switch (type) {
-            case SPITFIRE:
+            case SPITFIRE -> {
                 for (int dx = -1; dx < 2; dx++) {
                     for (int dy = -2; dy < 2; dy++) {
                         for (int dz = -1; dz < 2; dz++) {
@@ -107,8 +103,8 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
                         }
                     }
                 }
-                break;
-            case TELEPORT:
+            }
+            case TELEPORT -> {
                 if (shootingEntity != null) {
                     if (!shootingEntity.level.isClientSide && shootingEntity.isAlive()) {
                         if (shootingEntity instanceof ServerPlayer player) {
@@ -128,7 +124,7 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
                         }
                     }
                 }
-                break;
+            }
         }
     }
 

@@ -1,0 +1,24 @@
+{
+  "values": [
+    "vampirism:altar_inspiration",
+    "vampirism:hunter_table",
+    "vampirism:blood_sieve",
+    "vampirism:altar_cleansing",
+    "vampirism:dark_spruce_sign",
+    "vampirism:dark_spruce_wall_sign",
+    "vampirism:cursed_spruce_sign",
+    "vampirism:cursed_spruce_wall_sign",
+    "vampirism:blood_container",
+    "vampirism:potion_table",
+    "vampirism:cross",
+    "vampirism:dark_spruce_door",
+    "vampirism:cursed_spruce_door",
+    "vampirism:dark_spruce_trapdoor",
+    "vampirism:cursed_spruce_trapdoor",
+    "vampirism:dark_spruce_fence_gate",
+    "vampirism:cursed_spruce_fence_gate",
+    "vampirism:vampire_rack",
+    "vampirism:throne",
+    "#vampirism:coffin"
+  ]
+}

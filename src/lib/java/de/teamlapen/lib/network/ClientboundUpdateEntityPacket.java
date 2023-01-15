@@ -25,7 +25,7 @@ import java.util.function.Supplier;
  * Does Entity or Entity capability updates.
  * Entity capabilities that want to use this, have to be registered in {@link HelperRegistry}
  */
-public class ClientboundUpdateEntityPacket implements IMessage {
+public class ClientboundUpdateEntityPacket implements IMessage.IClientBoundMessage {
 
     private final static Logger LOGGER = LogManager.getLogger();
 

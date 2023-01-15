@@ -33,14 +33,8 @@ public class BasicHunterModel<T extends LivingEntity> extends BipedCloakedModel<
         super.setupAnim(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
         if (entityIn instanceof IVampirismCrossbowUser) {
             switch (((IVampirismCrossbowUser) entityIn).getArmPose()) {
-                case CROSSBOW_HOLD:
-                    AnimationUtils.animateCrossbowHold(this.rightArm, this.leftArm, this.head, true);
-                    break;
-                case CROSSBOW_CHARGE:
-                    AnimationUtils.animateCrossbowCharge(this.rightArm, this.leftArm, entityIn, true);
-                    break;
-                default:
-                    break;
+                case CROSSBOW_HOLD -> AnimationUtils.animateCrossbowHold(this.rightArm, this.leftArm, this.head, true);
+                case CROSSBOW_CHARGE -> AnimationUtils.animateCrossbowCharge(this.rightArm, this.leftArm, entityIn, true);
             }
         }
     }

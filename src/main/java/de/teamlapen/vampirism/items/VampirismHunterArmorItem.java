@@ -32,7 +32,7 @@ import java.util.UUID;
 /**
  * Base class for all hunter only armor tileInventory
  */
-public abstract class VampirismHunterArmorItem extends ArmorItem implements IFactionExclusiveItem {
+public abstract class VampirismHunterArmorItem extends ArmorItem implements IFactionExclusiveItem { //TODO 1.20 rename to HunterArmorItem
     protected static final UUID[] VAMPIRISM_ARMOR_MODIFIER = new UUID[]{UUID.fromString("f0b9a417-0cec-4629-8623-053cd0feec3c"), UUID.fromString("e54474a9-62a0-48ee-baaf-7efddca3d711"), UUID.fromString("ac0c33f4-ebbf-44fe-9be3-a729f7633329"), UUID.fromString("8839e157-d576-4cff-bf34-0a788131fe0f")};
     private final @NotNull Multimap<Attribute, AttributeModifier> modifierMultimap;
 
@@ -43,18 +43,10 @@ public abstract class VampirismHunterArmorItem extends ArmorItem implements IFac
     public VampirismHunterArmorItem(@NotNull ArmorMaterial materialIn, @NotNull EquipmentSlot equipmentSlotIn, Item.@NotNull Properties props, @NotNull Map<Attribute, Tuple<Double, AttributeModifier.Operation>> modifiers) {
         super(materialIn, equipmentSlotIn, props);
 
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
+        builder.putAll(getDefaultAttributeModifiers(equipmentSlotIn));
         for (Map.Entry<Attribute, Tuple<Double, AttributeModifier.Operation>> modifier : modifiers.entrySet()) {
             builder.put(modifier.getKey(), new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Vampirism armor modifier", modifier.getValue().getA(), modifier.getValue().getB()));
-        }
-        if (!modifiers.containsKey(Attributes.ARMOR)) {
-            builder.put(Attributes.ARMOR, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Vampirism armor modifier", materialIn.getDefenseForSlot(equipmentSlotIn), AttributeModifier.Operation.ADDITION));
-        }
-        if (!modifiers.containsKey(Attributes.ARMOR_TOUGHNESS) && materialIn.getToughness() > 0) {
-            builder.put(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Vampirism armor modifier", materialIn.getToughness(), AttributeModifier.Operation.ADDITION));
-        }
-        if (!modifiers.containsKey(Attributes.KNOCKBACK_RESISTANCE) && materialIn.getKnockbackResistance() > 0) {
-            builder.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor knockback resistance", materialIn.getKnockbackResistance(), AttributeModifier.Operation.ADDITION));
         }
         modifierMultimap = builder.build();
     }
@@ -62,9 +54,7 @@ public abstract class VampirismHunterArmorItem extends ArmorItem implements IFac
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        Player player = VampirismMod.proxy.getClientPlayer();
-        addFactionPoisonousToolTip(stack, worldIn, tooltip, flagIn, player);
+        this.addFactionToolTips(stack, worldIn, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());
     }
 
     @Override

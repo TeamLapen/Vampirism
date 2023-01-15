@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -18,28 +19,22 @@ import java.util.List;
 
 public class HeartStrikerItem extends VampirismVampireSwordItem implements IItemWithTier {
 
-    private final static int[] DAMAGE_TIER = {8, 9, 10};
-    private final static float[] UNTRAINED_SPEED_TIER = {-3.8f, -3.7f, -3.6f};
-    private final static float[] TRAINED_SPEED_TIER = {-2.4f, -2.3f, -2.2f};
+    public static final VampireSwordMaterial NORMAL = new VampireSwordMaterial(TIER.NORMAL,2, 500, -3.8f, 4.0F, 14, () -> Ingredient.of(ModItems.BLOOD_INFUSED_IRON_INGOT.get()), 1.4f);
+    public static final VampireSwordMaterial ENHANCED = new VampireSwordMaterial(TIER.ENHANCED,2, 1750, -3.7f, 5.0F, 14, () -> Ingredient.of(ModItems.BLOOD_INFUSED_ENHANCED_IRON_INGOT.get()), 1.4f);
+    public static final VampireSwordMaterial ULTIMATE = new VampireSwordMaterial(TIER.ULTIMATE,2, 2500, -3.6f, 6.0F, 14, () -> Ingredient.of(ModItems.BLOOD_INFUSED_ENHANCED_IRON_INGOT.get()), 1.4f);
+
     private final @NotNull TIER tier;
 
-    public HeartStrikerItem(@NotNull TIER tier) {
-        super(Tiers.IRON, DAMAGE_TIER[tier.ordinal()], UNTRAINED_SPEED_TIER[tier.ordinal()], TRAINED_SPEED_TIER[tier.ordinal()], new Properties().tab(VampirismMod.creativeTab).durability(2500));
-        this.tier = tier;
+    public HeartStrikerItem(@NotNull VampireSwordMaterial material) {
+        super(material, 3, new Properties());
+        this.tier = material.getTier();
     }
-
 
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         addTierInformation(tooltip);
-
-    }
-
-    @Override
-    public boolean isValidRepairItem(@NotNull ItemStack toRepair, @NotNull ItemStack repair) {
-        return (this.getVampirismTier() == TIER.NORMAL ? ModItems.BLOOD_INFUSED_IRON_INGOT.get() : ModItems.BLOOD_INFUSED_ENHANCED_IRON_INGOT.get()).equals(repair.getItem()) || super.isValidRepairItem(toRepair, repair);
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
     }
 
     @Override

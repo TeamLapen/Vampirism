@@ -16,14 +16,19 @@ import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 /**
  * Does almost no damage, but can one hit kill vampire from behind when used by skilled hunters
@@ -56,7 +61,7 @@ public class StakeItem extends VampirismSwordItem implements IVampireFinisher, I
     }
 
     public StakeItem() {
-        super(Tiers.WOOD, 1, -1, new Properties().tab(VampirismMod.creativeTab));
+        super(Tiers.WOOD, 1, -1, new Properties());
     }
 
     @Nullable
@@ -71,8 +76,7 @@ public class StakeItem extends VampirismSwordItem implements IVampireFinisher, I
             if (target instanceof IVampireMob || (target instanceof Player && Helper.isVampire(((Player) target)))) {
                 if (canKillInstant(target, attacker)) {
                     DamageSource dmg = attacker instanceof Player ? DamageSource.playerAttack((Player) attacker) : DamageSource.mobAttack(attacker);
-                    dmg = dmg.bypassArmor();
-                    target.hurt(dmg, 10000F);
+                    target.hurt(dmg.bypassArmor(), 10000F);
                     if (attacker instanceof ServerPlayer) {
                         ModAdvancements.TRIGGER_HUNTER_ACTION.trigger((ServerPlayer) attacker, HunterActionCriterionTrigger.Action.STAKE);
                     }
@@ -82,5 +86,11 @@ public class StakeItem extends VampirismSwordItem implements IVampireFinisher, I
         }
 
         return super.hurtEnemy(stack, target, attacker);
+    }
+
+    @Override
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        this.addFactionToolTips(stack, worldIn, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());
     }
 }
