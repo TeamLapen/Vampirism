@@ -204,7 +204,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
 
     @Override
     public boolean canBeInfected(IVampire vampire) {
-        return canBecomeVampire && !hasPoisonousBlood();
+        return canBecomeVampire && !hasPoisonousBlood() && !entity.hasEffect(ModEffects.SANGUINARE.get());
     }
 
     @Override
