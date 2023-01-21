@@ -163,6 +163,7 @@
   "guide.vampirism.blocks.hunter_table.text": "Used to craft %s",
   "guide.vampirism.blocks.altar_cleansing.text": "Found in the church of some villages. Can be used to become a normal human again if you are a vampire.",
   "guide.vampirism.blocks.weapon_table.text": "Used to craft several hunter weapons and tools. Some recipes use lava, so you have to fill it by right clicking with a lava bucket.\\n§4Can only be used by Vampire Hunters§r and requires a special skill.",
+  "guide.vampirism.blocks.blocks.coffin": "Coffin",
   "guide.vampirism.blocks.blocks.coffin.text": "Can be used by vampires to sleep through the day.",
   "guide.vampirism.blocks.item_med_chair.text": "Used to infuse %s and %s.",
   "guide.vampirism.blocks.alchemical_cauldron.text": "Used to craft a few alchemical recipes. §4Can only be used by Vampire Hunters§r and requires a special skill.",
