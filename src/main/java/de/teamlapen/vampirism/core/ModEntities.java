@@ -73,7 +73,7 @@ public class ModEntities {
     public static final RegistryObject<EntityType<VampirismChestBoatEntity>> CHEST_BOAT = prepareEntityType("chest_boat", () -> EntityType.Builder.<VampirismChestBoatEntity>of(VampirismChestBoatEntity::new, MobCategory.MISC).sized(1.375F, 0.5625F).clientTrackingRange(10).setCustomClientFactory((spawnEntity, level) -> new VampirismChestBoatEntity(level, spawnEntity.getPosX(), spawnEntity.getPosY(), spawnEntity.getPosZ())), false);
     public static final RegistryObject<EntityType<ConvertedFoxEntity>> CONVERTED_FOX = prepareEntityType("converted_fox", () -> EntityType.Builder.of(ConvertedFoxEntity::new, MobCategory.CREATURE).sized(0.6F, 0.7F).immuneTo(Blocks.SWEET_BERRY_BUSH), true);
     public static final RegistryObject<EntityType<ConvertedGoatEntity>> CONVERTED_GOAT = prepareEntityType("converted_goat", () -> EntityType.Builder.of(ConvertedGoatEntity::new, MobCategory.CREATURE).sized(0.9F, 1.3F), true);
-
+    public static final RegistryObject<EntityType<VulnerableRemainsDummyEntity>> VULNERABLE_REMAINS_DUMMY = prepareEntityType("vulnerable_remains_dummy", () -> EntityType.Builder.of(VulnerableRemainsDummyEntity::new, MobCategory.MISC).sized(1.02f, 1.02f).setTrackingRange(10).setUpdateInterval(20), false);
 
     /**
      * Registers special extended creature classes

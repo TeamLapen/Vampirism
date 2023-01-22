@@ -8,11 +8,8 @@ import de.teamlapen.vampirism.client.model.armor.*;
 import de.teamlapen.vampirism.client.renderer.entity.*;
 import de.teamlapen.vampirism.client.renderer.entity.layers.VampireEntityLayer;
 import de.teamlapen.vampirism.client.renderer.entity.layers.VampirePlayerHeadLayer;
-import de.teamlapen.vampirism.client.renderer.entity.layers.WingsLayer;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.IVampirismBoat;
-import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.*;
 import net.minecraft.client.model.geom.LayerDefinitions;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -108,6 +105,7 @@ public class ModEntitiesRender {
         event.registerEntityRenderer(ModEntities.CHEST_BOAT.get(), context -> new VampirismBoatRenderer(context, true));
         event.registerEntityRenderer(ModEntities.CONVERTED_FOX.get(), ConvertedFoxRenderer::new);
         event.registerEntityRenderer(ModEntities.CONVERTED_GOAT.get(), ConvertedGoatRenderer::new);
+        event.registerEntityRenderer(ModEntities.VULNERABLE_REMAINS_DUMMY.get(), DummyRenderer::new);
     }
 
     static void onRegisterLayers(EntityRenderersEvent.@NotNull RegisterLayerDefinitions event) {
