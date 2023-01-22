@@ -141,7 +141,7 @@ public class MotherPiece extends ScatteredFeaturePiece {
     }
 
     protected void placeRoots(@NotNull WorldGenLevel level, @NotNull StructureManager structureManager, @NotNull ChunkGenerator chunkGenerator, @NotNull RandomSource random, @NotNull BoundingBox box, @NotNull ChunkPos chunkPos, @NotNull BlockPos blockPos) {
-        BlockState roots = ModBlocks.CURSED_ROOTED_DIRT.get().defaultBlockState();
+        BlockState roots = ModBlocks.REMAINS.get().defaultBlockState();
         int y = -1;
         for (int i = -2; i <= 2; i++) {
             for (int j = -2; j <= 2; j++) {

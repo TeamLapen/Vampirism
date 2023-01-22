@@ -37,7 +37,7 @@ public class ModTiles {
     public static final RegistryObject<BlockEntityType<PotionTableBlockEntity>> POTION_TABLE = BLOCK_ENTITY_TYPES.register("potion_table", () -> create(PotionTableBlockEntity::new, ModBlocks.POTION_TABLE.get()));
     public static final RegistryObject<BlockEntityType<AlchemyTableBlockEntity>> ALCHEMICAL_TABLE = BLOCK_ENTITY_TYPES.register("alchemical_table", () -> create(AlchemyTableBlockEntity::new, ModBlocks.ALCHEMY_TABLE.get()));
     public static final RegistryObject<BlockEntityType<MotherBlockEntity>> MOTHER = BLOCK_ENTITY_TYPES.register("mother", () -> create(MotherBlockEntity::new, ModBlocks.MOTHER.get()));
-    public static final RegistryObject<BlockEntityType<VulnerabelCursedRootedDirtBlockEntity>> VULNERABLE_CURSED_ROOTED_DIRT = BLOCK_ENTITY_TYPES.register("vulnerable_cursed_rooted_dirt", () -> create(VulnerabelCursedRootedDirtBlockEntity::new, ModBlocks.VULNERABLE_CURSED_ROOTED_DIRT.get()));
+    public static final RegistryObject<BlockEntityType<VulnerableRemainsBlockEntity>> VULNERABLE_CURSED_ROOTED_DIRT = BLOCK_ENTITY_TYPES.register("vulnerable_cursed_rooted_dirt", () -> create(VulnerableRemainsBlockEntity::new, ModBlocks.ACTIVE_VULNERABLE_REMAINS.get()));
 
     static void register(IEventBus bus) {
         BLOCK_ENTITY_TYPES.register(bus);

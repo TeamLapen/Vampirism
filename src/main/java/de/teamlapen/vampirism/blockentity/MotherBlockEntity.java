@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blockentity;
 
+import de.teamlapen.vampirism.blocks.RemainsBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.core.ModVillage;
@@ -14,7 +15,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -26,61 +29,43 @@ import java.util.stream.Collectors;
 public class MotherBlockEntity extends BlockEntity {
 
     private final ServerBossEvent bossEvent = new ServerBossEvent(Component.translatable("block.vampirism.mother"), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.NOTCHED_10);
-    private boolean isVulnerable;
-    private int rootVulnerableTicks;
 
     public MotherBlockEntity(BlockPos pos, BlockState state) {
         super(ModTiles.MOTHER.get(), pos, state);
         bossEvent.setProgress(1);
     }
 
-
     public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, MotherBlockEntity e) {
-        if (e.rootVulnerableTicks == 0) {
-            e.setRootVulnerability(true);
-        }
-
-        if (e.rootVulnerableTicks > 0) {
-            e.rootVulnerableTicks--;
-        }
     }
 
-    private Set<VulnerabelCursedRootedDirtBlockEntity> getVulnerabilities() {
-        return getVulnerablePositions().stream().map(pos -> level.getBlockEntity(pos)).filter(VulnerabelCursedRootedDirtBlockEntity.class::isInstance).map(VulnerabelCursedRootedDirtBlockEntity.class::cast).collect(Collectors.toSet());
+
+    private Set<RemainsBlock> getVulnerabilities() {
+        return getVulnerablePositions().stream().map(pos -> level.getBlockState(pos).getBlock()).filter(RemainsBlock.class::isInstance).map(RemainsBlock.class::cast).collect(Collectors.toSet());
     }
 
     private Set<BlockPos> getVulnerablePositions() {
-        return ((ServerLevel) this.level).getPoiManager().findAll(holder -> holder.is(ModVillage.VULNERABLE_ROOTS.getKey()), pos -> true, this.worldPosition, 20, PoiManager.Occupancy.ANY).collect(Collectors.toSet());
+        return ((ServerLevel) this.level).getPoiManager().findAll(holder -> holder.is(ModVillage.VULNERABLE_REMAINS.getKey()), pos -> true, this.worldPosition, 20, PoiManager.Occupancy.ANY).collect(Collectors.toSet());
     }
 
-    public void notifyDestroyedRoot(BlockPos pos) {
-        Set<VulnerabelCursedRootedDirtBlockEntity> vulnerabilities = getVulnerabilities();
-        if(checkState(vulnerabilities)) {
-            this.rootVulnerableTicks = 100;
-            this.setRootVulnerability(false);
-            this.bossEvent.setProgress(vulnerabilities.stream().filter(VulnerabelCursedRootedDirtBlockEntity::isActive).count() / (float) vulnerabilities.size());
-        } else {
+
+    public void updateFightStatus(){
+        Set<RemainsBlock> vulnerabilities = getVulnerabilities();
+        long remainingVulnerabilities = vulnerabilities.stream().filter(RemainsBlock::isVulnerable).count();
+        if(remainingVulnerabilities > 0){
+            this.bossEvent.setProgress(remainingVulnerabilities / (float) vulnerabilities.size());
+        }
+        else{
             this.bossEvent.setProgress(0);
+            this.bossEvent.removeAllPlayers();
+            this.dissolveStructure();
         }
+
     }
 
-    private void setRootVulnerability(boolean vulnerable) {
-        getVulnerabilities().stream().filter(VulnerabelCursedRootedDirtBlockEntity::isActive).forEach(e -> e.setVulnerability(vulnerable));
-        if (vulnerable) {
-            this.bossEvent.setColor(BossEvent.BossBarColor.RED);
-        } else {
-            this.bossEvent.setColor(BossEvent.BossBarColor.WHITE);
-        }
-    }
 
-    public void attack() {
-        if (isVulnerable) {
-            // damage
-        }
-    }
 
-    private void destroy() {
-        getVulnerablePositions().forEach(pos -> level.setBlockAndUpdate(pos, ModBlocks.CURSED_ROOTED_DIRT.get().defaultBlockState()));
+    private void dissolveStructure() {
+        getVulnerablePositions().forEach(pos -> level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState())); //TODO remove non vulnerable remains
     }
 
     @Override
@@ -89,26 +74,10 @@ public class MotherBlockEntity extends BlockEntity {
         this.bossEvent.removeAllPlayers();
     }
 
-    public void addPlayer(ServerPlayer player) {
-        this.bossEvent.addPlayer(player);
+    public void addPlayer(Player player) {
+        if(player instanceof ServerPlayer serverPlayer) this.bossEvent.addPlayer(serverPlayer);
     }
 
-    private boolean checkState(Set<VulnerabelCursedRootedDirtBlockEntity> vulnerabilities) {
-        if (vulnerabilities.stream().noneMatch(VulnerabelCursedRootedDirtBlockEntity::isActive)) {
-            setVulnerable();
-            this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 3);
-            return false;
-        }
-        return true;
-    }
-
-    private void setVulnerable() {
-        this.isVulnerable = true;
-    }
-
-    public boolean isVulnerable() {
-        return this.isVulnerable;
-    }
 
     @Override
     public @NotNull CompoundTag getUpdateTag() {
@@ -124,12 +93,10 @@ public class MotherBlockEntity extends BlockEntity {
     @Override
     protected void saveAdditional(@NotNull CompoundTag tag) {
         super.saveAdditional(tag);
-        tag.putBoolean("isVulnerable", this.isVulnerable);
     }
 
     @Override
     public void load(@NotNull CompoundTag tag) {
         super.load(tag);
-        this.isVulnerable = tag.getBoolean("isVulnerable");
     }
 }

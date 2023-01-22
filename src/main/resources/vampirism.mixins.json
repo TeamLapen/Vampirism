@@ -6,7 +6,6 @@
   "mixins": [
     "AbstractFurnaceBlockEntityAccessor",
     "ArmorItemAccessor",
-    "BaseEntityBlockAccessor",
     "CrossbowItemMixin",
     "IngredientAccessor",
     "ItemMixin",

@@ -421,11 +421,7 @@ public class ModPlayerEventHandler {
             event.setCanceled(true);
         } else if ((ModBlocks.GARLIC_DIFFUSER_NORMAL.get() == state.getBlock() || ModBlocks.GARLIC_DIFFUSER_WEAK.get() == state.getBlock() || ModBlocks.GARLIC_DIFFUSER_IMPROVED.get() == state.getBlock()) && Helper.isVampire(event.getEntity())) {
             event.getEntity().addEffect(new MobEffectInstance(ModEffects.GARLIC.get()));
-        } else if (state.getBlock() == ModBlocks.MOTHER.get()) {
-            if (((MotherBlock) state.getBlock()).isInvulnerable(world, pos)) {
-                event.setUseItem(Event.Result.DENY);
-            }
-        } else if (state.getBlock() instanceof CursedRootedDirtBlock) {
+        } else if (state.getBlock() instanceof RemainsBlock) {
             event.setUseItem(Event.Result.DENY);
         }
     }

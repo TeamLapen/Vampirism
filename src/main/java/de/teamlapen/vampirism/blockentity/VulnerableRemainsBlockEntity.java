@@ -1,36 +1,33 @@
 package de.teamlapen.vampirism.blockentity;
 
-import de.teamlapen.vampirism.blocks.VulnerableCursedRootedDirtBlock;
+import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.core.ModVillage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-public class VulnerabelCursedRootedDirtBlockEntity extends BlockEntity {
+public class VulnerableRemainsBlockEntity extends BlockEntity {
 
     private int invulnerableTicks;
     private int health = 5;
     private BlockPos motherPos;
 
-    public VulnerabelCursedRootedDirtBlockEntity(BlockPos pos, BlockState state) {
+    public VulnerableRemainsBlockEntity(BlockPos pos, BlockState state) {
         super(ModTiles.VULNERABLE_CURSED_ROOTED_DIRT.get(), pos, state);
     }
 
-    public void setVulnerability(boolean isVulnerable) {
-        getLevel().setBlock(this.worldPosition, getBlockState().setValue(VulnerableCursedRootedDirtBlock.IS_INVULNERABLE, !isVulnerable), 3);
-    }
-
-    public boolean isActive() {
-        return getBlockState().getValue(VulnerableCursedRootedDirtBlock.IS_ACTIVE);
-    }
 
     private Optional<MotherBlockEntity> getMother() {
         if (motherPos == null) {
@@ -38,7 +35,7 @@ public class VulnerabelCursedRootedDirtBlockEntity extends BlockEntity {
                 motherPos = pos;
             });
             if (motherPos == null) {
-                this.level.setBlock(this.worldPosition, this.getBlockState().setValue(VulnerableCursedRootedDirtBlock.IS_ACTIVE, false), 3);
+                this.level.setBlockAndUpdate(this.worldPosition, ModBlocks.REMAINS.get().defaultBlockState());
             }
         }
         return Optional.ofNullable(motherPos).map(pos -> {
@@ -50,17 +47,15 @@ public class VulnerabelCursedRootedDirtBlockEntity extends BlockEntity {
         });
     }
 
-    private void destroy() {
-        this.level.setBlock(this.worldPosition, this.getBlockState().setValue(VulnerableCursedRootedDirtBlock.IS_ACTIVE, false), 3);
-        getMother().ifPresent(mother -> mother.notifyDestroyedRoot(this.worldPosition));
+    private void finish() {
+        this.level.setBlockAndUpdate(this.worldPosition, ModBlocks.INCAPACITATED_VULNERABLE_REMAINS.get().defaultBlockState());
+        getMother().ifPresent(MotherBlockEntity::updateFightStatus);
     }
 
     public void attacked(@NotNull BlockState state, @NotNull ServerPlayer player) {
-        if (state.getValue(VulnerableCursedRootedDirtBlock.IS_INVULNERABLE)) return;
-        if (!state.getValue(VulnerableCursedRootedDirtBlock.IS_ACTIVE)) return;
         this.getMother().ifPresent(mother -> mother.addPlayer(player));
         if (health-- <= 0) {
-            destroy();
+            finish();
         }
     }
 
@@ -84,4 +79,18 @@ public class VulnerabelCursedRootedDirtBlockEntity extends BlockEntity {
             this.motherPos = new BlockPos(pos[0], pos[1], pos[2]);
         }
     }
+
+    private boolean firstTick = true;
+
+    public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, VulnerableRemainsBlockEntity e) {
+        if(e.firstTick){
+            e.firstTick=false;
+            e.getMother().ifPresent(MotherBlockEntity::updateFightStatus);
+            e.getMother().ifPresent( mother -> {
+                mother.updateFightStatus();
+//                level.getNearbyPlayers(TargetingConditions.DEFAULT, null, AABB.ofSize(blockPos.getCenter(), 5, 5, 5)).forEach(mother::addPlayer);
+            });
+        }
+    }
+
 }

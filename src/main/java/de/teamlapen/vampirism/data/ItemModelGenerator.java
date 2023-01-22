@@ -4,6 +4,7 @@ import de.teamlapen.lib.lib.data.BaseItemModelGenerator;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
@@ -79,7 +80,10 @@ public class ItemModelGenerator extends BaseItemModelGenerator {//TODO 1.20 move
             add(ModBlocks.CURSED_SPRUCE_FENCE_GATE.get());
             add(ModBlocks.VAMPIRE_RACK.get());
             add(ModBlocks.THRONE.get());
-            add(ModBlocks.CURSED_ROOTED_DIRT.get());
+            add(ModBlocks.REMAINS.get());
+            add(ModBlocks.VULNERABLE_REMAINS.get());
+            add(ModBlocks.INCAPACITATED_VULNERABLE_REMAINS.get());
+            add(ModBlocks.CURSED_HANGING_ROOTS.get());
         }};
         Set<Item> items = new HashSet<>() {{
             add(ModItems.HUNTER_COAT_CHEST_NORMAL.get());
@@ -297,9 +301,6 @@ public class ItemModelGenerator extends BaseItemModelGenerator {//TODO 1.20 move
         }
         this.item(ModItems.OIL_BOTTLE.get(), modLoc("item/oil_bottle"), modLoc("item/oil_bottle_overlay"));
         withExistingParent(ModBlocks.ALCHEMY_TABLE.get(), modLoc("block/alchemy_table/alchemy_table"));
-        item(ModBlocks.CURSED_HANGING_ROOTS.get().asItem(), modLoc("block/cursed_hanging_roots"));
-        item(ModBlocks.CURSED_ROOTS.get().asItem(), modLoc("block/cursed_roots"));
-        withExistingParent(ModBlocks.VULNERABLE_CURSED_ROOTED_DIRT.get(), modLoc("block/vulnerable_cursed_rooted_dirt"));
     }
 
 }

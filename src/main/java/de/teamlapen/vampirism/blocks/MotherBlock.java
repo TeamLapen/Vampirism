@@ -38,11 +38,6 @@ public class MotherBlock extends BaseEntityBlock {
         return RenderShape.MODEL;
     }
 
-    @Override
-    public boolean canEntityDestroy(BlockState state, BlockGetter level, BlockPos pos, Entity entity) {
-        return getBlockEntity(level, pos).map(MotherBlockEntity::isVulnerable).orElse(false);
-    }
-
 
     private Optional<MotherBlockEntity> getBlockEntity(@NotNull BlockGetter level, @NotNull BlockPos pos) {
         var blockEntity = level.getBlockEntity(pos);
@@ -69,7 +64,4 @@ public class MotherBlock extends BaseEntityBlock {
         return level.isClientSide() ? null : createTickerHelper(type, ModTiles.MOTHER.get(), MotherBlockEntity::serverTick);
     }
 
-    public boolean isInvulnerable(BlockGetter level, BlockPos pos) {
-        return !getBlockEntity(level, pos).map(MotherBlockEntity::isVulnerable).orElse(true);
-    }
 }

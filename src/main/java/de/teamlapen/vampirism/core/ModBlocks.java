@@ -159,13 +159,17 @@ public class ModBlocks {
     public static final RegistryObject<CoffinBlock> COFFIN_RED = registerWithItem("coffin_red", () -> new CoffinBlock(DyeColor.RED));
     public static final RegistryObject<CoffinBlock> COFFIN_BLACK = registerWithItem("coffin_black", () -> new CoffinBlock(DyeColor.BLACK));
     public static final RegistryObject<AlchemyTableBlock> ALCHEMY_TABLE = registerWithItem("alchemy_table", AlchemyTableBlock::new);
-    public static final RegistryObject<CursedRootedDirtBlock> CURSED_ROOTED_DIRT = registerWithItem("cursed_rooted_dirt", CursedRootedDirtBlock::new);
+    public static final RegistryObject<RemainsBlock> REMAINS = registerWithItem("remains", () -> new RemainsBlock(BlockBehaviour.Properties.of(Material.DIRT, MaterialColor.TERRACOTTA_BROWN).strength(0.5F).sound(SoundType.ROOTED_DIRT), false));
+    public static final RegistryObject<RemainsBlock> VULNERABLE_REMAINS = registerWithItem("vulnerable_remains", () -> new RemainsBlock(BlockBehaviour.Properties.of(Material.DIRT, MaterialColor.TERRACOTTA_BROWN).strength(0.5F).sound(SoundType.ROOTED_DIRT), true));
+    public static final RegistryObject<RemainsBlock> INCAPACITATED_VULNERABLE_REMAINS = registerWithItem("incapacitated_vulnerable_remains", () -> new RemainsBlock(BlockBehaviour.Properties.of(Material.DIRT, MaterialColor.TERRACOTTA_BROWN).strength(0.5F).sound(SoundType.ROOTED_DIRT), false));
+
+    public static final RegistryObject<ActiveVulnerableRemainsBlock> ACTIVE_VULNERABLE_REMAINS = BLOCKS.register("active_vulnerable_remains", () -> new ActiveVulnerableRemainsBlock(BlockBehaviour.Properties.of(Material.DIRT, MaterialColor.TERRACOTTA_BROWN).strength(0.5F).sound(SoundType.ROOTED_DIRT)));
+
     public static final RegistryObject<HangingRootsBlock> CURSED_HANGING_ROOTS = registerWithItem("cursed_hanging_roots", () -> {
         var block = new HangingRootsBlock(BlockBehaviour.Properties.of(Material.REPLACEABLE_PLANT, MaterialColor.TERRACOTTA_BROWN).noCollission().instabreak().sound(SoundType.HANGING_ROOTS).offsetType(BlockBehaviour.OffsetType.XZ));
         ((FireBlock) Blocks.FIRE).setFlammable(block, 30, 60);
         return block;
     });
-    public static final RegistryObject<CursedRootedDirtBlock> VULNERABLE_CURSED_ROOTED_DIRT = registerWithItem("vulnerable_cursed_rooted_dirt", VulnerableCursedRootedDirtBlock::new); //TODO remove item, change texture
     public static final RegistryObject<MotherBlock> MOTHER = registerWithItem("mother", MotherBlock::new); //TODO remove item, add models/textures
 
 
