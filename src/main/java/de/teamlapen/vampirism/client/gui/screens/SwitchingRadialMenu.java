@@ -7,11 +7,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 public abstract class SwitchingRadialMenu<T> extends GuiRadialMenu<T> {
 
+    private boolean wasKeyReleased = false;
     private final @Nullable KeyMapping keyMapping;
     private final @NotNull Consumer<@NotNull KeyMapping> rotatingScreens;
 
@@ -27,12 +26,18 @@ public abstract class SwitchingRadialMenu<T> extends GuiRadialMenu<T> {
 
     @Override
     public boolean keyPressed(int key, int scanCode, int modifiers) {
-        if (this.keyMapping != null && this.keyMapping.matches(key, scanCode)) {
+        if (this.wasKeyReleased && this.keyMapping != null && this.keyMapping.matches(key, scanCode)) {
             this.rotatingScreens.accept(this.keyMapping);
             return true;
         }
         return super.keyPressed(key, scanCode, modifiers);
     }
 
-
+    @Override
+    public boolean keyReleased(int pKeyCode, int pScanCode, int pModifiers) {
+        if (this.keyMapping != null && this.keyMapping.matches(pKeyCode, pScanCode)) {
+            this.wasKeyReleased = true;
+        }
+        return super.keyReleased(pKeyCode, pScanCode, pModifiers);
+    }
 }
