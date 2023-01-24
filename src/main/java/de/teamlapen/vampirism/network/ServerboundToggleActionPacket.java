@@ -96,22 +96,12 @@ public record ServerboundToggleActionPacket(ResourceLocation actionId, @Nullable
                 if (action != null) {
                     IAction.PERM r = actionHandler.toggleAction(action, context);
                     switch (r) {
-                        case NOT_UNLOCKED: {
-                            player.displayClientMessage(Component.translatable("text.vampirism.action.not_unlocked"), true);
-                        }
-                        case DISABLED: {
-                            player.displayClientMessage(Component.translatable("text.vampirism.action.deactivated_by_serveradmin"), false);
-                        }
-                        case COOLDOWN: {
-                            player.displayClientMessage(Component.translatable("text.vampirism.action.cooldown_not_over"), true);
-                        }
-                        case DISALLOWED: {
-                            player.displayClientMessage(Component.translatable("text.vampirism.action.disallowed"), true);
-                        }
-                        case PERMISSION_DISALLOWED: {
-                            player.displayClientMessage(Component.translatable("text.vampirism.action.permission_disallowed"), false);
-                        }
-                        default: {
+                        case NOT_UNLOCKED -> player.displayClientMessage(Component.translatable("text.vampirism.action.not_unlocked"), true);
+                        case DISABLED -> player.displayClientMessage(Component.translatable("text.vampirism.action.deactivated_by_serveradmin"), false);
+                        case COOLDOWN -> player.displayClientMessage(Component.translatable("text.vampirism.action.cooldown_not_over"), true);
+                        case DISALLOWED -> player.displayClientMessage(Component.translatable("text.vampirism.action.disallowed"), true);
+                        case PERMISSION_DISALLOWED -> player.displayClientMessage(Component.translatable("text.vampirism.action.permission_disallowed"), false);
+                        default -> {
                             //Everything alright
                         }
                     }
