@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.minion.management;
 
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.minion.IFactionMinionTask;
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
@@ -30,7 +31,7 @@ import java.util.stream.Stream;
 import static de.teamlapen.vampirism.entity.minion.management.CollectResourcesTask.Desc;
 
 
-public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTask<Desc<Q>, Q> {
+public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTask<Desc<Q>, Q> implements IFactionMinionTask<Desc<Q>, Q> {
 
     @NotNull
     private final Function<Q, Integer> coolDownSupplier;
@@ -91,6 +92,11 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
                 stack.setDamageValue(Math.max(0, stack.getDamageValue() - VampirismConfig.BALANCE.miEquipmentRepairAmount.get()));
             }
         }
+    }
+
+    @Override
+    public @Nullable IFaction<?> getFaction() {
+        return this.faction;
     }
 
     public static class Desc<Z extends MinionData> implements IMinionTask.IMinionTaskDesc<Z> {

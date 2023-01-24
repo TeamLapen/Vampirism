@@ -7,7 +7,7 @@ import java.util.function.IntConsumer;
 
 public class RadialMenu<T> {
     private final IntConsumer setSelectedSlot;
-    private final List<RadialMenuSlot<T>> radialMenuSlots;
+    private final List<IRadialMenuSlot<T>> radialMenuSlots;
     private final boolean showMoreSecondaryItems;
     private final SecondaryIconPosition secondaryIconStartingPosition;
     private final DrawCallback<T> drawCallback;
@@ -25,7 +25,7 @@ public class RadialMenu<T> {
      *                        YOU are responsible to provide a method that handles the objects provided in your RadialMenuSlots
      * @param offset          Additional offset amount for secondary icons. If your Icons don't above each other try around with this parameter
      */
-    public RadialMenu(IntConsumer setSelectedSlot, List<RadialMenuSlot<T>> radialMenuSlots, DrawCallback<T> drawCallback, int offset) {
+    public RadialMenu(IntConsumer setSelectedSlot, List<IRadialMenuSlot<T>> radialMenuSlots, DrawCallback<T> drawCallback, int offset) {
         this.setSelectedSlot = setSelectedSlot;
         this.radialMenuSlots = radialMenuSlots;
         this.showMoreSecondaryItems = false;
@@ -45,7 +45,7 @@ public class RadialMenu<T> {
      *                        YOU are responsible to provide a method that handles the objects provided in your RadialMenuSlots
      * @param offset          Additional offset amount for secondary icons. If your Icons don't above each other try around with this parameter
      */
-    public RadialMenu(IntConsumer setSelectedSlot, List<RadialMenuSlot<T>> radialMenuSlots, SecondaryIconPosition secondaryIconStartingPosition, DrawCallback<T> drawCallback, int offset) {
+    public RadialMenu(IntConsumer setSelectedSlot, List<IRadialMenuSlot<T>> radialMenuSlots, SecondaryIconPosition secondaryIconStartingPosition, DrawCallback<T> drawCallback, int offset) {
         this.setSelectedSlot = setSelectedSlot;
         this.radialMenuSlots = radialMenuSlots;
         this.showMoreSecondaryItems = true;
@@ -54,7 +54,7 @@ public class RadialMenu<T> {
         this.offset = offset;
     }
 
-    public List<RadialMenuSlot<T>> getRadialMenuSlots() {
+    public List<IRadialMenuSlot<T>> getRadialMenuSlots() {
         return radialMenuSlots;
     }
 
