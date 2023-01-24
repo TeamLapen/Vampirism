@@ -2,10 +2,12 @@ package de.teamlapen.vampirism.client.gui.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import de.teamlapen.lib.lib.client.gui.screens.radialmenu.IRadialMenuSlot;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
+import de.teamlapen.vampirism.client.ClientConfigHelper;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenu;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenuSlot;
@@ -21,13 +23,18 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @OnlyIn(Dist.CLIENT)
 public class SelectMinionTaskScreen extends SwitchingRadialMenu<SelectMinionTaskScreen.Entry> {
+
+    public static Map<ResourceLocation, Entry> CUSTOM_ENTRIES = Stream.of(new SelectMinionTaskScreen.Entry(new ResourceLocation(REFERENCE.MODID, "call_single"), Component.translatable("text.vampirism.minion.call_single"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/recall_single.png"), (SelectMinionTaskScreen::callSingle)),
+            new SelectMinionTaskScreen.Entry(new ResourceLocation(REFERENCE.MODID, "call_all"), Component.translatable("text.vampirism.minion.call_all"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/recall.png"), (SelectMinionTaskScreen::callAll)),
+            new SelectMinionTaskScreen.Entry(new ResourceLocation(REFERENCE.MODID, "respawn"), Component.translatable("text.vampirism.minion.respawn"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/respawn.png"), (SelectMinionTaskScreen::callRespawn))).collect(Collectors.toMap(e -> e.id, e -> e));
 
     private SelectMinionTaskScreen(Collection<Entry> entries, KeyMapping keyMapping) {
         super(getRadialMenu(entries), keyMapping, SelectActionScreen::show);
@@ -45,15 +52,14 @@ public class SelectMinionTaskScreen extends SwitchingRadialMenu<SelectMinionTask
     }
 
     private static List<Entry> getTasks(IFactionPlayerHandler playerHandler) {
-        List<Entry> entries = PlayerMinionController.getAvailableTasks(playerHandler).stream().map(Entry::new).collect(Collectors.toList());
-        entries.add(new Entry(Component.translatable("text.vampirism.minion.call_single"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/recall_single.png"), (SelectMinionTaskScreen::callSingle)));
-        entries.add(new Entry(Component.translatable("text.vampirism.minion.call_all"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/recall.png"), (SelectMinionTaskScreen::callAll)));
-        entries.add(new Entry(Component.translatable("text.vampirism.minion.respawn"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/respawn.png"), (SelectMinionTaskScreen::callRespawn)));
-        return entries;
+        if (playerHandler.getLordLevel() == 0) return List.of();
+        return playerHandler.getCurrentFactionPlayer().map(player -> ClientConfigHelper.getMinionTaskOrder(playerHandler.getCurrentFaction()).stream().filter(entry -> {
+            return Optional.ofNullable(entry.getTask()).map(s -> s.isAvailable(player.getFaction(), playerHandler)).orElse(true);
+        }).collect(Collectors.toList())).orElseGet(List::of);
     }
 
     private static RadialMenu<Entry> getRadialMenu(Collection<Entry> playerHandler) {
-        List<RadialMenuSlot<Entry>> parts = playerHandler.stream().map(entry -> new RadialMenuSlot<>(entry.text.getString(), entry)).toList();
+        List<IRadialMenuSlot<Entry>> parts = playerHandler.stream().map(entry -> (IRadialMenuSlot<Entry>) new RadialMenuSlot<>(entry.text, entry)).toList();
         return new RadialMenu<>(i -> parts.get(i).primarySlotIcon().onSelected.run(), parts, SelectMinionTaskScreen::drawActionPart, 0);
     }
 
@@ -85,26 +91,59 @@ public class SelectMinionTaskScreen extends SwitchingRadialMenu<SelectMinionTask
 
     public static class Entry {
 
+        private final ResourceLocation id;
         private final Component text;
         private final ResourceLocation loc;
         private final Runnable onSelected;
+        private final IMinionTask<?,?> task;
 
         public Entry(@NotNull IMinionTask<?, ?> task) {
-            this(task.getName(), new ResourceLocation(RegUtil.id(task).getNamespace(), "textures/minion_tasks/" + RegUtil.id(task).getPath() + ".png"), (() -> sendTask(task)));
+            this(RegUtil.id(task), task.getName(), new ResourceLocation(RegUtil.id(task).getNamespace(), "textures/minion_tasks/" + RegUtil.id(task).getPath() + ".png"), (() -> sendTask(task)), task);
         }
 
-        public Entry(Component text, ResourceLocation icon, Runnable onSelected) {
+        public Entry(@NotNull ResourceLocation id, @NotNull Component text, @NotNull ResourceLocation icon, @NotNull Runnable onSelected, @Nullable IMinionTask<?,?> task) {
+            this.id = id;
             this.text = text;
             this.loc = icon;
             this.onSelected = onSelected;
+            this.task = task;
         }
 
+        public Entry(@NotNull ResourceLocation id, @NotNull Component text, @NotNull ResourceLocation icon, @NotNull Runnable onSelected) {
+            this(id, text, icon, onSelected, null);
+        }
+
+        @NotNull
         public ResourceLocation getIconLoc() {
             return loc;
         }
 
+        @NotNull
+        public ResourceLocation getId() {
+            return id;
+        }
+
+        @NotNull
         public Component getText() {
             return text;
+        }
+
+        @Nullable
+        public IMinionTask<?,?> getTask() {
+            return this.task;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj instanceof Entry other) {
+                return id.equals(other.id);
+            }
+            return false;
+        }
+
+        @Override
+        public int hashCode() {
+            return id.hashCode();
         }
     }
 

@@ -45,7 +45,7 @@ public interface IMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends
      * @param player  The lord player entity if loaded
      * @return Whether the task can currently be given by the lord player
      */
-    default boolean isAvailable(IPlayableFaction<?> faction, @Nullable ILordPlayer player) {
+    default boolean isAvailable(@NotNull IPlayableFaction<?> faction, @Nullable ILordPlayer player) {
         return true;
     }
 

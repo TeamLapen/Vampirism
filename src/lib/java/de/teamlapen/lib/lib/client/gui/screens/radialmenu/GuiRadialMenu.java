@@ -36,6 +36,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
@@ -46,23 +47,24 @@ import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
+import java.util.Optional;
 
 @Mod.EventBusSubscriber(Dist.CLIENT)
-public class GuiRadialMenu<T> extends Screen {
+public abstract class GuiRadialMenu<T> extends Screen {
     private static final float PRECISION = 5.0f;
-    private static final int MAX_SLOTS = 20;
+    protected static final int MAX_SLOTS = 30;
 
-    private boolean closing;
-    private RadialMenu<T> radialMenu;
-    private List<RadialMenuSlot<T>> radialMenuSlots;
-    final float OPEN_ANIMATION_LENGTH = 0.40f;
-    private float totalTime;
-    private float prevTick;
-    private float extraTick;
+    protected boolean closing;
+    private final RadialMenu<T> radialMenu;
+    protected final List<IRadialMenuSlot<T>> radialMenuSlots;
+    protected final float OPEN_ANIMATION_LENGTH = 0.40f;
+    protected float totalTime;
+    protected float prevTick;
+    protected float extraTick;
     /**
      * Zero-Based index
      */
-    private int selectedItem;
+    protected int selectedItem;
 
 
     public GuiRadialMenu(RadialMenu<T> radialMenu) {
@@ -177,7 +179,8 @@ public class GuiRadialMenu<T> extends Screen {
         if (hasMouseOver && mousedOverSlot != -1) {
             int adjusted = ((mousedOverSlot + (numberOfSlices / 2 + 1)) % numberOfSlices) - 1;
             adjusted = adjusted == -1 ? numberOfSlices - 1 : adjusted;
-            drawCenteredString(ms, font, radialMenuSlots.get(adjusted).slotName(), width / 2, (height - font.lineHeight) / 2, 16777215);
+            Component component = radialMenuSlots.get(adjusted).slotName();
+            drawCenteredString(ms, font, component, width / 2, (height - font.lineHeight) / 2, Optional.ofNullable(component.getStyle().getColor()).map(TextColor::getValue).orElse(16777215));
         }
 
         ms.popPose();
@@ -269,7 +272,7 @@ public class GuiRadialMenu<T> extends Screen {
         return true;
     }
 
-    public void drawSlice(RadialMenuSlot<T> slot, boolean highlighted, BufferBuilder buffer, float x, float y, float z, float radiusIn, float radiusOut, float startAngle, float endAngle, int r, int g, int b, int a) {
+    public void drawSlice(IRadialMenuSlot<T> slot, boolean highlighted, BufferBuilder buffer, float x, float y, float z, float radiusIn, float radiusOut, float startAngle, float endAngle, int r, int g, int b, int a) {
         float angle = endAngle - startAngle;
         int sections = Math.max(1, Mth.ceil(angle / PRECISION));
 
