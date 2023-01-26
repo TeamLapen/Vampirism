@@ -43,6 +43,12 @@ public class VulnerableRemainsDummyEntity extends Entity {
     }
 
     @Override
+    public boolean isPickable() {
+        return true; //This ensures the entity can be targeted by client which is required to be able to hit it
+    }
+
+
+    @Override
     public void push(Entity pEntity) {
     }
 
@@ -52,7 +58,7 @@ public class VulnerableRemainsDummyEntity extends Entity {
 
     @Override
     public void tick() {
-        if (this.ownerPos == null || this.level.getBlockState(ownerPos).getBlock() != ModBlocks.ACTIVE_VULNERABLE_REMAINS.get()) {
+        if (!this.level.isClientSide() && (this.ownerPos == null || this.level.getBlockState(ownerPos).getBlock() != ModBlocks.ACTIVE_VULNERABLE_REMAINS.get())) {
             this.remove(RemovalReason.DISCARDED);
         }
     }

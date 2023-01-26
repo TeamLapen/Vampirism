@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.blockentity;
 
 import de.teamlapen.vampirism.blocks.RemainsBlock;
-import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.core.ModVillage;
 import net.minecraft.core.BlockPos;
@@ -23,7 +22,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class MotherBlockEntity extends BlockEntity {
@@ -39,17 +38,17 @@ public class MotherBlockEntity extends BlockEntity {
     }
 
 
-    private Set<RemainsBlock> getVulnerabilities() {
-        return getVulnerablePositions().stream().map(pos -> level.getBlockState(pos).getBlock()).filter(RemainsBlock.class::isInstance).map(RemainsBlock.class::cast).collect(Collectors.toSet());
+    private List<RemainsBlock> getVulnerabilities() {
+        return getVulnerablePositions().stream().map(pos -> level.getBlockState(pos).getBlock()).filter(RemainsBlock.class::isInstance).map(RemainsBlock.class::cast).collect(Collectors.toList()); //Must collect to list to be able to count multiple identical block instances
     }
 
-    private Set<BlockPos> getVulnerablePositions() {
-        return ((ServerLevel) this.level).getPoiManager().findAll(holder -> holder.is(ModVillage.VULNERABLE_REMAINS.getKey()), pos -> true, this.worldPosition, 20, PoiManager.Occupancy.ANY).collect(Collectors.toSet());
+    private List<BlockPos> getVulnerablePositions() {
+        return ((ServerLevel) this.level).getPoiManager().findAll(holder -> holder.is(ModVillage.VULNERABLE_REMAINS.getKey()), pos -> true, this.worldPosition, 20, PoiManager.Occupancy.ANY).collect(Collectors.toList());
     }
 
 
     public void updateFightStatus(){
-        Set<RemainsBlock> vulnerabilities = getVulnerabilities();
+        List<RemainsBlock> vulnerabilities = getVulnerabilities();
         long remainingVulnerabilities = vulnerabilities.stream().filter(RemainsBlock::isVulnerable).count();
         if(remainingVulnerabilities > 0){
             this.bossEvent.setProgress(remainingVulnerabilities / (float) vulnerabilities.size());
