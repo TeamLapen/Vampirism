@@ -93,11 +93,4 @@ public interface IActionHandler<T extends IFactionPlayer<T>> {
      * Unlock the given actions. The given action have to belong to the players faction and have to be registered
      */
     void unlockActions(Collection<IAction<T>> actions);
-
-    /**
-     * @return all existing actions for the player's faction
-     */
-    default Collection<IAction<?>> getAllActions() {
-        return (Collection<IAction<?>>)(Object) getUnlockedActions();
-    }
 }

@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.IRadialMenuSlot;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
@@ -44,7 +45,7 @@ public class SelectActionRadialScreen<T extends IFactionPlayer<T>> extends DualS
         IPlayableFaction<?> faction = VampirismPlayerAttributes.get(Minecraft.getInstance().player).faction;
         if (faction != null) {
             faction.getPlayerCapability(Minecraft.getInstance().player).ifPresent(player -> {
-                List<IAction<?>> actions = ClientConfigHelper.getActionOrder(player.getFaction().getID()).stream().filter(f -> ((IActionHandler)player.getActionHandler()).isActionUnlocked(f)).collect(Collectors.toList());
+                List<IAction<?>> actions = ClientConfigHelper.getActionOrder(player.getFaction()).stream().filter(f -> ((IActionHandler)player.getActionHandler()).isActionUnlocked(f)).collect(Collectors.toList());
                 if (!actions.isEmpty()) {
                     //noinspection rawtypes
                     Minecraft.getInstance().setScreen(new SelectActionRadialScreen(player, actions, keyMapping));

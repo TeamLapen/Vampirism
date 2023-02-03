@@ -34,6 +34,10 @@ public interface IAction<T extends IFactionPlayer<T>> {
     @NotNull
     Optional<IPlayableFaction<?>> getFaction();
 
+    /**
+     * @param faction The faction to test
+     * @return of the action can be used by the given faction
+     */
     default boolean matchesFaction(@Nullable IPlayableFaction<?> faction) {
         if (getFaction().isEmpty() && faction == null) {
             return true;
