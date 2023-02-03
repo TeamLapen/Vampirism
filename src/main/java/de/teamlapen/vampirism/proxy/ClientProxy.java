@@ -192,7 +192,8 @@ public class ClientProxy extends CommonProxy {
             case CLIENT_SETUP -> {
                 this.overlay = new VampirismHUDOverlay(Minecraft.getInstance());
                 registerSubscriptions();
-                //TODO load action order if necessary
+                //noinspection deprecation
+                ActionSelectScreen.loadActionOrder();
                 ModBlocksRender.register();
                 event.enqueueWork(() -> {
                     Sheets.addWoodType(LogBlock.dark_spruce);

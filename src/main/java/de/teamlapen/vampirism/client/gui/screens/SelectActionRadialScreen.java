@@ -13,6 +13,7 @@ import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenu;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenuSlot;
 import de.teamlapen.vampirism.client.ClientConfigHelper;
 import de.teamlapen.vampirism.client.core.ModKeys;
+import de.teamlapen.vampirism.client.gui.screens.radial.SwitchingRadialMenu;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.network.ServerboundToggleActionPacket;
 import de.teamlapen.vampirism.util.RegUtil;
@@ -24,13 +25,13 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class SelectActionScreen<T extends IFactionPlayer<T>> extends SwitchingRadialMenu<IAction<?>> {
+public class SelectActionRadialScreen<T extends IFactionPlayer<T>> extends SwitchingRadialMenu<IAction<?>> {
 
     private final IActionHandler<?> actionHandler;
     private final T player;
 
-    private SelectActionScreen(T player, List<IAction<?>> actions, KeyMapping keyMapping) {
-        super(getRadialMenu(actions), keyMapping, SelectMinionTaskScreen::show);
+    private SelectActionRadialScreen(T player, List<IAction<?>> actions, KeyMapping keyMapping) {
+        super(getRadialMenu(actions), keyMapping, SelectMinionTaskRadialScreen::show);
         this.actionHandler = player.getActionHandler();
         this.player = player;
     }
@@ -46,7 +47,7 @@ public class SelectActionScreen<T extends IFactionPlayer<T>> extends SwitchingRa
                 List<IAction<?>> actions = ClientConfigHelper.getActionOrder(player.getFaction().getID()).stream().filter(f -> ((IActionHandler)player.getActionHandler()).isActionUnlocked(f)).collect(Collectors.toList());
                 if (actions.size() > 0) {
                     //noinspection rawtypes
-                    Minecraft.getInstance().setScreen(new SelectActionScreen(player, actions, keyMapping));
+                    Minecraft.getInstance().setScreen(new SelectActionRadialScreen(player, actions, keyMapping));
                 } else {
                     Minecraft.getInstance().player.displayClientMessage(Component.translatable("text.vampirism.no_actions"), true);
                     Minecraft.getInstance().setScreen(null);
@@ -59,7 +60,7 @@ public class SelectActionScreen<T extends IFactionPlayer<T>> extends SwitchingRa
         List<IRadialMenuSlot<IAction<?>>> parts = actions.stream().map(a -> (IRadialMenuSlot<IAction<?>>)new RadialMenuSlot<IAction<?>>(a.getName(), a, Collections.emptyList())).toList();
         return new RadialMenu<>((i) -> {
             VampirismMod.dispatcher.sendToServer(ServerboundToggleActionPacket.createFromRaytrace(RegUtil.id(parts.get(i).primarySlotIcon()), Minecraft.getInstance().hitResult));
-        }, parts , SelectActionScreen::drawActionPart,0);
+        }, parts , SelectActionRadialScreen::drawActionPart,0);
     }
 
     private static void drawActionPart(IAction<?> action, PoseStack stack, int posX, int posY, int size, boolean transparent) {

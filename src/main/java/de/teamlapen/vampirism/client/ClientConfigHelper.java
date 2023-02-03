@@ -12,7 +12,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
-import de.teamlapen.vampirism.client.gui.screens.SelectMinionTaskScreen;
+import de.teamlapen.vampirism.client.gui.screens.SelectMinionTaskRadialScreen;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.resources.ResourceLocation;
@@ -32,12 +32,12 @@ public class ClientConfigHelper {
     public static final Gson GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter(IAction.class, new IActionTypeAdapter())
             .registerTypeHierarchyAdapter(ResourceLocation.class, new ResourceLocationTypeAdapter())
-            .registerTypeHierarchyAdapter(SelectMinionTaskScreen.Entry.class, new EntryTypeAdapter())
+            .registerTypeHierarchyAdapter(SelectMinionTaskRadialScreen.Entry.class, new EntryTypeAdapter())
             .create();
 
     private static final ResourceLocation none = new ResourceLocation("none");
     private static Map<ResourceLocation, List<IAction<?>>> actionOrder = new HashMap<>();
-    private static Map<ResourceLocation, List<SelectMinionTaskScreen.Entry>> minionTaskOrder = new HashMap<>();
+    private static Map<ResourceLocation, List<SelectMinionTaskRadialScreen.Entry>> minionTaskOrder = new HashMap<>();
 
     @SubscribeEvent
     public static void onConfigChanged(@NotNull ModConfigEvent event) {
@@ -72,7 +72,7 @@ public class ClientConfigHelper {
 
     public static boolean testTasks(Object string) {
         try {
-            GSON.fromJson((String) string, new TypeToken<Map<ResourceLocation, List<SelectMinionTaskScreen.Entry>>>() {});
+            GSON.fromJson((String) string, new TypeToken<Map<ResourceLocation, List<SelectMinionTaskRadialScreen.Entry>>>() {});
         } catch (JsonSyntaxException | ClassCastException | IllegalArgumentException  e) {
             return false;
         }
@@ -83,7 +83,7 @@ public class ClientConfigHelper {
         return Objects.requireNonNullElseGet(actionOrder.get(id), ArrayList::new);
     }
 
-    public static List<SelectMinionTaskScreen.Entry> getMinionTaskOrder(@Nullable IFaction<?> faction) {
+    public static List<SelectMinionTaskRadialScreen.Entry> getMinionTaskOrder(@Nullable IFaction<?> faction) {
         return Objects.requireNonNullElseGet(minionTaskOrder.get(Optional.ofNullable(faction).map(IFaction::getID).orElse(none)), ArrayList::new);
     }
 
@@ -93,7 +93,7 @@ public class ClientConfigHelper {
         VampirismConfig.CLIENT.actionOrder.set(object);
     }
 
-    public static void setMinionTaskOrder(@Nullable IFaction<?> faction, @NotNull  List<SelectMinionTaskScreen.Entry> tasks) {
+    public static void setMinionTaskOrder(@Nullable IFaction<?> faction, @NotNull  List<SelectMinionTaskRadialScreen.Entry> tasks) {
         minionTaskOrder.put(Optional.ofNullable(faction).map(IFaction::getID).orElse(none), tasks);
         String object = GSON.toJson(minionTaskOrder);
         VampirismConfig.CLIENT.minionTaskOrder.set(object);
@@ -117,10 +117,10 @@ public class ClientConfigHelper {
         }
     }
 
-    public static final class EntryTypeAdapter extends TypeAdapter<SelectMinionTaskScreen.Entry> {
+    public static final class EntryTypeAdapter extends TypeAdapter<SelectMinionTaskRadialScreen.Entry> {
 
         @Override
-        public void write(JsonWriter out, @Nullable SelectMinionTaskScreen.Entry value) throws IOException {
+        public void write(JsonWriter out, @Nullable SelectMinionTaskRadialScreen.Entry value) throws IOException {
             if (value == null) {
                 out.nullValue();
                 return;
@@ -129,13 +129,13 @@ public class ClientConfigHelper {
         }
 
         @Override
-        public SelectMinionTaskScreen.Entry read(JsonReader in) throws IOException {
+        public SelectMinionTaskRadialScreen.Entry read(JsonReader in) throws IOException {
             ResourceLocation id = new ResourceLocation(in.nextString());
             IMinionTask<?, ?> minionTask = RegUtil.getMinionTask(id);
             if (minionTask != null) {
-                return new SelectMinionTaskScreen.Entry(minionTask);
+                return new SelectMinionTaskRadialScreen.Entry(minionTask);
             } else {
-                return SelectMinionTaskScreen.CUSTOM_ENTRIES.get(id);
+                return SelectMinionTaskRadialScreen.CUSTOM_ENTRIES.get(id);
             }
         }
     }

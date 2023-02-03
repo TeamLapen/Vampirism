@@ -1,18 +1,15 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.lib.lib.client.gui.screens.radialmenu.IRadialMenuSlot;
+import de.teamlapen.lib.lib.client.gui.GuiPieMenu;
+import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
-import de.teamlapen.vampirism.client.ClientConfigHelper;
 import de.teamlapen.vampirism.client.core.ModKeys;
-import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenu;
-import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenuSlot;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
+import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.network.ServerboundSelectMinionTaskPacket;
 import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
 import de.teamlapen.vampirism.util.RegUtil;
@@ -23,128 +20,120 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.lwjgl.glfw.GLFW;
 
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.function.Consumer;
 
+@Deprecated
 @OnlyIn(Dist.CLIENT)
-public class SelectMinionTaskScreen extends SwitchingRadialMenu<SelectMinionTaskScreen.Entry> {
+public class SelectMinionTaskScreen extends GuiPieMenu<SelectMinionTaskScreen.Entry> {
 
-    public static Map<ResourceLocation, Entry> CUSTOM_ENTRIES = Stream.of(new SelectMinionTaskScreen.Entry(new ResourceLocation(REFERENCE.MODID, "call_single"), Component.translatable("text.vampirism.minion.call_single"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/recall_single.png"), (SelectMinionTaskScreen::callSingle)),
-            new SelectMinionTaskScreen.Entry(new ResourceLocation(REFERENCE.MODID, "call_all"), Component.translatable("text.vampirism.minion.call_all"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/recall.png"), (SelectMinionTaskScreen::callAll)),
-            new SelectMinionTaskScreen.Entry(new ResourceLocation(REFERENCE.MODID, "respawn"), Component.translatable("text.vampirism.minion.respawn"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/respawn.png"), (SelectMinionTaskScreen::callRespawn))).collect(Collectors.toMap(e -> e.id, e -> e));
 
-    private SelectMinionTaskScreen(Collection<Entry> entries, KeyMapping keyMapping) {
-        super(getRadialMenu(entries), keyMapping, SelectActionScreen::show);
+    public SelectMinionTaskScreen() {
+        super(Color.GRAY, Component.translatable("text.vampirism.minion.give_order"));
     }
 
-    public static void show() {
-        show(ModKeys.MINION);
+    @Override
+    public boolean keyPressed(int key, int scancode, int modifiers) {
+        if (key == GLFW.GLFW_KEY_SPACE) {
+            if (Minecraft.getInstance().player.isAlive()) {
+                IPlayableFaction<?> faction = VampirismPlayerAttributes.get(Minecraft.getInstance().player).faction;
+                if (faction != null) {
+                    Minecraft.getInstance().setScreen(new ActionSelectScreen<>(new Color(faction.getColor()), false));
+                }
+            }
+        }
+        return super.keyPressed(key, scancode, modifiers);
     }
 
-    public static void show(KeyMapping mapping) {
-        FactionPlayerHandler.getOpt(Minecraft.getInstance().player).filter(p -> p.getLordLevel() > 0).ifPresent(p -> {
-            Collection<Entry> tasks = getTasks(p);
-            Minecraft.getInstance().setScreen(new SelectMinionTaskScreen(tasks, mapping));
-        });
+    @Override
+    public boolean keyReleased(int key, int scancode, int modifiers) {
+        if (ModKeys.MINION.matches(key, scancode) || ModKeys.ACTION.matches(key, scancode)) {
+            this.onClose();
+            if (getSelectedElement() >= 0) {
+                this.onElementSelected(elements.get(getSelectedElement()));
+            }
+        }
+        return false;
     }
 
-    private static List<Entry> getTasks(IFactionPlayerHandler playerHandler) {
-        if (playerHandler.getLordLevel() == 0) return List.of();
-        return playerHandler.getCurrentFactionPlayer().map(player -> ClientConfigHelper.getMinionTaskOrder(playerHandler.getCurrentFaction()).stream().filter(entry -> {
-            return Optional.ofNullable(entry.getTask()).map(s -> s.isAvailable(player.getFaction(), playerHandler)).orElse(true);
-        }).collect(Collectors.toList())).orElseGet(List::of);
+    @Override
+    protected ResourceLocation getIconLoc(@NotNull Entry item) {
+        return item.getIconLoc();
     }
 
-    private static RadialMenu<Entry> getRadialMenu(Collection<Entry> playerHandler) {
-        List<IRadialMenuSlot<Entry>> parts = playerHandler.stream().map(entry -> (IRadialMenuSlot<Entry>) new RadialMenuSlot<>(entry.text, entry)).toList();
-        return new RadialMenu<>(i -> parts.get(i).primarySlotIcon().onSelected.run(), parts, SelectMinionTaskScreen::drawActionPart, 0);
+    @Override
+    protected @NotNull KeyMapping getMenuKeyBinding() {
+        return ModKeys.MINION;
     }
 
-    private static void drawActionPart(Entry t, PoseStack stack, int posX, int posY, int size, boolean transparent) {
-        ResourceLocation texture = t.getIconLoc();
-        RenderSystem.setShaderTexture(0, texture);
-        blit(stack, posX, posY, 0, 0, 0, 16, 16, 16, 16);
+    @Override
+    protected Component getName(@NotNull Entry item) {
+        return item.getText();
     }
 
 
+    @Override
+    protected void onElementSelected(@NotNull Entry id) {
+        id.onSelected(this);
+    }
 
-    private static void callAll() {
+    @Override
+    protected void onGuiInit() {
+        this.elements.clear();
+        FactionPlayerHandler.getOpt(minecraft.player).ifPresent(fp -> elements.addAll(PlayerMinionController.getAvailableTasks(fp).stream().map(Entry::new).toList()));
+        this.elements.add(new Entry(Component.translatable("action.vampirism.cancel"), new ResourceLocation(REFERENCE.MODID, "textures/actions/cancel.png"), (GuiPieMenu::onClose)));
+        this.elements.add(new Entry(Component.translatable("text.vampirism.minion.call_single"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/recall_single.png"), (SelectMinionTaskScreen::callSingle)));
+        this.elements.add(new Entry(Component.translatable("text.vampirism.minion.call_all"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/recall.png"), (SelectMinionTaskScreen::callAll)));
+        this.elements.add(new Entry(Component.translatable("text.vampirism.minion.respawn"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/respawn.png"), (SelectMinionTaskScreen::callRespawn)));
+    }
+
+    private void callAll() {
         VampirismMod.dispatcher.sendToServer(new ServerboundSelectMinionTaskPacket(-1, ServerboundSelectMinionTaskPacket.RECALL));
 
     }
 
-    private static void callRespawn() {
+    private void callRespawn() {
         VampirismMod.dispatcher.sendToServer(new ServerboundSelectMinionTaskPacket(-1, ServerboundSelectMinionTaskPacket.RESPAWN));
 
     }
 
-    private static void callSingle() {
+    private void callSingle() {
         VampirismMod.dispatcher.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.SHOW_MINION_CALL_SELECTION));
     }
 
-    private static void sendTask(IMinionTask<?, ?> task) {
+    private void sendTask(IMinionTask<?, ?> task) {
         VampirismMod.dispatcher.sendToServer(new ServerboundSelectMinionTaskPacket(-1, RegUtil.id(task)));
     }
 
     public static class Entry {
 
-        private final ResourceLocation id;
         private final Component text;
         private final ResourceLocation loc;
-        private final Runnable onSelected;
-        private final IMinionTask<?,?> task;
+        private final Consumer<SelectMinionTaskScreen> onSelected;
 
         public Entry(@NotNull IMinionTask<?, ?> task) {
-            this(RegUtil.id(task), task.getName(), new ResourceLocation(RegUtil.id(task).getNamespace(), "textures/minion_tasks/" + RegUtil.id(task).getPath() + ".png"), (() -> sendTask(task)), task);
+            this(task.getName(), new ResourceLocation(RegUtil.id(task).getNamespace(), "textures/minion_tasks/" + RegUtil.id(task).getPath() + ".png"), (screen -> screen.sendTask(task)));
         }
 
-        public Entry(@NotNull ResourceLocation id, @NotNull Component text, @NotNull ResourceLocation icon, @NotNull Runnable onSelected, @Nullable IMinionTask<?,?> task) {
-            this.id = id;
+        public Entry(Component text, ResourceLocation icon, Consumer<SelectMinionTaskScreen> onSelected) {
             this.text = text;
             this.loc = icon;
             this.onSelected = onSelected;
-            this.task = task;
         }
 
-        public Entry(@NotNull ResourceLocation id, @NotNull Component text, @NotNull ResourceLocation icon, @NotNull Runnable onSelected) {
-            this(id, text, icon, onSelected, null);
-        }
-
-        @NotNull
         public ResourceLocation getIconLoc() {
             return loc;
         }
 
-        @NotNull
-        public ResourceLocation getId() {
-            return id;
-        }
-
-        @NotNull
         public Component getText() {
             return text;
         }
 
-        @Nullable
-        public IMinionTask<?,?> getTask() {
-            return this.task;
+        public void onSelected(SelectMinionTaskScreen screen) {
+            this.onSelected.accept(screen);
         }
 
-        @Override
-        public boolean equals(Object obj) {
-            if (obj instanceof Entry other) {
-                return id.equals(other.id);
-            }
-            return false;
-        }
-
-        @Override
-        public int hashCode() {
-            return id.hashCode();
-        }
     }
 
 }
