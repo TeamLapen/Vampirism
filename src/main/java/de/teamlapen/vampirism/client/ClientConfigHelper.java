@@ -30,6 +30,7 @@ import org.jetbrains.annotations.Unmodifiable;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = REFERENCE.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -132,9 +133,8 @@ public class ClientConfigHelper {
         });
     }
 
-    @Unmodifiable
     public static List<IAction<?>> getDefaultActionOrder(IPlayableFaction<?> faction) {
-        return RegUtil.values(VampirismRegistries.ACTIONS).stream().filter(action -> action.matchesFaction(faction)).toList();
+        return RegUtil.values(VampirismRegistries.ACTIONS).stream().filter(action -> action.matchesFaction(faction)).collect(Collectors.toList());
     }
 
     /**
@@ -157,7 +157,6 @@ public class ClientConfigHelper {
      * @param faction the faction for which the order should be created.
      * @return a valid order for the given faction
      */
-    @Unmodifiable
     public static List<SelectMinionTaskRadialScreen.Entry> getDefaultMinionTaskOrder(@Nullable IFaction<?> faction) {
         return Stream.concat(RegUtil.values(VampirismRegistries.MINION_TASKS).stream().filter(task -> !(task instanceof INoGlobalCommandTask<?,?>)).filter(task -> {
             if (task instanceof IFactionMinionTask<?, ?> factionTask) {
@@ -165,7 +164,7 @@ public class ClientConfigHelper {
             } else {
                 return true;
             }
-        }).map(SelectMinionTaskRadialScreen.Entry::new), SelectMinionTaskRadialScreen.CUSTOM_ENTRIES.values().stream()).toList();
+        }).map(SelectMinionTaskRadialScreen.Entry::new), SelectMinionTaskRadialScreen.CUSTOM_ENTRIES.values().stream()).collect(Collectors.toList());
     }
 
     /**
