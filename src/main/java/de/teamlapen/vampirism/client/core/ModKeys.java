@@ -5,8 +5,8 @@ import com.mojang.blaze3d.platform.InputConstants;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
-import de.teamlapen.vampirism.client.gui.screens.SelectActionScreen;
-import de.teamlapen.vampirism.client.gui.screens.SelectMinionTaskScreen;
+import de.teamlapen.vampirism.client.gui.screens.SelectActionRadialScreen;
+import de.teamlapen.vampirism.client.gui.screens.SelectMinionTaskRadialScreen;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
@@ -161,7 +161,7 @@ public class ModKeys {
 
     private void openActionMenu() {
         if (mc.player.isAlive() && !mc.player.isSpectator()) {
-            SelectActionScreen.show();
+            SelectActionRadialScreen.show();
         }
     }
 
@@ -176,7 +176,7 @@ public class ModKeys {
     private void openMinionTaskMenu() {
         if(Minecraft.getInstance().player.isSpectator()) return;
         FactionPlayerHandler.getOpt(mc.player).filter(p -> p.getLordLevel() > 0).ifPresent(p -> {
-            SelectMinionTaskScreen.show();
+            SelectMinionTaskRadialScreen.show();
         });
     }
 

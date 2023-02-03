@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.client.gui.screens;
+package de.teamlapen.vampirism.client.gui.screens.radial;
 
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.GuiRadialMenu;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenu;

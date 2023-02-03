@@ -1,19 +1,12 @@
 package de.teamlapen.vampirism.config;
 
 
-import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
-import de.teamlapen.lib.lib.util.ResourceLocationTypeAdapter;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.client.ClientConfigHelper;
-import de.teamlapen.vampirism.client.gui.screens.EditSelectActionScreen;
-import de.teamlapen.vampirism.client.gui.screens.EditSelectMinionTaskScreen;
-import de.teamlapen.vampirism.client.gui.screens.SelectMinionTaskScreen;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -27,12 +20,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.stringtemplate.v4.ST;
 
-import java.lang.reflect.Type;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 public class VampirismConfig {
 
