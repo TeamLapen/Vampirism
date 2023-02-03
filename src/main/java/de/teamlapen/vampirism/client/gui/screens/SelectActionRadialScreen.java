@@ -13,7 +13,7 @@ import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenu;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenuSlot;
 import de.teamlapen.vampirism.client.ClientConfigHelper;
 import de.teamlapen.vampirism.client.core.ModKeys;
-import de.teamlapen.vampirism.client.gui.screens.radial.SwitchingRadialMenu;
+import de.teamlapen.vampirism.client.gui.screens.radial.DualSwitchingRadialMenu;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.network.ServerboundToggleActionPacket;
 import de.teamlapen.vampirism.util.RegUtil;
@@ -25,7 +25,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class SelectActionRadialScreen<T extends IFactionPlayer<T>> extends SwitchingRadialMenu<IAction<?>> {
+public class SelectActionRadialScreen<T extends IFactionPlayer<T>> extends DualSwitchingRadialMenu<IAction<?>> {
 
     private final IActionHandler<?> actionHandler;
     private final T player;
@@ -45,7 +45,7 @@ public class SelectActionRadialScreen<T extends IFactionPlayer<T>> extends Switc
         if (faction != null) {
             faction.getPlayerCapability(Minecraft.getInstance().player).ifPresent(player -> {
                 List<IAction<?>> actions = ClientConfigHelper.getActionOrder(player.getFaction().getID()).stream().filter(f -> ((IActionHandler)player.getActionHandler()).isActionUnlocked(f)).collect(Collectors.toList());
-                if (actions.size() > 0) {
+                if (!actions.isEmpty()) {
                     //noinspection rawtypes
                     Minecraft.getInstance().setScreen(new SelectActionRadialScreen(player, actions, keyMapping));
                 } else {

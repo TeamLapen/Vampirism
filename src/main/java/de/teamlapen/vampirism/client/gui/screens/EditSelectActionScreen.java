@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.util.ItemOrdering;
 import de.teamlapen.vampirism.client.ClientConfigHelper;
-import de.teamlapen.vampirism.client.gui.screens.radial.ReorderingGuiRadialMenu;
+import de.teamlapen.vampirism.client.gui.screens.radial.edit.ReorderingGuiRadialMenu;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.client.Minecraft;

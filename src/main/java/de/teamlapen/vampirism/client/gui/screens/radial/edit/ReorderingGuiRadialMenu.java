@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.client.gui.screens.radial;
+package de.teamlapen.vampirism.client.gui.screens.radial.edit;
 
 import com.mojang.blaze3d.vertex.*;
 import de.teamlapen.lib.lib.client.gui.components.ScrollWidget;
