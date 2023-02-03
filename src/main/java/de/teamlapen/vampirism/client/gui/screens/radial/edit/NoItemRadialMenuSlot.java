@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.client.gui.screens.radial;
+package de.teamlapen.vampirism.client.gui.screens.radial.edit;
 
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.IRadialMenuSlot;
 import net.minecraft.ChatFormatting;

@@ -1,15 +1,12 @@
-package de.teamlapen.vampirism.client.gui.screens.radial;
+package de.teamlapen.vampirism.client.gui.screens.radial.edit;
 
 import de.teamlapen.lib.lib.client.gui.components.ScrollWidget;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.IRadialMenuSlot;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class ReorderingItemWidget<T> extends AbstractButton implements ScrollWidget.ItemWidget<IRadialMenuSlot<ItemWrapper<T>>> {
 

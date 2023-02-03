@@ -11,7 +11,7 @@ import de.teamlapen.vampirism.client.ClientConfigHelper;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenu;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenuSlot;
-import de.teamlapen.vampirism.client.gui.screens.radial.SwitchingRadialMenu;
+import de.teamlapen.vampirism.client.gui.screens.radial.DualSwitchingRadialMenu;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.ServerboundSelectMinionTaskPacket;
 import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @OnlyIn(Dist.CLIENT)
-public class SelectMinionTaskRadialScreen extends SwitchingRadialMenu<SelectMinionTaskRadialScreen.Entry> {
+public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<SelectMinionTaskRadialScreen.Entry> {
 
     public static Map<ResourceLocation, Entry> CUSTOM_ENTRIES = Stream.of(new SelectMinionTaskRadialScreen.Entry(new ResourceLocation(REFERENCE.MODID, "call_single"), Component.translatable("text.vampirism.minion.call_single"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/recall_single.png"), (SelectMinionTaskRadialScreen::callSingle)),
             new SelectMinionTaskRadialScreen.Entry(new ResourceLocation(REFERENCE.MODID, "call_all"), Component.translatable("text.vampirism.minion.call_all"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/recall.png"), (SelectMinionTaskRadialScreen::callAll)),
@@ -47,7 +47,12 @@ public class SelectMinionTaskRadialScreen extends SwitchingRadialMenu<SelectMini
     public static void show(KeyMapping mapping) {
         FactionPlayerHandler.getOpt(Minecraft.getInstance().player).filter(p -> p.getLordLevel() > 0).ifPresent(p -> {
             Collection<Entry> tasks = getTasks(p);
-            Minecraft.getInstance().setScreen(new SelectMinionTaskRadialScreen(tasks, mapping));
+            if (tasks.isEmpty() ) {
+                Minecraft.getInstance().player.displayClientMessage(Component.translatable("text.vampirism.no_minion_tasks"), true);
+                Minecraft.getInstance().setScreen(null);
+            } else {
+                Minecraft.getInstance().setScreen(new SelectMinionTaskRadialScreen(tasks, mapping));
+            }
         });
     }
 

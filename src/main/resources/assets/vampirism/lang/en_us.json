@@ -101,6 +101,7 @@
   "text.vampirism.faction_only": " only",
   "effect.vampirism.wrong_equipment.note": "Wrong equipment",
   "text.vampirism.no_actions": "No assigned actions",
+  "text.vampirism.no_minion_tasks": "No assigned minion tasks",
   "text.vampirism.gui.reset": "Reset",
   "__comment": "block interaction texts",
   "text.vampirism.med_chair_other_faction": "You cannot become a Hunter since you already are a %s",

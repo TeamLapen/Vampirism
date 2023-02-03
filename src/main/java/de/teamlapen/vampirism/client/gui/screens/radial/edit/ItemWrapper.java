@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.client.gui.screens.radial;
+package de.teamlapen.vampirism.client.gui.screens.radial.edit;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

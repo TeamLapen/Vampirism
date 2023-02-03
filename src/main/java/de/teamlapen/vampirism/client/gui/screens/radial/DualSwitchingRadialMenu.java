@@ -8,17 +8,17 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-public abstract class SwitchingRadialMenu<T> extends GuiRadialMenu<T> {
+public abstract class DualSwitchingRadialMenu<T> extends GuiRadialMenu<T> {
 
     private boolean wasKeyReleased = false;
     private final @Nullable KeyMapping keyMapping;
     private final @NotNull Consumer<@NotNull KeyMapping> rotatingScreens;
 
-    public SwitchingRadialMenu(@NotNull RadialMenu<T> radialMenu) {
+    public DualSwitchingRadialMenu(@NotNull RadialMenu<T> radialMenu) {
         this(radialMenu, null, k -> {});
     }
 
-    public SwitchingRadialMenu(@NotNull RadialMenu<T> radialMenu, @Nullable KeyMapping keyMapping, @NotNull Consumer<@NotNull KeyMapping> otherScreens) {
+    public DualSwitchingRadialMenu(@NotNull RadialMenu<T> radialMenu, @Nullable KeyMapping keyMapping, @NotNull Consumer<@NotNull KeyMapping> otherScreens) {
         super(radialMenu);
         this.keyMapping = keyMapping;
         this.rotatingScreens = otherScreens;
