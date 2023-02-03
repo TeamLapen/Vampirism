@@ -59,6 +59,6 @@ public class EditSelectMinionTaskScreen extends ReorderingGuiRadialMenu<SelectMi
     }
 
     private static void saveOrdering(FactionPlayerHandler player, ItemOrdering<SelectMinionTaskRadialScreen.Entry> ordering) {
-        ClientConfigHelper.setMinionTaskOrder(player.getCurrentFaction(), ordering.getOrdering());
+        ClientConfigHelper.saveMinionTaskOrder(player.getCurrentFaction(), ordering.getOrdering());
     }
 }

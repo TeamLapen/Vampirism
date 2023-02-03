@@ -5,8 +5,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.IRadialMenuSlot;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
+import de.teamlapen.vampirism.api.entity.minion.IFactionMinionTask;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
+import de.teamlapen.vampirism.api.entity.minion.INoGlobalCommandTask;
 import de.teamlapen.vampirism.client.ClientConfigHelper;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenu;
@@ -58,9 +61,12 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
 
     private static List<Entry> getTasks(IFactionPlayerHandler playerHandler) {
         if (playerHandler.getLordLevel() == 0) return List.of();
-        return playerHandler.getCurrentFactionPlayer().map(player -> ClientConfigHelper.getMinionTaskOrder(playerHandler.getCurrentFaction()).stream().filter(entry -> {
-            return Optional.ofNullable(entry.getTask()).map(s -> s.isAvailable(player.getFaction(), playerHandler)).orElse(true);
-        }).collect(Collectors.toList())).orElseGet(List::of);
+        return playerHandler.getCurrentFactionPlayer().map(player -> {
+            return ClientConfigHelper.getMinionTaskOrder(playerHandler.getCurrentFaction()).stream().filter(entry -> {
+                        return Optional.ofNullable(entry.getTask()).map(s -> s.isAvailable(player.getFaction(), playerHandler)).orElse(true);
+                    }).collect(Collectors.toList());
+                }
+        ).orElseGet(List::of);
     }
 
     private static RadialMenu<Entry> getRadialMenu(Collection<Entry> playerHandler) {

@@ -14,7 +14,6 @@ import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.client.ClientConfigHelper;
 import de.teamlapen.vampirism.client.core.ModKeys;
-import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.ServerboundActionBindingPacket;
@@ -35,7 +34,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -77,7 +76,7 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
      * safes the action order to client config
      */
     private static void saveActionOrder() {
-        ClientConfigHelper.setActionOrder(new ResourceLocation(REFERENCE.MODID, "old"), ACTIONORDER.stream().filter(action -> action != fakeAction).collect(Collectors.toList()));
+        ClientConfigHelper.saveActionOrder(new ResourceLocation(REFERENCE.MODID, "old"), ACTIONORDER.stream().filter(action -> action != fakeAction).collect(Collectors.toList()));
     }
 
     /**
@@ -87,10 +86,10 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
         List<IAction<?>> actions = Lists.newArrayList(RegUtil.values(ModRegistries.ACTIONS));
 
         //Keep in mind some previously saved actions may have been removed
-        ClientConfigHelper.getActionOrder(new ResourceLocation(REFERENCE.MODID, "old")).forEach(action -> {
+        Optional.ofNullable(ClientConfigHelper.getActionOrder(new ResourceLocation(REFERENCE.MODID, "old"))).ifPresent(list -> list.forEach(action -> {
             actions.remove(action);
             ACTIONORDER.add(action);
-        });
+        }));
         if (!actions.isEmpty()) {
             ACTIONORDER.addAll(actions);
             saveActionOrder();

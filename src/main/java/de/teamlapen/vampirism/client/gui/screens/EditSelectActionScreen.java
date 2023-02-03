@@ -43,10 +43,10 @@ public class EditSelectActionScreen<T extends IFactionPlayer<T>> extends Reorder
     }
 
     private static <T extends IFactionPlayer<T>> ItemOrdering<IAction<?>> getOrdering(T player) {
-        return new ItemOrdering<>(ClientConfigHelper.getActionOrder(player.getFaction().getID()), new ArrayList<>(), () -> VampirismRegistries.ACTIONS.get().getValues().stream().filter(action -> action.matchesFaction(player.getFaction())).collect(Collectors.toList()));
+        return new ItemOrdering<>(ClientConfigHelper.getActionOrder(player.getFaction()), new ArrayList<>(), () -> VampirismRegistries.ACTIONS.get().getValues().stream().filter(action -> action.matchesFaction(player.getFaction())).collect(Collectors.toList()));
     }
 
     private static <T extends IFactionPlayer<T>> void saveOrdering(T player, ItemOrdering<IAction<?>> ordering) {
-        ClientConfigHelper.setActionOrder(player.getFaction().getID(), ordering.getOrdering());
+        ClientConfigHelper.saveActionOrder(player.getFaction().getID(), ordering.getOrdering());
     }
 }
