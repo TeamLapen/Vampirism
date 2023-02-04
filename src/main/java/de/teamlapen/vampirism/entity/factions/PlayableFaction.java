@@ -29,11 +29,11 @@ public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> imp
     PlayableFaction(FactionRegistry.@NotNull PlayableFactionBuilder<T> builder) {
         super(builder);
         this.highestLevel = builder.highestLevel;
-        this.highestLordLevel = builder.highestLordLevel;
+        this.highestLordLevel = builder.lord.maxLevel;
         this.playerCapabilitySupplier = builder.playerCapabilitySupplier;
-        this.lordTitleFunction = builder.lordTitleFunction;
+        this.lordTitleFunction = builder.lord.lordTitleFunction;
         this.refinementItemBySlot = builder.refinementItemBySlot;
-        this.hasLordSkills = builder.hasLordSkills;
+        this.hasLordSkills = builder.lord.lordSkillsEnabled;
     }
 
     @Override

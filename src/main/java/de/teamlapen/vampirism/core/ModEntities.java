@@ -103,11 +103,6 @@ public class ModEntities {
         ENTITY_TYPES.register(bus);
     }
 
-    static void initializeEntities() {
-        VampireMinionEntity.init();
-        HunterMinionEntity.init();
-    }
-
     static void registerSpawns() {
         SpawnPlacements.register(ADVANCED_HUNTER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, HunterBaseEntity::spawnPredicateHunter);
         SpawnPlacements.register(ADVANCED_VAMPIRE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, VampireBaseEntity::spawnPredicateVampire);

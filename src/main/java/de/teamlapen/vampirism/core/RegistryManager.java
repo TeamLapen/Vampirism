@@ -89,7 +89,6 @@ public class RegistryManager implements IInitListener {
                 ModPotions.registerPotionMixes();
                 ModAdvancements.registerAdvancementTrigger();
                 event.enqueueWork(() -> {
-                    ModEntities.initializeEntities();
                     ModStats.registerCustomStats();
                     ModVillage.villagerTradeSetup();
                 });

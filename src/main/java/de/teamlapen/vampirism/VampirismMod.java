@@ -28,6 +28,8 @@ import de.teamlapen.vampirism.entity.converted.DefaultConvertingHandler;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.FactionRegistry;
+import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
+import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.entity.player.ModPlayerEventHandler;
 import de.teamlapen.vampirism.entity.player.actions.ActionManager;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
@@ -219,7 +221,9 @@ public class VampirismMod {
                 .namePlural("text.vampirism.vampires")
                 .hostileTowardsNeutral()
                 .highestLevel(REFERENCE.HIGHEST_VAMPIRE_LEVEL)
-                .lord().lordLevel(REFERENCE.HIGHEST_VAMPIRE_LORD).lordTitle(LordTitles::getVampireTitle).enableLordSkills().build()
+                .lord().lordLevel(REFERENCE.HIGHEST_VAMPIRE_LORD).lordTitle(LordTitles::getVampireTitle).enableLordSkills()
+                .minion(VampireMinionEntity.VampireMinionData.ID).minionData(VampireMinionEntity.VampireMinionData::new).build()
+                .build()
                 .village(VampireVillage::vampireVillage)
                 .refinementItems(VampireRefinementItem::getItemForType)
                 .addTag(ForgeRegistries.Keys.BIOMES, ModTags.Biomes.IS_VAMPIRE_BIOME)
@@ -234,7 +238,9 @@ public class VampirismMod {
                 .name("text.vampirism.hunter")
                 .namePlural("text.vampirism.hunters")
                 .highestLevel(REFERENCE.HIGHEST_HUNTER_LEVEL)
-                .lord().lordLevel(REFERENCE.HIGHEST_HUNTER_LORD).lordTitle(LordTitles::getHunterTitle).enableLordSkills().build()
+                .lord().lordLevel(REFERENCE.HIGHEST_HUNTER_LORD).lordTitle(LordTitles::getHunterTitle).enableLordSkills()
+                .minion(HunterMinionEntity.HunterMinionData.ID).minionData(HunterMinionEntity.HunterMinionData::new).build()
+                .build()
                 .village(HunterVillage::hunterVillage)
                 .addTag(ForgeRegistries.Keys.BIOMES, ModTags.Biomes.IS_HUNTER_BIOME)
                 .addTag(ForgeRegistries.Keys.POI_TYPES, ModTags.PoiTypes.IS_HUNTER)
