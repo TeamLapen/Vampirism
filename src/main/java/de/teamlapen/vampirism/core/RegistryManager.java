@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.core;
 
-import com.sun.jdi.VMOutOfMemoryException;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.entity.IVampirismBoat;
 import de.teamlapen.vampirism.entity.action.EntityActions;
@@ -76,6 +75,7 @@ public class RegistryManager implements IInitListener {
     public void onBuildRegistries(NewRegistryEvent event) {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ModEntities::onModifyEntityTypeAttributes);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ModEntities::onRegisterEntityTypeAttributes);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(ModEntities::onRegisterSpawns);
     }
 
     @Override
@@ -83,7 +83,6 @@ public class RegistryManager implements IInitListener {
         switch (step) {
             case COMMON_SETUP:
                 ModEntities.registerConvertibles();
-                ModEntities.registerSpawns();
                 ModEntities.registerCustomExtendedCreatures();
                 ModItems.registerCraftingRecipes();
                 ModPotions.registerPotionMixes();
