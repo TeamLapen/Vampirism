@@ -106,6 +106,8 @@ public class ModEntitiesRender {
         event.registerEntityRenderer(ModEntities.dummy_sit_entity.get(), DummyRenderer::new);
         event.registerEntityRenderer(ModEntities.BOAT.get(), context -> new VampirismBoatRenderer(context, false));
         event.registerEntityRenderer(ModEntities.CHEST_BOAT.get(), context -> new VampirismBoatRenderer(context, true));
+        event.registerEntityRenderer(ModEntities.CONVERTED_FOX.get(), ConvertedFoxRenderer::new);
+        event.registerEntityRenderer(ModEntities.CONVERTED_GOAT.get(), ConvertedGoatRenderer::new);
     }
 
     static void onRegisterLayers(EntityRenderersEvent.@NotNull RegisterLayerDefinitions event) {

@@ -89,11 +89,11 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     /**
      * return in {@link net.minecraft.world.entity.PathfinderMob#getTypeName()} ()}
      */
-    @SuppressWarnings("JavadocReference")
-    default @Nullable Component getNameC(@NotNull Supplier<Component> baseName) {
+    default @NotNull Component getNameC(@NotNull Supplier<Component> baseName) {
         if (data().name == null) {
             this.data().name = Component.translatable("entity.vampirism.vampire").append(baseName.get());
         }
+        //noinspection DataFlowIssue
         return data().name;
     }
 

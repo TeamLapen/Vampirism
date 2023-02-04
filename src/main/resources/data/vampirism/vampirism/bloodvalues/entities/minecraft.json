@@ -88,6 +88,22 @@
     {
       "id": "minecraft:skeleton_horse",
       "value": 0
+    },
+    {
+      "id": "minecraft:allay",
+      "value": 0
+    },
+    {
+      "id": "minecraft:axolotl",
+      "value": 0
+    },
+    {
+      "id": "minecraft:frog",
+      "value": 0
+    },
+    {
+      "id": "minecraft:goat",
+      "value": 7
     }
   ]
 }

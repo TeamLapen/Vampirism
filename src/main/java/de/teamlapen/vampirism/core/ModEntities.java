@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.sit.SitEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ambient.Bat;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
@@ -70,6 +71,8 @@ public class ModEntities {
     public static final RegistryObject<EntityType<SitEntity>> dummy_sit_entity = prepareEntityType("dummy_sit_entity", () -> EntityType.Builder.of(SitEntity::new, MobCategory.MISC).sized(0.0001f, 0.0001f).setTrackingRange(256).setUpdateInterval(20), false);
     public static final RegistryObject<EntityType<VampirismBoatEntity>> BOAT = prepareEntityType("boat", () -> EntityType.Builder.<VampirismBoatEntity>of(VampirismBoatEntity::new, MobCategory.MISC).sized(1.375F, 0.5625F).clientTrackingRange(10).setCustomClientFactory((spawnEntity, level) -> new VampirismBoatEntity(level, spawnEntity.getPosX(), spawnEntity.getPosY(), spawnEntity.getPosZ())), false);
     public static final RegistryObject<EntityType<VampirismChestBoatEntity>> CHEST_BOAT = prepareEntityType("chest_boat", () -> EntityType.Builder.<VampirismChestBoatEntity>of(VampirismChestBoatEntity::new, MobCategory.MISC).sized(1.375F, 0.5625F).clientTrackingRange(10).setCustomClientFactory((spawnEntity, level) -> new VampirismChestBoatEntity(level, spawnEntity.getPosX(), spawnEntity.getPosY(), spawnEntity.getPosZ())), false);
+    public static final RegistryObject<EntityType<ConvertedFoxEntity>> CONVERTED_FOX = prepareEntityType("converted_fox", () -> EntityType.Builder.of(ConvertedFoxEntity::new, MobCategory.CREATURE).sized(0.6F, 0.7F).immuneTo(Blocks.SWEET_BERRY_BUSH), true);
+    public static final RegistryObject<EntityType<ConvertedGoatEntity>> CONVERTED_GOAT = prepareEntityType("converted_goat", () -> EntityType.Builder.of(ConvertedGoatEntity::new, MobCategory.CREATURE).sized(0.9F, 1.3F), true);
 
 
     /**
@@ -98,6 +101,8 @@ public class ModEntities {
         registry.addConvertible(EntityType.HORSE, overlay.apply("horse"), new SpecialConvertingHandler<>(ModEntities.CONVERTED_HORSE.get()));
         registry.addConvertible(EntityType.DONKEY, overlay.apply("horse"), new SpecialConvertingHandler<>(ModEntities.CONVERTED_DONKEY.get()));
         registry.addConvertible(EntityType.MULE, overlay.apply("horse"), new SpecialConvertingHandler<>(ModEntities.CONVERTED_MULE.get()));
+        registry.addConvertible(EntityType.FOX, overlay.apply("fox"), new SpecialConvertingHandler<>(ModEntities.CONVERTED_FOX.get()));
+        registry.addConvertible(EntityType.GOAT, overlay.apply("goat"), new SpecialConvertingHandler<>(ModEntities.CONVERTED_GOAT.get()));
     }
 
     static void register(IEventBus bus) {
@@ -148,6 +153,8 @@ public class ModEntities {
         event.put(VAMPIRE_MINION.get(), VampireMinionEntity.getAttributeBuilder().build());
         event.put(TASK_MASTER_HUNTER.get(), HunterTaskMasterEntity.getAttributeBuilder().build());
         event.put(TASK_MASTER_VAMPIRE.get(), VampireTaskMasterEntity.getAttributeBuilder().build());
+        event.put(CONVERTED_FOX.get(), ConvertedFoxEntity.createAttributes().build());
+        event.put(CONVERTED_GOAT.get(), ConvertedGoatEntity.createAttributes().build());
     }
 
     static void onModifyEntityTypeAttributes(@NotNull EntityAttributeModificationEvent event) {
