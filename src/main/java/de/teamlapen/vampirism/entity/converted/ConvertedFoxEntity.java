@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.entity.converted;
 
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.config.BalanceMobProps;
+import de.teamlapen.vampirism.core.ModAttributes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -11,6 +13,8 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -23,6 +27,10 @@ public class ConvertedFoxEntity extends Fox implements CurableConvertedCreature<
 
     public ConvertedFoxEntity(EntityType<? extends Fox> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+    }
+
+    public static AttributeSupplier.@NotNull Builder createAttributes() {
+        return Fox.createAttributes().add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_DMG).add(ModAttributes.SUNDAMAGE.get(), BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
     }
 
     @Override

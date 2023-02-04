@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.entity.converted;
 
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.config.BalanceMobProps;
+import de.teamlapen.vampirism.core.ModAttributes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -11,6 +13,8 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.animal.goat.Goat;
 import net.minecraft.world.entity.player.Player;
@@ -24,6 +28,10 @@ public class ConvertedGoatEntity extends Goat implements CurableConvertedCreatur
 
     public ConvertedGoatEntity(EntityType<? extends Goat> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+    }
+
+    public static AttributeSupplier.@NotNull Builder createAttributes() {
+        return Goat.createAttributes().add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_DMG).add(ModAttributes.SUNDAMAGE.get(), BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
     }
 
     @Override
@@ -76,7 +84,7 @@ public class ConvertedGoatEntity extends Goat implements CurableConvertedCreatur
 
     @Override
     public @NotNull Component getName() {
-        return this.getNameC(EntityType.FOX::getDescription);
+        return this.getNameC(EntityType.GOAT::getDescription);
     }
 
     @Override

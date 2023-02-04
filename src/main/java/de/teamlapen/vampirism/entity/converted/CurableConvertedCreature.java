@@ -91,7 +91,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
      */
     default @NotNull Component getNameC(@NotNull Supplier<Component> baseName) {
         if (data().name == null) {
-            this.data().name = Component.translatable("entity.vampirism.vampire").append(baseName.get());
+            this.data().name = Component.translatable("entity.vampirism.vampire").append(" ").append(baseName.get());
         }
         //noinspection DataFlowIssue
         return data().name;
