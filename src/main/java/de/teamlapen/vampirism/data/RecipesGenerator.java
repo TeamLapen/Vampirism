@@ -19,6 +19,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.data.recipes.packs.VanillaRecipeProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -120,8 +121,7 @@ public class RecipesGenerator extends VanillaRecipeProvider {
         TagKey<Item> holy_water = ModTags.Items.HOLY_WATER;
         TagKey<Item> heart = ModTags.Items.HEART;
         TagKey<Item> leather = Tags.Items.LEATHER;
-
-
+        TagKey<Item> beds = ItemTags.BEDS;
 
 
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.BLOOD_GRINDER.get()).define('Z', hopper).define('Y', planks).define('D', diamond).define('X', iron_ingot).pattern(" Z ").pattern("YDY").pattern("YXY").unlockedBy("has_hopper", has(hopper)).save(consumer, general("blood_grinder"));
@@ -408,6 +408,7 @@ public class RecipesGenerator extends VanillaRecipeProvider {
         ShapelessRecipeBuilder.shapeless(RecipeCategory.COMBAT, Items.LEATHER).requires(obi_belt).unlockedBy("has_obi_belt", has(obi_belt)).save(consumer, new ResourceLocation(REFERENCE.MODID, "leather_from_obi_belt"));
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModBlocks.ALCHEMY_TABLE.get()).pattern("B  ").pattern("BBB").pattern("P P").define('B', basalt).define('P', planks).unlockedBy("has_basalt", has(basalt)).unlockedBy("has_planks", has(planks)).save(consumer);
         SpecialRecipeBuilder.special(ModRecipes.CLEAN_OIL.get()).save(consumer, REFERENCE.MODID+":clean_oil");
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModItems.ITEM_TENT.get()).pattern(" W ").pattern("WBW").define('W', wool).define('B', beds).unlockedBy("has_wool", has(wool)).unlockedBy("has_bed", has(beds)).save(consumer);
     }
 
     private @NotNull JsonObject enchantment(int level, Enchantment enchantment) {
