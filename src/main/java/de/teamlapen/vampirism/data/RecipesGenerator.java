@@ -19,7 +19,6 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.data.recipes.packs.VanillaRecipeProvider;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -233,23 +232,22 @@ public class RecipesGenerator extends VanillaRecipeProvider {
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.HEART_SEEKER_NORMAL.get()).pattern("X").pattern("X").pattern("Y").define('X', blood_infused_iron_ingot).define('Y', stick).unlockedBy("has_ingot", has(blood_infused_iron_ingot)).save(consumer, vampire("heart_seeker_normal"));
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.HEART_STRIKER_NORMAL.get()).pattern("XX").pattern("XX").pattern("YY").define('X', blood_infused_iron_ingot).define('Y', stick).unlockedBy("has_ingot", has(blood_infused_iron_ingot)).save(consumer, vampire("heart_striker_normal"));
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.COFFIN_WHITE.get()).pattern("XXX").pattern("YYY").pattern("XXX").define('X', planks).define('Y', Items.WHITE_WOOL).unlockedBy("has_wool", has(Items.WHITE_WOOL)).save(consumer, vampire("coffin_white"));
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.COFFIN_ORANGE.get()).pattern("XXX").pattern("YYY").pattern("XXX").define('X', planks).define('Y', Items.ORANGE_WOOL).unlockedBy("has_wool", has(Items.ORANGE_WOOL)).save(consumer, vampire("coffin_orange"));
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.COFFIN_MAGENTA.get()).pattern("XXX").pattern("YYY").pattern("XXX").define('X', planks).define('Y', Items.MAGENTA_WOOL).unlockedBy("has_wool", has(Items.MAGENTA_WOOL)).save(consumer, vampire("coffin_magenta"));
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.COFFIN_LIGHT_BLUE.get()).pattern("XXX").pattern("YYY").pattern("XXX").define('X', planks).define('Y', Items.LIGHT_BLUE_WOOL).unlockedBy("has_wool", has(Items.LIGHT_BLUE_WOOL)).save(consumer, vampire("coffin_light_blue"));
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.COFFIN_YELLOW.get()).pattern("XXX").pattern("YYY").pattern("XXX").define('X', planks).define('Y', Items.YELLOW_WOOL).unlockedBy("has_wool", has(Items.YELLOW_WOOL)).save(consumer, vampire("coffin_yellow"));
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.COFFIN_LIME.get()).pattern("XXX").pattern("YYY").pattern("XXX").define('X', planks).define('Y', Items.LIME_WOOL).unlockedBy("has_wool", has(Items.LIME_WOOL)).save(consumer, vampire("coffin_lime"));
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.COFFIN_PINK.get()).pattern("XXX").pattern("YYY").pattern("XXX").define('X', planks).define('Y', Items.PINK_WOOL).unlockedBy("has_wool", has(Items.PINK_WOOL)).save(consumer, vampire("coffin_pink"));
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.COFFIN_GRAY.get()).pattern("XXX").pattern("YYY").pattern("XXX").define('X', planks).define('Y', Items.GRAY_WOOL).unlockedBy("has_wool", has(Items.GRAY_WOOL)).save(consumer, vampire("coffin_gray"));
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.COFFIN_LIGHT_GRAY.get()).pattern("XXX").pattern("YYY").pattern("XXX").define('X', planks).define('Y', Items.LIGHT_GRAY_WOOL).unlockedBy("has_wool", has(Items.LIGHT_GRAY_WOOL)).save(consumer, vampire("coffin_light_gray"));
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.COFFIN_CYAN.get()).pattern("XXX").pattern("YYY").pattern("XXX").define('X', planks).define('Y', Items.CYAN_WOOL).unlockedBy("has_wool", has(Items.CYAN_WOOL)).save(consumer, vampire("coffin_cyan"));
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.COFFIN_PURPLE.get()).pattern("XXX").pattern("YYY").pattern("XXX").define('X', planks).define('Y', Items.PURPLE_WOOL).unlockedBy("has_wool", has(Items.PURPLE_WOOL)).save(consumer, vampire("coffin_purple"));
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.COFFIN_BLUE.get()).pattern("XXX").pattern("YYY").pattern("XXX").define('X', planks).define('Y', Items.BLUE_WOOL).unlockedBy("has_wool", has(Items.BLUE_WOOL)).save(consumer, vampire("coffin_blue"));
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.COFFIN_BROWN.get()).pattern("XXX").pattern("YYY").pattern("XXX").define('X', planks).define('Y', Items.BROWN_WOOL).unlockedBy("has_wool", has(Items.BROWN_WOOL)).save(consumer, vampire("coffin_brown"));
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.COFFIN_GREEN.get()).pattern("XXX").pattern("YYY").pattern("XXX").define('X', planks).define('Y', Items.GREEN_WOOL).unlockedBy("has_wool", has(Items.GREEN_WOOL)).save(consumer, vampire("coffin_green"));
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.COFFIN_RED.get()).pattern("XXX").pattern("YYY").pattern("XXX").define('X', planks).define('Y', Items.RED_WOOL).unlockedBy("has_wool", has(Items.RED_WOOL)).save(consumer, vampire("coffin_red"));
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.COFFIN_BLACK.get()).pattern("XXX").pattern("YYY").pattern("XXX").define('X', planks).define('Y', Items.BLACK_WOOL).unlockedBy("has_wool", has(Items.BLACK_WOOL)).save(consumer, vampire("coffin_black"));
-
+        coffinFromWool(consumer, ModBlocks.COFFIN_WHITE.get(), Items.WHITE_WOOL, vampire("coffin_white"));
+        coffinFromWoolOrDye(consumer, ModBlocks.COFFIN_ORANGE.get(), Items.ORANGE_WOOL, Items.ORANGE_DYE, vampire("coffin_orange"));
+        coffinFromWoolOrDye(consumer, ModBlocks.COFFIN_MAGENTA.get(), Items.MAGENTA_WOOL, Items.MAGENTA_DYE, vampire("coffin_magenta"));
+        coffinFromWoolOrDye(consumer, ModBlocks.COFFIN_LIGHT_BLUE.get(), Items.LIGHT_BLUE_WOOL, Items.LIGHT_BLUE_DYE, vampire("coffin_light_blue"));
+        coffinFromWoolOrDye(consumer, ModBlocks.COFFIN_YELLOW.get(), Items.YELLOW_WOOL, Items.YELLOW_DYE, vampire("coffin_yellow"));
+        coffinFromWoolOrDye(consumer, ModBlocks.COFFIN_LIME.get(), Items.LIME_WOOL, Items.LIME_DYE, vampire("coffin_lime"));
+        coffinFromWoolOrDye(consumer, ModBlocks.COFFIN_PINK.get(), Items.PINK_WOOL, Items.PINK_DYE, vampire("coffin_pink"));
+        coffinFromWoolOrDye(consumer, ModBlocks.COFFIN_GRAY.get(), Items.GRAY_WOOL, Items.GRAY_DYE, vampire("coffin_gray"));
+        coffinFromWoolOrDye(consumer, ModBlocks.COFFIN_LIGHT_GRAY.get(), Items.LIGHT_GRAY_WOOL, Items.LIGHT_GRAY_DYE, vampire("coffin_light_gray"));
+        coffinFromWoolOrDye(consumer, ModBlocks.COFFIN_CYAN.get(), Items.CYAN_WOOL, Items.CYAN_DYE, vampire("coffin_cyan"));
+        coffinFromWoolOrDye(consumer, ModBlocks.COFFIN_PURPLE.get(), Items.PURPLE_WOOL, Items.PURPLE_DYE, vampire("coffin_purple"));
+        coffinFromWoolOrDye(consumer, ModBlocks.COFFIN_BLUE.get(), Items.BLUE_WOOL, Items.BLUE_DYE, vampire("coffin_blue"));
+        coffinFromWoolOrDye(consumer, ModBlocks.COFFIN_BROWN.get(), Items.BROWN_WOOL, Items.BROWN_DYE, vampire("coffin_brown"));
+        coffinFromWoolOrDye(consumer, ModBlocks.COFFIN_GREEN.get(), Items.GREEN_WOOL, Items.GREEN_DYE, vampire("coffin_green"));
+        coffinFromWoolOrDye(consumer, ModBlocks.COFFIN_RED.get(), Items.RED_WOOL, Items.RED_DYE, vampire("coffin_red"));
+        coffinFromWoolOrDye(consumer, ModBlocks.COFFIN_BLACK.get(), Items.BLACK_WOOL, Items.BLACK_DYE, vampire("coffin_black"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.VAMPIRE_CLOAK_BLACK_BLUE.get()).pattern("YZY").pattern("XAX").pattern("Y Y").define('X', blue_wool).define('Y', black_wool).define('Z', diamond).define('A', pure_blood).unlockedBy("has_pure_blood", has(pure_blood)).save(consumer, vampire("vampire_cloak_black_blue"));
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.VAMPIRE_CLOAK_BLACK_RED.get()).pattern("YZY").pattern("XAX").pattern("Y Y").define('X', red_wool).define('Y', black_wool).define('Z', diamond).define('A', pure_blood).unlockedBy("has_pure_blood", has(pure_blood)).save(consumer, vampire("vampire_cloak_black_red"));
@@ -442,6 +440,15 @@ public class RecipesGenerator extends VanillaRecipeProvider {
         ItemStack stack = new ItemStack(Items.POTION, 1);
         PotionUtils.setPotion(stack, potion);
         return new NBTIngredient(stack);
+    }
+
+    protected void coffinFromWoolOrDye(Consumer<FinishedRecipe> consumer, ItemLike coffin, ItemLike wool, ItemLike dye, ResourceLocation path) {
+        coffinFromWool(consumer, coffin, wool, path);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.DECORATIONS, coffin).requires(ModBlocks.COFFIN_WHITE.get()).requires(dye).unlockedBy("has_coffin", has(ModBlocks.COFFIN_WHITE.get())).unlockedBy("has_dye", has(dye)).save(consumer, path.withPath(p -> p + "_from_white"));
+    }
+
+    protected void coffinFromWool(Consumer<FinishedRecipe> consumer, ItemLike coffin, ItemLike wool, ResourceLocation path) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, coffin).pattern("XXX").pattern("YYY").pattern("XXX").define('X', ItemTags.PLANKS).define('Y', wool).unlockedBy("has_wool", has(wool)).save(consumer, path);
     }
 
     private @NotNull ResourceLocation vampire(String path) {
