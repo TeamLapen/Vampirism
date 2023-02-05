@@ -79,23 +79,9 @@ public abstract class GuiRadialMenu<T> extends Screen {
 
     @SubscribeEvent
     public static void updateInputEvent(MovementInputUpdateEvent event) {
-        if (Minecraft.getInstance().screen instanceof GuiRadialMenu) {
+        if (Minecraft.getInstance().screen instanceof GuiRadialMenu<?> screen) {
 
-            Options settings = Minecraft.getInstance().options;
-            Input eInput = event.getInput();
-            eInput.up = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyUp.getKey().getValue());
-            eInput.down = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyDown.getKey().getValue());
-            eInput.left = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyLeft.getKey().getValue());
-            eInput.right = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyRight.getKey().getValue());
-
-            eInput.forwardImpulse = eInput.up == eInput.down ? 0.0F : (eInput.up ? 1.0F : -1.0F);
-            eInput.leftImpulse = eInput.left == eInput.right ? 0.0F : (eInput.left ? 1.0F : -1.0F);
-            eInput.jumping = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyJump.getKey().getValue());
-            eInput.shiftKeyDown = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyShift.getKey().getValue());
-            if (Minecraft.getInstance().player.isMovingSlowly()) {
-                eInput.leftImpulse = (float) ((double) eInput.leftImpulse * 0.3D);
-                eInput.forwardImpulse = (float) ((double) eInput.forwardImpulse * 0.3D);
-            }
+            screen.processInputEvent(event);
         }
     }
 
@@ -304,5 +290,23 @@ public abstract class GuiRadialMenu<T> extends Screen {
     @Override
     public boolean isPauseScreen() {
         return false;
+    }
+
+    protected void processInputEvent(MovementInputUpdateEvent event) {
+        Options settings = Minecraft.getInstance().options;
+        Input eInput = event.getInput();
+        eInput.up = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyUp.getKey().getValue());
+        eInput.down = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyDown.getKey().getValue());
+        eInput.left = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyLeft.getKey().getValue());
+        eInput.right = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyRight.getKey().getValue());
+
+        eInput.forwardImpulse = eInput.up == eInput.down ? 0.0F : (eInput.up ? 1.0F : -1.0F);
+        eInput.leftImpulse = eInput.left == eInput.right ? 0.0F : (eInput.left ? 1.0F : -1.0F);
+        eInput.jumping = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyJump.getKey().getValue());
+        eInput.shiftKeyDown = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyShift.getKey().getValue());
+        if (Minecraft.getInstance().player.isMovingSlowly()) {
+            eInput.leftImpulse = (float) ((double) eInput.leftImpulse * 0.3D);
+            eInput.forwardImpulse = (float) ((double) eInput.forwardImpulse * 0.3D);
+        }
     }
 }
