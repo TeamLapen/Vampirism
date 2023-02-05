@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Sit functionality" pattern="src[Vampirism.main]:de.teamlapen.vampirism.sit.SitEntity||src[Vampirism.main]:de.teamlapen.vampirism.sit.SitHandler||src[Vampirism.main]:de.teamlapen.vampirism.sit.SitUtil" />
+</component>

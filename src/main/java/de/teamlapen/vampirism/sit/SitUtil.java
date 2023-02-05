@@ -1,4 +1,4 @@
-/**
+/*
  * Licenced under GNU GPLv3. See LICENCE.txt in this package.
  * Credits to bl4ckscor3's Sit https://github.com/bl4ckscor3/Sit/
  */
