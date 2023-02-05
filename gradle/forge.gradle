@@ -109,14 +109,18 @@ minecraft {
                     source sourceSets.lib
                 }
             }
-
         }
         client2 {
             parent runs.client
             taskName 'runClient2'
             arg '--username=Dev2'
             arg '-mixin.config=vampirism.mixins.json'
-
+        }
+        // the same as runClient1 but with JBR only arguments
+        clientJBR {
+            parent runs.client
+            taskName 'runClientJBR'
+            jvmArg "-XX:+AllowEnhancedClassRedefinition"
         }
         server {
             // "SCAN": For mods scan.
