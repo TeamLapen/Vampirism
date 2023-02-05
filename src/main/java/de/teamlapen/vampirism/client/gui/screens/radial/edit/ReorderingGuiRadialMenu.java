@@ -1,20 +1,27 @@
 package de.teamlapen.vampirism.client.gui.screens.radial.edit;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import de.teamlapen.lib.lib.client.gui.components.ScrollWidget;
-import de.teamlapen.lib.lib.client.gui.screens.radialmenu.*;
+import de.teamlapen.lib.lib.client.gui.screens.radialmenu.DrawCallback;
+import de.teamlapen.lib.lib.client.gui.screens.radialmenu.GuiRadialMenu;
+import de.teamlapen.lib.lib.client.gui.screens.radialmenu.IRadialMenuSlot;
+import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenu;
 import de.teamlapen.vampirism.api.util.ItemOrdering;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.client.event.MovementInputUpdateEvent;
 import net.minecraftforge.client.gui.ScreenUtils;
 import net.minecraftforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.*;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -28,6 +35,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     private final Consumer<ItemOrdering<T>> saveAction;
     private final Function<T, Boolean> isEnabled;
     private ItemScrollWidget excludedList;
+    private Boolean wasGuiHidden;
 
     public ReorderingGuiRadialMenu(ItemOrdering<T> ordering, Function<T, MutableComponent> nameFunction, DrawCallback<T> drawCallback, @NotNull Consumer<ItemOrdering<T>> saveAction, Function<T, Boolean> isEnabled) {
         super(createMenu(ordering, nameFunction, drawCallback, isEnabled));
@@ -42,20 +50,45 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     protected void init() {
         super.init();
 
-        this.addRenderableWidget(new ExtendedButton(0,this.height - 40, 140, 20, Component.translatable("text.vampirism.gui.reset"), (context) -> this.reset()));
-        this.addRenderableWidget(new ExtendedButton(0,this.height - 20, 140, 20, Component.translatable("gui.done"), (context) -> this.onClose()));
-        this.excludedList = this.addRenderableWidget(new ItemScrollWidget(0, 20, 140, this.height - 60, new Consumer<>() {
-            @Override
-            public void accept(ScrollWidget.ContentBuilder<IRadialMenuSlot<ItemWrapper<T>>, ReorderingItemWidget<T>> iRadialMenuSlotItemWidgetContentBuilder) {
-                ordering.getExcluded().forEach(item -> iRadialMenuSlotItemWidgetContentBuilder.addWidget(new NoItemRadialMenuSlot<>(nameFunction, new ItemWrapper<>(item), isEnabled)));
-            }
-        }, Component.empty()));
+        this.addRenderableWidget(new ResetButton(0, this.height - 40, 140, 20, (context) -> this.reset()));
+        this.addRenderableWidget(new ExtendedButton(0, this.height - 20, 140, 20, Component.translatable("gui.done"), (context) -> this.onClose()));
+        this.excludedList = this.addRenderableWidget(new ItemScrollWidget(0, 20, 140, this.height - 70, builder -> ordering.getExcluded().forEach(item -> builder.addWidget(new NoItemRadialMenuSlot<>(nameFunction, new ItemWrapper<>(item), isEnabled))), Component.empty()));
+
+        if (this.wasGuiHidden == null) {
+            this.wasGuiHidden = Minecraft.getInstance().options.hideGui;
+        }
+        Minecraft.getInstance().options.hideGui = true;
+    }
+
+    /**
+     * from {@link #renderDirtBackground(int)}
+     */
+    @Override
+    public void renderBackground(@NotNull PoseStack pPoseStack) {
+        double width = 140;
+        Tesselator tesselator = Tesselator.getInstance();
+        BufferBuilder bufferbuilder = tesselator.getBuilder();
+        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+        RenderSystem.setShaderTexture(0, BACKGROUND_LOCATION);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        float f = 32.0F;
+        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+        bufferbuilder.vertex(0.0D, (double) this.height, 0.0D).uv(0.0F, (float) this.height / f + (float) 0).color(64, 64, 64, 255).endVertex();
+        bufferbuilder.vertex((double) width, (double) this.height, 0.0D).uv((float) width / f, (float) this.height / f + (float) 0).color(64, 64, 64, 255).endVertex();
+        bufferbuilder.vertex((double) width, 0.0D, 0.0D).uv((float) width / 32.0F, (float) 0).color(64, 64, 64, 255).endVertex();
+        bufferbuilder.vertex(0.0D, 0.0D, 0.0D).uv(0.0F, (float) 0).color(64, 64, 64, 255).endVertex();
+        tesselator.end();
+        //noinspection UnstableApiUsage
+        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.ScreenEvent.BackgroundRendered(this, pPoseStack));
     }
 
     @Override
     public void onClose() {
         super.onClose();
         this.saveOrdering();
+        if (this.wasGuiHidden != null) {
+            Minecraft.getInstance().options.hideGui = this.wasGuiHidden;
+        }
     }
 
     public void reset() {
@@ -146,7 +179,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
 
     @Override
     public void drawSlice(IRadialMenuSlot<ItemWrapper<T>> slot, boolean highlighted, BufferBuilder buffer, float x, float y, float z, float radiusIn, float radiusOut, float startAngle, float endAngle, int r, int g, int b, int a) {
-        if (!slot.primarySlotIcon().getOptional().map(this.isEnabled).orElse(true)) {
+        if (this.movingItem == null && !slot.primarySlotIcon().getOptional().map(this.isEnabled).orElse(true)) {
             r = 80;
         }
         super.drawSlice(slot, highlighted, buffer, x, y, z, radiusIn, radiusOut, startAngle, endAngle, r, g, b, Math.min(255, (int)(a*2f)));
@@ -158,6 +191,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
 
     @Override
     public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(ms);
         drawCenteredString(ms, this.font, Component.translatable("Excluded:"), 70, 5, -1);
         super.render(ms, mouseX, mouseY, partialTicks);
         if (this.movingItem != null) {
@@ -173,12 +207,17 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
         return true;
     }
 
+    @Override
+    protected void processInputEvent(MovementInputUpdateEvent event) {
+    }
+
     private static <T> RadialMenu<ItemWrapper<T>> createMenu(ItemOrdering<T> ordering, Function<T, MutableComponent> nameFunction, DrawCallback<T> drawCallback, Function<T, Boolean> isEnabled) {
-        List<IRadialMenuSlot<ItemWrapper<T>>> collect = ordering.getOrdering().stream().map(a -> (IRadialMenuSlot<ItemWrapper<T>>)new NoItemRadialMenuSlot<>(nameFunction, new ItemWrapper<>(a), isEnabled)).collect(Collectors.toList());
-        if(collect.isEmpty()) {
+        List<IRadialMenuSlot<ItemWrapper<T>>> collect = ordering.getOrdering().stream().map(a -> (IRadialMenuSlot<ItemWrapper<T>>) new NoItemRadialMenuSlot<>(nameFunction, new ItemWrapper<>(a), isEnabled)).collect(Collectors.toList());
+        if (collect.isEmpty()) {
             collect.add(new NoItemRadialMenuSlot<>(nameFunction, new ItemWrapper<>(), isEnabled));
         }
-        return new RadialMenu<>((i) -> {}, collect, (objectToBeDrawn, poseStack, positionX, positionY, size, renderTransparent) -> {
+        return new RadialMenu<>((i) -> {
+        }, collect, (objectToBeDrawn, poseStack, positionX, positionY, size, renderTransparent) -> {
             objectToBeDrawn.run(item -> drawCallback.accept(item, poseStack, positionX, positionY, size, renderTransparent));
         }, 0);
     }
@@ -219,6 +258,48 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
                 return true;
             }
             return super.mouseClicked(pMouseX, pMouseY, pButton);
+        }
+    }
+
+    private static class ResetButton extends ExtendedButton {
+
+        private static final Component DESCRIPTION = Component.translatable("text.vampirism.gui.reset");
+        private static final Component DESCRIPTION_CONFIRM = Component.translatable("text.vampirism.gui.reset_question").withStyle(ChatFormatting.DARK_RED);
+
+        private boolean isClicked = false;
+
+        public ResetButton(int xPos, int yPos, int width, int height, OnPress handler) {
+            super(xPos, yPos, width, height, DESCRIPTION, handler);
+        }
+
+        @Override
+        public void onPress() {
+            if (this.isClicked) {
+                super.onPress();
+                this.isClicked = false;
+            } else {
+                this.isClicked = true;
+            }
+        }
+
+        @Override
+        protected boolean clicked(double pMouseX, double pMouseY) {
+            var result = super.clicked(pMouseX, pMouseY);
+            if (!result) {
+                this.isClicked = false;
+            }
+            return result;
+        }
+
+        @Override
+        public @NotNull Component getMessage() {
+            return this.isClicked ? DESCRIPTION_CONFIRM : DESCRIPTION;
+        }
+
+        @Override
+        public int getFGColor() {
+            //noinspection DataFlowIssue
+            return this.isClicked ? ChatFormatting.DARK_RED.getColor() : super.getFGColor();
         }
     }
 }
