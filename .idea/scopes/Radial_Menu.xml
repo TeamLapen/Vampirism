@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Radial Menu" pattern="src[Vampirism.lib]:de.teamlapen.lib.lib.client.gui.screens.radialmenu.DrawCallback||src[Vampirism.lib]:de.teamlapen.lib.lib.client.gui.screens.radialmenu.GuiRadialMenu||src[Vampirism.lib]:de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenu||src[Vampirism.lib]:de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenuSlot||src[Vampirism.lib]:de.teamlapen.lib.lib.client.gui.screens.radialmenu.SecondaryIconPosition" />
+</component>

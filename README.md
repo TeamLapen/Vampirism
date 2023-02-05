@@ -204,9 +204,13 @@ Slimey by Nebulasnails https://freesound.org/people/nebulasnails/sounds/495116/ 
 blood_sucker by Bernuy https://freesound.org/people/Bernuy/sounds/268499/ -- Licence: CC Attribution
 Organ Ambience, Calm, A by InspectorJ https://freesound.org/people/InspectorJ/sounds/411991/ -- License CC Attribution
 
-
 ##### Sit functionality - `sit` package
 
 The code under `de.teamlapen.vampirism.sit` is adapted from bl4ckscor4's Sit mod and licensed under GNU GPLv3 (see
 LICENSE.txt in that directory)
+
+##### Radial screen - `lib.*.radialmenu` package
+
+The code under `de.teamlapen.lib.lib.client.gui.screens.radialmenu` is adapted from David Quintana's Radial Menu and
+licensed unter the terms of the LICENSE.txt file in that directory.
 
