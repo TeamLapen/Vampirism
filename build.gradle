@@ -8,7 +8,7 @@ buildscript {
 
     
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '[5.1.26,)', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1+', changing: true
         classpath group: 'org.spongepowered', name:'mixingradle', version: '0.7-SNAPSHOT', changing: true
         classpath 'org.parchmentmc:librarian:1.+'
     }
@@ -52,17 +52,11 @@ sourceSets {
     //noinspection GroovyAssignabilityCheck
     main {
         //noinspection GroovyAssignabilityCheck
-        resources {
-            srcDirs += 'src/generated/resources'
-            exclude '.cache'
-        }
         compileClasspath += sourceSets.lib.output
         compileClasspath += sourceSets.api.output
         runtimeClasspath += sourceSets.api.output
 
-        java {
-            exclude '**/jei/**'
-        }
+        resources.srcDirs += 'src/generated/resources'
     }
     test {
         compileClasspath += sourceSets.api.output
@@ -85,7 +79,7 @@ configurations {
 
 idea {
     module {
-        for (String excludeDirName in ["run", "out", "logs", "gradle"]) {
+        for (String excludeDirName in ["run", "out", "logs"]) {
             File excludeDir = new File(projectDir, excludeDirName)
             excludeDirs.add(excludeDir)
         }
