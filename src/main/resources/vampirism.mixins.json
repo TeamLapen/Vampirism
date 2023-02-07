@@ -35,7 +35,8 @@
     "client.AgeableModelAccessor",
     "client.BossOverlayGuiAccessor",
     "client.LevelRendererMixin",
-    "client.SheetsMixin"
+    "client.SheetsMixin",
+    "client.VillagerModelAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
