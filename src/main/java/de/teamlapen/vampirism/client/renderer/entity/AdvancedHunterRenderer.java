@@ -31,7 +31,7 @@ public class AdvancedHunterRenderer extends HumanoidMobRenderer<AdvancedHunterEn
 
     public AdvancedHunterRenderer(EntityRendererProvider.@NotNull Context context) {
         super(context, new BasicHunterModel<>(context.bakeLayer(ModEntitiesRender.HUNTER), false), 0.5F);
-        this.addLayer(new HunterEquipmentLayer<>(this, context.getModelSet(), h -> HunterEquipmentModel.StakeType.FULL, e -> HunterEquipmentModel.HatType.from(e.getHunterType())));
+        this.addLayer(new HunterEquipmentLayer<>(this, context.getModelSet(), h -> HunterEquipmentModel.StakeType.FULL, e -> HunterEquipmentModel.HatType.from(e.getHunterType()), getModel().hat));
         this.addLayer(new CloakLayer<>(this, textureCloak, advancedHunterEntity -> true));
         if (VampirismConfig.CLIENT.renderAdvancedMobPlayerFaces.get()) {
             this.addLayer(new PlayerFaceOverlayLayer<>(this));
