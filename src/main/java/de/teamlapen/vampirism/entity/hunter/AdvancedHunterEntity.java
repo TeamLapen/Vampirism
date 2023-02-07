@@ -215,8 +215,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    @Nullable
-    public Optional<Pair<ResourceLocation, Boolean>> getOverlayPlayerProperties() {
+    public @NotNull Optional<Pair<ResourceLocation, Boolean>> getOverlayPlayerProperties() {
         if (skinDetails == null) {
             String name = getTextureName();
             if (name == null) return Optional.empty();

@@ -227,8 +227,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    @Nullable
-    public Optional<Pair<ResourceLocation, Boolean>> getOverlayPlayerProperties() {
+    public @NotNull Optional<Pair<ResourceLocation, Boolean>> getOverlayPlayerProperties() {
         if (skinDetails == null) {
             String name = getTextureName();
             if (name == null) return Optional.empty();

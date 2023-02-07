@@ -1,10 +1,11 @@
 package de.teamlapen.vampirism.util;
 
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -15,12 +16,12 @@ public interface IPlayerOverlay {
     /**
      * Used as overlay description while waiting for the texture to be loaded
      */
-    Pair<ResourceLocation, Boolean> PENDING_PROP = Pair.of(new ResourceLocation("textures/entity/steve.png"), false);
+    Pair<ResourceLocation, Boolean> PENDING_PROP = Pair.of(DefaultPlayerSkin.getDefaultSkin(), false);
 
     /**
      * @return Description of the overlay. Textures loc and boolean (true: slimArms, false: normal)
      */
     @OnlyIn(Dist.CLIENT)
-    @Nullable
+    @NotNull
     Optional<Pair<ResourceLocation, Boolean>> getOverlayPlayerProperties();
 }
