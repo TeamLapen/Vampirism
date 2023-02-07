@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.client.model;
 
+import de.teamlapen.vampirism.client.renderer.entity.layers.PlayerBodyOverlayLayer;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import net.minecraft.client.model.AnimationUtils;
-import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
 
-public class HunterMinionModel<T extends HunterMinionEntity> extends PlayerModel<T> {
+public class HunterMinionModel<T extends HunterMinionEntity> extends PlayerBodyOverlayLayer.VisibilityPlayerModel<T> {
 
     public HunterMinionModel(ModelPart p_170821_, boolean p_170822_) {
         super(p_170821_, p_170822_);
