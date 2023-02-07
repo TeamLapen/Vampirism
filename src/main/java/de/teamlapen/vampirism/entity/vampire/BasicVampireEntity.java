@@ -162,6 +162,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                     if (controller.hasFreeMinionSlot()) {
                         if (fph.getCurrentFaction() == this.getFaction()) {
                             VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData("Minion", this.getEntityTextureType(), false);
+                            data.updateEntityCaps(this.serializeCaps());
                             int id = controller.createNewMinionSlot(data, ModEntities.VAMPIRE_MINION.get());
                             if (id < 0) {
                                 LOGGER.error("Failed to get minion slot");

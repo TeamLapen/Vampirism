@@ -172,6 +172,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                     if (controller.hasFreeMinionSlot()) {
                         if (fph.getCurrentFaction() == this.getFaction()) {
                             HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData("Minion", this.getEntityTextureType(), this.getEntityTextureType() % 4, false);
+                            data.updateEntityCaps(this.serializeCaps());
                             int id = controller.createNewMinionSlot(data, ModEntities.HUNTER_MINION.get());
                             if (id < 0) {
                                 LOGGER.error("Failed to get minion slot");
