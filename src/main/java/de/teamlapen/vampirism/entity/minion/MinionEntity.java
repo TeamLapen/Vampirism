@@ -62,9 +62,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Predicate;
 
 public abstract class MinionEntity<T extends MinionData> extends VampirismEntity implements IPlayerOverlay, ISyncable, ForceLookEntityGoal.TaskOwner, de.teamlapen.vampirism.api.entity.minion.IMinionEntity, IEntityAdditionalSpawnData {
@@ -369,12 +367,12 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     public void onRemovedFromWorld() {
         if (playerMinionController != null) {
             playerMinionController.checkInMinion(this.minionId, this.token);
+            this.minionData.updateEntityCaps(this.serializeMinionCaps());
             this.minionData = null;
             this.playerMinionController = null;
         }
         super.onRemovedFromWorld();
     }
-
 
     @NotNull
     @Override
@@ -543,6 +541,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
      * Can be called client and server side
      */
     protected void onMinionDataReceived(@NotNull T data) {
+        this.deserializeCaps(data.getEntityCaps());
     }
 
     @NotNull
@@ -598,7 +597,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         }
     }
 
-    private void handleLoadedMinionData(@NotNull T data) {
+    public final void handleLoadedMinionData(@NotNull T data) {
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(data.getMaxHealth());
         super.setHealth(data.getHealth());
         super.setCustomName(data.getFormattedName());
@@ -608,5 +607,28 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
             LOGGER.error("Failed to cast minion data. Maybe the correct data was not registered", e);
             this.discard();
         }
+    }
+
+    /**
+     * serializes all allowed {@link net.minecraftforge.common.capabilities.Capability}s
+     */
+    protected CompoundTag serializeMinionCaps() {
+        Collection<String> allowedCapTags = getAllowedCapTags();
+        CompoundTag tag = this.serializeCaps();
+        if (tag != null) {
+            tag.getAllKeys().removeIf(s -> {
+                return !allowedCapTags.contains(s);
+            });
+            return tag;
+        } else {
+            return new CompoundTag();
+        }
+    }
+
+    /**
+     * @return all allowed capability identifiers
+     */
+    protected Collection<String> getAllowedCapTags() {
+        return Collections.singleton(new ResourceLocation("armourers_workshop", "entity-skin-provider").toString());
     }
 }

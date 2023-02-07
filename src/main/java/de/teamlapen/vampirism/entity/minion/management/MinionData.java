@@ -51,6 +51,7 @@ public class MinionData implements INBTSerializable<CompoundTag>, IMinionData {
     private final @NotNull MinionInventory inventory;
     private float health;
     private String name;
+    private @NotNull CompoundTag entityCaps = new CompoundTag();
 
 
     @NotNull
@@ -87,6 +88,7 @@ public class MinionData implements INBTSerializable<CompoundTag>, IMinionData {
                 LOGGER.error("Saved minion task does not exist anymore {}", id);
             }
         }
+        entityCaps = nbt.getCompound("caps");
     }
 
     @Override
@@ -147,6 +149,14 @@ public class MinionData implements INBTSerializable<CompoundTag>, IMinionData {
         return taskLocked;
     }
 
+    public @NotNull CompoundTag getEntityCaps() {
+        return entityCaps;
+    }
+
+    public void updateEntityCaps(CompoundTag caps) {
+        this.entityCaps = caps;
+    }
+
     public void resetStats(@NotNull MinionEntity<?> entity) {
         entity.getInventory().ifPresent(inv -> {
             if (!InventoryHelper.removeItemFromInventory(inv, new ItemStack(ModItems.OBLIVION_POTION.get()))) {
@@ -176,6 +186,7 @@ public class MinionData implements INBTSerializable<CompoundTag>, IMinionData {
             activeTaskDesc.writeToNBT(task);
             tag.put("task", task);
         }
+        tag.put("caps", entityCaps);
     }
 
     public boolean setTaskLocked(boolean locked) {
