@@ -23,15 +23,15 @@ public class BloodValues implements PreparableReloadListener {
 
     @NotNull
     @Override
-    public CompletableFuture<Void> reload(@NotNull PreparationBarrier stage, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profiler1, @NotNull ProfilerFiller profiler2, @NotNull Executor executor1, @NotNull Executor executor2) {
-        CompletableFuture<Map<String, BloodValueBuilder>> entities = this.entities.prepare(resourceManager, executor1);
-        CompletableFuture<Map<String, BloodValueBuilder>> items = this.items.prepare(resourceManager, executor1);
-        CompletableFuture<Map<String, BloodValueBuilder>> fluids = this.fluids.prepare(resourceManager, executor1);
+    public CompletableFuture<Void> reload(@NotNull PreparationBarrier stage, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profiler1, @NotNull ProfilerFiller profiler2, @NotNull Executor pBackgroundExecutor, @NotNull Executor pGameExecutor) {
+        CompletableFuture<Map<String, BloodValueBuilder>> entities = this.entities.prepare(resourceManager, pBackgroundExecutor);
+        CompletableFuture<Map<String, BloodValueBuilder>> items = this.items.prepare(resourceManager, pBackgroundExecutor);
+        CompletableFuture<Map<String, BloodValueBuilder>> fluids = this.fluids.prepare(resourceManager, pBackgroundExecutor);
         return CompletableFuture.allOf(entities, items, fluids).thenCompose(stage::wait).thenAcceptAsync(o -> {
             this.entities.load(entities.join());
             this.items.load(items.join());
             this.fluids.load(fluids.join());
-        });
+        }, pGameExecutor);
     }
 
     private void applyNewEntitiesResources(@NotNull Map<ResourceLocation, Float> map) {
