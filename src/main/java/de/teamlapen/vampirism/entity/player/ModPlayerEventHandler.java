@@ -11,8 +11,14 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
+import de.teamlapen.vampirism.blockentity.MotherBlockEntity;
 import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
-import de.teamlapen.vampirism.blocks.*;
+import de.teamlapen.vampirism.blocks.AltarInspirationBlock;
+import de.teamlapen.vampirism.blocks.BloodContainerBlock;
+import de.teamlapen.vampirism.blocks.CoffinBlock;
+import de.teamlapen.vampirism.blocks.TentBlock;
+import de.teamlapen.vampirism.blocks.mother.MotherBlock;
+import de.teamlapen.vampirism.blocks.mother.RemainsBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEffects;
@@ -423,6 +429,11 @@ public class ModPlayerEventHandler {
             event.getEntity().addEffect(new MobEffectInstance(ModEffects.GARLIC.get()));
         } else if (state.getBlock() instanceof RemainsBlock) {
             event.setUseItem(Event.Result.DENY);
+        } else if (state.getBlock() instanceof MotherBlock) {
+            BlockEntity blockEntity = event.getEntity().level.getBlockEntity(pos);
+            if (blockEntity instanceof MotherBlockEntity mother && !mother.isCanBeDestroyed()) {
+                event.setUseItem(Event.Result.DENY);
+            }
         }
     }
 

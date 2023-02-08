@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.core;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.entity.ai.sensing.VampireVillagerHostilesSensor;
 import de.teamlapen.vampirism.entity.villager.Trades;
@@ -38,8 +37,6 @@ public class ModVillage {
     public static final RegistryObject<PoiType> VAMPIRE_TOTEM = POI_TYPES.register("vampire_totem", () -> new PoiType(getAllStates(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE.get(), ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED.get()), 1, 1));
     public static final RegistryObject<PoiType> NO_FACTION_TOTEM = POI_TYPES.register("no_faction_totem", () -> new PoiType(getAllStates(ModBlocks.TOTEM_TOP.get(), ModBlocks.TOTEM_TOP_CRAFTED.get()), 1, 1));
     public static final RegistryObject<PoiType> ALTAR_CLEANSING = POI_TYPES.register("church_altar", () -> new PoiType(getAllStates(ModBlocks.ALTAR_CLEANSING.get()), 1, 1));
-    public static final RegistryObject<PoiType> VULNERABLE_REMAINS = POI_TYPES.register("vulnerable_roots", () -> new PoiType(getAllStates(ModBlocks.ACTIVE_VULNERABLE_REMAINS.get(), ModBlocks.VULNERABLE_REMAINS.get(), ModBlocks.INCAPACITATED_VULNERABLE_REMAINS.get()), 0, 1));
-    public static final RegistryObject<PoiType> MOTHER = POI_TYPES.register("mother", () -> new PoiType(getAllStates(ModBlocks.MOTHER.get()), 0, 1));
 
     public static final RegistryObject<SensorType<VampireVillagerHostilesSensor>> VAMPIRE_VILLAGER_HOSTILES = SENSOR_TYPES.register("vampire_villager_hostiles", () -> new SensorType<>(VampireVillagerHostilesSensor::new));
 

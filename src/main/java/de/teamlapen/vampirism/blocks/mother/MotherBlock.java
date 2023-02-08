@@ -1,13 +1,12 @@
-package de.teamlapen.vampirism.blocks;
+package de.teamlapen.vampirism.blocks.mother;
 
 import de.teamlapen.vampirism.blockentity.MotherBlockEntity;
+import de.teamlapen.vampirism.blocks.connected.ConnectedBlock;
 import de.teamlapen.vampirism.core.ModTiles;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -22,19 +21,18 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class MotherBlock extends BaseEntityBlock {
+import static de.teamlapen.vampirism.blocks.HorizontalContainerBlock.createTickerHelper;
+
+public class MotherBlock extends ConnectedBlock implements EntityBlock, IRemainsBlock {
+
+    private final RemainsConnector connector = new RemainsConnector();
 
     public MotherBlock() {
-        super(BlockBehaviour.Properties.of(Material.DIRT, MaterialColor.TERRACOTTA_BROWN).strength(5).sound(SoundType.CHAIN));
+        super(BlockBehaviour.Properties.of(Material.DIRT, MaterialColor.TERRACOTTA_BROWN).strength(5, 3600000.0F).sound(SoundType.CHAIN));
     }
 
     @Override
-    public void attack(BlockState p_60499_, Level p_60500_, BlockPos p_60501_, Player p_60502_) {
-        super.attack(p_60499_, p_60500_, p_60501_, p_60502_);
-    }
-
-    @Override
-    public RenderShape getRenderShape(BlockState p_49232_) {
+    public @NotNull RenderShape getRenderShape(@NotNull BlockState state) {
         return RenderShape.MODEL;
     }
 
@@ -48,8 +46,18 @@ public class MotherBlock extends BaseEntityBlock {
     }
 
     @Override
-    public boolean canHarvestBlock(BlockState state, BlockGetter level, BlockPos pos, Player player) {
-        return super.canHarvestBlock(state, level, pos, player);
+    public boolean isVulnerable(BlockState state) {
+        return false;
+    }
+
+    @Override
+    public boolean isMother(BlockState state) {
+        return true;
+    }
+
+    @Override
+    public boolean isVulnerability(BlockState state) {
+        return false;
     }
 
     @Nullable
@@ -64,4 +72,8 @@ public class MotherBlock extends BaseEntityBlock {
         return level.isClientSide() ? null : createTickerHelper(type, ModTiles.MOTHER.get(), MotherBlockEntity::serverTick);
     }
 
+    @Override
+    public RemainsConnector getConnector() {
+        return this.connector;
+    }
 }

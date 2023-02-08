@@ -1,17 +1,15 @@
 package de.teamlapen.vampirism.blockentity;
 
+import de.teamlapen.vampirism.blocks.mother.IRemainsBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModTiles;
-import de.teamlapen.vampirism.core.ModVillage;
 import de.teamlapen.vampirism.entity.VulnerableRemainsDummyEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -21,8 +19,7 @@ import java.util.Optional;
 
 public class VulnerableRemainsBlockEntity extends BlockEntity {
 
-    private int invulnerableTicks;
-    private int health = 5;
+    private int health = 50;
     private BlockPos motherPos;
 
     private int dummy_entity_id;
@@ -34,12 +31,11 @@ public class VulnerableRemainsBlockEntity extends BlockEntity {
 
     private Optional<MotherBlockEntity> getMother() {
         if (motherPos == null) {
-            ((ServerLevel) this.level).getPoiManager().find((poi) -> poi.is(ModVillage.MOTHER.getKey()), (pos) -> true, this.worldPosition, 10, PoiManager.Occupancy.ANY).ifPresent((pos) -> {
-                motherPos = pos;
-            });
-            if (motherPos == null) {
+            ((IRemainsBlock) getBlockState().getBlock()).getConnector().getMother(this.level, this.worldPosition).ifPresentOrElse(pos -> {
+                motherPos = pos.getKey();
+            }, () -> {
                 this.level.setBlockAndUpdate(this.worldPosition, ModBlocks.REMAINS.get().defaultBlockState());
-            }
+            });
         }
         return Optional.ofNullable(motherPos).map(pos -> {
             var blockEntity = level.getBlockEntity(pos);
@@ -50,9 +46,8 @@ public class VulnerableRemainsBlockEntity extends BlockEntity {
         });
     }
 
-    private void finish() {
+    private void destroyVulnerability() {
         this.level.setBlockAndUpdate(this.worldPosition, ModBlocks.INCAPACITATED_VULNERABLE_REMAINS.get().defaultBlockState());
-        getMother().ifPresent(MotherBlockEntity::updateFightStatus);
     }
 
     public void attacked(@NotNull BlockState state, @NotNull ServerPlayer player) {
@@ -60,11 +55,12 @@ public class VulnerableRemainsBlockEntity extends BlockEntity {
     }
 
     public void onDamageDealt(DamageSource src, double damage) {
-        if (src.getEntity() instanceof ServerPlayer p) {
-            this.getMother().ifPresent(mother -> mother.addPlayer(p));
+        this.health -= damage;
+        if (this.health <= 0) {
+            destroyVulnerability();
         }
-        if (health-- <= 0) {
-            finish();
+        if (src.getEntity() instanceof ServerPlayer p) {
+            this.getMother().ifPresent(mother -> mother.onVulnerabilityHit(p, this.health <= 0));
         }
     }
 
@@ -72,7 +68,6 @@ public class VulnerableRemainsBlockEntity extends BlockEntity {
     protected void saveAdditional(@NotNull CompoundTag tag) {
         super.saveAdditional(tag);
         tag.putInt("health", this.health);
-        tag.putInt("invulnerableTicks", this.invulnerableTicks);
         if (this.motherPos != null) {
             tag.putIntArray("motherPos", new int[]{this.motherPos.getX(), this.motherPos.getY(), this.motherPos.getZ()});
         }
@@ -82,7 +77,6 @@ public class VulnerableRemainsBlockEntity extends BlockEntity {
     public void load(@NotNull CompoundTag tag) {
         super.load(tag);
         this.health = tag.getInt("health");
-        this.invulnerableTicks = tag.getInt("invulnerableTicks");
         if (tag.contains("motherPos")) {
             int[] pos = tag.getIntArray("motherPos");
             this.motherPos = new BlockPos(pos[0], pos[1], pos[2]);
@@ -112,8 +106,9 @@ public class VulnerableRemainsBlockEntity extends BlockEntity {
     public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, VulnerableRemainsBlockEntity e) {
         if (e.firstTick) {
             e.firstTick = false;
-            e.getMother().ifPresent(MotherBlockEntity::updateFightStatus);
-            e.getMother().ifPresent(mother -> {
+            Optional<MotherBlockEntity> motherOpt = e.getMother();
+            motherOpt.ifPresent(MotherBlockEntity::updateFightStatus);
+            motherOpt.ifPresent(mother -> {
                 mother.updateFightStatus();
                 Entity e2 = e.checkDummyEntity();
                 //level.getNearbyPlayers(TargetingConditions.DEFAULT, e2, AABB.ofSize(blockPos.getCenter(), 5, 5, 5)).forEach(mother::addPlayer);

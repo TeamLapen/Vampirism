@@ -4,6 +4,9 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.blocks.BushBlock;
 import de.teamlapen.vampirism.blocks.*;
+import de.teamlapen.vampirism.blocks.mother.ActiveVulnerableRemainsBlock;
+import de.teamlapen.vampirism.blocks.mother.MotherBlock;
+import de.teamlapen.vampirism.blocks.mother.RemainsBlock;
 import de.teamlapen.vampirism.util.BlockVoxelshapes;
 import de.teamlapen.vampirism.world.gen.CursedSpruceTree;
 import de.teamlapen.vampirism.world.gen.DarkSpruceTreeGrower;
@@ -159,11 +162,11 @@ public class ModBlocks {
     public static final RegistryObject<CoffinBlock> COFFIN_RED = registerWithItem("coffin_red", () -> new CoffinBlock(DyeColor.RED));
     public static final RegistryObject<CoffinBlock> COFFIN_BLACK = registerWithItem("coffin_black", () -> new CoffinBlock(DyeColor.BLACK));
     public static final RegistryObject<AlchemyTableBlock> ALCHEMY_TABLE = registerWithItem("alchemy_table", AlchemyTableBlock::new);
-    public static final RegistryObject<RemainsBlock> REMAINS = registerWithItem("remains", () -> new RemainsBlock(BlockBehaviour.Properties.of(Material.DIRT, MaterialColor.TERRACOTTA_BROWN).strength(0.5F).sound(SoundType.ROOTED_DIRT), false));
-    public static final RegistryObject<RemainsBlock> VULNERABLE_REMAINS = registerWithItem("vulnerable_remains", () -> new RemainsBlock(BlockBehaviour.Properties.of(Material.DIRT, MaterialColor.TERRACOTTA_BROWN).strength(0.5F).sound(SoundType.ROOTED_DIRT), true));
-    public static final RegistryObject<RemainsBlock> INCAPACITATED_VULNERABLE_REMAINS = registerWithItem("incapacitated_vulnerable_remains", () -> new RemainsBlock(BlockBehaviour.Properties.of(Material.DIRT, MaterialColor.TERRACOTTA_BROWN).strength(0.5F).sound(SoundType.ROOTED_DIRT), false));
+    public static final RegistryObject<RemainsBlock> REMAINS = registerWithItem("remains", () -> new RemainsBlock(BlockBehaviour.Properties.of(Material.DIRT, MaterialColor.TERRACOTTA_BROWN).strength(0.5F, 3600000.0F).sound(SoundType.ROOTED_DIRT).randomTicks(), false, false));
+    public static final RegistryObject<RemainsBlock> VULNERABLE_REMAINS = registerWithItem("vulnerable_remains", () -> new RemainsBlock(BlockBehaviour.Properties.of(Material.DIRT, MaterialColor.TERRACOTTA_BROWN).strength(0.5F, 3600000.0F).sound(SoundType.ROOTED_DIRT).randomTicks(), true, true));
+    public static final RegistryObject<RemainsBlock> INCAPACITATED_VULNERABLE_REMAINS = registerWithItem("incapacitated_vulnerable_remains", () -> new RemainsBlock(BlockBehaviour.Properties.of(Material.DIRT, MaterialColor.TERRACOTTA_BROWN).strength(0.5F, 3600000.0F).sound(SoundType.ROOTED_DIRT).randomTicks(), false, true));
 
-    public static final RegistryObject<ActiveVulnerableRemainsBlock> ACTIVE_VULNERABLE_REMAINS = BLOCKS.register("active_vulnerable_remains", () -> new ActiveVulnerableRemainsBlock(BlockBehaviour.Properties.of(Material.DIRT, MaterialColor.TERRACOTTA_BROWN).strength(0.5F).sound(SoundType.ROOTED_DIRT)));
+    public static final RegistryObject<ActiveVulnerableRemainsBlock> ACTIVE_VULNERABLE_REMAINS = BLOCKS.register("active_vulnerable_remains", () -> new ActiveVulnerableRemainsBlock(BlockBehaviour.Properties.of(Material.DIRT, MaterialColor.TERRACOTTA_BROWN).strength(0.5F, 3600000.0F).sound(SoundType.ROOTED_DIRT)));
 
     public static final RegistryObject<HangingRootsBlock> CURSED_HANGING_ROOTS = registerWithItem("cursed_hanging_roots", () -> {
         var block = new HangingRootsBlock(BlockBehaviour.Properties.of(Material.REPLACEABLE_PLANT, MaterialColor.TERRACOTTA_BROWN).noCollission().instabreak().sound(SoundType.HANGING_ROOTS).offsetType(BlockBehaviour.OffsetType.XZ));

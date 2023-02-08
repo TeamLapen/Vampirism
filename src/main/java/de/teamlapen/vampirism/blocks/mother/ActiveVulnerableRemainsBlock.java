@@ -1,6 +1,7 @@
-package de.teamlapen.vampirism.blocks;
+package de.teamlapen.vampirism.blocks.mother;
 
 import de.teamlapen.vampirism.blockentity.VulnerableRemainsBlockEntity;
+import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModTiles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,10 +21,8 @@ import static de.teamlapen.vampirism.blocks.HorizontalContainerBlock.createTicke
 
 public class ActiveVulnerableRemainsBlock extends RemainsBlock implements EntityBlock {
 
-
-
     public ActiveVulnerableRemainsBlock(Properties properties) {
-        super(properties, true);
+        super(properties, true, true);
     }
 
     @Nullable
@@ -51,5 +50,10 @@ public class ActiveVulnerableRemainsBlock extends RemainsBlock implements Entity
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
         return level.isClientSide() ? null : createTickerHelper(type, ModTiles.VULNERABLE_CURSED_ROOTED_DIRT.get(), VulnerableRemainsBlockEntity::serverTick);
+    }
+
+    @Override
+    public void freeze(Level level, BlockPos pos, BlockState state) {
+        level.setBlock(pos, ModBlocks.VULNERABLE_REMAINS.get().defaultBlockState(), 3);
     }
 }

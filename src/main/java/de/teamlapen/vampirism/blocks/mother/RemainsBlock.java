@@ -1,34 +1,34 @@
-package de.teamlapen.vampirism.blocks;
+package de.teamlapen.vampirism.blocks.mother;
 
+import de.teamlapen.vampirism.blocks.connected.ConnectedBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModTags;
-import de.teamlapen.vampirism.core.ModVillage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.ai.village.poi.PoiManager;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
-public class RemainsBlock extends Block implements BonemealableBlock {
+public class RemainsBlock extends ConnectedBlock implements BonemealableBlock, IRemainsBlock {
 
     private final boolean vulnerable;
+    private final boolean isVulnerability;
+    private final RemainsConnector connector = new RemainsConnector();
 
-    public RemainsBlock(Properties properties, boolean vulnerable) {
+    public RemainsBlock(Properties properties, boolean vulnerable, boolean isVulnerability) {
         super(properties);
         this.vulnerable = vulnerable;
+        this.isVulnerability = isVulnerability;
     }
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader pLevel, BlockPos pPos, BlockState pState, boolean pIsClient) {
+    public boolean isValidBonemealTarget(LevelReader pLevel, BlockPos pPos, @NotNull BlockState pState, boolean pIsClient) {
         return pLevel.getBlockState(pPos.below()).isAir();
     }
 
@@ -37,8 +37,19 @@ public class RemainsBlock extends Block implements BonemealableBlock {
         return true;
     }
 
-    public boolean isVulnerable() {
-        return vulnerable;
+    @Override
+    public boolean isVulnerable(BlockState state) {
+        return this.vulnerable;
+    }
+
+    @Override
+    public boolean isMother(BlockState state) {
+        return false;
+    }
+
+    @Override
+    public boolean isVulnerability(BlockState state) {
+        return this.isVulnerability;
     }
 
     @Override
@@ -48,25 +59,25 @@ public class RemainsBlock extends Block implements BonemealableBlock {
 
     @Override
     public void tick(@NotNull BlockState state, @NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull RandomSource random) {
-        if(level.getPoiManager().find(p -> p.is(ModVillage.MOTHER.getKey()), a -> true, pos, 30, PoiManager.Occupancy.ANY).isEmpty() ) {
+        if (this.getConnector().getMotherEntity(level, pos).isEmpty()) {
             level.setBlockAndUpdate(pos, ModBlocks.CURSED_EARTH.get().defaultBlockState());
         }
-        if(this == ModBlocks.VULNERABLE_REMAINS.get()){
-            if(Arrays.stream(Direction.values()).allMatch(d -> level.getBlockState(pos.relative(d)).is(ModTags.Blocks.REMAINS))){
+        if (this == ModBlocks.VULNERABLE_REMAINS.get()) {
+            if (Arrays.stream(Direction.values()).allMatch(d -> level.getBlockState(pos.relative(d)).is(ModTags.Blocks.REMAINS))) {
                 level.setBlockAndUpdate(pos, ModBlocks.CURSED_EARTH.get().defaultBlockState());
             }
         }
     }
 
     @Override
-    public boolean isRandomlyTicking(BlockState pState) {
-        return true;
+    public RemainsConnector getConnector() {
+        return this.connector;
     }
 
     @Override
-    public void attack(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player) {
-        if (this == ModBlocks.VULNERABLE_REMAINS.get() && !level.isClientSide()) {
-            level.setBlockAndUpdate(pos, ModBlocks.ACTIVE_VULNERABLE_REMAINS.get().defaultBlockState());
+    public void unFreeze(Level level, BlockPos pos, BlockState state) {
+        if (this == ModBlocks.VULNERABLE_REMAINS.get()) {
+            level.setBlock(pos, ModBlocks.ACTIVE_VULNERABLE_REMAINS.get().defaultBlockState(), 3);
         }
     }
 }

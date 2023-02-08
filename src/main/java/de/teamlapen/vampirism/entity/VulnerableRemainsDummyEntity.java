@@ -9,6 +9,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 public class VulnerableRemainsDummyEntity extends Entity {
 
@@ -24,16 +25,16 @@ public class VulnerableRemainsDummyEntity extends Entity {
     }
 
     @Override
-    public Vec3 getDeltaMovement() {
+    public @NotNull Vec3 getDeltaMovement() {
         return Vec3.ZERO;
     }
 
     @Override
-    public void setDeltaMovement(Vec3 pMotion) {
+    public void setDeltaMovement(@NotNull Vec3 pMotion) {
     }
 
     @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
+    public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
         if (ownerPos != null) {
             if (level.getBlockEntity(ownerPos) instanceof VulnerableRemainsBlockEntity vr) {
                 vr.onDamageDealt(pSource, pAmount);
@@ -49,7 +50,7 @@ public class VulnerableRemainsDummyEntity extends Entity {
 
 
     @Override
-    public void push(Entity pEntity) {
+    public void push(@NotNull Entity pEntity) {
     }
 
     public void setOwnerLocation(BlockPos pos) {
@@ -64,7 +65,7 @@ public class VulnerableRemainsDummyEntity extends Entity {
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag pCompound) {
+    protected void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
 
     }
 
@@ -74,12 +75,12 @@ public class VulnerableRemainsDummyEntity extends Entity {
     }
 
     @Override
-    protected Entity.MovementEmission getMovementEmission() {
+    protected Entity.@NotNull MovementEmission getMovementEmission() {
         return Entity.MovementEmission.NONE;
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag pCompound) {
+    protected void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
 
     }
 }
