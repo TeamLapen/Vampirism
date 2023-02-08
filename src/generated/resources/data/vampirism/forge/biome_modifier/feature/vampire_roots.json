@@ -1,6 +1,0 @@
-{
-  "type": "forge:add_features",
-  "biomes": "#minecraft:is_overworld",
-  "features": "vampirism:cursed_roots",
-  "step": "vegetal_decoration"
-}

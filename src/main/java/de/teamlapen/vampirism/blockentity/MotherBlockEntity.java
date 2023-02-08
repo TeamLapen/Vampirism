@@ -1,6 +1,9 @@
 package de.teamlapen.vampirism.blockentity;
 
+import de.teamlapen.vampirism.blocks.DarkSpruceLogs;
+import de.teamlapen.vampirism.blocks.connected.ConnectedBlock;
 import de.teamlapen.vampirism.blocks.mother.IRemainsBlock;
+import de.teamlapen.vampirism.blocks.mother.MotherBlock;
 import de.teamlapen.vampirism.core.ModTiles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -26,6 +29,7 @@ public class MotherBlockEntity extends BlockEntity {
     private boolean canBeDestroyed = false;
     private boolean isFrozen = false;
     private int freezeTimer = 0;
+    private final ConnectedBlock.Connector<DarkSpruceLogs> connector = new ConnectedBlock.Connector<>(DarkSpruceLogs.class);
 
     public MotherBlockEntity(BlockPos pos, BlockState state) {
         super(ModTiles.MOTHER.get(), pos, state);
@@ -52,6 +56,8 @@ public class MotherBlockEntity extends BlockEntity {
     private void endFight() {
         this.bossEvent.removeAllPlayers();
         this.canBeDestroyed = true;
+        this.connector.foreachFacing(this.level, this.worldPosition, (level, pos, state) -> level.setBlock(pos, state.setValue(DarkSpruceLogs.INVULNERABLE, false), 3));
+        this.setChanged();
     }
 
     @Override
@@ -104,14 +110,18 @@ public class MotherBlockEntity extends BlockEntity {
 
     private void freezeFight() {
         this.isFrozen = true;
-        ((IRemainsBlock) getBlockState().getBlock()).getConnector().foreach(this.level, this.worldPosition, (level, pos, state) -> ((IRemainsBlock) state.getBlock()).freeze(level, pos, state));
+        ((MotherBlock) getBlockState().getBlock()).getConnector().foreach(this.level, this.worldPosition, (level, pos, state) -> ((IRemainsBlock) state.getBlock()).freeze(level, pos, state));
         this.bossEvent.setColor(BossEvent.BossBarColor.WHITE);
     }
 
     private void unFreezeFight(Level level, BlockPos blockPos, BlockState blockState) {
         this.isFrozen = false;
         this.freezeTimer = 20 * 10;
-        ((IRemainsBlock) getBlockState().getBlock()).getConnector().foreach(level, blockPos, (level1, pos, state) -> ((IRemainsBlock) state.getBlock()).unFreeze(level1, pos, state));
+        ((MotherBlock) getBlockState().getBlock()).getConnector().foreach(level, blockPos, (level1, pos, state) -> ((IRemainsBlock) state.getBlock()).unFreeze(level1, pos, state));
         this.bossEvent.setColor(BossEvent.BossBarColor.RED);
+    }
+
+    public void informAboutAttacker(ServerPlayer serverPlayer) {
+        addPlayer(serverPlayer);
     }
 }

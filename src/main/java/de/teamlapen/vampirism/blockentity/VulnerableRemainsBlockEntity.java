@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.blockentity;
 
-import de.teamlapen.vampirism.blocks.mother.IRemainsBlock;
+import de.teamlapen.vampirism.blocks.mother.ActiveVulnerableRemainsBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModTiles;
@@ -31,7 +31,7 @@ public class VulnerableRemainsBlockEntity extends BlockEntity {
 
     private Optional<MotherBlockEntity> getMother() {
         if (motherPos == null) {
-            ((IRemainsBlock) getBlockState().getBlock()).getConnector().getMother(this.level, this.worldPosition).ifPresentOrElse(pos -> {
+            ((ActiveVulnerableRemainsBlock) getBlockState().getBlock()).getConnector().getMother(this.level, this.worldPosition).ifPresentOrElse(pos -> {
                 motherPos = pos.getKey();
             }, () -> {
                 this.level.setBlockAndUpdate(this.worldPosition, ModBlocks.REMAINS.get().defaultBlockState());

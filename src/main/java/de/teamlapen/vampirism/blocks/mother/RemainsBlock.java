@@ -6,7 +6,9 @@ import de.teamlapen.vampirism.core.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BonemealableBlock;
@@ -66,6 +68,13 @@ public class RemainsBlock extends ConnectedBlock implements BonemealableBlock, I
             if (Arrays.stream(Direction.values()).allMatch(d -> level.getBlockState(pos.relative(d)).is(ModTags.Blocks.REMAINS))) {
                 level.setBlockAndUpdate(pos, ModBlocks.CURSED_EARTH.get().defaultBlockState());
             }
+        }
+    }
+
+    @Override
+    public void attack(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player) {
+        if (player instanceof ServerPlayer serverPlayer) {
+            getConnector().getMotherEntity(level, pos).ifPresent(a -> a.informAboutAttacker(serverPlayer));
         }
     }
 

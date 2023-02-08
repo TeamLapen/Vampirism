@@ -11,7 +11,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public class RemainsConnector extends ConnectedBlock.Connector {
+public class RemainsConnector extends ConnectedBlock.Connector<IRemainsBlock> {
 
     public RemainsConnector() {
         super(IRemainsBlock.class);

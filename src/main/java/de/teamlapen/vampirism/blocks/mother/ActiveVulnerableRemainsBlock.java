@@ -4,8 +4,6 @@ import de.teamlapen.vampirism.blockentity.VulnerableRemainsBlockEntity;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModTiles;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -37,13 +35,6 @@ public class ActiveVulnerableRemainsBlock extends RemainsBlock implements Entity
             return Optional.of((VulnerableRemainsBlockEntity) blockEntity);
         }
         return Optional.empty();
-    }
-
-    @Override
-    public void attack(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player) {
-        if (player instanceof ServerPlayer serverPlayer) {
-            getBlockEntity(level, pos).ifPresent(entity -> entity.attacked(state, serverPlayer));
-        }
     }
 
     @Nullable

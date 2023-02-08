@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public abstract class ConnectedBlock extends Block implements IConnectedBlock {
+public abstract class ConnectedBlock<T extends IConnectedBlock> extends Block implements IConnectedBlock {
 
 
     public ConnectedBlock(Properties pProperties) {
@@ -23,15 +23,15 @@ public abstract class ConnectedBlock extends Block implements IConnectedBlock {
     }
 
     @Override
-    public abstract Connector getConnector();
+    public abstract Connector<T> getConnector();
 
 
-    public static class Connector implements IConnectedBlock.IConnector {
+    public static class Connector<T> implements IConnectedBlock.IConnector {
 
         @NotNull
-        private final Class<? extends IConnectedBlock> connectedBlock;
+        private final Class<T> connectedBlock;
 
-        public Connector(@NotNull Class<? extends IConnectedBlock> connectedBlock) {
+        public Connector(@NotNull Class<T> connectedBlock) {
 
             this.connectedBlock = connectedBlock;
         }
@@ -54,6 +54,11 @@ public abstract class ConnectedBlock extends Block implements IConnectedBlock {
         @Override
         public void foreach(Level level, BlockPos pos, TriConsumer<Level, BlockPos, BlockState> consumer) {
             innerForEach(level, pos, new HashSet<>(), consumer);
+        }
+
+        public void foreachFacing(Level level, BlockPos pos, TriConsumer<Level, BlockPos, BlockState> consumer) {
+            HashSet<BlockPos> objects = new HashSet<>();
+            Direction.stream().map(pos::relative).forEach(newPos -> this.innerForEach(level, newPos, objects, consumer));
         }
 
         private Stream<BlockState> innerCollect(Level level, BlockPos pos, Set<BlockPos> collected, Predicate<BlockState> predicate) {

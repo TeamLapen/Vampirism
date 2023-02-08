@@ -23,7 +23,7 @@ import java.util.Optional;
 
 import static de.teamlapen.vampirism.blocks.HorizontalContainerBlock.createTickerHelper;
 
-public class MotherBlock extends ConnectedBlock implements EntityBlock, IRemainsBlock {
+public class MotherBlock extends ConnectedBlock<IRemainsBlock> implements EntityBlock, IRemainsBlock {
 
     private final RemainsConnector connector = new RemainsConnector();
 
