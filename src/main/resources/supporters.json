@@ -53,6 +53,13 @@
       "name": "Sinister Solace",
       "texture": "S_olace",
       "type": 15,
+      "status": 2,
+      "bookId": "S_olace"
+    },
+    {
+      "name": "Valorous Vol",
+      "texture": "Volqonah",
+      "type": 16,
       "status": 2
     }
   ],
@@ -101,8 +108,20 @@
       "status": 2
     },
     {
-      "name": "Teri the Brave",
+      "name": "Imperial Teri",
       "texture": "teri_berry",
+      "type": 1,
+      "status": 2
+    },
+    {
+      "name": "Luminous Luna",
+      "texture": "Lunarifish",
+      "type": 1,
+      "status": 2
+    },
+    {
+      "name": "Commander Sam",
+      "texture": "LilCatGod",
       "type": 1,
       "status": 2
     }
