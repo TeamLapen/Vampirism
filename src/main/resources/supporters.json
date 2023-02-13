@@ -53,7 +53,8 @@
       "name": "Sinister Solace",
       "texture": "S_olace",
       "type": 15,
-      "status": 2
+      "status": 2,
+      "bookId": "S_olace"
     },
     {
       "name": "Valorous Vol",
