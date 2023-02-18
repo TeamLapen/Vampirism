@@ -428,6 +428,7 @@ public class LootTablesGenerator {//TODO 1.20 move to de.teamlapen.vampirism.dat
                                     .add(applyExplosionCondition(ModItems.PURE_BLOOD_4.get(), LootItem.lootTableItem(ModItems.PURE_BLOOD_4.get()).setQuality(2)))
                                     .add(applyExplosionCondition(ModItems.VAMPIRE_BLOOD_BOTTLE.get(), LootItem.lootTableItem(ModItems.VAMPIRE_BLOOD_BOTTLE.get()).setQuality(10)))));
             this.dropSelf(ModBlocks.MOTHER_TROPHY.get());
+            this.dropSelf(ModBlocks.FOG_DIFFUSER.get());
         }
 
         @NotNull

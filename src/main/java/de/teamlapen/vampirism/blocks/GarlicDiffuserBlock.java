@@ -50,7 +50,7 @@ public class GarlicDiffuserBlock extends VampirismBlockContainer {
     private final Type type;
 
     public GarlicDiffuserBlock(Type type) {
-        super(Properties.of().mapColor(MapColor.STONE).strength(3f).sound(SoundType.STONE).noOcclusion());
+        super(Properties.of().mapColor(MapColor.STONE).strength(40.0F, 1200.0F).sound(SoundType.STONE).noOcclusion());
         this.type = type;
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
     }

@@ -1,0 +1,4 @@
+{
+  "parent": "vampirism:block/fog_diffuser",
+  "render_type": "minecraft:cutout"
+}

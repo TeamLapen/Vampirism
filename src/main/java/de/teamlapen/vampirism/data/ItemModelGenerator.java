@@ -330,6 +330,7 @@ public class ItemModelGenerator extends BaseItemModelGenerator {//TODO 1.20 move
         withExistingParent(ModBlocks.COBBLED_DARK_STONE_WALL.get(), mcLoc("block/wall_inventory")).texture("wall", modLoc("block/cobbled_dark_stone"));
         withExistingParent(ModBlocks.POLISHED_DARK_STONE_WALL.get(), mcLoc("block/wall_inventory")).texture("wall", modLoc("block/polished_dark_stone"));
         withExistingParent(ModBlocks.INFESTED_DARK_STONE.get(), modLoc("block/dark_stone"));
+        block(ModBlocks.FOG_DIFFUSER.get(), "fog_diffuser");
     }
 
 }

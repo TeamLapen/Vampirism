@@ -282,6 +282,7 @@ public class BlockStateGenerator extends BlockStateProvider {//TODO 1.20 move to
         simpleBlock(ModBlocks.CURSED_HANGING_ROOTS.get(), models().cross("cursed_hanging_roots", modLoc("block/cursed_hanging_roots")));
         simpleBlock(ModBlocks.MOTHER.get(), models().cubeAll("mother", modLoc("block/mother")));
         simpleBlock(ModBlocks.MOTHER_TROPHY.get(), models().getExistingFile(modLoc("block/mother_trophy")));
+        simpleBlock(ModBlocks.FOG_DIFFUSER.get(), models().withExistingParent("fog_diffuser_normal", modLoc("block/fog_diffuser")).renderType(cutout));
     }
 
     private void createWoodStates() {

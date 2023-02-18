@@ -138,6 +138,7 @@ public class VampirismCreativeTab {
             addBlock(GARLIC_DIFFUSER_NORMAL);
             addBlock(GARLIC_DIFFUSER_WEAK);
             addBlock(GARLIC_DIFFUSER_IMPROVED);
+            addBlock(FOG_DIFFUSER);
             addBlock(HUNTER_TABLE);
             addBlock(SUNSCREEN_BEACON);
             addBlock(TOTEM_BASE);
