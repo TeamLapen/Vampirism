@@ -97,6 +97,8 @@ public class RecipesGenerator extends VanillaRecipeProvider {//TODO 1.20 move to
         ItemLike obi_belt = ModItems.OBI_BELT.get();
         ItemLike blood_container = ModBlocks.BLOOD_CONTAINER.get();
         ItemLike basalt = Blocks.BASALT;
+        ItemLike mother_core = ModItems.MOTHER_CORE.get();
+        ItemLike cursed_spruce_planks = ModBlocks.CURSED_SPRUCE_PLANKS.get();
         TagKey<Item> planks = ItemTags.PLANKS;
         TagKey<Item> glass = Tags.Items.GLASS;
         TagKey<Item> glass_pane = Tags.Items.GLASS_PANES;
@@ -431,6 +433,7 @@ public class RecipesGenerator extends VanillaRecipeProvider {//TODO 1.20 move to
         SimpleCookingRecipeBuilder.smelting(Ingredient.of(ModBlocks.COBBLED_DARK_STONE.get()), RecipeCategory.BUILDING_BLOCKS, ModBlocks.DARK_STONE.get(),0.1f, 200).unlockedBy("has_cobbled_dark_stone", has(ModBlocks.COBBLED_DARK_STONE.get())).save(consumer, new ResourceLocation(REFERENCE.MODID, "dark_stone_from_cobbled_dark_stone_smelting"));
         SimpleCookingRecipeBuilder.blasting(Ingredient.of(ModBlocks.COBBLED_DARK_STONE.get()), RecipeCategory.BUILDING_BLOCKS, ModBlocks.DARK_STONE.get(),0.1f, 100).unlockedBy("has_cobbled_dark_stone", has(ModBlocks.COBBLED_DARK_STONE.get())).save(consumer, new ResourceLocation(REFERENCE.MODID, "dark_stone_from_cobbled_dark_stone_blasting"));
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.BAT_CAGE.get()).pattern("GGG").pattern("GPG").pattern("PPP").define('G', gold_ingot).define('P', planks).unlockedBy("has_gold", has(gold_ingot)).unlockedBy("has_planks", has(planks)).save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.FOG_DIFFUSER.get()).pattern("XYX").pattern("YZY").pattern("OOO").define('X', cursed_spruce_planks).define('Y', diamond).define('O', obsidian).define('Z', mother_core).unlockedBy("has_diamond", has(diamond)).unlockedBy("has_cursed_plank", has(cursed_spruce_planks)).unlockedBy("has_mother_core", has(mother_core)).save(consumer, vampire("fog_diffuser"));
     }
 
     private @NotNull JsonObject enchantment(int level, Enchantment enchantment) {

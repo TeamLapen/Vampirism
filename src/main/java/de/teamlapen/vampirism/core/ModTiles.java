@@ -40,6 +40,7 @@ public class ModTiles {
     public static final RegistryObject<BlockEntityType<MotherBlockEntity>> MOTHER = BLOCK_ENTITY_TYPES.register("mother", () -> create(MotherBlockEntity::new, ModBlocks.MOTHER.get()));
     public static final RegistryObject<BlockEntityType<VulnerableRemainsBlockEntity>> VULNERABLE_CURSED_ROOTED_DIRT = BLOCK_ENTITY_TYPES.register("vulnerable_cursed_rooted_dirt", () -> create(VulnerableRemainsBlockEntity::new, ModBlocks.ACTIVE_VULNERABLE_REMAINS.get()));
     public static final RegistryObject<BlockEntityType<MotherTrophyBlockEntity>> MOTHER_TROPHY = BLOCK_ENTITY_TYPES.register("mother_trophy", () -> create(MotherTrophyBlockEntity::new, ModBlocks.MOTHER_TROPHY.get()));
+    public static final RegistryObject<BlockEntityType<FogDiffuserBlockEntity>> FOG_DIFFUSER = BLOCK_ENTITY_TYPES.register("fog_diffuser", () -> create(FogDiffuserBlockEntity::new, ModBlocks.FOG_DIFFUSER.get()));
 
     static void register(IEventBus bus) {
         BLOCK_ENTITY_TYPES.register(bus);

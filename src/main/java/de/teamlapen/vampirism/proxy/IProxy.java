@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.proxy;
 
 import de.teamlapen.lib.lib.util.IInitListener;
+import de.teamlapen.vampirism.blockentity.FogDiffuserBlockEntity;
 import de.teamlapen.vampirism.blockentity.GarlicDiffuserBlockEntity;
 import de.teamlapen.vampirism.entity.player.skills.SkillTree;
 import de.teamlapen.vampirism.network.*;
@@ -25,6 +26,9 @@ import java.util.*;
 public interface IProxy extends IInitListener {
 
     default void displayGarlicBeaconScreen(GarlicDiffuserBlockEntity tile, Component title) {
+    }
+
+    default void displayFogDiffuserScreen(FogDiffuserBlockEntity tile, Component title) {
     }
 
     default void displayNameSwordScreen(ItemStack stack) {

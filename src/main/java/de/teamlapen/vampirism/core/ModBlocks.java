@@ -188,6 +188,7 @@ public class ModBlocks {
     });
     public static final RegistryObject<MotherBlock> MOTHER = BLOCKS.register("mother", MotherBlock::new);
     public static final RegistryObject<Block> MOTHER_TROPHY = registerWithItem("mother_trophy", () -> new MotherTrophyBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3, 9).lightLevel(s -> 1).noOcclusion()), block -> new MotherTrophyItem(block, new Item.Properties().rarity(Rarity.EPIC).stacksTo(1)));
+    public static final RegistryObject<FogDiffuserBlock> FOG_DIFFUSER = registerWithItem("fog_diffuser", () -> new FogDiffuserBlock(BlockBehaviour.Properties.of().noOcclusion().mapColor(MapColor.STONE).strength(40.0F, 1200.0F).sound(SoundType.STONE)));
 
 
     /**

@@ -90,6 +90,7 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
                     .add(ModBlocks.GARLIC_DIFFUSER_WEAK.get())
                     .add(ModBlocks.GARLIC_DIFFUSER_NORMAL.get())
                     .add(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get())
+                    .add(ModBlocks.FOG_DIFFUSER.get())
                     .add(ModBlocks.CHANDELIER.get())
                     .add(ModBlocks.CANDELABRA.get())
                     .add(ModBlocks.CANDELABRA_WALL.get())
@@ -151,6 +152,7 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
                     .add(ModBlocks.GARLIC_DIFFUSER_WEAK.get())
                     .add(ModBlocks.GARLIC_DIFFUSER_NORMAL.get())
                     .add(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get())
+                    .add(ModBlocks.FOG_DIFFUSER.get())
                     .addTag(ModTags.Blocks.TOTEM_TOP_CRAFTED)
             ;
 
