@@ -23,7 +23,6 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.*;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.shapes.IBooleanFunction;
@@ -177,7 +176,7 @@ public class UtilLib {
      */
     public static @Nonnull
     Vector3d getItemPosition(LivingEntity entity, boolean mainHand) {
-        boolean left = (mainHand ? entity.getMainArm() : entity.getMainArm().getOpposite()) == HandSide.LEFT;
+        boolean left = (mainHand ? entity.getMainArm() : getOppositeHand(entity.getMainArm())) == HandSide.LEFT;
         boolean firstPerson = entity instanceof PlayerEntity && ((PlayerEntity) entity).isLocalPlayer() && Minecraft.getInstance().options.getCameraType().isFirstPerson();
         Vector3d dir = firstPerson ? entity.getForward() : Vector3d.directionFromRotation(new Vector2f(entity.xRot, entity.yBodyRot));
         dir = dir.yRot((float) (Math.PI / 5f) * (left ? 1f : -1f)).scale(0.75f);
@@ -864,5 +863,9 @@ public class UtilLib {
         }
 
         return i;
+    }
+
+    public static HandSide getOppositeHand(HandSide side) {
+        return side == HandSide.LEFT ? HandSide.RIGHT : HandSide.LEFT;
     }
 }
