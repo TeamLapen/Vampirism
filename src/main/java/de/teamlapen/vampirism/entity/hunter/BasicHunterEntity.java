@@ -24,6 +24,7 @@ import de.teamlapen.vampirism.entity.goals.ForceLookEntityGoal;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
+import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.inventory.container.HunterBasicContainer;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
@@ -193,7 +194,8 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                 MinionWorldData.getData(lord.level).map(w -> w.getOrCreateController(fph)).ifPresent(controller -> {
                     if (controller.hasFreeMinionSlot()) {
                         if (fph.getCurrentFaction() == this.getFaction()) {
-                            HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData("Minion", this.getEntityTextureType(), this.getEntityTextureType() % 4, false);
+                            boolean hasIncreasedStats = fph.getCurrentFactionPlayer().map(s -> s.getSkillHandler().isSkillEnabled(HunterSkills.HUNTER_MINION_STATS_INCREASE.get())).orElse(false);
+                            HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData("Minion", this.getEntityTextureType(), this.getEntityTextureType() % 4, false, hasIncreasedStats);
                             int id = controller.createNewMinionSlot(data, ModEntities.HUNTER_MINION.get());
                             if (id < 0) {
                                 LOGGER.error("Failed to get minion slot");

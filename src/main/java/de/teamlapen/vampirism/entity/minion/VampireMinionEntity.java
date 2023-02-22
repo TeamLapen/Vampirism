@@ -273,12 +273,13 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
 
         private boolean hasIncreasedStats;
 
-        public VampireMinionData(String name, int type, boolean useLordSkin) {
+        public VampireMinionData(String name, int type, boolean useLordSkin, boolean hasIncreasedStats) {
             super(name, 9);
             this.type = type;
             this.useLordSkin = useLordSkin;
             this.level = 0;
             this.minionSkin = false;
+            this.hasIncreasedStats = hasIncreasedStats;
         }
 
         private VampireMinionData() {

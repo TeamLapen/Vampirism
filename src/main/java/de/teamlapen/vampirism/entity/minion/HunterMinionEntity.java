@@ -280,13 +280,14 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
 
         private boolean hasIncreasedStats;
 
-        public HunterMinionData(String name, int type, int hat, boolean useLordSkin) {
+        public HunterMinionData(String name, int type, int hat, boolean useLordSkin, boolean hasIncreasedStats) {
             super(name, 9);
             this.type = type;
             this.hat = hat;
             this.useLordSkin = useLordSkin;
             this.level = 0;
             this.minionSkin = false;
+            this.hasIncreasedStats = hasIncreasedStats;
         }
 
         private HunterMinionData() {

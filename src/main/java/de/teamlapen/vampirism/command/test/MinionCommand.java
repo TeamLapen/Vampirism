@@ -10,6 +10,7 @@ import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -18,6 +19,10 @@ import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
+import de.teamlapen.vampirism.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
@@ -56,12 +61,14 @@ public class MinionCommand extends BasicCommand {
 
 
     private static int spawnNewVampireMinion(CommandSource ctx, String name, int type, boolean useLordSkin) throws CommandSyntaxException {
-        VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData(name, type, useLordSkin);
+        boolean hasIncreasedStats = VampirePlayer.getOpt(ctx.getPlayerOrException()).map(IFactionPlayer::getSkillHandler).map(skillHandler -> skillHandler.isSkillEnabled(VampireSkills.VAMPIRE_MINION_STATS_INCREASE.get())).orElse(false);
+        VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData(name, type, useLordSkin, hasIncreasedStats);
         return spawnNewMinion(ctx, VReference.VAMPIRE_FACTION, data, ModEntities.VAMPIRE_MINION.get());
     }
 
     private static int spawnNewHunterMinion(CommandSource ctx, String name, int type, int hat, boolean useLordSkin) throws CommandSyntaxException {
-        HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData(name, type, hat, useLordSkin);
+        boolean hasIncreasedStats = HunterPlayer.getOpt(ctx.getPlayerOrException()).map(IFactionPlayer::getSkillHandler).map(skillHandler -> skillHandler.isSkillEnabled(HunterSkills.HUNTER_MINION_STATS_INCREASE.get())).orElse(false);
+        HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData(name, type, hat, useLordSkin, hasIncreasedStats);
         return spawnNewMinion(ctx, VReference.HUNTER_FACTION, data, ModEntities.HUNTER_MINION.get());
     }
 
