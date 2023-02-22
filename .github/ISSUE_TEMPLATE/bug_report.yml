@@ -19,7 +19,8 @@ body:
         - 1.16.x
         - 1.17.x
         - 1.18.x
-        - 1.19.x
+        - 1.19.2
+        - 1.19.3+
     validations:
       required: true
   - type: input
