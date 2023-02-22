@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.IEntityLeader;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
 import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
@@ -23,6 +24,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
+import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.util.VampireVillage;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.nbt.CompoundTag;
@@ -161,7 +163,8 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                 MinionWorldData.getData(lord.level).map(w -> w.getOrCreateController(fph)).ifPresent(controller -> {
                     if (controller.hasFreeMinionSlot()) {
                         if (fph.getCurrentFaction() == this.getFaction()) {
-                            VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData("Minion", this.getEntityTextureType(), false);
+                            boolean hasIncreasedStats = fph.getCurrentFactionPlayer().map(IFactionPlayer::getSkillHandler).map(skillHandler -> skillHandler.isSkillEnabled(VampireSkills.MINION_STATS_INCREASE.get())).orElse(false);
+                            VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData("Minion", this.getEntityTextureType(), false, hasIncreasedStats);
                             data.updateEntityCaps(this.serializeCaps());
                             int id = controller.createNewMinionSlot(data, ModEntities.VAMPIRE_MINION.get());
                             if (id < 0) {

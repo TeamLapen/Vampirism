@@ -7,9 +7,7 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
-import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.client.gui.screens.VampireMinionAppearanceScreen;
 import de.teamlapen.vampirism.client.gui.screens.VampireMinionStatsScreen;
@@ -21,7 +19,6 @@ import de.teamlapen.vampirism.entity.ai.goals.FleeSunVampireGoal;
 import de.teamlapen.vampirism.entity.ai.goals.RestrictSunVampireGoal;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
-import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.entity.vampire.BasicVampireEntity;
 import de.teamlapen.vampirism.items.BloodBottleItem;
 import de.teamlapen.vampirism.items.MinionUpgradeItem;
@@ -271,12 +268,13 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
 
         private boolean hasIncreasedStats;
 
-        public VampireMinionData(String name, int type, boolean useLordSkin) {
+        public VampireMinionData(String name, int type, boolean useLordSkin, boolean hasIncreasedStats) {
             super(name, 9);
             this.type = type;
             this.useLordSkin = useLordSkin;
             this.level = 0;
             this.minionSkin = false;
+            this.hasIncreasedStats = hasIncreasedStats;
         }
 
         private VampireMinionData() {
