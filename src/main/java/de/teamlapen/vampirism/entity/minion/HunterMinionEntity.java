@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
-import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.hunter.IVampirismCrossbowUser;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
@@ -51,7 +50,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.annotation.Inherited;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -273,13 +271,14 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
 
         private boolean hasIncreasedStats;
 
-        public HunterMinionData(String name, int type, int hat, boolean useLordSkin) {
+        public HunterMinionData(String name, int type, int hat, boolean useLordSkin, boolean hasIncreasedStats) {
             super(name, 9);
             this.type = type;
             this.hat = hat;
             this.useLordSkin = useLordSkin;
             this.level = 0;
             this.minionSkin = false;
+            this.hasIncreasedStats = hasIncreasedStats;
         }
 
         public HunterMinionData() {
