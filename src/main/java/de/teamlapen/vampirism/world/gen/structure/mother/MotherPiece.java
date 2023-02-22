@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 public class MotherPiece extends ScatteredFeaturePiece {
 
     public MotherPiece(RandomSource random, int x, int z) {
-        super(VampirismFeatures.MOTHER.get(), x, 64, z, 8, 8, 8, Direction.Plane.HORIZONTAL.getRandomDirection(random));
+        super(VampirismFeatures.MOTHER.get(), x, 64, z, 15, 11, 17, Direction.Plane.HORIZONTAL.getRandomDirection(random));
     }
 
     public MotherPiece(CompoundTag tag) {
@@ -34,7 +34,7 @@ public class MotherPiece extends ScatteredFeaturePiece {
 
     @Override
     public void postProcess(@NotNull WorldGenLevel level, @NotNull StructureManager structureManager, @NotNull ChunkGenerator chunkGenerator, @NotNull RandomSource random, @NotNull BoundingBox box, @NotNull ChunkPos chunkPos, @NotNull BlockPos blockPos) {
-        if (updateAverageGroundHeight(level, box, -5)) {
+        if (updateAverageGroundHeight(level, box, -7)) {
             placeLogs(level, box);
             placeMother(level, box);
             placeRoots(level, box, random);
@@ -42,26 +42,26 @@ public class MotherPiece extends ScatteredFeaturePiece {
     }
 
     protected void placeLogs(WorldGenLevel level, BoundingBox box) {
-        for (int i = 0; i < 6; i++) {
+        for (int i = 5; i < 11; i++) {
             generateLogSlate(level, box, i);
         }
         BlockState log = ModBlocks.DARK_SPRUCE_LOG.get().defaultBlockState().setValue(DarkSpruceLogs.INVULNERABLE, true);
-        generateBox(level, box, 2, 6, 0, 4, 6, 0, log, log, false);
-        generateBox(level, box, 1, 6, 1, 2, 6, 1, log, log, false);
+        generateBox(level, box, 2, 11, 0, 4, 11, 0, log, log, false);
+        generateBox(level, box, 1, 11, 1, 2, 11, 1, log, log, false);
         placeAir(level, box);
     }
 
     protected void placeAir(WorldGenLevel level, BoundingBox box) {
         BlockState air = Blocks.AIR.defaultBlockState();
-        generateBox(level, box, 2, 5, 2, 5, 5, 2, air, air, false);
-        generateBox(level, box, 1, 5, 3, 6, 5, 4, air, air, false);
-        generateBox(level, box, 2, 5, 5, 6, 5, 5, air, air, false);
-        generateBox(level, box, 3, 5, 6, 5, 5, 6, air, air, false);
+        generateBox(level, box, 2, 10, 2, 5, 10, 2, air, air, false);
+        generateBox(level, box, 1, 10, 3, 6, 10, 4, air, air, false);
+        generateBox(level, box, 2, 10, 5, 6, 10, 5, air, air, false);
+        generateBox(level, box, 3, 10, 6, 5, 10, 6, air, air, false);
 
-        generateBox(level, box, 3, 4, 3, 5, 4, 5, air, air, false);
-        generateBox(level, box, 2, 4, 4, 2, 4, 4, air, air, false);
+        generateBox(level, box, 3, 9, 3, 5, 9, 5, air, air, false);
+        generateBox(level, box, 2, 9, 4, 2, 9, 4, air, air, false);
 
-        generateBox(level, box, 3, 3, 4, 4, 3, 4, air, air, false);
+        generateBox(level, box, 3, 8, 4, 4, 8, 4, air, air, false);
     }
 
     protected void generateLogSlate(WorldGenLevel level, BoundingBox box, int yHeight) {
@@ -76,24 +76,24 @@ public class MotherPiece extends ScatteredFeaturePiece {
     protected void placeMother(@NotNull WorldGenLevel level, @NotNull BoundingBox box) {
         BlockState mother = ModBlocks.MOTHER.get().defaultBlockState();
         BlockState remains = ModBlocks.REMAINS.get().defaultBlockState();
-        placeBlock(level, mother, 3, 1, 3, box);
-        generateBox(level, box, 3, 0, 3, 4, 0, 4, remains, remains, false);
+        placeBlock(level, mother, 3, 6, 3, box);
+        generateBox(level, box, 3, 5, 3, 4, 5, 4, remains, remains, false);
     }
 
     protected void placeRoots(@NotNull WorldGenLevel level, @NotNull BoundingBox box, @NotNull RandomSource random) {
         BlockState remains = ModBlocks.REMAINS.get().defaultBlockState();
         BlockState active = ModBlocks.ACTIVE_VULNERABLE_REMAINS.get().defaultBlockState();
-        generateBox(level, box, 2, -1, 2, 5, -1, 5, remains, remains, false);
-        generateBox(level, box, 1, -1, 3, 1, -1, 4, remains, remains, false);
+        generateBox(level, box, 2, 4, 2, 5, 4, 5, remains, remains, false);
+        generateBox(level, box, 1, 4, 3, 1, 4, 4, remains, remains, false);
 
-        generateBox(level, box, 2, -2, 1, 2, -2, 1, remains, remains, false);
-        generateBox(level, box, 2, -2, 2, 4, -2, 5, remains, remains, false);
-        placeBlock(level, remains, 5, -2, 2, box);
-        generateBox(level, box, 5, -2, 4, 6, -2, 4, remains, remains, false);
-        generateBox(level, box, 1, -2, 3, -1, -2, 3, remains, remains, false);
-        placeBlock(level, remains, 1, -2, 5, box);
-        generateBox(level, box, 1, -2, 6, 3, -2, 6, remains, remains, false);
-        int y = -3 - 2;
+        generateBox(level, box, 2, 3, 1, 2, 3, 1, remains, remains, false);
+        generateBox(level, box, 2, 3, 2, 4, 3, 5, remains, remains, false);
+        placeBlock(level, remains, 5, 3, 2, box);
+        generateBox(level, box, 5, 3, 4, 6, 3, 4, remains, remains, false);
+        generateBox(level, box, 1, 3, 3, -1, 3, 3, remains, remains, false);
+        placeBlock(level, remains, 1, 3, 5, box);
+        generateBox(level, box, 1, 3, 6, 3, 3, 6, remains, remains, false);
+        int y = 0;
         int x = -5;
         int z = -7;
         placeBlock(level, remains, x + 0, y + 0, z + 14, box);
