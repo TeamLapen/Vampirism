@@ -22,6 +22,7 @@ import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -61,7 +62,7 @@ public class MinionCommand extends BasicCommand {
 
 
     private static int spawnNewVampireMinion(@NotNull CommandSourceStack ctx, String name, int type, boolean useLordSkin) throws CommandSyntaxException {
-        boolean hasIncreasedStats = VampirePlayer.getOpt(ctx.getPlayerOrException()).map(IFactionPlayer::getSkillHandler).map(skillHandler -> skillHandler.isSkillEnabled(HunterSkills.MINION_STATS_INCREASE.get())).orElse(false);
+        boolean hasIncreasedStats = VampirePlayer.getOpt(ctx.getPlayerOrException()).map(IFactionPlayer::getSkillHandler).map(skillHandler -> skillHandler.isSkillEnabled(VampireSkills.MINION_STATS_INCREASE.get())).orElse(false);
         VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData(name, type, useLordSkin, hasIncreasedStats);
         return spawnNewMinion(ctx, VReference.VAMPIRE_FACTION, data, ModEntities.VAMPIRE_MINION.get());
     }
