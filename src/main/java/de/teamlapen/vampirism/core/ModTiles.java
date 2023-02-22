@@ -43,7 +43,9 @@ public class ModTiles {
     public static void registerTileExtensionsUnsafe() {
         Set<Block> blocks = new HashSet<>(((TileEntityTypeAccessor) TileEntityType.SIGN).getValidBlocks());
         blocks.add(ModBlocks.DARK_SPRUCE_SIGN.get());
+        blocks.add(ModBlocks.DARK_SPRUCE_WALL_SIGN.get());
         blocks.add(ModBlocks.CURSED_SPRUCE_SIGN.get());
+        blocks.add(ModBlocks.CURSED_SPRUCE_WALL_SIGN.get());
         ((TileEntityTypeAccessor) TileEntityType.SIGN).setValidBlocks(blocks);
     }
 
