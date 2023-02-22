@@ -14,8 +14,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class LogBlock extends RotatedPillarBlock {
 
-    public static final WoodType dark_spruce = WoodType.register(WoodType.create(REFERENCE.MODID + ":dark_spruce"));
-    public static final WoodType cursed_spruce = WoodType.register(WoodType.create(REFERENCE.MODID + ":cursed_spruce"));
+    public static final WoodType DARK_SPRUCE = WoodType.register(WoodType.create(REFERENCE.MODID + ":dark_spruce"));
+    public static final WoodType CURSED_SPRUCE = WoodType.register(WoodType.create(REFERENCE.MODID + ":cursed_spruce"));
 
     public LogBlock(BlockBehaviour.@NotNull Properties properties) {
         super(properties);

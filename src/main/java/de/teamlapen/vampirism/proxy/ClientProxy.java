@@ -196,8 +196,8 @@ public class ClientProxy extends CommonProxy {
                 ActionSelectScreen.loadActionOrder();
                 ModBlocksRender.register();
                 event.enqueueWork(() -> {
-                    Sheets.addWoodType(LogBlock.dark_spruce);
-                    Sheets.addWoodType(LogBlock.cursed_spruce);
+                    Sheets.addWoodType(LogBlock.DARK_SPRUCE);
+                    Sheets.addWoodType(LogBlock.CURSED_SPRUCE);
                 });
             }
             case LOAD_COMPLETE -> {
