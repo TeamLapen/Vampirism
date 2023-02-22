@@ -24,8 +24,10 @@ import net.minecraft.world.gen.feature.FlowersFeature;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.PlantType;
+import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
@@ -140,5 +142,11 @@ public class CursedGrass extends SpreadableSnowyDirtBlock implements IGrowable {
             return ActionResultType.SUCCESS;
         }
         return super.use(state, worldIn, pos, player, handIn, hit);
+    }
+
+    @Nullable
+    @Override
+    public ToolType getHarvestTool(BlockState state) {
+        return ToolType.SHOVEL;
     }
 }

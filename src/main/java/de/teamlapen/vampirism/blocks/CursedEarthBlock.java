@@ -38,11 +38,6 @@ public class CursedEarthBlock extends VampirismBlock {
         return plantable instanceof BushBlock || plantable.getPlantType(world, pos).equals(VReference.VAMPIRE_PLANT_TYPE);
     }
 
-    @Override
-    public int getHarvestLevel(BlockState p_getHarvestLevel_1_) {
-        return 0;
-    }
-
     @Nullable
     @Override
     public ToolType getHarvestTool(BlockState p_getHarvestTool_1_) {
