@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity.player.vampire;
 
-import com.mojang.serialization.Codec;
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
@@ -215,8 +214,8 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
     @Override
     public void activateVision(@Nullable IVampireVision vision) {
-        if (vision != null && !isRemote() && (VampirismAPI.vampireVisionRegistry()).getVisionId(vision) != null) {
-            throw new IllegalArgumentException("You have to register the vision first: " + vision);
+        if (vision != null && !isRemote()) {
+            VampirismAPI.vampireVisionRegistry().getVisionId(vision);
         }
         this.vision.activate(vision);
 
