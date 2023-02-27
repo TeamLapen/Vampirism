@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.effects.SanguinareEffect;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
@@ -38,73 +39,18 @@ import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FAC
 /**
  * Block which represents the top and the bottom part of a "Medical Chair" used for injections
  */
-public class MedChairBlock extends VampirismHorizontalBlock {
-    public static final EnumProperty<EnumPart> PART = EnumProperty.create("part", EnumPart.class);
-    private final VoxelShape SHAPE_TOP;
-    private final VoxelShape SHAPE_BOTTOM;
+public class MedChairBlock extends VampirismSplitBlock {
+
+    private static final VoxelShape SHAPE_TOP = box(2, 6, 0, 14, 16, 16);
+    private static final VoxelShape SHAPE_BOTTOM = box(1, 1, 0, 15, 10, 16);
 
 
     public MedChairBlock() {
-        super(Properties.of(Material.METAL).strength(1).noOcclusion());
-        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(PART, EnumPart.BOTTOM));
-        SHAPE_TOP = box(2, 6, 0, 14, 16, 16);
-        SHAPE_BOTTOM = box(1, 1, 0, 15, 10, 16);
+        super(Properties.of(Material.METAL).strength(1).noOcclusion(), SHAPE_BOTTOM, SHAPE_TOP, false);
     }
 
     @Override
-    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack itemStack) {
-        super.setPlacedBy(worldIn, pos, state, entity, itemStack);
-        if (!worldIn.isClientSide) {
-            BlockPos blockpos = pos.relative(state.getValue(HORIZONTAL_FACING).getOpposite());
-            worldIn.setBlock(blockpos, state.setValue(PART, EnumPart.TOP).setValue(FACING, state.getValue(HORIZONTAL_FACING)), 3);
-            worldIn.blockUpdated(pos, Blocks.AIR);
-            state.updateNeighbourShapes(worldIn, pos, 3);
-        }
-    }
-
-    @Nullable
-    @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
-    }
-
     @Nonnull
-    @Override
-    public VoxelShape getShape(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, @Nonnull ISelectionContext context) {
-        return state.getValue(PART) == EnumPart.BOTTOM ? SHAPE_BOTTOM : SHAPE_TOP;
-    }
-
-    public BlockState updateShape(BlockState p_196271_1_, Direction p_196271_2_, BlockState p_196271_3_, IWorld p_196271_4_, BlockPos p_196271_5_, BlockPos p_196271_6_) {
-        if (p_196271_2_ == getDirectionToOther(p_196271_1_.getValue(PART), p_196271_1_.getValue(FACING))) {
-            return p_196271_3_.is(this) && p_196271_3_.getValue(PART) != p_196271_1_.getValue(PART) ? p_196271_1_ : Blocks.AIR.defaultBlockState();
-        } else {
-            return super.updateShape(p_196271_1_, p_196271_2_, p_196271_3_, p_196271_4_, p_196271_5_, p_196271_6_);
-        }
-    }
-
-    private static Direction getDirectionToOther(EnumPart type, Direction facing) {
-        return type == EnumPart.TOP ? facing : facing.getOpposite();
-    }
-
-    @Override
-    public void playerWillDestroy(@Nonnull World worldIn, @Nonnull BlockPos pos, BlockState state, @Nonnull PlayerEntity player) {
-        //If in creative mode, also destroy the top block. Otherwise, it will be destroyed due to updateShape and an item will drop
-        if (!worldIn.isClientSide && player.isCreative()) {
-            EnumPart part = state.getValue(PART);
-            if(part == EnumPart.BOTTOM){
-                BlockPos other = pos.relative(getDirectionToOther(state.getValue(PART), state.getValue(FACING)));
-                BlockState otherState = worldIn.getBlockState(other);
-                if (otherState.getBlock() == this && otherState.getValue(PART) == EnumPart.TOP) {
-                    worldIn.setBlock(other, Blocks.AIR.defaultBlockState(), 35);
-                    worldIn.levelEvent(player, 2001, other, Block.getId(otherState));
-                }
-            }
-        }
-        super.playerWillDestroy(worldIn, pos, state, player);
-    }
-
-    @Nonnull
-    @Override
     public ActionResultType use(@Nonnull BlockState state, @Nonnull World world, @Nonnull BlockPos pos, PlayerEntity player, @Nonnull Hand hand, @Nonnull BlockRayTraceResult hit) {
         if (player.isAlive()) {
             ItemStack stack = player.getItemInHand(hand);
@@ -118,11 +64,6 @@ public class MedChairBlock extends VampirismHorizontalBlock {
             player.displayClientMessage(new TranslationTextComponent("text.vampirism.need_item_to_use", new TranslationTextComponent((new ItemStack(ModItems.INJECTION_GARLIC.get()).getDescriptionId()))), true);
         }
         return ActionResultType.SUCCESS;
-    }
-
-    @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING, PART);
     }
 
     private boolean handleGarlicInjection(@Nonnull PlayerEntity player, @Nonnull World world, @Nonnull IFactionPlayerHandler handler, @Nullable IPlayableFaction<?> currentFaction) {
@@ -178,41 +119,8 @@ public class MedChairBlock extends VampirismHorizontalBlock {
         return false;
     }
 
-    private boolean handleZombieBloodInjection(@Nonnull PlayerEntity player) {
-        player.addEffect(new EffectInstance(ModEffects.POISON.get(), 200));
-        return true;
-    }
-
-
-    public enum EnumPart implements IStringSerializable {
-        TOP("top", 0), BOTTOM("bottom", 1);
-
-        public static EnumPart fromMeta(int meta) {
-            if (meta == 1) {
-                return BOTTOM;
-            }
-            return TOP;
-        }
-
-        public final String name;
-        public final int meta;
-
-        EnumPart(String name, int meta) {
-            this.name = name;
-            this.meta = meta;
-        }
-
-        @Nonnull
-        @Override
-        public String getSerializedName() {
-            return name;
-        }
-
-        @Override
-        public String toString() {
-            return getSerializedName();
-        }
-
-
+    @Override
+    public BlockRenderType getRenderShape(BlockState p_149645_1_) {
+        return BlockRenderType.MODEL;
     }
 }

@@ -250,7 +250,7 @@ public class LootTablesGenerator extends LootTableProvider {
             this.dropSelf(ModBlocks.GARLIC_BEACON_NORMAL.get());
             this.dropSelf(ModBlocks.GARLIC_BEACON_IMPROVED.get());
             this.dropSelf(ModBlocks.HUNTER_TABLE.get());
-            this.add(ModBlocks.MED_CHAIR.get(), block -> createSinglePropConditionTable(block, MedChairBlock.PART, MedChairBlock.EnumPart.TOP));
+            this.add(ModBlocks.MED_CHAIR.get(), block -> createSinglePropConditionTable(block, MedChairBlock.PART, MedChairBlock.Part.MAIN));
             this.dropSelf(ModBlocks.SUNSCREEN_BEACON.get());
             this.add(ModBlocks.TENT_MAIN.get(), createSingleItemTable(ModItems.ITEM_TENT.get())
                     .withPool(LootPool.lootPool().name("bonus").setRolls(ConstantRange.exactly(1)).when(TentSpawnerCondition.builder())
@@ -279,7 +279,7 @@ public class LootTablesGenerator extends LootTableProvider {
             this.add(ModBlocks.CROSS.get(), (p_218567_0_) -> createSinglePropConditionTable(p_218567_0_, VampirismSplitBlock.PART, VampirismSplitBlock.Part.MAIN));
             this.dropSelf(ModBlocks.TOMBSTONE1.get());
             this.dropSelf(ModBlocks.TOMBSTONE2.get());
-            this.dropSelf(ModBlocks.TOMBSTONE3.get());
+            this.add(ModBlocks.TOMBSTONE3.get(), context -> createSinglePropConditionTable(context, VampirismSplitBlock.PART, VampirismSplitBlock.Part.MAIN));
             this.dropSelf(ModBlocks.GRAVE_CAGE.get());
             this.add(ModBlocks.CURSED_GRASS.get(), createSingleItemTable(ModBlocks.CURSED_EARTH.get()));
             this.dropSelf(ModBlocks.DARK_SPRUCE_LOG.get());

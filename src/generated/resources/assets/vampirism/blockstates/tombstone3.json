@@ -1,17 +1,32 @@
 {
   "variants": {
-    "facing=north": {
+    "facing=north,part=main": {
       "model": "vampirism:block/tombstone3"
     },
-    "facing=south": {
+    "facing=south,part=main": {
       "model": "vampirism:block/tombstone3",
       "y": 180
     },
-    "facing=west": {
+    "facing=west,part=main": {
       "model": "vampirism:block/tombstone3",
       "y": 270
     },
-    "facing=east": {
+    "facing=east,part=main": {
+      "model": "vampirism:block/tombstone3",
+      "y": 90
+    },
+    "facing=north,part=sub": {
+      "model": "vampirism:block/tombstone3"
+    },
+    "facing=south,part=sub": {
+      "model": "vampirism:block/tombstone3",
+      "y": 180
+    },
+    "facing=west,part=sub": {
+      "model": "vampirism:block/tombstone3",
+      "y": 270
+    },
+    "facing=east,part=sub": {
       "model": "vampirism:block/tombstone3",
       "y": 90
     }

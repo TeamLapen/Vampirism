@@ -62,6 +62,9 @@ public class BlockVoxelshapes {
             Block.box(5, 26, 4, 11, 27, 8)
     ).reduce((v1, v2) -> VoxelShapes.join(v1, v2, IBooleanFunction.OR)).orElseGet(VoxelShapes::empty);
 
+    public static final VoxelShape tomb3_base = VoxelShapes.join(tomb3, VoxelShapes.block(), IBooleanFunction.AND);
+    public static final VoxelShape tomb3_top = VoxelShapes.join(tomb3, VoxelShapes.block().move(0, 1, 0), IBooleanFunction.AND).move(0, -1, 0);
+
     public static final VoxelShape vampire_rack = Stream.of(
             Block.box(3, 0, 0, 13, 15.55, 3.23)
 //            Block.box(5.7182181566259285, -0.0011571834945509063, 0.008185183993054679, 10.318027520627503, 0.9188046893057633, 3.228051738794157),
