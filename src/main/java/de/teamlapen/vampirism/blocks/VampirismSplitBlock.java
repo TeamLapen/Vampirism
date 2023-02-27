@@ -83,7 +83,7 @@ public class VampirismSplitBlock extends VampirismBlock {
     public BlockState getStateForPlacement(@NotNull BlockPlaceContext context) {
         Direction enumfacing = context.getHorizontalDirection();
         BlockPos blockpos = context.getClickedPos();
-        BlockPos blockpos1 = blockpos.relative(enumfacing);
+        BlockPos blockpos1 = blockpos.relative(this.vertical ? Direction.UP : enumfacing);
         return context.getLevel().getBlockState(blockpos1).canBeReplaced(context) ? this.defaultBlockState().setValue(HORIZONTAL_FACING, enumfacing) : null;
     }
 
@@ -124,7 +124,11 @@ public class VampirismSplitBlock extends VampirismBlock {
         super.setPlacedBy(world, pos, state, placer, itemStack);
         if (!world.isClientSide) {
             BlockPos blockpos = pos.relative(getOtherBlockDirection(state));
-            world.setBlock(blockpos, state.setValue(PART, Part.SUB), 3);
+            BlockState otherState = state.setValue(PART, Part.SUB);
+            if (!this.vertical) {
+                otherState = otherState.setValue(FACING, otherState.getValue(FACING).getOpposite());
+            }
+            world.setBlock(blockpos, otherState, 3);
             world.blockUpdated(pos, Blocks.AIR);
             state.updateNeighbourShapes(world, pos, 3);
         }
@@ -150,8 +154,7 @@ public class VampirismSplitBlock extends VampirismBlock {
         if (vertical) {
             return blockState.getValue(PART) == Part.MAIN ? Direction.UP : Direction.DOWN;
         }
-        Direction rotation = blockState.getValue(FACING);
-        return blockState.getValue(PART) == Part.MAIN ? rotation.getClockWise() : rotation.getCounterClockWise();
+        return blockState.getValue(FACING);
     }
 
     protected BlockState updateFromOther(BlockState thisState, BlockState otherState) {

@@ -62,6 +62,9 @@ public class BlockVoxelshapes {
             Block.box(5, 26, 4, 11, 27, 8)
     ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElseGet(Shapes::empty);
 
+    public static final VoxelShape tomb3_base = Shapes.join(tomb3, Shapes.block(), BooleanOp.AND);
+    public static final VoxelShape tomb3_top = Shapes.join(tomb3, Shapes.block().move(0, 1, 0), BooleanOp.AND).move(0, -1, 0);
+
     public static final VoxelShape vampire_rack = Stream.of(
             Block.box(3, 0, 0, 13, 15.55, 3.23)
 //            Block.box(5.7182181566259285, -0.0011571834945509063, 0.008185183993054679, 10.318027520627503, 0.9188046893057633, 3.228051738794157),

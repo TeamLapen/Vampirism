@@ -108,13 +108,19 @@ public class BlockStateGenerator extends BlockStateProvider {
                 .partialState().with(SieveBlock.PROPERTY_ACTIVE, true).modelForState().modelFile(activeSieve).addModel()
                 .partialState().with(SieveBlock.PROPERTY_ACTIVE, false).modelForState().modelFile(sieve).addModel();
 
-        getVariantBuilder(ModBlocks.MED_CHAIR.get()).forAllStates(blockState -> ConfiguredModel.builder().modelFile(models().getExistingFile(modLoc(blockState.getValue(MedChairBlock.PART) == MedChairBlock.EnumPart.TOP ? "block/medchairhead" : "block/medchairbase"))).rotationY(((int) blockState.getValue(MedChairBlock.FACING).toYRot() + 180) % 360).build());
+        getVariantBuilder(ModBlocks.MED_CHAIR.get()).forAllStates(blockState -> {
+            if (blockState.getValue(MedChairBlock.PART) == MedChairBlock.Part.MAIN) {
+                return ConfiguredModel.builder().modelFile(models().getExistingFile(modLoc("block/medchairbase"))).rotationY(((int) blockState.getValue(MedChairBlock.FACING).toYRot()) % 360).build();
+            } else {
+                return ConfiguredModel.builder().modelFile(models().getExistingFile(modLoc("block/medchairhead"))).rotationY(((int) blockState.getValue(MedChairBlock.FACING).toYRot() + 180) % 360).build();
+            }
+        });
 
         //multiparts
         BlockModelBuilder fire_side_alt0 = models().withExistingParent("fire_side_alt0", modLoc("block/fire_side_alt")).renderType(cutout).texture("particle", mcLoc("block/fire_0")).texture("fire", mcLoc("block/fire_0"));
         BlockModelBuilder fire_side_alt1 = models().withExistingParent("fire_side_alt1", modLoc("block/fire_side_alt")).renderType(cutout).texture("particle", mcLoc("block/fire_1")).texture("fire", mcLoc("block/fire_1"));
         BlockModelBuilder fire_side0 = models().withExistingParent("fire_side0", modLoc("block/fire_side")).renderType(cutout).texture("particle", mcLoc("block/fire_0")).texture("fire", mcLoc("block/fire_0"));
-        BlockModelBuilder fire_side1 =models().withExistingParent("fire_side1", modLoc("block/fire_side")).renderType(cutout).texture("particle", mcLoc("block/fire_1")).texture("fire", mcLoc("block/fire_1"));
+        BlockModelBuilder fire_side1 = models().withExistingParent("fire_side1", modLoc("block/fire_side")).renderType(cutout).texture("particle", mcLoc("block/fire_1")).texture("fire", mcLoc("block/fire_1"));
         BlockModelBuilder fire_floor0 = models().withExistingParent("fire_floor0", modLoc("block/fire_floor")).renderType(cutout).texture("particle", mcLoc("block/fire_0")).texture("fire", mcLoc("block/fire_0"));
         BlockModelBuilder fire_floor1 = models().withExistingParent("fire_floor1", modLoc("block/fire_floor")).renderType(cutout).texture("particle", mcLoc("block/fire_1")).texture("fire", mcLoc("block/fire_1"));
         getMultipartBuilder(ModBlocks.ALCHEMICAL_FIRE.get())

@@ -10,101 +10,32 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.effects.SanguinareEffect;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
-
 /**
  * Block which represents the top and the bottom part of a "Medical Chair" used for injections
  */
-public class MedChairBlock extends VampirismHorizontalBlock {
-    public static final EnumProperty<EnumPart> PART = EnumProperty.create("part", EnumPart.class);
-    private final @NotNull VoxelShape SHAPE_TOP;
-    private final @NotNull VoxelShape SHAPE_BOTTOM;
+public class MedChairBlock extends VampirismSplitBlock {
+
+    private static final @NotNull VoxelShape SHAPE_TOP = box(2, 6, 0, 14, 16, 16);
+    private static final @NotNull VoxelShape SHAPE_BOTTOM = box(1, 1, 0, 15, 10, 16);
 
 
     public MedChairBlock() {
-        super(Properties.of(Material.METAL).strength(1).noOcclusion());
-        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(PART, EnumPart.BOTTOM));
-        SHAPE_TOP = box(2, 6, 0, 14, 16, 16);
-        SHAPE_BOTTOM = box(1, 1, 0, 15, 10, 16);
-    }
-
-    @Override
-    public void setPlacedBy(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state, @Nullable LivingEntity entity, @NotNull ItemStack stack) {
-        super.setPlacedBy(level, pos, state, entity, stack);
-        if (!level.isClientSide) {
-            BlockPos blockpos = pos.relative(state.getValue(HORIZONTAL_FACING).getOpposite());
-            level.setBlock(blockpos, state.setValue(PART, EnumPart.TOP).setValue(FACING, state.getValue(HORIZONTAL_FACING)), 3);
-            level.blockUpdated(pos, Blocks.AIR);
-            state.updateNeighbourShapes(level, pos, 3);
-        }
-    }
-
-    @Nullable
-    @Override
-    public BlockState getStateForPlacement(@NotNull BlockPlaceContext context) {
-        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
-
-    }
-
-    @NotNull
-    @Override
-    public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
-        return state.getValue(PART) == EnumPart.BOTTOM ? SHAPE_BOTTOM : SHAPE_TOP;
-    }
-
-    @Override
-    public @NotNull BlockState updateShape(@NotNull BlockState pState, Direction pDirection, BlockState pNeighborState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
-        if (pDirection == getDirectionToOther(pState.getValue(PART), pState.getValue(FACING))) {
-            return pNeighborState.is(this) && pNeighborState.getValue(PART) != pState.getValue(PART) ? pState : Blocks.AIR.defaultBlockState();
-        } else {
-            return super.updateShape(pState, pDirection, pNeighborState, pLevel, pCurrentPos, pNeighborPos);
-        }
-    }
-
-    private static Direction getDirectionToOther(EnumPart type, @NotNull Direction facing) {
-        return type == EnumPart.TOP ? facing : facing.getOpposite();
-    }
-
-    @Override
-    public void playerWillDestroy(@NotNull Level worldIn, @NotNull BlockPos pos, BlockState state, @NotNull Player player) {
-        //If in creative mode, also destroy the top block. Otherwise, it will be destroyed due to updateShape and an item will drop
-        if (!worldIn.isClientSide && player.isCreative()) {
-            EnumPart part = state.getValue(PART);
-            if (part == EnumPart.BOTTOM) {
-                BlockPos other = pos.relative(getDirectionToOther(state.getValue(PART), state.getValue(FACING)));
-                BlockState otherState = worldIn.getBlockState(other);
-                if (otherState.getBlock() == this && otherState.getValue(PART) == EnumPart.TOP) {
-                    worldIn.setBlock(other, Blocks.AIR.defaultBlockState(), 35);
-                    worldIn.levelEvent(player, 2001, other, Block.getId(otherState));
-                }
-            }
-        }
-        super.playerWillDestroy(worldIn, pos, state, player);
+        super(Properties.of(Material.METAL).strength(1).noOcclusion(), SHAPE_BOTTOM, SHAPE_TOP, false);
     }
 
     @NotNull
@@ -122,11 +53,6 @@ public class MedChairBlock extends VampirismHorizontalBlock {
             player.displayClientMessage(Component.translatable("text.vampirism.need_item_to_use", Component.translatable((new ItemStack(ModItems.INJECTION_GARLIC.get()).getDescriptionId()))), true);
         }
         return InteractionResult.SUCCESS;
-    }
-
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> builder) {
-        builder.add(FACING, PART);
     }
 
     private boolean handleGarlicInjection(@NotNull Player player, @NotNull Level world, @NotNull IFactionPlayerHandler handler, @Nullable IPlayableFaction<?> currentFaction) {
@@ -185,41 +111,8 @@ public class MedChairBlock extends VampirismHorizontalBlock {
         return false;
     }
 
-    private boolean handleZombieBloodInjection(@NotNull Player player) {
-        player.addEffect(new MobEffectInstance(ModEffects.POISON.get(), 200));
-        return true;
-    }
-
-
-    public enum EnumPart implements StringRepresentable {
-        TOP("top", 0), BOTTOM("bottom", 1);
-
-        public static @NotNull EnumPart fromMeta(int meta) {
-            if (meta == 1) {
-                return BOTTOM;
-            }
-            return TOP;
-        }
-
-        public final String name;
-        public final int meta;
-
-        EnumPart(String name, int meta) {
-            this.name = name;
-            this.meta = meta;
-        }
-
-        @NotNull
-        @Override
-        public String getSerializedName() {
-            return name;
-        }
-
-        @Override
-        public @NotNull String toString() {
-            return getSerializedName();
-        }
-
-
+    @Override
+    public @NotNull RenderShape getRenderShape(@NotNull BlockState p_149645_1_) {
+        return RenderShape.MODEL;
     }
 }
