@@ -250,7 +250,7 @@ public class LootTablesGenerator extends LootTableProvider {
             this.dropSelf(ModBlocks.GARLIC_BEACON_NORMAL.get());
             this.dropSelf(ModBlocks.GARLIC_BEACON_IMPROVED.get());
             this.dropSelf(ModBlocks.HUNTER_TABLE.get());
-            this.add(ModBlocks.MED_CHAIR.get(), block -> createSinglePropConditionTable(block, MedChairBlock.PART, MedChairBlock.Part.MAIN));
+            this.add(ModBlocks.MED_CHAIR.get(), block -> createSinglePropConditionTable(block, MedChairBlock.PART, MedChairBlock.EnumPart.BOTTOM));
             this.dropSelf(ModBlocks.SUNSCREEN_BEACON.get());
             this.add(ModBlocks.TENT_MAIN.get(), createSingleItemTable(ModItems.ITEM_TENT.get())
                     .withPool(LootPool.lootPool().name("bonus").setRolls(ConstantRange.exactly(1)).when(TentSpawnerCondition.builder())
