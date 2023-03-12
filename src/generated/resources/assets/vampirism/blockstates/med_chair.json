@@ -1,32 +1,32 @@
 {
   "variants": {
-    "facing=east,part=main": {
+    "facing=east,part=bottom": {
+      "model": "vampirism:block/medchairbase",
+      "y": 90
+    },
+    "facing=east,part=top": {
+      "model": "vampirism:block/medchairhead",
+      "y": 90
+    },
+    "facing=north,part=bottom": {
+      "model": "vampirism:block/medchairbase"
+    },
+    "facing=north,part=top": {
+      "model": "vampirism:block/medchairhead"
+    },
+    "facing=south,part=bottom": {
+      "model": "vampirism:block/medchairbase",
+      "y": 180
+    },
+    "facing=south,part=top": {
+      "model": "vampirism:block/medchairhead",
+      "y": 180
+    },
+    "facing=west,part=bottom": {
       "model": "vampirism:block/medchairbase",
       "y": 270
     },
-    "facing=east,part=sub": {
-      "model": "vampirism:block/medchairhead",
-      "y": 90
-    },
-    "facing=north,part=main": {
-      "model": "vampirism:block/medchairbase",
-      "y": 180
-    },
-    "facing=north,part=sub": {
-      "model": "vampirism:block/medchairhead"
-    },
-    "facing=south,part=main": {
-      "model": "vampirism:block/medchairbase"
-    },
-    "facing=south,part=sub": {
-      "model": "vampirism:block/medchairhead",
-      "y": 180
-    },
-    "facing=west,part=main": {
-      "model": "vampirism:block/medchairbase",
-      "y": 90
-    },
-    "facing=west,part=sub": {
+    "facing=west,part=top": {
       "model": "vampirism:block/medchairhead",
       "y": 270
     }
