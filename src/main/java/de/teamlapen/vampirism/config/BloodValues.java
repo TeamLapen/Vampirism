@@ -25,15 +25,15 @@ public class BloodValues implements IFutureReloadListener {
 
     @Nonnull
     @Override
-    public CompletableFuture<Void> reload(IStage stage, @Nonnull IResourceManager resourceManager, @Nonnull IProfiler profiler1, @Nonnull IProfiler profiler2, @Nonnull Executor executor1, @Nonnull Executor executor2) {
-        CompletableFuture<Map<String, BloodValueBuilder>> entities = this.entities.prepare(resourceManager, executor1);
-        CompletableFuture<Map<String, BloodValueBuilder>> items = this.items.prepare(resourceManager, executor1);
-        CompletableFuture<Map<String, BloodValueBuilder>> fluids = this.fluids.prepare(resourceManager, executor1);
+    public CompletableFuture<Void> reload(IStage stage, @Nonnull IResourceManager resourceManager, @Nonnull IProfiler profiler1, @Nonnull IProfiler profiler2, @Nonnull Executor pBackgroundExecutor, @Nonnull Executor pGameExecutor) {
+        CompletableFuture<Map<String, BloodValueBuilder>> entities = this.entities.prepare(resourceManager, pBackgroundExecutor);
+        CompletableFuture<Map<String, BloodValueBuilder>> items = this.items.prepare(resourceManager, pBackgroundExecutor);
+        CompletableFuture<Map<String, BloodValueBuilder>> fluids = this.fluids.prepare(resourceManager, pBackgroundExecutor);
         return CompletableFuture.allOf(entities, items, fluids).thenCompose(stage::wait).thenAcceptAsync(o -> {
             this.entities.load(entities.join());
             this.items.load(items.join());
             this.fluids.load(fluids.join());
-        });
+        }, pGameExecutor);
     }
 
     private void applyNewEntitiesResources(Map<ResourceLocation, Float> map) {
