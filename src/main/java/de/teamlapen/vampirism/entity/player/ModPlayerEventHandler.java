@@ -274,6 +274,13 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onBlockRightClicked(PlayerInteractEvent.RightClickBlock event) {
+        if (Helper.isVampire(event.getEntity()) && VampirismPlayerAttributes.get(event.getEntity()).getVampSpecial().isCannotInteract()) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onItemUse(LivingEntityUseItemEvent.@NotNull Finish event) {
         if (Helper.isVampire(event.getEntity())) {
             if (event.getItem().getItem() instanceof GarlicBreadItem) {
