@@ -109,8 +109,8 @@ public class BlockStateGenerator extends BlockStateProvider {
                 .partialState().with(SieveBlock.PROPERTY_ACTIVE, false).modelForState().modelFile(sieve).addModel();
 
         getVariantBuilder(ModBlocks.MED_CHAIR.get()).forAllStates(blockState -> {
-            if (blockState.getValue(MedChairBlock.PART) == MedChairBlock.Part.MAIN) {
-                return ConfiguredModel.builder().modelFile(models().getExistingFile(modLoc("block/medchairbase"))).rotationY(((int) blockState.getValue(MedChairBlock.FACING).toYRot()) % 360).build();
+            if (blockState.getValue(MedChairBlock.PART) == MedChairBlock.EnumPart.BOTTOM) {
+                return ConfiguredModel.builder().modelFile(models().getExistingFile(modLoc("block/medchairbase"))).rotationY(((int) blockState.getValue(MedChairBlock.FACING).toYRot() + 180) % 360).build();
             } else {
                 return ConfiguredModel.builder().modelFile(models().getExistingFile(modLoc("block/medchairhead"))).rotationY(((int) blockState.getValue(MedChairBlock.FACING).toYRot() + 180) % 360).build();
             }

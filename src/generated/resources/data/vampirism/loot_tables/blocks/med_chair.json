@@ -16,7 +16,7 @@
               "block": "vampirism:med_chair",
               "condition": "minecraft:block_state_property",
               "properties": {
-                "part": "main"
+                "part": "bottom"
               }
             }
           ],
