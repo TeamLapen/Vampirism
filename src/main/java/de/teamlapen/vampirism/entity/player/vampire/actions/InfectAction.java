@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -50,6 +51,7 @@ public class InfectAction extends DefaultVampireAction {
 
     @Override
     public boolean canBeUsedBy(@NotNull IVampirePlayer player) {
+        if (player.getRepresentingPlayer().level.getDifficulty() == Difficulty.PEACEFUL) return false;
         if (player.isRemote()) {
             Entity target = VampirismMod.proxy.getMouseOverEntity();
             if (target != null) {
