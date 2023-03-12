@@ -3,23 +3,28 @@ package de.teamlapen.vampirism.entity.converted;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModAttributes;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.animal.horse.Donkey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import org.jetbrains.annotations.NotNull;
 
 public class ConvertedDonkeyEntity extends Donkey implements CurableConvertedCreature<Donkey, ConvertedDonkeyEntity> {
@@ -30,6 +35,10 @@ public class ConvertedDonkeyEntity extends Donkey implements CurableConvertedCre
         return AbstractHorse.createBaseHorseAttributes()
                 .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_DMG)
                 .add(ModAttributes.SUNDAMAGE.get(), BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
+    }
+
+    public static boolean checkConvertedDonkeySpawnRules(EntityType<? extends Animal> pGoat, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
+        return pLevel.getDifficulty() != Difficulty.PEACEFUL && Donkey.checkAnimalSpawnRules(pGoat, pLevel, pSpawnType, pPos, pRandom);
     }
 
     private final Data<Donkey> data = new Data<>();
@@ -74,6 +83,12 @@ public class ConvertedDonkeyEntity extends Donkey implements CurableConvertedCre
     public void die(@NotNull DamageSource cause) {
         super.die(cause);
         dieC(cause);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        tickC();
     }
 
     @Override
