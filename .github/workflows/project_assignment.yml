@@ -2,7 +2,8 @@ name: Add issues to development project
 
 on:
   issues:
-    - opened
+    types:
+      - opened
 
 jobs:
   add-to-project:
