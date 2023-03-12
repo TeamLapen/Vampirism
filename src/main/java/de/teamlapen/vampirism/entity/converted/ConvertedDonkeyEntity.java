@@ -5,8 +5,10 @@ import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModAttributes;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.entity.passive.horse.DonkeyEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,10 +19,14 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.Difficulty;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
+import java.util.Random;
 
 public class ConvertedDonkeyEntity extends DonkeyEntity implements CurableConvertedCreature<DonkeyEntity, ConvertedDonkeyEntity> {
 
@@ -30,6 +36,10 @@ public class ConvertedDonkeyEntity extends DonkeyEntity implements CurableConver
         return AbstractHorseEntity.createBaseHorseAttributes()
                 .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_DMG)
                 .add(ModAttributes.SUNDAMAGE.get(), BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
+    }
+
+    public static boolean checkConvertedDonkeySpawnRules(EntityType<? extends AnimalEntity> pGoat, IWorld pLevel, SpawnReason pSpawnType, BlockPos pPos, Random pRandom) {
+        return pLevel.getDifficulty() != Difficulty.PEACEFUL && DonkeyEntity.checkAnimalSpawnRules(pGoat, pLevel, pSpawnType, pPos, pRandom);
     }
 
     private final Data<DonkeyEntity> data = new Data<>();
@@ -74,6 +84,12 @@ public class ConvertedDonkeyEntity extends DonkeyEntity implements CurableConver
     public void die(@Nonnull DamageSource cause) {
         super.die(cause);
         dieC(cause);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        tickC();
     }
 
     @Override

@@ -14,6 +14,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.world.Difficulty;
 
 import java.util.Optional;
 
@@ -49,6 +50,7 @@ public class InfectAction extends DefaultVampireAction {
 
     @Override
     public boolean canBeUsedBy(IVampirePlayer player) {
+        if (player.getRepresentingPlayer().level.getDifficulty() == Difficulty.PEACEFUL) return false;
         if(player.isRemote()){
             Entity target = VampirismMod.proxy.getMouseOverEntity();
             if(target != null){

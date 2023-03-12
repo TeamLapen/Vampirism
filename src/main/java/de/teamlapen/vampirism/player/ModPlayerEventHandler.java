@@ -279,7 +279,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onBlockRightClicked(PlayerInteractEvent.RightClickBlock event) {
-        if (Helper.isVampire(event.getEntity()) && VampirismPlayerAttributes.get(event.getEntity()).getVampSpecial().isCannotInteract()) {
+        if (Helper.isVampire(event.getEntity()) && VampirismPlayerAttributes.get(event.getPlayer()).getVampSpecial().isCannotInteract()) {
             event.setCanceled(true);
         }
     }
