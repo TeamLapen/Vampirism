@@ -15,5 +15,6 @@
   ],
   "result": {
     "item": "vampirism:altar_infusion"
-  }
+  },
+  "show_notification": true
 }

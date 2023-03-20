@@ -29,7 +29,8 @@
         ],
         "result": {
           "item": "vampirism:umbrella"
-        }
+        },
+        "show_notification": true
       }
     }
   ]

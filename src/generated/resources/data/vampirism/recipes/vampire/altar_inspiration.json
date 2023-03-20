@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "vampirism:altar_inspiration"
-  }
+  },
+  "show_notification": true
 }

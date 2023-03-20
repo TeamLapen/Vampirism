@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.actions.IActionHandlerEntity;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
@@ -15,13 +14,22 @@ import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
+import de.teamlapen.vampirism.world.ModDamageSources;
+import de.teamlapen.vampirism.world.VampirismWorld;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * Centralizes the calculation and appliance of different sorts of damages or similar.
@@ -132,7 +140,7 @@ public class DamageHandler {
                     int l = ((VampireBaronEntity) entity).getEntityLevel();
                     amount = scaleDamageWithLevel(l, VampireBaronEntity.MAX_LEVEL, amount * 0.8, amount * 2);
                 }
-                entity.hurt(VReference.HOLY_WATER, (float) amount);
+                hurtModded(entity, ModDamageSources::holyWater, (float) amount);
             }
         }
         if (vampire && entity instanceof Player) {
@@ -166,4 +174,21 @@ public class DamageHandler {
         return minDamage + level / (double) maxLevel * (maxDamage - minDamage);
     }
 
+    public static @NotNull Optional<DamageSource> getDamageSource(@NotNull Level world, @NotNull Function<ModDamageSources, DamageSource> sourceFunc) {
+        return VampirismWorld.getOpt(world).map(VampirismWorld::damageSources).map(sourceFunc);
+    }
+
+    public static boolean hurtModded(@NotNull Entity entity, @NotNull Function<ModDamageSources, DamageSource> sourceFunc, float amount) {
+        return getDamageSource(entity.level, sourceFunc).map(source -> entity.hurt(source, amount)).orElse(false);
+    }
+
+    @SuppressWarnings("UnusedReturnValue")
+    public static boolean hurtVanilla(@NotNull Entity entity, @NotNull Function<DamageSources, DamageSource> sourceFunc, float amount) {
+        DamageSource source = sourceFunc.apply(entity.level.damageSources());
+        return entity.hurt(source, amount);
+    }
+
+    public static boolean kill(@NotNull Entity entity, int damage) {
+        return hurtVanilla(entity, DamageSources::generic, damage);
+    }
 }

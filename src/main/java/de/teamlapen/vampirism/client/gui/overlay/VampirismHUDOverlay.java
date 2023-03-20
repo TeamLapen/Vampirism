@@ -239,7 +239,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 float b = (float) (screenColor & 255) / 255.0F;
                 float a = (screenPercentage / 100f) * (screenColor >> 24 & 255) / 255F;
 
-                RenderSystem.disableTexture();
+
                 RenderSystem.enableBlend();
                 //RenderSystem.disableAlphaTest();
                 RenderSystem.blendFuncSeparate(770, 771, 1, 0);
@@ -247,15 +247,15 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 Matrix4f matrix = stack.last().pose();
                 BufferBuilder worldrenderer = tessellator.getBuilder();
                 worldrenderer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-                worldrenderer.vertex(matrix, 0, h, this.getBlitOffset()).color(r, g, b, a).endVertex();
-                worldrenderer.vertex(matrix, w, h, this.getBlitOffset()).color(r, g, b, a).endVertex();
-                worldrenderer.vertex(matrix, w, 0, this.getBlitOffset()).color(r, g, b, a).endVertex();
-                worldrenderer.vertex(matrix, 0, 0, this.getBlitOffset()).color(r, g, b, a).endVertex();
+                worldrenderer.vertex(matrix, 0, h, 0).color(r, g, b, a).endVertex();
+                worldrenderer.vertex(matrix, w, h, 0).color(r, g, b, a).endVertex();
+                worldrenderer.vertex(matrix, w, 0, 0).color(r, g, b, a).endVertex();
+                worldrenderer.vertex(matrix, 0, 0, 0).color(r, g, b, a).endVertex();
 
                 tessellator.end();
                 RenderSystem.disableBlend();
                 //RenderSystem.enableAlphaTest();
-                RenderSystem.enableTexture();
+
 
                 /*
                  * Try later this.drawGradientRect(0, 0, w,Math.round(h/(2/renderRed)),

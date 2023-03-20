@@ -9,4 +9,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface ShapedRecipeBuilderAccessor {
     @Accessor("category")
     RecipeCategory getRecipeCategory();
+
+    @Accessor("showNotification")
+    boolean getShowNotification();
 }

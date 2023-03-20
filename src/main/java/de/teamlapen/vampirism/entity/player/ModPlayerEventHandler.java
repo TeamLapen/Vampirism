@@ -41,6 +41,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -107,7 +108,7 @@ public class ModPlayerEventHandler {
             for (int x = event.getPos().getX() - 1; x <= event.getPos().getX() + 1; ++x) {
                 for (int z = event.getPos().getZ() - 1; z <= event.getPos().getZ() + 1; ++z) {
                     for (double y = event.getPos().getY() - 1; y <= event.getPos().getY() + 1; ++y) {
-                        BlockPos pos1 = new BlockPos(x, y, z);
+                        BlockPos pos1 = new BlockPos(x, (int) y, z);
                         if (((Level) event.getLevel()).isLoaded(pos1) && event.getLevel().getBlockState(pos1).getBlock() == block) {
                             BlockPos totemPos1 = TotemHelper.getTotemPosition(((Level) event.getLevel()).dimension(), pos1);
                             if (totemPos1 != null && totemPos == null) {
@@ -335,7 +336,7 @@ public class ModPlayerEventHandler {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onLivingHurt(@NotNull LivingHurtEvent event) {
         DamageSource d = event.getSource();
-        if (!d.isBypassMagic() && !d.isBypassArmor() && event.getEntity() instanceof Player) {
+        if (!d.is(DamageTypeTags.WITCH_RESISTANT_TO) && !d.is(DamageTypeTags.BYPASSES_ARMOR) && event.getEntity() instanceof Player) {
             if (VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().bat) {
                 event.setAmount(event.getAmount() * 2);
             }

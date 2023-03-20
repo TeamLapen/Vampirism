@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.client.gui.screens.radial.edit;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import de.teamlapen.lib.lib.client.gui.components.ScrollWidget;
+import de.teamlapen.lib.lib.client.gui.components.SimpleList;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.DrawCallback;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.GuiRadialMenu;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.IRadialMenuSlot;
@@ -34,7 +34,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     private final DrawCallback<T> drawCallback;
     private final Consumer<ItemOrdering<T>> saveAction;
     private final Function<T, Boolean> isEnabled;
-    private ItemScrollWidget excludedList;
+    private ExcludedItemList excludedList;
     private Boolean wasGuiHidden;
 
     public ReorderingGuiRadialMenu(ItemOrdering<T> ordering, Function<T, MutableComponent> nameFunction, DrawCallback<T> drawCallback, @NotNull Consumer<ItemOrdering<T>> saveAction, Function<T, Boolean> isEnabled) {
@@ -52,7 +52,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
 
         this.addRenderableWidget(new ResetButton(0, this.height - 40, 140, 20, (context) -> this.reset()));
         this.addRenderableWidget(new ExtendedButton(0, this.height - 20, 140, 20, Component.translatable("gui.done"), (context) -> this.onClose()));
-        this.excludedList = this.addRenderableWidget(new ItemScrollWidget(0, 20, 140, this.height - 70, builder -> ordering.getExcluded().forEach(item -> builder.addWidget(new NoItemRadialMenuSlot<>(nameFunction, new ItemWrapper<>(item), isEnabled))), Component.empty()));
+        this.excludedList = this.addRenderableWidget(new ExcludedItemList(0, 20, 140, this.height - 70));
 
         if (this.wasGuiHidden == null) {
             this.wasGuiHidden = Minecraft.getInstance().options.hideGui;
@@ -91,9 +91,13 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
         }
     }
 
+    private void updateExcludedList() {
+        this.excludedList.updateContent(ordering.getExcluded().stream().map(s -> new NoItemRadialMenuSlot<>(nameFunction, new ItemWrapper<>(s), isEnabled)).toList());
+    }
+
     public void reset() {
         this.ordering.reset();
-        this.excludedList.updateContent();
+        this.updateExcludedList();
         this.radialMenuSlots.clear();
         this.checkEmpty();
     }
@@ -109,13 +113,13 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     public void excludeItem() {
         this.ordering.exclude(this.movingItem);
         this.movingItem = null;
-        this.excludedList.updateContent();
+        this.updateExcludedList();
         this.removeDummyItems();
         this.checkEmpty();
     }
 
-    private void pickExcludedItem(ReorderingItemWidget<T> widget) {
-        this.movingItem = widget.getItem().primarySlotIcon().get();
+    private void pickExcludedItem(T item) {
+        this.movingItem = item;
         addDummyMenuItems();
     }
 
@@ -131,7 +135,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
 
     private void syncOrdering() {
         this.ordering.applyOrdering(this.radialMenuSlots.stream().map(IRadialMenuSlot::primarySlotIcon).flatMap(a -> a.getOptional().stream()).collect(Collectors.toList()));
-        this.excludedList.updateContent();
+        this.updateExcludedList();
     }
 
     @Override
@@ -186,7 +190,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     }
 
     @Override
-    public void drawSliceName(String sliceName, ItemStack stack, int posX, int posY) {
+    public void drawSliceName(PoseStack poseStack, String sliceName, ItemStack stack, int posX, int posY) {
     }
 
     @Override
@@ -222,42 +226,57 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
         }, 0);
     }
 
-    public class ItemScrollWidget extends ScrollWidget<IRadialMenuSlot<ItemWrapper<T>>, ReorderingItemWidget<T>> {
+    public class ExcludedItemList extends SimpleList<ExcludedEntry<T>> {
 
-        public ItemScrollWidget(int pX, int pY, int pWidth, int pHeight, Consumer<ContentBuilder<IRadialMenuSlot<ItemWrapper<T>>, ReorderingItemWidget<T>>> contentSupplier, Component emptyText) {
-            super(pX, pY, pWidth, pHeight, (tiRadialMenuSlot, x, y, width, scrollAmountSupplier, onClick) -> new ReorderingItemWidget<>(tiRadialMenuSlot, x, y, width, 20, onClick), contentSupplier, emptyText);
+        public ExcludedItemList(int x, int y, int pWidth, int pHeight) {
+            super(Minecraft.getInstance(), pWidth, pHeight, y, y + pHeight, 20);
+            this.setLeftPos(x);
         }
 
-        @Override
-        protected void onClick(ReorderingItemWidget<T> widget) {
+        public void updateContent(List<? extends IRadialMenuSlot<ItemWrapper<T>>> newItems) {
+            this.replaceEntries(newItems.stream().map(s -> new ExcludedEntry<>(s, () -> selectItem(s))).toList());
+        }
+
+        private void selectItem(IRadialMenuSlot<ItemWrapper<T>> selected) {
             if (ReorderingGuiRadialMenu.this.movingItem != null) {
-                ReorderingGuiRadialMenu.this.movingItem = widget.getItem().primarySlotIcon().swapItem(ReorderingGuiRadialMenu.this.movingItem);
+                ReorderingGuiRadialMenu.this.movingItem = selected.primarySlotIcon().swapItem(ReorderingGuiRadialMenu.this.movingItem);
             } else {
-                ReorderingGuiRadialMenu.this.pickExcludedItem(widget);
-            }
-        }
-
-        @Override
-        public void renderButton(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-            super.renderButton(pPoseStack, pMouseX, pMouseY, pPartialTick);
-            if (this.visible && ReorderingGuiRadialMenu.this.movingItem != null) {
-                int i = this.getX() + this.innerPadding();
-                int j = this.getY() + this.innerPadding();
-                pPoseStack.pushPose();
-                pPoseStack.translate(i, j, 0.04);
-                ScreenUtils.drawGradientRect(pPoseStack.last().pose(), this.getBlitOffset(), 0, 0, this.containerWidth(), this.containerHeight(), 0xd0000000, 0xd0000000);
-                drawCenteredString(pPoseStack, Minecraft.getInstance().font, Component.translatable("Place here to exclude"), this.width / 2, this.height / 2, 0xFFFFFF);
-                pPoseStack.popPose();
+                ReorderingGuiRadialMenu.this.pickExcludedItem(selected.primarySlotIcon().get());
             }
         }
 
         @Override
         public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-            if (ReorderingGuiRadialMenu.this.movingItem != null && withinContentAreaPoint(pMouseX, pMouseY)) {
-                ReorderingGuiRadialMenu.this.excludeItem();
-                return true;
+            if (isMouseOver(pMouseX, pMouseY)) {
+                if (ReorderingGuiRadialMenu.this.movingItem != null) {
+                    ReorderingGuiRadialMenu.this.excludeItem();
+                    return true;
+                }
             }
             return super.mouseClicked(pMouseX, pMouseY, pButton);
+        }
+
+        @Override
+        public void render(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
+            super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
+            if (this.isVisible && ReorderingGuiRadialMenu.this.movingItem != null) {
+                int i = this.getLeft();
+                int j = this.getTop();
+                pPoseStack.pushPose();
+                pPoseStack.translate(i, j, 100);
+                ScreenUtils.drawGradientRect(pPoseStack.last().pose(), 0, 0, 0, this.getWidth(), this.getHeight(), 0xd0000000, 0xd0000000);
+                drawCenteredString(pPoseStack, Minecraft.getInstance().font, Component.translatable("Place here to exclude"), this.width / 2, this.height / 2, 0xFFFFFF);
+                pPoseStack.popPose();
+            }
+        }
+
+
+    }
+
+    public static class ExcludedEntry<T> extends SimpleList.Entry<ExcludedEntry<T>> {
+
+        public ExcludedEntry(@NotNull IRadialMenuSlot<ItemWrapper<T>> item, Runnable onClick) {
+            super(item.slotName(), onClick);
         }
     }
 

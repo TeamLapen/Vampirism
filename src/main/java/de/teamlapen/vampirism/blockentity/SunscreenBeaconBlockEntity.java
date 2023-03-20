@@ -34,7 +34,7 @@ public class SunscreenBeaconBlockEntity extends BlockEntity {
                 final int distSq = VampirismConfig.SERVER.sunscreenBeaconDistance.get() * VampirismConfig.SERVER.sunscreenBeaconDistance.get();
                 blockEntity.selector = input -> {
                     if (input == null) return false;
-                    BlockPos player = new BlockPos(input.getX(), 0, input.getZ());
+                    BlockPos player = new BlockPos((int) input.getX(), 0, (int) input.getZ());
                     return player.distSqr(center) < distSq;
                 };
             }

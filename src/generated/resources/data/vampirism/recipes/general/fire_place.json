@@ -15,5 +15,6 @@
   ],
   "result": {
     "item": "vampirism:fire_place"
-  }
+  },
+  "show_notification": true
 }

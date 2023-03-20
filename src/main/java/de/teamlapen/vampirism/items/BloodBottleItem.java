@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
@@ -9,21 +8,17 @@ import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.fluids.BloodHelper;
-import de.teamlapen.vampirism.misc.VampirismCreativeTab;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -34,8 +29,6 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Consumer;
 
 /**
  * Stores blood
@@ -68,7 +61,7 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem, ModD
     }
 
     @Override
-    public void generateCreativeTab(@NotNull FeatureFlagSet featureSet, CreativeModeTab.@NotNull Output output, boolean hasPermission) {
+    public void generateCreativeTab(CreativeModeTab.@NotNull ItemDisplayParameters parameters, CreativeModeTab.Output output) {
         for (int i = 0; i < BloodBottleItem.AMOUNT; i++) {
             ItemStack stack = getDefaultInstance();
             stack.setDamageValue(i);

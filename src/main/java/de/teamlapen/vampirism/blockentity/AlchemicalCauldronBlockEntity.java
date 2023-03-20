@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.recipes.AlchemicalCauldronRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
@@ -229,7 +230,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
                 }
             }
 
-            if (cauldronRecipe != null && !blockEntity.isBurning() && ((AbstractFurnaceBlockEntityAccessor) blockEntity).canBurn_vampirism(cauldronRecipe, blockEntity.items, blockEntity.getMaxStackSize()) && blockEntity.canPlayerCook(cauldronRecipe)) {
+            if (cauldronRecipe != null && !blockEntity.isBurning() && ((AbstractFurnaceBlockEntityAccessor) blockEntity).canBurn_vampirism(level.registryAccess(), cauldronRecipe, blockEntity.items, blockEntity.getMaxStackSize()) && blockEntity.canPlayerCook(cauldronRecipe)) {
                 blockEntity.dataAccess.set(0, blockEntity.getBurnDuration(itemstackFuel)); //Set burn time
                 blockEntity.dataAccess.set(1, blockEntity.dataAccess.get(0));
                 if (blockEntity.isBurning()) {
@@ -246,12 +247,12 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
                 }
             }
 
-            if (cauldronRecipe != null && blockEntity.isBurning() && ((AbstractFurnaceBlockEntityAccessor) blockEntity).canBurn_vampirism(cauldronRecipe, blockEntity.items, blockEntity.getMaxStackSize()) && blockEntity.canPlayerCook(cauldronRecipe)) {
+            if (cauldronRecipe != null && blockEntity.isBurning() && ((AbstractFurnaceBlockEntityAccessor) blockEntity).canBurn_vampirism(level.registryAccess(), cauldronRecipe, blockEntity.items, blockEntity.getMaxStackSize()) && blockEntity.canPlayerCook(cauldronRecipe)) {
                 blockEntity.dataAccess.set(2, blockEntity.dataAccess.get(2) + 1); //Increase cook time
                 if (blockEntity.dataAccess.get(2) == blockEntity.dataAccess.get(3)) { //If finished
                     blockEntity.dataAccess.set(2, 0);
                     blockEntity.dataAccess.set(3, getTotalCookTime(level, blockEntity));
-                    blockEntity.finishCooking(cauldronRecipe);
+                    blockEntity.finishCooking(level.registryAccess(), cauldronRecipe);
                     dirty = true;
                 }
             } else {
@@ -305,11 +306,11 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
     /**
      * copy of AbstractFurnaceTileEntity#finishCooking(IRecipe) with modification
      */
-    private void finishCooking(@Nullable AlchemicalCauldronRecipe recipe) {
-        if (recipe != null && ((AbstractFurnaceBlockEntityAccessor) this).canBurn_vampirism(recipe, items, getMaxStackSize()) && canPlayerCook(recipe)) {
+    private void finishCooking(RegistryAccess access, @Nullable AlchemicalCauldronRecipe recipe) {
+        if (recipe != null && ((AbstractFurnaceBlockEntityAccessor) this).canBurn_vampirism(access, recipe, items, getMaxStackSize()) && canPlayerCook(recipe)) {
             ItemStack itemstackfluid = this.items.get(0);
             ItemStack itemstackingredient = this.items.get(1);
-            ItemStack itemstack1result = recipe.getResultItem();
+            ItemStack itemstack1result = recipe.getResultItem(access);
             ItemStack itemstackoutput = this.items.get(2);
             if (itemstackoutput.isEmpty()) {
                 this.items.set(2, itemstack1result.copy());

@@ -4,7 +4,6 @@ import de.teamlapen.vampirism.blocks.AlchemyTableBlock;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.inventory.AlchemyTableMenu;
-import de.teamlapen.vampirism.recipes.AbstractBrewingRecipe;
 import de.teamlapen.vampirism.util.OilUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -171,7 +170,7 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
             --blockEntity.fuel;
             blockEntity.brewTime = 600;
             blockEntity.ingredient = itemstack1.getItem();
-            blockEntity.productColor = level.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().filter(recipe -> recipe.isInput(blockEntity.items.get(4)) && (recipe.isIngredient(blockEntity.items.get(0)) || recipe.isIngredient(blockEntity.items.get(1)))).map(AbstractBrewingRecipe::getResultItem).map(s -> OilUtils.getOil(s).getColor()).findAny().orElse(0xffffff);
+            blockEntity.productColor = level.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().filter(recipe -> recipe.isInput(blockEntity.items.get(4)) && (recipe.isIngredient(blockEntity.items.get(0)) || recipe.isIngredient(blockEntity.items.get(1)))).map(recipe -> recipe.getResultItem(level.registryAccess())).map(s -> OilUtils.getOil(s).getColor()).findAny().orElse(0xffffff);
             blockEntity.setChanged();
         }
 

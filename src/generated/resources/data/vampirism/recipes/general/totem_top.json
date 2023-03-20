@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "vampirism:totem_top_crafted"
-  }
+  },
+  "show_notification": true
 }

@@ -15,5 +15,6 @@
   "result": {
     "count": 3,
     "item": "vampirism:dark_spruce_door"
-  }
+  },
+  "show_notification": true
 }

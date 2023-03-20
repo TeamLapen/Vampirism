@@ -18,6 +18,7 @@ import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.world.ModDamageSources;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -25,6 +26,7 @@ import net.minecraft.tags.StructureTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
@@ -90,11 +92,13 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
         if (!level.isClientSide) {
             if (isGettingSundamage(level) && this.isAlive()) {
                 if (VampirismConfig.BALANCE.vpSundamageInstantDeath.get()) {
-                    this.hurt(VReference.SUNDAMAGE, 1000);
+                    DamageHandler.hurtModded(this, ModDamageSources::sunDamage, 1000);
                     turnToAsh();
                 } else if (tickCount % 40 == 11) {
                     double dmg = getAttribute(ModAttributes.SUNDAMAGE.get()).getValue();
-                    if (dmg > 0) this.hurt(VReference.SUNDAMAGE, (float) dmg);
+                    if (dmg > 0) {
+                        DamageHandler.hurtModded(this, ModDamageSources::sunDamage, (float) dmg);
+                    }
                 }
 
             }
@@ -234,10 +238,10 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     @Override
     public boolean hurt(@NotNull DamageSource damageSource, float amount) {
         if (vulnerableToFire) {
-            if (DamageSource.IN_FIRE.equals(damageSource)) {
-                return this.hurt(VReference.VAMPIRE_IN_FIRE, calculateFireDamage(amount));
-            } else if (DamageSource.ON_FIRE.equals(damageSource)) {
-                return this.hurt(VReference.VAMPIRE_ON_FIRE, calculateFireDamage(amount));
+            if (damageSource.is(DamageTypes.IN_FIRE)) {
+                return DamageHandler.hurtModded(this, ModDamageSources::vampireInFire, calculateFireDamage(amount));
+            } else if (damageSource.is(DamageTypes.ON_FIRE)) {
+                return DamageHandler.hurtModded(this, ModDamageSources::vampireOnFire, calculateFireDamage(amount));
             }
         }
         return super.hurt(damageSource, amount);

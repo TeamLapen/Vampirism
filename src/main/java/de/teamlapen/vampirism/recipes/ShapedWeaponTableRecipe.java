@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -53,7 +54,7 @@ public class ShapedWeaponTableRecipe implements CraftingRecipe, IWeaponTableReci
 
     @NotNull
     @Override
-    public ItemStack assemble(@NotNull CraftingContainer inv) {
+    public ItemStack assemble(@NotNull CraftingContainer inv, @NotNull RegistryAccess registryAccess) {
         return this.recipeOutput.copy();
     }
 
@@ -89,7 +90,7 @@ public class ShapedWeaponTableRecipe implements CraftingRecipe, IWeaponTableReci
 
     @NotNull
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(@NotNull RegistryAccess registryAccess) {
         return this.recipeOutput;
     }
 

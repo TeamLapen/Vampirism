@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "vampirism:coffin_purple"
-  }
+  },
+  "show_notification": true
 }

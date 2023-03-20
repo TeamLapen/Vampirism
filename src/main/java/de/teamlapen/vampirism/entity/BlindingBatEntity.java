@@ -4,11 +4,12 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntitySelector;
@@ -76,7 +77,7 @@ public class BlindingBatEntity extends Bat {
     public void tick() {
         super.tick();
         if (restrictLiveSpan && this.tickCount > BalanceMobProps.mobProps.BLINDING_BAT_LIVE_SPAWN) {
-            this.hurt(DamageSource.MAGIC, 10F);
+            DamageHandler.hurtVanilla(this, DamageSources::magic, 10f);
         }
         if (!this.level.isClientSide) {
             List<? extends LivingEntity> l = targetingMob ? level.getEntitiesOfClass(Monster.class, this.getBoundingBox()) : level.getEntitiesOfClass(Player.class, this.getBoundingBox());
@@ -88,7 +89,7 @@ public class BlindingBatEntity extends Bat {
                 }
             }
             if (targeting && hit) {
-                this.hurt(DamageSource.GENERIC, 1000);
+                DamageHandler.kill(this, 1000);
             }
         }
     }

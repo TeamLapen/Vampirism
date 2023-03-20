@@ -16,7 +16,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
@@ -36,17 +35,17 @@ public abstract class VampirismHunterArmorItem extends ArmorItem implements IFac
     protected static final UUID[] VAMPIRISM_ARMOR_MODIFIER = new UUID[]{UUID.fromString("f0b9a417-0cec-4629-8623-053cd0feec3c"), UUID.fromString("e54474a9-62a0-48ee-baaf-7efddca3d711"), UUID.fromString("ac0c33f4-ebbf-44fe-9be3-a729f7633329"), UUID.fromString("8839e157-d576-4cff-bf34-0a788131fe0f")};
     private final @NotNull Multimap<Attribute, AttributeModifier> modifierMultimap;
 
-    public VampirismHunterArmorItem(@NotNull ArmorMaterial materialIn, @NotNull EquipmentSlot equipmentSlotIn, Item.@NotNull Properties props) {
-        this(materialIn, equipmentSlotIn, props, ImmutableMap.of());
+    public VampirismHunterArmorItem(@NotNull ArmorMaterial materialIn, @NotNull ArmorItem.Type type, Item.@NotNull Properties props) {
+        this(materialIn, type, props, ImmutableMap.of());
     }
 
-    public VampirismHunterArmorItem(@NotNull ArmorMaterial materialIn, @NotNull EquipmentSlot equipmentSlotIn, Item.@NotNull Properties props, @NotNull Map<Attribute, Tuple<Double, AttributeModifier.Operation>> modifiers) {
-        super(materialIn, equipmentSlotIn, props);
+    public VampirismHunterArmorItem(@NotNull ArmorMaterial materialIn, @NotNull ArmorItem.Type type, Item.@NotNull Properties props, @NotNull Map<Attribute, Tuple<Double, AttributeModifier.Operation>> modifiers) {
+        super(materialIn, type, props);
 
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
-        builder.putAll(getDefaultAttributeModifiers(equipmentSlotIn));
+        builder.putAll(getDefaultAttributeModifiers(type.getSlot()));
         for (Map.Entry<Attribute, Tuple<Double, AttributeModifier.Operation>> modifier : modifiers.entrySet()) {
-            builder.put(modifier.getKey(), new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Vampirism armor modifier", modifier.getValue().getA(), modifier.getValue().getB()));
+            builder.put(modifier.getKey(), new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[type.getSlot().getIndex()], "Vampirism armor modifier", modifier.getValue().getA(), modifier.getValue().getB()));
         }
         modifierMultimap = builder.build();
     }
@@ -59,7 +58,7 @@ public abstract class VampirismHunterArmorItem extends ArmorItem implements IFac
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        if (slot == this.slot) {
+        if (slot == this.type.getSlot()) {
             return modifierMultimap;
         }
         return ImmutableMultimap.of();

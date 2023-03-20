@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -52,17 +53,18 @@ public class SitHandler {
      * @return true if the player is close enough, false otherwise
      */
     private static boolean isPlayerInRange(@NotNull Player player, BlockPos pos) {
-        BlockPos playerPos = player.blockPosition();
+        Vec3 playerPos = player.position();
+        Vec3 blockPos = new Vec3(pos.getX(), pos.getY(), pos.getZ());
         double blockReachDistance = player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue();
 
 //        if(blockReachDistance == 0) //player has to stand on top of the block
-//            return playerPos.getY() - pos.getY() <= 1 && playerPos.getX() - pos.getX() == 0 && playerPos.getZ() - pos.getZ() == 0;
+//            return playerPos.getY() - blockPos.getY() <= 1 && playerPos.getX() - blockPos.getX() == 0 && playerPos.getZ() - blockPos.getZ() == 0;
 
-        pos = pos.offset(0.5D, 0.5D, 0.5D);
+        blockPos = blockPos.add(0.5D, 0.5D, 0.5D);
 
-        AABB range = new AABB(pos.getX() + blockReachDistance, pos.getY() + blockReachDistance, pos.getZ() + blockReachDistance, pos.getX() - blockReachDistance, pos.getY() - blockReachDistance, pos.getZ() - blockReachDistance);
+        AABB range = new AABB(blockPos.x() + blockReachDistance, blockPos.y() + blockReachDistance, blockPos.z() + blockReachDistance, blockPos.x() - blockReachDistance, blockPos.y() - blockReachDistance, blockPos.z() - blockReachDistance);
 
-        playerPos = playerPos.offset(0.5D, 0.5D, 0.5D);
-        return range.minX <= playerPos.getX() && range.minY <= playerPos.getY() && range.minZ <= playerPos.getZ() && range.maxX >= playerPos.getX() && range.maxY >= playerPos.getY() && range.maxZ >= playerPos.getZ();
+        playerPos = playerPos.add(0.5D, 0.5D, 0.5D);
+        return range.minX <= playerPos.x() && range.minY <= playerPos.y() && range.minZ <= playerPos.z() && range.maxX >= playerPos.x() && range.maxY >= playerPos.y() && range.maxZ >= playerPos.z();
     }
 }

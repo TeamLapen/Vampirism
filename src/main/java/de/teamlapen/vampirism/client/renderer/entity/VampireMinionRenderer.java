@@ -26,7 +26,7 @@ public class VampireMinionRenderer extends DualBipedRenderer<VampireMinionEntity
         minionSpecificTextures = gatherTextures("textures/entity/minion/vampire", false);
 
         this.addLayer(new PlayerBodyOverlayLayer<>(this));
-        this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED_ARMOR_INNER)), new HumanoidModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED_ARMOR_OUTER))));
+        this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED_ARMOR_INNER)), new HumanoidModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED_ARMOR_OUTER)), context.getModelManager()));
     }
 
     public int getMinionSpecificTextureCount() {

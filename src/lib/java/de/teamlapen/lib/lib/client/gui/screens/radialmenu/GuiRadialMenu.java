@@ -122,7 +122,7 @@ public abstract class GuiRadialMenu<T> extends Screen {
 
         ms.pushPose();
         RenderSystem.enableBlend();
-        RenderSystem.disableTexture();
+
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -161,7 +161,7 @@ public abstract class GuiRadialMenu<T> extends Screen {
         }
 
         tessellator.end();
-        RenderSystem.enableTexture();
+
         RenderSystem.disableBlend();
         if (hasMouseOver && mousedOverSlot != -1) {
             int adjusted = ((mousedOverSlot + (numberOfSlices / 2 + 1)) % numberOfSlices) - 1;
@@ -190,7 +190,7 @@ public abstract class GuiRadialMenu<T> extends Screen {
                     drawSecondaryIcons(ms, (int) posX, (int) posY, secondarySlotIcons);
                 }
             }
-            drawSliceName(String.valueOf(i + 1), stack, (int) posX, (int) posY);
+            drawSliceName(ms, String.valueOf(i + 1), stack, (int) posX, (int) posY);
         }
 
         if (mousedOverSlot != -1) {
@@ -226,11 +226,11 @@ public abstract class GuiRadialMenu<T> extends Screen {
         }
     }
 
-    public void drawSliceName(String sliceName, ItemStack stack, int posX, int posY) {
+    public void drawSliceName(PoseStack ms, String sliceName, ItemStack stack, int posX, int posY) {
         if (!radialMenu.isShowMoreSecondaryItems()) {
-            this.itemRenderer.renderGuiItemDecorations(font, stack, posX + 5, posY, sliceName);
+            this.itemRenderer.renderGuiItemDecorations(ms, font, stack, posX + 5, posY, sliceName);
         } else {
-            this.itemRenderer.renderGuiItemDecorations(font, stack, posX + 5, posY + 5, sliceName);
+            this.itemRenderer.renderGuiItemDecorations(ms, font, stack, posX + 5, posY + 5, sliceName);
         }
     }
 

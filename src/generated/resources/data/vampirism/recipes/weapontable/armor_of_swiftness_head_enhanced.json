@@ -22,6 +22,7 @@
   "result": {
     "item": "vampirism:armor_of_swiftness_head_enhanced"
   },
+  "show_notification": true,
   "skill": [
     "vampirism:enhanced_armor"
   ]

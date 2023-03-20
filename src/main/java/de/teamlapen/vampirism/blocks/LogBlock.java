@@ -7,6 +7,7 @@ import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
@@ -14,8 +15,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class LogBlock extends RotatedPillarBlock {
 
-    public static final WoodType DARK_SPRUCE = WoodType.register(WoodType.create(REFERENCE.MODID + ":dark_spruce"));
-    public static final WoodType CURSED_SPRUCE = WoodType.register(WoodType.create(REFERENCE.MODID + ":cursed_spruce"));
+    public static final WoodType DARK_SPRUCE = WoodType.register(new WoodType(REFERENCE.MODID + ":dark_spruce", BlockSetType.SPRUCE));
+    public static final WoodType CURSED_SPRUCE = WoodType.register(new WoodType(REFERENCE.MODID + ":cursed_spruce", BlockSetType.SPRUCE));
 
     public LogBlock(BlockBehaviour.@NotNull Properties properties) {
         super(properties);

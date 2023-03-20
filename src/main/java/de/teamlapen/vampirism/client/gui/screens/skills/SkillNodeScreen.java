@@ -135,7 +135,7 @@ public class SkillNodeScreen extends GuiComponent {
         int x = getNodeStart();
         //draw skill background
         if (this.skillNode.getElements().length > 1) {
-            ScreenUtils.blitWithBorder(stack, x, this.y, 200, 0, width, 26, 26, 26, 3, this.getBlitOffset());
+            ScreenUtils.blitWithBorder(stack, x, this.y, 200, 0, width, 26, 26, 26, 3, 0);
         }
 
         //draw skills
@@ -155,7 +155,7 @@ public class SkillNodeScreen extends GuiComponent {
             RenderSystem.setShaderColor(1, 1, 1, 1);
 //            RenderSystem.disableLighting();
             RenderSystem.enableBlend();
-            UtilLib.drawTexturedModalRect(stack.last().pose(), this.getBlitOffset(), x + 5, this.y + 5, 0, 0, 16, 16, 16, 16);
+            UtilLib.drawTexturedModalRect(stack.last().pose(), 0, x + 5, this.y + 5, 0, 0, 16, 16, 16, 16);
 //            RenderSystem.disableLighting();
 
             x += 26 + 10;
@@ -248,7 +248,7 @@ public class SkillNodeScreen extends GuiComponent {
                 int width = text.stream().mapToInt(this.minecraft.font::width).max().getAsInt();
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
-                ScreenUtils.blitWithBorder(stack, scrollX + x - 3, scrollY + this.y - 3 - text.size() * 9, 0, 81, width + 8, 10 + text.size() * 10, 200, 20, 3, this.getBlitOffset());
+                ScreenUtils.blitWithBorder(stack, scrollX + x - 3, scrollY + this.y - 3 - text.size() * 9, 0, 81, width + 8, 10 + text.size() * 10, 200, 20, 3, 0);
                 int fontY = scrollY + this.y + 1 - text.size() * 9;
                 for (int i = 0; i < text.size(); i++) {
                     this.minecraft.font.drawShadow(stack, text.get(i), scrollX + x + 2, fontY + i * 9, -1);
@@ -266,7 +266,7 @@ public class SkillNodeScreen extends GuiComponent {
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
                 int yOffset = description.isEmpty() ? 15 : 24;
-                ScreenUtils.blitWithBorder(stack, scrollX + x - 3, scrollY + this.y + 3 + 7 + description.size() * 9, 0, 81, width + 8, text.size() * 10 + yOffset, 200, 20, 3, this.getBlitOffset());
+                ScreenUtils.blitWithBorder(stack, scrollX + x - 3, scrollY + this.y + 3 + 7 + description.size() * 9, 0, 81, width + 8, text.size() * 10 + yOffset, 200, 20, 3, 0);
                 int fontY = scrollY + this.y + 3 + yOffset + 8 + description.size() * 9;
                 for (int i = 0; i < text.size(); i++) {
                     this.minecraft.font.drawShadow(stack, text.get(i), scrollX + x + 2, fontY + i * 9, -1);
@@ -277,7 +277,7 @@ public class SkillNodeScreen extends GuiComponent {
             if (!description.isEmpty()) {
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
-                ScreenUtils.blitWithBorder(stack, scrollX + x - 5, scrollY + this.y + 3, 0, 81, this.width[hoveredSkillIndex], 30 + description.size() * 9, 200, 20, 3, this.getBlitOffset());
+                ScreenUtils.blitWithBorder(stack, scrollX + x - 5, scrollY + this.y + 3, 0, 81, this.width[hoveredSkillIndex], 30 + description.size() * 9, 200, 20, 3, 0);
                 for (int i = 0; i < description.size(); i++) {
                     this.minecraft.font.drawShadow(stack, description.get(i), scrollX + x + 2, scrollY + this.y + 3 + 24 + i * 9, -1);
                 }
@@ -301,8 +301,8 @@ public class SkillNodeScreen extends GuiComponent {
             int costHeight = this.minecraft.font.lineHeight;
             RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            ScreenUtils.blitWithBorder(stack, scrollX + x + 24, scrollY + this.y + ((26 - costHeight) /2) -1, 0, 81, costWidth + 5, costHeight + 4, 200, 20, 3, this.getBlitOffset());
-            this.minecraft.font.drawShadow(stack, Component.literal(String.valueOf(cost)), scrollX + x + 27, scrollY + this.y + ((26 - costHeight) /2f) + 1, -1);
+            ScreenUtils.blitWithBorder(stack, scrollX + x + 24, scrollY + this.y + ((26 - costHeight) / 2) - 1, 0, 81, costWidth + 5, costHeight + 4, 200, 20, 3, 0);
+            this.minecraft.font.drawShadow(stack, Component.literal(String.valueOf(cost)), scrollX + x + 27, scrollY + this.y + ((26 - costHeight) / 2f) + 1, -1);
 
             //draw skill
             RenderSystem.setShaderColor(1f, 1f, 1f, 1);
@@ -315,7 +315,7 @@ public class SkillNodeScreen extends GuiComponent {
             RenderSystem.setShaderColor(1, 1, 1, 1);
 //            RenderSystem.disableLighting();
             RenderSystem.enableBlend();
-            UtilLib.drawTexturedModalRect(stack.last().pose(), this.getBlitOffset(), x + scrollX + 5, this.y + scrollY + 5, 0, 0, 16, 16, 16, 16);
+            UtilLib.drawTexturedModalRect(stack.last().pose(), 0, x + scrollX + 5, this.y + scrollY + 5, 0, 0, 16, 16, 16, 16);
 //            RenderSystem.disableLighting();
         }
     }

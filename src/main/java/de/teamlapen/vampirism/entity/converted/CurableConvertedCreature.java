@@ -13,12 +13,14 @@ import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
 import de.teamlapen.vampirism.entity.SoulOrbEntity;
 import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.world.ModDamageSources;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
@@ -61,10 +63,10 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     default boolean hurtC(DamageSource damageSource, float amount) {
         PathfinderMob entity = ((PathfinderMob) this);
         if (data().vulnerableToFire) {
-            if (DamageSource.IN_FIRE.equals(damageSource)) {
-                return entity.hurt(VReference.VAMPIRE_IN_FIRE, calculateFireDamage(amount));
-            } else if (DamageSource.ON_FIRE.equals(damageSource)) {
-                return entity.hurt(VReference.VAMPIRE_ON_FIRE, calculateFireDamage(amount));
+            if (damageSource.is(DamageTypes.IN_FIRE)) {
+                return DamageHandler.hurtModded(entity, ModDamageSources::vampireInFire, calculateFireDamage(amount));
+            } else if (damageSource.is(DamageTypes.ON_FIRE)) {
+                return DamageHandler.hurtModded(entity, ModDamageSources::vampireOnFire, calculateFireDamage(amount));
             }
         }
         return hurtSuper(damageSource, amount);
@@ -153,7 +155,9 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
         if (!entity.level.isClientSide) {
             if (isGettingSundamage(entity.level) && entity.tickCount % 40 == 11) {
                 double dmg = entity.getAttribute(ModAttributes.SUNDAMAGE.get()).getValue();
-                if (dmg > 0) entity.hurt(VReference.SUNDAMAGE, (float) dmg);
+                if (dmg > 0) {
+                    DamageHandler.hurtModded(entity, ModDamageSources::sunDamage, (float) dmg);
+                }
             }
             if (isGettingGarlicDamage(entity.level) != EnumStrength.NONE) {
                 DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(entity.level), entity.tickCount);

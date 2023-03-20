@@ -31,5 +31,6 @@
       ]
     }
   },
+  "show_notification": true,
   "skill": []
 }

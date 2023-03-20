@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.entity.player.skills.SkillNode;
 import de.teamlapen.vampirism.entity.player.skills.SkillTree;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.advancements.AdvancementTabType;
 import net.minecraft.client.renderer.GameRenderer;
@@ -100,11 +101,11 @@ public class SkillsTabScreen extends GuiComponent {
     }
 
     public void drawTab(@NotNull PoseStack stack, int x, int y, boolean selected) {
-        this.position.draw(stack, this, x, y, selected, this.index);
+        this.position.draw(stack, x, y, selected, this.index);
     }
 
-    public void drawIcon(int x, int y, ItemRenderer itemRenderer) {
-        this.position.drawIcon(x, y, this.index, itemRenderer, this.icon);
+    public void drawIcon(PoseStack stack, int x, int y, ItemRenderer itemRenderer) {
+        this.position.drawIcon(stack, x, y, this.index, itemRenderer, this.icon);
     }
 
     public boolean isMouseOver(int guiLeft, int guiTop, double mouseX, double mouseY) {
@@ -280,7 +281,7 @@ public class SkillsTabScreen extends GuiComponent {
         int backgroundColor = 0xF09b0404;//0xF0550404;;
         int borderColorStart = 0x505f0c0c;
         int borderColorEnd = (borderColorStart & 0xFEFEFE) >> 1 | borderColorStart & 0xFF000000;
-        int zLevel = this.getBlitOffset();
+        int zLevel = 0;
 
         mStack.pushPose();
         Matrix4f mat = mStack.last().pose();
@@ -297,7 +298,7 @@ public class SkillsTabScreen extends GuiComponent {
         MultiBufferSource.BufferSource renderType = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
         mStack.translate(0.0D, 0.0D, zLevel);
 
-        this.minecraft.font.drawInBatch(s, (float) tooltipX + (tooltipTextWidth / 2f) - this.minecraft.font.width(f) / 2f, (float) tooltipY + (tooltipHeight / 2f) - 3, -1, true, mat, renderType, false, 0, 15728880);
+        this.minecraft.font.drawInBatch(s, (float) tooltipX + (tooltipTextWidth / 2f) - this.minecraft.font.width(f) / 2f, (float) tooltipY + (tooltipHeight / 2f) - 3, -1, true, mat, renderType, Font.DisplayMode.NORMAL, 0, 15728880);
 
         renderType.endBatch();
         mStack.popPose();

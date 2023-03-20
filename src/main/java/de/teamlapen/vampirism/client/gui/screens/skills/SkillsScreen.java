@@ -177,7 +177,7 @@ public class SkillsScreen extends Screen {
             RenderSystem.defaultBlendFunc();
 
             for (SkillsTabScreen skillTab : this.tabs) {
-                skillTab.drawIcon(x, y, this.itemRenderer);
+                skillTab.drawIcon(stack, x, y, this.itemRenderer);
             }
 
             RenderSystem.disableBlend();

@@ -20,10 +20,7 @@ import de.teamlapen.vampirism.entity.player.IVampirismPlayer;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.entity.player.tasks.reward.LordLevelReward;
 import de.teamlapen.vampirism.misc.VampirismLogger;
-import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.RegUtil;
-import de.teamlapen.vampirism.util.ScoreboardUtil;
-import de.teamlapen.vampirism.util.VampirismEventFactory;
+import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -33,7 +30,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
@@ -281,14 +277,12 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
 
     @Override
     public boolean onEntityAttacked(DamageSource src, float amt) {
-        if (VampirismConfig.SERVER.pvpOnlyBetweenFactions.get() && src instanceof EntityDamageSource) {
-            if (src.getEntity() instanceof Player) {
-                IPlayableFaction<?> otherFaction = getOpt((Player) src.getEntity()).resolve().map(FactionPlayerHandler::getCurrentFaction).orElse(null);
-                if (this.currentFaction == null || otherFaction == null) {
-                    return VampirismConfig.SERVER.pvpOnlyBetweenFactionsIncludeHumans.get();
-                }
-                return !this.currentFaction.equals(otherFaction);
+        if (VampirismConfig.SERVER.pvpOnlyBetweenFactions.get() && src.getEntity() instanceof Player) {
+            IPlayableFaction<?> otherFaction = getOpt((Player) src.getEntity()).resolve().map(FactionPlayerHandler::getCurrentFaction).orElse(null);
+            if (this.currentFaction == null || otherFaction == null) {
+                return VampirismConfig.SERVER.pvpOnlyBetweenFactionsIncludeHumans.get();
             }
+            return !this.currentFaction.equals(otherFaction);
         }
         return true;
     }
@@ -432,7 +426,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         setFactionAndLevel(null, 0);
         player.displayClientMessage(Component.translatable("command.vampirism.base.level.successful", player.getName(), oldFaction.getName(), 0), true);
         if (die) {
-            player.hurt(DamageSource.GENERIC, 10000);
+            DamageHandler.kill(player, 10000);
         }
     }
 

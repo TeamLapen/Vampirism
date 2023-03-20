@@ -20,5 +20,6 @@
   "result": {
     "item": "vampirism:pitchfork"
   },
+  "show_notification": true,
   "skill": []
 }

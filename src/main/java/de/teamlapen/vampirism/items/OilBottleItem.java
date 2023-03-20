@@ -5,24 +5,19 @@ import de.teamlapen.vampirism.api.items.IOilItem;
 import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.core.ModOils;
 import de.teamlapen.vampirism.core.ModRegistries;
-import de.teamlapen.vampirism.misc.VampirismCreativeTab;
 import de.teamlapen.vampirism.util.OilUtils;
 import de.teamlapen.vampirism.util.RegUtil;
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 public class OilBottleItem extends Item implements IOilItem, ModDisplayItemGenerator.CreativeTabItemProvider {
 
@@ -54,7 +49,7 @@ public class OilBottleItem extends Item implements IOilItem, ModDisplayItemGener
     }
 
     @Override
-    public void generateCreativeTab(FeatureFlagSet featureFlagSet, CreativeModeTab.Output output, boolean hasPermission) {
+    public void generateCreativeTab(CreativeModeTab.@NotNull ItemDisplayParameters parameters, CreativeModeTab.Output output) {
         for (IOil value : RegUtil.values(ModRegistries.OILS)) {
             if (value == ModOils.EMPTY.get()) continue;
             output.accept(OilUtils.setOil(new ItemStack(this), value));

@@ -5,8 +5,8 @@ import com.mojang.math.Axis;
 import de.teamlapen.vampirism.blockentity.PedestalBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,7 +23,7 @@ public class PedestalBESR extends VampirismBESR<PedestalBlockEntity> {
             matrixStack.translate(0.5, 0.8, 0.5);
             float rotation = (te.getTickForRender() % 512 + partialTicks) / 512f;
             matrixStack.mulPose(Axis.YP.rotationDegrees(rotation * 360));
-            Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemTransforms.TransformType.GROUND, i, i1, matrixStack, iRenderTypeBuffer, 0);
+            Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemDisplayContext.GROUND, i, i1, matrixStack, iRenderTypeBuffer, te.getLevel(), 0);
             matrixStack.popPose();
         }
 

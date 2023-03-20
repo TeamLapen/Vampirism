@@ -4,7 +4,6 @@ import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
@@ -15,6 +14,8 @@ import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.effects.SanguinareEffect;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.util.DamageHandler;
+import de.teamlapen.vampirism.world.ModDamageSources;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -229,7 +230,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         }
         blood -= amt;
         if (blood == 0) {
-            entity.hurt(VReference.NO_BLOOD, 1000);
+            DamageHandler.hurtModded(entity, ModDamageSources::noBlood, 1000);
         }
 
         this.sync();
@@ -275,7 +276,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
              * check for sanguinare as the entity might be converting instead of dying
              */
             if (blood == 0 && entity.tickCount % 20 == 10 && entity.getEffect(ModEffects.SANGUINARE.get()) == null) {
-                entity.hurt(VReference.NO_BLOOD, 1000);
+                DamageHandler.hurtModded(entity, ModDamageSources::noBlood, 1000);
             }
             if (blood > 0 && blood < getMaxBlood() && entity.tickCount % 40 == 8) {
                 entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 41));

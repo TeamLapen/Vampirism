@@ -30,7 +30,8 @@
           "count": 1,
           "item": "vampirism:blood_bottle",
           "nbt": "{Damage:0}"
-        }
+        },
+        "show_notification": true
       }
     }
   ]

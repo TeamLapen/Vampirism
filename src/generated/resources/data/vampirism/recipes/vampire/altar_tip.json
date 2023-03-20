@@ -15,5 +15,6 @@
   ],
   "result": {
     "item": "vampirism:altar_tip"
-  }
+  },
+  "show_notification": true
 }

@@ -25,13 +25,13 @@ import de.teamlapen.vampirism.world.VampirismWorld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.DoubleTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.damagesource.DamageSource;
@@ -74,12 +74,12 @@ public class Helper {
                 float angle = world.getTimeOfDay(1.0F);
                 //TODO maybe use this.worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)
                 if (angle > 0.78 || angle < 0.24) {
-                    BlockPos pos = new BlockPos(entity.getX(), entity.getY() + Mth.clamp(entity.getBbHeight() / 2.0F, 0F, 2F), entity.getZ());
+                    BlockPos pos = new BlockPos((int) entity.getX(), (int) (entity.getY() + Mth.clamp(entity.getBbHeight() / 2.0F, 0F, 2F)), (int) entity.getZ());
                     if (canBlockSeeSun(world, pos)) {
                         try {
                             ResourceLocation biome = getBiomeId(world, pos);
                             if (VampirismAPI.sundamageRegistry().getSundamageInBiome(biome)) {
-                                if (world instanceof Level && !VampirismWorld.getOpt((Level) world).map(vw -> vw.isInsideArtificialVampireFogArea(new BlockPos(entity.getX(), entity.getY() + 1, entity.getZ()))).orElse(false)) {
+                                if (world instanceof Level && !VampirismWorld.getOpt((Level) world).map(vw -> vw.isInsideArtificialVampireFogArea(new BlockPos((int) entity.getX(), (int) (entity.getY() + 1), (int) entity.getZ()))).orElse(false)) {
                                     if (profiler != null) profiler.pop();
                                     return true;
                                 }
@@ -285,7 +285,7 @@ public class Helper {
      * @return Whether the given damage source can kill a vampire player or go to DBNO state instead
      */
     public static boolean canKillVampires(@NotNull DamageSource source) {
-        if (!source.isBypassInvul()) {
+        if (!source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
             if (VampirismConfig.BALANCE.vpImmortalFromDamageSources.get().contains(source.getMsgId())) {
                 if (source.getDirectEntity() instanceof LivingEntity) {
                     //Maybe use all IVampireFinisher??

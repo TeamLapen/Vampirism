@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.item.CreativeModeTab;
@@ -30,11 +29,6 @@ public class VReference {
      * Plant type for plants that grow on cursed earth;
      */
     public static final PlantType VAMPIRE_PLANT_TYPE = PlantType.get("vampirism_vampire");
-    public static final DamageSource SUNDAMAGE = new DamageSource("sun").bypassArmor().setMagic();
-    public static final DamageSource VAMPIRE_ON_FIRE = new DamageSource("vampire_on_fire").bypassArmor().setMagic().setIsFire();
-    public static final DamageSource VAMPIRE_IN_FIRE = new DamageSource("vampire_in_fire").setMagic().setIsFire();
-    public static final DamageSource HOLY_WATER = new DamageSource("holy_water").setMagic();
-    public static final DamageSource NO_BLOOD = new DamageSource("blood_loss").bypassArmor().setMagic();
     /**
      * Enchantment type for crossbows
      */

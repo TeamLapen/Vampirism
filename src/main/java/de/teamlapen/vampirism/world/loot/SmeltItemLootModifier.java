@@ -11,7 +11,6 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -51,7 +50,7 @@ public class SmeltItemLootModifier extends LootModifier {
 
     private ObjectArrayList<ItemStack> trySmelting(@NotNull ObjectArrayList<ItemStack> generatedLoot, @NotNull ServerLevel level) {
         RecipeManager recipeManager = level.getRecipeManager();
-        return generatedLoot.stream().map(stack -> recipeManager.getRecipeFor(RecipeType.SMELTING, new SimpleContainer(stack), level).map(AbstractCookingRecipe::getResultItem).filter(result -> !result.isEmpty()).orElse(stack)).collect(Collector.of(ObjectArrayList::new, ObjectArrayList::add, (left, right) -> {
+        return generatedLoot.stream().map(stack -> recipeManager.getRecipeFor(RecipeType.SMELTING, new SimpleContainer(stack), level).map(recipe -> recipe.getResultItem(level.registryAccess())).filter(result -> !result.isEmpty()).orElse(stack)).collect(Collector.of(ObjectArrayList::new, ObjectArrayList::add, (left, right) -> {
             left.addAll(right);
             return left;
         }));

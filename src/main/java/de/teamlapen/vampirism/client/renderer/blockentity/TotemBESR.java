@@ -65,8 +65,8 @@ public class TotemBESR extends VampirismBESR<TotemBlockEntity> {
         int j = (int) (f1 * 255f) << 24;
         Font font = Minecraft.getInstance().font;
         float nameOffset = (float) (-font.width(displayNameIn) / 2);
-        font.drawInBatch(displayNameIn, nameOffset, 0, 553648127, false, matrix4f, iRenderTypeBuffer, true, j, packedLight);
-        font.drawInBatch(displayNameIn, nameOffset, 0, -1, false, matrix4f, iRenderTypeBuffer, true, 0, packedLight);
+        font.drawInBatch(displayNameIn, nameOffset, 0, 553648127, false, matrix4f, iRenderTypeBuffer, Font.DisplayMode.SEE_THROUGH, j, packedLight);
+        font.drawInBatch(displayNameIn, nameOffset, 0, -1, false, matrix4f, iRenderTypeBuffer, Font.DisplayMode.SEE_THROUGH, 0, packedLight);
         matrixStack.popPose();
     }
 

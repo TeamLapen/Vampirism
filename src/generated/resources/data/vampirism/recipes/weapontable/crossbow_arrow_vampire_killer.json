@@ -27,5 +27,6 @@
     "count": 3,
     "item": "vampirism:crossbow_arrow_vampire_killer"
   },
+  "show_notification": true,
   "skill": []
 }

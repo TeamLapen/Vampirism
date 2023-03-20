@@ -477,14 +477,14 @@ public class RecipesGenerator extends VanillaRecipeProvider {
         public void save(@NotNull Consumer<FinishedRecipe> consumerIn, @NotNull ResourceLocation id) {
             this.ensureValid(id);
             this.advancement.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id)).rewards(AdvancementRewards.Builder.recipe(id)).requirements(RequirementsStrategy.OR);
-            consumerIn.accept(new Result(id, this.count, this.group == null ? "" : this.group, this.rows,  determineBookCategory(((ShapedRecipeBuilderAccessor) this).getRecipeCategory()), this.key, this.advancement, id.withPath("recipes/" + ((ShapedRecipeBuilderAccessor) this).getRecipeCategory().getFolderName() + "/" + id.getPath()), this.stack));
+            consumerIn.accept(new Result(id, this.count, this.group == null ? "" : this.group, this.rows, determineBookCategory(((ShapedRecipeBuilderAccessor) this).getRecipeCategory()), this.key, this.advancement, id.withPath("recipes/" + ((ShapedRecipeBuilderAccessor) this).getRecipeCategory().getFolderName() + "/" + id.getPath()), this.stack, ((ShapedRecipeBuilderAccessor) this).getShowNotification()));
         }
 
         private static class Result extends ShapedRecipeBuilder.Result {
             private final @NotNull ItemStack stack;
 
-            public Result(@NotNull ResourceLocation idIn, int countIn, @NotNull String groupIn, @NotNull List<String> patternIn, CraftingBookCategory category, @NotNull Map<Character, Ingredient> keyIn, Advancement.@NotNull Builder advancementBuilderIn, @NotNull ResourceLocation advancementIdIn, @NotNull ItemStack stack) {
-                super(idIn, stack.getItem(), countIn, groupIn, category, patternIn, keyIn, advancementBuilderIn, advancementIdIn);
+            public Result(@NotNull ResourceLocation idIn, int countIn, @NotNull String groupIn, @NotNull List<String> patternIn, CraftingBookCategory category, @NotNull Map<Character, Ingredient> keyIn, Advancement.@NotNull Builder advancementBuilderIn, @NotNull ResourceLocation advancementIdIn, @NotNull ItemStack stack, boolean showNotification) {
+                super(idIn, stack.getItem(), countIn, groupIn, category, patternIn, keyIn, advancementBuilderIn, advancementIdIn, showNotification);
                 this.stack = stack;
             }
 

@@ -25,6 +25,7 @@ import de.teamlapen.vampirism.items.MinionUpgradeItem;
 import de.teamlapen.vampirism.items.VampirismItemBloodFoodItem;
 import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.world.ModDamageSources;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -119,7 +120,9 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         if (!level.isClientSide) {
             if (isGettingSundamage(level) && tickCount % 40 == 11) {
                 double dmg = getAttribute(ModAttributes.SUNDAMAGE.get()).getValue();
-                if (dmg > 0) this.hurt(VReference.SUNDAMAGE, (float) dmg);
+                if (dmg > 0) {
+                    DamageHandler.hurtModded(this, ModDamageSources::sunDamage, (float) dmg);
+                }
             }
             if (isGettingGarlicDamage(level) != EnumStrength.NONE) {
                 DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(level), this.tickCount);

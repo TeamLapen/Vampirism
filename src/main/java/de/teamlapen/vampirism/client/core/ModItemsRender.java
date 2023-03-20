@@ -84,8 +84,8 @@ public class ModItemsRender {
                     PoseStack posestack = RenderSystem.getModelViewStack();
                     posestack.pushPose();
                     posestack.translate(xOffset, yOffset + 8, 0);
-                    posestack.scale(0.5f,0.5f,0.5f);
-                    Minecraft.getInstance().getItemRenderer().renderGuiItem(ammo.getDefaultInstance(), 0,0);
+                    posestack.scale(0.5f, 0.5f, 0.5f);
+                    Minecraft.getInstance().getItemRenderer().renderGuiItem(posestack, ammo.getDefaultInstance(), 0, 0);
                     posestack.popPose();
                     RenderSystem.applyModelViewMatrix();
                 });

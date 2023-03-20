@@ -25,5 +25,6 @@
   ],
   "result": {
     "item": "vampirism:chandelier"
-  }
+  },
+  "show_notification": true
 }

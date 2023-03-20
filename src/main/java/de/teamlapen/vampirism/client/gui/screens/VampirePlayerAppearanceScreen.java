@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.client.gui.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.lib.lib.client.gui.components.SimpleButtonScrollWidget;
+import de.teamlapen.lib.lib.client.gui.components.HoverList;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
@@ -23,6 +23,8 @@ import net.minecraftforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.stream.IntStream;
+
 @OnlyIn(Dist.CLIENT)
 public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
 
@@ -34,8 +36,8 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
     private int eyeType;
     private boolean glowingEyes;
     private boolean titleGender;
-    private SimpleButtonScrollWidget eyeList;
-    private SimpleButtonScrollWidget fangList;
+    private HoverList<?> eyeList;
+    private HoverList<?> fangList;
     private ExtendedButton eyeButton;
     private ExtendedButton fangButton;
     private Checkbox glowingEyesButton;
@@ -91,11 +93,11 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
             }
         });
 
-        this.fangList = this.addRenderableWidget(SimpleButtonScrollWidget.builder(this.guiLeft + 20, this.guiTop + 50 + 19, 99, 80).setComponents(REFERENCE.FANG_TYPE_COUNT, type -> Component.translatable("gui.vampirism.appearance.fang").append(" "+type)).setButtonClickConsumer(this::fang).setButtonHoverConsumer(this::hoverFang).build());
-        this.fangButton = this.addRenderableWidget(new ExtendedButton(fangList.getX(), fangList.getY() - 20, fangList.getWidth(), 20, Component.literal(""), (b) -> this.setFangListVisibility(!fangList.visible)));
+        this.fangList = this.addRenderableWidget(HoverList.builder(this.guiLeft + 20, this.guiTop + 50 + 19, 99, 80).componentsWithClickAndHover(IntStream.range(0, REFERENCE.FANG_TYPE_COUNT).mapToObj(type -> Component.translatable("gui.vampirism.appearance.fang").append(" " + (type + 1))).toList(), this::fang, this::hoverFang).build());
+        this.fangButton = this.addRenderableWidget(new ExtendedButton(fangList.getLeft(), fangList.getTop() - 20, fangList.getWidth(), 20, Component.literal(""), (b) -> this.setFangListVisibility(!this.fangList.isVisible)));
 
-        this.eyeList = this.addRenderableWidget(SimpleButtonScrollWidget.builder(this.guiLeft + 20, this.guiTop + 30 + 19, 99, 100).setComponents(REFERENCE.EYE_TYPE_COUNT, type -> Component.translatable("gui.vampirism.appearance.eye").append(" "+type)).setButtonClickConsumer(this::eye).setButtonHoverConsumer(this::hoverEye).build());
-        this.eyeButton = this.addRenderableWidget(new ExtendedButton(eyeList.getX(), eyeList.getY() - 20, eyeList.getWidth(), 20, Component.literal(""), (b) -> this.setEyeListVisibility(!eyeList.visible)));
+        this.eyeList = this.addRenderableWidget(HoverList.builder(this.guiLeft + 20, this.guiTop + 30 + 19, 99, 100).componentsWithClickAndHover(IntStream.range(0, REFERENCE.EYE_TYPE_COUNT).mapToObj(type -> Component.translatable("gui.vampirism.appearance.eye").append(" " + (type + 1))).toList(), this::eye, this::hoverEye).build());
+        this.eyeButton = this.addRenderableWidget(new ExtendedButton(eyeList.getLeft(), eyeList.getTop() - 20, eyeList.getWidth(), 20, Component.literal(""), (b) -> this.setEyeListVisibility(!this.eyeList.isVisible)));
 
         this.setEyeListVisibility(false);
         this.setFangListVisibility(false);
@@ -148,18 +150,18 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
 
     private void setEyeListVisibility(boolean show) {
         eyeButton.setMessage(Component.translatable("gui.vampirism.appearance.eye").append(" " + (eyeType + 1)));
-        this.eyeList.visible = show;
+        this.eyeList.isVisible = show;
         this.fangButton.visible = !show;
         this.glowingEyesButton.visible = !show;
         this.titleGenderButton.visible = !show;
-        if (show) this.fangList.visible = false;
+        if (show) this.fangList.isVisible = false;
     }
 
     private void setFangListVisibility(boolean show) {
         fangButton.setMessage(Component.translatable("gui.vampirism.appearance.fang").append(" " + (fangType + 1)));
-        this.fangList.visible = show;
+        this.fangList.isVisible = show;
         this.glowingEyesButton.visible = !show;
         this.titleGenderButton.visible = !show;
-        if (show) this.eyeList.visible = false;
+        if (show) this.eyeList.isVisible = false;
     }
 }

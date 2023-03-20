@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "vampirism:grave_cage"
-  }
+  },
+  "show_notification": true
 }

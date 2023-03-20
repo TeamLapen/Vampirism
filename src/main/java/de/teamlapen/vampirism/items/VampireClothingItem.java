@@ -41,10 +41,10 @@ import java.util.function.Consumer;
 
 public class VampireClothingItem extends ArmorItem implements IFactionExclusiveItem {
 
-    public static final ArmorMaterial VAMPIRE_CLOTH = new ArmorMaterial("vampire_cloth", 15, new int[]{1, 2, 3, 1}, 15, SoundEvents.ARMOR_EQUIP_LEATHER, 0, 0, () -> Ingredient.of(ModTags.Items.HEART));
+    public static final ArmorMaterial VAMPIRE_CLOTH = new ArmorMaterial("vampire_cloth", 15, ArmorMaterial.createReduction(1, 2, 3, 1), 15, SoundEvents.ARMOR_EQUIP_LEATHER, 0, 0, () -> Ingredient.of(ModTags.Items.HEART));
 
-    public VampireClothingItem(@NotNull EquipmentSlot slotType) {
-        super(VAMPIRE_CLOTH, slotType, new Properties().defaultDurability(ArmorMaterials.IRON.getDurabilityForSlot(slotType)));
+    public VampireClothingItem(@NotNull ArmorItem.Type type) {
+        super(VAMPIRE_CLOTH, type, new Properties().defaultDurability(ArmorMaterials.IRON.getDurabilityForType(type)));
     }
 
     @OnlyIn(Dist.CLIENT)

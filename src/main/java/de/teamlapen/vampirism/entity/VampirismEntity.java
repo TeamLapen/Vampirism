@@ -244,7 +244,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
 
     protected boolean isLowLightLevel(@NotNull LevelAccessor iWorld) {
         //copy of Monster#isDarkEnoughToSSpawn, but not requiring server level
-        BlockPos blockpos = new BlockPos(this.getX(), this.getBoundingBox().minY, this.getZ());
+        BlockPos blockpos = new BlockPos((int) this.getX(), (int) this.getBoundingBox().minY, (int) this.getZ());
         if (iWorld.getBrightness(LightLayer.SKY, blockpos) > this.random.nextInt(32)) {
             return false;
         } else if (iWorld.getBrightness(LightLayer.BLOCK, blockpos) > 0) {

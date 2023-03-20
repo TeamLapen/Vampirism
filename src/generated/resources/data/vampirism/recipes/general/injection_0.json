@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "vampirism:injection_empty"
-  }
+  },
+  "show_notification": true
 }

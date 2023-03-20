@@ -1,6 +1,5 @@
 package de.teamlapen.lib.lib.util;
 
-import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -14,9 +13,7 @@ import java.util.Set;
 public abstract class ModDisplayItemGenerator implements CreativeModeTab.DisplayItemsGenerator {
     protected CreativeModeTab.Output output;
     @SuppressWarnings("FieldCanBeLocal")
-    protected FeatureFlagSet featureFlagSet;
-    @SuppressWarnings("FieldCanBeLocal")
-    protected boolean hasPermission;
+    protected CreativeModeTab.ItemDisplayParameters parameters;
     protected final Set<ItemLike> items;
 
     public ModDisplayItemGenerator(Set<ItemLike> allItems) {
@@ -24,10 +21,9 @@ public abstract class ModDisplayItemGenerator implements CreativeModeTab.Display
     }
 
     @Override
-    public void accept(@NotNull FeatureFlagSet featureFlagSet, CreativeModeTab.@NotNull Output output, boolean hasPermission) {
+    public void accept(CreativeModeTab.@NotNull ItemDisplayParameters parameters, CreativeModeTab.Output output) {
         this.output = output;
-        this.featureFlagSet = featureFlagSet;
-        this.hasPermission = hasPermission;
+        this.parameters = parameters;
 
         this.addItemsToOutput();
         this.items.forEach(output::accept);
@@ -55,10 +51,10 @@ public abstract class ModDisplayItemGenerator implements CreativeModeTab.Display
 
     protected  <T extends ItemLike & CreativeTabItemProvider> void addGen(RegistryObject<T> item) {
         this.items.remove(item.get());
-        item.get().generateCreativeTab(featureFlagSet, output, hasPermission);
+        item.get().generateCreativeTab(this.parameters, this.output);
     }
 
     public interface CreativeTabItemProvider {
-        void generateCreativeTab(FeatureFlagSet featureFlagSet, CreativeModeTab.Output output, boolean hasPermission);
+        void generateCreativeTab(CreativeModeTab.@NotNull ItemDisplayParameters parameters, CreativeModeTab.Output output);
     }
 }

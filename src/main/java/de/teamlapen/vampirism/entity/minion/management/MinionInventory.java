@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
@@ -65,7 +66,7 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
             if (damage >= 1) {
                 for (int i = 0; i < this.inventoryArmor.size(); ++i) {
                     ItemStack itemstack = this.inventoryArmor.get(i);
-                    if ((!source.isFire() || !itemstack.getItem().isFireResistant()) && itemstack.getItem() instanceof ArmorItem) {
+                    if ((!source.is(DamageTypeTags.IS_FIRE) || !itemstack.getItem().isFireResistant()) && itemstack.getItem() instanceof ArmorItem) {
                         final int i_final = i;
                         itemstack.hurtAndBreak((int) damage, entity, (e) -> {
                             e.broadcastBreakEvent(EquipmentSlot.byTypeAndIndex(EquipmentSlot.Type.ARMOR, i_final));

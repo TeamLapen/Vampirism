@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.items.oil.IApplicableOil;
 import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.util.OilUtils;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
@@ -46,7 +47,7 @@ public class ApplicableOilRecipe extends CustomRecipe {
 
     @NotNull
     @Override
-    public ItemStack assemble(@NotNull CraftingContainer inventory) {
+    public ItemStack assemble(@NotNull CraftingContainer inventory, @NotNull RegistryAccess registryAccess) {
         ItemStack oilStack = ItemStack.EMPTY;
         ItemStack toolStack = ItemStack.EMPTY;
         for (int i = 0; i < inventory.getContainerSize(); i++) {

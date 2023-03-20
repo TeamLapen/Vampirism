@@ -3,7 +3,8 @@ package de.teamlapen.vampirism.recipes;
 import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.core.ModRecipes;
-import net.minecraft.data.recipes.RecipeCategory;
+import de.teamlapen.vampirism.mixin.ShapedRecipeAccessor;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -21,12 +22,12 @@ import org.jetbrains.annotations.NotNull;
 public class ShapedItemWithTierRepair extends ShapedRecipe {
 
     public ShapedItemWithTierRepair(@NotNull ShapedRecipe shaped) {
-        super(shaped.getId(), shaped.getGroup(), CraftingBookCategory.EQUIPMENT, shaped.getRecipeWidth(), shaped.getRecipeHeight(), shaped.getIngredients(), shaped.getResultItem());
+        super(shaped.getId(), shaped.getGroup(), CraftingBookCategory.EQUIPMENT, shaped.getRecipeWidth(), shaped.getRecipeHeight(), shaped.getIngredients(), ((ShapedRecipeAccessor) shaped).getResult());
     }
 
     @NotNull
     @Override
-    public ItemStack assemble(@NotNull CraftingContainer inv) {
+    public ItemStack assemble(@NotNull CraftingContainer inv, @NotNull RegistryAccess registryAccess) {
         ItemStack stack = null;
         search:
         for (int i = 0; i <= inv.getWidth(); ++i) {
@@ -37,7 +38,7 @@ public class ShapedItemWithTierRepair extends ShapedRecipe {
                 }
             }
         }
-        ItemStack result = super.assemble(inv);
+        ItemStack result = super.assemble(inv, registryAccess);
         if (stack != null) {
             result.setTag(stack.getTag());
             result.setDamageValue(0);

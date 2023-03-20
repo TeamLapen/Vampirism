@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.lib.lib.client.gui.components.SimpleButtonScrollWidget;
+import de.teamlapen.lib.lib.client.gui.components.SimpleList;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.network.ClientboundRequestMinionSelectPacket;
 import de.teamlapen.vampirism.network.ServerboundSelectMinionTaskPacket;
@@ -40,7 +40,7 @@ public class SelectMinionScreen extends Screen {
     protected void init() {
         int w = 100;
         int maxH = 5;
-        this.addRenderableWidget(SimpleButtonScrollWidget.builder((this.width - w) / 2, (this.height - maxH * 18 + 2) / 2, w, Math.min(maxH * 18, 18 * minionNames.size()) +2).setComponents(this.minionNames).setButtonClickConsumer(SelectMinionScreen.this::onMinionSelected).build());
+        this.addRenderableWidget(SimpleList.builder((this.width - w) / 2, (this.height - maxH * 18 + 2) / 2, w, Math.min(maxH * 18, 18 * minionNames.size()) + 2).componentsWithClick(this.minionNames, SelectMinionScreen.this::onMinionSelected).build());
     }
 
     private void onMinionSelected(int id) {

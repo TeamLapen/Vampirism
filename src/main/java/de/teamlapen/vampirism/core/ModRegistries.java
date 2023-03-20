@@ -9,12 +9,8 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.world.gen.VampirismFeatures;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.RegistrySetBuilder;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -54,6 +50,7 @@ public class ModRegistries {
             .add(Registries.TEMPLATE_POOL, ModStructures::createStructurePoolTemplates)
             .add(Registries.STRUCTURE_SET, VampirismFeatures::createStructureSets)
             .add(ForgeRegistries.Keys.BIOME_MODIFIERS, VampirismFeatures::createBiomeModifier)
+            .add(Registries.DAMAGE_TYPE, ModDamageTypes::createDamageTypes)
             ;
 
     static void init(IEventBus bus) {

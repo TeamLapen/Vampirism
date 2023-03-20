@@ -1,27 +1,34 @@
 package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.api.items.IItemWithTier;
+import net.minecraft.Util;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.EnumMap;
 import java.util.function.Supplier;
 
 public class ArmorMaterial implements net.minecraft.world.item.ArmorMaterial {
 
-    private static final int[] MAX_DAMAGE_ARRAY = new int[]{13, 15, 16, 11};
+    private static final EnumMap<ArmorItem.Type, Integer> HEALTH_FUNCTION_FOR_TYPE = Util.make(new EnumMap<>(ArmorItem.Type.class), (p_266653_) -> {
+        p_266653_.put(ArmorItem.Type.BOOTS, 13);
+        p_266653_.put(ArmorItem.Type.LEGGINGS, 15);
+        p_266653_.put(ArmorItem.Type.CHESTPLATE, 16);
+        p_266653_.put(ArmorItem.Type.HELMET, 11);
+    });
 
     private final String name;
     private final int maxDamageFactor;
-    private final int[] damageReduction;
+    private final EnumMap<ArmorItem.Type, Integer> damageReduction;
     private final int enchantability;
     private final SoundEvent soundEvent;
     private final float toughness;
     private final float knockbackResistance;
     private final Supplier<Ingredient> repairMaterial;
 
-    public ArmorMaterial(String name, int maxDamageFactor, int[] damageReduction, int enchantability, SoundEvent soundEvent, float toughness, float knockbackResistance, Supplier<Ingredient> repairMaterial) {
+    public ArmorMaterial(String name, int maxDamageFactor, EnumMap<ArmorItem.Type, Integer> damageReduction, int enchantability, SoundEvent soundEvent, float toughness, float knockbackResistance, Supplier<Ingredient> repairMaterial) {
         this.name = name;
         this.maxDamageFactor = maxDamageFactor;
         this.damageReduction = damageReduction;
@@ -33,13 +40,13 @@ public class ArmorMaterial implements net.minecraft.world.item.ArmorMaterial {
     }
 
     @Override
-    public int getDurabilityForSlot(@NotNull EquipmentSlot slot) {
-        return MAX_DAMAGE_ARRAY[slot.getIndex()] * this.maxDamageFactor;
+    public int getDurabilityForType(ArmorItem.@NotNull Type type) {
+        return HEALTH_FUNCTION_FOR_TYPE.get(type) * this.maxDamageFactor;
     }
 
     @Override
-    public int getDefenseForSlot(@NotNull EquipmentSlot slot) {
-        return this.damageReduction[slot.getIndex()];
+    public int getDefenseForType(ArmorItem.@NotNull Type type) {
+        return this.damageReduction.get(type);
     }
 
     @Override
@@ -80,7 +87,7 @@ public class ArmorMaterial implements net.minecraft.world.item.ArmorMaterial {
 
         private final @NotNull IItemWithTier.TIER tier;
 
-        public Tiered(String name, @NotNull IItemWithTier.TIER tier, int maxDamageFactor, int[] damageReduction, int enchantability, SoundEvent soundEvent, float toughness, float knockbackResistance, Supplier<Ingredient> repairMaterial) {
+        public Tiered(String name, @NotNull IItemWithTier.TIER tier, int maxDamageFactor, EnumMap<ArmorItem.Type, Integer> damageReduction, int enchantability, SoundEvent soundEvent, float toughness, float knockbackResistance, Supplier<Ingredient> repairMaterial) {
             super(name, maxDamageFactor, damageReduction, enchantability, soundEvent, toughness, knockbackResistance, repairMaterial);
             this.tier = tier;
         }
@@ -88,6 +95,15 @@ public class ArmorMaterial implements net.minecraft.world.item.ArmorMaterial {
         public IItemWithTier.@NotNull TIER getTier() {
             return tier;
         }
+    }
+
+    public static EnumMap<ArmorItem.Type, Integer> createReduction(int helmet, int chestplate, int leggings, int boots) {
+        return Util.make(new EnumMap<>(ArmorItem.Type.class), (map) -> {
+            map.put(ArmorItem.Type.BOOTS, boots);
+            map.put(ArmorItem.Type.LEGGINGS, leggings);
+            map.put(ArmorItem.Type.CHESTPLATE, chestplate);
+            map.put(ArmorItem.Type.HELMET, helmet);
+        });
     }
 
 }

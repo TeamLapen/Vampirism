@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import de.teamlapen.lib.lib.client.gui.components.ScrollableArrayTextComponentList;
-import de.teamlapen.lib.lib.client.gui.components.SimpleButtonScrollWidget;
+import de.teamlapen.lib.lib.client.gui.components.HoverList;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.renderer.entity.VampireMinionRenderer;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
@@ -16,6 +15,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.widget.ExtendedButton;
 
+import java.util.stream.IntStream;
+
 @OnlyIn(Dist.CLIENT)
 public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinionEntity> {
     private static final Component NAME = Component.translatable("gui.vampirism.minion_appearance");
@@ -23,7 +24,7 @@ public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinio
     private int skinType;
     private boolean useLordSkin;
     private boolean isMinionSpecificSkin;
-    private SimpleButtonScrollWidget typeList;
+    private HoverList<?> typeList;
     private ExtendedButton typeButton;
     private Checkbox lordSkinButton;
     private EditBox nameWidget;
@@ -76,8 +77,8 @@ public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinio
             }
         });
 
-        this.typeList = this.addRenderableWidget(SimpleButtonScrollWidget.builder(this.guiLeft + 20, this.guiTop + 43 + 19, 99, 80).setComponents(this.normalSkinCount + this.minionSkinCount, type -> Component.translatable("gui.vampirism.minion_appearance.skin").append(" "+type)).setButtonClickConsumer(this::skin).setButtonHoverConsumer(this::previewSkin).build());
-        this.typeButton = this.addRenderableWidget(new ExtendedButton(this.typeList.getX(), this.typeList.getY() - 20, this.typeList.getWidth(), 20, Component.literal(""), (button1 -> setListVisibility(!typeList.visible))));
+        this.typeList = this.addRenderableWidget(HoverList.builder(this.guiLeft + 20, this.guiTop + 43 + 19, 99, 80).componentsWithClickAndHover(IntStream.range(0, this.normalSkinCount + this.minionSkinCount).mapToObj(type -> Component.translatable("gui.vampirism.minion_appearance.skin").append(" " + (type + 1))).toList(), this::skin, this::previewSkin).build());
+        this.typeButton = this.addRenderableWidget(new ExtendedButton(this.typeList.getLeft(), this.typeList.getTop() - 20, this.typeList.getWidth(), 20, Component.literal(""), (button1 -> setListVisibility(!this.typeList.isVisible))));
 
         setListVisibility(false);
     }
@@ -104,7 +105,7 @@ public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinio
 
     private void setListVisibility(boolean show) {
         this.typeButton.setMessage(Component.translatable("gui.vampirism.minion_appearance.skin").append(" " + (skinType + 1)));
-        this.typeList.visible = show;
+        this.typeList.isVisible = show;
         this.lordSkinButton.visible = !show;
     }
 

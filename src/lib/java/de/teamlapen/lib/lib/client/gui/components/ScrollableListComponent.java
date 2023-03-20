@@ -197,7 +197,7 @@ public class ScrollableListComponent<T> extends ExtendedButton {
     }
 
     private void renderBackground(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        ScreenUtils.blitWithBorder(matrixStack, new ResourceLocation("textures/gui/widgets.png"), this.getX(), this.getY(), 0, 46, this.width - this.scrollerWidth + 1, this.height, 200, 20, 3, 3, 3, 3, this.getBlitOffset());
+        ScreenUtils.blitWithBorder(matrixStack, new ResourceLocation("textures/gui/widgets.png"), this.getX(), this.getY(), 0, 46, this.width - this.scrollerWidth + 1, this.height, 200, 20, 3, 3, 3, 3, 0);
     }
 
     private void renderItems(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
@@ -207,7 +207,7 @@ public class ScrollableListComponent<T> extends ExtendedButton {
             int y = i * itemHeight - scrolled;
 
             ListItem<T> item = this.listItems.get(i);
-            item.render(matrixStack, this.getX() + 1, this.getY() + 1 + y, this.width - scrollerWidth - 1, this.height, this.itemHeight, mouseX, mouseY, partialTicks, this.getBlitOffset());
+            item.render(matrixStack, this.getX() + 1, this.getY() + 1 + y, this.width - scrollerWidth - 1, this.height, this.itemHeight, mouseX, mouseY, partialTicks, 0);
 
         }
         this.renderScrollBar(matrixStack, mouseX, mouseY, partialTicks);
@@ -216,7 +216,7 @@ public class ScrollableListComponent<T> extends ExtendedButton {
     }
 
     private void renderScrollBar(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        ScreenUtils.blitWithBorder(matrixStack, MISC, this.getX() + this.width - this.scrollerWidth, this.getY(), 0, 0, 9, this.height, 9, 200, 2, getBlitOffset());
+        ScreenUtils.blitWithBorder(matrixStack, MISC, this.getX() + this.width - this.scrollerWidth, this.getY(), 0, 0, 9, this.height, 9, 200, 2, 0);
         this.renderScroller(matrixStack, mouseX, mouseY, partialTicks);
     }
 

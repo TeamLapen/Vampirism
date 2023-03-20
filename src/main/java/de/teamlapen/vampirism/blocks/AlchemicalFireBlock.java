@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.vampirism.util.DamageHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -9,7 +10,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -80,7 +81,7 @@ public class AlchemicalFireBlock extends VampirismBlock {
                 entityIn.setSecondsOnFire(8);
             }
 
-            entityIn.hurt(DamageSource.IN_FIRE, 1);
+            DamageHandler.hurtVanilla(entityIn, DamageSources::inFire, 1);
         }
 
         super.entityInside(state, worldIn, pos, entityIn);

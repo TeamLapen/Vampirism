@@ -83,6 +83,11 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
         return (ShapedWeaponTableRecipeBuilder) super.pattern(patternIn);
     }
 
+    @Override
+    public @NotNull ShapedWeaponTableRecipeBuilder showNotification(boolean p_273326_) {
+        return (ShapedWeaponTableRecipeBuilder) super.showNotification(p_273326_);
+    }
+
     public @NotNull ShapedWeaponTableRecipeBuilder lava(int amount) {
         this.lava = amount;
         return this;
@@ -103,7 +108,7 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
                 .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id))
                 .rewards(net.minecraft.advancements.AdvancementRewards.Builder.recipe(id))
                 .requirements(RequirementsStrategy.OR);
-        consumer.accept(new Result(id, this.result, this.count, this.group == null ? "" : this.group, determineBookCategory(((ShapedRecipeBuilderAccessor)this).getRecipeCategory()), this.rows, this.key, this.advancement, id.withPath("recipes/" + ((ShapedRecipeBuilderAccessor)this).getRecipeCategory().getFolderName() + "/" + id.getPath()), this.lava, this.skills != null ? this.skills : new ISkill[]{}, this.level, this.extraNbt));
+        consumer.accept(new Result(id, this.result, this.count, this.group == null ? "" : this.group, determineBookCategory(((ShapedRecipeBuilderAccessor) this).getRecipeCategory()), this.rows, this.key, this.advancement, id.withPath("recipes/" + ((ShapedRecipeBuilderAccessor) this).getRecipeCategory().getFolderName() + "/" + id.getPath()), this.lava, this.skills != null ? this.skills : new ISkill[]{}, this.level, this.extraNbt, ((ShapedRecipeBuilderAccessor) this).getShowNotification()));
     }
 
     @NotNull
@@ -123,8 +128,8 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
         private final int level;
         private final @Nullable JsonObject extraNbt;
 
-        public Result(@NotNull ResourceLocation id, @NotNull Item item, int count, @NotNull String group, CraftingBookCategory category, @NotNull List<String> pattern, @NotNull Map<Character, Ingredient> ingredients, @NotNull Advancement.Builder advancementBuilder, @NotNull ResourceLocation advancementId, int lava, @NotNull ISkill<?>[] skills, int level, @Nullable JsonObject extraNbt) {
-            super(id, item, count, group, category, pattern, ingredients, advancementBuilder, advancementId);
+        public Result(@NotNull ResourceLocation id, @NotNull Item item, int count, @NotNull String group, CraftingBookCategory category, @NotNull List<String> pattern, @NotNull Map<Character, Ingredient> ingredients, @NotNull Advancement.Builder advancementBuilder, @NotNull ResourceLocation advancementId, int lava, @NotNull ISkill<?>[] skills, int level, @Nullable JsonObject extraNbt, boolean showNotification) {
+            super(id, item, count, group, category, pattern, ingredients, advancementBuilder, advancementId, showNotification);
             this.lava = lava;
             this.skills = skills;
             this.level = level;
