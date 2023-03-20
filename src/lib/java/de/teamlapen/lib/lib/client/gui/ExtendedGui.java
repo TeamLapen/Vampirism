@@ -32,20 +32,20 @@ public class ExtendedGui extends GuiComponent {
         float f7 = (float) (endColor & 255) / 255.0F;
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferBuilder = tesselator.getBuilder();
-        RenderSystem.disableTexture();
+
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         tesselator = Tesselator.getInstance();
         BufferBuilder bufferbuilder = tesselator.getBuilder();
         bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-        bufferBuilder.vertex(matrix, right, top, this.getBlitOffset()).color(f1, f2, f3, f).endVertex();
-        bufferBuilder.vertex(matrix, left, top, this.getBlitOffset()).color(f5, f6, f7, f4).endVertex();
-        bufferBuilder.vertex(matrix, left, bottom, this.getBlitOffset()).color(f5, f6, f7, f4).endVertex();
-        bufferBuilder.vertex(matrix, right, bottom, this.getBlitOffset()).color(f1, f2, f3, f).endVertex();
+        bufferBuilder.vertex(matrix, right, top, 0).color(f1, f2, f3, f).endVertex();
+        bufferBuilder.vertex(matrix, left, top, 0).color(f5, f6, f7, f4).endVertex();
+        bufferBuilder.vertex(matrix, left, bottom, 0).color(f5, f6, f7, f4).endVertex();
+        bufferBuilder.vertex(matrix, right, bottom, 0).color(f1, f2, f3, f).endVertex();
         tesselator.end();
         RenderSystem.disableBlend();
-        RenderSystem.enableTexture();
+
     }
 
 

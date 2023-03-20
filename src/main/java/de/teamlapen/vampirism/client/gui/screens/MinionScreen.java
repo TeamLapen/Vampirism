@@ -2,8 +2,7 @@ package de.teamlapen.vampirism.client.gui.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.lib.lib.client.gui.components.ScrollableArrayTextComponentList;
-import de.teamlapen.lib.lib.client.gui.components.SimpleButtonScrollWidget;
+import de.teamlapen.lib.lib.client.gui.components.SimpleList;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.inventory.MinionContainer;
@@ -27,7 +26,7 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
 
     private static final ResourceLocation GUI_TEXTURE = new ResourceLocation(REFERENCE.MODID, "textures/gui/minion_inventory.png");
     private final int extraSlots;
-    private SimpleButtonScrollWidget taskList;
+    private SimpleList<?> taskList;
     private Button taskButton;
     private Button appearanceButton;
     private Button statButton;
@@ -63,9 +62,9 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
         this.lockActionButton.setLocked(this.menu.isTaskLocked());
         List<Component> taskNames = Arrays.stream(menu.getAvailableTasks()).map(IMinionTask::getName).toList();
 
-        this.taskList = this.addRenderableWidget(SimpleButtonScrollWidget.builder(this.leftPos + 119, this.topPos + 19 + 19, 88, Math.min(3 * 18, taskNames.size() * 18) + 2).setComponents(taskNames).setButtonClickConsumer(this::selectTask).build());
-        this.taskList.visible = false;
-        this.taskButton = this.addRenderableWidget(new ExtendedButton(this.leftPos + 119, this.topPos + 19, 88, 20, getActiveTaskName(), (button -> this.taskList.visible = !this.taskList.visible)));
+        this.taskList = this.addRenderableWidget(SimpleList.builder(this.leftPos + 119, this.topPos + 19 + 19, 88, Math.min(3 * 18, taskNames.size() * 18) + 2).componentsWithClick(taskNames, this::selectTask).build());
+        this.taskButton = this.addRenderableWidget(new ExtendedButton(this.leftPos + 119, this.topPos + 19, 88, 20, getActiveTaskName(), button -> taskList.isVisible = !taskList.isVisible));
+        this.taskList.isVisible = false;
     }
 
     @Override
@@ -120,7 +119,7 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
     }
 
     private void selectTask(int id) {
-        this.taskList.visible = false;
+        this.taskList.isVisible = false;
         this.menu.setTaskToActivate(id);
         this.taskButton.setMessage(getActiveTaskName());
     }

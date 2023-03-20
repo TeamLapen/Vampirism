@@ -46,7 +46,7 @@ public class ActionDurationOverlay extends GuiComponent implements IGuiOverlay {
                             //render action icon transparent
                             RenderSystem.enableBlend();
                             RenderSystem.setShaderColor(1, 1, 1, 0.5f);
-                            blit(poseStack, x, y, this.getBlitOffset(), 0, 0, 16, 16, 16, 16);
+                            blit(poseStack, x, y, 0, 0, 0, 16, 16, 16, 16);
                             x += 17;
                         }
                     }

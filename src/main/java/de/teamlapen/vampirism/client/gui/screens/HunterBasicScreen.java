@@ -79,7 +79,7 @@ public class HunterBasicScreen extends AbstractContainerScreen<HunterBasicMenu> 
             text = Component.translatable("text.vampirism.basic_hunter.pay_n_vampire_blood_more", missing);
         }
         if (text != null) {
-            this.font.drawWordWrap(text, 50, 12, 120, 0);
+            this.font.drawWordWrap(stack, text, 50, 12, 120, 0);
         }
     }
 }

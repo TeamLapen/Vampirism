@@ -2,21 +2,17 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.misc.VampirismCreativeTab;
 import de.teamlapen.vampirism.network.ClientboundOpenVampireBookPacket;
 import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringUtil;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
@@ -60,7 +56,7 @@ public class VampireBookItem extends Item implements ModDisplayItemGenerator.Cre
     }
 
     @Override
-    public void generateCreativeTab(FeatureFlagSet featureFlagSet, CreativeModeTab.Output output, boolean hasPermission) {
+    public void generateCreativeTab(CreativeModeTab.@NotNull ItemDisplayParameters parameters, CreativeModeTab.Output output) {
         Collection<ItemStack> items = VampireBookManager.getInstance().getAllBookItems();
         items.stream().findAny().ifPresent(stack -> output.accept(stack, CreativeModeTab.TabVisibility.PARENT_TAB_ONLY));
         items.forEach(stack -> output.accept(stack, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY));

@@ -62,6 +62,6 @@ public class HunterTableScreen extends AbstractContainerScreen<HunterTableMenu> 
             Component item = missing.getItem() instanceof PureBloodItem ? ((PureBloodItem) missing.getItem()).getCustomName() : Component.translatable(missing.getDescriptionId());
             text = Component.translatable("text.vampirism.hunter_table.ritual_missing_items", missing.getCount(), item);
         }
-        if (text != null) this.font.drawWordWrap(text, 8, 50, this.imageWidth - 10, 0x000000);
+        if (text != null) this.font.drawWordWrap(stack, text, 8, 50, this.imageWidth - 10, 0x000000);
     }
 }

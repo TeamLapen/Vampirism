@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "vampirism:stake"
-  }
+  },
+  "show_notification": true
 }

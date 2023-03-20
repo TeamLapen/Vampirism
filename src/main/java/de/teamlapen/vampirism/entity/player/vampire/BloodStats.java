@@ -4,9 +4,10 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAttributes;
 import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.util.DamageHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
@@ -120,7 +121,7 @@ public class BloodStats implements IBloodStats {
 
             if (this.bloodTimer >= 80) {
                 if (player.getHealth() > 10.0F || enumDifficulty == Difficulty.HARD || player.getHealth() > 1.0F && enumDifficulty == Difficulty.NORMAL) {
-                    player.hurt(DamageSource.STARVE, 1.5F);
+                    DamageHandler.hurtVanilla(player, DamageSources::starve, 1.5f);
                 }
 
                 this.bloodTimer = 0;

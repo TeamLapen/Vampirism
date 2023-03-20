@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.blocks.CastleSlabBlock;
 import de.teamlapen.vampirism.blocks.CastleStairsBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModOils;
+import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.ai.goals.GolemTargetNonVillageFactionGoal;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
@@ -21,7 +22,6 @@ import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.items.VampirismVampireSwordItem;
-import de.teamlapen.vampirism.items.oil.EvasionOil;
 import de.teamlapen.vampirism.util.DifficultyCalculator;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.OilUtils;
@@ -32,7 +32,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.damagesource.EntityDamageSource;
+import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -114,7 +115,7 @@ public class ModEntityEventHandler {
 
     @SubscribeEvent
     public void onEntityCheckSpawn(LivingSpawnEvent.@NotNull CheckSpawn event) {
-        BlockPos pos = new BlockPos(event.getX() - 0.4F, event.getY(), event.getZ() - 0.4F).below();
+        BlockPos pos = new BlockPos((int) (event.getX() - 0.4F), (int) event.getY(), (int) (event.getZ() - 0.4F)).below();
         if (!event.getLevel().hasChunkAt(pos)) return;
         BlockState blockState = event.getLevel().getBlockState(pos);
         Block b = blockState.getBlock();
@@ -301,7 +302,7 @@ public class ModEntityEventHandler {
 
     @SubscribeEvent
     public void onActuallyHurt(@NotNull LivingHurtEvent event) {
-        if (event.getSource() instanceof EntityDamageSource && event.getSource().msgId.equals("player") && event.getSource().getEntity() instanceof Player player) {
+        if (event.getSource().is(DamageTypes.PLAYER_ATTACK) && event.getSource().getEntity() instanceof Player player) {
             ItemStack stack = player.getMainHandItem();
             OilUtils.getAppliedOil(stack).ifPresent(oil -> {
                 if (oil instanceof IWeaponOil) {
@@ -314,7 +315,7 @@ public class ModEntityEventHandler {
 
     @SubscribeEvent
     public void onLivingDamage(@NotNull LivingDamageEvent event) {
-        if (event.getSource() instanceof EntityDamageSource && event.getSource().msgId.equals("player") && event.getSource().getEntity() instanceof Player player) {
+        if (event.getSource().is(DamageTypes.PLAYER_ATTACK) && event.getSource().getEntity() instanceof Player player) {
             ItemStack stack = player.getMainHandItem();
             OilUtils.getAppliedOil(stack).ifPresent(oil -> {
                 if (oil instanceof IWeaponOil) {
@@ -322,9 +323,9 @@ public class ModEntityEventHandler {
                 }
             });
         }
-        if (event.getSource() instanceof EntityDamageSource && !event.getSource().isBypassArmor()) {
+        if (event.getSource().is(ModTags.DamageTypes.ENTITY_PHYSICAL) && !event.getSource().is(DamageTypeTags.BYPASSES_ARMOR)) {
             for (ItemStack armorStack : event.getEntity().getArmorSlots()) {
-                if(OilUtils.getAppliedOil(armorStack).map(oil -> {
+                if (OilUtils.getAppliedOil(armorStack).map(oil -> {
                     if (oil == ModOils.EVASION.get()) {
                         event.setAmount(0);
                         oil.reduceDuration(armorStack, oil, oil.getDurationReduction());

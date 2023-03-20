@@ -10,6 +10,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public class VillageCommand extends BasicCommand {
@@ -33,7 +34,8 @@ public class VillageCommand extends BasicCommand {
 
     @SuppressWarnings("SameReturnValue")
     private static int abort(@NotNull CommandSourceStack source) {
-        TotemHelper.getTotemNearPos(source.getLevel(), new BlockPos(source.getPosition()), true).ifPresent(TotemBlockEntity::breakCapture);
+        Vec3 position = source.getPosition();
+        TotemHelper.getTotemNearPos(source.getLevel(), new BlockPos((int) position.x(), (int) position.y(), (int) position.z()), true).ifPresent(TotemBlockEntity::breakCapture);
         return 0;
     }
 }

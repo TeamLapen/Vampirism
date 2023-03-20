@@ -75,7 +75,7 @@ public class GarlicDiffuserScreen extends Screen {
 
     protected void renderGuiBackground(@NotNull PoseStack mStack) {
         RenderSystem.setShaderTexture(0, BACKGROUND);
-        blit(mStack, this.guiLeft, this.guiTop, this.getBlitOffset(), 0, 0, this.xSize, this.ySize, 256, 256);
+        blit(mStack, this.guiLeft, this.guiTop, 0, 0, 0, this.xSize, this.ySize, 256, 256);
     }
 
     private void drawTitle(@NotNull PoseStack mStack) {

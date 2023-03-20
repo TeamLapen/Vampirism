@@ -17,9 +17,9 @@ import org.jetbrains.annotations.Nullable;
 
 public class AlchemyTableRecipe extends AbstractBrewingRecipe {
 
-    private final ISkill[] requiredSkills;
+    private final ISkill<?>[] requiredSkills;
 
-    public AlchemyTableRecipe(ResourceLocation id, String group, Ingredient ingredient, Ingredient input, ItemStack result, ISkill[] skills) {
+    public AlchemyTableRecipe(ResourceLocation id, String group, Ingredient ingredient, Ingredient input, ItemStack result, ISkill<?>[] skills) {
         super(ModRecipes.ALCHEMICAL_TABLE_TYPE.get(), id, group, ingredient, input, result);
         this.requiredSkills = skills;
     }
@@ -37,7 +37,7 @@ public class AlchemyTableRecipe extends AbstractBrewingRecipe {
         return isInput(input) && isIngredient(ingredient) ? this.result.copy() : ItemStack.EMPTY;
     }
 
-    public ISkill[] getRequiredSkills() {
+    public ISkill<?>[] getRequiredSkills() {
         return requiredSkills;
     }
 
@@ -53,7 +53,7 @@ public class AlchemyTableRecipe extends AbstractBrewingRecipe {
         @Override
         public AlchemyTableRecipe fromJson(@NotNull ResourceLocation recipeId, @NotNull JsonObject json) {
             String group = GsonHelper.getAsString(json, "group", "");
-            ISkill[] skills = VampirismRecipeHelper.deserializeSkills(GsonHelper.getAsJsonArray(json, "skill", null));
+            ISkill<?>[] skills = VampirismRecipeHelper.deserializeSkills(GsonHelper.getAsJsonArray(json, "skill", null));
             Ingredient ingredient = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "ingredient"));
             Ingredient input = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "input"));
             ItemStack result = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
@@ -67,7 +67,7 @@ public class AlchemyTableRecipe extends AbstractBrewingRecipe {
             ItemStack result = buffer.readItem();
             Ingredient ingredient = Ingredient.fromNetwork(buffer);
             Ingredient input = Ingredient.fromNetwork(buffer);
-            ISkill[] skills = new ISkill[buffer.readVarInt()];
+            ISkill<?>[] skills = new ISkill[buffer.readVarInt()];
             if (skills.length != 0) {
                 for (int i = 0; i < skills.length; i++) {
                     skills[i] = RegUtil.getSkill(new ResourceLocation(buffer.readUtf(32767)));
@@ -79,14 +79,12 @@ public class AlchemyTableRecipe extends AbstractBrewingRecipe {
         @Override
         public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull AlchemyTableRecipe recipe) {
             buffer.writeUtf(recipe.group);
-            buffer.writeItem(recipe.getResultItem());
+            buffer.writeItem(recipe.result);
             recipe.ingredient.toNetwork(buffer);
             recipe.input.toNetwork(buffer);
             buffer.writeVarInt(recipe.requiredSkills.length);
-            if (recipe.requiredSkills.length != 0) {
-                for (ISkill skill : recipe.requiredSkills) {
-                    buffer.writeResourceLocation(RegUtil.id(skill));
-                }
+            for (ISkill<?> skill : recipe.requiredSkills) {
+                buffer.writeResourceLocation(RegUtil.id(skill));
             }
         }
     }

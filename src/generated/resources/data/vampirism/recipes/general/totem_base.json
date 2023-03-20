@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "vampirism:totem_base"
-  }
+  },
+  "show_notification": true
 }

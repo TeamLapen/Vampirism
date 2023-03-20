@@ -1,20 +1,20 @@
 package de.teamlapen.vampirism.items;
 
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.api.items.IEntityCrossbowArrow;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
+import de.teamlapen.vampirism.util.DamageHandler;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.StringRepresentable;
-import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -108,7 +108,7 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
                 if (shootingEntity != null) {
                     if (!shootingEntity.level.isClientSide && shootingEntity.isAlive()) {
                         if (shootingEntity instanceof ServerPlayer player) {
-                            if (player.connection.getConnection().isConnected() && player.level == entity.level && !player.isSleeping()) {
+                            if (player.connection.connection.isConnected() && player.level == entity.level && !player.isSleeping()) {
 
                                 if (player.isPassenger()) {
                                     player.stopRiding();
@@ -116,7 +116,7 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
 
                                 player.teleportTo(blockPos.getX(), blockPos.getY(), blockPos.getZ());
                                 player.fallDistance = 0.0F;
-                                player.hurt(DamageSource.FALL, 1);
+                                DamageHandler.hurtVanilla(player, DamageSources::fall, 1);
                             }
                         } else {
                             shootingEntity.teleportTo(blockPos.getX(), blockPos.getY(), blockPos.getZ());
@@ -142,7 +142,8 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
             if (entity instanceof IVampireMob) {
                 float max = entity.getMaxHealth();
                 if (max < VampirismConfig.BALANCE.arrowVampireKillerMaxHealth.get()) {
-                    entity.hurt(DamageSource.arrow((AbstractArrow) arrowEntity, shootingEntity), max);
+                    DamageHandler.hurtVanilla(entity, damageSources -> damageSources.arrow((AbstractArrow) arrowEntity, shootingEntity), max);
+
                 }
             }
         }

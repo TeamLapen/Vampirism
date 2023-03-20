@@ -117,12 +117,9 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
             entityCreature.zOld = this.zOld;
             entityCreature.hurtTime = this.hurtTime;
             entityCreature.hurtDuration = this.hurtDuration;
-            entityCreature.hurtDir = this.hurtDir;
             entityCreature.attackAnim = this.attackAnim;
             entityCreature.oAttackAnim = this.oAttackAnim;
-            entityCreature.animationSpeedOld = this.animationSpeedOld;
-            entityCreature.animationSpeed = this.animationSpeed;
-            entityCreature.animationPosition = this.animationPosition;
+            entityCreature.walkAnimation.position(this.walkAnimation.position());
             entityCreature.yBodyRot = this.yBodyRot;
             entityCreature.yBodyRotO = this.yBodyRotO;
             entityCreature.deathTime = this.deathTime;

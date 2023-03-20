@@ -13,5 +13,6 @@
   ],
   "result": {
     "item": "vampirism:dark_spruce_boat"
-  }
+  },
+  "show_notification": true
 }

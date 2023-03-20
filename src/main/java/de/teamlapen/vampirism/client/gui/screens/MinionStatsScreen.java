@@ -111,7 +111,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
                     if (!this.active) {
                         RenderSystem.setShaderColor(0.65f, 0.65f, 0.65f, 1);
                     }
-                    super.renderButton(matrixStack, mouseX, mouseY, partialTicks);
+                    super.renderWidget(matrixStack, mouseX, mouseY, partialTicks);
                 }
             }
 
@@ -124,7 +124,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
 
     protected void renderGuiBackground(@NotNull PoseStack mStack) {
         RenderSystem.setShaderTexture(0, BACKGROUND);
-        blit(mStack, this.guiLeft, this.guiTop, this.getBlitOffset(), 0, 0, this.xSize, this.ySize, 300, 256);
+        blit(mStack, this.guiLeft, this.guiTop, 0, 0, 0, this.xSize, this.ySize, 300, 256);
     }
 
     protected void renderLevelRow(@NotNull PoseStack mStack, int current, int max) {

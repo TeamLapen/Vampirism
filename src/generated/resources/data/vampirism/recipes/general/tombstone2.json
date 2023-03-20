@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "vampirism:tombstone2"
-  }
+  },
+  "show_notification": true
 }

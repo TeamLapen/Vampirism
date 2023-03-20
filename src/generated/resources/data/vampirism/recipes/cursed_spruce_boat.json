@@ -13,5 +13,6 @@
   ],
   "result": {
     "item": "vampirism:cursed_spruce_boat"
-  }
+  },
+  "show_notification": true
 }

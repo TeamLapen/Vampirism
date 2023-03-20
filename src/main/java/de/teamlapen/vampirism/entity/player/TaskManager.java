@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.entity.player;
 
 import com.google.common.collect.Maps;
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -523,7 +522,7 @@ public class TaskManager implements ITaskManager {
             BlockPos taskBoardInfo = null;
             if (nbt.contains("pos")) {
                 ListTag pos = nbt.getList("pos", 6);
-                taskBoardInfo = new BlockPos(pos.getDouble(0), pos.getDouble(1), pos.getDouble(2));
+                taskBoardInfo = new BlockPos((int) pos.getDouble(0), (int) pos.getDouble(1), (int) pos.getDouble(2));
             }
 
             int taskSize = nbt.getInt("tasksSize");

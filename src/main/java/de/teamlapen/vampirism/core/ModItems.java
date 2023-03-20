@@ -15,7 +15,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionUtils;
@@ -51,22 +50,22 @@ public class ModItems {
     private static final Map<CreativeModeTab, Set<RegistryObject<? extends Item>>> CREATIVE_TAB_ITEMS = new HashMap<>();
 
     //Items
-    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_ENHANCED = register("armor_of_swiftness_chest_enhanced", () -> new ArmorOfSwiftnessItem(EquipmentSlot.CHEST, ArmorOfSwiftnessItem.ENHANCED));
-    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_NORMAL = register("armor_of_swiftness_chest_normal", () -> new ArmorOfSwiftnessItem(EquipmentSlot.CHEST, ArmorOfSwiftnessItem.NORMAL));
-    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE = register("armor_of_swiftness_chest_ultimate", () -> new ArmorOfSwiftnessItem(EquipmentSlot.CHEST, ArmorOfSwiftnessItem.ULTIMATE));
-    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_ENHANCED = register("armor_of_swiftness_feet_enhanced", () -> new ArmorOfSwiftnessItem(EquipmentSlot.FEET, ArmorOfSwiftnessItem.ENHANCED));
-    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_NORMAL = register("armor_of_swiftness_feet_normal", () -> new ArmorOfSwiftnessItem(EquipmentSlot.FEET, ArmorOfSwiftnessItem.NORMAL));
-    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_ULTIMATE = register("armor_of_swiftness_feet_ultimate", () -> new ArmorOfSwiftnessItem(EquipmentSlot.FEET, ArmorOfSwiftnessItem.ULTIMATE));
-    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_HEAD_ENHANCED = register("armor_of_swiftness_head_enhanced", () -> new ArmorOfSwiftnessItem(EquipmentSlot.HEAD, ArmorOfSwiftnessItem.ENHANCED));
-    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_HEAD_NORMAL = register("armor_of_swiftness_head_normal", () -> new ArmorOfSwiftnessItem(EquipmentSlot.HEAD, ArmorOfSwiftnessItem.NORMAL));
-    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE = register("armor_of_swiftness_head_ultimate", () -> new ArmorOfSwiftnessItem(EquipmentSlot.HEAD, ArmorOfSwiftnessItem.ULTIMATE));
-    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_ENHANCED = register("armor_of_swiftness_legs_enhanced", () -> new ArmorOfSwiftnessItem(EquipmentSlot.LEGS, ArmorOfSwiftnessItem.ENHANCED));
-    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_NORMAL = register("armor_of_swiftness_legs_normal", () -> new ArmorOfSwiftnessItem(EquipmentSlot.LEGS, ArmorOfSwiftnessItem.NORMAL));
-    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE = register("armor_of_swiftness_legs_ultimate", () -> new ArmorOfSwiftnessItem(EquipmentSlot.LEGS, ArmorOfSwiftnessItem.ULTIMATE));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_NORMAL = register("armor_of_swiftness_chest_normal", () -> new ArmorOfSwiftnessItem(ArmorItem.Type.CHESTPLATE, ArmorOfSwiftnessItem.NORMAL));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_ENHANCED = register("armor_of_swiftness_chest_enhanced", () -> new ArmorOfSwiftnessItem(ArmorItem.Type.CHESTPLATE, ArmorOfSwiftnessItem.ENHANCED));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE = register("armor_of_swiftness_chest_ultimate", () -> new ArmorOfSwiftnessItem(ArmorItem.Type.CHESTPLATE, ArmorOfSwiftnessItem.ULTIMATE));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_NORMAL = register("armor_of_swiftness_feet_normal", () -> new ArmorOfSwiftnessItem(ArmorItem.Type.BOOTS, ArmorOfSwiftnessItem.NORMAL));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_ENHANCED = register("armor_of_swiftness_feet_enhanced", () -> new ArmorOfSwiftnessItem(ArmorItem.Type.BOOTS, ArmorOfSwiftnessItem.ENHANCED));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_ULTIMATE = register("armor_of_swiftness_feet_ultimate", () -> new ArmorOfSwiftnessItem(ArmorItem.Type.BOOTS, ArmorOfSwiftnessItem.ULTIMATE));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_HEAD_NORMAL = register("armor_of_swiftness_head_normal", () -> new ArmorOfSwiftnessItem(ArmorItem.Type.HELMET, ArmorOfSwiftnessItem.NORMAL));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_HEAD_ENHANCED = register("armor_of_swiftness_head_enhanced", () -> new ArmorOfSwiftnessItem(ArmorItem.Type.HELMET, ArmorOfSwiftnessItem.ENHANCED));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE = register("armor_of_swiftness_head_ultimate", () -> new ArmorOfSwiftnessItem(ArmorItem.Type.HELMET, ArmorOfSwiftnessItem.ULTIMATE));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_NORMAL = register("armor_of_swiftness_legs_normal", () -> new ArmorOfSwiftnessItem(ArmorItem.Type.LEGGINGS, ArmorOfSwiftnessItem.NORMAL));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_ENHANCED = register("armor_of_swiftness_legs_enhanced", () -> new ArmorOfSwiftnessItem(ArmorItem.Type.LEGGINGS, ArmorOfSwiftnessItem.ENHANCED));
+    public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE = register("armor_of_swiftness_legs_ultimate", () -> new ArmorOfSwiftnessItem(ArmorItem.Type.LEGGINGS, ArmorOfSwiftnessItem.ULTIMATE));
 
-    public static final RegistryObject<SingleCrossbowItem> BASIC_CROSSBOW = register("basic_crossbow", () -> new SingleCrossbowItem(props().defaultDurability(465), 1,20, Tiers.WOOD));
-    public static final RegistryObject<DoubleCrossbowItem> BASIC_DOUBLE_CROSSBOW = register("basic_double_crossbow", () -> new DoubleCrossbowItem(props().durability(465),1,20, Tiers.WOOD));
-    public static final RegistryObject<TechCrossbowItem> BASIC_TECH_CROSSBOW = register("basic_tech_crossbow", () -> new TechCrossbowItem(props().durability(930),1.6F, 40, Tiers.DIAMOND));
+    public static final RegistryObject<SingleCrossbowItem> BASIC_CROSSBOW = register("basic_crossbow", () -> new SingleCrossbowItem(props().defaultDurability(465), 1, 20, Tiers.WOOD));
+    public static final RegistryObject<DoubleCrossbowItem> BASIC_DOUBLE_CROSSBOW = register("basic_double_crossbow", () -> new DoubleCrossbowItem(props().durability(465), 1, 20, Tiers.WOOD));
+    public static final RegistryObject<TechCrossbowItem> BASIC_TECH_CROSSBOW = register("basic_tech_crossbow", () -> new TechCrossbowItem(props().durability(930), 1.6F, 40, Tiers.DIAMOND));
 
     public static final RegistryObject<BloodBottleItem> BLOOD_BOTTLE = ITEMS.register("blood_bottle", BloodBottleItem::new);
     public static final RegistryObject<BucketItem> BLOOD_BUCKET = register("blood_bucket", CreativeModeTabs.TOOLS_AND_UTILITIES, () -> new BucketItem(ModFluids.BLOOD, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
@@ -111,18 +110,18 @@ public class ModItems {
     public static final RegistryObject<HunterAxeItem> HUNTER_AXE_NORMAL = register("hunter_axe_normal", () -> new HunterAxeItem(HunterAxeItem.NORMAL));
     public static final RegistryObject<HunterAxeItem> HUNTER_AXE_ULTIMATE = register("hunter_axe_ultimate", () -> new HunterAxeItem(HunterAxeItem.ULTIMATE));
 
-    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_CHEST_ENHANCED = register("hunter_coat_chest_enhanced", () -> new HunterCoatItem(EquipmentSlot.CHEST, HunterCoatItem.ENHANCED));
-    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_CHEST_NORMAL = register("hunter_coat_chest_normal", () -> new HunterCoatItem(EquipmentSlot.CHEST, HunterCoatItem.NORMAL));
-    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_CHEST_ULTIMATE = register("hunter_coat_chest_ultimate", () -> new HunterCoatItem(EquipmentSlot.CHEST, HunterCoatItem.ULTIMATE));
-    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_FEET_ENHANCED = register("hunter_coat_feet_enhanced", () -> new HunterCoatItem(EquipmentSlot.FEET, HunterCoatItem.ENHANCED));
-    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_FEET_NORMAL = register("hunter_coat_feet_normal", () -> new HunterCoatItem(EquipmentSlot.FEET, HunterCoatItem.NORMAL));
-    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_FEET_ULTIMATE = register("hunter_coat_feet_ultimate", () -> new HunterCoatItem(EquipmentSlot.FEET, HunterCoatItem.ULTIMATE));
-    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_HEAD_ENHANCED = register("hunter_coat_head_enhanced", () -> new HunterCoatItem(EquipmentSlot.HEAD, HunterCoatItem.ENHANCED));
-    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_HEAD_NORMAL = register("hunter_coat_head_normal", () -> new HunterCoatItem(EquipmentSlot.HEAD, HunterCoatItem.NORMAL));
-    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_HEAD_ULTIMATE = register("hunter_coat_head_ultimate", () -> new HunterCoatItem(EquipmentSlot.HEAD, HunterCoatItem.ULTIMATE));
-    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_LEGS_ENHANCED = register("hunter_coat_legs_enhanced", () -> new HunterCoatItem(EquipmentSlot.LEGS, HunterCoatItem.ENHANCED));
-    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_LEGS_NORMAL = register("hunter_coat_legs_normal", () -> new HunterCoatItem(EquipmentSlot.LEGS, HunterCoatItem.NORMAL));
-    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_LEGS_ULTIMATE = register("hunter_coat_legs_ultimate", () -> new HunterCoatItem(EquipmentSlot.LEGS, HunterCoatItem.ULTIMATE));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_CHEST_NORMAL = register("hunter_coat_chest_normal", () -> new HunterCoatItem(ArmorItem.Type.CHESTPLATE, HunterCoatItem.NORMAL));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_CHEST_ENHANCED = register("hunter_coat_chest_enhanced", () -> new HunterCoatItem(ArmorItem.Type.CHESTPLATE, HunterCoatItem.ENHANCED));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_CHEST_ULTIMATE = register("hunter_coat_chest_ultimate", () -> new HunterCoatItem(ArmorItem.Type.CHESTPLATE, HunterCoatItem.ULTIMATE));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_FEET_NORMAL = register("hunter_coat_feet_normal", () -> new HunterCoatItem(ArmorItem.Type.BOOTS, HunterCoatItem.NORMAL));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_FEET_ENHANCED = register("hunter_coat_feet_enhanced", () -> new HunterCoatItem(ArmorItem.Type.BOOTS, HunterCoatItem.ENHANCED));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_FEET_ULTIMATE = register("hunter_coat_feet_ultimate", () -> new HunterCoatItem(ArmorItem.Type.BOOTS, HunterCoatItem.ULTIMATE));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_HEAD_NORMAL = register("hunter_coat_head_normal", () -> new HunterCoatItem(ArmorItem.Type.HELMET, HunterCoatItem.NORMAL));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_HEAD_ENHANCED = register("hunter_coat_head_enhanced", () -> new HunterCoatItem(ArmorItem.Type.HELMET, HunterCoatItem.ENHANCED));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_HEAD_ULTIMATE = register("hunter_coat_head_ultimate", () -> new HunterCoatItem(ArmorItem.Type.HELMET, HunterCoatItem.ULTIMATE));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_LEGS_NORMAL = register("hunter_coat_legs_normal", () -> new HunterCoatItem(ArmorItem.Type.LEGGINGS, HunterCoatItem.NORMAL));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_LEGS_ENHANCED = register("hunter_coat_legs_enhanced", () -> new HunterCoatItem(ArmorItem.Type.LEGGINGS, HunterCoatItem.ENHANCED));
+    public static final RegistryObject<HunterCoatItem> HUNTER_COAT_LEGS_ULTIMATE = register("hunter_coat_legs_ultimate", () -> new HunterCoatItem(ArmorItem.Type.LEGGINGS, HunterCoatItem.ULTIMATE));
 
     public static final RegistryObject<HunterHatItem> HUNTER_HAT_HEAD_0 = register("hunter_hat_head_0", () -> new HunterHatItem(0));
     public static final RegistryObject<HunterHatItem> HUNTER_HAT_HEAD_1 = register("hunter_hat_head_1", () -> new HunterHatItem(1));
@@ -165,7 +164,7 @@ public class ModItems {
     public static final RegistryObject<Item> SOUL_ORB_VAMPIRE = register("soul_orb_vampire", () -> new Item(props()));
 
     public static final RegistryObject<StakeItem> STAKE = register("stake", StakeItem::new);
-    public static final RegistryObject<Item> TECH_CROSSBOW_AMMO_PACKAGE = register("tech_crossbow_ammo_package", () -> new ArrowContainer(new Item.Properties(), CROSSBOW_ARROW_NORMAL,12) {
+    public static final RegistryObject<Item> TECH_CROSSBOW_AMMO_PACKAGE = register("tech_crossbow_ammo_package", () -> new ArrowContainer(new Item.Properties(), CROSSBOW_ARROW_NORMAL, 12) {
         @Override
         public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
             tooltip.add(Component.translatable("item.vampirism.tech_crossbow_ammo_package.tooltip", Component.translatable(BASIC_TECH_CROSSBOW.get().getDescriptionId())).withStyle(ChatFormatting.GRAY));
@@ -173,11 +172,11 @@ public class ModItems {
 
     });
 
-    public static final RegistryObject<ColoredVampireClothingItem> VAMPIRE_CLOAK_BLACK_BLUE = register("vampire_cloak_black_blue", () -> new ColoredVampireClothingItem(EquipmentSlot.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.BLACKBLUE));
-    public static final RegistryObject<ColoredVampireClothingItem> VAMPIRE_CLOAK_BLACK_RED = register("vampire_cloak_black_red", () -> new ColoredVampireClothingItem(EquipmentSlot.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.BLACKRED));
-    public static final RegistryObject<ColoredVampireClothingItem> VAMPIRE_CLOAK_BLACK_WHITE = register("vampire_cloak_black_white", () -> new ColoredVampireClothingItem(EquipmentSlot.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.BLACKWHITE));
-    public static final RegistryObject<ColoredVampireClothingItem> VAMPIRE_CLOAK_RED_BLACK = register("vampire_cloak_red_black", () -> new ColoredVampireClothingItem(EquipmentSlot.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.REDBLACK));
-    public static final RegistryObject<ColoredVampireClothingItem> VAMPIRE_CLOAK_WHITE_BLACK = register("vampire_cloak_white_black", () -> new ColoredVampireClothingItem(EquipmentSlot.CHEST, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.WHITEBLACK));
+    public static final RegistryObject<ColoredVampireClothingItem> VAMPIRE_CLOAK_BLACK_BLUE = register("vampire_cloak_black_blue", () -> new ColoredVampireClothingItem(ArmorItem.Type.CHESTPLATE, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.BLACKBLUE));
+    public static final RegistryObject<ColoredVampireClothingItem> VAMPIRE_CLOAK_BLACK_RED = register("vampire_cloak_black_red", () -> new ColoredVampireClothingItem(ArmorItem.Type.CHESTPLATE, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.BLACKRED));
+    public static final RegistryObject<ColoredVampireClothingItem> VAMPIRE_CLOAK_BLACK_WHITE = register("vampire_cloak_black_white", () -> new ColoredVampireClothingItem(ArmorItem.Type.CHESTPLATE, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.BLACKWHITE));
+    public static final RegistryObject<ColoredVampireClothingItem> VAMPIRE_CLOAK_RED_BLACK = register("vampire_cloak_red_black", () -> new ColoredVampireClothingItem(ArmorItem.Type.CHESTPLATE, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.REDBLACK));
+    public static final RegistryObject<ColoredVampireClothingItem> VAMPIRE_CLOAK_WHITE_BLACK = register("vampire_cloak_white_black", () -> new ColoredVampireClothingItem(ArmorItem.Type.CHESTPLATE, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.WHITEBLACK));
 
     public static final RegistryObject<VampireBloodBottleItem> VAMPIRE_BLOOD_BOTTLE = register("vampire_blood_bottle", VampireBloodBottleItem::new);
     public static final RegistryObject<VampireBookItem> VAMPIRE_BOOK = register("vampire_book", VampireBookItem::new);
@@ -209,10 +208,10 @@ public class ModItems {
     public static final RegistryObject<RefinementItem> RING = register("ring", () -> new VampireRefinementItem(props(), IRefinementItem.AccessorySlotType.RING));
     public static final RegistryObject<RefinementItem> OBI_BELT = register("obi_belt", () -> new VampireRefinementItem(props(), IRefinementItem.AccessorySlotType.OBI_BELT));
 
-    public static final RegistryObject<VampireClothingItem> VAMPIRE_CLOTHING_CROWN = register("vampire_clothing_crown", () -> new VampireClothingItem(EquipmentSlot.HEAD));
-    public static final RegistryObject<VampireClothingItem> VAMPIRE_CLOTHING_LEGS = register("vampire_clothing_legs", () -> new VampireClothingItem(EquipmentSlot.LEGS));
-    public static final RegistryObject<VampireClothingItem> VAMPIRE_CLOTHING_BOOTS = register("vampire_clothing_boots", () -> new VampireClothingItem(EquipmentSlot.FEET));
-    public static final RegistryObject<VampireClothingItem> VAMPIRE_CLOTHING_HAT = register("vampire_clothing_hat", () -> new VampireClothingItem(EquipmentSlot.HEAD));
+    public static final RegistryObject<VampireClothingItem> VAMPIRE_CLOTHING_CROWN = register("vampire_clothing_crown", () -> new VampireClothingItem(ArmorItem.Type.HELMET));
+    public static final RegistryObject<VampireClothingItem> VAMPIRE_CLOTHING_LEGS = register("vampire_clothing_legs", () -> new VampireClothingItem(ArmorItem.Type.CHESTPLATE));
+    public static final RegistryObject<VampireClothingItem> VAMPIRE_CLOTHING_BOOTS = register("vampire_clothing_boots", () -> new VampireClothingItem(ArmorItem.Type.BOOTS));
+    public static final RegistryObject<VampireClothingItem> VAMPIRE_CLOTHING_HAT = register("vampire_clothing_hat", () -> new VampireClothingItem(ArmorItem.Type.HELMET));
 
     public static final RegistryObject<Item> GARLIC_FINDER = register("garlic_finder", () -> new Item(props().rarity(Rarity.RARE)));
 

@@ -22,5 +22,6 @@
   ],
   "result": {
     "item": "vampirism:vampire_cloak_white_black"
-  }
+  },
+  "show_notification": true
 }

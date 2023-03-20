@@ -20,6 +20,7 @@
   "result": {
     "item": "vampirism:enhanced_double_crossbow"
   },
+  "show_notification": true,
   "skill": [
     "vampirism:double_crossbow",
     "vampirism:enhanced_weapons"

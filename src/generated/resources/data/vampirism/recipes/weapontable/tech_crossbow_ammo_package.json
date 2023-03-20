@@ -23,5 +23,6 @@
   "result": {
     "item": "vampirism:tech_crossbow_ammo_package"
   },
+  "show_notification": true,
   "skill": []
 }

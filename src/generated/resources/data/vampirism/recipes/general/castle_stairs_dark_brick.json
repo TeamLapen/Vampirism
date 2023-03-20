@@ -14,5 +14,6 @@
   "result": {
     "count": 4,
     "item": "vampirism:castle_stairs_dark_brick"
-  }
+  },
+  "show_notification": true
 }

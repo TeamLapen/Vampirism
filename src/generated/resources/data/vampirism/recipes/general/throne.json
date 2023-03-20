@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "vampirism:throne"
-  }
+  },
+  "show_notification": true
 }

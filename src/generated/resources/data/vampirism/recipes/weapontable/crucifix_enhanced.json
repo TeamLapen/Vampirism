@@ -26,6 +26,7 @@
   "result": {
     "item": "vampirism:crucifix_enhanced"
   },
+  "show_notification": true,
   "skill": [
     "vampirism:crucifix_wielder"
   ]

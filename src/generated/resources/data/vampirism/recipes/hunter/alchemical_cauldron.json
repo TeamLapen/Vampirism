@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "vampirism:alchemical_cauldron"
-  }
+  },
+  "show_notification": true
 }

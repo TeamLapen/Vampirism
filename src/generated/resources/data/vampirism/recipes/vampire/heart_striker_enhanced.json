@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "vampirism:heart_striker_enhanced"
-  }
+  },
+  "show_notification": true
 }

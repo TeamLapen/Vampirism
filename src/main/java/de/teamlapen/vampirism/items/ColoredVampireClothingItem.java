@@ -8,6 +8,7 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -22,8 +23,8 @@ public class ColoredVampireClothingItem extends VampireClothingItem {
     private final EnumClothingColor color;
     private final EnumModel model;
 
-    public ColoredVampireClothingItem(@NotNull EquipmentSlot slotType, EnumModel model, String baseRegName, EnumClothingColor color) {
-        super(slotType);
+    public ColoredVampireClothingItem(@NotNull ArmorItem.Type type, EnumModel model, String baseRegName, EnumClothingColor color) {
+        super(type);
         this.baseName = baseRegName;
         this.color = color;
         this.model = model;
@@ -33,7 +34,7 @@ public class ColoredVampireClothingItem extends VampireClothingItem {
     @Override
     public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
         consumer.accept(new IClientItemExtensions() {
-                            @SuppressWarnings({"UnnecessaryDefault", "DuplicateBranchesInSwitch", "SwitchStatementWithTooFewBranches"})
+            @SuppressWarnings({"UnnecessaryDefault", "DuplicateBranchesInSwitch", "SwitchStatementWithTooFewBranches"})
                             public @NotNull Model getGenericArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<?> original) {
                                 return switch (model) {
                                     case CLOAK -> CloakModel.getAdjustedCloak(original);

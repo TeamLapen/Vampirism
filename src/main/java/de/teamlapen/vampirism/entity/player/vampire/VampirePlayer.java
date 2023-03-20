@@ -40,8 +40,12 @@ import de.teamlapen.vampirism.mixin.ArmorItemAccessor;
 import de.teamlapen.vampirism.modcompat.PlayerReviveHelper;
 import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
 import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleOptions;
-import de.teamlapen.vampirism.util.*;
+import de.teamlapen.vampirism.util.DamageHandler;
+import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.Permissions;
+import de.teamlapen.vampirism.util.ScoreboardUtil;
 import de.teamlapen.vampirism.world.MinionWorldData;
+import de.teamlapen.vampirism.world.ModDamageSources;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ItemParticleOption;
@@ -54,6 +58,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
@@ -698,11 +703,11 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                 }
                 return true;
             }
-            if (DamageSource.ON_FIRE.equals(src)) {
-                player.hurt(VReference.VAMPIRE_ON_FIRE, calculateFireDamage(amt));
+            if (src.is(DamageTypes.ON_FIRE)) {
+                DamageHandler.hurtModded(player, ModDamageSources::vampireOnFire, calculateFireDamage(amt));
                 return true;
-            } else if (DamageSource.IN_FIRE.equals(src) || DamageSource.LAVA.equals(src)) {
-                player.hurt(VReference.VAMPIRE_IN_FIRE, calculateFireDamage(amt));
+            } else if (src.is(DamageTypes.IN_FIRE) || src.is(DamageTypes.LAVA)) {
+                DamageHandler.hurtModded(player, ModDamageSources::vampireInFire, calculateFireDamage(amt));
                 return true;
             }
         }
@@ -800,7 +805,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         endFeeding(false);
         if (this.isDBNO()) {
             this.setDBNOTimer(-1);
-            this.player.hurt(DamageSource.GENERIC, 10000);
+            DamageHandler.kill(player, 10000);
         }
     }
 
@@ -824,7 +829,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         world.getProfiler().push("vampirism_vampirePlayer");
         if (wasDBNO) {
             wasDBNO = false;
-            this.player.hurt(DamageSource.GENERIC, 100000);
+            DamageHandler.kill(player, 100000);
             return;
         } else if (this.dbnoTimer >= 0) {
             if (dbnoTimer > 0) {
@@ -1092,7 +1097,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             this.player.setForcedPose(null);
             this.player.refreshDimensions();
             this.sync(true);
-            this.player.hurt(new DBNODamageSource(msg), 10000);
+            DamageHandler.hurtModded(this.player, sources -> sources.dbno(msg), 10000);
         }
     }
 
@@ -1127,7 +1132,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                 double armorRegenerationMod = armorRegen == null ? 0 : armorRegen.getDuration() / ((double) VampirismConfig.BALANCE.vpNaturalArmorRegenDuration.get() * 20);
                 naturalArmor *= (1 - 0.75 * armorRegenerationMod); //Modify natural armor between 25% and 100% depending on the armor regen state
                 double naturalToughness = getNaturalArmorToughnessValue(lvl);
-                List<UUID> armorItemModifiers = Arrays.asList(ArmorItemAccessor.getModifierUUID_vampirism());
+                Collection<UUID> armorItemModifiers = ArmorItemAccessor.getModifierUUID_vampirism().values();
                 double baseArmor = armorAtt.getModifiers(AttributeModifier.Operation.ADDITION).stream().filter(m -> armorItemModifiers.contains(m.getId())).map(AttributeModifier::getAmount).mapToDouble(Double::doubleValue).sum();
                 double baseToughness = toughnessAtt.getModifiers(AttributeModifier.Operation.ADDITION).stream().filter(m -> armorItemModifiers.contains(m.getId())).map(AttributeModifier::getAmount).mapToDouble(Double::doubleValue).sum();
                 double targetArmor = Math.max(0, naturalArmor - baseArmor);
@@ -1367,7 +1372,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         if (!player.isAlive() || isRemote || player.getAbilities().instabuild || player.getAbilities().invulnerable) return;
 
         if (ticksInSun == 100 && VampirismConfig.BALANCE.vpSundamageInstantDeath.get()) {
-            player.hurt(VReference.SUNDAMAGE, 1000);
+            DamageHandler.kill(player, 100000);
             turnToAsh();
         }
 
@@ -1379,7 +1384,9 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         }
         if (getLevel() >= VampirismConfig.BALANCE.vpSundamageMinLevel.get() && ticksInSun >= 100 && player.tickCount % 40 == 5) {
             float damage = (float) (player.getAttribute(ModAttributes.SUNDAMAGE.get()).getValue());
-            if (damage > 0) player.hurt(VReference.SUNDAMAGE, damage);
+            if (damage > 0) {
+                DamageHandler.hurtModded(player, ModDamageSources::sunDamage, damage);
+            }
             if (!player.isAlive()) {
                 turnToAsh(); //Instead of the normal dying animation, just turn to ash
             }

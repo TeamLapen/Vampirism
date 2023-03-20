@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.vampirism.util.DamageHandler;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
@@ -59,7 +60,7 @@ public class VampirismVillagerEntity extends Villager {
             i += EnchantmentHelper.getKnockbackBonus(this);
         }
 
-        boolean flag = entity.hurt(DamageSource.mobAttack(this), f);
+        boolean flag = DamageHandler.hurtVanilla(entity, s -> s.mobAttack(this), f);
 
         if (flag) {
             if (i > 0) {

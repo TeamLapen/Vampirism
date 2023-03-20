@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.recipes;
 
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -49,7 +50,7 @@ public abstract class AbstractBrewingRecipe implements Recipe<Container> {
 
     @NotNull
     @Override
-    public ItemStack assemble(@NotNull Container inventory) {
+    public ItemStack assemble(@NotNull Container inventory, @NotNull RegistryAccess registryAccess) {
         return this.result.copy();
     }
 
@@ -60,7 +61,7 @@ public abstract class AbstractBrewingRecipe implements Recipe<Container> {
 
     @NotNull
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(@NotNull RegistryAccess registryAccess) {
         return this.result;
     }
 

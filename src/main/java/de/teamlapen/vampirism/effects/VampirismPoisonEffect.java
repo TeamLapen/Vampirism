@@ -1,11 +1,12 @@
 package de.teamlapen.vampirism.effects;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import de.teamlapen.vampirism.util.DamageHandler;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffectUtil;
@@ -28,7 +29,7 @@ public class VampirismPoisonEffect extends VampirismEffect {
     public void applyEffectTick(@NotNull LivingEntity entityLivingBaseIn, int amplifier) {
         float damage = amplifier >= DEADLY_AMPLIFIER ? amplifier : Math.min(entityLivingBaseIn.getHealth() - 1, amplifier);
         if (damage > 0) {
-            entityLivingBaseIn.hurt(DamageSource.MAGIC, damage);
+            DamageHandler.hurtVanilla(entityLivingBaseIn, DamageSources::magic, damage);
         }
     }
 

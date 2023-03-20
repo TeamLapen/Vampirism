@@ -22,5 +22,6 @@
   ],
   "result": {
     "item": "vampirism:blood_pedestal"
-  }
+  },
+  "show_notification": true
 }

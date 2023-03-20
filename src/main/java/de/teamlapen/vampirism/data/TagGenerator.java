@@ -3,20 +3,18 @@ package de.teamlapen.vampirism.data;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.*;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.*;
-import net.minecraft.tags.BiomeTags;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.PoiTypeTags;
+import net.minecraft.tags.*;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.BlockTagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
@@ -32,12 +30,13 @@ public class TagGenerator {
     public static void register(DataGenerator gen, @NotNull GatherDataEvent event, PackOutput output, CompletableFuture<HolderLookup.Provider> future, ExistingFileHelper existingFileHelper) {
         BlockTagsProvider blockTagsProvider = new ModBlockTagsProvider(output, future, existingFileHelper);
         gen.addProvider(event.includeServer(), blockTagsProvider);
-        gen.addProvider(event.includeServer(), new ModItemTagsProvider(output, future, existingFileHelper, blockTagsProvider));
+        gen.addProvider(event.includeServer(), new ModItemTagsProvider(output, future, blockTagsProvider.contentsGetter(), existingFileHelper));
         gen.addProvider(event.includeServer(), new ModEntityTypeTagsProvider(output, future, existingFileHelper));
         gen.addProvider(event.includeServer(), new ModFluidTagsProvider(output, future, existingFileHelper));
         gen.addProvider(event.includeServer(), new ModBiomeTagsProvider(output, future, existingFileHelper));
         gen.addProvider(event.includeServer(), new ModPoiTypeProvider(output, future, existingFileHelper));
         gen.addProvider(event.includeServer(), new ModVillageProfessionProvider(output, future, existingFileHelper));
+        gen.addProvider(event.includeServer(), new ModDamageTypeProvider(output, future, existingFileHelper));
     }
 
     public static class ModBlockTagsProvider extends BlockTagsProvider {
@@ -170,7 +169,7 @@ public class TagGenerator {
     }
 
     public static class ModItemTagsProvider extends ItemTagsProvider {
-        public ModItemTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper, @NotNull BlockTagsProvider blockTagsProvider) {
+        public ModItemTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, CompletableFuture<TagLookup<Block>> blockTagsProvider, ExistingFileHelper existingFileHelper) {
             super(output, lookupProvider, blockTagsProvider, REFERENCE.MODID, existingFileHelper);
         }
 
@@ -310,6 +309,22 @@ public class TagGenerator {
             tag(ModTags.Professions.HAS_FACTION).add(ModVillage.HUNTER_EXPERT.getKey(), ModVillage.VAMPIRE_EXPERT.getKey());
             tag(ModTags.Professions.IS_VAMPIRE).add(ModVillage.VAMPIRE_EXPERT.getKey());
             tag(ModTags.Professions.IS_HUNTER).add(ModVillage.HUNTER_EXPERT.getKey());
+        }
+    }
+
+    public static class ModDamageTypeProvider extends TagsProvider<DamageType> {
+
+        public ModDamageTypeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
+            super(output, Registries.DAMAGE_TYPE, provider, REFERENCE.MODID, existingFileHelper);
+        }
+
+        @Override
+        protected void addTags(HolderLookup.@NotNull Provider pProvider) {
+            this.tag(DamageTypeTags.BYPASSES_ARMOR).add(ModDamageTypes.SUN_DAMAGE, ModDamageTypes.NO_BLOOD, ModDamageTypes.VAMPIRE_ON_FIRE, ModDamageTypes.DBNO);
+            this.tag(DamageTypeTags.IS_FIRE).add(ModDamageTypes.VAMPIRE_ON_FIRE, ModDamageTypes.VAMPIRE_IN_FIRE);
+            this.tag(DamageTypeTags.WITCH_RESISTANT_TO).add(ModDamageTypes.SUN_DAMAGE, ModDamageTypes.VAMPIRE_ON_FIRE, ModDamageTypes.VAMPIRE_IN_FIRE, ModDamageTypes.NO_BLOOD, ModDamageTypes.HOLY_WATER);
+            this.tag(DamageTypeTags.BYPASSES_ENCHANTMENTS).add(ModDamageTypes.DBNO);
+            this.tag(ModTags.DamageTypes.ENTITY_PHYSICAL).add(DamageTypes.PLAYER_ATTACK, DamageTypes.MOB_ATTACK, DamageTypes.MOB_ATTACK_NO_AGGRO, DamageTypes.MOB_PROJECTILE, DamageTypes.ARROW, DamageTypes.STING, DamageTypes.THORNS);
         }
     }
 }

@@ -81,6 +81,6 @@ public class HunterTrainerScreen extends AbstractContainerScreen<HunterTrainerMe
             Component item = missing.getItem() instanceof HunterIntelItem ? ((HunterIntelItem) missing.getItem()).getCustomName() : Component.translatable(missing.getDescriptionId());
             text = Component.translatable("text.vampirism.hunter_trainer.ritual_missing_items", missing.getCount(), item);
         }
-        if (text != null) this.font.drawWordWrap(text, 8, 50, this.imageWidth - 10, 0x000000);
+        if (text != null) this.font.drawWordWrap(stack, text, 8, 50, this.imageWidth - 10, 0x000000);
     }
 }

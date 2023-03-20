@@ -26,5 +26,6 @@
   "result": {
     "item": "vampirism:hunter_coat_chest_normal"
   },
+  "show_notification": true,
   "skill": []
 }

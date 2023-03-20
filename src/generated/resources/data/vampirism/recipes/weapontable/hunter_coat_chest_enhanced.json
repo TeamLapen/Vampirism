@@ -26,6 +26,7 @@
   "result": {
     "item": "vampirism:hunter_coat_chest_enhanced"
   },
+  "show_notification": true,
   "skill": [
     "vampirism:enhanced_armor"
   ]

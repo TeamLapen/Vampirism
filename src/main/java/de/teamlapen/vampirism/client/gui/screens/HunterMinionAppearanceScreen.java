@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import de.teamlapen.lib.lib.client.gui.components.SimpleButtonScrollWidget;
+import de.teamlapen.lib.lib.client.gui.components.HoverList;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.renderer.entity.HunterMinionRenderer;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
@@ -15,6 +15,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.widget.ExtendedButton;
 
+import java.util.stream.IntStream;
+
 @OnlyIn(Dist.CLIENT)
 public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionEntity> {
 
@@ -24,8 +26,8 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
     private int hatType;
     private boolean useLordSkin;
     private boolean isMinionSpecificSkin;
-    private SimpleButtonScrollWidget skinList;
-    private SimpleButtonScrollWidget hatList;
+    private HoverList<?> skinList;
+    private HoverList<?> hatList;
     private ExtendedButton skinButton;
     private ExtendedButton hatButton;
     private Checkbox useLordSkinButton;
@@ -78,10 +80,10 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
             }
         });
 
-        this.hatList = this.addRenderableWidget(SimpleButtonScrollWidget.builder(this.guiLeft + 20, this.guiTop + 64 + 19, 99, 60).setComponents(3, type -> Component.translatable("gui.vampirism.minion_appearance.hat").append(" " + type)).setButtonClickConsumer(this::hat).setButtonHoverConsumer(this::previewHat).build());
-        this.hatButton = this.addRenderableWidget(new ExtendedButton(hatList.getX(), hatList.getY() - 20, hatList.getWidth(), 20, Component.literal(""), (b) -> setHatListVisibility(!hatList.visible)));
-        this.skinList = this.addRenderableWidget(SimpleButtonScrollWidget.builder(this.guiLeft + 20, this.guiTop + 43 + 19, 99, 80).setComponents(this.normalSkinCount + this.minionSkinCount, type -> Component.translatable("gui.vampirism.minion_appearance.skin").append(" " + type)).setButtonClickConsumer(this::skin).setButtonHoverConsumer(this::previewSkin).build());
-        this.skinButton = this.addRenderableWidget(new ExtendedButton(skinList.getX(), skinList.getY() - 20, skinList.getWidth(), 20, Component.literal(""), (b) -> setSkinListVisibility(!skinList.visible)));
+        this.hatList = this.addRenderableWidget(HoverList.builder(this.guiLeft + 20, this.guiTop + 64 + 19, 99, 60).componentsWithClickAndHover(IntStream.range(0, 3).mapToObj(id -> Component.translatable("gui.vampirism.minion_appearance.hat").append(" " + (id + 1))).toList(), this::hat, this::previewHat).build());
+        this.hatButton = this.addRenderableWidget(new ExtendedButton(hatList.getLeft(), hatList.getTop() - 20, hatList.getWidth(), 20, Component.literal(""), (b) -> setHatListVisibility(!this.hatList.isVisible)));
+        this.skinList = this.addRenderableWidget(HoverList.builder(this.guiLeft + 20, this.guiTop + 43 + 19, 99, 80).componentsWithClickAndHover(IntStream.range(0, this.normalSkinCount + this.minionSkinCount).mapToObj(id -> Component.translatable("gui.vampirism.minion_appearance.skin").append(" " + (id + 1))).toList(), this::skin, this::previewSkin).build());
+        this.skinButton = this.addRenderableWidget(new ExtendedButton(skinList.getLeft(), skinList.getTop() - 20, skinList.getWidth(), 20, Component.literal(""), (b) -> setSkinListVisibility(!this.skinList.isVisible)));
 
         setSkinListVisibility(false);
         setHatListVisibility(false);
@@ -119,17 +121,17 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
 
     private void setHatListVisibility(boolean show) {
         hatButton.setMessage(Component.translatable("gui.vampirism.minion_appearance.hat").append(" " + (hatType + 1)));
-        hatList.visible = show;
-        if (show) skinList.visible = false;
+        hatList.isVisible = show;
+        if (show) skinList.isVisible = false;
         useLordSkinButton.visible = !show;
     }
 
     private void setSkinListVisibility(boolean show) {
         skinButton.setMessage(Component.translatable("gui.vampirism.minion_appearance.skin").append(" " + (skinType + 1)));
-        this.skinList.visible = show;
+        this.skinList.isVisible = show;
         this.hatButton.visible = !show;
         this.useLordSkinButton.visible = !show;
-        if (show) hatList.visible = false;
+        if (show) hatList.isVisible = false;
     }
 
     private void skin(int type) {

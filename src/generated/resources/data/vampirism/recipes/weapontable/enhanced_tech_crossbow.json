@@ -23,6 +23,7 @@
   "result": {
     "item": "vampirism:enhanced_tech_crossbow"
   },
+  "show_notification": true,
   "skill": [
     "vampirism:tech_weapons"
   ]

@@ -12,5 +12,6 @@
   ],
   "result": {
     "item": "vampirism:cursed_spruce_pressure_place"
-  }
+  },
+  "show_notification": true
 }

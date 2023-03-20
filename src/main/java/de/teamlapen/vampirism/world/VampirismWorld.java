@@ -31,12 +31,7 @@ import java.util.stream.Stream;
 
 public class VampirismWorld implements IVampirismWorld {
 
-    private final static Logger LOGGER = LogManager.getLogger();
-    /**
-     * stores all BoundingBoxes of vampire controlled villages per dimension, mapped from origin block positions
-     */
-    private static final Map<BlockPos, BoundingBox> fogAreas = new ConcurrentHashMap<>();
-    private static final Map<BlockPos, BoundingBox> tmpFogAreas = new ConcurrentHashMap<>();
+    private static final Logger LOGGER = LogManager.getLogger();
     public static final Capability<IVampirismWorld> CAP = CapabilityManager.get(new CapabilityToken<>() {
     });
 
@@ -73,7 +68,6 @@ public class VampirismWorld implements IVampirismWorld {
             @NotNull
             @Override
             public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, Direction facing) {
-
                 return CAP.orEmpty(capability, opt);
             }
 
@@ -93,13 +87,21 @@ public class VampirismWorld implements IVampirismWorld {
     // VampireFog
     @SuppressWarnings("FieldCanBeLocal")
     @NotNull
-    private final Level world;
+    private final Level level;
+    private final ModDamageSources damageSources;
+
+    /**
+     * stores all BoundingBoxes of vampire controlled villages per dimension, mapped from origin block positions
+     */
+    private final Map<BlockPos, BoundingBox> fogAreas = new ConcurrentHashMap<>();
+    private final Map<BlockPos, BoundingBox> tmpFogAreas = new ConcurrentHashMap<>();
     // Garlic Handler ------------
     private final HashMap<ChunkPos, EnumStrength> strengthHashMap = Maps.newHashMap();
     private final HashMap<Integer, Emitter> emitterHashMap = Maps.newHashMap();
 
-    public VampirismWorld(@NotNull Level world) {
-        this.world = world;
+    public VampirismWorld(@NotNull Level level) {
+        this.level = level;
+        this.damageSources = new ModDamageSources(level.registryAccess());
     }
 
     @Override
@@ -198,6 +200,10 @@ public class VampirismWorld implements IVampirismWorld {
     @SuppressWarnings("EmptyMethod")
     private void saveNBTData(CompoundTag nbt) {
 
+    }
+
+    public ModDamageSources damageSources() {
+        return this.damageSources;
     }
 
     private record Emitter(EnumStrength strength, ChunkPos[] pos) {

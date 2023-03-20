@@ -4,11 +4,13 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.core.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -227,7 +229,7 @@ public class UtilLib {
         float sinYaw = Mth.sin(-yaw * 0.017453292F - (float) Math.PI);
         double x = p.getX() + sinYaw * distance;
         double z = p.getZ() + cosYaw * distance;
-        return new BlockPos(x, p.getY(), z);
+        return new BlockPos((int) x, (int) p.getY(), (int) z);
     }
 
     /**
@@ -790,5 +792,11 @@ public class UtilLib {
 
     public static @NotNull ResourceLocation amend(@NotNull ResourceLocation original, String amendment) {
         return new ResourceLocation(original.getNamespace(), original.getPath() + amendment);
+    }
+
+    public static float horizontalDistance(BlockPos pos1, BlockPos pos2) {
+        int i = pos2.getX() - pos1.getX();
+        int j = pos2.getZ() - pos1.getZ();
+        return Mth.sqrt((float) (i * i + j * j));
     }
 }

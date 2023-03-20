@@ -15,11 +15,11 @@ import de.teamlapen.vampirism.entity.minion.goals.DefendAreaGoal;
 import de.teamlapen.vampirism.entity.minion.goals.DefendLordGoal;
 import de.teamlapen.vampirism.entity.minion.goals.FollowLordGoal;
 import de.teamlapen.vampirism.entity.minion.goals.MoveToTaskCenterGoal;
-import de.teamlapen.vampirism.entity.minion.management.MinionDamageSource;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.inventory.MinionContainer;
+import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.IPlayerOverlay;
 import de.teamlapen.vampirism.util.PlayerSkinHelper;
 import de.teamlapen.vampirism.world.MinionWorldData;
@@ -200,7 +200,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
             entityIn.setSecondsOnFire(i * 4);
         }
 
-        boolean flag = entityIn.hurt(new MinionDamageSource(this), f);
+        boolean flag = DamageHandler.hurtModded(entityIn, s -> s.minion(this), f);
         if (flag) {
             if (f1 > 0.0F && entityIn instanceof LivingEntity) {
                 ((LivingEntity) entityIn).knockback(f1 * 0.5F, Mth.sin(this.getYRot() * ((float) Math.PI / 180F)), -Mth.cos(this.getYRot() * ((float) Math.PI / 180F)));

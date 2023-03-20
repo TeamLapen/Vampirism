@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.particle.GenericParticleOptions;
+import de.teamlapen.vampirism.util.DamageHandler;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -86,7 +87,8 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
             }
             if (e instanceof LivingEntity entity && e.distanceToSqr(this) < distanceSq) {
                 entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 1));
-                entity.hurt(DamageSource.indirectMagic(this, getOwner()), indirectDamage);
+                DamageHandler.hurtVanilla(entity, damageSources -> damageSources.indirectMagic(this, getOwner()), indirectDamage);
+
             }
         }
         if (!this.level.isClientSide) {
@@ -223,7 +225,7 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
     }
 
     private void hitEntity(@NotNull Entity entity) {
-        entity.hurt(DamageSource.indirectMagic(this, getOwner()), directDamage);
+        DamageHandler.hurtVanilla(entity, damageSources -> damageSources.indirectMagic(this, getOwner()), directDamage);
         if (entity instanceof LivingEntity) {
             if (this.random.nextInt(3) == 0) {
                 ((LivingEntity) entity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 100));

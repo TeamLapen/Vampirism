@@ -1,29 +1,31 @@
 package de.teamlapen.vampirism.util;
 
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 public class DBNODamageSource extends DamageSource {
 
-    @Nonnull
+    @Nullable
     private final Component originalSource;
-    public DBNODamageSource(@Nonnull Component originalSource) {
-        super("vampirism_dbno");
+
+    public DBNODamageSource(Holder<DamageType> damageType, @Nullable Component originalSource) {
+        super(damageType);
         this.originalSource = originalSource;
-        this.bypassArmor();
-        this.bypassEnchantments();
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public Component getLocalizedDeathMessage(@Nonnull LivingEntity entityLivingBaseIn) {
-        String s = "death.attack.vampirism_dbno";
-        return Component.translatable(s, this.originalSource);
+    public Component getLocalizedDeathMessage(@NotNull LivingEntity entityLivingBaseIn) {
+        if (this.originalSource == null) {
+            return Component.translatable("death.attack.vampirism_dbno.missing");
+        } else {
+            return Component.translatable("death.attack.vampirism_dbno", this.originalSource);
+        }
     }
 }

@@ -13,5 +13,6 @@
   ],
   "result": {
     "item": "vampirism:altar_pillar"
-  }
+  },
+  "show_notification": true
 }
