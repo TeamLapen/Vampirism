@@ -298,9 +298,9 @@ public class VampirismCreativeTab {
             addItem(HEART_STRIKER_ENHANCED);
             addItem(HEART_STRIKER_ULTIMATE);
 
-            addItem(HUNTER_AXE_NORMAL);
-            addItem(HUNTER_AXE_ENHANCED);
-            addItem(HUNTER_AXE_ULTIMATE);
+            addGen(HUNTER_AXE_NORMAL);
+            addGen(HUNTER_AXE_ENHANCED);
+            addGen(HUNTER_AXE_ULTIMATE);
 
             addItem(BASIC_CROSSBOW);
             addItem(BASIC_DOUBLE_CROSSBOW);
