@@ -1,28 +1,27 @@
 {
   "entity_vampire_scream": {
-    "category": "hostile",
     "sounds": [
       "vampirism:entity/vampire/scream"
-    ]
+    ],
+    "subtitle": "subtitles.vampirism.entity_vampire_scream"
   },
   "player_bite": {
-    "category": "player",
     "sounds": [
       "vampirism:entity/vampire/bite",
       "vampirism:entity/vampire/bite_long"
-    ]
+    ],
+    "subtitle": "subtitles.vampirism.player_bite"
   },
   "player.feeding": {
-    "category": "player",
     "sounds": [
       {
         "stream": true,
         "name": "vampirism:entity/vampire/feeding"
       }
-    ]
+    ],
+    "subtitle": "subtitles.vampirism.player.feeding"
   },
   "ambient.scary": {
-    "category": "ambient",
     "sounds": [
       {
         "name": "vampirism:ambient/scary",
@@ -31,7 +30,6 @@
     ]
   },
   "ambient_castle": {
-    "category": "ambient",
     "sounds": [
       {
         "name": "vampirism:ambient/blood_dripping",
@@ -44,7 +42,6 @@
     ]
   },
   "ambient.vampire_biome": {
-    "category": "ambient",
     "sounds": [
       {
         "name": "vampirism:ambient/ghosty_ambient"
@@ -52,48 +49,47 @@
     ]
   },
   "coffin_lid": {
-    "category": "block",
     "sounds": [
       "vampirism:fx/coffin_lid_slide"
-    ]
+    ],
+    "subtitle": "subtitles.vampirism.coffin_lid"
   },
   "crossbow": {
-    "category": "player",
     "sounds": [
       "vampirism:fx/crossbow"
     ]
   },
   "bat_swarm": {
-    "category": "player",
     "sounds": [
       "vampirism:fx/bat_swarm"
-    ]
+    ],
+    "subtitle": "subtitles.vampirism.bat_swarm"
   },
   "boiling": {
-    "category": "block",
     "sounds": [
       "vampirism:fx/boiling"
-    ]
+    ],
+    "subtitle": "subtitles.vampirism.boiling"
   },
   "grinder": {
-    "category": "block",
     "sounds": [
       "vampirism:fx/grinder"
-    ]
+    ],
+    "subtitle": "subtitles.vampirism.grinder"
   },
   "task_complete": {
-    "category": "master",
     "sounds": [
       "vampirism:fx/task_complete"
-    ]
+    ],
+    "subtitle": "subtitles.vampirism.task_complete"
   },
   "blessing_music": {
-    "category": "player",
     "sounds": [
       {
         "name": "vampirism:fx/church_organ",
         "stream": true
       }
-    ]
+    ],
+    "subtitle": "subtitles.vampirism.blessing_music"
   }
 }

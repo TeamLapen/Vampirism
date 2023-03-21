@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 public class CoffinBlockEntity extends BlockEntity {
     public float lidPos;
     public DyeColor color = DyeColor.RED;
-    private boolean lastTickOccupied;
+    private boolean playLidSoundFlag;
 
     public CoffinBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         super(ModTiles.COFFIN.get(), pos, state);
@@ -87,10 +87,10 @@ public class CoffinBlockEntity extends BlockEntity {
     }
 
     public static void clientTickHead(@NotNull Level level, @NotNull BlockPos pos, BlockState state, @NotNull CoffinBlockEntity blockEntity) {
-        boolean occupied = CoffinBlock.isOccupied(level, pos);
-        if (blockEntity.lastTickOccupied != occupied) {
+        boolean occupied = CoffinBlock.isClosed(level, pos);
+        if (blockEntity.playLidSoundFlag != occupied) {
             level.playLocalSound(pos.getX(), (double) pos.getY() + 0.5D, pos.getZ(), ModSounds.COFFIN_LID.get(), SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.1F + 0.9F, true);
-            blockEntity.lastTickOccupied = occupied;
+            blockEntity.playLidSoundFlag = CoffinBlock.isClosed(level, pos);
         }
 
         // Calculate lid position

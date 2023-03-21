@@ -1289,5 +1289,15 @@
   "oil.vampirism.evasion": "Evasion",
   "__commend": "Oil description",
   "oil.vampirism.smelt.desc": "Can be used on Pickaxes to auto smelt destroyed blocks",
-  "oil.vampirism.evasion.desc": "Increases evasion chances when applied to armor"
+  "oil.vampirism.evasion.desc": "Increases evasion chances when applied to armor",
+  "__comment": "sound subtitles",
+  "subtitles.vampirism.entity_vampire_scream": "Hissing",
+  "subtitles.vampirism.player_bite": "Infect",
+  "subtitles.vampirism.player.feeding": "Sucking blood",
+  "subtitles.vampirism.coffin_lid": "Coffin Lid",
+  "subtitles.vampirism.bat_swarm": "Bat swarm",
+  "subtitles.vampirism.boiling": "Boiling",
+  "subtitles.vampirism.grinder": "Grinding",
+  "subtitles.vampirism.task_complete": "Task completed",
+  "subtitles.vampirism.blessing_music": "Blessing"
 }
