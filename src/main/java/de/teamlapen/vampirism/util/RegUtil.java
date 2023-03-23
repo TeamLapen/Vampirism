@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -40,10 +39,6 @@ public class RegUtil {
 
     public static ResourceLocation id(@NotNull IEntityAction entityAction) {
         return ModRegistries.ENTITY_ACTIONS.get().getKey(entityAction);
-    }
-
-    public static ResourceLocation id(@NotNull Task skill) {
-        return ModRegistries.TASKS.get().getKey(skill);
     }
 
     public static ResourceLocation id(@NotNull IRefinement refinement) {
@@ -86,7 +81,6 @@ public class RegUtil {
         return ModRegistries.OILS.get().getKey(oil);
     }
 
-
     public static boolean has(@NotNull IAction<?> action) {
         return ModRegistries.ACTIONS.get().containsValue(action);
     }
@@ -101,10 +95,6 @@ public class RegUtil {
 
     public static boolean has(@NotNull IEntityAction entityAction) {
         return ModRegistries.ENTITY_ACTIONS.get().containsValue(entityAction);
-    }
-
-    public static boolean has(@NotNull Task skill) {
-        return ModRegistries.TASKS.get().containsValue(skill);
     }
 
     public static boolean has(@NotNull IRefinement refinement) {
@@ -138,10 +128,6 @@ public class RegUtil {
 
     public static IEntityAction getEntityAction(@NotNull ResourceLocation id) {
         return get(ModRegistries.ENTITY_ACTIONS.get(), id);
-    }
-
-    public static Task getTask(@NotNull ResourceLocation id) {
-        return get(ModRegistries.TASKS.get(), id);
     }
 
     public static IRefinement getRefinement(@NotNull ResourceLocation id) {

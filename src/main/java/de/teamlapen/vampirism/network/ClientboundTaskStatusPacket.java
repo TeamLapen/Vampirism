@@ -50,7 +50,7 @@ public record ClientboundTaskStatusPacket(Set<ITaskInstance> available,
         int taskSize = buf.readVarInt();
         Set<ITaskInstance> taskInstances = Sets.newHashSetWithExpectedSize(taskSize);
         for (int i = 0; i < taskSize; i++) {
-            taskInstances.add(TaskInstance.decode(buf));
+            taskInstances.add(buf.readJsonWithCodec(TaskInstance.CODEC));
         }
         int completedReqSize = buf.readVarInt();
         Map<UUID, Map<ResourceLocation, Integer>> completedRequirements = Maps.newHashMapWithExpectedSize(completedReqSize);

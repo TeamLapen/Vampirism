@@ -1,0 +1,43 @@
+{
+  "requirements": {
+    "requirements": [
+      {
+        "type": "vampirism:item",
+        "description": {
+          "translate": "item.minecraft.gold_block"
+        },
+        "id": "minecraft:gold_block",
+        "item": {
+          "Count": 16,
+          "id": "minecraft:gold_block"
+        }
+      },
+      {
+        "type": "vampirism:entity_type",
+        "amount": 8,
+        "description": {
+          "translate": "entity_tag.vampirism.advanced_hunter"
+        },
+        "entityType": "vampirism:advanced_hunter",
+        "id": "vampirism:advanced_hunter"
+      }
+    ]
+  },
+  "rewards": {
+    "type": "vampirism:item",
+    "item": {
+      "Count": 1,
+      "id": "vampirism:vampire_minion_upgrade_simple"
+    }
+  },
+  "title": {
+    "translate": "task.vampirism.vampire_minion_upgrade_simple"
+  },
+  "unlocker": [
+    {
+      "type": "vampirism:lord_level",
+      "exact": false,
+      "reqLordLevel": 2
+    }
+  ]
+}

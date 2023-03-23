@@ -1,79 +1,53 @@
 package de.teamlapen.vampirism.api.entity.player.task;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.VampirismRegistries;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import net.minecraft.Util;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.RegistryFileCodec;
+import net.minecraft.util.ExtraCodecs;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Supplier;
+import java.util.List;
+import java.util.Optional;
 
 public class Task {
 
-    @NotNull
-    private final Variant variant;
-    @NotNull
-    private final Supplier<IPlayableFaction<?>> faction;
+    public static final Codec<Task> CODEC = RecordCodecBuilder.create(inst -> {
+        return inst.group(
+                TaskRequirement.CODEC.fieldOf("requirements").forGetter(i -> i.requirements),
+                TaskReward.CODEC.fieldOf("rewards").forGetter(i -> i.rewards),
+                TaskUnlocker.CODEC.listOf().optionalFieldOf("unlocker").forGetter(i -> Optional.of(List.of(i.unlocker))),
+                ExtraCodecs.COMPONENT.optionalFieldOf("description").forGetter(i -> Optional.ofNullable(i.description)),
+                ExtraCodecs.COMPONENT.fieldOf("title").forGetter(i -> i.title)
+        ).apply(inst, Task::new);
+    });
+    public static final Codec<Holder<Task>> HOLDER_CODEC = RegistryFileCodec.create(VampirismRegistries.TASK_ID, CODEC);
+
     @NotNull
     private final TaskRequirement requirements;
     @NotNull
     private final TaskReward rewards;
     @NotNull
     private final TaskUnlocker[] unlocker;
-    private final boolean useDescription;
+    @NotNull
+    private final Component title;
     @Nullable
-    private String translationKey;
-    @Nullable
-    private Component translation;
-    @Nullable
-    private String descKey;
-    @Nullable
-    private Component desc;
+    private final Component description;
 
-    /**
-     * translation keys used for a task are
-     * <p>
-     * - {@code task.<registryname>}
-     * <p>
-     * if needed:
-     * <p>
-     * - {@code task.<registryname>.req.<requirementname>}
-     * <p>
-     * - {@code task.<registryname>.reward}
-     * <p>
-     * - {@code task.<registryname>.desc}
-     *
-     * @param variant        the task variant
-     * @param faction        the faction that can complete the task. if {@code null} all faction are able to complete the task
-     * @param requirements   the requirements to acquire the task completion
-     * @param rewards        the rewards upon task completion
-     * @param unlocker       the unlocker to unlock the task for completion
-     * @param useDescription whether the task should display a description of not
-     */
-    public Task(@NotNull Variant variant, @NotNull Supplier<IPlayableFaction<?>> faction, @NotNull TaskRequirement requirements, @NotNull TaskReward rewards, @NotNull TaskUnlocker[] unlocker, boolean useDescription) {
-        this.variant = variant;
-        this.faction = faction;
+    public Task(@NotNull TaskRequirement requirements, @NotNull TaskReward rewards, @NotNull TaskUnlocker[] unlocker, @Nullable Component description, @NotNull Component title) {
         this.requirements = requirements;
-        this.useDescription = useDescription;
+        this.description = description;
         this.rewards = rewards;
         this.unlocker = unlocker;
+        this.title = title;
     }
 
-    @NotNull
-    public Component getDescription() {
-        return this.desc != null ? this.desc : (this.desc = Component.translatable(this.getDescriptionKey()));
-    }
-
-    @NotNull
-    public String getDescriptionKey() {
-        return this.descKey != null ? this.descKey : (this.descKey = (this.translationKey != null ? this.translationKey : getTranslationKey()) + ".desc");
-    }
-
-    @Nullable
-    public IPlayableFaction<?> getFaction() {
-        return this.faction.get();
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    private Task(@NotNull TaskRequirement requirements, @NotNull TaskReward rewards, @NotNull Optional<List<TaskUnlocker>> unlocker, Optional<Component> description, Component title) {
+        this(requirements, rewards, unlocker.map(list -> list.toArray(new TaskUnlocker[0])).orElseGet(() -> new TaskUnlocker[0]), description.orElse(null), title);
     }
 
     @NotNull
@@ -87,40 +61,15 @@ public class Task {
     }
 
     @NotNull
-    public Component getTranslation() {
-        return this.translation != null ? this.translation : (this.translation = Component.translatable(this.getTranslationKey()));
-    }
-
-    @NotNull
-    public String getTranslationKey() {
-        return this.translationKey != null ? this.translationKey : (this.translationKey = Util.makeDescriptionId("task", this.getRegistryName()));
-    }
-
-    @NotNull
     public TaskUnlocker[] getUnlocker() {
         return unlocker;
     }
 
-    public boolean isUnique() {
-        return variant == Variant.UNIQUE;
+    public Optional<Component> getDescription() {
+        return Optional.ofNullable(description);
     }
 
-    public boolean useDescription() {
-        return useDescription;
-    }
-
-    private @Nullable ResourceLocation getRegistryName() {
-        return VampirismRegistries.TASKS.get().getKey(this);
-    }
-
-    public enum Variant {
-        /**
-         * tasks that can be completed multiple times
-         */
-        REPEATABLE,
-        /**
-         * task that can only be completed once
-         */
-        UNIQUE
+    public @NotNull Component getTitle() {
+        return this.title;
     }
 }

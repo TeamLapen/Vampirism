@@ -1,15 +1,30 @@
 package de.teamlapen.vampirism.api.entity.player.task;
 
+import com.google.common.collect.Lists;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ExtraCodecs;
+import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class TaskRequirement {
+
+    public static final Codec<TaskRequirement> CODEC = RecordCodecBuilder.create(inst -> {
+        return inst.group(
+                Requirement.CODEC.listOf().fieldOf("requirements").forGetter(i -> i.requirements.values().stream().flatMap(Collection::stream).toList())
+        ).apply(inst, TaskRequirement::new);
+    });
 
     private final Map<Type, List<Requirement<?>>> requirements;
     private final int size;
@@ -19,6 +34,15 @@ public class TaskRequirement {
         this.requirements = requirements;
         this.size = requirements.values().stream().mapToInt(List::size).sum();
         this.hasStatBasedReq = requirements.keySet().stream().anyMatch(Type::isStatBased);
+    }
+
+    public TaskRequirement(@NotNull Collection<Requirement<?>> requirements) {
+        this.requirements = requirements.stream().collect(Collectors.toMap(Requirement::getType, Lists::newArrayList, (a, b) -> {
+            a.addAll(b);
+            return a;
+        }));
+        this.size = this.requirements.values().stream().mapToInt(List::size).sum();
+        this.hasStatBasedReq = this.requirements.keySet().stream().anyMatch(Type::isStatBased);
     }
 
     public @NotNull List<Requirement<?>> getAll() {
@@ -51,7 +75,7 @@ public class TaskRequirement {
     }
 
     @SuppressWarnings("JavadocReference")
-    public enum Type {
+    public enum Type implements StringRepresentable {
         /**
          * based on {@link net.minecraft.stats.Stats.CUSTOM} stat increase
          */
@@ -73,6 +97,8 @@ public class TaskRequirement {
          */
         BOOLEAN(false, "gui.vampirism.taskmaster.bool_req");
 
+        public static final Codec<Type> CODEC = StringRepresentable.fromEnum(Type::values);
+
         private final boolean statBased;
         private final String translationKey;
 
@@ -88,9 +114,17 @@ public class TaskRequirement {
         public boolean isStatBased() {
             return statBased;
         }
+
+        @Override
+        public @NotNull String getSerializedName() {
+            return name().toLowerCase(Locale.ROOT);
+        }
     }
 
     public interface Requirement<T> {
+
+        Codec<Requirement<?>> CODEC = ExtraCodecs.lazyInitializedCodec(() -> VampirismRegistries.TASK_REQUIREMENTS.get().getCodec()).dispatch(Requirement::codec, Function.identity());
+
         /**
          * @return the needed amount of the {@link #getStat(IFactionPlayer)} to complete this requirement
          */
@@ -99,7 +133,7 @@ public class TaskRequirement {
         }
 
         @NotNull
-        ResourceLocation getId();
+        ResourceLocation id();
 
         /**
          * @param player the player who wants to complete this task
@@ -121,6 +155,10 @@ public class TaskRequirement {
          */
         default void removeRequirement(IFactionPlayer<?> player) {
         }
+
+        Codec<? extends Requirement<?>> codec();
+
+        Component description();
 
     }
 

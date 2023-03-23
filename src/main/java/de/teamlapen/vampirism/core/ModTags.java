@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.VampirismRegistries;
+import de.teamlapen.vampirism.api.entity.player.task.Task;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -176,6 +178,19 @@ public class ModTags {
 
         private static @NotNull TagKey<DamageType> tag(@NotNull String name) {
             return TagKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(REFERENCE.MODID, name));
+        }
+    }
+
+    public static class Tasks {
+
+        public static final TagKey<Task> HAS_FACTION = tag("has_faction");
+        public static final TagKey<Task> IS_VAMPIRE = tag("has_faction/vampire");
+        public static final TagKey<Task> IS_HUNTER = tag("has_faction/hunter");
+        public static final TagKey<Task> IS_UNIQUE = tag("is_unique");
+        public static final TagKey<Task> AWARDS_LORD_LEVEL = tag("awards_lord_level");
+
+        private static @NotNull TagKey<Task> tag(@NotNull String name) {
+            return TagKey.create(VampirismRegistries.TASK_ID, new ResourceLocation(REFERENCE.MODID, name));
         }
     }
 }

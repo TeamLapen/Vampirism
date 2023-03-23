@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.api.entity.player.task;
 
+import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -70,7 +71,7 @@ public interface ITaskManager {
     /**
      * Completely reset the given unique task.
      */
-    void resetUniqueTask(Task task);
+    void resetUniqueTask(ResourceKey<Task> task);
 
     /**
      * removes chosen, but not accepted tasks for every task board to have space for new ones
@@ -83,5 +84,5 @@ public interface ITaskManager {
      * @param task the task to check
      * @return whether the task has been completed or not
      */
-    boolean wasTaskCompleted(@NotNull Task task);
+    boolean wasTaskCompleted(@NotNull ResourceKey<Task> task);
 }

@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.data;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.VampirismRegistries;
+import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.core.*;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -37,6 +39,7 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
         gen.addProvider(event.includeServer(), new ModPoiTypeProvider(output, future, existingFileHelper));
         gen.addProvider(event.includeServer(), new ModVillageProfessionProvider(output, future, existingFileHelper));
         gen.addProvider(event.includeServer(), new ModDamageTypeProvider(output, future, existingFileHelper));
+        gen.addProvider(event.includeServer(), new ModTasksProvider(output, future, existingFileHelper));
     }
 
     public static class ModBlockTagsProvider extends BlockTagsProvider {
@@ -325,6 +328,72 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
             this.tag(DamageTypeTags.WITCH_RESISTANT_TO).add(ModDamageTypes.SUN_DAMAGE, ModDamageTypes.VAMPIRE_ON_FIRE, ModDamageTypes.VAMPIRE_IN_FIRE, ModDamageTypes.NO_BLOOD, ModDamageTypes.HOLY_WATER);
             this.tag(DamageTypeTags.BYPASSES_ENCHANTMENTS).add(ModDamageTypes.DBNO);
             this.tag(ModTags.DamageTypes.ENTITY_PHYSICAL).add(DamageTypes.PLAYER_ATTACK, DamageTypes.MOB_ATTACK, DamageTypes.MOB_ATTACK_NO_AGGRO, DamageTypes.MOB_PROJECTILE, DamageTypes.ARROW, DamageTypes.STING, DamageTypes.THORNS);
+        }
+    }
+
+    public static class ModTasksProvider extends TagsProvider<Task> {
+
+        protected ModTasksProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
+            super(output, VampirismRegistries.TASK_ID, provider, REFERENCE.MODID, existingFileHelper);
+        }
+
+        @Override
+        protected void addTags(HolderLookup.@NotNull Provider pProvider) {
+            this.tag(ModTags.Tasks.HAS_FACTION).addTags(ModTags.Tasks.IS_VAMPIRE, ModTags.Tasks.IS_HUNTER);
+            this.tag(ModTags.Tasks.IS_VAMPIRE).add(
+                    ModTasks.FEEDING_ADAPTER,
+                    ModTasks.VAMPIRE_LORD_1,
+                    ModTasks.VAMPIRE_LORD_2,
+                    ModTasks.VAMPIRE_LORD_3,
+                    ModTasks.VAMPIRE_LORD_4,
+                    ModTasks.VAMPIRE_LORD_5,
+                    ModTasks.FIRE_RESISTANCE_1,
+                    ModTasks.FIRE_RESISTANCE_2,
+                    ModTasks.VAMPIRE_MINION_BINDING,
+                    ModTasks.VAMPIRE_MINION_UPGRADE_SIMPLE,
+                    ModTasks.VAMPIRE_MINION_UPGRADE_ENHANCED,
+                    ModTasks.VAMPIRE_MINION_UPGRADE_SPECIAL,
+                    ModTasks.V_INFECT_1,
+                    ModTasks.V_INFECT_2,
+                    ModTasks.V_INFECT_3,
+                    ModTasks.V_CAPTURE_1,
+                    ModTasks.V_CAPTURE_2,
+                    ModTasks.V_KILL_1,
+                    ModTasks.V_KILL_2,
+                    ModTasks.RANDOM_REFINEMENT_1,
+                    ModTasks.RANDOM_REFINEMENT_2,
+                    ModTasks.RANDOM_REFINEMENT_3,
+                    ModTasks.RANDOM_RARE_REFINEMENT
+            );
+            this.tag(ModTags.Tasks.IS_HUNTER).add(
+                    ModTasks.HUNTER_LORD_1,
+                    ModTasks.HUNTER_LORD_2,
+                    ModTasks.HUNTER_LORD_3,
+                    ModTasks.HUNTER_LORD_4,
+                    ModTasks.HUNTER_LORD_5,
+                    ModTasks.HUNTER_MINION_EQUIPMENT,
+                    ModTasks.HUNTER_MINION_UPGRADE_SIMPLE,
+                    ModTasks.HUNTER_MINION_UPGRADE_ENHANCED,
+                    ModTasks.HUNTER_MINION_UPGRADE_SPECIAL,
+                    ModTasks.H_KILL_1,
+                    ModTasks.H_KILL_2,
+                    ModTasks.H_CAPTURE_1
+            );
+            this.tag(ModTags.Tasks.AWARDS_LORD_LEVEL).add(
+                    ModTasks.HUNTER_LORD_1,
+                    ModTasks.HUNTER_LORD_2,
+                    ModTasks.HUNTER_LORD_3,
+                    ModTasks.HUNTER_LORD_4,
+                    ModTasks.HUNTER_LORD_5,
+                    ModTasks.VAMPIRE_LORD_1,
+                    ModTasks.VAMPIRE_LORD_2,
+                    ModTasks.VAMPIRE_LORD_3,
+                    ModTasks.VAMPIRE_LORD_4,
+                    ModTasks.VAMPIRE_LORD_5
+            );
+            this.tag(ModTags.Tasks.IS_UNIQUE)
+                    .addTag(ModTags.Tasks.AWARDS_LORD_LEVEL)
+            ;
         }
     }
 }

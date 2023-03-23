@@ -258,7 +258,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
             public TaskEntry(ITaskInstance taskInstance) {
                 super(taskInstance);
 
-                if (!taskInstance.isUnique()) {
+                if (!taskInstance.isUnique(menu.getRegistry())) {
                     this.button = new ImageButton(0, 0, 8, 11, 0, 229, 11, TASKMASTER_GUI_TEXTURE, 256, 256, this::clickLocator, Component.empty());
                     this.button.setTooltip(Tooltip.create(createTooltip()));
                 }

@@ -10,6 +10,7 @@ import de.teamlapen.lib.util.Color;
 import de.teamlapen.lib.util.OptifineHandler;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
@@ -232,6 +233,7 @@ public class VampirismMod {
                 .addTag(ForgeRegistries.Keys.POI_TYPES, ModTags.PoiTypes.IS_VAMPIRE)
                 .addTag(ForgeRegistries.Keys.VILLAGER_PROFESSIONS, ModTags.Professions.IS_VAMPIRE)
                 .addTag(ForgeRegistries.Keys.ENTITY_TYPES, ModTags.Entities.VAMPIRE)
+                .addTag(VampirismRegistries.TASK_ID, ModTags.Tasks.IS_VAMPIRE)
                 .register();
         VReference.HUNTER_FACTION = VampirismAPI.factionRegistry()
                 .createPlayableFaction(REFERENCE.HUNTER_PLAYER_KEY, IHunterPlayer.class, () -> HunterPlayer.CAP)
@@ -248,6 +250,7 @@ public class VampirismMod {
                 .addTag(ForgeRegistries.Keys.POI_TYPES, ModTags.PoiTypes.IS_HUNTER)
                 .addTag(ForgeRegistries.Keys.VILLAGER_PROFESSIONS, ModTags.Professions.IS_HUNTER)
                 .addTag(ForgeRegistries.Keys.ENTITY_TYPES, ModTags.Entities.HUNTER)
+                .addTag(VampirismRegistries.TASK_ID, ModTags.Tasks.IS_HUNTER)
                 .register();
 
         VReference.vision_nightVision = VampirismAPI.vampireVisionRegistry().registerVision(new ResourceLocation(REFERENCE.MODID, "night_vision"), new NightVision());
