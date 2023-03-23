@@ -1,5 +1,8 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
@@ -15,6 +18,8 @@ import java.util.Optional;
  * Represents an entity faction (e.g. Vampires)
  */
 public interface IFaction<T extends IFactionEntity> {
+
+    Codec<IFaction<?>> CODEC = RecordCodecBuilder.create(ins -> ins.group(ResourceLocation.CODEC.fieldOf("id").forGetter(IFaction::getID)).apply(ins, (id) -> VampirismAPI.factionRegistry().getFactionByID(id)));
 
     /**
      * If not set returns white

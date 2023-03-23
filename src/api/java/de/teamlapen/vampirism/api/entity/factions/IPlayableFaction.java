@@ -1,8 +1,12 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.util.LazyOptional;
@@ -13,6 +17,9 @@ import org.jetbrains.annotations.NotNull;
  * One instance should be used for players and entities at the same time.
  */
 public interface IPlayableFaction<T extends IFactionPlayer<T>> extends IFaction<T> {
+
+    Codec<IPlayableFaction<?>> PLAYABLE_CODEC = RecordCodecBuilder.create(ins -> ins.group(ResourceLocation.CODEC.fieldOf("id").forGetter(IPlayableFaction::getID)).apply(ins, (id) -> (IPlayableFaction<?>) VampirismAPI.factionRegistry().getFactionByID(id)));
+
     Class<T> getFactionPlayerInterface();
 
     /**

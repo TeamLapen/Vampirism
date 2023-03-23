@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.advancements.critereon.FactionCriterionTrigger;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -14,11 +15,10 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
-import de.teamlapen.vampirism.core.ModRegistries;
+import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.entity.player.IVampirismPlayer;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
-import de.teamlapen.vampirism.entity.player.tasks.reward.LordLevelReward;
 import de.teamlapen.vampirism.misc.VampirismLogger;
 import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.MinionWorldData;
@@ -302,7 +302,11 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
      * @param minLevel the lord level the player now has
      */
     public void resetLordTasks(int minLevel) {
-        RegUtil.values(ModRegistries.TASKS).stream().filter(task -> task.isUnique() && task.getReward() instanceof LordLevelReward && ((LordLevelReward) task.getReward()).targetLevel > minLevel).forEach(task -> getCurrentFactionPlayer().map(IFactionPlayer::getTaskManager).ifPresent(manager -> manager.resetUniqueTask(task)));
+        getCurrentFactionPlayer().map(IFactionPlayer::getTaskManager).ifPresent(manager -> {
+            this.player.level.registryAccess().registryOrThrow(VampirismRegistries.TASK_ID).getTagOrEmpty(ModTags.Tasks.AWARDS_LORD_LEVEL).forEach(holder -> {
+                holder.unwrapKey().ifPresent(manager::resetUniqueTask);
+            });
+        });
     }
 
     public void setBoundAction(int id, @Nullable IAction<?> boundAction, boolean sync, boolean notify) {

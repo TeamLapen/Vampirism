@@ -1,0 +1,55 @@
+{
+  "requirements": {
+    "requirements": [
+      {
+        "type": "vampirism:item",
+        "description": {
+          "translate": "item.minecraft.gold_ingot"
+        },
+        "id": "minecraft:gold_ingot",
+        "item": {
+          "Count": 64,
+          "id": "minecraft:gold_ingot"
+        }
+      },
+      {
+        "type": "vampirism:entity_type",
+        "amount": 100,
+        "description": {
+          "translate": "entity_tag.vampirism.vampire"
+        },
+        "entityType": "vampirism:vampire",
+        "id": "vampirism:vampire"
+      },
+      {
+        "type": "vampirism:stat",
+        "amount": 6,
+        "description": {
+          "translate": "stat.vampirism.capture_village"
+        },
+        "id": "vampirism:capture_village",
+        "stat": "vampirism:capture_village"
+      }
+    ]
+  },
+  "rewards": {
+    "type": "vampirism:lord_level",
+    "description": {
+      "translate": "task_reward.vampirism.lord_level_reward",
+      "with": [
+        "5"
+      ]
+    },
+    "targetLevel": 5
+  },
+  "title": {
+    "translate": "task.vampirism.hunter_lord5"
+  },
+  "unlocker": [
+    {
+      "type": "vampirism:lord_level",
+      "exact": true,
+      "reqLordLevel": 4
+    }
+  ]
+}

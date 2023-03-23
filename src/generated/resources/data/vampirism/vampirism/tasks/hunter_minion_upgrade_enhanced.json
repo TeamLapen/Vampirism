@@ -1,0 +1,65 @@
+{
+  "requirements": {
+    "requirements": [
+      {
+        "type": "vampirism:item",
+        "description": {
+          "translate": "item.vampirism.vampire_book"
+        },
+        "id": "vampirism:vampire_book",
+        "item": {
+          "Count": 1,
+          "id": "vampirism:vampire_book"
+        }
+      },
+      {
+        "type": "vampirism:item",
+        "description": {
+          "translate": "item.vampirism.vampire_blood_bottle"
+        },
+        "id": "vampirism:vampire_blood_bottle",
+        "item": {
+          "Count": 16,
+          "id": "vampirism:vampire_blood_bottle"
+        }
+      },
+      {
+        "type": "vampirism:item",
+        "description": {
+          "translate": "item.minecraft.diamond_block"
+        },
+        "id": "minecraft:diamond_block",
+        "item": {
+          "Count": 3,
+          "id": "minecraft:diamond_block"
+        }
+      },
+      {
+        "type": "vampirism:entity",
+        "amount": 10,
+        "description": {
+          "translate": "entity.vampirism.vampire_baron"
+        },
+        "entityType": "vampirism:vampire_baron",
+        "id": "vampirism:vampire_baron"
+      }
+    ]
+  },
+  "rewards": {
+    "type": "vampirism:item",
+    "item": {
+      "Count": 1,
+      "id": "vampirism:hunter_minion_upgrade_enhanced"
+    }
+  },
+  "title": {
+    "translate": "task.vampirism.hunter_minion_upgrade_enhanced"
+  },
+  "unlocker": [
+    {
+      "type": "vampirism:lord_level",
+      "exact": false,
+      "reqLordLevel": 3
+    }
+  ]
+}

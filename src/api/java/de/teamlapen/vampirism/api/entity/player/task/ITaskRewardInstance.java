@@ -1,12 +1,16 @@
 package de.teamlapen.vampirism.api.entity.player.task;
 
+import com.mojang.serialization.Codec;
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.util.ExtraCodecs;
+
+import java.util.function.Function;
 
 public interface ITaskRewardInstance {
+
+    Codec<ITaskRewardInstance> CODEC = ExtraCodecs.lazyInitializedCodec(() -> VampirismRegistries.TASK_REWARD_INSTANCES.get().getCodec()).dispatch(ITaskRewardInstance::codec, Function.identity());
+
     /**
      * applies the reward to the player upon task completion
      *
@@ -14,10 +18,6 @@ public interface ITaskRewardInstance {
      */
     void applyReward(IFactionPlayer<?> player);
 
-    void encode(FriendlyByteBuf buffer);
-
-    ResourceLocation getId();
-
-    CompoundTag writeNBT(@NotNull CompoundTag nbt);
+    Codec<? extends ITaskRewardInstance> codec();
 
 }

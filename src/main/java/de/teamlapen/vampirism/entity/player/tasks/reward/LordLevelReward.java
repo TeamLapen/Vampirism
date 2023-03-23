@@ -1,35 +1,39 @@
 package de.teamlapen.vampirism.entity.player.tasks.reward;
 
-import de.teamlapen.vampirism.REFERENCE;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskRewardInstance;
 import de.teamlapen.vampirism.api.entity.player.task.TaskReward;
+import de.teamlapen.vampirism.core.ModTasks;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.ExtraCodecs;
 import org.jetbrains.annotations.NotNull;
 
 
 /**
  * Reward to level up (1 level) as lord
  */
-@SuppressWarnings("ClassCanBeRecord")
 public class LordLevelReward implements TaskReward, ITaskRewardInstance {
-    public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "lord_level_reward");
 
-    public static @NotNull LordLevelReward decode(@NotNull FriendlyByteBuf buffer) {
-        return new LordLevelReward(buffer.readVarInt());
-    }
-
-    public static @NotNull LordLevelReward readNbt(@NotNull CompoundTag nbt) {
-        return new LordLevelReward(nbt.getInt("targetLevel"));
-    }
+    public static final Codec<LordLevelReward> CODEC = RecordCodecBuilder.create(inst -> {
+        return inst.group(Codec.INT.fieldOf("targetLevel").forGetter(i -> i.targetLevel),
+                ExtraCodecs.COMPONENT.fieldOf("description").forGetter(i -> i.description)
+        ).apply(inst, LordLevelReward::new);
+    });
 
     public final int targetLevel;
+    private final Component description;
+
+    public LordLevelReward(int targetLevel, Component description) {
+        this.targetLevel = targetLevel;
+        this.description = description;
+    }
 
     public LordLevelReward(int targetLevel) {
         this.targetLevel = targetLevel;
+        this.description = Component.translatable("task_reward.vampirism.lord_level_reward", targetLevel);
     }
 
     @Override
@@ -47,18 +51,12 @@ public class LordLevelReward implements TaskReward, ITaskRewardInstance {
     }
 
     @Override
-    public void encode(@NotNull FriendlyByteBuf buffer) {
-        buffer.writeVarInt(this.targetLevel);
+    public Codec<LordLevelReward> codec() {
+        return ModTasks.LORD_LEVEL_REWARD.get();
     }
 
     @Override
-    public ResourceLocation getId() {
-        return ID;
-    }
-
-    @Override
-    public @NotNull CompoundTag writeNBT(@NotNull CompoundTag nbt) {
-        nbt.putInt("targetLevel", this.targetLevel);
-        return nbt;
+    public Component description() {
+        return this.description;
     }
 }

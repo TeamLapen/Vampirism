@@ -1,0 +1,36 @@
+{
+  "requirements": {
+    "requirements": [
+      {
+        "type": "vampirism:item",
+        "description": {
+          "translate": "item.minecraft.gold_ingot"
+        },
+        "id": "minecraft:gold_ingot",
+        "item": {
+          "Count": 2,
+          "id": "minecraft:gold_ingot"
+        }
+      },
+      {
+        "type": "vampirism:entity_type",
+        "amount": 10,
+        "description": {
+          "translate": "entity_tag.vampirism.advanced_hunter"
+        },
+        "entityType": "vampirism:advanced_hunter",
+        "id": "vampirism:advanced_hunter"
+      }
+    ]
+  },
+  "rewards": {
+    "type": "vampirism:refinement",
+    "faction": {
+      "id": "vampirism:vampire"
+    }
+  },
+  "title": {
+    "translate": "task.vampirism.random_refinement1"
+  },
+  "unlocker": []
+}

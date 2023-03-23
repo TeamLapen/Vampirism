@@ -1,0 +1,52 @@
+{
+  "requirements": {
+    "requirements": [
+      {
+        "type": "vampirism:item",
+        "description": {
+          "translate": "item.minecraft.gold_ingot"
+        },
+        "id": "minecraft:gold_ingot",
+        "item": {
+          "Count": 32,
+          "id": "minecraft:gold_ingot"
+        }
+      },
+      {
+        "type": "vampirism:entity_type",
+        "amount": 4,
+        "description": {
+          "translate": "entity_tag.vampirism.advanced_vampire"
+        },
+        "entityType": "vampirism:advanced_vampire",
+        "id": "vampirism:advanced_vampire"
+      },
+      {
+        "type": "vampirism:entity",
+        "amount": 5,
+        "description": {
+          "translate": "entity.vampirism.vampire_baron"
+        },
+        "entityType": "vampirism:vampire_baron",
+        "id": "vampirism:vampire_baron"
+      }
+    ]
+  },
+  "rewards": {
+    "type": "vampirism:item",
+    "item": {
+      "Count": 1,
+      "id": "vampirism:hunter_minion_equipment"
+    }
+  },
+  "title": {
+    "translate": "task.vampirism.hunter_minion_equipment"
+  },
+  "unlocker": [
+    {
+      "type": "vampirism:lord_level",
+      "exact": false,
+      "reqLordLevel": 1
+    }
+  ]
+}

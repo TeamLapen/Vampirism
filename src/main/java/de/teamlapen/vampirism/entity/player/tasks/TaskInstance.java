@@ -1,15 +1,28 @@
 package de.teamlapen.vampirism.entity.player.tasks;
 
 import com.google.common.base.Objects;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskRewardInstance;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
-import de.teamlapen.vampirism.entity.player.TaskManager;
-import de.teamlapen.vampirism.util.RegUtil;
+import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.entity.player.tasks.reward.ItemReward;
+import de.teamlapen.vampirism.entity.player.tasks.reward.LordLevelReward;
+import de.teamlapen.vampirism.util.CodecUtil;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,13 +32,23 @@ import java.util.UUID;
 
 public class TaskInstance implements ITaskInstance {
 
-    /**
-     * @return {@code null} if the task does not exist
-     */
-    @Nullable
-    public static TaskInstance readNBT(@NotNull CompoundTag nbt) {
-        Task task = RegUtil.getTask(new ResourceLocation(nbt.getString("task")));
-        if (task == null) return null;
+    public static final Codec<TaskInstance> CODEC = RecordCodecBuilder.create(inst -> {
+        return inst.group(
+                CodecUtil.UUID.fieldOf("taskGiver").forGetter(t -> t.taskGiver),
+                ResourceKey.codec(VampirismRegistries.TASK_ID).fieldOf("task").forGetter(t -> t.task),
+                CodecUtil.UUID.fieldOf("instanceId").forGetter(t -> t.instanceId),
+                Codec.unboundedMap(ResourceLocation.CODEC, Codec.INT).fieldOf("stats").forGetter(t -> t.stats),
+                ITaskRewardInstance.CODEC.fieldOf("reward").forGetter(t -> t.reward),
+                Codec.LONG.fieldOf("taskDuration").forGetter(t -> t.taskDuration),
+                Codec.BOOL.fieldOf("accepted").forGetter(t -> t.accepted),
+                Codec.LONG.fieldOf("taskTimer").forGetter(t -> t.taskTimeStamp)
+        ).apply(inst, TaskInstance::new);
+    });
+
+    @Deprecated
+    @NotNull
+    public static TaskInstance readLegacy(@NotNull CompoundTag nbt) {
+        ResourceKey<Task> task = ResourceKey.create(VampirismRegistries.TASK_ID, new ResourceLocation(nbt.getString("task")));
         UUID id = nbt.getUUID("id");
         UUID insId = nbt.getUUID("insId");
         boolean accepted = nbt.getBoolean("accepted");
@@ -34,32 +57,24 @@ public class TaskInstance implements ITaskInstance {
         Map<ResourceLocation, Integer> stats = new HashMap<>();
         statsNBT.getAllKeys().forEach(name -> stats.put(new ResourceLocation(name), statsNBT.getInt(name)));
         ResourceLocation rewardId = new ResourceLocation(nbt.getString("rewardId"));
-        ITaskRewardInstance reward = TaskManager.createReward(rewardId, nbt);
+        ITaskRewardInstance reward = createReward(rewardId, nbt);
         long taskDuration = nbt.getLong("taskDuration");
-        return new TaskInstance(id, task, stats, accepted, taskTimer, insId, reward, taskDuration);
+        return new TaskInstance(id, task, insId, stats, reward, taskDuration, accepted, taskTimer);
     }
 
-    public static @NotNull TaskInstance decode(@NotNull FriendlyByteBuf buffer) {
-        UUID id = buffer.readUUID();
-        Task task = RegUtil.getTask(buffer.readResourceLocation());
-        UUID insId = buffer.readUUID();
-        boolean accepted = buffer.readBoolean();
-        long taskTimer = buffer.readVarLong();
-        int statsAmount = buffer.readVarInt();
-        Map<ResourceLocation, Integer> stats = new HashMap<>();
-        for (int i = 0; i < statsAmount; i++) {
-            stats.put(buffer.readResourceLocation(), buffer.readVarInt());
-        }
-        ResourceLocation rewardId = buffer.readResourceLocation();
-        ITaskRewardInstance reward = TaskManager.createReward(rewardId, buffer);
-        long taskDuration = buffer.readVarLong();
-        return new TaskInstance(id, task, stats, accepted, taskTimer, insId, reward, taskDuration);
+    private static ITaskRewardInstance createReward(ResourceLocation id, CompoundTag tag) {
+        return switch (id.toString()) {
+            case "vampirism:item" -> new ItemReward.Instance(ItemStack.of(tag.getCompound("reward")));
+            case "vampirism:lord_level_reward" -> new LordLevelReward(tag.getInt("targetLevel"));
+            default -> throw new IllegalArgumentException("Unknown reward id " + id);
+        };
     }
+
 
     @NotNull
     private final UUID taskGiver;
     @NotNull
-    private final Task task;
+    private final ResourceKey<Task> task;
     @NotNull
     private final UUID instanceId;
     @NotNull
@@ -71,17 +86,17 @@ public class TaskInstance implements ITaskInstance {
     private long taskTimeStamp;
     private boolean completed;
 
-    public TaskInstance(@NotNull Task task, @NotNull UUID taskGiver, @NotNull IFactionPlayer<?> player, long taskDuration) {
-        this.task = task;
+    public TaskInstance(@NotNull Holder.Reference<Task> task, @NotNull UUID taskGiver, @NotNull IFactionPlayer<?> player, long taskDuration) {
+        this.task = task.key();
         this.taskGiver = taskGiver;
         this.instanceId = UUID.randomUUID();
         this.stats = new HashMap<>();
         this.taskTimeStamp = -1;
         this.taskDuration = taskDuration;
-        this.reward = this.task.getReward().createInstance(player);
+        this.reward = task.value().getReward().createInstance(player);
     }
 
-    private TaskInstance(@NotNull UUID taskGiver, @NotNull Task task, @NotNull Map<ResourceLocation, Integer> stats, boolean accepted, long taskTimeStamp, @NotNull UUID instanceId, @NotNull ITaskRewardInstance taskRewardInstance, long taskDuration) {
+    private TaskInstance(@NotNull UUID taskGiver, @NotNull ResourceKey<Task> task, @NotNull UUID instanceId, @NotNull Map<ResourceLocation, Integer> stats, @NotNull ITaskRewardInstance taskRewardInstance, long taskDuration, boolean accepted, long taskTimeStamp) {
         this.taskGiver = taskGiver;
         this.task = task;
         this.stats = stats;
@@ -103,19 +118,7 @@ public class TaskInstance implements ITaskInstance {
     }
 
     public void encode(@NotNull FriendlyByteBuf buffer) {
-        buffer.writeUUID(this.taskGiver);
-        buffer.writeResourceLocation(RegUtil.id(this.task));
-        buffer.writeUUID(this.instanceId);
-        buffer.writeBoolean(this.accepted);
-        buffer.writeVarLong(this.taskTimeStamp);
-        buffer.writeVarInt(this.stats.size());
-        this.stats.forEach((loc, val) -> {
-            buffer.writeResourceLocation(loc);
-            buffer.writeVarInt(val);
-        });
-        buffer.writeResourceLocation(this.reward.getId());
-        this.reward.encode(buffer);
-        buffer.writeVarLong(this.taskDuration);
+        buffer.writeJsonWithCodec(CODEC, this);
     }
 
     @Override
@@ -143,7 +146,7 @@ public class TaskInstance implements ITaskInstance {
     }
 
     @NotNull
-    public Task getTask() {
+    public ResourceKey<Task> getTask() {
         return task;
     }
 
@@ -173,8 +176,8 @@ public class TaskInstance implements ITaskInstance {
         return completed;
     }
 
-    public boolean isUnique() {
-        return this.task.isUnique();
+    public boolean isUnique(Registry<Task> registry) {
+        return registry.getHolder(this.task).map(s -> s.is(ModTags.Tasks.IS_UNIQUE)).orElse(false);
     }
 
     public void startTask(long timestamp) {
@@ -183,17 +186,8 @@ public class TaskInstance implements ITaskInstance {
     }
 
     public @NotNull CompoundTag writeNBT(@NotNull CompoundTag nbt) {
-        nbt.putUUID("id", this.taskGiver);
-        nbt.putString("task", RegUtil.id(this.task).toString());
-        nbt.putUUID("insId", this.instanceId);
-        nbt.putBoolean("accepted", this.accepted);
-        nbt.putLong("taskTimer", this.taskTimeStamp);
-        CompoundTag stats = new CompoundTag();
-        this.stats.forEach((loc, amount) -> stats.putInt(loc.toString(), amount));
-        nbt.put("stats", stats);
-        nbt.putString("rewardId", this.reward.getId().toString());
-        this.reward.writeNBT(nbt);
-        nbt.putLong("taskDuration", this.taskDuration);
+        DataResult<Tag> result = CODEC.encodeStart(NbtOps.INSTANCE, this);
+        nbt.put("instance", result.getOrThrow(false, (message) -> LogManager.getLogger().error(message)));
         return nbt;
     }
 }

@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.api.entity.player.task;
 
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Map;
@@ -39,7 +41,7 @@ public interface ITaskInstance {
     /**
      * @return the corresponding task
      */
-    Task getTask();
+    ResourceKey<Task> getTask();
 
     /**
      * @return the owning task board
@@ -68,7 +70,7 @@ public interface ITaskInstance {
     /**
      * whether the task is unique or not
      */
-    boolean isUnique();
+    boolean isUnique(Registry<Task> registry);
 
     /**
      * sets the active status and timestamp

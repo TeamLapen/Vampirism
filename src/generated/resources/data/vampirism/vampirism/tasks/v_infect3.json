@@ -1,0 +1,26 @@
+{
+  "requirements": {
+    "requirements": [
+      {
+        "type": "vampirism:stat",
+        "amount": 15,
+        "description": {
+          "translate": "stat.vampirism.infected_creatures"
+        },
+        "id": "vampirism:infected_creatures",
+        "stat": "vampirism:infected_creatures"
+      }
+    ]
+  },
+  "rewards": {
+    "type": "vampirism:item",
+    "item": {
+      "Count": 5,
+      "id": "minecraft:iron_ingot"
+    }
+  },
+  "title": {
+    "translate": "task.vampirism.v_infect3"
+  },
+  "unlocker": []
+}

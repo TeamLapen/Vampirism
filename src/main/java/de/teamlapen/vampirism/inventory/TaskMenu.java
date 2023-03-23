@@ -1,8 +1,11 @@
 package de.teamlapen.vampirism.inventory;
 
 import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
+import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,6 +62,12 @@ public interface TaskMenu {
      * @param listener the listener will be run if the container got updated
      */
     void setReloadListener(@Nullable Runnable listener);
+
+    Registry<Task> getRegistry();
+
+    default Task getTask(ResourceKey<Task> key) {
+        return getRegistry().getOrThrow(key);
+    }
 
     enum TaskAction {
         /**

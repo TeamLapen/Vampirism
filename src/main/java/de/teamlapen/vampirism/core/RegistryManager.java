@@ -118,6 +118,11 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
+    public void onNewDatapackRegistries(@NotNull DataPackRegistryEvent.NewRegistry event) {
+        ModRegistries.registerDatapackRegistries(event);
+    }
+
+    @SubscribeEvent
     public void onRegisterEffects(@NotNull RegisterEvent event) {
         if (event.getRegistryKey().equals(ForgeRegistries.Keys.MOB_EFFECTS)) {
             //noinspection ConstantConditions,unchecked

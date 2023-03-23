@@ -1,0 +1,27 @@
+{
+  "values": [
+    "vampirism:feeding_adapter",
+    "vampirism:vampire_lord1",
+    "vampirism:vampire_lord2",
+    "vampirism:vampire_lord3",
+    "vampirism:vampire_lord4",
+    "vampirism:vampire_lord5",
+    "vampirism:fire_resistance1",
+    "vampirism:fire_resistance2",
+    "vampirism:vampire_minion_binding",
+    "vampirism:vampire_minion_upgrade_simple",
+    "vampirism:vampire_minion_upgrade_enhanced",
+    "vampirism:vampire_minion_upgrade_special",
+    "vampirism:v_infect1",
+    "vampirism:v_infect2",
+    "vampirism:v_infect3",
+    "vampirism:v_capture1",
+    "vampirism:v_capture2",
+    "vampirism:v_kill1",
+    "vampirism:v_kill2",
+    "vampirism:random_refinement1",
+    "vampirism:random_refinement2",
+    "vampirism:random_refinement3",
+    "vampirism:random_rare_refinement"
+  ]
+}

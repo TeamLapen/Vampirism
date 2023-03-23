@@ -6,14 +6,16 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.lib.client.gui.components.ContainerObjectSelectionListWithDummy;
 import de.teamlapen.lib.lib.util.MultilineTooltip;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.entity.player.tasks.req.ItemRequirement;
-import de.teamlapen.vampirism.entity.player.tasks.reward.ItemRewardInstance;
+import de.teamlapen.vampirism.entity.player.tasks.reward.ItemReward;
 import de.teamlapen.vampirism.inventory.TaskMenu;
 import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -24,12 +26,11 @@ import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.util.FormattedCharSequence;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -47,11 +48,13 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
 
     protected final TaskMenu menu;
     protected final IFactionPlayer<?> factionPlayer;
+    protected final Registry<Task> registry;
 
     public TaskList(Minecraft minecraft, TaskMenu menu, IFactionPlayer<?> factionPlayer, int x, int y, int width, int height, int itemHeight, Supplier<List<ITaskInstance>> itemSupplier) {
         super(minecraft, width, height, y, y + height, itemHeight, itemSupplier);
         this.menu = menu;
         this.factionPlayer = factionPlayer;
+        this.registry = factionPlayer.getRepresentingPlayer().level.registryAccess().registryOrThrow(VampirismRegistries.TASK_ID);
         setLeftPos(x);
     }
 
@@ -72,10 +75,13 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
 
     public class TaskEntry extends ContainerObjectSelectionListWithDummy<ITaskInstance, TaskEntry, DummyEntry>.ItemEntry {
 
-        private final Tooltip tooltip = generateTaskToolTip();
+        private final Task task;
+        private final Tooltip tooltip;
 
         public TaskEntry(ITaskInstance item) {
             super(item);
+            this.task = registry.get(item.getTask());
+            this.tooltip = generateTaskToolTip();
         }
 
         @Override
@@ -87,7 +93,7 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
             if (menu.isCompleted(this.getItem())) {
                 RenderSystem.setShaderColor(0.4f, 0.4f, 0.4f, 1);
             } else {
-                boolean isUnique = this.getItem().isUnique();
+                boolean isUnique = this.getItem().isUnique(menu.getRegistry());
                 boolean remainsTime = this.getItem().getTaskTimeStamp() - minecraft.level.getGameTime() > 0;
                 if (menu.canCompleteTask(this.getItem())) {
                     if (isUnique) {
@@ -124,11 +130,11 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
             this.renderBackground(pPoseStack, mc, pTop, pLeft, pWidth, pHeight + 4, pMouseX, pMouseY, pPartialTick);
 
             //render name
-            Optional<FormattedCharSequence> text = Optional.ofNullable(mc.font.split(this.getItem().getTask().getTranslation(), 131).get(0));
+            Optional<FormattedCharSequence> text = Optional.ofNullable(mc.font.split(this.task.getTitle(), 131).get(0));
             text.ifPresent(t -> mc.font.draw(pPoseStack, t, pLeft + 2, pTop + 4, 3419941));//(6839882 & 16711422) >> 1 //8453920 //4226832
 
             //render progress
-            if (!menu.isTaskNotAccepted(this.getItem()) && !this.getItem().isUnique()) {
+            if (!menu.isTaskNotAccepted(this.getItem()) && !this.getItem().isUnique(menu.getRegistry())) {
                 long remainingTime = this.getItem().getTaskTimeStamp() - Minecraft.getInstance().level.getGameTime();
                 Component msg;
                 if (remainingTime >= 0) {
@@ -136,7 +142,7 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
                     long hours = remainingTime / 60 / 60;
                     long minutes = remainingTime / 60 % (60);
                     long seconds = remainingTime % (60);
-                    String time = "" + hours + ":";
+                    String time = hours + ":";
                     if (minutes < 10) time += "0";
                     time += minutes + ":";
                     if (seconds < 10) time += "0";
@@ -168,13 +174,13 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
         }
 
         private Tooltip generateTaskToolTip() {
-            Task task = this.getItem().getTask();
+            Task task = menu.getTask(this.getItem().getTask());
             List<Component> toolTips = new ArrayList<>();
-            toolTips.add(task.getTranslation().plainCopy().withStyle(style -> style.withColor(menu.getFactionColor())));
-            if (task.useDescription()) {
-                toolTips.add(task.getDescription());
+            toolTips.add(this.task.getTitle().plainCopy().withStyle(style -> style.withColor(menu.getFactionColor())));
+            task.getDescription().ifPresent(component -> {
+                toolTips.add(component);
                 toolTips.add(Component.literal(" "));
-            }
+            });
             if (menu.isTaskNotAccepted(this.getItem())) {
                 toolTips.add(Component.translatable("gui.vampirism.taskmaster.not_accepted"));
             } else {
@@ -193,12 +199,7 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
                         int completedAmount = menu.getRequirementStatus(this.getItem(), requirement);
                         desc = switch (type) {
                             case ITEMS -> ((Item) requirement.getStat(factionPlayer)).getDescription().plainCopy().append(" " + completedAmount + "/" + requirement.getAmount(factionPlayer));
-                            case STATS -> Component.translatable("stat." + requirement.getStat(factionPlayer).toString().replace(':', '.')).append(" " + completedAmount + "/" + requirement.getAmount(factionPlayer));
-                            case ENTITY -> (((EntityType<?>) requirement.getStat(factionPlayer)).getDescription().plainCopy().append(" " + completedAmount + "/" + requirement.getAmount(factionPlayer)));
-                            case ENTITY_TAG ->
-                                //noinspection unchecked
-                                    Component.translatable("tasks.vampirism." + ((TagKey<EntityType<?>>) requirement.getStat(factionPlayer)).location()).append(" " + completedAmount + "/" + requirement.getAmount(factionPlayer));
-                            default -> Component.translatable(task.getTranslationKey() + ".req." + requirement.getId().toString().replace(':', '.'));
+                            default -> requirement.description().plainCopy();
                         };
                         if (completed || menu.isRequirementCompleted(this.getItem(), requirement)) {
                             desc.withStyle(ChatFormatting.STRIKETHROUGH);
@@ -218,7 +219,7 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
         public DummyEntry(ITaskInstance item) {
             super(item);
 
-            List<TaskRequirement.Requirement<?>> all = item.getTask().getRequirement().getAll();
+            List<TaskRequirement.Requirement<?>> all = menu.getTask(item.getTask()).getRequirement().getAll();
             for (int i = 0; i < all.size(); i++) {
                 this.children.add(new RequirementWidget(3 + 3 + i * 20, 3, item, all.get(i)));
 
@@ -331,24 +332,26 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
             protected static final Component REWARD = Component.translatable("gui.vampirism.taskmaster.reward").withStyle(ChatFormatting.UNDERLINE);
 
             private final ITaskInstance rewardInstance;
+            private final Component reward;
 
             public RewardWidget(int pX, int pY, @NotNull ITaskInstance rewardInstance) {
-                super(pX, pY, rewardInstance.getReward() instanceof ItemRewardInstance items ? items.getReward() : PAPER);
+                super(pX, pY, rewardInstance.getReward() instanceof ItemReward.Instance items ? items.reward() : PAPER);
                 this.rewardInstance = rewardInstance;
+                this.reward = Component.translatable(Util.makeDescriptionId("task", rewardInstance.getTask().location()) + ".reward");
             }
 
             @Override
             protected List<Component> createTooltip() {
-                if (this.rewardInstance.getReward() instanceof ItemRewardInstance item) {
-                    return this.renderItemTooltip(item.getReward(), REWARD, false, null);
+                if (this.rewardInstance.getReward() instanceof ItemReward.Instance item) {
+                    return this.renderItemTooltip(item.reward(), REWARD, false, null);
                 } else {
-                    return this.renderItemTooltip(this.rewardInstance.getTask());
+                    return this.renderItemTooltip();
                 }
             }
 
-            private List<Component> renderItemTooltip(@NotNull Task task) {
+            private List<Component> renderItemTooltip() {
                 List<Component> tooltips = Lists.newArrayList(REWARD);
-                tooltips.add(Component.translatable(task.getTranslationKey() + ".reward"));
+                tooltips.add(this.reward);
                 return tooltips;
             }
 
@@ -377,15 +380,10 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
                 boolean notAccepted = menu.isTaskNotAccepted(this.instance);
                 boolean completed = menu.isRequirementCompleted(this.instance, this.requirement);
                 int completedAmount = menu.getRequirementStatus(this.instance, this.requirement);
-                return switch (requirement.getType()) {
+                return switch (this.requirement.getType()) {
                     case ITEMS -> this.renderItemTooltip(((ItemRequirement) requirement).getItemStack(), (completed ? REQUIREMENT_STRIKE : REQUIREMENT), completed, notAccepted ? null : (completedAmount + "/"));
-                    case ENTITY ->
-                            this.renderGenericRequirementTooltip(TaskRequirement.Type.ENTITY, ((EntityType<?>) requirement.getStat(factionPlayer)).getDescription().plainCopy().append((notAccepted ? " " : (" " + (completedAmount + "/"))) + requirement.getAmount(factionPlayer)), completed);
-                    case ENTITY_TAG ->
-                        //noinspection unchecked
-                            this.renderGenericRequirementTooltip(TaskRequirement.Type.ENTITY_TAG, Component.translatable("tasks.vampirism." + ((TagKey<EntityType<?>>) requirement.getStat(factionPlayer)).location()).append((notAccepted ? " " : (" " + (completedAmount + "/"))) + requirement.getAmount(factionPlayer)), completed);
-                    case STATS ->
-                            this.renderGenericRequirementTooltip(TaskRequirement.Type.STATS, Component.translatable("stat." + requirement.getStat(factionPlayer).toString().replace(':', '.')).append((notAccepted ? " " : (" " + (completedAmount + "/"))) + requirement.getAmount(factionPlayer)), completed);
+                    case STATS, ENTITY_TAG, ENTITY ->
+                            this.renderGenericRequirementTooltip(this.requirement.getType(), this.requirement.description().plainCopy().append((notAccepted ? " " : (" " + (completedAmount + "/"))) + requirement.getAmount(factionPlayer)), completed);
                     default -> this.renderDefaultRequirementToolTip(this.instance, requirement, completed);
                 };
             }
@@ -393,7 +391,7 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
             private List<Component> renderDefaultRequirementToolTip(@NotNull ITaskInstance task, TaskRequirement.@NotNull Requirement<?> requirement, boolean strikeThrough) {
                 List<Component> tooltips = Lists.newArrayList();
                 tooltips.add((strikeThrough ? REQUIREMENT_STRIKE : REQUIREMENT));
-                MutableComponent text = Component.translatable(task.getTask().getTranslationKey() + ".req." + requirement.getId().toString().replace(':', '.'));
+                MutableComponent text = requirement.description().plainCopy();
                 if (strikeThrough) {
                     text.withStyle(ChatFormatting.STRIKETHROUGH);
                 }

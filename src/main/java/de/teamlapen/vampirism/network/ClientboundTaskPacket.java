@@ -74,7 +74,7 @@ public record ClientboundTaskPacket(int containerId,
         }
         Map<UUID, TaskManager.TaskWrapper> taskWrapper = new HashMap<>();
         for (int i = 0; i < taskWrapperSIze; i++) {
-            TaskManager.TaskWrapper wrapper = TaskManager.TaskWrapper.decode(buffer);
+            TaskManager.TaskWrapper wrapper = buffer.readJsonWithCodec(TaskManager.TaskWrapper.CODEC);
             taskWrapper.put(wrapper.getId(), wrapper);
         }
         return new ClientboundTaskPacket(containerId, taskWrapper, completableTasks, completedRequirements);
