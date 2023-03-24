@@ -1,0 +1,20 @@
+{
+  "single_pieces": [
+    "vampirism:village/birch/houses/hunter_trainer",
+    "vampirism:village/swamp/houses/hunter_trainer",
+    "vampirism:village/snowy/houses/hunter_trainer",
+    "vampirism:village/plains/houses/hunter_trainer",
+    "vampirism:village/taiga/houses/hunter_trainer",
+    "vampirism:village/desert/houses/hunter_trainer",
+    "vampirism:village/savanna/houses/hunter_trainer",
+    "vampirism:village/badlands/houses/hunter_trainer",
+    "vampirism:village/crimson/houses/hunter_trainer",
+    "vampirism:village/oak/houses/hunter_trainer",
+    "vampirism:village/warped/houses/hunter_trainer",
+    "vampirism:village/dark_forest/houses/hunter_trainer",
+    "vampirism:village/totem",
+    "vampirism:village/giant_taiga/houses/hunter_trainer",
+    "vampirism:village/mountains/houses/hunter_trainer",
+    "vampirism:village/jungle/houses/hunter_trainer"
+  ]
+}

@@ -1,13 +1,12 @@
 package de.teamlapen.vampirism.world.gen;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.mixin.ProcessorListsAccessor;
-import de.teamlapen.vampirism.util.MixinHooks;
-import net.minecraft.core.*;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.ProcessorLists;
 import net.minecraft.resources.ResourceKey;
@@ -28,23 +27,10 @@ import java.util.function.Function;
  */
 public class VanillaStructureModifications {
 
-    public static void setup() {
-        setupSingleJigsawPieceGeneration();
-    }
-
     public static void addVillageStructures(@NotNull RegistryAccess dynamicRegistries) {
         addHunterTrainerHouse(dynamicRegistries, getDefaultPools());
         addTotem(dynamicRegistries, getDefaultPools());
         replaceTemples(dynamicRegistries, getTempleReplacements(dynamicRegistries.lookupOrThrow(Registries.PROCESSOR_LIST)));
-    }
-
-    /**
-     * ensure single generation of following structures
-     */
-    private static void setupSingleJigsawPieceGeneration() {
-        List<ResourceLocation> list = Lists.newArrayList(new ResourceLocation("vampirism", "village/totem"));
-        list.addAll(Arrays.stream(VanillaStructureModifications.BiomeType.values()).map((type) -> new ResourceLocation("vampirism", "village/" + type.path + "/houses/hunter_trainer")).toList());
-        MixinHooks.addSingleInstanceStructure(list);
     }
 
     /**
@@ -206,7 +192,7 @@ public class VanillaStructureModifications {
         return "LegacySingle[Left[" + resourceLocation + "]]";
     }
 
-    private enum BiomeType {
+    public enum BiomeType {
         PLAINS("plains"), TAIGA("taiga"), DESERT("desert"), SNOWY("snowy"), SAVANNA("savanna"), BADLANDS("badlands"), BIRCH("birch"), DARK_FOREST("dark_forest"), CRIMSON("crimson"), GIANT_TAIGA("giant_taiga"), JUNGLE("jungle"), MOUNTAINS("mountains"), OAK("oak"), SWAMP("swamp"), WARPED("warped");
 
         public final String path;

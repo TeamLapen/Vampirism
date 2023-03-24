@@ -32,6 +32,11 @@ public class MixinHooks {
         onlyOneStructure.addAll(structures.stream().map(MixinHooks::singleJigsawString).toList());
     }
 
+    public static void replaceSingleInstanceStructure(@NotNull List<ResourceLocation> structures) {
+        onlyOneStructure.clear();
+        onlyOneStructure.addAll(structures.stream().map(MixinHooks::singleJigsawString).toList());
+    }
+
 
     public static boolean checkStructures(@NotNull List<? super PoolElementStructurePiece> pieces, @NotNull StructurePoolElement jigsawPiece) {
         if (!onlyOneStructure.contains(jigsawPiece.toString())) return false;
