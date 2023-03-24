@@ -30,7 +30,8 @@
     "ShapelessRecipeBuilderAccessor",
     "StructuresAccessor",
     "TileEntityTypeAccessor",
-    "VanillaBlockLootAccessor"
+    "VanillaBlockLootAccessor",
+    "WalkAnimationStateAccessor"
   ],
   "client": [
     "client.AgeableModelAccessor",
