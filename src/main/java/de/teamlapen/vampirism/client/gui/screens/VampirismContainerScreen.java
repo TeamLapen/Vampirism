@@ -130,6 +130,12 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
     }
 
     @Override
+    public void resize(Minecraft pMinecraft, int pWidth, int pHeight) {
+        super.resize(pMinecraft, pWidth, pHeight);
+        this.list.updateContent();
+    }
+
+    @Override
     protected void init() {
         super.init();
         if (factionPlayer.getLevel() > 0) {

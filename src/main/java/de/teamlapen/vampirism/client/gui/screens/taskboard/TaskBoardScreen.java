@@ -35,6 +35,12 @@ public class TaskBoardScreen extends AbstractContainerScreen<TaskBoardMenu> impl
     }
 
     @Override
+    public void resize(Minecraft pMinecraft, int pWidth, int pHeight) {
+        super.resize(pMinecraft, pWidth, pHeight);
+        this.list.updateContent();
+    }
+
+    @Override
     public @NotNull ItemRenderer getItemRenderer() {
         return this.itemRenderer;
     }
