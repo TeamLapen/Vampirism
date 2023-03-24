@@ -20,6 +20,7 @@ import de.teamlapen.vampirism.client.core.ClientRegistryHandler;
 import de.teamlapen.vampirism.config.BloodValues;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
+import de.teamlapen.vampirism.data.reloadlistener.SingleJigsawGeneration;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.ModEntityEventHandler;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
@@ -134,7 +135,6 @@ public class VampirismMod {
         if (OptifineHandler.isOptifineLoaded()) {
             LOGGER.warn("Using Optifine. Expect visual glitches and reduces blood vision functionality if using shaders.");
         }
-        VanillaStructureModifications.setup();
     }
 
     public VersionChecker.VersionInfo getVersionInfo() {
@@ -146,7 +146,7 @@ public class VampirismMod {
         SkillTreeManager.getInstance().getSkillTree().initRootSkills();//Load root skills here, so even if data pack reload fail, the root skills are available #622
         event.addListener(SkillTreeManager.getInstance());
         event.addListener(new BloodValues());
-
+        event.addListener(new SingleJigsawGeneration());
     }
 
     public void onCommandsRegister(@NotNull RegisterCommandsEvent event) {
