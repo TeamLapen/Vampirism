@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-public abstract class SkillNodeProvider implements DataProvider {
+public abstract class SkillNodeProvider implements DataProvider {//TODO 1.20 move to de.teamlapen.vampirism.data.provider
 
     protected final PackOutput.PathProvider skillNodePathProvider;
     protected final String modId;

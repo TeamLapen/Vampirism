@@ -19,7 +19,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class ItemModelGenerator extends BaseItemModelGenerator {
+public class ItemModelGenerator extends BaseItemModelGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provider
+
     public ItemModelGenerator(@NotNull PackOutput packOutput, @NotNull ExistingFileHelper existingFileHelper) {
         super(packOutput, REFERENCE.MODID, existingFileHelper);
     }

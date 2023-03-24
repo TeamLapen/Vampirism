@@ -21,7 +21,7 @@ import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class BloodValueReader<T> {
+public class BloodValueReader<T> { //TODO 1.20 move to de.teamlapen.vampirism.data.reloadlistener.bloodvalues
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Gson GSON = new Gson();
     private static final int PATH_SUFFIX_LENGTH = ".json".length();

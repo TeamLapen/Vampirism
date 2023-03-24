@@ -47,7 +47,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class RecipesGenerator extends VanillaRecipeProvider {
+public class RecipesGenerator extends VanillaRecipeProvider {//TODO 1.20 move to de.teamlapen.vampirism.data.provider
+
     public RecipesGenerator(@NotNull PackOutput packOutput) {
         super(packOutput);
     }

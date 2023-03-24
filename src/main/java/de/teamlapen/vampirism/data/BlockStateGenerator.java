@@ -22,7 +22,7 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 
 
-public class BlockStateGenerator extends BlockStateProvider {
+public class BlockStateGenerator extends BlockStateProvider {//TODO 1.20 move to de.teamlapen.vampirism.data.provider
 
     public BlockStateGenerator(@NotNull PackOutput packOutput, @NotNull ExistingFileHelper exFileHelper) {
         super(packOutput, REFERENCE.MODID, exFileHelper);

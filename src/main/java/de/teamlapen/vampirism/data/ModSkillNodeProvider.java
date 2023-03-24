@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
-public class ModSkillNodeProvider extends SkillNodeProvider {
+public class ModSkillNodeProvider extends SkillNodeProvider {//TODO 1.20 move to de.teamlapen.vampirism.data.provider
 
     public ModSkillNodeProvider(PackOutput packOutput) {
         super(packOutput, REFERENCE.MODID);

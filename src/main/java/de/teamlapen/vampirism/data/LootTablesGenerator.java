@@ -46,7 +46,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
-public class LootTablesGenerator extends LootTableProvider {
+public class LootTablesGenerator extends LootTableProvider {//TODO 1.20 move to de.teamlapen.vampirism.data.provider
 
     /**
      * copied from {@link net.minecraft.data.loot.packs.VanillaBlockLoot}
