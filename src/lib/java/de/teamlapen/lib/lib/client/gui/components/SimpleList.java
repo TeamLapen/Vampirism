@@ -31,13 +31,13 @@ public class SimpleList<T extends SimpleList.Entry<T>> extends VisibleObjectSele
 
     @Override
     protected void renderItem(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick, int pIndex, int pLeft, int pTop, int pWidth, int pHeight) {
-        super.renderItem(pPoseStack, pMouseX, pMouseY, pPartialTick, pIndex, pLeft, pTop, pWidth, pHeight);
+        super.renderItem(pPoseStack, pMouseX, pMouseY, pPartialTick, pIndex, pLeft, pTop, pWidth - 6, pHeight);
     }
 
     @SuppressWarnings("SuspiciousNameCombination")
     @Override
     protected void renderBackground(@NotNull PoseStack pPoseStack) {
-        fillGradient(pPoseStack, this.x0, this.y0, this.x1, this.y1, -1072689136, -804253680);
+        fillGradient(pPoseStack, this.x0, this.y0, this.x1 - 6, this.y1, -1072689136, -804253680);
     }
 
     @Override
@@ -53,6 +53,16 @@ public class SimpleList<T extends SimpleList.Entry<T>> extends VisibleObjectSele
     @Override
     public int getRowLeft() {
         return super.getRowLeft() - 2;
+    }
+
+    @Override
+    protected int getRowTop(int pIndex) {
+        return super.getRowTop(pIndex) - 4;
+    }
+
+    @Override
+    public int getMaxScroll() {
+        return Math.max(0, super.getMaxScroll() - 4);
     }
 
     public static Builder<?> builder(int x, int y, int pWidth, int pHeight) {

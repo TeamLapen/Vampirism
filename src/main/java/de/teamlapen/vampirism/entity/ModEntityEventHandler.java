@@ -54,7 +54,6 @@ import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
@@ -114,7 +113,7 @@ public class ModEntityEventHandler {
     }
 
     @SubscribeEvent
-    public void onEntityCheckSpawn(LivingSpawnEvent.@NotNull CheckSpawn event) {
+    public void onFinalizeSpawn(@NotNull MobSpawnEvent.FinalizeSpawn event) {
         BlockPos pos = new BlockPos((int) (event.getX() - 0.4F), (int) event.getY(), (int) (event.getZ() - 0.4F)).below();
         if (!event.getLevel().hasChunkAt(pos)) return;
         BlockState blockState = event.getLevel().getBlockState(pos);
@@ -133,7 +132,7 @@ public class ModEntityEventHandler {
             v = ((CastleStairsBlock) b).getVariant();
         }
         if (deny && (v == CastleBricksBlock.EnumVariant.DARK_STONE || !(event.getEntity().getClassification(false) == VReference.VAMPIRE_CREATURE_TYPE))) {
-            event.setResult(Event.Result.DENY);
+            event.setSpawnCancelled(true);
         }
     }
 

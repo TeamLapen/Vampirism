@@ -59,6 +59,16 @@ public abstract class ContainerObjectSelectionListWithDummy<Z, T extends Contain
         return this.x1 - 5;
     }
 
+    @Override
+    protected int getRowTop(int pIndex) {
+        return super.getRowTop(pIndex) - 4;
+    }
+
+    @Override
+    public int getMaxScroll() {
+        return Math.max(0, super.getMaxScroll() - 4);
+    }
+
     protected abstract T createItem(Z item);
 
     protected abstract U createDummy(Z item);
