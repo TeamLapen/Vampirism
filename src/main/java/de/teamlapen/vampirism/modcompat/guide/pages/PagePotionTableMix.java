@@ -11,6 +11,7 @@ import de.maxanier.guideapi.api.util.PageHelper;
 import de.maxanier.guideapi.gui.BaseScreen;
 import de.teamlapen.vampirism.api.items.ExtendedPotionMix;
 import net.minecraft.client.gui.Font;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -60,7 +61,7 @@ public class PagePotionTableMix extends Page {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void draw(@NotNull PoseStack stack, Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, @NotNull BaseScreen guiBase, Font fontRendererObj) {
+    public void draw(@NotNull PoseStack stack, RegistryAccess registryAccess, Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, @NotNull BaseScreen guiBase, Font fontRendererObj) {
         //Update cycle
         long time = guiBase.getMinecraft().level != null ? guiBase.getMinecraft().level.getGameTime() : 0L;
         if (this.lastCycle < 0L || this.lastCycle < time - 60L) {

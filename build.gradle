@@ -57,7 +57,6 @@ sourceSets {
             // if you want intellij to ignore the package, you need to add it in the settings (File -> Settings -> Build, Execution, Deployment -> Compiler -> Excludes)
             // exclude(<package>)
             exclude("de/teamlapen/vampirism/modcompat/jei")
-            exclude("de/teamlapen/vampirism/modcompat/guide")
         }
         //noinspection GroovyAssignabilityCheck
         compileClasspath += sourceSets.lib.output

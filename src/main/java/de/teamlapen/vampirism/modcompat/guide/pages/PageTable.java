@@ -11,6 +11,7 @@ import de.maxanier.guideapi.gui.BaseScreen;
 import de.teamlapen.lib.lib.util.UtilLib;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -43,7 +44,7 @@ public class PageTable extends Page {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void draw(@NotNull PoseStack stack, Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, @NotNull BaseScreen guiBase, @NotNull Font fontRendererObj) {
+    public void draw(@NotNull PoseStack stack, RegistryAccess registryAccess, Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, @NotNull BaseScreen guiBase, @NotNull Font fontRendererObj) {
         float charWidth = fontRendererObj.width("W");
         int y = guiTop + 12;
         int x = guiLeft + 39;
@@ -51,7 +52,7 @@ public class PageTable extends Page {
             fontRendererObj.draw(stack, headline.withStyle(ChatFormatting.BOLD), x, y, 0);
             y += fontRendererObj.lineHeight;
         }
-        drawLine(stack, x, y + fontRendererObj.lineHeight, x + (guiBase.xSize * 3F / 5F), y + fontRendererObj.lineHeight, guiBase.publicZLevel);
+        drawLine(stack, x, y + fontRendererObj.lineHeight, x + (guiBase.xSize * 3F / 5F), y + fontRendererObj.lineHeight, 0);
         for (String[] l : lines) {
             x = guiLeft + 39;
             for (int i = 0; i < l.length; i++) {

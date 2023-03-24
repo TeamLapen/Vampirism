@@ -2,7 +2,6 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <excludeFromCompile>
-      <directory url="file://$PROJECT_DIR$/src/main/java/de/teamlapen/vampirism/modcompat/guide" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/src/main/java/de/teamlapen/vampirism/modcompat/jei" includeSubdirectories="true" />
     </excludeFromCompile>
     <bytecodeTargetLevel target="17" />

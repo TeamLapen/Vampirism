@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
@@ -38,7 +39,7 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe> extend
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void draw(@NotNull PoseStack stack, Book book, CategoryAbstract categoryAbstract, EntryAbstract entryAbstract, int guiLeft, int guiTop, int mouseX, int mouseY, @NotNull BaseScreen baseScreen, @NotNull Font fontRenderer, IngredientCycler ingredientCycler) {
+    public void draw(@NotNull PoseStack stack, RegistryAccess registryAccess, Book book, CategoryAbstract categoryAbstract, EntryAbstract entryAbstract, int guiLeft, int guiTop, int mouseX, int mouseY, @NotNull BaseScreen baseScreen, @NotNull Font fontRenderer, IngredientCycler ingredientCycler) {
 
 
         CRAFTING_GRID.draw(stack, guiLeft + 62, guiTop + 43);
@@ -48,12 +49,12 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe> extend
         int outputX = guiLeft + 152;
         int outputY = guiTop + 72;
 
-        ItemStack itemStack = recipe.getResultItem();
+        ItemStack itemStack = recipe.getResultItem(registryAccess);
 
 
         GuiHelper.drawItemStack(stack, itemStack, outputX, outputY);
         if (GuiHelper.isMouseBetween(mouseX, mouseY, outputX, outputY, 15, 15)) {
-            tooltips = GuiHelper.getTooltip(recipe.getResultItem());
+            tooltips = GuiHelper.getTooltip(recipe.getResultItem(registryAccess));
         }
 
         if (recipe.getRequiredLavaUnits() > 0) {
@@ -74,7 +75,7 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe> extend
                 skills.add(skill.getName().copy().withStyle(ChatFormatting.ITALIC));
                 skills.add(newLine);
             }
-            fontRenderer.drawWordWrap(FormattedText.composite(skills), guiLeft + 40, y, 110, Color.GRAY.getRGB());
+            fontRenderer.drawWordWrap(stack, FormattedText.composite(skills), guiLeft + 40, y, 110, Color.GRAY.getRGB());
         }
     }
 

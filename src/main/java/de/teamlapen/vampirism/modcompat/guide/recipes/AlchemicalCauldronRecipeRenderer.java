@@ -16,6 +16,7 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.recipes.AlchemicalCauldronRecipe;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
@@ -35,7 +36,7 @@ public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRend
     }
 
     @Override
-    public void draw(@NotNull PoseStack stack, Book book, CategoryAbstract categoryAbstract, EntryAbstract entryAbstract, int guiLeft, int guiTop, int mouseX, int mouseY, @NotNull BaseScreen baseScreen, @NotNull Font fontRenderer, @NotNull IngredientCycler ingredientCycler) {
+    public void draw(@NotNull PoseStack stack, RegistryAccess registryAccess, Book book, CategoryAbstract categoryAbstract, EntryAbstract entryAbstract, int guiLeft, int guiTop, int mouseX, int mouseY, @NotNull BaseScreen baseScreen, @NotNull Font fontRenderer, @NotNull IngredientCycler ingredientCycler) {
 
         CRAFTING_GRID.draw(stack, guiLeft + 60, guiTop + 42);
         baseScreen.drawCenteredStringWithoutShadow(stack, fontRenderer, UtilLib.translate(ModBlocks.ALCHEMICAL_CAULDRON.get().getDescriptionId()), guiLeft + baseScreen.xSize / 2, guiTop + 12, 0);
@@ -48,7 +49,7 @@ public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRend
         int in2X = guiLeft + 108;
         int in2Y = guiTop + 59;
 
-        ItemStack itemStack = recipe.getResultItem();
+        ItemStack itemStack = recipe.getResultItem(registryAccess);
 
 
         GuiHelper.drawItemStack(stack, itemStack, outputX, outputY);
@@ -90,7 +91,7 @@ public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRend
                 skills.add(skill.getName().copy().withStyle(ChatFormatting.ITALIC));
                 skills.add(newLine);
             }
-            fontRenderer.drawWordWrap(FormattedText.composite(skills), guiLeft + 50, y, 100, Color.GRAY.getRGB());
+            fontRenderer.drawWordWrap(stack, FormattedText.composite(skills), guiLeft + 50, y, 100, Color.GRAY.getRGB());
         }
     }
 
