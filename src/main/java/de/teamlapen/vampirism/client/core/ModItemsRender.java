@@ -13,12 +13,15 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.CrossbowArrowItem;
 import de.teamlapen.vampirism.util.OilUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.DyeableLeatherItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.IItemDecorator;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterItemDecorationsEvent;
 import org.jetbrains.annotations.NotNull;
@@ -79,17 +82,20 @@ public class ModItemsRender {
 
     public static void registerItemDecorator(RegisterItemDecorationsEvent event) {
         Stream.of(ModItems.BASIC_CROSSBOW, ModItems.ENHANCED_CROSSBOW, ModItems.BASIC_DOUBLE_CROSSBOW, ModItems.ENHANCED_DOUBLE_CROSSBOW).forEach(item -> {
-            event.register(item.get(), (font, stack, xOffset, yOffset, blitOffset) -> {
-                ((IVampirismCrossbow) stack.getItem()).getAmmunition(stack).ifPresent(ammo -> {
-                    PoseStack posestack = RenderSystem.getModelViewStack();
-                    posestack.pushPose();
-                    posestack.translate(xOffset, yOffset + 8, 0);
-                    posestack.scale(0.5f, 0.5f, 0.5f);
-                    Minecraft.getInstance().getItemRenderer().renderGuiItem(posestack, ammo.getDefaultInstance(), 0, 0);
-                    posestack.popPose();
-                    RenderSystem.applyModelViewMatrix();
-                });
-                return false;
+            event.register(item.get(), new IItemDecorator() {
+                @Override
+                public boolean render(PoseStack poseStack, Font font, ItemStack stack, int xOffset, int yOffset) {
+                    ((IVampirismCrossbow) stack.getItem()).getAmmunition(stack).ifPresent(ammo -> {
+                        PoseStack posestack = RenderSystem.getModelViewStack();
+                        posestack.pushPose();
+                        posestack.translate(xOffset, yOffset + 8, 0);
+                        posestack.scale(0.5f, 0.5f, 0.5f);
+                        Minecraft.getInstance().getItemRenderer().renderGuiItem(posestack, ammo.getDefaultInstance(), 0, 0);
+                        posestack.popPose();
+                        RenderSystem.applyModelViewMatrix();
+                    });
+                    return false;
+                }
             });
         });
     }

@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * A simple {@link ObjectSelectionList} that can be hidden
  */
-public class VisibleObjectSelectionList<T extends ObjectSelectionList.Entry<T>> extends ObjectSelectionList<T> {
+public abstract class VisibleObjectSelectionList<T extends ObjectSelectionList.Entry<T>> extends ObjectSelectionList<T> {
 
     public boolean isVisible = true;
 
