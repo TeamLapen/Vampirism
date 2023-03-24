@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-public class BloodValues implements PreparableReloadListener {
+public class BloodValues implements PreparableReloadListener {//TODO 1.20 move to de.teamlapen.vampirism.data.reloadlistener
 
     public final BloodValueReader<ResourceLocation> entities = new BloodValueReader<>(this::applyNewEntitiesResources, "vampirism/bloodvalues/entities", "entities");
     public final BloodValueReader<ResourceLocation> items = new BloodValueReader<>(BloodConversionRegistry::applyNewItemResources, "vampirism/bloodvalues/items", "items");
