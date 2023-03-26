@@ -33,6 +33,8 @@ import java.util.UUID;
 @SuppressWarnings("JavadocReference")
 public interface ICurableConvertedCreature<T extends PathfinderMob> extends IConvertedCreature<T> {
 
+    byte CURE_EVENT_ID = (byte) 40;
+
     /**
      * creates the new entity <p>
      * <p>
@@ -86,7 +88,7 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
      * @return if the staus update was handled
      */
     default boolean handleSound(byte id, @NotNull PathfinderMob entity) {
-        if (id == 16) {
+        if (id == CURE_EVENT_ID) {
             if (!entity.isSilent()) {
                 entity.level.playLocalSound(entity.getX(), entity.getEyeY(), entity.getZ(), SoundEvents.ZOMBIE_VILLAGER_CURE, entity.getSoundSource(), 1.0F + entity.getRandom().nextFloat(), entity.getRandom().nextFloat() * 0.7F + 0.3F, false);
             }
@@ -104,6 +106,7 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
      * @return the action result
      */
     default @NotNull InteractionResult interactWithCureItem(@NotNull Player player, @NotNull ItemStack stack, @NotNull PathfinderMob entity) {
+        if(isConverting(entity)) return InteractionResult.CONSUME;
         if (!entity.hasEffect(MobEffects.WEAKNESS)) return InteractionResult.CONSUME;
         if (!player.getAbilities().instabuild) {
             stack.shrink(1);
@@ -141,6 +144,6 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
     default void startConverting(@Nullable UUID conversionStarterIn, int conversionTimeIn, @NotNull PathfinderMob entity) {
         entity.getEntityData().set(this.getConvertingDataParam(), true);
         entity.removeEffect(MobEffects.WEAKNESS);
-        entity.level.broadcastEntityEvent(entity, (byte) 16);
+        entity.level.broadcastEntityEvent(entity, (CURE_EVENT_ID));
     }
 }
