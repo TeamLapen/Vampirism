@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.player.tasks.req;
 
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.api.util.NonnullSupplier;
@@ -58,7 +59,7 @@ public class ItemRequirement implements TaskRequirement.Requirement<Item> {
     @Override
     public void removeRequirement(@NotNull IFactionPlayer<?> player) {
         final ItemStack stack = itemRequirement.get();
-        player.getRepresentingPlayer().getInventory().clearOrCountMatchingItems(itemStack -> ItemStack.matches(itemStack, stack), getAmount(player), player.getRepresentingPlayer().inventoryMenu.getCraftSlots() /*Not sure if the crafting container is correct here*/);
+        player.getRepresentingPlayer().getInventory().clearOrCountMatchingItems(itemStack -> ItemStackUtil.areStacksEqualIgnoreAmount(itemStack, stack), getAmount(player), player.getRepresentingPlayer().inventoryMenu.getCraftSlots() /*Not sure if the crafting container is correct here*/);
     }
 
 }
