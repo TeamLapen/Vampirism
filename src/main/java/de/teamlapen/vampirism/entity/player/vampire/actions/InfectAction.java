@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.Entity;
@@ -35,17 +36,20 @@ public class InfectAction extends DefaultVampireAction {
     @Override
     protected boolean activate(@NotNull IVampirePlayer vampire, @NotNull ActivationContext context) {
         Player player = vampire.getRepresentingPlayer();
-        return context.targetEntity().filter(LivingEntity.class::isInstance).map(target -> {
-            if (!UtilLib.canReallySee((LivingEntity) target, player, false)) {
+        Entity creature =  context.targetEntity().filter(LivingEntity.class::isInstance).filter(target -> {
+            if (UtilLib.canReallySee((LivingEntity) target, player, false)) {
                 return false;
             }
-            if (deriveBiteableEntry(target).map(e -> e.tryInfect(vampire)).orElse(false)) {
-                player.awardStat(ModStats.infected_creatures);
-                player.level.playSound(null, target.getX(), target.getY() + 1.5d, target.getZ(), ModSounds.PLAYER_BITE.get(), SoundSource.PLAYERS, 1, 1);
-                return true;
-            }
-            return false;
-        }).orElse(false);
+            return deriveBiteableEntry(target).map(e -> e.tryInfect(vampire)).orElse(false);
+        }).orElse(null);
+        if(creature != null ){
+            player.awardStat(ModStats.infected_creatures);
+            player.level.playSound(null, creature.getX(), creature.getY() + 1.5d, creature.getZ(), ModSounds.PLAYER_BITE.get(), SoundSource.PLAYERS, 1, 1);
+        }
+        else{
+            player.level.playSound(null, vampire.getRepresentingPlayer().getX(), vampire.getRepresentingPlayer().getY() + 1.5d, vampire.getRepresentingPlayer().getZ(), SoundEvents.NOTE_BLOCK_BANJO.get(), SoundSource.PLAYERS, 1, 1);
+        }
+        return creature != null;
     }
 
 
