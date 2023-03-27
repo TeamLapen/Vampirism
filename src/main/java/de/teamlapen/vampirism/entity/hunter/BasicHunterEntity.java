@@ -25,7 +25,7 @@ import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
-import de.teamlapen.vampirism.entity.player.hunter.HunterLevelingConf;
+import de.teamlapen.vampirism.entity.player.hunter.HunterLeveling;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.inventory.HunterBasicMenu;
@@ -407,7 +407,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         int hunterLevel = VampirismPlayerAttributes.get(player).hunterLevel;
         if (this.isAlive() && !player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
             if (!level.isClientSide) {
-                if (HunterLevelingConf.instance().isLevelValidForBasicHunter(hunterLevel + 1)) {
+                if (HunterLeveling.getBasicHunterRequirement(hunterLevel + 1).isPresent()) {
                     if (trainee == null) {
                         player.openMenu(new SimpleMenuProvider((id, playerInventory, playerEntity) -> new HunterBasicMenu(id, playerInventory, this), name));
                         trainee = player;
