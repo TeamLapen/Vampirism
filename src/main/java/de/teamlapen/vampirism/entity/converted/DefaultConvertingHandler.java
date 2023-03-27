@@ -75,7 +75,7 @@ public class DefaultConvertingHandler<T extends PathfinderMob> implements IConve
         //noinspection unchecked
         return Helper.createEntity((EntityType<ConvertedCreatureEntity<T>>) (Object) ModEntities.CONVERTED_CREATURE.get(), entity.getCommandSenderWorld()).map(convertedCreature -> {
             copyImportantStuff(convertedCreature, entity);
-            convertedCreature.setUUID(Mth.createInsecureUUID(convertedCreature.getRandom()));
+            convertedCreature.setUUID(Mth.createInsecureUUID(convertedCreature.getRandom())); //Set a new uuid to avoid confusion as the class of the entity associated with the uuid changes
             convertedCreature.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 2));
             return convertedCreature;
         }).orElse(null);

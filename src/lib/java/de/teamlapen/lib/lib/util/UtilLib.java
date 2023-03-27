@@ -745,8 +745,8 @@ public class UtilLib {
     public static void replaceEntity(@NotNull LivingEntity old, @NotNull LivingEntity replacement) {
         Level w = old.getCommandSenderWorld();
         MinecraftForge.EVENT_BUS.post(new LivingConversionEvent.Post(old, replacement));
-        w.addFreshEntity(replacement);
         old.remove(Entity.RemovalReason.DISCARDED);
+        w.addFreshEntity(replacement);
     }
 
     /**
