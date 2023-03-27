@@ -970,9 +970,9 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         if (!this.level.isClientSide) {
             List<Villager> villagerEntities = this.level.getEntitiesOfClass(Villager.class, this.getVillageArea());
             for (Villager villager : villagerEntities) {
+                if (villager instanceof IFactionEntity) continue;
                 if (VampirismEventFactory.fireMakeAggressive(this, villager)) {
                     if (VReference.VAMPIRE_FACTION.equals(this.capturingFaction)) {
-                        if (villager instanceof IFactionEntity) continue;
                         if (villager.getAge() < 0) continue;
                         if (RNG.nextInt(3) == 0) {
                             makeAgressive(villager);
