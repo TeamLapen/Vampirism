@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.entity.player.hunter.HunterLevelingConf;
+import de.teamlapen.vampirism.entity.player.hunter.HunterLeveling;
 import de.teamlapen.vampirism.items.HunterIntelItem;
 import de.teamlapen.vampirism.items.PureBloodItem;
 import net.minecraft.core.BlockPos;
@@ -29,6 +29,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.network.IContainerFactory;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 /**
  * Container for the hunter table.
  * Handles inventory setup  and "crafting"
@@ -37,7 +39,7 @@ public class HunterTableMenu extends InventoryContainerMenu implements Container
     private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(Items.BOOK, 15, 28), new SelectorInfo(ModItems.VAMPIRE_FANG.get(), 42, 28), new SelectorInfo(ModTags.Items.PURE_BLOOD, 69, 28), new SelectorInfo(ModItems.VAMPIRE_BOOK.get(), 96, 28)};
     private final @NotNull SlotResult slotResult;
     private final int hunterLevel;
-    private final HunterLevelingConf levelingConf = HunterLevelingConf.instance();
+    private final Optional<HunterLeveling.HunterTrainerRequirement> levelingReq;
     private ItemStack missing = ItemStack.EMPTY;
 
 
@@ -53,6 +55,7 @@ public class HunterTableMenu extends InventoryContainerMenu implements Container
         this.addSlot(slotResult);
         hunterLevel = FactionPlayerHandler.get(playerInventory.player).getCurrentLevel(VReference.HUNTER_FACTION);
         this.addPlayerSlots(playerInventory);
+        levelingReq = HunterLeveling.getTrainerRequirement(hunterLevel + 1);
     }
 
     @Override
@@ -65,10 +68,10 @@ public class HunterTableMenu extends InventoryContainerMenu implements Container
     }
 
     public boolean isLevelValid(boolean considerTier) {
-        return considerTier ? levelingConf.isLevelValidForTableTier(hunterLevel + 1, worldPos.evaluate(((world, blockPos) -> {
+        return levelingReq.map(HunterLeveling.HunterTrainerRequirement::tableRequirement).map(level -> !considerTier || level.requiredTableTier() >= worldPos.evaluate(((world, blockPos) -> {
             BlockState state = world.getBlockState(blockPos);
             return state.hasProperty(HunterTableBlock.VARIANT) ? state.getValue(HunterTableBlock.VARIANT).tier : 0;
-        })).orElse(0)) : levelingConf.isLevelValidForTable(hunterLevel + 1);
+        })).orElse(0)).orElse(false);
     }
 
     @Override
@@ -82,8 +85,9 @@ public class HunterTableMenu extends InventoryContainerMenu implements Container
     @Override
     public void slotsChanged(@NotNull Container inventoryIn) {
         if (isLevelValid(true)) {
-            int[] req = levelingConf.getItemRequirementsForTable(hunterLevel + 1);
-            missing = checkItems(req[0], req[1], req[2], req[3]);
+            levelingReq.map(HunterLeveling.HunterTrainerRequirement::tableRequirement).ifPresent(x -> {
+                checkItems(x.fangs(), x.blood(), x.blood_meta(), x.vampireBook());
+            });
             if (missing.isEmpty()) {
                 slotResult.container.setItem(0, new ItemStack(HunterIntelItem.getIntelForExactlyLevel(hunterLevel + 1)));
             } else {
@@ -102,8 +106,9 @@ public class HunterTableMenu extends InventoryContainerMenu implements Container
      * Called when the resulting item is picked up
      */
     protected void onPickupResult() {
-        int[] req = levelingConf.getItemRequirementsForTable(hunterLevel + 1);
-        InventoryHelper.removeItems(inventory, new int[]{1, req[0], req[1], req[3]});
+        this.levelingReq.map(HunterLeveling.HunterTrainerRequirement::tableRequirement).ifPresent(req -> {
+            InventoryHelper.removeItems(inventory, req.fangs(), req.blood(), req.blood_meta(), req.vampireBook());
+        });
     }
 
     /**

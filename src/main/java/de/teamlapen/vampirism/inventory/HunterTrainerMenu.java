@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.hunter.HunterTrainerEntity;
-import de.teamlapen.vampirism.entity.player.hunter.HunterLevelingConf;
+import de.teamlapen.vampirism.entity.player.hunter.HunterLeveling;
 import de.teamlapen.vampirism.items.HunterIntelItem;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerListener;
@@ -59,12 +59,10 @@ public class HunterTrainerMenu extends InventoryContainerMenu implements Contain
      */
     public boolean canLevelup() {
         int targetLevel = FactionPlayerHandler.getOpt(player).map(h -> h.getCurrentLevel(VReference.HUNTER_FACTION)).orElse(0) + 1;
-        HunterLevelingConf levelingConf = HunterLevelingConf.instance();
-        if (levelingConf.isLevelValidForTrainer(targetLevel) != 0) return false;
-        int[] req = levelingConf.getItemRequirementsForTrainer(targetLevel);
-        int level = levelingConf.getHunterIntelMetaForLevel(targetLevel);
-        missing = InventoryHelper.checkItems(inventory, new Item[]{Items.IRON_INGOT, Items.GOLD_INGOT, HunterIntelItem.getIntelForLevel(level)}, new int[]{req[0], req[1], 1}, (supplied, required) -> supplied.equals(required) || (supplied instanceof HunterIntelItem && required instanceof HunterIntelItem && ((HunterIntelItem) supplied).getLevel() >= ((HunterIntelItem) required).getLevel()));
-        return missing.isEmpty();
+        return HunterLeveling.getTrainerRequirement(targetLevel).map(requirement -> {
+            missing = InventoryHelper.checkItems(inventory, new Item[]{Items.IRON_INGOT, Items.GOLD_INGOT, requirement.tableRequirement().intel().get()}, new int[]{requirement.iron(), requirement.gold(), 1}, (supplied, required) -> supplied.equals(required) || (supplied instanceof HunterIntelItem && required instanceof HunterIntelItem && ((HunterIntelItem) supplied).getLevel() >= ((HunterIntelItem) required).getLevel()));
+            return missing.isEmpty();
+        }).orElse(false);
     }
 
     /**
@@ -92,8 +90,8 @@ public class HunterTrainerMenu extends InventoryContainerMenu implements Contain
         if (canLevelup()) {
             int old = FactionPlayerHandler.get(player).getCurrentLevel(VReference.HUNTER_FACTION);
             FactionPlayerHandler.get(player).setFactionLevel(VReference.HUNTER_FACTION, old + 1);
-            int[] req = HunterLevelingConf.instance().getItemRequirementsForTrainer(old + 1);
-            InventoryHelper.removeItems(inventory, new int[]{req[0], req[1], 1});
+            var req = HunterLeveling.getTrainerRequirement(old + 1).orElseThrow();
+            InventoryHelper.removeItems(inventory, new int[]{req.iron(), req.gold(), 1});
             player.addEffect(new MobEffectInstance(ModEffects.SATURATION.get(), 400, 2));
             changed = true;
         }
