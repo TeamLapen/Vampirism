@@ -24,11 +24,7 @@ public class HunterLeveling {
     private static final HunterTrainerRequirement LEVEL_13 = new HunterTrainerRequirement(13, 40, 20, new HunterTableRequirement(3, 25, 2, 3, 1, ModItems.HUNTER_INTEL_8));
     private static final HunterTrainerRequirement LEVEL_14 = new HunterTrainerRequirement(14, 40, 40, new HunterTableRequirement(3, 25, 2, 4, 1, ModItems.HUNTER_INTEL_9));
 
-    private static final HunterLevelRequirement[] LEVEL_REQUIREMENTS;
-
-    static {
-        LEVEL_REQUIREMENTS = new HunterLevelRequirement[]{LEVEL_2, LEVEL_3, LEVEL_4, LEVEL_5, LEVEL_6, LEVEL_7, LEVEL_8, LEVEL_9, LEVEL_10, LEVEL_11, LEVEL_12, LEVEL_13, LEVEL_14};
-    }
+    private static final HunterLevelRequirement[] LEVEL_REQUIREMENTS = {LEVEL_2, LEVEL_3, LEVEL_4, LEVEL_5, LEVEL_6, LEVEL_7, LEVEL_8, LEVEL_9, LEVEL_10, LEVEL_11, LEVEL_12, LEVEL_13, LEVEL_14};
 
     public static Optional<HunterLevelRequirement> getLevelRequirement(@Range(from = 2, to = REFERENCE.HIGHEST_HUNTER_LEVEL) int targetLevel) {
         //noinspection ConstantValue
