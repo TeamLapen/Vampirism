@@ -74,7 +74,7 @@ public class HunterTrainerMenu extends ItemCombinerMenu {
     }
 
     @Override
-    public void createResultSlot(ItemCombinerMenuSlotDefinition definition) {
+    public void createResultSlot(@NotNull ItemCombinerMenuSlotDefinition definition) {
 
     }
 

@@ -73,27 +73,23 @@ public class HunterTrainerScreen extends ItemCombinerScreen<HunterTrainerMenu> {
     }
 
     private void renderOnBoardingTooltips(PoseStack pPoseStack, int pMouseX, int pMouseY) {
-        Optional<Component> optional = Optional.empty();
-
-        if (this.hoveredSlot != null) {
+        if (this.hoveredSlot != null && this.hoveredSlot.index < 3) {
+            Optional<Component> optional = Optional.empty();
             var req = this.menu.getRequirement();
-            for (int i = 0; i < 3; i++) {
-                if (this.hoveredSlot.index != i) continue;
-                ItemStack stack = this.menu.getSlot(i).getItem();
-                int finalI = i;
-                var missing = req.map(s -> switch (finalI) {
-                    case 0 -> s.iron();
-                    case 1 -> s.gold();
-                    default -> 1;
-                } - stack.getCount()).orElse(0);
-                if (missing > 0) {
-                    optional = Optional.of(Component.translatable("text.vampirism.hunter_trainer.ritual_missing_items", missing, (switch (finalI) {
-                        case 0 -> iron.getHoverName();
-                        case 1 -> this.gold.getHoverName();
-                        default -> req.map(s -> s.tableRequirement().intel().get()).map(item -> item.getName(item.getDefaultInstance())).orElseThrow();
-                    }).getString()));
-                    break;
-                }
+            ItemStack stack = this.hoveredSlot.getItem();
+            var missing = req.map(s -> switch (this.hoveredSlot.index) {
+                case 0 -> s.iron() - stack.getCount();
+                case 1 -> s.gold() - stack.getCount();
+                case 2 -> 1 - stack.getCount();
+                default -> 0;
+            }).orElse(0);
+            if (missing > 0) {
+                optional = Optional.of(Component.translatable("text.vampirism.hunter_trainer.ritual_missing_items", missing, (switch (this.hoveredSlot.index) {
+                    case 0 -> this.iron.getHoverName();
+                    case 1 -> this.gold.getHoverName();
+                    case 2 -> req.map(s -> s.tableRequirement().intel().get().getCustomName()).orElseGet(Component::empty);
+                    default -> throw new IllegalStateException("Unexpected value: " + this.hoveredSlot.index);
+                }).getString()));
             }
             optional.ifPresent((p_274684_) -> {
                 this.renderTooltip(pPoseStack, this.font.split(p_274684_, 115), pMouseX, pMouseY);

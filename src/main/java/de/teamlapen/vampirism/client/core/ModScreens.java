@@ -4,7 +4,6 @@ import de.teamlapen.vampirism.api.client.VIngameOverlays;
 import de.teamlapen.vampirism.client.gui.screens.*;
 import de.teamlapen.vampirism.client.gui.screens.taskboard.TaskBoardScreen;
 import de.teamlapen.vampirism.core.ModContainer;
-import de.teamlapen.vampirism.inventory.HunterTableMenu;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -18,8 +17,7 @@ public class ModScreens {
      * Call on serial loading queue to avoid possible issues with parallel access
      */
     public static void registerScreensUnsafe() {
-        //noinspection RedundantTypeArguments
-        MenuScreens.<HunterTableMenu, HunterTableScreen>register(ModContainer.HUNTER_TABLE.get(), HunterTableScreen::new);
+        MenuScreens.register(ModContainer.HUNTER_TABLE.get(), HunterTableScreen::new);
         MenuScreens.register(ModContainer.ALCHEMICAL_CAULDRON.get(), AlchemicalCauldronScreen::new);
         MenuScreens.register(ModContainer.WEAPON_TABLE.get(), WeaponTableScreen::new);
         MenuScreens.register(ModContainer.HUNTER_TRAINER.get(), HunterTrainerScreen::new);
