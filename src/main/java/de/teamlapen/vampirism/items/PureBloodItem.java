@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.core.ModEffects;
@@ -33,7 +32,7 @@ public class PureBloodItem extends Item {
     public static final int COUNT = 5;
     private final static Logger LOGGER = LogManager.getLogger();
 
-    public static @NotNull Item getBloodItemForLevel(int level) {
+    public static @NotNull PureBloodItem getBloodItemForLevel(int level) {
         return switch (level) {
             case 0 -> ModItems.PURE_BLOOD_0.get();
             case 1 -> ModItems.PURE_BLOOD_1.get();
@@ -42,7 +41,7 @@ public class PureBloodItem extends Item {
             case 4 -> ModItems.PURE_BLOOD_4.get();
             default -> {
                 LOGGER.warn("Pure blood of level {} does not exist", level);
-                yield  ModItems.PURE_BLOOD_4.get();
+                yield ModItems.PURE_BLOOD_4.get();
             }
         };
     }

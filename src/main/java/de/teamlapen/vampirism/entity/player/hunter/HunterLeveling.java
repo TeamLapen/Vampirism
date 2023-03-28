@@ -31,14 +31,20 @@ public class HunterLeveling {
     }
 
     public static Optional<HunterLevelRequirement> getLevelRequirement(@Range(from = 2, to = REFERENCE.HIGHEST_HUNTER_LEVEL) int targetLevel) {
+        //noinspection ConstantValue
+        if (targetLevel < 2 || targetLevel > REFERENCE.HIGHEST_HUNTER_LEVEL) return Optional.empty();
         return Optional.ofNullable(LEVEL_REQUIREMENTS[targetLevel - 2]);
     }
 
     public static Optional<HunterTrainerRequirement> getTrainerRequirement(@Range(from = 2, to = REFERENCE.HIGHEST_HUNTER_LEVEL) int targetLevel) {
+        //noinspection ConstantValue
+        if (targetLevel < 2 || targetLevel > REFERENCE.HIGHEST_HUNTER_LEVEL) return Optional.empty();
         return Optional.ofNullable(LEVEL_REQUIREMENTS[targetLevel - 2]).filter(HunterTrainerRequirement.class::isInstance).map(HunterTrainerRequirement.class::cast);
     }
 
     public static Optional<BasicHunterRequirement> getBasicHunterRequirement(@Range(from = 2, to = REFERENCE.HIGHEST_HUNTER_LEVEL) int targetLevel) {
+        //noinspection ConstantValue
+        if (targetLevel < 2 || targetLevel > REFERENCE.HIGHEST_HUNTER_LEVEL) return Optional.empty();
         return Optional.ofNullable(LEVEL_REQUIREMENTS[targetLevel - 2]).filter(BasicHunterRequirement.class::isInstance).map(BasicHunterRequirement.class::cast);
     }
 
@@ -46,7 +52,11 @@ public class HunterLeveling {
         int targetLevel();
     }
 
-    public record HunterTableRequirement(int requiredTableTier, int fangs, int blood, int blood_meta, int vampireBook, Supplier<HunterIntelItem> intel) {
+    public record HunterTableRequirement(int requiredTableTier, int book, int fangs, int blood, @Range(from = 0, to = 4) int pureBloodLevel, int vampireBook, Supplier<HunterIntelItem> intel) {
+
+        public HunterTableRequirement(int requiredTableTier, int fangs, int blood, int pureBloodLevel, int vampireBook, Supplier<HunterIntelItem> intel) {
+            this(requiredTableTier, 1, fangs, blood, pureBloodLevel, vampireBook, intel);
+        }
     }
 
     public record HunterTrainerRequirement(int targetLevel, int iron, int gold, HunterTableRequirement tableRequirement) implements HunterLevelRequirement {

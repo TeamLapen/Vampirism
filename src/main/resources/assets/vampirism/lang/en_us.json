@@ -576,7 +576,7 @@
   "text.vampirism.skills.reset_req": "You need a '%s' to reset your skills",
   "text.vampirism.skills.reset_consume": "This consumes a '%s'",
   "container.vampirism.hunter_table.structure_level_wrong": "Table structure incomplete for your level",
-  "container.vampirism.hunter_table.level_wrong": "Cannot use table at this level",
+  "container.vampirism.hunter_table.level_wrong": "You cannot use the table at this level",
   "container.vampirism.basic_hunter.levelup": "I hope you have learned something",
   "tile.vampirism.alchemical_cauldron.display": "%s’s %s",
   "tile.vampirism.potion_table.display": "%s's %s",
