@@ -11,7 +11,7 @@ import de.teamlapen.vampirism.blocks.AltarTipBlock;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
-import de.teamlapen.vampirism.entity.player.vampire.VampireLevelingConf;
+import de.teamlapen.vampirism.entity.player.vampire.VampireLeveling;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.inventory.AltarInfusionMenu;
 import de.teamlapen.vampirism.items.PureBloodItem;
@@ -354,12 +354,12 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
      */
     private boolean checkItemRequirements(@NotNull Player player, boolean messagePlayer) {
         int newLevel = targetLevel;
-        VampireLevelingConf.AltarInfusionRequirements requirements = VampireLevelingConf.getInstance().getAltarInfusionRequirements(newLevel);
-        ItemStack missing = InventoryHelper.checkItems(this, new Item[]{
-                        PureBloodItem.getBloodItemForLevel(requirements.pureBloodLevel()), ModItems.HUMAN_HEART.get(), ModItems.VAMPIRE_BOOK.get()},
-                new int[]{requirements.blood(), requirements.heart(), requirements.vampireBook()},
-                (supplied, required) -> supplied.equals(required) || (supplied instanceof PureBloodItem suppliedBlood && required instanceof PureBloodItem requiredBlood && suppliedBlood.getLevel() >= requiredBlood.getLevel()));
-
+        ItemStack missing = VampireLeveling.getInfusionRequirement(newLevel).map(req -> {
+            return InventoryHelper.checkItems(this, new Item[]{
+                            PureBloodItem.getBloodItemForLevel(req.pureBloodLevel()), ModItems.HUMAN_HEART.get(), ModItems.VAMPIRE_BOOK.get()},
+                    new int[]{req.blood(), req.heart(), req.vampireBook()},
+                    (supplied, required) -> supplied.equals(required) || (supplied instanceof PureBloodItem suppliedBlood && required instanceof PureBloodItem requiredBlood && suppliedBlood.getLevel() >= requiredBlood.getLevel()));
+        }).orElse(ItemStack.EMPTY);
         if (!missing.isEmpty()) {
             if (messagePlayer) {
                 Component item = missing.getItem() instanceof PureBloodItem pureBloodItem ? pureBloodItem.getCustomName() : Component.translatable(missing.getDescriptionId());
@@ -380,11 +380,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     private int checkRequiredLevel() {
         int newLevel = targetLevel;
 
-        if (!VampireLevelingConf.getInstance().isLevelValidForAltarInfusion(newLevel)) {
-            return -1;
-        }
-        return VampireLevelingConf.getInstance().getRequiredStructureLevelAltarInfusion(newLevel);
-
+        return VampireLeveling.getInfusionRequirement(newLevel).map(VampireLeveling.AltarInfusionRequirements::getRequiredStructurePoints).orElse(-1);
     }
 
     /**
@@ -438,8 +434,9 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
      * Consume the required tileInventory
      */
     private void consumeItems() {
-        VampireLevelingConf.AltarInfusionRequirements requirements = VampireLevelingConf.getInstance().getAltarInfusionRequirements(targetLevel);
-        InventoryHelper.removeItems(this, new int[]{requirements.blood(), requirements.heart(), requirements.vampireBook()});
+        VampireLeveling.getInfusionRequirement(targetLevel).ifPresent(req -> {
+            InventoryHelper.removeItems(this, new int[]{req.blood(), req.heart(), req.vampireBook()});
+        });
     }
 
     /**
