@@ -44,10 +44,10 @@ public class HunterTableScreen extends ItemCombinerScreen<HunterTableMenu> {
     protected void containerTick() {
         super.containerTick();
         var requirement = this.menu.getTableRequirement();
-        this.bookIcon.tick(requirement.filter(s -> s.book() > 0).map(s -> List.of(EMPTY_BOOK)).orElse(List.of()));
-        this.fangsIcon.tick(requirement.filter(s -> s.fangs() > 0).map(s -> List.of(EMPTY_FANG)).orElse(List.of()));
-        this.bloodIcon.tick(requirement.filter(s -> s.blood() > 0).map(s -> List.of(EMPTY_PURE_BLOOD)).orElse(List.of()));
-        this.vampireBookIcon.tick(requirement.filter(s -> s.vampireBook() > 0).map(s -> List.of(EMPTY_VAMPIRE_BOOK)).orElse(List.of()));
+        this.bookIcon.tick(requirement.filter(s -> s.bookQuantity() > 0).map(s -> List.of(EMPTY_BOOK)).orElse(List.of()));
+        this.fangsIcon.tick(requirement.filter(s -> s.vampireFangQuantity() > 0).map(s -> List.of(EMPTY_FANG)).orElse(List.of()));
+        this.bloodIcon.tick(requirement.filter(s -> s.pureBloodQuantity() > 0).map(s -> List.of(EMPTY_PURE_BLOOD)).orElse(List.of()));
+        this.vampireBookIcon.tick(requirement.filter(s -> s.vampireBookQuantity() > 0).map(s -> List.of(EMPTY_VAMPIRE_BOOK)).orElse(List.of()));
     }
 
     @Override
@@ -62,10 +62,10 @@ public class HunterTableScreen extends ItemCombinerScreen<HunterTableMenu> {
             var req = this.menu.getTableRequirement();
             ItemStack stack = this.hoveredSlot.getItem();
             var missing = req.map(r -> switch (this.hoveredSlot.index) {
-                case 0 -> r.book() - stack.getCount();
-                case 1 -> r.fangs() - stack.getCount();
-                case 2 -> r.blood() - stack.getCount();
-                case 3 -> r.vampireBook() - stack.getCount();
+                case 0 -> r.bookQuantity() - stack.getCount();
+                case 1 -> r.vampireFangQuantity() - stack.getCount();
+                case 2 -> r.pureBloodQuantity() - stack.getCount();
+                case 3 -> r.vampireBookQuantity() - stack.getCount();
                 default -> 0;
             }).orElse(0);
             if (missing > 0) {
@@ -73,7 +73,7 @@ public class HunterTableScreen extends ItemCombinerScreen<HunterTableMenu> {
                     case 0 -> Items.BOOK.getDefaultInstance().getHoverName();
                     case 1 -> ModItems.VAMPIRE_FANG.get().getDefaultInstance().getHoverName();
                     case 2 -> req.map(HunterLeveling.HunterTableRequirement::pureBloodLevel).map(PureBloodItem::getBloodItemForLevel).map(PureBloodItem::getCustomName).orElseGet(Component::empty);
-                    case 3 -> Items.ENCHANTED_BOOK.getDefaultInstance().getHoverName();
+                    case 3 -> ModItems.VAMPIRE_BOOK.get().getDefaultInstance().getHoverName();
                     default -> throw new IllegalStateException("Unexpected value: " + this.hoveredSlot.index);
                 }));
             }
@@ -102,9 +102,7 @@ public class HunterTableScreen extends ItemCombinerScreen<HunterTableMenu> {
             component = Optional.of(Component.translatable("container.vampirism.hunter_table.structure_level_wrong"));
         }
         component.ifPresent((c) -> {
-            pPoseStack.pushPose();
             this.renderTooltip(pPoseStack, this.font.split(c, 115), this.leftPos + 10, this.topPos + 60);
-            pPoseStack.popPose();
         });
     }
 

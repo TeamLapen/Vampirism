@@ -56,8 +56,8 @@ public class HunterTrainerScreen extends ItemCombinerScreen<HunterTrainerMenu> {
     protected void containerTick() {
         super.containerTick();
         var requirement = this.menu.getRequirement();
-        this.ironIcon.tick(requirement.filter(s -> s.iron() > 0).map(s -> List.of(EMPTY_INGOT)).orElse(List.of()));
-        this.goldIcon.tick(requirement.filter(s -> s.gold() > 0).map(s -> List.of(EMPTY_INGOT)).orElse(List.of()));
+        this.ironIcon.tick(requirement.filter(s -> s.ironQuantity() > 0).map(s -> List.of(EMPTY_INGOT)).orElse(List.of()));
+        this.goldIcon.tick(requirement.filter(s -> s.goldQuantity() > 0).map(s -> List.of(EMPTY_INGOT)).orElse(List.of()));
         this.hunterIntel.tick(requirement.map(s -> List.of(EMPTY_INTEL)).orElse(List.of()));
     }
 
@@ -78,8 +78,8 @@ public class HunterTrainerScreen extends ItemCombinerScreen<HunterTrainerMenu> {
             var req = this.menu.getRequirement();
             ItemStack stack = this.hoveredSlot.getItem();
             var missing = req.map(s -> switch (this.hoveredSlot.index) {
-                case 0 -> s.iron() - stack.getCount();
-                case 1 -> s.gold() - stack.getCount();
+                case 0 -> s.ironQuantity() - stack.getCount();
+                case 1 -> s.goldQuantity() - stack.getCount();
                 case 2 -> 1 - stack.getCount();
                 default -> 0;
             }).orElse(0);
@@ -87,7 +87,7 @@ public class HunterTrainerScreen extends ItemCombinerScreen<HunterTrainerMenu> {
                 optional = Optional.of(Component.translatable("text.vampirism.hunter_trainer.ritual_missing_items", missing, (switch (this.hoveredSlot.index) {
                     case 0 -> this.iron.getHoverName();
                     case 1 -> this.gold.getHoverName();
-                    case 2 -> req.map(s -> s.tableRequirement().intel().get().getCustomName()).orElseGet(Component::empty);
+                    case 2 -> req.map(s -> s.tableRequirement().resultIntelItem().get().getCustomName()).orElseGet(Component::empty);
                     default -> throw new IllegalStateException("Unexpected value: " + this.hoveredSlot.index);
                 }).getString()));
             }

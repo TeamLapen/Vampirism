@@ -66,9 +66,9 @@ public class HunterTrainerMenu extends ItemCombinerMenu {
     @Override
     protected @NotNull ItemCombinerMenuSlotDefinition createInputSlotDefinitions() {
         return ItemCombinerMenuSlotDefinition.create()
-                .withSlot(0, 27, 26, stack -> this.lvlRequirement.filter(req -> req.iron() > 0).isPresent() && stack.is(Items.IRON_INGOT))
-                .withSlot(1, 57, 26, stack -> this.lvlRequirement.filter(req -> req.gold() > 0).isPresent() && stack.is(Items.GOLD_INGOT))
-                .withSlot(2, 86, 26, stack -> this.lvlRequirement.map(req -> req.tableRequirement().intel().get()).filter(stack::is).isPresent())
+                .withSlot(0, 27, 26, stack -> this.lvlRequirement.filter(req -> req.ironQuantity() > 0).isPresent() && stack.is(Items.IRON_INGOT))
+                .withSlot(1, 57, 26, stack -> this.lvlRequirement.filter(req -> req.goldQuantity() > 0).isPresent() && stack.is(Items.GOLD_INGOT))
+                .withSlot(2, 86, 26, stack -> this.lvlRequirement.map(req -> req.tableRequirement().resultIntelItem().get()).filter(stack::is).isPresent())
                 .withResultSlot(0, 0, 0)
                 .build();
     }
@@ -83,7 +83,7 @@ public class HunterTrainerMenu extends ItemCombinerMenu {
      * @return If the player can levelup with the given tileInventory
      */
     public boolean canLevelup() {
-        return this.lvlRequirement.map(req -> req.iron() <= this.inputSlots.countItem(Items.IRON_INGOT) && req.gold() <= this.inputSlots.countItem(Items.GOLD_INGOT) && this.inputSlots.countItem(req.tableRequirement().intel().get()) >= 1).orElse(false);
+        return this.lvlRequirement.map(req -> req.ironQuantity() <= this.inputSlots.countItem(Items.IRON_INGOT) && req.goldQuantity() <= this.inputSlots.countItem(Items.GOLD_INGOT) && this.inputSlots.countItem(req.tableRequirement().resultIntelItem().get()) >= 1).orElse(false);
     }
 
     public Optional<HunterLeveling.HunterTrainerRequirement> getRequirement() {
@@ -98,7 +98,7 @@ public class HunterTrainerMenu extends ItemCombinerMenu {
         if (canLevelup()) {
             this.lvlRequirement.ifPresent(req -> {
                 FactionPlayerHandler.get(this.player).setFactionLevel(VReference.HUNTER_FACTION, req.targetLevel());
-                InventoryHelper.removeItems(this.inputSlots, req.iron(), req.gold(), 1);
+                InventoryHelper.removeItems(this.inputSlots, req.ironQuantity(), req.goldQuantity(), 1);
                 this.player.addEffect(new MobEffectInstance(ModEffects.SATURATION.get(), 400, 2));
                 this.lvlRequirement = HunterLeveling.getTrainerRequirement(req.targetLevel() + 1);
             });
