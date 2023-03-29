@@ -79,7 +79,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     private int targetLevel;
 
     public AltarInfusionBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        super(ModTiles.ALTAR_INFUSION.get(), pos, state, 3, AltarInfusionMenu.SELECTOR_INFOS);
+        super(ModTiles.ALTAR_INFUSION.get(), pos, state, AltarInfusionMenu.createInputSlotDefinition());
     }
 
     /**
@@ -357,7 +357,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
         ItemStack missing = VampireLeveling.getInfusionRequirement(newLevel).map(req -> {
             return InventoryHelper.checkItems(this, new Item[]{
                             PureBloodItem.getBloodItemForLevel(req.pureBloodLevel()), ModItems.HUMAN_HEART.get(), ModItems.VAMPIRE_BOOK.get()},
-                    new int[]{req.blood(), req.heart(), req.vampireBook()},
+                    new int[]{req.pureBloodQuantity(), req.humanHeartQuantity(), req.vampireBookQuantity()},
                     (supplied, required) -> supplied.equals(required) || (supplied instanceof PureBloodItem suppliedBlood && required instanceof PureBloodItem requiredBlood && suppliedBlood.getLevel() >= requiredBlood.getLevel()));
         }).orElse(ItemStack.EMPTY);
         if (!missing.isEmpty()) {
@@ -435,7 +435,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
      */
     private void consumeItems() {
         VampireLeveling.getInfusionRequirement(targetLevel).ifPresent(req -> {
-            InventoryHelper.removeItems(this, new int[]{req.blood(), req.heart(), req.vampireBook()});
+            InventoryHelper.removeItems(this, req.pureBloodQuantity(), req.humanHeartQuantity(), req.vampireBookQuantity());
         });
     }
 

@@ -24,38 +24,32 @@ public class HunterLeveling {
     private static final HunterTrainerRequirement LEVEL_13 = new HunterTrainerRequirement(13, 40, 20, new HunterTableRequirement(3, 25, 2, 3, 1, ModItems.HUNTER_INTEL_8));
     private static final HunterTrainerRequirement LEVEL_14 = new HunterTrainerRequirement(14, 40, 40, new HunterTableRequirement(3, 25, 2, 4, 1, ModItems.HUNTER_INTEL_9));
 
-    private static final HunterLevelRequirement[] LEVEL_REQUIREMENTS = {LEVEL_2, LEVEL_3, LEVEL_4, LEVEL_5, LEVEL_6, LEVEL_7, LEVEL_8, LEVEL_9, LEVEL_10, LEVEL_11, LEVEL_12, LEVEL_13, LEVEL_14};
+    private static final HunterLevelRequirement[] LEVEL_REQUIREMENTS = {null, null, LEVEL_2, LEVEL_3, LEVEL_4, LEVEL_5, LEVEL_6, LEVEL_7, LEVEL_8, LEVEL_9, LEVEL_10, LEVEL_11, LEVEL_12, LEVEL_13, LEVEL_14};
 
     public static Optional<HunterLevelRequirement> getLevelRequirement(@Range(from = 2, to = REFERENCE.HIGHEST_HUNTER_LEVEL) int targetLevel) {
-        //noinspection ConstantValue
-        if (targetLevel < 2 || targetLevel > REFERENCE.HIGHEST_HUNTER_LEVEL) return Optional.empty();
-        return Optional.ofNullable(LEVEL_REQUIREMENTS[targetLevel - 2]);
+        return Optional.ofNullable(LEVEL_REQUIREMENTS[targetLevel]);
     }
 
     public static Optional<HunterTrainerRequirement> getTrainerRequirement(@Range(from = 2, to = REFERENCE.HIGHEST_HUNTER_LEVEL) int targetLevel) {
-        //noinspection ConstantValue
-        if (targetLevel < 2 || targetLevel > REFERENCE.HIGHEST_HUNTER_LEVEL) return Optional.empty();
-        return Optional.ofNullable(LEVEL_REQUIREMENTS[targetLevel - 2]).filter(HunterTrainerRequirement.class::isInstance).map(HunterTrainerRequirement.class::cast);
+        return Optional.ofNullable(LEVEL_REQUIREMENTS[targetLevel]).filter(HunterTrainerRequirement.class::isInstance).map(HunterTrainerRequirement.class::cast);
     }
 
     public static Optional<BasicHunterRequirement> getBasicHunterRequirement(@Range(from = 2, to = REFERENCE.HIGHEST_HUNTER_LEVEL) int targetLevel) {
-        //noinspection ConstantValue
-        if (targetLevel < 2 || targetLevel > REFERENCE.HIGHEST_HUNTER_LEVEL) return Optional.empty();
-        return Optional.ofNullable(LEVEL_REQUIREMENTS[targetLevel - 2]).filter(BasicHunterRequirement.class::isInstance).map(BasicHunterRequirement.class::cast);
+        return Optional.ofNullable(LEVEL_REQUIREMENTS[targetLevel]).filter(BasicHunterRequirement.class::isInstance).map(BasicHunterRequirement.class::cast);
     }
 
     public interface HunterLevelRequirement {
         int targetLevel();
     }
 
-    public record HunterTableRequirement(int requiredTableTier, int book, int fangs, int blood, @Range(from = 0, to = 4) int pureBloodLevel, int vampireBook, Supplier<HunterIntelItem> intel) {
+    public record HunterTableRequirement(int requiredTableTier, int bookQuantity, int vampireFangQuantity, int pureBloodQuantity, @Range(from = 0, to = 4) int pureBloodLevel, int vampireBookQuantity, Supplier<HunterIntelItem> resultIntelItem) {
 
         public HunterTableRequirement(int requiredTableTier, int fangs, int blood, int pureBloodLevel, int vampireBook, Supplier<HunterIntelItem> intel) {
             this(requiredTableTier, 1, fangs, blood, pureBloodLevel, vampireBook, intel);
         }
     }
 
-    public record HunterTrainerRequirement(int targetLevel, int iron, int gold, HunterTableRequirement tableRequirement) implements HunterLevelRequirement {
+    public record HunterTrainerRequirement(int targetLevel, int ironQuantity, int goldQuantity, HunterTableRequirement tableRequirement) implements HunterLevelRequirement {
     }
 
     public record BasicHunterRequirement(int targetLevel, int blood) implements HunterLevelRequirement {

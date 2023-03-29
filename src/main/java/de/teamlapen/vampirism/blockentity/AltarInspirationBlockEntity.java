@@ -121,7 +121,7 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
             }
             return;
         }
-        int neededBlood = requirement.get().blood() * VReference.FOOD_TO_FLUID_BLOOD;
+        int neededBlood = requirement.get().bloodAmount() * VReference.FOOD_TO_FLUID_BLOOD;
         if (tank.getFluidAmount() + 99 < neededBlood) {//Since the container can only be filled in 100th steps
             if (p.level.isClientSide) {
                 p.displayClientMessage(Component.translatable("text.vampirism.not_enough_blood"), true);
@@ -152,7 +152,7 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
             }
             case 1 -> {
                 var req = VampireLeveling.getInspirationRequirement(blockEntity.targetLevel);
-                int blood = req.map(VampireLeveling.AltarInspirationRequirement::blood).orElse(0) * VReference.FOOD_TO_FLUID_BLOOD;
+                int blood = req.map(VampireLeveling.AltarInspirationRequirement::bloodAmount).orElse(0) * VReference.FOOD_TO_FLUID_BLOOD;
                 ((InternalTank) blockEntity.tank).doDrain(blood, IFluidHandler.FluidAction.EXECUTE);
                 blockEntity.ritualPlayer.addEffect(new MobEffectInstance(MobEffects.REGENERATION, blockEntity.targetLevel * 10 * 20));
                 FactionPlayerHandler.getOpt(blockEntity.ritualPlayer).ifPresent(h -> h.setFactionLevel(VReference.VAMPIRE_FACTION, blockEntity.targetLevel));

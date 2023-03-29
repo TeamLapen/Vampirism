@@ -8,6 +8,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ItemCombinerMenuSlotDefinition;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -28,6 +29,9 @@ public abstract class InventoryBlockEntity extends BaseContainerBlockEntity impl
     protected final @NotNull NonNullList<ItemStack> inventorySlots;
     protected InventoryContainerMenu.SelectorInfo[] selectors;
 
+    public InventoryBlockEntity(@NotNull BlockEntityType<?> tileEntityTypeIn, @NotNull BlockPos pos, @NotNull BlockState state, ItemCombinerMenuSlotDefinition slotDefinition) {
+        this(tileEntityTypeIn, pos, state, slotDefinition.getNumOfInputSlots(), slotDefinition.getSlots().stream().map(d -> new InventoryContainerMenu.SelectorInfo(d.mayPlace(), d.x(), d.y())).toArray(InventoryContainerMenu.SelectorInfo[]::new));
+    }
 
     public InventoryBlockEntity(@NotNull BlockEntityType<?> tileEntityTypeIn, @NotNull BlockPos pos, @NotNull BlockState state, int size, InventoryContainerMenu.SelectorInfo @NotNull ... selectorInfos) {
         super(tileEntityTypeIn, pos, state);

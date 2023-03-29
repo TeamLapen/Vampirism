@@ -1,38 +1,96 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.entity.player.vampire.VampireLeveling;
 import de.teamlapen.vampirism.inventory.AltarInfusionMenu;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import de.teamlapen.vampirism.items.PureBloodItem;
+import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
+import net.minecraft.client.gui.screens.inventory.ItemCombinerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
-@OnlyIn(Dist.CLIENT)
-public class AltarInfusionScreen extends AbstractContainerScreen<AltarInfusionMenu> {
+import java.util.List;
+import java.util.Optional;
 
-    private static final ResourceLocation altarGuiTextures = new ResourceLocation(REFERENCE.MODID, "textures/gui/altar4.png");
+@OnlyIn(Dist.CLIENT)
+public class AltarInfusionScreen extends ItemCombinerScreen<AltarInfusionMenu> {
+
+    private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/altar4.png");
+    private static final ResourceLocation EMPTY_PURE_BLOOD = new ResourceLocation(REFERENCE.MODID, "item/empty_pure_blood");
+    private static final ResourceLocation EMPTY_HUMAN_HEART = new ResourceLocation(REFERENCE.MODID, "item/empty_human_heart");
+    private static final ResourceLocation EMPTY_VAMPIRE_BOOK = new ResourceLocation(REFERENCE.MODID, "item/empty_vampire_book");
+
+    private final CyclingSlotBackground pureBloodIcon = new CyclingSlotBackground(0);
+    private final CyclingSlotBackground humanHeartIcon = new CyclingSlotBackground(1);
+    private final CyclingSlotBackground vampireBookIcon = new CyclingSlotBackground(2);
 
     public AltarInfusionScreen(@NotNull AltarInfusionMenu inventorySlotsIn, @NotNull Inventory playerInventory, @NotNull Component name) {
-        super(inventorySlotsIn, playerInventory, name);
+        super(inventorySlotsIn, playerInventory, name, BACKGROUND);
     }
 
     @Override
-    public void render(@NotNull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(stack);
-        super.render(stack, mouseX, mouseY, partialTicks);
-        this.renderTooltip(stack, mouseX, mouseY);
+    protected void containerTick() {
+        super.containerTick();
+        var requirement = this.menu.getRequirement();
+        this.pureBloodIcon.tick(requirement.filter(s -> s.pureBloodQuantity() > 0).map(s -> List.of(EMPTY_PURE_BLOOD)).orElse(List.of()));
+        this.humanHeartIcon.tick(requirement.filter(s -> s.humanHeartQuantity() > 0).map(s -> List.of(EMPTY_HUMAN_HEART)).orElse(List.of()));
+        this.vampireBookIcon.tick(requirement.filter(s -> s.vampireBookQuantity() > 0).map(s -> List.of(EMPTY_VAMPIRE_BOOK)).orElse(List.of()));
     }
 
     @Override
-    protected void renderBg(@NotNull PoseStack stack, float var1, int var2, int var3) {
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, altarGuiTextures);
-        this.blit(stack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
+    public void render(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
+        super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
+        this.renderOnBoardingTooltips(pPoseStack, pMouseX, pMouseY);
     }
 
+    private void renderOnBoardingTooltips(PoseStack pPoseStack, int pMouseX, int pMouseY) {
+        if (this.hoveredSlot != null && this.hoveredSlot.index < 3) {
+            Optional<Component> optional = Optional.empty();
+            var req = this.menu.getRequirement();
+            ItemStack stack = this.hoveredSlot.getItem();
+            var missing = req.map(s -> switch (this.hoveredSlot.index) {
+                case 0 -> s.pureBloodQuantity() - stack.getCount();
+                case 1 -> s.humanHeartQuantity() - stack.getCount();
+                case 2 -> s.vampireBookQuantity() - stack.getCount();
+                default -> 0;
+            }).orElse(0);
+            if (missing > 0) {
+                optional = Optional.of(Component.translatable("text.vampirism.altar_infusion.ritual_missing_items", missing, (switch (this.hoveredSlot.index) {
+                    case 0 -> req.map(VampireLeveling.AltarInfusionRequirements::pureBloodLevel).map(PureBloodItem::getBloodItemForLevel).map(PureBloodItem::getCustomName).orElseGet(Component::empty);
+                    case 1 -> ModItems.HUMAN_HEART.get().getDefaultInstance().getHoverName();
+                    case 2 -> ModItems.VAMPIRE_BOOK.get().getDefaultInstance().getHoverName();
+                    default -> null;
+                })));
+            }
+            optional.ifPresent(component -> this.renderTooltip(pPoseStack, component, pMouseX, pMouseY));
+        }
+    }
+
+    @Override
+    protected void renderBg(@NotNull PoseStack pPoseStack, float pPartialTick, int pX, int pY) {
+        super.renderBg(pPoseStack, pPartialTick, pX, pY);
+        this.pureBloodIcon.render(this.menu, pPoseStack, pPartialTick, this.leftPos, this.topPos);
+        this.humanHeartIcon.render(this.menu, pPoseStack, pPartialTick, this.leftPos, this.topPos);
+        this.vampireBookIcon.render(this.menu, pPoseStack, pPartialTick, this.leftPos, this.topPos);
+    }
+
+    @Override
+    protected void renderErrorIcon(@NotNull PoseStack pPoseStack, int mouseX, int mouseY) {
+        Optional<Component> component = Optional.empty();
+        var requirement = this.menu.getRequirement();
+        if (requirement.isEmpty()) {
+            component = Optional.of(Component.translatable("text.vampirism.altar_infusion.wrong_level"));
+        }
+        component.ifPresent(c -> {
+            this.renderTooltip(pPoseStack, this.font.split(c, 115), this.leftPos + 10, this.topPos + 60);
+
+        });
+    }
 }

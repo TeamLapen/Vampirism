@@ -21,24 +21,18 @@ public class VampireLeveling {
     private static final AltarInfusionRequirements LEVEL_13 = new AltarInfusionRequirements(13, 3, 2, 20, 1);
     private static final AltarInfusionRequirements LEVEL_14 = new AltarInfusionRequirements(14, 4, 2, 25, 1);
 
-    private static final VampireLevelRequirement[] LEVEL_REQUIREMENTS = {LEVEL_2, LEVEL_3, LEVEL_4, LEVEL_5, LEVEL_6, LEVEL_7, LEVEL_8, LEVEL_9, LEVEL_10, LEVEL_11, LEVEL_12, LEVEL_13, LEVEL_14};
+    private static final VampireLevelRequirement[] LEVEL_REQUIREMENTS = {null, null, LEVEL_2, LEVEL_3, LEVEL_4, LEVEL_5, LEVEL_6, LEVEL_7, LEVEL_8, LEVEL_9, LEVEL_10, LEVEL_11, LEVEL_12, LEVEL_13, LEVEL_14};
 
     public static Optional<VampireLevelRequirement> getLevelRequirement(@Range(from = 2, to = REFERENCE.HIGHEST_HUNTER_LEVEL) int targetLevel) {
-        //noinspection ConstantValue
-        if (targetLevel < 2 || targetLevel > REFERENCE.HIGHEST_VAMPIRE_LEVEL) return Optional.empty();
-        return Optional.ofNullable(LEVEL_REQUIREMENTS[targetLevel - 2]);
+        return Optional.ofNullable(LEVEL_REQUIREMENTS[targetLevel]);
     }
 
     public static Optional<AltarInfusionRequirements> getInfusionRequirement(@Range(from = 2, to = REFERENCE.HIGHEST_HUNTER_LEVEL) int targetLevel) {
-        //noinspection ConstantValue
-        if (targetLevel < 2 || targetLevel > REFERENCE.HIGHEST_VAMPIRE_LEVEL) return Optional.empty();
-        return Optional.ofNullable(LEVEL_REQUIREMENTS[targetLevel - 2]).filter(AltarInfusionRequirements.class::isInstance).map(AltarInfusionRequirements.class::cast);
+        return Optional.ofNullable(LEVEL_REQUIREMENTS[targetLevel]).filter(AltarInfusionRequirements.class::isInstance).map(AltarInfusionRequirements.class::cast);
     }
 
     public static Optional<AltarInspirationRequirement> getInspirationRequirement(@Range(from = 2, to = REFERENCE.HIGHEST_HUNTER_LEVEL) int targetLevel) {
-        //noinspection ConstantValue
-        if (targetLevel < 2 || targetLevel > REFERENCE.HIGHEST_VAMPIRE_LEVEL) return Optional.empty();
-        return Optional.ofNullable(LEVEL_REQUIREMENTS[targetLevel - 2]).filter(AltarInspirationRequirement.class::isInstance).map(AltarInspirationRequirement.class::cast);
+        return Optional.ofNullable(LEVEL_REQUIREMENTS[targetLevel]).filter(AltarInspirationRequirement.class::isInstance).map(AltarInspirationRequirement.class::cast);
     }
 
     public interface VampireLevelRequirement {
@@ -46,7 +40,7 @@ public class VampireLeveling {
         int targetLevel();
     }
 
-    public record AltarInfusionRequirements(int targetLevel, int pureBloodLevel, int blood, int heart, int vampireBook) implements VampireLevelRequirement {
+    public record AltarInfusionRequirements(int targetLevel, int pureBloodLevel, int pureBloodQuantity, int humanHeartQuantity, int vampireBookQuantity) implements VampireLevelRequirement {
 
         public int getRequiredStructurePoints() {
             int t = (this.targetLevel() - 4) / 2;
@@ -54,7 +48,7 @@ public class VampireLeveling {
         }
     }
 
-    public record AltarInspirationRequirement(int targetLevel, int blood) implements VampireLevelRequirement {
+    public record AltarInspirationRequirement(int targetLevel, int bloodAmount) implements VampireLevelRequirement {
 
     }
 }
