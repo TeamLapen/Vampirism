@@ -1,9 +1,9 @@
-package de.teamlapen.vampirism.config;
+package de.teamlapen.vampirism.data.reloadlistener;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
-import de.teamlapen.vampirism.config.bloodvalues.BloodValueBuilder;
-import de.teamlapen.vampirism.config.bloodvalues.BloodValueReader;
+import de.teamlapen.vampirism.data.reloadlistener.bloodvalues.BloodValueBuilder;
+import de.teamlapen.vampirism.data.reloadlistener.bloodvalues.BloodValueReader;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
@@ -15,11 +15,11 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-public class BloodValues implements PreparableReloadListener {//TODO 1.20 move to de.teamlapen.vampirism.data.reloadlistener
+public class BloodValuesReloadListener implements PreparableReloadListener {
 
-    public final BloodValueReader<ResourceLocation> entities = new BloodValueReader<>(this::applyNewEntitiesResources, "vampirism/bloodvalues/entities", "entities");
-    public final BloodValueReader<ResourceLocation> items = new BloodValueReader<>(BloodConversionRegistry::applyNewItemResources, "vampirism/bloodvalues/items", "items");
-    public final BloodValueReader<ResourceLocation> fluids = new BloodValueReader<>(BloodConversionRegistry::applyNewFluidResources, "vampirism/bloodvalues/fluids", "fluids");
+    public final BloodValueReader entities = new BloodValueReader(this::applyNewEntitiesResources, "vampirism/bloodvalues/entities", "entities");
+    public final BloodValueReader items = new BloodValueReader(BloodConversionRegistry::applyNewItemResources, "vampirism/bloodvalues/items", "items");
+    public final BloodValueReader fluids = new BloodValueReader(BloodConversionRegistry::applyNewFluidResources, "vampirism/bloodvalues/fluids", "fluids");
 
     @NotNull
     @Override

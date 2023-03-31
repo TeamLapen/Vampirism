@@ -18,9 +18,9 @@ import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.world.IVampirismWorld;
 import de.teamlapen.vampirism.client.core.ClientRegistryHandler;
-import de.teamlapen.vampirism.config.BloodValues;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
+import de.teamlapen.vampirism.data.reloadlistener.BloodValuesReloadListener;
 import de.teamlapen.vampirism.data.reloadlistener.SingleJigsawGeneration;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.ModEntityEventHandler;
@@ -136,7 +136,7 @@ public class VampirismMod {
     public void onAddReloadListenerEvent(@NotNull AddReloadListenerEvent event) {
         SkillTreeManager.getInstance().getSkillTree().initRootSkills();//Load root skills here, so even if data pack reload fail, the root skills are available #622
         event.addListener(SkillTreeManager.getInstance());
-        event.addListener(new BloodValues());
+        event.addListener(new BloodValuesReloadListener());
         event.addListener(new SingleJigsawGeneration());
     }
 
