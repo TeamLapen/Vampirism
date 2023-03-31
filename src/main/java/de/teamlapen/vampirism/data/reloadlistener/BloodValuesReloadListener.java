@@ -17,18 +17,18 @@ import java.util.concurrent.Executor;
 
 public class BloodValuesReloadListener implements PreparableReloadListener {
 
-    public final BloodValueReader entities = new BloodValueReader(this::applyNewEntitiesResources, "vampirism/bloodvalues/entities", "entities");
+    public final ConvertiblesReloadListener entities = new ConvertiblesReloadListener(new BloodValueReader(this::applyNewEntitiesResources, "vampirism/bloodvalues/entities", "entities"));
     public final BloodValueReader items = new BloodValueReader(BloodConversionRegistry::applyNewItemResources, "vampirism/bloodvalues/items", "items");
     public final BloodValueReader fluids = new BloodValueReader(BloodConversionRegistry::applyNewFluidResources, "vampirism/bloodvalues/fluids", "fluids");
 
     @NotNull
     @Override
     public CompletableFuture<Void> reload(@NotNull PreparationBarrier stage, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profiler1, @NotNull ProfilerFiller profiler2, @NotNull Executor pBackgroundExecutor, @NotNull Executor pGameExecutor) {
-        CompletableFuture<Map<String, BloodValueBuilder>> entities = this.entities.prepare(resourceManager, pBackgroundExecutor);
+        var entities = this.entities.prepare(resourceManager, pBackgroundExecutor);
         CompletableFuture<Map<String, BloodValueBuilder>> items = this.items.prepare(resourceManager, pBackgroundExecutor);
         CompletableFuture<Map<String, BloodValueBuilder>> fluids = this.fluids.prepare(resourceManager, pBackgroundExecutor);
         return CompletableFuture.allOf(entities, items, fluids).thenCompose(stage::wait).thenAcceptAsync(o -> {
-            this.entities.load(entities.join());
+            this.entities.apply(entities.join());
             this.items.load(items.join());
             this.fluids.load(fluids.join());
         }, pGameExecutor);

@@ -11,11 +11,13 @@ import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Supplier;
+
 public class SpecialConvertingHandler<T extends PathfinderMob, Z extends PathfinderMob & IConvertedCreature<T>> extends DefaultConvertingHandler<T> {
 
-    private final EntityType<Z> convertedType;
+    private final Supplier<EntityType<Z>> convertedType;
 
-    public SpecialConvertingHandler(EntityType<Z> convertedType) {
+    public SpecialConvertingHandler(Supplier<EntityType<Z>> convertedType) {
         super(null);
         this.convertedType = convertedType;
     }
@@ -23,7 +25,7 @@ public class SpecialConvertingHandler<T extends PathfinderMob, Z extends Pathfin
     @Nullable
     @Override
     public IConvertedCreature<T> createFrom(@NotNull T entity) {
-        return Helper.createEntity(this.convertedType, entity.getCommandSenderWorld()).map(convertedCreature -> {
+        return Helper.createEntity(this.convertedType.get(), entity.getCommandSenderWorld()).map(convertedCreature -> {
             copyImportantStuff(convertedCreature, entity);
             convertedCreature.setUUID(Mth.createInsecureUUID(convertedCreature.getRandom()));
             convertedCreature.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 2));
