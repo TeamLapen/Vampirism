@@ -3,7 +3,9 @@ package de.teamlapen.vampirism.core;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
+import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.entity.*;
 import de.teamlapen.vampirism.entity.converted.*;
 import de.teamlapen.vampirism.entity.hunter.*;
@@ -11,7 +13,6 @@ import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.entity.vampire.*;
 import de.teamlapen.vampirism.sit.SitEntity;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.level.block.Blocks;
@@ -27,7 +28,6 @@ import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -36,6 +36,7 @@ import java.util.stream.Collectors;
  */
 public class ModEntities {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, REFERENCE.MODID);
+    public static final DeferredRegister<IConvertingHandler<?>> CONVERTING_HANDLERS = DeferredRegister.create(VampirismRegistries.CONVERTING_HANDLER_ID, REFERENCE.MODID);
 
     public static final RegistryObject<EntityType<BasicHunterEntity>> HUNTER = prepareEntityType("hunter", () -> EntityType.Builder.of(BasicHunterEntity::new, VReference.HUNTER_CREATURE_TYPE).sized(0.6F, 1.95F), true);
     public static final RegistryObject<EntityType<HunterTrainerEntity>> HUNTER_TRAINER = prepareEntityType("hunter_trainer", () -> EntityType.Builder.of(HunterTrainerEntity::new, VReference.HUNTER_CREATURE_TYPE).sized(0.6F, 1.95F), true);
@@ -74,6 +75,16 @@ public class ModEntities {
     public static final RegistryObject<EntityType<ConvertedFoxEntity>> CONVERTED_FOX = prepareEntityType("converted_fox", () -> EntityType.Builder.of(ConvertedFoxEntity::new, MobCategory.CREATURE).sized(0.6F, 0.7F).immuneTo(Blocks.SWEET_BERRY_BUSH), true);
     public static final RegistryObject<EntityType<ConvertedGoatEntity>> CONVERTED_GOAT = prepareEntityType("converted_goat", () -> EntityType.Builder.of(ConvertedGoatEntity::new, MobCategory.CREATURE).sized(0.9F, 1.3F), true);
 
+    public static final RegistryObject<IConvertingHandler<?>> DEFAULT_CONVERTING_HANDLER = CONVERTING_HANDLERS.register("default", () -> new DefaultConvertingHandler<>(null));
+    public static final RegistryObject<IConvertingHandler<?>> COW_CONVERTING_HANDLER = CONVERTING_HANDLERS.register("cow", ConvertedCowEntity.ConvertingHandler::new);
+    public static final RegistryObject<IConvertingHandler<?>> SHEEP_CONVERTING_HANDLER = CONVERTING_HANDLERS.register("sheep", ConvertedSheepEntity.ConvertingHandler::new);
+    public static final RegistryObject<IConvertingHandler<?>> VILLAGER_CONVERTING_HANDLER = CONVERTING_HANDLERS.register("villager", ConvertedVillagerEntity.ConvertingHandler::new);
+    public static final RegistryObject<IConvertingHandler<?>> HORSE_CONVERTING_HANDLER = CONVERTING_HANDLERS.register("horse", () -> new SpecialConvertingHandler<>(CONVERTED_HORSE));
+    public static final RegistryObject<IConvertingHandler<?>> DONKEY_CONVERTING_HANDLER = CONVERTING_HANDLERS.register("donkey", () -> new SpecialConvertingHandler<>(CONVERTED_DONKEY));
+    public static final RegistryObject<IConvertingHandler<?>> MULE_CONVERTING_HANDLER = CONVERTING_HANDLERS.register("mule", () -> new SpecialConvertingHandler<>(CONVERTED_MULE));
+    public static final RegistryObject<IConvertingHandler<?>> FOX_CONVERTING_HANDLER = CONVERTING_HANDLERS.register("fox", () -> new SpecialConvertingHandler<>(CONVERTED_FOX));
+    public static final RegistryObject<IConvertingHandler<?>> GOAT_CONVERTING_HANDLER = CONVERTING_HANDLERS.register("goat", () -> new SpecialConvertingHandler<>(CONVERTED_GOAT));
+
 
     /**
      * Registers special extended creature classes
@@ -82,31 +93,9 @@ public class ModEntities {
         IVampirismEntityRegistry registry = VampirismAPI.entityRegistry();
     }
 
-    /**
-     * Register convertibles for vanilla creatures and maybe for future vampirism creature as well
-     */
-    static void registerConvertibles() {
-        Function<String, ResourceLocation> overlay = (String name) -> new ResourceLocation(REFERENCE.MODID, String.format("textures/entity/vanilla/%s_overlay.png", name));
-        IVampirismEntityRegistry registry = VampirismAPI.entityRegistry();
-
-        registry.addConvertible(EntityType.COW, overlay.apply("cow"), new ConvertedCowEntity.ConvertingHandler());
-        registry.addConvertible(EntityType.LLAMA, overlay.apply("llama"));
-        registry.addConvertible(EntityType.OCELOT, overlay.apply("cat"));
-        registry.addConvertible(EntityType.PANDA, overlay.apply("panda"));
-        registry.addConvertible(EntityType.PIG, overlay.apply("pig"));
-        registry.addConvertible(EntityType.POLAR_BEAR, overlay.apply("polarbear"));
-        registry.addConvertible(EntityType.RABBIT, overlay.apply("rabbit"));
-        registry.addConvertible(EntityType.SHEEP, overlay.apply("sheep"), new ConvertedSheepEntity.ConvertingHandler());
-        registry.addConvertible(EntityType.VILLAGER, null, new ConvertedVillagerEntity.ConvertingHandler());
-        registry.addConvertible(EntityType.HORSE, overlay.apply("horse"), new SpecialConvertingHandler<>(ModEntities.CONVERTED_HORSE.get()));
-        registry.addConvertible(EntityType.DONKEY, overlay.apply("horse"), new SpecialConvertingHandler<>(ModEntities.CONVERTED_DONKEY.get()));
-        registry.addConvertible(EntityType.MULE, overlay.apply("horse"), new SpecialConvertingHandler<>(ModEntities.CONVERTED_MULE.get()));
-        registry.addConvertible(EntityType.FOX, overlay.apply("fox"), new SpecialConvertingHandler<>(ModEntities.CONVERTED_FOX.get()));
-        registry.addConvertible(EntityType.GOAT, overlay.apply("goat"), new SpecialConvertingHandler<>(ModEntities.CONVERTED_GOAT.get()));
-    }
-
     static void register(IEventBus bus) {
         ENTITY_TYPES.register(bus);
+        CONVERTING_HANDLERS.register(bus);
     }
 
     static void onRegisterSpawns(@NotNull SpawnPlacementRegisterEvent event) {

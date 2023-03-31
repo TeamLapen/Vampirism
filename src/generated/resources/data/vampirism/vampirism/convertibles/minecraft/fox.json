@@ -1,0 +1,4 @@
+{
+  "handler": "vampirism:fox",
+  "overlay": "vampirism:textures/entity/vanilla/fox_overlay.png"
+}

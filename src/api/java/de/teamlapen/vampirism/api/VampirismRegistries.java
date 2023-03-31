@@ -3,6 +3,8 @@ package de.teamlapen.vampirism.api;
 import com.google.common.base.Suppliers;
 import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
+import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
+import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
@@ -36,6 +38,7 @@ public class VampirismRegistries {
     public static final ResourceKey<Registry<Codec<? extends TaskUnlocker>>> TASK_UNLOCKER_ID = key("vampirism:task_unlocker");
     public static final ResourceKey<Registry<Codec<? extends TaskRequirement.Requirement<?>>>> TASK_REQUIREMENT_ID = key("vampirism:task_requirement");
     public static final ResourceKey<Registry<Codec<? extends ITaskRewardInstance>>> TASK_REWARD_INSTANCE_ID = key("vampirism:task_reward_instance");
+    public static final ResourceKey<Registry<IConvertingHandler<?>>> CONVERTING_HANDLER_ID = key("vampirism:converting_handler");
 
     // data pack registries
     public static final ResourceKey<Registry<Task>> TASK_ID = key("vampirism:tasks");
@@ -51,7 +54,7 @@ public class VampirismRegistries {
     public static final Supplier<IForgeRegistry<Codec<? extends TaskUnlocker>>> TASK_UNLOCKER = Suppliers.memoize(() -> RegistryManager.ACTIVE.getRegistry(TASK_UNLOCKER_ID));
     public static final Supplier<IForgeRegistry<Codec<? extends TaskRequirement.Requirement<?>>>> TASK_REQUIREMENTS = Suppliers.memoize(() -> RegistryManager.ACTIVE.getRegistry(TASK_REQUIREMENT_ID));
     public static final Supplier<IForgeRegistry<Codec<? extends ITaskRewardInstance>>> TASK_REWARD_INSTANCES = Suppliers.memoize(() -> RegistryManager.ACTIVE.getRegistry(TASK_REWARD_INSTANCE_ID));
-
+    public static final Supplier<IForgeRegistry<IConvertingHandler<?>>> CONVERTING_HANDLERS = Suppliers.memoize(() -> RegistryManager.ACTIVE.getRegistry(CONVERTING_HANDLER_ID));
 
     private static <T> @NotNull ResourceKey<Registry<T>> key(@NotNull String name) {
         return ResourceKey.createRegistryKey(new ResourceLocation(name));

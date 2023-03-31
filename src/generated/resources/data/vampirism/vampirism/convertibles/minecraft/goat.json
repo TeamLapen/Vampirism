@@ -1,0 +1,4 @@
+{
+  "handler": "vampirism:goat",
+  "overlay": "vampirism:textures/entity/vanilla/goat_overlay.png"
+}

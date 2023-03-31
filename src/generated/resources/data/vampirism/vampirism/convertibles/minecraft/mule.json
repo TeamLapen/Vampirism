@@ -1,0 +1,4 @@
+{
+  "handler": "vampirism:mule",
+  "overlay": "vampirism:textures/entity/vanilla/mule_overlay.png"
+}

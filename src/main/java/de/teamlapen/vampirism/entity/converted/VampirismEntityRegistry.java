@@ -8,6 +8,8 @@ import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
+import de.teamlapen.vampirism.core.ModEntities;
+import de.teamlapen.vampirism.data.reloadlistener.ConvertiblesReloadListener;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -169,5 +171,14 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     public VampirismEntityRegistry setDefaultConvertingHandlerCreator(Function<IConvertingHandler.IDefaultHelper, IConvertingHandler<?>> creator) {
         this.defaultConvertingHandlerCreator = creator;
         return this;
+    }
+
+    public void applyDataConvertibles(Map<EntityType<? extends PathfinderMob>, ConvertiblesReloadListener.EntityEntry> entries) {
+        this.convertibles.clear();
+        this.convertibleOverlay.clear();
+        entries.forEach((type, entry) -> {
+            this.convertibles.put(type, entry.handler().orElseGet(ModEntities.DEFAULT_CONVERTING_HANDLER));
+            entry.overlay().ifPresent(overlay -> this.convertibleOverlay.put(type, overlay));
+        });
     }
 }
