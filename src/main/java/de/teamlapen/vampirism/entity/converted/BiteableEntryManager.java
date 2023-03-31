@@ -4,7 +4,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
-import de.teamlapen.vampirism.config.BloodValues;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.util.RegUtil;
@@ -27,9 +26,9 @@ import java.util.Set;
 /**
  * Manages biteable values.
  * Get values from various sources
- * Static values present in datapacks from {@link BloodValues#entities}
+ * Static values present in datapacks from {@link de.teamlapen.vampirism.data.reloadlistener.BloodValuesReloadListener#entities}
  * Dynamically calculated values from itself
- * Dynamically saved values on world load from {@link BloodValues#entities}}
+ * Dynamically saved values on world load from {@link de.teamlapen.vampirism.data.reloadlistener.BloodValuesReloadListener#entities}}
  * <p>
  * <p>
  * Dynamic values are calculated during gameplay and saved on stopping (server).

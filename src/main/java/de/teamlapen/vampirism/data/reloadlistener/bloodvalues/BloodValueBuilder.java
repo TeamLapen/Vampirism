@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.config.bloodvalues;
+package de.teamlapen.vampirism.data.reloadlistener.bloodvalues;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class BloodValueBuilder { //TODO 1.20 move to de.teamlapen.vampirism.data.reloadlistener.bloodvalues
+public class BloodValueBuilder {
 
     private final List<BuilderEntries> entries = new ArrayList<>();
     private final LegacyBuilderEntries legacyEntries = new LegacyBuilderEntries();
