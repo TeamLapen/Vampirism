@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-public class SingleJigsawGeneration implements PreparableReloadListener {
+public class SingleJigsawReloadListener implements PreparableReloadListener {
 
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String directory = "vampirism";
