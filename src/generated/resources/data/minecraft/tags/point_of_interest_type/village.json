@@ -2,6 +2,7 @@
   "values": [
     "vampirism:no_faction_totem",
     "vampirism:hunter_totem",
-    "vampirism:vampire_totem"
+    "vampirism:vampire_totem",
+    "vampirism:church_altar"
   ]
 }
