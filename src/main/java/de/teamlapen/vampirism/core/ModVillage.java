@@ -63,7 +63,7 @@ public class ModVillage {
     }
 
     private static Set<BlockState> getAllStates(Block @NotNull ... blocks) {
-        return Arrays.stream(blocks).map(block -> block.getStateDefinition().any()).collect(ImmutableSet.toImmutableSet());
+        return Arrays.stream(blocks).flatMap(block -> block.getStateDefinition().getPossibleStates().stream()).collect(ImmutableSet.toImmutableSet());
     }
 
     private static @NotNull Map<Integer, VillagerTrades.ItemListing[]> getHunterTrades() {
