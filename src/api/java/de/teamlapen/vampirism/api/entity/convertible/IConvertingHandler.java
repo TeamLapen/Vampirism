@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.api.entity.convertible;
 
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
@@ -21,13 +22,33 @@ public interface IConvertingHandler<T extends PathfinderMob> {
      */
     interface IDefaultHelper {
 
-        double getConvertedDMG(EntityType<? extends PathfinderMob> entity);
+        @Deprecated
+        default double getConvertedDMG(EntityType<? extends PathfinderMob> entity) {
+            return getConvertedDMG(entity, RandomSource.create());
+        }
 
-        double getConvertedKnockbackResistance(EntityType<? extends PathfinderMob> entity);
+        double getConvertedDMG(EntityType<? extends PathfinderMob> entity, RandomSource random);
 
-        double getConvertedMaxHealth(EntityType<? extends PathfinderMob> entity);
+        @Deprecated
+        default double getConvertedKnockbackResistance(EntityType<? extends PathfinderMob> entity) {
+            return getConvertedKnockbackResistance(entity, RandomSource.create());
+        }
 
-        double getConvertedSpeed(EntityType<? extends PathfinderMob> entity);
+        double getConvertedKnockbackResistance(EntityType<? extends PathfinderMob> entity, RandomSource random);
+
+        @Deprecated
+        default double getConvertedMaxHealth(EntityType<? extends PathfinderMob> entity) {
+            return getConvertedMaxHealth(entity, RandomSource.create());
+        }
+
+        double getConvertedMaxHealth(EntityType<? extends PathfinderMob> entity, RandomSource random);
+
+        @Deprecated
+        default double getConvertedSpeed(EntityType<? extends PathfinderMob> entity) {
+            return getConvertedSpeed(entity, RandomSource.create());
+        }
+
+        double getConvertedSpeed(EntityType<? extends PathfinderMob> entity, RandomSource random);
 
     }
 }

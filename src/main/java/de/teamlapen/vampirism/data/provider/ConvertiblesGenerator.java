@@ -58,7 +58,7 @@ public class ConvertiblesGenerator implements DataProvider {
         consumer.accept(EntityType.POLAR_BEAR, new ConvertiblesReloadListener.EntityEntry(overlay.apply("polar_bear")));
         consumer.accept(EntityType.RABBIT, new ConvertiblesReloadListener.EntityEntry(overlay.apply("rabbit")));
         consumer.accept(EntityType.SHEEP, new ConvertiblesReloadListener.EntityEntry(overlay.apply("sheep"), ModEntities.SHEEP_CONVERTING_HANDLER));
-        consumer.accept(EntityType.VILLAGER, new ConvertiblesReloadListener.EntityEntry(ModEntities.VILLAGER_CONVERTING_HANDLER));
+        consumer.accept(EntityType.VILLAGER, new ConvertiblesReloadListener.EntityEntry(null, ModEntities.VILLAGER_CONVERTING_HANDLER));
         consumer.accept(EntityType.HORSE, new ConvertiblesReloadListener.EntityEntry(overlay.apply("horse"), ModEntities.HORSE_CONVERTING_HANDLER));
         consumer.accept(EntityType.DONKEY, new ConvertiblesReloadListener.EntityEntry(overlay.apply("donkey"), ModEntities.DONKEY_CONVERTING_HANDLER));
         consumer.accept(EntityType.MULE, new ConvertiblesReloadListener.EntityEntry(overlay.apply("mule"), ModEntities.MULE_CONVERTING_HANDLER));

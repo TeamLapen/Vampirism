@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
@@ -32,7 +33,7 @@ public class DefaultConvertingHandler<T extends PathfinderMob> implements IConve
 
 
         @Override
-        public double getConvertedDMG(@NotNull EntityType<? extends PathfinderMob> entityType) {
+        public double getConvertedDMG(@NotNull EntityType<? extends PathfinderMob> entityType, RandomSource random) {
             AttributeSupplier map = DefaultAttributes.getSupplier(entityType);
             if (map.hasAttribute(Attributes.ATTACK_DAMAGE)) {
                 return map.getBaseValue(Attributes.ATTACK_DAMAGE) * 1.3;
@@ -42,19 +43,19 @@ public class DefaultConvertingHandler<T extends PathfinderMob> implements IConve
         }
 
         @Override
-        public double getConvertedKnockbackResistance(@NotNull EntityType<? extends PathfinderMob> entityType) {
+        public double getConvertedKnockbackResistance(@NotNull EntityType<? extends PathfinderMob> entityType, RandomSource random) {
             AttributeSupplier map = DefaultAttributes.getSupplier(entityType);
             return map.getBaseValue(Attributes.KNOCKBACK_RESISTANCE) * 1.3;
         }
 
         @Override
-        public double getConvertedMaxHealth(@NotNull EntityType<? extends PathfinderMob> entityType) {
+        public double getConvertedMaxHealth(@NotNull EntityType<? extends PathfinderMob> entityType, RandomSource random) {
             AttributeSupplier map = DefaultAttributes.getSupplier(entityType);
             return map.getBaseValue(Attributes.MAX_HEALTH) * 1.5;
         }
 
         @Override
-        public double getConvertedSpeed(@NotNull EntityType<? extends PathfinderMob> entityType) {
+        public double getConvertedSpeed(@NotNull EntityType<? extends PathfinderMob> entityType, RandomSource random) {
             AttributeSupplier map = DefaultAttributes.getSupplier(entityType);
             return Math.min(map.getBaseValue(Attributes.MOVEMENT_SPEED) * 1.2, 2.9D);
         }
