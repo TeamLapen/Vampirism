@@ -78,11 +78,12 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
 
     /**
      * copied from {@link net.minecraft.world.level.block.GrassBlock#performBonemeal(net.minecraft.server.level.ServerLevel, net.minecraft.util.RandomSource, net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState)}
+     * and changed from grass to cursed grass
      */
     @Override
     public void performBonemeal(@NotNull ServerLevel p_221270_, @NotNull RandomSource p_221271_, @NotNull BlockPos p_221272_, @NotNull BlockState p_221273_) {
         BlockPos blockpos = p_221272_.above();
-        BlockState blockstate = Blocks.GRASS.defaultBlockState();
+        BlockState blockstate = ModBlocks.CURSED_GRASS.get().defaultBlockState();
 
         label46:
         for (int i = 0; i < 128; ++i) {
