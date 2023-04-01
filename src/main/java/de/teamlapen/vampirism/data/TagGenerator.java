@@ -286,8 +286,8 @@ public class TagGenerator {
             tag(ModTags.PoiTypes.HAS_FACTION).add(ModVillage.NO_FACTION_TOTEM.get(), ModVillage.HUNTER_TOTEM.get(), ModVillage.VAMPIRE_TOTEM.get());
             tag(ModTags.PoiTypes.IS_HUNTER).add(ModVillage.HUNTER_TOTEM.get());
             tag(ModTags.PoiTypes.IS_VAMPIRE).add(ModVillage.VAMPIRE_TOTEM.get());
-            tag(PoiTypeTags.ACQUIRABLE_JOB_SITE).add(ModVillage.HUNTER_TOTEM.get(), ModVillage.VAMPIRE_TOTEM.get());
-            tag(PoiTypeTags.VILLAGE).add(ModVillage.NO_FACTION_TOTEM.get(), ModVillage.HUNTER_TOTEM.get(), ModVillage.VAMPIRE_TOTEM.get());
+            tag(PoiTypeTags.ACQUIRABLE_JOB_SITE).add(ModVillage.HUNTER_TOTEM.get(), ModVillage.VAMPIRE_TOTEM.get(), ModVillage.ALTAR_CLEANSING.get());
+            tag(PoiTypeTags.VILLAGE).add(ModVillage.NO_FACTION_TOTEM.get(), ModVillage.HUNTER_TOTEM.get(), ModVillage.VAMPIRE_TOTEM.get(), ModVillage.ALTAR_CLEANSING.get());
         }
     }
 
