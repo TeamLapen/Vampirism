@@ -8,10 +8,9 @@ import de.teamlapen.vampirism.client.model.armor.*;
 import de.teamlapen.vampirism.client.renderer.entity.*;
 import de.teamlapen.vampirism.client.renderer.entity.layers.VampireEntityLayer;
 import de.teamlapen.vampirism.client.renderer.entity.layers.VampirePlayerHeadLayer;
-import de.teamlapen.vampirism.client.renderer.entity.layers.WingsLayer;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.IVampirismBoat;
-import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.mixin.client.LivingEntityRendererAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.*;
 import net.minecraft.client.model.geom.LayerDefinitions;
@@ -20,6 +19,7 @@ import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.BatRenderer;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.HorseRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -34,6 +34,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -147,6 +148,26 @@ public class ModEntitiesRender {
         _onAddLayers(event);
     }
 
+    private static Map<LivingEntityRenderer<?, ?>, VampireEntityLayer> ENTITY_VAMPIRE_LAYER = new HashMap<>();
+
+    public static <T extends Player, Q extends EntityModel<T>, Z extends HumanoidModel<T>, I extends LivingEntity, U extends EntityModel<I>> void applyConvertibleOverlayUnsafe(Map<EntityType<? extends PathfinderMob>, ResourceLocation> overlays) {
+        Map<EntityType<?>, EntityRenderer<?>> renderers = Minecraft.getInstance().getEntityRenderDispatcher().renderers;
+        ENTITY_VAMPIRE_LAYER.forEach((renderer, layer) -> ((LivingEntityRendererAccessor<?, ?>) renderer).getLayers().remove(layer));
+        ENTITY_VAMPIRE_LAYER.clear();
+        overlays.forEach((type, overlay) -> {
+            EntityRenderer<?> entityRenderer = renderers.get(type);
+            if (entityRenderer != null) {
+                if (entityRenderer instanceof LivingEntityRenderer<?, ?> livingRenderer) {
+                    livingRenderer.addLayer(new VampireEntityLayer(livingRenderer, overlay, true));
+                } else {
+                    LOGGER.error("Renderer for {} is not a LivingEntityRenderer", type);
+                }
+            } else {
+                LOGGER.error("Did not find renderer for {}", type);
+            }
+        });
+    }
+
     @SuppressWarnings("unchecked")
     private static <T extends Player, Q extends EntityModel<T>, Z extends HumanoidModel<T>, I extends LivingEntity, U extends EntityModel<I>> void _onAddLayers(EntityRenderersEvent.@NotNull AddLayers event) {
 
@@ -161,7 +182,6 @@ public class ModEntitiesRender {
             EntityType<? extends PathfinderMob> type = entry.getKey();
             LivingEntityRenderer<I, U> render = (LivingEntityRenderer<I, U>) event.getRenderer(type);
             if (render == null) {
-                LOGGER.error("Did not find renderer for {}", type);
                 continue;
             }
             render.addLayer(new VampireEntityLayer<>(render, entry.getValue(), true));

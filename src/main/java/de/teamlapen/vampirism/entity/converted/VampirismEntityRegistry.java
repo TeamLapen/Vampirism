@@ -8,12 +8,18 @@ import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
+import de.teamlapen.vampirism.client.core.ModEntitiesRender;
+import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.data.reloadlistener.ConvertiblesReloadListener;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -23,7 +29,6 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,12 +56,16 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
      * Stores custom extended creature constructors after {@link InterModEnqueueEvent}
      */
     private final Map<Class<? extends PathfinderMob>, Function<? extends PathfinderMob, IExtendedCreatureVampirism>> extendedCreatureConstructors = new ConcurrentHashMap<>();
-    private Function<IConvertingHandler.IDefaultHelper, IConvertingHandler<?>> defaultConvertingHandlerCreator;
+    private final Function<IConvertingHandler.IDefaultHelper, IConvertingHandler<?>> defaultConvertingHandlerCreator;
 
     /**
      * denies convertible addition after {@link InterModProcessEvent}
      */
     private boolean finished = false;
+
+    public VampirismEntityRegistry(Function<IConvertingHandler.IDefaultHelper, IConvertingHandler<?>> creator) {
+        this.defaultConvertingHandlerCreator = creator;
+    }
 
     @Override
     @ThreadSafeAPI
@@ -120,6 +129,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
             }
         }
         biteableEntryManager.setNewBiteables(biteables, blacklist);
+        ModEntitiesRender.applyConvertibleOverlayUnsafe(this.convertibleOverlay);
     }
 
     @Override
@@ -163,22 +173,49 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
         return biteableEntryManager.getOrCalculate(creature);
     }
 
-    /**
-     * Set the creator for Vampirism's default converting handler
-     * FOR INTERNAL USAGE ONLY
-     */
-    @ApiStatus.Internal
-    public VampirismEntityRegistry setDefaultConvertingHandlerCreator(Function<IConvertingHandler.IDefaultHelper, IConvertingHandler<?>> creator) {
-        this.defaultConvertingHandlerCreator = creator;
-        return this;
-    }
-
     public void applyDataConvertibles(Map<EntityType<? extends PathfinderMob>, ConvertiblesReloadListener.EntityEntry> entries) {
         this.convertibles.clear();
         this.convertibleOverlay.clear();
         entries.forEach((type, entry) -> {
-            this.convertibles.put(type, entry.handler().orElseGet(ModEntities.DEFAULT_CONVERTING_HANDLER));
+            this.convertibles.put(type, entry.handler().orElseGet(() -> {
+                if (entry.properties().isPresent()) {
+                    return this.defaultConvertingHandlerCreator.apply(new DatapackHelper(entry.properties().get()));
+                } else {
+                    return ModEntities.DEFAULT_CONVERTING_HANDLER.get();
+                }
+            }));
             entry.overlay().ifPresent(overlay -> this.convertibleOverlay.put(type, overlay));
         });
+    }
+
+    private record DatapackHelper(ConvertiblesReloadListener.EntityEntry.Attributes attributes) implements IConvertingHandler.IDefaultHelper {
+
+        @Override
+        public double getConvertedDMG(EntityType<? extends PathfinderMob> entity, RandomSource random) {
+            AttributeSupplier map = DefaultAttributes.getSupplier(entity);
+            if (map.hasAttribute(Attributes.ATTACK_DAMAGE)) {
+                return map.getBaseValue(Attributes.ATTACK_DAMAGE) * this.attributes.damageProvider().sample(random);
+            } else {
+                return BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_DMG;
+            }
+        }
+
+        @Override
+        public double getConvertedKnockbackResistance(EntityType<? extends PathfinderMob> entity, RandomSource random) {
+            AttributeSupplier map = DefaultAttributes.getSupplier(entity);
+            return map.getBaseValue(Attributes.KNOCKBACK_RESISTANCE) * this.attributes.knockBackResistanceProvider().sample(random);
+        }
+
+        @Override
+        public double getConvertedMaxHealth(EntityType<? extends PathfinderMob> entity, RandomSource random) {
+            AttributeSupplier map = DefaultAttributes.getSupplier(entity);
+            return map.getBaseValue(Attributes.MAX_HEALTH) * this.attributes.maxHealthProvider().sample(random);
+        }
+
+        @Override
+        public double getConvertedSpeed(EntityType<? extends PathfinderMob> entity, RandomSource random) {
+            AttributeSupplier map = DefaultAttributes.getSupplier(entity);
+            return Math.min(map.getBaseValue(Attributes.MOVEMENT_SPEED) * this.attributes.convertedSpeedProvider().sample(random), 2.9D);
+        }
     }
 }

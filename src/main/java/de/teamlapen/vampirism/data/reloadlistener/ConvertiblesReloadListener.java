@@ -15,6 +15,8 @@ import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.valueproviders.ConstantFloat;
+import net.minecraft.util.valueproviders.FloatProvider;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -23,6 +25,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Reader;
 import java.util.HashMap;
@@ -80,29 +83,33 @@ public class ConvertiblesReloadListener {
         return values;
     }
 
-    public record EntityEntry(Optional<ResourceLocation> overlay, Optional<IConvertingHandler<?>> handler) {
+    public record EntityEntry(Optional<ResourceLocation> overlay, Optional<IConvertingHandler<?>> handler, Optional<Attributes> properties) {
 
         public static final Codec<EntityEntry> CODEC = RecordCodecBuilder.create(inst -> {
             return inst.group(
                     ResourceLocation.CODEC.optionalFieldOf("overlay").forGetter(EntityEntry::overlay),
-                    ModRegistries.CONVERTING_HANDLERS.get().getCodec().optionalFieldOf("handler").forGetter(EntityEntry::handler)
+                    ModRegistries.CONVERTING_HANDLERS.get().getCodec().optionalFieldOf("handler").forGetter(EntityEntry::handler),
+                    Attributes.CODEC.optionalFieldOf("attributes").forGetter(EntityEntry::properties)
             ).apply(inst, EntityEntry::new);
         });
 
-        public EntityEntry(ResourceLocation overlay, IConvertingHandler<?> handler) {
-            this(Optional.of(overlay), Optional.of(handler));
+        public EntityEntry(@Nullable ResourceLocation overlay, Supplier<@Nullable IConvertingHandler<?>> handler) {
+            this(Optional.ofNullable(overlay), Optional.of(handler.get()), Optional.empty());
         }
 
-        public EntityEntry(ResourceLocation overlay, Supplier<IConvertingHandler<?>> handler) {
-            this(Optional.of(overlay), Optional.of(handler.get()));
+        public EntityEntry(@Nullable ResourceLocation overlay) {
+            this(Optional.ofNullable(overlay), Optional.empty(), Optional.empty());
         }
 
-        public EntityEntry(ResourceLocation overlay) {
-            this(Optional.of(overlay), Optional.empty());
-        }
-
-        public EntityEntry(Supplier<IConvertingHandler<?>> handler) {
-            this(Optional.empty(), Optional.of(handler.get()));
+        public record Attributes(FloatProvider damageProvider, FloatProvider knockBackResistanceProvider, FloatProvider maxHealthProvider, FloatProvider convertedSpeedProvider) {
+            public static final Codec<Attributes> CODEC = RecordCodecBuilder.create(inst -> {
+                return inst.group(
+                        FloatProvider.CODEC.optionalFieldOf("damage_multiplikator", ConstantFloat.of(1.3f)).forGetter(Attributes::damageProvider),
+                        FloatProvider.CODEC.optionalFieldOf("knockback_resistance_multiplikator", ConstantFloat.of(1.3f)).forGetter(Attributes::knockBackResistanceProvider),
+                        FloatProvider.CODEC.optionalFieldOf("max_health_multiplikator", ConstantFloat.of(1.5f)).forGetter(Attributes::maxHealthProvider),
+                        FloatProvider.CODEC.optionalFieldOf("converted_speed_multiplikator", ConstantFloat.of(1.2f)).forGetter(Attributes::convertedSpeedProvider)
+                ).apply(inst, Attributes::new);
+            });
         }
     }
 }
