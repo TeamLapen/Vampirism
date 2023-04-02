@@ -1,7 +1,13 @@
 package de.teamlapen.vampirism.entity.converted;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.vampirism.api.entity.convertible.Converter;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
+import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.core.ModEntities;
+import de.teamlapen.vampirism.data.reloadlistener.ConvertiblesReloadListener;
+import de.teamlapen.vampirism.entity.converted.converter.DefaultConverter;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -19,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * {@link IConvertedCreature} for sheep
@@ -107,6 +114,10 @@ public class ConvertedSheepEntity extends ConvertedCreatureEntity<Sheep> impleme
             super(null);
         }
 
+        public ConvertingHandler(IDefaultHelper helper) {
+            super(helper);
+        }
+
         @Override
         public ConvertedCreatureEntity<Sheep> createFrom(@NotNull Sheep entity) {
             return Helper.createEntity(ModEntities.CONVERTED_SHEEP.get(), entity.getCommandSenderWorld()).map(creature -> {
@@ -114,6 +125,34 @@ public class ConvertedSheepEntity extends ConvertedCreatureEntity<Sheep> impleme
                 creature.setSheared(entity.isSheared());
                 return creature;
             }).orElse(null);
+        }
+    }
+
+    public static class SheepConverter extends DefaultConverter {
+
+        public static final Codec<SheepConverter> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                ConvertiblesReloadListener.EntityEntry.Attributes.CODEC.optionalFieldOf("attribute_helper").forGetter(i -> Optional.ofNullable(i.helper))
+        ).apply(instance, SheepConverter::new));
+
+        protected SheepConverter(Optional<ConvertiblesReloadListener.EntityEntry.Attributes> helper) {
+            super(helper);
+        }
+
+        public SheepConverter(ConvertiblesReloadListener.EntityEntry.Attributes helper) {
+            super(helper);
+        }
+
+        public SheepConverter() {
+        }
+
+        @Override
+        public IConvertingHandler<?> createHandler() {
+            return new ConvertingHandler(new VampirismEntityRegistry.DatapackHelper(this.helper));
+        }
+
+        @Override
+        public Codec<? extends Converter> codec() {
+            return ModEntities.SHEEP_CONVERTER.get();
         }
     }
 

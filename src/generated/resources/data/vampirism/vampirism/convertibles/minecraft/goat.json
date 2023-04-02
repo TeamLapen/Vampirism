@@ -1,4 +1,7 @@
 {
-  "handler": "vampirism:goat",
+  "handler": {
+    "type": "vampirism:special",
+    "converted_type": "vampirism:converted_goat"
+  },
   "overlay": "vampirism:textures/entity/vanilla/goat_overlay.png"
 }

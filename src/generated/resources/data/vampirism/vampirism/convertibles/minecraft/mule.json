@@ -1,4 +1,7 @@
 {
-  "handler": "vampirism:mule",
+  "handler": {
+    "type": "vampirism:special",
+    "converted_type": "vampirism:converted_mule"
+  },
   "overlay": "vampirism:textures/entity/vanilla/mule_overlay.png"
 }

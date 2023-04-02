@@ -1,4 +1,6 @@
 {
-  "handler": "vampirism:sheep",
+  "handler": {
+    "type": "vampirism:sheep"
+  },
   "overlay": "vampirism:textures/entity/vanilla/sheep_overlay.png"
 }

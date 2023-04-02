@@ -1,4 +1,7 @@
 {
-  "handler": "vampirism:horse",
+  "handler": {
+    "type": "vampirism:special",
+    "converted_type": "vampirism:converted_horse"
+  },
   "overlay": "vampirism:textures/entity/vanilla/horse_overlay.png"
 }

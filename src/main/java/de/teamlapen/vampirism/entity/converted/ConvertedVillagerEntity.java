@@ -1,10 +1,12 @@
 package de.teamlapen.vampirism.entity.converted;
 
 import com.google.common.collect.Lists;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.Dynamic;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
+import de.teamlapen.vampirism.api.entity.convertible.Converter;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.api.entity.convertible.ICurableConvertedCreature;
@@ -294,6 +296,22 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
             converted.yBodyRot = entity.yBodyRot;
             converted.yHeadRot = entity.yHeadRot;
             return converted;
+        }
+    }
+
+    public static class VillagerConverter implements Converter {
+
+        public static final VillagerConverter INSTANCE = new VillagerConverter();
+        public static final Codec<VillagerConverter> CODEC = Codec.unit(() -> INSTANCE);
+
+        @Override
+        public IConvertingHandler<?> createHandler() {
+            return new ConvertingHandler();
+        }
+
+        @Override
+        public Codec<? extends Converter> codec() {
+            return ModEntities.VILLAGER_CONVERTER.get();
         }
     }
 }

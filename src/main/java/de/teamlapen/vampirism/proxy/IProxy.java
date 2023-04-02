@@ -6,13 +6,17 @@ import de.teamlapen.vampirism.entity.player.skills.SkillTree;
 import de.teamlapen.vampirism.network.*;
 import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Proxy interface
@@ -90,4 +94,7 @@ public interface IProxy extends IInitListener {
 
     }
 
+    default void applyConvertibleOverlays(Map<EntityType<? extends PathfinderMob>, ResourceLocation> convertibleOverlay) {
+
+    }
 }

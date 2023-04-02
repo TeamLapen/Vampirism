@@ -5,6 +5,10 @@ import com.mojang.serialization.JsonOps;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.data.reloadlistener.ConvertiblesReloadListener;
+import de.teamlapen.vampirism.entity.converted.ConvertedCowEntity;
+import de.teamlapen.vampirism.entity.converted.ConvertedSheepEntity;
+import de.teamlapen.vampirism.entity.converted.ConvertedVillagerEntity;
+import de.teamlapen.vampirism.entity.converted.converter.SpecialConverter;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
@@ -50,20 +54,20 @@ public class ConvertiblesGenerator implements DataProvider {
     private void registerConvertibles(BiConsumer<EntityType<? extends PathfinderMob>, ConvertiblesReloadListener.EntityEntry> consumer) {
         Function<String, ResourceLocation> overlay = (String name) -> new ResourceLocation(REFERENCE.MODID, String.format("textures/entity/vanilla/%s_overlay.png", name));
 
-        consumer.accept(EntityType.COW, new ConvertiblesReloadListener.EntityEntry(overlay.apply("cow"), ModEntities.COW_CONVERTING_HANDLER));
+        consumer.accept(EntityType.COW, new ConvertiblesReloadListener.EntityEntry(new ConvertedCowEntity.CowConverter(), overlay.apply("cow")));
         consumer.accept(EntityType.LLAMA, new ConvertiblesReloadListener.EntityEntry(overlay.apply("llama")));
         consumer.accept(EntityType.OCELOT, new ConvertiblesReloadListener.EntityEntry(overlay.apply("ocelot")));
         consumer.accept(EntityType.PANDA, new ConvertiblesReloadListener.EntityEntry(overlay.apply("panda")));
         consumer.accept(EntityType.PIG, new ConvertiblesReloadListener.EntityEntry(overlay.apply("pig")));
         consumer.accept(EntityType.POLAR_BEAR, new ConvertiblesReloadListener.EntityEntry(overlay.apply("polar_bear")));
         consumer.accept(EntityType.RABBIT, new ConvertiblesReloadListener.EntityEntry(overlay.apply("rabbit")));
-        consumer.accept(EntityType.SHEEP, new ConvertiblesReloadListener.EntityEntry(overlay.apply("sheep"), ModEntities.SHEEP_CONVERTING_HANDLER));
-        consumer.accept(EntityType.VILLAGER, new ConvertiblesReloadListener.EntityEntry(null, ModEntities.VILLAGER_CONVERTING_HANDLER));
-        consumer.accept(EntityType.HORSE, new ConvertiblesReloadListener.EntityEntry(overlay.apply("horse"), ModEntities.HORSE_CONVERTING_HANDLER));
-        consumer.accept(EntityType.DONKEY, new ConvertiblesReloadListener.EntityEntry(overlay.apply("donkey"), ModEntities.DONKEY_CONVERTING_HANDLER));
-        consumer.accept(EntityType.MULE, new ConvertiblesReloadListener.EntityEntry(overlay.apply("mule"), ModEntities.MULE_CONVERTING_HANDLER));
-        consumer.accept(EntityType.FOX, new ConvertiblesReloadListener.EntityEntry(overlay.apply("fox"), ModEntities.FOX_CONVERTING_HANDLER));
-        consumer.accept(EntityType.GOAT, new ConvertiblesReloadListener.EntityEntry(overlay.apply("goat"), ModEntities.GOAT_CONVERTING_HANDLER));
+        consumer.accept(EntityType.SHEEP, new ConvertiblesReloadListener.EntityEntry(new ConvertedSheepEntity.SheepConverter(), overlay.apply("sheep")));
+        consumer.accept(EntityType.VILLAGER, new ConvertiblesReloadListener.EntityEntry(ConvertedVillagerEntity.VillagerConverter.INSTANCE));
+        consumer.accept(EntityType.HORSE, new ConvertiblesReloadListener.EntityEntry(new SpecialConverter<>(ModEntities.CONVERTED_HORSE), overlay.apply("horse")));
+        consumer.accept(EntityType.DONKEY, new ConvertiblesReloadListener.EntityEntry(new SpecialConverter<>(ModEntities.CONVERTED_DONKEY), overlay.apply("donkey")));
+        consumer.accept(EntityType.MULE, new ConvertiblesReloadListener.EntityEntry(new SpecialConverter<>(ModEntities.CONVERTED_MULE), overlay.apply("mule")));
+        consumer.accept(EntityType.FOX, new ConvertiblesReloadListener.EntityEntry(new SpecialConverter<>(ModEntities.CONVERTED_FOX), overlay.apply("fox")));
+        consumer.accept(EntityType.GOAT, new ConvertiblesReloadListener.EntityEntry(new SpecialConverter<>(ModEntities.CONVERTED_GOAT), overlay.apply("goat")));
     }
 
     @Override

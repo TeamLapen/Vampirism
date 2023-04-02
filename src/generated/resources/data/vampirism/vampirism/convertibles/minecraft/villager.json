@@ -1,3 +1,5 @@
 {
-  "handler": "vampirism:villager"
+  "handler": {
+    "type": "vampirism:villager"
+  }
 }
