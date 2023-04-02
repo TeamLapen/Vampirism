@@ -22,6 +22,11 @@ public class SpecialConvertingHandler<T extends PathfinderMob, Z extends Pathfin
         this.convertedType = convertedType;
     }
 
+    public SpecialConvertingHandler(Supplier<EntityType<Z>> convertedType, IDefaultHelper attributeHelper) {
+        super(attributeHelper);
+        this.convertedType = convertedType;
+    }
+
     @Nullable
     @Override
     public IConvertedCreature<T> createFrom(@NotNull T entity) {

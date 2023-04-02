@@ -30,6 +30,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
@@ -122,6 +124,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void handleBloodValuePacket(@NotNull ClientboundBloodValuePacket msg) {
+        ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).applyDataConvertibleOverlays((Map<EntityType<? extends PathfinderMob>, ResourceLocation>) (Object) msg.convertibleOverlay());
         Map<ResourceLocation, Float> entities = msg.getValues()[0];
         ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).applyNewResources(entities);
         BloodConversionRegistry.applyNewEntitiesResources(entities);
@@ -280,5 +283,10 @@ public class ClientProxy extends CommonProxy {
 
     public static void openScreen(Screen screen) {
         runOnRenderThread(() -> Minecraft.getInstance().setScreen(screen));
+    }
+
+    @Override
+    public void applyConvertibleOverlays(Map<EntityType<? extends PathfinderMob>, ResourceLocation> convertibleOverlay) {
+        ModEntitiesRender.applyConvertibleOverlayUnsafe(convertibleOverlay);
     }
 }

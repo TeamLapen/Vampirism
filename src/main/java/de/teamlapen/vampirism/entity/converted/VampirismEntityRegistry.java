@@ -2,16 +2,17 @@ package de.teamlapen.vampirism.entity.converted;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
+import de.teamlapen.vampirism.api.entity.convertible.Converter;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
-import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.config.BalanceMobProps;
-import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.data.reloadlistener.ConvertiblesReloadListener;
+import de.teamlapen.vampirism.entity.converted.converter.DefaultConverter;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -33,6 +34,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -129,7 +131,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
             }
         }
         biteableEntryManager.setNewBiteables(biteables, blacklist);
-        ModEntitiesRender.applyConvertibleOverlayUnsafe(this.convertibleOverlay);
+        VampirismMod.proxy.applyConvertibleOverlays(convertibleOverlay);
     }
 
     @Override
@@ -150,7 +152,6 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
 
     @NotNull
     @Override
-    @OnlyIn(Dist.CLIENT)
     public Map<EntityType<? extends PathfinderMob>, ResourceLocation> getConvertibleOverlay() {
         return convertibleOverlay;
     }
@@ -173,22 +174,23 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
         return biteableEntryManager.getOrCalculate(creature);
     }
 
+    @OnlyIn(Dist.CLIENT)
+    public void applyDataConvertibleOverlays(Map<EntityType<? extends PathfinderMob>, ResourceLocation> entries) {
+        this.convertibleOverlay.clear();
+        this.convertibleOverlay.putAll(entries);
+    }
+
     public void applyDataConvertibles(Map<EntityType<? extends PathfinderMob>, ConvertiblesReloadListener.EntityEntry> entries) {
         this.convertibles.clear();
         this.convertibleOverlay.clear();
         entries.forEach((type, entry) -> {
-            this.convertibles.put(type, entry.handler().orElseGet(() -> {
-                if (entry.properties().isPresent()) {
-                    return this.defaultConvertingHandlerCreator.apply(new DatapackHelper(entry.properties().get()));
-                } else {
-                    return ModEntities.DEFAULT_CONVERTING_HANDLER.get();
-                }
-            }));
+            Optional<IConvertingHandler<?>> handler = entry.converter().map(Converter::createHandler);
+            this.convertibles.put(type, handler.orElseGet(() -> new DefaultConverter().createHandler()));
             entry.overlay().ifPresent(overlay -> this.convertibleOverlay.put(type, overlay));
         });
     }
 
-    private record DatapackHelper(ConvertiblesReloadListener.EntityEntry.Attributes attributes) implements IConvertingHandler.IDefaultHelper {
+    public record DatapackHelper(ConvertiblesReloadListener.EntityEntry.Attributes attributes) implements IConvertingHandler.IDefaultHelper {
 
         @Override
         public double getConvertedDMG(EntityType<? extends PathfinderMob> entity, RandomSource random) {
