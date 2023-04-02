@@ -19,11 +19,14 @@ import de.teamlapen.vampirism.world.ModDamageSources;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.village.ReputationEventType;
+import net.minecraft.world.entity.npc.Villager;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
@@ -247,6 +250,9 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
             if (entity.getRandom().nextInt(4) == 0) {
                 amt = 2 * amt;
             }
+        }
+        if (this.entity instanceof Villager villager) {
+            ((ServerLevel) villager.level).onReputationEvent(ReputationEventType.VILLAGER_HURT, biter.getRepresentingEntity(), villager);
         }
 
         return amt;
