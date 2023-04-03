@@ -232,6 +232,16 @@ public class ModItems {
 
     public static final RegistryObject<OilBottleItem> OIL_BOTTLE = register("oil_bottle", () -> new OilBottleItem(props().stacksTo(1)));
 
+    public static final RegistryObject<HunterEmperorArmor> HUNTER_EMPEROR_HELMET = register("hunter_emperor_helmet", () -> new HunterEmperorArmor(false, HunterEmperorArmor.ARMOR_MATERIAL, ArmorItem.Type.HELMET, props()));
+    public static final RegistryObject<HunterEmperorArmor> HUNTER_EMPEROR_CHESTPLATE = register("hunter_emperor_chestplate", () -> new HunterEmperorArmor(false, HunterEmperorArmor.ARMOR_MATERIAL, ArmorItem.Type.CHESTPLATE, props()));
+    public static final RegistryObject<HunterEmperorArmor> HUNTER_EMPEROR_LEGGINGS = register("hunter_emperor_leggings", () -> new HunterEmperorArmor(false, HunterEmperorArmor.ARMOR_MATERIAL, ArmorItem.Type.LEGGINGS, props()));
+    public static final RegistryObject<HunterEmperorArmor> HUNTER_EMPEROR_BOOTS = register("hunter_emperor_boots", () -> new HunterEmperorArmor(false, HunterEmperorArmor.ARMOR_MATERIAL, ArmorItem.Type.BOOTS, props()));
+
+    public static final RegistryObject<HunterEmperorArmor> HUNTER_EMPEROR_HELMET_CURSED = register("hunter_emperor_helmet_cursed", () -> new HunterEmperorArmor(true, HunterEmperorArmor.ARMOR_MATERIAL_CURSED, ArmorItem.Type.HELMET, props()));
+    public static final RegistryObject<HunterEmperorArmor> HUNTER_EMPEROR_CHESTPLATE_CURSED = register("hunter_emperor_chestplate_cursed", () -> new HunterEmperorArmor(true, HunterEmperorArmor.ARMOR_MATERIAL_CURSED, ArmorItem.Type.CHESTPLATE, props()));
+    public static final RegistryObject<HunterEmperorArmor> HUNTER_EMPEROR_LEGGINGS_CURSED = register("hunter_emperor_leggings_cursed", () -> new HunterEmperorArmor(true, HunterEmperorArmor.ARMOR_MATERIAL_CURSED, ArmorItem.Type.LEGGINGS, props()));
+    public static final RegistryObject<HunterEmperorArmor> HUNTER_EMPEROR_BOOTS_CURSED = register("hunter_emperor_boots_cursed", () -> new HunterEmperorArmor(true, HunterEmperorArmor.ARMOR_MATERIAL_CURSED, ArmorItem.Type.BOOTS, props()));
+
     static void registerCraftingRecipes() {
         // Brewing
         BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER)), Ingredient.of(new ItemStack(PURE_SALT.get())), new ItemStack(PURE_SALT_WATER.get()));

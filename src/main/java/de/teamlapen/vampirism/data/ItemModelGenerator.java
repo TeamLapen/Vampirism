@@ -137,6 +137,14 @@ public class ItemModelGenerator extends BaseItemModelGenerator {//TODO 1.20 move
             add(ModItems.CURSED_SPRUCE_BOAT.get());
             add(ModItems.DARK_SPRUCE_CHEST_BOAT.get());
             add(ModItems.CURSED_SPRUCE_CHEST_BOAT.get());
+            add(ModItems.HUNTER_EMPEROR_HELMET.get());
+            add(ModItems.HUNTER_EMPEROR_CHESTPLATE.get());
+            add(ModItems.HUNTER_EMPEROR_LEGGINGS.get());
+            add(ModItems.HUNTER_EMPEROR_BOOTS.get());
+            add(ModItems.HUNTER_EMPEROR_HELMET_CURSED.get());
+            add(ModItems.HUNTER_EMPEROR_CHESTPLATE_CURSED.get());
+            add(ModItems.HUNTER_EMPEROR_LEGGINGS_CURSED.get());
+            add(ModItems.HUNTER_EMPEROR_BOOTS_CURSED.get());
         }};
         Map<Item, ResourceLocation> itemsWithTexture = new HashMap<>() {{
             put(ModItems.HOLY_WATER_BOTTLE_NORMAL.get(), modLoc("item/holy_water_normal"));

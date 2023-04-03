@@ -274,6 +274,14 @@ public class VampirismCreativeTab {
             addItem(HUNTER_HAT_HEAD_0);
             addItem(HUNTER_HAT_HEAD_1);
 
+            addItem(HUNTER_EMPEROR_HELMET);
+            addItem(HUNTER_EMPEROR_CHESTPLATE);
+            addItem(HUNTER_EMPEROR_LEGGINGS);
+            addItem(HUNTER_EMPEROR_BOOTS);
+            addItem(HUNTER_EMPEROR_HELMET_CURSED);
+            addItem(HUNTER_EMPEROR_CHESTPLATE_CURSED);
+            addItem(HUNTER_EMPEROR_LEGGINGS_CURSED);
+            addItem(HUNTER_EMPEROR_BOOTS_CURSED);
 
             addItem(VAMPIRE_CLOTHING_CROWN);
             addItem(VAMPIRE_CLOTHING_HAT);
