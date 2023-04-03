@@ -76,6 +76,11 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
         return String.format(REFERENCE.MODID + ":textures/models/armor/%s.png", RegUtil.id(this).getPath());
     }
 
+    @Override
+    public boolean canEquip(ItemStack stack, EquipmentSlot armorType, Entity entity) {
+        return super.canEquip(stack, armorType, entity) && Helper.isVampire(entity);
+    }
+
     @Nullable
     @Override
     public IFaction<?> getExclusiveFaction(@NotNull ItemStack stack) {
