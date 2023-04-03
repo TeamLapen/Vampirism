@@ -50,6 +50,7 @@ public class ModEffects {
     });
     public static final RegistryObject<MobEffect> LORD_SPEED = EFFECTS.register("lord_speed", () -> new VampirismEffect(MobEffectCategory.BENEFICIAL, 0xffffff).addAttributeModifier(Attributes.MOVEMENT_SPEED, "efe607d8-db8a-4156-b9d0-6a0640593057", 0.07F, AttributeModifier.Operation.MULTIPLY_TOTAL));
     public static final RegistryObject<MobEffect> LORD_ATTACK_SPEED = EFFECTS.register("lord_attack_speed", () -> new VampirismEffect(MobEffectCategory.BENEFICIAL, 0xffffff).addAttributeModifier(Attributes.ATTACK_SPEED, "a2ca9534-3baf-404f-b159-bc835bf963e6", 0.05F, AttributeModifier.Operation.MULTIPLY_TOTAL));
+    public static final RegistryObject<MobEffect> NO_BLOOD = EFFECTS.register("no_blood", () -> new VampirismEffect(MobEffectCategory.HARMFUL, 0xff0000).addAttributeModifier(Attributes.MOVEMENT_SPEED, "48bb1318-3d52-4030-a264-de52b59d03d0", -0.2F, AttributeModifier.Operation.MULTIPLY_TOTAL).addAttributeModifier(Attributes.ATTACK_SPEED, "6d9474ab-6693-49f5-9357-ad4444a16bd4", -0.2F, AttributeModifier.Operation.MULTIPLY_TOTAL).addAttributeModifier(ModAttributes.SUNDAMAGE.get(), "45ebd53a-14fa-4ede-b4e7-412e075a8b5f", 0.3, AttributeModifier.Operation.MULTIPLY_TOTAL));
 
     private static final Logger LOGGER = LogManager.getLogger();
     private static MobEffect modded_night_vision;  //Substituted version
