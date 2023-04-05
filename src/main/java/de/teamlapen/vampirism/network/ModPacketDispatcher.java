@@ -3,10 +3,7 @@ package de.teamlapen.vampirism.network;
 import de.teamlapen.lib.lib.network.AbstractPacketDispatcher;
 import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
-
-import java.util.Optional;
 
 /**
  * Vampirism packet dispatcher
@@ -42,5 +39,6 @@ public class ModPacketDispatcher extends AbstractPacketDispatcher {
         registerServerBound(ServerboundToggleMinionTaskLock.class, ServerboundToggleMinionTaskLock::encode, ServerboundToggleMinionTaskLock::decode, ServerboundToggleMinionTaskLock::handle);
         registerServerBound(ServerboundDeleteRefinementPacket.class, ServerboundDeleteRefinementPacket::encode, ServerboundDeleteRefinementPacket::decode, ServerboundDeleteRefinementPacket::handle);
         registerServerBound(ServerboundSelectAmmoTypePacket.class, ServerboundSelectAmmoTypePacket::encode, ServerboundSelectAmmoTypePacket::decode, ServerboundSelectAmmoTypePacket::handle);
+        registerClientBound(ClientboundSundamagePacket.class, ClientboundSundamagePacket::encode, ClientboundSundamagePacket::decode, ClientboundSundamagePacket::handle);
     }
 }

@@ -1,0 +1,9 @@
+{
+  "biomes": [
+    "#vampirism:has_faction/vampire"
+  ],
+  "dimensions": [
+    "minecraft:the_nether",
+    "minecraft:the_end"
+  ]
+}

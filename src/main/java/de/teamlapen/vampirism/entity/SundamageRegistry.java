@@ -1,61 +1,157 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.ISundamageRegistry;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.network.ClientboundSundamagePacket;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.core.Registry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.dimension.DimensionType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class SundamageRegistry implements ISundamageRegistry {
-    private static final Logger LOGGER = LogManager.getLogger(SundamageRegistry.class);
-    private final HashMap<ResourceKey<Level>, Boolean> sundamageDims = new HashMap<>();
-    private final HashMap<ResourceKey<Level>, Boolean> sundamageConfiguredDims = new HashMap<>();
-    private final Set<ResourceLocation> noSundamageBiomesIDs = new CopyOnWriteArraySet<>();
-    private final Set<ResourceLocation> noSundamageConfiguredBiomesIDs = new CopyOnWriteArraySet<>();
 
-    public SundamageRegistry() {
-        sundamageDims.put(Level.OVERWORLD, true);
-        sundamageDims.put(Level.NETHER, false);
-        sundamageDims.put(Level.END, false);
+    private @Nullable RegistryAccess registryAccess;
+    private Settings dataSettings = Settings.EMPTY;
+    private final APISettings apiSettings = new APISettings(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+    private ConfigSettings configSettings = new ConfigSettings(new HashSet<>(), new HashSet<>(), new HashSet<>());
+    private Set<ResourceKey<DimensionType>> noSunDamageDimensions = new HashSet<>();
+    private Set<ResourceKey<Biome>> noSunDamageBiomes = new HashSet<>();
+    private Set<ResourceKey<Level>> noSunDamageLevels = new HashSet<>();
+    private Set<ResourceKey<Level>> sunDamageLevels = new HashSet<>();
+
+    public void reloadSettings() {
+        if (this.registryAccess != null) {
+            Set<ResourceKey<Biome>> biomes = this.dataSettings.biomesWithout.stream().map(Holder::unwrapKey).flatMap(Optional::stream).collect(Collectors.toSet());
+            Set<ResourceKey<DimensionType>> dimensions = this.dataSettings.dimensionWithout.stream().map(Holder::unwrapKey).flatMap(Optional::stream).collect(Collectors.toSet());
+            Set<ResourceKey<Level>> noSundamageLevels = new HashSet<>(this.dataSettings.levelsWithoutSunDamage());
+            Set<ResourceKey<Level>> sundamageLevels = new HashSet<>(this.dataSettings.levelsWithSunDamage());
+            biomes.addAll(this.apiSettings.biomes);
+            dimensions.addAll(this.apiSettings.dimensions);
+            this.apiSettings.levels.forEach(level -> {
+                noSundamageLevels.add(level);
+                sundamageLevels.remove(level);
+            });
+            this.apiSettings.sundamageLevels.forEach(level -> {
+                noSundamageLevels.remove(level);
+                sundamageLevels.add(level);
+            });
+            biomes.addAll(this.configSettings.biomes);
+            this.configSettings.levels.forEach(level -> {
+                noSundamageLevels.add(level);
+                sundamageLevels.remove(level);
+            });
+            this.configSettings.sundamageLevels.forEach(level -> {
+                noSundamageLevels.remove(level);
+                sundamageLevels.add(level);
+            });
+            this.noSunDamageBiomes = Collections.unmodifiableSet(biomes);
+            this.noSunDamageDimensions = Collections.unmodifiableSet(dimensions);
+            this.noSunDamageLevels = Collections.unmodifiableSet(noSundamageLevels);
+            this.sunDamageLevels = Collections.unmodifiableSet(sundamageLevels);
+            this.updateClients();
+        } else {
+            this.noSunDamageBiomes = Collections.emptySet();
+            this.noSunDamageDimensions = Collections.emptySet();
+            this.noSunDamageLevels = Collections.emptySet();
+            this.sunDamageLevels = Collections.emptySet();
+        }
     }
 
-
-    public void addNoSundamageBiomeConfigured(ResourceLocation id) {
-        noSundamageConfiguredBiomesIDs.add(id);
+    public void updateClients() {
+        VampirismMod.dispatcher.sendToAll(new ClientboundSundamagePacket(new ArrayList<>(this.noSunDamageDimensions), new ArrayList<>(this.noSunDamageBiomes), new ArrayList<>(this.noSunDamageLevels), new ArrayList<>(this.sunDamageLevels)));
     }
 
-    @Override
-    public void addNoSundamageBiomes(ResourceLocation... biomes) {
-        noSundamageBiomesIDs.addAll(Arrays.asList(biomes));
+    public void updateClient(ServerPlayer player) {
+        VampirismMod.dispatcher.sendTo(new ClientboundSundamagePacket(new ArrayList<>(this.noSunDamageDimensions), new ArrayList<>(this.noSunDamageBiomes), new ArrayList<>(this.noSunDamageLevels), new ArrayList<>(this.sunDamageLevels)), player);
+    }
+
+    public void applyData(Settings settings) {
+        this.dataSettings = settings;
+    }
+
+    public void reloadConfiguration() {
+        Set<ResourceKey<Biome>> biomes = VampirismConfig.SERVER.sundamageDisabledBiomes.get().stream().map(ResourceLocation::new).map(s -> ResourceKey.create(Registries.BIOME, s)).collect(Collectors.toUnmodifiableSet());
+        Set<ResourceKey<Level>> levels = VampirismConfig.SERVER.sundamageDimensionsOverrideNegative.get().stream().map(ResourceLocation::new).map(s -> ResourceKey.create(Registries.DIMENSION, s)).collect(Collectors.toUnmodifiableSet());
+        Set<ResourceKey<Level>> positiveLevels = VampirismConfig.SERVER.sundamageDimensionsOverridePositive.get().stream().map(ResourceLocation::new).map(s -> ResourceKey.create(Registries.DIMENSION, s)).collect(Collectors.toUnmodifiableSet());
+        this.configSettings = new ConfigSettings(levels, positiveLevels, biomes);
+        reloadSettings();
     }
 
     @Deprecated
     @Override
     public boolean getSundamageInBiome(ResourceLocation registryName) {
-        return !noSundamageBiomesIDs.contains(registryName) && !noSundamageConfiguredBiomesIDs.contains(registryName);
+        return !this.noSunDamageBiomes.contains(ResourceKey.create(Registries.BIOME, registryName));
     }
 
     @Override
     public boolean getSundamageInDim(ResourceKey<Level> dim) {
-        Boolean r = sundamageConfiguredDims.get(dim);
-        if (r == null) {
-            r = sundamageDims.get(dim);
+        if (this.sunDamageLevels.contains(dim)) {
+            return true;
+        } else if (this.noSunDamageLevels.contains(dim)) {
+            return false;
+        } else {
+            return VampirismConfig.SERVER.sundamageUnknownDimension.get();
         }
-        return r == null ? VampirismConfig.SERVER.sundamageUnknownDimension.get() : r;
+    }
+
+    @Override
+    public boolean hasSunDamage(@NotNull LevelAccessor levelAccessor, @NotNull BlockPos pos) {
+        DimensionType dimensionType = levelAccessor.dimensionType();
+        ResourceKey<Level> level = getLevel(levelAccessor);
+        if (this.registryAccess != null && this.registryAccess.registry(Registries.DIMENSION_TYPE).flatMap(a -> a.getResourceKey(dimensionType)).filter(key -> this.noSunDamageDimensions.contains(key)).isPresent()) {
+            return this.sunDamageLevels.contains(level);
+        } else {
+            if (this.noSunDamageLevels.contains(level)) {
+                return false;
+            } else {
+                Holder<Biome> biome = levelAccessor.getBiome(pos);
+                return biome.unwrapKey().filter(key -> this.noSunDamageBiomes.contains(key)).isEmpty();
+            }
+        }
+    }
+
+    @SafeVarargs
+    @Override
+    public final void addNoSundamageBiomes(ResourceKey<Biome>... biomes) {
+        this.apiSettings.biomes.addAll(Arrays.asList(biomes));
+    }
+
+    @Override
+    public void addNoSundamageDimensionType(ResourceKey<DimensionType> dimensionType) {
+        this.apiSettings.dimensions.add(dimensionType);
+    }
+
+    @Override
+    public boolean hasBiomeSundamage(ResourceKey<Biome> biome) {
+        return false;
+    }
+
+    @Override
+    public boolean hasDimensionTypeSundamage(ResourceKey<DimensionType> dimensionType) {
+        return false;
+    }
+
+    private ResourceKey<Level> getLevel(LevelAccessor levelAccessor) {
+        return levelAccessor instanceof Level level ? level.dimension() : levelAccessor instanceof WorldGenRegion worldGenRegion ? worldGenRegion.getLevel().dimension() : Level.OVERWORLD;
     }
 
     @Override
@@ -63,42 +159,49 @@ public class SundamageRegistry implements ISundamageRegistry {
         return Helper.gettingSundamge(entity, world, null);
     }
 
-
-    public void reloadConfiguration() {
-        sundamageConfiguredDims.clear();
-        List<? extends String> negative = VampirismConfig.SERVER.sundamageDimensionsOverrideNegative.get();
-        for (String s : negative) {
-            ResourceLocation id = new ResourceLocation(s); //Should be safe because config validates values?
-            ResourceKey<Level> key = ResourceKey.create(Registries.DIMENSION, id);
-            sundamageConfiguredDims.put(key, false);
-        }
-        List<? extends String> positive = VampirismConfig.SERVER.sundamageDimensionsOverridePositive.get();
-        for (String s : positive) {
-            ResourceLocation id = new ResourceLocation(s); //Should be safe because config validates values?
-            ResourceKey<Level> key = ResourceKey.create(Registries.DIMENSION, id);
-            sundamageConfiguredDims.put(key, true);
-        }
-
-        noSundamageConfiguredBiomesIDs.clear();
-        List<? extends String> biomes = VampirismConfig.SERVER.sundamageDisabledBiomes.get();
-        for (String s : biomes) {
-            ResourceLocation id = new ResourceLocation(s);
-            noSundamageConfiguredBiomesIDs.add(id);
-        }
-
+    @Deprecated
+    @Override
+    public void addNoSundamageBiomes(ResourceLocation... biomes) {
+        this.apiSettings.biomes.addAll(Arrays.stream(biomes).map(id -> ResourceKey.create(Registries.BIOME, id)).toList());
     }
 
-
-    /**
-     * Adds settings from Vampirism's config file.
-     */
-    public void specifyConfiguredSundamageForDim(ResourceKey<Level> dimension, boolean sundamage) {
-        sundamageConfiguredDims.put(dimension, sundamage);
-    }
-
+    @Deprecated
     @Override
     public void specifySundamageForDim(ResourceKey<Level> dimension, boolean sundamage) {
-        sundamageDims.put(dimension, sundamage);
+        if (sundamage) {
+            apiSettings.sundamageLevels.add(dimension);
+            apiSettings.levels.remove(dimension);
+        } else {
+            apiSettings.levels.add(dimension);
+            apiSettings.sundamageLevels.remove(dimension);
+        }
     }
 
+    public void applyNetworkData(@NotNull ClientboundSundamagePacket msg) {
+        this.noSunDamageBiomes = Set.copyOf(msg.biomes());
+        this.noSunDamageDimensions = Set.copyOf(msg.dimensions());
+        this.noSunDamageLevels = Set.copyOf(msg.noSunDamageLevels());
+        this.sunDamageLevels = Set.copyOf(msg.sunDamageLevels());
+    }
+
+    public void initServer(RegistryAccess registryAccess) {
+        this.registryAccess = registryAccess;
+        this.reloadSettings();
+    }
+
+    public void removeServer() {
+        this.registryAccess = null;
+        this.reloadSettings();
+    }
+
+
+    public record Settings(HolderSet<Biome> biomesWithout, HolderSet<DimensionType> dimensionWithout, @Unmodifiable Set<ResourceKey<Level>> levelsWithoutSunDamage, @Unmodifiable Set<ResourceKey<Level>> levelsWithSunDamage) {
+        private static final Settings EMPTY = new Settings(HolderSet.direct(), HolderSet.direct(), Collections.emptySet(), Collections.emptySet());
+    }
+
+    public record ConfigSettings(@Unmodifiable Set<ResourceKey<Level>> levels, @Unmodifiable Set<ResourceKey<Level>> sundamageLevels, @Unmodifiable Set<ResourceKey<Biome>> biomes) {
+    }
+
+    public record APISettings(List<ResourceKey<Biome>> biomes, List<ResourceKey<DimensionType>> dimensions, List<ResourceKey<Level>> levels, List<ResourceKey<Level>> sundamageLevels) {
+    }
 }

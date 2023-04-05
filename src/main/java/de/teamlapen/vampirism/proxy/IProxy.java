@@ -15,6 +15,8 @@ import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -97,4 +99,9 @@ public interface IProxy extends IInitListener {
     default void applyConvertibleOverlays(Map<EntityType<? extends PathfinderMob>, ResourceLocation> convertibleOverlay) {
 
     }
+
+    default Collection<Player> getServerPlayers() {
+        return Collections.emptyList();
+    }
+
 }
