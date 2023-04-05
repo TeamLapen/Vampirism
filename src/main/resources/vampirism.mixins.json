@@ -27,11 +27,13 @@
     "ProcessorListsAccessor",
     "RecipeManagerAccessor",
     "RegistriesDatapackGeneratorAccessor",
+    "ReloadableServerResourcesAccessor",
     "ShapedRecipeAccessor",
     "ShapedRecipeBuilderAccessor",
     "ShapelessRecipeBuilderAccessor",
     "StructuresAccessor",
     "TargetConditionAccessor",
+    "TagManagerAccessor",
     "TileEntityTypeAccessor",
     "VanillaBlockLootAccessor",
     "WalkAnimationStateAccessor"

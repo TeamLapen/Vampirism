@@ -66,35 +66,19 @@ public class Helper {
      * It is recommended to cache the value for a few ticks.
      */
     public static boolean gettingSundamge(LivingEntity entity, LevelAccessor world, @Nullable ProfilerFiller profiler) {
-        if (profiler != null) profiler.push("vampirism_checkSundamage");
         if (entity instanceof Player && entity.isSpectator()) return false;
-        ResourceKey<Level> worldKey = Helper.getWorldKey(world);
-        if (VampirismAPI.sundamageRegistry().getSundamageInDim(worldKey)) {
+        if (VampirismAPI.sundamageRegistry().hasSunDamage(world, entity.blockPosition())) {
             if (!(world instanceof Level) || !((Level) world).isRaining()) {
                 float angle = world.getTimeOfDay(1.0F);
                 //TODO maybe use this.worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)
                 if (angle > 0.78 || angle < 0.24) {
                     BlockPos pos = new BlockPos((int) entity.getX(), (int) (entity.getY() + Mth.clamp(entity.getBbHeight() / 2.0F, 0F, 2F)), (int) entity.getZ());
                     if (canBlockSeeSun(world, pos)) {
-                        try {
-                            ResourceLocation biome = getBiomeId(world, pos);
-                            if (VampirismAPI.sundamageRegistry().getSundamageInBiome(biome)) {
-                                if (world instanceof Level && !VampirismWorld.getOpt((Level) world).map(vw -> vw.isInsideArtificialVampireFogArea(new BlockPos((int) entity.getX(), (int) (entity.getY() + 1), (int) entity.getZ()))).orElse(false)) {
-                                    if (profiler != null) profiler.pop();
-                                    return true;
-                                }
-                            }
-                        } catch (NullPointerException e) {
-                            //Strange thing which happen in 1.7.10, not sure about 1.14
-                        }
-
+                        return world instanceof Level && !VampirismWorld.getOpt((Level) world).map(vw -> vw.isInsideArtificialVampireFogArea(new BlockPos((int) entity.getX(), (int) (entity.getY() + 1), (int) entity.getZ()))).orElse(false);
                     }
                 }
-
             }
         }
-        if (profiler != null) profiler.pop();
-
         return false;
     }
 
@@ -212,6 +196,10 @@ public class Helper {
 
     public static ResourceLocation getBiomeId(@NotNull Entity e) {
         return getBiomeId(e.getCommandSenderWorld(), e.blockPosition());
+    }
+
+    public static Holder<Biome> getBiome(@NotNull Entity e) {
+        return e.getCommandSenderWorld().getBiome(e.blockPosition());
     }
 
     public static ResourceLocation getBiomeId(@NotNull CommonLevelAccessor world, @NotNull BlockPos pos) {
