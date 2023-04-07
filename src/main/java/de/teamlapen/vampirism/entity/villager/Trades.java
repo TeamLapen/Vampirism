@@ -1,8 +1,14 @@
 package de.teamlapen.vampirism.entity.villager;
 
+import com.mojang.datafixers.util.Pair;
+import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.converted.ConvertedVillagerEntity;
 import de.teamlapen.vampirism.items.BloodBottleItem;
+import de.teamlapen.vampirism.util.TotemHelper;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -184,9 +190,9 @@ public class Trades {
 
         @Nullable
         public MerchantOffer getOffer(@NotNull Entity pTrader, RandomSource pRand) {
-            if (pTrader instanceof ConvertedVillagerEntity convertedVillager && pTrader.level instanceof ServerLevel serverLevel){
-                //This may block for a short amount of time if the vampire villager has not completed its forest search yet
-                return convertedVillager.getClosestVampireForest(pTrader.level, pTrader.blockPosition()).map(blockPos -> {
+            if (pTrader.level instanceof ServerLevel serverLevel){
+                //This may block for a short amount of time if the totem has not completed its forest search yet
+                return TotemHelper.getTotemNearPos(serverLevel, pTrader.blockPosition(), true).flatMap(TotemBlockEntity::getVampireForestLocation).map(blockPos -> {
                     ItemStack itemstack = MapItem.create(pTrader.level, blockPos.getX(), blockPos.getZ(), (byte) 3, true, true);
                     MapItem.renderBiomePreviewMap(serverLevel, itemstack);
                     MapItemSavedData.addTargetDecoration(itemstack, blockPos, "+", MapDecoration.Type.TARGET_POINT);
