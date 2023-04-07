@@ -298,6 +298,7 @@
   "death.attack.holy_water": "%1$s was burned with holy water",
   "death.attack.holy_water.player": "%2$s burned %1$s with holy water",
   "death.attack.blood_loss": "%1$s was sucked dry",
+  "death.attack.blood_loss.player": "%1$s was sucked dry by %2$s",
   "death.minion.on_behalf": "on behalf of %1$s",
   "death.attack.vampirism_dbno": "After %1$s, they gave up",
   "death.attack.vampirism_dbno.missing": "After nearly dying, they gave up",
