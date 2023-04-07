@@ -84,11 +84,12 @@ public class CursedGrass extends SpreadableSnowyDirtBlock implements IGrowable {
 
     /**
      * copied and {@link net.minecraft.block.GrassBlock#performBonemeal(ServerWorld, Random, BlockPos, BlockState)}
+     * and changed from grass to cursed grass
      */
     @Override
     public void performBonemeal(ServerWorld p_225535_1_, Random p_225535_2_, BlockPos p_225535_3_, BlockState p_225535_4_) {
         BlockPos blockpos = p_225535_3_.above();
-        BlockState blockstate = Blocks.GRASS.defaultBlockState();
+        BlockState blockstate = ModBlocks.CURSED_GRASS.get().defaultBlockState();
 
         label48:
         for(int i = 0; i < 128; ++i) {
