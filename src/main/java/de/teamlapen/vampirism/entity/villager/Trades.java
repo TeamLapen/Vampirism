@@ -2,20 +2,16 @@ package de.teamlapen.vampirism.entity.villager;
 
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.BloodBottleItem;
+import de.teamlapen.vampirism.tileentity.TotemHelper;
+import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.item.*;
 import net.minecraft.util.IItemProvider;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.MapDecoration;
-import org.apache.logging.log4j.LogManager;
 
 import javax.annotation.Nullable;
 import java.util.Random;
@@ -166,41 +162,29 @@ public class Trades {
         }
     }
 
-    public static class BiomeMapForEmeralds implements VillagerTrades.ITrade {
+    public static class VampireForestTrade implements VillagerTrades.ITrade {
         private final int emeraldCost;
-        private final ResourceLocation destination;
         private final int maxUses;
         private final int villagerXp;
 
-        public BiomeMapForEmeralds(int pEmeraldCost, RegistryKey<Biome> pDestination, int pMaxUses, int pVillagerXp) {
+        public VampireForestTrade(int pEmeraldCost, int pMaxUses, int pVillagerXp) {
             this.emeraldCost = pEmeraldCost;
-            this.destination = pDestination.location();
             this.maxUses = pMaxUses;
             this.villagerXp = pVillagerXp;
         }
 
         @Nullable
-        public MerchantOffer getOffer(Entity pTrader, Random pRand) {
-            if (!(pTrader.level instanceof ServerWorld)) {
-                return null;
-            } else {
-                ServerWorld serverlevel = (ServerWorld) pTrader.level;
-                Biome biome = serverlevel.getServer().registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getOptional(destination).orElse(null);
-                if(biome==null){
-                    LogManager.getLogger().warn("Cannot find destination biome in registry{}",destination);
-                    return null;
-                }
-                BlockPos blockpos = serverlevel.findNearestBiome(biome, pTrader.blockPosition(), 2400, 8);
-                if (blockpos != null) {
-                    ItemStack itemstack = FilledMapItem.create(serverlevel, blockpos.getX(), blockpos.getZ(), (byte)3, true, true);
-                    FilledMapItem.renderBiomePreviewMap(serverlevel, itemstack);
+        public MerchantOffer getOffer(Entity pTrader, Random rand) {
+            if(pTrader.level instanceof ServerWorld){
+                return TotemHelper.getTotemNearPos((ServerWorld) pTrader.level, pTrader.blockPosition(), true).flatMap(TotemTileEntity::getVampireForestLocation).map(blockpos ->  {
+                    ItemStack itemstack = FilledMapItem.create(pTrader.level, blockpos.getX(), blockpos.getZ(), (byte)3, true, true);
+                    FilledMapItem.renderBiomePreviewMap((ServerWorld) pTrader.level, itemstack);
                     MapData.addTargetDecoration(itemstack, blockpos, "+", MapDecoration.Type.TARGET_POINT);
-                    itemstack.setHoverName(new TranslationTextComponent("biome."+destination.getNamespace()+ "."+destination.getPath()));
+                    itemstack.setHoverName(new TranslationTextComponent("biome.vampirism.vampire_forest"));
                     return new MerchantOffer(new ItemStack(Items.EMERALD, this.emeraldCost), new ItemStack(Items.COMPASS), itemstack, this.maxUses, this.villagerXp, 0.2F);
-                } else {
-                    return null;
-                }
+                }).orElse(null);
             }
+            return null;
         }
     }
 

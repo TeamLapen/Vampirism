@@ -48,6 +48,7 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -58,6 +59,7 @@ import net.minecraft.world.server.ServerWorld;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -117,6 +119,12 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
         }
         bloodTimer++;
         super.aiStep();
+    }
+
+    public Optional<BlockPos> getClosestVampireForest() {
+        if(this.getLevel() instanceof ServerWorld){
+        }
+        return Optional.empty();
     }
 
     @Override
