@@ -275,7 +275,9 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
              * check for sanguinare as the entity might be converting instead of dying
              */
             if (blood == 0 && entity.tickCount % 20 == 10 && entity.getEffect(ModEffects.SANGUINARE.get()) == null) {
+                this.blood = 1; //Re-add some blood . If the entity does not die by the following damage applied it probably is not supposed to die. Also, avoid death-loops with mods that respawn entities as is (like PlayerCompanion)
                 entity.hurt(VReference.NO_BLOOD, 1000);
+                return;
             }
             if (blood > 0 && blood < getMaxBlood() && entity.tickCount % 40 == 8) {
                 entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 41));
