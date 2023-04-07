@@ -128,9 +128,8 @@ public class ModVillage {
     private static Map<Integer, VillagerTrades.ITrade[]> getPriestTrades() {
         return ImmutableMap.of(
                 1, new VillagerTrades.ITrade[]{
-                        new VillagerTrades.EmeraldForItemsTrade(ModItems.PURE_SALT.get(), 25, 1, 4),
-                        new VillagerTrades.EmeraldForItemsTrade(ModItems.PURE_SALT_WATER.get(), 25, 1, 4),
-                        new VillagerTrades.EmeraldForItemsTrade(ModItems.ITEM_GARLIC.get(), 30, 4, 2),
+                        new VillagerTrades.EmeraldForItemsTrade(ModItems.PURE_SALT.get(), 25, 2, 4),
+                        new VillagerTrades.EmeraldForItemsTrade(ModItems.ITEM_GARLIC.get(), 30, 6, 2),
 
                 },
                 2, new VillagerTrades.ITrade[]{
