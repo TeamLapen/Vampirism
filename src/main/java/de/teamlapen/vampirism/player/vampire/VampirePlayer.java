@@ -287,7 +287,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             return;
         }
         if (e instanceof LivingEntity) {
-            if (e.distanceTo(player) <= player.getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue() + 1) {
+            if (e.distanceTo(player) <= (player.getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue()/2f) + 1) { //Also adjust distance in VampirismHUDOverlay
                 feed_victim_bite_type = determineBiteType((LivingEntity) e);
                 if (feed_victim_bite_type == BITE_TYPE.NONE) {
                 } else if (feed_victim_bite_type == BITE_TYPE.HUNTER_CREATURE) {

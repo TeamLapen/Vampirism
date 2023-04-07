@@ -12,8 +12,10 @@ import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.world.Difficulty;
 
 import java.util.Optional;
@@ -32,33 +34,38 @@ public class InfectAction extends DefaultVampireAction {
     }
 
     @Override
-    protected boolean activate(IVampirePlayer vampire, ActivationContext context) {
-        PlayerEntity player = vampire.getRepresentingPlayer();
-        return context.targetEntity().filter(LivingEntity.class::isInstance).map(target -> {
-            if (!UtilLib.canReallySee((LivingEntity) target, player, false)) {
-                return false;
-            }
-            if (deriveBiteableEntry(target).map(e -> e.tryInfect(vampire)).orElse(false)) {
-                player.awardStat(ModStats.infected_creatures);
-                player.level.playSound(null, target.getX(), target.getY() + 1.5d, target.getZ(), ModSounds.PLAYER_BITE.get(), SoundCategory.PLAYERS, 1, 1 );
-                return true;
-            }
-            return false;
-        }).orElse(false);
-    }
-
-
-    @Override
     public boolean canBeUsedBy(IVampirePlayer player) {
         if (player.getRepresentingPlayer().level.getDifficulty() == Difficulty.PEACEFUL) return false;
         if(player.isRemote()){
             Entity target = VampirismMod.proxy.getMouseOverEntity();
-            if(target != null){
+            if(target != null && !( (target instanceof PlayerEntity || target instanceof VillagerEntity) && UtilLib.canReallySee((LivingEntity) target, player.getRepresentingPlayer(), false)) && (player.getRepresentingPlayer().distanceTo(target) <= (player.getRepresentingPlayer().getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue()/2f) + 1)){
                 return deriveBiteableEntry(target).map(b->b.canBeInfected(player)).orElse(false);
             }
             return false;
         }
         return true;
+    }
+
+    @Override
+    protected boolean activate(IVampirePlayer vampire, ActivationContext context) {
+        PlayerEntity player = vampire.getRepresentingPlayer();
+        Entity creature = context.targetEntity().filter(LivingEntity.class::isInstance).filter(target -> {
+            if ((target instanceof PlayerEntity || target instanceof VillagerEntity) && UtilLib.canReallySee((LivingEntity) target, player, false)) {
+                return false;
+            }
+            if (player.distanceTo(target) <= (player.getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue()/2f) + 1) {
+                return deriveBiteableEntry(target).map(e -> e.tryInfect(vampire)).orElse(false);
+            }
+            return false;
+        }).orElse(null);
+
+        if (creature != null) {
+            player.awardStat(ModStats.infected_creatures);
+            player.level.playSound(null, creature.getX(), creature.getY() + 1.5d, creature.getZ(), ModSounds.PLAYER_BITE.get(), SoundCategory.PLAYERS, 1, 1);
+        } else {
+            player.level.playSound(null, vampire.getRepresentingPlayer().getX(), vampire.getRepresentingPlayer().getY() + 1.5d, vampire.getRepresentingPlayer().getZ(), SoundEvents.NOTE_BLOCK_BANJO, SoundCategory.PLAYERS, 1, 1);
+        }
+        return creature != null;
     }
 
     private Optional<? extends IBiteableEntity> deriveBiteableEntry(Entity target){
