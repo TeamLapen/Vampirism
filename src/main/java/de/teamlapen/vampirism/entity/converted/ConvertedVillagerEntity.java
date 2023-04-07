@@ -121,16 +121,6 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
         super.aiStep();
     }
 
-    /**
-     *
-     * For vampire expert villagers on server side this will return an asynchronously found block pos (or empty if still searching).
-     * For all other villagers it returns an empty optional
-     * @return The location of the closest vampire forest if available
-     */
-    public Optional<BlockPos> getClosestVampireForest(Level level, BlockPos blockPos) {
-        return level instanceof ServerLevel serverLevel ? TotemHelper.getTotemNearPos(serverLevel, blockPos, true).flatMap(TotemBlockEntity::getVampireForestLocation) : Optional.empty();
-    }
-
     @Override
     public boolean doesResistGarlic(EnumStrength strength) {
         return false;
