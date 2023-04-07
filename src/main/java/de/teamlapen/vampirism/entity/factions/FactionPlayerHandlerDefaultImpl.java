@@ -23,7 +23,7 @@ class FactionPlayerHandlerDefaultImpl implements IFactionPlayerHandler {
     private final static Logger LOGGER = LogManager.getLogger(FactionPlayerHandlerDefaultImpl.class);
 
     public FactionPlayerHandlerDefaultImpl() {
-        LOGGER.error("Created Default Implementation. THIS SHOULD NOT BE DONE. The default impl does absolutely nothing");
+        LOGGER.error("Created Default Implementation. THIS SHOULD NOT BE DONE. The default impl does absolutely nothing", new Throwable());
 
     }
 
