@@ -147,7 +147,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
             Entity entity = ((EntityHitResult) p).getEntity();
             if (!entity.isInvisible()) {
                 VampirismPlayerAttributes atts = VampirismPlayerAttributes.get(mc.player);
-                if (atts.vampireLevel > 0 && !mc.player.isSpectator() && !atts.getVampSpecial().bat) {
+                if (atts.vampireLevel > 0 && !mc.player.isSpectator() && !atts.getVampSpecial().bat && (entity.distanceTo(mc.player) < mc.player.getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue()/2f + 1)) {
                     VampirePlayer.getOpt(mc.player).ifPresent(player -> {
                         LazyOptional<? extends IBiteableEntity> biteableOpt = LazyOptional.empty();
                         if (entity instanceof IBiteableEntity) {

@@ -284,7 +284,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             return;
         }
         if (e instanceof LivingEntity) {
-            if (e.distanceTo(player) <= player.getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue() + 1) {
+            if (e.distanceTo(player) <= (player.getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue()/2f + 1)) {
                 feed_victim_bite_type = determineBiteType((LivingEntity) e);
                 switch (feed_victim_bite_type) {
                     case HUNTER_CREATURE:

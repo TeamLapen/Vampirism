@@ -15,6 +15,7 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,10 +38,13 @@ public class InfectAction extends DefaultVampireAction {
     protected boolean activate(@NotNull IVampirePlayer vampire, @NotNull ActivationContext context) {
         Player player = vampire.getRepresentingPlayer();
         Entity creature =  context.targetEntity().filter(LivingEntity.class::isInstance).filter(target -> {
-            if (UtilLib.canReallySee((LivingEntity) target, player, false)) {
+            if ((target instanceof Player  || target instanceof Villager) && UtilLib.canReallySee((LivingEntity) target, player, false)) {
                 return false;
             }
-            return deriveBiteableEntry(target).map(e -> e.tryInfect(vampire)).orElse(false);
+            if(player.distanceTo(target) < player.getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue()/2f + 1){
+                return deriveBiteableEntry(target).map(e -> e.tryInfect(vampire)).orElse(false);
+            }
+            return false;
         }).orElse(null);
         if(creature != null ){
             player.awardStat(ModStats.infected_creatures);
@@ -58,7 +62,10 @@ public class InfectAction extends DefaultVampireAction {
         if (player.getRepresentingPlayer().level.getDifficulty() == Difficulty.PEACEFUL) return false;
         if (player.isRemote()) {
             Entity target = VampirismMod.proxy.getMouseOverEntity();
-            if (target != null) {
+            if (target != null && (player.getRepresentingPlayer().distanceTo(target) < player.getRepresentingPlayer().getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue()/2f + 1)) {
+                if((target instanceof Player || target instanceof Villager) && UtilLib.canReallySee((LivingEntity) target, player.getRepresentingPlayer(), false)){
+                    return false;
+                }
                 return deriveBiteableEntry(target).map(b -> b.canBeInfected(player)).orElse(false);
             }
             return false;
