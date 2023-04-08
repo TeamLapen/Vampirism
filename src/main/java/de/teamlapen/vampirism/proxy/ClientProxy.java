@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.proxy;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
+import de.teamlapen.vampirism.blocks.LogBlock;
 import de.teamlapen.vampirism.blocks.TentBlock;
 import de.teamlapen.vampirism.client.core.*;
 import de.teamlapen.vampirism.client.gui.*;
@@ -24,6 +25,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.SleepInMultiplayerScreen;
 import net.minecraft.client.particle.DiggingParticle;
+import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
@@ -207,6 +209,10 @@ public class ClientProxy extends CommonProxy {
                 SelectActionScreen.loadActionOrder();
                 ModBlocksRender.register();
                 ((FMLClientSetupEvent) event).getMinecraftSupplier().get().getEntityRenderDispatcher().getSkinMap().forEach((k, r) -> r.addLayer(new WingsLayer<>(r, player -> VampirePlayer.getOpt(player).map(VampirePlayer::getWingCounter).filter(i -> i > 0).isPresent(), (e, m) -> m.body)));
+                event.enqueueWork(() -> {
+                    Atlases.addWoodType(LogBlock.cursed_spruce);
+                    Atlases.addWoodType(LogBlock.dark_spruce);
+                });
                 break;
             case LOAD_COMPLETE:
                 event.enqueueWork(ModBlocksRender::registerColorsUnsafe);

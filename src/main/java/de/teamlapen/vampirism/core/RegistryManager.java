@@ -88,7 +88,6 @@ public class RegistryManager implements IInitListener {
                 ModLoot.registerLootConditions();
                 ModLoot.registerLootFunctionType();
                 VampirismBiomeFeatures.init();
-                ModTiles.registerTileExtensionsUnsafe();
                 DispenserBlock.registerBehavior(ModItems.DARK_SPRUCE_BOAT.get(), new VampirismDispenseBoatBehavior(VampirismBoatItem.BoatType.DARK_SPRUCE));
                 DispenserBlock.registerBehavior(ModItems.CURSED_SPRUCE_BOAT.get(), new VampirismDispenseBoatBehavior(VampirismBoatItem.BoatType.CURSED_SPRUCE));
                 event.enqueueWork(() -> {
@@ -97,6 +96,7 @@ public class RegistryManager implements IInitListener {
                     ModStats.registerCustomStats();
                     ModCommands.registerArgumentTypesUsage();
                     ModVillage.villagerTradeSetup();
+                    ModTiles.registerTileExtensionsUnsafe();
                 });
             case LOAD_COMPLETE:
                 event.enqueueWork(ModFeatures::registerStructureSeparation);
