@@ -4,25 +4,18 @@ import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import de.teamlapen.vampirism.api.entity.player.actions.IAction;
-import de.teamlapen.vampirism.api.util.ItemOrdering;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Collection;
-import java.util.stream.Collectors;
 
 /**
  * Basic class for all of Vampirism's players.
@@ -91,6 +84,7 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
         return player.getCommandSenderWorld().isClientSide;
     }
 
+    @MustBeInvokedByOverriders
     public void loadData(@NotNull CompoundTag nbt) {
         if (this.taskManager != null) {
             this.taskManager.readNBT(nbt);
@@ -104,11 +98,13 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
         loadUpdate(nbt);
     }
 
+    @MustBeInvokedByOverriders
     @Override
     public void onDeath(DamageSource src) {
         this.getSkillHandler().damageRefinements();
     }
 
+    @MustBeInvokedByOverriders
     @Override
     public void onPlayerClone(@NotNull Player original, boolean wasDeath) {
         original.reviveCaps();
@@ -116,6 +112,7 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
         original.invalidateCaps();
     }
 
+    @MustBeInvokedByOverriders
     @Override
     public void onUpdate() {
         if (!isRemote()) {
@@ -123,6 +120,7 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
         }
     }
 
+    @MustBeInvokedByOverriders
     public void saveData(@NotNull CompoundTag nbt) {
         if (this.taskManager != null) {
             this.taskManager.writeNBT(nbt);
@@ -153,6 +151,7 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
     /**
      * Can be overridden to load data from updates in subclasses
      */
+    @MustBeInvokedByOverriders
     protected void loadUpdate(CompoundTag nbt) {
     }
 
@@ -168,9 +167,11 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
     /**
      * Can be overridden to put data into updates in subclasses
      */
+    @MustBeInvokedByOverriders
     protected void writeFullUpdate(CompoundTag nbt) {
     }
 
+    @MustBeInvokedByOverriders
     @Override
     public void onLevelChanged(int newLevel, int oldLevel) {
         if (!isRemote()) {
