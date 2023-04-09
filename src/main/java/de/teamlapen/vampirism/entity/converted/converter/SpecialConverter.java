@@ -31,13 +31,13 @@ public class SpecialConverter<T extends PathfinderMob, Z extends PathfinderMob &
         this.helper = helper.orElseGet(() -> ConvertiblesReloadListener.EntityEntry.Attributes.DEFAULT);
     }
 
-    public SpecialConverter(Supplier<EntityType<?>> convertedType, ConvertiblesReloadListener.EntityEntry.Attributes helper) {
-        this.convertedType = (EntityType<Z>) convertedType.get();
+    public SpecialConverter(Supplier<EntityType<Z>> convertedType, ConvertiblesReloadListener.EntityEntry.Attributes helper) {
+        this.convertedType = convertedType.get();
         this.helper = helper;
     }
 
-    public SpecialConverter(Supplier<? extends EntityType<?>> convertedType) {
-        this.convertedType = (EntityType<Z>) convertedType.get();
+    public SpecialConverter(Supplier<? extends EntityType<Z>> convertedType) {
+        this.convertedType = convertedType.get();
         this.helper = null;
     }
 

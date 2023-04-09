@@ -346,10 +346,10 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
         IConvertingHandler.IDefaultHelper helper = getConvertedHelper();
         try {
             if (helper != null) {
-                this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(helper.getConvertedDMG((EntityType<? extends PathfinderMob>) entityCreature.getType()));
-                this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(helper.getConvertedMaxHealth((EntityType<? extends PathfinderMob>) entityCreature.getType()));
-                this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(helper.getConvertedKnockbackResistance((EntityType<? extends PathfinderMob>) entityCreature.getType()));
-                this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(helper.getConvertedSpeed((EntityType<? extends PathfinderMob>) entityCreature.getType()));
+                this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(helper.getConvertedDMG((EntityType<? extends PathfinderMob>) entityCreature.getType(), entityCreature.getRandom()));
+                this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(helper.getConvertedMaxHealth((EntityType<? extends PathfinderMob>) entityCreature.getType(), entityCreature.getRandom()));
+                this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(helper.getConvertedKnockbackResistance((EntityType<? extends PathfinderMob>) entityCreature.getType(), entityCreature.getRandom()));
+                this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(helper.getConvertedSpeed((EntityType<? extends PathfinderMob>) entityCreature.getType(), entityCreature.getRandom()));
             } else {
                 this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(20);
                 this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(0);

@@ -22,33 +22,44 @@ public interface IConvertingHandler<T extends PathfinderMob> {
      */
     interface IDefaultHelper {
 
-        @Deprecated
+        /**
+         * use {@link #getConvertedDMG(net.minecraft.world.entity.EntityType, net.minecraft.util.RandomSource)}
+         */
+        @Deprecated(forRemoval = true)
         default double getConvertedDMG(EntityType<? extends PathfinderMob> entity) {
-            return getConvertedDMG(entity, RandomSource.create());
+            return 0;
         }
 
-        double getConvertedDMG(EntityType<? extends PathfinderMob> entity, RandomSource random);
+        default double getConvertedDMG(EntityType<? extends PathfinderMob> entity, RandomSource random) {
+            return getConvertedDMG(entity);
+        }
 
-        @Deprecated
+        @Deprecated(forRemoval = true)
         default double getConvertedKnockbackResistance(EntityType<? extends PathfinderMob> entity) {
-            return getConvertedKnockbackResistance(entity, RandomSource.create());
+            return 0;
         }
 
-        double getConvertedKnockbackResistance(EntityType<? extends PathfinderMob> entity, RandomSource random);
+        default double getConvertedKnockbackResistance(EntityType<? extends PathfinderMob> entity, RandomSource random) {
+            return getConvertedKnockbackResistance(entity);
+        }
 
-        @Deprecated
+        @Deprecated(forRemoval = true)
         default double getConvertedMaxHealth(EntityType<? extends PathfinderMob> entity) {
-            return getConvertedMaxHealth(entity, RandomSource.create());
+            return 0;
         }
 
-        double getConvertedMaxHealth(EntityType<? extends PathfinderMob> entity, RandomSource random);
+        default double getConvertedMaxHealth(EntityType<? extends PathfinderMob> entity, RandomSource random) {
+            return getConvertedMaxHealth(entity);
+        }
 
-        @Deprecated
+        @Deprecated(forRemoval = true)
         default double getConvertedSpeed(EntityType<? extends PathfinderMob> entity) {
-            return getConvertedSpeed(entity, RandomSource.create());
+            return 0;
         }
 
-        double getConvertedSpeed(EntityType<? extends PathfinderMob> entity, RandomSource random);
+        default double getConvertedSpeed(EntityType<? extends PathfinderMob> entity, RandomSource random) {
+            return getConvertedSpeed(entity);
+        }
 
     }
 }
