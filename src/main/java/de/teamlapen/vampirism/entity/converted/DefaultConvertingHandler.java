@@ -31,7 +31,6 @@ public class DefaultConvertingHandler<T extends PathfinderMob> implements IConve
      */
     private final static IDefaultHelper defaultHelper = new IDefaultHelper() {
 
-
         @Override
         public double getConvertedDMG(@NotNull EntityType<? extends PathfinderMob> entityType, RandomSource random) {
             AttributeSupplier map = DefaultAttributes.getSupplier(entityType);
