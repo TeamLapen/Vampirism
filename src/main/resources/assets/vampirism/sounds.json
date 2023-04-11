@@ -1,22 +1,22 @@
 {
-  "entity_vampire_scream": {
+  "entity.vampire_scream": {
     "sounds": [
-      "vampirism:entity/vampire/scream"
+      "vampirism:cc/entity/vampire_scream"
     ],
-    "subtitle": "subtitles.vampirism.entity_vampire_scream"
+    "subtitle": "subtitles.vampirism.entity.vampire_scream"
   },
-  "player_bite": {
+  "entity.vampire_bite": {
     "sounds": [
-      "vampirism:entity/vampire/bite",
-      "vampirism:entity/vampire/bite_long"
+      "vampirism:cc/entity/vampire_bite",
+      "vampirism:cc/entity/vampire_bite_long"
     ],
     "subtitle": "subtitles.vampirism.player_bite"
   },
-  "player.feeding": {
+  "entity.vampire_feeding": {
     "sounds": [
       {
         "stream": true,
-        "name": "vampirism:entity/vampire/feeding"
+        "name": "vampirism:cc/entity/vampire_feeding"
       }
     ],
     "subtitle": "subtitles.vampirism.player.feeding"
@@ -24,19 +24,19 @@
   "ambient.scary": {
     "sounds": [
       {
-        "name": "vampirism:ambient/scary",
+        "name": "vampirism:cc/ambient/scary",
         "stream": true
       }
     ]
   },
-  "ambient_castle": {
+  "ambient.blood_dripping": {
     "sounds": [
       {
-        "name": "vampirism:ambient/blood_dripping",
+        "name": "vampirism:cc/ambient/blood_dripping",
         "stream": true
       },
       {
-        "name": "vampirism:ambient/blood_dripping2",
+        "name": "vampirism:cc/ambient/blood_dripping2",
         "stream": true
       }
     ]
@@ -44,52 +44,94 @@
   "ambient.vampire_biome": {
     "sounds": [
       {
-        "name": "vampirism:ambient/ghosty_ambient"
+        "name": "vampirism:cc/ambient/ghosty_ambient"
       }
     ]
   },
-  "coffin_lid": {
+  "block.coffin_lid": {
     "sounds": [
-      "vampirism:fx/coffin_lid_slide"
+      "vampirism:cc/block/coffin_lid_slide"
     ],
     "subtitle": "subtitles.vampirism.coffin_lid"
   },
-  "crossbow": {
+  "entity.bat_swarm": {
     "sounds": [
-      "vampirism:fx/crossbow"
-    ]
-  },
-  "bat_swarm": {
-    "sounds": [
-      "vampirism:fx/bat_swarm"
+      "vampirism:cc/fx/bat_swarm"
     ],
     "subtitle": "subtitles.vampirism.bat_swarm"
   },
-  "boiling": {
+  "block.boiling": {
     "sounds": [
-      "vampirism:fx/boiling"
+      "vampirism:cc/block/boiling"
     ],
     "subtitle": "subtitles.vampirism.boiling"
   },
-  "grinder": {
+  "block.grinder": {
     "sounds": [
-      "vampirism:fx/grinder"
+      "vampirism:cc/block/grinder"
     ],
     "subtitle": "subtitles.vampirism.grinder"
   },
   "task_complete": {
     "sounds": [
-      "vampirism:fx/task_complete"
+      "vampirism:cc/fx/task_complete"
     ],
     "subtitle": "subtitles.vampirism.task_complete"
   },
-  "blessing_music": {
+  "block.blessing_music": {
     "sounds": [
       {
-        "name": "vampirism:fx/church_organ",
+        "name": "vampirism:cc/block/church_organ",
         "stream": true
       }
     ],
     "subtitle": "subtitles.vampirism.blessing_music"
+  },
+  "fx.blood_projectile_hit": {
+    "sounds": [
+      {
+        "name": "vampirism:reserved/fx/blood_projectile_hit"
+      }
+    ],
+    "subtitle": "subtitles.vampirism.blood_projectile_hit"
+  },
+  "block.weapon_table_crafting": {
+    "sounds": [
+      {
+        "name": "vampirism:reserved/block/weapon_table_crafting",
+        "stream": true
+      }
+    ],
+    "subtitle": "subtitles.vampirism.weapon_table_crafting"
+  },
+  "fx.stake": {
+    "sounds": [
+      "vampirism:reserved/fx/stake"
+    ],
+    "subtitle": "subtitles.vampirism.stake"
+  },
+  "fx.teleport_away": {
+    "sounds": [
+      "vampirism:reserved/fx/teleport1"
+    ],
+    "subtitle": "subtitles.vampirism.teleport_away"
+  },
+  "fx.teleport_here": {
+    "sounds": [
+      "vampirism:reserved/fx/teleport2"
+    ],
+    "subtitle": "subtitles.vampirism.teleport_here"
+  },
+  "fx.freeze": {
+    "sounds": [
+      "vampirism:reserved/fx/freeze"
+    ],
+    "subtitle": "subtitles.vampirism.freeze"
+  },
+  "block.potion_table_crafting": {
+    "sounds":  [
+      "vampirism:reserved:block.potion_table_crafting"
+    ],
+    "subtitle": "subtitles.vampirism.potion_table_crafting"
   }
 }

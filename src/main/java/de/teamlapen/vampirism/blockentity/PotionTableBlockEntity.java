@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.items.IExtendedBrewingRecipeRegistry;
+import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
@@ -13,6 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
@@ -373,6 +375,8 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
 
         this.brewingItemStacks.set(2, ingredientStack);
         this.brewingItemStacks.set(1, extraIngredient);
+        this.level.playSound(null, blockpos.getX(), blockpos.getY(), blockpos.getZ(), ModSounds.POTION_TABLE_CRAFTING.get(), SoundSource.BLOCKS, 1f, 1f);
+
         this.level.levelEvent(1035, blockpos, 0);
     }
 

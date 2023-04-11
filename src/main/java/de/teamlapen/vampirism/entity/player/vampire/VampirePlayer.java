@@ -184,7 +184,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     private int ticksInSun = 0;
     private int remainingBarkTicks = 0;
     private boolean wasDead = false;
-    private @NotNull VisionStatus vision = new VisionStatus();
+    private final @NotNull VisionStatus vision = new VisionStatus();
     private int feed_victim = -1;
     /**
      * Holds a sound reference (client side only) for the feeding sound while feed_victim!=-1
@@ -1158,7 +1158,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             feed_victim = nbt.getInt(KEY_FEED_VICTIM_ID);
             if (feed_victim != -1) {
                 if (feedingSoundReference == null || !feedingSoundReference.isPlaying()) {
-                    feedingSoundReference = VampLib.proxy.createSoundReference(ModSounds.PLAYER_FEEDING.get(), SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 0.8f, 1);
+                    feedingSoundReference = VampLib.proxy.createSoundReference(ModSounds.VAMPIRE_FEEDING.get(), SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 0.8f, 1);
                     feedingSoundReference.startPlaying();
                 }
             } else {

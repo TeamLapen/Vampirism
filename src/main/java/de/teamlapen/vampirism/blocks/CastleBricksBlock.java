@@ -32,7 +32,7 @@ public class CastleBricksBlock extends VampirismBlock {
     public void animateTick(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull RandomSource rand) {
         if (!CastleStairsBlock.isStairs(state) && variant == EnumVariant.DARK_BRICK_BLOODY) {
             if (rand.nextInt(180) == 0) {
-                world.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), ModSounds.AMBIENT_CASTLE.get(), SoundSource.AMBIENT, 0.8F, 1.0F, false);
+                world.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), ModSounds.AMBIENT_BLOOD_DRIPPING.get(), SoundSource.AMBIENT, 0.8F, 1.0F, false);
             }
 
         }

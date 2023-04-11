@@ -180,7 +180,7 @@ The code style used in this project is the IntelliJ default one.
 For Eclipse, you can use the settings created by @Cheaterpaul [FormatFile](https://gist.github.com/Cheaterpaul/1aa0d0014240c8bd854434b5147804df) [ImportOrder](https://gist.github.com/Cheaterpaul/594d16f54358bdca6ea5e549f81b3589)
 
 ## Licence
-This mod is licenced under [LGPLv3](https://raw.githubusercontent.com/TeamLapen/Vampirism/master/LICENCE) ***except*** for the following parts:
+The source code and text in this repository is licenced under [LGPLv3](https://raw.githubusercontent.com/TeamLapen/Vampirism/master/CODE_LICENCE) ***except*** for the following parts:
 
 ##### Textures
 Any textures included in this mod are licenced under the following terms:
@@ -190,7 +190,9 @@ If you want to use them in a resource/texture pack, you must credit the Vampiris
 ```
 
 ##### Sounds
+The sounds used in this mod are individual licensed and may only be used outside Vampirism under the respective licensing terms if noted as such.
 
+###### Attribution
 This mod uses these sounds from freesound:  
 DST-VampireMonk.mp3 by Striderjapan -- http://www.freesound.org/people/Striderjapan/sounds/141368/ -- License: CC
 Attribution  
@@ -207,10 +209,10 @@ Organ Ambience, Calm, A by InspectorJ https://freesound.org/people/InspectorJ/so
 ##### Sit functionality - `sit` package
 
 The code under `de.teamlapen.vampirism.sit` is adapted from bl4ckscor4's Sit mod and licensed under GNU GPLv3 (see
-LICENSE.txt in that directory)
+LICENSE.txt in that directory).
 
 ##### Radial screen - `lib.*.radialmenu` package
 
 The code under `de.teamlapen.lib.lib.client.gui.screens.radialmenu` is adapted from David Quintana's Radial Menu and
-licensed unter the terms of the LICENSE.txt file in that directory.
+licensed under the terms of the LICENSE.txt file in that directory.
 
