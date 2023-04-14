@@ -9,6 +9,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.Tags;
@@ -68,6 +69,7 @@ public class ModPotions {
     public static final RegistryObject<HunterPotion> RESISTANCE = POTIONS.register("resistance", () -> new HunterPotion(null, new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 1800)));
     public static final RegistryObject<HunterPotion> LONG_RESISTANCE = POTIONS.register("long_resistance", () -> new HunterPotion("resistance", new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 4800)));
     public static final RegistryObject<HunterPotion> STRONG_RESISTANCE = POTIONS.register("strong_resistance", () -> new HunterPotion("resistance", new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 400, 1)));
+    public static final RegistryObject<Potion> GARLIC = POTIONS.register("garlic", () -> new Potion(new MobEffectInstance(ModEffects.GARLIC.get(), 1200)));
 
     //Vampire
     public static final RegistryObject<VampirismPotion> VAMPIRE_FIRE_RESISTANCE = POTIONS.register("vampire_fire_resistance", () -> new VampirismPotion(null, new MobEffectInstance(ModEffects.FIRE_PROTECTION.get(), 3600, 5)));
@@ -126,6 +128,7 @@ public class ModPotions {
         master(RESISTANCE, () -> Ingredient.of(Items.GOLDEN_APPLE), 20, 10);
         durable(RESISTANCE, LONG_RESISTANCE);
         strong(RESISTANCE, STRONG_RESISTANCE);
+        PotionBrewing.addMix(Potions.WATER, ModItems.ITEM_GARLIC.get(), GARLIC.get());
     }
 
     private static void durable(Supplier<? extends Potion> in, Supplier<? extends Potion> out) {
