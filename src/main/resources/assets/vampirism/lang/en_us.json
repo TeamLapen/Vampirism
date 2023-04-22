@@ -22,6 +22,8 @@
   "text.vampirism.blood.poisonous": "Poisonous blood",
   "text.vampirism.task.reward": "Task reward",
   "text.vampirism.task.reward_obtain": "Can be obtained as a task reward from a %s",
+  "text.vampirism.task.reward_obtain_all": "Can be obtained as a task reward",
+  "text.vampirism.task.reward_obtain_for": "Can be obtained as a task reward for %s",
   "text.vampirism.task.require_parent": "Complete parent (%s)",
   "text.vampirism.task.prerequisites": "Prerequisites",
   "text.vampirism.task.prerequisites.none": "None",
