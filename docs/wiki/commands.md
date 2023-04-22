@@ -116,9 +116,9 @@ Following commands requires the player to be admin
 :::
 ### Skill
 
-`/vampirism skill <skill> [<force>]`  
-`/vampirism skill disableall`  
-`/vampirism skill enableall`
+`/vampirism skills <skill> [<force>]`  
+`/vampirism skills disableall`  
+`/vampirism skills enableall`
 
 - `<skill>`: the skill id
 - `<force>`: `true` or `false`
