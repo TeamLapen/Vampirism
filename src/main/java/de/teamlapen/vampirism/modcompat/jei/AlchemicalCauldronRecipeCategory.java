@@ -104,6 +104,6 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
     public void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull AlchemicalCauldronRecipe recipe, @NotNull IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.INPUT, 6, 7).addIngredients(recipe.getFluid().map(in -> in, fl -> Ingredient.of(fl.getFluid().getBucket())));
         builder.addSlot(RecipeIngredientRole.INPUT, 30, 7).addIngredients(recipe.getIngredient());
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 78, 25).addItemStack(recipe.getResultItem());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 78, 25).addItemStack(RecipeUtil.getResultItem(recipe));
     }
 }

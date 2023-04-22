@@ -56,7 +56,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
             stack.pushPose();
             RenderSystem.backupProjectionMatrix();
             RenderSystem.setProjectionMatrix(stack.last().pose());
-            minecraft.getItemRenderer().renderGuiItem(lavaStack, 83, 13);
+            minecraft.getItemRenderer().renderGuiItem(stack, lavaStack, 83, 13);
             RenderSystem.restoreProjectionMatrix();
             stack.popPose();
         }
@@ -108,7 +108,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
             builder.setShapeless();
         }
         IRecipeSlotBuilder output = builder.addSlot(RecipeIngredientRole.OUTPUT, 112, 32);
-        output.addItemStack(recipe.getResultItem());
+        output.addItemStack(RecipeUtil.getResultItem(recipe));
 
         NonNullList<Ingredient> ingredients = recipe.getIngredients();
         for (int y = 0; y < 4; ++y) {

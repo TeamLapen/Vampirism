@@ -6,8 +6,8 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
-import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
+import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.api.items.oil.IApplicableOil;
 import de.teamlapen.vampirism.client.gui.screens.AlchemicalCauldronScreen;
 import de.teamlapen.vampirism.client.gui.screens.AlchemyTableScreen;
@@ -36,7 +36,7 @@ import mezz.jei.api.registration.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.NonNullList;
-import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -121,13 +121,13 @@ public class VampirismJEIPlugin implements IModPlugin {
         RecipeManager recipeManager = world.getRecipeManager();
         registration.addRecipes(ALCHEMICAL_CAULDRON, ((RecipeManagerAccessor) recipeManager).getByType(ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get()).values().stream().toList());
         registration.addRecipes(WEAPON_TABLE, ((RecipeManagerAccessor) recipeManager).getByType(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get()).values().stream().toList());
-        registration.addRecipes(TASK, TaskUtil.getItemRewardTasks());
+        registration.addRecipes(TASK, TaskUtil.getItemRewardTasks(world.registryAccess()));
         registration.addRecipes(POTION, VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().map(JEIPotionMix::createFromMix).flatMap(Collection::stream).collect(Collectors.toList()));
         registration.addRecipes(RecipeTypes.ANVIL, getRepairRecipes(registration.getVanillaRecipeFactory()));
         registration.addRecipes(ALCHEMY_TABLE, recipeManager.byType(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).values().stream().toList());
         registration.addRecipes(RecipeTypes.CRAFTING, getApplicableOilRecipes());
         registration.addRecipes(BLESSING, BlessableItem.getBlessableRecipes());
-        registration.addRecipes(RecipeTypes.CRAFTING, getCleanOilRecipes());
+        registration.addRecipes(RecipeTypes.CRAFTING, getCleanOilRecipes(world.registryAccess()));
     }
 
     @Override
@@ -188,9 +188,9 @@ public class VampirismJEIPlugin implements IModPlugin {
                         .map(stack -> new ShapelessRecipe(new ResourceLocation(REFERENCE.MODID, (RegUtil.id(oil).toString() + RegUtil.id(stack.getItem()).toString()).replace(':', '_')), "", CraftingBookCategory.EQUIPMENT, OilUtils.setAppliedOil(stack.copy(), oil), NonNullList.of(Ingredient.EMPTY, Ingredient.of(stack), Ingredient.of(OilUtils.createOilItem(oil)))))).collect(Collectors.toList());
     }
 
-    private @NotNull List<CraftingRecipe> getCleanOilRecipes() {
+    private @NotNull List<CraftingRecipe> getCleanOilRecipes(RegistryAccess registryAccess) {
         return getApplicableOilRecipes().stream().map(recipe -> {
-            ItemStack item = recipe.getResultItem();
+            ItemStack item = recipe.getResultItem(registryAccess);
             IApplicableOil oil = OilUtils.getAppliedOil(item).get();
             return new ShapelessRecipe(new ResourceLocation(REFERENCE.MODID, ("clean_" + RegUtil.id(oil).toString() + "_from_" + RegUtil.id(item.getItem()).toString()).replace(':', '_')), "", CraftingBookCategory.EQUIPMENT, OilUtils.removeAppliedOil(item.copy()), NonNullList.of(Ingredient.EMPTY, Ingredient.of(Items.PAPER), Ingredient.of(item)));
         }).collect(Collectors.toList());

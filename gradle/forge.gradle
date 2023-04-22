@@ -52,11 +52,13 @@ dependencies {
             version: "${project.minecraft_version}-${project.forge_version}"
     ])
     //Don't export dependencies to pom as their deobfuscated version would be used which cannot be found in dependent projects
-//    compileOnly fg.deobf("mezz.jei:jei-1.19.3-common-api:${project.jei_version}") //API for compile
-//    compileOnly fg.deobf("mezz.jei:jei-1.19.3-forge-api:${project.jei_version}") //API for compile
-//    runtimeOnly fg.deobf("mezz.jei:jei-1.19.3-forge:${project.jei_version}") //Full for runtime
-    compileOnly fg.deobf("de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}") //For compile (not exported to POM)
-    runtimeOnly fg.deobf("de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}") //For runtime (not exported to POM)
+    compileOnly fg.deobf("mezz.jei:jei-1.19.4-common-api:${project.jei_version}") //API for compile
+    compileOnly fg.deobf("mezz.jei:jei-1.19.4-forge-api:${project.jei_version}") //API for compile
+    runtimeOnly fg.deobf("mezz.jei:jei-1.19.4-forge:${project.jei_version}") //Full for runtime
+    compileOnly fg.deobf("de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}")
+    //For compile (not exported to POM)
+    runtimeOnly fg.deobf("de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}")
+    //For runtime (not exported to POM)
 
     //runtimeOnly fg.deobf("curse.maven:angel-of-vengeance:2810906")
     if (System.getProperty("idea.sync.active") != "true") {
