@@ -24,15 +24,21 @@ public class VampireLeveling {
 
     private static final VampireLevelRequirement[] LEVEL_REQUIREMENTS = {null, null, LEVEL_2, LEVEL_3, LEVEL_4, LEVEL_5, LEVEL_6, LEVEL_7, LEVEL_8, LEVEL_9, LEVEL_10, LEVEL_11, LEVEL_12, LEVEL_13, LEVEL_14};
 
-    public static Optional<VampireLevelRequirement> getLevelRequirement(@Range(from = 2, to = REFERENCE.HIGHEST_HUNTER_LEVEL) int targetLevel) {
+    public static Optional<VampireLevelRequirement> getLevelRequirement(@Range(from = 0, to = REFERENCE.HIGHEST_HUNTER_LEVEL) int targetLevel) {
+        //noinspection ConstantValue
+        if (targetLevel < 0 || targetLevel > REFERENCE.HIGHEST_VAMPIRE_LEVEL) return Optional.empty();
         return Optional.ofNullable(LEVEL_REQUIREMENTS[targetLevel]);
     }
 
-    public static Optional<AltarInfusionRequirements> getInfusionRequirement(@Range(from = 2, to = REFERENCE.HIGHEST_HUNTER_LEVEL) int targetLevel) {
+    public static Optional<AltarInfusionRequirements> getInfusionRequirement(@Range(from = 0, to = REFERENCE.HIGHEST_HUNTER_LEVEL) int targetLevel) {
+        //noinspection ConstantValue
+        if (targetLevel < 0 || targetLevel > REFERENCE.HIGHEST_VAMPIRE_LEVEL) return Optional.empty();
         return Optional.ofNullable(LEVEL_REQUIREMENTS[targetLevel]).filter(AltarInfusionRequirements.class::isInstance).map(AltarInfusionRequirements.class::cast);
     }
 
-    public static Optional<AltarInspirationRequirement> getInspirationRequirement(@Range(from = 2, to = REFERENCE.HIGHEST_HUNTER_LEVEL) int targetLevel) {
+    public static Optional<AltarInspirationRequirement> getInspirationRequirement(@Range(from = 0, to = REFERENCE.HIGHEST_HUNTER_LEVEL) int targetLevel) {
+        //noinspection ConstantValue
+        if (targetLevel < 0 || targetLevel > REFERENCE.HIGHEST_VAMPIRE_LEVEL) return Optional.empty();
         return Optional.ofNullable(LEVEL_REQUIREMENTS[targetLevel]).filter(AltarInspirationRequirement.class::isInstance).map(AltarInspirationRequirement.class::cast);
     }
 

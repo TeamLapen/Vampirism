@@ -28,15 +28,21 @@ public class HunterLeveling {
 
     private static final HunterLevelRequirement[] LEVEL_REQUIREMENTS = {null, null, LEVEL_2, LEVEL_3, LEVEL_4, LEVEL_5, LEVEL_6, LEVEL_7, LEVEL_8, LEVEL_9, LEVEL_10, LEVEL_11, LEVEL_12, LEVEL_13, LEVEL_14};
 
-    public static Optional<HunterLevelRequirement> getLevelRequirement(@Range(from = 2, to = REFERENCE.HIGHEST_HUNTER_LEVEL) int targetLevel) {
+    public static Optional<HunterLevelRequirement> getLevelRequirement(@Range(from = 0, to = REFERENCE.HIGHEST_HUNTER_LEVEL) int targetLevel) {
+        //noinspection ConstantValue
+        if (targetLevel < 0 || targetLevel > REFERENCE.HIGHEST_HUNTER_LEVEL) return Optional.empty();
         return Optional.ofNullable(LEVEL_REQUIREMENTS[targetLevel]);
     }
 
-    public static Optional<HunterTrainerRequirement> getTrainerRequirement(@Range(from = 2, to = REFERENCE.HIGHEST_HUNTER_LEVEL) int targetLevel) {
+    public static Optional<HunterTrainerRequirement> getTrainerRequirement(@Range(from = 0, to = REFERENCE.HIGHEST_HUNTER_LEVEL) int targetLevel) {
+        //noinspection ConstantValue
+        if (targetLevel < 0 || targetLevel > REFERENCE.HIGHEST_HUNTER_LEVEL) return Optional.empty();
         return Optional.ofNullable(LEVEL_REQUIREMENTS[targetLevel]).filter(HunterTrainerRequirement.class::isInstance).map(HunterTrainerRequirement.class::cast);
     }
 
-    public static Optional<BasicHunterRequirement> getBasicHunterRequirement(@Range(from = 2, to = REFERENCE.HIGHEST_HUNTER_LEVEL) int targetLevel) {
+    public static Optional<BasicHunterRequirement> getBasicHunterRequirement(@Range(from = 0, to = REFERENCE.HIGHEST_HUNTER_LEVEL) int targetLevel) {
+        //noinspection ConstantValue
+        if (targetLevel < 0 || targetLevel > REFERENCE.HIGHEST_HUNTER_LEVEL) return Optional.empty();
         return Optional.ofNullable(LEVEL_REQUIREMENTS[targetLevel]).filter(BasicHunterRequirement.class::isInstance).map(BasicHunterRequirement.class::cast);
     }
 
