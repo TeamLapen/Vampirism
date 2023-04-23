@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity.player.vampire;
 import de.teamlapen.vampirism.REFERENCE;
 import org.jetbrains.annotations.Range;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 public class VampireLeveling {
@@ -33,6 +34,14 @@ public class VampireLeveling {
 
     public static Optional<AltarInspirationRequirement> getInspirationRequirement(@Range(from = 2, to = REFERENCE.HIGHEST_HUNTER_LEVEL) int targetLevel) {
         return Optional.ofNullable(LEVEL_REQUIREMENTS[targetLevel]).filter(AltarInspirationRequirement.class::isInstance).map(AltarInspirationRequirement.class::cast);
+    }
+
+    public static AltarInfusionRequirements[] getInfusionRequirements() {
+        return Arrays.stream(LEVEL_REQUIREMENTS).filter(AltarInfusionRequirements.class::isInstance).map(AltarInfusionRequirements.class::cast).toArray(AltarInfusionRequirements[]::new);
+    }
+
+    public static AltarInspirationRequirement[] getInspirationRequirements() {
+        return Arrays.stream(LEVEL_REQUIREMENTS).filter(AltarInspirationRequirement.class::isInstance).map(AltarInspirationRequirement.class::cast).toArray(AltarInspirationRequirement[]::new);
     }
 
     public interface VampireLevelRequirement {

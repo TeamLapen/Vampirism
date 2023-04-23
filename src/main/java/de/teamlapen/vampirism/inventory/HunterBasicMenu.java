@@ -49,7 +49,7 @@ public class HunterBasicMenu extends InventoryContainerMenu {
         ItemStack blood = inventory.getItem(0);
 
         return HunterLeveling.getBasicHunterRequirement(targetLevel).map(req -> {
-            int required = req.blood();
+            int required = req.vampireBloodAmount();
             return (blood.isEmpty() || !blood.getItem().equals(ModItems.VAMPIRE_BLOOD_BOTTLE.get())) ? required : Math.max(0, required - blood.getCount());
         }).orElse(-1);
     }
@@ -62,7 +62,7 @@ public class HunterBasicMenu extends InventoryContainerMenu {
         if (!canLevelUp()) return;
         int target = player.getLevel() + 1;
         HunterLeveling.getBasicHunterRequirement(target).ifPresent(req -> {
-            inventory.removeItem(0, req.blood());
+            inventory.removeItem(0, req.vampireBloodAmount());
             FactionPlayerHandler.getOpt(player.getRepresentingPlayer()).ifPresent(h -> h.setFactionLevel(VReference.HUNTER_FACTION, target));
             player.getRepresentingPlayer().displayClientMessage(Component.translatable("container.vampirism.basic_hunter.levelup"), false);
             player.getRepresentingPlayer().closeContainer();
