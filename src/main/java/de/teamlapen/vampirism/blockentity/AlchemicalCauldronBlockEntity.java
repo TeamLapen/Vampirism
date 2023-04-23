@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.inventory.AlchemicalCauldronMenu;
 import de.teamlapen.vampirism.mixin.AbstractFurnaceBlockEntityAccessor;
 import de.teamlapen.vampirism.recipes.AlchemicalCauldronRecipe;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -74,6 +75,10 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
     @Override
     public boolean canOpen(@NotNull Player player) {
         if (super.canOpen(player)) {
+            if (!Helper.isHunter(player)) {
+                player.displayClientMessage(Component.translatable("text.vampirism.unfamiliar"), true);
+                return false;
+            }
             if (HunterPlayer.getOpt(player).map(HunterPlayer::getSkillHandler).map(h -> h.isSkillEnabled(HunterSkills.BASIC_ALCHEMY.get())).orElse(false)) {
                 if (ownerID == null) {
                     setOwnerID(player);
@@ -81,10 +86,10 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
                 } else if (ownerID.equals(player.getUUID())) {
                     return true;
                 } else {
-                    player.sendSystemMessage(Component.translatable("text.vampirism.alchemical_cauldron.other", getOwnerName()));
+                    player.displayClientMessage(Component.translatable("text.vampirism.alchemical_cauldron.other", getOwnerName()), true);
                 }
             } else {
-                player.sendSystemMessage(Component.translatable("text.vampirism.alchemical_cauldron.cannot_use", getOwnerName()));
+                player.displayClientMessage(Component.translatable("text.vampirism.not_learned"), true);
             }
         }
         return false;

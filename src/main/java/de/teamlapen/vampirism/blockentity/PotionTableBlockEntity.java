@@ -105,7 +105,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
                         player.displayClientMessage(Component.translatable("text.vampirism.potion_table.other", getOwnerName()), true);
                     }
                 } else {
-                    player.displayClientMessage(Component.translatable("text.vampirism.potion_table.cannot_use", getOwnerName()), true);
+                    player.displayClientMessage(Component.translatable("text.vampirism.unfamiliar"), true);
                 }
                 return false;
 
