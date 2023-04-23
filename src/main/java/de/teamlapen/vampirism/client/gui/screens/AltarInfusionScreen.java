@@ -86,7 +86,7 @@ public class AltarInfusionScreen extends ItemCombinerScreen<AltarInfusionMenu> {
         Optional<Component> component = Optional.empty();
         var requirement = this.menu.getRequirement();
         if (requirement.isEmpty()) {
-            component = Optional.of(Component.translatable("text.vampirism.altar_infusion.wrong_level"));
+            component = Optional.of(Component.translatable("text.vampirism.altar_infusion.ritual_level_wrong"));
         }
         component.ifPresent(c -> {
             this.renderTooltip(pPoseStack, this.font.split(c, 115), this.leftPos + 10, this.topPos + 60);

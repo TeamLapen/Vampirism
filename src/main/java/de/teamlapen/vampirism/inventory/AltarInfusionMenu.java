@@ -14,7 +14,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.ItemCombinerMenu;
 import net.minecraft.world.inventory.ItemCombinerMenuSlotDefinition;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -34,17 +33,16 @@ public class AltarInfusionMenu extends ItemCombinerMenu {
     public AltarInfusionMenu(int id, @NotNull Inventory playerInventory, @NotNull Container inventory, ContainerLevelAccess worldPosCallable) {
         super(ModContainer.ALTAR_INFUSION.get(), id, playerInventory, worldPosCallable);
         this.inputSlots = inventory;
-        this.init();
+        this.init(playerInventory);
         this.lvlRequirement = VampireLeveling.getInfusionRequirement(FactionPlayerHandler.getOpt(player).map(h -> h.getCurrentLevel(VReference.VAMPIRE_FACTION)).orElse(0) + 1);
     }
 
-    protected void init() {
+    protected void init(@NotNull Inventory playerInventory) {
         this.slots.clear();
-        for (ItemCombinerMenuSlotDefinition.SlotDefinition definition : createInputSlotDefinitions().getSlots()) {
-            var slot = new Slot(this.inputSlots, definition.slotIndex(), definition.x(), definition.y());
-            slot.index = this.slots.size();
-            this.slots.add(slot);
-        }
+        this.remoteSlots.clear();
+        this.lastSlots.clear();
+        this.createInputSlots(createInputSlotDefinitions());
+        this.createInventorySlots(playerInventory);
     }
 
     public Optional<VampireLeveling.AltarInfusionRequirements> getRequirement() {
@@ -59,6 +57,10 @@ public class AltarInfusionMenu extends ItemCombinerMenu {
     @Override
     protected void onTake(@NotNull Player player, @NotNull ItemStack stack) {
 
+    }
+
+    @Override
+    protected void clearContainer(@NotNull Player pPlayer, @NotNull Container pContainer) {
     }
 
     @Override
