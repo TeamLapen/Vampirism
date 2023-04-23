@@ -104,7 +104,7 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
                 if (Helper.isHunter(serverPlayer)) {
                     NetworkHooks.openScreen(serverPlayer, new SimpleMenuProvider((id, playerInventory, playerIn) -> new HunterTableMenu(id, playerInventory, ContainerLevelAccess.create(playerIn.level, pos)), Component.translatable("container.crafting")), pos);
                 } else {
-                    player.displayClientMessage(Component.translatable("text.vampirism.hunter_table.unfamiliar"), true);
+                    player.displayClientMessage(Component.translatable("text.vampirism.unfamiliar"), true);
                 }
             }
         }

@@ -80,6 +80,10 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
     @Override
     public InteractionResult use(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         if (!world.isClientSide) {
+            if (!Helper.isHunter(player)) {
+                player.displayClientMessage(Component.translatable("This seem unfamiliar"), true);
+                return InteractionResult.CONSUME;
+            }
             int fluid = world.getBlockState(pos).getValue(LAVA);
             boolean flag = false;
             ItemStack heldItem = player.getItemInHand(hand);
@@ -108,11 +112,11 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
                 if (canUse(player) && player instanceof ServerPlayer) {
                     NetworkHooks.openScreen((ServerPlayer) player, new SimpleMenuProvider((id, playerInventory, playerIn) -> new WeaponTableMenu(id, playerInventory, ContainerLevelAccess.create(playerIn.level, pos)), name), pos);
                 } else {
-                    player.displayClientMessage(Component.translatable("text.vampirism.weapon_table.cannot_use"), true);
+                    player.displayClientMessage(Component.translatable("You have not learned how to use this"), true);
                 }
             }
         }
-        return InteractionResult.SUCCESS;
+        return InteractionResult.sidedSuccess(world.isClientSide);
     }
 
     @Override

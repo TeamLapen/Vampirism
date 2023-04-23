@@ -3,7 +3,9 @@ package de.teamlapen.vampirism.blocks;
 import de.teamlapen.vampirism.blockentity.AlchemyTableBlockEntity;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -63,10 +65,14 @@ public class AlchemyTableBlock extends HorizontalContainerBlock {
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
-            BlockEntity tileentity = level.getBlockEntity(pos);
-            if (tileentity instanceof AlchemyTableBlockEntity) {
-                player.openMenu((AlchemyTableBlockEntity) tileentity);
-                player.awardStat(ModStats.interact_with_alchemy_table);
+            if (Helper.isHunter(player)) {
+                BlockEntity tileentity = level.getBlockEntity(pos);
+                if (tileentity instanceof AlchemyTableBlockEntity) {
+                    player.openMenu((AlchemyTableBlockEntity) tileentity);
+                    player.awardStat(ModStats.interact_with_alchemy_table);
+                }
+            } else {
+                player.displayClientMessage(Component.translatable("text.vampirism.unfamiliar"), true);
             }
 
             return InteractionResult.CONSUME;
