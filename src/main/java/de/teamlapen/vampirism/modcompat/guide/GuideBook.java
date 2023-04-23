@@ -25,6 +25,7 @@ import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.hunter.BasicHunterEntity;
+import de.teamlapen.vampirism.entity.player.hunter.HunterLeveling;
 import de.teamlapen.vampirism.entity.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.entity.player.vampire.VampireLeveling;
@@ -176,12 +177,11 @@ public class GuideBook implements IGuideBook {
         bloodPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "blood.biteable_creatures")), new PageHolderWithLinks.URLLink("Biteable Creatures", URI.create("https://github.com/TeamLapen/Vampirism/wiki/Biteable-Creatures"))));
         entries.put(new ResourceLocation(base + "blood"), new EntryText(bloodPages, translateComponent(base + "blood")));
 
-        VampireLevelingConf levelingConf = VampireLevelingConf.getInstance();
         List<IPage> levelingPages = new ArrayList<>();
         levelingPages.addAll(PageHelper.pagesForLongText(translateComponent(base + "leveling.intro")));
         String altarOfInspiration = "§l" + loc(ModBlocks.ALTAR_INSPIRATION.get()) + "§r\n§o" + translate(base + "leveling.inspiration.reach") + "§r\n";
         altarOfInspiration += translate(base + "leveling.inspiration.text") + "\n";
-        altarOfInspiration += translate(base + "leveling.inspiration.requirements", levelingConf.getRequiredBloodForAltarInspiration(2), levelingConf.getRequiredBloodForAltarInspiration(3), levelingConf.getRequiredBloodForAltarInspiration(4));
+        altarOfInspiration += translate(base + "leveling.inspiration.requirements", Arrays.stream(VampireLeveling.getInspirationRequirements()).map(VampireLeveling.AltarInspirationRequirement::bloodAmount).toArray());
         levelingPages.addAll(helper.addLinks(PageHelper.pagesForLongText(Component.literal(altarOfInspiration)), new ResourceLocation("guide.vampirism.blocks.altar_inspiration")));
 
         String altarOfInfusion = "§l" + loc(ModBlocks.ALTAR_INFUSION.get()) + "§r\n§o" + translate(base + "leveling.infusion.reach") + "§r\n";
@@ -275,11 +275,10 @@ public class GuideBook implements IGuideBook {
         gettingStarted.addAll(PageHelper.pagesForLongText(translateComponent(base + "getting_started.as_hunter")));
         entries.put(new ResourceLocation(base + "getting_started"), new EntryText(gettingStarted, translateComponent(base + "getting_started")));
 
-        HunterLevelingConf levelingConf = HunterLevelingConf.instance();
         List<IPage> levelingPages = new ArrayList<>();
         levelingPages.addAll(PageHelper.pagesForLongText(translateComponent(base + "leveling.intro")));
         String train1 = "§l" + translate(base + "leveling.to_reach", "2-4") + "§r\n";
-        train1 += translate(base + "leveling.train1.text", levelingConf.getVampireBloodCountForBasicHunter(2), levelingConf.getVampireBloodCountForBasicHunter(3), levelingConf.getVampireBloodCountForBasicHunter(4));
+        train1 += translate(base + "leveling.train1.text", HunterLeveling.getBasicHunterRequirements().stream().map(HunterLeveling.BasicHunterRequirement::vampireBloodAmount).toArray());
         levelingPages.addAll(helper.addLinks(PageHelper.pagesForLongText(Component.literal(train1)), new ResourceLocation("guide.vampirism.items.stake"), new ResourceLocation("guide.vampirism.items.vampire_blood_bottle")));
 
         String train2 = "§l" + translate(base + "leveling.to_reach", "5+") + "§r\n";
@@ -287,14 +286,14 @@ public class GuideBook implements IGuideBook {
         levelingPages.addAll(helper.addLinks(PageHelper.pagesForLongText(Component.translatable(train2)), new ResourceLocation("guide.vampirism.blocks.hunter_table"), new ResourceLocation("guide.vampirism.blocks.weapon_table"), new ResourceLocation("guide.vampirism.blocks.alchemical_cauldron"), new ResourceLocation("guide.vampirism.blocks.potion_table")));
         PageTable.Builder builder = new PageTable.Builder(4);
         builder.addUnlocLine("text.vampirism.level", base + "leveling.train2.fang", loc(ModItems.PURE_BLOOD_0.get()), loc(ModItems.VAMPIRE_BOOK.get()));
-        for (int i = levelingConf.TABLE_MIN_LEVEL; i <= levelingConf.TABLE_MAX_LEVEL; i++) {
-            int[] req = levelingConf.getItemRequirementsForTable(i);
+        HunterLeveling.getTrainerRequirements().forEach(requirement -> {
+            var tableReq = requirement.tableRequirement();
             String pure = "";
-            if (req[1] > 0) {
-                pure = "" + req[1] + " Purity(" + (req[2] + 1) + ")";
+            if (tableReq.pureBloodLevel() > 0) {
+                pure = tableReq.pureBloodQuantity() + " Purity(" + (tableReq.pureBloodLevel() + 1) + ")";
             }
-            builder.addLine(i, req[0], pure, req[3]);
-        }
+            builder.addLine(tableReq.vampireFangQuantity(), tableReq.pureBloodQuantity(), pure, tableReq.vampireBookQuantity());
+        });
 
         builder.setHeadline(translateComponent(base + "leveling.train2.req"));
         PageHolderWithLinks requirementsTable = new PageHolderWithLinks(helper, builder.build());

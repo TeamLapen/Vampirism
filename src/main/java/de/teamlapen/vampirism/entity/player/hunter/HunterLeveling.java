@@ -5,6 +5,8 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.HunterIntelItem;
 import org.jetbrains.annotations.Range;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -38,6 +40,14 @@ public class HunterLeveling {
         return Optional.ofNullable(LEVEL_REQUIREMENTS[targetLevel]).filter(BasicHunterRequirement.class::isInstance).map(BasicHunterRequirement.class::cast);
     }
 
+    public static Collection<BasicHunterRequirement> getBasicHunterRequirements() {
+        return Arrays.stream(LEVEL_REQUIREMENTS).filter(BasicHunterRequirement.class::isInstance).map(BasicHunterRequirement.class::cast).toList();
+    }
+
+    public static Collection<HunterTrainerRequirement> getTrainerRequirements() {
+        return Arrays.stream(LEVEL_REQUIREMENTS).filter(HunterTrainerRequirement.class::isInstance).map(HunterTrainerRequirement.class::cast).toList();
+    }
+
     public interface HunterLevelRequirement {
         int targetLevel();
     }
@@ -52,6 +62,6 @@ public class HunterLeveling {
     public record HunterTrainerRequirement(int targetLevel, int ironQuantity, int goldQuantity, HunterTableRequirement tableRequirement) implements HunterLevelRequirement {
     }
 
-    public record BasicHunterRequirement(int targetLevel, int blood) implements HunterLevelRequirement {
+    public record BasicHunterRequirement(int targetLevel, int vampireBloodAmount) implements HunterLevelRequirement {
     }
 }
