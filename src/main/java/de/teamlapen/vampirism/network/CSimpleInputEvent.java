@@ -67,7 +67,7 @@ public class CSimpleInputEvent implements IMessage {
                     }
                     break;
                 case SHOW_MINION_CALL_SELECTION:
-                    SRequestMinionSelectPacket.createRequestForPlayer(player, SRequestMinionSelectPacket.Action.CALL).ifPresent(VampirismMod.dispatcher::sendToServer);
+                    SRequestMinionSelectPacket.createRequestForPlayer(player, SRequestMinionSelectPacket.Action.CALL).ifPresent(x -> VampirismMod.dispatcher.sendTo(x, player));
                     break;
                 case VAMPIRISM_MENU:
                     factionPlayerOpt.ifPresent(fPlayer -> fPlayer.getTaskManager().openVampirismMenu());
