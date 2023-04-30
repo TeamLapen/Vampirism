@@ -128,6 +128,9 @@ publishing {
 
             // Sets the maven URL
             url findProperty('maxanier_maven_url')
+            authentication {
+                basic(BasicAuthentication)
+            }
         }
     }
 }
