@@ -16,6 +16,7 @@ import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.players.GameProfileCache;
 import net.minecraftforge.server.ServerLifecycleHooks;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class MinionArgument implements ArgumentType<MinionArgument.MinionId> {
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
         String s = builder.getRemaining();
-        filterResources(playerMinionIds.get(), s, MinionId::toString, builder::suggest);
+        filterResources(playerMinionIds.get(), s, MinionId::toEscaped, builder::suggest);
         return builder.buildFuture();
     }
 
@@ -77,9 +78,14 @@ public class MinionArgument implements ArgumentType<MinionArgument.MinionId> {
     @Override
     public MinionId parse(StringReader reader) throws CommandSyntaxException {
         StringBuilder builder = new StringBuilder();
+        boolean isQuotes = false;
         while (reader.canRead()) {
             char c = reader.peek();
-            if (c == ' ') {
+            if (c == '\"') {
+                isQuotes = !isQuotes;
+                reader.skip();
+                continue;
+            } else if (c == ' ' && !isQuotes) {
                 break;
             }
             builder.append(c);
@@ -123,6 +129,14 @@ public class MinionArgument implements ArgumentType<MinionArgument.MinionId> {
         @Override
         public String toString() {
             return player + ":" + id + "/" + name;
+        }
+
+        public String toEscaped() {
+            var res = StringEscapeUtils.escapeJava(toString());
+            if (res.contains(" ")) {
+                res = "\"" + res + "\"";
+            }
+            return res;
         }
     }
 
