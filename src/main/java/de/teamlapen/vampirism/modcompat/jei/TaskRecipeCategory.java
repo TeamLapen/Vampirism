@@ -32,7 +32,7 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
     private final @NotNull IDrawable icon;
 
     public TaskRecipeCategory(@NotNull IGuiHelper guiHelper) {
-        this.background = guiHelper.drawableBuilder(new ResourceLocation("jei", "textures/gui/slot.png"), 0, 0, 18, 18).setTextureSize(18, 18).addPadding(14, 90, 75, 75).build();
+        this.background = guiHelper.drawableBuilder(new ResourceLocation("jei", "textures/jei/gui/gui_vanilla.png"), 107, 168, 18, 18).addPadding(14, 90, 75, 75).build();
         this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModItems.VAMPIRE_FANG.get()));
     }
 

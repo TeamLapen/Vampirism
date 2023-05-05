@@ -77,8 +77,8 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<AlchemyTableR
         builder.addSlot(RecipeIngredientRole.INPUT, 4, 13).addIngredients(recipe.getInput());
         builder.addSlot(RecipeIngredientRole.INPUT, 44, 4).addIngredients(recipe.getIngredient());
         builder.addSlot(RecipeIngredientRole.INPUT, 68, 4).addIngredients(recipe.getIngredient());
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 101, 60).addItemStack(recipe.getResultItem());
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 129, 32).addItemStack(recipe.getResultItem());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 101, 60).addItemStack(RecipeUtil.getResultItem(recipe));
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 129, 32).addItemStack(RecipeUtil.getResultItem(recipe));
         builder.addSlot(RecipeIngredientRole.INPUT, 23, 57).addItemStack(new ItemStack(Items.BLAZE_POWDER));
     }
 
@@ -87,7 +87,7 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<AlchemyTableR
         this.blazeHeat.draw(matrixStack, 33 - 9 - 2, 60 - 10 - 2);
         this.arrow.draw(matrixStack, 73 - 9 - 2, 57 - 10 - 2);
 
-        int color = OilUtils.getOil(recipe.getResultItem()).getColor();
+        int color = OilUtils.getOil(RecipeUtil.getResultItem(recipe)).getColor();
         RenderSystem.setShaderColor(((color >> 16) & 0xFF) / 255f, ((color >> 8) & 0xFF) / 255f, ((color) & 0xFF) / 255f, 1F);
         this.pool.draw(matrixStack, 104 - 9 - 2, 36 - 10 - 2);
         RenderSystem.setShaderColor(1, 1, 1, 1);
