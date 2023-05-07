@@ -130,7 +130,7 @@
   },
   "block.potion_table_crafting": {
     "sounds":  [
-      "vampirism:reserved:block.potion_table_crafting"
+      "vampirism:reserved/block.potion_table_crafting"
     ],
     "subtitle": "subtitles.vampirism.potion_table_crafting"
   }

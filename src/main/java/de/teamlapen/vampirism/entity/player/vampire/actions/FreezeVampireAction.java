@@ -43,7 +43,7 @@ public class FreezeVampireAction extends DefaultVampireAction {
                 dur *= VampirismConfig.BALANCE.vrFreezeDurationMod.get();
             }
             e.addEffect(new MobEffectInstance(ModEffects.FREEZE.get(), dur));
-            e.getCommandSenderWorld().playSound(null, e.getX(), e.getY(), e.getZ(), ModSounds.FREEZE.get(), SoundSource.PLAYERS, 0.5f, 1f);
+            e.getCommandSenderWorld().playSound(null, e.getX(), e.getY(), e.getZ(), ModSounds.FREEZE.get(), SoundSource.PLAYERS, 1f, 1f);
             ModParticles.spawnParticlesServer(player.getCommandSenderWorld(), new GenericParticleOptions(new ResourceLocation("minecraft", "generic_2"), 20, 0xF0F0F0, 0.4F), e.getX(), e.getY(), e.getZ(), 20, 1, 1, 1, 0);
         }
         return l.size() > 0;

@@ -81,7 +81,7 @@ public class StakeItem extends VampirismSwordItem implements IVampireFinisher, I
                     if (attacker instanceof ServerPlayer) {
                         ModAdvancements.TRIGGER_HUNTER_ACTION.trigger((ServerPlayer) attacker, HunterActionCriterionTrigger.Action.STAKE);
                     }
-                    target.getCommandSenderWorld().playSound(null, target.getX(), target.getY()+0.5*target.getEyeHeight(), target.getZ(), ModSounds.STAKE.get(), SoundSource.PLAYERS, 1f, 1f);
+                    target.getCommandSenderWorld().playSound(null, target.getX(), target.getY()+0.5*target.getEyeHeight(), target.getZ(), ModSounds.STAKE.get(), SoundSource.PLAYERS, 1.5f, 0.7f);
                 }
 
             }
