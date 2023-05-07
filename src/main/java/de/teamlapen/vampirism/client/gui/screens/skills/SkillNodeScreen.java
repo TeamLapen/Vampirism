@@ -296,13 +296,15 @@ public class SkillNodeScreen extends GuiComponent {
             this.minecraft.font.drawShadow(stack, this.titles[hoveredSkillIndex], scrollX + x + 40, scrollY + this.y + 9, -1);
 
             //draw skill point cost
-            int cost = hoveredSkill.getSkillPointCost();
-            int costWidth = this.minecraft.font.width(String.valueOf(cost));
-            int costHeight = this.minecraft.font.lineHeight;
-            RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            ScreenUtils.blitWithBorder(stack, scrollX + x + 24, scrollY + this.y + ((26 - costHeight) / 2) - 1, 0, 81, costWidth + 5, costHeight + 4, 200, 20, 3, 0);
-            this.minecraft.font.drawShadow(stack, Component.literal(String.valueOf(cost)), scrollX + x + 27, scrollY + this.y + ((26 - costHeight) / 2f) + 1, -1);
+            if (!this.skillNode.isRoot()) {
+                int cost = hoveredSkill.getSkillPointCost();
+                int costWidth = this.minecraft.font.width(String.valueOf(cost));
+                int costHeight = this.minecraft.font.lineHeight;
+                RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
+                RenderSystem.setShader(GameRenderer::getPositionTexShader);
+                ScreenUtils.blitWithBorder(stack, scrollX + x + 24, scrollY + this.y + ((26 - costHeight) / 2) - 1, 0, 81, costWidth + 5, costHeight + 4, 200, 20, 3, 0);
+                this.minecraft.font.drawShadow(stack, Component.literal(String.valueOf(cost)), scrollX + x + 27, scrollY + this.y + ((26 - costHeight) / 2f) + 1, -1);
+            }
 
             //draw skill
             RenderSystem.setShaderColor(1f, 1f, 1f, 1);

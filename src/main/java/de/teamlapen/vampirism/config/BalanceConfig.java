@@ -249,8 +249,8 @@ public class BalanceConfig {
         taskMasterMaxTaskAmount = builder.comment("Maximum amount of task shown at a taskmaster, except unique tasks").defineInRange("taskMasterMaxTaskAmount", 3, 1, Integer.MAX_VALUE);
         taskDurationSinglePlayer = builder.comment("Duration a task can be completed in a singleplayer world. In Minutes").defineInRange("taskDurationSinglePlayer", 120, 1, Integer.MAX_VALUE);
         taskDurationDedicatedServer = builder.comment("Duration a task can be completed on a dedicated server. In Minutes").defineInRange("taskDurationDedicatedServer", 1440, 1, Integer.MAX_VALUE);
-        skillPointsPerLevel = builder.comment("Players receive n skill points for each level-up. Anything except 1 is unbalanced, but to unlock all skills on maxlevel this value should be set to skill-amount/(max-level - 1)").defineInRange("skillPointsPerLevel", 1.5D, 1D, 20D);
-        skillPointsPerLordLevel = builder.comment("Players receive n skill points for each lord level-up. Anything except 1 is unbalanced, but to unlock all skills on max lord level this value should be set to skill-amount/(max-level - 1)").defineInRange("skillPointsPerLordLevel", 1.2D, 1D, 20D);
+        skillPointsPerLevel = builder.comment("Players receive n skill points for each level-up. Anything except 1 is unbalanced, but to unlock all skills on maxlevel this value should be set to skill-amount/(max-level - 1)").defineInRange("skillPointsPerLevel", 2D, 1D, 20D);
+        skillPointsPerLordLevel = builder.comment("Players receive n skill points for each lord level-up. Anything except 1 is unbalanced, but to unlock all skills on max lord level this value should be set to skill-amount/(max-level - 1)").defineInRange("skillPointsPerLordLevel", 2D, 1D, 20D);
         allowInfiniteSpecialArrows = builder.comment("Whether special crossbow arrows (e.g. spitfire) can be used with infinity enchantment").define("allowInfiniteSpecialArrows", false);
         garlicDiffuserStartupTime = builder.comment("Delay in seconds before a newly placed garlic diffuser becomes active. *0.25 in Singleplayer").defineInRange("garlicDiffuserStartupTime", 5 * 20, 1, 10000);
 

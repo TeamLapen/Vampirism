@@ -16,13 +16,13 @@ public class LordSkills {
     public static final DeferredRegister<ISkill<?>> SKILLS = DeferredRegister.create(VampirismRegistries.SKILLS_ID, REFERENCE.MODID);
 
 
-    public static final RegistryObject<ISkill<?>> LORD_SPEED = SKILLS.register("lord_speed", () -> new ActionSkill<>(LordActions.LORD_SPEED::get, SkillType.LORD, 2,true));
-    public static final RegistryObject<ISkill<?>> LORD_ATTACK_SPEED = SKILLS.register("lord_attack_speed", () -> new ActionSkill<>(LordActions.LORD_ATTACK_SPEED::get, SkillType.LORD, 2,true));
-    public static final RegistryObject<ISkill<?>> MINION_RECOVERY = SKILLS.register("minion_recovery", () -> new SimpleLordSkill<>(true));
+    public static final RegistryObject<ISkill<?>> LORD_SPEED = SKILLS.register("lord_speed", () -> new ActionSkill<>(LordActions.LORD_SPEED::get, SkillType.LORD, 1, true));
+    public static final RegistryObject<ISkill<?>> LORD_ATTACK_SPEED = SKILLS.register("lord_attack_speed", () -> new ActionSkill<>(LordActions.LORD_ATTACK_SPEED::get, SkillType.LORD, 1, true));
+    public static final RegistryObject<ISkill<?>> MINION_RECOVERY = SKILLS.register("minion_recovery", () -> new SimpleLordSkill<>(2, true));
 
 
     @ApiStatus.Internal
-    public static void register(IEventBus bus){
+    public static void register(IEventBus bus) {
         SKILLS.register(bus);
     }
 }

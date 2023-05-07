@@ -89,7 +89,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
                 return Result.LOCKED_BY_OTHER_NODE;
             }
             if (node.isRoot() || isNodeEnabled(node.getParent())) {
-                if (getLeftSkillPoints() > 0) {
+                if (getLeftSkillPoints() >= skill.getSkillPointCost()) {
                     return isNodeEnabled(node) ? Result.OTHER_NODE_SKILL : Result.OK;//If another skill in that node is already enabled this one cannot be enabled
                 } else {
                     return Result.NO_POINTS;

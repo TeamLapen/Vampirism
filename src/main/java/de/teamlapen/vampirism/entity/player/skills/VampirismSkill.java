@@ -77,10 +77,6 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends Defaul
      */
     public static class SimpleHunterSkill extends VampirismSkill<IHunterPlayer> {
 
-        public SimpleHunterSkill(boolean desc) {
-            super(desc);
-        }
-
         /**
          * @param desc Enable description using the default unlocalized key
          */
@@ -102,10 +98,6 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends Defaul
 
     public static class LordHunterSkill extends SimpleHunterSkill {
 
-        public LordHunterSkill(boolean desc) {
-            super(desc);
-        }
-
         public LordHunterSkill(int skillPointCost, boolean desc) {
             super(skillPointCost, desc);
         }
@@ -120,12 +112,6 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends Defaul
      * Simple vampire skill implementation. Does nothing by itself
      */
     public static class SimpleVampireSkill extends VampirismSkill<IVampirePlayer> {
-        /**
-         * @param desc Enable description using the default unlocalized key
-         */
-        public SimpleVampireSkill(boolean desc) {
-            super(desc);
-        }
 
         public SimpleVampireSkill(int skillPointCost, boolean desc) {
             super(skillPointCost, desc);
@@ -145,9 +131,6 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends Defaul
 
     public static class LordVampireSkill extends SimpleVampireSkill {
 
-        public LordVampireSkill(boolean desc) {
-            super(desc);
-        }
 
         public LordVampireSkill(int skillPointCost, boolean desc) {
             super(skillPointCost, desc);
