@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.blocks;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.blocks.HolyWaterEffectConsumer;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
+import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.HolyWaterBottleItem;
@@ -83,13 +84,14 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
 
     /**
      * copied from {@link net.minecraft.world.level.block.GrassBlock#performBonemeal(net.minecraft.server.level.ServerLevel, net.minecraft.util.RandomSource, net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState)}
-     * and changed from grass to cursed grass
+     * and add a random flower
+     * * and use vampire forest as flower source
      */
     @Override
     public void performBonemeal(@NotNull ServerLevel level, @NotNull RandomSource random, @NotNull BlockPos pos, @NotNull BlockState state) {
         BlockPos blockpos = pos.above();
         // changed from grass to cursed grass
-        BlockState blockstate = ModBlocks.CURSED_GRASS.get().defaultBlockState();
+        BlockState blockstate = Blocks.GRASS.defaultBlockState();
         Optional<Holder.Reference<PlacedFeature>> optional = level.registryAccess().registryOrThrow(Registries.PLACED_FEATURE).getHolder(VegetationPlacements.GRASS_BONEMEAL);
 
 
@@ -112,12 +114,13 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
             if (blockstate1.isAir()) {
                 Holder<PlacedFeature> holder;
                 if (random.nextInt(8) == 0) {
-                    List<ConfiguredFeature<?, ?>> list = level.getBiome(blockpos1).value().getGenerationSettings().getFlowerFeatures();
+                    BlockPos finalBlockpos = blockpos1;
+                    List<ConfiguredFeature<?, ?>> list = level.registryAccess().registry(Registries.BIOME).flatMap(x -> x.getHolder(ModBiomes.VAMPIRE_FOREST).map(Holder.Reference::value)).orElseGet(() -> level.getBiome(finalBlockpos).value()).getGenerationSettings().getFlowerFeatures();
                     if (list.isEmpty()) {
                         continue;
                     }
 
-                    holder = ((RandomPatchConfiguration) list.get(0).config()).feature();
+                    holder = ((RandomPatchConfiguration) list.get(level.random.nextInt(list.size())).config()).feature();
                 } else {
                     if (optional.isEmpty()) {
                         continue;
