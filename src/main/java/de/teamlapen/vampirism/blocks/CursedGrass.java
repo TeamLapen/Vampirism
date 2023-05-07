@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.HolyWaterBottleItem;
@@ -16,15 +17,18 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.FlowersFeature;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.PlantType;
 import net.minecraftforge.common.ToolType;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -84,12 +88,13 @@ public class CursedGrass extends SpreadableSnowyDirtBlock implements IGrowable {
 
     /**
      * copied and {@link net.minecraft.block.GrassBlock#performBonemeal(ServerWorld, Random, BlockPos, BlockState)}
-     * and changed from grass to cursed grass
+     * and add a random flower
+     * and use vampire forest as flower source
      */
     @Override
     public void performBonemeal(ServerWorld p_225535_1_, Random p_225535_2_, BlockPos p_225535_3_, BlockState p_225535_4_) {
         BlockPos blockpos = p_225535_3_.above();
-        BlockState blockstate = ModBlocks.CURSED_GRASS.get().defaultBlockState();
+        BlockState blockstate = Blocks.GRASS.defaultBlockState();
 
         label48:
         for(int i = 0; i < 128; ++i) {
@@ -110,12 +115,12 @@ public class CursedGrass extends SpreadableSnowyDirtBlock implements IGrowable {
             if (blockstate2.isAir()) {
                 BlockState blockstate1;
                 if (p_225535_2_.nextInt(8) == 0) {
-                    List<ConfiguredFeature<?, ?>> list = p_225535_1_.getBiome(blockpos1).getGenerationSettings().getFlowerFeatures();
+                    BlockPos finalBlockpos = blockpos1; // use vampire forest as feature source
+                    List<ConfiguredFeature<?, ?>> list = p_225535_1_.registryAccess().registry(Registry.BIOME_REGISTRY).map(x -> x.get(ModBiomes.VAMPIRE_FOREST_KEY)).orElseGet(() -> p_225535_1_.getBiome(finalBlockpos)).getGenerationSettings().getFlowerFeatures();
                     if (list.isEmpty()) {
                         continue;
                     }
-
-                    ConfiguredFeature<?, ?> configuredfeature = list.get(0);
+                    ConfiguredFeature<?, ?> configuredfeature = list.get(p_225535_1_.random.nextInt(list.size())); // add random flower
                     FlowersFeature flowersfeature = (FlowersFeature)configuredfeature.feature;
                     blockstate1 = flowersfeature.getRandomFlower(p_225535_2_, blockpos1, configuredfeature.config());
                 } else {
