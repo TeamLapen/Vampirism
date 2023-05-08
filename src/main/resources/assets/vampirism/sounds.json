@@ -10,7 +10,7 @@
       "vampirism:cc/entity/vampire_bite",
       "vampirism:cc/entity/vampire_bite_long"
     ],
-    "subtitle": "subtitles.vampirism.player_bite"
+    "subtitle": "subtitles.vampirism.player.bite"
   },
   "entity.vampire_feeding": {
     "sounds": [
@@ -101,14 +101,12 @@
         "name": "vampirism:reserved/block/weapon_table_crafting",
         "stream": true
       }
-    ],
-    "subtitle": "subtitles.vampirism.weapon_table_crafting"
+    ]
   },
   "fx.stake": {
     "sounds": [
       "vampirism:reserved/fx/stake"
-    ],
-    "subtitle": "subtitles.vampirism.stake"
+    ]
   },
   "fx.teleport_away": {
     "sounds": [
@@ -131,7 +129,6 @@
   "block.potion_table_crafting": {
     "sounds":  [
       "vampirism:reserved/block.potion_table_crafting"
-    ],
-    "subtitle": "subtitles.vampirism.potion_table_crafting"
+    ]
   }
 }
