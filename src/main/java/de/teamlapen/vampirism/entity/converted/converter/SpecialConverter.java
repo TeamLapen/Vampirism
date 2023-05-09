@@ -13,22 +13,21 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.Optional;
 import java.util.function.Supplier;
 
 public class SpecialConverter<T extends PathfinderMob, Z extends PathfinderMob & IConvertedCreature<T>> implements Converter {
 
     public static final Codec<SpecialConverter<?, ?>> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ForgeRegistries.ENTITY_TYPES.getCodec().fieldOf("converted_type").forGetter(i -> i.convertedType),
-            ConvertiblesReloadListener.EntityEntry.Attributes.CODEC.optionalFieldOf("attribute_helper").forGetter(i -> Optional.ofNullable(i.helper))
+            ConvertiblesReloadListener.EntityEntry.Attributes.CODEC.optionalFieldOf("attribute_helper", ConvertiblesReloadListener.EntityEntry.Attributes.DEFAULT).forGetter(i -> i.helper)
     ).apply(instance, SpecialConverter::new));
 
     private final EntityType<Z> convertedType;
     private final ConvertiblesReloadListener.EntityEntry.Attributes helper;
 
-    private SpecialConverter(EntityType<?> convertedType, Optional<ConvertiblesReloadListener.EntityEntry.Attributes> helper) {
+    private SpecialConverter(EntityType<?> convertedType, ConvertiblesReloadListener.EntityEntry.Attributes helper) {
         this.convertedType = (EntityType<Z>) convertedType;
-        this.helper = helper.orElseGet(() -> ConvertiblesReloadListener.EntityEntry.Attributes.DEFAULT);
+        this.helper = helper;
     }
 
     public SpecialConverter(Supplier<EntityType<Z>> convertedType, ConvertiblesReloadListener.EntityEntry.Attributes helper) {

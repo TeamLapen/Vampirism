@@ -107,10 +107,10 @@ public class ConvertiblesReloadListener {
 
             public static final Codec<Attributes> CODEC = RecordCodecBuilder.create(inst -> {
                 return inst.group(
-                        FloatProvider.CODEC.optionalFieldOf("damage_multiplikator", ConstantFloat.of(1.3f)).forGetter(Attributes::damageProvider),
-                        FloatProvider.CODEC.optionalFieldOf("knockback_resistance_multiplikator", ConstantFloat.of(1.3f)).forGetter(Attributes::knockBackResistanceProvider),
-                        FloatProvider.CODEC.optionalFieldOf("max_health_multiplikator", ConstantFloat.of(1.5f)).forGetter(Attributes::maxHealthProvider),
-                        FloatProvider.CODEC.optionalFieldOf("converted_speed_multiplikator", ConstantFloat.of(1.2f)).forGetter(Attributes::convertedSpeedProvider)
+                        FloatProvider.CODEC.optionalFieldOf("damage_multiplikator", ConstantFloat.of(1f)).forGetter(Attributes::damageProvider),
+                        FloatProvider.CODEC.optionalFieldOf("knockback_resistance_multiplikator", ConstantFloat.of(1f)).forGetter(Attributes::knockBackResistanceProvider),
+                        FloatProvider.CODEC.optionalFieldOf("max_health_multiplikator", ConstantFloat.of(1f)).forGetter(Attributes::maxHealthProvider),
+                        FloatProvider.CODEC.optionalFieldOf("converted_speed_multiplikator", ConstantFloat.of(1f)).forGetter(Attributes::convertedSpeedProvider)
                 ).apply(inst, Attributes::new);
             });
 

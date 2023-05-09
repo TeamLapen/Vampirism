@@ -205,19 +205,31 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
         @Override
         public double getConvertedKnockbackResistance(EntityType<? extends PathfinderMob> entity, RandomSource random) {
             AttributeSupplier map = DefaultAttributes.getSupplier(entity);
-            return map.getBaseValue(Attributes.KNOCKBACK_RESISTANCE) * this.attributes.knockBackResistanceProvider().sample(random);
+            if (map.hasAttribute(Attributes.KNOCKBACK_RESISTANCE)) {
+                return map.getBaseValue(Attributes.KNOCKBACK_RESISTANCE) * this.attributes.knockBackResistanceProvider().sample(random);
+            } else {
+                return BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_KNOCKBACK_RESISTANCE;
+            }
         }
 
         @Override
         public double getConvertedMaxHealth(EntityType<? extends PathfinderMob> entity, RandomSource random) {
             AttributeSupplier map = DefaultAttributes.getSupplier(entity);
-            return map.getBaseValue(Attributes.MAX_HEALTH) * this.attributes.maxHealthProvider().sample(random);
+            if (map.hasAttribute(Attributes.MAX_HEALTH)) {
+                return map.getBaseValue(Attributes.MAX_HEALTH) * this.attributes.maxHealthProvider().sample(random);
+            } else {
+                return BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_HEALTH;
+            }
         }
 
         @Override
         public double getConvertedSpeed(EntityType<? extends PathfinderMob> entity, RandomSource random) {
             AttributeSupplier map = DefaultAttributes.getSupplier(entity);
-            return Math.min(map.getBaseValue(Attributes.MOVEMENT_SPEED) * this.attributes.convertedSpeedProvider().sample(random), 2.9D);
+            if (map.hasAttribute(Attributes.MOVEMENT_SPEED)) {
+                return Math.min(map.getBaseValue(Attributes.MOVEMENT_SPEED) * this.attributes.convertedSpeedProvider().sample(random), 2.9D);
+            } else {
+                return BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_SPEED;
+            }
         }
     }
 }
