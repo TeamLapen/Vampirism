@@ -513,6 +513,7 @@
   "text.vampirism.alchemical_cauldron.cannot_use": "You have not learned how to use this",
   "text.vampirism.altar_infusion.ritual_missing_times": "You are missing items for this ritual",
   "text.vampirism.altar_infusion.ritual_structure_wrong": "The structure is wrong for this ritual",
+  "text.vampirism.altar_infusion.ritual_missing_pillars": "You need more or stronger pillars for your ritual",
   "text.vampirism.altar_infusion.ritual_level_wrong": "You cannot use this altar at this level",
   "text.vampirism.altar_infusion.ritual_still_running": "The ritual is still running",
   "text.vampirism.altar_infusion.ritual.wrong_faction": "This altar seem unfamiliar",
