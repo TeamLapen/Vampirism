@@ -33,6 +33,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -51,9 +52,14 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
      * Used to store convertible handlers after {@link FMLCommonSetupEvent}
      */
     @NotNull
-    private final Map<EntityType<? extends PathfinderMob>, IConvertingHandler<?>> convertibles = new ConcurrentHashMap<>();
+    private final Map<EntityType<? extends PathfinderMob>, IConvertingHandler<?>> convertibles = new HashMap<>();
     @NotNull
-    private final Map<EntityType<? extends PathfinderMob>, ResourceLocation> convertibleOverlay = new ConcurrentHashMap<>();
+    private final Map<EntityType<? extends PathfinderMob>, ResourceLocation> convertibleOverlay = new HashMap<>();
+
+    @NotNull
+    private final Map<EntityType<? extends PathfinderMob>, IConvertingHandler<?>> convertiblesAPI = new ConcurrentHashMap<>();
+    @NotNull
+    private final Map<EntityType<? extends PathfinderMob>, ResourceLocation> convertibleOverlayAPI = new ConcurrentHashMap<>();
     /**
      * Stores custom extended creature constructors after {@link InterModEnqueueEvent}
      */
@@ -85,10 +91,10 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     @ThreadSafeAPI
     public void addConvertible(EntityType<? extends PathfinderMob> type, @Nullable ResourceLocation overlay_loc, @NotNull IConvertingHandler<?> handler) {
         if (finished) throw new IllegalStateException("Register convertibles during InterModEnqueueEvent");
-        convertibles.put(type, handler);
+        convertiblesAPI.put(type, handler);
 
         if (FMLEnvironment.dist.isClient() && overlay_loc != null) {
-            convertibleOverlay.put(type, overlay_loc);
+            convertibleOverlayAPI.put(type, overlay_loc);
         }
     }
 
@@ -183,6 +189,8 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     public void applyDataConvertibles(Map<EntityType<? extends PathfinderMob>, ConvertiblesReloadListener.EntityEntry> entries) {
         this.convertibles.clear();
         this.convertibleOverlay.clear();
+        this.convertibles.putAll(this.convertiblesAPI);
+        this.convertibleOverlay.putAll(this.convertibleOverlayAPI);
         entries.forEach((type, entry) -> {
             Optional<IConvertingHandler<?>> handler = entry.converter().map(Converter::createHandler);
             this.convertibles.put(type, handler.orElseGet(() -> new DefaultConverter().createHandler()));
