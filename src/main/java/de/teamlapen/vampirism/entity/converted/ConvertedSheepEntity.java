@@ -25,7 +25,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * {@link IConvertedCreature} for sheep
@@ -131,12 +130,8 @@ public class ConvertedSheepEntity extends ConvertedCreatureEntity<Sheep> impleme
     public static class SheepConverter extends DefaultConverter {
 
         public static final Codec<SheepConverter> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                ConvertiblesReloadListener.EntityEntry.Attributes.CODEC.optionalFieldOf("attribute_helper").forGetter(i -> Optional.ofNullable(i.helper))
+                ConvertiblesReloadListener.EntityEntry.Attributes.CODEC.optionalFieldOf("attribute_helper", ConvertiblesReloadListener.EntityEntry.Attributes.DEFAULT).forGetter(i -> i.helper)
         ).apply(instance, SheepConverter::new));
-
-        protected SheepConverter(Optional<ConvertiblesReloadListener.EntityEntry.Attributes> helper) {
-            super(helper);
-        }
 
         public SheepConverter(ConvertiblesReloadListener.EntityEntry.Attributes helper) {
             super(helper);
