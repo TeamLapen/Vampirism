@@ -106,7 +106,7 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
                     return InteractionResult.SUCCESS;
                 }
                 case STRUCTUREWRONG -> {
-                    player.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual_structure_wrong"), true);
+                    player.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual_missing_pillars"), true);
                     return InteractionResult.SUCCESS;
                 }
                 case INVMISSING -> player.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual_missing_times"), true);
