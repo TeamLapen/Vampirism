@@ -237,7 +237,7 @@ public abstract class GuiRadialMenu<T> extends Screen {
     @Override
     public boolean keyPressed(int key, int scanCode, int modifiers) {
         int adjustedKey = key - 48;
-        if (adjustedKey >= 0 && adjustedKey < radialMenuSlots.size()) {
+        if (adjustedKey >= 0 && adjustedKey <= radialMenuSlots.size()) {
             selectedItem = adjustedKey == 0 ? radialMenuSlots.size() : adjustedKey;
             selectedItem = selectedItem - 1; // Offset by 1 because 0 based indexing but users see 1 indexed
             mouseClicked(0, 0, 0);
