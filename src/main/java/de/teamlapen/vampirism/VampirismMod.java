@@ -115,6 +115,7 @@ public class VampirismMod {
         modbus.addListener(this::loadComplete);
         modbus.addListener(this::registerCapabilities);
         modbus.addListener(this::finalizeConfiguration);
+        modbus.addListener(VersionUpdater::catchModVersionMismatch);
 
         DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ClientRegistryHandler::init);
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
@@ -126,6 +127,7 @@ public class VampirismMod {
         MinecraftForge.EVENT_BUS.addListener(this::onCommandsRegister);
         MinecraftForge.EVENT_BUS.addListener(this::onAddReloadListenerEvent);
         MinecraftForge.EVENT_BUS.addListener(this::onServerStarting);
+        MinecraftForge.EVENT_BUS.addListener(VersionUpdater::checkVersionUpdated);
 
         VampirismConfig.init();
 
