@@ -6,16 +6,18 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModRefinements;
-import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.AreaParticleCloudEntity;
+import de.teamlapen.vampirism.entity.player.runnable.DispatchedDash;
+import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -42,42 +44,41 @@ public class TeleportVampireAction extends DefaultVampireAction {
             return false;
         }
         BlockPos pos = null;
+        Level level = player.getCommandSenderWorld();
         if (target.getType() == HitResult.Type.BLOCK) {
-            if (player.getCommandSenderWorld().getBlockState(((BlockHitResult) target).getBlockPos()).getMaterial().blocksMotion()) {
-                pos = ((BlockHitResult) target).getBlockPos().above();
+            if (level.getBlockState(((BlockHitResult) target).getBlockPos()).getMaterial().blocksMotion()) {
+                pos = ((BlockHitResult) target).getBlockPos().relative(((BlockHitResult) target).getDirection());
             }
         } else {//TODO better solution / remove
-            if (player.getCommandSenderWorld().getBlockState(((EntityHitResult) target).getEntity().blockPosition()).getMaterial().blocksMotion()) {
+            if (level.getBlockState(((EntityHitResult) target).getEntity().blockPosition()).getMaterial().blocksMotion()) {
                 pos = ((EntityHitResult) target).getEntity().blockPosition();
             }
         }
 
         if (pos != null) {
             player.setPos(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
-            if (player.getCommandSenderWorld().containsAnyLiquid(player.getBoundingBox()) || !player.getCommandSenderWorld().isUnobstructed(player)) { //isEntityColliding
+            if (level.containsAnyLiquid(player.getBoundingBox()) || !level.isUnobstructed(player)) { //isEntityColliding
                 pos = null;
             }
+            player.setPos(ox, oy, oz);
         }
 
 
         if (pos == null) {
-            player.setPos(ox, oy, oz);
             player.playSound(SoundEvents.NOTE_BLOCK_BASEDRUM.get(), 1, 1);
             return false;
         }
         if (player instanceof ServerPlayer playerMp) {
-            playerMp.disconnect();
-            playerMp.teleportTo(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
+            BlockPos finalPos = pos;
+            VampirePlayer.getOpt(playerMp).ifPresent(s -> s.dispatchAction(new DispatchedDash(new Vec3(finalPos.getX() + 0.5, finalPos.getY(), finalPos.getZ() + 0.5))));
         }
-        AreaParticleCloudEntity particleCloud = new AreaParticleCloudEntity(ModEntities.PARTICLE_CLOUD.get(), player.getCommandSenderWorld());
+        AreaParticleCloudEntity particleCloud = new AreaParticleCloudEntity(ModEntities.PARTICLE_CLOUD.get(), level);
         particleCloud.setPos(ox, oy, oz);
         particleCloud.setRadius(0.7F);
         particleCloud.setHeight(player.getBbHeight());
         particleCloud.setDuration(5);
         particleCloud.setSpawnRate(15);
-        player.getCommandSenderWorld().addFreshEntity(particleCloud);
-        player.getCommandSenderWorld().playSound(null, ox,oy,oz, ModSounds.TELEPORT_AWAY.get(), SoundSource.PLAYERS, 1f, 1f);
-        player.getCommandSenderWorld().playSound(null, player.getX(), player.getY(), player.getZ(),ModSounds.TELEPORT_HERE.get(), SoundSource.PLAYERS, 1f, 1f);
+        level.addFreshEntity(particleCloud);
         return true;
     }
 

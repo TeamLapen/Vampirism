@@ -136,6 +136,8 @@ public class VampirismMod {
         if (OptifineHandler.isOptifineLoaded()) {
             LOGGER.warn("Using Optifine. Expect visual glitches and reduces blood vision functionality if using shaders.");
         }
+
+        RegistryManager.registerActions();
     }
 
     public VersionChecker.VersionInfo getVersionInfo() {

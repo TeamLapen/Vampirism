@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.entity.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.entity.player.lord.actions.LordActions;
 import de.teamlapen.vampirism.entity.player.lord.skills.LordSkills;
+import de.teamlapen.vampirism.entity.player.runnable.DispatchedDash;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.misc.VampirismDispenseBoatBehavior;
@@ -69,6 +70,10 @@ public class RegistryManager implements IInitListener {
         ModOils.register(modbus);
 
         VampirismFeatures.register(modbus);
+    }
+
+    public static void registerActions() {
+        DispatchedDash.register();
     }
 
     @SubscribeEvent

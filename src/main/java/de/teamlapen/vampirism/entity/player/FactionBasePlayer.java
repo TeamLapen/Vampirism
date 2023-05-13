@@ -4,13 +4,12 @@ import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import de.teamlapen.vampirism.api.entity.player.actions.IAction;
-import de.teamlapen.vampirism.api.util.ItemOrdering;
+import de.teamlapen.vampirism.api.entity.player.runnable.IPlayerRunnable;
+import de.teamlapen.vampirism.api.entity.player.runnable.ISaveablePlayerRunnable;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -21,8 +20,8 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Basic class for all of Vampirism's players.
@@ -36,6 +35,7 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
      * {@code @NotNull} on server, otherwise {@code null}
      */
     private final @Nullable TaskManager taskManager;
+    private final List<IPlayerRunnable<T>> dispatchedActions = new ArrayList<>();
 
     public FactionBasePlayer(Player player) {
         this.player = player;
@@ -97,6 +97,13 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
         } else {
             LOGGER.debug("The player is loaded on the client side and therefore taskmaster related data is missing");
         }
+        nbt.getList("dispatchedActions", 10).stream().map(CompoundTag.class::cast).forEach(x -> {
+            var constructor = ISaveablePlayerRunnable.CONSTRUCTORS.get(new ResourceLocation(x.getString("id")));
+            if (constructor != null) {
+                //noinspection unchecked
+                this.dispatchedActions.add((IPlayerRunnable<T>) constructor.apply(x));
+            }
+        });
     }
 
     @Override
@@ -120,7 +127,20 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
     public void onUpdate() {
         if (!isRemote()) {
             this.taskManager.tick();
+            this.dispatchedActions.removeIf(action -> {
+                if (action.run((T) this)) {
+                    action.shutdown((T) this);
+                    return true;
+                }
+                return false;
+            });
         }
+    }
+
+    public void dispatchAction(IPlayerRunnable<T> task) {
+        //noinspection unchecked
+        task.setUp((T) this);
+        this.dispatchedActions.add(task);
     }
 
     public void saveData(@NotNull CompoundTag nbt) {
@@ -129,6 +149,14 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
         } else {
             LOGGER.debug("The player is saved on the client side and therefore taskmaster related data is missing");
         }
+
+        var dispatched = new ListTag();
+        this.dispatchedActions.stream().filter(ISaveablePlayerRunnable.class::isInstance).map(s -> {
+            CompoundTag tag = ((ISaveablePlayerRunnable<T>) s).writeNBT();
+            tag.putString("id", ((ISaveablePlayerRunnable<T>) s).getID().toString());
+            return tag;
+        }).forEach(dispatched::add);
+        nbt.put("dispatchedActions", dispatched);
     }
 
     /**
