@@ -239,6 +239,8 @@ public class ModItems {
 
     public static final RegistryObject<OilBottleItem> OIL_BOTTLE = register("oil_bottle", () -> new OilBottleItem(props().stacksTo(1)));
 
+    public static final RegistryObject<Item> MOTHER_CORE = register("mother_core", () -> new Item(props().rarity(Rarity.EPIC)));
+
     static void registerCraftingRecipes() {
         // Brewing
         BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER)), Ingredient.of(new ItemStack(PURE_SALT.get())), new ItemStack(PURE_SALT_WATER.get()));
