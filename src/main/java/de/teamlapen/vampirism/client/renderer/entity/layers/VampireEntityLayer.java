@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.renderer.entity.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.client.renderer.entity.ConvertedCreatureRenderer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
@@ -32,7 +33,8 @@ public class VampireEntityLayer<T extends LivingEntity, U extends EntityModel<T>
 
     @Override
     public void render(@NotNull PoseStack matrixStack, @NotNull MultiBufferSource iRenderTypeBuffer, int i, @NotNull T entity, float v, float v1, float v2, float v3, float v4, float v5) {
-        if (!entity.isInvisible() && (!checkIfRender || ConvertedCreatureRenderer.renderOverlay)) {
+        //noinspection ConstantValue
+        if (!entity.isInvisible() && (!checkIfRender || ConvertedCreatureRenderer.renderOverlay) && Minecraft.getInstance().textureManager.getTexture(overlay) != null) {
             renderColoredCutoutModel(this.getParentModel(), overlay, matrixStack, iRenderTypeBuffer, i, entity, 1, 1, 1);
         }
     }
