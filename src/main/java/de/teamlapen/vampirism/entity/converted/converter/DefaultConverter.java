@@ -9,16 +9,19 @@ import de.teamlapen.vampirism.data.reloadlistener.ConvertiblesReloadListener;
 import de.teamlapen.vampirism.entity.converted.DefaultConvertingHandler;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 
+import java.util.Optional;
+
 public class DefaultConverter implements Converter {
 
     public static final Codec<DefaultConverter> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ConvertiblesReloadListener.EntityEntry.Attributes.CODEC.optionalFieldOf("attribute_helper", ConvertiblesReloadListener.EntityEntry.Attributes.DEFAULT).forGetter(i -> i.helper)
+            ConvertiblesReloadListener.EntityEntry.Attributes.CODEC.optionalFieldOf("attribute_helper").forGetter(i -> Optional.ofNullable(i.helper))
     ).apply(instance, DefaultConverter::new));
 
     protected final ConvertiblesReloadListener.EntityEntry.Attributes helper;
 
-    public DefaultConverter(ConvertiblesReloadListener.EntityEntry.Attributes helper) {
-        this.helper = helper;
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public DefaultConverter(Optional<ConvertiblesReloadListener.EntityEntry.Attributes> helper) {
+        this.helper = helper.orElse(ConvertiblesReloadListener.EntityEntry.Attributes.DEFAULT);
     }
 
     public DefaultConverter() {
