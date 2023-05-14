@@ -20,6 +20,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 public class ConvertedCowEntity extends ConvertedCreatureEntity<Cow> {
     public ConvertedCowEntity(EntityType<? extends ConvertedCreatureEntity> type, Level world) {
         super(type, world);
@@ -59,10 +61,11 @@ public class ConvertedCowEntity extends ConvertedCreatureEntity<Cow> {
     public static class CowConverter extends DefaultConverter {
 
         public static final Codec<CowConverter> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                ConvertiblesReloadListener.EntityEntry.Attributes.CODEC.optionalFieldOf("attribute_helper", ConvertiblesReloadListener.EntityEntry.Attributes.DEFAULT).forGetter(i -> i.helper)
+                ConvertiblesReloadListener.EntityEntry.Attributes.CODEC.optionalFieldOf("attribute_helper").forGetter(i -> Optional.ofNullable(i.helper))
         ).apply(instance, CowConverter::new));
 
-        public CowConverter(ConvertiblesReloadListener.EntityEntry.Attributes helper) {
+        @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+        public CowConverter(Optional<ConvertiblesReloadListener.EntityEntry.Attributes> helper) {
             super(helper);
         }
 
