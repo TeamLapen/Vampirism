@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.core.ModSounds;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
@@ -48,11 +49,11 @@ public class DispatchedDash implements ISaveablePlayerRunnable<IVampirePlayer> {
 
     @Override
     public boolean run(@NotNull IVampirePlayer factionPlayer) {
-        if (this.steps-- > 0) {
-            Player player = factionPlayer.getRepresentingPlayer();
+        if (this.steps-- > 0 && factionPlayer.getRepresentingPlayer() instanceof ServerPlayer player) {
             Vec3 scale = this.targetPosition.subtract(player.position()).normalize().scale(this.distance);
             player.teleportRelative(scale.x, scale.y, scale.z);
             player.level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.TELEPORT_HERE.get(), SoundSource.PLAYERS, 1f, 1f);
+            player.connection.resetPosition();
             return this.steps <= 0;
         }
         return true;

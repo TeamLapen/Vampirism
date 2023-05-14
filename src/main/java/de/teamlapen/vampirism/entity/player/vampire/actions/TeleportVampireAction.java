@@ -36,50 +36,54 @@ public class TeleportVampireAction extends DefaultVampireAction {
             dist *= VampirismConfig.BALANCE.vrTeleportDistanceMod.get();
         }
         HitResult target = UtilLib.getPlayerLookingSpot(player, dist);
-        double ox = player.getX();
-        double oy = player.getY();
-        double oz = player.getZ();
-        if (target.getType() == HitResult.Type.MISS) {
+
+        Level level = player.getCommandSenderWorld();
+        BlockPos targetPos = switch (target.getType()) {
+            case BLOCK -> {
+                var pos = ((BlockHitResult) target).getBlockPos().relative(((BlockHitResult) target).getDirection());
+                yield level.getBlockState(pos.below()).getMaterial().blocksMotion() ? pos : pos.below();
+            }
+            case ENTITY -> {
+                var pos = ((EntityHitResult) target).getEntity().blockPosition();
+                yield level.getBlockState(pos).getMaterial().blocksMotion() ? null : pos;
+            }
+            default -> null;
+        };
+
+        if (targetPos == null) {
             player.playSound(SoundEvents.NOTE_BLOCK_BASS.get(), 1, 1);
             return false;
         }
-        BlockPos pos = null;
-        Level level = player.getCommandSenderWorld();
-        if (target.getType() == HitResult.Type.BLOCK) {
-            if (level.getBlockState(((BlockHitResult) target).getBlockPos()).getMaterial().blocksMotion()) {
-                pos = ((BlockHitResult) target).getBlockPos().relative(((BlockHitResult) target).getDirection());
-            }
-        } else {//TODO better solution / remove
-            if (level.getBlockState(((EntityHitResult) target).getEntity().blockPosition()).getMaterial().blocksMotion()) {
-                pos = ((EntityHitResult) target).getEntity().blockPosition();
-            }
+
+        Vec3 currentPosition = player.position();
+        player.setPos(targetPos.getX() + 0.5, targetPos.getY() + 0.1, targetPos.getZ() + 0.5);
+        if (level.containsAnyLiquid(player.getBoundingBox()) || !level.isUnobstructed(player)) {
+            targetPos = null;
         }
-
-        if (pos != null) {
-            player.setPos(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
-            if (level.containsAnyLiquid(player.getBoundingBox()) || !level.isUnobstructed(player)) { //isEntityColliding
-                pos = null;
-            }
-            player.setPos(ox, oy, oz);
-        }
+        player.setPos(currentPosition);
 
 
-        if (pos == null) {
+        if (targetPos == null) {
             player.playSound(SoundEvents.NOTE_BLOCK_BASEDRUM.get(), 1, 1);
             return false;
         }
+
         if (player instanceof ServerPlayer playerMp) {
-            BlockPos finalPos = pos;
+            BlockPos finalPos = targetPos;
             VampirePlayer.getOpt(playerMp).ifPresent(s -> s.dispatchAction(new DispatchedDash(new Vec3(finalPos.getX() + 0.5, finalPos.getY(), finalPos.getZ() + 0.5))));
         }
+        spawnCloud(level, player.position(), player.getBbHeight());
+        return true;
+    }
+
+    private void spawnCloud(Level level, Vec3 position, float height) {
         AreaParticleCloudEntity particleCloud = new AreaParticleCloudEntity(ModEntities.PARTICLE_CLOUD.get(), level);
-        particleCloud.setPos(ox, oy, oz);
+        particleCloud.setPos(position);
         particleCloud.setRadius(0.7F);
-        particleCloud.setHeight(player.getBbHeight());
+        particleCloud.setHeight(height);
         particleCloud.setDuration(5);
         particleCloud.setSpawnRate(15);
         level.addFreshEntity(particleCloud);
-        return true;
     }
 
     @Override
