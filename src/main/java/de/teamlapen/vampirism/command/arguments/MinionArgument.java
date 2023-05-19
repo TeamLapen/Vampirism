@@ -79,9 +79,10 @@ public class MinionArgument implements ArgumentType<MinionArgument.MinionId> {
     public MinionId parse(StringReader reader) throws CommandSyntaxException {
         StringBuilder builder = new StringBuilder();
         boolean isQuotes = false;
+        char prev = 0;
         while (reader.canRead()) {
             char c = reader.peek();
-            if (c == '\"') {
+            if (c == '\"' && prev != '\\') {
                 isQuotes = !isQuotes;
                 reader.skip();
                 continue;
@@ -90,6 +91,7 @@ public class MinionArgument implements ArgumentType<MinionArgument.MinionId> {
             }
             builder.append(c);
             reader.skip();
+            prev = c;
         }
         return new MinionId(builder.toString());
     }
