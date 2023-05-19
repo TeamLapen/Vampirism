@@ -18,6 +18,7 @@ import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
+import de.teamlapen.vampirism.items.oil.EvasionOil;
 import de.teamlapen.vampirism.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.tileentity.TotemHelper;
@@ -321,7 +322,7 @@ public class ModEntityEventHandler {
         if (event.getSource() instanceof EntityDamageSource && !event.getSource().isBypassArmor()) {
             for (ItemStack armorStack : event.getEntityLiving().getArmorSlots()) {
                 if(OilUtils.getAppliedOil(armorStack).map(oil -> {
-                    if (oil == ModOils.EVASION.get()) {
+                    if (oil instanceof EvasionOil && ((EvasionOil)oil).evasionChance() > Optional.ofNullable(event.getSource().getEntity()).map(entity -> entity.level.random.nextFloat()).orElse(1f)) {
                         event.setAmount(0);
                         oil.reduceDuration(armorStack, oil, oil.getDurationReduction());
                         return true;
