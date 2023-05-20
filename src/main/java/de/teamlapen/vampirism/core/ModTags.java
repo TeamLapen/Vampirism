@@ -137,12 +137,6 @@ public class ModTags {
             public static final TagKey<Biome> MOTHER = tag("has_structure/mother");
         }
 
-        public static class NoStructure {
-            public static final TagKey<Biome> HUNTER_TENT = tag("no_structure/hunter_tent");
-            public static final TagKey<Biome> VAMPIRE_DUNGEON = tag("no_structure/vampire_dungeon");
-            public static final TagKey<Biome> MOTHER = tag("no_structure/mother");
-        }
-
         public static class HasSpawn {
             public static final TagKey<Biome> VAMPIRE = tag("has_spawn/vampire");
             public static final TagKey<Biome> ADVANCED_VAMPIRE = tag("has_spawn/advanced_vampire");

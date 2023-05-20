@@ -10,13 +10,10 @@ import de.teamlapen.vampirism.world.gen.feature.treedecorators.TrunkCursedVineDe
 import de.teamlapen.vampirism.world.gen.structure.huntercamp.HunterCampStructure;
 import de.teamlapen.vampirism.world.gen.structure.mother.MotherStructure;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
@@ -28,10 +25,6 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import net.minecraftforge.registries.holdersets.AndHolderSet;
-import net.minecraftforge.registries.holdersets.NotHolderSet;
-
-import java.util.List;
 
 /**
  * For new dynamic registry related things see {@link VampirismFeatures} and {@link VanillaStructureModifications}
@@ -60,11 +53,8 @@ public class ModFeatures {
 
     public static void createStructures(BootstapContext<Structure> context) {
         HolderGetter<Biome> lookup = context.lookup(Registries.BIOME);
-        context.register(ModFeatures.HUNTER_CAMP, new HunterCampStructure(StructuresAccessor.structure(getWithExclusion(ModTags.Biomes.HasStructure.HUNTER_TENT, ModTags.Biomes.NoStructure.HUNTER_TENT, lookup), TerrainAdjustment.NONE)));
-        context.register(ModFeatures.MOTHER_KEY, new MotherStructure(StructuresAccessor.structure(getWithExclusion(ModTags.Biomes.HasStructure.MOTHER, ModTags.Biomes.NoStructure.MOTHER, lookup), TerrainAdjustment.NONE)));
-    }
 
-    private static <T> HolderSet<T> getWithExclusion(TagKey<T> normal, TagKey<T> exclusion, HolderGetter<T> holder) {
-        return new AndHolderSet<>(List.of(holder.getOrThrow(normal), new NotHolderSet<>((HolderLookup.RegistryLookup<T>) holder, holder.getOrThrow(exclusion))));
+        context.register(ModFeatures.HUNTER_CAMP, new HunterCampStructure(StructuresAccessor.structure(lookup.getOrThrow(ModTags.Biomes.HasStructure.HUNTER_TENT), TerrainAdjustment.NONE)));
+        context.register(ModFeatures.MOTHER_KEY, new MotherStructure(StructuresAccessor.structure(lookup.getOrThrow(ModTags.Biomes.HasStructure.MOTHER), TerrainAdjustment.NONE)));
     }
 }
