@@ -58,6 +58,9 @@ public class MotherBlockEntity extends BlockEntity {
         this.canBeDestroyed = true;
         this.connector.foreachFacing(this.level, this.worldPosition, (level, pos, state) -> level.setBlock(pos, state.setValue(DarkSpruceLogs.INVULNERABLE, false), 3));
         this.setChanged();
+        if (this.level != null) {
+            this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
+        }
     }
 
     @Override

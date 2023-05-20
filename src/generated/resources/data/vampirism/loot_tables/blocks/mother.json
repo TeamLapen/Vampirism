@@ -1,3 +1,49 @@
 {
-  "type": "minecraft:block"
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:mother_core"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:pure_blood_4"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:human_heart",
+          "quality": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:diamond_block"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:vampire_blood_bottle",
+          "quality": 10
+        }
+      ],
+      "name": "bonus",
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 4.0,
+        "min": 1.0
+      }
+    }
+  ]
 }
