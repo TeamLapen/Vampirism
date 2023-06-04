@@ -39,6 +39,7 @@ public class CursedBarkBlock extends Block {
     public CursedBarkBlock() {
         super(AbstractBlock.Properties.of(Material.REPLACEABLE_PLANT, MaterialColor.NONE).noCollission().strength(0.0F).sound(SoundType.VINE));
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(FACING2, Direction.NORTH).setValue(AXIS, Direction.Axis.Y));
+        ((FireBlock) Blocks.FIRE).setFlammable(this, 5, 5);
     }
 
     @Override
