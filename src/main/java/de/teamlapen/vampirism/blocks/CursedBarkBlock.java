@@ -13,6 +13,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -30,8 +32,8 @@ public abstract class CursedBarkBlock extends Block implements HolyWaterEffectCo
 
     public CursedBarkBlock() {
         super(BlockBehaviour.Properties.of(Material.REPLACEABLE_PLANT, MaterialColor.NONE).noCollission().strength(0.0F).sound(SoundType.VINE));
+        ((FireBlock) Blocks.FIRE).setFlammable(this, 5, 5);
     }
-
 
     protected void moveEntityTo(@NotNull Level level, @NotNull Entity entity, @NotNull BlockPos targetPos) {
         if (targetPos.equals(entity.blockPosition())) return;
