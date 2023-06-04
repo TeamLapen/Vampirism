@@ -1,4 +1,7 @@
 {
   "parent": "vampirism:block/garlic_diffuser",
-  "render_type": "minecraft:cutout"
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "garlic": "vampirism:block/garlic_diffuser_inside_improved"
+  }
 }

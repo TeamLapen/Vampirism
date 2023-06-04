@@ -40,7 +40,7 @@ public class BlockStateGenerator extends BlockStateProvider {
         //default blocks
         horizontalBlock(ModBlocks.GARLIC_DIFFUSER_NORMAL.get(), models().withExistingParent("garlic_diffuser_normal", modLoc("block/garlic_diffuser")).renderType(cutout));
         horizontalBlock(ModBlocks.GARLIC_DIFFUSER_WEAK.get(), models().withExistingParent("garlic_diffuser_weak", modLoc("block/garlic_diffuser")).renderType(cutout));
-        horizontalBlock(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get(), models().withExistingParent("garlic_diffuser_improved", modLoc("block/garlic_diffuser")).renderType(cutout));
+        horizontalBlock(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get(), models().withExistingParent("garlic_diffuser_improved", modLoc("block/garlic_diffuser")).texture("garlic", "vampirism:block/garlic_diffuser_inside_improved").renderType(cutout));
         horizontalBlock(ModBlocks.ALTAR_CLEANSING.get(), models().getExistingFile(modLoc("block/altar_cleansing")));
         horizontalBlock(ModBlocks.BLOOD_GRINDER.get(), models().getExistingFile(modLoc("block/blood_grinder")));
 
