@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -62,15 +61,15 @@ public class MinionArgument implements ArgumentType<MinionArgument.MinionId> {
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
         String s = builder.getRemaining();
-        filterResources(playerMinionIds.get(), s, MinionId::toEscaped, builder::suggest);
+        filterResources(playerMinionIds.get(), s, builder::suggest);
         return builder.buildFuture();
     }
 
-    <T> void filterResources(Iterable<T> p_210512_0_, String p_210512_1_, Function<T, String> p_210512_2_, Consumer<String> consumer) {
-        for(T t : p_210512_0_) {
-            String id = p_210512_2_.apply(t);
-            if (SharedSuggestionProvider.matchesSubStr(p_210512_1_, id)) {
-                consumer.accept(id);
+    void filterResources(Iterable<MinionId> arguments, String commandText, Consumer<String> consumer) {
+        for (MinionId id : arguments) {
+            if (SharedSuggestionProvider.matchesSubStr(commandText, id.toEscaped()) || SharedSuggestionProvider.matchesSubStr(commandText, id.toShort())) {
+                consumer.accept(id.toShort());
+                consumer.accept(id.toEscaped());
             }
         }
     }
@@ -110,14 +109,14 @@ public class MinionArgument implements ArgumentType<MinionArgument.MinionId> {
         public MinionId(String id) throws NumberFormatException{
             int first = id.indexOf(':');
             this.player = id.substring(0, first);
-            int second = id.indexOf('/');
+            int second = id.indexOf('|');
             if (second == -1) {
-                this.id = Integer.parseInt(id.substring(first + 1));
+                this.id = Integer.parseInt(id.substring(first + 1).trim());
                 this.name = "";
             } else {
-                this.id = Integer.parseInt(id.substring(first + 1, second));
+                this.id = Integer.parseInt(id.substring(first + 1, second).trim());
                 if (id.length() > second + 1) {
-                    this.name = id.substring(second + 1);
+                    this.name = id.substring(second + 1).trim();
                 } else {
                     this.name = "";
                 }
@@ -130,7 +129,7 @@ public class MinionArgument implements ArgumentType<MinionArgument.MinionId> {
 
         @Override
         public String toString() {
-            return player + ":" + id + "/" + name;
+            return player + ":" + id + " | " + name;
         }
 
         public String toEscaped() {
@@ -139,6 +138,10 @@ public class MinionArgument implements ArgumentType<MinionArgument.MinionId> {
                 res = "\"" + res + "\"";
             }
             return res;
+        }
+
+        public String toShort() {
+            return player + ":" + id;
         }
     }
 
