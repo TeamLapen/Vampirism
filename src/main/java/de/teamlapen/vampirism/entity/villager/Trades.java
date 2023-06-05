@@ -6,11 +6,7 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.converted.ConvertedVillagerEntity;
 import de.teamlapen.vampirism.items.BloodBottleItem;
 import de.teamlapen.vampirism.util.TotemHelper;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -21,15 +17,13 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.MapItem;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
-import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class Trades {
-    public static final VillagerTrades.ItemListing[] converted_trades = new VillagerTrades.ItemListing[]{new net.minecraft.world.entity.npc.VillagerTrades.EmeraldForItems(ModItems.HUMAN_HEART.get(), 9, 2, 2), new VillagerTrades.ItemsForEmeralds(ModItems.HUMAN_HEART.get(), 3, 9, 2), new ItemsForEmeraldsTradeWithDamage(BloodBottleItem.getStackWithDamage(9), 1, 3, 12, 2)};
+    public static final VillagerTrades.ItemListing[] converted_trades = new VillagerTrades.ItemListing[]{new net.minecraft.world.entity.npc.VillagerTrades.EmeraldForItems(ModItems.HUMAN_HEART.get(), 9, 2, 2), new VillagerTrades.ItemsForEmeralds(ModItems.HUMAN_HEART.get(), 3, 9, 2), new ItemsForEmeraldsTradeWithDamage(BloodBottleItem.getStackWithDamage(9), 1, 1, 20, 2)};
 
     /**
      * copy of {@link VillagerTrades.ItemsForEmeralds} with damage to {@link ItemStack}
