@@ -6,6 +6,7 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import de.teamlapen.vampirism.world.MinionWorldData;
@@ -14,14 +15,16 @@ import net.minecraft.command.ISuggestionProvider;
 import net.minecraft.command.arguments.IArgumentSerializer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.server.management.PlayerProfileCache;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -32,6 +35,7 @@ import java.util.stream.Collectors;
  */
 public class MinionArgument implements ArgumentType<MinionArgument.MinionId> {
 
+    public static final SimpleCommandExceptionType NO_MINION_FOUND = new SimpleCommandExceptionType(new TranslationTextComponent("command.vampirism.argument.minion.notfound"));
     private final Supplier<Collection<MinionId>> playerMinionIds;
 
     public MinionArgument() {
@@ -62,15 +66,15 @@ public class MinionArgument implements ArgumentType<MinionArgument.MinionId> {
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
         String s = builder.getRemaining();
-        filterResources(playerMinionIds.get(), s, MinionId::toString, builder::suggest);
+        filterResources(playerMinionIds.get(), s, builder::suggest);
         return builder.buildFuture();
     }
 
-    <T> void filterResources(Iterable<T> p_210512_0_, String p_210512_1_, Function<T, String> p_210512_2_, Consumer<String> consumer) {
-        for(T t : p_210512_0_) {
-            String id = p_210512_2_.apply(t);
-            if (ISuggestionProvider.matchesSubStr(p_210512_1_, id)) {
-                consumer.accept(id);
+    void filterResources(Iterable<MinionId> arguments, String commandText, Consumer<String> consumer) {
+        for (MinionId id : arguments) {
+            if (ISuggestionProvider.matchesSubStr(commandText, id.toEscaped()) || ISuggestionProvider.matchesSubStr(commandText, id.toShort())) {
+                consumer.accept(id.toShort());
+                consumer.accept(id.toEscaped());
             }
         }
     }
@@ -78,15 +82,26 @@ public class MinionArgument implements ArgumentType<MinionArgument.MinionId> {
     @Override
     public MinionId parse(StringReader reader) throws CommandSyntaxException {
         StringBuilder builder = new StringBuilder();
+        boolean isQuotes = false;
+        char prev = 0;
         while (reader.canRead()) {
             char c = reader.peek();
-            if (c == ' ') {
+            if (c == '\"' && prev != '\\') {
+                isQuotes = !isQuotes;
+                reader.skip();
+                continue;
+            } else if (c == ' ' && !isQuotes) {
                 break;
             }
             builder.append(c);
             reader.skip();
+            prev = c;
         }
-        return new MinionId(builder.toString());
+        MinionId id = new MinionId(builder.toString());
+        if (this.playerMinionIds.get().contains(id)) {
+            return id;
+        }
+        throw NO_MINION_FOUND.create();
     }
 
     public static class MinionId {
@@ -103,14 +118,14 @@ public class MinionArgument implements ArgumentType<MinionArgument.MinionId> {
         public MinionId(String id) throws NumberFormatException{
             int first = id.indexOf(':');
             this.player = id.substring(0, first);
-            int second = id.indexOf('/');
+            int second = id.indexOf('|');
             if (second == -1) {
-                this.id = Integer.parseInt(id.substring(first + 1));
+                this.id = Integer.parseInt(id.substring(first + 1).trim());
                 this.name = "";
             } else {
-                this.id = Integer.parseInt(id.substring(first + 1, second));
+                this.id = Integer.parseInt(id.substring(first + 1, second).trim());
                 if (id.length() > second + 1) {
-                    this.name = id.substring(second + 1);
+                    this.name = id.substring(second + 1).trim();
                 } else {
                     this.name = "";
                 }
@@ -123,7 +138,41 @@ public class MinionArgument implements ArgumentType<MinionArgument.MinionId> {
 
         @Override
         public String toString() {
-            return player + ":" + id + "/" + name;
+            if (this.name.isEmpty()) {
+                return this.player + ":" + this.id;
+            } else {
+                return this.player + ":" + this.id + " | " + this.name;
+            }
+        }
+
+        public String toEscaped() {
+            String res = StringEscapeUtils.escapeJava(this.player + ":" + this.id + " | " + this.name);
+            if (res.contains(" ")) {
+                res = "\"" + res + "\"";
+            }
+            return res;
+        }
+
+        public String toShort() {
+            return this.player + ":" + this.id;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            MinionId id1 = (MinionId) o;
+
+            if (this.id != id1.id) return false;
+            return Objects.equals(this.player, id1.player);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = this.player != null ? this.player.hashCode() : 0;
+            result = 31 * result + this.id;
+            return result;
         }
     }
 
