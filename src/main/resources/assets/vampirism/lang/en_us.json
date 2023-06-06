@@ -930,6 +930,7 @@
   "command.vampirism.argument.action.notfound": "The given action %s does not exist",
   "command.vampirism.argument.faction.notfound": "The given faction %s does not exist",
   "command.vampirism.argument.faction.notplayable": "You can not play as %s",
+  "command.vampirism.argument.minion.notfound": "Minion not found",
   "command.vampirism.biome.not_found": "The biome %s does not exist",
   "command.vampirism.base.gender.success": "Successfully set gender for lord title display",
   "command.vampirism.base.lord.successful": "%s is now a %s lord level %s",
