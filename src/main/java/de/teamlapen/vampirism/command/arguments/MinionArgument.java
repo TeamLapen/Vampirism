@@ -6,6 +6,7 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import de.teamlapen.vampirism.world.MinionWorldData;
@@ -14,6 +15,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.players.GameProfileCache;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -21,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -33,6 +36,7 @@ import java.util.stream.Collectors;
  */
 public class MinionArgument implements ArgumentType<MinionArgument.MinionId> {
 
+    public static final SimpleCommandExceptionType NO_MINION_FOUND = new SimpleCommandExceptionType(Component.translatable("command.vampirism.argument.minion.notfound"));
     private final Supplier<Collection<MinionId>> playerMinionIds;
 
     public MinionArgument() {
@@ -92,7 +96,11 @@ public class MinionArgument implements ArgumentType<MinionArgument.MinionId> {
             reader.skip();
             prev = c;
         }
-        return new MinionId(builder.toString());
+        MinionId id = new MinionId(builder.toString());
+        if (this.playerMinionIds.get().contains(id)) {
+            return id;
+        }
+        throw NO_MINION_FOUND.create();
     }
 
     public static class MinionId {
@@ -129,11 +137,15 @@ public class MinionArgument implements ArgumentType<MinionArgument.MinionId> {
 
         @Override
         public String toString() {
-            return player + ":" + id + " | " + name;
+            if (this.name.isEmpty()) {
+                return this.player + ":" + this.id;
+            } else {
+                return this.player + ":" + this.id + " | " + this.name;
+            }
         }
 
         public String toEscaped() {
-            var res = StringEscapeUtils.escapeJava(toString());
+            var res = StringEscapeUtils.escapeJava(this.player + ":" + this.id + " | " + this.name);
             if (res.contains(" ")) {
                 res = "\"" + res + "\"";
             }
@@ -141,7 +153,25 @@ public class MinionArgument implements ArgumentType<MinionArgument.MinionId> {
         }
 
         public String toShort() {
-            return player + ":" + id;
+            return this.player + ":" + this.id;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            MinionId id1 = (MinionId) o;
+
+            if (this.id != id1.id) return false;
+            return Objects.equals(this.player, id1.player);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = this.player != null ? this.player.hashCode() : 0;
+            result = 31 * result + this.id;
+            return result;
         }
     }
 
