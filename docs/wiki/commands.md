@@ -152,6 +152,20 @@ Dimensions and Biomes can be blacklisted for vampire sundamage.
 - `<dimension>`: the dimension id to enforce (optional). If not given the current dimension is used.
 Dimensions can be enforced to deliver sundamage to vampires.
 
+### Modify Minion Inventory
+`/vampirism modifyMinionInventory <minionid> list`  
+`/vampirism modifyMinionInventory <minionid> <add|remove> <item> [<amount>]`
+
+- `<minionid>`: the minion id that identifies the player and the targeted minion. A minion can be identified by two ids:
+  - a short and simple version `playername:1`
+  - a more descriptive version `"playername:1 | minionname"`
+  
+  Both target the same minion, but with the descriptive version you know what minion you are targeting instead of using the internal number.
+- `<add|remove>`: select if you want to add or remove an item from the inventory
+- `<item>`: the item id of the item to add or remove. Supports nbt data.
+- `<amount>`: the amount of items to add or remove. Default is 1.
+
+
 ## Test Commands
 
 the test commands are prefixed with `/vampirism-test`
