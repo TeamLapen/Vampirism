@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.gui.screens.skills;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import de.teamlapen.vampirism.REFERENCE;
@@ -13,28 +12,24 @@ import de.teamlapen.vampirism.entity.player.skills.SkillTree;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.advancements.AdvancementTabType;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.gui.ScreenUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix4f;
 import org.lwjgl.system.NonnullDefault;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @NonnullDefault
-public class SkillsTabScreen extends GuiComponent {
+public class SkillsTabScreen {
 
     public static final int SCREEN_WIDTH = SkillsScreen.SCREEN_WIDTH - 18;
     public static final int SCREEN_HEIGHT = SkillsScreen.SCREEN_HEIGHT - 47;
@@ -100,98 +95,86 @@ public class SkillsTabScreen extends GuiComponent {
         return index;
     }
 
-    public void drawTab(@NotNull PoseStack stack, int x, int y, boolean selected) {
-        this.position.draw(stack, x, y, selected, this.index);
+    public void drawTab(@NotNull GuiGraphics graphics, int x, int y, boolean selected) {
+        this.position.draw(graphics, x, y, selected, this.index);
     }
 
-    public void drawIcon(PoseStack stack, int x, int y, ItemRenderer itemRenderer) {
-        this.position.drawIcon(stack, x, y, this.index, itemRenderer, this.icon);
+    public void drawIcon(GuiGraphics graphics, int x, int y) {
+        this.position.drawIcon(graphics, x, y, this.index, this.icon);
     }
 
     public boolean isMouseOver(int guiLeft, int guiTop, double mouseX, double mouseY) {
         return this.position.isMouseOver(guiLeft, guiTop, this.index, mouseX, mouseY);
     }
 
-    public void drawContents(@NotNull PoseStack stack) {
+    public void drawContents(@NotNull GuiGraphics graphics, int x, int y) {
+        PoseStack pose = graphics.pose();
 
-        stack.pushPose();
-        RenderSystem.enableDepthTest();
-        stack.translate(0.0F, 0.0F, 950.0F);
-        RenderSystem.colorMask(false, false, false, false);
-        fill(stack, 4680, 2260, -4680, -2260, -16777216);
-        RenderSystem.colorMask(true, true, true, true);
-        stack.translate(0.0F, 0.0F, -950.0F);
-        RenderSystem.depthFunc(518);
-        fill(stack, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, -16777216);
-        RenderSystem.depthFunc(515);
+        graphics.enableScissor(x, y, x + SCREEN_WIDTH, y + SCREEN_HEIGHT);
+        pose.pushPose();
+        pose.translate(x, y, 0);
 
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, this.background);
 
         int i = getX();
         int j = getY();
         int k = i % 16;
         int l = j % 16;
-        stack.scale(this.zoom, this.zoom, 1);
+        pose.scale(this.zoom, this.zoom, 1);
 
         for (int i1 = -1; i1 <= 15 / this.zoom; ++i1) {
             for (int j1 = -1; j1 <= 12 / this.zoom; ++j1) {
-                blit(stack, k + 16 * i1, l + 16 * j1, 0.0F, 0.0F, 16, 16, 16, 16);
+                graphics.blit(this.background, k + 16 * i1, l + 16 * j1, 0.0F, 0.0F, 16, 16, 16, 16);
             }
         }
 
-        stack.pushPose();
-        stack.translate(i,j,0);
-        this.root.drawConnectivity(stack, 0, 0, true);
-        this.root.drawConnectivity(stack, 0, 0, false);
-        this.root.draw(stack, 0, 0);
-        stack.popPose();
+        this.root.drawConnectivity(graphics, i, j, true);
+        this.root.drawConnectivity(graphics, i, j, false);
+        this.root.draw(graphics, i, j);
+        pose.popPose();
+        graphics.disableScissor();
 
-        RenderSystem.depthFunc(518);
-        stack.translate(0.0F, 0.0F, -950.0F);
-        RenderSystem.colorMask(false, false, false, false);
-        fill(stack, 4680, 2260, -4680, -2260, -16777216);
-        RenderSystem.colorMask(true, true, true, true);
-        stack.translate(0.0F, 0.0F, 950.0F);
-        RenderSystem.depthFunc(515);
-        stack.popPose();
+//        RenderSystem.depthFunc(518);
+//        pose.translate(0.0F, 0.0F, -950.0F);
+//        RenderSystem.colorMask(false, false, false, false);
+//        graphics.fill(4680, 2260, -4680, -2260, -16777216);
+//        RenderSystem.colorMask(true, true, true, true);
+//        pose.translate(0.0F, 0.0F, 950.0F);
+//        RenderSystem.depthFunc(515);
+//        pose.popPose();
 
         if (this.minecraft.player.getEffect(ModEffects.OBLIVION.get()) != null) {
-            stack.pushPose();
-            RenderSystem.enableDepthTest();
-            stack.translate(0.0F, 0.0F, 200.0F);
-            fill(stack, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Mth.floor(0.5 * 255.0F) << 24);
-            RenderSystem.disableDepthTest();
-            stack.popPose();
-            stack.pushPose();
-            stack.translate(0, 0, 200);
-            this.drawDisableText(stack);
-            stack.popPose();
+            pose.pushPose();
+            pose.translate(0.0F, 0.0F, 200.0F);
+            graphics.fill(x, y, x + SCREEN_WIDTH, y + SCREEN_HEIGHT, Mth.floor(0.5 * 255.0F) << 24);
+            pose.translate(0, 0, 200);
+            this.drawDisableText(graphics, x, y);
+            pose.popPose();
         }
 
     }
 
-    public void drawTooltips(@NotNull PoseStack stack, int mouseX, int mouseY) {
-        stack.pushPose();
-        stack.translate(0.0F, 0.0F, 200.0F);
-        fill(stack, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Mth.floor(this.fade * 255.0F) << 24);
+    public void drawTooltips(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
+        PoseStack pose = graphics.pose();
+        pose.pushPose();
+        pose.translate(0.0F, 0.0F, -200.0F);
+        graphics.fill(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Mth.floor(this.fade * 255.0F) << 24);
         boolean flag = false;
         int scrollX = getX();
         int scrollY = getY();
         if (mouseX >= 0 && mouseX < 235 && mouseY >= 0 && mouseY < 173) {
             for (SkillNodeScreen nodeScreen : this.nodes.values()) {
-                if (nodeScreen.isMouseOver(mouseX / this.zoom, mouseY / this.zoom, scrollX,  scrollY)) {
+                if (nodeScreen.isMouseOver(mouseX / this.zoom, mouseY / this.zoom, scrollX, scrollY)) {
                     flag = true;
-                    stack.pushPose();
-                    stack.scale(this.zoom, this.zoom, 1);
-                    nodeScreen.drawHover(stack, mouseX / this.zoom, mouseY / this.zoom, this.fade, scrollX, scrollY);
-                    stack.popPose();
+                    pose.pushPose();
+                    pose.scale(this.zoom, this.zoom, 1);
+                    nodeScreen.drawHover(graphics, mouseX / this.zoom, mouseY / this.zoom, this.fade, scrollX, scrollY);
+                    pose.popPose();
                     break;
                 }
             }
         }
 
-        stack.popPose();
+        pose.popPose();
         if (flag) {
             this.fade = Mth.clamp(this.fade + 0.02F, 0.0F, 0.3F);
         } else {
@@ -268,39 +251,39 @@ public class SkillsTabScreen extends GuiComponent {
         return true;
     }
 
-    public void drawDisableText(@NotNull PoseStack mStack) {
+    public void drawDisableText(@NotNull GuiGraphics graphics, int x, int y) {
         if (this.minecraft.player.getEffect(ModEffects.OBLIVION.get()) == null) return;
 
         Component f = Component.translatable("text.vampirism.skill.unlock_unavailable").withStyle(ChatFormatting.WHITE);
         FormattedCharSequence s = Language.getInstance().getVisualOrder(f);
 
         int tooltipTextWidth = 219;
-        int tooltipX = 7;
-        int tooltipY = 17;
+        int tooltipX = 7 + x;
+        int tooltipY = 17 + y;
         int tooltipHeight = this.minecraft.font.lineHeight * 2;
         int backgroundColor = 0xF09b0404;//0xF0550404;;
         int borderColorStart = 0x505f0c0c;
         int borderColorEnd = (borderColorStart & 0xFEFEFE) >> 1 | borderColorStart & 0xFF000000;
         int zLevel = 0;
 
-        mStack.pushPose();
-        Matrix4f mat = mStack.last().pose();
-        ScreenUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 4, tooltipX + tooltipTextWidth + 3, tooltipY - 3, backgroundColor, backgroundColor);
-        ScreenUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY + tooltipHeight + 3, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 4, backgroundColor, backgroundColor);
-        ScreenUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 3, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3, backgroundColor, backgroundColor);
-        ScreenUtils.drawGradientRect(mat, zLevel, tooltipX - 4, tooltipY - 3, tooltipX - 3, tooltipY + tooltipHeight + 3, backgroundColor, backgroundColor);
-        ScreenUtils.drawGradientRect(mat, zLevel, tooltipX + tooltipTextWidth + 3, tooltipY - 3, tooltipX + tooltipTextWidth + 4, tooltipY + tooltipHeight + 3, backgroundColor, backgroundColor);
-        ScreenUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 3 + 1, tooltipX - 3 + 1, tooltipY + tooltipHeight + 3 - 1, borderColorStart, borderColorEnd);
-        ScreenUtils.drawGradientRect(mat, zLevel, tooltipX + tooltipTextWidth + 2, tooltipY - 3 + 1, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3 - 1, borderColorStart, borderColorEnd);
-        ScreenUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 3, tooltipX + tooltipTextWidth + 3, tooltipY - 3 + 1, borderColorStart, borderColorStart);
-        ScreenUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY + tooltipHeight + 2, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3, borderColorEnd, borderColorEnd);
+        PoseStack pose = graphics.pose();
+        pose.pushPose();
+        graphics.fillGradient(tooltipX - 3, tooltipY - 4, tooltipX + tooltipTextWidth + 3, tooltipY - 3, backgroundColor, backgroundColor);
+        graphics.fillGradient(tooltipX - 3, tooltipY + tooltipHeight + 3, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 4, backgroundColor, backgroundColor);
+        graphics.fillGradient(tooltipX - 3, tooltipY - 3, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3, backgroundColor, backgroundColor);
+        graphics.fillGradient(tooltipX - 4, tooltipY - 3, tooltipX - 3, tooltipY + tooltipHeight + 3, backgroundColor, backgroundColor);
+        graphics.fillGradient(tooltipX + tooltipTextWidth + 3, tooltipY - 3, tooltipX + tooltipTextWidth + 4, tooltipY + tooltipHeight + 3, backgroundColor, backgroundColor);
+        graphics.fillGradient(tooltipX - 3, tooltipY - 3 + 1, tooltipX - 3 + 1, tooltipY + tooltipHeight + 3 - 1, borderColorStart, borderColorEnd);
+        graphics.fillGradient(tooltipX + tooltipTextWidth + 2, tooltipY - 3 + 1, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3 - 1, borderColorStart, borderColorEnd);
+        graphics.fillGradient(tooltipX - 3, tooltipY - 3, tooltipX + tooltipTextWidth + 3, tooltipY - 3 + 1, borderColorStart, borderColorStart);
+        graphics.fillGradient(tooltipX - 3, tooltipY + tooltipHeight + 2, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3, borderColorEnd, borderColorEnd);
 
         MultiBufferSource.BufferSource renderType = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-        mStack.translate(0.0D, 0.0D, zLevel);
+        pose.translate(0.0D, 0.0D, zLevel);
 
-        this.minecraft.font.drawInBatch(s, (float) tooltipX + (tooltipTextWidth / 2f) - this.minecraft.font.width(f) / 2f, (float) tooltipY + (tooltipHeight / 2f) - 3, -1, true, mat, renderType, Font.DisplayMode.NORMAL, 0, 15728880);
+        this.minecraft.font.drawInBatch(s, (float) tooltipX + (tooltipTextWidth / 2f) - this.minecraft.font.width(f) / 2f, (float) tooltipY + (tooltipHeight / 2f) - 3, -1, true, pose.last().pose(), renderType, Font.DisplayMode.NORMAL, 0, 15728880);
 
         renderType.endBatch();
-        mStack.popPose();
+        pose.popPose();
     }
 }

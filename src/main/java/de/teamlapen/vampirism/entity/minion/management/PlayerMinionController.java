@@ -138,7 +138,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
         MinionInfo i = getMinionInfo(id, token);
         if (i != null) {
             int entityId = entity.getId();
-            ResourceKey<Level> dimension = entity.level.dimension();
+            ResourceKey<Level> dimension = entity.level().dimension();
             if (i.checkout(entityId, dimension)) {
                 //noinspection unchecked
                 return (T) i.data;
@@ -208,7 +208,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
                 } else {
                     m.claimMinionSlot(id, this);
                     m.copyPosition(p);
-                    p.level.addFreshEntity(m);
+                    p.level().addFreshEntity(m);
                     activateTask(id, MinionTasks.STAY.get());
                     return m;
                 }

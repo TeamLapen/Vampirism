@@ -33,7 +33,7 @@ public class ResetActionsCommand extends BasicCommand {
                 IActionHandler<?> handler = factionPlayer.getActionHandler();
                 if (handler != null) {
                     handler.resetTimers();
-                    commandSource.sendSuccess(Component.translatable("command.vampirism.test.resetactions"), false);
+                    commandSource.sendSuccess(() -> Component.translatable("command.vampirism.test.resetactions"), false);
                 }
             });
         }

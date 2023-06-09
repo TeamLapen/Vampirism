@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.misc;
 
 import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModOils;
@@ -10,13 +9,11 @@ import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.util.OilUtils;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraftforge.event.CreativeModeTabEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.function.Consumer;
+import java.util.Set;
 
 import static de.teamlapen.vampirism.core.ModBlocks.*;
 import static de.teamlapen.vampirism.core.ModItems.*;
@@ -24,20 +21,17 @@ import static de.teamlapen.vampirism.core.ModItems.*;
 @Mod.EventBusSubscriber(modid = REFERENCE.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class VampirismCreativeTab {
 
-    private static final Consumer<CreativeModeTab.Builder> BUILDER = builder -> {
-        builder.title(Component.translatable("itemGroup.vampirism"))
+    public static CreativeModeTab.Builder builder(Set<ItemLike> allItems) {
+        return CreativeModeTab.builder()
+                .title(Component.translatable("itemGroup.vampirism"))
                 .icon(() -> VAMPIRE_FANG.get().getDefaultInstance())
-                .displayItems(new VampirismDisplayItemGenerator());
-    };
-    @SubscribeEvent
-    public static void registerCreativeTab(CreativeModeTabEvent.Register event) {
-        VReference.VAMPIRISM_TAB = event.registerCreativeModeTab(new ResourceLocation(REFERENCE.MODID, "default"), BUILDER);
+                .displayItems(new VampirismDisplayItemGenerator(allItems));
     }
 
     public static class VampirismDisplayItemGenerator extends ModDisplayItemGenerator {
 
-        public VampirismDisplayItemGenerator() {
-            super(ModItems.getAllVampirismTabItems());
+        public VampirismDisplayItemGenerator(Set<ItemLike> allItems) {
+            super(allItems);
         }
 
         @Override

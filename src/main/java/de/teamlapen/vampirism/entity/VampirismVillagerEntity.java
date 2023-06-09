@@ -100,7 +100,7 @@ public class VampirismVillagerEntity extends Villager {
     public void tick() {
         super.tick();
 
-        if (!this.level.isClientSide && !peaceful && this.level.getDifficulty() == Difficulty.PEACEFUL) {
+        if (!this.level().isClientSide && !peaceful && this.level().getDifficulty() == Difficulty.PEACEFUL) {
             this.discard();
         }
     }

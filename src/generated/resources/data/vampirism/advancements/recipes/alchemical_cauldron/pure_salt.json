@@ -17,5 +17,6 @@
     "recipes": [
       "vampirism:alchemical_cauldron/pure_salt"
     ]
-  }
+  },
+  "sends_telemetry_event": true
 }

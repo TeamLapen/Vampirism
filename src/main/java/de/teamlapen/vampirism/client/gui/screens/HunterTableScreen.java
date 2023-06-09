@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.inventory.HunterTableMenu;
 import de.teamlapen.vampirism.items.PureBloodItem;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -34,23 +35,21 @@ public class HunterTableScreen extends AbstractContainerScreen<HunterTableMenu> 
     }
 
     @Override
-    public void render(@NotNull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(stack);
-        super.render(stack, mouseX, mouseY, partialTicks);
-        this.renderTooltip(stack, mouseX, mouseY);
-
+    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(graphics);
+        super.render(graphics, mouseX, mouseY, partialTicks);
+        this.renderTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(@NotNull PoseStack stack, float var1, int var2, int var3) {
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, altarGuiTextures);
-        this.blit(stack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
+    protected void renderBg(@NotNull GuiGraphics graphics, float var1, int var2, int var3) {
+        graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
+        graphics.blit(altarGuiTextures, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override
-    protected void renderLabels(@NotNull PoseStack stack, int mouseX, int mouseY) {
-        super.renderLabels(stack, mouseX, mouseY);
+    protected void renderLabels(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
+        super.renderLabels(graphics, mouseX, mouseY);
 
         Component text = null;
         if (!menu.isLevelValid(false)) {
@@ -62,6 +61,8 @@ public class HunterTableScreen extends AbstractContainerScreen<HunterTableMenu> 
             Component item = missing.getItem() instanceof PureBloodItem ? ((PureBloodItem) missing.getItem()).getCustomName() : Component.translatable(missing.getDescriptionId());
             text = Component.translatable("text.vampirism.hunter_table.ritual_missing_items", missing.getCount(), item);
         }
-        if (text != null) this.font.drawWordWrap(stack, text, 8, 50, this.imageWidth - 10, 0x000000);
+        if (text != null){
+            graphics.drawWordWrap(this.font, text, 8, 50, this.imageWidth - 10, 0x000000);
+        }
     }
 }

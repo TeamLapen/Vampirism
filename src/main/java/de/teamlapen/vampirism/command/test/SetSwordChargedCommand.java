@@ -36,7 +36,7 @@ public class SetSwordChargedCommand extends BasicCommand {
                 ((VampirismVampireSwordItem) held.getItem()).setCharged(held, charge);
                 player.setItemInHand(InteractionHand.MAIN_HAND, held);
             } else {
-                commandSource.sendSuccess(Component.translatable("command.vampirism.test.swordcharged.nosword"), false);
+                commandSource.sendSuccess(() -> Component.translatable("command.vampirism.test.swordcharged.nosword"), false);
             }
         }
         return 0;

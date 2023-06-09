@@ -32,7 +32,7 @@ public class VampireActionCriterionTrigger extends SimpleCriterionTrigger<Vampir
 
     @NotNull
     @Override
-    protected Instance createInstance(@NotNull JsonObject json, @NotNull EntityPredicate.Composite entityPredicate, @NotNull DeserializationContext conditionsParser) {
+    protected Instance createInstance(@NotNull JsonObject json, @NotNull ContextAwarePredicate entityPredicate, @NotNull DeserializationContext conditionsParser) {
         Action action = Action.NONE;
         if (json.has("action")) {
             String name = json.get("action").getAsString();
@@ -57,7 +57,7 @@ public class VampireActionCriterionTrigger extends SimpleCriterionTrigger<Vampir
         private final Action action;
 
         Instance(@NotNull Action action) {
-            super(ID, EntityPredicate.Composite.ANY);
+            super(ID, ContextAwarePredicate.ANY);
             this.action = action;
         }
 

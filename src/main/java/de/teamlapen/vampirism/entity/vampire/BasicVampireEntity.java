@@ -160,7 +160,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     public void convertToMinion(@NotNull Player lord) {
         FactionPlayerHandler.getOpt(lord).ifPresent(fph -> {
             if (fph.getMaxMinions() > 0) {
-                MinionWorldData.getData(lord.level).map(w -> w.getOrCreateController(fph)).ifPresent(controller -> {
+                MinionWorldData.getData(lord.level()).map(w -> w.getOrCreateController(fph)).ifPresent(controller -> {
                     if (controller.hasFreeMinionSlot()) {
                         if (fph.getCurrentFaction() == this.getFaction()) {
                             boolean hasIncreasedStats = fph.getCurrentFactionPlayer().map(IFactionPlayer::getSkillHandler).map(skillHandler -> skillHandler.isSkillEnabled(VampireSkills.MINION_STATS_INCREASE.get())).orElse(false);
@@ -171,7 +171,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                                 LOGGER.error("Failed to get minion slot");
                                 return;
                             }
-                            VampireMinionEntity minion = ModEntities.VAMPIRE_MINION.get().create(this.level);
+                            VampireMinionEntity minion = ModEntities.VAMPIRE_MINION.get().create(this.level());
                             minion.claimMinionSlot(id, controller);
                             minion.copyPosition(this);
                             minion.markAsConverted();
@@ -420,14 +420,14 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     @Override
     protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (this.isAlive() && !player.isShiftKeyDown()) {
-            if (!level.isClientSide) {
+            if (!level().isClientSide) {
                 int vampireLevel = FactionPlayerHandler.getOpt(player).map(fph -> fph.getCurrentLevel(VReference.VAMPIRE_FACTION)).orElse(0);
                 if (vampireLevel > 0) {
                     return FactionPlayerHandler.getOpt(player).map(fph -> {
                         if (fph.getMaxMinions() > 0) {
                             ItemStack heldItem = player.getItemInHand(hand);
                             //noinspection Convert2MethodRef
-                            boolean freeSlot = MinionWorldData.getData(player.level).map(data -> data.getOrCreateController(fph)).map(c -> c.hasFreeMinionSlot()).orElse(false);
+                            boolean freeSlot = MinionWorldData.getData(player.level()).map(data -> data.getOrCreateController(fph)).map(c -> c.hasFreeMinionSlot()).orElse(false);
                             player.displayClientMessage(Component.translatable("text.vampirism.basic_vampire.minion.available"), true);
                             if (heldItem.getItem() == ModItems.VAMPIRE_MINION_BINDING.get()) {
                                 if (!freeSlot) {

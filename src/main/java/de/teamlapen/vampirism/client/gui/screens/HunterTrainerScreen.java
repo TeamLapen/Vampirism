@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.inventory.HunterTrainerMenu;
 import de.teamlapen.vampirism.items.HunterIntelItem;
 import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.particles.ParticleTypes;
@@ -50,10 +51,10 @@ public class HunterTrainerScreen extends AbstractContainerScreen<HunterTrainerMe
     }
 
     @Override
-    public void render(@NotNull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(stack);
-        super.render(stack, mouseX, mouseY, partialTicks);
-        this.renderTooltip(stack, mouseX, mouseY);
+    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(graphics);
+        super.render(graphics, mouseX, mouseY, partialTicks);
+        this.renderTooltip(graphics, mouseX, mouseY);
 
     }
 
@@ -65,15 +66,14 @@ public class HunterTrainerScreen extends AbstractContainerScreen<HunterTrainerMe
     }
 
     @Override
-    protected void renderBg(@NotNull PoseStack stack, float var1, int var2, int var3) {
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, altarGuiTextures);
-        this.blit(stack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
+    protected void renderBg(@NotNull GuiGraphics graphics, float var1, int var2, int var3) {
+        graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
+        graphics.blit(altarGuiTextures, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override
-    protected void renderLabels(@NotNull PoseStack stack, int par1, int par2) {
-        super.renderLabels(stack, par1, par2);
+    protected void renderLabels(@NotNull GuiGraphics graphics, int par1, int par2) {
+        super.renderLabels(graphics, par1, par2);
 
         Component text = null;
         if (!menu.getMissingItems().isEmpty()) {
@@ -81,6 +81,8 @@ public class HunterTrainerScreen extends AbstractContainerScreen<HunterTrainerMe
             Component item = missing.getItem() instanceof HunterIntelItem ? ((HunterIntelItem) missing.getItem()).getCustomName() : Component.translatable(missing.getDescriptionId());
             text = Component.translatable("text.vampirism.hunter_trainer.ritual_missing_items", missing.getCount(), item);
         }
-        if (text != null) this.font.drawWordWrap(stack, text, 8, 50, this.imageWidth - 10, 0x000000);
+        if (text != null) {
+            graphics.drawWordWrap(this.font, text, 8, 50, this.imageWidth - 10, 0x000000);
+        }
     }
 }

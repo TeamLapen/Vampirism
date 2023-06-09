@@ -96,8 +96,7 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
                         for (int dz = -1; dz < 2; dz++) {
                             BlockPos pos = blockPos.offset(dx, dy, dz);
                             BlockState blockState = entity.getCommandSenderWorld().getBlockState(pos);
-                            if (blockState.getMaterial().isReplaceable()
-                                    && entity.getCommandSenderWorld().getBlockState(pos.below()).isFaceSturdy(entity.getCommandSenderWorld(), pos.below(), Direction.UP) && (entity).getRNG().nextInt(4) != 0) {
+                            if (blockState.canBeReplaced() && entity.getCommandSenderWorld().getBlockState(pos.below()).isFaceSturdy(entity.getCommandSenderWorld(), pos.below(), Direction.UP) && (entity).getRNG().nextInt(4) != 0) {
                                 entity.getCommandSenderWorld().setBlockAndUpdate(pos, ModBlocks.ALCHEMICAL_FIRE.get().defaultBlockState());
                             }
                         }
@@ -106,9 +105,9 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
             }
             case TELEPORT -> {
                 if (shootingEntity != null) {
-                    if (!shootingEntity.level.isClientSide && shootingEntity.isAlive()) {
+                    if (!shootingEntity.level().isClientSide && shootingEntity.isAlive()) {
                         if (shootingEntity instanceof ServerPlayer player) {
-                            if (player.connection.connection.isConnected() && player.level == entity.level && !player.isSleeping()) {
+                            if (player.connection.connection.isConnected() && player.level() == entity.level() && !player.isSleeping()) {
 
                                 if (player.isPassenger()) {
                                     player.stopRiding();

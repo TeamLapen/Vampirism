@@ -4,11 +4,9 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.blocks.TentBlock;
-import de.teamlapen.vampirism.client.gui.screens.SleepInMultiplayerModScreen;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -25,9 +23,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
-
-import static de.teamlapen.vampirism.blocks.TentBlock.FACING;
-import static de.teamlapen.vampirism.blocks.TentBlock.POSITION;
 
 /**
  * Add a button to the inventory screen that allows opening the skill menu from there
@@ -65,7 +60,7 @@ public class ScreenEventHandler {
             if (p!= null && p.isSleeping()) {
                 GuiEventListener l = event.getScreen().children().get(1);
                 if (l instanceof AbstractWidget leaveButton) {
-                    p.getSleepingPos().map(pos -> p.level.getBlockState(pos).getBlock()).map(block -> block instanceof TentBlock ? "text.vampirism.tent.stop_sleeping" : (block instanceof CoffinBlock ? "text.vampirism.coffin.stop_sleeping" : null)).ifPresent(newText -> {
+                    p.getSleepingPos().map(pos -> p.level().getBlockState(pos).getBlock()).map(block -> block instanceof TentBlock ? "text.vampirism.tent.stop_sleeping" : (block instanceof CoffinBlock ? "text.vampirism.coffin.stop_sleeping" : null)).ifPresent(newText -> {
                         leaveButton.setMessage(Component.translatable(newText));
                     });
                 }

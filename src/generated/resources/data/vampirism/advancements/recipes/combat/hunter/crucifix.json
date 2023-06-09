@@ -52,5 +52,6 @@
     "recipes": [
       "vampirism:hunter/crucifix"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

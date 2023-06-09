@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.REFERENCE;
@@ -21,13 +20,13 @@ import de.teamlapen.vampirism.util.Helper;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
@@ -69,11 +68,6 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
     }
 
     @Override
-    public @NotNull ItemRenderer getItemRenderer() {
-        return this.itemRenderer;
-    }
-
-    @Override
     public @NotNull TaskMenu getTaskContainer() {
         return this.menu;
     }
@@ -97,8 +91,8 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
     }
 
     @Override
-    public void render(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
+    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(graphics, mouseX, mouseY, partialTicks);
 
         if (this.menu.areRefinementsAvailable()) {
             for (int i = 0; i < this.menu.getRefinementStacks().size(); i++) {
@@ -106,25 +100,25 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
                 Slot slot = this.menu.getSlot(i);
                 int x = slot.x + this.leftPos;
                 int y = slot.y + this.topPos;
-                this.itemRenderer.renderAndDecorateItem(matrixStack, stack, x, y);
-                this.itemRenderer.renderGuiItemDecorations(matrixStack, this.font, stack, x, y, null);
+                graphics.renderItem(stack, x, y);
+                graphics.renderItemDecorations(this.font, stack, x, y, null);
             }
         }
 
-        this.renderAccessorySlots(matrixStack, mouseX, mouseY, partialTicks);
+        this.renderAccessorySlots(graphics, mouseX, mouseY, partialTicks);
 
         this.oldMouseX = mouseX;
         this.oldMouseY = mouseY;
-        this.renderTooltip(matrixStack, mouseX, mouseY);
+        this.renderTooltip(graphics, mouseX, mouseY);
         if (this.menu.areRefinementsAvailable()) {
-            this.renderHoveredRefinementTooltip(matrixStack, mouseX, mouseY);
+            this.renderHoveredRefinementTooltip(graphics, mouseX, mouseY);
         }
     }
 
-    protected void renderAccessorySlots(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    protected void renderAccessorySlots(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         for (Slot slot : this.menu.slots) {
             if (this.isHovering(slot, mouseX, mouseY) && slot instanceof VampirismMenu.RemovingSelectorSlot && !this.menu.getRefinementStacks().get(slot.getSlotIndex()).isEmpty()) {
-                this.refinementRemoveButtons.get(slot.getSlotIndex()).render(matrixStack, mouseX, mouseY, partialTicks);
+                this.refinementRemoveButtons.get(slot.getSlotIndex()).render(graphics, mouseX, mouseY, partialTicks);
             }
         }
     }
@@ -176,9 +170,9 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
                     refinementList.set(slot.index, ItemStack.EMPTY);
                 }, Component.empty()) {
                     @Override
-                    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+                    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
                         this.visible = !refinementList.get(slot.index).isEmpty() && VampirismContainerScreen.this.draggingItem.isEmpty() && overSlot(slot, mouseX, mouseY);
-                        super.render(matrixStack, mouseX, mouseY, partialTicks);
+                        super.render(graphics, mouseX, mouseY, partialTicks);
                     }
 
                     private boolean overSlot(@NotNull Slot slot, int mouseX, int mouseY) {
@@ -195,35 +189,35 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
     }
 
     @Override
-    protected void renderLabels(@NotNull PoseStack stack, int mouseX, int mouseY) {
-        super.renderLabels(stack, mouseX, mouseY);
+    protected void renderLabels(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
+        super.renderLabels(graphics, mouseX, mouseY);
         int width = this.font.width(this.level);
-        this.font.draw(stack, this.level, Math.max(5, 31 - (float) width / 2), 81, -1);
+        graphics.drawString(this.font, this.level, (int) Math.max(5, 31 - (float) width / 2), 81, -1, false);
     }
 
     @Override
-    protected void renderBg(@NotNull PoseStack matrixStack, float v, int i, int i1) {
-        this.renderBackground(matrixStack);
+    protected void renderBg(@NotNull GuiGraphics graphics, float v, int i, int i1) {
+        this.renderBackground(graphics);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, this.menu.areRefinementsAvailable() ? BACKGROUND_REFINEMENTS : BACKGROUND);
-        this.blit(matrixStack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
-        InventoryScreen.renderEntityInInventoryFollowsMouse(matrixStack, this.leftPos + 31, this.topPos + 72, 30, (float) (this.leftPos + 10) - this.oldMouseX, (float) (this.topPos + 75 - 50) - this.oldMouseY, this.minecraft.player);
+        var texture = this.menu.areRefinementsAvailable() ? BACKGROUND_REFINEMENTS : BACKGROUND;
+        graphics.blit(texture, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
+        InventoryScreen.renderEntityInInventoryFollowsMouse(graphics, this.leftPos + 31, this.topPos + 72, 30, (float) (this.leftPos + 10) - this.oldMouseX, (float) (this.topPos + 75 - 50) - this.oldMouseY, this.minecraft.player);
     }
 
-    protected void renderHoveredRefinementTooltip(@NotNull PoseStack matrixStack, int mouseX, int mouseY) {
+    protected void renderHoveredRefinementTooltip(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
         if (this.hoveredSlot != null) {
             int index = this.hoveredSlot.index;
             NonNullList<ItemStack> list = this.menu.getRefinementStacks();
             if (index < list.size() && index >= 0) {
                 if (this.getMenu().getCarried().isEmpty() && !list.get(index).isEmpty()) {
                     if (!this.refinementRemoveButtons.get(this.hoveredSlot.getSlotIndex()).isHoveredOrFocused()) {
-                        this.renderTooltip(matrixStack, list.get(index), mouseX, mouseY);
+                        graphics.renderTooltip(this.font, list.get(index), mouseX, mouseY);
 
                     }
                 } else {
                     if (!list.get(index).isEmpty() && this.menu.getSlot(index).mayPlace(this.getMenu().getCarried())) {
-                        this.renderTooltip(matrixStack, Component.translatable("gui.vampirism.vampirism_menu.destroy_item").withStyle(ChatFormatting.RED), mouseX, mouseY);
+                        graphics.renderTooltip(this.font, Component.translatable("gui.vampirism.vampirism_menu.destroy_item").withStyle(ChatFormatting.RED), mouseX, mouseY);
                     }
                 }
             }
@@ -242,10 +236,10 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
         }
 
         @Override
-        public void render(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-            super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
+        public void render(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+            super.render(graphics, pMouseX, pMouseY, pPartialTick);
             if (children().isEmpty()) {
-                drawCenteredString(pPoseStack, minecraft.font, Component.translatable("gui.vampirism.vampirism_menu.no_tasks"), this.x0 + width / 2, this.y0 + height / 2, 0x404040);
+                graphics.drawCenteredString(minecraft.font, Component.translatable("gui.vampirism.vampirism_menu.no_tasks"), this.x0 + width / 2, this.y0 + height / 2, 0x404040);
             }
         }
 
@@ -295,11 +289,11 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
             }
 
             @Override
-            public void render(PoseStack pPoseStack, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pIsMouseOver, float pPartialTick) {
-                super.render(pPoseStack, pIndex, pTop, pLeft, pWidth, pHeight, pMouseX, pMouseY, pIsMouseOver, pPartialTick);
+            public void render(GuiGraphics graphics, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pIsMouseOver, float pPartialTick) {
+                super.render(graphics, pIndex, pTop, pLeft, pWidth, pHeight, pMouseX, pMouseY, pIsMouseOver, pPartialTick);
                 if (this.button != null) {
                     this.button.setPosition(pLeft + pWidth - this.button.getWidth() - 1, pTop + 1);
-                    this.button.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
+                    this.button.render(graphics, pMouseX, pMouseY, pPartialTick);
                 }
             }
         }

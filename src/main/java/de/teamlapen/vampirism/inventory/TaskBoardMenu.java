@@ -79,7 +79,7 @@ public class TaskBoardMenu extends AbstractContainerMenu implements TaskMenu {
             return TaskAction.COMPLETE;
         } else if (isTaskNotAccepted(taskInfo)) {
             return TaskAction.ACCEPT;
-        } else if (!taskInfo.isUnique() && this.factionPlayer.getRepresentingPlayer().level.getGameTime() > taskInfo.getTaskTimeStamp()) {
+        } else if (!taskInfo.isUnique() && this.factionPlayer.getRepresentingPlayer().level().getGameTime() > taskInfo.getTaskTimeStamp()) {
             return TaskAction.REMOVE;
         } else {
             return TaskAction.ABORT;
@@ -88,7 +88,7 @@ public class TaskBoardMenu extends AbstractContainerMenu implements TaskMenu {
 
     @Override
     public boolean canCompleteTask(@NotNull ITaskInstance taskInfo) {
-        return this.completableTasks.contains(taskInfo.getId()) && (taskInfo.isUnique() || this.factionPlayer.getRepresentingPlayer().level.getGameTime() < taskInfo.getTaskTimeStamp());
+        return this.completableTasks.contains(taskInfo.getId()) && (taskInfo.isUnique() || this.factionPlayer.getRepresentingPlayer().level().getGameTime() < taskInfo.getTaskTimeStamp());
     }
 
     @Override

@@ -13,7 +13,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,7 +23,7 @@ public class CastleBricksBlock extends VampirismBlock {
     private final EnumVariant variant;
 
     public CastleBricksBlock(EnumVariant variant) {
-        super(Properties.of(Material.STONE).strength(2, 10).sound(SoundType.STONE));
+        super(Properties.of().mapColor(MapColor.STONE).strength(2, 10).sound(SoundType.STONE));
         this.variant = variant;
 
     }

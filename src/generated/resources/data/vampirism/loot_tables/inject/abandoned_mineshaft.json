@@ -45,7 +45,6 @@
           "weight": 40
         }
       ],
-      "name": "main",
       "rolls": {
         "type": "minecraft:uniform",
         "max": 4.0,
@@ -124,7 +123,6 @@
           "weight": 88
         }
       ],
-      "name": "swiftness_armor",
       "rolls": 1.0
     },
     {
@@ -151,7 +149,6 @@
           "weight": 95
         }
       ],
-      "name": "hunter_weapons",
       "rolls": 1.0
     },
     {
@@ -194,7 +191,6 @@
           "weight": 60
         }
       ],
-      "name": "vampire_weapons",
       "rolls": 1.0
     },
     {
@@ -216,7 +212,6 @@
           "weight": 10
         }
       ],
-      "name": "holy_water",
       "rolls": 2.0
     },
     {
@@ -253,8 +248,8 @@
           "name": "vampirism:obi_belt"
         }
       ],
-      "name": "refinement_item",
       "rolls": 1.0
     }
-  ]
+  ],
+  "random_sequence": "vampirism:inject/abandoned_mineshaft"
 }

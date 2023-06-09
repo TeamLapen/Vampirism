@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.blockentity.BloodContainerBlockEntity;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -25,7 +26,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -68,7 +68,7 @@ public class BloodContainerBlock extends VampirismBlockContainer implements ModD
     }
 
     public BloodContainerBlock() {
-        super(Properties.of(Material.GLASS).strength(1f).noOcclusion());
+        super(Properties.of().strength(1f).isViewBlocking(UtilLib::never).noOcclusion());
     }
 
     @Override

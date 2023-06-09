@@ -30,5 +30,6 @@
     "recipes": [
       "vampirism:hunter/hunter_table"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

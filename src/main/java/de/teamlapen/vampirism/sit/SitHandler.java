@@ -55,7 +55,7 @@ public class SitHandler {
     private static boolean isPlayerInRange(@NotNull Player player, BlockPos pos) {
         Vec3 playerPos = player.position();
         Vec3 blockPos = new Vec3(pos.getX(), pos.getY(), pos.getZ());
-        double blockReachDistance = player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue();
+        double blockReachDistance = player.getAttribute(ForgeMod.BLOCK_REACH.get()).getValue();
 
 //        if(blockReachDistance == 0) //player has to stand on top of the block
 //            return playerPos.getY() - blockPos.getY() <= 1 && playerPos.getX() - blockPos.getX() == 0 && playerPos.getZ() - blockPos.getZ() == 0;

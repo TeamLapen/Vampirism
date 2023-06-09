@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -18,6 +17,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -49,30 +49,30 @@ public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> 
     }
 
     @Override
-    public void draw(@NotNull JEIPotionMix recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull PoseStack stack, double mouseX, double mouseY) {
-        this.blazeHeat.draw(stack, 1, 35);
-        this.bubbles.draw(stack, 3, 4);
-        this.arrow.draw(stack, 80, 10);
+    public void draw(@NotNull JEIPotionMix recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics graphics, double mouseX, double mouseY) {
+        this.blazeHeat.draw(graphics, 1, 35);
+        this.bubbles.draw(graphics, 3, 4);
+        this.arrow.draw(graphics, 80, 10);
 
         int y = 75;
         int x = 5;
         Minecraft minecraft = Minecraft.getInstance();
         if (recipe.getOriginal().durable && recipe.getOriginal().concentrated) {
-            minecraft.font.draw(stack, HunterSkills.CONCENTRATED_DURABLE_BREWING.get().getName(), x, y, Color.GRAY.getRGB());
+            graphics.drawString(minecraft.font, HunterSkills.CONCENTRATED_DURABLE_BREWING.get().getName(), x, y, Color.GRAY.getRGB(), false);
             y += minecraft.font.lineHeight;
         } else if (recipe.getOriginal().durable) {
-            minecraft.font.draw(stack, HunterSkills.DURABLE_BREWING.get().getName(), x, y, Color.GRAY.getRGB());
+            graphics.drawString(minecraft.font, HunterSkills.DURABLE_BREWING.get().getName(), x, y, Color.GRAY.getRGB(), false);
             y += minecraft.font.lineHeight;
         } else if (recipe.getOriginal().concentrated) {
-            minecraft.font.draw(stack, HunterSkills.CONCENTRATED_BREWING.get().getName(), x, y, Color.GRAY.getRGB());
+            graphics.drawString(minecraft.font, HunterSkills.CONCENTRATED_BREWING.get().getName(), x, y, Color.GRAY.getRGB(), false);
             y += minecraft.font.lineHeight;
         }
         if (recipe.getOriginal().master) {
-            minecraft.font.draw(stack, HunterSkills.MASTER_BREWER.get().getName(), x, y, Color.GRAY.getRGB());
+            graphics.drawString(minecraft.font, HunterSkills.MASTER_BREWER.get().getName(), x, y, Color.GRAY.getRGB(), false);
             y += minecraft.font.lineHeight;
         }
         if (recipe.getOriginal().efficient) {
-            minecraft.font.draw(stack, HunterSkills.EFFICIENT_BREWING.get().getName(), x, y, Color.GRAY.getRGB());
+            graphics.drawString(minecraft.font, HunterSkills.EFFICIENT_BREWING.get().getName(), x, y, Color.GRAY.getRGB(), false);
             y += minecraft.font.lineHeight;
         }
     }

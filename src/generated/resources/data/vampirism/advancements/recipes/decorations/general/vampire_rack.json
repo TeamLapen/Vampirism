@@ -80,5 +80,6 @@
     "recipes": [
       "vampirism:general/vampire_rack"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

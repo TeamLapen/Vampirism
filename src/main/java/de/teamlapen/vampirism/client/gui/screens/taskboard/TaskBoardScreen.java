@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.client.gui.screens.taskboard;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.client.gui.screens.ExtendedScreen;
@@ -9,8 +7,8 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.inventory.TaskBoardMenu;
 import de.teamlapen.vampirism.inventory.TaskMenu;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -41,18 +39,13 @@ public class TaskBoardScreen extends AbstractContainerScreen<TaskBoardMenu> impl
     }
 
     @Override
-    public @NotNull ItemRenderer getItemRenderer() {
-        return this.itemRenderer;
-    }
-
-    @Override
     public @NotNull TaskMenu getTaskContainer() {
         return this.menu;
     }
 
     @Override
-    public void render(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
+    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(graphics, mouseX, mouseY, partialTicks);
     }
 
     @Override
@@ -68,15 +61,14 @@ public class TaskBoardScreen extends AbstractContainerScreen<TaskBoardMenu> impl
     }
 
     @Override
-    protected void renderBg(@NotNull PoseStack mStack, float partialTicks, int mouseX, int mouseY) {
-        this.renderBackground(mStack);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, TASKMASTER_GUI_TEXTURE);
-        blit(mStack, this.leftPos, this.topPos, 0, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
+    protected void renderBg(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+        this.renderBackground(graphics);
+        graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
+        graphics.blit(TASKMASTER_GUI_TEXTURE, this.leftPos, this.topPos, 0, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
     }
 
     @Override
-    protected void renderLabels(@NotNull PoseStack mStack, int mouseX, int mouseY) {
-        this.font.draw(mStack, this.title, (float) (this.imageWidth / 2 - this.font.width(this.title) / 2), 5.0F, 4210752);
+    protected void renderLabels(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
+        graphics.drawString(this.font, this.title, this.imageWidth / 2 - this.font.width(this.title) / 2, 5, 4210752, false);
     }
 }

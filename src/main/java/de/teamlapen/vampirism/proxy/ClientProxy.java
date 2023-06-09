@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.api.client.VIngameOverlays;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.blockentity.GarlicDiffuserBlockEntity;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
-import de.teamlapen.vampirism.blocks.LogBlock;
 import de.teamlapen.vampirism.blocks.TentBlock;
 import de.teamlapen.vampirism.client.core.*;
 import de.teamlapen.vampirism.client.gui.ScreenEventHandler;
@@ -150,10 +149,10 @@ public class ClientProxy extends CommonProxy {
     public void handleSleepClient(@NotNull Player player) {
         if (player.isSleeping()) {
             player.getSleepingPos().ifPresent(pos -> {
-                if (player.level.getBlockState(pos).getBlock() instanceof TentBlock) {
-                    TentBlock.setTentSleepPosition(player, pos, player.level.getBlockState(pos).getValue(POSITION), player.level.getBlockState(pos).getValue(FACING));
-                } else if (player.level.getBlockState(pos).getBlock() instanceof CoffinBlock) {
-                    CoffinBlock.setCoffinSleepPosition(player, pos, player.level.getBlockState(pos));
+                if (player.level().getBlockState(pos).getBlock() instanceof TentBlock) {
+                    TentBlock.setTentSleepPosition(player, pos, player.level().getBlockState(pos).getValue(POSITION), player.level().getBlockState(pos).getValue(FACING));
+                } else if (player.level().getBlockState(pos).getBlock() instanceof CoffinBlock) {
+                    CoffinBlock.setCoffinSleepPosition(player, pos, player.level().getBlockState(pos));
                 }
             });
         }

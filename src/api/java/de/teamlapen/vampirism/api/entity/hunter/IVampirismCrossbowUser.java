@@ -46,7 +46,7 @@ public interface IVampirismCrossbowUser extends CrossbowAttackMob {
         ItemStack itemstack = entity.getItemInHand(hand);
         if (itemstack.getItem() instanceof IVampirismCrossbow) {
             if (CrossbowItem.isCharged(itemstack)){
-                ((IVampirismCrossbow) itemstack.getItem()).performShootingMod(entity.level, entity, hand, itemstack, speed, (float)(14 - entity.level.getDifficulty().getId() * 4));
+                ((IVampirismCrossbow) itemstack.getItem()).performShootingMod(entity.level(), entity, hand, itemstack, speed, (float) (14 - entity.level().getDifficulty().getId() * 4));
                 this.onCrossbowAttackPerformed();
             }
         }

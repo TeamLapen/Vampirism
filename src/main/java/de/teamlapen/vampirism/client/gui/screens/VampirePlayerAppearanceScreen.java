@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.lib.client.gui.components.HoverList;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.REFERENCE;
@@ -12,6 +11,7 @@ import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayerSpecialAttributes;
 import de.teamlapen.vampirism.network.ServerboundAppearancePacket;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -91,9 +91,9 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
     }
 
     @Override
-    protected void renderGuiBackground(@NotNull PoseStack mStack) {
+    protected void renderGuiBackground(@NotNull GuiGraphics graphics) {
         RenderSystem.setShaderColor(color[0], color[1], color[2], 1f);
-        super.renderGuiBackground(mStack);
+        super.renderGuiBackground(graphics);
         RenderSystem.setShaderColor(1, 1, 1, 1);
     }
 

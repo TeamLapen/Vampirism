@@ -40,8 +40,8 @@ public class RefinementItemReward extends ItemReward {
         this(faction, () -> null, refinementRarity);
     }
 
-    public RefinementItemReward(@Nullable IFaction<?> faction, @NotNull Supplier<IRefinementItem> item, @Nullable IRefinementSet.Rarity refinementRarity) {
-        super(() -> new ItemStack(item.get()));
+    public RefinementItemReward(@Nullable IFaction<?> faction, @NotNull Supplier<@Nullable IRefinementItem> item, @Nullable IRefinementSet.Rarity refinementRarity) {
+        super(() -> ItemStack.EMPTY);
         this.faction = faction;
         this.rarity = refinementRarity;
     }

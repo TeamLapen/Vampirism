@@ -5,11 +5,9 @@ import com.mojang.brigadier.context.CommandContext;
 import de.teamlapen.lib.lib.util.BasicCommand;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 public class CurrentDimensionCommand extends BasicCommand {
@@ -22,7 +20,7 @@ public class CurrentDimensionCommand extends BasicCommand {
 
     @SuppressWarnings("SameReturnValue")
     private static int currentDimension(@NotNull CommandContext<CommandSourceStack> context, @NotNull ServerPlayer asPlayer) {
-        context.getSource().sendSuccess(Component.translatable("command.vampirism.base.currentdimension.dimension", asPlayer.getCommandSenderWorld().dimension().location() + " (" + asPlayer.getServer().registryAccess().registryOrThrow(Registries.DIMENSION_TYPE).getKey(asPlayer.getCommandSenderWorld().dimensionType())), false);
+        context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.base.currentdimension.dimension", asPlayer.getCommandSenderWorld().dimension().location() + " (" + asPlayer.getServer().registryAccess().registryOrThrow(Registries.DIMENSION_TYPE).getKey(asPlayer.getCommandSenderWorld().dimensionType())), false);
         return 0;
     }
 }

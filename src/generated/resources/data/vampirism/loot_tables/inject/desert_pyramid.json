@@ -40,7 +40,6 @@
           "weight": 60
         }
       ],
-      "name": "main",
       "rolls": 1.0
     },
     {
@@ -77,8 +76,8 @@
           "name": "vampirism:obi_belt"
         }
       ],
-      "name": "refinement_item",
       "rolls": 1.0
     }
-  ]
+  ],
+  "random_sequence": "vampirism:inject/desert_pyramid"
 }

@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.inventory.AltarInfusionMenu;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -22,17 +23,16 @@ public class AltarInfusionScreen extends AbstractContainerScreen<AltarInfusionMe
     }
 
     @Override
-    public void render(@NotNull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(stack);
-        super.render(stack, mouseX, mouseY, partialTicks);
-        this.renderTooltip(stack, mouseX, mouseY);
+    public void render(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        this.renderBackground(graphics);
+        super.render(graphics, pMouseX, pMouseY, pPartialTick);
+        this.renderTooltip(graphics, pMouseX, pMouseY);
     }
 
     @Override
-    protected void renderBg(@NotNull PoseStack stack, float var1, int var2, int var3) {
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, altarGuiTextures);
-        this.blit(stack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
+    protected void renderBg(@NotNull GuiGraphics graphics, float pPartialTick, int pX, int pY) {
+        graphics.setColor(1,1,1,1);
+        graphics.blit(altarGuiTextures, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
     }
 
 }

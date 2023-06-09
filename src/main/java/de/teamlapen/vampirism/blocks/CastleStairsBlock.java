@@ -8,7 +8,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +21,7 @@ public class CastleStairsBlock extends StairBlock {
     private final CastleBricksBlock.EnumVariant variant;
 
     public CastleStairsBlock(@NotNull Supplier<BlockState> state, CastleBricksBlock.EnumVariant variant) {
-        super(state, Properties.of(Material.STONE).strength(2, 10).sound(SoundType.STONE));
+        super(state, Properties.of().mapColor(MapColor.STONE).strength(2, 10).sound(SoundType.STONE));
         this.variant = variant;
     }
 

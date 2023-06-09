@@ -28,7 +28,7 @@ public abstract class LordRangeEffectAction<T extends IFactionPlayer<T>> extends
     @Override
     protected boolean activate(@NotNull T player, ActivationContext context) {
         int lordLevel = FactionPlayerHandler.getOpt(player.getRepresentingPlayer()).map(FactionPlayerHandler::getLordLevel).orElse(0);
-        List<LivingEntity> entitiesOfClass = player.getRepresentingPlayer().level.getEntitiesOfClass(LivingEntity.class, new AABB(player.getRepresentingPlayer().blockPosition()).inflate(10, 10, 10), e -> player.getFaction() == VampirismAPI.factionRegistry().getFaction(e));
+        List<LivingEntity> entitiesOfClass = player.getRepresentingPlayer().level().getEntitiesOfClass(LivingEntity.class, new AABB(player.getRepresentingPlayer().blockPosition()).inflate(10, 10, 10), e -> player.getFaction() == VampirismAPI.factionRegistry().getFaction(e));
         for (LivingEntity entity : entitiesOfClass) {
             if (entity instanceof Player && FactionPlayerHandler.getOpt(((Player) entity)).map(FactionPlayerHandler::getLordLevel).filter(l -> l >= lordLevel).isPresent()) {
                 continue;

@@ -30,5 +30,6 @@
     "recipes": [
       "vampirism:vampire/heart_seeker_normal"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

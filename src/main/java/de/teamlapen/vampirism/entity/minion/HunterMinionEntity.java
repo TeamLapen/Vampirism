@@ -157,7 +157,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     @NotNull
     @Override
     protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
-        if (!this.level.isClientSide() && isLord(player) && minionData != null) {
+        if (!this.level().isClientSide() && isLord(player) && minionData != null) {
             ItemStack heldItem = player.getItemInHand(hand);
             if (heldItem.getItem() instanceof MinionUpgradeItem && ((MinionUpgradeItem) heldItem.getItem()).getFaction() == this.getFaction()) {
                 if (this.minionData.level + 1 >= ((MinionUpgradeItem) heldItem.getItem()).getMinLevel() && this.minionData.level + 1 <= ((MinionUpgradeItem) heldItem.getItem()).getMaxLevel()) {
@@ -183,7 +183,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     }
 
     private void updateAttackGoal() {
-        if (this.level.isClientSide()) return;
+        if (this.level().isClientSide()) return;
     }
 
     public void updateAttributes() {

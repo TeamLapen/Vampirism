@@ -127,7 +127,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
         if (!forceRefresh) {
             return data().sundamageCache;
         }
-        return (data().sundamageCache = Helper.gettingSundamge(((PathfinderMob) this), iWorld, ((PathfinderMob) this).level.getProfiler()));
+        return (data().sundamageCache = Helper.gettingSundamge(((PathfinderMob) this), iWorld, ((PathfinderMob) this).level().getProfiler()));
     }
 
     @Override
@@ -140,27 +140,27 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
      */
     default void aiStepC(@NotNull EntityType<T> originalType) {
         PathfinderMob entity = ((PathfinderMob) this);
-        if (!entity.level.isClientSide && entity.isAlive() && this.isConverting(entity)) {
+        if (!entity.level().isClientSide && entity.isAlive() && this.isConverting(entity)) {
             --data().conversionTime;
             if (data().conversionTime <= 0 && net.minecraftforge.event.ForgeEventFactory.canLivingConvert(entity, originalType, (timer) -> data().conversionTime = timer)) {
-                this.cureEntity((ServerLevel) entity.level, entity, originalType);
+                this.cureEntity((ServerLevel) entity.level(), entity, originalType);
             }
         }
         if (entity.tickCount % REFERENCE.REFRESH_GARLIC_TICKS == 1) {
-            isGettingGarlicDamage(entity.level, true);
+            isGettingGarlicDamage(entity.level(), true);
         }
         if (entity.tickCount % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 2) {
-            isGettingSundamage(entity.level, true);
+            isGettingSundamage(entity.level(), true);
         }
-        if (!entity.level.isClientSide) {
-            if (isGettingSundamage(entity.level) && entity.tickCount % 40 == 11) {
+        if (!entity.level().isClientSide) {
+            if (isGettingSundamage(entity.level()) && entity.tickCount % 40 == 11) {
                 double dmg = entity.getAttribute(ModAttributes.SUNDAMAGE.get()).getValue();
                 if (dmg > 0) {
                     DamageHandler.hurtModded(entity, ModDamageSources::sunDamage, (float) dmg);
                 }
             }
-            if (isGettingGarlicDamage(entity.level) != EnumStrength.NONE) {
-                DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(entity.level), entity.tickCount);
+            if (isGettingGarlicDamage(entity.level()) != EnumStrength.NONE) {
+                DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(entity.level()), entity.tickCount);
             }
             if (entity.isAlive() && entity.isInWater()) {
                 entity.setAirSupply(300);
@@ -240,8 +240,8 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     default void tickDeathC() {
         PathfinderMob entity = ((PathfinderMob) this);
         if (entity.deathTime == 19) {
-            if (!entity.level.isClientSide && (data().dropSoul && entity.level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT))) {
-                entity.level.addFreshEntity(new SoulOrbEntity(entity.level, entity.getX(), entity.getY(), entity.getZ(), SoulOrbEntity.VARIANT.VAMPIRE));
+            if (!entity.level().isClientSide && (data().dropSoul && entity.level().getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT))) {
+                entity.level().addFreshEntity(new SoulOrbEntity(entity.level(), entity.getX(), entity.getY(), entity.getZ(), SoulOrbEntity.VARIANT.VAMPIRE));
             }
         }
     }

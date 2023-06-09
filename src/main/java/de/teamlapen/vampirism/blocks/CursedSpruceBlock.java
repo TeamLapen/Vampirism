@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 public class CursedSpruceBlock extends StrippableLogBlock {
 
     public CursedSpruceBlock(@Nullable Supplier<? extends LogBlock> strippedBlock) {
-        super(BlockBehaviour.Properties.of(Material.WOOD, (p_235431_2_) -> MaterialColor.CRIMSON_HYPHAE).strength(2.0F).sound(SoundType.WOOD).randomTicks(), strippedBlock);
+        super(BlockBehaviour.Properties.of().mapColor(MapColor.CRIMSON_HYPHAE).strength(2.0F).sound(SoundType.WOOD).randomTicks().ignitedByLava(), strippedBlock);
     }
 
     @Override

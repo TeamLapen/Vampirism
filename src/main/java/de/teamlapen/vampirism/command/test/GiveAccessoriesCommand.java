@@ -45,9 +45,9 @@ public class GiveAccessoriesCommand extends BasicCommand {
             ItemStack s = new ItemStack(i);
             if (i.applyRefinementSet(s, set)) {
                 asPlayer.addItem(s);
-                context.getSource().sendSuccess(Component.translatable("command.vampirism.test.give_accessories.success", set.getName(), number), false);
+                context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.test.give_accessories.success", set.getName(), number), false);
             } else {
-                context.getSource().sendSuccess(Component.translatable("command.vampirism.test.give_accessories.incompatible", set.getName(), number), false);
+                context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.test.give_accessories.incompatible", set.getName(), number), false);
             }
         }
         return 0;
@@ -55,7 +55,7 @@ public class GiveAccessoriesCommand extends BasicCommand {
 
     @SuppressWarnings("SameReturnValue")
     private static int help(@NotNull CommandContext<CommandSourceStack> context) {
-        context.getSource().sendSuccess(Component.translatable("command.vampirism.test.give_accessories.help"), false);
+        context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.test.give_accessories.help"), false);
         return 0;
     }
 
@@ -69,7 +69,7 @@ public class GiveAccessoriesCommand extends BasicCommand {
                 if (!stack.isEmpty()) {
                     entity.addItem(stack);
                 } else {
-                    context.getSource().sendSuccess(Component.translatable("command.vampirism.test.give_accessories.no_item"), false);
+                    context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.test.give_accessories.no_item"), false);
                     return 0;
                 }
             }

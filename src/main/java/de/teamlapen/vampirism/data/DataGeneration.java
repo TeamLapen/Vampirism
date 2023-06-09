@@ -32,7 +32,7 @@ public class DataGeneration {
         lookupProviderFuture = ((RegistriesDatapackGeneratorAccessor) provider).getRegistries();
         generator.addProvider(event.includeServer(), provider);
         TagGenerator.register(generator, event, packOutput, lookupProviderFuture, existingFileHelper);
-        generator.addProvider(event.includeServer(), new LootTablesGenerator(packOutput));
+        generator.addProvider(event.includeServer(), LootTablesGenerator.getProvider(packOutput));
         generator.addProvider(event.includeServer(), new AdvancementGenerator(packOutput, lookupProviderFuture));
         generator.addProvider(event.includeServer(), new RecipesGenerator(packOutput));
         generator.addProvider(event.includeServer(), new ModSkillNodeProvider(packOutput));

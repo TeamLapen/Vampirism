@@ -30,5 +30,6 @@
     "recipes": [
       "vampirism:stonecutting/castle_slaps_dark_stone_from_castle_block_dark_brick"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

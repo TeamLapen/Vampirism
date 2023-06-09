@@ -19,7 +19,7 @@ public record ServerboundUpgradeMinionStatPacket(int entityId, int statId) imple
         ctx.enqueueWork(() -> {
             Player player = ctx.getSender();
             if (player != null) {
-                Entity entity = player.level.getEntity(msg.entityId);
+                Entity entity = player.level().getEntity(msg.entityId);
                 if (entity instanceof MinionEntity) {
                     if (((MinionEntity<?>) entity).getMinionData().map(d -> d.upgradeStat(msg.statId, (MinionEntity<?>) entity)).orElse(false)) {
                         HelperLib.sync((MinionEntity<?>) entity);

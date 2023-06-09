@@ -39,5 +39,6 @@
     "recipes": [
       "vampirism:hunter/cross"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

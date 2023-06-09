@@ -62,7 +62,7 @@ public class WeaponTableCraftingSlot extends Slot {
             }));
         }
         net.minecraftforge.common.ForgeHooks.setCraftingPlayer(playerIn);
-        NonNullList<ItemStack> remaining = playerIn.level.getRecipeManager().getRemainingItemsFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get(), this.craftMatrix, playerIn.level);
+        NonNullList<ItemStack> remaining = playerIn.level().getRecipeManager().getRemainingItemsFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get(), this.craftMatrix, playerIn.level());
         net.minecraftforge.common.ForgeHooks.setCraftingPlayer(null);
         for (int i = 0; i < remaining.size(); ++i) {
             ItemStack itemstack = this.craftMatrix.getItem(i);
@@ -75,7 +75,7 @@ public class WeaponTableCraftingSlot extends Slot {
             if (!itemstack1.isEmpty()) {
                 if (itemstack.isEmpty()) {
                     this.craftMatrix.setItem(i, itemstack1);
-                } else if (ItemStack.isSame(itemstack, itemstack1) && ItemStack.tagMatches(itemstack, itemstack1)) {
+                } else if (ItemStack.isSameItem(itemstack, itemstack1) && ItemStack.isSameItemSameTags(itemstack, itemstack1)) {
                     itemstack1.grow(itemstack.getCount());
                     this.craftMatrix.setItem(i, itemstack1);
                 } else if (!this.player.getInventory().add(itemstack1)) {

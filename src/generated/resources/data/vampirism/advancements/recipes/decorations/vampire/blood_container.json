@@ -28,5 +28,6 @@
     "recipes": [
       "vampirism:vampire/blood_container"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

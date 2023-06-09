@@ -179,12 +179,12 @@ public class DamageHandler {
     }
 
     public static boolean hurtModded(@NotNull Entity entity, @NotNull Function<ModDamageSources, DamageSource> sourceFunc, float amount) {
-        return getDamageSource(entity.level, sourceFunc).map(source -> entity.hurt(source, amount)).orElse(false);
+        return getDamageSource(entity.level(), sourceFunc).map(source -> entity.hurt(source, amount)).orElse(false);
     }
 
     @SuppressWarnings("UnusedReturnValue")
     public static boolean hurtVanilla(@NotNull Entity entity, @NotNull Function<DamageSources, DamageSource> sourceFunc, float amount) {
-        DamageSource source = sourceFunc.apply(entity.level.damageSources());
+        DamageSource source = sourceFunc.apply(entity.level().damageSources());
         return entity.hurt(source, amount);
     }
 

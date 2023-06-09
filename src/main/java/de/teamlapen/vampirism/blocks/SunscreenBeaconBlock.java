@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,7 +25,7 @@ import java.util.List;
 public class SunscreenBeaconBlock extends VampirismBlockContainer {
 
     public SunscreenBeaconBlock() {
-        super(Properties.of(Material.METAL).strength(-1, 3600000).noOcclusion());
+        super(Properties.of().mapColor(MapColor.METAL).strength(-1, 3600000).noOcclusion());
     }
 
     @Nullable

@@ -28,5 +28,6 @@
     "recipes": [
       "vampirism:general/totem_base"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

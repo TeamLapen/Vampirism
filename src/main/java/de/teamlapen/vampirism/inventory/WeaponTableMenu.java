@@ -37,7 +37,7 @@ public class WeaponTableMenu extends RecipeBookMenu<CraftingContainer> {
     private final ContainerLevelAccess worldPos;
     private final @NotNull HunterPlayer hunterPlayer;
     private final @NotNull Player player;
-    private final CraftingContainer craftMatrix = new CraftingContainer(this, 4, 4);
+    private final CraftingContainer craftMatrix = new TransientCraftingContainer(this, 4, 4);
     private final ResultContainer craftResult = new ResultContainer();
     private final BooleanDataSlot missingLava = new BooleanDataSlot();
 
@@ -185,7 +185,7 @@ public class WeaponTableMenu extends RecipeBookMenu<CraftingContainer> {
 
     @Override
     public boolean recipeMatches(@NotNull Recipe<? super CraftingContainer> recipeIn) {
-        return recipeIn.matches(craftMatrix, this.player.level);
+        return recipeIn.matches(craftMatrix, this.player.level());
     }
 
     @Override
@@ -241,7 +241,7 @@ public class WeaponTableMenu extends RecipeBookMenu<CraftingContainer> {
         @Override
         public @NotNull WeaponTableMenu create(int windowId, @NotNull Inventory inv, @NotNull FriendlyByteBuf data) {
             BlockPos pos = data.readBlockPos();
-            return new WeaponTableMenu(windowId, inv, ContainerLevelAccess.create(inv.player.level, pos));
+            return new WeaponTableMenu(windowId, inv, ContainerLevelAccess.create(inv.player.level(), pos));
         }
     }
 

@@ -80,7 +80,7 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
      */
     public void explode(int distanceSq, @Nullable Entity excludeEntity) {
         @Nullable Entity shootingEntity = getOwner();
-        List<Entity> list = this.level.getEntities(this, this.getBoundingBox().inflate(distanceSq / 2d), EntitySelector.ENTITY_STILL_ALIVE.and(EntitySelector.NO_SPECTATORS));
+        List<Entity> list = this.level().getEntities(this, this.getBoundingBox().inflate(distanceSq / 2d), EntitySelector.ENTITY_STILL_ALIVE.and(EntitySelector.NO_SPECTATORS));
         for (Entity e : list) {
             if ((excludeShooter && e == shootingEntity) || e == excludeEntity) {
                 continue;
@@ -91,9 +91,9 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
 
             }
         }
-        if (!this.level.isClientSide) {
-            ModParticles.spawnParticlesServer(this.level, new GenericParticleOptions(new ResourceLocation("minecraft", "spell_1"), 7, 0xA01010, 0.2F), this.getX(), this.getY(), this.getZ(), 40, 1, 1, 1, 0);
-            ModParticles.spawnParticlesServer(this.level, new GenericParticleOptions(new ResourceLocation("minecraft", "spell_6"), 10, 0x700505), this.getX(), this.getY(), this.getZ(), 15, 1, 1, 1, 0);
+        if (!this.level().isClientSide) {
+            ModParticles.spawnParticlesServer(this.level(), new GenericParticleOptions(new ResourceLocation("minecraft", "spell_1"), 7, 0xA01010, 0.2F), this.getX(), this.getY(), this.getZ(), 40, 1, 1, 1, 0);
+            ModParticles.spawnParticlesServer(this.level(), new GenericParticleOptions(new ResourceLocation("minecraft", "spell_6"), 10, 0x700505), this.getX(), this.getY(), this.getZ(), 15, 1, 1, 1, 0);
         }
         this.discard();
     }
@@ -159,17 +159,17 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
     @Override
     public void tick() {
         super.tick();
-        if (this.level.isClientSide) {
+        if (this.level().isClientSide) {
             Vec3 center = this.position();
-            ModParticles.spawnParticlesClient(this.level, new GenericParticleOptions(new ResourceLocation("minecraft", "spell_4"), 4, 0xA01010, 0f), center.x, center.y, center.z, 5, getPickRadius(), this.random);
+            ModParticles.spawnParticlesClient(this.level(), new GenericParticleOptions(new ResourceLocation("minecraft", "spell_4"), 4, 0xA01010, 0f), center.x, center.y, center.z, 5, getPickRadius(), this.random);
 
             if (this.tickCount % 3 == 0) {
-                ModParticles.spawnParticleClient(this.level, new GenericParticleOptions(new ResourceLocation("minecraft", "effect_4"), 12, 0xC01010, 0.4F), center.x, center.y, center.z);
+                ModParticles.spawnParticleClient(this.level(), new GenericParticleOptions(new ResourceLocation("minecraft", "effect_4"), 12, 0xC01010, 0.4F), center.x, center.y, center.z);
             }
         }
 
         if (this.tickCount > this.maxTicks) {
-            if (!this.level.isClientSide()) {
+            if (!this.level().isClientSide()) {
                 explode(4, null);
             } else {
                 this.discard();
@@ -198,7 +198,7 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
 
     @Override
     protected void onHit(@NotNull HitResult result) {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             if (initialNoClip && this.tickCount > 20) {
                 if (result.getType() == HitResult.Type.BLOCK) {
                     return;

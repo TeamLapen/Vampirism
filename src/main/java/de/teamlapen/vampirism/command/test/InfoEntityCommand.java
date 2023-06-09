@@ -30,7 +30,7 @@ public class InfoEntityCommand extends BasicCommand {
             o.saveAsPassenger(nbt);
             LogManager.getLogger().info(LogUtil.TEST, "Data {}", nbt);
         }
-        commandSource.sendSuccess(Component.translatable("command.vampirism.test.infoentity.printed"), false);
+        commandSource.sendSuccess(() -> Component.translatable("command.vampirism.test.infoentity.printed"), false);
         return 0;
     }
 }

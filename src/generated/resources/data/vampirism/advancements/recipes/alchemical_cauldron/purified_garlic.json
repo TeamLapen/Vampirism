@@ -17,5 +17,6 @@
     "recipes": [
       "vampirism:alchemical_cauldron/purified_garlic"
     ]
-  }
+  },
+  "sends_telemetry_event": true
 }

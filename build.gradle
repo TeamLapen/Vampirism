@@ -8,7 +8,7 @@ buildscript {
 
     
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '6.0+', changing: true
         classpath group: 'org.spongepowered', name:'mixingradle', version: '0.7-SNAPSHOT', changing: true
         classpath 'org.parchmentmc:librarian:1.+'
     }
@@ -56,6 +56,7 @@ sourceSets {
             //if you want to exclude a package do it here, but use the package as path (e.g. de/teamlapen/vampirism for de.teamlapen.vampirism)
             // if you want intellij to ignore the package, you need to add it in the settings (File -> Settings -> Build, Execution, Deployment -> Compiler -> Excludes)
             // exclude(<package>)
+            exclude("de/teamlapen/vampirism/modcompat/guide")
             exclude("de/teamlapen/vampirism/modcompat/jei")
         }
         //noinspection GroovyAssignabilityCheck

@@ -15,9 +15,6 @@ import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
-import de.teamlapen.vampirism.entity.minion.MinionEntity;
-import de.teamlapen.vampirism.entity.minion.management.MinionData;
-import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.entity.player.FactionBasePlayer;
 import de.teamlapen.vampirism.entity.player.IVampirismPlayer;
 import de.teamlapen.vampirism.entity.player.LevelAttributeModifier;
@@ -282,8 +279,8 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
 
             }
         } else {
-            if (this.player.level.getGameTime() % 100 == 16) {
-                if(OilUtils.getEquippedArmorOils(this.player).size() > 0) {
+            if (this.player.level().getGameTime() % 100 == 16) {
+                if (OilUtils.getEquippedArmorOils(this.player).size() > 0) {
                     this.player.addEffect(new MobEffectInstance(ModEffects.POISON.get(), 120, 0, false, false));
                 }
             }
@@ -329,8 +326,8 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
 
     @Override
     public void updateMinionAttributes(boolean increasedStats) {
-        MinionWorldData.getData(this.player.level).flatMap(a -> FactionPlayerHandler.getOpt(this.player).map(a::getOrCreateController)).ifPresent(controller -> controller.contactMinions((minion) -> {
-            (minion.getMinionData()).ifPresent(b -> ((HunterMinionEntity.HunterMinionData)b).setIncreasedStats(increasedStats));
+        MinionWorldData.getData(this.player.level()).flatMap(a -> FactionPlayerHandler.getOpt(this.player).map(a::getOrCreateController)).ifPresent(controller -> controller.contactMinions((minion) -> {
+            (minion.getMinionData()).ifPresent(b -> ((HunterMinionEntity.HunterMinionData) b).setIncreasedStats(increasedStats));
             HelperLib.sync(minion);
         }));
     }

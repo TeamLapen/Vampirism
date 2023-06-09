@@ -54,7 +54,8 @@ public class LordCommand extends BasicCommand {
             level = Math.min(level, faction.getHighestLordLevel());
 
             if (handler.setLordLevel(level)) {
-                context.getSource().sendSuccess(Component.translatable("command.vampirism.base.lord.successful", player.getName(), faction.getName(), level), true);
+                int finalLevel = level;
+                context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.base.lord.successful", player.getName(), faction.getName(), finalLevel), true);
             } else {
                 throw LORD_FAILED.create();
             }

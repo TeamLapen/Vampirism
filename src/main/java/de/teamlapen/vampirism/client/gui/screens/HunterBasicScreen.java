@@ -1,11 +1,10 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.inventory.HunterBasicMenu;
 import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -45,10 +44,10 @@ public class HunterBasicScreen extends AbstractContainerScreen<HunterBasicMenu> 
     }
 
     @Override
-    public void render(@NotNull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(stack);
-        super.render(stack, mouseX, mouseY, partialTicks);
-        this.renderTooltip(stack, mouseX, mouseY);
+    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(graphics);
+        super.render(graphics, mouseX, mouseY, partialTicks);
+        this.renderTooltip(graphics, mouseX, mouseY);
 
     }
 
@@ -62,15 +61,14 @@ public class HunterBasicScreen extends AbstractContainerScreen<HunterBasicMenu> 
     }
 
     @Override
-    protected void renderBg(@NotNull PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, guiTexture);
-        this.blit(stack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
+    protected void renderBg(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+        graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
+        graphics.blit(guiTexture, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override
-    protected void renderLabels(@NotNull PoseStack stack, int mouseX, int mouseY) {
-        super.renderLabels(stack, mouseX, mouseY);
+    protected void renderLabels(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
+        super.renderLabels(graphics, mouseX, mouseY);
 
         Component text = null;
         if (missing == 0) {
@@ -79,7 +77,7 @@ public class HunterBasicScreen extends AbstractContainerScreen<HunterBasicMenu> 
             text = Component.translatable("text.vampirism.basic_hunter.pay_n_vampire_blood_more", missing);
         }
         if (text != null) {
-            this.font.drawWordWrap(stack, text, 50, 12, 120, 0);
+            graphics.drawWordWrap(this.font, text, 50, 12, 120, 0);
         }
     }
 }

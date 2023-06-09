@@ -28,5 +28,6 @@
     "recipes": [
       "vampirism:general/altar_cleansing"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

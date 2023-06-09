@@ -22,7 +22,7 @@ public class AlchemyTableMenu extends AbstractContainerMenu {
     private final @NotNull Slot ingredientSlot;
 
     public AlchemyTableMenu(int containerId, @NotNull Inventory playerInventory) {
-        this(containerId, playerInventory.player.level, playerInventory, new SimpleContainer(6), new SimpleContainerData(3));
+        this(containerId, playerInventory.player.level(), playerInventory, new SimpleContainer(6), new SimpleContainerData(3));
     }
 
     public AlchemyTableMenu(int containerId, Level level, @NotNull Inventory playerInventory, @NotNull Container inventory, @NotNull ContainerData data) {
@@ -85,7 +85,7 @@ public class AlchemyTableMenu extends AbstractContainerMenu {
                     if (!this.moveItemStackTo(itemstack1, 4, 5, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (OilSlot.mayPlaceItem(player.level, itemstack) && itemstack.getCount() == 1) {
+                } else if (OilSlot.mayPlaceItem(player.level(), itemstack) && itemstack.getCount() == 1) {
                     if (!this.moveItemStackTo(itemstack1, 0, 2, false)) {
                         return ItemStack.EMPTY;
                     }

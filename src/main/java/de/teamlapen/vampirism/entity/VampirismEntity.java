@@ -170,7 +170,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
     public void tick() {
         super.tick();
         this.checkImobConversion();
-        if (!this.level.isClientSide && !peaceful && this.level.getDifficulty() == Difficulty.PEACEFUL) {
+        if (!this.level().isClientSide && !peaceful && this.level().getDifficulty() == Difficulty.PEACEFUL) {
             this.discard();
         }
     }
@@ -307,13 +307,13 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
      */
     protected void teleportAway() {
         this.setInvisible(true);
-        ModParticles.spawnParticlesServer(this.level, new GenericParticleOptions(new ResourceLocation("minecraft", "effect_6"), 10, 0x0A0A0A, 0.6F), this.getX(), this.getY(), this.getZ(), 20, 1, 1, 1, 0);
+        ModParticles.spawnParticlesServer(this.level(), new GenericParticleOptions(new ResourceLocation("minecraft", "effect_6"), 10, 0x0A0A0A, 0.6F), this.getX(), this.getY(), this.getZ(), 20, 1, 1, 1, 0);
         this.playSound(SoundEvents.ENDERMAN_TELEPORT, 1, 1);
         this.discard();
     }
 
     private void checkImobConversion() {
-        if (doImobConversion && !this.level.isClientSide) {
+        if (doImobConversion && !this.level().isClientSide) {
             if (this.tickCount % 256 == 0 && this.isAlive()) {
                 boolean current = this instanceof Enemy;
                 boolean convert = false;
@@ -337,7 +337,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
                 }
                 if (convert) {
                     EntityType<?> t = getIMobTypeOpt(!current);
-                    Helper.createEntity(t, this.level).ifPresent(newEntity -> {
+                    Helper.createEntity(t, this.level()).ifPresent(newEntity -> {
                         CompoundTag nbt = new CompoundTag();
                         this.saveWithoutId(nbt);
                         newEntity.load(nbt);

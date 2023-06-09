@@ -74,7 +74,7 @@ public abstract class HunterCampPieces extends StructurePiece {
 
     protected boolean testPreconditions(@NotNull WorldGenLevel worldIn, @NotNull StructureManager manager, @NotNull ChunkPos chunkPos) {
         if (!VampirismConfig.COMMON.enableHunterTentGeneration.get()) return false;
-        return this.y >= 63 && !worldIn.getBlockState(new BlockPos(x, y - 1, z)).getMaterial().isLiquid() && UtilLib.getStructureStartAt(worldIn.getLevel(), new BlockPos(x, y, z), StructureTags.VILLAGE).isEmpty();
+        return this.y >= 63 && !worldIn.getBlockState(new BlockPos(x, y - 1, z)).liquid() && UtilLib.getStructureStartAt(worldIn.getLevel(), new BlockPos(x, y, z), StructureTags.VILLAGE).isEmpty();
     }
 
     public static class Fireplace extends HunterCampPieces {
@@ -275,9 +275,9 @@ public abstract class HunterCampPieces extends StructurePiece {
         @Override
         protected boolean testPreconditions(@NotNull WorldGenLevel worldIn, @NotNull StructureManager manager, @NotNull ChunkPos chunkPos) {
             return super.testPreconditions(worldIn, manager, chunkPos)
-                    && !worldIn.getBlockState(new BlockPos(xCenter, y - 1, z - 1)).getMaterial().isLiquid()
-                    && !worldIn.getBlockState(new BlockPos(x, y - 1, z - 1)).getMaterial().isLiquid()
-                    && !worldIn.getBlockState(new BlockPos(xCenter, y - 1, z)).getMaterial().isLiquid();
+                    && !worldIn.getBlockState(new BlockPos(xCenter, y - 1, z - 1)).liquid()
+                    && !worldIn.getBlockState(new BlockPos(x, y - 1, z - 1)).liquid()
+                    && !worldIn.getBlockState(new BlockPos(xCenter, y - 1, z)).liquid();
         }
     }
 
@@ -309,10 +309,10 @@ public abstract class HunterCampPieces extends StructurePiece {
 
             //generation
             if (advanced) {
-                if (!worldIn.getBlockState(new BlockPos(this.x + 1, worldIn.getHeight(Heightmap.Types.WORLD_SURFACE_WG, this.x + 1, this.z) - 1, z)).getMaterial().isReplaceable()) {
+                if (!worldIn.getBlockState(new BlockPos(this.x + 1, worldIn.getHeight(Heightmap.Types.WORLD_SURFACE_WG, this.x + 1, this.z) - 1, z)).canBeReplaced()) {
                     this.placeBlock(worldIn, ModBlocks.WEAPON_TABLE.get().defaultBlockState(), 2, worldIn.getHeight(Heightmap.Types.WORLD_SURFACE_WG, this.x + 1, this.z) - y, 1, structureBoundingBoxIn);
                 }
-                if (!worldIn.getBlockState(new BlockPos(this.x - 1, worldIn.getHeight(Heightmap.Types.WORLD_SURFACE_WG, this.x - 1, this.z) - 1, z)).getMaterial().isReplaceable()) {
+                if (!worldIn.getBlockState(new BlockPos(this.x - 1, worldIn.getHeight(Heightmap.Types.WORLD_SURFACE_WG, this.x - 1, this.z) - 1, z)).canBeReplaced()) {
                     this.placeBlock(worldIn, Blocks.CRAFTING_TABLE.defaultBlockState(), 0, worldIn.getHeight(Heightmap.Types.WORLD_SURFACE_WG, this.x - 1, this.z) - y, 1, structureBoundingBoxIn);
                 }
             } else {

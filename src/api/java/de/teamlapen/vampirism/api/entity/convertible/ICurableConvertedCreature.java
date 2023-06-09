@@ -45,7 +45,7 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
      * @return the new entity
      */
     default T createCuredEntity(@NotNull PathfinderMob entity, @NotNull EntityType<T> newType) {
-        T newEntity = newType.create(entity.level);
+        T newEntity = newType.create(entity.level());
         assert newEntity != null;
         newEntity.load(entity.saveWithoutId(new CompoundTag()));
         newEntity.yBodyRot = entity.yBodyRot;
@@ -68,7 +68,7 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
     default T cureEntity(@NotNull ServerLevel world, @NotNull PathfinderMob entity, @NotNull EntityType<T> newType) {
         T newEntity = createCuredEntity(entity, newType);
         entity.remove(Entity.RemovalReason.DISCARDED);
-        entity.level.addFreshEntity(newEntity);
+        entity.level().addFreshEntity(newEntity);
         newEntity.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 200, 0));
         if (!entity.isSilent()) {
             world.levelEvent(null, 1027, entity.blockPosition(), 0);
@@ -90,7 +90,7 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
     default boolean handleSound(byte id, @NotNull PathfinderMob entity) {
         if (id == CURE_EVENT_ID) {
             if (!entity.isSilent()) {
-                entity.level.playLocalSound(entity.getX(), entity.getEyeY(), entity.getZ(), SoundEvents.ZOMBIE_VILLAGER_CURE, entity.getSoundSource(), 1.0F + entity.getRandom().nextFloat(), entity.getRandom().nextFloat() * 0.7F + 0.3F, false);
+                entity.level().playLocalSound(entity.getX(), entity.getEyeY(), entity.getZ(), SoundEvents.ZOMBIE_VILLAGER_CURE, entity.getSoundSource(), 1.0F + entity.getRandom().nextFloat(), entity.getRandom().nextFloat() * 0.7F + 0.3F, false);
             }
             return true;
         }
@@ -111,7 +111,7 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
         if (!player.getAbilities().instabuild) {
             stack.shrink(1);
         }
-        if (!entity.level.isClientSide) {
+        if (!entity.level().isClientSide) {
             this.startConverting(player.getUUID(), entity.getRandom().nextInt(2400) + 2400, entity);
         }
         return InteractionResult.SUCCESS;
@@ -144,6 +144,6 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
     default void startConverting(@Nullable UUID conversionStarterIn, int conversionTimeIn, @NotNull PathfinderMob entity) {
         entity.getEntityData().set(this.getConvertingDataParam(), true);
         entity.removeEffect(MobEffects.WEAKNESS);
-        entity.level.broadcastEntityEvent(entity, (CURE_EVENT_ID));
+        entity.level().broadcastEntityEvent(entity, (CURE_EVENT_ID));
     }
 }

@@ -29,14 +29,14 @@ public class BindActionCommand extends BasicCommand {
     private static int bindAction(@NotNull CommandContext<CommandSourceStack> context, @NotNull ServerPlayer asPlayer, int number, @NotNull IAction<?> action) {
         FactionPlayerHandler.getOpt(asPlayer).ifPresent(fp -> {
             fp.setBoundAction(number, action, true, true);
-            context.getSource().sendSuccess(Component.translatable("command.vampirism.base.bind_action.success", action.getName(), number), false);
+            context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.base.bind_action.success", action.getName(), number), false);
         });
         return 0;
     }
 
     @SuppressWarnings("SameReturnValue")
     private static int help(@NotNull CommandContext<CommandSourceStack> context) {
-        context.getSource().sendSuccess(Component.translatable("command.vampirism.base.bind_action.help"), false);
+        context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.base.bind_action.help"), false);
         return 0;
     }
 

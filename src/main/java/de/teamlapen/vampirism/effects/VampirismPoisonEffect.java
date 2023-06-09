@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.effects;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.util.DamageHandler;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -47,11 +47,11 @@ public class VampirismPoisonEffect extends VampirismEffect {
     public void initializeClient(@NotNull Consumer<IClientMobEffectExtensions> consumer) {
         consumer.accept(new IClientMobEffectExtensions() {
             @Override
-            public boolean renderInventoryText(MobEffectInstance instance, EffectRenderingInventoryScreen<?> screen, PoseStack poseStack, int x, int y, int blitOffset) {
+            public boolean renderInventoryText(MobEffectInstance instance, EffectRenderingInventoryScreen<?> screen, GuiGraphics graphics, int x, int y, int blitOffset) {
                 Component component = ((MutableComponent) screen.getEffectName(instance)).append(" - ").append(MobEffectUtil.formatDuration(instance, 1.0F));
-                screen.font.drawShadow(poseStack, component, (float)(x + 10 + 18), (float)(y + 6), 16777215);
+                graphics.drawString(screen.font, component, x + 10 + 18, y + 6, 16777215, true);
                 Component note = Component.translatable("effect.vampirism.wrong_equipment.note").withStyle(ChatFormatting.DARK_RED);
-                screen.font.drawShadow(poseStack, note, (float)(x + 10 + 18), (float)(y + 6 + 10), -1);
+                graphics.drawString(screen.font, note, x + 10 + 18, y + 6 + 10, -1, true);
                 return true;
             }
         });

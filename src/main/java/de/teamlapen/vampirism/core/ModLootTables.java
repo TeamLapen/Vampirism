@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.mixin.LootTableAccessor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
@@ -67,7 +68,7 @@ public class ModLootTables {
             String file = name.substring(name.indexOf(prefix) + prefix.length());
             if (INJECTION_TABLES.containsKey(file)) {
                 try {
-                    event.getTable().addPool(getInjectPool(file));
+                    ((LootTableAccessor) event.getTable()).getPools().add(getInjectPool(file));
                     injected++;
                 } catch (NullPointerException e) {
                     LOGGER.warn("Loottable {} is broken by some other mod. Cannot add Vampirism loot to it.", name);
@@ -78,7 +79,7 @@ public class ModLootTables {
 
     private static @NotNull LootPool getInjectPool(String entryName) {
         LootPoolEntryContainer.Builder<?> entryBuilder = LootTableReference.lootTableReference(INJECTION_TABLES.get(entryName)).setWeight(1);
-        return LootPool.lootPool().name("vampirism_inject_pool").setBonusRolls(UniformGenerator.between(0, 1)).setRolls(ConstantValue.exactly(1)).add(entryBuilder).build();
+        return LootPool.lootPool().setBonusRolls(UniformGenerator.between(0, 1)).setRolls(ConstantValue.exactly(1)).add(entryBuilder).build();
     }
 
     /**

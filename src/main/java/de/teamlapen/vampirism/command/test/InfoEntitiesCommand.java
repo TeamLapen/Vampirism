@@ -23,9 +23,9 @@ public class InfoEntitiesCommand extends BasicCommand {
 
     @SuppressWarnings("SameReturnValue")
     private static int infoEntities(@NotNull CommandSourceStack commandSource, @NotNull ServerPlayer asPlayer) {
-        NaturalSpawner.SpawnState densityManager = asPlayer.getLevel().getChunkSource().getLastSpawnState();
+        NaturalSpawner.SpawnState densityManager = asPlayer.serverLevel().getChunkSource().getLastSpawnState();
         Object2IntMap<MobCategory> object2intmap = densityManager.getMobCategoryCounts();
-        commandSource.sendSuccess(Component.literal(String.format("Creature: %d (%d), Monster: %s (%s), Hunter: %s (%s), Vampire: %s (%s)", object2intmap.getOrDefault(MobCategory.CREATURE, 0), MobCategory.CREATURE.getMaxInstancesPerChunk(), object2intmap.getOrDefault(MobCategory.MONSTER, 0), MobCategory.MONSTER.getMaxInstancesPerChunk(), object2intmap.getOrDefault(VReference.HUNTER_CREATURE_TYPE, 0), VReference.HUNTER_CREATURE_TYPE.getMaxInstancesPerChunk(), object2intmap.getOrDefault(VReference.VAMPIRE_CREATURE_TYPE, 0), VReference.VAMPIRE_CREATURE_TYPE.getMaxInstancesPerChunk())), true);
+        commandSource.sendSuccess(() -> Component.literal(String.format("Creature: %d (%d), Monster: %s (%s), Hunter: %s (%s), Vampire: %s (%s)", object2intmap.getOrDefault(MobCategory.CREATURE, 0), MobCategory.CREATURE.getMaxInstancesPerChunk(), object2intmap.getOrDefault(MobCategory.MONSTER, 0), MobCategory.MONSTER.getMaxInstancesPerChunk(), object2intmap.getOrDefault(VReference.HUNTER_CREATURE_TYPE, 0), VReference.HUNTER_CREATURE_TYPE.getMaxInstancesPerChunk(), object2intmap.getOrDefault(VReference.VAMPIRE_CREATURE_TYPE, 0), VReference.VAMPIRE_CREATURE_TYPE.getMaxInstancesPerChunk())), true);
         return 0;
     }
 }

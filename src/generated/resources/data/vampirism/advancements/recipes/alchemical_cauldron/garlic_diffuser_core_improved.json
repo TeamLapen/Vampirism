@@ -17,5 +17,6 @@
     "recipes": [
       "vampirism:alchemical_cauldron/garlic_diffuser_core_improved"
     ]
-  }
+  },
+  "sends_telemetry_event": true
 }

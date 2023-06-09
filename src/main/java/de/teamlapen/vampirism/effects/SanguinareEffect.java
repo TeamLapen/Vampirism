@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.effects;
 
 import com.google.common.base.Preconditions;
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.effect.EffectWithNoCounter;
 import de.teamlapen.vampirism.config.BalanceMobProps;
@@ -9,6 +8,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -59,7 +59,7 @@ public class SanguinareEffect extends VampirismEffect implements EffectWithNoCou
 
     @Override
     public void applyEffectTick(@NotNull LivingEntity entity, int amplifier) {
-        if (entity.level.isClientSide || !entity.isAlive()) return;
+        if (entity.level().isClientSide || !entity.isAlive()) return;
         if (entity instanceof PathfinderMob) {
             ExtendedCreature.getSafe(entity).ifPresent(IExtendedCreatureVampirism::makeVampire);
         }
@@ -85,10 +85,10 @@ public class SanguinareEffect extends VampirismEffect implements EffectWithNoCou
             }
 
             @Override
-            public boolean renderInventoryText(MobEffectInstance instance, EffectRenderingInventoryScreen<?> screen, PoseStack poseStack, int x, int y, int blitOffset) {
+            public boolean renderInventoryText(MobEffectInstance instance, EffectRenderingInventoryScreen<?> screen, GuiGraphics graphics, int x, int y, int blitOffset) {
                 Component component = screen.getEffectName(instance);
-                screen.font.drawShadow(poseStack, component, (float)(x + 10 + 18), (float)(y + 6), 16777215);
-                screen.font.drawShadow(poseStack, "**:**", (float)(x + 10 + 18), (float)(y + 6 + 10), 8355711);
+                graphics.drawString(screen.font, component, x + 10 + 18, y + 6, 16777215, true);
+                graphics.drawString(screen.font, "**:**", x + 10 + 18, y + 6 + 10, 8355711, true);
                 return true;
             }
         });

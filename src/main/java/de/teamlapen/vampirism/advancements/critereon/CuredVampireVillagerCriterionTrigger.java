@@ -27,21 +27,21 @@ public class CuredVampireVillagerCriterionTrigger extends SimpleCriterionTrigger
 
     @NotNull
     @Override
-    protected Instance createInstance(@NotNull JsonObject json, @NotNull EntityPredicate.Composite entityPredicate, @NotNull DeserializationContext conditionsParser) {
-        EntityPredicate.Composite vampire = EntityPredicate.Composite.fromJson(json, "vampire", conditionsParser);
-        EntityPredicate.Composite villager = EntityPredicate.Composite.fromJson(json, "villager", conditionsParser);
+    protected Instance createInstance(@NotNull JsonObject json, @NotNull ContextAwarePredicate entityPredicate, @NotNull DeserializationContext conditionsParser) {
+        ContextAwarePredicate vampire = EntityPredicate.fromJson(json, "vampire", conditionsParser);
+        ContextAwarePredicate villager = EntityPredicate.fromJson(json, "villager", conditionsParser);
         return new Instance(entityPredicate, vampire, villager);
     }
 
     public static class Instance extends AbstractCriterionTriggerInstance {
         public static @NotNull Instance any() {
-            return new Instance(EntityPredicate.Composite.ANY, EntityPredicate.Composite.ANY, EntityPredicate.Composite.ANY);
+            return new Instance(ContextAwarePredicate.ANY, ContextAwarePredicate.ANY, ContextAwarePredicate.ANY);
         }
 
-        private final EntityPredicate.Composite vampire;
-        private final EntityPredicate.Composite villager;
+        private final ContextAwarePredicate vampire;
+        private final ContextAwarePredicate villager;
 
-        public Instance(EntityPredicate.@NotNull Composite player, EntityPredicate.Composite vampire, EntityPredicate.Composite villager) {
+        public Instance(ContextAwarePredicate player, ContextAwarePredicate vampire, ContextAwarePredicate villager) {
             super(ID, player);
             this.vampire = vampire;
             this.villager = villager;

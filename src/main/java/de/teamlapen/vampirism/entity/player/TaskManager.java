@@ -93,7 +93,7 @@ public class TaskManager implements ITaskManager {
 
     @Override
     public void acceptTask(UUID taskBoardId, @NotNull UUID taskInstance) {
-        ITaskInstance ins = this.taskWrapperMap.get(taskBoardId).acceptTask(taskInstance, this.player.level.getGameTime() + getTaskTimeConfig() * 1200L);
+        ITaskInstance ins = this.taskWrapperMap.get(taskBoardId).acceptTask(taskInstance, this.player.level().getGameTime() + getTaskTimeConfig() * 1200L);
         this.updateStats(ins);
     }
 
@@ -121,7 +121,7 @@ public class TaskManager implements ITaskManager {
      */
     public boolean canCompleteTask(@NotNull ITaskInstance taskInstance) {
         if (!isTaskUnlocked(taskInstance.getTask())) return false;
-        if (!isTimeEnough(taskInstance, this.player.level.getGameTime())) return false;
+        if (!isTimeEnough(taskInstance, this.player.level().getGameTime())) return false;
         for (TaskRequirement.Requirement<?> requirement : taskInstance.getTask().getRequirement().getAll()) {
             if (!checkStat(taskInstance, requirement)) {
                 return false;
@@ -458,7 +458,7 @@ public class TaskManager implements ITaskManager {
 
         for(int j = 0; j < inventory.getContainerSize(); ++j) {
             ItemStack itemstack = inventory.getItem(j);
-            if (ItemStack.isSame(itemstack, stack) && checkPotionEqual(itemstack, stack) && checkOilEqual(itemstack, stack)) {
+            if (ItemStack.isSameItem(itemstack, stack) && checkPotionEqual(itemstack, stack) && checkOilEqual(itemstack, stack)) {
                 i += itemstack.getCount();
             }
         }

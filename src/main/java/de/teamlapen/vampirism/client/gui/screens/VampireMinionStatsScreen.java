@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -43,12 +43,12 @@ public class VampireMinionStatsScreen extends MinionStatsScreen<VampireMinionEnt
     }
 
     @Override
-    protected void renderStats(@NotNull PoseStack mStack, VampireMinionEntity.@NotNull VampireMinionData data) {
-        renderLevelRow(mStack, data.getLevel() + 1, VampireMinionEntity.VampireMinionData.MAX_LEVEL + 1);
-        renderStatRow(mStack, 0, inventoryLevel, Component.literal("" + data.getInventorySize()), data.getInventoryLevel() + 1, VampireMinionEntity.VampireMinionData.MAX_LEVEL_INVENTORY + 1);
-        renderStatRow(mStack, 1, healthLevel, Component.literal(String.format("%.1f", entity.getAttribute(Attributes.MAX_HEALTH).getBaseValue())), data.getHealthLevel() + 1, VampireMinionEntity.VampireMinionData.MAX_LEVEL_HEALTH + 1);
-        renderStatRow(mStack, 2, strengthLevel, Component.literal(String.format("%.1f", entity.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue())), data.getStrengthLevel() + 1, VampireMinionEntity.VampireMinionData.MAX_LEVEL_STRENGTH + 1);
-        renderStatRow(mStack, 3, speedLevel, Component.literal(String.format("%.1f", entity.getAttribute(Attributes.MOVEMENT_SPEED).getBaseValue())), data.getSpeedLevel() + 1, VampireMinionEntity.VampireMinionData.MAX_LEVEL_SPEED + 1);
+    protected void renderStats(@NotNull GuiGraphics graphics, VampireMinionEntity.@NotNull VampireMinionData data) {
+        renderLevelRow(graphics, data.getLevel() + 1, VampireMinionEntity.VampireMinionData.MAX_LEVEL + 1);
+        renderStatRow(graphics, 0, inventoryLevel, Component.literal("" + data.getInventorySize()), data.getInventoryLevel() + 1, VampireMinionEntity.VampireMinionData.MAX_LEVEL_INVENTORY + 1);
+        renderStatRow(graphics, 1, healthLevel, Component.literal(String.format("%.1f", entity.getAttribute(Attributes.MAX_HEALTH).getBaseValue())), data.getHealthLevel() + 1, VampireMinionEntity.VampireMinionData.MAX_LEVEL_HEALTH + 1);
+        renderStatRow(graphics, 2, strengthLevel, Component.literal(String.format("%.1f", entity.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue())), data.getStrengthLevel() + 1, VampireMinionEntity.VampireMinionData.MAX_LEVEL_STRENGTH + 1);
+        renderStatRow(graphics, 3, speedLevel, Component.literal(String.format("%.1f", entity.getAttribute(Attributes.MOVEMENT_SPEED).getBaseValue())), data.getSpeedLevel() + 1, VampireMinionEntity.VampireMinionData.MAX_LEVEL_SPEED + 1);
 
     }
 }

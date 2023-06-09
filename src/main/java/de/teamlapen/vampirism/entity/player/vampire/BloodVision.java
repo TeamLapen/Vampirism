@@ -21,7 +21,7 @@ public class BloodVision implements IVampireVision {
     public void onActivated(@NotNull IVampirePlayer player) {
         ((VampirePlayer) player).getSpecialAttributes().blood_vision = true;
         Player entity = player.getRepresentingPlayer();
-        if (entity.level.isClientSide() && OptifineHandler.isShaders()) {
+        if (entity.level().isClientSide() && OptifineHandler.isShaders()) {
             if (!VampirismConfig.COMMON.optifineBloodvisionWarning.get()) {
                 VampirismConfig.COMMON.optifineBloodvisionWarning.set(true);
                 VampirismConfig.COMMON.optifineBloodvisionWarning.save();

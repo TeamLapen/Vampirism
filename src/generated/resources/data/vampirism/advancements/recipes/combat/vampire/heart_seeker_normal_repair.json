@@ -30,5 +30,6 @@
     "recipes": [
       "vampirism:vampire/heart_seeker_normal_repair"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

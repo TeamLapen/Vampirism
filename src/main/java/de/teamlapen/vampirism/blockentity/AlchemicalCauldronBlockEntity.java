@@ -194,7 +194,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
     public void setItem(int index, @NotNull ItemStack stack) {
         super.setItem(index, stack);
         ItemStack itemstack = this.items.get(index);
-        boolean flag = !stack.isEmpty() && stack.sameItem(itemstack) && ItemStack.tagMatches(stack, itemstack);
+        boolean flag = !stack.isEmpty() && ItemStack.isSameItem(stack, itemstack) && ItemStack.isSameItemSameTags(stack, itemstack);
         if (flag) {
             this.setChanged();
         }

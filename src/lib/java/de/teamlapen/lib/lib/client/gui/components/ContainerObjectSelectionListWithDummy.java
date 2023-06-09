@@ -1,8 +1,7 @@
 package de.teamlapen.lib.lib.client.gui.components;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,19 +23,19 @@ public abstract class ContainerObjectSelectionListWithDummy<Z, T extends Contain
 
     @SuppressWarnings("SuspiciousNameCombination")
     @Override
-    protected void renderBackground(@NotNull PoseStack pPoseStack) {
+    protected void renderBackground(@NotNull GuiGraphics graphics) {
         int color = 0xFFFFFFFF;
-        GuiComponent.hLine(pPoseStack, this.x0 - 1, this.x1 - 6, this.y0 - 1, color);
-        GuiComponent.hLine(pPoseStack, this.x0 - 1, this.x1 - 6, this.y1, color);
-        GuiComponent.vLine(pPoseStack, this.x0 - 1, this.y0 - 1, this.y1 + 1, color);
-        GuiComponent.vLine(pPoseStack, this.x1 - 6, this.y0 - 1, this.y1 + 1, color);
-        fillGradient(pPoseStack, this.x0, this.y0, this.x1 - 6, this.y1, 0xFF000000, 0xFF000000);
+        graphics.hLine(this.x0 - 1, this.x1 - 6, this.y0 - 1, color);
+        graphics.hLine(this.x0 - 1, this.x1 - 6, this.y1, color);
+        graphics.vLine(this.x0 - 1, this.y0 - 1, this.y1 + 1, color);
+        graphics.vLine(this.x1 - 6, this.y0 - 1, this.y1 + 1, color);
+        graphics.fillGradient(this.x0, this.y0, this.x1 - 6, this.y1, 0xFF000000, 0xFF000000);
     }
 
     @Override
-    protected void renderDecorations(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY) {
-        fillGradient(pPoseStack, this.x0, this.y0, this.x1 - 6, this.y0 + 4, -16777216, 0);
-        fillGradient(pPoseStack, this.x0, this.y1 - 4, this.x1 - 6, this.y1, 0, -16777216);
+    protected void renderDecorations(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY) {
+        graphics.fillGradient(this.x0, this.y0, this.x1 - 6, this.y0 + 4, -16777216, 0);
+        graphics.fillGradient(this.x0, this.y1 - 4, this.x1 - 6, this.y1, 0, -16777216);
     }
 
     @Override
@@ -50,8 +49,8 @@ public abstract class ContainerObjectSelectionListWithDummy<Z, T extends Contain
     }
 
     @Override
-    protected void renderItem(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick, int pIndex, int pLeft, int pTop, int pWidth, int pHeight) {
-        super.renderItem(pPoseStack, pMouseX, pMouseY, pPartialTick, pIndex, pLeft, pTop, pWidth - 6, pHeight);
+    protected void renderItem(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick, int pIndex, int pLeft, int pTop, int pWidth, int pHeight) {
+        super.renderItem(graphics, pMouseX, pMouseY, pPartialTick, pIndex, pLeft, pTop, pWidth - 6, pHeight);
     }
 
     @Override

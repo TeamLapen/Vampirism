@@ -48,7 +48,7 @@ public class SkillCommand extends BasicCommand {
     private static int disableall(@NotNull CommandSourceStack commandSource, @NotNull ServerPlayer asPlayer) throws CommandSyntaxException {
         IFactionPlayer<?> factionPlayer = FactionPlayerHandler.getCurrentFactionPlayer(asPlayer).orElseThrow(NO_FACTION::create);
         factionPlayer.getSkillHandler().resetSkills();
-        commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.all_locked"), false);
+        commandSource.sendSuccess(() -> Component.translatable("command.vampirism.test.skill.all_locked"), false);
         return 0;
     }
 
@@ -61,7 +61,7 @@ public class SkillCommand extends BasicCommand {
                 skillHandler.enableSkill((ISkill) skill);
             }
         }
-        commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.all_unlocked"), false);
+        commandSource.sendSuccess(() -> Component.translatable("command.vampirism.test.skill.all_unlocked"), false);
         return 0;
     }
 
@@ -69,7 +69,7 @@ public class SkillCommand extends BasicCommand {
         IFactionPlayer<?> factionPlayer = FactionPlayerHandler.getCurrentFactionPlayer(asPlayer).orElseThrow(NO_FACTION::create);
         if (factionPlayer.getSkillHandler().isSkillEnabled(skill)) {
             factionPlayer.getSkillHandler().disableSkill(skill);
-            commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.disabled"), false);
+            commandSource.sendSuccess(() -> Component.translatable("command.vampirism.test.skill.disabled"), false);
             return 0;
         }
         ISkillHandler.Result result = factionPlayer.getSkillHandler().canSkillBeEnabled(skill);
@@ -79,9 +79,9 @@ public class SkillCommand extends BasicCommand {
         switch (result) {
             case OK -> {
                 factionPlayer.getSkillHandler().enableSkill(skill);
-                commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.enabled", RegUtil.id(skill) + " (" + skill.getName().getString() + ")"), false);
+                commandSource.sendSuccess(() -> Component.translatable("command.vampirism.test.skill.enabled", RegUtil.id(skill) + " (" + skill.getName().getString() + ")"), false);
             }
-            case ALREADY_ENABLED -> commandSource.sendSuccess(Component.translatable("command.vampirism.test.skill.alreadyenabled", skill.getName()), false);
+            case ALREADY_ENABLED -> commandSource.sendSuccess(() -> Component.translatable("command.vampirism.test.skill.alreadyenabled", skill.getName()), false);
             case PARENT_NOT_ENABLED -> {
                 ISkill<?>[] skills = factionPlayer.getSkillHandler().getParentSkills(skill);
                 if (skills == null || skills.length == 0) return 0;

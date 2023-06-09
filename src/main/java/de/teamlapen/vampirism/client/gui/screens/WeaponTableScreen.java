@@ -1,15 +1,13 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.gui.screens.recipebook.WeaponTableRecipeBookGui;
 import de.teamlapen.vampirism.inventory.WeaponTableMenu;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.gui.screens.recipebook.RecipeUpdateListener;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -60,19 +58,19 @@ public class WeaponTableScreen extends AbstractContainerScreen<WeaponTableMenu> 
     }
 
     @Override
-    public void render(@NotNull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-        super.render(stack, mouseX, mouseY, partialTicks);
-        this.renderBackground(stack);
+    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(graphics, mouseX, mouseY, partialTicks);
+        this.renderBackground(graphics);
         if (this.recipeBookGui.isVisible() && this.widthTooNarrow) {
-            this.renderBg(stack, partialTicks, mouseX, mouseY);
-            this.recipeBookGui.render(stack, mouseX, mouseY, partialTicks);
+            this.renderBg(graphics, partialTicks, mouseX, mouseY);
+            this.recipeBookGui.render(graphics, mouseX, mouseY, partialTicks);
         } else {
-            this.recipeBookGui.render(stack, mouseX, mouseY, partialTicks);
-            super.render(stack, mouseX, mouseY, partialTicks);
-            this.recipeBookGui.renderGhostRecipe(stack, this.leftPos, this.topPos, true, partialTicks);
+            this.recipeBookGui.render(graphics, mouseX, mouseY, partialTicks);
+            super.render(graphics, mouseX, mouseY, partialTicks);
+            this.recipeBookGui.renderGhostRecipe(graphics, this.leftPos, this.topPos, true, partialTicks);
         }
-        this.renderTooltip(stack, mouseX, mouseY);
-        this.recipeBookGui.renderTooltip(stack, this.leftPos, this.topPos, mouseX, mouseY);
+        this.renderTooltip(graphics, mouseX, mouseY);
+        this.recipeBookGui.renderTooltip(graphics, this.leftPos, this.topPos, mouseX, mouseY);
         this.magicalSpecialHackyFocus(this.recipeBookGui);
     }
 
@@ -110,20 +108,16 @@ public class WeaponTableScreen extends AbstractContainerScreen<WeaponTableMenu> 
     }
 
     @Override
-    protected void renderBg(@NotNull PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, TABLE_GUI_TEXTURES);
+    protected void renderBg(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+        graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         int i = this.leftPos;
         int j = (this.height - this.imageHeight) / 2;
-        this.blit(stack, i, j, 0, 0, this.imageWidth, this.imageHeight);
+        graphics.blit(TABLE_GUI_TEXTURES, i, j, 0, 0, this.imageWidth, this.imageHeight);
         if (menu.hasLava()) {
-            RenderSystem.setShaderTexture(0, TABLE_GUI_TEXTURES_LAVA);
-            this.blit(stack, i, j, 0, 0, this.imageWidth, this.imageHeight);
+            graphics.blit(TABLE_GUI_TEXTURES_LAVA, i, j, 0, 0, this.imageWidth, this.imageHeight);
         }
         if (menu.isMissingLava()) {
-            RenderSystem.setShaderTexture(0, TABLE_GUI_TEXTURES_MISSING_LAVA);
-            this.blit(stack, i, j, 0, 0, this.imageWidth, this.imageHeight);
+            graphics.blit(TABLE_GUI_TEXTURES_MISSING_LAVA, i, j, 0, 0, this.imageWidth, this.imageHeight);
         }
     }
 

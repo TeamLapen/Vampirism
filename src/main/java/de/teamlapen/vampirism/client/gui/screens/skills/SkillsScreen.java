@@ -17,6 +17,7 @@ import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
 import de.teamlapen.vampirism.network.ServerboundUnlockSkillPacket;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.client.GameNarrator;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
@@ -132,79 +133,74 @@ public class SkillsScreen extends Screen {
     }
 
     @Override
-    public void render(@NotNull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(stack);
+    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(graphics);
 
-        this.renderInside(stack, mouseX, mouseY, guiLeft, guiTop);
-        this.renderWindow(stack, mouseX, mouseY, guiLeft, guiTop);
-        super.render(stack, mouseX, mouseY, partialTicks);
-        this.renderTooltip(stack, mouseX, mouseY, guiLeft, guiTop);
+        this.renderInside(graphics, mouseX, mouseY, guiLeft, guiTop);
+        this.renderWindow(graphics, mouseX, mouseY, guiLeft, guiTop);
+        super.render(graphics, mouseX, mouseY, partialTicks);
+        this.renderTooltip(graphics, mouseX, mouseY, guiLeft, guiTop);
     }
 
-    public void renderInside(@NotNull PoseStack stack, int mouseX, int mouseY, int x, int y) {
+    public void renderInside(@NotNull GuiGraphics graphics, int mouseX, int mouseY, int x, int y) {
+        PoseStack pose = graphics.pose();
         if (this.selectedTab != null) {
-            stack.pushPose();
-            stack.translate((float) (x + 9), (float) (y + 18), 0.0F);
-            this.selectedTab.drawContents(stack);
-            stack.popPose();
-            RenderSystem.depthFunc(515);
-            RenderSystem.disableDepthTest();
+            this.selectedTab.drawContents(graphics, x + 9, y + 18);
         } else {
-            stack.pushPose();
-            stack.translate(x + 9, y + 18, 0);
-            fill(stack, 0, 0, SCREEN_WIDTH - 18, SCREEN_HEIGHT - 27, -16777216);
+            pose.pushPose();
+            pose.translate(x + 9, y + 18, 0);
+            graphics.fill(0, 0, SCREEN_WIDTH - 18, SCREEN_HEIGHT - 27, -16777216);
             int i = 117;
-            drawCenteredString(stack, this.font, NO_TABS_LABEL, i, 56 - 9 / 2, -1);
-            drawCenteredString(stack, this.font, VERY_SAD_LABEL, i, 113 - 9, -1);
-            stack.popPose();
+            graphics.drawCenteredString(this.font, NO_TABS_LABEL, i, 56 - 9 / 2, -1);
+            graphics.drawCenteredString(this.font, VERY_SAD_LABEL, i, 113 - 9, -1);
+            pose.popPose();
         }
     }
 
-    public void renderWindow(@NotNull PoseStack stack, int mouseX, int mouseY, int x, int y) {
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+    public void renderWindow(@NotNull GuiGraphics graphics, int mouseX, int mouseY, int x, int y) {
+        graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.enableBlend();
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, WINDOW_LOCATION);
-        this.blit(stack, x, y, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        graphics.blit(WINDOW_LOCATION, x, y, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         if (this.tabs.size() > 1) {
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, TABS_LOCATION);
 
             for (SkillsTabScreen skillTab : this.tabs) {
-                skillTab.drawTab(stack, x, y, skillTab == this.selectedTab);
+                skillTab.drawTab(graphics, x, y, skillTab == this.selectedTab);
             }
 
             RenderSystem.defaultBlendFunc();
 
             for (SkillsTabScreen skillTab : this.tabs) {
-                skillTab.drawIcon(stack, x, y, this.itemRenderer);
+                skillTab.drawIcon(graphics, x, y);
             }
 
             RenderSystem.disableBlend();
         }
         if (this.selectedTab != null) {
             Component remainingPoints = Component.translatable("text.vampirism.skills.points_left", String.valueOf(this.selectedTab.getRemainingPoints()));
-            this.font.draw(stack, remainingPoints, x + 240 - this.font.width(remainingPoints), y + 6, 4210752);
+            graphics.drawString(this.font, remainingPoints, x + 240 - this.font.width(remainingPoints), y + 6, 4210752, false);
         }
-        this.font.draw(stack, TITLE, (float) (x + 8), (float) (y + 6), 4210752);
+        graphics.drawString(this.font, TITLE, x + 8, y + 6, 4210752, false);
     }
 
-    public void renderTooltip(@NotNull PoseStack stack, int mouseX, int mouseY, int guiLeft, int guiTop) {
+    public void renderTooltip(@NotNull GuiGraphics graphics, int mouseX, int mouseY, int guiLeft, int guiTop) {
         if (this.minecraft.player.getEffect(ModEffects.OBLIVION.get()) != null) return;
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         if (this.selectedTab != null) {
-            stack.pushPose();
+            PoseStack pose = graphics.pose();
+            pose.pushPose();
+            pose.translate((float) (guiLeft + 9), (float) (guiTop + 18), 400.0F);
             RenderSystem.enableDepthTest();
-            stack.translate((float) (guiLeft + 9), (float) (guiTop + 18), 400.0F);
-            this.selectedTab.drawTooltips(stack, mouseX - guiLeft - 9, mouseY - guiTop - 18);
+            this.selectedTab.drawTooltips(graphics, mouseX - guiLeft - 9, mouseY - guiTop - 18);
             RenderSystem.disableDepthTest();
-            stack.popPose();
+            pose.popPose();
         }
 
         if (this.tabs.size() > 1) {
             for (SkillsTabScreen tabScreen : this.tabs) {
                 if (tabScreen.isMouseOver(guiLeft, guiTop, mouseX, mouseY)) {
-                    this.renderTooltip(stack, tabScreen.getTitle(), mouseX, mouseY);
+                    graphics.renderTooltip(this.minecraft.font, tabScreen.getTitle(), mouseX, mouseY);
                 }
             }
         }
