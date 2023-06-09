@@ -74,5 +74,6 @@
     "recipes": [
       "vampirism:weapontable/crucifix_enhanced"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

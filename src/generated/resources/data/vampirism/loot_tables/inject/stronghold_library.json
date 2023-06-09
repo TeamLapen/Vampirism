@@ -14,7 +14,6 @@
           "name": "vampirism:vampire_book"
         }
       ],
-      "name": "main",
       "rolls": 1.0
     },
     {
@@ -51,8 +50,8 @@
           "name": "vampirism:obi_belt"
         }
       ],
-      "name": "refinement_item",
       "rolls": 3.0
     }
-  ]
+  ],
+  "random_sequence": "vampirism:inject/stronghold_library"
 }

@@ -84,13 +84,13 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     @Override
     public void aiStep() {
         if (this.tickCount % REFERENCE.REFRESH_GARLIC_TICKS == 3) {
-            isGettingGarlicDamage(level, true);
+            isGettingGarlicDamage(level(), true);
         }
         if (this.tickCount % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 2) {
-            isGettingSundamage(level, true);
+            isGettingSundamage(level(), true);
         }
-        if (!level.isClientSide) {
-            if (isGettingSundamage(level) && this.isAlive()) {
+        if (!level().isClientSide) {
+            if (isGettingSundamage(level()) && this.isAlive()) {
                 if (VampirismConfig.BALANCE.vpSundamageInstantDeath.get()) {
                     DamageHandler.hurtModded(this, ModDamageSources::sunDamage, 1000);
                     turnToAsh();
@@ -102,11 +102,11 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
                 }
 
             }
-            if (isGettingGarlicDamage(level) != EnumStrength.NONE) {
-                DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(level), this.tickCount);
+            if (isGettingGarlicDamage(level()) != EnumStrength.NONE) {
+                DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(level()), this.tickCount);
             }
         }
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             if (isAlive() && isInWater()) {
                 setAirSupply(300);
                 if (tickCount % 16 == 4) {
@@ -124,8 +124,8 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     private void turnToAsh() {
         if (!this.isAlive()) {
             this.deathTime = 19;
-            ModParticles.spawnParticlesServer(this.level, ParticleTypes.WHITE_ASH, this.getX() + 0.5, this.getY() + this.getBbHeight(), this.getZ() + 0.5f, 20, 0.2, this.getBbHeight() * 0.2d, 0.2, 0.1);
-            ModParticles.spawnParticlesServer(this.level, ParticleTypes.ASH, this.getX() + 0.5, this.getY() + this.getBbHeight() / 2, this.getZ() + 0.5f, 20, 0.2, this.getBbHeight() * 0.2d, 0.2, 0.1);
+            ModParticles.spawnParticlesServer(this.level(), ParticleTypes.WHITE_ASH, this.getX() + 0.5, this.getY() + this.getBbHeight(), this.getZ() + 0.5f, 20, 0.2, this.getBbHeight() * 0.2d, 0.2, 0.1);
+            ModParticles.spawnParticlesServer(this.level(), ParticleTypes.ASH, this.getX() + 0.5, this.getY() + this.getBbHeight() / 2, this.getZ() + 0.5f, 20, 0.2, this.getBbHeight() * 0.2d, 0.2, 0.1);
             this.remove(RemovalReason.KILLED);
         }
     }
@@ -140,8 +140,8 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
                 if (-worldIn.getPathfindingCostFromLightLevels(blockPosition()) < 0.0 && random.nextInt(5) != 0) {
                     return false;
                 }
-                if (this.level.isLoaded(blockPosition()) && worldIn instanceof ServerLevel) { //TODO check performance
-                    if (UtilLib.getStructureStartAt(level, blockPosition(), StructureTags.VILLAGE).isPresent()) {
+                if (this.level().isLoaded(blockPosition()) && worldIn instanceof ServerLevel) { //TODO check performance
+                    if (UtilLib.getStructureStartAt(level(), blockPosition(), StructureTags.VILLAGE).isPresent()) {
                         if (getRandom().nextInt(60) != 0) {
                             return false;
                         }
@@ -180,7 +180,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
 
     @Override
     public boolean doHurtTarget(@NotNull Entity entity) {
-        if (canSuckBloodFromPlayer && !level.isClientSide && wantsBlood() && entity instanceof Player player && !Helper.isHunter(player) && !UtilLib.canReallySee(player, this, true)) {
+        if (canSuckBloodFromPlayer && !level().isClientSide && wantsBlood() && entity instanceof Player player && !Helper.isHunter(player) && !UtilLib.canReallySee(player, this, true)) {
             int amt = VampirePlayer.getOpt(player).map(v -> v.onBite(this)).orElse(0);
             drinkBlood(amt, IBloodStats.MEDIUM_SATURATION);
             VampirePlayer.getOpt(player).ifPresent(v -> v.tryInfect(this));
@@ -250,7 +250,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     @Override
     public boolean isGettingSundamage(LevelAccessor iWorld, boolean forceRefresh) {
         if (!forceRefresh) return sundamageCache;
-        return (sundamageCache = Helper.gettingSundamge(this, iWorld, this.level.getProfiler()));
+        return (sundamageCache = Helper.gettingSundamge(this, iWorld, this.level().getProfiler()));
     }
 
     @Override
@@ -286,8 +286,8 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     @Override
     protected void tickDeath() {
         if (this.deathTime == 19) {
-            if (!this.level.isClientSide && (dropSoul && this.level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT))) {
-                this.level.addFreshEntity(new SoulOrbEntity(this.level, this.getX(), this.getY(), this.getZ(), SoulOrbEntity.VARIANT.VAMPIRE));
+            if (!this.level().isClientSide && (dropSoul && this.level().getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT))) {
+                this.level().addFreshEntity(new SoulOrbEntity(this.level(), this.getX(), this.getY(), this.getZ(), SoulOrbEntity.VARIANT.VAMPIRE));
             }
         }
         super.tickDeath();

@@ -116,20 +116,20 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
         targetLevel = VampirismPlayerAttributes.get(p).vampireLevel + 1;
         var requirement = VampireLeveling.getInspirationRequirement(targetLevel);
         if (requirement.isEmpty()) {
-            if (p.level.isClientSide) {
+            if (p.level().isClientSide) {
                 p.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual_level_wrong"), true);
             }
             return;
         }
         int neededBlood = requirement.get().bloodAmount() * VReference.FOOD_TO_FLUID_BLOOD;
         if (tank.getFluidAmount() + 99 < neededBlood) {//Since the container can only be filled in 100th steps
-            if (p.level.isClientSide) {
+            if (p.level().isClientSide) {
                 p.displayClientMessage(Component.translatable("text.vampirism.not_enough_blood"), true);
             }
             return;
         }
-        if (!p.level.isClientSide) {
-            ModParticles.spawnParticlesServer(p.level, new FlyingBloodEntityParticleOptions(p.getId(), false), this.worldPosition.getX() + 0.5, this.worldPosition.getY() + 1, this.worldPosition.getZ() + 0.5, 40, 0.1F, 0.1f, 0.1f, 0);
+        if (!p.level().isClientSide) {
+            ModParticles.spawnParticlesServer(p.level(), new FlyingBloodEntityParticleOptions(p.getId(), false), this.worldPosition.getX() + 0.5, this.worldPosition.getY() + 1, this.worldPosition.getZ() + 0.5, 40, 0.1F, 0.1f, 0.1f, 0);
         } else {
             ((InternalTank) tank).doDrain(neededBlood, IFluidHandler.FluidAction.EXECUTE);
         }

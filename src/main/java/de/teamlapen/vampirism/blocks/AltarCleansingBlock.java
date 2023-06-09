@@ -14,7 +14,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -39,7 +39,7 @@ public class AltarCleansingBlock extends VampirismHorizontalBlock {
 
 
     public AltarCleansingBlock() {
-        super(Properties.of(Material.WOOD).strength(0.5f).noOcclusion());
+        super(Properties.of().mapColor(MapColor.WOOD).ignitedByLava().strength(0.5f).noOcclusion());
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
     }
 

@@ -124,6 +124,7 @@ public class VampirismMod {
 
         MinecraftForge.EVENT_BUS.register(Permissions.class);
         MinecraftForge.EVENT_BUS.register(SitHandler.class);
+        MinecraftForge.EVENT_BUS.register(new GeneralEventHandler());
         MinecraftForge.EVENT_BUS.addListener(this::onCommandsRegister);
         MinecraftForge.EVENT_BUS.addListener(this::onAddReloadListenerEvent);
         MinecraftForge.EVENT_BUS.addListener(this::onServerStarting);
@@ -280,9 +281,6 @@ public class VampirismMod {
         } else {
             versionInfo = VersionChecker.executeVersionCheck(REFERENCE.VERSION_UPDATE_FILE, REFERENCE.VERSION, !inDev && VampirismConfig.COMMON.collectStats.get());
         }
-
-        GeneralEventHandler eventHandler = new GeneralEventHandler();
-        MinecraftForge.EVENT_BUS.register(eventHandler);
 
         MinecraftForge.EVENT_BUS.register(new ModPlayerEventHandler());
 

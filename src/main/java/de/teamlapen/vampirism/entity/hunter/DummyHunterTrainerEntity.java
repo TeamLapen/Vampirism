@@ -57,7 +57,7 @@ public class DummyHunterTrainerEntity extends VampirismEntity implements ICaptur
         boolean flag = !stack.isEmpty() && stack.getItem() instanceof SpawnEggItem;
 
         if (!flag && this.isAlive() && !player.isShiftKeyDown()) {
-            if (!this.level.isClientSide) {
+            if (!this.level().isClientSide) {
                 if (Helper.isHunter(player)) {
                     player.sendSystemMessage(Component.translatable("text.vampirism.trainer_disabled_hunter"));
                 } else {

@@ -6,7 +6,6 @@ import org.apache.logging.log4j.LogManager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 
 /**
  * Helper for compatibility with PlayerRevive https://www.curseforge.com/minecraft/mc-mods/playerrevive
@@ -22,12 +21,11 @@ public class PlayerReviveHelper {
     private static boolean use_player_revive_time = true;
 
     public static int getPreviousDownTime(Player player){
-        if(use_player_revive_time && !player.getLevel().isClientSide()){
-            if(!ModList.get().isLoaded("playerrevive")){
+        if (use_player_revive_time && !player.level().isClientSide()) {
+            if (!ModList.get().isLoaded("playerrevive")) {
                 use_player_revive_time = false;
-            }
-            else{
-                if(m_getDownedTime == null){
+            } else {
+                if (m_getDownedTime == null) {
                     try {
                         Class<?> clazz = Class.forName("team.creative.playerrevive.server.PlayerReviveServer");
                         m_getDownedTime = clazz.getMethod("downedTime", Player.class);

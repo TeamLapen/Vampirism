@@ -45,7 +45,8 @@ public class LevelCommand extends BasicCommand {
             } else {
                 level = Math.min(level, faction.getHighestReachableLevel());
                 if (handler.setFactionAndLevel(faction, level)) {
-                    context.getSource().sendSuccess(Component.translatable("command.vampirism.base.level.successful", player.getName(), faction.getName(), level), true);
+                    int finalLevel = level;
+                    context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.base.level.successful", player.getName(), faction.getName(), finalLevel), true);
                 } else {
                     context.getSource().sendFailure(players.size() > 1 ? Component.translatable("command.vampirism.failed_to_execute.players", player.getDisplayName()) : Component.translatable("command.vampirism.failed_to_execute"));
                 }

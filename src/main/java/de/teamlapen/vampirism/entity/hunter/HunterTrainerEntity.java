@@ -123,7 +123,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
 
         if (!flag && this.isAlive() && !player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
             int lvl = VampirismPlayerAttributes.get(player).hunterLevel;
-            if (!this.level.isClientSide && lvl > 0) {
+            if (!this.level().isClientSide && lvl > 0) {
                 if (HunterLeveling.getTrainerRequirement(lvl + 1).isPresent()) {
                     if (trainee == null) {
                         player.openMenu(new SimpleMenuProvider((id, playerInventory, playerEntity) -> new HunterTrainerMenu(id, playerInventory, this), name));

@@ -1,8 +1,8 @@
 package de.teamlapen.lib.lib.client.gui.components;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import org.apache.commons.lang3.tuple.Pair;
@@ -82,15 +82,15 @@ public class ScrollableArrayTextComponentList extends ScrollableListComponent<Pa
         }
 
         @Override
-        public void render(@NotNull PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel) {
-            super.render(matrixStack, x - 1, y, listWidth + 1, listHeight, itemHeight, mouseX, mouseY, partialTicks, zLevel);
+        public void render(@NotNull GuiGraphics graphics, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel) {
+            super.render(graphics, x - 1, y, listWidth + 1, listHeight, itemHeight, mouseX, mouseY, partialTicks, zLevel);
             Font font = Minecraft.getInstance().font;
             int width = font.width(this.item.getRight());
             if (width > listWidth) {
                 width = listWidth;
             }
 
-            Minecraft.getInstance().font.drawShadow(matrixStack, this.item.getRight(), x + (listWidth / 2F) - (width / 2F), y + 7, -1);
+            graphics.drawString(Minecraft.getInstance().font, this.item.getRight(), (int) (x + (listWidth / 2F) - (width / 2F)), y + 7, -1, false);
 
             if (this.onHover != null) {
                 boolean newHovered = mouseX >= x && mouseX < x + listWidth && mouseY >= y && mouseY < y + itemHeight;

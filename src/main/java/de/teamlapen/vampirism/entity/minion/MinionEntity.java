@@ -137,7 +137,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     @Override
     public void aiStep() {
         super.aiStep();
-        if (!this.level.isClientSide && this.isAlive()) {
+        if (!this.level().isClientSide && this.isAlive()) {
             if (this.random.nextInt(900) == 0 && this.deathTime == 0) {
                 this.heal(1.0F);
             }
@@ -148,7 +148,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         if (convertCounter > 0) {
             convertCounter--;
         }
-        if (!this.level.isClientSide && !this.isValid() && this.isAlive()) {
+        if (!this.level().isClientSide && !this.isValid() && this.isAlive()) {
             LOGGER.warn("Minion without lord.");
             this.discard();
         }
@@ -211,7 +211,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
             if (entityIn instanceof Player player) {
                 this.maybeDisableShield(player, this.getMainHandItem(), player.isUsingItem() ? player.getUseItem() : ItemStack.EMPTY);
             }
-            if (!this.level.isClientSide && !itemstack.isEmpty() && entityIn instanceof LivingEntity) {
+            if (!this.level().isClientSide && !itemstack.isEmpty() && entityIn instanceof LivingEntity) {
                 itemstack.getItem().hurtEnemy(itemstack, (LivingEntity) entityIn, this);
                 if (itemstack.isEmpty()) {
                     this.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
@@ -387,8 +387,8 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     public void readAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
         UUID id = nbt.hasUUID("lord") ? nbt.getUUID("lord") : null;
-        if (id != null && level instanceof ServerLevel) {
-            this.playerMinionController = MinionWorldData.getData((ServerLevel) this.level).getController(id);
+        if (id != null && level() instanceof ServerLevel) {
+            this.playerMinionController = MinionWorldData.getData((ServerLevel) this.level()).getController(id);
             if (this.playerMinionController == null) {
                 LOGGER.warn("Cannot get PlayerMinionController for {}", id);
             } else {
@@ -478,7 +478,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
 
     @Override
     public void writeFullUpdateToNBT(@NotNull CompoundTag nbt) {
-        if (minionData == null && this.level.getEntity(this.getId()) != null) { //If tracking is started already while adding to world (and thereby before {@link Entity#onAddedToWorld}) trigger the checkout here (but only if actually added to world).
+        if (minionData == null && this.level().getEntity(this.getId()) != null) { //If tracking is started already while adding to world (and thereby before {@link Entity#onAddedToWorld}) trigger the checkout here (but only if actually added to world).
             this.checkoutMinionData();
         }
         if (minionData != null) {
@@ -515,7 +515,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
 
     @Nullable
     protected ILordPlayer getLord() {
-        return this.getLordID().map(this.level::getPlayerByUUID).filter(Player::isAlive).flatMap(p -> FactionPlayerHandler.getOpt(p).resolve()).orElse(null);
+        return this.getLordID().map(this.level()::getPlayerByUUID).filter(Player::isAlive).flatMap(p -> FactionPlayerHandler.getOpt(p).resolve()).orElse(null);
     }
 
     protected @NotNull Optional<UUID> getLordID() {

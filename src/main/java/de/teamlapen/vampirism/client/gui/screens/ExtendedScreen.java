@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.vampirism.inventory.TaskMenu;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -10,11 +9,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  */
 @OnlyIn(Dist.CLIENT)
 public interface ExtendedScreen {
-
-    /**
-     * @return {@link ItemRenderer} of the screen
-     */
-    ItemRenderer getItemRenderer();
 
     /**
      * @return {@link de.teamlapen.vampirism.inventory.TaskMenu} of the screen

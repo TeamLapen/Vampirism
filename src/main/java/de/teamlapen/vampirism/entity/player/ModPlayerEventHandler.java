@@ -219,7 +219,7 @@ public class ModPlayerEventHandler {
                 }
 
                 if (event.getEntity() instanceof ServerPlayer) { //For some reason this event is only run serverside. Therefore, we have to make sure the client is notified about the not-placed block.
-                    MinecraftServer server = event.getEntity().level.getServer();
+                    MinecraftServer server = event.getEntity().level().getServer();
                     if (server != null) {
                         server.getPlayerList().sendAllPlayerInfo((ServerPlayer) event.getEntity()); //Would probably suffice to just sent a SHeldItemChangePacket
                     }
@@ -446,7 +446,7 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void sleepTimeCheck(@NotNull SleepingTimeCheckEvent event) {
         if (Helper.isVampire(event.getEntity())) {
-            event.getSleepingLocation().ifPresent((blockPos -> event.setResult(event.getEntity().level.getBlockState(blockPos).getBlock() instanceof CoffinBlock ? event.getEntity().level.isDay() ? Event.Result.ALLOW : Event.Result.DENY : event.getResult())));
+            event.getSleepingLocation().ifPresent((blockPos -> event.setResult(event.getEntity().level().getBlockState(blockPos).getBlock() instanceof CoffinBlock ? event.getEntity().level().isDay() ? Event.Result.ALLOW : Event.Result.DENY : event.getResult())));
         }
         if (Helper.isHunter(event.getEntity())) {
             event.getSleepingLocation().ifPresent((blockPos -> event.setResult(event.getEntity().getCommandSenderWorld().getBlockState(blockPos).getBlock() instanceof TentBlock ? !event.getEntity().getCommandSenderWorld().isDay() ? Event.Result.ALLOW : Event.Result.DENY : event.getResult())));

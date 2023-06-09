@@ -30,12 +30,15 @@ package de.teamlapen.lib.lib.client.gui.screens.radialmenu;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.Input;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.util.Mth;
@@ -93,12 +96,12 @@ public abstract class GuiRadialMenu<T> extends Screen {
     }
 
     @Override
-    public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-        super.render(ms, mouseX, mouseY, partialTicks);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(graphics, mouseX, mouseY, partialTicks);
 
         float openAnimation = closing ? 1.0f - totalTime / OPEN_ANIMATION_LENGTH : totalTime / OPEN_ANIMATION_LENGTH;
         float currTick = minecraft.getFrameTime();
-        totalTime += (currTick + extraTick - prevTick)/20f;
+        totalTime += (currTick + extraTick - prevTick) / 20f;
         extraTick = 0;
         prevTick = currTick;
 
@@ -120,11 +123,10 @@ public abstract class GuiRadialMenu<T> extends Screen {
             mousePositionInDegreesInRelationToCenterOfScreen += 360;
         }
 
-        ms.pushPose();
+        graphics.pose().pushPose();
         RenderSystem.enableBlend();
 
         RenderSystem.defaultBlendFunc();
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
 
@@ -167,10 +169,10 @@ public abstract class GuiRadialMenu<T> extends Screen {
             int adjusted = ((mousedOverSlot + (numberOfSlices / 2 + 1)) % numberOfSlices) - 1;
             adjusted = adjusted == -1 ? numberOfSlices - 1 : adjusted;
             Component component = radialMenuSlots.get(adjusted).slotName();
-            drawCenteredString(ms, font, component, width / 2, (height - font.lineHeight) / 2, Optional.ofNullable(component.getStyle().getColor()).map(TextColor::getValue).orElse(16777215));
+            graphics.drawCenteredString(font, component, width / 2, (height - font.lineHeight) / 2, Optional.ofNullable(component.getStyle().getColor()).map(TextColor::getValue).orElse(16777215));
         }
 
-        ms.popPose();
+        graphics.pose().popPose();
         for (int i = 0; i < numberOfSlices; i++) {
             ItemStack stack = new ItemStack(Blocks.DIRT);
             float angle1 = ((i / (float) numberOfSlices) - 0.25f) * 2 * (float) Math.PI;
@@ -185,12 +187,12 @@ public abstract class GuiRadialMenu<T> extends Screen {
             T primarySlotIcon = radialMenuSlots.get(i).primarySlotIcon();
             List<T> secondarySlotIcons = radialMenuSlots.get(i).secondarySlotIcons();
             if (primarySlotIcon != null) {
-                radialMenu.drawIcon(primarySlotIcon, ms, (int) posX, (int) posY, 16);
+                radialMenu.drawIcon(primarySlotIcon, graphics, (int) posX, (int) posY, 16);
                 if (secondarySlotIcons != null && !secondarySlotIcons.isEmpty()) {
-                    drawSecondaryIcons(ms, (int) posX, (int) posY, secondarySlotIcons);
+                    drawSecondaryIcons(graphics, (int) posX, (int) posY, secondarySlotIcons);
                 }
             }
-            drawSliceName(ms, String.valueOf(i + 1), stack, (int) posX, (int) posY);
+            drawSliceName(graphics, String.valueOf(i + 1), stack, (int) posX, (int) posY);
         }
 
         if (mousedOverSlot != -1) {
@@ -200,37 +202,33 @@ public abstract class GuiRadialMenu<T> extends Screen {
         }
     }
 
-    public void drawSecondaryIcons(PoseStack ms, int positionXOfPrimaryIcon, int positionYOfPrimaryIcon, List<T> secondarySlotIcons) {
+    public void drawSecondaryIcons(GuiGraphics graphics, int positionXOfPrimaryIcon, int positionYOfPrimaryIcon, List<T> secondarySlotIcons) {
         if (!radialMenu.isShowMoreSecondaryItems()) {
-            drawSecondaryIcon(ms, secondarySlotIcons.get(0), positionXOfPrimaryIcon, positionYOfPrimaryIcon, radialMenu.getSecondaryIconStartingPosition());
+            drawSecondaryIcon(graphics, secondarySlotIcons.get(0), positionXOfPrimaryIcon, positionYOfPrimaryIcon, radialMenu.getSecondaryIconStartingPosition());
         } else {
             SecondaryIconPosition currentSecondaryIconPosition = radialMenu.getSecondaryIconStartingPosition();
             for (T secondarySlotIcon : secondarySlotIcons) {
-                drawSecondaryIcon(ms, secondarySlotIcon, positionXOfPrimaryIcon, positionYOfPrimaryIcon, currentSecondaryIconPosition);
+                drawSecondaryIcon(graphics, secondarySlotIcon, positionXOfPrimaryIcon, positionYOfPrimaryIcon, currentSecondaryIconPosition);
                 currentSecondaryIconPosition = SecondaryIconPosition.getNextPositon(currentSecondaryIconPosition);
             }
         }
     }
 
-    public void drawSecondaryIcon(PoseStack poseStack, T item, int positionXOfPrimaryIcon, int positionYOfPrimaryIcon, SecondaryIconPosition secondaryIconPosition) {
+    public void drawSecondaryIcon(GuiGraphics graphics, T item, int positionXOfPrimaryIcon, int positionYOfPrimaryIcon, SecondaryIconPosition secondaryIconPosition) {
         int offset = radialMenu.getOffset();
         switch (secondaryIconPosition) {
-            case NORTH ->
-                    radialMenu.drawIcon(item, poseStack, positionXOfPrimaryIcon + offset, positionYOfPrimaryIcon - 14 + offset, 10);
-            case EAST ->
-                    radialMenu.drawIcon(item, poseStack, positionXOfPrimaryIcon + 14 + offset, positionYOfPrimaryIcon + offset, 10);
-            case SOUTH ->
-                    radialMenu.drawIcon(item, poseStack, positionXOfPrimaryIcon + offset, positionYOfPrimaryIcon + 14 + offset, 10);
-            case WEST ->
-                    radialMenu.drawIcon(item, poseStack, positionXOfPrimaryIcon - 14 + offset, positionYOfPrimaryIcon + offset, 10);
+            case NORTH -> radialMenu.drawIcon(item, graphics, positionXOfPrimaryIcon + offset, positionYOfPrimaryIcon - 14 + offset, 10);
+            case EAST -> radialMenu.drawIcon(item, graphics, positionXOfPrimaryIcon + 14 + offset, positionYOfPrimaryIcon + offset, 10);
+            case SOUTH -> radialMenu.drawIcon(item, graphics, positionXOfPrimaryIcon + offset, positionYOfPrimaryIcon + 14 + offset, 10);
+            case WEST -> radialMenu.drawIcon(item, graphics, positionXOfPrimaryIcon - 14 + offset, positionYOfPrimaryIcon + offset, 10);
         }
     }
 
-    public void drawSliceName(PoseStack ms, String sliceName, ItemStack stack, int posX, int posY) {
+    public void drawSliceName(GuiGraphics graphics, String sliceName, ItemStack stack, int posX, int posY) {
         if (!radialMenu.isShowMoreSecondaryItems()) {
-            this.itemRenderer.renderGuiItemDecorations(ms, font, stack, posX + 5, posY, sliceName);
+            graphics.renderItemDecorations(font, stack, posX + 5, posY, sliceName);
         } else {
-            this.itemRenderer.renderGuiItemDecorations(ms, font, stack, posX + 5, posY + 5, sliceName);
+            graphics.renderItemDecorations(font, stack, posX + 5, posY + 5, sliceName);
         }
     }
 

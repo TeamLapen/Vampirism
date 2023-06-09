@@ -1,14 +1,12 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.PageButton;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
@@ -45,10 +43,8 @@ public class VampireBookScreen extends Screen {
 
 
     @Override
-    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, pageTexture);
-        blit(stack, guiLeft, guiTop, 0, 0, xSize, ySize);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        graphics.blit(pageTexture, guiLeft, guiTop, 0, 0, xSize, ySize);
 
         pageNumber = Mth.clamp(pageNumber, 0, content.size() - 1);
 
@@ -59,18 +55,18 @@ public class VampireBookScreen extends Screen {
             List<FormattedCharSequence> cutLines = fontRenderer.split(toDraw, 170);
             int y = guiTop + 12 + 5;
             for (FormattedCharSequence cut : cutLines) {
-                fontRenderer.draw(stack, cut, guiLeft + 44, y, 0);
+                graphics.drawString(fontRenderer, cut, guiLeft + 44, y, 0, false);
                 y += 10;
             }
         }
 
-        drawCenteredStringWithoutShadow(stack, font, String.format("%d/%d", pageNumber + 1, content.size()), guiLeft + xSize / 2, guiTop + 5 * ySize / 6, 0);
-        drawCenteredString(stack, font, title, guiLeft + xSize / 2, guiTop - 10, Color.WHITE.getRGB());
+        drawCenteredStringWithoutShadow(graphics, font, String.format("%d/%d", pageNumber + 1, content.size()), guiLeft + xSize / 2, guiTop + 5 * ySize / 6, 0);
+        graphics.drawCenteredString(font, title, guiLeft + xSize / 2, guiTop - 10, Color.WHITE.getRGB());
 
         buttonPrev.visible = pageNumber != 0;
         buttonNext.visible = pageNumber != content.size() - 1 && !content.isEmpty();
 
-        super.render(stack, mouseX, mouseY, partialTicks);
+        super.render(graphics, mouseX, mouseY, partialTicks);
     }
 
     @Override
@@ -95,8 +91,8 @@ public class VampireBookScreen extends Screen {
 
     }
 
-    public static void drawCenteredStringWithoutShadow(@NotNull PoseStack p_238471_0_, @NotNull Font p_238471_1_, @NotNull String p_238471_2_, int p_238471_3_, int p_238471_4_, int p_238471_5_) {
-        p_238471_1_.draw(p_238471_0_, p_238471_2_, (float) (p_238471_3_ - p_238471_1_.width(p_238471_2_) / 2), (float) p_238471_4_, p_238471_5_);
+    public static void drawCenteredStringWithoutShadow(@NotNull GuiGraphics graphics, @NotNull Font p_238471_1_, @NotNull String p_238471_2_, int p_238471_3_, int p_238471_4_, int p_238471_5_) {
+        graphics.drawString(p_238471_1_, p_238471_2_, (p_238471_3_ - p_238471_1_.width(p_238471_2_) / 2), p_238471_4_, p_238471_5_, false);
     }
 
     @Override

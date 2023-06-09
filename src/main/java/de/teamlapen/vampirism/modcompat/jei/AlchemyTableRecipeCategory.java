@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
@@ -20,6 +19,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -83,13 +83,13 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<AlchemyTableR
     }
 
     @Override
-    public void draw(@NotNull AlchemyTableRecipe recipe, IRecipeSlotsView recipeSlotsView, @NotNull PoseStack matrixStack, double mouseX, double mouseY) {
-        this.blazeHeat.draw(matrixStack, 33 - 9 - 2, 60 - 10 - 2);
-        this.arrow.draw(matrixStack, 73 - 9 - 2, 57 - 10 - 2);
+    public void draw(@NotNull AlchemyTableRecipe recipe, IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics graphics, double mouseX, double mouseY) {
+        this.blazeHeat.draw(graphics, 33 - 9 - 2, 60 - 10 - 2);
+        this.arrow.draw(graphics, 73 - 9 - 2, 57 - 10 - 2);
 
         int color = OilUtils.getOil(RecipeUtil.getResultItem(recipe)).getColor();
         RenderSystem.setShaderColor(((color >> 16) & 0xFF) / 255f, ((color >> 8) & 0xFF) / 255f, ((color) & 0xFF) / 255f, 1F);
-        this.pool.draw(matrixStack, 104 - 9 - 2, 36 - 10 - 2);
+        this.pool.draw(graphics, 104 - 9 - 2, 36 - 10 - 2);
         RenderSystem.setShaderColor(1, 1, 1, 1);
 
         int x = 2;
@@ -104,7 +104,7 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<AlchemyTableR
                 skillText.append(skill.getName()).append(" ");
 
             }
-            y += UtilLib.renderMultiLine(minecraft.font, matrixStack, skillText, 132, x, y, Color.gray.getRGB());
+            y += UtilLib.renderMultiLine(minecraft.font, graphics, skillText, 132, x, y, Color.gray.getRGB());
 
         }
     }

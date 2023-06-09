@@ -27,5 +27,6 @@
     [
       "action"
     ]
-  ]
+  ],
+  "sends_telemetry_event": true
 }

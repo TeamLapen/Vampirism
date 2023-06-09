@@ -1,12 +1,11 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.items.VampirismVampireSwordItem;
 import de.teamlapen.vampirism.network.ServerboundNameItemPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -77,18 +76,18 @@ public class NameSwordScreen extends Screen {
     }
 
     @Override
-    public void render(@NotNull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(stack);
-        drawCenteredString(stack, this.font, this.text1, this.width / 2, 70, 16777215);
+    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(graphics);
+        graphics.drawCenteredString(this.font, this.text1, this.width / 2, 70, 16777215);
         int i = 90;
         for (FormattedCharSequence s : this.listLines) {
-            font.draw(stack, s, (float) this.width / 2 - (float) font.width(s) / 2.0F, (float) i, 16777215);
+            graphics.drawString(this.font, s, (int) ((float) this.width / 2 - (float) font.width(s) / 2.0F), i, 16777215, false);
             i += this.font.lineHeight;
         }
-        this.nameField.render(stack, mouseX, mouseY, partialTicks);
+        this.nameField.render(graphics, mouseX, mouseY, partialTicks);
 
 
-        super.render(stack, mouseX, mouseY, partialTicks);
+        super.render(graphics, mouseX, mouseY, partialTicks);
         RenderSystem.disableBlend();
     }
 

@@ -52,5 +52,6 @@
     "recipes": [
       "vampirism:vampire/garlic_finder"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

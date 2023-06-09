@@ -28,7 +28,7 @@ public class VillageCommand extends BasicCommand {
 
     @SuppressWarnings("SameReturnValue")
     private static int capture(@NotNull CommandSourceStack source, @NotNull ServerPlayer player, IFaction<?> faction) {
-        source.sendSuccess(TotemHelper.forceFactionCommand(faction, player), true);
+        source.sendSuccess(() -> TotemHelper.forceFactionCommand(faction, player), true);
         return 0;
     }
 

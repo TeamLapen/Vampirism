@@ -113,29 +113,29 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem, ModD
     }
 
     @Override
-    public void onUsingTick(@NotNull ItemStack stack, LivingEntity player, int count) {
-        if (player instanceof IVampire) return;
-        if (!(player instanceof Player) || !player.isAlive()) {
-            player.releaseUsingItem();
+    public void onUseTick(@NotNull Level level, @NotNull LivingEntity pLivingEntity, @NotNull ItemStack stack, int count) {
+        if (pLivingEntity instanceof IVampire) return;
+        if (!(pLivingEntity instanceof Player) || !pLivingEntity.isAlive()) {
+            pLivingEntity.releaseUsingItem();
             return;
         }
         int blood = BloodHelper.getBlood(stack);
-        VampirePlayer vampire = VampirePlayer.getOpt((Player) player).resolve().orElse(null);
+        VampirePlayer vampire = VampirePlayer.getOpt((Player) pLivingEntity).resolve().orElse(null);
         if (vampire == null || vampire.getLevel() == 0 || blood == 0 || !vampire.getBloodStats().needsBlood()) {
-            player.releaseUsingItem();
+            pLivingEntity.releaseUsingItem();
             return;
         }
 
         if (blood > 0 && count == 1) {
-            InteractionHand activeHand = player.getUsedItemHand();
+            InteractionHand activeHand = pLivingEntity.getUsedItemHand();
             int drink = Math.min(blood, 3 * MULTIPLIER);
-            if (BloodHelper.drain(stack, drink, IFluidHandler.FluidAction.EXECUTE, true, containerStack -> player.setItemInHand(activeHand, containerStack)) > 0) {
+            if (BloodHelper.drain(stack, drink, IFluidHandler.FluidAction.EXECUTE, true, containerStack -> pLivingEntity.setItemInHand(activeHand, containerStack)) > 0) {
                 vampire.drinkBlood(Math.round(((float) drink) / VReference.FOOD_TO_FLUID_BLOOD), 0.3F, false);
             }
 
             blood = BloodHelper.getBlood(stack);
             if (blood > 0) {
-                player.startUsingItem(player.getUsedItemHand());
+                pLivingEntity.startUsingItem(pLivingEntity.getUsedItemHand());
             }
         }
     }

@@ -17,7 +17,6 @@ import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.RequirementsStrategy;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -128,7 +127,7 @@ public class AlchemyTableRecipeBuilder {
     }
 
     protected static InventoryChangeTrigger.@NotNull TriggerInstance inventoryTrigger(@NotNull ItemPredicate @NotNull ... p_200405_0_) {
-        return new InventoryChangeTrigger.TriggerInstance(EntityPredicate.Composite.ANY, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, p_200405_0_);
+        return new InventoryChangeTrigger.TriggerInstance(ContextAwarePredicate.ANY, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, p_200405_0_);
     }
 
     private record Result(@NotNull ResourceLocation id, @NotNull String group, @NotNull Ingredient ingredient, @NotNull IOil ingredientOil, @NotNull Ingredient input, @NotNull ItemStack result, @NotNull IOil resultOil, @NotNull ISkill[] skills, @NotNull ResourceLocation advancementId, @NotNull Advancement.Builder advancementBuilder) implements FinishedRecipe {

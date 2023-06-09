@@ -33,7 +33,6 @@
           "name": "vampirism:blood_bottle"
         }
       ],
-      "name": "general",
       "rolls": 1.0
     },
     {
@@ -56,7 +55,6 @@
           "name": "vampirism:vampire_book"
         }
       ],
-      "name": "special",
       "rolls": 1.0
     },
     {
@@ -100,8 +98,8 @@
           "name": "vampirism:obi_belt"
         }
       ],
-      "name": "refinement_item",
       "rolls": 1.0
     }
-  ]
+  ],
+  "random_sequence": "vampirism:entities/advanced_vampire_imob"
 }

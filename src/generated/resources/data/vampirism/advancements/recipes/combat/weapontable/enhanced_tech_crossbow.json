@@ -24,5 +24,6 @@
     "recipes": [
       "vampirism:weapontable/enhanced_tech_crossbow"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

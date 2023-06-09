@@ -1,19 +1,14 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.IRadialMenuSlot;
-import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VampirismRegistries;
-import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
-import de.teamlapen.vampirism.api.entity.minion.IFactionMinionTask;
-import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
-import de.teamlapen.vampirism.api.entity.minion.INoGlobalCommandTask;
-import de.teamlapen.vampirism.client.ClientConfigHelper;
-import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenu;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenuSlot;
+import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
+import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
+import de.teamlapen.vampirism.client.ClientConfigHelper;
+import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.client.gui.screens.radial.DualSwitchingRadialMenu;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.ServerboundSelectMinionTaskPacket;
@@ -21,6 +16,7 @@ import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -28,7 +24,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -64,7 +63,7 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
         return playerHandler.getCurrentFactionPlayer().map(player -> {
             return ClientConfigHelper.getMinionTaskOrder(playerHandler.getCurrentFaction()).stream().filter(entry -> {
                         return Optional.ofNullable(entry.getTask()).map(s -> s.isAvailable(player.getFaction(), playerHandler)).orElse(true);
-                    }).collect(Collectors.toList());
+            }).collect(Collectors.toList());
                 }
         ).orElseGet(List::of);
     }
@@ -74,12 +73,9 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
         return new RadialMenu<>(i -> parts.get(i).primarySlotIcon().onSelected.run(), parts, SelectMinionTaskRadialScreen::drawActionPart, 0);
     }
 
-    private static void drawActionPart(Entry t, PoseStack stack, int posX, int posY, int size, boolean transparent) {
-        ResourceLocation texture = t.getIconLoc();
-        RenderSystem.setShaderTexture(0, texture);
-        blit(stack, posX, posY, 0, 0, 0, 16, 16, 16, 16);
+    private static void drawActionPart(Entry t, GuiGraphics graphics, int posX, int posY, int size, boolean transparent) {
+        graphics.blit(t.getIconLoc(), posX, posY, 0, 0, 0, 16, 16, 16, 16);
     }
-
 
 
     private static void callAll() {

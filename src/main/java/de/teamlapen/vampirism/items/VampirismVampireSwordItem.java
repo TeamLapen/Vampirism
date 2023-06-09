@@ -163,7 +163,7 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
                 DamageHandler.hurtModded(target, s -> s.getPlayerAttackWithBypassArmor(player), 10000f);
                 Vec3 center = Vec3.atLowerCornerOf(target.blockPosition());
                 center.add(0, target.getBbHeight() / 2d, 0);
-                ModParticles.spawnParticlesServer(target.level, new GenericParticleOptions(new ResourceLocation("minecraft", "effect_4"), 12, 0xE02020), center.x, center.y, center.z, 15, 0.5, 0.5, 0.5, 0);
+                ModParticles.spawnParticlesServer(target.level(), new GenericParticleOptions(new ResourceLocation("minecraft", "effect_4"), 12, 0xE02020), center.x, center.y, center.z, 15, 0.5, 0.5, 0.5, 0);
             }
         }
         //Update training on kill
@@ -210,7 +210,7 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
     }
 
     @Override
-    public void onUsingTick(ItemStack stack, @NotNull LivingEntity player, int count) {
+    public void onUseTick(Level level, @NotNull LivingEntity player, ItemStack stack, int count) {
         if (player.getCommandSenderWorld().isClientSide) {
             if (count % 3 == 0) {
                 spawnChargingParticle(player, player.getMainHandItem().equals(stack));
@@ -246,9 +246,9 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
      * If the stack is not named and the player hasn't been named before, ask the player to name this stack
      */
     public void tryName(@NotNull ItemStack stack, @NotNull Player player) {
-        if (!stack.hasCustomHoverName() && player.level.isClientSide() && (!stack.hasTag() || !stack.getTag().getBoolean("dont_name"))) {
+        if (!stack.hasCustomHoverName() && player.level().isClientSide() && (!stack.hasTag() || !stack.getTag().getBoolean("dont_name"))) {
             VampirismMod.proxy.displayNameSwordScreen(stack);
-            player.level.playLocalSound((player).getX(), (player).getY(), (player).getZ(), SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS, 1f, 1f, false);
+            player.level().playLocalSound((player).getX(), (player).getY(), (player).getZ(), SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS, 1f, 1f, false);
         }
     }
 

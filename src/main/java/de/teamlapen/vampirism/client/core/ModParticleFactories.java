@@ -13,8 +13,8 @@ import org.jetbrains.annotations.NotNull;
 public class ModParticleFactories {
 
     static void registerFactories(@NotNull RegisterParticleProvidersEvent event) {
-        event.register(ModParticles.FLYING_BLOOD.get(), new FlyingBloodParticle.Factory());
-        event.register(ModParticles.FLYING_BLOOD_ENTITY.get(), new FlyingBloodEntityParticle.Factory());
-        event.register(ModParticles.GENERIC.get(), new GenericParticle.Factory());
+        event.registerSpecial(ModParticles.FLYING_BLOOD.get(), new FlyingBloodParticle.Factory());
+        event.registerSpecial(ModParticles.FLYING_BLOOD_ENTITY.get(), new FlyingBloodEntityParticle.Factory());
+        event.registerSpecial(ModParticles.GENERIC.get(), new GenericParticle.Factory());
     }
 }

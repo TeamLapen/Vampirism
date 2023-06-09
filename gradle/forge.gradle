@@ -52,12 +52,12 @@ dependencies {
             version: "${project.minecraft_version}-${project.forge_version}"
     ])
     //Don't export dependencies to pom as their deobfuscated version would be used which cannot be found in dependent projects
-    compileOnly fg.deobf("mezz.jei:jei-1.19.4-common-api:${project.jei_version}") //API for compile
-    compileOnly fg.deobf("mezz.jei:jei-1.19.4-forge-api:${project.jei_version}") //API for compile
-    runtimeOnly fg.deobf("mezz.jei:jei-1.19.4-forge:${project.jei_version}") //Full for runtime
-    compileOnly fg.deobf("de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}")
+    compileOnly fg.deobf("mezz.jei:jei-1.20-common-api:${project.jei_version}") //API for compile
+    compileOnly fg.deobf("mezz.jei:jei-1.20-forge-api:${project.jei_version}") //API for compile
+    runtimeOnly fg.deobf("mezz.jei:jei-1.20-forge:${project.jei_version}") //Full for runtime
+//    compileOnly fg.deobf("de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}")
     //For compile (not exported to POM)
-    runtimeOnly fg.deobf("de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}")
+//    runtimeOnly fg.deobf("de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}")
     //For runtime (not exported to POM)
 
     //runtimeOnly fg.deobf("curse.maven:angel-of-vengeance:2810906")
@@ -67,7 +67,7 @@ dependencies {
 
     compileOnly fg.deobf("com.github.glitchfiend:TerraBlender-forge:${project.terrablender_version}")
     //Only enable for testing
-//    runtimeOnly fg.deobf("com.github.glitchfiend:TerraBlender-forge:${project.terrablender_version}")
+    runtimeOnly fg.deobf("com.github.glitchfiend:TerraBlender-forge:${project.terrablender_version}")
 
     //implementation fg.deobf("curse.maven:biomes-o-plenty-220318:3605502")
 

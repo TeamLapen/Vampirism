@@ -28,7 +28,7 @@
 
 package de.teamlapen.lib.lib.client.gui.screens.radialmenu;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 
 import java.util.List;
 import java.util.function.IntConsumer;
@@ -98,8 +98,8 @@ public class RadialMenu<T> {
         return this.secondaryIconStartingPosition;
     }
 
-    public void drawIcon(T objectToBeDrawn, PoseStack poseStack, int positionX, int positionY, int size) {
-        this.drawCallback.accept(objectToBeDrawn, poseStack, positionX, positionY, size, false);
+    public void drawIcon(T objectToBeDrawn, GuiGraphics graphics, int positionX, int positionY, int size) {
+        this.drawCallback.accept(objectToBeDrawn, graphics, positionX, positionY, size, false);
     }
 
     public int getOffset() {

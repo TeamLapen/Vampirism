@@ -33,7 +33,7 @@ public class SkillUnlockedCriterionTrigger extends SimpleCriterionTrigger<SkillU
 
     @NotNull
     @Override
-    protected Instance createInstance(@NotNull JsonObject json, @NotNull EntityPredicate.Composite entityPredicate, @NotNull DeserializationContext conditionsParser) {
+    protected Instance createInstance(@NotNull JsonObject json, @NotNull ContextAwarePredicate entityPredicate, @NotNull DeserializationContext conditionsParser) {
         return new Instance(new ResourceLocation(GsonHelper.getAsString(json, "skill")));
     }
 
@@ -42,12 +42,12 @@ public class SkillUnlockedCriterionTrigger extends SimpleCriterionTrigger<SkillU
         private final ResourceLocation skillId;
 
         Instance(@NotNull ISkill<?> skill) {
-            super(ID, EntityPredicate.Composite.ANY);
+            super(ID, ContextAwarePredicate.ANY);
             this.skillId = RegUtil.id(skill);
         }
 
         Instance(@NotNull ResourceLocation skillId) {
-            super(ID, EntityPredicate.Composite.ANY);
+            super(ID, ContextAwarePredicate.ANY);
             this.skillId = skillId;
         }
 

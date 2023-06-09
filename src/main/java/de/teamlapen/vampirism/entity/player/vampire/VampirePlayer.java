@@ -245,11 +245,11 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             LOGGER.warn("Player can't bite in spectator mode");
             return;
         }
-        double dist = player.getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue() + 1;
+        double dist = player.getAttribute(ForgeMod.BLOCK_REACH.get()).getValue() + 1;
         if (player.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) > dist * dist) {
             LOGGER.warn("Block sent by client is not in reach" + pos);
         } else {
-            biteBlock(pos, player.level.getBlockState(pos), player.level.getBlockEntity(pos));
+            biteBlock(pos, player.level().getBlockState(pos), player.level().getBlockEntity(pos));
         }
     }
 
@@ -274,7 +274,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             return;
         }
         if (e instanceof LivingEntity) {
-            if (e.distanceTo(player) <= player.getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue() + 1) {
+            if (e.distanceTo(player) <= player.getAttribute(ForgeMod.BLOCK_REACH.get()).getValue() + 1) {
                 feed_victim_bite_type = determineBiteType((LivingEntity) e);
                 switch (feed_victim_bite_type) {
                     case HUNTER_CREATURE:
@@ -566,7 +566,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     @Override
     public boolean isGettingSundamage(LevelAccessor iWorld, boolean forcerefresh) {
         if (forcerefresh) {
-            sundamage_cache = Helper.gettingSundamge(player, iWorld, player.level.getProfiler()) && ModItems.UMBRELLA.get() != player.getMainHandItem().getItem();
+            sundamage_cache = Helper.gettingSundamge(player, iWorld, player.level().getProfiler()) && ModItems.UMBRELLA.get() != player.getMainHandItem().getItem();
         }
         return sundamage_cache;
     }
@@ -651,7 +651,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             this.player.setHealth(0.5f);
             this.player.setForcedPose(Pose.SLEEPING);
             resetNearbyTargetingMobs();
-            boolean flag = player.level.getGameRules().getBoolean(GameRules.RULE_SHOWDEATHMESSAGES);
+            boolean flag = player.level().getGameRules().getBoolean(GameRules.RULE_SHOWDEATHMESSAGES);
             if (flag) {
                 dbnoMessage = player.getCombatTracker().getDeathMessage();
             }
@@ -772,7 +772,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
     @Override
     public void onPlayerLoggedIn() {
-        if (getLevel() > 0 && !player.level.isClientSide) {
+        if (getLevel() > 0 && !player.level().isClientSide) {
             player.addEffect(new MobEffectInstance(ModEffects.SUNSCREEN.get(), 200, 4, true, false));
         }
     }
@@ -940,11 +940,11 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
             //Update blood stats
             if (getLevel() > 0 && !isDBNO()) {
-                player.level.getProfiler().push("vampirism_bloodupdate");
-                if (!player.level.isClientSide && this.bloodStats.onUpdate()) {
+                player.level().getProfiler().push("vampirism_bloodupdate");
+                if (!player.level().isClientSide && this.bloodStats.onUpdate()) {
                     sync(this.bloodStats.writeUpdate(new CompoundTag()), false);
                 }
-                player.level.getProfiler().pop();
+                player.level().getProfiler().pop();
             }
         }
     }
@@ -1352,8 +1352,8 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     private void turnToAsh() {
         if (!player.isAlive()) {
             player.deathTime = 19;
-            ModParticles.spawnParticlesServer(player.level, ParticleTypes.WHITE_ASH, player.getX() + 0.5, player.getY() + player.getBbHeight(), player.getZ() + 0.5f, 20, 0.2, player.getBbHeight() * 0.2d, 0.2, 0.1);
-            ModParticles.spawnParticlesServer(player.level, ParticleTypes.ASH, player.getX() + 0.5, player.getY() + player.getBbHeight() / 2, player.getZ() + 0.5f, 20, 0.2, player.getBbHeight() * 0.2d, 0.2, 0.1);
+            ModParticles.spawnParticlesServer(player.level(), ParticleTypes.WHITE_ASH, player.getX() + 0.5, player.getY() + player.getBbHeight(), player.getZ() + 0.5f, 20, 0.2, player.getBbHeight() * 0.2d, 0.2, 0.1);
+            ModParticles.spawnParticlesServer(player.level(), ParticleTypes.ASH, player.getX() + 0.5, player.getY() + player.getBbHeight() / 2, player.getZ() + 0.5f, 20, 0.2, player.getBbHeight() * 0.2d, 0.2, 0.1);
         }
     }
 
@@ -1362,7 +1362,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
      */
     private void resetNearbyTargetingMobs() {
         AABB axisalignedbb = (new AABB(player.blockPosition())).inflate(32.0D, 10.0D, 32.0D);
-        player.level.getEntitiesOfClass(Mob.class, axisalignedbb).forEach(e -> {
+        player.level().getEntitiesOfClass(Mob.class, axisalignedbb).forEach(e -> {
             if (e.getTarget() == player) {
                 e.targetSelector.getRunningGoals().filter(g -> g.getGoal() instanceof TargetGoal).forEach(WrappedGoal::stop);
             }
@@ -1383,9 +1383,9 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
      * @param entityId ID of the entity
      */
     private void spawnBiteParticle(int entityId) {
-        Entity entity = player.level.getEntity(entityId);
+        Entity entity = player.level().getEntity(entityId);
         if (entity != null) {
-            UtilLib.spawnParticles(player.level, ParticleTypes.CRIT, entity.getX(), entity.getY(), entity.getZ(), player.getX() - entity.getX(), player.getY() - entity.getY(), player.getZ() - entity.getZ(), 10, 1);
+            UtilLib.spawnParticles(player.level(), ParticleTypes.CRIT, entity.getX(), entity.getY(), entity.getZ(), player.getX() - entity.getX(), player.getY() - entity.getY(), player.getZ() - entity.getZ(), 10, 1);
         }
         for (int j = 0; j < 16; ++j) {
             Vec3 vec3 = new Vec3((player.getRandom().nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
@@ -1397,7 +1397,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             vec31 = vec31.yRot(-player.getYRot() * (float) Math.PI / 180.0F);
             vec31 = vec31.add(player.getX(), player.getY() + (double) player.getEyeHeight(), player.getZ());
 
-            player.level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(Items.APPLE)), vec31.x, vec31.y, vec31.z, vec3.x, vec3.y + 0.05D, vec3.z);
+            player.level().addParticle(new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(Items.APPLE)), vec31.x, vec31.y, vec31.z, vec3.x, vec3.y + 0.05D, vec3.z);
         }
     }
 
@@ -1405,7 +1405,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
      * This is called every 20 ticks in onUpdate() to run the continuous feeding effect
      */
     private void updateFeeding() {
-        Entity entity = player.level.getEntity(feed_victim);
+        Entity entity = player.level().getEntity(feed_victim);
         if (!(entity instanceof LivingEntity e)) return;
         if (e.getHealth() == 0f) {
             endFeeding(true);
@@ -1414,21 +1414,21 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         e.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 7, false, false));
         player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 25, 4, false, false));
 
-        ModParticles.spawnParticlesServer(player.level, new FlyingBloodEntityParticleOptions(player.getId(), true), e.getX(), e.getY() + e.getEyeHeight() / 2, e.getZ(), 10, 0.1f, 0.1f, 0.1f, 0);
+        ModParticles.spawnParticlesServer(player.level(), new FlyingBloodEntityParticleOptions(player.getId(), true), e.getX(), e.getY() + e.getEyeHeight() / 2, e.getZ(), 10, 0.1f, 0.1f, 0.1f, 0);
 
         if (!biteFeed(e)) {
             endFeeding(true);
         }
 
-        if (!(e.distanceTo(player) <= player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue() + 1) || e.getHealth() == 0f) {
+        if (!(e.distanceTo(player) <= player.getAttribute(ForgeMod.BLOCK_REACH.get()).getValue() + 1) || e.getHealth() == 0f) {
             endFeeding(true);
         }
     }
 
     @Override
     public void updateMinionAttributes(boolean enabled) {
-        MinionWorldData.getData(this.player.level).flatMap(a -> FactionPlayerHandler.getOpt(this.player).map(a::getOrCreateController)).ifPresent(controller -> controller.contactMinions((minion) -> {
-            (minion.getMinionData()).ifPresent(b -> ((VampireMinionEntity.VampireMinionData)b).setIncreasedStats(enabled));
+        MinionWorldData.getData(this.player.level()).flatMap(a -> FactionPlayerHandler.getOpt(this.player).map(a::getOrCreateController)).ifPresent(controller -> controller.contactMinions((minion) -> {
+            (minion.getMinionData()).ifPresent(b -> ((VampireMinionEntity.VampireMinionData) b).setIncreasedStats(enabled));
             HelperLib.sync(minion);
         }));
     }

@@ -30,5 +30,6 @@
     "recipes": [
       "vampirism:hunter/garlic_diffuser_improved"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

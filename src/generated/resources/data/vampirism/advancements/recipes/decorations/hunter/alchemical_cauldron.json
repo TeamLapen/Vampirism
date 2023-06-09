@@ -28,5 +28,6 @@
     "recipes": [
       "vampirism:hunter/alchemical_cauldron"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

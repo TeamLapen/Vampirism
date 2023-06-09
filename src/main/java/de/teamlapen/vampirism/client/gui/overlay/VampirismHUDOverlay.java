@@ -28,7 +28,7 @@ import de.teamlapen.vampirism.modcompat.IMCHandler;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -64,7 +64,8 @@ import org.joml.Matrix4f;
 public class VampirismHUDOverlay extends ExtendedGui {
 
     private final Minecraft mc;
-    private final ResourceLocation icons = new ResourceLocation(REFERENCE.MODID + ":textures/gui/icons.png");
+    private static final ResourceLocation ICONS = new ResourceLocation(REFERENCE.MODID, "textures/gui/icons.png");
+    private static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation("textures/gui/icons.png");
 
     private int screenColor = 0;
     private int screenPercentage = 0;
@@ -162,7 +163,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                             if (entity instanceof IHunterMob || ExtendedCreature.getSafe(entity).map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false)) {
                                 color = 0x099022;
                             }
-                            renderBloodFangs(event.getPoseStack(), this.mc.getWindow().getGuiScaledWidth(), this.mc.getWindow().getGuiScaledHeight(), Mth.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F), color);
+                            renderBloodFangs(event.getGuiGraphics(), this.mc.getWindow().getGuiScaledWidth(), this.mc.getWindow().getGuiScaledHeight(), Mth.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F), color);
                             event.setCanceled(true);
                         });
                     });
@@ -172,7 +173,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     if (entity instanceof LivingEntity && entity instanceof IVampireMob) {
                         if (StakeItem.canKillInstant((LivingEntity) entity, mc.player)) {
                             if (((LivingEntity) entity).getHealth() > 0) {
-                                this.renderStakeInstantKill(event.getPoseStack(), this.mc.getWindow().getGuiScaledWidth(), this.mc.getWindow().getGuiScaledHeight());
+                                this.renderStakeInstantKill(event.getGuiGraphics(), this.mc.getWindow().getGuiScaledWidth(), this.mc.getWindow().getGuiScaledHeight());
                                 event.setCanceled(true);
                             }
                         }
@@ -188,7 +189,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     if (tile != null) {
                         tile.getCapability(ForgeCapabilities.FLUID_HANDLER).ifPresent(handler -> {
                             if (FluidLib.getFluidAmount(handler, ModFluids.BLOOD.get()) > 0) {
-                                renderBloodFangs(event.getPoseStack(), this.mc.getWindow().getGuiScaledWidth(), this.mc.getWindow().getGuiScaledHeight(), 1, 0xFF0000);
+                                renderBloodFangs(event.getGuiGraphics(), this.mc.getWindow().getGuiScaledWidth(), this.mc.getWindow().getGuiScaledHeight(), 1, 0xFF0000);
                                 event.setCanceled(true);
                             }
                         });
@@ -206,12 +207,11 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 if (progress <= 1.0F) {
                     int x = this.mc.getWindow().getGuiScaledWidth() / 2 - 8;
                     int y = this.mc.getWindow().getGuiScaledHeight() / 2 - 7 + 16;
-                    RenderSystem.setShaderTexture(0, icons);
 
                     int l = (int) (progress * 14.0F) + 2;
 
-                    this.blit(event.getPoseStack(), x, y, 0, 19, 16, 2);
-                    this.blit(event.getPoseStack(), x, y, 16, 19, l, 2);
+                    event.getGuiGraphics().blit(ICONS, x, y, 0, 19, 16, 2);
+                    event.getGuiGraphics().blit(ICONS, x, y, 16, 19, l, 2);
                 }
             }
         }
@@ -228,7 +228,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onRenderGameOverlay(RenderGuiEvent.@NotNull Pre event) {
         if ((screenPercentage > 0 || screenBottomPercentage > 0) && VampirismConfig.CLIENT.renderScreenOverlay.get()) {
-            PoseStack stack = event.getPoseStack();
+            PoseStack stack = event.getGuiGraphics().pose();
             stack.pushPose();
             int w = (this.mc.getWindow().getGuiScaledWidth());
             int h = (this.mc.getWindow().getGuiScaledHeight());
@@ -275,9 +275,9 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     bh = Math.round(h / (float) 4 * screenPercentage / 100);
                     bw = Math.round(w / (float) 8 * screenPercentage / 100);
 
-                    this.fillGradient(stack, 0, 0, w, bh, screenColor, 0x000);
+                    event.getGuiGraphics().fillGradient(0, 0, w, bh, screenColor, 0x000);
                     if (!OptifineHandler.isShaders()) {
-                        this.fillGradient(stack, 0, h - bh, w, h, 0x00000000, screenColor);
+                        event.getGuiGraphics().fillGradient(0, h - bh, w, h, 0x00000000, screenColor);
                     }
                     this.fillGradient2(stack, 0, 0, bw, h, 0x000000, screenColor);
                     this.fillGradient2(stack, w - bw, 0, w, h, screenColor, 0x00);
@@ -288,7 +288,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
                     hh = Math.round(h / (float) 4 * screenBottomPercentage / 100);
 
-                    this.fillGradient(event.getPoseStack(), 0, h - hh, w, h, 0x00000000, screenBottomColor);
+                    event.getGuiGraphics().fillGradient(0, h - hh, w, h, 0x00000000, screenBottomColor);
                 }
 
             }
@@ -376,36 +376,34 @@ public class VampirismHUDOverlay extends ExtendedGui {
         }
     }
 
-    private void renderBloodFangs(@NotNull PoseStack stack, int width, int height, float perc, int color) {
+    private void renderBloodFangs(@NotNull GuiGraphics graphics, int width, int height, float perc, int color) {
 
         float r = ((color & 0xFF0000) >> 16) / 256f;
         float g = ((color & 0xFF00) >> 8) / 256f;
         float b = (color & 0xFF) / 256f;
-        RenderSystem.setShaderTexture(0, icons);
         int left = width / 2 - 8;
         int top = height / 2 - 4;
         RenderSystem.enableBlend();
-        RenderSystem.setShaderColor(1f, 1f, 1f, 0.7F);
-        blit(stack, left, top, 27, 0, 16, 10);
+        graphics.setColor(1f, 1f, 1f, 0.7F);
+        graphics.blit(ICONS, left, top, 27, 0, 16, 10);
         RenderSystem.setShaderColor(r, g, b, 0.8F);
         int percHeight = (int) (10 * perc);
-        blit(stack, left, top + (10 - percHeight), 27, 10 - percHeight, 16, percHeight);
+        graphics.blit(ICONS, left, top + (10 - percHeight), 27, 10 - percHeight, 16, percHeight);
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         RenderSystem.disableBlend();
 
     }
 
-    private void renderStakeInstantKill(@NotNull PoseStack mStack, int width, int height) {
+    private void renderStakeInstantKill(@NotNull GuiGraphics graphics, int width, int height) {
         if (this.mc.options.getCameraType().isFirstPerson() && this.mc.gameMode.getPlayerMode() != GameType.SPECTATOR) {
             RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR.value, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR.value, GlStateManager.SourceFactor.ONE.value, GlStateManager.DestFactor.ZERO.value);
-            RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
-            RenderSystem.setShaderColor(158f / 256, 0, 0, 1);
-            this.blit(mStack, (width - 15) / 2, (height - 15) / 2, 0, 0, 15, 15);
+            graphics.setColor(158f / 256, 0, 0, 1);
+            graphics.blit(GUI_ICONS_LOCATION, (width - 15) / 2, (height - 15) / 2, 0, 0, 15, 15);
             int j = height / 2 - 7 + 16;
             int k = width / 2 - 8;
-            this.blit(mStack, k, j, 68, 94, 16, 16);
-            this.blit(mStack, k, j, 36, 94, 16, 4);
-            this.blit(mStack, k, j, 52, 94, 17, 4);
+            graphics.blit(GUI_ICONS_LOCATION, k, j, 68, 94, 16, 16);
+            graphics.blit(GUI_ICONS_LOCATION, k, j, 36, 94, 16, 4);
+            graphics.blit(GUI_ICONS_LOCATION, k, j, 52, 94, 17, 4);
         }
     }
 }

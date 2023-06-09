@@ -56,5 +56,4 @@ public abstract class VampirismBlockContainer extends BaseEntityBlock {
         net.minecraft.world.Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
     }
 
-
 }

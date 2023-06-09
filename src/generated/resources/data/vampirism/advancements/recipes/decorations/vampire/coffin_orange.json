@@ -30,5 +30,6 @@
     "recipes": [
       "vampirism:vampire/coffin_orange"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

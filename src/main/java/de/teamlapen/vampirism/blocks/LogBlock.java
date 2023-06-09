@@ -9,8 +9,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.WoodType;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.NotNull;
 
 public class LogBlock extends RotatedPillarBlock {
@@ -23,10 +22,10 @@ public class LogBlock extends RotatedPillarBlock {
         ((FireBlock) Blocks.FIRE).setFlammable(this, 5, 5);
     }
 
-    public LogBlock(MaterialColor color1, MaterialColor color2) {
-        super(BlockBehaviour.Properties.of(Material.WOOD, (p_235431_2_) -> {
+    public LogBlock(MapColor color1, MapColor color2) {
+        super(BlockBehaviour.Properties.of().mapColor((p_235431_2_) -> {
             return p_235431_2_.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? color1 : color2;
-        }).strength(2.0F).sound(SoundType.WOOD));
+        }).strength(2.0F).ignitedByLava().sound(SoundType.WOOD));
         ((FireBlock) Blocks.FIRE).setFlammable(this, 5, 5);
     }
 }

@@ -28,8 +28,8 @@
 
 package de.teamlapen.lib.lib.client.gui.screens.radialmenu;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 
 public interface DrawCallback<T> {
-    void accept(T objectToBeDrawn, PoseStack poseStack, int positionX, int positionY, int size, boolean renderTransparent);
+    void accept(T objectToBeDrawn, GuiGraphics graphics, int positionX, int positionY, int size, boolean renderTransparent);
 }

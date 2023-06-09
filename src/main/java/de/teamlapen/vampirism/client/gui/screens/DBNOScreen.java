@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.gui.components.CooldownButton;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.ClickEvent;
@@ -47,22 +47,22 @@ public class DBNOScreen extends Screen {
     }
 
     @Override
-    public void render(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        this.fillGradient(matrixStack, 0, 0, this.width, this.height, 1615855616, -1602211792);
-        matrixStack.pushPose();
-        matrixStack.scale(2.0F, 2.0F, 2.0F);
-        drawCenteredString(matrixStack, this.font, this.title, this.width / 2 / 2, 30, 16777215);
-        matrixStack.popPose();
+    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        graphics.fillGradient(0, 0, this.width, this.height, 1615855616, -1602211792);
+        graphics.pose().pushPose();
+        graphics.pose().scale(2.0F, 2.0F, 2.0F);
+        graphics.drawCenteredString(this.font, this.title, this.width / 2 / 2, 30, 16777215);
+        graphics.pose().popPose();
         if (this.causeOfDeath != null) {
-            drawCenteredString(matrixStack, this.font, this.causeOfDeath, this.width / 2, 85, 16777215);
+            graphics.drawCenteredString(this.font, this.causeOfDeath, this.width / 2, 85, 16777215);
         }
 
         if (this.causeOfDeath != null && mouseY > 85 && mouseY < 85 + 9) {
             Style style = this.deriveDeathMessageStyle(mouseX);
-            this.renderComponentHoverEffect(matrixStack, style, mouseX, mouseY);
+            graphics.renderComponentHoverEffect(this.font, style, mouseX, mouseY);
         }
 
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
+        super.render(graphics, mouseX, mouseY, partialTicks);
     }
 
     public boolean shouldCloseOnEsc() {

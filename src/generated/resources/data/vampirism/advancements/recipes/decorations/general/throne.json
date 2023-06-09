@@ -54,5 +54,6 @@
     "recipes": [
       "vampirism:general/throne"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

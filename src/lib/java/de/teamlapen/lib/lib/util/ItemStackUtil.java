@@ -42,10 +42,10 @@ public class ItemStackUtil {
         if (stackA.isEmpty() || stackB.isEmpty()) return false;
         if (stackA.getItem() != stackB.getItem()) return false;
         if (stackA.getDamageValue() != stackB.getDamageValue()) return false;
-        return ItemStack.tagMatches(stackA, stackB);
+        return ItemStack.isSameItemSameTags(stackA, stackB);
     }
 
     public static boolean stackEqualExact(@NotNull ItemStack stack1, @NotNull ItemStack stack2) {
-        return stack1.getItem() == stack2.getItem() && ItemStack.tagMatches(stack1, stack2);
+        return stack1.getItem() == stack2.getItem() && ItemStack.isSameItemSameTags(stack1, stack2);
     }
 }

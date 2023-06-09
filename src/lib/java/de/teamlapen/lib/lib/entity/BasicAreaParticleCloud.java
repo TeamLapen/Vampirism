@@ -81,7 +81,7 @@ public class BasicAreaParticleCloud extends Entity {
         this.dimensions = new EntityDimensions(radius * 2.0F, getBbHeight(), dimensions.fixed);
         this.setPos(d0, d1, d2);
 
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             this.getEntityData().set(RADIUS, radius);
         }
     }
@@ -123,7 +123,7 @@ public class BasicAreaParticleCloud extends Entity {
         this.dimensions = new EntityDimensions(getRadius() * 2, height, dimensions.fixed);
         this.setPos(d0, d1, d2);
 
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             this.getEntityData().set(HEIGHT, height);
         }
     }
@@ -132,7 +132,7 @@ public class BasicAreaParticleCloud extends Entity {
     public void tick() {
         super.tick();
         float radius = this.getRadius();
-        if (this.level.isClientSide) {
+        if (this.level().isClientSide) {
             ParticleOptions particle = getParticle();
             float amount = (float) (Math.PI * radius * radius) * getSpawnRate();
             for (int i = 0; i < amount; i++) {
@@ -148,9 +148,9 @@ public class BasicAreaParticleCloud extends Entity {
                     int cr = rgb >> 16 & 255;
                     int cg = rgb >> 8 & 255;
                     int cb = rgb & 255;
-                    this.level.addParticle(particle, this.getX() + (double) dx, this.getY() + dy, this.getZ() + (double) dz, (float) cr / 255.0F, (float) cg / 255.0F, (float) cb / 255.0F);
+                    this.level().addParticle(particle, this.getX() + (double) dx, this.getY() + dy, this.getZ() + (double) dz, (float) cr / 255.0F, (float) cg / 255.0F, (float) cb / 255.0F);
                 } else {
-                    this.level.addParticle(particle, this.getX() + (double) dx, this.getY() + dy, this.getZ() + (double) dz, (0.5D - this.random.nextDouble()) * 0.15D, 0.009999999776482582D, (0.5D - this.random.nextDouble()) * 0.15D);
+                    this.level().addParticle(particle, this.getX() + (double) dx, this.getY() + dy, this.getZ() + (double) dz, (0.5D - this.random.nextDouble()) * 0.15D, 0.009999999776482582D, (0.5D - this.random.nextDouble()) * 0.15D);
                 }
             }
         } else {

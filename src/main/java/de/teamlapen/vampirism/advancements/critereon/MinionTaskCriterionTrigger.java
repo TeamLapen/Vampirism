@@ -28,7 +28,7 @@ public class MinionTaskCriterionTrigger extends SimpleCriterionTrigger<MinionTas
 
     @NotNull
     @Override
-    protected Instance createInstance(@NotNull JsonObject json, @NotNull EntityPredicate.Composite entityPredicate, @NotNull DeserializationContext conditionsParser) {
+    protected Instance createInstance(@NotNull JsonObject json, @NotNull ContextAwarePredicate entityPredicate, @NotNull DeserializationContext conditionsParser) {
         IMinionTask<?, ?> task = RegUtil.getMinionTask(new ResourceLocation(json.get("action").getAsString()));
         if (task != null) {
             return new Instance(task);
@@ -42,7 +42,7 @@ public class MinionTaskCriterionTrigger extends SimpleCriterionTrigger<MinionTas
         private final IMinionTask<?, ?> task;
 
         Instance(@NotNull IMinionTask<?, ?> task) {
-            super(ID, EntityPredicate.Composite.ANY);
+            super(ID, ContextAwarePredicate.ANY);
             this.task = task;
         }
 

@@ -107,7 +107,7 @@ public class HunterTableMenu extends ItemCombinerMenu {
         @Override
         public @NotNull HunterTableMenu create(int windowId, @NotNull Inventory inv, @NotNull FriendlyByteBuf data) {
             BlockPos pos = data.readBlockPos();
-            return new HunterTableMenu(windowId, inv, ContainerLevelAccess.create(inv.player.level, pos));
+            return new HunterTableMenu(windowId, inv, ContainerLevelAccess.create(inv.player.level(), pos));
         }
     }
 }

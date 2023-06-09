@@ -33,7 +33,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.AABB;
@@ -82,7 +82,7 @@ public class CoffinBlock extends VampirismBlockContainer {
     private final DyeColor color;
 
     public CoffinBlock(DyeColor color) {
-        super(Properties.of(Material.WOOD).strength(0.2f).noOcclusion());
+        super(Properties.of().mapColor(MapColor.WOOD).strength(0.2f).noOcclusion().pushReaction(PushReaction.DESTROY).ignitedByLava());
         this.registerDefaultState(this.getStateDefinition().any().setValue(BedBlock.OCCUPIED, Boolean.FALSE).setValue(PART, CoffinPart.FOOT).setValue(HORIZONTAL_FACING, Direction.NORTH).setValue(CLOSED, false).setValue(VERTICAL, false));
         this.color = color;
         COFFIN_BLOCKS.put(color, this);
@@ -91,12 +91,6 @@ public class CoffinBlock extends VampirismBlockContainer {
     @Override
     public @NotNull Direction getBedDirection(@NotNull BlockState state, LevelReader world, BlockPos pos) {
         return state.getValue(HORIZONTAL_FACING);
-    }
-
-    @NotNull
-    @Override
-    public PushReaction getPistonPushReaction(@NotNull BlockState state) {
-        return PushReaction.DESTROY;
     }
 
     @NotNull

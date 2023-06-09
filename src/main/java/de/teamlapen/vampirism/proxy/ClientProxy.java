@@ -150,10 +150,10 @@ public class ClientProxy extends CommonProxy {
     public void handleSleepClient(@NotNull Player player) {
         if (player.isSleeping()) {
             player.getSleepingPos().ifPresent(pos -> {
-                if (player.level.getBlockState(pos).getBlock() instanceof TentBlock) {
-                    TentBlock.setTentSleepPosition(player, pos, player.level.getBlockState(pos).getValue(POSITION), player.level.getBlockState(pos).getValue(FACING));
-                } else if (player.level.getBlockState(pos).getBlock() instanceof CoffinBlock) {
-                    CoffinBlock.setCoffinSleepPosition(player, pos, player.level.getBlockState(pos));
+                if (player.level().getBlockState(pos).getBlock() instanceof TentBlock) {
+                    TentBlock.setTentSleepPosition(player, pos, player.level().getBlockState(pos).getValue(POSITION), player.level().getBlockState(pos).getValue(FACING));
+                } else if (player.level().getBlockState(pos).getBlock() instanceof CoffinBlock) {
+                    CoffinBlock.setCoffinSleepPosition(player, pos, player.level().getBlockState(pos));
                 }
             });
         }

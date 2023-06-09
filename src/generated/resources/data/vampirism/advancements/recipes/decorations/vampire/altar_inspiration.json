@@ -41,5 +41,6 @@
     "recipes": [
       "vampirism:vampire/altar_inspiration"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -39,5 +39,6 @@
     "recipes": [
       "vampirism:item_tent"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

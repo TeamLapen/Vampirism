@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -73,12 +72,12 @@ public class BlessableItem extends Item {
     }
 
     @Override
-    public @NotNull UseAnim getUseAnimation(ItemStack p_77661_1_) {
+    public @NotNull UseAnim getUseAnimation(@NotNull ItemStack pStack) {
         return UseAnim.BLOCK;
     }
 
     @Override
-    public int getUseDuration(ItemStack stack) {
+    public int getUseDuration(@NotNull ItemStack stack) {
         return 316;
     }
 
@@ -95,34 +94,34 @@ public class BlessableItem extends Item {
     }
 
     @Override
-    public void onUsingTick(ItemStack stack, @NotNull LivingEntity entity, int ticksLeft) {
-        if (ticksLeft == 300 && entity.level.isClientSide() && entity instanceof Player player) {
+    public void onUseTick(@NotNull Level pLevel, @NotNull LivingEntity pLivingEntity, @NotNull ItemStack pStack, int pRemainingUseDuration) {
+        if (pRemainingUseDuration == 300 && pLivingEntity.level().isClientSide() && pLivingEntity instanceof Player player) {
             HunterPlayer.getOpt(player).map(HunterPlayer::getSpecialAttributes).ifPresent(att -> {
                 if (att.blessingSoundReference != null) {
                     att.blessingSoundReference.stopPlaying();
                 }
-                att.blessingSoundReference = VampLib.proxy.createSoundReference(ModSounds.BLESSING_MUSIC.get(), SoundSource.PLAYERS, entity.blockPosition(), 1, 1);
+                att.blessingSoundReference = VampLib.proxy.createSoundReference(ModSounds.BLESSING_MUSIC.get(), SoundSource.PLAYERS, pLivingEntity.blockPosition(), 1, 1);
                 att.blessingSoundReference.startPlaying();
 
             });
 
         }
-        if (ticksLeft % 20 == 1) {
+        if (pRemainingUseDuration % 20 == 1) {
 
-            Vec3 mainPos = UtilLib.getItemPosition(entity, entity.getUsedItemHand() == InteractionHand.MAIN_HAND);
+            Vec3 mainPos = UtilLib.getItemPosition(pLivingEntity, pLivingEntity.getUsedItemHand() == InteractionHand.MAIN_HAND);
             for (int j = 0; j < 3; ++j) {
-                Vec3 pos = mainPos.add((entity.getRandom().nextFloat() - 0.5f) * 0.1f, (entity.getRandom().nextFloat() - 0.3f) * 0.9f, (entity.getRandom().nextFloat() - 0.5f) * 0.1f);
-                UtilLib.spawnParticles(entity.level, ParticleTypes.ENCHANT, pos.x, pos.y, pos.z, 0, 0, 0, 10, 0.4f);
+                Vec3 pos = mainPos.add((pLivingEntity.getRandom().nextFloat() - 0.5f) * 0.1f, (pLivingEntity.getRandom().nextFloat() - 0.3f) * 0.9f, (pLivingEntity.getRandom().nextFloat() - 0.5f) * 0.1f);
+                UtilLib.spawnParticles(pLivingEntity.level(), ParticleTypes.ENCHANT, pos.x, pos.y, pos.z, 0, 0, 0, 10, 0.4f);
             }
-            if (ticksLeft > 21) {
-                entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, 2));
-                entity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 40, 2));
+            if (pRemainingUseDuration > 21) {
+                pLivingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, 2));
+                pLivingEntity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 40, 2));
             }
         }
     }
 
     @Override
-    public @NotNull ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity livingEntity) {
+    public @NotNull ItemStack finishUsingItem(@NotNull ItemStack stack, @NotNull Level world, @NotNull LivingEntity livingEntity) {
         if (enhancedBlessedItem != null && livingEntity instanceof Player player) {
             IFactionPlayerHandler handler = FactionPlayerHandler.get(player);
             boolean enhanced = handler.isInFaction(VReference.HUNTER_FACTION) && handler.getCurrentFactionPlayer().map(IFactionPlayer::getSkillHandler).map(s -> s.isSkillEnabled(HunterSkills.ENHANCED_BLESSING.get())).orElse(false);
@@ -132,8 +131,8 @@ public class BlessableItem extends Item {
     }
 
     @Override
-    public void releaseUsing(ItemStack sttack, Level world, @NotNull LivingEntity entity, int duration) {
-        if (entity.level.isClientSide() && entity instanceof Player player) {
+    public void releaseUsing(@NotNull ItemStack pStack, @NotNull Level world, @NotNull LivingEntity entity, int duration) {
+        if (entity.level().isClientSide() && entity instanceof Player player) {
             HunterPlayer.getOpt(player).map(HunterPlayer::getSpecialAttributes).ifPresent(att -> {
                 if (att.blessingSoundReference != null) {
                     att.blessingSoundReference.stopPlaying();

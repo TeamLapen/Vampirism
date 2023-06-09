@@ -17,5 +17,6 @@
     "recipes": [
       "vampirism:alchemical_cauldron/alchemical_fire_6"
     ]
-  }
+  },
+  "sends_telemetry_event": true
 }

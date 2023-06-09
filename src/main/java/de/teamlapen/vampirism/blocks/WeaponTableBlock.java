@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -65,7 +65,7 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
     }
 
     public WeaponTableBlock() {
-        super(Properties.of(Material.METAL).strength(3).noOcclusion(), makeShape());
+        super(Properties.of().mapColor(MapColor.METAL).strength(3).noOcclusion(), makeShape());
         this.registerDefaultState(this.getStateDefinition().any().setValue(LAVA, 0).setValue(FACING, Direction.NORTH));
 
     }
@@ -110,7 +110,7 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
             if (!flag) {
 
                 if (canUse(player) && player instanceof ServerPlayer) {
-                    NetworkHooks.openScreen((ServerPlayer) player, new SimpleMenuProvider((id, playerInventory, playerIn) -> new WeaponTableMenu(id, playerInventory, ContainerLevelAccess.create(playerIn.level, pos)), name), pos);
+                    NetworkHooks.openScreen((ServerPlayer) player, new SimpleMenuProvider((id, playerInventory, playerIn) -> new WeaponTableMenu(id, playerInventory, ContainerLevelAccess.create(playerIn.level(), pos)), name), pos);
                 } else {
                     player.displayClientMessage(Component.translatable("You have not learned how to use this"), true);
                 }

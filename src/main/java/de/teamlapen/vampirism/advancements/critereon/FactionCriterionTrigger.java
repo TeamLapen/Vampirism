@@ -67,7 +67,7 @@ public class FactionCriterionTrigger extends SimpleCriterionTrigger<FactionCrite
 
     @NotNull
     @Override
-    protected Instance createInstance(@NotNull JsonObject json, @NotNull EntityPredicate.Composite entityPredicate, @NotNull DeserializationContext conditionsParser) {
+    protected Instance createInstance(@NotNull JsonObject json, @NotNull ContextAwarePredicate entityPredicate, @NotNull DeserializationContext conditionsParser) {
         IPlayableFaction<?> playableFaction = null;
         Type type = json.has("type") ? Type.valueOf(json.get("type").getAsString()) : Type.LEVEL;
         if (json.has("faction")) {
@@ -99,7 +99,7 @@ public class FactionCriterionTrigger extends SimpleCriterionTrigger<FactionCrite
         private final int level;
 
         Instance(@NotNull Type type, @Nullable IPlayableFaction<?> faction, int level) {
-            super(ID, EntityPredicate.Composite.ANY);
+            super(ID, ContextAwarePredicate.ANY);
             this.type = type;
             this.faction = faction;
             this.level = level;

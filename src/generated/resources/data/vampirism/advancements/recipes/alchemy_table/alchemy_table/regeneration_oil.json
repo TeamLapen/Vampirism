@@ -30,5 +30,6 @@
     "recipes": [
       "vampirism:alchemy_table/regeneration_oil"
     ]
-  }
+  },
+  "sends_telemetry_event": true
 }

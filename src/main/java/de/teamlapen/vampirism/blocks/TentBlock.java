@@ -31,7 +31,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -208,7 +208,7 @@ public class TentBlock extends VampirismBlock {
     }
 
     public TentBlock() {
-        super(Properties.of(Material.WOOL).strength(0.6f).sound(SoundType.WOOL).noOcclusion());
+        super(Properties.of().mapColor(MapColor.WOOL).ignitedByLava().strength(0.6f).sound(SoundType.WOOL).noOcclusion());
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(POSITION, 0).setValue(OCCUPIED, false));
     }
 
@@ -338,7 +338,7 @@ public class TentBlock extends VampirismBlock {
                 }
             }).ifRight(u -> {
                 this.setBedOccupied(blockState, world, pos, null, true);
-                setTentSleepPosition(player, pos, player.level.getBlockState(pos).getValue(POSITION), player.level.getBlockState(pos).getValue(HORIZONTAL_FACING));
+                setTentSleepPosition(player, pos, player.level().getBlockState(pos).getValue(POSITION), player.level().getBlockState(pos).getValue(HORIZONTAL_FACING));
             });
             return InteractionResult.SUCCESS;
         }

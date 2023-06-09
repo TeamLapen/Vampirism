@@ -28,5 +28,6 @@
     "recipes": [
       "vampirism:vampire/vampire_cloak_black_red"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

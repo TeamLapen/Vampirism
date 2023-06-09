@@ -19,7 +19,6 @@
           "name": "vampirism:vampire_fang"
         }
       ],
-      "name": "general",
       "rolls": 1.0
     },
     {
@@ -41,7 +40,6 @@
           "name": "vampirism:vampire_blood_bottle"
         }
       ],
-      "name": "special",
       "rolls": 1.0
     },
     {
@@ -85,8 +83,8 @@
           "name": "vampirism:obi_belt"
         }
       ],
-      "name": "refinement_item",
       "rolls": 1.0
     }
-  ]
+  ],
+  "random_sequence": "vampirism:entities/vampire_imob"
 }

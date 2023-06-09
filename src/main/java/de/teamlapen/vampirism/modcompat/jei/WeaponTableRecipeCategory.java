@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.modcompat.jei;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexSorting;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.REFERENCE;
@@ -20,6 +21,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -47,23 +49,24 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
     }
 
     @Override
-    public void draw(@NotNull IWeaponTableRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull PoseStack stack, double mouseX, double mouseY) {
+    public void draw(@NotNull IWeaponTableRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics graphics, double mouseX, double mouseY) {
 
         int x = 2;
         int y = 80;
         Minecraft minecraft = Minecraft.getInstance();
         if (recipe.getRequiredLavaUnits() > 0) {
-            stack.pushPose();
+            PoseStack pose = graphics.pose();
+            pose.pushPose();
             RenderSystem.backupProjectionMatrix();
-            RenderSystem.setProjectionMatrix(stack.last().pose());
-            minecraft.getItemRenderer().renderGuiItem(stack, lavaStack, 83, 13);
+            RenderSystem.setProjectionMatrix(pose.last().pose(), VertexSorting.ORTHOGRAPHIC_Z);
+            graphics.renderItem(lavaStack, 83, 13);
             RenderSystem.restoreProjectionMatrix();
-            stack.popPose();
+            pose.popPose();
         }
         if (recipe.getRequiredLevel() > 1) {
             Component level = Component.translatable("gui.vampirism.hunter_weapon_table.level", recipe.getRequiredLevel());
 
-            minecraft.font.draw(stack, level, x, y, Color.GRAY.getRGB());
+            graphics.drawString(minecraft.font, level, x, y, Color.GRAY.getRGB(), false);
             y += minecraft.font.lineHeight + 2;
         }
         ISkill<?>[] requiredSkills = recipe.getRequiredSkills();
@@ -74,7 +77,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
                 skillText.append(skill.getName()).append(" ");
 
             }
-            y += UtilLib.renderMultiLine(minecraft.font, stack, skillText, 132, x, y, Color.GRAY.getRGB());
+            y += UtilLib.renderMultiLine(minecraft.font, graphics, skillText, 132, x, y, Color.GRAY.getRGB());
 
         }
     }

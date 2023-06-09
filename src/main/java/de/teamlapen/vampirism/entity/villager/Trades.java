@@ -184,10 +184,10 @@ public class Trades {
 
         @Nullable
         public MerchantOffer getOffer(@NotNull Entity pTrader, RandomSource pRand) {
-            if (pTrader instanceof ConvertedVillagerEntity convertedVillager && pTrader.level instanceof ServerLevel serverLevel){
+            if (pTrader instanceof ConvertedVillagerEntity convertedVillager && pTrader.level() instanceof ServerLevel serverLevel) {
                 //This may block for a short amount of time if the vampire villager has not completed its forest search yet
-                return convertedVillager.getClosestVampireForest(pTrader.level, pTrader.blockPosition()).map(blockPos -> {
-                    ItemStack itemstack = MapItem.create(pTrader.level, blockPos.getX(), blockPos.getZ(), (byte) 3, true, true);
+                return convertedVillager.getClosestVampireForest(pTrader.level(), pTrader.blockPosition()).map(blockPos -> {
+                    ItemStack itemstack = MapItem.create(pTrader.level(), blockPos.getX(), blockPos.getZ(), (byte) 3, true, true);
                     MapItem.renderBiomePreviewMap(serverLevel, itemstack);
                     MapItemSavedData.addTargetDecoration(itemstack, blockPos, "+", MapDecoration.Type.TARGET_POINT);
                     itemstack.setHoverName(Component.translatable("biome.vampirism.vampire_forest"));

@@ -30,5 +30,6 @@
     "recipes": [
       "vampirism:vampire/coffin_cyan"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

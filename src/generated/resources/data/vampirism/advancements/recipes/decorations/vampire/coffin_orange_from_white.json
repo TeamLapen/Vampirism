@@ -43,5 +43,6 @@
     "recipes": [
       "vampirism:vampire/coffin_orange_from_white"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

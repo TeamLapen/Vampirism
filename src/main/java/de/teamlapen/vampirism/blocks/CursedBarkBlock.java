@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.blocks.HolyWaterEffectConsumer;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
@@ -18,8 +19,7 @@ import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -31,14 +31,14 @@ public abstract class CursedBarkBlock extends Block implements HolyWaterEffectCo
     private static final VoxelShape shape =  Shapes.empty();
 
     public CursedBarkBlock() {
-        super(BlockBehaviour.Properties.of(Material.REPLACEABLE_PLANT, MaterialColor.NONE).noCollission().strength(0.0F).sound(SoundType.VINE));
+        super(BlockBehaviour.Properties.of().noCollission().replaceable().strength(0.0F).pushReaction(PushReaction.DESTROY).ignitedByLava().isViewBlocking(UtilLib::never).sound(SoundType.VINE));
         ((FireBlock) Blocks.FIRE).setFlammable(this, 5, 5);
     }
 
     protected void moveEntityTo(@NotNull Level level, @NotNull Entity entity, @NotNull BlockPos targetPos) {
         if (targetPos.equals(entity.blockPosition())) return;
         Vec3 thrust = new Vec3(targetPos.getX(), targetPos.getY(), targetPos.getZ()).subtract(entity.getX(), entity.getY(), entity.getZ()).normalize().scale(0.04);
-        if (!entity.isOnGround()) {
+        if (!entity.onGround()) {
             thrust = thrust.scale(0.3d);
         }
         entity.setDeltaMovement(entity.getDeltaMovement().add(thrust));
@@ -65,7 +65,7 @@ public abstract class CursedBarkBlock extends Block implements HolyWaterEffectCo
     }
 
     @Override
-    public VoxelShape getShape(BlockState p_60555_, BlockGetter p_60556_, BlockPos p_60557_, CollisionContext p_60558_) {
+    public @NotNull VoxelShape getShape(@NotNull BlockState p_60555_, @NotNull BlockGetter p_60556_, @NotNull BlockPos p_60557_, @NotNull CollisionContext p_60558_) {
         return shape;
     }
 

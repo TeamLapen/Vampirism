@@ -45,7 +45,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
      * @param villager Is not modified or removed
      */
     public static @NotNull AggressiveVillagerEntity makeHunter(@NotNull Villager villager) {
-        AggressiveVillagerEntity hunter = ModEntities.VILLAGER_ANGRY.get().create(villager.level);
+        AggressiveVillagerEntity hunter = ModEntities.VILLAGER_ANGRY.get().create(villager.level());
         assert hunter != null;
         CompoundTag nbt = new CompoundTag();
         if (villager.isSleeping()) {
@@ -124,7 +124,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
 
     @Override
     public void stopVillageAttackDefense() {
-        Villager villager = EntityType.VILLAGER.create(this.level);
+        Villager villager = EntityType.VILLAGER.create(this.level());
         assert villager != null;
         this.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
         CompoundTag nbt = new CompoundTag();

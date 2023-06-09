@@ -24,5 +24,6 @@
     "recipes": [
       "vampirism:weapontable/hunter_coat_feet_enhanced"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

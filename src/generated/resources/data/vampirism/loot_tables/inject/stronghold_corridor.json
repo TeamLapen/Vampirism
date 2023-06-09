@@ -24,7 +24,6 @@
           "weight": 27
         }
       ],
-      "name": "main",
       "rolls": 2.0
     },
     {
@@ -99,7 +98,6 @@
           "weight": 80
         }
       ],
-      "name": "swiftness_armor",
       "rolls": 1.0
     },
     {
@@ -142,7 +140,6 @@
           "weight": 80
         }
       ],
-      "name": "vampire_weapons",
       "rolls": 1.0
     },
     {
@@ -179,8 +176,8 @@
           "name": "vampirism:obi_belt"
         }
       ],
-      "name": "refinement_item",
       "rolls": 3.0
     }
-  ]
+  ],
+  "random_sequence": "vampirism:inject/stronghold_corridor"
 }

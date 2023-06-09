@@ -35,9 +35,9 @@ public class DummyBittenAnimalEntity extends Mob {
             PathfinderMob entity;
             int rand = this.random.nextInt(3);
             entity = switch (rand) {
-                case 0 -> EntityType.PIG.create(level);
-                case 1 -> EntityType.SHEEP.create(level);
-                default -> EntityType.COW.create(level);
+                case 0 -> EntityType.PIG.create(level());
+                case 1 -> EntityType.SHEEP.create(level());
+                default -> EntityType.COW.create(level());
             };
             if (entity == null) return;
             entity.copyPosition(this);

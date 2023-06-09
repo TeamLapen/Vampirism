@@ -112,23 +112,23 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     @Override
     public void aiStep() {
         if (this.tickCount % REFERENCE.REFRESH_GARLIC_TICKS == 3) {
-            isGettingGarlicDamage(level, true);
+            isGettingGarlicDamage(level(), true);
         }
         if (this.tickCount % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 2) {
-            isGettingSundamage(level, true);
+            isGettingSundamage(level(), true);
         }
-        if (!level.isClientSide) {
-            if (isGettingSundamage(level) && tickCount % 40 == 11) {
+        if (!level().isClientSide) {
+            if (isGettingSundamage(level()) && tickCount % 40 == 11) {
                 double dmg = getAttribute(ModAttributes.SUNDAMAGE.get()).getValue();
                 if (dmg > 0) {
                     DamageHandler.hurtModded(this, ModDamageSources::sunDamage, (float) dmg);
                 }
             }
-            if (isGettingGarlicDamage(level) != EnumStrength.NONE) {
-                DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(level), this.tickCount);
+            if (isGettingGarlicDamage(level()) != EnumStrength.NONE) {
+                DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(level()), this.tickCount);
             }
         }
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             if (isAlive() && isInWater()) {
                 setAirSupply(300);
                 if (tickCount % 16 == 4) {
@@ -148,7 +148,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     @Override
     public boolean isGettingSundamage(LevelAccessor iWorld, boolean forceRefresh) {
         if (!forceRefresh) return sundamageCache;
-        return (sundamageCache = Helper.gettingSundamge(this, iWorld, this.level.getProfiler()));
+        return (sundamageCache = Helper.gettingSundamge(this, iWorld, this.level().getProfiler()));
     }
 
     @Override
@@ -206,7 +206,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     @NotNull
     @Override
     protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
-        if (!this.level.isClientSide() && isLord(player) && minionData != null) {
+        if (!this.level().isClientSide() && isLord(player) && minionData != null) {
             ItemStack heldItem = player.getItemInHand(hand);
             if (heldItem.getItem() instanceof MinionUpgradeItem && ((MinionUpgradeItem) heldItem.getItem()).getFaction() == this.getFaction()) {
                 if (this.minionData.level + 1 >= ((MinionUpgradeItem) heldItem.getItem()).getMinLevel() && this.minionData.level + 1 <= ((MinionUpgradeItem) heldItem.getItem()).getMaxLevel()) {

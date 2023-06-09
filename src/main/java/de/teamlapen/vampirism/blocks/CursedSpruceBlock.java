@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.api.blocks.HolyWaterEffectConsumer;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
-import de.teamlapen.vampirism.api.blocks.HolyWaterEffectConsumer;
 import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -15,12 +14,8 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
-import net.minecraftforge.common.ToolAction;
-import net.minecraftforge.common.ToolActions;
+import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,7 +27,7 @@ public class CursedSpruceBlock extends StrippableLogBlock implements HolyWaterEf
     private final Supplier<? extends CursedSpruceBlock> curedBlockSupplier;
 
     public CursedSpruceBlock(@NotNull Supplier<? extends LogBlock> strippedBlock, Supplier<? extends CursedSpruceBlock> curedBlockSupplier) {
-        super(BlockBehaviour.Properties.of(Material.WOOD, (p_235431_2_) -> MaterialColor.CRIMSON_HYPHAE).strength(2.0F).sound(SoundType.WOOD).randomTicks(), strippedBlock);
+        super(BlockBehaviour.Properties.of().mapColor(MapColor.CRIMSON_HYPHAE).strength(2.0F).sound(SoundType.WOOD).randomTicks().ignitedByLava(), strippedBlock);
         this.curedBlockSupplier = curedBlockSupplier;
     }
 

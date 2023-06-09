@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -52,7 +52,7 @@ public class PedestalBlock extends VampirismBlockContainer {
     }
 
     public PedestalBlock() {
-        super(Properties.of(Material.STONE).strength(3f).noOcclusion());
+        super(Properties.of().mapColor(MapColor.STONE).strength(3f).noOcclusion());
     }
 
     @NotNull

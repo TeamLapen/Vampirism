@@ -30,5 +30,6 @@
     "recipes": [
       "vampirism:hunter/pure_blood1"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

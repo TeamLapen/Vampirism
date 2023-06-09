@@ -32,7 +32,7 @@ public class TentCommand extends BasicCommand {
             if (tent instanceof TentBlockEntity) {
                 ((TentBlockEntity) tent).setSpawn(true);
                 if (advanced) ((TentBlockEntity) tent).setAdvanced(true);
-                commandSource.sendSuccess(Component.translatable("command.vampirism.test.tent.success"), false);
+                commandSource.sendSuccess(() -> Component.translatable("command.vampirism.test.tent.success"), false);
             }
 
         }

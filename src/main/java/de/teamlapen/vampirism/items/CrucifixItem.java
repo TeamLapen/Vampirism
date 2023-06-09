@@ -175,9 +175,9 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
     }
 
     @Override
-    public void onUsingTick(ItemStack stack, @NotNull LivingEntity player, int count) {
-        for (LivingEntity nearbyEntity : player.level.getNearbyEntities(LivingEntity.class, TargetingConditions.forCombat().selector(this::affectsEntity), player, player.getBoundingBox().inflate(getRange(stack)))) {
-            Vec3 baseVector = player.position().subtract(nearbyEntity.position()).multiply(1, 0, 1).normalize(); //Normalized horizontal (xz) vector giving the direction towards the holder of this crucifix
+    public void onUseTick(@NotNull Level level, @NotNull LivingEntity entity, @NotNull ItemStack stack, int count) {
+        for (LivingEntity nearbyEntity : entity.level().getNearbyEntities(LivingEntity.class, TargetingConditions.forCombat().selector(this::affectsEntity), entity, entity.getBoundingBox().inflate(getRange(stack)))) {
+            Vec3 baseVector = entity.position().subtract(nearbyEntity.position()).multiply(1, 0, 1).normalize(); //Normalized horizontal (xz) vector giving the direction towards the holder of this crucifix
             Vec3 oldDelta = nearbyEntity.getDeltaMovement();
             Vec3 horizontalDelta = oldDelta.multiply(1, 0, 1);
             double parallelScale = baseVector.dot(horizontalDelta);

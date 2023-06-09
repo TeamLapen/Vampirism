@@ -6,7 +6,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.ToolActions;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +23,7 @@ public class StrippableLogBlock extends LogBlock{
         this.strippedBlock = strippedLog;
     }
 
-    public StrippableLogBlock(MaterialColor color1, MaterialColor color2, @NotNull Supplier<? extends LogBlock> strippedLog) {
+    public StrippableLogBlock(MapColor color1, MapColor color2, @NotNull Supplier<? extends LogBlock> strippedLog) {
         super(color1, color2);
         this.strippedBlock = strippedLog;
     }

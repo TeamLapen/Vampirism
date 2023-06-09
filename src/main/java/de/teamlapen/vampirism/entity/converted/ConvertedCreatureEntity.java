@@ -84,11 +84,11 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
 
     @Override
     public void aiStep() {
-        if (!this.level.isClientSide && this.isAlive() && this.isConverting(this)) {
+        if (!this.level().isClientSide && this.isAlive() && this.isConverting(this)) {
             --this.conversionTime;
             if (this.conversionTime <= 0 && net.minecraftforge.event.ForgeEventFactory.canLivingConvert(this, EntityType.VILLAGER, (timer) -> this.conversionTime = timer)) {
                 //noinspection unchecked
-                this.cureEntity((ServerLevel) this.level, this, ((EntityType<T>) entityCreature.getType()));
+                this.cureEntity((ServerLevel) this.level(), this, ((EntityType<T>) entityCreature.getType()));
             }
         }
         super.aiStep();
@@ -170,7 +170,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
         super.readAdditionalSaveData(nbt);
         if (nbt.contains("entity_old")) {
             //noinspection unchecked
-            setEntityCreature((T) EntityType.create(nbt.getCompound("entity_old"), level).orElse(null));
+            setEntityCreature((T) EntityType.create(nbt.getCompound("entity_old"), level()).orElse(null));
             if (nil()) {
                 LOGGER.warn("Failed to create old entity {}. Maybe the entity does not exist anymore", nbt.getCompound("entity_old"));
             }
@@ -259,7 +259,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     @Override
     public void tick() {
         super.tick();
-        if (!level.isClientSide && entityCreature == null) {
+        if (!level().isClientSide && entityCreature == null) {
             LOGGER.debug("Setting dead, since creature is null");
             this.discard();
         }

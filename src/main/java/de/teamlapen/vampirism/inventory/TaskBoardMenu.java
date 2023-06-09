@@ -58,7 +58,7 @@ public class TaskBoardMenu extends AbstractContainerMenu implements TaskMenu {
         super(ModContainer.TASK_MASTER.get(), id);
         this.factionPlayer = FactionPlayerHandler.getCurrentFactionPlayer(playerInventory.player).orElseThrow(() -> new IllegalStateException("Can't open container without faction"));
         this.factionColor = this.factionPlayer.getFaction().getChatColor();
-        this.registry = playerInventory.player.level.registryAccess().registryOrThrow(VampirismRegistries.TASK_ID);
+        this.registry = playerInventory.player.level().registryAccess().registryOrThrow(VampirismRegistries.TASK_ID);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class TaskBoardMenu extends AbstractContainerMenu implements TaskMenu {
             return TaskAction.COMPLETE;
         } else if (isTaskNotAccepted(taskInfo)) {
             return TaskAction.ACCEPT;
-        } else if (!taskInfo.isUnique(this.registry) && this.factionPlayer.getRepresentingPlayer().level.getGameTime() > taskInfo.getTaskTimeStamp()) {
+        } else if (!taskInfo.isUnique(this.registry) && this.factionPlayer.getRepresentingPlayer().level().getGameTime() > taskInfo.getTaskTimeStamp()) {
             return TaskAction.REMOVE;
         } else {
             return TaskAction.ABORT;
@@ -98,7 +98,7 @@ public class TaskBoardMenu extends AbstractContainerMenu implements TaskMenu {
 
     @Override
     public boolean canCompleteTask(@NotNull ITaskInstance taskInfo) {
-        return this.completableTasks.contains(taskInfo.getId()) && (taskInfo.isUnique(this.registry) || this.factionPlayer.getRepresentingPlayer().level.getGameTime() < taskInfo.getTaskTimeStamp());
+        return this.completableTasks.contains(taskInfo.getId()) && (taskInfo.isUnique(this.registry) || this.factionPlayer.getRepresentingPlayer().level().getGameTime() < taskInfo.getTaskTimeStamp());
     }
 
     @Override

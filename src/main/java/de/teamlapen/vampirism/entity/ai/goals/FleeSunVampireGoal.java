@@ -24,6 +24,6 @@ public class FleeSunVampireGoal<T extends PathfinderMob & IVampire> extends Flee
 
     @Override
     protected boolean shouldFlee() {
-        return vampire.isGettingSundamage(vampire.level) && !vampire.isIgnoringSundamage();
+        return vampire.isGettingSundamage(vampire.level()) && !vampire.isIgnoringSundamage();
     }
 }

@@ -21,7 +21,7 @@ public class GenderCommand extends BasicCommand {
     @SuppressWarnings("SameReturnValue")
     private static int setGender(@NotNull CommandContext<CommandSourceStack> context, @NotNull Player player, boolean female) {
         if (FactionPlayerHandler.getOpt(player).map(fph -> fph.setTitleGender(female)).orElse(false)) {
-            context.getSource().sendSuccess(Component.translatable("command.vampirism.base.gender.success"), false);
+            context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.base.gender.success"), false);
 
         }
         return 0;

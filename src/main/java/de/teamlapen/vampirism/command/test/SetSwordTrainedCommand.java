@@ -36,7 +36,7 @@ public class SetSwordTrainedCommand extends BasicCommand {
                 ((VampirismVampireSwordItem) held.getItem()).setTrained(held, player, train);
                 player.setItemInHand(InteractionHand.MAIN_HAND, held);
             } else {
-                commandSource.sendSuccess(Component.translatable("command.vampirism.test.swordtrained.nosword"), false);
+                commandSource.sendSuccess(() -> Component.translatable("command.vampirism.test.swordtrained.nosword"), false);
             }
         }
         return 0;

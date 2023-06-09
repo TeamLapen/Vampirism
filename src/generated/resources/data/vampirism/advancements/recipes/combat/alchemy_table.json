@@ -41,5 +41,6 @@
     "recipes": [
       "vampirism:alchemy_table"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

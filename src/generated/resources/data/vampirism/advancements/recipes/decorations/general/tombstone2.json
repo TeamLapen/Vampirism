@@ -41,5 +41,6 @@
     "recipes": [
       "vampirism:general/tombstone2"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

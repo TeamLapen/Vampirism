@@ -39,5 +39,6 @@
     "recipes": [
       "vampirism:general/totem_top"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

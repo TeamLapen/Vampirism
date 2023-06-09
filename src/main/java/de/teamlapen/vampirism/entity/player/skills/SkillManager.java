@@ -67,7 +67,7 @@ public class SkillManager implements ISkillManager {
      */
     public void printSkills(IPlayableFaction<?> faction, @NotNull CommandSourceStack sender) {
         for (ISkill<?> s : getSkillsForFaction(faction)) {
-            sender.sendSuccess(Component.literal("ID: " + RegUtil.id(s) + " Skill: ").append(s.getName()), true);
+            sender.sendSuccess(() -> Component.literal("ID: " + RegUtil.id(s) + " Skill: ").append(s.getName()), true);
         }
     }
 

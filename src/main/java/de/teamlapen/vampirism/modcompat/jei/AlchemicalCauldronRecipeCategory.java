@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.REFERENCE;
@@ -19,6 +18,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -54,16 +54,16 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
     }
 
     @Override
-    public void draw(@NotNull AlchemicalCauldronRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull PoseStack stack, double mouseX, double mouseY) {
-        this.flame.draw(stack, 19, 27);
-        this.arrow.draw(stack, 41, 25);
-        this.bubbles.draw(stack, 104, 19);
+    public void draw(@NotNull AlchemicalCauldronRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics graphics, double mouseX, double mouseY) {
+        this.flame.draw(graphics, 19, 27);
+        this.arrow.draw(graphics, 41, 25);
+        this.bubbles.draw(graphics, 104, 19);
         Minecraft minecraft = Minecraft.getInstance();
         int x = 0;
         int y = 65;
         if (recipe.getRequiredLevel() > 1) {
             Component level = Component.translatable("gui.vampirism.alchemical_cauldron.level", recipe.getRequiredLevel());
-            minecraft.font.draw(stack, level, x, y, Color.GRAY.getRGB());
+            graphics.drawString(minecraft.font, level, x, y, Color.GRAY.getRGB(), false);
             y += minecraft.font.lineHeight + 2;
         }
         if (recipe.getRequiredSkills().length > 0) {
@@ -72,7 +72,7 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
             for (ISkill<?> s : recipe.getRequiredSkills()) {
                 skillText.append(s.getName()).append(" ");
             }
-            y += UtilLib.renderMultiLine(minecraft.font, stack, skillText, 132, x, y, Color.GRAY.getRGB());
+            y += UtilLib.renderMultiLine(minecraft.font, graphics, skillText, 132, x, y, Color.GRAY.getRGB());
         }
     }
 

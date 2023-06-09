@@ -109,7 +109,7 @@ public class Helper {
                 int liquidBlocks = 0;
                 for (blockpos = blockpos.below(); blockpos.getY() > pos.getY(); blockpos = blockpos.below()) {
                     BlockState state = world.getBlockState(blockpos);
-                    if (state.getMaterial().isLiquid()) { // if fluid than it propagates the light until `vpSundamageWaterBlocks`
+                    if (state.liquid()) { // if fluid than it propagates the light until `vpSundamageWaterBlocks`
                         liquidBlocks++;
                         if (liquidBlocks >= VampirismConfig.BALANCE.vpSundamageWaterblocks.get()) {
                             return false;

@@ -22,7 +22,6 @@
           "weight": 20
         }
       ],
-      "name": "main",
       "rolls": 7.0
     },
     {
@@ -43,7 +42,6 @@
           "weight": 30
         }
       ],
-      "name": "book",
       "rolls": 1.0
     },
     {
@@ -150,7 +148,6 @@
           "weight": 40
         }
       ],
-      "name": "equipment",
       "rolls": 1.0
     },
     {
@@ -187,8 +184,8 @@
           "name": "vampirism:obi_belt"
         }
       ],
-      "name": "refinement_item",
       "rolls": 3.0
     }
-  ]
+  ],
+  "random_sequence": "vampirism:chests/dungeon/vampire_dungeon"
 }

@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.util.DamageHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,8 +21,8 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -36,7 +37,7 @@ public class AlchemicalFireBlock extends VampirismBlock {
     public static final IntegerProperty AGE = IntegerProperty.create("age", 0, 15);
 
     public AlchemicalFireBlock() {
-        super(Properties.of(Material.FIRE, MaterialColor.FIRE).strength(0.0f).lightLevel(s -> 15).sound(SoundType.WOOL).noCollission().randomTicks().noOcclusion().noLootTable());
+        super(Properties.of().mapColor(MapColor.FIRE).strength(0.0f).lightLevel(s -> 15).sound(SoundType.WOOL).noCollission().randomTicks().noOcclusion().pushReaction(PushReaction.DESTROY).replaceable().noLootTable().isViewBlocking(UtilLib::never));
         this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0));
     }
 

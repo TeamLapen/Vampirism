@@ -102,12 +102,12 @@ public class ThrowableItemEntity extends ThrowableProjectile implements ItemSupp
         if (!stack.isEmpty()) {
             Item item = stack.getItem();
             if (item instanceof IVampirismThrowableItem) {
-                ((IVampirismThrowableItem) item).onImpact(this, stack, result, this.level.isClientSide);
+                ((IVampirismThrowableItem) item).onImpact(this, stack, result, this.level().isClientSide);
             } else {
                 LOGGER.warn("Saved item ({}) is not an instance of IVampirismThrowableItem. This should not be able to happen", stack);
             }
         }
-        if (!this.level.isClientSide) this.discard();
+        if (!this.level().isClientSide) this.discard();
     }
 
     /**

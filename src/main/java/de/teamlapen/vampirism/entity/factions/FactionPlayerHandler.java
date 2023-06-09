@@ -303,7 +303,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
      */
     public void resetLordTasks(int minLevel) {
         getCurrentFactionPlayer().map(IFactionPlayer::getTaskManager).ifPresent(manager -> {
-            this.player.level.registryAccess().registryOrThrow(VampirismRegistries.TASK_ID).getTagOrEmpty(ModTags.Tasks.AWARDS_LORD_LEVEL).forEach(holder -> {
+            this.player.level().registryAccess().registryOrThrow(VampirismRegistries.TASK_ID).getTagOrEmpty(ModTags.Tasks.AWARDS_LORD_LEVEL).forEach(holder -> {
                 holder.unwrapKey().ifPresent(manager::resetUniqueTask);
             });
         });
@@ -406,7 +406,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         if (titleGender == null || female != this.titleGender) {
             this.titleGender = female;
             player.refreshDisplayName();
-            if (!player.level.isClientSide()) {
+            if (!player.level().isClientSide()) {
                 sync(true);
             }
         }
@@ -528,7 +528,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             this.updateSkillTypes();
         }
         this.updateCache();
-        MinionWorldData.getData(player.level).ifPresent(data -> {
+        MinionWorldData.getData(player.level()).ifPresent(data -> {
             PlayerMinionController c = data.getController(this.player.getUUID());
             if (c != null) {
                 c.setMaxMinions(this.currentFaction, this.getMaxMinions());

@@ -30,5 +30,6 @@
     "recipes": [
       "vampirism:cursed_spruce_pressure_place"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }
