@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.lib.client.gui.components.SimpleList;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.network.ClientboundRequestMinionSelectPacket;
 import de.teamlapen.vampirism.network.ServerboundSelectMinionTaskPacket;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
@@ -29,11 +29,11 @@ public class SelectMinionScreen extends Screen {
     }
 
     @Override
-    public void render(@NotNull PoseStack mStack, int p_render_1_, int p_render_2_, float p_render_3_) {
+    public void render(@NotNull GuiGraphics graphics, int p_render_1_, int p_render_2_, float p_render_3_) {
         if (this.minecraft != null) {
-            renderBackground(mStack);
+            renderBackground(graphics);
         }
-        super.render(mStack, p_render_1_, p_render_2_, p_render_3_);
+        super.render(graphics, p_render_1_, p_render_2_, p_render_3_);
     }
 
     @Override

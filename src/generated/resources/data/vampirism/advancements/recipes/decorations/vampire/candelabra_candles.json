@@ -50,5 +50,6 @@
     "recipes": [
       "vampirism:vampire/candelabra_candles"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

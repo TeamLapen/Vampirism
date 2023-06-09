@@ -30,5 +30,6 @@
     "recipes": [
       "vampirism:general/castle_slab_purple_brick"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
@@ -11,6 +9,7 @@ import de.teamlapen.vampirism.client.gui.screens.radial.edit.ReorderingGuiRadial
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -30,12 +29,11 @@ public class EditSelectActionScreen<T extends IFactionPlayer<T>> extends Reorder
         });
     }
 
-    private static void drawActionPart(@Nullable IAction<?> action, PoseStack stack, int posX, int posY, int size, boolean transparent) {
+    private static void drawActionPart(@Nullable IAction<?> action, GuiGraphics graphics, int posX, int posY, int size, boolean transparent) {
         if (action == null) return;
         ResourceLocation id = RegUtil.id(action);
         ResourceLocation texture = new ResourceLocation(id.getNamespace(), "textures/actions/" + id.getPath() + ".png");
-        RenderSystem.setShaderTexture(0, texture);
-        blit(stack, posX, posY, 0, 0, 0, 16, 16, 16, 16);
+        graphics.blit(texture, posX, posY, 0, 0, 0, 16, 16, 16, 16);
     }
 
     private static <T extends IFactionPlayer<T>> boolean isEnabled(T player, @NotNull IAction<?> item) {

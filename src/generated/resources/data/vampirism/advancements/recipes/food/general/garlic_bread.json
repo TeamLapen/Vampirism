@@ -41,5 +41,6 @@
     "recipes": [
       "vampirism:general/garlic_bread"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

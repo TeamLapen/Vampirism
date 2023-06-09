@@ -22,7 +22,7 @@ public class SpawnTestAnimalCommand extends BasicCommand {
         Cow cow = EntityType.COW.create(asPlayer.getCommandSenderWorld());
         cow.setHealth(cow.getMaxHealth() / 4.2f);
         cow.copyPosition(asPlayer);
-        asPlayer.level.addFreshEntity(cow);
+        asPlayer.level().addFreshEntity(cow);
         return 0;
     }
 }

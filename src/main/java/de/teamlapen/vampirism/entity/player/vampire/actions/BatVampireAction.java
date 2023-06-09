@@ -54,9 +54,9 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
     @Override
     public boolean canBeUsedBy(@NotNull IVampirePlayer vampire) {
-        return !vampire.isGettingSundamage(vampire.getRepresentingEntity().level)
+        return !vampire.isGettingSundamage(vampire.getRepresentingEntity().level())
                 && !ModItems.UMBRELLA.equals(vampire.getRepresentingEntity().getMainHandItem().getItem())
-                && vampire.isGettingGarlicDamage(vampire.getRepresentingEntity().level) == EnumStrength.NONE
+                && vampire.isGettingGarlicDamage(vampire.getRepresentingEntity().level()) == EnumStrength.NONE
                 && !vampire.getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE.get())
                 && !vampire.getRepresentingPlayer().isInWater()
                 && !(vampire.getRepresentingPlayer().getCommandSenderWorld().dimension() == Level.END)
@@ -90,7 +90,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     public void onDeactivated(@NotNull IVampirePlayer vampire) {
         Player player = vampire.getRepresentingPlayer();
         setModifier(player, false);
-        if (!player.isOnGround()) {
+        if (!player.onGround()) {
             player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 20, 100, false, false));
         }
         //player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 20, 0, false, false));
@@ -107,13 +107,13 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
     @Override
     public boolean onUpdate(@NotNull IVampirePlayer vampire) {
-        if (vampire.isGettingSundamage(vampire.getRepresentingEntity().level) && !vampire.isRemote()) {
+        if (vampire.isGettingSundamage(vampire.getRepresentingEntity().level()) && !vampire.isRemote()) {
             vampire.getRepresentingPlayer().sendSystemMessage(Component.translatable("text.vampirism.cant_fly_day"));
             return true;
         } else if (ModItems.UMBRELLA.get() == vampire.getRepresentingEntity().getMainHandItem().getItem() && !vampire.isRemote()) {
             vampire.getRepresentingPlayer().sendSystemMessage(Component.translatable("text.vampirism.cant_fly_umbrella"));
             return true;
-        } else if (vampire.isGettingGarlicDamage(vampire.getRepresentingEntity().level) != EnumStrength.NONE && !vampire.isRemote()) {
+        } else if (vampire.isGettingGarlicDamage(vampire.getRepresentingEntity().level()) != EnumStrength.NONE && !vampire.isRemote()) {
             vampire.getRepresentingEntity().sendSystemMessage(Component.translatable("text.vampirism.cant_fly_garlic"));
             return true;
         } else if (VampirismConfig.SERVER.batDimensionBlacklist.get().contains(vampire.getRepresentingPlayer().getCommandSenderWorld().dimension().location().toString()) && vampire.getRepresentingPlayer().getCommandSenderWorld().dimension() == Level.END) {

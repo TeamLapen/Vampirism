@@ -7,7 +7,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +19,7 @@ public class CastleSlabBlock extends SlabBlock {
     private final CastleBricksBlock.EnumVariant variant;
 
     public CastleSlabBlock(CastleBricksBlock.EnumVariant variant) {
-        super(Properties.of(Material.STONE).strength(2, 10).sound(SoundType.STONE));
+        super(Properties.of().mapColor(MapColor.STONE).strength(2, 10).sound(SoundType.STONE));
         this.variant = variant;
     }
 

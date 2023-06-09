@@ -41,8 +41,8 @@
           "name": "minecraft:oak_planks"
         }
       ],
-      "name": "bonus",
       "rolls": 1.0
     }
-  ]
+  ],
+  "random_sequence": "vampirism:blocks/tent_main"
 }

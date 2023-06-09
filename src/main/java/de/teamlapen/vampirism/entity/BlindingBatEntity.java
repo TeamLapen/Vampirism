@@ -79,8 +79,8 @@ public class BlindingBatEntity extends Bat {
         if (restrictLiveSpan && this.tickCount > BalanceMobProps.mobProps.BLINDING_BAT_LIVE_SPAWN) {
             DamageHandler.hurtVanilla(this, DamageSources::magic, 10f);
         }
-        if (!this.level.isClientSide) {
-            List<? extends LivingEntity> l = targetingMob ? level.getEntitiesOfClass(Monster.class, this.getBoundingBox()) : level.getEntitiesOfClass(Player.class, this.getBoundingBox());
+        if (!this.level().isClientSide) {
+            List<? extends LivingEntity> l = targetingMob ? this.level().getEntitiesOfClass(Monster.class, this.getBoundingBox()) : this.level().getEntitiesOfClass(Player.class, this.getBoundingBox());
             boolean hit = false;
             for (LivingEntity e : l) {
                 if (e.isAlive() && !Helper.isVampire(e)) {
@@ -99,9 +99,9 @@ public class BlindingBatEntity extends Bat {
         boolean t = false;
         if (targeting && this.tickCount > 40) {
             targetingMob = false;
-            LivingEntity e = level.getNearestPlayer(nonVampirePredicatePlayer, this);
+            LivingEntity e = this.level().getNearestPlayer(nonVampirePredicatePlayer, this);
             if (e == null) {
-                e = level.getNearestEntity(Monster.class, nonVampirePredicate, null, this.getX(), this.getY(), this.getZ(), this.getBoundingBox().inflate(20));
+                e = this.level().getNearestEntity(Monster.class, nonVampirePredicate, null, this.getX(), this.getY(), this.getZ(), this.getBoundingBox().inflate(20));
                 targetingMob = true;
             }
             if (e != null) {

@@ -28,5 +28,6 @@
     "recipes": [
       "vampirism:dark_spruce_planks"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

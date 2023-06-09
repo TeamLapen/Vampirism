@@ -35,7 +35,7 @@ public class DefendVillageGoal<T extends PathfinderMob & IVillageCaptureEntity> 
     @Override
     public boolean canUse() {
         if (!creature.isDefendingVillage()) return false;
-        this.targetMob = this.creature.level.getNearestEntity(LivingEntity.class, entityPredicate, this.mob, this.mob.getX(), this.mob.getY() + (double) this.mob.getEyeHeight(), this.mob.getZ(), creature.getTargetVillageArea());
+        this.targetMob = this.creature.level().getNearestEntity(LivingEntity.class, entityPredicate, this.mob, this.mob.getX(), this.mob.getY() + (double) this.mob.getEyeHeight(), this.mob.getZ(), creature.getTargetVillageArea());
         return targetMob != null;
     }
 

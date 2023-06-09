@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.player.vampire.VampireLeveling;
 import de.teamlapen.vampirism.inventory.AltarInfusionMenu;
 import de.teamlapen.vampirism.items.PureBloodItem;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
 import net.minecraft.client.gui.screens.inventory.ItemCombinerScreen;
 import net.minecraft.network.chat.Component;
@@ -45,12 +45,12 @@ public class AltarInfusionScreen extends ItemCombinerScreen<AltarInfusionMenu> {
     }
 
     @Override
-    public void render(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
-        this.renderOnBoardingTooltips(pPoseStack, pMouseX, pMouseY);
+    public void render(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        super.render(graphics, pMouseX, pMouseY, pPartialTick);
+        this.renderOnBoardingTooltips(graphics, pMouseX, pMouseY);
     }
 
-    private void renderOnBoardingTooltips(PoseStack pPoseStack, int pMouseX, int pMouseY) {
+    private void renderOnBoardingTooltips(GuiGraphics graphics, int pMouseX, int pMouseY) {
         if (this.hoveredSlot != null && this.hoveredSlot.index < 3) {
             Optional<Component> optional = Optional.empty();
             var req = this.menu.getRequirement();
@@ -69,28 +69,27 @@ public class AltarInfusionScreen extends ItemCombinerScreen<AltarInfusionMenu> {
                     default -> null;
                 })));
             }
-            optional.ifPresent(component -> this.renderTooltip(pPoseStack, component, pMouseX, pMouseY));
+            optional.ifPresent(component -> graphics.renderTooltip(this.font, component, pMouseX, pMouseY));
         }
     }
 
     @Override
-    protected void renderBg(@NotNull PoseStack pPoseStack, float pPartialTick, int pX, int pY) {
-        super.renderBg(pPoseStack, pPartialTick, pX, pY);
-        this.pureBloodIcon.render(this.menu, pPoseStack, pPartialTick, this.leftPos, this.topPos);
-        this.humanHeartIcon.render(this.menu, pPoseStack, pPartialTick, this.leftPos, this.topPos);
-        this.vampireBookIcon.render(this.menu, pPoseStack, pPartialTick, this.leftPos, this.topPos);
+    protected void renderBg(@NotNull GuiGraphics graphics, float pPartialTick, int pX, int pY) {
+        super.renderBg(graphics, pPartialTick, pX, pY);
+        this.pureBloodIcon.render(this.menu, graphics, pPartialTick, this.leftPos, this.topPos);
+        this.humanHeartIcon.render(this.menu, graphics, pPartialTick, this.leftPos, this.topPos);
+        this.vampireBookIcon.render(this.menu, graphics, pPartialTick, this.leftPos, this.topPos);
     }
 
     @Override
-    protected void renderErrorIcon(@NotNull PoseStack pPoseStack, int mouseX, int mouseY) {
+    protected void renderErrorIcon(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
         Optional<Component> component = Optional.empty();
         var requirement = this.menu.getRequirement();
         if (requirement.isEmpty()) {
             component = Optional.of(Component.translatable("text.vampirism.altar_infusion.ritual_level_wrong"));
         }
         component.ifPresent(c -> {
-            this.renderTooltip(pPoseStack, this.font.split(c, 115), this.leftPos + 10, this.topPos + 60);
-
+            graphics.renderTooltip(this.font, this.font.split(c, 115), this.leftPos + 10, this.topPos + 60);
         });
     }
 }

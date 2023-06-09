@@ -24,5 +24,6 @@
     "recipes": [
       "vampirism:cursed_spruce_boat"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

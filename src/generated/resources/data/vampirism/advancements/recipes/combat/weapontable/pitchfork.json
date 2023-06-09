@@ -24,5 +24,6 @@
     "recipes": [
       "vampirism:weapontable/pitchfork"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

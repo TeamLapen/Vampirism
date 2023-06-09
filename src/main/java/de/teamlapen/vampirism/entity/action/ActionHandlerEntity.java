@@ -47,7 +47,7 @@ public class ActionHandlerEntity<T extends PathfinderMob & IEntityActionUser> im
     }
 
     public void handle() {
-        if (!entity.level.isClientSide && availableActions != null && !availableActions.isEmpty()) {
+        if (!entity.level().isClientSide && availableActions != null && !availableActions.isEmpty()) {
             if (entity.getTarget() instanceof Player) {
                 if (isPlayerTarget) {
                     updateHandler();

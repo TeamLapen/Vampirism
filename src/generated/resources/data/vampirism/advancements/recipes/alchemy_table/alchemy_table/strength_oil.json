@@ -30,5 +30,6 @@
     "recipes": [
       "vampirism:alchemy_table/strength_oil"
     ]
-  }
+  },
+  "sends_telemetry_event": true
 }

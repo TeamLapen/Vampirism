@@ -43,5 +43,6 @@
     "recipes": [
       "vampirism:alchemy_table/plant_oil"
     ]
-  }
+  },
+  "sends_telemetry_event": true
 }

@@ -108,11 +108,11 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
             updateEntityAttributes(false);
         }
 
-        if (!this.level.isClientSide && this.isGettingSundamage(level)) {
+        if (!this.level().isClientSide && this.isGettingSundamage(level())) {
             this.teleportAway();
 
         }
-        if (!this.level.isClientSide && this.getTarget() != null && this.tickCount % 128 == 0) {
+        if (!this.level().isClientSide && this.getTarget() != null && this.tickCount % 128 == 0) {
             if (rangedAttack) {
                 if (this.random.nextInt(2) == 0 && this.navigation.createPath(this.getTarget(), 0) != null) {
                     rangedAttack = false;
@@ -127,7 +127,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
                 this.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 60));
             }
         }
-        if (this.level.isClientSide()) {
+        if (this.level().isClientSide()) {
             if (isEnraged() && enragedTransitionTime < ENRAGED_TRANSITION_TIME) {
                 enragedTransitionTime++;
             } else if (!isEnraged() && enragedTransitionTime > 0) {
@@ -271,8 +271,8 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public boolean wasKilled(@NotNull ServerLevel world, @NotNull LivingEntity entity) {
-        boolean result = super.wasKilled(world, entity);
+    public boolean killedEntity(@NotNull ServerLevel world, @NotNull LivingEntity entity) {
+        boolean result = super.killedEntity(world, entity);
         if (entity instanceof VampireBaronEntity) {
             this.setHealth(this.getMaxHealth());
         }

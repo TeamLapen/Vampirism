@@ -23,9 +23,9 @@ public class SummonDummy extends BasicCommand {
 
     @SuppressWarnings("SameReturnValue")
     private static int summon(@NotNull ServerPlayer p, boolean b) {
-        VampirismEntity t = b ? new TrainingDummyVampireEntity(ModEntities.VAMPIRE.get(), p.level) : new TrainingDummyHunterEntity(ModEntities.HUNTER.get(), p.level);
+        VampirismEntity t = b ? new TrainingDummyVampireEntity(ModEntities.VAMPIRE.get(), p.level()) : new TrainingDummyHunterEntity(ModEntities.HUNTER.get(), p.level());
         t.copyPosition(p);
-        p.level.addFreshEntity(t);
+        p.level().addFreshEntity(t);
         return 0;
     }
 }

@@ -124,10 +124,10 @@ public class VampirismWorld implements IVampirismWorld {
 
     public void printDebug(@NotNull CommandSourceStack sender) {
         for (Emitter e : emitterHashMap.values()) {
-            sender.sendSuccess(Component.literal("E: " + e.toString()), true);
+            sender.sendSuccess(() -> Component.literal("E: " + e.toString()), true);
         }
         for (Map.Entry<ChunkPos, EnumStrength> e : strengthHashMap.entrySet()) {
-            sender.sendSuccess(Component.literal("S: " + e.toString()), true);
+            sender.sendSuccess(() -> Component.literal("S: " + e.toString()), true);
         }
     }
 

@@ -1,6 +1,6 @@
 package de.teamlapen.lib.lib.client.gui.components;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -80,31 +80,31 @@ public class ScrollableListWithDummyWidget<T> extends ScrollableListComponent<T>
         }
 
         @Override
-        public void render(PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel) {
+        public void render(GuiGraphics graphics, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel) {
             if (this.isDummy) {
-                this.renderDummy(matrixStack, x, y, listWidth, listHeight, itemHeight, mouseX, mouseY, partialTicks, zLevel);
+                this.renderDummy(graphics, x, y, listWidth, listHeight, itemHeight, mouseX, mouseY, partialTicks, zLevel);
             } else {
-                this.renderItem(matrixStack, x, y, listWidth, listHeight, itemHeight, mouseX, mouseY, partialTicks, zLevel);
+                this.renderItem(graphics, x, y, listWidth, listHeight, itemHeight, mouseX, mouseY, partialTicks, zLevel);
             }
         }
 
-        public abstract void renderDummy(PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel);
+        public abstract void renderDummy(GuiGraphics graphics, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel);
 
-        public abstract void renderDummyToolTip(PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float zLevel);
+        public abstract void renderDummyToolTip(GuiGraphics graphics, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float zLevel);
 
         /**
          *
          */
-        public abstract void renderItem(PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel);
+        public abstract void renderItem(GuiGraphics graphics, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float partialTicks, float zLevel);
 
-        public abstract void renderItemToolTip(PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float zLevel);
+        public abstract void renderItemToolTip(GuiGraphics graphics, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float zLevel);
 
         @Override
-        public void renderToolTip(PoseStack matrixStack, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float zLevel) {
+        public void renderToolTip(GuiGraphics graphics, int x, int y, int listWidth, int listHeight, int itemHeight, int mouseX, int mouseY, float zLevel) {
             if (this.isDummy) {
-                this.renderDummyToolTip(matrixStack, x, y, listWidth, listHeight, itemHeight, mouseX, mouseY, zLevel);
+                this.renderDummyToolTip(graphics, x, y, listWidth, listHeight, itemHeight, mouseX, mouseY, zLevel);
             } else {
-                this.renderItemToolTip(matrixStack, x, y, listWidth, listHeight, itemHeight, mouseX, mouseY, zLevel);
+                this.renderItemToolTip(graphics, x, y, listWidth, listHeight, itemHeight, mouseX, mouseY, zLevel);
             }
         }
 

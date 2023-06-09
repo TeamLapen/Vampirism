@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
@@ -11,6 +10,7 @@ import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.network.ServerboundUpgradeMinionStatPacket;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Tooltip;
@@ -56,12 +56,12 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
 
 
     @Override
-    public void render(@NotNull PoseStack mStack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(mStack);
-        this.renderGuiBackground(mStack);
-        this.drawTitle(mStack);
-        super.render(mStack, mouseX, mouseY, partialTicks);
-        entity.getMinionData().ifPresent(d -> renderStats(mStack, d));
+    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(graphics);
+        this.renderGuiBackground(graphics);
+        this.drawTitle(graphics);
+        super.render(graphics, mouseX, mouseY, partialTicks);
+        entity.getMinionData().ifPresent(d -> renderStats(graphics, d));
 
     }
 
@@ -105,13 +105,13 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
             getOblivionPotion().ifPresent(stack -> stack.shrink(1));//server syncs after the screen is closed
         }, Component.translatable("text.vampirism.minion_screen.reset_stats", ModItems.OBLIVION_POTION.get().getDescription())) {
             @Override
-            public void render(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+            public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
                 if (this.visible) {
                     this.isHovered = mouseX >= this.getX() && mouseY >= this.getY() && mouseX < this.getX() + this.width && mouseY < this.getY() + this.height;
                     if (!this.active) {
                         RenderSystem.setShaderColor(0.65f, 0.65f, 0.65f, 1);
                     }
-                    super.renderWidget(matrixStack, mouseX, mouseY, partialTicks);
+                    super.renderWidget(graphics, mouseX, mouseY, partialTicks);
                 }
             }
 
@@ -122,33 +122,32 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
 
     protected abstract boolean isActive(T data, int i);
 
-    protected void renderGuiBackground(@NotNull PoseStack mStack) {
-        RenderSystem.setShaderTexture(0, BACKGROUND);
-        blit(mStack, this.guiLeft, this.guiTop, 0, 0, 0, this.xSize, this.ySize, 300, 256);
+    protected void renderGuiBackground(@NotNull GuiGraphics graphics) {
+        graphics.blit(BACKGROUND, this.guiLeft, this.guiTop, 0, 0, 0, this.xSize, this.ySize, 300, 256);
     }
 
-    protected void renderLevelRow(@NotNull PoseStack mStack, int current, int max) {
-        this.font.draw(mStack, textLevel, guiLeft + 10, guiTop + 30, 0x0);
-        this.font.draw(mStack, current + "/" + max, guiLeft + 145, guiTop + 30, 0x404040);
+    protected void renderLevelRow(@NotNull GuiGraphics graphics, int current, int max) {
+        graphics.drawString(this.font, textLevel, guiLeft + 10, guiTop + 30, 0x0, false);
+        graphics.drawString(this.font, current + "/" + max, guiLeft + 145, guiTop + 30, 0x404040, false);
         int remainingPoints = entity.getMinionData().map(this::getRemainingStatPoints).orElse(0);
         if (remainingPoints > 0) {
-            this.font.draw(mStack, "(" + remainingPoints + ")", guiLeft + 228, guiTop + 30, 0x404040);
+            graphics.drawString(this.font, "(" + remainingPoints + ")", guiLeft + 228, guiTop + 30, 0x404040, false);
         }
-        this.hLine(mStack, guiLeft + 10, guiLeft + xSize - 10, guiTop + 40, 0xF0303030);
+        graphics.hLine(guiLeft + 10, guiLeft + xSize - 10, guiTop + 40, 0xF0303030);
     }
 
-    protected void renderStatRow(@NotNull PoseStack mStack, int i, @NotNull MutableComponent name, @NotNull Component value, int currentLevel, int maxLevel) {
-        this.font.draw(mStack, name.append(":"), guiLeft + 10, guiTop + 50 + 26 * i, 0x404040);
-        this.font.draw(mStack, value, guiLeft + 145, guiTop + 50 + 26 * i, 0x404040);
-        this.font.draw(mStack, UtilLib.translate("text.vampirism.level_short") + ": " + currentLevel + "/" + maxLevel, guiLeft + 175, guiTop + 50 + 26 * i, 0x404040);
+    protected void renderStatRow(@NotNull GuiGraphics graphics, int i, @NotNull MutableComponent name, @NotNull Component value, int currentLevel, int maxLevel) {
+        graphics.drawString(this.font, name.append(":"), guiLeft + 10, guiTop + 50 + 26 * i, 0x404040, false);
+        graphics.drawString(this.font, value, guiLeft + 145, guiTop + 50 + 26 * i, 0x404040, false);
+        graphics.drawString(this.font, UtilLib.translate("text.vampirism.level_short") + ": " + currentLevel + "/" + maxLevel, guiLeft + 175, guiTop + 50 + 26 * i, 0x404040, false);
     }
 
-    protected void renderStats(PoseStack mStack, T data) {
+    protected void renderStats(GuiGraphics graphics, T data) {
 
     }
 
-    private void drawTitle(@NotNull PoseStack mStack) {
-        this.font.drawShadow(mStack, this.title, this.guiLeft + 10, this.guiTop + 10, 0xFFFFFF);
+    private void drawTitle(@NotNull GuiGraphics graphics) {
+        graphics.drawString(this.font, this.title, this.guiLeft + 10, this.guiTop + 10, 0xFFFFFF, true);
     }
 
     private @NotNull Optional<ItemStack> getOblivionPotion() {

@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.GuiRadialMenu;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.IRadialMenuSlot;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenu;
@@ -12,6 +10,7 @@ import de.teamlapen.vampirism.items.crossbow.CrossbowArrowHandler;
 import de.teamlapen.vampirism.network.ServerboundSelectAmmoTypePacket;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -48,18 +47,17 @@ public class SelectAmmoScreen extends GuiRadialMenu<SelectAmmoScreen.AmmoType> {
         }, parts, SelectAmmoScreen::drawAmmoTypePart, 0);
     }
 
-    private static void drawAmmoTypePart(AmmoType action, PoseStack stack, int posX, int posY, int size, boolean transparent) {
+    private static void drawAmmoTypePart(AmmoType action, GuiGraphics graphics, int posX, int posY, int size, boolean transparent) {
         if (action.renderStack != null) {
-            Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(stack, action.renderStack, posX, posY);
-            Minecraft.getInstance().getItemRenderer().renderGuiItemDecorations(stack, Minecraft.getInstance().screen.font, action.renderStack, posX, posY, String.valueOf(action.count));
+            graphics.renderItem(action.renderStack, posX, posY);
+            graphics.renderItemDecorations(Minecraft.getInstance().screen.font, action.renderStack, posX, posY, String.valueOf(action.count));
         } else {
-            RenderSystem.setShaderTexture(0, NO_RESTRICTION);
-            blit(stack, posX, posY, 128, 0, 16, 16, 256, 256);
+            graphics.blit(NO_RESTRICTION, posX, posY, 128, 0, 16, 16, 256, 256);
         }
     }
 
     @Override
-    public void drawSliceName(PoseStack ms, String sliceName, ItemStack stack, int posX, int posY) {
+    public void drawSliceName(GuiGraphics graphics, String sliceName, ItemStack stack, int posX, int posY) {
     }
 
     public static class AmmoType {

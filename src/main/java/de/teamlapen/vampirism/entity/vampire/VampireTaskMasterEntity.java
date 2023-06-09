@@ -12,7 +12,6 @@ import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.inventory.TaskBoardMenu;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -113,7 +112,7 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefau
     @NotNull
     @Override
     protected InteractionResult mobInteract(@NotNull Player playerEntity, @NotNull InteractionHand hand) {
-        if (this.level.isClientSide) {
+        if (this.level().isClientSide) {
             return Helper.isVampire(playerEntity) ? InteractionResult.SUCCESS : InteractionResult.PASS;
         }
         if (Helper.isVampire(playerEntity) && interactor == null) {

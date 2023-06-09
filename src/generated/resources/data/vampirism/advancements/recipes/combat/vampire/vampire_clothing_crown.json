@@ -41,5 +41,6 @@
     "recipes": [
       "vampirism:vampire/vampire_clothing_crown"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -11,21 +11,23 @@ import de.teamlapen.vampirism.items.crossbow.ArrowContainer;
 import de.teamlapen.vampirism.items.crossbow.DoubleCrossbowItem;
 import de.teamlapen.vampirism.items.crossbow.SingleCrossbowItem;
 import de.teamlapen.vampirism.items.crossbow.TechCrossbowItem;
+import de.teamlapen.vampirism.misc.VampirismCreativeTab;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.common.brewing.BrewingRecipe;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
-import net.minecraftforge.event.CreativeModeTabEvent;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -46,8 +48,13 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unused")
 public class ModItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, REFERENCE.MODID);
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, REFERENCE.MODID);
+
     private static final Set<RegistryObject<? extends Item>> VAMPIRISM_TAB_ITEMS = new HashSet<>();
-    private static final Map<CreativeModeTab, Set<RegistryObject<? extends Item>>> CREATIVE_TAB_ITEMS = new HashMap<>();
+    private static final Map<ResourceKey<CreativeModeTab>, Set<RegistryObject<? extends Item>>> CREATIVE_TAB_ITEMS = new HashMap<>();
+
+    public static final ResourceKey<CreativeModeTab> VAMPIRISM_TAB_KEY = ResourceKey.create(Registries.CREATIVE_MODE_TAB, new ResourceLocation(REFERENCE.MODID, "default"));
+    public static final RegistryObject<CreativeModeTab> VAMPIRISM_TAB = CREATIVE_TABS.register(VAMPIRISM_TAB_KEY.location().getPath(), () -> VampirismCreativeTab.builder(VAMPIRISM_TAB_ITEMS.stream().map(RegistryObject::get).collect(Collectors.toSet())).build());
 
     //Items
     public static final RegistryObject<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_NORMAL = register("armor_of_swiftness_chest_normal", () -> new ArmorOfSwiftnessItem(ArmorItem.Type.CHESTPLATE, ArmorOfSwiftnessItem.NORMAL));
@@ -258,9 +265,9 @@ public class ModItems {
         });
     }
 
-    static <I extends Item> RegistryObject<I> register(final String name, CreativeModeTab tab, final Supplier<? extends I> sup) {
+    static <I extends Item> RegistryObject<I> register(final String name, ResourceKey<CreativeModeTab> tab, final Supplier<? extends I> sup) {
         RegistryObject<I> item = ITEMS.register(name, sup);
-        if (tab == VReference.VAMPIRISM_TAB) {
+        if (tab == VAMPIRISM_TAB_KEY) {
             VAMPIRISM_TAB_ITEMS.add(item);
         } else {
             CREATIVE_TAB_ITEMS.computeIfAbsent(tab, (a) -> new HashSet<>()).add(item);
@@ -269,11 +276,12 @@ public class ModItems {
     }
 
     static <I extends Item> RegistryObject<I> register(final String name, final Supplier<? extends I> sup) {
-        return register(name, VReference.VAMPIRISM_TAB, sup);
+        return register(name, VAMPIRISM_TAB_KEY, sup);
     }
 
 
     public static void register(IEventBus bus) {
+        CREATIVE_TABS.register(bus);
         ITEMS.register(bus);
         if (VampirismMod.inDataGen) {
             DeferredRegister<Item> DUMMY_ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, "guideapi_vp");
@@ -283,18 +291,14 @@ public class ModItems {
         }
     }
 
-    public static Set<ItemLike> getAllVampirismTabItems() {
-        return VAMPIRISM_TAB_ITEMS.stream().map(RegistryObject::get).collect(Collectors.toSet());
-    }
-
     private static Item.@NotNull Properties props() {
         return new Item.Properties();
     }
 
     @ApiStatus.Internal
-    public static void registerOtherCreativeTabItems(CreativeModeTabEvent.BuildContents event) {
+    public static void registerOtherCreativeTabItems(BuildCreativeModeTabContentsEvent event) {
         CREATIVE_TAB_ITEMS.forEach((tab, items) -> {
-            if (event.getTab() == tab) {
+            if (event.getTabKey() == tab) {
                 items.forEach(item -> event.accept(item.get()));
             }
         });

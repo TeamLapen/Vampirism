@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.player.hunter.HunterLeveling;
 import de.teamlapen.vampirism.inventory.HunterTableMenu;
 import de.teamlapen.vampirism.items.PureBloodItem;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
 import net.minecraft.client.gui.screens.inventory.ItemCombinerScreen;
 import net.minecraft.network.chat.Component;
@@ -51,12 +51,12 @@ public class HunterTableScreen extends ItemCombinerScreen<HunterTableMenu> {
     }
 
     @Override
-    public void render(@NotNull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-        super.render(stack, mouseX, mouseY, partialTicks);
-        this.renderOnBoardingTooltips(stack, mouseX, mouseY);
+    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(graphics, mouseX, mouseY, partialTicks);
+        this.renderOnBoardingTooltips(graphics, mouseX, mouseY);
     }
 
-    private void renderOnBoardingTooltips(PoseStack pPoseStack, int pMouseX, int pMouseY) {
+    private void renderOnBoardingTooltips(GuiGraphics graphics, int pMouseX, int pMouseY) {
         if (this.hoveredSlot != null && this.hoveredSlot.index < 4) {
             Optional<Component> optional = Optional.empty();
             var req = this.menu.getTableRequirement();
@@ -78,22 +78,22 @@ public class HunterTableScreen extends ItemCombinerScreen<HunterTableMenu> {
                 }));
             }
             optional.ifPresent((component) -> {
-                this.renderTooltip(pPoseStack, this.font.split(component, 115), pMouseX, pMouseY);
+                graphics.renderTooltip(this.font, this.font.split(component, 115), pMouseX, pMouseY);
             });
         }
     }
 
     @Override
-    protected void renderBg(@NotNull PoseStack pPoseStack, float pPartialTick, int pX, int pY) {
-        super.renderBg(pPoseStack, pPartialTick, pX, pY);
-        this.bookIcon.render(this.menu, pPoseStack, pPartialTick, this.leftPos, this.topPos);
-        this.fangsIcon.render(this.menu, pPoseStack, pPartialTick, this.leftPos, this.topPos);
-        this.bloodIcon.render(this.menu, pPoseStack, pPartialTick, this.leftPos, this.topPos);
-        this.vampireBookIcon.render(this.menu, pPoseStack, pPartialTick, this.leftPos, this.topPos);
+    protected void renderBg(@NotNull GuiGraphics graphics, float pPartialTick, int pX, int pY) {
+        super.renderBg(graphics, pPartialTick, pX, pY);
+        this.bookIcon.render(this.menu, graphics, pPartialTick, this.leftPos, this.topPos);
+        this.fangsIcon.render(this.menu, graphics, pPartialTick, this.leftPos, this.topPos);
+        this.bloodIcon.render(this.menu, graphics, pPartialTick, this.leftPos, this.topPos);
+        this.vampireBookIcon.render(this.menu, graphics, pPartialTick, this.leftPos, this.topPos);
     }
 
     @Override
-    protected void renderErrorIcon(@NotNull PoseStack pPoseStack, int mouseX, int mouseY) {
+    protected void renderErrorIcon(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
         Optional<Component> component = Optional.empty();
         Optional<HunterLeveling.HunterTableRequirement> requirement = this.menu.getRequirement();
         if (requirement.isEmpty()) {
@@ -102,7 +102,7 @@ public class HunterTableScreen extends ItemCombinerScreen<HunterTableMenu> {
             component = Optional.of(Component.translatable("container.vampirism.hunter_table.structure_level_wrong"));
         }
         component.ifPresent((c) -> {
-            this.renderTooltip(pPoseStack, this.font.split(c, 115), this.leftPos + 10, this.topPos + 60);
+            graphics.renderTooltip(this.font, this.font.split(c, 115), this.leftPos + 10, this.topPos + 60);
         });
     }
 

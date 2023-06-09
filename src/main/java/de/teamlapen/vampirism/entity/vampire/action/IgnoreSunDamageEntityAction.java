@@ -45,7 +45,7 @@ public class IgnoreSunDamageEntityAction<T extends PathfinderMob & IEntityAction
         if (!entity.getCommandSenderWorld().isDay() || entity.getCommandSenderWorld().isRaining()) {//Not perfectly accurate (the actual sundamage checks for celestial angle and also might exclude certain dimensions and biomes
             return 0;
         }
-        return ((IVampire) entity).isGettingSundamage(entity.level) ? 3 : 1;
+        return ((IVampire) entity).isGettingSundamage(entity.level()) ? 3 : 1;
     }
 
     @Override

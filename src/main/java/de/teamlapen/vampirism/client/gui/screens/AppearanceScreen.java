@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -35,16 +35,16 @@ public class AppearanceScreen<T extends LivingEntity> extends Screen {
     }
 
     @Override
-    public void render(@NotNull PoseStack mStack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(mStack);
+    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(graphics);
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        this.renderGuiBackground(mStack);
+        this.renderGuiBackground(graphics);
 
-        this.drawTitle(mStack);
-        InventoryScreen.renderEntityInInventoryFollowsMouse(mStack, this.guiLeft + 200, this.guiTop + 145, 60, (float) (this.guiLeft + 200) - mouseX, (float) (this.guiTop + 45) - mouseY, this.entity);
+        this.drawTitle(graphics);
+        InventoryScreen.renderEntityInInventoryFollowsMouse(graphics, this.guiLeft + 200, this.guiTop + 145, 60, (float) (this.guiLeft + 200) - mouseX, (float) (this.guiTop + 45) - mouseY, this.entity);
 
-        super.render(mStack, mouseX, mouseY, partialTicks);
+        super.render(graphics, mouseX, mouseY, partialTicks);
     }
 
     @Override
@@ -60,12 +60,11 @@ public class AppearanceScreen<T extends LivingEntity> extends Screen {
         }
     }
 
-    protected void renderGuiBackground(@NotNull PoseStack mStack) {
-        RenderSystem.setShaderTexture(0, BACKGROUND);
-        blit(mStack, this.guiLeft, this.guiTop, 0, 0, 0, this.xSize, this.ySize, 300, 256);
+    protected void renderGuiBackground(@NotNull GuiGraphics graphics) {
+        graphics.blit(BACKGROUND, this.guiLeft, this.guiTop, 0, 0, 0, this.xSize, this.ySize, 300, 256);
     }
 
-    private void drawTitle(@NotNull PoseStack mStack) {
-        this.font.drawShadow(mStack, title, this.guiLeft + 15, this.guiTop + 5, 0xFFFFFFFF);
+    private void drawTitle(@NotNull GuiGraphics graphics) {
+        graphics.drawString(this.font, title, this.guiLeft + 15, this.guiTop + 5, 0xFFFFFFFF, true);
     }
 }

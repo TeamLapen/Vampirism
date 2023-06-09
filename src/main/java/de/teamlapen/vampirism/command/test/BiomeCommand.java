@@ -21,7 +21,7 @@ public class BiomeCommand extends BasicCommand {
     @SuppressWarnings("SameReturnValue")
     private static int biome(@NotNull CommandSourceStack commandSource, @NotNull ServerPlayer asPlayer) {
         ResourceLocation res = Helper.getBiomeId(asPlayer);
-        commandSource.sendSuccess(Component.literal(res.toString()), true);
+        commandSource.sendSuccess(() -> Component.literal(res.toString()), true);
         return 0;
     }
 }

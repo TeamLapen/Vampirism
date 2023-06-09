@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.client.gui.screens;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.lib.client.gui.GuiPieMenu;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.REFERENCE;
@@ -22,6 +21,7 @@ import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -182,18 +182,18 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
     }
 
     @Override
-    public void render(@NotNull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-        super.render(stack, mouseX, mouseY, partialTicks);
+    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(graphics, mouseX, mouseY, partialTicks);
         if (editActions) {
             List<Component> tooltips = Lists.newArrayList(Component.translatable("gui.vampirism.action_select.action_binding")
                     , ModKeys.ACTION1.getTranslatedKeyMessage().plainCopy().withStyle(ChatFormatting.AQUA)
                     , ModKeys.ACTION2.getTranslatedKeyMessage().plainCopy().withStyle(ChatFormatting.AQUA));
-            this.renderTooltip(stack, tooltips.stream().flatMap(t -> this.font.split(t, this.width / 4).stream()).collect(Collectors.toList()), 0, ((int) (this.height * 0.82)), this.font);
+            graphics.renderTooltip(this.font, tooltips.stream().flatMap(t -> this.font.split(t, this.width / 4).stream()).collect(Collectors.toList()), 0, ((int) (this.height * 0.82)));
         }
     }
 
     @Override
-    protected void afterIconDraw(@NotNull PoseStack stack, @NotNull IAction<T> p, int x, int y) {
+    protected void afterIconDraw(@NotNull GuiGraphics graphics, @NotNull IAction<T> p, int x, int y) {
         if (p == fakeAction || editActions) {
             return;
         }
@@ -203,11 +203,11 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
         if (active > 0) {
 
             float h = active * 16;
-            this.fillGradient(stack, x, (int) (y + h), x + 16, y + 16, Color.YELLOW.getRGB() - 0x88000000, Color.YELLOW.getRGB());
+            graphics.fillGradient(x, (int) (y + h), x + 16, y + 16, Color.YELLOW.getRGB() - 0x88000000, Color.YELLOW.getRGB());
         } else if (active < 0) {
 
             float h = (1F + (active)) * 16;
-            this.fillGradient(stack, x, (int) (y + h), x + 16, y + 16, Color.BLACK.getRGB() - 0x55000000, Color.BLACK.getRGB());
+            graphics.fillGradient(x, (int) (y + h), x + 16, y + 16, Color.BLACK.getRGB() - 0x55000000, Color.BLACK.getRGB());
         }
     }
 

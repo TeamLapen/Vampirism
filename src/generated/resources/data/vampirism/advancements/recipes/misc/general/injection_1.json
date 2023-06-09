@@ -30,5 +30,6 @@
     "recipes": [
       "vampirism:general/injection_1"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

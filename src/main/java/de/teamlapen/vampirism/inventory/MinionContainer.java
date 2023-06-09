@@ -70,7 +70,7 @@ public class MinionContainer extends InventoryContainerMenu {
     private boolean taskLocked;
 
     public MinionContainer(int id, @NotNull Inventory playerInventory, @NotNull ILordPlayer lord, @NotNull MinionEntity<?> minionEntity, @NotNull Container inventory, int extraSlots, SelectorInfo... selectorInfos) {
-        super(ModContainer.MINION.get(), id, playerInventory, ContainerLevelAccess.create(minionEntity.level, minionEntity.blockPosition()), inventory, selectorInfos);
+        super(ModContainer.MINION.get(), id, playerInventory, ContainerLevelAccess.create(minionEntity.level(), minionEntity.blockPosition()), inventory, selectorInfos);
         this.minionEntity = minionEntity;
         this.extraSlots = extraSlots;
         this.availableTasks = this.minionEntity.getAvailableTasks().stream().filter(task -> task.isAvailable(lord.getLordFaction(), lord)).toArray(IMinionTask[]::new);
@@ -84,7 +84,7 @@ public class MinionContainer extends InventoryContainerMenu {
     @Override
     public void removed(@NotNull Player playerIn) {
         super.removed(playerIn);
-        if (this.minionEntity.level.isClientSide()) {
+        if (this.minionEntity.level().isClientSide()) {
             sendChanges();
         }
         minionEntity.setInteractingPlayer(null);
@@ -157,7 +157,7 @@ public class MinionContainer extends InventoryContainerMenu {
         public MinionContainer create(int windowId, @NotNull Inventory inv, @Nullable FriendlyByteBuf data) {
             if (data == null) return null;
             int entityId = data.readVarInt(); //Anything read here has to be written to buffer in open method (in MinionEntity)
-            Entity e = inv.player.level == null ? null : inv.player.level.getEntity(entityId);
+            Entity e = inv.player.level() == null ? null : inv.player.level().getEntity(entityId);
             if (!(e instanceof MinionEntity)) {
                 LOGGER.error("Cannot find related minion entity {}", entityId);
                 return null;

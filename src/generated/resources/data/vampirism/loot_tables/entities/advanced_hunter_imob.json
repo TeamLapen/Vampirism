@@ -75,7 +75,6 @@
           "weight": 4
         }
       ],
-      "name": "general",
       "rolls": 1.0
     },
     {
@@ -98,8 +97,8 @@
           "name": "vampirism:vampire_book"
         }
       ],
-      "name": "special",
       "rolls": 1.0
     }
-  ]
+  ],
+  "random_sequence": "vampirism:entities/advanced_hunter_imob"
 }

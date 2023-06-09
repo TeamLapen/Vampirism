@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.minion.IFactionMinionTask;
 import de.teamlapen.vampirism.api.entity.minion.INoGlobalCommandTask;
@@ -10,7 +8,7 @@ import de.teamlapen.vampirism.client.ClientConfigHelper;
 import de.teamlapen.vampirism.client.gui.screens.radial.edit.ReorderingGuiRadialMenu;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,11 +31,9 @@ public class EditSelectMinionTaskScreen extends ReorderingGuiRadialMenu<SelectMi
         });
     }
 
-    private static void drawActionPart(@Nullable SelectMinionTaskRadialScreen.Entry entry, PoseStack stack, int posX, int posY, int size, boolean transparent) {
+    private static void drawActionPart(@Nullable SelectMinionTaskRadialScreen.Entry entry, GuiGraphics graphics, int posX, int posY, int size, boolean transparent) {
         if (entry == null) return;
-        ResourceLocation texture = entry.getIconLoc();
-        RenderSystem.setShaderTexture(0, texture);
-        blit(stack, posX, posY, 0, 0, 0, 16, 16, 16, 16);
+        graphics.blit(entry.getIconLoc(), posX, posY, 0, 0, 0, 16, 16, 16, 16);
     }
 
     private static boolean isEnabled(FactionPlayerHandler player, @NotNull SelectMinionTaskRadialScreen.Entry item) {

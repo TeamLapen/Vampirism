@@ -1,17 +1,14 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.IRadialMenuSlot;
+import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenu;
+import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenuSlot;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
-import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenu;
-import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenuSlot;
 import de.teamlapen.vampirism.client.ClientConfigHelper;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.client.gui.screens.radial.DualSwitchingRadialMenu;
@@ -20,10 +17,12 @@ import de.teamlapen.vampirism.network.ServerboundToggleActionPacket;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class SelectActionRadialScreen<T extends IFactionPlayer<T>> extends DualSwitchingRadialMenu<IAction<?>> {
@@ -64,11 +63,10 @@ public class SelectActionRadialScreen<T extends IFactionPlayer<T>> extends DualS
         }, parts , SelectActionRadialScreen::drawActionPart,0);
     }
 
-    private static void drawActionPart(IAction<?> action, PoseStack stack, int posX, int posY, int size, boolean transparent) {
+    private static void drawActionPart(IAction<?> action, GuiGraphics graphics, int posX, int posY, int size, boolean transparent) {
         ResourceLocation id = RegUtil.id(action);
         ResourceLocation texture = new ResourceLocation(id.getNamespace(), "textures/actions/" + id.getPath() + ".png");
-        RenderSystem.setShaderTexture(0, texture);
-        blit(stack, posX, posY, 0, 0, 0, 16, 16, 16, 16);
+        graphics.blit(texture, posX, posY, 0, 0, 0, 16, 16, 16, 16);
     }
 
     @Override

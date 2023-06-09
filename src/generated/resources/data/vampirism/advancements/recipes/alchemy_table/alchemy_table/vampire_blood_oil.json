@@ -43,5 +43,6 @@
     "recipes": [
       "vampirism:alchemy_table/vampire_blood_oil"
     ]
-  }
+  },
+  "sends_telemetry_event": true
 }

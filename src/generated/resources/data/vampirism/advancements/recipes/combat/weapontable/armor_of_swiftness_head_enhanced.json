@@ -24,5 +24,6 @@
     "recipes": [
       "vampirism:weapontable/armor_of_swiftness_head_enhanced"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

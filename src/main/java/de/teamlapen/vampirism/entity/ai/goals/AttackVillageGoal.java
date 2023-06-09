@@ -36,7 +36,7 @@ public class AttackVillageGoal<T extends VampirismEntity & IVillageCaptureEntity
     public boolean canUse() {
         if (!attacker.isAttackingVillage()) return false;
         if (attacker.getTargetVillageArea() == null) return false;
-        this.targetMob = this.attacker.level.getNearestEntity(LivingEntity.class, entityPredicate, this.mob, this.mob.getX(), this.mob.getY() + (double) this.mob.getEyeHeight(), this.mob.getZ(), attacker.getTargetVillageArea());
+        this.targetMob = this.attacker.level().getNearestEntity(LivingEntity.class, entityPredicate, this.mob, this.mob.getX(), this.mob.getY() + (double) this.mob.getEyeHeight(), this.mob.getZ(), attacker.getTargetVillageArea());
         return targetMob != null;
     }
 

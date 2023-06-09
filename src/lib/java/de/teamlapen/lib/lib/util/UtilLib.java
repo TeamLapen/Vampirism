@@ -1,9 +1,13 @@
 package de.teamlapen.lib.lib.util;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
@@ -84,6 +88,7 @@ public class UtilLib {
         return worldIn.getBlockState(pos).isFaceSturdy(worldIn, pos, Direction.UP);
     }
 
+    @Deprecated
     @OnlyIn(Dist.CLIENT)
     public static void drawTexturedModalRect(@NotNull Matrix4f matrix, float zLevel, int x, int y, int textureX, int textureY, int width, int height, int texWidth, int texHeight) {
         float f = 1 / (float) texWidth;
@@ -120,7 +125,7 @@ public class UtilLib {
         float pitchAdjustedCosYaw = cosYaw * cosPitch;
         double distance = 500D;
         if (restriction == 0 && player instanceof ServerPlayer) {
-            distance = player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue() - 0.5f;
+            distance = player.getAttribute(ForgeMod.BLOCK_REACH.get()).getValue() - 0.5f;
         } else if (restriction > 0) {
             distance = restriction;
         }
@@ -323,7 +328,7 @@ public class UtilLib {
 
             while (!flag1 && blockPos.getY() > 0) {
                 BlockState blockState = entity.getCommandSenderWorld().getBlockState(blockPos.below());
-                if (blockState.getMaterial().blocksMotion()) {
+                if (blockState.blocksMotion()) {
                     flag1 = true;
                 } else {
                     entity.setPosRaw(x, --ty, z);
@@ -715,10 +720,10 @@ public class UtilLib {
      *
      * @return The height of the rendered text
      */
-    public static int renderMultiLine(@NotNull Font fontRenderer, @NotNull PoseStack stack, @NotNull Component text, int textLength, int x, int y, int color) {
+    public static int renderMultiLine(@NotNull Font fontRenderer, @NotNull GuiGraphics graphics, @NotNull Component text, int textLength, int x, int y, int color) {
         int d = 0;
         for (FormattedCharSequence sequence : fontRenderer.split(text, textLength)) {
-            fontRenderer.draw(stack, sequence, x, y + d, color);
+            graphics.drawString(fontRenderer, sequence, x, y + d, color, false);
             d += fontRenderer.lineHeight;
         }
         return d;
@@ -763,7 +768,7 @@ public class UtilLib {
 
     public static boolean matchesItem(@NotNull Ingredient ingredient, @NotNull ItemStack searchStack) {
         return Arrays.stream(ingredient.getItems()).anyMatch(stack -> {
-            if (!stack.sameItem(searchStack)) return false;
+            if (!ItemStack.isSameItem(stack, searchStack)) return false;
             if (stack.getTag() != null) {
                 return stack.areShareTagsEqual(searchStack);
             }
@@ -782,7 +787,7 @@ public class UtilLib {
 
         for (int j = 0; j < inventory.getContainerSize(); ++j) {
             ItemStack itemstack = inventory.getItem(j);
-            if (ItemStack.isSame(itemstack, stack) && ItemStack.tagMatches(itemstack, stack)) {
+            if (ItemStack.isSameItem(itemstack, stack) && ItemStack.isSameItemSameTags(itemstack, stack)) {
                 i += itemstack.getCount();
             }
         }
@@ -809,5 +814,9 @@ public class UtilLib {
         int i = pos2.getX() - pos1.getX();
         int j = pos2.getZ() - pos1.getZ();
         return Mth.sqrt((float) (i * i + j * j));
+    }
+
+    public static boolean never(BlockState state, BlockGetter block, BlockPos pos) {
+        return false;
     }
 }

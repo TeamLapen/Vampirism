@@ -112,7 +112,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
             Minecraft.getInstance().getEntityRenderDispatcher().setRenderHitBoxes(false);
         }
         if (event.getCamera().getEntity() instanceof LivingEntity && ((LivingEntity) event.getCamera().getEntity()).isSleeping()) {
-            ((LivingEntity) event.getCamera().getEntity()).getSleepingPos().map(pos -> event.getCamera().getEntity().level.getBlockState(pos)).filter(blockState -> blockState.getBlock() instanceof CoffinBlock).ifPresent(blockState -> {
+            ((LivingEntity) event.getCamera().getEntity()).getSleepingPos().map(pos -> event.getCamera().getEntity().level().getBlockState(pos)).filter(blockState -> blockState.getBlock() instanceof CoffinBlock).ifPresent(blockState -> {
                 if (blockState.getValue(CoffinBlock.VERTICAL)) {
                     event.getCamera().move(0.2, -0.2, 0);
                 } else {
@@ -130,7 +130,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
         @Nullable
         VampirePlayer vampire = VampirePlayer.getOpt(mc.player).resolve().orElse(null);
         if (vampire != null) {
-            if (vampire.getSpecialAttributes().blood_vision && !VampirismConfig.CLIENT.disableBloodVisionRendering.get() && !vampire.isGettingSundamage(mc.player.level)) {
+            if (vampire.getSpecialAttributes().blood_vision && !VampirismConfig.CLIENT.disableBloodVisionRendering.get() && !vampire.isGettingSundamage(mc.player.level())) {
                 if (bloodVisionTicks < BLOOD_VISION_FADE_TICKS) {
                     bloodVisionTicks++;
 
@@ -267,7 +267,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
             m.leftLeg.visible = false;
             m.rightPants.visible = false;
             m.leftPants.visible = false;
-        } else if (player.getSleepingPos().map(pos -> player.level.getBlockState(pos)).map(state -> state.getBlock() instanceof CoffinBlock).orElse(false)) {
+        } else if (player.getSleepingPos().map(pos -> player.level().getBlockState(pos)).map(state -> state.getBlock() instanceof CoffinBlock).orElse(false)) {
             //Shrink player, so they fit into the coffin model
             event.getPoseStack().scale(0.8f, 0.95f, 0.8f);
         } else if (event.getEntity().isUsingItem() && event.getEntity().getUseItemRemainingTicks() > 0 && event.getEntity().getMainHandItem().getItem() instanceof CrucifixItem) {

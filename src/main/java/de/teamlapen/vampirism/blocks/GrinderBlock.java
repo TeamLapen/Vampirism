@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -73,7 +73,7 @@ public class GrinderBlock extends VampirismBlockContainer {
     }
 
     public GrinderBlock() {
-        super(Properties.of(Material.METAL).strength(5).sound(SoundType.METAL).noOcclusion());
+        super(Properties.of().mapColor(MapColor.METAL).strength(5).sound(SoundType.METAL).noOcclusion());
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
 
     }

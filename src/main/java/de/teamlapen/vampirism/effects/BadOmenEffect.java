@@ -57,7 +57,7 @@ public abstract class BadOmenEffect extends MobEffect {
     @Override
     public void applyEffectTick(@NotNull LivingEntity entityLivingBaseIn, int amplifier) {
         if (entityLivingBaseIn instanceof ServerPlayer playerEntity && !entityLivingBaseIn.isSpectator()) {
-            ServerLevel serverWorld = playerEntity.getLevel();
+            ServerLevel serverWorld = playerEntity.serverLevel();
             if (serverWorld.getDifficulty() == Difficulty.PEACEFUL) {
                 return;
             }

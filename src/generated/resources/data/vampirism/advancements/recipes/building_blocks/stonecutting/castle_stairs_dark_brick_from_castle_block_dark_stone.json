@@ -30,5 +30,6 @@
     "recipes": [
       "vampirism:stonecutting/castle_stairs_dark_brick_from_castle_block_dark_stone"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -28,7 +28,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
@@ -56,7 +56,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
     private final @NotNull VoxelShape WEST2;
 
     public MedChairBlock() {
-        super(Properties.of(Material.METAL).strength(1).noOcclusion());
+        super(Properties.of().mapColor(MapColor.METAL).pushReaction(PushReaction.DESTROY).strength(1).noOcclusion());
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(PART, EnumPart.BOTTOM));
         NORTH1 = SHAPE_BOTTOM;
         EAST1 = UtilLib.rotateShape(NORTH1, UtilLib.RotationAmount.NINETY);
@@ -122,7 +122,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
             return false;
         }
         if (VReference.HUNTER_FACTION.equals(currentFaction)) {
-            if (player.level.isClientSide()) {
+            if (player.level().isClientSide()) {
                 VampirismMod.proxy.displayRevertBackScreen();
             }
             return true;
@@ -177,11 +177,6 @@ public class MedChairBlock extends VampirismHorizontalBlock {
         return RenderShape.MODEL;
     }
 
-
-    @Override
-    public PushReaction getPistonPushReaction(BlockState pState) {
-        return PushReaction.DESTROY;
-    }
 
     @Override
     public @NotNull VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {

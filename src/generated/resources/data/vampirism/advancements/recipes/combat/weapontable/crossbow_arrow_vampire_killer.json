@@ -37,5 +37,6 @@
     "recipes": [
       "vampirism:weapontable/crossbow_arrow_vampire_killer"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

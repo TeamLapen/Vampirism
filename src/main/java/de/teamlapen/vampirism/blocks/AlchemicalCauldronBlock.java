@@ -22,7 +22,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -49,7 +49,7 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
     }
 
     public AlchemicalCauldronBlock() {
-        super(Block.Properties.of(Material.METAL).strength(4f).noOcclusion());
+        super(Block.Properties.of().mapColor(MapColor.METAL).strength(4f).noOcclusion());
         this.registerDefaultState(this.stateDefinition.any().setValue(LIQUID, 0).setValue(FACING, Direction.NORTH).setValue(LIT, false));
     }
 

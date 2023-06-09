@@ -30,5 +30,6 @@
     "recipes": [
       "vampirism:alchemy_table/slowness_oil"
     ]
-  }
+  },
+  "sends_telemetry_event": true
 }

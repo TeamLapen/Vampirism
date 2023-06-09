@@ -84,23 +84,15 @@ publishing {
             }
 
             // Adds the api as an artifact.
-            artifact apiJar {
-                classifier 'api'
-            }
+            artifact apiJar
 
             // Adds the sources as an artifact.
-            artifact sourcesJar {
-                classifier 'sources'
-            }
+            artifact sourcesJar
 
             // Adds the deobfuscated jar as an artifact.
-            artifact deobfJar {
-                classifier 'deobf'
-            }
+            artifact deobfJar
 
-            artifact javadocJar {
-                classifier 'javadoc'
-            }
+            artifact javadocJar
 
         }
     }

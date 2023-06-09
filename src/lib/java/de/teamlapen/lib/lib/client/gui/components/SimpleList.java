@@ -3,7 +3,7 @@ package de.teamlapen.lib.lib.client.gui.components;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -22,22 +22,20 @@ public class SimpleList<T extends SimpleList.Entry<T>> extends VisibleObjectSele
         this.setRenderTopAndBottom(false);
     }
 
-    @SuppressWarnings("SuspiciousNameCombination")
     @Override
-    protected void renderDecorations(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY) {
-        fillGradient(pPoseStack, this.x0, this.y0, this.x1 - 6, this.y0 + 4, -16777216, 0);
-        fillGradient(pPoseStack, this.x0, this.y1 - 4, this.x1 - 6, this.y1, 0, -16777216);
+    protected void renderDecorations(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY) {
+        graphics.fillGradient(this.x0, this.y0, this.x1 - 6, this.y0 + 4, -16777216, 0);
+        graphics.fillGradient(this.x0, this.y1 - 4, this.x1 - 6, this.y1, 0, -16777216);
     }
 
     @Override
-    protected void renderItem(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick, int pIndex, int pLeft, int pTop, int pWidth, int pHeight) {
-        super.renderItem(pPoseStack, pMouseX, pMouseY, pPartialTick, pIndex, pLeft, pTop, pWidth - 6, pHeight);
+    protected void renderItem(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick, int pIndex, int pLeft, int pTop, int pWidth, int pHeight) {
+        super.renderItem(graphics, pMouseX, pMouseY, pPartialTick, pIndex, pLeft, pTop, pWidth - 6, pHeight);
     }
 
-    @SuppressWarnings("SuspiciousNameCombination")
     @Override
-    protected void renderBackground(@NotNull PoseStack pPoseStack) {
-        fillGradient(pPoseStack, this.x0, this.y0, this.x1 - 6, this.y1, -1072689136, -804253680);
+    protected void renderBackground(@NotNull GuiGraphics graphics) {
+        graphics.fillGradient(this.x0, this.y0, this.x1 - 6, this.y1, -1072689136, -804253680);
     }
 
     @Override
@@ -132,20 +130,20 @@ public class SimpleList<T extends SimpleList.Entry<T>> extends VisibleObjectSele
         }
 
         @Override
-        public void render(@NotNull PoseStack pPoseStack, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pIsMouseOver, float pPartialTick) {
+        public void render(@NotNull GuiGraphics graphics, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pIsMouseOver, float pPartialTick) {
             Minecraft minecraft = Minecraft.getInstance();
-            RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+            graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
             RenderSystem.enableBlend();
             RenderSystem.enableDepthTest();
-            pPoseStack.pushPose();
+            PoseStack pose = graphics.pose();
+            pose.pushPose();
             if (pIsMouseOver) {
-                pPoseStack.translate(0, 0, 1);
+                pose.translate(0, 0, 1);
             }
-            blitNineSliced(pPoseStack, pLeft, pTop, pWidth, pHeight + 5, 20, 4, 200, 20, 0, this.getTextureY(pIsMouseOver));
+            graphics.blitNineSliced(WIDGETS_LOCATION, pLeft, pTop, pWidth, pHeight + 5, 20, 4, 200, 20, 0, this.getTextureY(pIsMouseOver));
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            GuiComponent.drawCenteredString(pPoseStack, minecraft.font, this.component, pLeft + pWidth / 2, pTop + 5, 0xFFFFFF);
-            pPoseStack.popPose();
+            graphics.drawCenteredString(minecraft.font, this.component, pLeft + pWidth / 2, pTop + 5, 0xFFFFFF);
+            pose.popPose();
         }
 
         public int getTextureY(boolean isMouseOver) {

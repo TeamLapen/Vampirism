@@ -19,7 +19,6 @@ import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.MonsterRoomFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
-import net.minecraft.world.level.material.Material;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -67,8 +66,7 @@ public class VampireDungeonFeature extends MonsterRoomFeature {
             for (int l2 = -1; l2 <= 4; ++l2) {
                 for (int i3 = l1; i3 <= i2; ++i3) {
                     BlockPos blockpos1 = blockpos.offset(k2, l2, i3);
-                    Material material = worldgenlevel.getBlockState(blockpos1).getMaterial();
-                    boolean flag = material.isSolid();
+                    boolean flag = worldgenlevel.getBlockState(blockpos1).isSolid();
                     if (l2 == -1 && !flag) {
                         return false;
                     }
@@ -94,9 +92,9 @@ public class VampireDungeonFeature extends MonsterRoomFeature {
                             if (!blockstate.is(Blocks.CHEST) && !blockstate.is(Blocks.SPAWNER)) {
                                 this.safeSetBlock(worldgenlevel, blockpos2, CAVE_AIR, predicate);
                             }
-                        } else if (blockpos2.getY() >= worldgenlevel.getMinBuildHeight() && !worldgenlevel.getBlockState(blockpos2.below()).getMaterial().isSolid()) {
+                        } else if (blockpos2.getY() >= worldgenlevel.getMinBuildHeight() && !worldgenlevel.getBlockState(blockpos2.below()).isSolid()) {
                             worldgenlevel.setBlock(blockpos2, CAVE_AIR, 2);
-                        } else if (blockstate.getMaterial().isSolid() && !blockstate.is(Blocks.CHEST)) {
+                        } else if (blockstate.isSolid() && !blockstate.is(Blocks.CHEST)) {
                             if (i4 == -1 && randomsource.nextInt(4) != 0) {
                                 this.safeSetBlock(worldgenlevel, blockpos2, (p_160066_.random().nextInt(20) == 0 ? ModBlocks.CASTLE_BLOCK_DARK_BRICK_BLOODY.get() : ModBlocks.CASTLE_BLOCK_DARK_BRICK.get()).defaultBlockState(), predicate);
                             } else {
@@ -117,7 +115,7 @@ public class VampireDungeonFeature extends MonsterRoomFeature {
                         int j3 = 0;
 
                         for (Direction direction : Direction.Plane.HORIZONTAL) {
-                            if (worldgenlevel.getBlockState(blockpos3.relative(direction)).getMaterial().isSolid()) {
+                            if (worldgenlevel.getBlockState(blockpos3.relative(direction)).isSolid()) {
                                 ++j3;
                             }
                         }

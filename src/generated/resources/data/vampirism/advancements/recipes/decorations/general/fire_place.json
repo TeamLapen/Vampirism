@@ -28,5 +28,6 @@
     "recipes": [
       "vampirism:general/fire_place"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -24,5 +24,6 @@
     "recipes": [
       "vampirism:weapontable/basic_double_crossbow"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

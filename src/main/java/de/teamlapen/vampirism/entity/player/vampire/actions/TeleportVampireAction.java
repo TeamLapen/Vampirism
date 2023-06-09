@@ -43,11 +43,11 @@ public class TeleportVampireAction extends DefaultVampireAction {
         }
         BlockPos pos = null;
         if (target.getType() == HitResult.Type.BLOCK) {
-            if (player.getCommandSenderWorld().getBlockState(((BlockHitResult) target).getBlockPos()).getMaterial().blocksMotion()) {
+            if (player.getCommandSenderWorld().getBlockState(((BlockHitResult) target).getBlockPos()).blocksMotion()) {
                 pos = ((BlockHitResult) target).getBlockPos().above();
             }
         } else {//TODO better solution / remove
-            if (player.getCommandSenderWorld().getBlockState(((EntityHitResult) target).getEntity().blockPosition()).getMaterial().blocksMotion()) {
+            if (player.getCommandSenderWorld().getBlockState(((EntityHitResult) target).getEntity().blockPosition()).blocksMotion()) {
                 pos = ((EntityHitResult) target).getEntity().blockPosition();
             }
         }

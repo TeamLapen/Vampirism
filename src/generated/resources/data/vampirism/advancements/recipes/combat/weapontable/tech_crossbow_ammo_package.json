@@ -24,5 +24,6 @@
     "recipes": [
       "vampirism:weapontable/tech_crossbow_ammo_package"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

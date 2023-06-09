@@ -20,7 +20,6 @@
           "weight": 40
         }
       ],
-      "name": "main",
       "rolls": {
         "type": "minecraft:uniform",
         "max": 9.0,
@@ -45,7 +44,6 @@
           "weight": 95
         }
       ],
-      "name": "book",
       "rolls": 1.0
     },
     {
@@ -72,7 +70,6 @@
           "weight": 95
         }
       ],
-      "name": "hunter_weapons",
       "rolls": 1.0
     },
     {
@@ -147,7 +144,6 @@
           "weight": 60
         }
       ],
-      "name": "swiftness_armor",
       "rolls": 1.0
     },
     {
@@ -222,7 +218,6 @@
           "weight": 60
         }
       ],
-      "name": "hunter_coat",
       "rolls": 1.0
     },
     {
@@ -249,8 +244,8 @@
           "weight": 10
         }
       ],
-      "name": "holy_water",
       "rolls": 5.0
     }
-  ]
+  ],
+  "random_sequence": "vampirism:chests/village/hunter_trainer"
 }

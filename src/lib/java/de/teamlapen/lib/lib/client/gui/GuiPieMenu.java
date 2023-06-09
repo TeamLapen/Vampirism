@@ -9,6 +9,7 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.util.Color;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -64,7 +65,6 @@ public abstract class GuiPieMenu<T> extends Screen {
 
     public GuiPieMenu(Color backgroundColorIn, @NotNull Component title) {
         super(title);
-        this.passEvents = true;
         this.backgroundColor = backgroundColorIn;
         this.elements = new ArrayList<>();
     }
@@ -112,13 +112,13 @@ public abstract class GuiPieMenu<T> extends Screen {
     }
 
     @Override
-    public void render(@NotNull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         // Calculate center and radius of the skill cycle
         int cX = this.width / 2;
         int cY = this.height / 2;
         double radius = this.height / 4d;
 
-        drawBackground(stack, cX, cY);
+        drawBackground(graphics, cX, cY);
         // Check if the mouse is in bounds and whether its in the center or not
         double mouseRad = updateMouse(mouseX, mouseY, cX, cY, radius / 2);
         boolean center = (mouseX - cX) * (mouseX - cX) + (mouseY - cY) * (mouseY - cY) < (radius / 4) * (radius / 4);
@@ -144,35 +144,34 @@ public abstract class GuiPieMenu<T> extends Screen {
             Color col = this.getColor(element);
             RenderSystem.enableBlend();
 
-            RenderSystem.setShaderColor(col.getRed(), col.getGreen(), col.getBlue(), 0.5F);
-            RenderSystem.setShaderTexture(0, WIDGETS);
-            blit(stack, x - 2, y - 2, 1, 1, 20, 20);
+            graphics.setColor(col.getRed(), col.getGreen(), col.getBlue(), 0.5F);
+            graphics.blit(WIDGETS, x - 2, y - 2, 1, 1, 20, 20);
             if (selected) {
-                blit(stack, x - 3, y - 3, 1, 23, 22, 22);
+                graphics.blit(WIDGETS, x - 3, y - 3, 1, 23, 22, 22);
             }
             if (selected) {
                 selectedElement = i;
-                drawSelectedCenter(stack, cX, cY, rad);
+                drawSelectedCenter(graphics, cX, cY, rad);
             }
 
             // Draw Icon
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
             RenderSystem.setShaderTexture(0, getIconLoc(element));
-            UtilLib.drawTexturedModalRect(stack.last().pose(), 0, x, y, 0, 0, 16, 16, 16, 16);
+            UtilLib.drawTexturedModalRect(graphics.pose().last().pose(), 0, x, y, 0, 0, 16, 16, 16, 16);
 
-            this.afterIconDraw(stack, element, x, y);
+            this.afterIconDraw(graphics, element, x, y);
 
         }
         if (selectedElement == -1) {
-            this.drawUnselectedCenter(stack, cX, cY);
+            this.drawUnselectedCenter(graphics, cX, cY);
         } else {
             Component name = getName(elements.get(selectedElement));
             int tx = cX - minecraft.font.width(name) / 2;
             int ty = this.height / 7;
-            minecraft.font.drawShadow(stack, name, tx, ty, Color.WHITE.getRGB());
+            graphics.drawString(minecraft.font, name, tx, ty, Color.WHITE.getRGB(), true);
         }
-        super.render(stack, mouseX, mouseY, partialTicks);
+        super.render(graphics, mouseX, mouseY, partialTicks);
     }
 
     @Override
@@ -188,21 +187,21 @@ public abstract class GuiPieMenu<T> extends Screen {
         }
     }
 
-    protected void afterIconDraw(PoseStack stack, T element, int x, int y) {
+    protected void afterIconDraw(GuiGraphics graphics, T element, int x, int y) {
 
     }
 
     /**
      * Draws a line between the given coordinates
      */
-    protected void drawLine(@NotNull PoseStack stack, double x1, double y1, double x2, double y2) {
+    protected void drawLine(@NotNull GuiGraphics graphics, double x1, double y1, double x2, double y2) {
 
         BufferBuilder builder = Tesselator.getInstance().getBuilder();
         builder.begin(VertexFormat.Mode.LINES, DefaultVertexFormat.POSITION_COLOR);
         RenderSystem.lineWidth(2F);
 
-        builder.vertex(stack.last().pose(), (float) x1, (float) y1, 0).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).endVertex();
-        builder.vertex(stack.last().pose(), (float) x2, (float) y2, 0).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).endVertex();
+        builder.vertex(graphics.pose().last().pose(), (float) x1, (float) y1, 0).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).endVertex();
+        builder.vertex(graphics.pose().last().pose(), (float) x2, (float) y2, 0).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).endVertex();
         Tesselator.getInstance().end();
 
     }
@@ -256,20 +255,20 @@ public abstract class GuiPieMenu<T> extends Screen {
      * @param cX CenterX
      * @param cY CenterY
      */
-    private void drawBackground(@NotNull PoseStack stack, float cX, float cY) {
+    private void drawBackground(@NotNull GuiGraphics graphics, float cX, float cY) {
+        PoseStack pose = graphics.pose();
         // Calculate the scale which has to be applied for the image to fit
-        float scale = (this.height
-                / 2F + 16 + 16) / BGS;
-        stack.pushPose();
+        float scale = (this.height / 2F + 16 + 16) / BGS;
+        pose.pushPose();
         RenderSystem.enableBlend();
-        stack.translate(cX, cY, 0);
-        stack.scale(scale, scale, 1);
+        pose.translate(cX, cY, 0);
+        pose.scale(scale, scale, 1);
 
         // Draw the circle image
         RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1f);
         RenderSystem.setShaderTexture(0, backgroundTex);
-        Matrix4f matrix = stack.last().pose();
+        Matrix4f matrix = pose.last().pose();
 
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder builder = tesselator.getBuilder();
@@ -287,11 +286,11 @@ public abstract class GuiPieMenu<T> extends Screen {
                 double rad = i * radDiff + radDiff / 2;
                 double cos = Math.cos(rad);
                 double sin = Math.sin(rad);
-                this.drawLine(stack, cos * RR, sin * RR, cos * BGS / 2, sin * BGS / 2);
+                this.drawLine(graphics, cos * RR, sin * RR, cos * BGS / 2, sin * BGS / 2);
             }
         }
         RenderSystem.disableBlend();
-        stack.popPose();
+        pose.popPose();
 
     }
 
@@ -300,21 +299,20 @@ public abstract class GuiPieMenu<T> extends Screen {
      *
      * @param rad The direction the arrow should point in radiant
      */
-    private void drawSelectedCenter(@NotNull PoseStack stack, double cX, double cY, double rad) {
-
+    private void drawSelectedCenter(@NotNull GuiGraphics graphics, double cX, double cY, double rad) {
+        PoseStack pose = graphics.pose();
         // Calculate rotation and scale
         double deg = Math.toDegrees(-rad);
-        float scale = (this.height
-        ) / 4F / CS;
-        stack.pushPose();
+        float scale = (this.height) / 4F / CS;
+        pose.pushPose();
         RenderSystem.enableBlend();
         // Move origin to center, scale and rotate
-        stack.translate(cX, cY, 0);
-        stack.scale(scale, scale, 1);
-        stack.mulPose(Axis.ZP.rotationDegrees((float) deg));
+        pose.translate(cX, cY, 0);
+        pose.scale(scale, scale, 1);
+        pose.mulPose(Axis.ZP.rotationDegrees((float) deg));
 
         // Draw
-        Matrix4f matrix = stack.last().pose();
+        Matrix4f matrix = pose.last().pose();
         RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1f);
         RenderSystem.setShaderTexture(0, centerTex);
@@ -329,22 +327,22 @@ public abstract class GuiPieMenu<T> extends Screen {
 
 
         RenderSystem.disableBlend();
-        stack.popPose();
+        pose.popPose();
     }
 
-    private void drawUnselectedCenter(@NotNull PoseStack stack, double cX, double cY) {
+    private void drawUnselectedCenter(@NotNull GuiGraphics graphics, double cX, double cY) {
+        PoseStack pose = graphics.pose();
 
-        float scale = (this.height
-        ) / 4F / CS;
+        float scale = (this.height) / 4F / CS;
 
-        stack.pushPose();
+        pose.pushPose();
         RenderSystem.enableBlend();
         // Move origin to center, scale and rotate
-        stack.translate(cX, cY, 0);
-        stack.scale(scale, scale, 1);
+        pose.translate(cX, cY, 0);
+        pose.scale(scale, scale, 1);
 
         // Draw
-        Matrix4f matrix = stack.last().pose();
+        Matrix4f matrix = pose.last().pose();
 
         RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1f);
@@ -361,7 +359,7 @@ public abstract class GuiPieMenu<T> extends Screen {
 
 
         RenderSystem.disableBlend();
-        stack.popPose();
+        pose.popPose();
     }
 
     /**

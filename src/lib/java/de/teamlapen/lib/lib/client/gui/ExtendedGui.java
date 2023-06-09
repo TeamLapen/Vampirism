@@ -2,7 +2,6 @@ package de.teamlapen.lib.lib.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -13,7 +12,7 @@ import org.joml.Matrix4f;
  * Adds additional methods to vanilla Gui
  */
 @OnlyIn(Dist.CLIENT)
-public class ExtendedGui extends GuiComponent {
+public class ExtendedGui {
 
     /**
      * Draws a rectangle with a horizontal gradient between the specified colors (ARGB format). Args : x1, y1, x2, y2,

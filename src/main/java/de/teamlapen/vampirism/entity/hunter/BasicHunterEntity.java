@@ -148,13 +148,13 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         if (trainee != null && !(trainee.containerMenu instanceof HunterBasicMenu)) {
             this.trainee = null;
         }
-        if (!level.isClientSide) {
+        if (!level().isClientSide) {
             LivingEntity target = getTarget();
             int id = target == null ? 0 : target.getId();
             this.updateWatchedId(id);
             if (this.tickCount % 512 == 0 && this.getRandom().nextInt(500) == 0) { //Very very very randomly decide to walk to a random location
                 BlockPos randomDestination = new BlockPos(this.getRandom().nextInt(30000) - 15000, 100, this.getRandom().nextInt(30000) - 15000);
-                randomDestination = this.level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, randomDestination);
+                randomDestination = this.level().getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, randomDestination);
                 this.setHomeArea(randomDestination, 10);
             }
         }
@@ -169,7 +169,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     public void convertToMinion(@NotNull Player lord) {
         FactionPlayerHandler.getOpt(lord).ifPresent(fph -> {
             if (fph.getMaxMinions() > 0) {
-                MinionWorldData.getData(lord.level).map(w -> w.getOrCreateController(fph)).ifPresent(controller -> {
+                MinionWorldData.getData(lord.level()).map(w -> w.getOrCreateController(fph)).ifPresent(controller -> {
                     if (controller.hasFreeMinionSlot()) {
                         if (fph.getCurrentFaction() == this.getFaction()) {
                             boolean hasIncreasedStats = fph.getCurrentFactionPlayer().map(s -> s.getSkillHandler().isSkillEnabled(HunterSkills.MINION_STATS_INCREASE.get())).orElse(false);
@@ -180,7 +180,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                                 LOGGER.error("Failed to get minion slot");
                                 return;
                             }
-                            HunterMinionEntity minion = ModEntities.HUNTER_MINION.get().create(this.level);
+                            HunterMinionEntity minion = ModEntities.HUNTER_MINION.get().create(this.level());
                             minion.claimMinionSlot(id, controller);
                             minion.copyPosition(this);
                             minion.markAsConverted();
@@ -406,7 +406,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         if (hand == InteractionHand.MAIN_HAND && tryCureSanguinare(player)) return InteractionResult.SUCCESS;
         int hunterLevel = VampirismPlayerAttributes.get(player).hunterLevel;
         if (this.isAlive() && !player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
-            if (!level.isClientSide) {
+            if (!level().isClientSide) {
                 if (HunterLeveling.getBasicHunterRequirement(hunterLevel + 1).isPresent()) {
                     if (trainee == null) {
                         player.openMenu(new SimpleMenuProvider((id, playerInventory, playerEntity) -> new HunterBasicMenu(id, playerInventory, this), name));
@@ -426,7 +426,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                                     player.displayClientMessage(Component.translatable("text.vampirism.basic_hunter.minion.unavailable"), true);
                                 }
                             } else {
-                                boolean freeSlot = MinionWorldData.getData(player.level).map(data -> data.getOrCreateController(fph)).map(PlayerMinionController::hasFreeMinionSlot).orElse(false);
+                                boolean freeSlot = MinionWorldData.getData(player.level()).map(data -> data.getOrCreateController(fph)).map(PlayerMinionController::hasFreeMinionSlot).orElse(false);
                                 player.displayClientMessage(Component.translatable("text.vampirism.basic_hunter.minion.available"), false);
                                 if (heldItem.getItem() == ModItems.HUNTER_MINION_EQUIPMENT.get()) {
                                     if (!freeSlot) {

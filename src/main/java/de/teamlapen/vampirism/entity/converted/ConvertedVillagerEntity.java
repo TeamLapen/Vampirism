@@ -57,7 +57,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Vampire Villager
@@ -96,25 +95,25 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
 
     @Override
     public void aiStep() {
-        if (!this.level.isClientSide && this.isAlive() && this.isConverting(this)) {
+        if (!this.level().isClientSide && this.isAlive() && this.isConverting(this)) {
             --this.conversionTime;
             if (this.conversionTime <= 0 && net.minecraftforge.event.ForgeEventFactory.canLivingConvert(this, EntityType.VILLAGER, (timer) -> this.conversionTime = timer)) {
-                this.cureEntity((ServerLevel) this.level, this, EntityType.VILLAGER);
+                this.cureEntity((ServerLevel) this.level(), this, EntityType.VILLAGER);
             }
         }
 
         if (this.tickCount % REFERENCE.REFRESH_GARLIC_TICKS == 1) {
-            isGettingGarlicDamage(level, true);
+            isGettingGarlicDamage(level(), true);
         }
         if (this.tickCount % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 2) {
-            isGettingSundamage(level, true);
+            isGettingSundamage(level(), true);
         }
-        if (!level.isClientSide) {
-            if (isGettingSundamage(level) && tickCount % 40 == 11) {
+        if (!level().isClientSide) {
+            if (isGettingSundamage(level()) && tickCount % 40 == 11) {
                 this.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 42));
             }
-            if (isGettingGarlicDamage(level) != EnumStrength.NONE) {
-                DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(level), this.tickCount);
+            if (isGettingGarlicDamage(level()) != EnumStrength.NONE) {
+                DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(level()), this.tickCount);
             }
         }
         bloodTimer++;
@@ -155,7 +154,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
 
     @Override
     public boolean doHurtTarget(@NotNull Entity entity) {
-        if (!level.isClientSide && wantsBlood() && entity instanceof Player && !Helper.isHunter(entity) && !UtilLib.canReallySee((LivingEntity) entity, this, true)) {
+        if (!level().isClientSide && wantsBlood() && entity instanceof Player && !Helper.isHunter(entity) && !UtilLib.canReallySee((LivingEntity) entity, this, true)) {
             int amt = VampirePlayer.getOpt((Player) entity).map(vampire -> vampire.onBite(this)).orElse(0);
             drinkBlood(amt, IBloodStats.MEDIUM_SATURATION);
             return true;
@@ -204,7 +203,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     @Override
     public boolean isGettingSundamage(LevelAccessor iWorld, boolean forceRefresh) {
         if (!forceRefresh) return sundamageCache;
-        return (sundamageCache = Helper.gettingSundamge(this, iWorld, this.level.getProfiler()));
+        return (sundamageCache = Helper.gettingSundamge(this, iWorld, this.level().getProfiler()));
     }
 
     @Override
@@ -242,7 +241,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
         super.registerBrainGoals(brain);
         if (!this.isBaby()) {
             brain.setSchedule(ModVillage.CONVERTED_DEFAULT.get());
-            brain.updateActivityFromSchedule(this.level.getDayTime(), this.level.getGameTime());
+            brain.updateActivityFromSchedule(this.level().getDayTime(), this.level().getGameTime());
         }
     }
 
@@ -289,7 +288,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
         public IConvertedCreature<Villager> createFrom(@NotNull Villager entity) {
             CompoundTag nbt = new CompoundTag();
             entity.saveWithoutId(nbt);
-            ConvertedVillagerEntity converted = ModEntities.VILLAGER_CONVERTED.get().create(entity.level);
+            ConvertedVillagerEntity converted = ModEntities.VILLAGER_CONVERTED.get().create(entity.level());
             converted.load(nbt);
             converted.setUUID(Mth.createInsecureUUID(converted.random));
             converted.yBodyRot = entity.yBodyRot;

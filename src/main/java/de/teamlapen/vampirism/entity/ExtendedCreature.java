@@ -252,7 +252,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
             }
         }
         if (this.entity instanceof Villager villager) {
-            ((ServerLevel) villager.level).onReputationEvent(ReputationEventType.VILLAGER_HURT, biter.getRepresentingEntity(), villager);
+            ((ServerLevel) villager.level()).onReputationEvent(ReputationEventType.VILLAGER_HURT, biter.getRepresentingEntity(), villager);
         }
 
         return amt;

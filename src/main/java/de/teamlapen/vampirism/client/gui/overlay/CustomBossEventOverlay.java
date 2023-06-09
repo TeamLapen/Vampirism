@@ -1,14 +1,12 @@
 package de.teamlapen.vampirism.client.gui.overlay;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.mixin.client.BossOverlayGuiAccessor;
 import de.teamlapen.vampirism.network.ClientboundUpdateMultiBossEventPacket;
 import de.teamlapen.vampirism.world.MultiBossEvent;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.BossEvent;
@@ -21,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class CustomBossEventOverlay extends GuiComponent implements IGuiOverlay {
+public class CustomBossEventOverlay implements IGuiOverlay {
     private static final ResourceLocation GUI_BARS_TEXTURES = new ResourceLocation("textures/gui/bars.png");
     private final @NotNull Minecraft client;
     private final Map<UUID, MultiBossEvent> bossInfoMap = new LinkedHashMap<>();
@@ -45,7 +43,7 @@ public class CustomBossEventOverlay extends GuiComponent implements IGuiOverlay 
     }
 
     @Override
-    public void render(ForgeGui gui, @NotNull PoseStack stack, float partialTicks, int width, int height) {
+    public void render(ForgeGui gui, @NotNull GuiGraphics graphics, float partialTicks, int width, int height) {
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableBlend();
 
@@ -53,15 +51,12 @@ public class CustomBossEventOverlay extends GuiComponent implements IGuiOverlay 
         int j = 12 + ((BossOverlayGuiAccessor) this.client.gui.getBossOverlay()).getMapBossInfos().size() * (10 + this.client.font.lineHeight);
         for (MultiBossEvent value : bossInfoMap.values()) {
             int k = i / 2 - 91;
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderSystem.setShaderTexture(0, GUI_BARS_TEXTURES);
-            this.render(stack, k, j, value);
+            this.render(graphics, k, j, value);
             Component itextcomponent = value.getName();
             int l = this.client.font.width(itextcomponent);
             int i1 = i / 2 - l / 2;
             int j1 = j - 9;
-            this.client.font.drawShadow(stack, itextcomponent, (float) i1, (float) j1, 16777215);
+            graphics.drawString(this.client.font, itextcomponent, i1, j1, 16777215, true);
 
             if (j >= this.client.getWindow().getGuiScaledHeight() / 3) {
                 break;
@@ -70,7 +65,7 @@ public class CustomBossEventOverlay extends GuiComponent implements IGuiOverlay 
         RenderSystem.disableBlend();
     }
 
-    private void render(@NotNull PoseStack stack, int k, int j, @NotNull MultiBossEvent value) {
+    private void render(@NotNull GuiGraphics graphics, int k, int j, @NotNull MultiBossEvent value) {
         int textureStart = 0;
         List<Color> s = value.getColors();
         Map<Color, Float> perc = value.getEntries();
@@ -83,13 +78,14 @@ public class CustomBossEventOverlay extends GuiComponent implements IGuiOverlay 
                     width = 182 - textureStart;
                 }
             }
-            RenderSystem.setShaderColor(color.getRedF(), color.getGreenF(), color.getBlueF(), color.getAlphaF());
-            this.blit(stack, k + textureStart, j, textureStart, BossEvent.BossBarColor.WHITE.ordinal() * 5 * 2 + 5, width, 5);
+            graphics.setColor(color.getRedF(), color.getGreenF(), color.getBlueF(), color.getAlphaF());
+            graphics.blit(GUI_BARS_TEXTURES, k + textureStart, j, textureStart, BossEvent.BossBarColor.WHITE.ordinal() * 5 * 2 + 5, width, 5);
             textureStart += width;
+            graphics.setColor(1, 1, 1, 1);
         }
         if (value.getOverlay() != BossEvent.BossBarOverlay.PROGRESS) {
-            RenderSystem.setShaderColor(1, 1, 1, 1);
-            this.blit(stack, k, j, 0, 80 + (value.getOverlay().ordinal() - 1) * 5 * 2, 182, 5);
+            graphics.setColor(1, 1, 1, 1);
+            graphics.blit(GUI_BARS_TEXTURES, k, j, 0, 80 + (value.getOverlay().ordinal() - 1) * 5 * 2, 182, 5);
         }
     }
 }

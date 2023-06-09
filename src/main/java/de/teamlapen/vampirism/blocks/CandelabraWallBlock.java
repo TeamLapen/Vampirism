@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -39,7 +39,7 @@ public class CandelabraWallBlock extends VampirismHorizontalBlock {
     }
 
     public CandelabraWallBlock() {
-        super(BlockBehaviour.Properties.of(Material.METAL).lightLevel(s -> 14).noOcclusion(), makeWallCandelabraShape());
+        super(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).lightLevel(s -> 14).noOcclusion(), makeWallCandelabraShape());
     }
 
     @Override

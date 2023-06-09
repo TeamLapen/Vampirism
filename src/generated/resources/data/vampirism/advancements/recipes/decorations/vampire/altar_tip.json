@@ -28,5 +28,6 @@
     "recipes": [
       "vampirism:vampire/altar_tip"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -30,5 +30,6 @@
     "recipes": [
       "vampirism:leather_from_obi_belt"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

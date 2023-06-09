@@ -28,5 +28,6 @@
     "recipes": [
       "vampirism:vampire/blood_pedestal"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

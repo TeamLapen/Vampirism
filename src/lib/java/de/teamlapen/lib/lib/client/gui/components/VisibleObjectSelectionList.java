@@ -1,7 +1,7 @@
 package de.teamlapen.lib.lib.client.gui.components;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,9 +17,9 @@ public abstract class VisibleObjectSelectionList<T extends ObjectSelectionList.E
     }
 
     @Override
-    public void render(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
+    public void render(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
         if (this.isVisible) {
-            super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
+            super.render(graphics, pMouseX, pMouseY, pPartialTick);
         }
     }
 

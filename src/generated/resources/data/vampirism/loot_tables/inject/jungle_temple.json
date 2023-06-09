@@ -45,7 +45,6 @@
           "weight": 30
         }
       ],
-      "name": "main",
       "rolls": 2.0
     },
     {
@@ -120,7 +119,6 @@
           "weight": 72
         }
       ],
-      "name": "swiftness_armor",
       "rolls": 1.0
     },
     {
@@ -195,7 +193,6 @@
           "weight": 72
         }
       ],
-      "name": "hunter_coat",
       "rolls": 1.0
     },
     {
@@ -232,8 +229,8 @@
           "name": "vampirism:obi_belt"
         }
       ],
-      "name": "refinement_item",
       "rolls": 1.0
     }
-  ]
+  ],
+  "random_sequence": "vampirism:inject/jungle_temple"
 }

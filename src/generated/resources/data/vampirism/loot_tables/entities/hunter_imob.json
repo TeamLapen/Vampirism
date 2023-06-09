@@ -19,7 +19,6 @@
           "name": "vampirism:human_heart"
         }
       ],
-      "name": "general",
       "rolls": 1.0
     },
     {
@@ -63,8 +62,8 @@
           "name": "vampirism:obi_belt"
         }
       ],
-      "name": "refinement_item",
       "rolls": 1.0
     }
-  ]
+  ],
+  "random_sequence": "vampirism:entities/hunter_imob"
 }

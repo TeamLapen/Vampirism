@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.client.gui.screens.taskboard;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.lib.client.gui.components.ContainerObjectSelectionListWithDummy;
 import de.teamlapen.lib.lib.util.MultilineTooltip;
 import de.teamlapen.vampirism.REFERENCE;
@@ -17,7 +16,7 @@ import de.teamlapen.vampirism.inventory.TaskMenu;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Tooltip;
@@ -25,7 +24,6 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -36,7 +34,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.client.gui.ScreenUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,7 +51,7 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
         super(minecraft, width, height, y, y + height, itemHeight, itemSupplier);
         this.menu = menu;
         this.factionPlayer = factionPlayer;
-        this.registry = factionPlayer.getRepresentingPlayer().level.registryAccess().registryOrThrow(VampirismRegistries.TASK_ID);
+        this.registry = factionPlayer.getRepresentingPlayer().level().registryAccess().registryOrThrow(VampirismRegistries.TASK_ID);
         setLeftPos(x);
     }
 
@@ -89,7 +86,7 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
             return Collections.emptyList();
         }
 
-        public void renderBackground(PoseStack stack, Minecraft minecraft, int pTop, int pLeft, int pWidth, int pHeight, int mouseX, int mouseY, float partialTicks) {
+        public void renderBackground(GuiGraphics graphics, Minecraft minecraft, int pTop, int pLeft, int pWidth, int pHeight, int mouseX, int mouseY, float partialTicks) {
             if (menu.isCompleted(this.getItem())) {
                 RenderSystem.setShaderColor(0.4f, 0.4f, 0.4f, 1);
             } else {
@@ -117,21 +114,19 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
                     }
                 }
             }
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderTexture(0, TASKMASTER_GUI_TEXTURE);
-            GuiComponent.blit(stack, pLeft, pTop, 0, 17, 187, Math.min(pWidth - 1, 135), pHeight, 256, 256);
-            GuiComponent.blit(stack, pLeft + pWidth - Math.min(pWidth - 1, 135), pTop, 0, 17 + (135 - Math.min(pWidth - 1, 134)), 187, Math.min(pWidth - 1, 135), pHeight, 256, 256);
+            graphics.blit(TASKMASTER_GUI_TEXTURE, pLeft, pTop, 0, 17, 187, Math.min(pWidth - 1, 135), pHeight, 256, 256);
+            graphics.blit(TASKMASTER_GUI_TEXTURE, pLeft + pWidth - Math.min(pWidth - 1, 135), pTop, 0, 17 + (135 - Math.min(pWidth - 1, 134)), 187, Math.min(pWidth - 1, 135), pHeight, 256, 256);
             RenderSystem.setShaderColor(1, 1, 1, 1);
         }
 
         @Override
-        public void render(PoseStack pPoseStack, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pIsMouseOver, float pPartialTick) {
+        public void render(GuiGraphics graphics, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pIsMouseOver, float pPartialTick) {
             Minecraft mc = Minecraft.getInstance();
-            this.renderBackground(pPoseStack, mc, pTop, pLeft, pWidth, pHeight + 4, pMouseX, pMouseY, pPartialTick);
+            this.renderBackground(graphics, mc, pTop, pLeft, pWidth, pHeight + 4, pMouseX, pMouseY, pPartialTick);
 
             //render name
             Optional<FormattedCharSequence> text = Optional.ofNullable(mc.font.split(this.task.getTitle(), 131).get(0));
-            text.ifPresent(t -> mc.font.draw(pPoseStack, t, pLeft + 2, pTop + 4, 3419941));//(6839882 & 16711422) >> 1 //8453920 //4226832
+            text.ifPresent(t -> graphics.drawString(mc.font, t, pLeft + 2, pTop + 4, 3419941, false));//(6839882 & 16711422) >> 1 //8453920 //4226832
 
             //render progress
             if (!menu.isTaskNotAccepted(this.getItem()) && !this.getItem().isUnique(menu.getRegistry())) {
@@ -156,7 +151,7 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
                 if (remainingTime < this.getItem().getTaskDuration() / 20F * 0.1F) {
                     color = 16733525;
                 }
-                mc.font.drawShadow(pPoseStack, msg, pLeft + pWidth - width - 1, pTop + 12, color);
+                graphics.drawString(mc.font, msg, pLeft + pWidth - width - 1, pTop + 12, color, true);
             }
 
             if (isMouseOver(pMouseX, pMouseY)) {
@@ -236,15 +231,15 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
 
 
         @Override
-        public void render(@NotNull PoseStack pPoseStack, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pIsMouseOver, float pPartialTick) {
-            renderBg(pPoseStack, pIndex, pTop, pLeft, pWidth, pHeight + 4, pMouseX, pMouseY, pIsMouseOver, pPartialTick);
+        public void render(@NotNull GuiGraphics graphics, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pIsMouseOver, float pPartialTick) {
+            renderBg(graphics, pIndex, pTop, pLeft, pWidth, pHeight + 4, pMouseX, pMouseY, pIsMouseOver, pPartialTick);
             this.children.forEach(w -> ((MovableWidget) w).setOffset(pLeft, pTop));
-            this.children.forEach(a -> a.render(pPoseStack, pMouseX, pMouseY, pPartialTick));
+            this.children.forEach(a -> a.render(graphics, pMouseX, pMouseY, pPartialTick));
         }
 
-        protected void renderBg(@NotNull PoseStack pPoseStack, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pIsMouseOver, float pPartialTick) {
-            ScreenUtils.blitWithBorder(pPoseStack, TASKMASTER_GUI_TEXTURE, pLeft + 2, pTop, 17, 229, pWidth - 4, pHeight, 136, 21, 1, 2, 3, 2, 0);
-            ScreenUtils.blitWithBorder(pPoseStack, TASKMASTER_GUI_TEXTURE, pLeft + pWidth - 40, pTop, 17, 229, 40 - 2, pHeight, 136, 21, 1, 2, 3, 2, 0);
+        protected void renderBg(@NotNull GuiGraphics graphics, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pIsMouseOver, float pPartialTick) {
+            graphics.blitWithBorder(TASKMASTER_GUI_TEXTURE, pLeft + 2, pTop, 17, 229, pWidth - 4, pHeight, 136, 21, 1, 2, 3, 2);
+            graphics.blitWithBorder(TASKMASTER_GUI_TEXTURE, pLeft + pWidth - 40, pTop, 17, 229, 40 - 2, pHeight, 136, 21, 1, 2, 3, 2);
         }
 
         @Override
@@ -286,8 +281,8 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
             }
 
             @Override
-            public void renderWidget(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-                Minecraft.getInstance().getItemRenderer().renderAndDecorateFakeItem(pPoseStack, this.stack, this.getX(), this.getY());
+            public void renderWidget(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+                graphics.renderFakeItem(this.stack, this.getX(), this.getY());
 
                 if (this.isHovered) {
                     this.setTooltip(new MultilineTooltip(createTooltip()));
@@ -446,17 +441,16 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
             }
 
             @Override
-            public void renderWidget(@NotNull PoseStack mStack, int mouseX, int mouseY, float p_renderButton_3_) {
+            public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float p_renderButton_3_) {
                 TaskMenu.TaskAction action = menu.buttonAction(getItem());
                 RenderSystem.enableDepthTest();
-                RenderSystem.setShaderTexture(0, TASKMASTER_GUI_TEXTURE);
                 int j = switch (action) {
                     case ACCEPT -> 190;
                     case COMPLETE -> 176;
                     default -> 204;
                 };
 
-                blit(mStack, this.getX(), this.getY(), (float) j, (float) (this.isHovered ? 13 : 0), this.width, this.height, 256, 256);
+                graphics.blit(TASKMASTER_GUI_TEXTURE, this.getX(), this.getY(), (float) j, (float) (this.isHovered ? 13 : 0), this.width, this.height, 256, 256);
                 RenderSystem.disableDepthTest();
 
                 if (this.isHovered) {

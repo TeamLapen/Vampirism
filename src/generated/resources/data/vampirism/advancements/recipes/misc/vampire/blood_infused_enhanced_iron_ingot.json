@@ -28,5 +28,6 @@
     "recipes": [
       "vampirism:vampire/blood_infused_enhanced_iron_ingot"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

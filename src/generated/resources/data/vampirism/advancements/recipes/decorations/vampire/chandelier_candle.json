@@ -41,5 +41,6 @@
     "recipes": [
       "vampirism:vampire/chandelier_candle"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

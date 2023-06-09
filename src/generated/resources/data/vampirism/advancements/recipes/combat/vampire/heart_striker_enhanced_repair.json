@@ -30,5 +30,6 @@
     "recipes": [
       "vampirism:vampire/heart_striker_enhanced_repair"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

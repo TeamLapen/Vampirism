@@ -109,7 +109,7 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
 
     @Override
     public void playerTouch(@NotNull Player entityIn) {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             if (delayBeforePickup == 0) {
                 if (Helper.isHunter(entityIn)) {
                     if (entityIn.getInventory().add(getSoulItemStack())) {
@@ -139,17 +139,17 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
             this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.03D, 0.0D));
         }
 
-        if (this.level.getFluidState(blockPosition()).is(FluidTags.LAVA)) {
+        if (this.level().getFluidState(blockPosition()).is(FluidTags.LAVA)) {
             this.setDeltaMovement((this.random.nextFloat() - this.random.nextFloat()) * 0.2F, 0.2F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F);
             this.playSound(SoundEvents.GENERIC_BURN, 0.4F, 2.0F + this.random.nextFloat() * 0.4F);
         }
-        if (!this.level.noCollision(this.getBoundingBox())) { //areCollisionShapesEmpty
+        if (!this.level().noCollision(this.getBoundingBox())) { //areCollisionShapesEmpty
             this.moveTowardsClosestSpace(this.getX(), (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0D, this.getZ());
         }
 
 
         if (this.age % 10 == 5 & (this.player == null || !this.player.isAlive() || this.player.distanceToSqr(this) > 64)) {
-            this.player = this.level.getNearestPlayer(this.getX(), this.getY(), this.getZ(), 8, EntitySelector.NO_SPECTATORS.and(Helper::isHunter));
+            this.player = this.level().getNearestPlayer(this.getX(), this.getY(), this.getZ(), 8, EntitySelector.NO_SPECTATORS.and(Helper::isHunter));
         }
 
         if (this.player != null) {
@@ -164,15 +164,15 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
         this.move(MoverType.SELF, this.getDeltaMovement());
         float f = 0.98F;
 
-        if (this.onGround) {
+        if (this.onGround()) {
             BlockPos underPos = new BlockPos(Mth.floor(this.getX()), Mth.floor(this.getBoundingBox().minY) - 1, Mth.floor(this.getZ()));
-            BlockState underState = this.level.getBlockState(underPos);
-            f = underState.getBlock().getFriction(underState, this.level, underPos, this) * 0.98F;
+            BlockState underState = this.level().getBlockState(underPos);
+            f = underState.getBlock().getFriction(underState, this.level(), underPos, this) * 0.98F;
         }
 
         this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.9800000190734863D, f));
 
-        if (this.onGround) {
+        if (this.onGround()) {
             this.setDeltaMovement(this.getDeltaMovement().multiply(1D, -0.8999999761581421D, 1D));
         }
 

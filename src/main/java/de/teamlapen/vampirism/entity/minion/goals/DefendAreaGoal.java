@@ -45,7 +45,7 @@ public class DefendAreaGoal extends TargetGoal {
                         this.center = newCenter;
                     }
 
-                    this.targetMob = entity.level.getNearestEntity(LivingEntity.class, predicate, entity, entity.getX(), entity.getY(), entity.getZ(), bb);
+                    this.targetMob = entity.level().getNearestEntity(LivingEntity.class, predicate, entity, entity.getX(), entity.getY(), entity.getZ(), bb);
                     return this.targetMob != null;
                 }
         ).orElse(false);

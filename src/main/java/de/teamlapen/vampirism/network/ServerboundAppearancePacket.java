@@ -37,7 +37,7 @@ public record ServerboundAppearancePacket(int entityId, String name, int... data
     public static void handle(final @NotNull ServerboundAppearancePacket msg, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> {
-            Entity entity = ctx.getSender().level.getEntity(msg.entityId);
+            Entity entity = ctx.getSender().level().getEntity(msg.entityId);
             if (entity instanceof Player player) {
                 VampirePlayer.getOpt(player).ifPresent(vampire -> vampire.setSkinData(msg.data));
             } else if (entity instanceof MinionEntity<?> minion) {

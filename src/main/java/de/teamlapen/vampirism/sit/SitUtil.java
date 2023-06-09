@@ -97,8 +97,8 @@ public class SitUtil {
      * @return The position the player was at before he sat down, null if the player is not sitting. This is always null on the client.
      */
     public static @Nullable BlockPos getPreviousPlayerPosition(@NotNull Player player, SitEntity sitEntity) {
-        if (!player.level.isClientSide) {
-            ResourceLocation id = getDimensionTypeId(player.level);
+        if (!player.level().isClientSide) {
+            ResourceLocation id = getDimensionTypeId(player.level());
 
             if (OCCUPIED.containsKey(id)) {
                 for (Pair<SitEntity, BlockPos> pair : OCCUPIED.get(id).values()) {

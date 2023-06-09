@@ -19,7 +19,6 @@
           "name": "vampirism:pure_blood_0"
         }
       ],
-      "name": "pure_blood_0",
       "rolls": 1.0
     },
     {
@@ -40,7 +39,6 @@
           "name": "vampirism:pure_blood_1"
         }
       ],
-      "name": "pure_blood_1",
       "rolls": 1.0
     },
     {
@@ -61,7 +59,6 @@
           "name": "vampirism:pure_blood_2"
         }
       ],
-      "name": "pure_blood_2",
       "rolls": 1.0
     },
     {
@@ -82,7 +79,6 @@
           "name": "vampirism:pure_blood_3"
         }
       ],
-      "name": "pure_blood_3",
       "rolls": 1.0
     },
     {
@@ -103,8 +99,8 @@
           "name": "vampirism:pure_blood_4"
         }
       ],
-      "name": "pure_blood_4",
       "rolls": 1.0
     }
-  ]
+  ],
+  "random_sequence": "vampirism:entities/vampire_baron"
 }

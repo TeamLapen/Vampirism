@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.inventory.HunterTrainerMenu;
 import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
 import net.minecraft.client.gui.screens.inventory.ItemCombinerScreen;
@@ -67,12 +67,12 @@ public class HunterTrainerScreen extends ItemCombinerScreen<HunterTrainerMenu> {
     }
 
     @Override
-    public void render(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
-        this.renderOnBoardingTooltips(pPoseStack, pMouseX, pMouseY);
+    public void render(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        super.render(graphics, pMouseX, pMouseY, pPartialTick);
+        this.renderOnBoardingTooltips(graphics, pMouseX, pMouseY);
     }
 
-    private void renderOnBoardingTooltips(PoseStack pPoseStack, int pMouseX, int pMouseY) {
+    private void renderOnBoardingTooltips(GuiGraphics graphics, int pMouseX, int pMouseY) {
         if (this.hoveredSlot != null && this.hoveredSlot.index < 3) {
             Optional<Component> optional = Optional.empty();
             var req = this.menu.getRequirement();
@@ -92,7 +92,7 @@ public class HunterTrainerScreen extends ItemCombinerScreen<HunterTrainerMenu> {
                 }).getString()));
             }
             optional.ifPresent((p_274684_) -> {
-                this.renderTooltip(pPoseStack, this.font.split(p_274684_, 115), pMouseX, pMouseY);
+                graphics.renderTooltip(this.font, this.font.split(p_274684_, 115), pMouseX, pMouseY);
             });
         }
     }
@@ -112,15 +112,15 @@ public class HunterTrainerScreen extends ItemCombinerScreen<HunterTrainerMenu> {
     }
 
     @Override
-    protected void renderBg(@NotNull PoseStack stack, float var1, int var2, int var3) {
-        super.renderBg(stack, var1, var2, var3);
-        this.ironIcon.render(this.menu, stack, var1, this.leftPos, this.topPos);
-        this.goldIcon.render(this.menu, stack, var1, this.leftPos, this.topPos);
-        this.hunterIntel.render(this.menu, stack, var1, this.leftPos, this.topPos);
+    protected void renderBg(@NotNull GuiGraphics graphics, float var1, int var2, int var3) {
+        super.renderBg(graphics, var1, var2, var3);
+        this.ironIcon.render(this.menu, graphics, var1, this.leftPos, this.topPos);
+        this.goldIcon.render(this.menu, graphics, var1, this.leftPos, this.topPos);
+        this.hunterIntel.render(this.menu, graphics, var1, this.leftPos, this.topPos);
     }
 
     @Override
-    protected void renderErrorIcon(@NotNull PoseStack poseStack, int mouseX, int mouseY) {
+    protected void renderErrorIcon(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
 
     }
 }
