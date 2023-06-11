@@ -128,7 +128,38 @@
   },
   "block.potion_table_crafting": {
     "sounds":  [
-      "vampirism:reserved/block.potion_table_crafting"
+      "vampirism:reserved/block/potion_table_crafting"
+    ]
+  },
+  "block.remains_destroyed": {
+    "sounds": [
+      "vampirism:reserved/block/remains_destroyed"
+    ]
+  },
+  "block.remains_hit": {
+    "sounds": [
+      "vampirism:reserved/block/remains_hit"
+    ]
+  },
+  "fx.mother_death": {
+    "sounds": [
+      "vampirism:reserved/fx/mother_death"
+    ]
+  },
+  "ambient.mother": {
+    "sounds": [
+      {
+        "name": "vampirism:reserved/ambient/mother",
+        "stream": true
+      }
+    ]
+  },
+  "ambient.forest": {
+    "sounds": [
+      {
+        "name": "vampirism:reserved/ambient/vampire_forest",
+        "stream": true
+      }
     ]
   }
 }

@@ -134,6 +134,9 @@ public class ClientProxy extends CommonProxy {
         if (msg.type() == 1) {
             spawnParticles(Minecraft.getInstance().level, msg.pos(), Block.stateById(msg.stateId()));
         }
+        else if(msg.type() == 2){
+            Minecraft.getInstance().getMusicManager().stopPlaying();
+        }
     }
 
     @Override

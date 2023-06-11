@@ -2,6 +2,8 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.Music;
+import net.minecraft.sounds.Musics;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -32,6 +34,12 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> TELEPORT_HERE = create("fx.teleport_here");
     public static final RegistryObject<SoundEvent> FREEZE = create("fx.freeze");
     public static final RegistryObject<SoundEvent> POTION_TABLE_CRAFTING = create("block.potion_table_crafting");
+    public static final RegistryObject<SoundEvent> REMAINS_HIT = create("block.remains_hit");
+    public static final RegistryObject<SoundEvent> REMAINS_DESTROYED = create("block.remains_destroyed");
+    public static final RegistryObject<SoundEvent> MOTHER_DEATH = create("fx.mother_death");
+    public static final RegistryObject<SoundEvent> MOTHER_AMBIENT = create("ambient.mother");
+    public static final RegistryObject<SoundEvent> VAMPIRE_FOREST_AMBIENT = create("ambient.forest");
+
 
     static void register(IEventBus bus) {
         SOUND_EVENTS.register(bus);
@@ -41,4 +49,13 @@ public class ModSounds {
         ResourceLocation resourcelocation = new ResourceLocation(REFERENCE.MODID, soundNameIn);
         return SOUND_EVENTS.register(soundNameIn, () -> SoundEvent.createVariableRangeEvent(resourcelocation));
     }
+
+    private static Music mother_music;
+    public static Music getMotherMusic(){
+        if(mother_music == null){
+            mother_music = ModSounds.MOTHER_AMBIENT.getHolder().map(music -> new Music(music, 0,0, true)).orElse(Musics.GAME);
+        }
+        return mother_music;
+    }
+
 }

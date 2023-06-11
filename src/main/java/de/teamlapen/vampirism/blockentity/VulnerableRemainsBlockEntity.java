@@ -3,11 +3,13 @@ package de.teamlapen.vampirism.blockentity;
 import de.teamlapen.vampirism.blocks.mother.ActiveVulnerableRemainsBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
+import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.entity.VulnerableRemainsDummyEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -57,7 +59,11 @@ public class VulnerableRemainsBlockEntity extends BlockEntity {
     public void onDamageDealt(DamageSource src, double damage) {
         this.health -= damage;
         if (this.health <= 0) {
+            if(this.level!=null)this.level.playSound(null, worldPosition, ModSounds.REMAINS_DESTROYED.get(), SoundSource.BLOCKS, 1f ,1f);
             destroyVulnerability();
+        }
+        else{
+            if(this.level!=null)this.level.playSound(null, worldPosition, ModSounds.REMAINS_HIT.get(), SoundSource.BLOCKS, 1f ,1f);
         }
         if (src.getEntity() instanceof ServerPlayer p) {
             this.getMother().ifPresent(mother -> mother.onVulnerabilityHit(p, this.health <= 0));
