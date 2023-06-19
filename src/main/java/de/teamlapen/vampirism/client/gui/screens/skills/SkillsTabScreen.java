@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.gui.screens.skills;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import de.teamlapen.vampirism.REFERENCE;
@@ -14,6 +15,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.advancements.AdvancementTabType;
+import net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
@@ -131,16 +133,6 @@ public class SkillsTabScreen {
         this.root.drawConnectivity(graphics, i, j, false);
         this.root.draw(graphics, i, j);
         pose.popPose();
-        graphics.disableScissor();
-
-//        RenderSystem.depthFunc(518);
-//        pose.translate(0.0F, 0.0F, -950.0F);
-//        RenderSystem.colorMask(false, false, false, false);
-//        graphics.fill(4680, 2260, -4680, -2260, -16777216);
-//        RenderSystem.colorMask(true, true, true, true);
-//        pose.translate(0.0F, 0.0F, 950.0F);
-//        RenderSystem.depthFunc(515);
-//        pose.popPose();
 
         if (this.minecraft.player.getEffect(ModEffects.OBLIVION.get()) != null) {
             pose.pushPose();
@@ -151,6 +143,7 @@ public class SkillsTabScreen {
             pose.popPose();
         }
 
+        graphics.disableScissor();
     }
 
     public void drawTooltips(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
@@ -252,8 +245,6 @@ public class SkillsTabScreen {
     }
 
     public void drawDisableText(@NotNull GuiGraphics graphics, int x, int y) {
-        if (this.minecraft.player.getEffect(ModEffects.OBLIVION.get()) == null) return;
-
         Component f = Component.translatable("text.vampirism.skill.unlock_unavailable").withStyle(ChatFormatting.WHITE);
         FormattedCharSequence s = Language.getInstance().getVisualOrder(f);
 
@@ -264,26 +255,12 @@ public class SkillsTabScreen {
         int backgroundColor = 0xF09b0404;//0xF0550404;;
         int borderColorStart = 0x505f0c0c;
         int borderColorEnd = (borderColorStart & 0xFEFEFE) >> 1 | borderColorStart & 0xFF000000;
-        int zLevel = 0;
 
-        PoseStack pose = graphics.pose();
-        pose.pushPose();
-        graphics.fillGradient(tooltipX - 3, tooltipY - 4, tooltipX + tooltipTextWidth + 3, tooltipY - 3, backgroundColor, backgroundColor);
-        graphics.fillGradient(tooltipX - 3, tooltipY + tooltipHeight + 3, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 4, backgroundColor, backgroundColor);
-        graphics.fillGradient(tooltipX - 3, tooltipY - 3, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3, backgroundColor, backgroundColor);
-        graphics.fillGradient(tooltipX - 4, tooltipY - 3, tooltipX - 3, tooltipY + tooltipHeight + 3, backgroundColor, backgroundColor);
-        graphics.fillGradient(tooltipX + tooltipTextWidth + 3, tooltipY - 3, tooltipX + tooltipTextWidth + 4, tooltipY + tooltipHeight + 3, backgroundColor, backgroundColor);
-        graphics.fillGradient(tooltipX - 3, tooltipY - 3 + 1, tooltipX - 3 + 1, tooltipY + tooltipHeight + 3 - 1, borderColorStart, borderColorEnd);
-        graphics.fillGradient(tooltipX + tooltipTextWidth + 2, tooltipY - 3 + 1, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3 - 1, borderColorStart, borderColorEnd);
-        graphics.fillGradient(tooltipX - 3, tooltipY - 3, tooltipX + tooltipTextWidth + 3, tooltipY - 3 + 1, borderColorStart, borderColorStart);
-        graphics.fillGradient(tooltipX - 3, tooltipY + tooltipHeight + 2, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3, borderColorEnd, borderColorEnd);
+        TooltipRenderUtil.renderTooltipBackground(graphics, tooltipX, tooltipY, tooltipTextWidth, tooltipHeight, 400, backgroundColor, backgroundColor, borderColorStart, borderColorEnd);
 
-        MultiBufferSource.BufferSource renderType = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-        pose.translate(0.0D, 0.0D, zLevel);
-
-        this.minecraft.font.drawInBatch(s, (float) tooltipX + (tooltipTextWidth / 2f) - this.minecraft.font.width(f) / 2f, (float) tooltipY + (tooltipHeight / 2f) - 3, -1, true, pose.last().pose(), renderType, Font.DisplayMode.NORMAL, 0, 15728880);
-
-        renderType.endBatch();
-        pose.popPose();
+        graphics.pose().pushPose();
+        graphics.pose().translate(0, 0, 400);
+        graphics.drawCenteredString(this.minecraft.font, f, tooltipX + tooltipTextWidth/2, tooltipY + tooltipHeight/2 - this.minecraft.font.lineHeight/2, 15728880);
+        graphics.pose().popPose();
     }
 }

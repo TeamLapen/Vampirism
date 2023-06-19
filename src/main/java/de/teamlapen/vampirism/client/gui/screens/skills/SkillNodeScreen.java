@@ -120,14 +120,12 @@ public class SkillNodeScreen {
     public void draw(@NotNull GuiGraphics graphics, int i, int j) {
         PoseStack pose = graphics.pose();
         pose.pushPose();
-        pose.translate(0, 0, 50);
         SkillNodeState state = getState();
         if (state == SkillNodeState.HIDDEN) return;
         int width = getNodeWidth();
 
-        //center
-        pose.pushPose();
-        pose.translate(-width / 2f, 0, 0);
+        // center and in front of the connectors
+        pose.translate(-width / 2f, 0, 50);
 
         int x = i + getNodeStart();
         //draw skill background
@@ -157,7 +155,6 @@ public class SkillNodeScreen {
         for (SkillNodeScreen child : this.children) {
             child.draw(graphics, i, j);
         }
-        pose.popPose();
     }
 
     public void drawConnectivity(@NotNull GuiGraphics graphics, int startX, int startY, boolean outerLine) {
@@ -208,10 +205,8 @@ public class SkillNodeScreen {
     public void drawHover(@NotNull GuiGraphics graphics, double mouseX, double mouseY, float fade, int scrollX, int scrollY) {
         SkillNodeState state = getState();
         if (state == SkillNodeState.HIDDEN) return;
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
-        ISkill[] elements = this.skillNode.getElements();
-        scrollX -= getNodeWidth() /2f;
+        ISkill<?>[] elements = this.skillNode.getElements();
+        scrollX -= getNodeWidth() / 2f;
 
         //check if a node is hovered
         int hoveredSkill = -1;
@@ -262,27 +257,27 @@ public class SkillNodeScreen {
 
             //draw description
             if (!description.isEmpty()) {
-                graphics.blitWithBorder(WIDGETS_LOCATION, scrollX + x - 5, scrollY + this.y + 3, 0, 81, this.width[hoveredSkillIndex], 30 + description.size() * 9, 200, 20, 3);
+                graphics.blitWithBorder(WIDGETS_LOCATION, scrollX + x - 5, scrollY + this.y + 3, 0, 81, this.width[hoveredSkill], 30 + description.size() * 9, 200, 20, 3);
                 for (int i = 0; i < description.size(); i++) {
                     graphics.drawString(this.minecraft.font, description.get(i), scrollX + x + 2, scrollY + this.y + 3 + 24 + i * 9, -1, true);
                 }
             }
 
             //draw title
-            int wid = this.width[hoveredSkillIndex] / 2;
+            int wid = this.width[hoveredSkill] / 2;
             int titleTextureY = state.titleTextureY;
             if (state == SkillNodeState.UNLOCKED && !this.skillHandler.isSkillEnabled(elements[hoveredSkill])) {
                 titleTextureY = SkillNodeState.LOCKED.titleTextureY;
             }
             graphics.blit(WIDGETS_LOCATION, scrollX + x - 5, scrollY + this.y + 3, 0, titleTextureY, wid, 22);
             graphics.blit(WIDGETS_LOCATION, scrollX + x - 5 + wid, scrollY + this.y + 3, 200 - wid, titleTextureY, wid, 22);
-            graphics.drawString(this.minecraft.font, this.titles[hoveredSkillIndex], scrollX + x + 40, scrollY + this.y + 9, -1, true);
+            graphics.drawString(this.minecraft.font, this.titles[hoveredSkill], scrollX + x + 40, scrollY + this.y + 9, -1, true);
 
             //draw skill
             graphics.setColor(1f, 1f, 1f, 1);
             graphics.blit(WIDGETS_LOCATION, scrollX + x, scrollY + this.y, skillNode.isRoot() ? 226 : 200, 0, 26, 26);
             RenderSystem.enableBlend();
-            graphics.blit(getSkillIconLocation(hoveredSkill), x + scrollX + 5, this.y + scrollY + 5, 0, 0, 16, 16, 16, 16);
+            graphics.blit(getSkillIconLocation(elements[hoveredSkill]), x + scrollX + 5, this.y + scrollY + 5, 0, 0, 16, 16, 16, 16);
         }
     }
 

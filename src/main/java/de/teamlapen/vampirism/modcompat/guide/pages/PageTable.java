@@ -11,6 +11,7 @@ import de.maxanier.guideapi.gui.BaseScreen;
 import de.teamlapen.lib.lib.util.UtilLib;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -44,25 +45,25 @@ public class PageTable extends Page {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void draw(@NotNull PoseStack stack, RegistryAccess registryAccess, Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, @NotNull BaseScreen guiBase, @NotNull Font fontRendererObj) {
-        float charWidth = fontRendererObj.width("W");
+    public void draw(@NotNull GuiGraphics guiGraphics, RegistryAccess registryAccess, Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, @NotNull BaseScreen guiBase, @NotNull Font font) {
+        float charWidth = font.width("W");
         int y = guiTop + 12;
         int x = guiLeft + 39;
         if (headline != null) {
-            fontRendererObj.draw(stack, headline.withStyle(ChatFormatting.BOLD), x, y, 0);
-            y += fontRendererObj.lineHeight;
+            guiGraphics.drawString(font, headline.withStyle(ChatFormatting.BOLD), x, y, 0, false);
+            y += font.lineHeight;
         }
-        drawLine(stack, x, y + fontRendererObj.lineHeight, x + (guiBase.xSize * 3F / 5F), y + fontRendererObj.lineHeight, 0);
+        drawLine(guiGraphics, x, y + font.lineHeight, x + (guiBase.xSize * 3F / 5F), y + font.lineHeight, 0);
         for (String[] l : lines) {
             x = guiLeft + 39;
             for (int i = 0; i < l.length; i++) {
                 int mw = (int) (width[i] * charWidth);
-                int aw = fontRendererObj.width(l[i]);
+                int aw = font.width(l[i]);
                 int dw = (mw - aw) / 2;
-                fontRendererObj.draw(stack, l[i], x + dw, y, 0);
+                guiGraphics.drawString(font, l[i], x + dw, y, 0, false);
                 x += mw;
             }
-            y += fontRendererObj.lineHeight;
+            y += font.lineHeight;
 
         }
 
@@ -71,9 +72,10 @@ public class PageTable extends Page {
     /**
      * Copied from GuiPieMenu
      */
-    protected void drawLine(@NotNull PoseStack stack, double x1, double y1, double x2, double y2, float publicZLevel) {
-        stack.pushPose();
-        Matrix4f matrix = stack.last().pose();
+    protected void drawLine(@NotNull GuiGraphics guiGraphics, double x1, double y1, double x2, double y2, float publicZLevel) {
+        PoseStack pose = guiGraphics.pose();
+        pose.pushPose();
+        Matrix4f matrix = pose.last().pose();
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         RenderSystem.lineWidth(2F);
         BufferBuilder builder = Tesselator.getInstance().getBuilder();
@@ -82,7 +84,7 @@ public class PageTable extends Page {
         builder.vertex(matrix, (float) x2, (float) y2, publicZLevel).color(0, 0, 0, 255).endVertex();
         Tesselator.getInstance().end();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
-        stack.popPose();
+        pose.popPose();
     }
 
 

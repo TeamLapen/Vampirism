@@ -18,9 +18,6 @@ public class CooldownButton extends Button {
     @Override
     public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         Minecraft minecraft = Minecraft.getInstance();
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.enableDepthTest();
         guiGraphics.blitWithBorder(WIDGETS_LOCATION, this.getX(), this.getY(), 0, 46, this.width, this.height, 200, 20, 3);
         int width = (int) ((1f - progress) * this.width);
         int s = Mth.clamp(width / 2, 0, 3);

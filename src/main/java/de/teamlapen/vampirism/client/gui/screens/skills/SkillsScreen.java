@@ -159,23 +159,16 @@ public class SkillsScreen extends Screen {
 
     public void renderWindow(@NotNull GuiGraphics graphics, int mouseX, int mouseY, int x, int y) {
         graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.enableBlend();
         graphics.blit(WINDOW_LOCATION, x, y, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         if (this.tabs.size() > 1) {
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderTexture(0, TABS_LOCATION);
 
             for (SkillsTabScreen skillTab : this.tabs) {
                 skillTab.drawTab(graphics, x, y, skillTab == this.selectedTab);
             }
 
-            RenderSystem.defaultBlendFunc();
-
             for (SkillsTabScreen skillTab : this.tabs) {
                 skillTab.drawIcon(graphics, x, y);
             }
-
-            RenderSystem.disableBlend();
         }
         if (this.selectedTab != null) {
             Component remainingPoints = Component.translatable("text.vampirism.skills.points_left", String.valueOf(this.selectedTab.getRemainingPoints()));
@@ -191,9 +184,7 @@ public class SkillsScreen extends Screen {
             PoseStack pose = graphics.pose();
             pose.pushPose();
             pose.translate((float) (guiLeft + 9), (float) (guiTop + 18), 400.0F);
-            RenderSystem.enableDepthTest();
             this.selectedTab.drawTooltips(graphics, mouseX - guiLeft - 9, mouseY - guiTop - 18);
-            RenderSystem.disableDepthTest();
             pose.popPose();
         }
 

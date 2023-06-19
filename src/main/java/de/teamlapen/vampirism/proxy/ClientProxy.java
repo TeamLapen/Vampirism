@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.client.VIngameOverlays;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.blockentity.GarlicDiffuserBlockEntity;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
+import de.teamlapen.vampirism.blocks.LogBlock;
 import de.teamlapen.vampirism.blocks.TentBlock;
 import de.teamlapen.vampirism.client.core.*;
 import de.teamlapen.vampirism.client.gui.ScreenEventHandler;

@@ -52,7 +52,7 @@ public class AlchemyTableScreen extends AbstractContainerScreen<AlchemyTableMenu
             if (j1 > 0) {
                 graphics.blit(BREWING_STAND_LOCATION, i + 73, j + 57, 176, 1, (int) (j1 * 28), 8);
                 int color = this.menu.getColor();
-                RenderSystem.setShaderColor(((color >> 16) & 0xFF) / 255f, ((color >> 8) & 0xFF) / 255f, ((color) & 0xFF) / 255f, 1F);
+                graphics.setColor(((color >> 16) & 0xFF) / 255f, ((color >> 8) & 0xFF) / 255f, ((color) & 0xFF) / 255f, 1F);
                 graphics.blit(BREWING_STAND_LOCATION, i + 104, j + 36, 176, 13, (int) (j1 * 32), 32);
             }
         }

@@ -39,6 +39,11 @@ public class SimpleList<T extends SimpleList.Entry<T>> extends VisibleObjectSele
     }
 
     @Override
+    protected void renderSelection(GuiGraphics p_283589_, int p_240142_, int p_240143_, int p_240144_, int p_240145_, int p_240146_) {
+//        super.renderSelection(p_283589_, p_240142_,p_240143_ +6, p_240144_, p_240145_, p_240146_);
+    }
+
+    @Override
     protected int getScrollbarPosition() {
         return this.x1 - 6;
     }

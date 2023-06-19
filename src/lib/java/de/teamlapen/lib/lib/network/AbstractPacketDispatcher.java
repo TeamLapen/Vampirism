@@ -1,5 +1,6 @@
 package de.teamlapen.lib.lib.network;
 
+import com.mojang.serialization.Codec;
 import de.teamlapen.lib.network.IMessage;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
@@ -102,11 +103,11 @@ public abstract class AbstractPacketDispatcher {
     }
 
     protected <MSG extends IMessage.IClientBoundMessage> void registerClientBound(Class<MSG> messageType, BiConsumer<MSG, FriendlyByteBuf> encoder, Function<FriendlyByteBuf, MSG> decoder, BiConsumer<MSG, Supplier<NetworkEvent.Context>> messageConsumer) {
-        dispatcher.registerMessage(nextID(), messageType, encoder, decoder, messageConsumer, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        dispatcher.messageBuilder(messageType, nextID(), NetworkDirection.PLAY_TO_CLIENT).encoder(encoder).decoder(decoder).consumerNetworkThread(messageConsumer).add();
     }
 
     protected <MSG extends IMessage.IServerBoundMessage> void registerServerBound(Class<MSG> messageType, BiConsumer<MSG, FriendlyByteBuf> encoder, Function<FriendlyByteBuf, MSG> decoder, BiConsumer<MSG, Supplier<NetworkEvent.Context>> messageConsumer) {
-        dispatcher.registerMessage(nextID(), messageType, encoder, decoder, messageConsumer, Optional.of(NetworkDirection.PLAY_TO_SERVER));
+        dispatcher.messageBuilder(messageType, nextID(), NetworkDirection.PLAY_TO_SERVER).encoder(encoder).decoder(decoder).consumerNetworkThread(messageConsumer).add();
     }
 
 }

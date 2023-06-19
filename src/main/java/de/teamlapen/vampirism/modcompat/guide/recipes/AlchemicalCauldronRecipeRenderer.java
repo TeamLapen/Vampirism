@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.modcompat.guide.recipes;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.maxanier.guideapi.api.IRecipeRenderer;
 import de.maxanier.guideapi.api.SubTexture;
 import de.maxanier.guideapi.api.impl.Book;
@@ -16,6 +15,7 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.recipes.AlchemicalCauldronRecipe;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
@@ -36,11 +36,11 @@ public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRend
     }
 
     @Override
-    public void draw(@NotNull PoseStack stack, RegistryAccess registryAccess, Book book, CategoryAbstract categoryAbstract, EntryAbstract entryAbstract, int guiLeft, int guiTop, int mouseX, int mouseY, @NotNull BaseScreen baseScreen, @NotNull Font fontRenderer, @NotNull IngredientCycler ingredientCycler) {
+    public void draw(@NotNull GuiGraphics guiGraphics, RegistryAccess registryAccess, Book book, CategoryAbstract categoryAbstract, EntryAbstract entryAbstract, int guiLeft, int guiTop, int mouseX, int mouseY, @NotNull BaseScreen baseScreen, @NotNull Font font, @NotNull IngredientCycler ingredientCycler) {
 
-        CRAFTING_GRID.draw(stack, guiLeft + 60, guiTop + 42);
-        baseScreen.drawCenteredStringWithoutShadow(stack, fontRenderer, UtilLib.translate(ModBlocks.ALCHEMICAL_CAULDRON.get().getDescriptionId()), guiLeft + baseScreen.xSize / 2, guiTop + 12, 0);
-        baseScreen.drawCenteredStringWithoutShadow(stack, fontRenderer, "§o" + UtilLib.translate("guideapi.text.crafting.shaped") + "§r", guiLeft + baseScreen.xSize / 2, guiTop + 14 + fontRenderer.lineHeight, 0);
+        CRAFTING_GRID.draw(guiGraphics, guiLeft + 60, guiTop + 42);
+        baseScreen.drawCenteredStringWithoutShadow(guiGraphics, font, UtilLib.translate(ModBlocks.ALCHEMICAL_CAULDRON.get().getDescriptionId()), guiLeft + baseScreen.xSize / 2, guiTop + 12, 0);
+        baseScreen.drawCenteredStringWithoutShadow(guiGraphics, font, "§o" + UtilLib.translate("guideapi.text.crafting.shaped") + "§r", guiLeft + baseScreen.xSize / 2, guiTop + 14 + font.lineHeight, 0);
 
         int outputX = guiLeft + 150;
         int outputY = guiTop + 72;
@@ -52,7 +52,7 @@ public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRend
         ItemStack itemStack = recipe.getResultItem(registryAccess);
 
 
-        GuiHelper.drawItemStack(stack, itemStack, outputX, outputY);
+        GuiHelper.drawItemStack(guiGraphics, itemStack, outputX, outputY);
         if (GuiHelper.isMouseBetween(mouseX, mouseY, outputX, outputY, 15, 15)) {
             tooltips = GuiHelper.getTooltip(itemStack);
         }
@@ -60,7 +60,7 @@ public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRend
         Ingredient input = recipe.getIngredients().get(0);
         ingredientCycler.getCycledIngredientStack(input, 0).ifPresent(inStack -> {
 
-            GuiHelper.drawItemStack(stack, inStack, in2X, in2Y);
+            GuiHelper.drawItemStack(guiGraphics, inStack, in2X, in2Y);
             if (GuiHelper.isMouseBetween(mouseX, mouseY, in2X, in2Y, 15, 15)) {
                 tooltips = GuiHelper.getTooltip(inStack);
             }
@@ -70,7 +70,7 @@ public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRend
         Ingredient liquid = recipe.getFluid().map(ingredient -> ingredient, fluidStack -> Ingredient.of(fluidStack.getFluid().getBucket()));
 
         ingredientCycler.getCycledIngredientStack(liquid, 1).ifPresent(fluidStack -> {
-            GuiHelper.drawItemStack(stack, fluidStack, in1X, in1Y);
+            GuiHelper.drawItemStack(guiGraphics, fluidStack, in1X, in1Y);
             if (GuiHelper.isMouseBetween(mouseX, mouseY, in1X, in1Y, 15, 15)) {
                 tooltips = GuiHelper.getTooltip(fluidStack);
             }
@@ -80,8 +80,8 @@ public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRend
         int y = guiTop + 120;
         if (recipe.getRequiredLevel() > 1) {
             Component level = Component.translatable("gui.vampirism.hunter_weapon_table.level", recipe.getRequiredLevel());
-            fontRenderer.draw(stack, level, guiLeft + 50, y, Color.GRAY.getRGB());
-            y += fontRenderer.lineHeight + 2;
+            guiGraphics.drawString(font, level, guiLeft + 50, y, Color.GRAY.getRGB(), false);
+            y += font.lineHeight + 2;
         }
         if (recipe.getRequiredSkills().length > 0) {
             FormattedText newLine = Component.literal("\n");
@@ -91,7 +91,7 @@ public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRend
                 skills.add(skill.getName().copy().withStyle(ChatFormatting.ITALIC));
                 skills.add(newLine);
             }
-            fontRenderer.drawWordWrap(stack, FormattedText.composite(skills), guiLeft + 50, y, 100, Color.GRAY.getRGB());
+            guiGraphics.drawWordWrap(font, FormattedText.composite(skills), guiLeft + 50, y, 100, Color.GRAY.getRGB());
         }
     }
 
