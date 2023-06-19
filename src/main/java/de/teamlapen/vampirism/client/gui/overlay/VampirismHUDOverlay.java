@@ -29,6 +29,7 @@ import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -239,22 +240,13 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 float b = (float) (screenColor & 255) / 255.0F;
                 float a = (screenPercentage / 100f) * (screenColor >> 24 & 255) / 255F;
 
-
-                RenderSystem.enableBlend();
-                //RenderSystem.disableAlphaTest();
-                RenderSystem.blendFuncSeparate(770, 771, 1, 0);
-                Tesselator tessellator = Tesselator.getInstance();
                 Matrix4f matrix = stack.last().pose();
-                BufferBuilder worldrenderer = tessellator.getBuilder();
-                worldrenderer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-                worldrenderer.vertex(matrix, 0, h, 0).color(r, g, b, a).endVertex();
-                worldrenderer.vertex(matrix, w, h, 0).color(r, g, b, a).endVertex();
-                worldrenderer.vertex(matrix, w, 0, 0).color(r, g, b, a).endVertex();
-                worldrenderer.vertex(matrix, 0, 0, 0).color(r, g, b, a).endVertex();
-
-                tessellator.end();
-                RenderSystem.disableBlend();
-                //RenderSystem.enableAlphaTest();
+                VertexConsumer buffer = event.getGuiGraphics().bufferSource().getBuffer(RenderType.guiOverlay());
+                buffer.vertex(matrix, 0, h, 0).color(r, g, b, a).endVertex();
+                buffer.vertex(matrix, w, h, 0).color(r, g, b, a).endVertex();
+                buffer.vertex(matrix, w, 0, 0).color(r, g, b, a).endVertex();
+                buffer.vertex(matrix, 0, 0, 0).color(r, g, b, a).endVertex();
+                event.getGuiGraphics().flush();
 
 
                 /*

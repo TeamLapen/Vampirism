@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import com.mojang.blaze3d.vertex.BufferBuilder;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.IRadialMenuSlot;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenu;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenuSlot;
@@ -66,11 +65,12 @@ public class SelectActionRadialScreen<T extends IFactionPlayer<T>> extends DualS
     private static void drawActionPart(IAction<?> action, GuiGraphics graphics, int posX, int posY, int size, boolean transparent) {
         ResourceLocation id = RegUtil.id(action);
         ResourceLocation texture = new ResourceLocation(id.getNamespace(), "textures/actions/" + id.getPath() + ".png");
+        graphics.setColor(1,1,1,1);
         graphics.blit(texture, posX, posY, 0, 0, 0, 16, 16, 16, 16);
     }
 
     @Override
-    public void drawSlice(IRadialMenuSlot<IAction<?>> slot, boolean highlighted, BufferBuilder buffer, float x, float y, float z, float radiusIn, float radiusOut, float startAngle, float endAngle, int r, int g, int b, int a) {
+    public void drawSlice(IRadialMenuSlot<IAction<?>> slot, boolean highlighted, GuiGraphics buffer, float x, float y, float z, float radiusIn, float radiusOut, float startAngle, float endAngle, int r, int g, int b, int a) {
         float actionPercentage = actionHandler.getPercentageForAction((IAction) slot.primarySlotIcon());
         if (((IAction<T>)slot.primarySlotIcon()).canUse(this.player) != IAction.PERM.ALLOWED) {
             actionPercentage = -1;

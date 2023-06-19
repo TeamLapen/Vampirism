@@ -99,7 +99,7 @@ public class TaskInstance implements ITaskInstance {
     private TaskInstance(@NotNull UUID taskGiver, @NotNull ResourceKey<Task> task, @NotNull UUID instanceId, @NotNull Map<ResourceLocation, Integer> stats, @NotNull ITaskRewardInstance taskRewardInstance, long taskDuration, boolean accepted, long taskTimeStamp) {
         this.taskGiver = taskGiver;
         this.task = task;
-        this.stats = stats;
+        this.stats = new HashMap<>(stats);
         this.accepted = accepted;
         this.taskTimeStamp = taskTimeStamp;
         this.instanceId = instanceId;

@@ -88,35 +88,35 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
 
         public void renderBackground(GuiGraphics graphics, Minecraft minecraft, int pTop, int pLeft, int pWidth, int pHeight, int mouseX, int mouseY, float partialTicks) {
             if (menu.isCompleted(this.getItem())) {
-                RenderSystem.setShaderColor(0.4f, 0.4f, 0.4f, 1);
+                graphics.setColor(0.4f, 0.4f, 0.4f, 1);
             } else {
                 boolean isUnique = this.getItem().isUnique(menu.getRegistry());
                 boolean remainsTime = this.getItem().getTaskTimeStamp() - minecraft.level.getGameTime() > 0;
                 if (menu.canCompleteTask(this.getItem())) {
                     if (isUnique) {
-                        RenderSystem.setShaderColor(1f, 0.855859375f, 0, 1);
+                        graphics.setColor(1f, 0.855859375f, 0, 1);
                     } else {
-                        RenderSystem.setShaderColor(0, 0.9f, 0, 1);
+                        graphics.setColor(0, 0.9f, 0, 1);
                     }
                 } else if (menu.isTaskNotAccepted(this.getItem())) {
                     if (isUnique) {
-                        RenderSystem.setShaderColor(0.64f, 0.57f, 0.5f, 1);
+                        graphics.setColor(0.64f, 0.57f, 0.5f, 1);
                     } else {
-                        RenderSystem.setShaderColor(0.55f, 0.55f, 0.55f, 1);
+                        graphics.setColor(0.55f, 0.55f, 0.55f, 1);
                     }
                 } else if (!isUnique && !remainsTime) {
-                    RenderSystem.setShaderColor(1f, 85 / 255f, 85 / 255f, 1);
+                    graphics.setColor(1f, 85 / 255f, 85 / 255f, 1);
                 } else {
                     if (isUnique) {
-                        RenderSystem.setShaderColor(1f, 0.9f, 0.6f, 1f);
+                        graphics.setColor(1f, 0.9f, 0.6f, 1f);
                     } else {
-                        RenderSystem.setShaderColor(0.85f, 1f, 0.85f, 1f);
+                        graphics.setColor(0.85f, 1f, 0.85f, 1f);
                     }
                 }
             }
             graphics.blit(TASKMASTER_GUI_TEXTURE, pLeft, pTop, 0, 17, 187, Math.min(pWidth - 1, 135), pHeight, 256, 256);
             graphics.blit(TASKMASTER_GUI_TEXTURE, pLeft + pWidth - Math.min(pWidth - 1, 135), pTop, 0, 17 + (135 - Math.min(pWidth - 1, 134)), 187, Math.min(pWidth - 1, 135), pHeight, 256, 256);
-            RenderSystem.setShaderColor(1, 1, 1, 1);
+            graphics.setColor(1, 1, 1, 1);
         }
 
         @Override
@@ -443,7 +443,6 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
             @Override
             public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float p_renderButton_3_) {
                 TaskMenu.TaskAction action = menu.buttonAction(getItem());
-                RenderSystem.enableDepthTest();
                 int j = switch (action) {
                     case ACCEPT -> 190;
                     case COMPLETE -> 176;
@@ -451,7 +450,6 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
                 };
 
                 graphics.blit(TASKMASTER_GUI_TEXTURE, this.getX(), this.getY(), (float) j, (float) (this.isHovered ? 13 : 0), this.width, this.height, 256, 256);
-                RenderSystem.disableDepthTest();
 
                 if (this.isHovered) {
                     this.setTooltip(Tooltip.create(Component.translatable(action.getTranslationKey())));

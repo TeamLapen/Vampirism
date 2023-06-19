@@ -1,10 +1,7 @@
 package de.teamlapen.vampirism.client.gui.screens.radial.edit;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.*;
 import de.teamlapen.lib.lib.client.gui.components.SimpleList;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.DrawCallback;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.GuiRadialMenu;
@@ -16,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
@@ -61,6 +59,8 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
             this.wasGuiHidden = Minecraft.getInstance().options.hideGui;
         }
         Minecraft.getInstance().options.hideGui = true;
+
+        updateExcludedList();
     }
 
     /**
@@ -68,19 +68,10 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
      */
     @Override
     public void renderBackground(@NotNull GuiGraphics graphics) {
-        double width = 140;
-        Tesselator tesselator = Tesselator.getInstance();
-        BufferBuilder bufferbuilder = tesselator.getBuilder();
-        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
-        RenderSystem.setShaderTexture(0, BACKGROUND_LOCATION);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        float f = 32.0F;
-        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-        bufferbuilder.vertex(0.0D, (double) this.height, 0.0D).uv(0.0F, (float) this.height / f + (float) 0).color(64, 64, 64, 255).endVertex();
-        bufferbuilder.vertex((double) width, (double) this.height, 0.0D).uv((float) width / f, (float) this.height / f + (float) 0).color(64, 64, 64, 255).endVertex();
-        bufferbuilder.vertex((double) width, 0.0D, 0.0D).uv((float) width / 32.0F, (float) 0).color(64, 64, 64, 255).endVertex();
-        bufferbuilder.vertex(0.0D, 0.0D, 0.0D).uv(0.0F, (float) 0).color(64, 64, 64, 255).endVertex();
-        tesselator.end();
+        graphics.setColor(0.25F, 0.25F, 0.25F, 1.0F);
+        int i = 32;
+        graphics.blit(BACKGROUND_LOCATION, 0, 0, 0, 0.0F, 0.0F, 140, this.height, i, i);
+        graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         //noinspection UnstableApiUsage
         net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.ScreenEvent.BackgroundRendered(this, graphics));
     }
@@ -156,9 +147,6 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
                 if (this.movingItem == null) {
                     this.removeDummyItems();
                 }
-                if(this.movingItem != null) {
-                    this.ordering.exclude(this.movingItem);
-                }
                 syncOrdering();
             }
         } else {
@@ -185,7 +173,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     }
 
     @Override
-    public void drawSlice(IRadialMenuSlot<ItemWrapper<T>> slot, boolean highlighted, BufferBuilder buffer, float x, float y, float z, float radiusIn, float radiusOut, float startAngle, float endAngle, int r, int g, int b, int a) {
+    public void drawSlice(IRadialMenuSlot<ItemWrapper<T>> slot, boolean highlighted, GuiGraphics buffer, float x, float y, float z, float radiusIn, float radiusOut, float startAngle, float endAngle, int r, int g, int b, int a) {
         if (this.movingItem == null && !slot.primarySlotIcon().getOptional().map(this.isEnabled).orElse(true)) {
             r = 80;
         }
@@ -197,7 +185,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(graphics);
         graphics.drawCenteredString(this.font, Component.translatable("Excluded:"), 70, 5, -1);
         super.render(graphics, mouseX, mouseY, partialTicks);
@@ -266,8 +254,8 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
                 int i = this.getLeft();
                 int j = this.getTop();
                 graphics.pose().pushPose();
-                graphics.pose().translate(i, j, 100);
-                graphics.fillGradient(0, 0, 0, this.getWidth(), this.getHeight(), 0xd0000000, 0xd0000000);
+                graphics.pose().translate(i, j, 200);
+                graphics.fillGradient(0, 0, this.getWidth(), this.getHeight(), -1072689136, -804253680);
                 graphics.drawCenteredString(Minecraft.getInstance().font, Component.translatable("Place here to exclude"), this.width / 2, this.height / 2, 0xFFFFFF);
                 graphics.pose().popPose();
             }

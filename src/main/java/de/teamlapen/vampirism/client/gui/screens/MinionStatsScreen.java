@@ -109,7 +109,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
                 if (this.visible) {
                     this.isHovered = mouseX >= this.getX() && mouseY >= this.getY() && mouseX < this.getX() + this.width && mouseY < this.getY() + this.height;
                     if (!this.active) {
-                        RenderSystem.setShaderColor(0.65f, 0.65f, 0.65f, 1);
+                        graphics.setColor(0.65f, 0.65f, 0.65f, 1);
                     }
                     super.renderWidget(graphics, mouseX, mouseY, partialTicks);
                 }
