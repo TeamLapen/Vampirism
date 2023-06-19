@@ -38,7 +38,6 @@ public class AppearanceScreen<T extends LivingEntity> extends Screen {
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(graphics);
 
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         this.renderGuiBackground(graphics);
 
         this.drawTitle(graphics);

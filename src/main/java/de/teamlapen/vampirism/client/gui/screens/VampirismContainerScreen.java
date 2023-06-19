@@ -200,8 +200,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
     @Override
     protected void renderBg(@NotNull GuiGraphics graphics, float v, int i, int i1) {
         this.renderBackground(graphics);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         var texture = this.menu.areRefinementsAvailable() ? BACKGROUND_REFINEMENTS : BACKGROUND;
         graphics.blit(texture, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
         InventoryScreen.renderEntityInInventoryFollowsMouse(graphics, this.leftPos + 31, this.topPos + 72, 30, (float) (this.leftPos + 10) - this.oldMouseX, (float) (this.topPos + 75 - 50) - this.oldMouseY, this.minecraft.player);

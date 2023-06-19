@@ -42,7 +42,6 @@ public class ActionDurationOverlay implements IGuiOverlay {
                             //render gray transparent background for remaining duration
                             graphics.fillGradient(x, y + perc, x + 16, y + 16, 0x44888888/*Color.GRAY - 0xBB000000 */, 0x44888888/*Color.GRAY - 0xBB000000 */);
                             //render action icon transparent
-                            RenderSystem.enableBlend();
                             graphics.setColor(1, 1, 1, 0.5f);
                             graphics.blit(loc, x, y, 0, 0, 0, 16, 16, 16, 16);
                             graphics.setColor(1, 1, 1, 1f);

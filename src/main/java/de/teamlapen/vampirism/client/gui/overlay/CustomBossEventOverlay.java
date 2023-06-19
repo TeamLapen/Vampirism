@@ -44,9 +44,6 @@ public class CustomBossEventOverlay implements IGuiOverlay {
 
     @Override
     public void render(ForgeGui gui, @NotNull GuiGraphics graphics, float partialTicks, int width, int height) {
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.enableBlend();
-
         int i = Minecraft.getInstance().getWindow().getGuiScaledWidth();
         int j = 12 + ((BossOverlayGuiAccessor) this.client.gui.getBossOverlay()).getMapBossInfos().size() * (10 + this.client.font.lineHeight);
         for (MultiBossEvent value : bossInfoMap.values()) {
@@ -62,7 +59,6 @@ public class CustomBossEventOverlay implements IGuiOverlay {
                 break;
             }
         }
-        RenderSystem.disableBlend();
     }
 
     private void render(@NotNull GuiGraphics graphics, int k, int j, @NotNull MultiBossEvent value) {

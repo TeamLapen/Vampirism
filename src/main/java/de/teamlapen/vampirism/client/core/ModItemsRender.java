@@ -86,13 +86,12 @@ public class ModItemsRender {
                 @Override
                 public boolean render(GuiGraphics graphics, Font font, ItemStack stack, int xOffset, int yOffset) {
                     ((IVampirismCrossbow) stack.getItem()).getAmmunition(stack).ifPresent(ammo -> {
-                        PoseStack posestack = RenderSystem.getModelViewStack();
+                        PoseStack posestack = graphics.pose();
                         posestack.pushPose();
                         posestack.translate(xOffset, yOffset + 8, 0);
                         posestack.scale(0.5f, 0.5f, 0.5f);
                         graphics.renderItem(ammo.getDefaultInstance(), 0, 0);
                         posestack.popPose();
-                        RenderSystem.applyModelViewMatrix();
                     });
                     return false;
                 }

@@ -42,6 +42,5 @@ public class ModPacketDispatcher extends AbstractPacketDispatcher {
         registerServerBound(ServerboundToggleMinionTaskLock.class, ServerboundToggleMinionTaskLock::encode, ServerboundToggleMinionTaskLock::decode, ServerboundToggleMinionTaskLock::handle);
         registerServerBound(ServerboundDeleteRefinementPacket.class, ServerboundDeleteRefinementPacket::encode, ServerboundDeleteRefinementPacket::decode, ServerboundDeleteRefinementPacket::handle);
         registerServerBound(ServerboundSelectAmmoTypePacket.class, ServerboundSelectAmmoTypePacket::encode, ServerboundSelectAmmoTypePacket::decode, ServerboundSelectAmmoTypePacket::handle);
-
     }
 }

@@ -88,9 +88,9 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<AlchemyTableR
         this.arrow.draw(graphics, 73 - 9 - 2, 57 - 10 - 2);
 
         int color = OilUtils.getOil(RecipeUtil.getResultItem(recipe)).getColor();
-        RenderSystem.setShaderColor(((color >> 16) & 0xFF) / 255f, ((color >> 8) & 0xFF) / 255f, ((color) & 0xFF) / 255f, 1F);
+        graphics.setColor(((color >> 16) & 0xFF) / 255f, ((color >> 8) & 0xFF) / 255f, ((color) & 0xFF) / 255f, 1F);
         this.pool.draw(graphics, 104 - 9 - 2, 36 - 10 - 2);
-        RenderSystem.setShaderColor(1, 1, 1, 1);
+        graphics.setColor(1, 1, 1, 1);
 
         int x = 2;
         int y = 80;

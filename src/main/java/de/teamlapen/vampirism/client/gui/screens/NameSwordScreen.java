@@ -88,7 +88,6 @@ public class NameSwordScreen extends Screen {
 
 
         super.render(graphics, mouseX, mouseY, partialTicks);
-        RenderSystem.disableBlend();
     }
 
     @Override

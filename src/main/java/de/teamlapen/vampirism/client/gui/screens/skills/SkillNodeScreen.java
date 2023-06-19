@@ -120,14 +120,12 @@ public class SkillNodeScreen {
     public void draw(@NotNull GuiGraphics graphics, int i, int j) {
         PoseStack pose = graphics.pose();
         pose.pushPose();
-        pose.translate(0, 0, 50);
         SkillNodeState state = getState();
         if (state == SkillNodeState.HIDDEN) return;
         int width = getNodeWidth();
 
-        //center
-        pose.pushPose();
-        pose.translate(-width / 2f, 0, 0);
+        // center and in front of the connectors
+        pose.translate(-width / 2f, 0, 50);
 
         int x = i + getNodeStart();
         //draw skill background
@@ -157,7 +155,6 @@ public class SkillNodeScreen {
         for (SkillNodeScreen child : this.children) {
             child.draw(graphics, i, j);
         }
-        pose.popPose();
     }
 
     public void drawConnectivity(@NotNull GuiGraphics graphics, int startX, int startY, boolean outerLine) {
@@ -208,8 +205,6 @@ public class SkillNodeScreen {
     public void drawHover(@NotNull GuiGraphics graphics, double mouseX, double mouseY, float fade, int scrollX, int scrollY) {
         SkillNodeState state = getState();
         if (state == SkillNodeState.HIDDEN) return;
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
         ISkill<?>[] elements = this.skillNode.getElements();
         scrollX -= getNodeWidth() / 2f;
 

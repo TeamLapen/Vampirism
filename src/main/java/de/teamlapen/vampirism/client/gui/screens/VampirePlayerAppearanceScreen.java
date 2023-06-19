@@ -105,9 +105,9 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
 
     @Override
     protected void renderGuiBackground(@NotNull GuiGraphics graphics) {
-        RenderSystem.setShaderColor(color[0], color[1], color[2], 1f);
+        graphics.setColor(color[0], color[1], color[2], 1f);
         super.renderGuiBackground(graphics);
-        RenderSystem.setShaderColor(1, 1, 1, 1);
+        graphics.setColor(1, 1, 1, 1);
     }
 
     private void eye(int eyeType) {
