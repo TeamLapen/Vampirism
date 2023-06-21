@@ -1,5 +1,5 @@
 task apiJar(type: Jar, dependsOn: 'classes') {
-    classifier 'api'
+    archiveClassifier = 'api'
     from sourceSets.api.output
 //    afterEvaluate { finalizedBy reobfApiJar }
 }
@@ -8,19 +8,19 @@ task apiJar(type: Jar, dependsOn: 'classes') {
 task deobfJar(type: Jar) {
     description = 'Creates a JAR containing the non-obfuscated compiled code.'
     from sourceSets.main.output
-    classifier = "deobf"
+    archiveClassifier = "deobf"
 }
 
 task sourcesJar(type: Jar) {
     from sourceSets.main.allJava
     from sourceSets.api.allJava
-    classifier = 'sources'
+    archiveClassifier = 'sources'
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
     description = 'Creates a JAR containing the JavaDocs.'
     from javadoc.destinationDir
-    classifier = 'javadoc'
+    archiveClassifier = 'javadoc'
 }
 
 javadoc {
