@@ -29,16 +29,12 @@ public class ProgressBar extends AbstractWidget {
         Minecraft minecraft = Minecraft.getInstance();
         Font font = minecraft.font;
         int i = this.getTextureY();
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.enableDepthTest();
-        graphics.blitWithBorder(WIDGETS, this.getX(), this.getY(), 0, 46 + i * 20, this.width, 20, 200, 20, 3);
+        graphics.blitWithBorder(WIDGETS, this.getX(), this.getY(), 0, i, this.width, 20, 200, 20, 3);
 
         graphics.setColor((color >> 16) / 256f, ((color >> 8) & 0xFF) / 256f, (color & 0xFF) / 256f, this.alpha);
         if (this.active) {
             graphics.blit(WIDGETS, this.getX() + 3, this.getY() + 3, 0, 32, (int) ((progress) * (this.width - 6)), 14);
         }
-//        this.renderBg(matrixStack, minecraft, mouseX, mouseY);
         int j = getFGColor();
         graphics.drawCenteredString(font, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, j | Mth.ceil(this.alpha * 255.0F) << 24);
 
