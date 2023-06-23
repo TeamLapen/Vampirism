@@ -292,7 +292,7 @@ public class LootTablesGenerator {//TODO 1.20 move to de.teamlapen.vampirism.dat
             this.dropSelf(ModBlocks.TOMBSTONE2.get());
             this.add(ModBlocks.TOMBSTONE3.get(), context -> createSinglePropConditionTable(context, VampirismSplitBlock.PART, VampirismSplitBlock.Part.MAIN));
             this.dropSelf(ModBlocks.GRAVE_CAGE.get());
-            this.add(ModBlocks.CURSED_GRASS.get(), createSingleItemTable(ModBlocks.CURSED_EARTH.get()));
+            this.add(ModBlocks.CURSED_GRASS.get(), block -> createSingleItemTableWithSilkTouch(block, ModBlocks.CURSED_EARTH.get()));
             this.dropSelf(ModBlocks.DARK_SPRUCE_LOG.get());
             this.dropPottedContents(ModBlocks.POTTED_CURSED_ROOTS.get());
             this.dropSelf(ModBlocks.CURSED_SPRUCE_LOG.get());
