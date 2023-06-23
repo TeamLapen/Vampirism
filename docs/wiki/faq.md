@@ -32,9 +32,8 @@ As a vampire look for an [Altar of Cleansing](content/blocks.mdx#altar-of-cleans
 #### How do I get vampire books
 Vampire books can be found around the world (e.g. in mineshafts or vampire dungeons). They have cryptic names and content.
 
-#### Only player with the OP role can do certain actions (biting/using action/infecting)
-Then you need to give the players the appropriate permissions in your permission plugin. See [Permissions](./permissions.md)
-Should you not use any permission plugin this is most likely a bug in the server software, and you need to add a permission plugin yourself.
+#### You do not have the permission to do this action
+Vampirism uses Forge's permission system to allow / disallow certain actions. Take a look at [Permissions](./permissions.md#actions-etc-can-not-be-used-on-a-server-when-not-being-op) for detailed information.
 
 ### I have another question
 1) Checkout this wiki  
