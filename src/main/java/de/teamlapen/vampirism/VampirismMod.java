@@ -274,6 +274,7 @@ public class VampirismMod {
         event.enqueueWork(TerraBlenderCompat::registerBiomeProviderIfPresentUnsafe);
 //        VanillaStructureModifications.addVillageStructures(RegistryAccess.EMPTY);
 
+        TelemetryCollector.execute();
     }
 
     private void setupClient(@NotNull FMLClientSetupEvent event) {
