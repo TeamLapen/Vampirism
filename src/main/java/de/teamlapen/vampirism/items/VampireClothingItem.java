@@ -4,6 +4,7 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.client.model.armor.*;
@@ -95,10 +96,10 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
                 player.addEffect(new MobEffectInstance(ModEffects.POISON.get(), 20, 1));
             }
         }
-        if(stack.getItem() == ModItems.VAMPIRE_CLOTHING_CROWN.get() && stack.hasCustomHoverName() && "10000000".equals(stack.getHoverName().getString())){
+        if (stack.getItem() == ModItems.VAMPIRE_CLOTHING_CROWN.get() && stack.hasCustomHoverName() && "10000000".equals(stack.getHoverName().getString()) && VampirismAPI.settings().isSettingTrue("vampirism:10000000d")) {
             UtilLib.spawnParticlesAroundEntity(player, ParticleTypes.ELECTRIC_SPARK, 0.5, 4);
-            if(player.tickCount % 16 == 4) {
-                player.addEffect(new MobEffectInstance(MobEffects.LEVITATION,30,0));
+            if (player.tickCount % 16 == 4) {
+                player.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 30, 0));
                 player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 100, 2));
             }
         }
