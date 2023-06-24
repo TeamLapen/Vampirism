@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkillManager;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVisionRegistry;
 import de.teamlapen.vampirism.api.items.IExtendedBrewingRecipeRegistry;
+import de.teamlapen.vampirism.api.settings.ISettingsProvider;
 import de.teamlapen.vampirism.api.world.IVampirismWorld;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
@@ -38,6 +39,7 @@ public class VampirismAPI {
     private static IActionManager actionManager;
     private static IEntityActionManager entityActionManager;
     private static IExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistry;
+    private static ISettingsProvider settings;
 
     public static ISkillManager skillManager() {
         return skillManager;
@@ -81,6 +83,10 @@ public class VampirismAPI {
         return extendedBrewingRecipeRegistry;
     }
 
+    public static ISettingsProvider settings() {
+        return settings;
+    }
+
     /**
      * Set up the API registries
      * FOR INTERNAL USAGE ONLY
@@ -89,7 +95,7 @@ public class VampirismAPI {
      */
     @ApiStatus.Internal
     public static void setUpRegistries(IFactionRegistry factionRegistryIn, ISundamageRegistry sundamageRegistryIn, IVampirismEntityRegistry entityRegistryIn, IActionManager actionManagerIn, ISkillManager skillManagerIn,
-                                       IVampireVisionRegistry vampireVisionRegistryIn, IEntityActionManager entityActionManagerIn, IExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistryIn) {
+                                       IVampireVisionRegistry vampireVisionRegistryIn, IEntityActionManager entityActionManagerIn, IExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistryIn, ISettingsProvider settingsIn) {
         if (INIT) throw new IllegalStateException("Vampirism API can only be setup once");
         factionRegistry = factionRegistryIn;
         sundamageRegistry = sundamageRegistryIn;
@@ -99,6 +105,7 @@ public class VampirismAPI {
         vampireVisionRegistry = vampireVisionRegistryIn;
         entityActionManager = entityActionManagerIn;
         extendedBrewingRecipeRegistry = extendedBrewingRecipeRegistryIn;
+        settings = settingsIn;
         INIT = true;
     }
 
@@ -109,7 +116,7 @@ public class VampirismAPI {
     @SuppressWarnings("EmptyMethod")
     @ApiStatus.Internal
     public static void onSetupComplete() {
-
+        settings.syncSettingsCache();
     }
 
     /**

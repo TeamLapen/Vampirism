@@ -43,6 +43,7 @@ import de.teamlapen.vampirism.entity.player.vampire.NightVision;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.items.VampireRefinementItem;
 import de.teamlapen.vampirism.items.crossbow.CrossbowArrowHandler;
+import de.teamlapen.vampirism.misc.SettingsProvider;
 import de.teamlapen.vampirism.misc.VampirismLogger;
 import de.teamlapen.vampirism.modcompat.IMCHandler;
 import de.teamlapen.vampirism.modcompat.terrablender.TerraBlenderCompat;
@@ -217,7 +218,7 @@ public class VampirismMod {
      */
     private void prepareAPI() {
 
-        VampirismAPI.setUpRegistries(new FactionRegistry(), new SundamageRegistry(), new VampirismEntityRegistry().setDefaultConvertingHandlerCreator(DefaultConvertingHandler::new), new ActionManager(), new SkillManager(), new VampireVisionRegistry(), new ActionManagerEntity(), new ExtendedBrewingRecipeRegistry());
+        VampirismAPI.setUpRegistries(new FactionRegistry(), new SundamageRegistry(), new VampirismEntityRegistry().setDefaultConvertingHandlerCreator(DefaultConvertingHandler::new), new ActionManager(), new SkillManager(), new VampireVisionRegistry(), new ActionManagerEntity(), new ExtendedBrewingRecipeRegistry(), new SettingsProvider(REFERENCE.SETTINGS_API, REFERENCE.SETTINGS_API_VERSION));
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> proxy::setupAPIClient);
 
         VReference.VAMPIRE_FACTION = VampirismAPI.factionRegistry()
@@ -288,7 +289,7 @@ public class VampirismMod {
         MinecraftForge.EVENT_BUS.register(new ModEntityEventHandler());
         MinecraftForge.EVENT_BUS.addListener(ModLootTables::onLootLoad);
 
-        SupporterManager.getInstance().initAsync();
+        SupporterManager.init();
         VampireBookManager.getInstance().init();
         ModEntitySelectors.registerSelectors();
         event.enqueueWork(TerraBlenderCompat::registerBiomeProviderIfPresentUnsafe);
