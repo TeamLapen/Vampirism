@@ -5,7 +5,6 @@ import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.network.AbstractPacketDispatcher;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.lib.lib.util.IInitListener;
-import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.lib.util.OptifineHandler;
 import de.teamlapen.vampirism.api.VReference;
@@ -68,7 +67,6 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.*;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -95,19 +93,11 @@ public class VampirismMod {
     public static boolean inDataGen = false;
 
     private final @NotNull RegistryManager registryManager = new RegistryManager();
-    private VersionChecker.VersionInfo versionInfo;
 
 
     public VampirismMod() {
         instance = this;
         checkEnv();
-
-        Optional<? extends net.minecraftforge.fml.ModContainer> opt = ModList.get().getModContainerById(REFERENCE.MODID);
-        if (opt.isPresent()) {
-            REFERENCE.VERSION = opt.get().getModInfo().getVersion();
-        } else {
-            LOGGER.warn("Cannot get version from mod info");
-        }
 
         IEventBus modbus = FMLJavaModLoadingContext.get().getModEventBus();
 
@@ -141,11 +131,6 @@ public class VampirismMod {
         if (OptifineHandler.isOptifineLoaded()) {
             LOGGER.warn("Using Optifine. Expect visual glitches and reduces blood vision functionality if using shaders.");
         }
-    }
-
-    public VersionChecker.VersionInfo getVersionInfo() {
-
-        return versionInfo;
     }
 
     public void onAddReloadListenerEvent(@NotNull AddReloadListenerEvent event) {
@@ -277,12 +262,6 @@ public class VampirismMod {
     private void setup(final @NotNull FMLCommonSetupEvent event) {
         dispatcher.registerPackets();
         onInitStep(IInitListener.Step.COMMON_SETUP, event);
-
-        if (!VampirismConfig.COMMON.versionCheck.get()) {
-            versionInfo = new VersionChecker.VersionInfo(REFERENCE.VERSION);
-        } else {
-            versionInfo = VersionChecker.executeVersionCheck(REFERENCE.VERSION_UPDATE_FILE, REFERENCE.VERSION, !inDev && VampirismConfig.COMMON.collectStats.get());
-        }
 
         MinecraftForge.EVENT_BUS.register(new ModPlayerEventHandler());
 

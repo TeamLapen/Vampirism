@@ -50,7 +50,6 @@ public class ModCommands {
             dispatcher.register(
                     LiteralArgumentBuilder.<CommandSourceStack>literal(s)
                             .then(BindActionCommand.register())
-                            .then(VersionCheckCommand.register())
                             .then(CurrentDimensionCommand.register())
                             .then(EyeCommand.register())
                             .then(FangCommand.register())

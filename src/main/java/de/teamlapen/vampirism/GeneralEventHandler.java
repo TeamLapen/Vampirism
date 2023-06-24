@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism;
 
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModLootTables;
@@ -48,24 +47,9 @@ public class GeneralEventHandler {
 
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.@NotNull PlayerLoggedInEvent event) {
-        VersionChecker.VersionInfo versionInfo = VampirismMod.instance.getVersionInfo();
-        if (!versionInfo.isChecked()) LOGGER.warn("Version check is not finished yet");
-
         Player player = event.getEntity();
         boolean isAdminLikePlayer = !ServerLifecycleHooks.getCurrentServer().isDedicatedServer() || UtilLib.isPlayerOp(player);
 
-        if (VampirismConfig.COMMON.versionCheck.get() && versionInfo.isNewVersionAvailable()) {
-            if (isAdminLikePlayer || player.getRandom().nextInt(5) == 0) {
-                if (player.getRandom().nextInt(4) == 0) {
-                    VersionChecker.Version newVersion = versionInfo.getNewVersion();
-                    player.sendSystemMessage(Component.translatable("text.vampirism.outdated", versionInfo.getCurrentVersion().name, newVersion.name));
-                    Component download = Component.translatable("text.vampirism.update_message.download").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, newVersion.getUrl() == null ? versionInfo.getHomePage() : newVersion.getUrl())).withUnderlined(true).applyFormat(ChatFormatting.BLUE));
-                    Component changelog = Component.translatable("text.vampirism.update_message.changelog").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/vampirism changelog")).withUnderlined(true));
-                    Component modpage = Component.translatable("text.vampirism.update_message.modpage").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, versionInfo.getHomePage())).withUnderlined(true).applyFormat(ChatFormatting.BLUE));
-                    player.sendSystemMessage(Component.literal("").append(download).append(Component.literal(" ")).append(changelog).append(Component.literal(" ")).append(modpage));
-                }
-            }
-        }
         if (isAdminLikePlayer) {
             //TODO 1.19
 //            List<String> mods = IntegrationsNotifier.shouldNotifyAboutIntegrations();

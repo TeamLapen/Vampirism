@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism;
 
+import de.teamlapen.lib.util.QualifiedVersion;
 import net.minecraft.resources.ResourceLocation;
-import org.apache.maven.artifact.versioning.ArtifactVersion;
-import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
+import net.minecraftforge.fml.ModList;
 
 /**
  * Class to store constants and stuff
@@ -42,6 +42,6 @@ public class REFERENCE {
     public final static ResourceLocation HUNTER_PLAYER_KEY = new ResourceLocation(MODID, "hunter");
     public final static ResourceLocation EXTENDED_CREATURE_KEY = new ResourceLocation(MODID, "iextendedcreature");
     public final static ResourceLocation WORLD_CAP_KEY = new ResourceLocation(MODID, "world");
-    public static ArtifactVersion VERSION = new DefaultArtifactVersion("0.0.0");
+    public static final QualifiedVersion VERSION = new QualifiedVersion(ModList.get().getModContainerById(MODID).map(s -> s.getModInfo().getVersion().toString()).orElse("1.0.0"));
 
 }

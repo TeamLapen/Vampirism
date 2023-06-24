@@ -301,7 +301,6 @@ public class VampirismConfig {
      */
     public static class Common {
 
-        public final ForgeConfigSpec.BooleanValue versionCheck;
         public final ForgeConfigSpec.BooleanValue collectStats;
         public final ForgeConfigSpec.ConfigValue<String> integrationsNotifier;
         public final ForgeConfigSpec.BooleanValue optifineBloodvisionWarning;
@@ -327,7 +326,6 @@ public class VampirismConfig {
         Common(ForgeConfigSpec.@NotNull Builder builder) {
             builder.comment("Common configuration settings. Most other configuration can be found in the world (server)configuration folder")
                     .push("common");
-            versionCheck = builder.comment("Check for new versions of Vampirism on startup").define("versionCheck", true);
             collectStats = builder.comment("Send mod version, MC version and mod count to mod author").define("collectStats", true);
 
             builder.push("internal");
