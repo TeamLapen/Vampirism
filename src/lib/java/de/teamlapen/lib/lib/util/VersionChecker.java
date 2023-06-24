@@ -29,6 +29,7 @@ import java.util.Map;
  * Uses an update file format which is an extension to forge one's, so you can use the same file for forge, but have additional information here e.g. download link.
  * Requires a versioning system, which is like Vampirism's
  */
+@Deprecated
 public class VersionChecker implements Runnable {
     private final static Logger LOGGER = LogManager.getLogger();
     private static final int MAX_HTTP_REDIRECTS = Integer.getInteger("http.maxRedirects", 20);

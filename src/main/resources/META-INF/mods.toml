@@ -39,7 +39,7 @@ license = "${mod_license}"
     description='''${mod_description}'''
     displayURL="${mod_url}"
     logoFile="logo.png"
-    updateJSONURL="https://maxanier.de/projects/vampirism/versions.json"
+    updateJSONURL="https://api.modrinth.com/updates/vampirism/forge_updates.json"
     [[dependencies.${mod_id}]]
         modId="forge"
         mandatory=true
