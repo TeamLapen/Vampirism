@@ -4,6 +4,7 @@ package de.teamlapen.vampirism.world;
 import com.google.common.collect.Maps;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.EnumStrength;
+import de.teamlapen.vampirism.api.VampirismCapabilities;
 import de.teamlapen.vampirism.api.world.IVampirismWorld;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
@@ -32,8 +33,7 @@ import java.util.stream.Stream;
 public class VampirismWorld implements IVampirismWorld {
 
     private static final Logger LOGGER = LogManager.getLogger();
-    public static final Capability<IVampirismWorld> CAP = CapabilityManager.get(new CapabilityToken<>() {
-    });
+    public static final Capability<IVampirismWorld> CAP = VampirismCapabilities.WORLD;
 
     /**
      * Always prefer #getOpt

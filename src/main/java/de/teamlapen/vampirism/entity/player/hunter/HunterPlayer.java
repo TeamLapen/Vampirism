@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.critereon.VampireActionCriterionTrigger;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.VampirismCapabilities;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
@@ -55,8 +56,7 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
 
     private static final Logger LOGGER = LogManager.getLogger(HunterPlayer.class);
 
-    public static final Capability<IHunterPlayer> CAP = CapabilityManager.get(new CapabilityToken<>() {
-    });
+    public static final Capability<IHunterPlayer> CAP = VampirismCapabilities.HUNTER_PLAYER;
 
     /**
      * Don't call before the construction event of the player entity is finished

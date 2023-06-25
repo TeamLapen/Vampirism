@@ -16,12 +16,11 @@ import de.teamlapen.vampirism.api.world.IVampirismWorld;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+
+import static de.teamlapen.vampirism.api.VampirismCapabilities.*;
 
 /**
  * Class for core api methods
@@ -30,12 +29,6 @@ import org.jetbrains.annotations.NotNull;
 public class VampirismAPI {
 
     private static boolean INIT;
-    private static final Capability<IExtendedCreatureVampirism> CAP_CREATURE = CapabilityManager.get(new CapabilityToken<>() {
-    });
-    private static final Capability<IFactionPlayerHandler> CAP_FACTION_HANDLER_PLAYER = CapabilityManager.get(new CapabilityToken<>(){});
-    private static final Capability<IVampirismWorld> CAP_WORLD = CapabilityManager.get(new CapabilityToken<>(){});
-    private static final Capability<IVampirePlayer> CAP_VAMPIRE = CapabilityManager.get(new CapabilityToken<>(){});
-    private static final Capability<IHunterPlayer> CAP_HUNTER = CapabilityManager.get(new CapabilityToken<>(){});
 
     private static IFactionRegistry factionRegistry;
     private static ISundamageRegistry sundamageRegistry;
@@ -123,32 +116,32 @@ public class VampirismAPI {
      * @return The respective {@link IFactionPlayerHandler}
      */
     public static @NotNull LazyOptional<IFactionPlayerHandler> getFactionPlayerHandler(@NotNull Player player) {
-        return player.getCapability(CAP_FACTION_HANDLER_PLAYER, null);
+        return player.getCapability(FACTION_HANDLER_PLAYER, null);
     }
 
     /**
      * @return The respective {@link IVampirePlayer}
      */
     public static @NotNull LazyOptional<IVampirePlayer> getVampirePlayer(@NotNull Player player) {
-        return player.getCapability(CAP_VAMPIRE, null);
+        return player.getCapability(VAMPIRE_PLAYER, null);
     }
 
     /**
      * @return The respective {@link de.teamlapen.vampirism.api.entity.hunter.IHunter}
      */
     public static @NotNull LazyOptional<IHunterPlayer> getHunterPlayer(@NotNull Player player) {
-        return player.getCapability(CAP_HUNTER, null);
+        return player.getCapability(HUNTER_PLAYER, null);
     }
 
     /**
      * Get the {@link IExtendedCreatureVampirism} instance for the given creature
      */
     public static @NotNull LazyOptional<IExtendedCreatureVampirism> getExtendedCreatureVampirism(@NotNull PathfinderMob creature) {
-        return creature.getCapability(CAP_CREATURE, null);
+        return creature.getCapability(EXTENDED_CREATURE, null);
     }
 
     public static @NotNull LazyOptional<IVampirismWorld> getVampirismWorld(@NotNull Level w) {
-        return w.getCapability(CAP_WORLD);
+        return w.getCapability(WORLD);
     }
 
 

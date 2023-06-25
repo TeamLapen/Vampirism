@@ -5,6 +5,7 @@ import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.VampirismCapabilities;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
@@ -42,9 +43,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     private final static String KEY_BLOOD = "bloodLevel";
     private final static String KEY_MAX_BLOOD = "maxBlood";
     private final static String POISONOUS_BLOOD = "poisonousBlood";
-    public static final Capability<IExtendedCreatureVampirism> CAP = CapabilityManager.get(new CapabilityToken<>() {
-    });
-
+    public static final Capability<IExtendedCreatureVampirism> CAP = VampirismCapabilities.EXTENDED_CREATURE;
 
     public static @NotNull LazyOptional<IExtendedCreatureVampirism> getSafe(@NotNull Entity mob) {
         return mob.getCapability(CAP);
