@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.util.OilUtils;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.fml.common.Mod;
 
@@ -17,6 +18,7 @@ import java.util.Set;
 
 import static de.teamlapen.vampirism.core.ModBlocks.*;
 import static de.teamlapen.vampirism.core.ModItems.*;
+import static net.minecraft.world.item.CreativeModeTabs.BUILDING_BLOCKS;
 
 @Mod.EventBusSubscriber(modid = REFERENCE.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class VampirismCreativeTab {
@@ -24,6 +26,7 @@ public class VampirismCreativeTab {
     public static CreativeModeTab.Builder builder(Set<ItemLike> allItems) {
         return CreativeModeTab.builder()
                 .title(Component.translatable("itemGroup.vampirism"))
+                .withTabsBefore(CreativeModeTabs.SPAWN_EGGS)
                 .icon(() -> VAMPIRE_FANG.get().getDefaultInstance())
                 .displayItems(new VampirismDisplayItemGenerator(allItems));
     }
