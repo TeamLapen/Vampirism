@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.advancements.critereon.VampireActionCriterionTrigg
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.VampirismCapabilities;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -116,8 +117,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     private final static String KEY_DBNO_MSG = "dbno_msg";
     private final static String KEY_WAS_DBNO = "wasDBNO";
 
-    public static final Capability<IVampirePlayer> CAP = CapabilityManager.get(new CapabilityToken<>() {
-    });
+    public static final Capability<IVampirePlayer> CAP = VampirismCapabilities.VAMPIRE_PLAYER;
 
     /**
      * Don't call before the construction event of the player entity is finished

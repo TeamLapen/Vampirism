@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.advancements.critereon.FactionCriterionTrigger;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.VampirismCapabilities;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
@@ -47,8 +48,7 @@ import java.util.Optional;
  */
 public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapabilityInst, IFactionPlayerHandler {
     private final static Logger LOGGER = LogManager.getLogger();
-    public static final Capability<IFactionPlayerHandler> CAP = CapabilityManager.get(new CapabilityToken<>() {
-    });
+    public static final Capability<IFactionPlayerHandler> CAP = VampirismCapabilities.FACTION_HANDLER_PLAYER;
 
     /**
      * Must check Entity#isAlive before
