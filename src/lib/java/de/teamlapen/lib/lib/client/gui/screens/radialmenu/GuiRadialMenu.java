@@ -60,7 +60,7 @@ public abstract class GuiRadialMenu<T> extends Screen {
     protected boolean closing;
     private final RadialMenu<T> radialMenu;
     protected final List<IRadialMenuSlot<T>> radialMenuSlots;
-    protected final float OPEN_ANIMATION_LENGTH = 0.40f;
+    protected final float OPEN_ANIMATION_LENGTH = 0.20f;
     protected float totalTime;
     protected float prevTick;
     protected float extraTick;
@@ -135,7 +135,7 @@ public abstract class GuiRadialMenu<T> extends Screen {
             for (int i = 0; i < numberOfSlices; i++) {
                 float sliceBorderLeft = (((i - 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
                 float sliceBorderRight = (((i + 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
-                if (mousePositionInDegreesInRelationToCenterOfScreen >= sliceBorderLeft && mousePositionInDegreesInRelationToCenterOfScreen < sliceBorderRight && mouseDistanceToCenterOfScreen >= radiusIn && mouseDistanceToCenterOfScreen < radiusOut) {
+                if (mousePositionInDegreesInRelationToCenterOfScreen >= sliceBorderLeft && mousePositionInDegreesInRelationToCenterOfScreen < sliceBorderRight && mouseDistanceToCenterOfScreen >= 10) {
                     selectedItem = i;
                     break;
                 }
