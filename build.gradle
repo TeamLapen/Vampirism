@@ -8,7 +8,7 @@ buildscript {
 
     
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '[5.1.26,)', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '[5.1.26,5.2)', changing: true
         classpath group: 'org.spongepowered', name:'mixingradle', version: '0.7-SNAPSHOT', changing: true
         classpath 'org.parchmentmc:librarian:1.+'
     }

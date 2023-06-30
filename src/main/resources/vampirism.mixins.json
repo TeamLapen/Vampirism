@@ -20,10 +20,12 @@
     "MixinPlayerEntity",
     "MixinPotionBrewing",
     "MultiNoiseBiomeSourcePresetAccessor",
+    "NearestAttackableTargetGoalMixin",
     "PlayerAdvancementsAccessor",
     "RecipeManagerAccessor",
     "SurfaceRuleDataMixin",
-    "TileEntityTypeAccessor"
+    "TileEntityTypeAccessor",
+    "TargetConditionAccessor"
   ],
   "client": [
     "client.AgeableModelAccessor",
