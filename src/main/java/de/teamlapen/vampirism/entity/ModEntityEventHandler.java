@@ -205,8 +205,7 @@ public class ModEntityEventHandler {
                     }
                 }
                 if (mobTarget != null) {
-                    ((IronGolem) event.getEntity()).targetSelector.removeGoal(mobTarget);
-                    ((IronGolem) event.getEntity()).targetSelector.addGoal(3, new NearestAttackableTargetGoal<>((IronGolem) event.getEntity(), Mob.class, 5, false, false, entity -> entity instanceof Enemy && !(entity instanceof IFactionEntity) && !(entity instanceof Creeper)));
+                    ((NearestTargetGoalModifier) mobTarget).ignoreFactionEntities();
                 } else {
                     if (warnAboutGolem) {
                         LOGGER.warn("Could not replace villager iron golem target task");
