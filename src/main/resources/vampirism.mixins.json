@@ -19,7 +19,9 @@
     "MixinMobEntity",
     "MixinPlayerEntity",
     "MixinPotionBrewing",
+    "NearestAttackableTargetGoalMixin",
     "PlayerAdvancementsAccessor",
+    "TargetConditionAccessor",
     "TileEntityTypeAccessor"
   ],
   "client": [

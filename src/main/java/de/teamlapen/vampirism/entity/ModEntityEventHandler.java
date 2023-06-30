@@ -64,7 +64,6 @@ import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
 /**
@@ -73,10 +72,9 @@ import java.util.function.Predicate;
 public class ModEntityEventHandler {
 
     private final static Logger LOGGER = LogManager.getLogger(ModEntityEventHandler.class);
-    private static final Predicate<LivingEntity> nonVampireCheck = entity -> !Helper.isVampire(entity);
     private static final Object2BooleanMap<String> entityAIReplacementWarnMap = new Object2BooleanArrayMap<>();
 
-    public static <T extends MobEntity, S extends LivingEntity, Q extends NearestAttackableTargetGoal<S>> void makeVampireFriendly(String name, T e, Class<Q> targetClass, Class<S> targetEntityClass, int attackPriority, BiFunction<T, Predicate<LivingEntity>, Q> replacement, Predicate<EntityType<? extends T>> typeCheck) {
+    public static <T extends MobEntity, S extends LivingEntity, Q extends NearestAttackableTargetGoal<S>> void makeVampireFriendly(String name, @NotNull T e, @NotNull Class<Q> targetClass, @NotNull Class<S> targetEntityClass, int attackPriority, @NotNull Predicate<EntityType<? extends T>> typeCheck) {
         Goal target = null;
         for (PrioritizedGoal t : e.targetSelector.availableGoals) {
             Goal g = t.getGoal();
@@ -88,12 +86,11 @@ public class ModEntityEventHandler {
         if (target != null) {
             EntityType<? extends T> type = (EntityType<? extends T>) e.getType();
             if (typeCheck.test(type)) {
-                e.targetSelector.removeGoal(target);
-                e.targetSelector.addGoal(attackPriority, replacement.apply(e, nonVampireCheck));
+                ((NearestTargetGoalModifier) target).ignoreVampires();
             }
         } else {
             if (entityAIReplacementWarnMap.getOrDefault(name, true)) {
-                LOGGER.warn("Could not replace {} attack target task for {}", name, e.getType().getDescription());
+                LOGGER.warn("Could not modify {} attack target task for {}", name, e.getType().getDescription());
                 entityAIReplacementWarnMap.put(name, false);
             }
 
