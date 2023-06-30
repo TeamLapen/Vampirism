@@ -49,7 +49,7 @@ public class SitEntity extends Entity {
 
                 discard();
 
-                if (!player.level.getBlockState(belowResetPos).isFaceSturdy(level(), belowResetPos, Direction.UP, SupportType.FULL)) {
+                if (!player.level.getBlockState(belowResetPos).isFaceSturdy(level, belowResetPos, Direction.UP, SupportType.FULL)) {
                     return new Vec3(resetPosition.x, resetPosition.y + 1, resetPosition.z);
                 } else {
                     return resetPosition;
