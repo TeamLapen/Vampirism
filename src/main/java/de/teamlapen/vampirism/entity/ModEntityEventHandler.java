@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.blocks.CastleStairsBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.ai.goals.GolemTargetNonVillageFactionGoal;
+import de.teamlapen.vampirism.entity.ai.goals.NearestTargetGoalModifier;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
@@ -64,7 +65,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
 /**
@@ -73,10 +73,9 @@ import java.util.function.Predicate;
 public class ModEntityEventHandler {
 
     private final static Logger LOGGER = LogManager.getLogger(ModEntityEventHandler.class);
-    private static final Predicate<LivingEntity> nonVampireCheck = entity -> !Helper.isVampire(entity);
     private static final Object2BooleanMap<String> entityAIReplacementWarnMap = new Object2BooleanArrayMap<>();
 
-    public static <T extends Mob, S extends LivingEntity, Q extends NearestAttackableTargetGoal<S>> void makeVampireFriendly(String name, @NotNull T e, @NotNull Class<Q> targetClass, @NotNull Class<S> targetEntityClass, int attackPriority, @NotNull BiFunction<T, Predicate<LivingEntity>, Q> replacement, @NotNull Predicate<EntityType<? extends T>> typeCheck) {
+    public static <T extends Mob, S extends LivingEntity, Q extends NearestAttackableTargetGoal<S>> void makeVampireFriendly(String name, @NotNull T e, @NotNull Class<Q> targetClass, @NotNull Class<S> targetEntityClass, int attackPriority, @NotNull Predicate<EntityType<? extends T>> typeCheck) {
         Goal target = null;
         for (WrappedGoal t : e.targetSelector.availableGoals) {
             Goal g = t.getGoal();
@@ -89,12 +88,11 @@ public class ModEntityEventHandler {
             @SuppressWarnings("unchecked")
             EntityType<? extends T> type = (EntityType<? extends T>) e.getType();
             if (typeCheck.test(type)) {
-                e.targetSelector.removeGoal(target);
-                e.targetSelector.addGoal(attackPriority, replacement.apply(e, nonVampireCheck));
+                ((NearestTargetGoalModifier) target).ignoreVampires();
             }
         } else {
             if (entityAIReplacementWarnMap.getOrDefault(name, true)) {
-                LOGGER.warn("Could not replace {} attack target task for {}", name, e.getType().getDescription());
+                LOGGER.warn("Could not modify {} attack target task for {}", name, e.getType().getDescription());
                 entityAIReplacementWarnMap.put(name, false);
             }
 
@@ -170,7 +168,7 @@ public class ModEntityEventHandler {
                 if (event.getEntity() instanceof Creeper) {
                     ((Creeper) event.getEntity()).goalSelector.addGoal(3, new AvoidEntityGoal<>((Creeper) event.getEntity(), Player.class, 20, 1.1, 1.3, Helper::isVampire));
                     //noinspection unchecked
-                    makeVampireFriendly("creeper", (Creeper) event.getEntity(), NearestAttackableTargetGoal.class, Player.class, 1, (entity, predicate) -> new NearestAttackableTargetGoal<>(entity, Player.class, 10, true, false, predicate), type -> type == EntityType.CREEPER);
+                    makeVampireFriendly("creeper", (Creeper) event.getEntity(), NearestAttackableTargetGoal.class, Player.class, 1, type -> type == EntityType.CREEPER);
 
                     return;
                 }
@@ -180,10 +178,10 @@ public class ModEntityEventHandler {
             if (VampirismConfig.BALANCE.zombieIgnoreVampire.get()) {
                 if (event.getEntity() instanceof Zombie) {
                     //noinspection unchecked
-                    makeVampireFriendly("zombie", (Zombie) event.getEntity(), NearestAttackableTargetGoal.class, Player.class, 2, (entity, predicate) -> entity instanceof Drowned ? new NearestAttackableTargetGoal<>(entity, Player.class, 10, true, false, predicate.and(((Drowned) entity)::okTarget)) : new NearestAttackableTargetGoal<>(entity, Player.class, 10, true, false, predicate), type -> type == EntityType.ZOMBIE || type == EntityType.HUSK || type == EntityType.ZOMBIE_VILLAGER || type == EntityType.DROWNED);
+                    makeVampireFriendly("zombie", (Zombie) event.getEntity(), NearestAttackableTargetGoal.class, Player.class, 2, type -> type == EntityType.ZOMBIE || type == EntityType.HUSK || type == EntityType.ZOMBIE_VILLAGER || type == EntityType.DROWNED);
                     //Also replace attack villager task for entities that have it
                     //noinspection unchecked
-                    makeVampireFriendly("villager zombie", (Zombie) event.getEntity(), NearestAttackableTargetGoal.class, AbstractVillager.class, 3, (entity, predicate) -> new NearestAttackableTargetGoal<>(entity, AbstractVillager.class, 10, true, false, predicate), type -> type == EntityType.ZOMBIE || type == EntityType.HUSK || type == EntityType.ZOMBIE_VILLAGER || type == EntityType.DROWNED);
+                    makeVampireFriendly("villager zombie", (Zombie) event.getEntity(), NearestAttackableTargetGoal.class, AbstractVillager.class, 3, type -> type == EntityType.ZOMBIE || type == EntityType.HUSK || type == EntityType.ZOMBIE_VILLAGER || type == EntityType.DROWNED);
                     return;
                 }
             }
@@ -191,7 +189,7 @@ public class ModEntityEventHandler {
             if (VampirismConfig.BALANCE.skeletonIgnoreVampire.get()) {
                 if (event.getEntity() instanceof Skeleton || event.getEntity() instanceof Stray) {
                     //noinspection unchecked
-                    makeVampireFriendly("skeleton", (AbstractSkeleton) event.getEntity(), NearestAttackableTargetGoal.class, Player.class, 2, (entity, predicate) -> new NearestAttackableTargetGoal<>(entity, Player.class, 10, true, false, predicate), type -> type == EntityType.SKELETON);
+                    makeVampireFriendly("skeleton", (AbstractSkeleton) event.getEntity(), NearestAttackableTargetGoal.class, Player.class, 2, type -> type == EntityType.SKELETON);
                 }
             }
 

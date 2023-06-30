@@ -21,6 +21,7 @@
     "MixinPlayerEntity",
     "MixinPotionBrewing",
     "MultiNoiseBiomeSourceParameterListPresetAccessor",
+    "NearestAttackableTargetGoalMixin",
     "NoiseGeneratorSettingsMixin",
     "PlayerAdvancementsAccessor",
     "ProcessorListsAccessor",
@@ -30,6 +31,7 @@
     "ShapedRecipeBuilderAccessor",
     "ShapelessRecipeBuilderAccessor",
     "StructuresAccessor",
+    "TargetConditionAccessor",
     "TileEntityTypeAccessor",
     "VanillaBlockLootAccessor",
     "WalkAnimationStateAccessor"
