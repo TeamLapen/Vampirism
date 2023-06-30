@@ -21,7 +21,7 @@
     "MixinPotionBrewing",
     "NearestAttackableTargetGoalMixin",
     "PlayerAdvancementsAccessor",
-    "TargetConditionAccessor",
+    "EntityPredicateAccessor",
     "TileEntityTypeAccessor"
   ],
   "client": [

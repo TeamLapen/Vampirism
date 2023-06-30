@@ -74,7 +74,7 @@ public class ModEntityEventHandler {
     private final static Logger LOGGER = LogManager.getLogger(ModEntityEventHandler.class);
     private static final Object2BooleanMap<String> entityAIReplacementWarnMap = new Object2BooleanArrayMap<>();
 
-    public static <T extends MobEntity, S extends LivingEntity, Q extends NearestAttackableTargetGoal<S>> void makeVampireFriendly(String name, @NotNull T e, @NotNull Class<Q> targetClass, @NotNull Class<S> targetEntityClass, int attackPriority, @NotNull Predicate<EntityType<? extends T>> typeCheck) {
+    public static <T extends MobEntity, S extends LivingEntity, Q extends NearestAttackableTargetGoal<S>> void makeVampireFriendly(String name, T e, Class<Q> targetClass, Class<S> targetEntityClass, int attackPriority, Predicate<EntityType<? extends T>> typeCheck) {
         Goal target = null;
         for (PrioritizedGoal t : e.targetSelector.availableGoals) {
             Goal g = t.getGoal();
@@ -86,7 +86,7 @@ public class ModEntityEventHandler {
         if (target != null) {
             EntityType<? extends T> type = (EntityType<? extends T>) e.getType();
             if (typeCheck.test(type)) {
-                ((NearestTargetGoalModifier) target).ignoreVampires();
+                ((de.teamlapen.vampirism.entity.ai.goals.NearestTargetGoalModifier) target).ignoreVampires();
             }
         } else {
             if (entityAIReplacementWarnMap.getOrDefault(name, true)) {
@@ -165,7 +165,7 @@ public class ModEntityEventHandler {
             if (VampirismConfig.BALANCE.creeperIgnoreVampire.get()) {
                 if (event.getEntity() instanceof CreeperEntity) {
                     ((CreeperEntity) event.getEntity()).goalSelector.addGoal(3, new AvoidEntityGoal<>((CreeperEntity) event.getEntity(), PlayerEntity.class, 20, 1.1, 1.3, Helper::isVampire));
-                    makeVampireFriendly("creeper", (CreeperEntity) event.getEntity(), NearestAttackableTargetGoal.class, PlayerEntity.class, 1, (entity, predicate) -> new NearestAttackableTargetGoal<>(entity, PlayerEntity.class, 10, true, false, predicate), type -> type == EntityType.CREEPER);
+                    makeVampireFriendly("creeper", (CreeperEntity) event.getEntity(), NearestAttackableTargetGoal.class, PlayerEntity.class, 1, type -> type == EntityType.CREEPER);
 
                     return;
                 }
@@ -174,16 +174,16 @@ public class ModEntityEventHandler {
             //Zombie AI changes
             if (VampirismConfig.BALANCE.zombieIgnoreVampire.get()) {
                 if (event.getEntity() instanceof ZombieEntity) {
-                    makeVampireFriendly("zombie", (ZombieEntity) event.getEntity(), NearestAttackableTargetGoal.class, PlayerEntity.class, 2, (entity, predicate) -> entity instanceof DrownedEntity ? new NearestAttackableTargetGoal<>(entity, PlayerEntity.class, 10, true, false, predicate.and(((DrownedEntity) entity)::okTarget)) : new NearestAttackableTargetGoal<>(entity, PlayerEntity.class, 10, true, false, predicate), type -> type == EntityType.ZOMBIE || type == EntityType.HUSK || type == EntityType.ZOMBIE_VILLAGER || type == EntityType.DROWNED);
+                    makeVampireFriendly("zombie", (ZombieEntity) event.getEntity(), NearestAttackableTargetGoal.class, PlayerEntity.class, 2, type -> type == EntityType.ZOMBIE || type == EntityType.HUSK || type == EntityType.ZOMBIE_VILLAGER || type == EntityType.DROWNED);
                     //Also replace attack villager task for entities that have it
-                    makeVampireFriendly("villager zombie", (ZombieEntity) event.getEntity(), NearestAttackableTargetGoal.class, AbstractVillagerEntity.class, 3, (entity, predicate) -> new NearestAttackableTargetGoal<>(entity, AbstractVillagerEntity.class, 10, true, false, predicate), type -> type == EntityType.ZOMBIE || type == EntityType.HUSK || type == EntityType.ZOMBIE_VILLAGER || type == EntityType.DROWNED);
+                    makeVampireFriendly("villager zombie", (ZombieEntity) event.getEntity(), NearestAttackableTargetGoal.class, AbstractVillagerEntity.class, 3, type -> type == EntityType.ZOMBIE || type == EntityType.HUSK || type == EntityType.ZOMBIE_VILLAGER || type == EntityType.DROWNED);
                     return;
                 }
             }
 
             if (VampirismConfig.BALANCE.skeletonIgnoreVampire.get()) {
                 if (event.getEntity() instanceof SkeletonEntity || event.getEntity() instanceof StrayEntity) {
-                    makeVampireFriendly("skeleton", (AbstractSkeletonEntity) event.getEntity(), NearestAttackableTargetGoal.class, PlayerEntity.class, 2, (entity, predicate) -> new NearestAttackableTargetGoal<>(entity, PlayerEntity.class, 10, true, false, predicate), type -> type == EntityType.SKELETON || type == EntityType.STRAY);
+                    makeVampireFriendly("skeleton", (AbstractSkeletonEntity) event.getEntity(), NearestAttackableTargetGoal.class, PlayerEntity.class, 2, type -> type == EntityType.SKELETON || type == EntityType.STRAY);
                 }
             }
 
@@ -199,8 +199,7 @@ public class ModEntityEventHandler {
                     }
                 }
                 if (mobTarget != null) {
-                    ((IronGolemEntity) event.getEntity()).targetSelector.removeGoal(mobTarget);
-                    ((IronGolemEntity) event.getEntity()).targetSelector.addGoal(3, new NearestAttackableTargetGoal<>((IronGolemEntity) event.getEntity(), MobEntity.class, 5, false, false, entity -> entity instanceof IMob && !(entity instanceof IFactionEntity) && !(entity instanceof CreeperEntity)));
+                    ((de.teamlapen.vampirism.entity.ai.goals.NearestTargetGoalModifier) mobTarget).ignoreFactionEntities();
                 } else {
                     if (warnAboutGolem) {
                         LOGGER.warn("Could not replace villager iron golem target task");

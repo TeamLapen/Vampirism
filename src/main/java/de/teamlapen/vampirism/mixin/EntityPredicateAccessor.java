@@ -1,15 +1,15 @@
 package de.teamlapen.vampirism.mixin;
 
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.entity.EntityPredicate;
+import net.minecraft.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
-@Mixin(TargetingConditions.class)
-public interface TargetConditionAccessor {
+@Mixin(EntityPredicate.class)
+public interface EntityPredicateAccessor {
 
     @Nullable
     @Accessor("selector")
