@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_enhanced_holy_water": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "vampirism:holy_water_bottle_enhanced"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:holy_water_bottle_normal_from_enhanced"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_enhanced_holy_water",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:holy_water_bottle_normal_from_enhanced"
+    ]
+  },
+  "sends_telemetry_event": false
+}

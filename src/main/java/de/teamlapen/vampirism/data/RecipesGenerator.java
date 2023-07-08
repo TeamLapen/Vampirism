@@ -408,6 +408,8 @@ public class RecipesGenerator extends VanillaRecipeProvider {//TODO 1.20 move to
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModBlocks.ALCHEMY_TABLE.get()).pattern("B  ").pattern("BBB").pattern("P P").define('B', basalt).define('P', planks).unlockedBy("has_basalt", has(basalt)).unlockedBy("has_planks", has(planks)).save(consumer);
         SpecialRecipeBuilder.special(ModRecipes.CLEAN_OIL.get()).save(consumer, REFERENCE.MODID+":clean_oil");
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModItems.ITEM_TENT.get()).pattern(" W ").pattern("WBW").define('W', wool).define('B', beds).unlockedBy("has_wool", has(wool)).unlockedBy("has_bed", has(beds)).save(consumer);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.DECORATIONS, holy_water_bottle_normal, 2).requires(holy_water_bottle_enhanced).requires(ModItems.PURE_SALT_WATER.get()).unlockedBy("has_enhanced_holy_water", has(holy_water_bottle_enhanced)).save(consumer, "holy_water_bottle_normal_from_enhanced");
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.DECORATIONS, holy_water_bottle_enhanced, 2).requires(holy_water_bottle_ultimate).requires(ModItems.PURE_SALT_WATER.get()).unlockedBy("has_ultimate_holy_water", has(holy_water_bottle_enhanced)).save(consumer, "holy_water_bottle_enhanced_from_ultimate");
     }
 
     private @NotNull JsonObject enchantment(int level, Enchantment enchantment) {
