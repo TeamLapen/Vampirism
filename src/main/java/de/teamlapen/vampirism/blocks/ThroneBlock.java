@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.vampirism.sit.SitEntity;
 import de.teamlapen.vampirism.sit.SitHandler;
+import de.teamlapen.vampirism.sit.SitUtil;
 import de.teamlapen.vampirism.util.BlockVoxelshapes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -8,6 +10,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
@@ -34,5 +37,14 @@ public class ThroneBlock extends VampirismSplitBlock {
             return InteractionResult.SUCCESS;
         }
         return super.use(state, world, pos, player, p_225533_5_, traceResult);
+    }
+
+    @Override
+    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
+        super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
+        SitEntity entity = SitUtil.getSitEntity(pLevel, pPos);
+        if (entity != null) {
+            entity.discard();
+        }
     }
 }
