@@ -22,7 +22,7 @@ public class SitUtil {
      * <dimension type id, <position, <entity, previous player position>>>
      * This map only gets populated on server side.
      */
-    private static final Map<ResourceLocation, Map<BlockPos, Pair<SitEntity, BlockPos>>> OCCUPIED = new HashMap<>();
+    private static final Map<ResourceLocation, Map<BlockPos, SitEntity>> OCCUPIED = new HashMap<>();
 
     /**
      * Adds a sit entity to the map that keeps track of them. This does not spawn the entity itself.
@@ -30,17 +30,21 @@ public class SitUtil {
      * @param world     The world to add the entity in
      * @param blockPos  The position at which to add the entity
      * @param entity    The entity to add
-     * @param playerPos The position of the player who is sitting down. Used for correctly positioning the player after dismounting
-     * @return true if the entity was added, false otherwhise. This is always false on the client.
+     * @return true if the entity was added, false otherwise. This is always false on the client.
      */
-    public static boolean addSitEntity(World world, BlockPos blockPos, SitEntity entity, BlockPos playerPos) {
-        if (!world.isClientSide && playerPos != null) {
+    public static boolean addSitEntity(World world, BlockPos blockPos, SitEntity entity) {
+        if (!world.isClientSide) {
             ResourceLocation id = getDimensionTypeId(world);
 
-            if (!OCCUPIED.containsKey(id))
+            if (!OCCUPIED.containsKey(id)) {
                 OCCUPIED.put(id, new HashMap<>());
-
-            OCCUPIED.get(id).put(blockPos, Pair.of(entity, playerPos));
+            }
+            Map<BlockPos, SitEntity> map = OCCUPIED.get(id);
+            if (map.containsKey(blockPos) && map.get(blockPos) != entity) {
+                entity.remove();
+                return false;
+            }
+            map.put(blockPos, entity);
             return true;
         }
 
@@ -58,8 +62,8 @@ public class SitUtil {
         if (!world.isClientSide) {
             ResourceLocation id = getDimensionTypeId(world);
 
-            if (OCCUPIED.containsKey(id)) {
-                OCCUPIED.get(id).remove(pos).getLeft();
+            if (OCCUPIED.containsKey(id) && OCCUPIED.get(id).containsKey(pos)) {
+                OCCUPIED.get(id).remove(pos);
                 return true;
             }
         }
@@ -78,29 +82,8 @@ public class SitUtil {
         if (!world.isClientSide) {
             ResourceLocation id = getDimensionTypeId(world);
 
-            if (OCCUPIED.containsKey(id) && OCCUPIED.get(id).containsKey(pos))
-                return OCCUPIED.get(id).get(pos).getLeft();
-        }
-
-        return null;
-    }
-
-    /**
-     * Gets the position the player was at before he sat down
-     *
-     * @param player    The player
-     * @param sitEntity sit entity the player is sitting on
-     * @return The position the player was at before he sat down, null if the player is not sitting. This is always null on the client.
-     */
-    public static BlockPos getPreviousPlayerPosition(PlayerEntity player, SitEntity sitEntity) {
-        if (!player.level.isClientSide) {
-            ResourceLocation id = getDimensionTypeId(player.level);
-
-            if (OCCUPIED.containsKey(id)) {
-                for (Pair<SitEntity, BlockPos> pair : OCCUPIED.get(id).values()) {
-                    if (pair.getLeft() == sitEntity)
-                        return pair.getRight();
-                }
+            if (OCCUPIED.containsKey(id) && OCCUPIED.get(id).containsKey(pos)) {
+                return OCCUPIED.get(id).get(pos);
             }
         }
 
@@ -128,9 +111,10 @@ public class SitUtil {
      */
     public static boolean isPlayerSitting(PlayerEntity player) {
         for (ResourceLocation i : OCCUPIED.keySet()) {
-            for (Pair<SitEntity, BlockPos> pair : OCCUPIED.get(i).values()) {
-                if (pair.getLeft().hasPassenger(player))
+            for (SitEntity pair : OCCUPIED.get(i).values()) {
+                if (pair.hasPassenger(player)) {
                     return true;
+                }
             }
         }
 
