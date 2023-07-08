@@ -21,9 +21,9 @@ public class SitHandler {
             if (isPlayerInRange(player, pos) && !SitUtil.isOccupied(level, pos) && player.getMainHandItem().isEmpty()) //level.getBlockState(pos.above()).isAir(level, pos.above()
             {
 
-                SitEntity sit = SitEntity.newEntity(level, pos, offset);
+                SitEntity sit = SitEntity.newEntity(level, pos, offset, player.position());
 
-                if (SitUtil.addSitEntity(level, pos, sit, player.blockPosition())) {
+                if (SitUtil.addSitEntity(level, pos, sit)) {
                     level.addFreshEntity(sit);
                     player.startRiding(sit);
                 }
@@ -39,8 +39,7 @@ public class SitHandler {
             SitEntity entity = SitUtil.getSitEntity((Level) event.getLevel(), event.getPos());
 
             if (entity != null) {
-                SitUtil.removeSitEntity((Level) event.getLevel(), event.getPos());
-                entity.ejectPassengers();
+                entity.discard();
             }
         }
     }
