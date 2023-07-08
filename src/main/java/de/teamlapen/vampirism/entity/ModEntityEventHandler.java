@@ -152,8 +152,8 @@ public class ModEntityEventHandler {
                     int l = entity.suggestEntityLevel(d);
                     if (l > entity.getMaxEntityLevel()) {
                         l = entity.getMaxEntityLevel();
-                    } else if (l < 0) {
-                        event.setCanceled(true);
+                    } else if (l <= 0) {
+                        l = 0;
                     }
                     entity.setEntityLevel(l);
                     if (entity instanceof PathfinderMob) {
