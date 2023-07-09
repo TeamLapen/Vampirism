@@ -1,6 +1,6 @@
 {
   "pack": {
-    "description": "Vampirism Resources",
+    "description": "${mod_id} Resources",
     "pack_format": 15
   }
 }

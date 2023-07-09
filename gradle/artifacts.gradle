@@ -34,13 +34,3 @@ artifacts {
     archives deobfJar
     archives javadocJar
 }
-//jar.finalizedBy('reobfJar')
-//reobf {
-//    apiJar { classpath.from(sourceSets.api.compileClasspath) }
-//    jar { classpath.from(sourceSets.main.compileClasspath) }
-//}
-//
-//task reobf {
-//    dependsOn reobfJar
-//    dependsOn reobfApiJar
-//}
