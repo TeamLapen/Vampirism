@@ -53,13 +53,15 @@
       "name": "Sinister Solace",
       "texture": "S_olace",
       "type": 15,
-      "status": 2
+      "status": 2,
+      "bookdId": "s_olace"
     },
     {
       "name": "Valorous Vol",
       "texture": "Volqonah",
       "type": 15,
-      "status": 2
+      "status": 2,
+      "bookId": "volqonah"
     }
   ],
   "hunters": [

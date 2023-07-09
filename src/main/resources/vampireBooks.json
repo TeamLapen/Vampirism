@@ -56,7 +56,7 @@
         "It's been one day since my so called \"friends\" left me in the middle of this desert. I must be going crazy because not only have I been hearing these...whispers..but also had this urge...like something powerful is calling me..Ah why bother, i'm just losing myself aren't I?",
         "I've been wandering for a few days now, each day the whispers seem to grow louder and clearer? I feel a greater desire to find whatever is making it..I'm not even sure why i'm still walking- its just something tells me I need to keep going this way, maybe god is trying to save me?",
         "I- I could hear her clearly today! The whispers were so...beautiful so..elegant! Whatever it- She is, she's calling me! The pull I feel is so strong now, I feel so close to her now!",
-        "I may have made a mistake..I-I wandered into these dark woods searching for her..but as I get closer I feel such a deep level of dread, red eyes watch me from the fog but vanish when I try to reach them..Every time I turn to leave the screaming turns me around..back to her..",
+        "I may have made a mistake..I-I wandered into these dark woods searching for her..but as I get closer I feel such a deep level of dread, red eyes watch me from the fog but vanish when I try to reach them .Every time I turn to leave the screaming turns me around..back to her..",
         "It's all fine now. The storm has passed, mother has guided me. My hands once vacant now are filled with purpose- Her purpose- mothers purpose. I feel so charmed, so complete. Mother has given me purpose, she can give you purpose to. Come to the woods. Come to the woods.",
         "§oMOTHER§r"
       ]
@@ -145,9 +145,9 @@
       ]
     }
   },  {
-  "id": "S_olace",
+  "id": "s_olace",
   "tags": [
-    "S_olace"
+    "s_olace"
   ],
   "unique": true,
   "book": {
@@ -170,6 +170,20 @@
       "author": "Unknown",
       "content": [
         "To Martha, \nI hope you are feeling better.\n\nI think I found a cure to your illness, it seems milk will do the trick with almost any poison!\nDon't worry my sister, I am on my way and I will make you better. I just hope that whatever bited you did not carry any mortal disease, the way you described it seems like nothing I've seen before. My maid and all the servants at my mansion will take care of it in my absence, when it comes to family, it's a priority.\nI heard rumors about strange creatures in the forest near your home, please stay safe, It won't be long before I arrive.\n\nWith all my love, your brother."
+      ]
+    }
+  },
+  {
+    "id": "volqonah",
+    "tags": [
+      "volqonah"
+    ],
+    "unique": true,
+    "book": {
+      "title": "A Valorous tale",
+      "author": "Unknown",
+      "content": [
+        "Once upon a time, or perhaps centuries ago. There was a group of people dedicated solely to the art of war and battle. They lived and died for battle, for the thrill of bloodshed, and for the hope of a warrior's death. Among these people was a woman known as their greatest warrior, never defeated in battle and driven by the single goal of \"bravery\".\n Tragically, she was never given a name, for there was no need. For she was valued solely for her prowess in battle. As a result, the only true name given to her was by those who fled in her wake. \"The Valorous One\", earned from tales of her strength, said to be that of a raging volcano, never to be stopped or felled in battle.\nThat is, until the fateful battle. Not much is known about this battle, in fact, there's no way to prove its existence other than first-hand accounts. Legend has it that The Valorous One and her army had come to slay a \"walking disaster,\" often described as a pale, finely dressed man with dark red eyes and terribly sharp teeth. With a simple gesture, The Valorous One ordered her army to attack. Upon this transgression, the \"walking disaster\" slaughtered the entirety of The Valorous One's army, leaving only the undefeated warrior herself.\nUndeterred, she simply drew her blade and met the man in combat. Each inflicted grievous wounds on the other, only for the man's wounds to heal faster than they could be made. Sensing her impending doom, the brave One refused to be defeated. Drawing on the last of her life, she tore every limb from his body in one swift motion that resembled a raging fire. Both, having sustained terrible blows, collapsed. Only the man recovered and rose to his feet. A look of awe and terror on his face. In an instant, the man had moved over her near-dead body and bit her, infecting her with his vile blood."
       ]
     }
   }
