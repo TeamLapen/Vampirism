@@ -427,7 +427,7 @@ public class ModPlayerEventHandler {
         } else if (state.getBlock() instanceof RemainsBlock) {
             event.setUseItem(Event.Result.DENY);
         } else if (state.getBlock() instanceof MotherBlock) {
-            BlockEntity blockEntity = event.getEntity().level.getBlockEntity(pos);
+            BlockEntity blockEntity = event.getEntity().level().getBlockEntity(pos);
             if (blockEntity instanceof MotherBlockEntity mother && !mother.isCanBeDestroyed()) {
                 event.setUseItem(Event.Result.DENY);
             }

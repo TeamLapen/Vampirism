@@ -36,7 +36,7 @@ public class VulnerableRemainsDummyEntity extends Entity {
     @Override
     public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
         if (ownerPos != null) {
-            if (level.getBlockEntity(ownerPos) instanceof VulnerableRemainsBlockEntity vr) {
+            if (this.level().getBlockEntity(ownerPos) instanceof VulnerableRemainsBlockEntity vr) {
                 vr.onDamageDealt(pSource, pAmount);
             }
         }
@@ -59,7 +59,7 @@ public class VulnerableRemainsDummyEntity extends Entity {
 
     @Override
     public void tick() {
-        if (!this.level.isClientSide() && (this.ownerPos == null || this.level.getBlockState(ownerPos).getBlock() != ModBlocks.ACTIVE_VULNERABLE_REMAINS.get())) {
+        if (!this.level().isClientSide() && (this.ownerPos == null || this.level().getBlockState(ownerPos).getBlock() != ModBlocks.ACTIVE_VULNERABLE_REMAINS.get())) {
             this.remove(RemovalReason.DISCARDED);
         }
     }

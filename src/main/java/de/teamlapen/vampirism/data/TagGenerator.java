@@ -148,7 +148,7 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
                     .addTag(ModTags.Blocks.TOTEM_TOP_CRAFTED)
             ;
 
-            tag(BlockTags.REPLACEABLE_PLANTS).add(ModBlocks.CURSED_HANGING_ROOTS.get());
+            tag(BlockTags.REPLACEABLE_BY_TREES).add(ModBlocks.CURSED_HANGING_ROOTS.get());
             tag(ModTags.Blocks.DARK_SPRUCE_LOG).add(ModBlocks.DARK_SPRUCE_LOG.get(), ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get(), ModBlocks.DARK_SPRUCE_WOOD.get(), ModBlocks.STRIPPED_DARK_SPRUCE_WOOD.get());
             tag(ModTags.Blocks.CURSED_SPRUCE_LOG).add(ModBlocks.CURSED_SPRUCE_LOG.get(), ModBlocks.CURSED_SPRUCE_LOG_CURED.get(), ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get(), ModBlocks.CURSED_SPRUCE_WOOD.get(), ModBlocks.CURSED_SPRUCE_WOOD_CURED.get(), ModBlocks.STRIPPED_CURSED_SPRUCE_WOOD.get());
             tag(BlockTags.LEAVES).add(ModBlocks.DARK_SPRUCE_LEAVES.get());
