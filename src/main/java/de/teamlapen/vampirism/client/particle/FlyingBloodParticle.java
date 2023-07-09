@@ -48,6 +48,7 @@ public class FlyingBloodParticle extends TextureSheetParticle {
         }
 
         this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(particleId));
+        this.hasPhysics = false;
     }
 
     @NotNull

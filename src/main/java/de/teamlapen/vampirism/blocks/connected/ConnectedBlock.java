@@ -37,12 +37,12 @@ public abstract class ConnectedBlock<T extends IConnectedBlock> extends Block im
         }
 
         @Override
-        public Stream<BlockState> collectConnectedBlocks(Level level, BlockPos pos) {
+        public Stream<Pair<BlockPos, BlockState>> collectConnectedBlocks(Level level, BlockPos pos) {
             return this.innerCollect(level, pos, new HashSet<>(), state -> true);
         }
 
         @Override
-        public Stream<BlockState> collectConnectedBlocks(Level level, BlockPos pos, Predicate<BlockState> predicate) {
+        public Stream<Pair<BlockPos, BlockState>> collectConnectedBlocks(Level level, BlockPos pos, Predicate<BlockState> predicate) {
             return this.innerCollect(level, pos, new HashSet<>(), predicate);
         }
 
@@ -61,14 +61,14 @@ public abstract class ConnectedBlock<T extends IConnectedBlock> extends Block im
             Direction.stream().map(pos::relative).forEach(newPos -> this.innerForEach(level, newPos, objects, consumer));
         }
 
-        private Stream<BlockState> innerCollect(Level level, BlockPos pos, Set<BlockPos> collected, Predicate<BlockState> predicate) {
+        private Stream<Pair<BlockPos, BlockState>> innerCollect(Level level, BlockPos pos, Set<BlockPos> collected, Predicate<BlockState> predicate) {
             if (collected.contains(pos)) return Stream.empty();
             collected.add(pos);
             BlockState blockState = level.getBlockState(pos);
             if (!this.connectedBlock.isAssignableFrom(blockState.getBlock().getClass())) return Stream.empty();
-            Stream<BlockState> stream = Direction.stream().map(pos::relative).flatMap(newPos -> this.innerCollect(level, newPos, collected, predicate));
+            Stream<Pair<BlockPos, BlockState>> stream = Direction.stream().map(pos::relative).flatMap(newPos -> this.innerCollect(level, newPos, collected, predicate));
             if (predicate.test(blockState)) {
-                return Stream.concat(Stream.of(blockState), stream);
+                return Stream.concat(Stream.of(Pair.of(pos, blockState)), stream);
             } else {
                 return stream;
             }

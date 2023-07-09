@@ -113,7 +113,7 @@ public class VulnerableRemainsBlockEntity extends BlockEntity {
         if (e.firstTick) {
             e.firstTick = false;
             Optional<MotherBlockEntity> motherOpt = e.getMother();
-            motherOpt.ifPresent(MotherBlockEntity::updateFightStatus);
+            //motherOpt.ifPresent(MotherBlockEntity::updateFightStatus);
             motherOpt.ifPresent(mother -> {
                 mother.updateFightStatus();
                 Entity e2 = e.checkDummyEntity();

@@ -15,9 +15,9 @@ public interface IConnectedBlock {
     IConnector getConnector();
 
     interface IConnector {
-        Stream<BlockState> collectConnectedBlocks(Level level, BlockPos pos);
+        Stream<Pair<BlockPos, BlockState>> collectConnectedBlocks(Level level, BlockPos pos);
 
-        Stream<BlockState> collectConnectedBlocks(Level level, BlockPos pos, Predicate<BlockState> predicate);
+        Stream<Pair<BlockPos, BlockState>> collectConnectedBlocks(Level level, BlockPos pos, Predicate<BlockState> predicate);
 
         Optional<Pair<BlockPos, BlockState>> find(Level level, BlockPos pos, Predicate<BlockState> predicate);
 

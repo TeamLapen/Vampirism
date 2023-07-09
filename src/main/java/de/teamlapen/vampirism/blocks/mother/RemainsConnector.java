@@ -31,7 +31,7 @@ public class RemainsConnector extends ConnectedBlock.Connector<IRemainsBlock> {
         });
     }
 
-    public Stream<BlockState> getVulnerabilities(Level level, BlockPos pos) {
+    public Stream<Pair<BlockPos, BlockState>> getVulnerabilities(Level level, BlockPos pos) {
         return this.collectConnectedBlocks(level, pos, state -> ((IRemainsBlock) state.getBlock()).isVulnerability(state));
     }
 }

@@ -5,10 +5,13 @@ import de.teamlapen.vampirism.blocks.DarkSpruceLogs;
 import de.teamlapen.vampirism.blocks.connected.ConnectedBlock;
 import de.teamlapen.vampirism.blocks.mother.IRemainsBlock;
 import de.teamlapen.vampirism.blocks.mother.MotherBlock;
+import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.network.ClientboundPlayEventPacket;
+import de.teamlapen.vampirism.particle.FlyingBloodParticleOptions;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
@@ -20,8 +23,10 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,11 +56,26 @@ public class MotherBlockEntity extends BlockEntity {
         if (e.isFrozen && e.freezeTimer-- <= 0) {
             e.unFreezeFight(level, blockPos, blockState);
         }
+        if (!e.isFrozen && e.level != null) {
+            if (e.level.getRandom().nextInt(50) == 0) {
+                e.updateFightStatus();
+                if (!e.bossEvent.getPlayers().isEmpty()) {
+                    List<Pair<BlockPos, BlockState>> vul = ((IRemainsBlock) e.getBlockState().getBlock()).getConnector().getVulnerabilities(level, blockPos).filter(state -> ((IRemainsBlock) (state.getRight().getBlock())).isVulnerable(state.getRight())).toList();
+                    if (!vul.isEmpty()) {
+                        for (ServerPlayer player : e.bossEvent.getPlayers()) {
+                            BlockPos p = vul.get(e.level.getRandom().nextInt(vul.size())).getLeft();
+                            ModParticles.spawnParticlesServer(player.level(), new FlyingBloodParticleOptions(100, false, p.getX() + 0.5, p.getY() + 0.5, p.getZ() + 0.5), player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(), 10, 0.1f, 0.1f, 0.1f, 0);
+                        }
+                    }
+                }
+
+            }
+        }
     }
 
     public void updateFightStatus() {
-        List<BlockState> vulnerabilities = ((IRemainsBlock) this.getBlockState().getBlock()).getConnector().getVulnerabilities(this.level, this.worldPosition).toList();
-        long remainingVulnerabilities = vulnerabilities.stream().filter(state -> ((IRemainsBlock) (state.getBlock())).isVulnerable(state)).count();
+        List<Pair<BlockPos, BlockState>> vulnerabilities = ((IRemainsBlock) this.getBlockState().getBlock()).getConnector().getVulnerabilities(this.level, this.worldPosition).toList();
+        long remainingVulnerabilities = vulnerabilities.stream().filter(state -> ((IRemainsBlock) (state.getRight().getBlock())).isVulnerable(state.getRight())).count();
         if (remainingVulnerabilities > 0) {
             this.bossEvent.setProgress(remainingVulnerabilities / (float) vulnerabilities.size());
         } else {
@@ -65,14 +85,17 @@ public class MotherBlockEntity extends BlockEntity {
     }
 
     private void endFight() {
-        this.bossEvent.getPlayers().forEach( p -> VampirismMod.dispatcher.sendTo(new ClientboundPlayEventPacket(2,getBlockPos(),0), p));
+        this.bossEvent.getPlayers().forEach(p -> VampirismMod.dispatcher.sendTo(new ClientboundPlayEventPacket(2, getBlockPos(), 0), p));
         this.bossEvent.removeAllPlayers();
         this.canBeDestroyed = true;
-        this.connector.foreachFacing(this.level, this.worldPosition, (level, pos, state) -> level.setBlock(pos, state.setValue(DarkSpruceLogs.INVULNERABLE, false), 3));
+        this.connector.foreachFacing(this.level, this.worldPosition, (level, pos, state) -> {
+            level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+            ModParticles.spawnParticlesServer(level, ParticleTypes.POOF, pos.getX(), pos.getY(), pos.getZ(), 5, 0.5, 0.5, 0.5, 0.05);
+        });
         this.setChanged();
         if (this.level != null) {
             this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
-            this.level.playSound(null, worldPosition, ModSounds.MOTHER_DEATH.get(), SoundSource.BLOCKS, 1f ,1f);
+            this.level.playSound(null, worldPosition, ModSounds.MOTHER_DEATH.get(), SoundSource.BLOCKS, 1f, 1f);
         }
     }
 
