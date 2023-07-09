@@ -179,6 +179,9 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     @Override
     public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
         this.getEntityData().set(LADY, this.getRandom().nextBoolean());
+        if (reason == MobSpawnType.COMMAND || reason == MobSpawnType.SPAWN_EGG) {
+            this.setEntityLevel(getRandom().nextInt(getMaxEntityLevel() + 1));
+        }
         return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 
