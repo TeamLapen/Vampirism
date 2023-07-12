@@ -130,6 +130,10 @@ modrinth{
     uploadFile = jar
     gameVersions = [project.minecraft_version]
     loaders = ["forge"]
+    dependencies {
+        optional.project "u6dRKJwZ" //jei
+        optional.project "w5L2PHJU" //guide-api-village-and-pillage
+    }
 }
 
 
