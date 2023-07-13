@@ -68,7 +68,7 @@ public record ServerboundSimpleInputEvent(Type type) implements IMessage {
                     }
                     break;
                 case SHOW_MINION_CALL_SELECTION:
-                    ClientboundRequestMinionSelectPacket.createRequestForPlayer(player, ClientboundRequestMinionSelectPacket.Action.CALL).ifPresent(VampirismMod.dispatcher::sendToServer);
+                    ClientboundRequestMinionSelectPacket.createRequestForPlayer(player, ClientboundRequestMinionSelectPacket.Action.CALL).ifPresent(x -> VampirismMod.dispatcher.sendTo(x, player));
                     break;
                 case VAMPIRISM_MENU:
                     factionPlayerOpt.ifPresent(fPlayer -> fPlayer.getTaskManager().openVampirismMenu());
