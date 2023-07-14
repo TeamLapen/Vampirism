@@ -3,6 +3,8 @@ package de.teamlapen.vampirism.entity.converted;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -17,13 +19,13 @@ public class SpecialConvertingHandler<T extends PathfinderMob, Z extends Pathfin
 
     private final Supplier<EntityType<Z>> convertedType;
 
-    public SpecialConvertingHandler(Supplier<EntityType<Z>> convertedType) {
-        super(null);
+    public SpecialConvertingHandler(Supplier<EntityType<Z>> convertedType, ResourceLocation overlayTexture) {
+        super(null, overlayTexture);
         this.convertedType = convertedType;
     }
 
-    public SpecialConvertingHandler(Supplier<EntityType<Z>> convertedType, IDefaultHelper attributeHelper) {
-        super(attributeHelper);
+    public SpecialConvertingHandler(Supplier<EntityType<Z>> convertedType, ResourceLocation overlayTexture, IDefaultHelper attributeHelper) {
+        super(attributeHelper, overlayTexture);
         this.convertedType = convertedType;
     }
 
@@ -34,6 +36,7 @@ public class SpecialConvertingHandler<T extends PathfinderMob, Z extends Pathfin
             copyImportantStuff(convertedCreature, entity);
             convertedCreature.setUUID(Mth.createInsecureUUID(convertedCreature.getRandom()));
             convertedCreature.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 2));
+            convertedCreature.data().texture = this.overlayTexture;
             return convertedCreature;
         }).orElse(null);
     }

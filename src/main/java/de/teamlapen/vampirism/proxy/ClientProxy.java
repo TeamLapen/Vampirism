@@ -285,8 +285,4 @@ public class ClientProxy extends CommonProxy {
         runOnRenderThread(() -> Minecraft.getInstance().setScreen(screen));
     }
 
-    @Override
-    public void applyConvertibleOverlays(Map<EntityType<? extends PathfinderMob>, ResourceLocation> convertibleOverlay) {
-        ModEntitiesRender.applyConvertibleOverlayUnsafe(convertibleOverlay);
-    }
 }

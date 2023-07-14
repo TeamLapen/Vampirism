@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.renderer.entity.layers.TaskMasterTypeLayer;
+import de.teamlapen.vampirism.client.renderer.entity.layers.ConvertedVampireEntityLayer;
 import de.teamlapen.vampirism.client.renderer.entity.layers.VampireEntityLayer;
 import de.teamlapen.vampirism.entity.vampire.VampireTaskMasterEntity;
 import net.minecraft.client.model.VillagerModel;
@@ -28,7 +29,7 @@ public class VampireTaskMasterRenderer extends MobRenderer<VampireTaskMasterEnti
     public VampireTaskMasterRenderer(EntityRendererProvider.@NotNull Context context) {
         super(context, new VillagerModel<>(context.bakeLayer(ModEntitiesRender.TASK_MASTER)), 0.5F);
 //        this.addLayer(new HeldItemLayer<>(this));
-        this.addLayer(new VampireEntityLayer<>(this, vampireOverlay, false));
+        this.addLayer(new VampireEntityLayer<>(this, vampireOverlay));
         this.addLayer(new TaskMasterTypeLayer<>(this, overlay));
     }
 

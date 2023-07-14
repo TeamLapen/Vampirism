@@ -81,6 +81,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     private int bloodTimer = 0;
     private int conversionTime;
     private @Nullable UUID conversationStarter;
+    private final Data<Villager> convertedData = new Data<>();
 
     public ConvertedVillagerEntity(EntityType<? extends ConvertedVillagerEntity> type, Level worldIn) {
         super(type, worldIn);
@@ -284,34 +285,8 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
         }
     }
 
-    public static class ConvertingHandler implements IConvertingHandler<Villager> {
-
-        @Override
-        public IConvertedCreature<Villager> createFrom(@NotNull Villager entity) {
-            CompoundTag nbt = new CompoundTag();
-            entity.saveWithoutId(nbt);
-            ConvertedVillagerEntity converted = ModEntities.VILLAGER_CONVERTED.get().create(entity.level());
-            converted.load(nbt);
-            converted.setUUID(Mth.createInsecureUUID(converted.random));
-            converted.yBodyRot = entity.yBodyRot;
-            converted.yHeadRot = entity.yHeadRot;
-            return converted;
-        }
-    }
-
-    public static class VillagerConverter implements Converter {
-
-        public static final VillagerConverter INSTANCE = new VillagerConverter();
-        public static final Codec<VillagerConverter> CODEC = Codec.unit(() -> INSTANCE);
-
-        @Override
-        public IConvertingHandler<?> createHandler() {
-            return new ConvertingHandler();
-        }
-
-        @Override
-        public Codec<? extends Converter> codec() {
-            return ModEntities.VILLAGER_CONVERTER.get();
-        }
+    @Override
+    public Data<Villager> data() {
+        return this.convertedData;
     }
 }

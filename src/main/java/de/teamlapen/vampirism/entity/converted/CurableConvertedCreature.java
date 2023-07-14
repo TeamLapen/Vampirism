@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.ConvertedCreature;
 import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
 import de.teamlapen.vampirism.entity.SoulOrbEntity;
+import de.teamlapen.vampirism.entity.ai.goals.AttackMeleeNoSunGoal;
 import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.world.ModDamageSources;
@@ -26,8 +27,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
-import net.minecraft.world.entity.ai.goal.RestrictSunGoal;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
@@ -43,18 +43,17 @@ import java.util.function.Supplier;
 
 public interface CurableConvertedCreature<T extends PathfinderMob, Z extends PathfinderMob & ICurableConvertedCreature<T>> extends ConvertedCreature<T>, ICurableConvertedCreature<T> {
 
-    class Data<T> {
+    class Data<T> extends ConvertedCreature.Data<T> {
         public boolean vulnerableToFire = true;
         public @NotNull EnumStrength garlicCache = EnumStrength.NONE;
-        public T entityCreature;
         public boolean sundamageCache;
         public boolean dropSoul = false;
-        @Nullable
-        public Component name;
+        public @Nullable Component name;
         public int conversionTime;
         public @Nullable UUID conversationStarter;
     }
 
+    @Override
     Data<T> data();
 
     /**
@@ -190,8 +189,10 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     /**
      * call in {@link PathfinderMob#readAdditionalSaveData(CompoundTag)}
      */
+    @Override
     @SuppressWarnings("JavadocReference")
     default void readAdditionalSaveDataC(@NotNull CompoundTag compound) {
+        ConvertedCreature.super.readAdditionalSaveDataC(compound);
         if (compound.contains("ConversionTime", 99) && compound.getInt("ConversionTime") > -1) {
             this.startConverting(compound.hasUUID("ConversionPlayer") ? compound.getUUID("ConversionPlayer") : null, compound.getInt("ConversionTime"), ((PathfinderMob) this));
         }
@@ -200,8 +201,10 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     /**
      * call in {@link PathfinderMob#addAdditionalSaveData(CompoundTag)}}
      */
+    @Override
     @SuppressWarnings("JavadocReference")
     default void addAdditionalSaveDataC(@NotNull CompoundTag compound) {
+        ConvertedCreature.super.addAdditionalSaveDataC(compound);
         compound.putInt("ConversionTime", this.isConverting(((PathfinderMob) this)) ? data().conversionTime : -1);
         if (data().conversationStarter != null) {
             compound.putUUID("ConversionPlayer", data().conversationStarter);
@@ -254,6 +257,11 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
         PathfinderMob entity = ((PathfinderMob) this);
         entity.goalSelector.addGoal(1, new AvoidEntityGoal<>(entity, PathfinderMob.class, 10, 1, 1.1, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION)));
         entity.goalSelector.addGoal(4, new RestrictSunGoal(entity));
+        entity.goalSelector.addGoal(5, new AttackMeleeNoSunGoal(entity, 0.9D, false));
+
+        entity.goalSelector.addGoal(11, new RandomStrollGoal(entity, 0.7));
+        entity.goalSelector.addGoal(13, new LookAtPlayerGoal(entity, Player.class, 6.0F));
+        entity.goalSelector.addGoal(15, new RandomLookAroundGoal(entity));
 
         entity.targetSelector.addGoal(1, new HurtByTargetGoal(entity));
         entity.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(entity, Player.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
