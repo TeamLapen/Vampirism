@@ -80,9 +80,6 @@ public class ModEntities {
 
     public static final RegistryObject<Codec<? extends Converter>> DEFAULT_CONVERTER = CONVERTING_HELPER.register("default", () -> DefaultConverter.CODEC);
     public static final RegistryObject<Codec<? extends Converter>> SPECIAL_CONVERTER = CONVERTING_HELPER.register("special", () -> SpecialConverter.CODEC);
-    public static final RegistryObject<Codec<? extends Converter>> COW_CONVERTER = CONVERTING_HELPER.register("cow", () -> ConvertedCowEntity.CowConverter.CODEC);
-    public static final RegistryObject<Codec<? extends Converter>> SHEEP_CONVERTER = CONVERTING_HELPER.register("sheep", () -> ConvertedSheepEntity.SheepConverter.CODEC);
-    public static final RegistryObject<Codec<? extends Converter>> VILLAGER_CONVERTER = CONVERTING_HELPER.register("villager", () -> ConvertedVillagerEntity.VillagerConverter.CODEC);
 
 
     /**
@@ -103,8 +100,8 @@ public class ModEntities {
         event.register(BLINDING_BAT.get(), SpawnPlacements.Type.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BlindingBatEntity::spawnPredicate, SpawnPlacementRegisterEvent.Operation.OR);
         event.register(DUMMY_CREATURE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DummyBittenAnimalEntity::spawnPredicate, SpawnPlacementRegisterEvent.Operation.OR);
         event.register(CONVERTED_CREATURE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedCreatureEntity::spawnPredicate, SpawnPlacementRegisterEvent.Operation.OR);
-        event.register(CONVERTED_SHEEP.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedCreatureEntity::spawnPredicate, SpawnPlacementRegisterEvent.Operation.OR);
-        event.register(CONVERTED_COW.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedCreatureEntity::spawnPredicate, SpawnPlacementRegisterEvent.Operation.OR);
+        event.register(CONVERTED_SHEEP.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedSheepEntity::checkConvertedSheepSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
+        event.register(CONVERTED_COW.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedCowEntity::checkConvertedCowSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
         event.register(HUNTER_TRAINER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
         event.register(HUNTER_TRAINER_DUMMY.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
         event.register(VAMPIRE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, VampireBaseEntity::spawnPredicateVampire, SpawnPlacementRegisterEvent.Operation.OR);
@@ -128,8 +125,8 @@ public class ModEntities {
         event.put(CONVERTED_CREATURE.get(), BasicVampireEntity.getAttributeBuilder().build());
         event.put(CONVERTED_CREATURE_IMOB.get(), BasicVampireEntity.getAttributeBuilder().build());
         event.put(CONVERTED_HORSE.get(), ConvertedHorseEntity.getAttributeBuilder().build());
-        event.put(CONVERTED_SHEEP.get(), BasicVampireEntity.getAttributeBuilder().build());
-        event.put(CONVERTED_COW.get(), BasicVampireEntity.getAttributeBuilder().build());
+        event.put(CONVERTED_SHEEP.get(), ConvertedSheepEntity.getAttributeBuilder().build());
+        event.put(CONVERTED_COW.get(), ConvertedCowEntity.getAttributeBuilder().build());
         event.put(CONVERTED_DONKEY.get(), ConvertedDonkeyEntity.getAttributeBuilder().build());
         event.put(CONVERTED_MULE.get(), ConvertedMuleEntity.getAttributeBuilder().build());
         event.put(DUMMY_CREATURE.get(), BasicVampireEntity.getAttributeBuilder().build());

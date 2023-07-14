@@ -15,27 +15,29 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Render the vampire overlay
+ * Render the vampire overlay for converted creatures
  */
 @OnlyIn(Dist.CLIENT)
-public class VampireEntityLayer<T extends LivingEntity, U extends EntityModel<T>> extends RenderLayer<T, U> {
+public class ConvertedVampireEntityLayer<T extends LivingEntity, U extends EntityModel<T>> extends RenderLayer<T, U> {
 
-    private final ResourceLocation texture;
+    private final boolean checkIfRender;
 
-    public VampireEntityLayer(@NotNull RenderLayerParent<T, U> entityRendererIn, ResourceLocation texture) {
+    /**
+     * @param checkIfRender If it should check if {@link ConvertedCreatureRenderer#renderOverlay} is true
+     */
+    public ConvertedVampireEntityLayer(@NotNull RenderLayerParent<T, U> entityRendererIn, boolean checkIfRender) {
         super(entityRendererIn);
-        this.texture = texture;
-    }
-
-    @Deprecated
-    public VampireEntityLayer(@NotNull RenderLayerParent<T, U> entityRendererIn, ResourceLocation texture, @SuppressWarnings("unused") boolean checkIfRender) {
-        this(entityRendererIn, texture);
+        this.checkIfRender = checkIfRender;
     }
 
     @Override
     public void render(@NotNull PoseStack matrixStack, @NotNull MultiBufferSource iRenderTypeBuffer, int i, @NotNull T entity, float v, float v1, float v2, float v3, float v4, float v5) {
-        if (!entity.isInvisible()) {
-            renderColoredCutoutModel(this.getParentModel(), this.texture, matrixStack, iRenderTypeBuffer, i, entity, 1, 1, 1);
+        if (entity instanceof ConvertedCreature<?> converted && !entity.isInvisible() && (!checkIfRender || ConvertedCreatureRenderer.renderOverlay)) {
+            ResourceLocation texture = converted.data().texture;
+            //noinspection ConstantValue,DataFlowIssue
+            if (texture != null && Minecraft.getInstance().textureManager.getTexture(texture, null) != null) {
+                renderColoredCutoutModel(this.getParentModel(), texture, matrixStack, iRenderTypeBuffer, i, entity, 1, 1, 1);
+            }
         }
     }
 }

@@ -9,9 +9,11 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.data.reloadlistener.ConvertiblesReloadListener;
 import de.teamlapen.vampirism.entity.converted.SpecialConvertingHandler;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -44,7 +46,12 @@ public class SpecialConverter<T extends PathfinderMob, Z extends PathfinderMob &
 
     @Override
     public IConvertingHandler<?> createHandler() {
-        return new SpecialConvertingHandler<>(() -> this.convertedType, new VampirismEntityRegistry.DatapackHelper(this.helper));
+        return new SpecialConvertingHandler<>(() -> this.convertedType, null, new VampirismEntityRegistry.DatapackHelper(this.helper));
+    }
+
+    @Override
+    public IConvertingHandler<?> createHandler(@Nullable ResourceLocation texture) {
+        return new SpecialConvertingHandler<>(() -> this.convertedType, texture, new VampirismEntityRegistry.DatapackHelper(this.helper));
     }
 
     @Override

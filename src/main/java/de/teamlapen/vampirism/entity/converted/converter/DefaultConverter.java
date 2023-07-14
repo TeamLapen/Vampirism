@@ -8,6 +8,8 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.data.reloadlistener.ConvertiblesReloadListener;
 import de.teamlapen.vampirism.entity.converted.DefaultConvertingHandler;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
+import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -25,12 +27,17 @@ public class DefaultConverter implements Converter {
     }
 
     public DefaultConverter() {
-        this.helper = null;
+        this.helper = ConvertiblesReloadListener.EntityEntry.Attributes.DEFAULT;
     }
 
     @Override
     public IConvertingHandler<?> createHandler() {
-        return new DefaultConvertingHandler<>(new VampirismEntityRegistry.DatapackHelper(this.helper));
+        return new DefaultConvertingHandler<>(new VampirismEntityRegistry.DatapackHelper(this.helper), null);
+    }
+
+    @Override
+    public IConvertingHandler<?> createHandler(@Nullable ResourceLocation texture) {
+        return new DefaultConvertingHandler<>(new VampirismEntityRegistry.DatapackHelper(this.helper), texture);
     }
 
     @Override

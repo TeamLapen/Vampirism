@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -61,12 +62,14 @@ public class DefaultConvertingHandler<T extends PathfinderMob> implements IConve
     };
 
     protected final @NotNull IDefaultHelper helper;
+    protected final @Nullable ResourceLocation overlayTexture;
 
     /**
      * @param helper If null a default one will be used
      */
-    public DefaultConvertingHandler(@Nullable IDefaultHelper helper) {
+    public DefaultConvertingHandler(@Nullable IDefaultHelper helper, @Nullable ResourceLocation overlayTexture) {
         this.helper = Objects.requireNonNullElse(helper, defaultHelper);
+        this.overlayTexture = overlayTexture;
     }
 
     @Nullable
@@ -77,6 +80,7 @@ public class DefaultConvertingHandler<T extends PathfinderMob> implements IConve
             copyImportantStuff(convertedCreature, entity);
             convertedCreature.setUUID(Mth.createInsecureUUID(convertedCreature.getRandom())); //Set a new uuid to avoid confusion as the class of the entity associated with the uuid changes
             convertedCreature.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 2));
+            convertedCreature.data().texture = this.overlayTexture;
             return convertedCreature;
         }).orElse(null);
     }
