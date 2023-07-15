@@ -144,14 +144,25 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void eyeHeight(EntityEvent.@NotNull Size event) {
+    public void size(EntityEvent.@NotNull Size event) {
         if (event.getEntity() instanceof Player && ((Player) event.getEntity()).getInventory() != null /*make sure we are not in the player's contructor*/) {
             if (event.getEntity().isAlive() && event.getEntity().position().lengthSqr() != 0 && event.getEntity().getVehicle() == null) { //Do not attempt to get capability while entity is being initialized
                 if (VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().bat) {
                     event.setNewSize(BatVampireAction.BAT_SIZE);
-                    event.setNewEyeHeight(BatVampireAction.BAT_EYE_HEIGHT);
                 } else if (VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().isDBNO) {
                     event.setNewSize(EntityDimensions.fixed(0.6f, 0.95f));
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void eyeHeight(EntityEvent.@NotNull EyeHeight event) {
+        if (event.getEntity() instanceof Player && ((Player) event.getEntity()).getInventory() != null /*make sure we are not in the player's contructor*/) {
+            if (event.getEntity().isAlive() && event.getEntity().position().lengthSqr() != 0 && event.getEntity().getVehicle() == null) { //Do not attempt to get capability while entity is being initialized
+                if (VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().bat) {
+                    event.setNewEyeHeight(BatVampireAction.BAT_EYE_HEIGHT);
+                } else if (VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().isDBNO) {
                     event.setNewEyeHeight(0.725f);
                 }
             }
