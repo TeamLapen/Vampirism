@@ -179,6 +179,7 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
             } else {
                 this.getSkillHandler().reset();
                 this.getActionHandler().resetTimers();
+                this.sync(true);
             }
 
         } else {
