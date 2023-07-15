@@ -754,8 +754,10 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                 bloodStats.setMaxBlood(30);
             } else if (newLevel > 3) {
                 bloodStats.setMaxBlood(26);
-            } else {
+            } else if (newLevel > 0) {
                 bloodStats.setMaxBlood(20);
+            } else {
+                this.vision.deactivate();
             }
         } else {
             if (oldLevel == 0) {
@@ -1462,14 +1464,14 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         }
 
         private void switchVision() {
-            List<IVampireVision> visions = VampirismAPI.vampireVisionRegistry().getVisions();
+            List<IVampireVision> visions = VampirismAPI.vampireVisionRegistry().getVisions().stream().filter(unlockedVisions::contains).toList();
             int newIndex;
             if (this.vision != null) {
                 newIndex = visions.indexOf(this.vision) + 1;
             } else {
                 newIndex = 0;
             }
-            var newVision = newIndex == visions.size() ? null : visions.get(++newIndex);
+            var newVision = newIndex >= visions.size() ? null : visions.get(newIndex);
             activate(newVision);
         }
 
@@ -1485,6 +1487,9 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
         public void activate(@Nullable IVampireVision vision) {
             if (this.vision != null && this.vision == vision) {
+                return;
+            }
+            if (vision != null && !this.unlockedVisions.contains(vision)) {
                 return;
             }
             if (this.vision != null) {
