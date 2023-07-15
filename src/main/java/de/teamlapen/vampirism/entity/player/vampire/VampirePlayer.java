@@ -774,6 +774,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                 actionHandler.resetTimers();
                 skillHandler.disableAllSkills();
                 this.skillHandler.resetRefinements();
+                this.sync(true);
             }
         } else {
             if (oldLevel == 0) {

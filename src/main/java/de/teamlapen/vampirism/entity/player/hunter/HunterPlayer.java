@@ -228,6 +228,7 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
                 skillHandler.disableAllSkills();
                 actionHandler.resetTimers();
                 this.skillHandler.resetRefinements();
+                this.sync(true);
             }
 
         } else {
