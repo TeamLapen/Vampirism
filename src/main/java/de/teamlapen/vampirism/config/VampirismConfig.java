@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.config;
 
 
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -13,7 +14,12 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.apache.commons.compress.archivers.sevenz.CLI;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.maven.artifact.versioning.ArtifactVersion;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -111,7 +117,12 @@ public class VampirismConfig {
     public static void onLoad(final ModConfigEvent.@NotNull Loading configEvent) {
         if (configEvent.getConfig().getType() == ModConfig.Type.SERVER) {
             ((SundamageRegistry) VampirismAPI.sundamageRegistry()).reloadConfiguration();
-
+        }
+        if (configEvent.getConfig().getSpec() == clientSpec) {
+            if (CLIENT.guiLevelOffsetYOld.get() == 0) {
+                CLIENT.guiLevelOffsetYOld.set(CLIENT.guiLevelOffsetY.get());
+                CLIENT.guiLevelOffsetY.set(CLIENT.guiLevelOffsetY.get() - 49);
+            }
         }
     }
 
@@ -235,6 +246,7 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue disableBloodVisionRendering;
         public final ForgeConfigSpec.BooleanValue disableHudActionCooldownRendering;
         public final ForgeConfigSpec.BooleanValue disableHudActionDurationRendering;
+        public final ForgeConfigSpec.IntValue guiLevelOffsetYOld;
 
         Client(ForgeConfigSpec.@NotNull Builder builder) {
             builder.comment("Client configuration settings")
@@ -252,7 +264,7 @@ public class VampirismConfig {
 
             builder.comment("Configure GUI").push("gui");
             guiLevelOffsetX = builder.comment("X-Offset of the level indicator from the center in pixels").defineInRange("levelOffsetX", 0, -250, 250);
-            guiLevelOffsetY = builder.comment("Y-Offset of the level indicator from the bottom in pixels").defineInRange("levelOffsetY", 47, 0, 270);
+            guiLevelOffsetY = builder.comment("Y-Offset of the level indicator from the bottom in pixels").defineInRange("levelOffsetY", 0, 0, 270);
             guiSkillButton = builder.comment("Render skill menu button in inventory").define("skillButtonEnable", true);
             overrideGuiSkillButtonX = builder.comment("Force the guiSkillButton to the following x position from the center of the inventory, default value is 125").defineInRange("overrideGuiSkillButtonX", 125, Integer.MIN_VALUE, Integer.MAX_VALUE);
             overrideGuiSkillButtonY = builder.comment("Force the guiSkillButton to the following y position from the center of the inventory, default value is -22").defineInRange("overrideGuiSkillButtonY", -22, Integer.MIN_VALUE, Integer.MAX_VALUE);
@@ -263,6 +275,7 @@ public class VampirismConfig {
             disableHudActionCooldownRendering = builder.comment("Disable the rendering of the action cooldowns in the HUD").define("disableHudActionCooldownRendering", false);
             disableHudActionDurationRendering = builder.comment("Disable the rendering of the action durations in the HUD").define("disableHudActionDurationRendering", false);
 
+            guiLevelOffsetYOld = builder.comment("Old fixed Y offset of level overlay").defineInRange("levelOffsetYOld", 0, 0, 270);
             builder.pop();
 
             builder.pop();
