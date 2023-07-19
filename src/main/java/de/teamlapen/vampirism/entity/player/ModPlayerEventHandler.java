@@ -23,6 +23,7 @@ import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.effects.VampirismPoisonEffect;
 import de.teamlapen.vampirism.effects.VampirismPotion;
+import de.teamlapen.vampirism.entity.ModEntityEventHandler;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
@@ -62,6 +63,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -76,14 +78,21 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Console;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * Event handler for player related events
@@ -144,7 +153,7 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void eyeHeight(EntityEvent.@NotNull Size event) {
+    public void sizeEvent(EntityEvent.@NotNull Size event) {
         if (event.getEntity() instanceof Player && ((Player) event.getEntity()).getInventory() != null /*make sure we are not in the player's contructor*/) {
             if (event.getEntity().isAlive() && event.getEntity().position().lengthSqr() != 0 && event.getEntity().getVehicle() == null) { //Do not attempt to get capability while entity is being initialized
                 if (VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().bat) {
@@ -155,6 +164,61 @@ public class ModPlayerEventHandler {
                     event.setNewEyeHeight(0.725f);
                 }
             }
+        }
+    }
+
+    /**
+     * This is a workaround because the class {@link EntityEvent.EyeHeight} may not be available on runtime. Take a look at {@link #registerEyeHeight()}
+     */
+    @Deprecated
+    private static <T extends EntityEvent> void eyeHeightReflect(Method setNewEyeHeight, Method getOldEyeHeight, T event) throws InvocationTargetException, IllegalAccessException {
+        if (event.getEntity() instanceof Player && ((Player) event.getEntity()).getInventory() != null /*make sure we are not in the player's contructor*/) {
+            if (event.getEntity().isAlive() && event.getEntity().position().lengthSqr() != 0 && event.getEntity().getVehicle() == null) { //Do not attempt to get capability while entity is being initialized
+                if (VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().bat) {
+                    setNewEyeHeight.invoke(event, BatVampireAction.BAT_EYE_HEIGHT);
+                } else if (VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().isDBNO) {
+                    setNewEyeHeight.invoke(event, 0.725f);
+                }
+            }
+        }
+    }
+
+    /**
+     * Performs a {@link net.minecraftforge.eventbus.api.SubscribeEvent} for {@link #eyeHeightReflect(java.lang.reflect.Method, java.lang.reflect.Method, net.minecraftforge.event.entity.EntityEvent)}  because {@link EntityEvent.EyeHeight} is not available
+     * on compile time and may not be available on runtime depending on the forge version.
+     * <p>
+     * This will only subscribe if the Class is available.
+     * <p>
+     * @see <a href="https://github.com/TeamLapen/Vampirism/issues/1235"></a>
+     *
+     */
+    @SuppressWarnings("SuspiciousInvocationHandlerImplementation")
+    @Deprecated
+    public static <T extends Event> void registerEyeHeight() {
+        try {
+            var EyeHeight = Class.forName("net.minecraftforge.event.entity.EntityEvent$EyeHeight");
+            Method hashCode = Object.class.getDeclaredMethod("hashCode");
+            Method equals = Object.class.getDeclaredMethod("equals", Object.class);
+            Method toString = Object.class.getDeclaredMethod("toString");
+            Method accept = Consumer.class.getDeclaredMethod("accept", Object.class);
+            Method setNewEyeHeight = EyeHeight.getDeclaredMethod("setNewEyeHeight", float.class);
+            Method getOldEyeHeight = EyeHeight.getDeclaredMethod("getOriginalEyeHeight");
+            var proxy = Proxy.newProxyInstance(Consumer.class.getClassLoader(), new Class[]{Consumer.class}, (object, method, args) -> {
+                if (method.equals(accept)) {
+                    eyeHeightReflect(setNewEyeHeight, getOldEyeHeight, ((EntityEvent) args[0]));
+                    ModEntityEventHandler.eyeHeightReflect(setNewEyeHeight, getOldEyeHeight, ((EntityEvent) args[0]));
+                    return null;
+                } else if (method.equals(hashCode)) {
+                    return System.identityHashCode(object);
+                } else if (method.equals(equals)) {
+                    return object == args[0];
+                } else if (method.equals(toString)) {
+                    return object.getClass().getName() + "@" + Integer.toHexString(object.hashCode());
+                }
+                throw new UnsupportedOperationException("Method " + method + " is not supported in this proxy implementation.");
+            });
+            MinecraftForge.EVENT_BUS.addListener(EventPriority.NORMAL, false, (Class<T>) EyeHeight, (Consumer<T>) proxy);
+        } catch (ClassNotFoundException | NoSuchMethodException ignored) {
         }
     }
 
