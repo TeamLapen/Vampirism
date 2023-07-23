@@ -284,7 +284,6 @@ public class VampirismMod {
         }
 
         MinecraftForge.EVENT_BUS.register(new ModPlayerEventHandler());
-        ModPlayerEventHandler.registerEyeHeight();
 
         MinecraftForge.EVENT_BUS.register(new ModEntityEventHandler());
         MinecraftForge.EVENT_BUS.addListener(ModLootTables::onLootLoad);

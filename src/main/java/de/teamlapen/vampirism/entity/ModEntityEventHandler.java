@@ -20,7 +20,6 @@ import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.entity.player.vampire.actions.BatVampireAction;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.items.VampirismVampireSwordItem;
 import de.teamlapen.vampirism.items.oil.EvasionOil;
@@ -63,8 +62,6 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -256,16 +253,6 @@ public class ModEntityEventHandler {
         }
         if (event.getEntity() instanceof LivingEntity) {
             //(CoffinBlock.setSleepSize(event, ((LivingEntity) event.getEntity()));
-        }
-    }
-
-    /**
-     * This is a workaround because the class {@link EntityEvent.EyeHeight} may not be available on runtime. Take a look at {@link de.teamlapen.vampirism.entity.player.ModPlayerEventHandler#registerEyeHeight()}
-     */
-    @Deprecated
-    public static <T extends EntityEvent> void eyeHeightReflect(Method setNewEyeHeight, Method getOldEyeHeight, T event) throws InvocationTargetException, IllegalAccessException {
-        if (event.getEntity() instanceof VampireBaseEntity || event.getEntity() instanceof HunterBaseEntity) {
-            setNewEyeHeight.invoke(event, ((Float) getOldEyeHeight.invoke(event)) * 0.875f);
         }
     }
 
