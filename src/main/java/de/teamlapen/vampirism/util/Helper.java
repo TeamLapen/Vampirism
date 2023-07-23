@@ -149,7 +149,7 @@ public class Helper {
         if (target != null && (target.isCreative() || target.isSpectator())) return false;
         if (biter instanceof IVampirePlayer player) {
             if (!VampirismConfig.SERVER.playerCanTurnPlayer.get()) return false;
-            return !(player instanceof ServerPlayer) || PermissionAPI.getPermission((ServerPlayer) player, Permissions.INFECT_PLAYER);
+            return !(player instanceof ServerPlayer) || Permissions.INFECT_PLAYER.isAllowed((ServerPlayer) player);
         } else {
             return !VampirismConfig.SERVER.disableMobBiteInfection.get();
         }

@@ -328,7 +328,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
     @NotNull
     public BITE_TYPE determineBiteType(LivingEntity entity) {
-        if (player instanceof ServerPlayer && !PermissionAPI.getPermission((ServerPlayer) player, Permissions.FEED)) {
+        if (player instanceof ServerPlayer && Permissions.FEED.isDisallowed(((ServerPlayer) player))) {
             return BITE_TYPE.NONE;
         }
         if (entity instanceof IBiteableEntity) {
@@ -346,7 +346,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             if (((Player) entity).getAbilities().instabuild || !Permissions.isPvpEnabled(player)) {
                 return BITE_TYPE.NONE;
             }
-            if (!UtilLib.canReallySee(entity, player, false) && VampirePlayer.getOpt((Player) entity).map(v -> v.canBeBitten(this)).orElse(false) && (!(player instanceof ServerPlayer) || PermissionAPI.<Boolean>getPermission((ServerPlayer) player, Permissions.FEED_PLAYER))) {
+            if (!UtilLib.canReallySee(entity, player, false) && VampirePlayer.getOpt((Player) entity).map(v -> v.canBeBitten(this)).orElse(false) && (!(player instanceof ServerPlayer) || Permissions.FEED_PLAYER.isAllowed((ServerPlayer) player))) {
                 if (!(entity.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof VampirismHunterArmorItem)) {
                     return BITE_TYPE.SUCK_BLOOD_PLAYER;
                 }
