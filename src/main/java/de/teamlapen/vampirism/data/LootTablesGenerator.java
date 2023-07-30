@@ -324,10 +324,6 @@ public class LootTablesGenerator {//TODO 1.20 move to de.teamlapen.vampirism.dat
             this.add(ModBlocks.THRONE.get(), (p_218567_0_) -> createSinglePropConditionTable(p_218567_0_, VampirismSplitBlock.PART, VampirismSplitBlock.Part.MAIN));
             this.dropSelf(ModBlocks.ALCHEMY_TABLE.get());
             this.add(ModBlocks.DIAGONAL_CURSED_BARK.get(), noDrop());
-            this.add(ModBlocks.REMAINS.get(), noDrop());
-            this.add(ModBlocks.ACTIVE_VULNERABLE_REMAINS.get(), noDrop());
-            this.add(ModBlocks.INCAPACITATED_VULNERABLE_REMAINS.get(), noDrop());
-            this.add(ModBlocks.VULNERABLE_REMAINS.get(), noDrop());
             this.add(ModBlocks.CURSED_HANGING_ROOTS.get(), ModBlockLootTables::createShearsOnlyDrop);
             this.add(ModBlocks.MOTHER.get(), createSingleItemTable(ModItems.MOTHER_CORE.get())
                     .withPool(LootPool.lootPool().name("bonus").setRolls(UniformGenerator.between(1,4))

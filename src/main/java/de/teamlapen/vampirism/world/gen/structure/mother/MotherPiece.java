@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.world.gen.structure.mother;
 
-import de.teamlapen.vampirism.blocks.DarkSpruceLogs;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.world.gen.VampirismFeatures;
 import net.minecraft.core.BlockPos;
@@ -41,14 +40,13 @@ public class MotherPiece extends ScatteredFeaturePiece {
         }
     }
 
-    protected void placeLogs(WorldGenLevel level, BoundingBox box) {
-        for (int i = 5; i < 11; i++) {
-            generateLogSlate(level, box, i);
-        }
-        BlockState log = ModBlocks.DARK_SPRUCE_LOG.get().defaultBlockState().setValue(DarkSpruceLogs.INVULNERABLE, true);
-        generateBox(level, box, 2, 11, 0, 4, 11, 0, log, log, false);
-        generateBox(level, box, 1, 11, 1, 2, 11, 1, log, log, false);
-        placeAir(level, box);
+    protected void generateLogSlate(WorldGenLevel level, BoundingBox box, int yHeight) {
+        BlockState log = ModBlocks.REMAINS.get().defaultBlockState();
+        generateBox(level, box, 2, yHeight, 0, 5, yHeight, 0, log, log, false);
+        generateBox(level, box, 1, yHeight, 1, 6, yHeight, 1, log, log, false);
+        generateBox(level, box, 0, yHeight, 2, 7, yHeight, 5, log, log, false);
+        generateBox(level, box, 1, yHeight, 6, 6, yHeight, 6, log, log, false);
+        generateBox(level, box, 2, yHeight, 7, 5, yHeight, 7, log, log, false);
     }
 
     protected void placeAir(WorldGenLevel level, BoundingBox box) {
@@ -64,13 +62,14 @@ public class MotherPiece extends ScatteredFeaturePiece {
         generateBox(level, box, 3, 8, 4, 4, 8, 4, air, air, false);
     }
 
-    protected void generateLogSlate(WorldGenLevel level, BoundingBox box, int yHeight) {
-        BlockState log = ModBlocks.DARK_SPRUCE_LOG.get().defaultBlockState().setValue(DarkSpruceLogs.INVULNERABLE, true);
-        generateBox(level, box, 2, yHeight, 0, 5, yHeight, 0, log, log, false);
-        generateBox(level, box, 1, yHeight, 1, 6, yHeight, 1, log, log, false);
-        generateBox(level, box, 0, yHeight, 2, 7, yHeight, 5, log, log, false);
-        generateBox(level, box, 1, yHeight, 6, 6, yHeight, 6, log, log, false);
-        generateBox(level, box, 2, yHeight, 7, 5, yHeight, 7, log, log, false);
+    protected void placeLogs(WorldGenLevel level, BoundingBox box) {
+        for (int i = 5; i < 11; i++) {
+            generateLogSlate(level, box, i);
+        }
+        BlockState log = ModBlocks.REMAINS.get().defaultBlockState();
+        generateBox(level, box, 2, 11, 0, 4, 11, 0, log, log, false);
+        generateBox(level, box, 1, 11, 1, 2, 11, 1, log, log, false);
+        placeAir(level, box);
     }
 
     protected void placeMother(@NotNull WorldGenLevel level, @NotNull BoundingBox box) {
@@ -96,20 +95,20 @@ public class MotherPiece extends ScatteredFeaturePiece {
         int y = 0;
         int x = -5;
         int z = -7;
-        placeBlock(level, remains, x + 0, y + 0, z + 14, box);
-        placeBlock(level, remains, x + 1, y + 0, z + 14, box);
-        placeBlock(level, remains, x + 2, y + 0, z + 2, box);
-        placeBlock(level, remains, x + 2, y + 0, z + 14, box);
-        placeBlock(level, remains, x + 3, y + 0, z + 2, box);
-        placeBlock(level, remains, x + 4, y + 0, z + 8, box);
-        placeBlock(level, remains, x + 5, y + 0, z + 8, box);
-        placeBlock(level, remains, x + 6, y + 0, z + 11, box);
-        placeBlock(level, remains, x + 7, y + 0, z + 4, box);
-        placeBlock(level, active, x + 8, y + 0, z + 9, box);
-        placeBlock(level, remains, x + 12, y + 0, z + 16, box);
-        placeBlock(level, remains, x + 12, y + 0, z + 17, box);
-        placeBlock(level, remains, x + 13, y + 0, z + 17, box);
-        placeBlock(level, remains, x + 14, y + 0, z + 17, box);
+        placeBlock(level, remains, x, y, z + 14, box);
+        placeBlock(level, remains, x + 1, y, z + 14, box);
+        placeBlock(level, remains, x + 2, y, z + 2, box);
+        placeBlock(level, remains, x + 2, y, z + 14, box);
+        placeBlock(level, remains, x + 3, y, z + 2, box);
+        placeBlock(level, remains, x + 4, y, z + 8, box);
+        placeBlock(level, remains, x + 5, y, z + 8, box);
+        placeBlock(level, remains, x + 6, y, z + 11, box);
+        placeBlock(level, remains, x + 7, y, z + 4, box);
+        placeBlock(level, active, x + 8, y, z + 9, box);
+        placeBlock(level, remains, x + 12, y, z + 16, box);
+        placeBlock(level, remains, x + 12, y, z + 17, box);
+        placeBlock(level, remains, x + 13, y, z + 17, box);
+        placeBlock(level, remains, x + 14, y, z + 17, box);
 
         placeBlock(level, remains, x + 1, y + 1, z + 10, box);
         placeBlock(level, remains, x + 2, y + 1, z + 10, box);
@@ -125,11 +124,11 @@ public class MotherPiece extends ScatteredFeaturePiece {
         placeBlock(level, remains, x + 7, y + 1, z + 4, box);
         placeBlock(level, remains, x + 7, y + 1, z + 5, box);
         placeBlock(level, remains, x + 7, y + 1, z + 11, box);
-        placeBlock(level, remains, x + 8, y + 1, z + 0, box);
+        placeBlock(level, remains, x + 8, y + 1, z, box);
         placeBlock(level, remains, x + 8, y + 1, z + 8, box);
         placeBlock(level, remains, x + 8, y + 1, z + 9, box);
         placeBlock(level, remains, x + 8, y + 1, z + 10, box);
-        placeBlock(level, remains, x + 9, y + 1, z + 0, box);
+        placeBlock(level, remains, x + 9, y + 1, z, box);
         placeBlock(level, remains, x + 9, y + 1, z + 16, box);
         placeBlock(level, remains, x + 9, y + 1, z + 17, box);
         placeBlock(level, remains, x + 11, y + 1, z + 4, box);
@@ -164,7 +163,7 @@ public class MotherPiece extends ScatteredFeaturePiece {
         placeBlock(level, remains, x + 5, y + 2, z + 17, box);
         placeBlock(level, remains, x + 6, y + 2, z + 2, box);
         placeBlock(level, remains, x + 6, y + 2, z + 8, box);
-        placeBlock(level, remains, x + 7, y + 2, z + 0, box);
+        placeBlock(level, remains, x + 7, y + 2, z, box);
         placeBlock(level, active, x + 7, y + 2, z + 1, box);
         placeBlock(level, remains, x + 7, y + 2, z + 2, box);
         placeBlock(level, remains, x + 7, y + 2, z + 3, box);
@@ -174,7 +173,7 @@ public class MotherPiece extends ScatteredFeaturePiece {
         placeBlock(level, remains, x + 7, y + 2, z + 11, box);
         placeBlock(level, remains, x + 7, y + 2, z + 13, box);
         placeBlock(level, remains, x + 7, y + 2, z + 14, box);
-        placeBlock(level, remains, x + 8, y + 2, z + 0, box);
+        placeBlock(level, remains, x + 8, y + 2, z, box);
         placeBlock(level, remains, x + 8, y + 2, z + 9, box);
         placeBlock(level, remains, x + 8, y + 2, z + 10, box);
         placeBlock(level, remains, x + 8, y + 2, z + 13, box);

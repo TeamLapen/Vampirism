@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.blockentity;
 
-import de.teamlapen.vampirism.blocks.mother.ActiveVulnerableRemainsBlock;
+import de.teamlapen.vampirism.blocks.mother.MotherTreeStructure;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModSounds;
@@ -31,30 +31,23 @@ public class VulnerableRemainsBlockEntity extends BlockEntity {
     }
 
 
-    private Optional<MotherBlockEntity> getMother() {
-        if (motherPos == null) {
-            ((ActiveVulnerableRemainsBlock) getBlockState().getBlock()).getConnector().getMother(this.level, this.worldPosition).ifPresentOrElse(pos -> {
-                motherPos = pos.getKey();
-            }, () -> {
-                this.level.setBlockAndUpdate(this.worldPosition, ModBlocks.REMAINS.get().defaultBlockState());
+    public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, VulnerableRemainsBlockEntity e) {
+        if (e.firstTick) {
+            e.firstTick = false;
+            e.getMother().ifPresent(mother -> {
+                mother.updateFightStatus();
+                e.checkDummyEntity();
             });
+        } else if (level.getRandom().nextInt(100) == 3) {
+            e.checkDummyEntity();
         }
-        return Optional.ofNullable(motherPos).map(pos -> {
-            var blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof MotherBlockEntity mother) {
-                return mother;
-            }
-            return null;
-        });
     }
 
     private void destroyVulnerability() {
         this.level.setBlockAndUpdate(this.worldPosition, ModBlocks.INCAPACITATED_VULNERABLE_REMAINS.get().defaultBlockState());
     }
 
-    public void attacked(@NotNull BlockState state, @NotNull ServerPlayer player) {
 
-    }
 
     public void onDamageDealt(DamageSource src, double damage) {
         this.health -= damage;
@@ -109,17 +102,11 @@ public class VulnerableRemainsBlockEntity extends BlockEntity {
 
     private boolean firstTick = true;
 
-    public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, VulnerableRemainsBlockEntity e) {
-        if (e.firstTick) {
-            e.firstTick = false;
-            Optional<MotherBlockEntity> motherOpt = e.getMother();
-            //motherOpt.ifPresent(MotherBlockEntity::updateFightStatus);
-            motherOpt.ifPresent(mother -> {
-                mother.updateFightStatus();
-                Entity e2 = e.checkDummyEntity();
-                //level.getNearbyPlayers(TargetingConditions.DEFAULT, e2, AABB.ofSize(blockPos.getCenter(), 5, 5, 5)).forEach(mother::addPlayer);
-            });
+    private Optional<MotherBlockEntity> getMother() {
+        if (this.level != null) {
+            return MotherTreeStructure.findMother(this.level, this.getBlockPos()).map(p -> this.level.getBlockEntity(p.getKey())).filter(e -> e instanceof MotherBlockEntity).map(e -> (MotherBlockEntity) e);
         }
+        return Optional.empty();
     }
 
 }

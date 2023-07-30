@@ -1,9 +1,10 @@
 package de.teamlapen.vampirism.blocks.mother;
 
 import de.teamlapen.vampirism.blockentity.MotherBlockEntity;
-import de.teamlapen.vampirism.blocks.connected.ConnectedBlock;
+import de.teamlapen.vampirism.blocks.VampirismBlock;
 import de.teamlapen.vampirism.core.ModTiles;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.EntityBlock;
@@ -14,6 +15,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,9 +24,8 @@ import java.util.Optional;
 
 import static de.teamlapen.vampirism.blocks.HorizontalContainerBlock.createTickerHelper;
 
-public class MotherBlock extends ConnectedBlock<IRemainsBlock> implements EntityBlock, IRemainsBlock {
+public class MotherBlock extends VampirismBlock implements EntityBlock, IRemainsBlock {
 
-    private final RemainsConnector connector = new RemainsConnector();
 
     public MotherBlock() {
         super(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_BROWN).strength(5, 3600000.0F).sound(SoundType.CHAIN));
@@ -65,14 +66,18 @@ public class MotherBlock extends ConnectedBlock<IRemainsBlock> implements Entity
         return new MotherBlockEntity(pos, state);
     }
 
+    @Override
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+        if (getBlockEntity(level, pos).map(MotherBlockEntity::isCanBeBroken).orElse(Boolean.TRUE)) {
+            return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
+        }
+        return false;
+    }
+
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
         return level.isClientSide() ? null : createTickerHelper(type, ModTiles.MOTHER.get(), MotherBlockEntity::serverTick);
     }
 
-    @Override
-    public RemainsConnector getConnector() {
-        return this.connector;
-    }
 }

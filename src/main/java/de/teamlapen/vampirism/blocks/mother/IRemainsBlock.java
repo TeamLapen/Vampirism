@@ -1,11 +1,10 @@
 package de.teamlapen.vampirism.blocks.mother;
 
-import de.teamlapen.vampirism.blocks.connected.IConnectedBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public interface IRemainsBlock extends IConnectedBlock {
+public interface IRemainsBlock {
 
     boolean isVulnerable(BlockState state);
 
@@ -19,6 +18,4 @@ public interface IRemainsBlock extends IConnectedBlock {
     default void unFreeze(Level level, BlockPos pos, BlockState state) {
     }
 
-    @Override
-    RemainsConnector getConnector();
 }
