@@ -18,7 +18,7 @@ public interface ISettingsProvider {
      * @return true if the settings value exists and the value is {@code true}
      */
     @Contract(pure = true)
-    boolean isSettingTrue(String key);
+    boolean isSettingTrue(@NotNull String key);
 
     /**
      * @param key settings key
@@ -26,18 +26,10 @@ public interface ISettingsProvider {
      */
     @NotNull
     @Contract(pure = true)
-    Optional<String> getSettingsValueOpt(String key);
-
-    /**
-     * @param key settings key
-     * @return settings value for the given key
-     */
-    @Nullable
-    @Contract(pure = true)
-    String getSettingsValue(String key);
+    Optional<String> getSettingsValue(@NotNull String key);
 
     @NotNull
-    CompletableFuture<Collection<Supporter>> getSupportersAsync();
+    CompletableFuture<Optional<Collection<Supporter>>> getSupportersAsync();
 
     /**
      * updates the cache of the settings

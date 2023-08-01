@@ -39,7 +39,7 @@ public class TelemetryCollector {
     private static void send() {
         try {
             URIBuilder builder = new URIBuilder(REFERENCE.SETTINGS_API);
-            addPathSegment(builder, REFERENCE.SETTINGS_API_VERSION, "telemetry", "basic");
+            addPathSegment(builder,"telemetry", "basic");
             builder.addParameter("mod_version", REFERENCE.VERSION.toString());
             builder.addParameter("mc_version", MCPVersion.getMCVersion());
             builder.addParameter("mod_count", Integer.toString(ModList.get().size()));
