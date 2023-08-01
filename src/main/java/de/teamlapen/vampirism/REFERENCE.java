@@ -36,8 +36,7 @@ public class REFERENCE {
     public static final String CURSEFORGE_LINK = "https://minecraft.curseforge.com/projects/vampirism-become-a-vampire";
     public static final String GUIDEAPI_LINK = "https://www.curseforge.com/minecraft/mc-mods/guide-api-village-and-pillage";
     public static final String INTEGRATIONS_LINK = "https://minecraft.curseforge.com/projects/vampirism-integrations";
-    public static final String SETTINGS_API = "https://api.vampirism.dev/api";
-    public static final String SETTINGS_API_VERSION = "v1";
+    public static final String SETTINGS_API = "https://api.vampirism.dev/api/v1";
 
     // fixed values
     public static final ResourceLocation FACTION_PLAYER_HANDLER_KEY = new ResourceLocation(MODID, "ifactionplayerhandler");

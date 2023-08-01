@@ -48,12 +48,14 @@ public class SupporterManager {
     }
 
     public static void init() {
-        VampirismAPI.settings().getSupportersAsync().thenAccept(supporters -> {
-            var supporter = new Supporter[2][];
-            supporter[0] = supporters.stream().filter(s -> s.faction().equals(REFERENCE.VAMPIRE_PLAYER_KEY)).toArray(Supporter[]::new);
-            supporter[1] = supporters.stream().filter(s -> s.faction().equals(REFERENCE.HUNTER_PLAYER_KEY)).toArray(Supporter[]::new);
-            SupporterManager.supporters = supporter;
-            LOGGER.trace("Supporters {}", getDebugString());
+        VampirismAPI.settings().getSupportersAsync().thenAccept(optional -> {
+            optional.ifPresentOrElse(supporters -> {
+                var supporter = new Supporter[2][];
+                supporter[0] = supporters.stream().filter(s -> s.faction().equals(REFERENCE.VAMPIRE_PLAYER_KEY)).toArray(Supporter[]::new);
+                supporter[1] = supporters.stream().filter(s -> s.faction().equals(REFERENCE.HUNTER_PLAYER_KEY)).toArray(Supporter[]::new);
+                SupporterManager.supporters = supporter;
+                LOGGER.trace("Supporters {}", getDebugString());
+            }, () -> LOGGER.warn("Failed to retrieve supporters"));
         });
     }
 }
