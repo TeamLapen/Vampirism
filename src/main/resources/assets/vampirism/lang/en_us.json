@@ -308,6 +308,7 @@
   "enchantment.vampirism.crossbowinfinite.desc": "Makes your (non tech) crossbow shoot without consuming arrows",
   "__comment": "death cause",
   "death.attack.sun": "%1$s did not like the sun",
+  "death.attack.sun.player": "%1$s was pushed into the sun by %2$s",
   "death.attack.garlic": "%1$s was poisoned by garlic",
   "death.attack.vampire_on_fire": "%1$s burned to ashes",
   "death.attack.vampire_on_fire.player": "%2$s scorched %1$s",
