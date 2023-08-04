@@ -50,7 +50,7 @@ public class Permissions {
 
     public record Permission(PermissionNode<Boolean> node) {
         public boolean isAllowed(ServerPlayer player) {
-            return VampirismConfig.SERVER.usePermissions.get() && PermissionAPI.getPermission(player, this.node);
+            return !VampirismConfig.SERVER.usePermissions.get() || PermissionAPI.getPermission(player, this.node);
         }
 
         public boolean isDisallowed(ServerPlayer player) {
@@ -69,12 +69,12 @@ public class Permissions {
         }
 
         public boolean isAllowed(ServerPlayer player, T context) {
-            return VampirismConfig.SERVER.usePermissions.get() && PermissionAPI.getPermission(player, this.node, this.context.createContext(context));
+            return !VampirismConfig.SERVER.usePermissions.get() || PermissionAPI.getPermission(player, this.node, this.context.createContext(context));
         }
 
         @SafeVarargs
         public final boolean isAllowed(ServerPlayer player, T... context) {
-            return VampirismConfig.SERVER.usePermissions.get() && PermissionAPI.getPermission(player, this.node, Arrays.stream(context).map(this.context::createContext).toArray(PermissionDynamicContext[]::new));
+            return !VampirismConfig.SERVER.usePermissions.get() || PermissionAPI.getPermission(player, this.node, Arrays.stream(context).map(this.context::createContext).toArray(PermissionDynamicContext[]::new));
         }
 
         public boolean isDisallowed(ServerPlayer player, T context) {
