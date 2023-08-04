@@ -117,23 +117,25 @@ public class ModKeys {
 
     @SubscribeEvent
     public void handleMouseButton(InputEvent.MouseButton.Pre event) {
-        handleInputEvent(event);
+        handleInputEvent(event, event.getAction());
     }
 
     @SubscribeEvent
     public void handleKey(InputEvent.Key event) {
-        handleInputEvent(event);
+        handleInputEvent(event, event.getAction());
     }
 
-    public void handleInputEvent(InputEvent event) {
+    public void handleInputEvent(InputEvent event, int action) {
         if (SUCK.isDown()) {
             suck();
         } else {
             endSuck();
-            for (Map.Entry<KeyMapping, Runnable> entry : this.keyMappingActions.entrySet()) {
-                if (entry.getKey().isDown()) {
-                    entry.getValue().run();
-                    break;
+            if (action == InputConstants.PRESS) {
+                for (Map.Entry<KeyMapping, Runnable> entry : this.keyMappingActions.entrySet()) {
+                    if (entry.getKey().isDown()) {
+                        entry.getValue().run();
+                        break;
+                    }
                 }
             }
         }
