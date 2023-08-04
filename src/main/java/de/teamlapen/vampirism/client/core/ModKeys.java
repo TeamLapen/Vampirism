@@ -87,8 +87,7 @@ public class ModKeys {
     private long lastAction3Trigger = 0;
 
 
-    @SubscribeEvent
-    public void handleInputEvent(InputEvent event) {
+    public void handleInputEvent(InputEvent event, int keyAction) {
         if (SUCK.isDown()) {
             if (!suckKeyDown) {
                 HitResult mouseOver = Minecraft.getInstance().hitResult;
@@ -111,53 +110,65 @@ public class ModKeys {
                 VampirismMod.dispatcher.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.FINISH_SUCK_BLOOD));
             }
 
-            if (ACTION.isDown()) {
-                if (Minecraft.getInstance().player.isAlive() && !Minecraft.getInstance().player.isSpectator()) {
-                    IPlayableFaction<?> faction = VampirismPlayerAttributes.get(Minecraft.getInstance().player).faction;
-                    if (faction != null) {
-                        Minecraft.getInstance().setScreen(new ActionSelectScreen<>(new Color(faction.getColor()), false));
+            if (keyAction == InputConstants.PRESS) {
+                if (ACTION.isDown()) {
+                    if (Minecraft.getInstance().player.isAlive() && !Minecraft.getInstance().player.isSpectator()) {
+                        IPlayableFaction<?> faction = VampirismPlayerAttributes.get(Minecraft.getInstance().player).faction;
+                        if (faction != null) {
+                            Minecraft.getInstance().setScreen(new ActionSelectScreen<>(new Color(faction.getColor()), false));
+                        }
                     }
-                }
-            } else if (VAMPIRISM_MENU.isDown()) {
-                VampirismMod.dispatcher.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.VAMPIRISM_MENU));
-            } else if (VISION.isDown()) {
-                VampirismMod.dispatcher.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.TOGGLE_VAMPIRE_VISION));
-            } else if (ACTION1.isDown()) {
-                long t = System.currentTimeMillis();
-                if (t - lastAction1Trigger > ACTION_BUTTON_COOLDOWN) {
-                    lastAction1Trigger = System.currentTimeMillis();
-                    Player player = Minecraft.getInstance().player;
-                    if (player.isAlive()) {
-                        FactionPlayerHandler.getOpt(player).ifPresent(factionHandler -> factionHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, factionHandler.getBoundAction(1))));
+                } else if (VAMPIRISM_MENU.isDown()) {
+                    VampirismMod.dispatcher.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.VAMPIRISM_MENU));
+                } else if (VISION.isDown()) {
+                    VampirismMod.dispatcher.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.TOGGLE_VAMPIRE_VISION));
+                } else if (ACTION1.isDown()) {
+                    long t = System.currentTimeMillis();
+                    if (t - lastAction1Trigger > ACTION_BUTTON_COOLDOWN) {
+                        lastAction1Trigger = System.currentTimeMillis();
+                        Player player = Minecraft.getInstance().player;
+                        if (player.isAlive()) {
+                            FactionPlayerHandler.getOpt(player).ifPresent(factionHandler -> factionHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, factionHandler.getBoundAction(1))));
+                        }
                     }
-                }
 
-            } else if (ACTION2.isDown()) {
-                long t = System.currentTimeMillis();
-                if (t - lastAction2Trigger > ACTION_BUTTON_COOLDOWN) {
-                    lastAction2Trigger = System.currentTimeMillis();
-                    Player player = Minecraft.getInstance().player;
-                    if (player.isAlive()) {
-                        FactionPlayerHandler.getOpt(player).ifPresent(factionHandler -> factionHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, factionHandler.getBoundAction(2))));
+                } else if (ACTION2.isDown()) {
+                    long t = System.currentTimeMillis();
+                    if (t - lastAction2Trigger > ACTION_BUTTON_COOLDOWN) {
+                        lastAction2Trigger = System.currentTimeMillis();
+                        Player player = Minecraft.getInstance().player;
+                        if (player.isAlive()) {
+                            FactionPlayerHandler.getOpt(player).ifPresent(factionHandler -> factionHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, factionHandler.getBoundAction(2))));
+                        }
                     }
-                }
 
-            } else if (ACTION3.isDown()) {
-                long t = System.currentTimeMillis();
-                if (t - lastAction3Trigger > ACTION_BUTTON_COOLDOWN) {
-                    lastAction3Trigger = System.currentTimeMillis();
-                    Player player = Minecraft.getInstance().player;
-                    if (player.isAlive()) {
-                        FactionPlayerHandler.getOpt(player).ifPresent(factionHandler -> factionHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, factionHandler.getBoundAction(3))));
+                } else if (ACTION3.isDown()) {
+                    long t = System.currentTimeMillis();
+                    if (t - lastAction3Trigger > ACTION_BUTTON_COOLDOWN) {
+                        lastAction3Trigger = System.currentTimeMillis();
+                        Player player = Minecraft.getInstance().player;
+                        if (player.isAlive()) {
+                            FactionPlayerHandler.getOpt(player).ifPresent(factionHandler -> factionHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, factionHandler.getBoundAction(3))));
+                        }
                     }
-                }
 
-            } else if (MINION.isDown()) {
-                if (!Minecraft.getInstance().player.isSpectator() && FactionPlayerHandler.getOpt(Minecraft.getInstance().player).map(FactionPlayerHandler::getLordLevel).orElse(0) > 0) {
-                    Minecraft.getInstance().setScreen(new SelectMinionTaskScreen());
+                } else if (MINION.isDown()) {
+                    if (!Minecraft.getInstance().player.isSpectator() && FactionPlayerHandler.getOpt(Minecraft.getInstance().player).map(FactionPlayerHandler::getLordLevel).orElse(0) > 0) {
+                        Minecraft.getInstance().setScreen(new SelectMinionTaskScreen());
+                    }
                 }
             }
         }
+    }
+
+    @SubscribeEvent
+    public void handleKey(InputEvent.Key event) {
+        handleInputEvent(event, event.getAction());
+    }
+
+    @SubscribeEvent
+    public void handleMouseButton(InputEvent.MouseButton.Pre event) {
+        handleInputEvent(event, event.getAction());
     }
 
     /**
