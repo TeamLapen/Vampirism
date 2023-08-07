@@ -343,7 +343,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 screenColor = 0xfffff755;
                 fullScreen = false;
                 if (vampire.getRepresentingPlayer().getAbilities().instabuild || (effect != null && effect.getAmplifier() >= 3)) {
-                    screenPercentage = Math.min(20, screenPercentage);
+                    screenPercentage = Math.min(10, screenPercentage);
                 }
                 screenPercentage = Math.min(screenPercentage, VampirismConfig.BALANCE.vpMaxYellowBorderPercentage.get());
             } else {
