@@ -2,15 +2,6 @@
   "requirements": {
     "requirements": [
       {
-        "type": "vampirism:entity_type",
-        "amount": 10,
-        "description": {
-          "translate": "entity_tag.vampirism.hunter"
-        },
-        "entityType": "vampirism:hunter",
-        "id": "vampirism:hunter"
-      },
-      {
         "type": "vampirism:item",
         "description": {
           "translate": "item.minecraft.magma_cream"
@@ -20,6 +11,15 @@
           "Count": 3,
           "id": "minecraft:magma_cream"
         }
+      },
+      {
+        "type": "vampirism:entity_type",
+        "amount": 10,
+        "description": {
+          "translate": "entity_tag.vampirism.hunter"
+        },
+        "entityType": "vampirism:hunter",
+        "id": "vampirism:hunter"
       }
     ]
   },

@@ -2,15 +2,6 @@
   "requirements": {
     "requirements": [
       {
-        "type": "vampirism:entity_type",
-        "amount": 5,
-        "description": {
-          "translate": "entity_tag.vampirism.advanced_hunter"
-        },
-        "entityType": "vampirism:advanced_hunter",
-        "id": "vampirism:advanced_hunter"
-      },
-      {
         "type": "vampirism:item",
         "description": {
           "translate": "item.minecraft.gold_ingot"
@@ -31,6 +22,15 @@
           "Count": 10,
           "id": "vampirism:pure_blood_4"
         }
+      },
+      {
+        "type": "vampirism:entity_type",
+        "amount": 5,
+        "description": {
+          "translate": "entity_tag.vampirism.advanced_hunter"
+        },
+        "entityType": "vampirism:advanced_hunter",
+        "id": "vampirism:advanced_hunter"
       }
     ]
   },

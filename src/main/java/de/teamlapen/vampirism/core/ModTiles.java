@@ -52,6 +52,14 @@ public class ModTiles {
         blocks.add(ModBlocks.DARK_SPRUCE_WALL_SIGN.get());
         blocks.add(ModBlocks.CURSED_SPRUCE_WALL_SIGN.get());
         ((TileEntityTypeAccessor) BlockEntityType.SIGN).setValidBlocks(blocks);
+
+        blocks = new HashSet<>(((TileEntityTypeAccessor) BlockEntityType.HANGING_SIGN).getValidBlocks());
+        blocks.add(ModBlocks.DARK_SPRUCE_HANGING_SIGN.get());
+        blocks.add(ModBlocks.CURSED_SPRUCE_HANGING_SIGN.get());
+        blocks.add(ModBlocks.DARK_SPRUCE_WALL_HANGING_SIGN.get());
+        blocks.add(ModBlocks.CURSED_SPRUCE_WALL_HANGING_SIGN.get());
+        ((TileEntityTypeAccessor) BlockEntityType.HANGING_SIGN).setValidBlocks(blocks);
+
     }
 
     public static void fixMappings(@NotNull MissingMappingsEvent event) {

@@ -324,6 +324,8 @@ public class LootTablesGenerator {//TODO 1.20 move to de.teamlapen.vampirism.dat
             this.add(ModBlocks.THRONE.get(), (p_218567_0_) -> createSinglePropConditionTable(p_218567_0_, VampirismSplitBlock.PART, VampirismSplitBlock.Part.MAIN));
             this.dropSelf(ModBlocks.ALCHEMY_TABLE.get());
             this.add(ModBlocks.DIAGONAL_CURSED_BARK.get(), noDrop());
+            this.dropSelf(ModBlocks.DARK_SPRUCE_HANGING_SIGN.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_HANGING_SIGN.get());
         }
 
         @NotNull

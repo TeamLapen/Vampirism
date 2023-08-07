@@ -2,13 +2,15 @@
   "requirements": {
     "requirements": [
       {
-        "type": "vampirism:entity_type",
-        "amount": 100,
+        "type": "vampirism:item",
         "description": {
-          "translate": "entity_tag.vampirism.vampire"
+          "translate": "item.minecraft.gold_ingot"
         },
-        "entityType": "vampirism:vampire",
-        "id": "vampirism:vampire"
+        "id": "minecraft:gold_ingot",
+        "item": {
+          "Count": 64,
+          "id": "minecraft:gold_ingot"
+        }
       },
       {
         "type": "vampirism:stat",
@@ -20,15 +22,13 @@
         "stat": "vampirism:capture_village"
       },
       {
-        "type": "vampirism:item",
+        "type": "vampirism:entity_type",
+        "amount": 100,
         "description": {
-          "translate": "item.minecraft.gold_ingot"
+          "translate": "entity_tag.vampirism.vampire"
         },
-        "id": "minecraft:gold_ingot",
-        "item": {
-          "Count": 64,
-          "id": "minecraft:gold_ingot"
-        }
+        "entityType": "vampirism:vampire",
+        "id": "vampirism:vampire"
       }
     ]
   },

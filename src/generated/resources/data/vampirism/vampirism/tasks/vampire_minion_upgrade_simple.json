@@ -2,15 +2,6 @@
   "requirements": {
     "requirements": [
       {
-        "type": "vampirism:entity_type",
-        "amount": 8,
-        "description": {
-          "translate": "entity_tag.vampirism.advanced_hunter"
-        },
-        "entityType": "vampirism:advanced_hunter",
-        "id": "vampirism:advanced_hunter"
-      },
-      {
         "type": "vampirism:item",
         "description": {
           "translate": "item.minecraft.gold_block"
@@ -20,6 +11,15 @@
           "Count": 16,
           "id": "minecraft:gold_block"
         }
+      },
+      {
+        "type": "vampirism:entity_type",
+        "amount": 8,
+        "description": {
+          "translate": "entity_tag.vampirism.advanced_hunter"
+        },
+        "entityType": "vampirism:advanced_hunter",
+        "id": "vampirism:advanced_hunter"
       }
     ]
   },

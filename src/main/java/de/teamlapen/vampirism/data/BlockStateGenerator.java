@@ -7,6 +7,8 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.models.model.ModelTemplates;
+import net.minecraft.data.models.model.TextureMapping;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
@@ -306,6 +308,11 @@ public class BlockStateGenerator extends BlockStateProvider {//TODO 1.20 move to
         simpleBlock(ModBlocks.CURSED_SPRUCE_WALL_SIGN.get(), models().getBuilder("vampirism:cursed_spruce_wall_sign").texture("particle", "vampirism:block/cursed_spruce_planks"));
         simpleBlock(ModBlocks.DARK_SPRUCE_SIGN.get(), models().getBuilder("vampirism:dark_spruce_sign").texture("particle", "vampirism:block/dark_spruce_planks"));
         simpleBlock(ModBlocks.CURSED_SPRUCE_SIGN.get(), models().getBuilder("vampirism:cursed_spruce_sign").texture("particle", "vampirism:block/cursed_spruce_planks"));
+
+        simpleBlock(ModBlocks.DARK_SPRUCE_HANGING_SIGN.get(), models().getBuilder("vampirism:dark_spruce_hanging_sign").texture("particle", "vampirism:block/dark_spruce_planks"));
+        simpleBlock(ModBlocks.DARK_SPRUCE_WALL_HANGING_SIGN.get(), models().getBuilder("vampirism:dark_spruce_wall_hanging_sign").texture("particle", "vampirism:block/dark_spruce_planks"));
+        simpleBlock(ModBlocks.CURSED_SPRUCE_HANGING_SIGN.get(), models().getBuilder("vampirism:cursed_spruce_hanging_sign").texture("particle", "vampirism:block/cursed_spruce_planks"));
+        simpleBlock(ModBlocks.CURSED_SPRUCE_WALL_HANGING_SIGN.get(), models().getBuilder("vampirism:cursed_spruce_wall_hanging_sign").texture("particle", "vampirism:block/cursed_spruce_planks"));
     }
 
     private void createCursedBark() {

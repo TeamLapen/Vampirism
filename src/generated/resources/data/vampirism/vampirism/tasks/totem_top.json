@@ -2,15 +2,6 @@
   "requirements": {
     "requirements": [
       {
-        "type": "vampirism:entity_type",
-        "amount": 32,
-        "description": {
-          "translate": "entity_tag.vampirism.zombies"
-        },
-        "entityType": "vampirism:zombies",
-        "id": "vampirism:zombies"
-      },
-      {
         "type": "vampirism:item",
         "description": {
           "translate": "item.minecraft.diamond"
@@ -31,6 +22,15 @@
           "Count": 32,
           "id": "minecraft:obsidian"
         }
+      },
+      {
+        "type": "vampirism:entity_type",
+        "amount": 32,
+        "description": {
+          "translate": "entity_tag.vampirism.zombies"
+        },
+        "entityType": "vampirism:zombies",
+        "id": "vampirism:zombies"
       }
     ]
   },

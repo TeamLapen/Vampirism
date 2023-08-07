@@ -723,6 +723,8 @@
   "block.vampirism.throne": "Throne",
   "block.vampirism.vampire_rack": "Vampire Rack",
   "block.vampirism.alchemy_table": "Alchemy Table",
+  "block.vampirism.dark_spruce_hanging_sign": "Dark Spruce Hanging Sign",
+  "block.vampirism.cursed_spruce_hanging_sign": "Cursed Spruce Hanging Sign",
   "__comment": "items",
   "item.vampirism.hunter_intel": "Hunter Intel",
   "item.vampirism.pure_blood": "Pure Blood",

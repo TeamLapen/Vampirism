@@ -156,6 +156,10 @@ public class ItemModelGenerator extends BaseItemModelGenerator {//TODO 1.20 move
             put(ModBlocks.DIRECT_CURSED_BARK.get().asItem(), modLoc("block/cursed_bark"));
             put(ModItems.DARK_SPRUCE_SIGN.get(), modLoc("item/dark_spruce_sign"));
             put(ModItems.CURSED_SPRUCE_SIGN.get(), modLoc("item/cursed_spruce_sign"));
+            put(ModItems.DARK_SPRUCE_SIGN.get(), modLoc("item/dark_spruce_sign"));
+            put(ModItems.CURSED_SPRUCE_SIGN.get(), modLoc("item/cursed_spruce_sign"));
+            put(ModItems.DARK_SPRUCE_HANGING_SIGN.get(), modLoc("item/dark_spruce_hanging_sign"));
+            put(ModItems.CURSED_SPRUCE_HANGING_SIGN.get(), modLoc("item/cursed_spruce_hanging_sign"));
         }};
 
         blocks.forEach(this::block);

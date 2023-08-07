@@ -2,13 +2,15 @@
   "requirements": {
     "requirements": [
       {
-        "type": "vampirism:entity_type",
-        "amount": 4,
+        "type": "vampirism:item",
         "description": {
-          "translate": "entity_tag.vampirism.advanced_vampire"
+          "translate": "item.minecraft.gold_ingot"
         },
-        "entityType": "vampirism:advanced_vampire",
-        "id": "vampirism:advanced_vampire"
+        "id": "minecraft:gold_ingot",
+        "item": {
+          "Count": 32,
+          "id": "minecraft:gold_ingot"
+        }
       },
       {
         "type": "vampirism:entity",
@@ -20,15 +22,13 @@
         "id": "vampirism:vampire_baron"
       },
       {
-        "type": "vampirism:item",
+        "type": "vampirism:entity_type",
+        "amount": 4,
         "description": {
-          "translate": "item.minecraft.gold_ingot"
+          "translate": "entity_tag.vampirism.advanced_vampire"
         },
-        "id": "minecraft:gold_ingot",
-        "item": {
-          "Count": 32,
-          "id": "minecraft:gold_ingot"
-        }
+        "entityType": "vampirism:advanced_vampire",
+        "id": "vampirism:advanced_vampire"
       }
     ]
   },

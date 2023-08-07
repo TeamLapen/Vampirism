@@ -159,6 +159,10 @@ public class ModBlocks {
     public static final RegistryObject<CoffinBlock> COFFIN_RED = registerWithItem("coffin_red", () -> new CoffinBlock(DyeColor.RED));
     public static final RegistryObject<CoffinBlock> COFFIN_BLACK = registerWithItem("coffin_black", () -> new CoffinBlock(DyeColor.BLACK));
     public static final RegistryObject<AlchemyTableBlock> ALCHEMY_TABLE = registerWithItem("alchemy_table", AlchemyTableBlock::new);
+    public static final RegistryObject<CeilingHangingSignBlock> DARK_SPRUCE_HANGING_SIGN = BLOCKS.register("dark_spruce_hanging_sign", () -> new CeilingHangingSignBlock(BlockBehaviour.Properties.of().mapColor(DARK_SPRUCE_LOG.get().defaultMapColor()).ignitedByLava().noCollission().strength(1.0F).sound(SoundType.WOOD), LogBlock.DARK_SPRUCE));
+    public static final RegistryObject<CeilingHangingSignBlock> CURSED_SPRUCE_HANGING_SIGN = BLOCKS.register("cursed_spruce_hanging_sign", () -> new CeilingHangingSignBlock(BlockBehaviour.Properties.of().mapColor(CURSED_SPRUCE_LOG.get().defaultMapColor()).ignitedByLava().noCollission().strength(1.0F).sound(SoundType.WOOD), LogBlock.CURSED_SPRUCE));
+    public static final RegistryObject<WallHangingSignBlock> DARK_SPRUCE_WALL_HANGING_SIGN = BLOCKS.register("dark_spruce_wall_hanging_sign", () -> new WallHangingSignBlock(BlockBehaviour.Properties.of().mapColor(DARK_SPRUCE_LOG.get().defaultMapColor()).ignitedByLava().noCollission().strength(1.0F).sound(SoundType.WOOD).lootFrom(DARK_SPRUCE_HANGING_SIGN), LogBlock.DARK_SPRUCE));
+    public static final RegistryObject<WallHangingSignBlock> CURSED_SPRUCE_WALL_HANGING_SIGN = BLOCKS.register("cursed_spruce_wall_hanging_sign", () -> new WallHangingSignBlock(BlockBehaviour.Properties.of().mapColor(CURSED_SPRUCE_LOG.get().defaultMapColor()).ignitedByLava().noCollission().strength(1.0F).sound(SoundType.WOOD).lootFrom(CURSED_SPRUCE_HANGING_SIGN), LogBlock.CURSED_SPRUCE));
 
 
     /**

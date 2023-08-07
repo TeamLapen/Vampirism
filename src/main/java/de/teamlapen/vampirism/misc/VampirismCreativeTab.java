@@ -180,6 +180,7 @@ public class VampirismCreativeTab {
             addBlock(DARK_SPRUCE_PRESSURE_PLACE);
             addBlock(DARK_SPRUCE_BUTTON);
             addItem(ModItems.DARK_SPRUCE_SIGN);
+            addItem(ModItems.DARK_SPRUCE_HANGING_SIGN);
 
             addBlock(CURSED_SPRUCE_LOG);
             addBlock(CURSED_SPRUCE_LOG_CURED);
@@ -197,6 +198,7 @@ public class VampirismCreativeTab {
             addBlock(CURSED_SPRUCE_PRESSURE_PLACE);
             addBlock(CURSED_SPRUCE_BUTTON);
             addItem(ModItems.CURSED_SPRUCE_SIGN);
+            addItem(ModItems.CURSED_SPRUCE_HANGING_SIGN);
 
             addBlock(CASTLE_BLOCK_DARK_STONE);
             addBlock(CASTLE_STAIRS_DARK_STONE);
