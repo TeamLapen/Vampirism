@@ -55,7 +55,7 @@ public class CustomBossEventOverlay implements IGuiOverlay {
             int j1 = j - 9;
             graphics.drawString(this.client.font, itextcomponent, i1, j1, 16777215, true);
 
-            if (j >= this.client.getWindow().getGuiScaledHeight() / 3) {
+            if (j >= graphics.guiHeight()  / 3) {
                 break;
             }
         }
@@ -81,7 +81,10 @@ public class CustomBossEventOverlay implements IGuiOverlay {
         }
         if (value.getOverlay() != BossEvent.BossBarOverlay.PROGRESS) {
             graphics.setColor(1, 1, 1, 1);
-            graphics.blit(GUI_BARS_TEXTURES, k, j, 0, 80 + (value.getOverlay().ordinal() - 1) * 5 * 2, 182, 5);
+            int y = 80 + (value.getOverlay().ordinal() - 1) * 5 * 2;
+            RenderSystem.enableBlend();
+            graphics.blit(GUI_BARS_TEXTURES, k, j, 0, y, 182, 5);
+            RenderSystem.disableBlend();
         }
     }
 }
