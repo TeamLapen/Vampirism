@@ -148,6 +148,7 @@
   "text.vampirism.action.not_bound": "No action is bound to this key. See %s.",
   "text.vampirism.action.only_faction": "This action can only be used by players of %s faction",
   "text.vampirism.action.permission_disallowed": "You do not have the permission to use this action",
+  "text.vampirism.action.temporary_disabled": "You are not able to use an action",
   "__comment": "util",
   "itemGroup.vampirism": "Vampirism",
   "action.vampirism.cancel": "Cancel",

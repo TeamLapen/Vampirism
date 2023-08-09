@@ -85,6 +85,11 @@ public interface IActionHandler<T extends IFactionPlayer<T>> {
     IAction.PERM toggleAction(IAction<T> action, IAction.ActivationContext context);
 
     /**
+     * Make a complete check if the player can use the action. This includes a general check and an action specific check ({@link IAction#canUse(IFactionPlayer)})
+     */
+    IAction.PERM canUseAction(@NotNull IAction<T> action);
+
+    /**
      * Deactivate a lasting action, if it was active.
      */
     void deactivateAction(ILastingAction<T> action);

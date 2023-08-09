@@ -101,6 +101,7 @@ public record ServerboundToggleActionPacket(ResourceLocation actionId, @Nullable
                         case COOLDOWN -> player.displayClientMessage(Component.translatable("text.vampirism.action.cooldown_not_over"), true);
                         case DISALLOWED -> player.displayClientMessage(Component.translatable("text.vampirism.action.disallowed"), true);
                         case PERMISSION_DISALLOWED -> player.displayClientMessage(Component.translatable("text.vampirism.action.permission_disallowed"), false);
+                        case PLAYER_DISALLOWED -> player.displayClientMessage(Component.translatable("text.vampirism.action.temporary_disabled"), true);
                         default -> {
                             //Everything alright
                         }

@@ -359,6 +359,11 @@ public class ModPlayerEventHandler {
         }
     }
 
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        FactionPlayerHandler.get(event.getEntity()).onRespawn(event.isEndConquered());
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent.@NotNull RightClickBlock event) {
 

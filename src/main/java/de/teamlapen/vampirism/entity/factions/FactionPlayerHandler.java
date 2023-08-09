@@ -16,6 +16,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.entity.player.IVampirismPlayer;
@@ -31,6 +32,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
@@ -570,5 +572,9 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             bounds.putString(String.valueOf(entry.getIntKey()), RegUtil.id(entry.getValue()).toString());
         }
         nbt.put("bound_actions", bounds);
+    }
+
+    public void onRespawn(boolean keepInventory) {
+        this.player.addEffect(new MobEffectInstance(ModEffects.ACTION_DISABLED.get(), 5 * 20));
     }
 }

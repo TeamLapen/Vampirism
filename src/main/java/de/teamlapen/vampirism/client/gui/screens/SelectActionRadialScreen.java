@@ -71,9 +71,9 @@ public class SelectActionRadialScreen<T extends IFactionPlayer<T>> extends DualS
 
     @Override
     public void drawSlice(IRadialMenuSlot<IAction<?>> slot, boolean highlighted, GuiGraphics buffer, float x, float y, float z, float radiusIn, float radiusOut, float startAngle, float endAngle, int r, int g, int b, int a) {
-        float actionPercentage = actionHandler.getPercentageForAction((IAction) slot.primarySlotIcon());
-        if (((IAction<T>)slot.primarySlotIcon()).canUse(this.player) != IAction.PERM.ALLOWED) {
-            actionPercentage = -1;
+        float actionPercentage = -1;
+        if (actionHandler.canUseAction((IAction)slot.primarySlotIcon()) == IAction.PERM.ALLOWED) {
+            actionPercentage = actionHandler.getPercentageForAction((IAction) slot.primarySlotIcon());
         }
         if (actionPercentage == 0) {
             super.drawSlice(slot, highlighted, buffer, x, y, z, radiusIn, radiusOut, startAngle, endAngle, r, g, b, 100);

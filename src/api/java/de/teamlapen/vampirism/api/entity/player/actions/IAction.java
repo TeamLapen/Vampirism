@@ -19,6 +19,7 @@ public interface IAction<T extends IFactionPlayer<T>> {
      * Checks if the player can use this action
      *
      * @param player Must be an instance of class that belongs to {@link IAction#getFaction()}
+     * @implNote  This only checks for action specific conditions. For a more general check use {@link de.teamlapen.vampirism.api.entity.player.actions.IActionHandler#canUseAction(IAction)}
      */
     PERM canUse(T player);
 
@@ -95,7 +96,7 @@ public interface IAction<T extends IFactionPlayer<T>> {
         /**
          * The player is not in the position to use the action.
          * <p>
-         * This is the case if the player is in spectator mode or the action rejects the player
+         * This is different from {@link PERM#PLAYER_DISALLOWED} as it is returned by a specific action when it does not allow the player to use it
          */
         DISALLOWED,
         /**
@@ -107,7 +108,13 @@ public interface IAction<T extends IFactionPlayer<T>> {
         /**
          * The user does not have the correct permission to use the action {@link de.teamlapen.vampirism.util.Permissions#ACTION}
          */
-        PERMISSION_DISALLOWED
+        PERMISSION_DISALLOWED,
+        /**
+         * The player is not in the position to use the action.
+         * <p>
+         * This is different from {@link PERM#DISALLOWED} as it is returned by the {@link IActionHandler} when the player is not able to use any action
+         */
+        PLAYER_DISALLOWED;
     }
 
     /**

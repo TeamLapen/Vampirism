@@ -56,6 +56,7 @@ public class ModEffects {
             .addAttributeModifier(ModAttributes.SUNDAMAGE.get(), "45ebd53a-14fa-4ede-b4e7-412e075a8b5f", 0.2, AttributeModifier.Operation.MULTIPLY_TOTAL)
             .addAttributeModifier(Attributes.ARMOR_TOUGHNESS, "45ebd53a-14fa-4ede-b4e7-412e075a8b5f", -0.3, AttributeModifier.Operation.MULTIPLY_TOTAL)
     );
+    public static final RegistryObject<MobEffect> ACTION_DISABLED = EFFECTS.register("action_disabled", () -> new VampirismEffect(MobEffectCategory.HARMFUL, 0x1919191));
 
     private static final Logger LOGGER = LogManager.getLogger();
     private static MobEffect modded_night_vision;  //Substituted version

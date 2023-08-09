@@ -107,6 +107,7 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
     @Override
     public void onDeath(DamageSource src) {
         this.getSkillHandler().damageRefinements();
+        this.getActionHandler().resetTimers();
     }
 
     @Override

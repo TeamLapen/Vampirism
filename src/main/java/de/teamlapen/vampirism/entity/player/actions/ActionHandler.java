@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.util.Permissions;
 import de.teamlapen.vampirism.util.RegUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -17,7 +18,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -268,19 +268,13 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
 
     @Override
     public IAction.PERM toggleAction(@NotNull IAction<T> action, IAction.ActivationContext context) {
-        ResourceLocation id = RegUtil.id(action);
-        if (activeTimers.containsKey(id)) {
-            deactivateAction((ILastingAction<T>) action);
-            dirty = true;
-            return IAction.PERM.ALLOWED;
-        } else if (cooldownTimers.containsKey(id)) {
-            return IAction.PERM.COOLDOWN;
-        } else {
-            if (this.player.getRepresentingPlayer().isSpectator()) return IAction.PERM.DISALLOWED;
-            if (!isActionUnlocked(action)) return IAction.PERM.NOT_UNLOCKED;
-            if (!isActionAllowedPermission(action)) return IAction.PERM.PERMISSION_DISALLOWED;
-            IAction.PERM r = action.canUse(player);
-            if (r == IAction.PERM.ALLOWED) {
+        IAction.PERM perm = canUseAction(action);
+        if (perm == IAction.PERM.ALLOWED) {
+            ResourceLocation id = RegUtil.id(action);
+            if (activeTimers.containsKey(id)) {
+                deactivateAction((ILastingAction<T>) action);
+                dirty = true;
+            } else {
                 if (action.onActivated(player, context)) {
                     if (action instanceof ILastingAction) {
                         activeTimers.put(id, ((ILastingAction<T>) action).getDuration(player));
@@ -289,12 +283,26 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
                     }
                     dirty = true;
                 }
-
-                return IAction.PERM.ALLOWED;
-            } else {
-                return r;
             }
         }
+        return perm;
+    }
+
+    @Override
+    public IAction.PERM canUseAction(@NotNull IAction<T> action) {
+        ResourceLocation id = RegUtil.id(action);
+        if (this.player.getRepresentingPlayer().isSpectator() || player.getRepresentingPlayer().getEffect(ModEffects.ACTION_DISABLED.get()) != null) {
+            return IAction.PERM.PLAYER_DISALLOWED;
+        } else if (!isActionAllowedPermission(action)){
+            return IAction.PERM.PERMISSION_DISALLOWED;
+        } else if (!isActionUnlocked(action)) {
+            return IAction.PERM.NOT_UNLOCKED;
+        } else if (activeTimers.containsKey(id)) {
+            return IAction.PERM.ALLOWED;
+        } else if (cooldownTimers.containsKey(id)) {
+            return IAction.PERM.COOLDOWN;
+        }
+        return action.canUse(player);
     }
 
     @Override
