@@ -90,6 +90,7 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
         r = compound.getInt("radius");
         defaultStrength = EnumStrength.getFromStrength(compound.getInt("strength"));
         bootTimer = compound.getInt("boot_timer");
+        maxBootTimer = compound.contains("max_boot_timer") ? compound.getInt("max_boot_timer") : 1;
         setFueledTime(compound.getInt("fueled"));
     }
 
@@ -114,7 +115,7 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
 
     public void onFueled() {
         setFueledTime(FUEL_DURATION);
-        this.setChanged();
+        this.updateLevel();
     }
 
     @Override
@@ -125,6 +126,7 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
         compound.putInt("fueled", fueled);
         if (bootTimer != 0) {
             compound.putInt("boot_timer", bootTimer);
+            compound.putInt("max_boot_timer", maxBootTimer);
         }
     }
 
@@ -155,9 +157,8 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
         strength = defaultStrength;
     }
 
-    @Override
-    public void setChanged() {
-        super.setChanged();
+    public void updateLevel() {
+        this.setChanged();
         if (hasLevel()) {
             BlockState state = level.getBlockState(worldPosition);
             this.level.sendBlockUpdated(worldPosition, state, state, 3);
@@ -173,7 +174,7 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
 
 
     public static void tick(Level level, BlockPos pos, BlockState state, @NotNull GarlicDiffuserBlockEntity blockEntity) {
-        if (blockEntity.initiateBootTimer) {
+        if (blockEntity.initiateBootTimer && !level.isClientSide) {
             blockEntity.initiateBootTimer = false;
             int bootTime = VampirismConfig.BALANCE.garlicDiffuserStartupTime.get() * 20;
             if (level instanceof ServerLevel serverLevel) {
@@ -183,19 +184,20 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
             }
             blockEntity.bootTimer = bootTime;
             blockEntity.maxBootTimer = bootTime;
-
+            blockEntity.updateLevel();
         }
         if (blockEntity.bootTimer > 0) {
             if (--blockEntity.bootTimer == 0) {
-                blockEntity.setChanged();
+                blockEntity.updateLevel();
                 blockEntity.register();
             }
         } else if (blockEntity.fueled > 0) {
             if (blockEntity.fueled == 1) {
                 blockEntity.setFueledTime(0);
-                blockEntity.setChanged();
+                blockEntity.updateLevel();
             } else {
                 blockEntity.fueled--;
+                blockEntity.setChanged();
             }
         }
     }
