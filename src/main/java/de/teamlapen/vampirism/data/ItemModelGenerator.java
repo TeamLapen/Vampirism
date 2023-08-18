@@ -79,6 +79,7 @@ public class ItemModelGenerator extends BaseItemModelGenerator {//TODO 1.20 move
             add(ModBlocks.CURSED_SPRUCE_FENCE_GATE.get());
             add(ModBlocks.VAMPIRE_RACK.get());
             add(ModBlocks.THRONE.get());
+            add(ModBlocks.CURSED_EARTH_PATH.get());
         }};
         Set<Item> items = new HashSet<>() {{
             add(ModItems.HUNTER_COAT_CHEST_NORMAL.get());

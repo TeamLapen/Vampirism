@@ -2,6 +2,15 @@
   "requirements": {
     "requirements": [
       {
+        "type": "vampirism:stat",
+        "amount": 3,
+        "description": {
+          "translate": "stat.vampirism.win_village_capture"
+        },
+        "id": "vampirism:win_village_capture",
+        "stat": "vampirism:win_village_capture"
+      },
+      {
         "type": "vampirism:item",
         "description": {
           "translate": "item.minecraft.gold_ingot"
@@ -11,15 +20,6 @@
           "Count": 32,
           "id": "minecraft:gold_ingot"
         }
-      },
-      {
-        "type": "vampirism:stat",
-        "amount": 3,
-        "description": {
-          "translate": "stat.vampirism.win_village_capture"
-        },
-        "id": "vampirism:win_village_capture",
-        "stat": "vampirism:win_village_capture"
       },
       {
         "type": "vampirism:entity_type",

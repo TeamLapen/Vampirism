@@ -269,6 +269,25 @@ public class BlockStateGenerator extends BlockStateProvider {//TODO 1.20 move to
         applyHorizontalModel(alchemy_table, models().getExistingFile(modLoc("block/alchemy_table/alchemy_table_input_1")), partBuilder -> partBuilder.condition(AlchemyTableBlock.HAS_BOTTLE_INPUT_1, true));
         applyHorizontalModel(alchemy_table, models().getExistingFile(modLoc("block/alchemy_table/alchemy_table_output_0")), partBuilder -> partBuilder.condition(AlchemyTableBlock.HAS_BOTTLE_OUTPUT_0, true));
         applyHorizontalModel(alchemy_table, models().getExistingFile(modLoc("block/alchemy_table/alchemy_table_output_1")), partBuilder -> partBuilder.condition(AlchemyTableBlock.HAS_BOTTLE_OUTPUT_1, true));
+
+        var cursedEarthPath = models().getBuilder(ModBlocks.CURSED_EARTH_PATH.getId().getPath())
+                .parent(models().getExistingFile(mcLoc("block/block")))
+                .texture("particle", modLoc("block/cursed_earth_path_side"))
+                .texture("side", modLoc("block/cursed_earth_path_side"))
+                .texture("top", modLoc("block/cursed_earth_path_top"))
+                .texture("bottom", modLoc("block/cursed_earth_path_top"))
+                .element()
+                .from(0,0,0).to(16,15,16)
+                .allFaces((direction, builder) -> {
+                    switch (direction) {
+                        case UP -> builder.uvs(0, 0, 16, 16).texture("#top").end();
+                        case DOWN -> builder.uvs(0, 0, 16, 16).texture("#bottom").end();
+                        default -> builder.uvs(0, 1, 16, 16).texture("#side").end();
+                    }
+                })
+                .end()
+                .renderType(cutout);
+        simpleBlock(ModBlocks.CURSED_EARTH_PATH.get(), cursedEarthPath);
     }
 
     private void createWoodStates() {

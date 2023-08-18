@@ -326,6 +326,7 @@ public class LootTablesGenerator {//TODO 1.20 move to de.teamlapen.vampirism.dat
             this.add(ModBlocks.DIAGONAL_CURSED_BARK.get(), noDrop());
             this.dropSelf(ModBlocks.DARK_SPRUCE_HANGING_SIGN.get());
             this.dropSelf(ModBlocks.CURSED_SPRUCE_HANGING_SIGN.get());
+            this.dropOther(ModBlocks.CURSED_EARTH_PATH.get(), ModBlocks.CURSED_EARTH.get());
         }
 
         @NotNull

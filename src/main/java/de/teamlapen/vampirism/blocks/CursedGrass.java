@@ -20,6 +20,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -33,8 +34,11 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.PlantType;
+import net.minecraftforge.common.ToolAction;
+import net.minecraftforge.common.ToolActions;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 
@@ -153,5 +157,10 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
     @Override
     public void onHolyWaterEffect(Level level, BlockState state, BlockPos pos, ItemStack holyWaterStack, IItemWithTier.TIER tier) {
         level.setBlockAndUpdate(pos, Blocks.GRASS_BLOCK.defaultBlockState());
+    }
+
+    @Override
+    public @Nullable BlockState getToolModifiedState(BlockState state, UseOnContext context, ToolAction toolAction, boolean simulate) {
+        return toolAction == ToolActions.SHOVEL_FLATTEN ? ModBlocks.CURSED_EARTH_PATH.get().defaultBlockState() : super.getToolModifiedState(state, context, toolAction, simulate);
     }
 }

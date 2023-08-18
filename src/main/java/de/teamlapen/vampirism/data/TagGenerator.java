@@ -69,6 +69,7 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
             tag(BlockTags.MINEABLE_WITH_SHOVEL)
                     .add(ModBlocks.CURSED_EARTH.get())
                     .add(ModBlocks.CURSED_GRASS.get())
+                    .add(ModBlocks.CURSED_EARTH_PATH.get())
             ;
             tag(BlockTags.MINEABLE_WITH_PICKAXE)
                     .add(ModBlocks.ALTAR_PILLAR.get())
