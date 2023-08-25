@@ -1,12 +1,6 @@
 repositories {
-    maven { // original jei release
-        url "https://dvs1.progwml6.com/files/maven"
-        content {
-            includeGroup "mezz.jei"
-        }
-    }
     maven {
-        // location of a maven mirror for JEI files, as a fallback
+        // location of a maven mirror for JEI files
         name = "ModMaven"
         url = "https://modmaven.dev/"
         content {
