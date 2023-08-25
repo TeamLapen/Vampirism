@@ -1,8 +1,4 @@
 repositories {
-
-    maven {
-        url "https://dvs1.progwml6.com/files/maven"
-    }
     maven {
         // location of a maven mirror for JEI files, as a fallback
         name = "ModMaven"
