@@ -32,7 +32,7 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
     private int r = 1;
     private boolean registered = false;
     private int fueled = 0;
-    private int bootTimer;
+    private int bootTimer = -1;
     private int maxBootTimer;
     private boolean initiateBootTimer = false;
 
