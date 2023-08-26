@@ -41,7 +41,7 @@ public class VampireDungeonFeature extends MonsterRoomFeature {
      * <p>
      * - changed {@link Blocks#MOSSY_COBBLESTONE} to {@link ModBlocks#CASTLE_BLOCK_DARK_BRICK} and {@link ModBlocks#CASTLE_BLOCK_DARK_BRICK_BLOODY}
      * - changed {@link Blocks#COBBLESTONE} to {@link Blocks#SPRUCE_PLANKS}
-     * - changed {@link net.minecraft.world.level.storage.loot.BuiltInLootTables#SIMPLE_DUNGEON} to {@link ModLootTables#chest_vampire_dungeon}
+     * - changed {@link net.minecraft.world.level.storage.loot.BuiltInLootTables#SIMPLE_DUNGEON} to {@link ModLootTables#CHEST_VAMPIRE_DUNGEON}
      * - changed {@link MonsterRoomFeature#randomEntityId(net.minecraft.util.RandomSource)} to {@link ModEntities#VAMPIRE}
      */
     @SuppressWarnings("JavadocReference")
@@ -122,7 +122,7 @@ public class VampireDungeonFeature extends MonsterRoomFeature {
 
                         if (j3 == 1) {
                             this.safeSetBlock(worldgenlevel, blockpos3, StructurePiece.reorient(worldgenlevel, blockpos3, Blocks.CHEST.defaultBlockState()), predicate);
-                            RandomizableContainerBlockEntity.setLootTable(worldgenlevel, randomsource, blockpos3, ModLootTables.chest_vampire_dungeon);
+                            RandomizableContainerBlockEntity.setLootTable(worldgenlevel, randomsource, blockpos3, ModLootTables.CHEST_VAMPIRE_DUNGEON);
                             break;
                         }
                     }

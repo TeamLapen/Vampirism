@@ -1,0 +1,7 @@
+{
+  "type": "vampirism:vampire_altar",
+  "biomes": "#vampirism:has_structure/vampire_altar",
+  "spawn_overrides": {},
+  "step": "surface_structures",
+  "terrain_adaptation": "beard_box"
+}

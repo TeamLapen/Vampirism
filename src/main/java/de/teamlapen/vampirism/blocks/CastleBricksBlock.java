@@ -54,7 +54,8 @@ public class CastleBricksBlock extends VampirismBlock {
         PURPLE_BRICK("purple_brick"),
         DARK_BRICK_BLOODY("dark_brick_bloody"),
         NORMAL_BRICK("normal_brick"),
-        DARK_STONE("dark_stone");
+        DARK_STONE("dark_stone"),
+        CRACKED_DARK_BRICK("cracked_dark_brick");
 
         private final String name;
 

@@ -1,0 +1,137 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:heart_striker_normal",
+          "weight": 30
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:heart_striker_enhanced",
+          "weight": 20
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:heart_striker_ultimate",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:heart_seeker_normal",
+          "weight": 30
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:heart_seeker_enhanced",
+          "weight": 20
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:heart_seeker_ultimate",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:basic_crossbow",
+          "weight": 30
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:basic_double_crossbow",
+          "weight": 20
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:basic_tech_crossbow",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:enhanced_crossbow",
+          "weight": 30
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:enhanced_double_crossbow",
+          "weight": 20
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:enhanced_tech_crossbow",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:hunter_axe_normal",
+          "weight": 60
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:hunter_axe_enhanced",
+          "weight": 40
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:hunter_axe_ultimate",
+          "weight": 20
+        }
+      ],
+      "rolls": 2.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:iron_ingot",
+          "weight": 20
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:gold_block",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:garlic_bread",
+          "weight": 20
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:item_garlic",
+          "weight": 20
+        }
+      ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 9.0,
+        "min": 5.0
+      }
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "vampirism:add_book_nbt"
+            }
+          ],
+          "name": "vampirism:vampire_book",
+          "weight": 50
+        }
+      ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 1.0,
+        "min": 0.0
+      }
+    }
+  ],
+  "random_sequence": "vampirism:chests/hunter_outpost"
+}

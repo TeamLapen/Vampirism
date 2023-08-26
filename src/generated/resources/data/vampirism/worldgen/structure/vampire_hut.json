@@ -1,0 +1,6 @@
+{
+  "type": "vampirism:vampire_hut",
+  "biomes": "#vampirism:has_structure/vampire_hut",
+  "spawn_overrides": {},
+  "step": "surface_structures"
+}

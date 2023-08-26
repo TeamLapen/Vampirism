@@ -2,15 +2,6 @@
   "requirements": {
     "requirements": [
       {
-        "type": "vampirism:entity",
-        "amount": 20,
-        "description": {
-          "translate": "entity.vampirism.vampire_baron"
-        },
-        "entityType": "vampirism:vampire_baron",
-        "id": "vampirism:vampire_baron"
-      },
-      {
         "type": "vampirism:item",
         "description": {
           "translate": "item.vampirism.human_heart"
@@ -42,6 +33,15 @@
           "Count": 8,
           "id": "minecraft:diamond_block"
         }
+      },
+      {
+        "type": "vampirism:entity",
+        "amount": 20,
+        "description": {
+          "translate": "entity.vampirism.vampire_baron"
+        },
+        "entityType": "vampirism:vampire_baron",
+        "id": "vampirism:vampire_baron"
       }
     ]
   },

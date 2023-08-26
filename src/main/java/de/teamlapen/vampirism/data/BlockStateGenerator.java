@@ -7,8 +7,6 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.models.model.ModelTemplates;
-import net.minecraft.data.models.model.TextureMapping;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
@@ -288,6 +286,10 @@ public class BlockStateGenerator extends BlockStateProvider {//TODO 1.20 move to
                 .end()
                 .renderType(cutout);
         simpleBlock(ModBlocks.CURSED_EARTH_PATH.get(), cursedEarthPath);
+        simpleBlock(ModBlocks.CASTLE_BLOCK_DARK_BRICK_CRACKED.get());
+
+        wallBlock(ModBlocks.CASTLE_BLOCK_DARK_BRICK_WALL.get(), blockTexture(ModBlocks.CASTLE_BLOCK_DARK_BRICK.get()));
+        wallBlock(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK_WALL.get(), blockTexture(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK.get()));
     }
 
     private void createWoodStates() {
