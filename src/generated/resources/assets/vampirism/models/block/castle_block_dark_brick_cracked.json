@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "vampirism:block/castle_block_dark_brick_cracked"
+  }
+}

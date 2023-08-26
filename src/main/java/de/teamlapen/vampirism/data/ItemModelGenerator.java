@@ -80,6 +80,7 @@ public class ItemModelGenerator extends BaseItemModelGenerator {//TODO 1.20 move
             add(ModBlocks.VAMPIRE_RACK.get());
             add(ModBlocks.THRONE.get());
             add(ModBlocks.CURSED_EARTH_PATH.get());
+            add(ModBlocks.CASTLE_BLOCK_DARK_BRICK_CRACKED.get());
         }};
         Set<Item> items = new HashSet<>() {{
             add(ModItems.HUNTER_COAT_CHEST_NORMAL.get());
@@ -301,6 +302,8 @@ public class ItemModelGenerator extends BaseItemModelGenerator {//TODO 1.20 move
         }
         this.item(ModItems.OIL_BOTTLE.get(), modLoc("item/oil_bottle"), modLoc("item/oil_bottle_overlay"));
         withExistingParent(ModBlocks.ALCHEMY_TABLE.get(), modLoc("block/alchemy_table/alchemy_table"));
+        withExistingParent(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK_WALL.get(), mcLoc("block/wall_inventory")).texture("wall", modLoc("block/castle_block_purple_brick"));
+        withExistingParent(ModBlocks.CASTLE_BLOCK_DARK_BRICK_WALL.get(), mcLoc("block/wall_inventory")).texture("wall", modLoc("block/castle_block_dark_brick"));
     }
 
 }

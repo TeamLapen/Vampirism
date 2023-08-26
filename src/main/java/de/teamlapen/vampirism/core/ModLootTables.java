@@ -29,15 +29,20 @@ public class ModLootTables {
     private final static Logger LOGGER = LogManager.getLogger();
     private static final Set<ResourceLocation> LOOT_TABLES = Sets.newHashSet();
     //chests
-    public static final ResourceLocation chest_hunter_trainer = register("chests/village/hunter_trainer");
-    public static final ResourceLocation chest_vampire_dungeon = register("chests/dungeon/vampire_dungeon");
+    public static final ResourceLocation CHEST_HUNTER_TRAINER = register("chests/village/hunter_trainer");
+    public static final ResourceLocation CHEST_VAMPIRE_DUNGEON = register("chests/dungeon/vampire_dungeon");
+    public static final ResourceLocation CHEST_VAMPIRE_HUT = register("chests/vampire_hut");
+    public static final ResourceLocation CHEST_HUNTER_OUTPOST = register("chests/hunter_outpost");
+    public static final ResourceLocation CHEST_HUNTER_OUTPOST_ALCHEMY = register("chests/hunter_outpost_alchemy");
+    public static final ResourceLocation CHEST_VAMPIRE_ALTAR = register("chests/vampire_altar");
+
     private static final Map<String, ResourceLocation> INJECTION_TABLES = Maps.newHashMap();
     //inject
-    public static final ResourceLocation abandoned_mineshaft = registerInject("abandoned_mineshaft");
-    public static final ResourceLocation jungle_temple = registerInject("jungle_temple");
-    public static final ResourceLocation stronghold_corridor = registerInject("stronghold_corridor");
-    public static final ResourceLocation desert_pyramid = registerInject("desert_pyramid");
-    public static final ResourceLocation stronghold_library = registerInject("stronghold_library");
+    public static final ResourceLocation ABANDONED_MINESHAFT = registerInject("abandoned_mineshaft");
+    public static final ResourceLocation JUNGLE_TEMPLE = registerInject("jungle_temple");
+    public static final ResourceLocation STRONGHOLD_CORRIDOR = registerInject("stronghold_corridor");
+    public static final ResourceLocation DESERT_PYRAMID = registerInject("desert_pyramid");
+    public static final ResourceLocation STRONGHOLD_LIBRARY = registerInject("stronghold_library");
     private static int injected = 0;
 
     static @NotNull ResourceLocation registerInject(String resourceName) {

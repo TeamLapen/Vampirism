@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_castle_block_dark_brick": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "vampirism:castle_block_dark_brick"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:castle_block_dark_brick_wall_from_castle_block_dark_brick_stonecutting"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_castle_block_dark_brick",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:castle_block_dark_brick_wall_from_castle_block_dark_brick_stonecutting"
+    ]
+  },
+  "sends_telemetry_event": false
+}

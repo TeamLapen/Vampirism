@@ -2,15 +2,6 @@
   "requirements": {
     "requirements": [
       {
-        "type": "vampirism:entity",
-        "amount": 3,
-        "description": {
-          "translate": "entity.vampirism.vampire_baron"
-        },
-        "entityType": "vampirism:vampire_baron",
-        "id": "vampirism:vampire_baron"
-      },
-      {
         "type": "vampirism:item",
         "description": {
           "translate": "item.minecraft.gold_ingot"
@@ -20,6 +11,15 @@
           "Count": 2,
           "id": "minecraft:gold_ingot"
         }
+      },
+      {
+        "type": "vampirism:entity",
+        "amount": 3,
+        "description": {
+          "translate": "entity.vampirism.vampire_baron"
+        },
+        "entityType": "vampirism:vampire_baron",
+        "id": "vampirism:vampire_baron"
       }
     ]
   },

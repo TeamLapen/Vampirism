@@ -2,24 +2,6 @@
   "requirements": {
     "requirements": [
       {
-        "type": "vampirism:stat",
-        "amount": 50,
-        "description": {
-          "translate": "stat.vampirism.infected_creatures"
-        },
-        "id": "vampirism:infected_creatures",
-        "stat": "vampirism:infected_creatures"
-      },
-      {
-        "type": "vampirism:stat",
-        "amount": 6,
-        "description": {
-          "translate": "stat.vampirism.capture_village"
-        },
-        "id": "vampirism:capture_village",
-        "stat": "vampirism:capture_village"
-      },
-      {
         "type": "vampirism:item",
         "description": {
           "translate": "item.minecraft.gold_ingot"
@@ -40,6 +22,24 @@
           "Count": 20,
           "id": "vampirism:pure_blood_4"
         }
+      },
+      {
+        "type": "vampirism:stat",
+        "amount": 50,
+        "description": {
+          "translate": "stat.vampirism.infected_creatures"
+        },
+        "id": "vampirism:infected_creatures",
+        "stat": "vampirism:infected_creatures"
+      },
+      {
+        "type": "vampirism:stat",
+        "amount": 6,
+        "description": {
+          "translate": "stat.vampirism.capture_village"
+        },
+        "id": "vampirism:capture_village",
+        "stat": "vampirism:capture_village"
       }
     ]
   },
