@@ -232,7 +232,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     @NotNull
     @Override
     public MobType getMobType() {
-        return VReference.VAMPIRE_CREATURE_ATTRIBUTE;
+        return VampirismConfig.SERVER.vampiresAreUndeadType.get() ? MobType.UNDEAD : VReference.VAMPIRE_CREATURE_ATTRIBUTE;
     }
 
     @Override

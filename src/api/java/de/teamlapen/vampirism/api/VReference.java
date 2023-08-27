@@ -43,8 +43,9 @@ public class VReference {
      */
     public static MobCategory VAMPIRE_CREATURE_TYPE = MobCategory.create("vampirism_vampire", "vampirism_vampire", 30, false, false, 128);
     /**
-     * Vampire creatures have this creature attribute.
+     * Vampire creatures have this creature attribute. Note: There is a config option that makes Vampirism use UNDEAD type instead
      * Don't know why this exists alongside EnumCreatureType, but this is used by enchantments
+     * TODO 1.21 maybe replace with a getter method, if the config option still exists
      */
     @SuppressWarnings("InstantiationOfUtilityClass")
     public static MobType VAMPIRE_CREATURE_ATTRIBUTE = new MobType();
