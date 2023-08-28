@@ -255,6 +255,8 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         if (!(reason == MobSpawnType.SPAWN_EGG || reason == MobSpawnType.BUCKET || reason == MobSpawnType.CONVERSION || reason == MobSpawnType.COMMAND) && this.getRandom().nextInt(50) == 0) {
             this.setItemSlot(EquipmentSlot.HEAD, HunterVillage.createBanner());
         }
+        getEntityData().set(TYPE, this.getRandom().nextInt(TYPES));
+
         SpawnGroupData livingData = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
 
         if (this.getRandom().nextInt(4) == 0) {
