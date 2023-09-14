@@ -59,6 +59,7 @@ public abstract class GuiRadialMenu<T> extends Screen {
 
     protected boolean closing;
     private final RadialMenu<T> radialMenu;
+    private final boolean allowMouseDirection;
     protected final List<IRadialMenuSlot<T>> radialMenuSlots;
     protected final float OPEN_ANIMATION_LENGTH = 0.20f;
     protected float totalTime;
@@ -71,8 +72,13 @@ public abstract class GuiRadialMenu<T> extends Screen {
 
 
     public GuiRadialMenu(RadialMenu<T> radialMenu) {
+        this(radialMenu, false);
+    }
+
+    public GuiRadialMenu(RadialMenu<T> radialMenu, boolean allowMouseDirection) {
         super(Component.literal(""));
         this.radialMenu = radialMenu;
+        this.allowMouseDirection = allowMouseDirection;
         this.radialMenuSlots = this.radialMenu.getRadialMenuSlots();
         this.closing = false;
         this.minecraft = Minecraft.getInstance();
@@ -92,6 +98,10 @@ public abstract class GuiRadialMenu<T> extends Screen {
         if (totalTime != OPEN_ANIMATION_LENGTH){
             extraTick++;
         }
+    }
+
+    protected boolean isMouseOverMenuItems(double mouseDistanceToCenterOfScreen, float radiusIn, float radiusOut) {
+        return allowMouseDirection ? mouseDistanceToCenterOfScreen >= 10 : mouseDistanceToCenterOfScreen >= radiusIn && mouseDistanceToCenterOfScreen < radiusOut;
     }
 
     @Override
@@ -135,7 +145,7 @@ public abstract class GuiRadialMenu<T> extends Screen {
             for (int i = 0; i < numberOfSlices; i++) {
                 float sliceBorderLeft = (((i - 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
                 float sliceBorderRight = (((i + 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
-                if (mousePositionInDegreesInRelationToCenterOfScreen >= sliceBorderLeft && mousePositionInDegreesInRelationToCenterOfScreen < sliceBorderRight && mouseDistanceToCenterOfScreen >= 10) {
+                if (mousePositionInDegreesInRelationToCenterOfScreen >= sliceBorderLeft && mousePositionInDegreesInRelationToCenterOfScreen < sliceBorderRight && isMouseOverMenuItems(mouseDistanceToCenterOfScreen, radiusIn, radiusOut)) {
                     selectedItem = i;
                     break;
                 }

@@ -8,11 +8,10 @@ import java.util.function.Consumer;
 
 public class ItemWrapper<T> {
 
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    private Optional<T> item;
+    private T item;
 
     public ItemWrapper(@Nullable T item) {
-        this.item = Optional.ofNullable(item);
+        this.item = item;
     }
 
 
@@ -22,21 +21,32 @@ public class ItemWrapper<T> {
 
     @Nullable
     public T get() {
-        return this.item.orElse(null);
+        return this.item;
     }
 
     @NotNull
     public Optional<T> getOptional() {
-        return this.item;
+        return Optional.ofNullable(this.item);
     }
 
     public void run(Consumer<T> consumer) {
-        this.item.ifPresent(consumer);
+        if (this.item != null) {
+            consumer.accept(this.item);
+        }
     }
 
-    public T swapItem(T item) {
-        T old = this.item.orElse(null);
-        this.item = Optional.ofNullable(item);
-        return old;
+    public void swapItem(ItemWrapper<T> item) {
+        T old = this.item;
+        T oldOther = item.item;
+        item.item = old;
+        this.item = oldOther;
+    }
+
+    public void selectItem(T item) {
+        this.item = item;
+    }
+
+    public void clear() {
+        this.item = null;
     }
 }

@@ -27,7 +27,7 @@ public class SelectAmmoScreen extends GuiRadialMenu<SelectAmmoScreen.AmmoType> {
     private static final ResourceLocation NO_RESTRICTION = new ResourceLocation("textures/gui/spectator_widgets.png");
 
     public SelectAmmoScreen(Collection<AmmoType> ammoTypes) {
-        super(getRadialMenu(ammoTypes));
+        super(getRadialMenu(ammoTypes), true);
     }
 
     public static void show() {

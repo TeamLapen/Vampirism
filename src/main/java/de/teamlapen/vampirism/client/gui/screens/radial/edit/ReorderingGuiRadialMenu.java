@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.client.gui.screens.radial.edit;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
 import de.teamlapen.lib.lib.client.gui.components.SimpleList;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.DrawCallback;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.GuiRadialMenu;
@@ -12,8 +10,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
@@ -29,7 +25,7 @@ import java.util.stream.Collectors;
 
 public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
 
-    private T movingItem;
+    private ItemWrapper<T> movingItem;
     private final ItemOrdering<T> ordering;
     private final Function<T, MutableComponent> nameFunction;
     private final DrawCallback<T> drawCallback;
@@ -86,7 +82,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     }
 
     private void updateExcludedList() {
-        this.excludedList.updateContent(ordering.getExcluded().stream().map(s -> new NoItemRadialMenuSlot<>(nameFunction, new ItemWrapper<>(s), isEnabled)).toList());
+        this.excludedList.updateContent(ordering.getExcluded(), nameFunction);
     }
 
     public void reset() {
@@ -94,10 +90,11 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
         this.updateExcludedList();
         this.radialMenuSlots.clear();
         this.checkEmpty();
+        this.movingItem = null;
     }
 
     private void addDummyMenuItems() {
-        if (!(this.radialMenuSlots.size() == 1 && this.radialMenuSlots.get(0).primarySlotIcon().getOptional().isEmpty())) {
+        if (!(this.radialMenuSlots.size() == 1 && this.radialMenuSlots.get(0).primarySlotIcon().get() == null)) {
             for (int i = this.radialMenuSlots.size() - 1; i >= 0; i--) {
                 this.radialMenuSlots.add(i, new NoItemRadialMenuSlot<>(this.nameFunction, new ItemWrapper<>(), this.isEnabled));
             }
@@ -105,15 +102,22 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     }
 
     public void excludeItem() {
-        this.ordering.exclude(this.movingItem);
+        excludeItem(this.movingItem);
+        this.movingItem.clear();
         this.movingItem = null;
-        this.updateExcludedList();
         this.removeDummyItems();
         this.checkEmpty();
     }
 
+    private void excludeItem(ItemWrapper<T> item) {
+        if (item != null) {
+            this.ordering.exclude(item.get());
+        }
+        this.updateExcludedList();
+    }
+
     private void pickExcludedItem(T item) {
-        this.movingItem = item;
+        this.movingItem = new ItemWrapper<>(item);
         addDummyMenuItems();
     }
 
@@ -140,24 +144,31 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
             }
         }
 
-        if (this.movingItem != null) {
-            if (this.selectedItem != -1) {
-                IRadialMenuSlot<ItemWrapper<T>> selected = this.radialMenuSlots.get(this.selectedItem);
-                this.movingItem = selected.primarySlotIcon().swapItem(this.movingItem);
-                if (this.movingItem == null) {
+        pickItem();
+        return true;
+    }
+
+    private void pickItem() {
+        if (this.selectedItem != -1) {
+            IRadialMenuSlot<ItemWrapper<T>> selected = this.radialMenuSlots.get(this.selectedItem);
+            if (this.movingItem != null) {
+                selected.primarySlotIcon().swapItem(this.movingItem);
+                if (this.movingItem.get() == null) {
                     this.removeDummyItems();
+                    this.movingItem = null;
+                }
+                if (this.radialMenuSlots.stream().noneMatch(s -> s.primarySlotIcon() == this.movingItem)) {
+                    this.excludeItem(this.movingItem);
                 }
                 syncOrdering();
-            }
-        } else {
-            if (this.selectedItem != -1) {
-                if (this.radialMenuSlots.get(this.selectedItem).primarySlotIcon().getOptional().isEmpty()) return true;
-                IRadialMenuSlot<ItemWrapper<T>> selected = this.radialMenuSlots.get(this.selectedItem);
+            } else {
+                if (selected.primarySlotIcon().get() == null) {
+                    return;
+                }
+                this.movingItem = selected.primarySlotIcon();
                 addDummyMenuItems();
-                this.movingItem = selected.primarySlotIcon().swapItem(null);
             }
         }
-        return true;
     }
 
     @Override
@@ -190,7 +201,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
         graphics.drawCenteredString(this.font, Component.translatable("Excluded:"), 70, 5, -1);
         super.render(graphics, mouseX, mouseY, partialTicks);
         if (this.movingItem != null) {
-            this.drawCallback.accept(this.movingItem, graphics, mouseX - 8, mouseY - 8, 16, false);
+            this.drawCallback.accept(this.movingItem.get(), graphics, mouseX - 8, mouseY - 8, 16, false);
         }
     }
 
@@ -224,15 +235,15 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
             this.setLeftPos(x);
         }
 
-        public void updateContent(List<? extends IRadialMenuSlot<ItemWrapper<T>>> newItems) {
-            this.replaceEntries(newItems.stream().map(s -> new ExcludedEntry<>(s, () -> selectItem(s))).toList());
+        public void updateContent(List<T> newItems, Function<T, MutableComponent> nameFunction) {
+            this.replaceEntries(newItems.stream().map(s -> new ExcludedEntry<>(s, nameFunction.apply(s), () -> selectItem(s))).toList());
         }
 
-        private void selectItem(IRadialMenuSlot<ItemWrapper<T>> selected) {
+        private void selectItem(T selected) {
             if (ReorderingGuiRadialMenu.this.movingItem != null) {
-                ReorderingGuiRadialMenu.this.movingItem = selected.primarySlotIcon().swapItem(ReorderingGuiRadialMenu.this.movingItem);
+//                selected.primarySlotIcon().swapItem(ReorderingGuiRadialMenu.this.movingItem);
             } else {
-                ReorderingGuiRadialMenu.this.pickExcludedItem(selected.primarySlotIcon().get());
+                ReorderingGuiRadialMenu.this.pickExcludedItem(selected);
             }
         }
 
@@ -266,8 +277,15 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
 
     public static class ExcludedEntry<T> extends SimpleList.Entry<ExcludedEntry<T>> {
 
-        public ExcludedEntry(@NotNull IRadialMenuSlot<ItemWrapper<T>> item, Runnable onClick) {
-            super(item.slotName(), onClick);
+        private final T item;
+
+        public ExcludedEntry(@NotNull T item, Component name, Runnable onClick) {
+            super(name, onClick);
+            this.item = item;
+        }
+
+        public T getItem() {
+            return item;
         }
     }
 
