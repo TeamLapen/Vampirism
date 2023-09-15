@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
 
-    private ItemWrapper<T> movingItem;
+    protected ItemWrapper<T> movingItem;
     private final ItemOrdering<T> ordering;
     private final Function<T, MutableComponent> nameFunction;
     private final DrawCallback<T> drawCallback;
@@ -68,8 +68,6 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
         int i = 32;
         graphics.blit(BACKGROUND_LOCATION, 0, 0, 0, 0.0F, 0.0F, 140, this.height, i, i);
         graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
-        //noinspection UnstableApiUsage
-        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.ScreenEvent.BackgroundRendered(this, graphics));
     }
 
     @Override
@@ -121,7 +119,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
         addDummyMenuItems();
     }
 
-    private void removeDummyItems() {
+    protected void removeDummyItems() {
         this.radialMenuSlots.removeIf(slot -> slot.primarySlotIcon().getOptional().isEmpty());
         this.checkEmpty();
     }
@@ -198,7 +196,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(graphics);
-        graphics.drawCenteredString(this.font, Component.translatable("Excluded:"), 70, 5, -1);
+        graphics.drawCenteredString(this.font, Component.translatable("text.vampirism.excluded"), 70, 5, -1);
         super.render(graphics, mouseX, mouseY, partialTicks);
         if (this.movingItem != null) {
             this.drawCallback.accept(this.movingItem.get(), graphics, mouseX - 8, mouseY - 8, 16, false);
@@ -267,7 +265,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
                 graphics.pose().pushPose();
                 graphics.pose().translate(i, j, 200);
                 graphics.fillGradient(0, 0, this.getWidth(), this.getHeight(), -1072689136, -804253680);
-                graphics.drawCenteredString(Minecraft.getInstance().font, Component.translatable("Place here to exclude"), this.width / 2, this.height / 2, 0xFFFFFF);
+                graphics.drawCenteredString(Minecraft.getInstance().font, Component.translatable("text.vampirism.place_exclude"), this.width / 2, this.height / 2, 0xFFFFFF);
                 graphics.pose().popPose();
             }
         }
@@ -289,7 +287,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
         }
     }
 
-    private static class ResetButton extends ExtendedButton {
+    public static class ResetButton extends ExtendedButton {
 
         private static final Component DESCRIPTION = Component.translatable("text.vampirism.gui.reset");
         private static final Component DESCRIPTION_CONFIRM = Component.translatable("text.vampirism.gui.reset_question").withStyle(ChatFormatting.DARK_RED);
