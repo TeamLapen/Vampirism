@@ -22,19 +22,19 @@ public class SpecialConverter<T extends PathfinderMob, Z extends PathfinderMob &
 
     public static final Codec<SpecialConverter<?, ?>> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ForgeRegistries.ENTITY_TYPES.getCodec().fieldOf("converted_type").forGetter(i -> i.convertedType),
-            ConvertiblesReloadListener.EntityEntry.Attributes.CODEC.optionalFieldOf("attribute_helper").forGetter(i -> Optional.ofNullable(i.helper))
+            ConvertiblesReloadListener.EntityEntry.ConvertingAttributeModifier.CODEC.optionalFieldOf("attribute_helper").forGetter(i -> Optional.ofNullable(i.helper))
     ).apply(instance, SpecialConverter::new));
 
     private final EntityType<Z> convertedType;
-    private final ConvertiblesReloadListener.EntityEntry.Attributes helper;
+    private final ConvertiblesReloadListener.EntityEntry.ConvertingAttributeModifier helper;
 
     @SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "unchecked"})
-    private SpecialConverter(EntityType<?> convertedType, Optional<ConvertiblesReloadListener.EntityEntry.Attributes> helper) {
+    private SpecialConverter(EntityType<?> convertedType, Optional<ConvertiblesReloadListener.EntityEntry.ConvertingAttributeModifier> helper) {
         this.convertedType = (EntityType<Z>) convertedType;
-        this.helper = helper.orElse(ConvertiblesReloadListener.EntityEntry.Attributes.DEFAULT);
+        this.helper = helper.orElse(ConvertiblesReloadListener.EntityEntry.ConvertingAttributeModifier.DEFAULT);
     }
 
-    public SpecialConverter(Supplier<? extends EntityType<Z>> convertedType, ConvertiblesReloadListener.EntityEntry.Attributes helper) {
+    public SpecialConverter(Supplier<? extends EntityType<Z>> convertedType, ConvertiblesReloadListener.EntityEntry.ConvertingAttributeModifier helper) {
         this.convertedType = convertedType.get();
         this.helper = helper;
     }

@@ -1,9 +1,13 @@
 package de.teamlapen.vampirism.api.entity.convertible;
 
-import net.minecraft.util.RandomSource;
+import net.minecraft.util.valueproviders.FloatProvider;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * Handles conversion of entities
@@ -23,43 +27,39 @@ public interface IConvertingHandler<T extends PathfinderMob> {
     interface IDefaultHelper {
 
         /**
-         * use {@link #getConvertedDMG(net.minecraft.world.entity.EntityType, net.minecraft.util.RandomSource)}
+         * use {@link #getAttributeModifier()} instead
          */
-        @Deprecated(forRemoval = true)
+        @Deprecated
         default double getConvertedDMG(EntityType<? extends PathfinderMob> entity) {
             return 0;
         }
 
-        default double getConvertedDMG(EntityType<? extends PathfinderMob> entity, RandomSource random) {
-            return getConvertedDMG(entity);
-        }
-
-        @Deprecated(forRemoval = true)
+        /**
+         * use {@link #getAttributeModifier()} instead
+         */
+        @Deprecated
         default double getConvertedKnockbackResistance(EntityType<? extends PathfinderMob> entity) {
             return 0;
         }
 
-        default double getConvertedKnockbackResistance(EntityType<? extends PathfinderMob> entity, RandomSource random) {
-            return getConvertedKnockbackResistance(entity);
-        }
-
-        @Deprecated(forRemoval = true)
+        /**
+         * use {@link #getAttributeModifier()} instead
+         */
+        @Deprecated
         default double getConvertedMaxHealth(EntityType<? extends PathfinderMob> entity) {
             return 0;
         }
 
-        default double getConvertedMaxHealth(EntityType<? extends PathfinderMob> entity, RandomSource random) {
-            return getConvertedMaxHealth(entity);
-        }
-
-        @Deprecated(forRemoval = true)
+        /**
+         * use {@link #getAttributeModifier()} instead
+         */
+        @Deprecated
         default double getConvertedSpeed(EntityType<? extends PathfinderMob> entity) {
             return 0;
         }
 
-        default double getConvertedSpeed(EntityType<? extends PathfinderMob> entity, RandomSource random) {
-            return getConvertedSpeed(entity);
+        default Map<Attribute, com.mojang.datafixers.util.Pair<FloatProvider,Double>> getAttributeModifier() {
+            return Collections.emptyMap();
         }
-
     }
 }

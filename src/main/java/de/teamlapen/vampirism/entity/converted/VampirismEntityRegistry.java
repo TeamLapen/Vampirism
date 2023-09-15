@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.converted;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.mojang.datafixers.util.Pair;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
@@ -9,17 +10,14 @@ import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
-import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.data.reloadlistener.ConvertiblesReloadListener;
 import de.teamlapen.vampirism.entity.converted.converter.DefaultConverter;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
+import net.minecraft.util.valueproviders.FloatProvider;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -194,46 +192,11 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
         });
     }
 
-    public record DatapackHelper(ConvertiblesReloadListener.EntityEntry.Attributes attributes) implements IConvertingHandler.IDefaultHelper {
+    public record DatapackHelper(ConvertiblesReloadListener.EntityEntry.ConvertingAttributeModifier attributes) implements IConvertingHandler.IDefaultHelper {
 
         @Override
-        public double getConvertedDMG(EntityType<? extends PathfinderMob> entity, RandomSource random) {
-            AttributeSupplier map = DefaultAttributes.getSupplier(entity);
-            if (map.hasAttribute(Attributes.ATTACK_DAMAGE)) {
-                return map.getBaseValue(Attributes.ATTACK_DAMAGE) * this.attributes.damageProvider().sample(random);
-            } else {
-                return BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_DMG;
-            }
-        }
-
-        @Override
-        public double getConvertedKnockbackResistance(EntityType<? extends PathfinderMob> entity, RandomSource random) {
-            AttributeSupplier map = DefaultAttributes.getSupplier(entity);
-            if (map.hasAttribute(Attributes.KNOCKBACK_RESISTANCE)) {
-                return map.getBaseValue(Attributes.KNOCKBACK_RESISTANCE) * this.attributes.knockBackResistanceProvider().sample(random);
-            } else {
-                return BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_KNOCKBACK_RESISTANCE;
-            }
-        }
-
-        @Override
-        public double getConvertedMaxHealth(EntityType<? extends PathfinderMob> entity, RandomSource random) {
-            AttributeSupplier map = DefaultAttributes.getSupplier(entity);
-            if (map.hasAttribute(Attributes.MAX_HEALTH)) {
-                return map.getBaseValue(Attributes.MAX_HEALTH) * this.attributes.maxHealthProvider().sample(random);
-            } else {
-                return BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_HEALTH;
-            }
-        }
-
-        @Override
-        public double getConvertedSpeed(EntityType<? extends PathfinderMob> entity, RandomSource random) {
-            AttributeSupplier map = DefaultAttributes.getSupplier(entity);
-            if (map.hasAttribute(Attributes.MOVEMENT_SPEED)) {
-                return Math.min(map.getBaseValue(Attributes.MOVEMENT_SPEED) * this.attributes.convertedSpeedProvider().sample(random), 2.9D);
-            } else {
-                return BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_SPEED;
-            }
+        public Map<Attribute, Pair<FloatProvider, Double>> getAttributeModifier() {
+            return this.attributes.attributeModifier();
         }
     }
 }
