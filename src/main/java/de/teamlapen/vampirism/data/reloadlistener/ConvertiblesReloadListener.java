@@ -8,6 +8,7 @@ import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.convertible.Converter;
+import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.data.reloadlistener.bloodvalues.BloodValueBuilder;
 import de.teamlapen.vampirism.data.reloadlistener.bloodvalues.BloodValueReader;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
@@ -18,6 +19,8 @@ import net.minecraft.util.valueproviders.ConstantFloat;
 import net.minecraft.util.valueproviders.FloatProvider;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.commons.lang3.tuple.Pair;
@@ -33,6 +36,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
+import java.util.stream.Collectors;
 
 public class ConvertiblesReloadListener {
 
@@ -102,17 +106,36 @@ public class ConvertiblesReloadListener {
             this(Optional.of(converter), Optional.empty());
         }
 
-        public record Attributes(FloatProvider damageProvider, FloatProvider knockBackResistanceProvider, FloatProvider maxHealthProvider, FloatProvider convertedSpeedProvider) {
-            public static Attributes DEFAULT = new Attributes(ConstantFloat.of(1.3f), ConstantFloat.of(1.3f), ConstantFloat.of(1.5f), ConstantFloat.of(1.2f));
+        public record ConvertingAttributeModifier(Map<Attribute, com.mojang.datafixers.util.Pair<FloatProvider, Double>> attributeModifier) {
+            public static ConvertingAttributeModifier DEFAULT = new ConvertingAttributeModifier(
+                    Map.of(
+                            Attributes.ATTACK_DAMAGE, com.mojang.datafixers.util.Pair.of(ConstantFloat.of(1.3f), (double) BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_DMG),
+                            Attributes.KNOCKBACK_RESISTANCE, com.mojang.datafixers.util.Pair.of(ConstantFloat.of(1.3f), (double) BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_KNOCKBACK_RESISTANCE),
+                            Attributes.MAX_HEALTH, com.mojang.datafixers.util.Pair.of(ConstantFloat.of(1.5f), (double) BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_HEALTH),
+                            Attributes.MOVEMENT_SPEED, com.mojang.datafixers.util.Pair.of(ConstantFloat.of(1.2f), (double) BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_SPEED))
+            );
 
-            public static final Codec<Attributes> CODEC = RecordCodecBuilder.create(inst -> {
+            public ConvertingAttributeModifier(List<com.mojang.datafixers.util.Pair<Attribute, com.mojang.datafixers.util.Pair<FloatProvider, Double>>> values) {
+                this(values.stream().collect(Collectors.toMap(com.mojang.datafixers.util.Pair::getFirst, com.mojang.datafixers.util.Pair::getSecond, (a, b) -> b)));
+            }
+
+            private static final Codec<com.mojang.datafixers.util.Pair<FloatProvider, Double>> CODEC_PAIR = RecordCodecBuilder.create(inst -> {
                 return inst.group(
-                        FloatProvider.CODEC.optionalFieldOf("damage_multiplikator", ConstantFloat.of(1f)).forGetter(Attributes::damageProvider),
-                        FloatProvider.CODEC.optionalFieldOf("knockback_resistance_multiplikator", ConstantFloat.of(1f)).forGetter(Attributes::knockBackResistanceProvider),
-                        FloatProvider.CODEC.optionalFieldOf("max_health_multiplikator", ConstantFloat.of(1f)).forGetter(Attributes::maxHealthProvider),
-                        FloatProvider.CODEC.optionalFieldOf("converted_speed_multiplikator", ConstantFloat.of(1f)).forGetter(Attributes::convertedSpeedProvider)
-                ).apply(inst, Attributes::new);
+                        FloatProvider.CODEC.fieldOf("modifier").forGetter(com.mojang.datafixers.util.Pair::getFirst),
+                        Codec.DOUBLE.fieldOf("fallback_base").forGetter(com.mojang.datafixers.util.Pair::getSecond)
+                ).apply(inst, com.mojang.datafixers.util.Pair::new);
             });
+            public static final Codec<ConvertingAttributeModifier> CODEC = RecordCodecBuilder.create(inst -> {
+                return inst.group(
+                        Codec.pair(ForgeRegistries.ATTRIBUTES.getCodec(), CODEC_PAIR).listOf().fieldOf("attribute_modifier").forGetter(m -> {
+                            return m.attributeModifier.entrySet().stream().map(s -> com.mojang.datafixers.util.Pair.of(s.getKey(), s.getValue())).toList();
+                        })
+                ).apply(inst, ConvertingAttributeModifier::new);
+            });
+
+            public com.mojang.datafixers.util.Pair<FloatProvider, Double> modifier(Attribute attribute) {
+                return attributeModifier.get(attribute);
+            }
 
         }
     }

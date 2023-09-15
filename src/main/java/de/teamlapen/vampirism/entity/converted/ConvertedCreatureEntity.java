@@ -25,7 +25,9 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -341,10 +343,20 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
         IConvertingHandler.IDefaultHelper helper = getConvertedHelper();
         try {
             if (helper != null) {
-                this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(helper.getConvertedDMG((EntityType<? extends PathfinderMob>) entityCreature.getType(), entityCreature.getRandom()));
-                this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(helper.getConvertedMaxHealth((EntityType<? extends PathfinderMob>) entityCreature.getType(), entityCreature.getRandom()));
-                this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(helper.getConvertedKnockbackResistance((EntityType<? extends PathfinderMob>) entityCreature.getType(), entityCreature.getRandom()));
-                this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(helper.getConvertedSpeed((EntityType<? extends PathfinderMob>) entityCreature.getType(), entityCreature.getRandom()));
+                // for legacy, we need to set that attributes in case a IDefaultHelper is using the old methods
+                this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(helper.getConvertedDMG((EntityType<? extends PathfinderMob>) entityCreature.getType()));
+                this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(helper.getConvertedMaxHealth((EntityType<? extends PathfinderMob>) entityCreature.getType()));
+                this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(helper.getConvertedKnockbackResistance((EntityType<? extends PathfinderMob>) entityCreature.getType()));
+                this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(helper.getConvertedSpeed((EntityType<? extends PathfinderMob>) entityCreature.getType()));
+
+                helper.getAttributeModifier().forEach(((attribute, valueProvider) -> {
+                    AttributeSupplier supplier = DefaultAttributes.getSupplier((EntityType<? extends PathfinderMob>) entityCreature.getType());
+                    double baseValue = valueProvider.getSecond();
+                    if (supplier.hasAttribute(attribute)) {
+                        baseValue = supplier.getBaseValue(attribute);
+                    }
+                    this.getAttribute(attribute).setBaseValue(baseValue * valueProvider.getFirst().sample(entityCreature.getRandom()));
+                }));
             } else {
                 this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(20);
                 this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(0);
