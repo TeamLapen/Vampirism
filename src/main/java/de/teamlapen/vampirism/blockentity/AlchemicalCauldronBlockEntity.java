@@ -251,7 +251,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
                 blockEntity.dataAccess.set(2, blockEntity.dataAccess.get(2) + 1); //Increase cook time
                 if (blockEntity.dataAccess.get(2) == blockEntity.dataAccess.get(3)) { //If finished
                     blockEntity.dataAccess.set(2, 0);
-                    blockEntity.dataAccess.set(3, getTotalCookTime(level, blockEntity));
+                    blockEntity.dataAccess.set(3, AbstractFurnaceBlockEntityAccessor.getTotalCookTime(level, blockEntity));
                     blockEntity.finishCooking(level.registryAccess(), cauldronRecipe);
                     dirty = true;
                 }
