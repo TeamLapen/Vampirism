@@ -10,12 +10,20 @@ import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
+import de.teamlapen.vampirism.client.renderer.entity.layers.ConvertedVampireEntityLayer;
 import de.teamlapen.vampirism.data.reloadlistener.ConvertiblesReloadListener;
 import de.teamlapen.vampirism.entity.converted.converter.DefaultConverter;
+import de.teamlapen.vampirism.mixin.client.LivingEntityRendererAccessor;
 import de.teamlapen.vampirism.util.RegUtil;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.valueproviders.FloatProvider;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraftforge.api.distmarker.Dist;
@@ -28,14 +36,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     /**
@@ -52,6 +59,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     private final Map<EntityType<? extends PathfinderMob>, IConvertingHandler<?>> convertibles = new HashMap<>();
     @NotNull
     private final Map<EntityType<? extends PathfinderMob>, ResourceLocation> convertibleOverlay = new HashMap<>();
+    private final Map<String, ResourceLocation> convertibleIdOverlay = new HashMap<>();
 
     @NotNull
     private final Map<EntityType<? extends PathfinderMob>, IConvertingHandler<?>> convertiblesAPI = new ConcurrentHashMap<>();
@@ -156,6 +164,16 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
         return convertibleOverlay;
     }
 
+    @Override
+    public @Nullable ResourceLocation getConvertibleOverlay(String sourceEntity) {
+        return this.convertibleIdOverlay.get(sourceEntity);
+    }
+
+    @Unmodifiable
+    public Map<EntityType<? extends PathfinderMob>, IConvertingHandler<?>> getConvertibles() {
+        return Collections.unmodifiableMap(convertibles);
+    }
+
     @Nullable
     @Override
     @SuppressWarnings("unchecked")
@@ -177,7 +195,32 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     @OnlyIn(Dist.CLIENT)
     public void applyDataConvertibleOverlays(Map<EntityType<? extends PathfinderMob>, ResourceLocation> entries) {
         this.convertibleOverlay.clear();
+        this.convertibleOverlay.putAll(this.convertibleOverlayAPI);
         this.convertibleOverlay.putAll(entries);
+        syncOverlays();
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public <I extends LivingEntity, U extends EntityModel<I>> void syncOverlays() {
+        this.convertibleIdOverlay.clear();
+        TextureManager textureManager = Minecraft.getInstance().getTextureManager();
+        this.convertibleIdOverlay.putAll(this.convertibleOverlay.entrySet().stream().filter(s -> {
+            var texture = textureManager.getTexture(s.getValue());
+            // call twice in case of missing texture
+            texture = textureManager.getTexture(s.getValue());
+            return texture != MissingTextureAtlasSprite.getTexture();
+        }).collect(Collectors.toMap(x -> ForgeRegistries.ENTITY_TYPES.getKey(x.getKey()).toString(), Map.Entry::getValue)));
+
+        for (EntityType<? extends PathfinderMob> type: getConvertibleOverlay().keySet()) {
+            LivingEntityRenderer<I, U> render = (LivingEntityRenderer<I, U>) Minecraft.getInstance().getEntityRenderDispatcher().renderers.get(type);
+            if (render == null) {
+                LOGGER.error("Did not find renderer for {}", type);
+                continue;
+            }
+            if(((LivingEntityRendererAccessor) render).getLayers().stream().noneMatch(s -> s instanceof ConvertedVampireEntityLayer<?,?>)) {
+                render.addLayer(new ConvertedVampireEntityLayer<>(render, true));
+            }
+        }
     }
 
     public void applyDataConvertibles(Map<EntityType<? extends PathfinderMob>, ConvertiblesReloadListener.EntityEntry> entries) {
@@ -187,7 +230,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
         this.convertibleOverlay.putAll(this.convertibleOverlayAPI);
         entries.forEach((type, entry) -> {
             Optional<IConvertingHandler<?>> handler = entry.converter().map(c -> c.createHandler(entry.overlay().orElse(null)));
-            this.convertibles.put(type, handler.orElseGet(() -> new DefaultConverter().createHandler()));
+            this.convertibles.put(type, handler.orElseGet(() -> new DefaultConverter().createHandler(entry.overlay().orElse(null))));
             entry.overlay().ifPresent(overlay -> this.convertibleOverlay.put(type, overlay));
         });
     }

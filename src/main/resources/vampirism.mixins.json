@@ -41,6 +41,7 @@
     "client.BossOverlayGuiAccessor",
     "client.LevelRendererMixin",
     "client.LivingEntityRendererAccessor",
+    "client.ResourceLoadStateTrackerMixin",
     "client.SheetsMixin",
     "client.VillagerModelAccessor"
   ],

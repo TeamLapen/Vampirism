@@ -29,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 public class ConvertedSheepEntity extends Sheep implements CurableConvertedCreature<Sheep, ConvertedSheepEntity> {
 
     private static final EntityDataAccessor<Boolean> CONVERTING = SynchedEntityData.defineId(ConvertedSheepEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<String> OVERLAY_TEXTURE = SynchedEntityData.defineId(ConvertedSheepEntity.class, EntityDataSerializers.STRING);
 
     private final Data<Sheep> data = new Data<>();
 
@@ -45,8 +46,13 @@ public class ConvertedSheepEntity extends Sheep implements CurableConvertedCreat
     }
 
     @Override
-    public EntityDataAccessor<Boolean> getConvertingDataParam() {
+    public @NotNull EntityDataAccessor<Boolean> getConvertingDataParam() {
         return CONVERTING;
+    }
+
+    @Override
+    public @NotNull EntityDataAccessor<String> getSourceEntityDataParam() {
+        return OVERLAY_TEXTURE;
     }
 
     @Override

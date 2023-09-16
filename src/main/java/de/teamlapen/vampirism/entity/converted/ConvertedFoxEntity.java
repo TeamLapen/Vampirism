@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ConvertedFoxEntity extends Fox implements CurableConvertedCreature<Fox, ConvertedFoxEntity> {
     private static final EntityDataAccessor<Boolean> CONVERTING = SynchedEntityData.defineId(ConvertedFoxEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<String> OVERLAY_TEXTURE = SynchedEntityData.defineId(ConvertedFoxEntity.class, EntityDataSerializers.STRING);
 
     public static AttributeSupplier.@NotNull Builder createAttributes() {
         return Fox.createAttributes().add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_DMG).add(ModAttributes.SUNDAMAGE.get(), BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
@@ -44,8 +45,13 @@ public class ConvertedFoxEntity extends Fox implements CurableConvertedCreature<
     }
 
     @Override
-    public EntityDataAccessor<Boolean> getConvertingDataParam() {
+    public @NotNull EntityDataAccessor<Boolean> getConvertingDataParam() {
         return CONVERTING;
+    }
+
+    @Override
+    public @NotNull EntityDataAccessor<String> getSourceEntityDataParam() {
+        return OVERLAY_TEXTURE;
     }
 
     @Override

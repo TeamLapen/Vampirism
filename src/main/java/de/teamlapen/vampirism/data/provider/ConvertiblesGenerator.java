@@ -5,9 +5,6 @@ import com.mojang.serialization.JsonOps;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.data.reloadlistener.ConvertiblesReloadListener;
-import de.teamlapen.vampirism.entity.converted.ConvertedCowEntity;
-import de.teamlapen.vampirism.entity.converted.ConvertedSheepEntity;
-import de.teamlapen.vampirism.entity.converted.ConvertedVillagerEntity;
 import de.teamlapen.vampirism.entity.converted.converter.SpecialConverter;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.data.CachedOutput;
@@ -56,16 +53,16 @@ public class ConvertiblesGenerator implements DataProvider {
 
         consumer.accept(EntityType.COW, new ConvertiblesReloadListener.EntityEntry(new SpecialConverter<>(ModEntities.CONVERTED_COW), overlay.apply("cow")));
         consumer.accept(EntityType.LLAMA, new ConvertiblesReloadListener.EntityEntry(overlay.apply("llama")));
-        consumer.accept(EntityType.OCELOT, new ConvertiblesReloadListener.EntityEntry(overlay.apply("ocelot")));
+        consumer.accept(EntityType.OCELOT, new ConvertiblesReloadListener.EntityEntry(overlay.apply("cat")));
         consumer.accept(EntityType.PANDA, new ConvertiblesReloadListener.EntityEntry(overlay.apply("panda")));
         consumer.accept(EntityType.PIG, new ConvertiblesReloadListener.EntityEntry(overlay.apply("pig")));
-        consumer.accept(EntityType.POLAR_BEAR, new ConvertiblesReloadListener.EntityEntry(overlay.apply("polar_bear")));
+        consumer.accept(EntityType.POLAR_BEAR, new ConvertiblesReloadListener.EntityEntry(overlay.apply("polarbear")));
         consumer.accept(EntityType.RABBIT, new ConvertiblesReloadListener.EntityEntry(overlay.apply("rabbit")));
         consumer.accept(EntityType.SHEEP, new ConvertiblesReloadListener.EntityEntry(new SpecialConverter<>(ModEntities.CONVERTED_SHEEP), overlay.apply("sheep")));
-        consumer.accept(EntityType.VILLAGER, new ConvertiblesReloadListener.EntityEntry(new SpecialConverter<>(ModEntities.VILLAGER_CONVERTED), overlay.apply("villager_overlay")));
+        consumer.accept(EntityType.VILLAGER, new ConvertiblesReloadListener.EntityEntry(new SpecialConverter<>(ModEntities.VILLAGER_CONVERTED), overlay.apply("villager")));
         consumer.accept(EntityType.HORSE, new ConvertiblesReloadListener.EntityEntry(new SpecialConverter<>(ModEntities.CONVERTED_HORSE), overlay.apply("horse")));
-        consumer.accept(EntityType.DONKEY, new ConvertiblesReloadListener.EntityEntry(new SpecialConverter<>(ModEntities.CONVERTED_DONKEY), overlay.apply("donkey")));
-        consumer.accept(EntityType.MULE, new ConvertiblesReloadListener.EntityEntry(new SpecialConverter<>(ModEntities.CONVERTED_MULE), overlay.apply("mule")));
+        consumer.accept(EntityType.DONKEY, new ConvertiblesReloadListener.EntityEntry(new SpecialConverter<>(ModEntities.CONVERTED_DONKEY), overlay.apply("horse")));
+        consumer.accept(EntityType.MULE, new ConvertiblesReloadListener.EntityEntry(new SpecialConverter<>(ModEntities.CONVERTED_MULE), overlay.apply("horse")));
         consumer.accept(EntityType.FOX, new ConvertiblesReloadListener.EntityEntry(new SpecialConverter<>(ModEntities.CONVERTED_FOX), overlay.apply("fox")));
         consumer.accept(EntityType.GOAT, new ConvertiblesReloadListener.EntityEntry(new SpecialConverter<>(ModEntities.CONVERTED_GOAT), overlay.apply("goat")));
     }

@@ -3,5 +3,5 @@
     "type": "vampirism:special",
     "converted_type": "vampirism:villager_converted"
   },
-  "overlay": "vampirism:textures/entity/vanilla/villager_overlay_overlay.png"
+  "overlay": "vampirism:textures/entity/vanilla/villager_overlay.png"
 }

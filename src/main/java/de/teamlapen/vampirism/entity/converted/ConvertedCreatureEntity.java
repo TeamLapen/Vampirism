@@ -25,9 +25,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -36,6 +33,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -46,8 +44,10 @@ import org.jetbrains.annotations.Nullable;
  * Contains (stores and syncs) a normal Entity for rendering purpose
  */
 public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBaseEntity implements CurableConvertedCreature<T, ConvertedCreatureEntity<T>>, ISyncable {
+
     private static final Logger LOGGER = LogManager.getLogger();
     private static final EntityDataAccessor<Boolean> CONVERTING = SynchedEntityData.defineId(ConvertedCreatureEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<String> OVERLAY_TEXTURE = SynchedEntityData.defineId(ConvertedCreatureEntity.class, EntityDataSerializers.STRING);
 
     public static boolean spawnPredicate(EntityType<? extends ConvertedCreatureEntity<?>> entityType, @NotNull LevelAccessor iWorld, MobSpawnType spawnReason, @NotNull BlockPos blockPos, RandomSource random) {
         return (iWorld.getBlockState(blockPos.below()).getBlock() == Blocks.GRASS_BLOCK || iWorld.getBlockState(blockPos.below()).is(ModTags.Blocks.CURSED_EARTH)) && iWorld.getRawBrightness(blockPos, 0) > 8;
@@ -195,8 +195,13 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
     @Override
-    public EntityDataAccessor<Boolean> getConvertingDataParam() {
+    public @NotNull EntityDataAccessor<Boolean> getConvertingDataParam() {
         return CONVERTING;
+    }
+
+    @Override
+    public @NotNull EntityDataAccessor<String> getSourceEntityDataParam() {
+        return OVERLAY_TEXTURE;
     }
 
 
@@ -230,6 +235,9 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
         }
         if (nbt.contains("ConversionTime", 99) && nbt.getInt("ConversionTime") > -1) {
             this.startConverting(nbt.hasUUID("ConversionPlayer") ? nbt.getUUID("ConversionPlayer") : null, nbt.getInt("ConversionTime"), this);
+        }
+        if (!nbt.contains("source_entity")) {
+            this.getRepresentingEntity().getEntityData().set(this.getSourceEntityDataParam(), ForgeRegistries.ENTITY_TYPES.getKey(getOldCreature().getType()).toString());
         }
     }
 
@@ -272,7 +280,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
                 this.dimensions = creature.dimensions;
             }
         }
-        if (this.entityCreature != null && getConvertedHelper() == null) {
+        if (this.entityCreature != null && getConvertedHandler() == null) {
             LOGGER.warn("Cannot find converting handler for converted creature {} ({})", this, this.entityCreature);
             this.entityCreature = null;
         }
@@ -306,18 +314,14 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
      * @return The {@link de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler.IDefaultHelper} for this creature
      */
     @Nullable
-    protected IConvertingHandler.IDefaultHelper getConvertedHelper() {
+    protected IConvertingHandler<?> getConvertedHandler() {
         if (nil()) return null;
         BiteableEntry biteableEntry = VampirismAPI.entityRegistry().getEntry(entityCreature);
         if (biteableEntry == null) {
             LOGGER.warn("Cannot find biteable entry for {}", entityCreature);
             return null;
         }
-        IConvertingHandler<?> handler = biteableEntry.convertingHandler;
-        if (handler instanceof DefaultConvertingHandler) {
-            return ((DefaultConvertingHandler<?>) handler).getHelper();
-        }
-        return null;
+        return biteableEntry.convertingHandler;
     }
 
     @Override
@@ -338,35 +342,11 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
         return entityCreature == null;
     }
 
-    @SuppressWarnings({"unchecked", "ConstantConditions"})
     protected void updateEntityAttributes() {
-        IConvertingHandler.IDefaultHelper helper = getConvertedHelper();
-        try {
-            if (helper != null) {
-                // for legacy, we need to set that attributes in case a IDefaultHelper is using the old methods
-                this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(helper.getConvertedDMG((EntityType<? extends PathfinderMob>) entityCreature.getType()));
-                this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(helper.getConvertedMaxHealth((EntityType<? extends PathfinderMob>) entityCreature.getType()));
-                this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(helper.getConvertedKnockbackResistance((EntityType<? extends PathfinderMob>) entityCreature.getType()));
-                this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(helper.getConvertedSpeed((EntityType<? extends PathfinderMob>) entityCreature.getType()));
-
-                helper.getAttributeModifier().forEach(((attribute, valueProvider) -> {
-                    AttributeSupplier supplier = DefaultAttributes.getSupplier((EntityType<? extends PathfinderMob>) entityCreature.getType());
-                    double baseValue = valueProvider.getSecond();
-                    if (supplier.hasAttribute(attribute)) {
-                        baseValue = supplier.getBaseValue(attribute);
-                    }
-                    this.getAttribute(attribute).setBaseValue(baseValue * valueProvider.getFirst().sample(entityCreature.getRandom()));
-                }));
-            } else {
-                this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(20);
-                this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(0);
-                this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0);
-            }
-        } catch (NullPointerException e) {
-            LOGGER.error("Failed to update entity attributes for {} {}", this, e);
+        IConvertingHandler<?> convertedHandler = getConvertedHandler();
+        if (convertedHandler != null) {
+            convertedHandler.updateEntityAttributes(this);
         }
-
-
     }
 
     /**

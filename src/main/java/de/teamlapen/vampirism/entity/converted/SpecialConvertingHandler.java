@@ -1,21 +1,22 @@
 package de.teamlapen.vampirism.entity.converted;
 
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
+import de.teamlapen.vampirism.api.entity.convertible.ICurableConvertedCreature;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
-public class SpecialConvertingHandler<T extends PathfinderMob, Z extends PathfinderMob & IConvertedCreature<T>> extends DefaultConvertingHandler<T> {
+public class SpecialConvertingHandler<T extends PathfinderMob, Z extends PathfinderMob & ICurableConvertedCreature<T>> extends DefaultConvertingHandler<T> {
 
     private final Supplier<EntityType<Z>> convertedType;
 
@@ -29,6 +30,10 @@ public class SpecialConvertingHandler<T extends PathfinderMob, Z extends Pathfin
         this.convertedType = convertedType;
     }
 
+    public EntityType<Z> getConvertedType() {
+        return this.convertedType.get();
+    }
+
     @Nullable
     @Override
     public IConvertedCreature<T> createFrom(@NotNull T entity) {
@@ -36,7 +41,7 @@ public class SpecialConvertingHandler<T extends PathfinderMob, Z extends Pathfin
             copyImportantStuff(convertedCreature, entity);
             convertedCreature.setUUID(Mth.createInsecureUUID(convertedCreature.getRandom()));
             convertedCreature.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 2));
-            convertedCreature.data().texture = this.overlayTexture;
+            convertedCreature.getRepresentingEntity().getEntityData().set(convertedCreature.getSourceEntityDataParam(), ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()).toString());
             return convertedCreature;
         }).orElse(null);
     }
@@ -47,6 +52,7 @@ public class SpecialConvertingHandler<T extends PathfinderMob, Z extends Pathfin
         converted.yBodyRot = entity.yBodyRot;
         converted.yHeadRot = entity.yHeadRot;
         converted.load(nbt);
+        updateEntityAttributes(converted);
         converted.setHealth(converted.getMaxHealth() / 3 * 2);
     }
 }
