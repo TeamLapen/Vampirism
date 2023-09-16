@@ -78,7 +78,20 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
         return newEntity;
     }
 
+    @NotNull
     EntityDataAccessor<Boolean> getConvertingDataParam();
+
+    @NotNull
+    EntityDataAccessor<String> getSourceEntityDataParam();
+
+    @Override
+    default @Nullable String getSourceEntityId() {
+        String overlay = this.getRepresentingEntity().getEntityData().get(getSourceEntityDataParam());
+        if (overlay.isEmpty()) {
+            return null;
+        }
+        return overlay;
+    }
 
     /**
      * call in {@link Entity#handleEntityEvent(byte)}
@@ -132,6 +145,7 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
      */
     default void registerConvertingData(@NotNull PathfinderMob entity) {
         entity.getEntityData().define(this.getConvertingDataParam(), false);
+        entity.getEntityData().define(this.getSourceEntityDataParam(), "");
     }
 
     /**
@@ -146,4 +160,6 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
         entity.removeEffect(MobEffects.WEAKNESS);
         entity.level().broadcastEntityEvent(entity, (CURE_EVENT_ID));
     }
+
+
 }

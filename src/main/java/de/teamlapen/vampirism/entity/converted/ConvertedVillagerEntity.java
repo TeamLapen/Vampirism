@@ -1,19 +1,14 @@
 package de.teamlapen.vampirism.entity.converted;
 
 import com.google.common.collect.Lists;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.Dynamic;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
-import de.teamlapen.vampirism.api.entity.convertible.Converter;
-import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
-import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.api.entity.convertible.ICurableConvertedCreature;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.core.ModAdvancements;
-import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModVillage;
 import de.teamlapen.vampirism.entity.VampirismVillagerEntity;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
@@ -32,7 +27,6 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -51,8 +45,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,10 +57,9 @@ import java.util.UUID;
  */
 public class ConvertedVillagerEntity extends VampirismVillagerEntity implements ICurableConvertedCreature<Villager> {
 
-    private static final Logger LOGGER = LogManager.getLogger();
-
     public static final @NotNull List<SensorType<? extends Sensor<? super Villager>>> SENSOR_TYPES;
     private static final EntityDataAccessor<Boolean> CONVERTING = SynchedEntityData.defineId(ConvertedVillagerEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<String> OVERLAY_TEXTURE = SynchedEntityData.defineId(ConvertedVillagerEntity.class, EntityDataSerializers.STRING);
 
     static {
         SENSOR_TYPES = Lists.newArrayList(Villager.SENSOR_TYPES);
@@ -166,8 +157,13 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     }
 
     @Override
-    public EntityDataAccessor<Boolean> getConvertingDataParam() {
+    public @NotNull EntityDataAccessor<Boolean> getConvertingDataParam() {
         return CONVERTING;
+    }
+
+    @Override
+    public @NotNull EntityDataAccessor<String> getSourceEntityDataParam() {
+        return OVERLAY_TEXTURE;
     }
 
     @Override

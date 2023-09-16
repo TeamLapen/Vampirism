@@ -119,19 +119,17 @@ public class ConvertiblesReloadListener {
                 this(values.stream().collect(Collectors.toMap(com.mojang.datafixers.util.Pair::getFirst, com.mojang.datafixers.util.Pair::getSecond, (a, b) -> b)));
             }
 
-            private static final Codec<com.mojang.datafixers.util.Pair<FloatProvider, Double>> CODEC_PAIR = RecordCodecBuilder.create(inst -> {
+            private static final Codec<com.mojang.datafixers.util.Pair<Attribute, com.mojang.datafixers.util.Pair<FloatProvider, Double>>> CODEC_PAIR = RecordCodecBuilder.create(inst -> {
                 return inst.group(
-                        FloatProvider.CODEC.fieldOf("modifier").forGetter(com.mojang.datafixers.util.Pair::getFirst),
-                        Codec.DOUBLE.fieldOf("fallback_base").forGetter(com.mojang.datafixers.util.Pair::getSecond)
-                ).apply(inst, com.mojang.datafixers.util.Pair::new);
+                        ForgeRegistries.ATTRIBUTES.getCodec().fieldOf("attribute").forGetter(com.mojang.datafixers.util.Pair::getFirst),
+                        FloatProvider.CODEC.fieldOf("modifier").forGetter(s -> s.getSecond().getFirst()),
+                        Codec.DOUBLE.optionalFieldOf("fallback_base", 1d).forGetter(s -> s.getSecond().getSecond())
+                ).apply(inst, ((attribute, floatProvider, aDouble) -> com.mojang.datafixers.util.Pair.of(attribute, com.mojang.datafixers.util.Pair.of(floatProvider, aDouble))));
             });
-            public static final Codec<ConvertingAttributeModifier> CODEC = RecordCodecBuilder.create(inst -> {
-                return inst.group(
-                        Codec.pair(ForgeRegistries.ATTRIBUTES.getCodec(), CODEC_PAIR).listOf().fieldOf("attribute_modifier").forGetter(m -> {
-                            return m.attributeModifier.entrySet().stream().map(s -> com.mojang.datafixers.util.Pair.of(s.getKey(), s.getValue())).toList();
-                        })
-                ).apply(inst, ConvertingAttributeModifier::new);
-            });
+            public static final Codec<ConvertingAttributeModifier> CODEC = CODEC_PAIR.listOf().xmap(
+                    ConvertingAttributeModifier::new,
+                    x -> x.attributeModifier.entrySet().stream().map(s -> com.mojang.datafixers.util.Pair.of(s.getKey(), com.mojang.datafixers.util.Pair.of(s.getValue().getFirst(), s.getValue().getSecond()))).collect(Collectors.toList())
+            );
 
             public com.mojang.datafixers.util.Pair<FloatProvider, Double> modifier(Attribute attribute) {
                 return attributeModifier.get(attribute);

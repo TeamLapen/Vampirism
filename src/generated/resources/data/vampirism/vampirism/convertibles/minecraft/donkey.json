@@ -3,5 +3,5 @@
     "type": "vampirism:special",
     "converted_type": "vampirism:converted_donkey"
   },
-  "overlay": "vampirism:textures/entity/vanilla/donkey_overlay.png"
+  "overlay": "vampirism:textures/entity/vanilla/horse_overlay.png"
 }

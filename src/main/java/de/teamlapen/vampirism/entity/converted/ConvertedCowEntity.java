@@ -1,23 +1,14 @@
 package de.teamlapen.vampirism.entity.converted;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.entity.convertible.Converter;
-import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModAttributes;
-import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.data.reloadlistener.ConvertiblesReloadListener;
-import de.teamlapen.vampirism.entity.converted.converter.DefaultConverter;
-import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionHand;
@@ -30,20 +21,15 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Cow;
-import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemUtils;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
-
 public class ConvertedCowEntity extends Cow implements CurableConvertedCreature<Cow, ConvertedCowEntity> {
 
     private static final EntityDataAccessor<Boolean> CONVERTING = SynchedEntityData.defineId(ConvertedCowEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<String> OVERLAY_TEXTURE = SynchedEntityData.defineId(ConvertedCowEntity.class, EntityDataSerializers.STRING);
 
     private final Data<Cow> data = new Data<>();
 
@@ -60,8 +46,13 @@ public class ConvertedCowEntity extends Cow implements CurableConvertedCreature<
     }
 
     @Override
-    public EntityDataAccessor<Boolean> getConvertingDataParam() {
+    public @NotNull EntityDataAccessor<Boolean> getConvertingDataParam() {
         return CONVERTING;
+    }
+
+    @Override
+    public @NotNull EntityDataAccessor<String> getSourceEntityDataParam() {
+        return OVERLAY_TEXTURE;
     }
 
     @Override

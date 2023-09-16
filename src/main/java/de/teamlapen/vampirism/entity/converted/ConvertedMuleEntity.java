@@ -30,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 public class ConvertedMuleEntity extends Mule implements CurableConvertedCreature<Mule, ConvertedMuleEntity> {
 
     private static final EntityDataAccessor<Boolean> CONVERTING = SynchedEntityData.defineId(ConvertedMuleEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<String> OVERLAY_TEXTURE = SynchedEntityData.defineId(ConvertedMuleEntity.class, EntityDataSerializers.STRING);
 
     public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
         return AbstractHorse.createBaseHorseAttributes()
@@ -86,8 +87,13 @@ public class ConvertedMuleEntity extends Mule implements CurableConvertedCreatur
     }
 
     @Override
-    public EntityDataAccessor<Boolean> getConvertingDataParam() {
+    public @NotNull EntityDataAccessor<Boolean> getConvertingDataParam() {
         return CONVERTING;
+    }
+
+    @Override
+    public @NotNull EntityDataAccessor<String> getSourceEntityDataParam() {
+        return OVERLAY_TEXTURE;
     }
 
     @NotNull

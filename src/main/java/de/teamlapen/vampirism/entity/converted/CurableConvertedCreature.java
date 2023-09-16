@@ -16,6 +16,7 @@ import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.world.ModDamageSources;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -35,9 +36,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -196,6 +199,16 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
         if (compound.contains("ConversionTime", 99) && compound.getInt("ConversionTime") > -1) {
             this.startConverting(compound.hasUUID("ConversionPlayer") ? compound.getUUID("ConversionPlayer") : null, compound.getInt("ConversionTime"), ((PathfinderMob) this));
         }
+        if (compound.contains("source_entity", Tag.TAG_STRING)) {
+            this.getRepresentingEntity().getEntityData().set(this.getSourceEntityDataParam(), compound.getString("source_entity"));
+        } else {
+            var convertibles = ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).getConvertibles();
+            for (var entry : convertibles.entrySet()) {
+                if (entry.getValue() instanceof SpecialConvertingHandler<?,?> special && Objects.equals(special.getConvertedType(), this.getRepresentingEntity().getType())) {
+                    this.getRepresentingEntity().getEntityData().set(this.getSourceEntityDataParam(), ForgeRegistries.ENTITY_TYPES.getKey(entry.getKey()).toString());
+                }
+            }
+        }
     }
 
     /**
@@ -208,6 +221,9 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
         compound.putInt("ConversionTime", this.isConverting(((PathfinderMob) this)) ? data().conversionTime : -1);
         if (data().conversationStarter != null) {
             compound.putUUID("ConversionPlayer", data().conversationStarter);
+        }
+        if (getSourceEntityId() != null) {
+            compound.putString("source_entity", getSourceEntityId());
         }
     }
 

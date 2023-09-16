@@ -30,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ConvertedHorseEntity extends Horse implements CurableConvertedCreature<Horse, ConvertedHorseEntity> {
     private static final EntityDataAccessor<Boolean> CONVERTING = SynchedEntityData.defineId(ConvertedHorseEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<String> OVERLAY_TEXTURE = SynchedEntityData.defineId(ConvertedHorseEntity.class, EntityDataSerializers.STRING);
 
     public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
         return AbstractHorse.createBaseHorseAttributes()
@@ -87,8 +88,13 @@ public class ConvertedHorseEntity extends Horse implements CurableConvertedCreat
     }
 
     @Override
-    public EntityDataAccessor<Boolean> getConvertingDataParam() {
+    public @NotNull EntityDataAccessor<Boolean> getConvertingDataParam() {
         return CONVERTING;
+    }
+
+    @Override
+    public @NotNull EntityDataAccessor<String> getSourceEntityDataParam() {
+        return OVERLAY_TEXTURE;
     }
 
     @NotNull

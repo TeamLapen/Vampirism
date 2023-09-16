@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.api.entity.convertible;
 
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,9 +13,15 @@ public interface IConvertedCreature<T extends PathfinderMob> extends IVampireMob
 
     class Data<T> {
 
-        @Nullable
-        public ResourceLocation texture;
     }
 
-    Data<T> data();
+    default Data<T> data() {
+        return new Data<>();
+    }
+
+
+    @Nullable
+    default String getSourceEntityId() {
+        return null;
+    }
 }

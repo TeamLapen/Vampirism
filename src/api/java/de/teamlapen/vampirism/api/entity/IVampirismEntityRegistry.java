@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -69,7 +70,15 @@ public interface IVampirismEntityRegistry {
     /**
      * @return A map mapping the overlay resource location string to e convertible entity's class
      */
+    @NotNull
     Map<EntityType<? extends PathfinderMob>, ResourceLocation> getConvertibleOverlay();
+
+    /**
+     * directly return the overlay texture for the given entity
+     * @param sourceEntity the string values of the source entity's registry name
+     */
+    @Nullable
+    ResourceLocation getConvertibleOverlay(String sourceEntity);
 
     /**
      * @return The custom constructor registered for the given entity's class. Can be null if none is registered
