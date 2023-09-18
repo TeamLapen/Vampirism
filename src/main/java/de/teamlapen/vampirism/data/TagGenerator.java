@@ -224,6 +224,8 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
             tag(ModTags.Items.APPLICABLE_OIL_SWORD);
             tag(ItemTags.SIGNS).add(ModItems.DARK_SPRUCE_SIGN.get(), ModItems.CURSED_SPRUCE_SIGN.get());
             tag(ItemTags.HANGING_SIGNS).add(ModItems.DARK_SPRUCE_HANGING_SIGN.get(), ModItems.CURSED_SPRUCE_HANGING_SIGN.get());
+            tag(ModTags.Items.HUNTER_COAT).add(ModItems.HUNTER_COAT_HEAD_NORMAL.get(),ModItems.HUNTER_COAT_HEAD_ENHANCED.get(),ModItems.HUNTER_COAT_HEAD_ULTIMATE.get(), ModItems.HUNTER_COAT_CHEST_NORMAL.get(),ModItems.HUNTER_COAT_CHEST_ENHANCED.get(),ModItems.HUNTER_COAT_CHEST_ULTIMATE.get(), ModItems.HUNTER_COAT_LEGS_NORMAL.get(),ModItems.HUNTER_COAT_LEGS_ENHANCED.get(),ModItems.HUNTER_COAT_LEGS_ULTIMATE.get(), ModItems.HUNTER_COAT_FEET_NORMAL.get(),ModItems.HUNTER_COAT_FEET_ENHANCED.get(),ModItems.HUNTER_COAT_FEET_ULTIMATE.get());
+            tag(ItemTags.FREEZE_IMMUNE_WEARABLES).addTag(ModTags.Items.HUNTER_COAT);
         }
     }
 

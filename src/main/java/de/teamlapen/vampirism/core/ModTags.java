@@ -67,6 +67,7 @@ public class ModTags {
         public static final TagKey<Item> APPLICABLE_OIL_SWORD = tag("applicable_oil/sword");
         public static final TagKey<Item> APPLICABLE_OIL_PICKAXE = tag("applicable_oil/pickaxe");
         public static final TagKey<Item> APPLICABLE_OIL_ARMOR = tag("applicable_oil/armor");
+        public static final TagKey<Item> HUNTER_COAT = tag("armo/hunter_coat");
 
         private static @NotNull TagKey<Item> tag(@NotNull ResourceLocation resourceLocation) {
             return ItemTags.create(resourceLocation);

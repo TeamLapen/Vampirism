@@ -370,7 +370,7 @@ public class BalanceConfig {
         //Vampire actions
         builder.category("vampireActions", "va");
         vaFreezeCooldown = builder.comment("In seconds").defineInRange("freezeCooldown", 60, 1, Integer.MAX_VALUE);
-        vaFreezeDuration = builder.comment("In seconds").defineInRange("freezeDuration", 6, 1, 30);
+        vaFreezeDuration = builder.comment("In seconds").defineInRange("freezeDuration", 3, 1, 30);
         vaFreezeEnabled = builder.define("freezeEnabled", true);
         vaInvisibilityCooldown = builder.comment("In seconds").defineInRange("invisibilityCooldown", 25, 1, Integer.MAX_VALUE);
         vaInvisibilityDuration = builder.comment("In seconds").defineInRange("invisibilityDuration", 25, 1, Integer.MAX_VALUE);

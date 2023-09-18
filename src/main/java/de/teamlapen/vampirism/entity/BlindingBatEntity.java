@@ -124,4 +124,9 @@ public class BlindingBatEntity extends Bat {
         }
 
     }
+
+    @Override
+    public boolean canFreeze() {
+        return false;
+    }
 }
