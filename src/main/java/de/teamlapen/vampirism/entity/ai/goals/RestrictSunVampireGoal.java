@@ -20,7 +20,7 @@ public class RestrictSunVampireGoal<T extends PathfinderMob & IVampire> extends 
     @Override
     public boolean canUse() {
         if (vampire.tickCount % 10 == 3) {
-            cache = VampirismAPI.sundamageRegistry().hasSunDamage(vampire.level, vampire.blockPosition()) && !Helper.isEntityInArtificalVampireFogArea(vampire);
+            cache = VampirismAPI.sundamageRegistry().hasSunDamage(vampire.level(), vampire.blockPosition()) && !Helper.isEntityInArtificalVampireFogArea(vampire);
         }
         return cache && vampire.getCommandSenderWorld().isDay() && !vampire.isIgnoringSundamage();
     }

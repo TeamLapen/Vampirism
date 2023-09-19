@@ -85,11 +85,11 @@ public class SundamageProvider implements DataProvider {
             this.dimensions.add(new ExtraCodecs.TagOrElementLocation(dimension.location(), true));
         }
 
-        public void noSunDamageLevel(ResourceKey<Level> level) {
+        public void addLevelWithoutSundamage(ResourceKey<Level> level) {
             this.levels.add(level);
         }
 
-        public void sunDamageLevel(ResourceKey<Level> level) {
+        public void addLevelWithSundamage(ResourceKey<Level> level) {
             this.sunDamageLevels.add(level);
         }
 
