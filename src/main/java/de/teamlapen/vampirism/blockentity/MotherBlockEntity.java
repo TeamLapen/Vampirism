@@ -48,7 +48,7 @@ public class MotherBlockEntity extends BlockEntity {
         if (e.isFrozen && e.freezeTimer-- <= 0) {
             e.unFreezeFight(level, blockPos, blockState);
         }
-        if (!e.isFrozen && e.level != null) {
+        if (!e.isFrozen && e.level != null && e.isIntact()) {
             if (e.level.getRandom().nextInt(50) == 0) {
                 e.updateFightStatus();
                 if (!e.bossEvent.getPlayers().isEmpty()) {
@@ -74,11 +74,15 @@ public class MotherBlockEntity extends BlockEntity {
                         if (level.getBlockState(p).getBlock() instanceof IRemainsBlock) {
                             level.setBlock(p, Blocks.AIR.defaultBlockState(), 3);
                             ModParticles.spawnParticlesServer(level, new DustParticleOptions(new Vector3f(0.7f, 0.7f, 0.7f), 1), p.getX() + 0.5, p.getY() + 0.5, p.getZ() + 0.5f, 20, 0.3, 0.3, 0.3, 0.01);
+                            e.level.playSound(null, p, ModSounds.REMAINS_DESTROYED.get(), SoundSource.BLOCKS, 0.2f, 1f);
                         }
                     }
                 } else {
                     //Destruction complete
                     e.destructionTimer = -1;
+                    if (e.level != null) {
+                        e.level.playSound(null, blockPos, ModSounds.MOTHER_DEATH.get(), SoundSource.BLOCKS, 2f, 0.8f);
+                    }
                 }
             }
         }
@@ -210,9 +214,6 @@ public class MotherBlockEntity extends BlockEntity {
     private void initiateDestruction() {
         this.getTreeStructure(true);
         this.destructionTimer = 1;
-        if (this.level != null) {
-            this.level.playSound(null, worldPosition, ModSounds.MOTHER_DEATH.get(), SoundSource.BLOCKS, 1f, 1f);
-        }
     }
 
     private void unFreezeFight(Level level, BlockPos blockPos, BlockState blockState) {
