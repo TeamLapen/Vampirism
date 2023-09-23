@@ -1,0 +1,14 @@
+{
+	"parent": "vampirism:item/crossbow",
+	"textures": {
+		"layer0": "vampirism:item/crossbow"
+	},
+    "overrides": [
+		{
+			"predicate": {
+				"vampirism:charged": 0.01
+			},
+			"model": "vampirism:item/basic_crossbow_unloaded"
+		}
+    ]
+}
