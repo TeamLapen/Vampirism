@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
 import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
@@ -476,31 +477,33 @@ public class ModPlayerEventHandler {
     private boolean checkItemUsePerm(@NotNull ItemStack stack, @NotNull Player player) {
 
         boolean message = !player.getCommandSenderWorld().isClientSide;
-        if (!stack.isEmpty() && stack.getItem() instanceof IFactionLevelItem<?> item) {
+        if (!stack.isEmpty() && stack.getItem() instanceof IFactionExclusiveItem factionItem) {
             if (!player.isAlive()) return false;
             LazyOptional<FactionPlayerHandler> handler = FactionPlayerHandler.getOpt(player);
-            IFaction<?> usingFaction = item.getExclusiveFaction(stack);
-            ISkill<?> requiredSkill = item.getRequiredSkill(stack);
+            IFaction<?> usingFaction = factionItem.getExclusiveFaction(stack);
             if (usingFaction != null && !handler.map(h -> h.isInFaction(usingFaction)).orElse(false)) {
                 if (message) {
-                    player.displayClientMessage(Component.translatable("text.vampirism.can_only_be_used_by", usingFaction.getNamePlural()), true);
+                    player.displayClientMessage(Component.translatable("text.vampirism.can_not_be_used_faction"), true);
                 }
                 return false;
-            } else if (handler.map(FactionPlayerHandler::getCurrentLevel).orElse(0) < item.getMinLevel(stack)) {
-                if (message) {
-                    player.displayClientMessage(Component.translatable("text.vampirism.can_only_be_used_by_level", usingFaction == null ? Component.translatable("text.vampirism.all") : usingFaction.getNamePlural(), item.getMinLevel(stack)), true);
-                }
-                return false;
-            } else if (requiredSkill != null) {
-                IFactionPlayer<?> factionPlayer = handler.resolve().flatMap(FactionPlayerHandler::getCurrentFactionPlayer).orElse(null);
-                if (factionPlayer == null || !factionPlayer.getSkillHandler().isSkillEnabled(requiredSkill)) {
+            } else if (stack.getItem() instanceof IFactionLevelItem<?> levelItem) {
+                ISkill<?> requiredSkill = levelItem.getRequiredSkill(stack);
+
+                if (handler.map(FactionPlayerHandler::getCurrentLevel).orElse(0) < levelItem.getMinLevel(stack)) {
                     if (message) {
-                        player.displayClientMessage(Component.translatable("text.vampirism.can_only_be_used_with_skill", requiredSkill.getName()), true);
+                        player.displayClientMessage(Component.translatable("text.vampirism.can_not_be_used_level"), true);
                     }
                     return false;
+                } else if (requiredSkill != null) {
+                    IFactionPlayer<?> factionPlayer = handler.resolve().flatMap(FactionPlayerHandler::getCurrentFactionPlayer).orElse(null);
+                    if (factionPlayer == null || !factionPlayer.getSkillHandler().isSkillEnabled(requiredSkill)) {
+                        if (message) {
+                            player.displayClientMessage(Component.translatable("text.vampirism.can_not_be_used_skill"), true);
+                        }
+                        return false;
+                    }
                 }
             }
-
         }
         return true;
     }

@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.effects;
 
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.util.DamageHandler;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -27,7 +28,7 @@ public class VampirismPoisonEffect extends VampirismEffect {
 
     @Override
     public void applyEffectTick(@NotNull LivingEntity entityLivingBaseIn, int amplifier) {
-        float damage = amplifier >= DEADLY_AMPLIFIER ? amplifier : Math.min(entityLivingBaseIn.getHealth() - 1, amplifier);
+        float damage = amplifier >= DEADLY_AMPLIFIER ? amplifier : Math.min(entityLivingBaseIn.getHealth() - 1, Math.max(1,amplifier));
         if (damage > 0) {
             DamageHandler.hurtVanilla(entityLivingBaseIn, DamageSources::magic, damage);
         }
@@ -55,5 +56,13 @@ public class VampirismPoisonEffect extends VampirismEffect {
                 return true;
             }
         });
+    }
+
+    public static MobEffectInstance createThrowableEffect() {
+        return new MobEffectInstance(ModEffects.POISON.get(), 40, 1);
+    }
+
+    public static MobEffectInstance createEffectCloudEffect() {
+        return new MobEffectInstance(ModEffects.POISON.get(), 60, 1);
     }
 }
