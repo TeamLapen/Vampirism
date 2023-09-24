@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.world.gen.structure.vampirealtar;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModLootTables;
@@ -62,9 +63,11 @@ public class VampireAltarPieces {
                 }
                 case "entity" -> {
                     pLevel.removeBlock(pPos, false);
-                    AdvancedVampireEntity advancedVampireEntity = ModEntities.ADVANCED_VAMPIRE.get().create(pLevel.getLevel());
-                    advancedVampireEntity.setPos(pPos.getX() + 0.5, pPos.getY(), pPos.getZ() + 0.5);
-                    pLevel.addFreshEntity(advancedVampireEntity);
+                    if (!VampirismAPI.sundamageRegistry().hasSunDamage(pLevel, pPos)) {
+                        AdvancedVampireEntity advancedVampireEntity = ModEntities.ADVANCED_VAMPIRE.get().create(pLevel.getLevel());
+                        advancedVampireEntity.setPos(pPos.getX() + 0.5, pPos.getY(), pPos.getZ() + 0.5);
+                        pLevel.addFreshEntity(advancedVampireEntity);
+                    }
                 }
             }
         }
