@@ -46,13 +46,14 @@ public abstract class HunterCampPieces extends StructurePiece {
 
     public HunterCampPieces(@NotNull StructurePieceType structurePieceType, @NotNull CompoundTag nbt) {
         super(structurePieceType, nbt);
-        int[] pos = nbt.getIntArray("pos");
-        this.pos = new BlockPos(pos[0], pos[1], pos[2]);
+        this.pos = new BlockPos(nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z"));
     }
 
     @Override
     protected void addAdditionalSaveData(@NotNull StructurePieceSerializationContext context, @NotNull CompoundTag tagCompound) {
-        tagCompound.putIntArray("pos", new int[]{this.pos.getX(), this.pos.getY(), this.pos.getZ()});
+        tagCompound.putInt("x", this.pos.getX());
+        tagCompound.putInt("y", this.pos.getY());
+        tagCompound.putInt("z", this.pos.getZ());
     }
 
     protected boolean testPreconditions(@NotNull WorldGenLevel worldIn, @NotNull StructureManager manager, @NotNull ChunkPos chunkPos) {
