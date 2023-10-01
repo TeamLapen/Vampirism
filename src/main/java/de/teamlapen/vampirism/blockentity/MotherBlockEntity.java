@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.network.ClientboundPlayEventPacket;
 import de.teamlapen.vampirism.particle.FlyingBloodParticleOptions;
+import de.teamlapen.vampirism.util.DamageHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.nbt.CompoundTag;
@@ -19,6 +20,7 @@ import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.BossEvent;
+import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -57,6 +59,7 @@ public class MotherBlockEntity extends BlockEntity {
                     if (!vuls.isEmpty()) {
                         for (ServerPlayer player : e.bossEvent.getPlayers()) {
                             BlockPos p = vuls.get(e.level.getRandom().nextInt(vuls.size())).getLeft();
+                            DamageHandler.hurtVanilla(player, DamageSources::magic, 1);
                             ModParticles.spawnParticlesServer(player.level(), new FlyingBloodParticleOptions(100, false, p.getX() + 0.5, p.getY() + 0.5, p.getZ() + 0.5), player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(), 10, 0.1f, 0.1f, 0.1f, 0);
                         }
                     }
