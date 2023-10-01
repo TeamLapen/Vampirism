@@ -21,15 +21,7 @@ import java.util.Optional;
 
 public class VulnerableRemainsBlockEntity extends BlockEntity {
 
-    private int health = 50;
-    private BlockPos motherPos;
-
-    private int dummy_entity_id;
-
-    public VulnerableRemainsBlockEntity(BlockPos pos, BlockState state) {
-        super(ModTiles.VULNERABLE_CURSED_ROOTED_DIRT.get(), pos, state);
-    }
-
+    private final static int MAX_HEALTH = 50;
 
     public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, VulnerableRemainsBlockEntity e) {
         if (e.firstTick) {
@@ -40,23 +32,46 @@ public class VulnerableRemainsBlockEntity extends BlockEntity {
             });
         } else if (level.getRandom().nextInt(100) == 3) {
             e.checkDummyEntity();
+            if (e.lastDamage - level.getGameTime() > 3 * 60 * 20L) {
+                e.health = Math.min(e.health + 10, MAX_HEALTH);
+            }
         }
     }
+    private BlockPos motherPos;
+    private int health = MAX_HEALTH;
+
+    private int dummy_entity_id;
+
+    public VulnerableRemainsBlockEntity(BlockPos pos, BlockState state) {
+        super(ModTiles.VULNERABLE_CURSED_ROOTED_DIRT.get(), pos, state);
+    }
+    private long lastDamage = 0;
 
     private void destroyVulnerability() {
         this.level.setBlockAndUpdate(this.worldPosition, ModBlocks.INCAPACITATED_VULNERABLE_REMAINS.get().defaultBlockState());
     }
 
-
+    @Override
+    public void load(@NotNull CompoundTag tag) {
+        super.load(tag);
+        this.health = tag.getInt("health");
+        this.lastDamage = tag.getLong("lastDamage");
+        if (tag.contains("motherPos")) {
+            int[] pos = tag.getIntArray("motherPos");
+            this.motherPos = new BlockPos(pos[0], pos[1], pos[2]);
+        }
+    }
 
     public void onDamageDealt(DamageSource src, double damage) {
         this.health -= damage;
+        if (this.level != null) this.lastDamage = this.level.getGameTime();
         if (this.health <= 0) {
-            if(this.level!=null)this.level.playSound(null, worldPosition, ModSounds.REMAINS_DESTROYED.get(), SoundSource.BLOCKS, 1f ,1f);
+            if (this.level != null)
+                this.level.playSound(null, worldPosition, ModSounds.REMAINS_DESTROYED.get(), SoundSource.BLOCKS, 1f, 1f);
             destroyVulnerability();
-        }
-        else{
-            if(this.level!=null)this.level.playSound(null, worldPosition, ModSounds.REMAINS_HIT.get(), SoundSource.BLOCKS, 1f ,1f);
+        } else {
+            if (this.level != null)
+                this.level.playSound(null, worldPosition, ModSounds.REMAINS_HIT.get(), SoundSource.BLOCKS, 1f, 1f);
         }
         if (src.getEntity() instanceof ServerPlayer p) {
             this.getMother().ifPresent(mother -> mother.onVulnerabilityHit(p, this.health <= 0));
@@ -67,18 +82,9 @@ public class VulnerableRemainsBlockEntity extends BlockEntity {
     protected void saveAdditional(@NotNull CompoundTag tag) {
         super.saveAdditional(tag);
         tag.putInt("health", this.health);
+        tag.putLong("lastDamage", this.lastDamage);
         if (this.motherPos != null) {
             tag.putIntArray("motherPos", new int[]{this.motherPos.getX(), this.motherPos.getY(), this.motherPos.getZ()});
-        }
-    }
-
-    @Override
-    public void load(@NotNull CompoundTag tag) {
-        super.load(tag);
-        this.health = tag.getInt("health");
-        if (tag.contains("motherPos")) {
-            int[] pos = tag.getIntArray("motherPos");
-            this.motherPos = new BlockPos(pos[0], pos[1], pos[2]);
         }
     }
 
