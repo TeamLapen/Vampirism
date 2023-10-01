@@ -60,7 +60,7 @@ public class ModDamageSources {
     }
 
     public MinionDamageSource minion(@NotNull MinionEntity<?> entity) {
-        return new MinionDamageSource(this.damageTypes.getHolderOrThrow(DamageTypes.MOB_ATTACK), entity);
+        return new MinionDamageSource(this.damageTypes.getHolderOrThrow(ModDamageTypes.MINION), entity);
     }
 
     public DBNODamageSource dbno(@Nullable Component originalSource) {
