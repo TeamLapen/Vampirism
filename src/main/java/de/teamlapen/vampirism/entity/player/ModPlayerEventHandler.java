@@ -13,7 +13,10 @@ import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
 import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
-import de.teamlapen.vampirism.blocks.*;
+import de.teamlapen.vampirism.blocks.AltarInspirationBlock;
+import de.teamlapen.vampirism.blocks.BloodContainerBlock;
+import de.teamlapen.vampirism.blocks.CoffinBlock;
+import de.teamlapen.vampirism.blocks.TentBlock;
 import de.teamlapen.vampirism.blocks.mother.MotherBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -428,10 +431,6 @@ public class ModPlayerEventHandler {
             //if (blockEntity instanceof MotherBlockEntity mother && !mother.isCanBeBroken()) {
             //    event.setUseItem(Event.Result.DENY);
             //}
-        } else if (state.getBlock() == ModBlocks.DARK_SPRUCE_LOG.get()) {
-            if (state.getValue(DarkSpruceLogs.INVULNERABLE)) {
-                event.setUseItem(Event.Result.DENY);
-            }
         }
     }
 
