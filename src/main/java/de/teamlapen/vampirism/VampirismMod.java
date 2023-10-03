@@ -5,7 +5,6 @@ import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.network.AbstractPacketDispatcher;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.lib.lib.util.IInitListener;
-import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.lib.util.OptifineHandler;
 import de.teamlapen.vampirism.api.VReference;
@@ -19,10 +18,11 @@ import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.world.IVampirismWorld;
 import de.teamlapen.vampirism.client.core.ClientRegistryHandler;
-import de.teamlapen.vampirism.config.BloodValues;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
-import de.teamlapen.vampirism.data.reloadlistener.SingleJigsawGeneration;
+import de.teamlapen.vampirism.data.reloadlistener.BloodValuesReloadListener;
+import de.teamlapen.vampirism.data.reloadlistener.SingleJigsawReloadListener;
+import de.teamlapen.vampirism.data.reloadlistener.SundamageReloadListener;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.ModEntityEventHandler;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
@@ -43,7 +43,10 @@ import de.teamlapen.vampirism.entity.player.vampire.NightVision;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.items.VampireRefinementItem;
 import de.teamlapen.vampirism.items.crossbow.CrossbowArrowHandler;
+import de.teamlapen.vampirism.misc.SettingsProvider;
 import de.teamlapen.vampirism.misc.VampirismLogger;
+import de.teamlapen.vampirism.mixin.ReloadableServerResourcesAccessor;
+import de.teamlapen.vampirism.mixin.TagManagerAccessor;
 import de.teamlapen.vampirism.modcompat.IMCHandler;
 import de.teamlapen.vampirism.modcompat.terrablender.TerraBlenderCompat;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
@@ -63,11 +66,12 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
+import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.*;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -94,19 +98,11 @@ public class VampirismMod {
     public static boolean inDataGen = false;
 
     private final @NotNull RegistryManager registryManager = new RegistryManager();
-    private VersionChecker.VersionInfo versionInfo;
 
 
     public VampirismMod() {
         instance = this;
         checkEnv();
-
-        Optional<? extends net.minecraftforge.fml.ModContainer> opt = ModList.get().getModContainerById(REFERENCE.MODID);
-        if (opt.isPresent()) {
-            REFERENCE.VERSION = opt.get().getModInfo().getVersion();
-        } else {
-            LOGGER.warn("Cannot get version from mod info");
-        }
 
         IEventBus modbus = FMLJavaModLoadingContext.get().getModEventBus();
 
@@ -130,6 +126,8 @@ public class VampirismMod {
         MinecraftForge.EVENT_BUS.addListener(this::onAddReloadListenerEvent);
         MinecraftForge.EVENT_BUS.addListener(this::onServerStarting);
         MinecraftForge.EVENT_BUS.addListener(VersionUpdater::checkVersionUpdated);
+        MinecraftForge.EVENT_BUS.addListener(this::onServerStopped);
+        MinecraftForge.EVENT_BUS.addListener(this::onDataPackSyncEvent);
 
         VampirismConfig.init();
 
@@ -142,16 +140,12 @@ public class VampirismMod {
         }
     }
 
-    public VersionChecker.VersionInfo getVersionInfo() {
-
-        return versionInfo;
-    }
-
     public void onAddReloadListenerEvent(@NotNull AddReloadListenerEvent event) {
         SkillTreeManager.getInstance().getSkillTree().initRootSkills();//Load root skills here, so even if data pack reload fail, the root skills are available #622
         event.addListener(SkillTreeManager.getInstance());
-        event.addListener(new BloodValues());
-        event.addListener(new SingleJigsawGeneration());
+        event.addListener(new BloodValuesReloadListener());
+        event.addListener(new SingleJigsawReloadListener());
+        event.addListener(new SundamageReloadListener(((TagManagerAccessor) ((ReloadableServerResourcesAccessor) event.getServerResources()).getTagManager()).getRegistryAccess()));
     }
 
     public void onCommandsRegister(@NotNull RegisterCommandsEvent event) {
@@ -189,6 +183,15 @@ public class VampirismMod {
 
     private void onServerStarting(@NotNull ServerAboutToStartEvent event) {
         VanillaStructureModifications.addVillageStructures(event.getServer().registryAccess());
+        ((SundamageRegistry) VampirismAPI.sundamageRegistry()).initServer(event.getServer().registryAccess());
+    }
+
+    private void onServerStopped(ServerStoppedEvent event) {
+        ((SundamageRegistry) VampirismAPI.sundamageRegistry()).removeServer();
+    }
+
+    private void onDataPackSyncEvent(OnDatapackSyncEvent event) {
+        ((SundamageRegistry) VampirismAPI.sundamageRegistry()).updateClient(event.getPlayer());
     }
 
     private void finalizeConfiguration(RegisterEvent event) {
@@ -217,7 +220,7 @@ public class VampirismMod {
      */
     private void prepareAPI() {
 
-        VampirismAPI.setUpRegistries(new FactionRegistry(), new SundamageRegistry(), new VampirismEntityRegistry().setDefaultConvertingHandlerCreator(DefaultConvertingHandler::new), new ActionManager(), new SkillManager(), new VampireVisionRegistry(), new ActionManagerEntity(), new ExtendedBrewingRecipeRegistry());
+        VampirismAPI.setUpRegistries(new FactionRegistry(), new SundamageRegistry(), new VampirismEntityRegistry(DefaultConvertingHandler::new), new ActionManager(), new SkillManager(), new VampireVisionRegistry(), new ActionManagerEntity(), new ExtendedBrewingRecipeRegistry(), new SettingsProvider(REFERENCE.SETTINGS_API));
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> proxy::setupAPIClient);
 
         VReference.VAMPIRE_FACTION = VampirismAPI.factionRegistry()
@@ -277,23 +280,18 @@ public class VampirismMod {
         dispatcher.registerPackets();
         onInitStep(IInitListener.Step.COMMON_SETUP, event);
 
-        if (!VampirismConfig.COMMON.versionCheck.get()) {
-            versionInfo = new VersionChecker.VersionInfo(REFERENCE.VERSION);
-        } else {
-            versionInfo = VersionChecker.executeVersionCheck(REFERENCE.VERSION_UPDATE_FILE, REFERENCE.VERSION, !inDev && VampirismConfig.COMMON.collectStats.get());
-        }
-
         MinecraftForge.EVENT_BUS.register(new ModPlayerEventHandler());
 
         MinecraftForge.EVENT_BUS.register(new ModEntityEventHandler());
         MinecraftForge.EVENT_BUS.addListener(ModLootTables::onLootLoad);
 
-        SupporterManager.getInstance().initAsync();
+        SupporterManager.init();
         VampireBookManager.getInstance().init();
         ModEntitySelectors.registerSelectors();
         event.enqueueWork(TerraBlenderCompat::registerBiomeProviderIfPresentUnsafe);
 //        VanillaStructureModifications.addVillageStructures(RegistryAccess.EMPTY);
 
+        TelemetryCollector.execute();
     }
 
     private void setupClient(@NotNull FMLClientSetupEvent event) {

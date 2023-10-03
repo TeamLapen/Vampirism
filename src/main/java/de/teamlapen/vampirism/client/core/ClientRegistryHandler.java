@@ -23,5 +23,6 @@ public class ClientRegistryHandler {
         modbus.addListener(ModKeys::registerKeyMapping);
         modbus.addListener(ClientEventHandler::onModelRegistry);
         modbus.addListener(ModItemsRender::registerItemDecorator);
+        modbus.addListener(ClientEventHandler::registerPackRepository);
     }
 }

@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:item/hunter_axe",
+  "textures": {
+    "layer0": "vampirism:item/hunter_axe_enhanced"
+  }
+}

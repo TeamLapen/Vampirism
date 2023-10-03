@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:item/crucifix",
+  "textures": {
+    "layer0": "vampirism:item/crucifix_gold"
+  }
+}

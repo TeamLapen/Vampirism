@@ -5,6 +5,7 @@
   "refmap": "vampirism.refmap.json",
   "mixins": [
     "AbstractFurnaceBlockEntityAccessor",
+    "AreaEffectCloudMixin",
     "ArmorItemAccessor",
     "CrossbowItemMixin",
     "IngredientAccessor",
@@ -27,11 +28,14 @@
     "ProcessorListsAccessor",
     "RecipeManagerAccessor",
     "RegistriesDatapackGeneratorAccessor",
+    "ReloadableServerResourcesAccessor",
     "ShapedRecipeAccessor",
     "ShapedRecipeBuilderAccessor",
     "ShapelessRecipeBuilderAccessor",
     "StructuresAccessor",
+    "TagManagerAccessor",
     "TargetConditionAccessor",
+    "ThrowablePotionMixin",
     "TileEntityTypeAccessor",
     "VanillaBlockLootAccessor",
     "WalkAnimationStateAccessor"
@@ -40,6 +44,8 @@
     "client.AgeableModelAccessor",
     "client.BossOverlayGuiAccessor",
     "client.LevelRendererMixin",
+    "client.LivingEntityRendererAccessor",
+    "client.ResourceLoadStateTrackerMixin",
     "client.MinecraftMixin",
     "client.SheetsMixin",
     "client.VillagerModelAccessor"

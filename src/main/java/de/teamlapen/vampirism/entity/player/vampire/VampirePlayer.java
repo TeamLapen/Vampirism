@@ -328,7 +328,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
     @NotNull
     public BITE_TYPE determineBiteType(LivingEntity entity) {
-        if (player instanceof ServerPlayer && !PermissionAPI.getPermission((ServerPlayer) player, Permissions.FEED)) {
+        if (player instanceof ServerPlayer && Permissions.FEED.isDisallowed(((ServerPlayer) player))) {
             return BITE_TYPE.NONE;
         }
         if (entity instanceof IBiteableEntity) {
@@ -346,7 +346,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             if (((Player) entity).getAbilities().instabuild || !Permissions.isPvpEnabled(player)) {
                 return BITE_TYPE.NONE;
             }
-            if (!UtilLib.canReallySee(entity, player, false) && VampirePlayer.getOpt((Player) entity).map(v -> v.canBeBitten(this)).orElse(false) && (!(player instanceof ServerPlayer) || PermissionAPI.<Boolean>getPermission((ServerPlayer) player, Permissions.FEED_PLAYER))) {
+            if (!UtilLib.canReallySee(entity, player, false) && VampirePlayer.getOpt((Player) entity).map(v -> v.canBeBitten(this)).orElse(false) && (!(player instanceof ServerPlayer) || Permissions.FEED_PLAYER.isAllowed((ServerPlayer) player))) {
                 if (!(entity.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof VampirismHunterArmorItem)) {
                     return BITE_TYPE.SUCK_BLOOD_PLAYER;
                 }
@@ -754,8 +754,10 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                 bloodStats.setMaxBlood(30);
             } else if (newLevel > 3) {
                 bloodStats.setMaxBlood(26);
-            } else {
+            } else if (newLevel > 0) {
                 bloodStats.setMaxBlood(20);
+            } else {
+                this.vision.deactivate();
             }
         } else {
             if (oldLevel == 0) {
@@ -1462,14 +1464,14 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         }
 
         private void switchVision() {
-            List<IVampireVision> visions = VampirismAPI.vampireVisionRegistry().getVisions();
+            List<IVampireVision> visions = VampirismAPI.vampireVisionRegistry().getVisions().stream().filter(unlockedVisions::contains).toList();
             int newIndex;
             if (this.vision != null) {
                 newIndex = visions.indexOf(this.vision) + 1;
             } else {
                 newIndex = 0;
             }
-            var newVision = newIndex == visions.size() ? null : visions.get(++newIndex);
+            var newVision = newIndex >= visions.size() ? null : visions.get(newIndex);
             activate(newVision);
         }
 
@@ -1485,6 +1487,9 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
         public void activate(@Nullable IVampireVision vision) {
             if (this.vision != null && this.vision == vision) {
+                return;
+            }
+            if (vision != null && !this.unlockedVisions.contains(vision)) {
                 return;
             }
             if (this.vision != null) {

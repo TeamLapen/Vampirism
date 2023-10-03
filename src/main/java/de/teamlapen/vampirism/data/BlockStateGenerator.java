@@ -268,6 +268,29 @@ public class BlockStateGenerator extends BlockStateProvider {//TODO 1.20 move to
         applyHorizontalModel(alchemy_table, models().getExistingFile(modLoc("block/alchemy_table/alchemy_table_output_0")), partBuilder -> partBuilder.condition(AlchemyTableBlock.HAS_BOTTLE_OUTPUT_0, true));
         applyHorizontalModel(alchemy_table, models().getExistingFile(modLoc("block/alchemy_table/alchemy_table_output_1")), partBuilder -> partBuilder.condition(AlchemyTableBlock.HAS_BOTTLE_OUTPUT_1, true));
 
+        var cursedEarthPath = models().getBuilder(ModBlocks.CURSED_EARTH_PATH.getId().getPath())
+                .parent(models().getExistingFile(mcLoc("block/block")))
+                .texture("particle", modLoc("block/cursed_earth_path_side"))
+                .texture("side", modLoc("block/cursed_earth_path_side"))
+                .texture("top", modLoc("block/cursed_earth_path_top"))
+                .texture("bottom", modLoc("block/cursed_earth_path_top"))
+                .element()
+                .from(0,0,0).to(16,15,16)
+                .allFaces((direction, builder) -> {
+                    switch (direction) {
+                        case UP -> builder.uvs(0, 0, 16, 16).texture("#top").end();
+                        case DOWN -> builder.uvs(0, 0, 16, 16).texture("#bottom").end();
+                        default -> builder.uvs(0, 1, 16, 16).texture("#side").end();
+                    }
+                })
+                .end()
+                .renderType(cutout);
+        simpleBlock(ModBlocks.CURSED_EARTH_PATH.get(), cursedEarthPath);
+        simpleBlock(ModBlocks.CASTLE_BLOCK_DARK_BRICK_CRACKED.get());
+
+        wallBlock(ModBlocks.CASTLE_BLOCK_DARK_BRICK_WALL.get(), blockTexture(ModBlocks.CASTLE_BLOCK_DARK_BRICK.get()));
+        wallBlock(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK_WALL.get(), blockTexture(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK.get()));
+
         var remainsModel = models().cubeAll("remains", modLoc("block/remains"));
         simpleBlock(ModBlocks.REMAINS.get(), remainsModel);
         simpleBlock(ModBlocks.INCAPACITATED_VULNERABLE_REMAINS.get(), models().cubeAll("incapacitated_vulnerable_remains", modLoc("block/incapacitated_vulnerable_remains")));
@@ -315,6 +338,11 @@ public class BlockStateGenerator extends BlockStateProvider {//TODO 1.20 move to
         simpleBlock(ModBlocks.CURSED_SPRUCE_WALL_SIGN.get(), models().getBuilder("vampirism:cursed_spruce_wall_sign").texture("particle", "vampirism:block/cursed_spruce_planks"));
         simpleBlock(ModBlocks.DARK_SPRUCE_SIGN.get(), models().getBuilder("vampirism:dark_spruce_sign").texture("particle", "vampirism:block/dark_spruce_planks"));
         simpleBlock(ModBlocks.CURSED_SPRUCE_SIGN.get(), models().getBuilder("vampirism:cursed_spruce_sign").texture("particle", "vampirism:block/cursed_spruce_planks"));
+
+        simpleBlock(ModBlocks.DARK_SPRUCE_HANGING_SIGN.get(), models().getBuilder("vampirism:dark_spruce_hanging_sign").texture("particle", "vampirism:block/dark_spruce_planks"));
+        simpleBlock(ModBlocks.DARK_SPRUCE_WALL_HANGING_SIGN.get(), models().getBuilder("vampirism:dark_spruce_wall_hanging_sign").texture("particle", "vampirism:block/dark_spruce_planks"));
+        simpleBlock(ModBlocks.CURSED_SPRUCE_HANGING_SIGN.get(), models().getBuilder("vampirism:cursed_spruce_hanging_sign").texture("particle", "vampirism:block/cursed_spruce_planks"));
+        simpleBlock(ModBlocks.CURSED_SPRUCE_WALL_HANGING_SIGN.get(), models().getBuilder("vampirism:cursed_spruce_wall_hanging_sign").texture("particle", "vampirism:block/cursed_spruce_planks"));
     }
 
     private void createCursedBark() {

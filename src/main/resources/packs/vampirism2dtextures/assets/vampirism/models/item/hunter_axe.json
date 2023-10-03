@@ -1,0 +1,39 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "minecraft:item/handheld",
+	"textures": {
+		"layer0": "vampirism:item/hunter_axe_normal"
+	},
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [5, -90, 45],
+			"translation": [0, 8, 1.5],
+			"scale": [1.4, 1.4, 1.4]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [5, 90, -45],
+			"translation": [0, 8, 1.5],
+			"scale": [1.4, 1.4, 1.4]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, -90, 25],
+			"translation": [2, 5.75, 0],
+			"scale": [1.25, 1.25, 1.25]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 90, -25],
+			"translation": [2, 5.75, 0],
+			"scale": [1.25, 1.25, 1.25]
+		},
+		"ground": {
+			"translation": [0, 2.5, 0],
+			"scale": [0.75, 0.75, 0.75]
+		},
+		"head": {
+			"translation": [0, 0, 7]
+		},
+		"fixed": {
+			"rotation": [0, 180, 0]
+		}
+	}
+}

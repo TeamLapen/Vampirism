@@ -1,48 +1,21 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        maven { url = 'https://maven.minecraftforge.net' }
-        maven {url='https://repo.spongepowered.org/repository/maven-public'}
-        maven { url = 'https://maven.parchmentmc.org' }
-    }
-
-    
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '6.0+', changing: true
-        classpath group: 'org.spongepowered', name:'mixingradle', version: '0.7-SNAPSHOT', changing: true
-        classpath 'org.parchmentmc:librarian:1.+'
-    }
-}
-
-
 plugins {
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+    id 'org.spongepowered.mixin' version '0.7.+'
     id 'com.matthewprenger.cursegradle' version '1.4.0'
     id "com.modrinth.minotaur" version "2.4.5"
     id 'de.undercouch.download' version '3.3.0'
+    id 'idea'
+    id 'eclipse'
 }
 
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'org.parchmentmc.librarian.forgegradle'
-apply plugin: 'idea'
-apply plugin: 'eclipse'
-apply plugin: 'org.spongepowered.mixin'
-apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle'
-apply from: 'https://raw.githubusercontent.com/SizableShrimp/ForgeUpdatesRemapper/main/remapper.gradle'
-
-
-configurations {
-    optionalRuntime
-    runtime.extendsFrom optionalRuntime // optionalRuntime dependencies are downloaded but not exported to POM
+group = mod_group_id
+base {
+    archivesName = mod_id
+    mod_version = "1.0.0"
 }
 
-group = "de.teamlapen.vampirism"
-archivesBaseName = "Vampirism"
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-//These will be overridden in gradle/versioning.gradle, but have to be defined here
-ext.mod_version="Test"
-ext.type="test"
-ext.classification="test"
-
 
 sourceSets {
     api
@@ -75,6 +48,7 @@ apply from: 'gradle/versioning.gradle'
 apply from: 'gradle/forge.gradle'
 apply from: 'gradle/artifacts.gradle'
 apply from: 'gradle/deploy.gradle'
+apply from: 'gradle/crowdin.gradle'
 
 
 configurations {
@@ -90,4 +64,61 @@ idea {
             excludeDirs.add(excludeDir)
         }
     }
+}
+
+tasks.named('processResources', ProcessResources).configure {
+    var replaceProperties = [
+            minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
+            forge_version: forge_version, forge_version_range: forge_version_range,
+            loader_version_range: loader_version_range,
+            mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
+            mod_authors: mod_authors, mod_description: mod_description,
+            jei_version: jei_version,
+            guideapi_version: guideapi_version,
+            mod_url: mod_url,
+            mod_issue_tracker: mod_issue_tracker,
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+        expand replaceProperties + [project: project]
+    }
+}
+
+tasks.named('jar', Jar).configure {
+    dependsOn 'crowdin'
+
+    includeEmptyDirs = false
+
+    from sourceSets.main.output.classesDirs
+    from sourceSets.api.output.classesDirs
+    from sourceSets.lib.output.classesDirs
+    from sourceSets.main.output.resourcesDir
+    from sourceSets.api.output.resourcesDir
+    from sourceSets.lib.output.resourcesDir
+
+    from{
+        fileTree('build/translations').matching{
+            exclude "**/en_us.json" //Don't override local source file
+        }
+    }
+
+    manifest {
+        attributes([
+                'Specification-Title'     : mod_id,
+                'Specification-Vendor'    : mod_authors,
+                'Specification-Version'   : '1', // We are version 1 of ourselves
+                'Implementation-Title'    : project.name,
+                'Implementation-Version'  : project.jar.archiveVersion,
+                'Implementation-Vendor'   : mod_authors,
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                "FMLAT"                   : "accesstransformer.cfg",
+        ])
+    }
+
+    finalizedBy 'reobfJar'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }

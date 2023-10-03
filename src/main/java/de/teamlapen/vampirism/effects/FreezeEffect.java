@@ -12,8 +12,11 @@ public class FreezeEffect extends VampirismEffect {
 
     @Override
     public void applyEffectTick(@NotNull LivingEntity entityLivingBaseIn, int amplifier) {
-        entityLivingBaseIn.setDeltaMovement(0, Math.min(0, entityLivingBaseIn.getDeltaMovement().y()), 0);
+        if (entityLivingBaseIn.canFreeze()) {
+            entityLivingBaseIn.setTicksFrozen(Math.max(entityLivingBaseIn.getTicksRequiredToFreeze() + 40, entityLivingBaseIn.getTicksFrozen()));
+        }
     }
+
 
     @Override
     public boolean isDurationEffectTick(int duration, int amplifier) {

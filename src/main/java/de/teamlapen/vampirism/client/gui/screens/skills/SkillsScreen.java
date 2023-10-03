@@ -112,7 +112,7 @@ public class SkillsScreen extends Screen {
         FactionPlayerHandler.getOpt(minecraft.player).ifPresent(fph -> {
             fph.getCurrentFactionPlayer().ifPresent(factionPlayer -> {
 
-                boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
+                boolean test = VampirismMod.inDev || REFERENCE.VERSION.isTestVersion();
 
                 resetSkills = this.addRenderableWidget(new ExtendedButton(guiLeft + 85, guiTop + 194, 80, 20, Component.translatable("text.vampirism.skill.resetall"), (context) -> {
                     VampirismMod.dispatcher.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.RESET_SKILLS));

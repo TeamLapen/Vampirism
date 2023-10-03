@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.world.loot.conditions.*;
 import de.teamlapen.vampirism.world.loot.functions.AddBookNbtFunction;
 import de.teamlapen.vampirism.world.loot.functions.RefinementSetFunction;
 import de.teamlapen.vampirism.world.loot.functions.SetItemBloodChargeFunction;
-import net.minecraft.core.Registry;
+import de.teamlapen.vampirism.world.loot.functions.SetOilFunction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
@@ -26,6 +26,7 @@ public class ModLoot {
     public static final RegistryObject<LootItemFunctionType> ADD_BOOK_NBT = LOOT_FUNCTION_TYPES.register("add_book_nbt", () -> new LootItemFunctionType(new AddBookNbtFunction.Serializer()));
     public static final RegistryObject<LootItemFunctionType> SET_ITEM_BLOOD_CHARGE = LOOT_FUNCTION_TYPES.register("set_item_blood_charge", () -> new LootItemFunctionType(new SetItemBloodChargeFunction.Serializer()));
     public static final RegistryObject<LootItemFunctionType> ADD_REFINEMENT_SET = LOOT_FUNCTION_TYPES.register("add_refinement_set", () -> new LootItemFunctionType(new RefinementSetFunction.Serializer()));
+    public static final RegistryObject<LootItemFunctionType> SET_OIL = LOOT_FUNCTION_TYPES.register("set_oil", () -> new LootItemFunctionType(new SetOilFunction.Serializer()));
 
     public static final RegistryObject<LootItemConditionType> WITH_STAKE = LOOT_CONDITION_TYPES.register("with_stake", () -> new LootItemConditionType(new StakeCondition.Serializer()));
     public static final RegistryObject<LootItemConditionType> ADJUSTABLE_LEVEL = LOOT_CONDITION_TYPES.register("adjustable_level", () -> new LootItemConditionType(new AdjustableLevelCondition.Serializer()));

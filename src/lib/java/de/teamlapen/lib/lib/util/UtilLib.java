@@ -819,4 +819,8 @@ public class UtilLib {
     public static boolean never(BlockState state, BlockGetter block, BlockPos pos) {
         return false;
     }
+
+    public static boolean always(BlockState state, BlockGetter block, BlockPos pos) {
+        return true;
+    }
 }

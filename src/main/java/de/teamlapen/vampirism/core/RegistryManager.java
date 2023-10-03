@@ -82,7 +82,6 @@ public class RegistryManager implements IInitListener {
     public void onInitStep(@NotNull Step step, @NotNull ParallelDispatchEvent event) {
         switch (step) {
             case COMMON_SETUP:
-                ModEntities.registerConvertibles();
                 ModEntities.registerCustomExtendedCreatures();
                 ModItems.registerCraftingRecipes();
                 ModAdvancements.registerAdvancementTrigger();

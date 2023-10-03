@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
@@ -24,7 +23,6 @@ import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
@@ -138,7 +136,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
 
         this.list = this.addRenderableWidget(new TaskList(Minecraft.getInstance(), this.menu, factionPlayer, this.leftPos + 83, this.topPos + 7, 137, 104, 21, () -> new ArrayList<>(this.menu.getTaskInfos())));
 
-        var button1 = this.addRenderableWidget(new ImageButton(this.leftPos + 5, this.topPos + 90, 20, 20, 40, 205, 20, BACKGROUND, 256, 256, context -> {
+        var button1 = this.addRenderableWidget(new ImageButton(this.leftPos + 7, this.topPos + 90, 20, 20, 40, 205, 20, BACKGROUND, 256, 256, context -> {
             if (this.minecraft.player.isAlive() && VampirismPlayerAttributes.get(this.minecraft.player).faction != null) {
                 Minecraft.getInstance().setScreen(new SkillsScreen(FactionPlayerHandler.getCurrentFactionPlayer(this.minecraft.player).orElse(null), this));
             }
@@ -155,7 +153,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
         button3.setTooltip(Tooltip.create(Component.translatable("gui.vampirism.vampirism_menu.edit_tasks")));
         button3.visible = FactionPlayerHandler.getOpt(factionPlayer.getRepresentingPlayer()).map(a -> a.getLordLevel()> 0).orElse(false);
 
-        Button appearanceButton = this.addRenderableWidget(new ImageButton(this.leftPos + 26, this.topPos + 90, 20, 20, 20, 205, 20, BACKGROUND, 256, 256, (context) -> {
+        Button appearanceButton = this.addRenderableWidget(new ImageButton(this.leftPos + 29, this.topPos + 90, 20, 20, 20, 205, 20, BACKGROUND, 256, 256, (context) -> {
             Minecraft.getInstance().setScreen(new VampirePlayerAppearanceScreen(this));
         }, Component.empty()));
         appearanceButton.setTooltip(Tooltip.create(Component.translatable("gui.vampirism.vampirism_menu.appearance_menu")));

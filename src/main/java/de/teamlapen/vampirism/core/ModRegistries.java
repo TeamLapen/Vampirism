@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.core;
 
 import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
+import de.teamlapen.vampirism.api.entity.convertible.Converter;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
@@ -33,6 +34,7 @@ public class ModRegistries {
     static final DeferredRegister<Codec<? extends TaskUnlocker>> DEFERRED_TASK_UNLOCKER = DeferredRegister.create(TASK_UNLOCKER_ID, TASK_UNLOCKER_ID.location().getNamespace());
     static final DeferredRegister<Codec<? extends TaskRequirement.Requirement<?>>> DEFERRED_TASK_REQUIREMENTS = DeferredRegister.create(TASK_REQUIREMENT_ID, TASK_REQUIREMENT_ID.location().getNamespace());
     static final DeferredRegister<Codec<? extends ITaskRewardInstance>> DEFERRED_TASK_REWARD_INSTANCES = DeferredRegister.create(TASK_REWARD_INSTANCE_ID, TASK_REWARD_INSTANCE_ID.location().getNamespace());
+    static final DeferredRegister<Codec<? extends Converter>> DEFERRED_ENTITY_CONVERTER = DeferredRegister.create(ENTITY_CONVERTER_ID, ENTITY_CONVERTER_ID.location().getNamespace());
 
     public static final Supplier<IForgeRegistry<ISkill<?>>> SKILLS = DEFERRED_SKILLS.makeRegistry(RegistryBuilder::new);
     public static final Supplier<IForgeRegistry<IAction<?>>> ACTIONS = DEFERRED_ACTIONS.makeRegistry(RegistryBuilder::new);
@@ -45,6 +47,7 @@ public class ModRegistries {
     public static final Supplier<IForgeRegistry<Codec<? extends TaskUnlocker>>> TASK_UNLOCKER = DEFERRED_TASK_UNLOCKER.makeRegistry(RegistryBuilder::new);
     public static final Supplier<IForgeRegistry<Codec<? extends TaskRequirement.Requirement<?>>>> TASK_REQUIREMENTS = DEFERRED_TASK_REQUIREMENTS.makeRegistry(RegistryBuilder::new);
     public static final Supplier<IForgeRegistry<Codec<? extends ITaskRewardInstance>>> TASK_REWARD_INSTANCES = DEFERRED_TASK_REWARD_INSTANCES.makeRegistry(RegistryBuilder::new);
+    public static final Supplier<IForgeRegistry<Codec<? extends Converter>>> ENTIITY_CONVERTER = DEFERRED_ENTITY_CONVERTER.makeRegistry(RegistryBuilder::new);
 
     public static final RegistrySetBuilder DATA_BUILDER = new RegistrySetBuilder()
             .add(Registries.BIOME, ModBiomes::createBiomes)
@@ -72,6 +75,7 @@ public class ModRegistries {
         DEFERRED_TASK_UNLOCKER.register(bus);
         DEFERRED_TASK_REQUIREMENTS.register(bus);
         DEFERRED_TASK_REWARD_INSTANCES.register(bus);
+        DEFERRED_ENTITY_CONVERTER.register(bus);
     }
 
     public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {

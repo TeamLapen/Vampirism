@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.config;
 
 
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -15,13 +16,17 @@ import net.minecraftforge.fml.config.IConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.apache.commons.compress.archivers.sevenz.CLI;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.maven.artifact.versioning.ArtifactVersion;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class VampirismConfig {
@@ -119,7 +124,12 @@ public class VampirismConfig {
     public static void onLoad(final ModConfigEvent.@NotNull Loading configEvent) {
         if (configEvent.getConfig().getType() == ModConfig.Type.SERVER) {
             ((SundamageRegistry) VampirismAPI.sundamageRegistry()).reloadConfiguration();
-
+        }
+        if (configEvent.getConfig().getSpec() == clientSpec) {
+            if (CLIENT.guiLevelOffsetYOld.get() == 0) {
+                CLIENT.guiLevelOffsetYOld.set(CLIENT.guiLevelOffsetY.get());
+                CLIENT.guiLevelOffsetY.set(CLIENT.guiLevelOffsetY.get() - 49);
+            }
         }
     }
 
@@ -150,6 +160,7 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue infectCreaturesSanguinare;
         public final ForgeConfigSpec.BooleanValue preventRenderingDebugBoundingBoxes;
         public final ForgeConfigSpec.BooleanValue allowVillageDestroyBlocks;
+        public final ForgeConfigSpec.BooleanValue usePermissions;
 
         public final ForgeConfigSpec.BooleanValue sundamageUnknownDimension;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> sundamageDimensionsOverridePositive;
@@ -187,6 +198,7 @@ public class VampirismConfig {
             preventRenderingDebugBoundingBoxes = builder.comment("Prevent players from enabling the rendering of debug bounding boxes. This can allow them to see certain entities they are not supposed to see (e.g. disguised hunter").define("preventDebugBoundingBoxes", false);
             batDimensionBlacklist = builder.comment("Prevent vampire players to transform into a bat").defineList("batDimensionBlacklist", Collections.singletonList(Level.END.location().toString()), string -> string instanceof String && UtilLib.isValidResourceLocation(((String) string)));
             allowVillageDestroyBlocks = builder.comment("Allow players to destroy point of interest blocks in faction villages if they no not have the faction village").define("allowVillageDestroyBlocks", false);
+            usePermissions = builder.comment("Use the forge permission system for certain actions. Take a look at the wiki for more information").define("usePermissions", false);
 
             builder.push("sundamage");
             sundamageUnknownDimension = builder.comment("Whether vampires should receive sundamage in unknown dimensions").define("sundamageUnknownDimension", false);
@@ -244,6 +256,7 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue disableHudActionDurationRendering;
         public final ForgeConfigSpec.ConfigValue<String> actionOrder;
         public final ForgeConfigSpec.ConfigValue<String> minionTaskOrder;
+        public final ForgeConfigSpec.IntValue guiLevelOffsetYOld;
 
         Client(ForgeConfigSpec.@NotNull Builder builder) {
             builder.comment("Client configuration settings")
@@ -261,7 +274,7 @@ public class VampirismConfig {
 
             builder.comment("Configure GUI").push("gui");
             guiLevelOffsetX = builder.comment("X-Offset of the level indicator from the center in pixels").defineInRange("levelOffsetX", 0, -250, 250);
-            guiLevelOffsetY = builder.comment("Y-Offset of the level indicator from the bottom in pixels").defineInRange("levelOffsetY", 47, 0, 270);
+            guiLevelOffsetY = builder.comment("Y-Offset of the level indicator from the bottom in pixels").defineInRange("levelOffsetY", 0, 0, 270);
             guiSkillButton = builder.comment("Render skill menu button in inventory").define("skillButtonEnable", true);
             overrideGuiSkillButtonX = builder.comment("Force the guiSkillButton to the following x position from the center of the inventory, default value is 125").defineInRange("overrideGuiSkillButtonX", 125, Integer.MIN_VALUE, Integer.MAX_VALUE);
             overrideGuiSkillButtonY = builder.comment("Force the guiSkillButton to the following y position from the center of the inventory, default value is -22").defineInRange("overrideGuiSkillButtonY", -22, Integer.MIN_VALUE, Integer.MAX_VALUE);
@@ -276,6 +289,7 @@ public class VampirismConfig {
             builder.push("internal");
             actionOrder = builder.comment("Action ordering").define("actionOrder", "", ClientConfigHelper::testActions);
             minionTaskOrder = builder.comment("Minion task ordering").define("minionTaskOrder", "", ClientConfigHelper::testTasks);
+            guiLevelOffsetYOld = builder.comment("Old fixed Y offset of level overlay").defineInRange("levelOffsetYOld", 0, 0, 270);
             builder.pop();
 
             builder.pop();
@@ -290,7 +304,6 @@ public class VampirismConfig {
      */
     public static class Common {
 
-        public final ForgeConfigSpec.BooleanValue versionCheck;
         public final ForgeConfigSpec.BooleanValue collectStats;
         public final ForgeConfigSpec.ConfigValue<String> integrationsNotifier;
         public final ForgeConfigSpec.BooleanValue optifineBloodvisionWarning;
@@ -316,7 +329,6 @@ public class VampirismConfig {
         Common(ForgeConfigSpec.@NotNull Builder builder) {
             builder.comment("Common configuration settings. Most other configuration can be found in the world (server)configuration folder")
                     .push("common");
-            versionCheck = builder.comment("Check for new versions of Vampirism on startup").define("versionCheck", true);
             collectStats = builder.comment("Send mod version, MC version and mod count to mod author").define("collectStats", true);
 
             builder.push("internal");

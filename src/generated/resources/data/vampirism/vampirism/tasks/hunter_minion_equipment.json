@@ -11,15 +11,6 @@
         "id": "vampirism:advanced_vampire"
       },
       {
-        "type": "vampirism:entity",
-        "amount": 5,
-        "description": {
-          "translate": "entity.vampirism.vampire_baron"
-        },
-        "entityType": "vampirism:vampire_baron",
-        "id": "vampirism:vampire_baron"
-      },
-      {
         "type": "vampirism:item",
         "description": {
           "translate": "item.minecraft.gold_ingot"
@@ -29,6 +20,15 @@
           "Count": 32,
           "id": "minecraft:gold_ingot"
         }
+      },
+      {
+        "type": "vampirism:entity",
+        "amount": 5,
+        "description": {
+          "translate": "entity.vampirism.vampire_baron"
+        },
+        "entityType": "vampirism:vampire_baron",
+        "id": "vampirism:vampire_baron"
       }
     ]
   },

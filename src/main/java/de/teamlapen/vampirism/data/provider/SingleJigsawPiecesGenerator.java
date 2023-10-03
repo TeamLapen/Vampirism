@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.data.provider;
 
 import com.google.common.collect.Sets;
 import com.mojang.serialization.JsonOps;
-import de.teamlapen.vampirism.data.reloadlistener.SingleJigsawGeneration;
+import de.teamlapen.vampirism.data.reloadlistener.SingleJigsawReloadListener;
 import de.teamlapen.vampirism.world.gen.VanillaStructureModifications;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
@@ -35,7 +35,7 @@ public class SingleJigsawPiecesGenerator implements DataProvider {
         Set<ResourceLocation> set = Sets.newHashSet();
         this.registerSingleJigsawPieces(set::add);
 
-        return DataProvider.saveStable(pOutput, SingleJigsawGeneration.CODEC.encodeStart(JsonOps.INSTANCE, new ArrayList<>(set)).getOrThrow(false, LOGGER::error), pathProvider.json(new ResourceLocation(modId, "single_jigsaw_pieces")));
+        return DataProvider.saveStable(pOutput, SingleJigsawReloadListener.CODEC.encodeStart(JsonOps.INSTANCE, new ArrayList<>(set)).getOrThrow(false, LOGGER::error), pathProvider.json(new ResourceLocation(modId, "single_jigsaw_pieces")));
     }
 
     @Override

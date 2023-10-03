@@ -106,6 +106,10 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
         if (held && entity instanceof LivingEntity && entity.tickCount % 16 == 8) {
             if (Helper.isVampire(entity)) {
                 ((LivingEntity) entity).addEffect(new MobEffectInstance(ModEffects.POISON.get(), 20, 1));
+                if (entity instanceof Player player) {
+                    player.getInventory().removeItem(stack);
+                    player.drop(stack, true);
+                }
             }
         }
     }

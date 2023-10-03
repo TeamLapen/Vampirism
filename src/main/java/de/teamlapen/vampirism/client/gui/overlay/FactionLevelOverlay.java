@@ -19,7 +19,7 @@ public class FactionLevelOverlay implements IGuiOverlay {
 
             FactionPlayerHandler.getOpt(this.mc.player).ifPresent(handler -> {
                 IPlayableFaction<?> faction = handler.getCurrentFaction();
-                if (this.mc.gameMode.hasExperience() && faction != null) {
+                if (this.mc.gameMode != null && this.mc.gameMode.hasExperience() && faction != null) {
                     // boolean flag1 = false;
                     int color = faction.getColor();
                     int lord = handler.getLordLevel();
@@ -28,10 +28,10 @@ public class FactionLevelOverlay implements IGuiOverlay {
                         String title = handler.getLordTitle().getString();
                         text = title.substring(0, Math.min(3, title.length()));
                     } else {
-                        text = "" + handler.getCurrentLevel();
+                        text = String.valueOf(handler.getCurrentLevel());
                     }
                     int x = (this.mc.getWindow().getGuiScaledWidth() - this.mc.font.width(text)) / 2 + VampirismConfig.CLIENT.guiLevelOffsetX.get();
-                    int y = this.mc.getWindow().getGuiScaledHeight() - VampirismConfig.CLIENT.guiLevelOffsetY.get();
+                    int y = this.mc.getWindow().getGuiScaledHeight() - VampirismConfig.CLIENT.guiLevelOffsetY.get() - 39;
                     graphics.drawString(this.mc.font, text, x + 1, y, 0, false);
                     graphics.drawString(this.mc.font, text, x - 1, y, 0, false);
                     graphics.drawString(this.mc.font, text, x, y + 1, 0, false);

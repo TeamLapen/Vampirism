@@ -79,6 +79,8 @@ public class ItemModelGenerator extends BaseItemModelGenerator {//TODO 1.20 move
             add(ModBlocks.CURSED_SPRUCE_FENCE_GATE.get());
             add(ModBlocks.VAMPIRE_RACK.get());
             add(ModBlocks.THRONE.get());
+            add(ModBlocks.CURSED_EARTH_PATH.get());
+            add(ModBlocks.CASTLE_BLOCK_DARK_BRICK_CRACKED.get());
             add(ModBlocks.REMAINS.get());
             add(ModBlocks.VULNERABLE_REMAINS.get());
             add(ModBlocks.INCAPACITATED_VULNERABLE_REMAINS.get());
@@ -161,6 +163,10 @@ public class ItemModelGenerator extends BaseItemModelGenerator {//TODO 1.20 move
             put(ModBlocks.DIRECT_CURSED_BARK.get().asItem(), modLoc("block/cursed_bark"));
             put(ModItems.DARK_SPRUCE_SIGN.get(), modLoc("item/dark_spruce_sign"));
             put(ModItems.CURSED_SPRUCE_SIGN.get(), modLoc("item/cursed_spruce_sign"));
+            put(ModItems.DARK_SPRUCE_SIGN.get(), modLoc("item/dark_spruce_sign"));
+            put(ModItems.CURSED_SPRUCE_SIGN.get(), modLoc("item/cursed_spruce_sign"));
+            put(ModItems.DARK_SPRUCE_HANGING_SIGN.get(), modLoc("item/dark_spruce_hanging_sign"));
+            put(ModItems.CURSED_SPRUCE_HANGING_SIGN.get(), modLoc("item/cursed_spruce_hanging_sign"));
             put(ModItems.MOTHER_CORE.get(), modLoc("item/mother_core"));
         }};
 
@@ -302,6 +308,8 @@ public class ItemModelGenerator extends BaseItemModelGenerator {//TODO 1.20 move
         }
         this.item(ModItems.OIL_BOTTLE.get(), modLoc("item/oil_bottle"), modLoc("item/oil_bottle_overlay"));
         withExistingParent(ModBlocks.ALCHEMY_TABLE.get(), modLoc("block/alchemy_table/alchemy_table"));
+        withExistingParent(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK_WALL.get(), mcLoc("block/wall_inventory")).texture("wall", modLoc("block/castle_block_purple_brick"));
+        withExistingParent(ModBlocks.CASTLE_BLOCK_DARK_BRICK_WALL.get(), mcLoc("block/wall_inventory")).texture("wall", modLoc("block/castle_block_dark_brick"));
     }
 
 }

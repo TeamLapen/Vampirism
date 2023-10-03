@@ -1,0 +1,7 @@
+{
+  "handler": {
+    "type": "vampirism:special",
+    "converted_type": "vampirism:villager_converted"
+  },
+  "overlay": "vampirism:textures/entity/vanilla/villager_overlay.png"
+}

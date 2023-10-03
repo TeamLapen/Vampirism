@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.client.gui.screens.radial.edit;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
 import de.teamlapen.lib.lib.client.gui.components.SimpleList;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.DrawCallback;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.GuiRadialMenu;
@@ -12,8 +10,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
@@ -29,7 +25,7 @@ import java.util.stream.Collectors;
 
 public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
 
-    private T movingItem;
+    protected ItemWrapper<T> movingItem;
     private final ItemOrdering<T> ordering;
     private final Function<T, MutableComponent> nameFunction;
     private final DrawCallback<T> drawCallback;
@@ -72,8 +68,6 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
         int i = 32;
         graphics.blit(BACKGROUND_LOCATION, 0, 0, 0, 0.0F, 0.0F, 140, this.height, i, i);
         graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
-        //noinspection UnstableApiUsage
-        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.ScreenEvent.BackgroundRendered(this, graphics));
     }
 
     @Override
@@ -86,7 +80,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     }
 
     private void updateExcludedList() {
-        this.excludedList.updateContent(ordering.getExcluded().stream().map(s -> new NoItemRadialMenuSlot<>(nameFunction, new ItemWrapper<>(s), isEnabled)).toList());
+        this.excludedList.updateContent(ordering.getExcluded(), nameFunction);
     }
 
     public void reset() {
@@ -94,10 +88,11 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
         this.updateExcludedList();
         this.radialMenuSlots.clear();
         this.checkEmpty();
+        this.movingItem = null;
     }
 
     private void addDummyMenuItems() {
-        if (!(this.radialMenuSlots.size() == 1 && this.radialMenuSlots.get(0).primarySlotIcon().getOptional().isEmpty())) {
+        if (!(this.radialMenuSlots.size() == 1 && this.radialMenuSlots.get(0).primarySlotIcon().get() == null)) {
             for (int i = this.radialMenuSlots.size() - 1; i >= 0; i--) {
                 this.radialMenuSlots.add(i, new NoItemRadialMenuSlot<>(this.nameFunction, new ItemWrapper<>(), this.isEnabled));
             }
@@ -105,19 +100,26 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     }
 
     public void excludeItem() {
-        this.ordering.exclude(this.movingItem);
+        excludeItem(this.movingItem);
+        this.movingItem.clear();
         this.movingItem = null;
-        this.updateExcludedList();
         this.removeDummyItems();
         this.checkEmpty();
     }
 
+    private void excludeItem(ItemWrapper<T> item) {
+        if (item != null) {
+            this.ordering.exclude(item.get());
+        }
+        this.updateExcludedList();
+    }
+
     private void pickExcludedItem(T item) {
-        this.movingItem = item;
+        this.movingItem = new ItemWrapper<>(item);
         addDummyMenuItems();
     }
 
-    private void removeDummyItems() {
+    protected void removeDummyItems() {
         this.radialMenuSlots.removeIf(slot -> slot.primarySlotIcon().getOptional().isEmpty());
         this.checkEmpty();
     }
@@ -140,24 +142,31 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
             }
         }
 
-        if (this.movingItem != null) {
-            if (this.selectedItem != -1) {
-                IRadialMenuSlot<ItemWrapper<T>> selected = this.radialMenuSlots.get(this.selectedItem);
-                this.movingItem = selected.primarySlotIcon().swapItem(this.movingItem);
-                if (this.movingItem == null) {
+        pickItem();
+        return true;
+    }
+
+    private void pickItem() {
+        if (this.selectedItem != -1) {
+            IRadialMenuSlot<ItemWrapper<T>> selected = this.radialMenuSlots.get(this.selectedItem);
+            if (this.movingItem != null) {
+                selected.primarySlotIcon().swapItem(this.movingItem);
+                if (this.movingItem.get() == null) {
                     this.removeDummyItems();
+                    this.movingItem = null;
+                }
+                if (this.radialMenuSlots.stream().noneMatch(s -> s.primarySlotIcon() == this.movingItem)) {
+                    this.excludeItem(this.movingItem);
                 }
                 syncOrdering();
-            }
-        } else {
-            if (this.selectedItem != -1) {
-                if (this.radialMenuSlots.get(this.selectedItem).primarySlotIcon().getOptional().isEmpty()) return true;
-                IRadialMenuSlot<ItemWrapper<T>> selected = this.radialMenuSlots.get(this.selectedItem);
+            } else {
+                if (selected.primarySlotIcon().get() == null) {
+                    return;
+                }
+                this.movingItem = selected.primarySlotIcon();
                 addDummyMenuItems();
-                this.movingItem = selected.primarySlotIcon().swapItem(null);
             }
         }
-        return true;
     }
 
     @Override
@@ -187,10 +196,10 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(graphics);
-        graphics.drawCenteredString(this.font, Component.translatable("Excluded:"), 70, 5, -1);
+        graphics.drawCenteredString(this.font, Component.translatable("text.vampirism.excluded"), 70, 5, -1);
         super.render(graphics, mouseX, mouseY, partialTicks);
         if (this.movingItem != null) {
-            this.drawCallback.accept(this.movingItem, graphics, mouseX - 8, mouseY - 8, 16, false);
+            this.drawCallback.accept(this.movingItem.get(), graphics, mouseX - 8, mouseY - 8, 16, false);
         }
     }
 
@@ -224,15 +233,15 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
             this.setLeftPos(x);
         }
 
-        public void updateContent(List<? extends IRadialMenuSlot<ItemWrapper<T>>> newItems) {
-            this.replaceEntries(newItems.stream().map(s -> new ExcludedEntry<>(s, () -> selectItem(s))).toList());
+        public void updateContent(List<T> newItems, Function<T, MutableComponent> nameFunction) {
+            this.replaceEntries(newItems.stream().map(s -> new ExcludedEntry<>(s, nameFunction.apply(s), () -> selectItem(s))).toList());
         }
 
-        private void selectItem(IRadialMenuSlot<ItemWrapper<T>> selected) {
+        private void selectItem(T selected) {
             if (ReorderingGuiRadialMenu.this.movingItem != null) {
-                ReorderingGuiRadialMenu.this.movingItem = selected.primarySlotIcon().swapItem(ReorderingGuiRadialMenu.this.movingItem);
+//                selected.primarySlotIcon().swapItem(ReorderingGuiRadialMenu.this.movingItem);
             } else {
-                ReorderingGuiRadialMenu.this.pickExcludedItem(selected.primarySlotIcon().get());
+                ReorderingGuiRadialMenu.this.pickExcludedItem(selected);
             }
         }
 
@@ -256,7 +265,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
                 graphics.pose().pushPose();
                 graphics.pose().translate(i, j, 200);
                 graphics.fillGradient(0, 0, this.getWidth(), this.getHeight(), -1072689136, -804253680);
-                graphics.drawCenteredString(Minecraft.getInstance().font, Component.translatable("Place here to exclude"), this.width / 2, this.height / 2, 0xFFFFFF);
+                graphics.drawCenteredString(Minecraft.getInstance().font, Component.translatable("text.vampirism.place_exclude"), this.width / 2, this.height / 2, 0xFFFFFF);
                 graphics.pose().popPose();
             }
         }
@@ -266,12 +275,19 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
 
     public static class ExcludedEntry<T> extends SimpleList.Entry<ExcludedEntry<T>> {
 
-        public ExcludedEntry(@NotNull IRadialMenuSlot<ItemWrapper<T>> item, Runnable onClick) {
-            super(item.slotName(), onClick);
+        private final T item;
+
+        public ExcludedEntry(@NotNull T item, Component name, Runnable onClick) {
+            super(name, onClick);
+            this.item = item;
+        }
+
+        public T getItem() {
+            return item;
         }
     }
 
-    private static class ResetButton extends ExtendedButton {
+    public static class ResetButton extends ExtendedButton {
 
         private static final Component DESCRIPTION = Component.translatable("text.vampirism.gui.reset");
         private static final Component DESCRIPTION_CONFIRM = Component.translatable("text.vampirism.gui.reset_question").withStyle(ChatFormatting.DARK_RED);

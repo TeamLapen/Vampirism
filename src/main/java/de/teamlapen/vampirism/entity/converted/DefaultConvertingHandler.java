@@ -2,9 +2,10 @@ package de.teamlapen.vampirism.entity.converted;
 
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
-import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEntities;
+import de.teamlapen.vampirism.data.reloadlistener.ConvertiblesReloadListener;
 import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -13,6 +14,9 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
+import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,48 +29,17 @@ import java.util.Objects;
  */
 public class DefaultConvertingHandler<T extends PathfinderMob> implements IConvertingHandler<T> {
 
-    /**
-     * Used if no helper is specified
-     */
-    private final static IDefaultHelper defaultHelper = new IDefaultHelper() {
-
-
-        @Override
-        public double getConvertedDMG(@NotNull EntityType<? extends PathfinderMob> entityType) {
-            AttributeSupplier map = DefaultAttributes.getSupplier(entityType);
-            if (map.hasAttribute(Attributes.ATTACK_DAMAGE)) {
-                return map.getBaseValue(Attributes.ATTACK_DAMAGE) * 1.3;
-            } else {
-                return BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_DMG;
-            }
-        }
-
-        @Override
-        public double getConvertedKnockbackResistance(@NotNull EntityType<? extends PathfinderMob> entityType) {
-            AttributeSupplier map = DefaultAttributes.getSupplier(entityType);
-            return map.getBaseValue(Attributes.KNOCKBACK_RESISTANCE) * 1.3;
-        }
-
-        @Override
-        public double getConvertedMaxHealth(@NotNull EntityType<? extends PathfinderMob> entityType) {
-            AttributeSupplier map = DefaultAttributes.getSupplier(entityType);
-            return map.getBaseValue(Attributes.MAX_HEALTH) * 1.5;
-        }
-
-        @Override
-        public double getConvertedSpeed(@NotNull EntityType<? extends PathfinderMob> entityType) {
-            AttributeSupplier map = DefaultAttributes.getSupplier(entityType);
-            return Math.min(map.getBaseValue(Attributes.MOVEMENT_SPEED) * 1.2, 2.9D);
-        }
-    };
+    private static final Logger LOGGER = LogManager.getLogger();
 
     protected final @NotNull IDefaultHelper helper;
+    protected final @Nullable ResourceLocation overlayTexture;
 
     /**
      * @param helper If null a default one will be used
      */
-    public DefaultConvertingHandler(@Nullable IDefaultHelper helper) {
-        this.helper = Objects.requireNonNullElse(helper, defaultHelper);
+    public DefaultConvertingHandler(@Nullable IDefaultHelper helper, @Nullable ResourceLocation overlayTexture) {
+        this.helper = Objects.requireNonNullElse(helper, new VampirismEntityRegistry.DatapackHelper(ConvertiblesReloadListener.EntityEntry.ConvertingAttributeModifier.DEFAULT));
+        this.overlayTexture = overlayTexture;
     }
 
     @Nullable
@@ -77,6 +50,7 @@ public class DefaultConvertingHandler<T extends PathfinderMob> implements IConve
             copyImportantStuff(convertedCreature, entity);
             convertedCreature.setUUID(Mth.createInsecureUUID(convertedCreature.getRandom())); //Set a new uuid to avoid confusion as the class of the entity associated with the uuid changes
             convertedCreature.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 2));
+            convertedCreature.getRepresentingEntity().getEntityData().set(convertedCreature.getSourceEntityDataParam(), ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()).toString());
             return convertedCreature;
         }).orElse(null);
     }
@@ -84,16 +58,38 @@ public class DefaultConvertingHandler<T extends PathfinderMob> implements IConve
     /**
      * @return The helper for this handler
      */
-    public IDefaultHelper getHelper() {
+    public @NotNull IDefaultHelper getHelper() {
         return helper;
     }
 
     protected void copyImportantStuff(@NotNull ConvertedCreatureEntity<T> converted, @NotNull T entity) {
         converted.copyPosition(entity);
         converted.setEntityCreature(entity);
-        converted.updateEntityAttributes();
+        updateEntityAttributes(converted);
         converted.setHealth(converted.getMaxHealth() / 3 * 2);
         converted.yBodyRot = entity.yBodyRot;
         converted.yHeadRot = entity.yHeadRot;
+    }
+
+    @SuppressWarnings({"unchecked", "DataFlowIssue", "removal"})
+    @Override
+    public void updateEntityAttributes(PathfinderMob creature) {
+        try {
+            creature.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(helper.getConvertedDMG((EntityType<? extends PathfinderMob>) creature.getType()));
+            creature.getAttribute(Attributes.MAX_HEALTH).setBaseValue(helper.getConvertedMaxHealth((EntityType<? extends PathfinderMob>) creature.getType()));
+            creature.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(helper.getConvertedKnockbackResistance((EntityType<? extends PathfinderMob>) creature.getType()));
+            creature.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(helper.getConvertedSpeed((EntityType<? extends PathfinderMob>) creature.getType()));
+
+            helper.getAttributeModifier().forEach(((attribute, valueProvider) -> {
+                AttributeSupplier supplier = DefaultAttributes.getSupplier((EntityType<? extends PathfinderMob>) creature.getType());
+                double baseValue = valueProvider.getSecond();
+                if (supplier.hasAttribute(attribute)) {
+                    baseValue = supplier.getBaseValue(attribute);
+                }
+                creature.getAttribute(attribute).setBaseValue(baseValue * valueProvider.getFirst().sample(creature.getRandom()));
+            }));
+        } catch (NullPointerException ex) {
+            LOGGER.error("Failed to update entity attributes for {} {}", creature, ex);
+        }
     }
 }

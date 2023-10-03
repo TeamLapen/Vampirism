@@ -19,7 +19,7 @@ public abstract class DualSwitchingRadialMenu<T> extends GuiRadialMenu<T> {
     }
 
     public DualSwitchingRadialMenu(@NotNull RadialMenu<T> radialMenu, @Nullable KeyMapping keyMapping, @NotNull Consumer<@NotNull KeyMapping> otherScreens) {
-        super(radialMenu);
+        super(radialMenu, true);
         this.keyMapping = keyMapping;
         this.rotatingScreens = otherScreens;
     }

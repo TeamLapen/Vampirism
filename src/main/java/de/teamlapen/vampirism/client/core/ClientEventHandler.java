@@ -19,6 +19,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.repository.Pack;
+import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -31,9 +34,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ComputeFovModifierEvent;
 import net.minecraftforge.client.event.ModelEvent;
+import net.minecraftforge.event.AddPackFindersEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.loading.FMLLoader;
+import net.minecraftforge.resource.PathPackResources;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -49,6 +55,7 @@ import java.util.Optional;
 @OnlyIn(Dist.CLIENT)
 public class ClientEventHandler {
     private final static Logger LOGGER = LogManager.getLogger();
+    private static final String VAMPIRISM_2D_PACK_ID = "vampirism2dtextures";
 
 
     static void onModelBakeRequest(ModelEvent.RegisterAdditional event){
@@ -196,5 +203,12 @@ public class ClientEventHandler {
 
     private int getHideFlags(@NotNull ItemStack stack) {
         return stack.hasTag() && stack.getTag().contains("HideFlags", 99) ? stack.getTag().getInt("HideFlags") : 0;
+    }
+
+    public static void registerPackRepository(AddPackFindersEvent event) {
+        event.addRepositorySource(s -> {
+            var resources = new PathPackResources(VAMPIRISM_2D_PACK_ID, false, FMLLoader.getLoadingModList().getModFileById(REFERENCE.MODID).getFile().getFilePath().resolve("packs/" + VAMPIRISM_2D_PACK_ID));
+            s.accept(Pack.readMetaAndCreate(VAMPIRISM_2D_PACK_ID, Component.literal("Vanilla Style Vampirism"), false, id -> resources, PackType.CLIENT_RESOURCES, Pack.Position.TOP, PackSource.BUILT_IN));
+        });
     }
 }

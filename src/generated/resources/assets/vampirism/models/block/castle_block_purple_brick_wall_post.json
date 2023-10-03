@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/template_wall_post",
+  "textures": {
+    "wall": "vampirism:block/castle_block_purple_brick"
+  }
+}

@@ -285,6 +285,9 @@ public class RecipesGenerator extends VanillaRecipeProvider {//TODO 1.20 move to
 
         generateRecipes(consumer, ModBlockFamilies.DARK_SPRUCE_PLANKS);
         generateRecipes(consumer, ModBlockFamilies.CURSED_SPRUCE_PLANKS);
+        generateRecipes(consumer, ModBlockFamilies.CASTLE_BRICK_DARK_STONE);
+        generateRecipes(consumer, ModBlockFamilies.CASTLE_BRICK_PURPLE_BRICK);
+        generateRecipes(consumer, ModBlockFamilies.CASTLE_BRICK_DARK_BRICK);
 
         planksFromLog(consumer, ModBlocks.DARK_SPRUCE_PLANKS.get(), ModTags.Items.DARK_SPRUCE_LOG, 4);
         planksFromLog(consumer, ModBlocks.CURSED_SPRUCE_PLANKS.get(), ModTags.Items.CURSED_SPRUCE_LOG, 4);
@@ -410,6 +413,10 @@ public class RecipesGenerator extends VanillaRecipeProvider {//TODO 1.20 move to
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModItems.ITEM_TENT.get()).pattern(" W ").pattern("WBW").define('W', wool).define('B', beds).unlockedBy("has_wool", has(wool)).unlockedBy("has_bed", has(beds)).save(consumer);
         ShapelessRecipeBuilder.shapeless(RecipeCategory.DECORATIONS, holy_water_bottle_normal, 2).requires(holy_water_bottle_enhanced).requires(ModItems.PURE_SALT_WATER.get()).unlockedBy("has_enhanced_holy_water", has(holy_water_bottle_enhanced)).save(consumer, "holy_water_bottle_normal_from_enhanced");
         ShapelessRecipeBuilder.shapeless(RecipeCategory.DECORATIONS, holy_water_bottle_enhanced, 2).requires(holy_water_bottle_ultimate).requires(ModItems.PURE_SALT_WATER.get()).unlockedBy("has_ultimate_holy_water", has(holy_water_bottle_enhanced)).save(consumer, "holy_water_bottle_enhanced_from_ultimate");
+        hangingSign(consumer, ModItems.DARK_SPRUCE_HANGING_SIGN.get(), ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get());
+        hangingSign(consumer, ModItems.CURSED_SPRUCE_HANGING_SIGN.get(), ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get());
+        stonecutterResultFromBase(consumer, RecipeCategory.DECORATIONS, ModBlocks.CASTLE_BLOCK_DARK_BRICK_WALL.get(), ModBlocks.CASTLE_BLOCK_DARK_BRICK.get());
+        stonecutterResultFromBase(consumer, RecipeCategory.DECORATIONS, ModBlocks.CASTLE_BLOCK_PURPLE_BRICK_WALL.get(), ModBlocks.CASTLE_BLOCK_PURPLE_BRICK.get());
     }
 
     private @NotNull JsonObject enchantment(int level, Enchantment enchantment) {

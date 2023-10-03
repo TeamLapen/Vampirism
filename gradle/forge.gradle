@@ -1,10 +1,6 @@
 repositories {
-
     maven {
-        url "https://dvs1.progwml6.com/files/maven"
-    }
-    maven {
-        // location of a maven mirror for JEI files, as a fallback
+        // location of a maven mirror for JEI files
         name = "ModMaven"
         url = "https://modmaven.dev/"
         content {
@@ -18,9 +14,9 @@ repositories {
         url = "../../MinecraftForge/repo/"
     }
     maven {
+        name = "Maxanier"
         url = "https://maven.maxanier.de/releases"
     }
-    maven {url='https://repo.spongepowered.org/repository/maven-public'}
     maven {
         url "https://www.cursemaven.com"
         content {
@@ -32,92 +28,60 @@ repositories {
     mavenLocal()
 }
 
-// Workaround to make Mixins and BMS work with the mess that is FG - credit to malte0811
-configurations {
-    library
-    implementation.extendsFrom library
-}
-
-minecraft.runs.all {
-    lazyToken('minecraft_classpath') {
-        configurations.library.copyRecursive().resolve().collect { it.absolutePath }.join(File.pathSeparator)
-    }
-}
-// End of workaround
-
 dependencies {
-    minecraft([
-            group  : "net.minecraftforge",
-            name   : "forge",
-            version: "${project.minecraft_version}-${project.forge_version}"
-    ])
-    //Don't export dependencies to pom as their deobfuscated version would be used which cannot be found in dependent projects
-    compileOnly fg.deobf("mezz.jei:jei-1.20.1-common-api:${project.jei_version}") //API for compile
-    compileOnly fg.deobf("mezz.jei:jei-1.20.1-forge-api:${project.jei_version}") //API for compile
-    runtimeOnly fg.deobf("mezz.jei:jei-1.20.1-forge:${project.jei_version}") //Full for runtime
-    compileOnly fg.deobf("de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}")
-    //For compile (not exported to POM)
-    runtimeOnly fg.deobf("de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}")
-    //For runtime (not exported to POM)
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    //runtimeOnly fg.deobf("curse.maven:angel-of-vengeance:2810906")
-    if (System.getProperty("idea.sync.active") != "true") {
-        annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+
+    //Don't export dependencies to pom as their deobfuscated version would be used which cannot be found in dependent projects
+    if (include_jei) {
+        compileOnly fg.deobf("mezz.jei:jei-${jei_mc_version}-common-api:${project.jei_version}") //API for compile
+        compileOnly fg.deobf("mezz.jei:jei-${jei_mc_version}-forge-api:${project.jei_version}") //API for compile
+        runtimeOnly fg.deobf("mezz.jei:jei-${jei_mc_version}-forge:${project.jei_version}") //Full for runtime
     }
 
-    compileOnly fg.deobf("com.github.glitchfiend:TerraBlender-forge:${project.terrablender_version}")
-    //Only enable for testing
-    runtimeOnly fg.deobf("com.github.glitchfiend:TerraBlender-forge:${project.terrablender_version}")
+    if (include_guideapi) {
+        compileOnly fg.deobf("de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}")
+        runtimeOnly fg.deobf("de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}")
+    }
 
-    //implementation fg.deobf("curse.maven:biomes-o-plenty-220318:3605502")
-
-
-    //Blame for debugging
-//    runtimeOnly fg.deobf("com.telepathicgrunt:Blame:${project.blame_version}")
-
-    // Repurposed structures
-//    runtimeOnly fg.deobf("com.telepathicgrunt:RepurposedStructures:5.0.4+1.18.2")
-//    runtimeOnly fg.deobf("com.telepathicgrunt:FeatureNBTDeadlockBeGone-Forge:2.0.0+1.18.2")
-
-    // Player revive - Only enable for testing
-//    runtimeOnly fg.deobf("curse.maven:player-revive-266890:4009481")
-//    runtimeOnly fg.deobf("curse.maven:creative-core-257814:3999672")
-
+    if (include_terrablender) {
+        compileOnly fg.deobf("com.github.glitchfiend:TerraBlender-forge:${project.terrablender_version}")
+        runtimeOnly fg.deobf("com.github.glitchfiend:TerraBlender-forge:${project.terrablender_version}")
+    }
 }
 
 minecraft {
-    mappings channel: "${project.mcp_channel}".toString(), version: "${project.mcp_mappings}".toString()
+    mappings channel: project.mappings_channel, version: mappings_version
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     copyIdeResources = true
 
     runs {
-        client {
-            taskName 'runClient1'
-            //property 'mixin.env.disableRefMap', 'true' //In case we have some (temporary) dependency on a mod using mixins.
+        configureEach {
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             property 'forge.logging.console.level', 'debug'
-            property 'vampirism_target', 'dev_client'
-            // "SCAN": For mods scan.
-            // "REGISTRIES": For firing of registry events.
-            // "REGISTRYDUMP": For getting the contents of all registries.
             property 'forge.logging.markers', 'REGISTRIES'
-            workingDirectory project.file('run/client1').canonicalPath
             jvmArg '-ea:de.teamlapen...'
-            
+
             mods {
-                vampirism {
+                "${mod_id}" {
                     source sourceSets.main
                     source sourceSets.api
                     source sourceSets.lib
                 }
             }
         }
+
+        client {
+            taskName 'runClient1'
+            workingDirectory project.file('run/client1').canonicalPath
+            property 'vampirism_target', 'dev_client'
+        }
         client2 {
             parent runs.client
             taskName 'runClient2'
             arg '--username=Dev2'
-            arg '-mixin.config=vampirism.mixins.json'
         }
         // the same as runClient1 but with JBR only arguments
         clientJBR {
@@ -126,162 +90,17 @@ minecraft {
             jvmArg "-XX:+AllowEnhancedClassRedefinition"
         }
         server {
-            // "SCAN": For mods scan.
-            // "REGISTRIES": For firing of registry events.
-            // "REGISTRYDUMP": For getting the contents of all registries.
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            //property 'mixin.env.disableRefMap', 'true'
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-            property 'vampirism_target', 'dev_server'
             workingDirectory project.file('run/server').canonicalPath
-            jvmArg '-ea:de.teamlapen...'
-
-            mods {
-                vampirism {
-                    source sourceSets.main
-                    source sourceSets.api
-                    source sourceSets.lib
-                }
-
-
-            }
+            property 'vampirism_target', 'dev_server'
         }
         data {
-            workingDirectory project.file('run/data').canonicalPath
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-            //property 'mixin.env.disableRefMap', 'true'
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             property 'vampirism_target', 'dev_data'
-            args '--mod', 'vampirism', '--all', '--output', file('src/generated/resources/'),  '--existing', sourceSets.main.resources.srcDirs[0]
-            mods {
-                vampirism {
-                    source sourceSets.main
-                    source sourceSets.api
-                    source sourceSets.lib
-                }
-            }
+            workingDirectory project.file('run/data').canonicalPath
+            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'),  '--existing', file('src/main/resources/')
         }
     }
 
 }
-
-task downloadCrowdin() {
-    ext {
-        output = file('build/crowdin_raw.zip')
-        update = file('build/crowdin.json')
-        id = 'vampirism'
-    }
-    outputs.upToDateWhen { false }
-    onlyIf {
-        project.hasProperty('VAMPIRISM_CROWDIN_KEY') && !project.gradle.startParameter.isOffline()
-    }
-    doLast {
-        download {
-            src "https://api.crowdin.com/api/project/${id}/export?key=${project.VAMPIRISM_CROWDIN_KEY}&export_translated_only&json"
-            dest update
-            overwrite true
-        }
-        if (!update.text.contains('success')) {
-            throw new RuntimeException("Crowdin export failed, see ${update} for more info")
-        }
-        download {
-            src "https://api.crowdin.com/api/project/${id}/download/all.zip?key=${project.VAMPIRISM_CROWDIN_KEY}"
-            dest output
-            overwrite true
-        }
-    }
-}
-
-task crowdin(type: Copy){
-    dependsOn downloadCrowdin
-    onlyIf {
-        !downloadCrowdin.state.skipped
-    }
-    destinationDir = file('build/translations')
-    from(zipTree(downloadCrowdin.output)){
-        filter { String line ->
-            line.indexOf("\"\"") != -1 ? null : line //Filter empty translations
-        }
-        filteringCharset = 'UTF-8'
-        exclude { it.isDirectory() }
-        rename { it.toLowerCase() }//Minecraft needs it lowercase.
-        exclude '**/*.lang' //Pre-1.13 format
-    }
-}
-//Replace strings in IDEA folders as well
-def resourceTargets = ['META-INF/mods.toml', 'pack.mcmeta']
-def intoTargets = ["$rootDir/out/production/resources/", "$rootDir/out/production/${project.name}.main/", "$rootDir/bin/main/"]
-def replaceProperties = ['version': project.mod_version, 'mcversion': minecraft_version, 'forge_version': forge_version, 'jei_version': jei_version, 'guideapi_version': guideapi_version]
-processResources {
-    inputs.properties replaceProperties
-    replaceProperties.put 'project', project
-
-    filesMatching(resourceTargets) {
-        expand replaceProperties
-    }
-
-    intoTargets.each { target ->
-        if (file(target).exists()) {
-            copy {
-                from(sourceSets.main.resources) {
-                    include resourceTargets
-                    expand replaceProperties
-                }
-                into target
-            }
-        }
-    }
-    exclude '**/Thumbs.db'
-
-}
-
-
-processLibResources {
-}
-
-
-
-
-jar {
-    dependsOn 'crowdin'
-
-    //Keep the jar as clean as possible
-    includeEmptyDirs = false
-
-    from sourceSets.main.output.classesDirs
-    from sourceSets.api.output.classesDirs
-    from sourceSets.lib.output.classesDirs
-    from sourceSets.main.output.resourcesDir
-    from sourceSets.api.output.resourcesDir
-    from sourceSets.lib.output.resourcesDir
-    
-    from{
-        fileTree('build/translations').matching{
-            exclude "**/en_us.json" //Don't override local source file
-        }
-    }
-
-
-
-    manifest {
-        attributes([
-                "FMLAT": "accesstransformer.cfg",
-                "Specification-Title": "vampirism",
-                "Specification-Vendor": "maxanier",
-                "Specification-Version": "1", // We are version 1 of ourselves
-                "Implementation-Title": project.name,
-                "Implementation-Version": mod_version,
-                "Implementation-Vendor" :"maxanier",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
-}
-apply plugin: 'org.spongepowered.mixin'
-
 
 // https://github.com/SpongePowered/Mixin/wiki/Mixins-on-Minecraft-Forge
 mixin {

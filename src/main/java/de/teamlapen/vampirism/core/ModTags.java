@@ -70,6 +70,7 @@ public class ModTags {
         public static final TagKey<Item> APPLICABLE_OIL_SWORD = tag("applicable_oil/sword");
         public static final TagKey<Item> APPLICABLE_OIL_PICKAXE = tag("applicable_oil/pickaxe");
         public static final TagKey<Item> APPLICABLE_OIL_ARMOR = tag("applicable_oil/armor");
+        public static final TagKey<Item> HUNTER_COAT = tag("armo/hunter_coat");
 
         private static @NotNull TagKey<Item> tag(@NotNull ResourceLocation resourceLocation) {
             return ItemTags.create(resourceLocation);
@@ -134,6 +135,9 @@ public class ModTags {
         public static class HasStructure {
             public static final TagKey<Biome> HUNTER_TENT = tag("has_structure/hunter_tent");
             public static final TagKey<Biome> VAMPIRE_DUNGEON = tag("has_structure/vampire_dungeon");
+            public static final TagKey<Biome> VAMPIRE_HUT = tag("has_structure/vampire_hut");
+            public static final TagKey<Biome> HUNTER_OUTPOST = tag("has_structure/outpost");
+            public static final TagKey<Biome> VAMPIRE_ALTAR = tag("has_structure/vampire_altar");
             public static final TagKey<Biome> MOTHER = tag("has_structure/mother");
         }
 

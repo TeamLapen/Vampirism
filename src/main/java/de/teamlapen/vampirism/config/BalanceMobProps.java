@@ -13,6 +13,9 @@ public class BalanceMobProps {
 
     //    @DefaultInt(value = 1, minValue = 0, name = "converted_mob_default_dmg")
     public final int CONVERTED_MOB_DEFAULT_DMG = 1;
+    public final int CONVERTED_MOB_DEFAULT_SPEED = 1;
+    public final int CONVERTED_MOB_DEFAULT_HEALTH = 1;
+    public final int CONVERTED_MOB_DEFAULT_KNOCKBACK_RESISTANCE = 0;
 
     //    @DefaultInt(value = 60, comment = "Duration of the sanguinare effect for mobs in seconds", name = "sanguinare_avg_duration", minValue = 1)
     public final int SANGUINARE_AVG_DURATION = 30;

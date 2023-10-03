@@ -18,7 +18,6 @@ import java.util.Set;
 
 import static de.teamlapen.vampirism.core.ModBlocks.*;
 import static de.teamlapen.vampirism.core.ModItems.*;
-import static net.minecraft.world.item.CreativeModeTabs.BUILDING_BLOCKS;
 
 @Mod.EventBusSubscriber(modid = REFERENCE.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class VampirismCreativeTab {
@@ -165,6 +164,7 @@ public class VampirismCreativeTab {
         private void addBuildingBlocks() {
             addBlock(CURSED_GRASS);
             addBlock(CURSED_EARTH);
+            addBlock(CURSED_EARTH_PATH);
 
             addBlock(DARK_SPRUCE_LOG);
             addBlock(DARK_SPRUCE_WOOD);
@@ -180,6 +180,7 @@ public class VampirismCreativeTab {
             addBlock(DARK_SPRUCE_PRESSURE_PLACE);
             addBlock(DARK_SPRUCE_BUTTON);
             addItem(ModItems.DARK_SPRUCE_SIGN);
+            addItem(ModItems.DARK_SPRUCE_HANGING_SIGN);
 
             addBlock(CURSED_SPRUCE_LOG);
             addBlock(CURSED_SPRUCE_LOG_CURED);
@@ -197,6 +198,7 @@ public class VampirismCreativeTab {
             addBlock(CURSED_SPRUCE_PRESSURE_PLACE);
             addBlock(CURSED_SPRUCE_BUTTON);
             addItem(ModItems.CURSED_SPRUCE_SIGN);
+            addItem(ModItems.CURSED_SPRUCE_HANGING_SIGN);
 
             addBlock(CASTLE_BLOCK_DARK_STONE);
             addBlock(CASTLE_STAIRS_DARK_STONE);
@@ -204,10 +206,13 @@ public class VampirismCreativeTab {
             addBlock(CASTLE_BLOCK_DARK_BRICK);
             addBlock(CASTLE_STAIRS_DARK_BRICK);
             addBlock(CASTLE_SLAB_DARK_BRICK);
+            addBlock(CASTLE_BLOCK_DARK_BRICK_WALL);
+            addBlock(CASTLE_BLOCK_DARK_BRICK_CRACKED);
             addBlock(CASTLE_BLOCK_DARK_BRICK_BLOODY);
             addBlock(CASTLE_BLOCK_PURPLE_BRICK);
             addBlock(CASTLE_STAIRS_PURPLE_BRICK);
             addBlock(CASTLE_SLAB_PURPLE_BRICK);
+            addBlock(CASTLE_BLOCK_PURPLE_BRICK_WALL);
             addBlock(CASTLE_BLOCK_NORMAL_BRICK);
         }
 

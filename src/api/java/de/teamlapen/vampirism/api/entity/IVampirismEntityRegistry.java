@@ -3,21 +3,14 @@ package de.teamlapen.vampirism.api.entity;
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.minion.IMinionData;
-import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * Registration of blood values and converting handler for {@link PathfinderMob}'s
@@ -30,7 +23,9 @@ public interface IVampirismEntityRegistry {
      * Requires a blood value to be registered for that creature
      *
      * @param overlay_loc Location of the overlay texture file
+     * @deprecated use data driven system
      */
+    @Deprecated
     @ThreadSafeAPI
     void addConvertible(EntityType<? extends PathfinderMob> type, ResourceLocation overlay_loc);
 
@@ -40,7 +35,10 @@ public interface IVampirismEntityRegistry {
      *
      * @param helper      Helper instance for the DefaultHandler to specify some values for the converted creature
      * @param overlay_loc Location of the overlay texture file
+     *
+     * @deprecated use data driven system
      */
+    @Deprecated
     @ThreadSafeAPI
     void addConvertible(EntityType<? extends PathfinderMob> type, ResourceLocation overlay_loc, IConvertingHandler.IDefaultHelper helper);
 
@@ -50,7 +48,9 @@ public interface IVampirismEntityRegistry {
      *
      * @param overlay_loc Location of the overlay texture file. Only required if Vampirism's default Converted Creature renderer is used, if you handle that stuff yourself, null is just fine.
      * @param handler     Handles the conversion
+     * @deprecated use data driven system
      */
+    @Deprecated
     @ThreadSafeAPI
     void addConvertible(EntityType<? extends PathfinderMob> type, ResourceLocation overlay_loc, IConvertingHandler<?> handler);
 
@@ -70,8 +70,15 @@ public interface IVampirismEntityRegistry {
     /**
      * @return A map mapping the overlay resource location string to e convertible entity's class
      */
-    @OnlyIn(Dist.CLIENT)
+    @NotNull
     Map<EntityType<? extends PathfinderMob>, ResourceLocation> getConvertibleOverlay();
+
+    /**
+     * directly return the overlay texture for the given entity
+     * @param sourceEntity the string values of the source entity's registry name
+     */
+    @Nullable
+    ResourceLocation getConvertibleOverlay(String sourceEntity);
 
     /**
      * @return The custom constructor registered for the given entity's class. Can be null if none is registered

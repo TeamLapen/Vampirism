@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.entity.VampireBookLootProvider;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.hunter.IAdvancedHunter;
+import de.teamlapen.vampirism.api.settings.Supporter;
 import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEntities;
@@ -318,12 +319,12 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     @Nullable
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
-        SupporterManager.Supporter supporter = SupporterManager.getInstance().getRandomHunter(random);
+        Supporter supporter = SupporterManager.getRandomHunter(random);
         this.getEntityData().set(TYPE, supporter.typeId());
         this.getEntityData().set(TYPE, supporter.typeId());
-        this.getEntityData().set(NAME, supporter.senderName() == null ? "none" : supporter.senderName());
-        this.getEntityData().set(TEXTURE, supporter.textureName() == null ? "none" : supporter.textureName());
-        this.lootBookId = supporter.bookID();
+        this.getEntityData().set(NAME, supporter.name());
+        this.getEntityData().set(TEXTURE, supporter.texture());
+        this.lootBookId = supporter.bookId();
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
     }
 
