@@ -146,6 +146,7 @@ public class ModEntities {
         event.put(TASK_MASTER_VAMPIRE.get(), VampireTaskMasterEntity.getAttributeBuilder().build());
         event.put(CONVERTED_FOX.get(), ConvertedFoxEntity.createAttributes().build());
         event.put(CONVERTED_GOAT.get(), ConvertedGoatEntity.createAttributes().build());
+        event.put(VULNERABLE_REMAINS_DUMMY.get(), VulnerableRemainsDummyEntity.createAttributes().build());
     }
 
     static void onModifyEntityTypeAttributes(@NotNull EntityAttributeModificationEvent event) {

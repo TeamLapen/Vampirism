@@ -94,7 +94,9 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
 
     @Override
     public void aiStep() {
-        aiStepC((EntityType<T>) this.entityCreature.getType());
+        if (!nil()) {
+            aiStepC((EntityType<T>) this.entityCreature.getType());
+        }
         super.aiStep();
     }
 

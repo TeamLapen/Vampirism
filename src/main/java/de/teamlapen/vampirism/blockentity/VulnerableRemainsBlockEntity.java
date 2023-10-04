@@ -63,18 +63,20 @@ public class VulnerableRemainsBlockEntity extends BlockEntity {
     }
 
     public void onDamageDealt(DamageSource src, double damage) {
-        this.health -= damage;
-        if (this.level != null) this.lastDamage = this.level.getGameTime();
         if (this.health <= 0) {
-            if (this.level != null)
+            if (this.level != null) {
                 this.level.playSound(null, worldPosition, ModSounds.REMAINS_DESTROYED.get(), SoundSource.BLOCKS, 1f, 1f);
+            }
             destroyVulnerability();
         } else {
-            if (this.level != null)
+            this.health -= (int) damage;
+            if (this.level != null) {
+                this.lastDamage = this.level.getGameTime();
                 this.level.playSound(null, worldPosition, ModSounds.REMAINS_HIT.get(), SoundSource.BLOCKS, 1f, 1f);
-        }
-        if (src.getEntity() instanceof ServerPlayer p) {
-            this.getMother().ifPresent(mother -> mother.onVulnerabilityHit(p, this.health <= 0));
+            }
+            if (src.getEntity() instanceof ServerPlayer p) {
+                this.getMother().ifPresent(mother -> mother.onVulnerabilityHit(p, this.health <= 0));
+            }
         }
     }
 
@@ -107,6 +109,10 @@ public class VulnerableRemainsBlockEntity extends BlockEntity {
     }
 
     private boolean firstTick = true;
+
+    public int getHealth() {
+        return health;
+    }
 
     private Optional<MotherBlockEntity> getMother() {
         if (this.level != null) {

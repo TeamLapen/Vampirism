@@ -8,11 +8,17 @@ import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.core.ModRegistries;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
@@ -140,6 +146,14 @@ public class RegUtil {
 
     public static IOil getOil(@NotNull ResourceLocation id) {
         return get(ModRegistries.OILS.get(), id);
+    }
+
+    public static <T, Z extends Registry<T>> Holder<T> getHolder(Level level, ResourceKey<Z> registry, T type) {
+        return level.registryAccess().registryOrThrow(registry).wrapAsHolder(type);
+    }
+
+    public static Holder<DamageType> getHolder(Level level, DamageType type) {
+        return getHolder(level, Registries.DAMAGE_TYPE, type);
     }
 
 
