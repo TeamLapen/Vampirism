@@ -82,7 +82,7 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
      */
     public void explode(int distanceSq, @Nullable Entity excludeEntity) {
         @Nullable Entity shootingEntity = getOwner();
-        List<Entity> list = this.level().getEntities(this, this.getBoundingBox().inflate(distanceSq / 2d), EntitySelector.ENTITY_STILL_ALIVE.and(EntitySelector.NO_SPECTATORS));
+        List<Entity> list = this.level().getEntities(this, this.getBoundingBox().inflate(distanceSq / 2d), EntitySelector.ENTITY_STILL_ALIVE.and(EntitySelector.NO_SPECTATORS).and(s -> !(s instanceof DarkBloodProjectileEntity.Ignore)));
         for (Entity e : list) {
             if ((excludeShooter && e == shootingEntity) || e == excludeEntity) {
                 continue;
@@ -237,5 +237,9 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
 
             }
         }
+    }
+
+    public interface Ignore {
+
     }
 }

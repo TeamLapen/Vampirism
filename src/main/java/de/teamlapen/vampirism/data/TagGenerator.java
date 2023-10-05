@@ -65,6 +65,7 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
             tag(BlockTags.SLABS).addTag(ModTags.Blocks.CASTLE_SLAPS);
             tag(BlockTags.FLOWER_POTS).add(ModBlocks.POTTED_VAMPIRE_ORCHID.get());
             tag(ModTags.Blocks.REMAINS).add(ModBlocks.ACTIVE_VULNERABLE_REMAINS.get(), ModBlocks.VULNERABLE_REMAINS.get(), ModBlocks.REMAINS.get(), ModBlocks.INCAPACITATED_VULNERABLE_REMAINS.get());
+            tag(ModTags.Blocks.ACTIVE_REMAINS).add(ModBlocks.ACTIVE_VULNERABLE_REMAINS.get(), ModBlocks.VULNERABLE_REMAINS.get());
             // Tool Types
             tag(BlockTags.MINEABLE_WITH_SHOVEL)
                     .add(ModBlocks.CURSED_EARTH.get())

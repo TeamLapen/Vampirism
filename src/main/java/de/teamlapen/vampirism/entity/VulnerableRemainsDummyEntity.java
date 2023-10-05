@@ -4,21 +4,28 @@ import de.teamlapen.vampirism.api.entity.IEntityLeader;
 import de.teamlapen.vampirism.blockentity.VulnerableRemainsBlockEntity;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModDamageTypes;
+import de.teamlapen.vampirism.core.ModEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
-public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntityLeader {
+public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntityLeader, IRemainsEntity {
 
     private BlockPos ownerPos = null;
 
@@ -98,12 +105,55 @@ public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntit
 
     @Override
     public void tick() {
-        if (!this.level().isClientSide() && (this.ownerPos == null || this.level().getBlockState(ownerPos).getBlock() != ModBlocks.ACTIVE_VULNERABLE_REMAINS.get())) {
-            this.remove(RemovalReason.DISCARDED);
+        if (!this.level().isClientSide) {
+            BlockState block = this.level().getBlockState(ownerPos);
+            if(this.ownerPos == null || !block.is(ModBlocks.ACTIVE_VULNERABLE_REMAINS.get()) || block.is(ModBlocks.INCAPACITATED_VULNERABLE_REMAINS.get())) {
+                if (block.is(ModBlocks.INCAPACITATED_VULNERABLE_REMAINS.get())) {
+                    this.getPassengers().forEach(s -> s.setRemoved(RemovalReason.DISCARDED));
+                }
+                this.remove(RemovalReason.DISCARDED);
+            } else if (level().getGameTime() % 400 == 16) {
+                spawnDefender();
+            }
         }
     }
 
-    private Optional<VulnerableRemainsBlockEntity> getTile() {
+    public void spawnDefender() {
+        BlockPos pos = this.ownerPos;
+
+        List<Direction> directionStream = Arrays.stream(Direction.values()).filter(l -> {
+            var block = this.level().getBlockState(pos.relative(l)).canBeReplaced();
+            return block && !hasDefender(l);
+        }).toList();
+        if (!directionStream.isEmpty()) {
+            spawnDefender(directionStream.get(this.random.nextInt(directionStream.size())));
+        }
+
+    }
+
+    private boolean hasDefender(Direction direction) {
+        return getPassengers().stream().anyMatch(entity -> entity instanceof RemainsDefenderEntity defender && defender.getAttachFace().getOpposite() == direction);
+    }
+
+    public void spawnDefender(Direction direction) {
+        RemainsDefenderEntity defender = ModEntities.REMAINS_DEFENDER.get().create(this.level());
+        getTile().map(BlockEntity::getBlockPos).ifPresent(pos -> {
+            defender.setPos(Vec3.atBottomCenterOf(pos.relative(direction)));
+            defender.setAttachFace(direction.getOpposite());
+            level().addFreshEntity(defender);
+            defender.startRiding(this);
+            defender.setYRot(0);
+            defender.yHeadRot = getYRot();
+            defender.setOldPosAndRot();
+        });
+    }
+
+    @Override
+    protected boolean canAddPassenger(Entity pPassenger) {
+        return pPassenger instanceof RemainsDefenderEntity && getPassengers().size() < 6;
+    }
+
+    public Optional<VulnerableRemainsBlockEntity> getTile() {
         if (ownerPos != null) {
             if (this.level().getBlockEntity(ownerPos) instanceof VulnerableRemainsBlockEntity vr) {
                 return Optional.of(vr);
@@ -114,7 +164,7 @@ public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntit
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
-
+        pCompound.putIntArray("ownerPos", new int[]{this.ownerPos.getX(), this.ownerPos.getY(), this.ownerPos.getZ()});
     }
 
     @Override
@@ -124,7 +174,10 @@ public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntit
 
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
-
+        if (pCompound.contains("ownerPos", Tag.TAG_INT_ARRAY)) {
+            int[] pos = pCompound.getIntArray("ownerPos");
+            this.ownerPos = new BlockPos(pos[0], pos[1], pos[2]);
+        }
     }
 
     private int followerCount = 0;

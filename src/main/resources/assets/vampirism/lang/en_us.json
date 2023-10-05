@@ -1047,6 +1047,7 @@
   "entity.vampirism.converted_donkey": "Vampire Donkey",
   "entity.vampirism.converted_mule": "Vampire Mule",
   "entity.vampirism.converted_horse": "Vampire Horse",
+  "entity.vampirism.remains_defender": "Remains Defender",
   "__comment": "minion tasks",
   "minion_task.vampirism.protect_lord": "Defend Lord",
   "minion_task.vampirism.nothing": "Nothing",

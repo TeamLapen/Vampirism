@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.blockentity.VulnerableRemainsBlockEntity;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModTiles;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -40,7 +41,7 @@ public class ActiveVulnerableRemainsBlock extends RemainsBlock implements Entity
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
-        return level.isClientSide() ? null : createTickerHelper(type, ModTiles.VULNERABLE_CURSED_ROOTED_DIRT.get(), VulnerableRemainsBlockEntity::serverTick);
+        return level.isClientSide() ? null : createTickerHelper(type, ModTiles.VULNERABLE_CURSED_ROOTED_DIRT.get(), (level1, pos, state1,entity) -> VulnerableRemainsBlockEntity.serverTick((ServerLevel) level1, pos, state1, entity));
     }
 
     @Override

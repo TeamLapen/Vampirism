@@ -41,6 +41,7 @@ public class ModTags {
         public static final TagKey<Block> COFFIN = tag("coffin");
 
         public static final TagKey<Block> REMAINS = tag("remains");
+        public static final TagKey<Block> ACTIVE_REMAINS = tag("active_remains");
         public static final TagKey<Block> MOTHER_GROWS_ON = tag("mother_grows_on");
 
         private static @NotNull TagKey<Block> tag(@NotNull ResourceLocation resourceLocation) {

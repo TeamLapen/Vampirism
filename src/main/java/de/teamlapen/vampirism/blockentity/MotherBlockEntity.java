@@ -21,6 +21,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -31,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -58,6 +60,9 @@ public class MotherBlockEntity extends BlockEntity {
                     List<Triple<BlockPos, BlockState, IRemainsBlock>> vuls = e.getTreeStructure(false).getVerifiedVulnerabilities(level).filter(t -> t.getRight().isVulnerable(t.getMiddle())).toList();
                     if (!vuls.isEmpty()) {
                         for (ServerPlayer player : e.bossEvent.getPlayers()) {
+                            if (player.getAbilities().invulnerable) {
+                                continue;
+                            }
                             BlockPos p = vuls.get(e.level.getRandom().nextInt(vuls.size())).getLeft();
                             player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 5 * 20, 2));
                             ModParticles.spawnParticlesServer(player.level(), new FlyingBloodParticleOptions(100, false, p.getX() + 0.5, p.getY() + 0.5, p.getZ() + 0.5), player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(), 10, 0.1f, 0.1f, 0.1f, 0);
@@ -169,8 +174,10 @@ public class MotherBlockEntity extends BlockEntity {
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    public void onVulnerabilityHit(ServerPlayer p, boolean destroyed) {
-        addPlayer(p);
+    public void onVulnerabilityHit(LivingEntity entity, boolean destroyed) {
+        if (entity instanceof Player player){
+            addPlayer(player);
+        }
         updateFightStatus();
         if (destroyed && isIntact()) {
             freezeFight();
@@ -202,6 +209,7 @@ public class MotherBlockEntity extends BlockEntity {
 
     private void freezeFight() {
         this.isFrozen = true;
+        this.freezeTimer = 20 * 10;
         getTreeStructure(false).getVerifiedVulnerabilities(this.level).forEach(vul -> vul.getRight().freeze(level, vul.getLeft(), vul.getMiddle()));
         this.bossEvent.setColor(BossEvent.BossBarColor.WHITE);
     }
@@ -221,12 +229,15 @@ public class MotherBlockEntity extends BlockEntity {
 
     private void unFreezeFight(Level level, BlockPos blockPos, BlockState blockState) {
         this.isFrozen = false;
-        this.freezeTimer = 20 * 10;
         getTreeStructure(false).getVerifiedVulnerabilities(this.level).forEach(vul -> vul.getRight().unFreeze(level, vul.getLeft(), vul.getMiddle()));
         this.bossEvent.setColor(BossEvent.BossBarColor.RED);
     }
 
     public void informAboutAttacker(ServerPlayer serverPlayer) {
         addPlayer(serverPlayer);
+    }
+
+    public Collection<ServerPlayer> involvedPlayers() {
+        return this.bossEvent.getPlayers();
     }
 }
