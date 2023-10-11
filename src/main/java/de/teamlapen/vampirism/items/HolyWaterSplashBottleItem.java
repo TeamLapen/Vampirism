@@ -39,6 +39,9 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
 
             if (!list1.isEmpty()) {
                 for (LivingEntity entitylivingbase : list1) {
+                    if(thrower instanceof PlayerEntity && entitylivingbase instanceof PlayerEntity && !((PlayerEntity)thrower).canHarmPlayer((PlayerEntity) entitylivingbase)){
+                        continue;
+                    }
                     DamageHandler.affectEntityHolyWaterSplash(entitylivingbase, getStrength(tier), entity.distanceToSqr(entitylivingbase), result.getType() == RayTraceResult.Type.ENTITY, thrower instanceof LivingEntity ? (LivingEntity) thrower : null);
                 }
             }
