@@ -25,7 +25,7 @@ import java.util.UUID;
 
 public class VulnerableRemainsBlockEntity extends BlockEntity {
 
-    private final static int MAX_HEALTH = 100;
+    public final static int MAX_HEALTH = 100;
 
     public static void serverTick(ServerLevel level, BlockPos blockPos, BlockState blockState, VulnerableRemainsBlockEntity e) {
         if (e.firstTick) {

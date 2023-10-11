@@ -186,9 +186,9 @@ public class MotherBlockEntity extends BlockEntity {
 
     public void updateFightStatus() {
         List<Triple<BlockPos, BlockState, IRemainsBlock>> vuls = getTreeStructure(false).getVerifiedVulnerabilities(level).toList();
-        long remainingVulnerabilities = vuls.stream().filter(vul -> vul.getRight().isVulnerable(vul.getMiddle())).count();
+        int remainingVulnerabilities = vuls.stream().filter(vul -> vul.getRight().isVulnerable(vul.getMiddle())).map(s -> level.getBlockEntity(s.getLeft())).filter(VulnerableRemainsBlockEntity.class::isInstance).map(VulnerableRemainsBlockEntity.class::cast).mapToInt(VulnerableRemainsBlockEntity::getHealth).sum();
         if (remainingVulnerabilities > 0) {
-            this.bossEvent.setProgress(remainingVulnerabilities / (float) vuls.size());
+            this.bossEvent.setProgress(remainingVulnerabilities / ((float) vuls.size() * VulnerableRemainsBlockEntity.MAX_HEALTH));
         } else {
             this.bossEvent.setProgress(0);
             this.endFight();
@@ -209,7 +209,7 @@ public class MotherBlockEntity extends BlockEntity {
 
     private void freezeFight() {
         this.isFrozen = true;
-        this.freezeTimer = 20 * 10;
+        this.freezeTimer = 20 * 20;
         getTreeStructure(false).getVerifiedVulnerabilities(this.level).forEach(vul -> vul.getRight().freeze(level, vul.getLeft(), vul.getMiddle()));
         this.bossEvent.setColor(BossEvent.BossBarColor.WHITE);
     }
