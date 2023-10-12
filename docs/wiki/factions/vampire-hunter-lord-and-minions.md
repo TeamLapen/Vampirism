@@ -17,7 +17,7 @@ To become a lord you have to fulfill a certain task for your faction. You can ac
 | 4     | Colonel      | Duke/Duchess    |
 | 5     | Brigadier    | Prince(ss)      |
 
-The gender used is determined based on your skin type (steve -> male, alex -> female), but this can be changed using [`/vampirism title-gender <true/false>`](../commands.md#title-gender).
+The gender used is determined based on your skin type (steve -> male, alex -> female), but this can be changed using [`/vampirism title-gender <true/false>`](../commands/title_gender).
 
 ### Leveling
 
