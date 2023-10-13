@@ -39,7 +39,7 @@
     },
     {
       "name": "Cultist Courn",
-      "texture": "cournualllama2",
+      "texture": "CournBread",
       "type": 15,
       "status": 2
     },
@@ -62,6 +62,12 @@
       "type": 15,
       "status": 2,
       "bookId": "volqonah"
+    },
+    {
+      "name": "Merciless Mike",
+      "texture": "supermike1999",
+      "type": 13,
+      "status": 1
     }
   ],
   "hunters": [
@@ -72,7 +78,7 @@
       "status": 0
     },
     {
-      "name": "Paul the Hunter",
+      "name": "Perilous Paul",
       "texture": "cheaterpaul",
       "type": 1,
       "status": 0
@@ -92,7 +98,7 @@
     },
     {
       "name": "Marcus Walker",
-      "texture": "RebelT",
+      "texture": "TheR3belT",
       "type": 2,
       "status": 1
     },
