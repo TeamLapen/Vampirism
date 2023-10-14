@@ -14,7 +14,7 @@ public class RemainsDefenderRenderer extends LivingEntityRenderer<RemainsDefende
     private final ResourceLocation TEX = new ResourceLocation(REFERENCE.MODID, "textures/entity/remains_defender.png");
 
     public RemainsDefenderRenderer(EntityRendererProvider.Context pContext) {
-        super(pContext, new RemainsDefenderModel(pContext.bakeLayer(ModEntitiesRender.REMAINS_DEFENDER)), 0.1f);
+        super(pContext, new RemainsDefenderModel(pContext.bakeLayer(ModEntitiesRender.REMAINS_DEFENDER)), 0f);
     }
 
     @Override

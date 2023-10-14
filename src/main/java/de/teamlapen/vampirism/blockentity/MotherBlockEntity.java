@@ -134,6 +134,11 @@ public class MotherBlockEntity extends BlockEntity {
     public void load(@NotNull CompoundTag tag) {
         super.load(tag);
         this.destructionTimer = tag.getInt("destruction_timer");
+        this.isFrozen = tag.getBoolean("is_frozen");
+        this.freezeTimer = tag.getInt("freeze_timer");
+        if (this.isFrozen) {
+            this.bossEvent.setColor(BossEvent.BossBarColor.WHITE);
+        }
     }
 
     /**
@@ -157,6 +162,7 @@ public class MotherBlockEntity extends BlockEntity {
     }
 
     private void addPlayer(Player player) {
+        updateFightStatus();
         if (player instanceof ServerPlayer serverPlayer) {
             this.bossEvent.addPlayer(serverPlayer);
         }
@@ -166,7 +172,6 @@ public class MotherBlockEntity extends BlockEntity {
     public @NotNull CompoundTag getUpdateTag() {
         return saveWithoutMetadata();
     }
-
 
     @Nullable
     @Override
@@ -186,19 +191,29 @@ public class MotherBlockEntity extends BlockEntity {
 
     public void updateFightStatus() {
         List<Triple<BlockPos, BlockState, IRemainsBlock>> vuls = getTreeStructure(false).getVerifiedVulnerabilities(level).toList();
-        int remainingVulnerabilities = vuls.stream().filter(vul -> vul.getRight().isVulnerable(vul.getMiddle())).map(s -> level.getBlockEntity(s.getLeft())).filter(VulnerableRemainsBlockEntity.class::isInstance).map(VulnerableRemainsBlockEntity.class::cast).mapToInt(VulnerableRemainsBlockEntity::getHealth).sum();
-        if (remainingVulnerabilities > 0) {
-            this.bossEvent.setProgress(remainingVulnerabilities / ((float) vuls.size() * VulnerableRemainsBlockEntity.MAX_HEALTH));
+        List<Triple<BlockPos, BlockState, IRemainsBlock>> remaining = vuls.stream().filter(vul -> vul.getRight().isVulnerable(vul.getMiddle())).toList();
+        if (!remaining.isEmpty()) {
+            var remainingHealth = remaining.stream().mapToInt(s -> {
+                var entity = level.getBlockEntity(s.getLeft());
+                if (entity instanceof VulnerableRemainsBlockEntity vulnerable) {
+                    return vulnerable.getHealth();
+                }
+                return VulnerableRemainsBlockEntity.MAX_HEALTH;
+            }).sum();
+            this.bossEvent.setProgress(remainingHealth / ((float) vuls.size() * VulnerableRemainsBlockEntity.MAX_HEALTH));
         } else {
             this.bossEvent.setProgress(0);
             this.endFight();
         }
+        this.bossEvent.getPlayers().stream().filter(player -> player.hasDisconnected() || player.distanceToSqr(this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ()) > 100 * 100).toList().forEach(this.bossEvent::removePlayer);
     }
 
     @Override
     protected void saveAdditional(@NotNull CompoundTag tag) {
         super.saveAdditional(tag);
         tag.putInt("destruction_timer", this.destructionTimer);
+        tag.putBoolean("is_frozen", this.isFrozen);
+        tag.putInt("freeze_timer", this.freezeTimer);
     }
 
     private void endFight() {

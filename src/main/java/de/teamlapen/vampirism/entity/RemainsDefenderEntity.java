@@ -169,6 +169,15 @@ public class RemainsDefenderEntity extends AbstractGolem implements IRemainsEnti
     }
 
     @Override
+    public boolean startRiding(Entity pEntity, boolean pForce) {
+        if(super.startRiding(pEntity, pForce)) {
+            this.reapplyPosition();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     protected @NotNull AABB makeBoundingBox() {
         Direction attachFace = getAttachFace().getOpposite();
         AABB box = new AABB(BlockPos.ZERO);
@@ -254,6 +263,16 @@ public class RemainsDefenderEntity extends AbstractGolem implements IRemainsEnti
                     return !(target instanceof  IRemainsEntity) && !Helper.isVampire(target);
                 }
             });
+        }
+    }
+
+    @Override
+    protected void reapplyPosition() {
+        if (this.getVehicle() != null) {
+            Direction attachFace = getAttachFace();
+            this.setPos(Vec3.atBottomCenterOf(this.getVehicle().blockPosition().above()).subtract(attachFace.getStepX(), attachFace.getStepY(), attachFace.getStepZ()));
+        } else {
+            super.reapplyPosition();
         }
     }
 }

@@ -82,7 +82,7 @@ public class RemainsBlock extends VampirismBlock implements BonemealableBlock, I
             if (MotherTreeStructure.findMother(level, pos).isEmpty()) {
                 level.setBlockAndUpdate(pos, ModBlocks.CURSED_EARTH.get().defaultBlockState());
             }
-            if (this == ModBlocks.VULNERABLE_REMAINS.get()) {
+            if (state.is(ModTags.Blocks.VULNERABLE_REMAINS)) {
                 if (Arrays.stream(Direction.values()).allMatch(d -> level.getBlockState(pos.relative(d)).is(ModTags.Blocks.REMAINS))) {
                     level.setBlockAndUpdate(pos, ModBlocks.CURSED_EARTH.get().defaultBlockState());
                 }
