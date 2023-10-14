@@ -21,6 +21,7 @@ import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.inventory.MinionContainer;
 import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.IPlayerOverlay;
+import de.teamlapen.vampirism.util.Permissions;
 import de.teamlapen.vampirism.util.PlayerSkinHelper;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.core.NonNullList;
@@ -118,7 +119,8 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         this.hardAttackPredicate = livingEntity -> {
             boolean flag1 = getLordOpt().map(ILordPlayer::getPlayer).filter(entity -> entity == livingEntity).isPresent(); //Don't attack lord
             boolean flag2 = livingEntity instanceof MinionEntity && ((MinionEntity<?>) livingEntity).getLordID().filter(id -> getLordID().map(id2 -> id == id2).orElse(false)).isPresent(); //Don't attack other minions of lord
-            return !flag1 && !flag2;
+            boolean flag3 = livingEntity instanceof Player otherPlayer && getLordOpt().map(ILordPlayer::getPlayer).map(player -> !player.canHarmPlayer(otherPlayer)).orElse(!Permissions.isPvpEnabled(otherPlayer));
+            return !flag1 && !flag2 && !flag3;
         };
         setDontDropEquipment();
         this.peaceful = true;
@@ -184,7 +186,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     /**
      * Copy of {@link net.minecraft.world.entity.Mob} but with modified DamageSource
      * Check if code still up-to-date
-     * TODO 1.20
+     * TODO 1.21
      */
     @Override
     public boolean doHurtTarget(@NotNull Entity entityIn) {
@@ -211,6 +213,8 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
             if (entityIn instanceof Player player) {
                 this.maybeDisableShield(player, this.getMainHandItem(), player.isUsingItem() ? player.getUseItem() : ItemStack.EMPTY);
             }
+
+            //Usually only players call the hurt enemy method on the itemstack
             if (!this.level().isClientSide && !itemstack.isEmpty() && entityIn instanceof LivingEntity) {
                 itemstack.getItem().hurtEnemy(itemstack, (LivingEntity) entityIn, this);
                 if (itemstack.isEmpty()) {
