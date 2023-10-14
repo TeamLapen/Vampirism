@@ -21,6 +21,7 @@ import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.inventory.container.MinionContainer;
 import de.teamlapen.vampirism.util.IPlayerOverlay;
+import de.teamlapen.vampirism.util.Permissions;
 import de.teamlapen.vampirism.util.PlayerSkinHelper;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -119,7 +120,8 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         this.hardAttackPredicate = livingEntity -> {
             boolean flag1 = getLordOpt().map(ILordPlayer::getPlayer).filter(entity -> entity == livingEntity).isPresent(); //Don't attack lord
             boolean flag2 = livingEntity instanceof MinionEntity && ((MinionEntity<?>) livingEntity).getLordID().filter(id -> getLordID().map(id2 -> id == id2).orElse(false)).isPresent(); //Don't attack other minions of lord
-            return !flag1 && !flag2;
+            boolean flag3 = livingEntity instanceof PlayerEntity && getLordOpt().map(ILordPlayer::getPlayer).map(player -> !player.canHarmPlayer((PlayerEntity) livingEntity)).orElse(!Permissions.isPvpEnabled((PlayerEntity)livingEntity));
+            return !flag1 && !flag2 && !flag3;
         };
         setDontDropEquipment();
         this.peaceful=true;
