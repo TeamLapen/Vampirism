@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.ThrowableItemEntity;
 import de.teamlapen.vampirism.util.DamageHandler;
 import net.minecraft.sounds.SoundEvents;
@@ -43,6 +42,9 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
 
             if (!list1.isEmpty()) {
                 for (LivingEntity entitylivingbase : list1) {
+                    if (thrower instanceof Player source && entitylivingbase instanceof Player target && !source.canHarmPlayer(target)) {
+                        continue;
+                    }
                     DamageHandler.affectEntityHolyWaterSplash(entitylivingbase, getStrength(tier), entity.distanceToSqr(entitylivingbase), result.getType() == HitResult.Type.ENTITY, thrower instanceof LivingEntity ? (LivingEntity) thrower : null);
                 }
             }
