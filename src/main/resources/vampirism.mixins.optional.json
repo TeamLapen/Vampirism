@@ -1,0 +1,8 @@
+{
+  "refmap": "vampirism.refmap.json",
+  "required": false,
+  "package": "de.teamlapen.vampirism.mixin",
+  "parent": "vampirism.mixins.parent.json",
+  "mixins": [
+    "MixinMobEntityOptional"]
+}

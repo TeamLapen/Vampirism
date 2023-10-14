@@ -1,12 +1,13 @@
 {
+  "refmap": "vampirism.refmap.json",
   "required": true,
   "package": "de.teamlapen.vampirism.mixin",
-  "compatibilityLevel": "JAVA_8",
-  "refmap": "vampirism.refmap.json",
+  "parent": "vampirism.mixins.parent.json",
   "mixins": [
     "ArmorItemAccessor",
     "AssemblerMixin",
     "DimensionStructureSettingsAccessor",
+    "EntityPredicateAccessor",
     "FlatGenerationSettingsAccessor",
     "IngredientAccessor",
     "ItemMixin",
@@ -16,21 +17,15 @@
     "MixinEntity",
     "MixinEntityPredicate",
     "MixinLivingEntity",
-    "MixinMobEntity",
     "MixinPlayerEntity",
     "MixinPotionBrewing",
     "NearestAttackableTargetGoalMixin",
     "PlayerAdvancementsAccessor",
-    "EntityPredicateAccessor",
     "TileEntityTypeAccessor"
   ],
   "client": [
     "client.AgeableModelAccessor",
     "client.AtlasesMixin",
     "client.BossOverlayGuiAccessor"
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  },
-  "minVersion": "0.8"
+  ]
 }

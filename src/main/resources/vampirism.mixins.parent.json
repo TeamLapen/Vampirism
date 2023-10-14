@@ -1,0 +1,7 @@
+{
+  "compatibilityLevel": "JAVA_8",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

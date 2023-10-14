@@ -11,9 +11,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(MobEntity.class)
-public abstract class MixinMobEntity extends LivingEntity {
+public abstract class MixinMobEntityOptional extends LivingEntity {
 
-    public MixinMobEntity(EntityType<? extends LivingEntity> p_i48577_1_, World p_i48577_2_) {
+    public MixinMobEntityOptional(EntityType<? extends LivingEntity> p_i48577_1_, World p_i48577_2_) {
         super(p_i48577_1_, p_i48577_2_);
     }
 
