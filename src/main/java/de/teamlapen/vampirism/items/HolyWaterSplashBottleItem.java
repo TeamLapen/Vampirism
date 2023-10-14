@@ -52,9 +52,10 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
 
         if (!list1.isEmpty()) {
             for (LivingEntity entity : list1) {
-                if (thrower instanceof Player source && entity instanceof Player target && source.canHarmPlayer(target)) {
-                    DamageHandler.affectEntityHolyWaterSplash(entity, getStrength(getVampirismTier()), bottleEntity.distanceToSqr(entity), result.getType() == HitResult.Type.ENTITY, thrower instanceof LivingEntity ? (LivingEntity) thrower : null);
+                if (thrower instanceof Player source && entity instanceof Player target && !source.canHarmPlayer(target)) {
+                    continue;
                 }
+                DamageHandler.affectEntityHolyWaterSplash(entity, getStrength(getVampirismTier()), bottleEntity.distanceToSqr(entity), result.getType() == HitResult.Type.ENTITY, thrower instanceof LivingEntity ? (LivingEntity) thrower : null);
             }
         }
     }
