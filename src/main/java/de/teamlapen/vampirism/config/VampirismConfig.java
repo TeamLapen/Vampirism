@@ -111,7 +111,10 @@ public class VampirismConfig {
     public static void onLoad(final ModConfigEvent.@NotNull Loading configEvent) {
         if (configEvent.getConfig().getType() == ModConfig.Type.SERVER) {
             ((SundamageRegistry) VampirismAPI.sundamageRegistry()).reloadConfiguration();
-
+        } else if (configEvent.getConfig().getType() == ModConfig.Type.CLIENT) {
+            if (CLIENT.guiLevelOffsetY.get() == 0) {
+                CLIENT.guiLevelOffsetY.set(47); //Temporary workaround to reset incorrect values
+            }
         }
     }
 
@@ -252,7 +255,7 @@ public class VampirismConfig {
 
             builder.comment("Configure GUI").push("gui");
             guiLevelOffsetX = builder.comment("X-Offset of the level indicator from the center in pixels").defineInRange("levelOffsetX", 0, -250, 250);
-            guiLevelOffsetY = builder.comment("Y-Offset of the level indicator from the bottom in pixels").defineInRange("levelOffsetY", 0, 0, 270);
+            guiLevelOffsetY = builder.comment("Y-Offset of the level indicator from the bottom in pixels. Must be > 0").defineInRange("levelOffsetY", 47, 0, 270);
             guiSkillButton = builder.comment("Render skill menu button in inventory").define("skillButtonEnable", true);
             overrideGuiSkillButtonX = builder.comment("Force the guiSkillButton to the following x position from the center of the inventory, default value is 125").defineInRange("overrideGuiSkillButtonX", 125, Integer.MIN_VALUE, Integer.MAX_VALUE);
             overrideGuiSkillButtonY = builder.comment("Force the guiSkillButton to the following y position from the center of the inventory, default value is -22").defineInRange("overrideGuiSkillButtonY", -22, Integer.MIN_VALUE, Integer.MAX_VALUE);

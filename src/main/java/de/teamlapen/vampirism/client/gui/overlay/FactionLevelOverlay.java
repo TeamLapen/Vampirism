@@ -31,7 +31,7 @@ public class FactionLevelOverlay implements IGuiOverlay {
                         text = String.valueOf(handler.getCurrentLevel());
                     }
                     int x = (this.mc.getWindow().getGuiScaledWidth() - this.mc.font.width(text)) / 2 + VampirismConfig.CLIENT.guiLevelOffsetX.get();
-                    int y = this.mc.getWindow().getGuiScaledHeight() - VampirismConfig.CLIENT.guiLevelOffsetY.get() - gui.rightHeight;
+                    int y = this.mc.getWindow().getGuiScaledHeight() - VampirismConfig.CLIENT.guiLevelOffsetY.get();
                     graphics.drawString(this.mc.font, text, x + 1, y, 0, false);
                     graphics.drawString(this.mc.font, text, x - 1, y, 0, false);
                     graphics.drawString(this.mc.font, text, x, y + 1, 0, false);
