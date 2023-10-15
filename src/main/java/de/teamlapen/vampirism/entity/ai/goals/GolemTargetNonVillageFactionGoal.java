@@ -30,9 +30,35 @@ public class GolemTargetNonVillageFactionGoal extends NearestAttackableTargetGoa
         this.golem = creature;
     }
 
+    @Override
+    public boolean canContinueToUse() {
+        if (golem.tickCount % 16 == 0) {
+            if (determineGolemFaction()) {
+                return false;
+            }
+        }
+        return super.canContinueToUse();
+    }
+
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public boolean canUse() {
+        if (golem.tickCount < 20) return false; // Some delay to allow nearby totems to load
+        return super.canUse();
+    }
+
+    @Override
+    protected void findTarget() {
+        determineGolemFaction();
+        super.findTarget();
+    }
+
+    /**
+     * Determine the faction of the golem by checking for nearby totems. Update the targetConditions accordingly
+     *
+     * @return Whether the faction has changed
+     */
+    private boolean determineGolemFaction() {
         IFaction<?> faction = VReference.HUNTER_FACTION;
         if (VampirismConfig.BALANCE.golemAttackNonVillageFaction.get()) {
             Optional<TotemBlockEntity> tile = TotemHelper.getTotemNearPos(((ServerLevel) this.golem.level()), this.golem.blockPosition(), true);
@@ -41,8 +67,8 @@ public class GolemTargetNonVillageFactionGoal extends NearestAttackableTargetGoa
 
         if (faction != this.faction) {
             this.targetConditions.selector(predicates.computeIfAbsent(this.faction = faction, faction1 -> VampirismAPI.factionRegistry().getPredicate(faction1, true, true, false, false, null)));
+            return true;
         }
-
-        return super.canUse();
+        return false;
     }
 }
