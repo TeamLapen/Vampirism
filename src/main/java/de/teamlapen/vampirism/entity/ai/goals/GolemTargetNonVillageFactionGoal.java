@@ -40,7 +40,7 @@ public class GolemTargetNonVillageFactionGoal extends NearestAttackableTargetGoa
         return super.canContinueToUse();
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+
     @Override
     public boolean canUse() {
         if (golem.tickCount < 20) return false; // Some delay to allow nearby totems to load
@@ -58,6 +58,7 @@ public class GolemTargetNonVillageFactionGoal extends NearestAttackableTargetGoa
      *
      * @return Whether the faction has changed
      */
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private boolean determineGolemFaction() {
         IFaction<?> faction = VReference.HUNTER_FACTION;
         if (VampirismConfig.BALANCE.golemAttackNonVillageFaction.get()) {
