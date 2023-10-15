@@ -30,12 +30,12 @@ mkdir "$dir/vampirism"
 cp "build/libs/Vampirism-$mc_version-$version.jar" "$dir/vampirism/"
 
 #Werewolves
-#git clone https://github.com/TeamLapen/Werewolves.git "$dir/werewolves"
-#cd "$dir/werewolves" || exit
-#git checkout "origin/$branch_name"
-#echo -e "\nrepositories{ maven{ url='$dir/.m2' }}" >> build.gradle
-#./gradlew build -Pvampirism_version="$version"
-werewolves_success=0 #$?
+git clone https://github.com/TeamLapen/Werewolves.git "$dir/werewolves"
+cd "$dir/werewolves" || exit
+git checkout "origin/$branch_name"
+echo -e "\nrepositories{ maven{ url='$dir/.m2' }}" >> build.gradle
+./gradlew build -Pvampirism_version="$version"
+werewolves_success=$?
 
 #Integrations
 #git clone https://github.com/TeamLapen/VampirismIntegrations.git "$dir/integrations"
