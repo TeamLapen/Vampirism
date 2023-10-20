@@ -5,10 +5,11 @@ import de.teamlapen.vampirism.blockentity.VulnerableRemainsBlockEntity;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModDamageTypes;
 import de.teamlapen.vampirism.core.ModEntities;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
@@ -28,6 +29,7 @@ import java.util.Optional;
 public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntityLeader, IRemainsEntity {
 
     private BlockPos ownerPos = null;
+    private Object2IntMap<Direction> delayRespawn = new Object2IntOpenHashMap<>();
 
     public VulnerableRemainsDummyEntity(EntityType<VulnerableRemainsDummyEntity> type, Level pLevel) {
         super(type, pLevel);
@@ -57,16 +59,24 @@ public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntit
     }
 
     @Override
-    public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
+    protected void actuallyHurt(@NotNull DamageSource pDamageSource, float pDamageAmount) {
         getTile().ifPresent(vr -> {
-            vr.onDamageDealt(pSource, pAmount);
+            vr.onDamageDealt(pDamageSource, pDamageAmount);
         });
-        return false;
+    }
+
+    public void childrenIsHurt(DamageSource damageSource, boolean killed, Direction direction) {
+        getTile().ifPresent(vr -> {
+            vr.onDamageDealt(damageSource, 0);
+        });
+        if (killed) {
+            this.delayRespawn.put(direction, 20 * 5);
+        }
     }
 
     @Override
     public boolean isInvulnerableTo(@NotNull DamageSource pSource) {
-        return this.isRemoved() || pSource.is(DamageTypes.ON_FIRE) || pSource.is(ModDamageTypes.HOLY_WATER) || pSource.is(DamageTypes.FREEZE);
+        return this.isRemoved() || pSource.is(DamageTypes.ON_FIRE)|| pSource.is(DamageTypes.IN_FIRE) || pSource.is(ModDamageTypes.HOLY_WATER) || pSource.is(DamageTypes.FREEZE);
     }
 
     @Override
@@ -105,6 +115,9 @@ public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntit
 
     @Override
     public void tick() {
+        this.noPhysics = true;
+        super.tick();
+        this.noPhysics = false;
         if (!this.level().isClientSide) {
             BlockState block = this.level().getBlockState(ownerPos);
             if(this.ownerPos == null || !block.is(ModBlocks.ACTIVE_VULNERABLE_REMAINS.get()) || block.is(ModBlocks.INCAPACITATED_VULNERABLE_REMAINS.get())) {
@@ -121,14 +134,22 @@ public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntit
     public void spawnDefender() {
         BlockPos pos = this.ownerPos;
 
-        List<Direction> directionStream = Arrays.stream(Direction.values()).filter(l -> {
+        List<Direction> directionStream = Arrays.stream(Direction.values()).filter(direction -> this.delayRespawn.getOrDefault(direction, 0) <= 0).filter(l -> {
             var block = this.level().getBlockState(pos.relative(l)).canBeReplaced();
             return block && !hasDefender(l);
         }).toList();
         if (!directionStream.isEmpty()) {
             spawnDefender(directionStream.get(this.random.nextInt(directionStream.size())));
         }
+    }
 
+    public void spawnDefenders() {
+        this.delayRespawn.clear();
+        BlockPos pos = this.ownerPos;
+        Arrays.stream(Direction.values()).filter(l -> {
+            var block = this.level().getBlockState(pos.relative(l)).canBeReplaced();
+            return block && !hasDefender(l);
+        }).forEach(this::spawnDefender);
     }
 
     private boolean hasDefender(Direction direction) {
@@ -174,10 +195,8 @@ public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntit
 
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        if (pCompound.contains("ownerPos", Tag.TAG_INT_ARRAY)) {
-            int[] pos = pCompound.getIntArray("ownerPos");
-            this.ownerPos = new BlockPos(pos[0], pos[1], pos[2]);
-        }
+        int[] pos = pCompound.getIntArray("ownerPos");
+        this.ownerPos = new BlockPos(pos[0], pos[1], pos[2]);
     }
 
     private int followerCount = 0;

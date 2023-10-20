@@ -39,7 +39,7 @@ public class RemainsDefenderEntity extends AbstractGolem implements IRemainsEnti
     protected static final EntityDataAccessor<Direction> DATA_ATTACH_FACE_ID = SynchedEntityData.defineId(RemainsDefenderEntity.class, EntityDataSerializers.DIRECTION);
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 20.0D).add(Attributes.ATTACK_DAMAGE, 3);
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 20.0D).add(Attributes.ARMOR, 15).add(Attributes.ATTACK_DAMAGE, 5).add(Attributes.ARMOR_TOUGHNESS, 6);
     }
 
     public RemainsDefenderEntity(EntityType<RemainsDefenderEntity> type, Level pLevel) {
@@ -72,6 +72,11 @@ public class RemainsDefenderEntity extends AbstractGolem implements IRemainsEnti
         if (level().getGameTime() % 512 == 32 && getVehicle() == null && !level().getBlockState(blockPosition().relative(getAttachFace())).is(ModTags.Blocks.ACTIVE_REMAINS)) {
             this.remove(RemovalReason.KILLED);
         }
+    }
+
+    @Override
+    public boolean isInvulnerableTo(DamageSource pSource) {
+        return pSource.is(ModTags.DamageTypes.REMAINS_INVULNERABLE) || super.isInvulnerableTo(pSource);
     }
 
     @Nullable
@@ -119,10 +124,16 @@ public class RemainsDefenderEntity extends AbstractGolem implements IRemainsEnti
     @Override
     public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
         if(super.hurt(pSource, pAmount)) {
-            this.getDummy().ifPresent(vehicle -> vehicle.hurt(pSource, 0));
+            this.getDummy().ifPresent(vehicle -> vehicle.childrenIsHurt(pSource, this.dead, getAttachFace()));
             return true;
         }
         return false;
+    }
+
+    @Override
+    protected void actuallyHurt(@NotNull DamageSource pDamageSource, float pDamageAmount) {
+        super.actuallyHurt(pDamageSource, pDamageAmount);
+        this.invulnerableTime *= 2;
     }
 
     @Override
@@ -211,7 +222,7 @@ public class RemainsDefenderEntity extends AbstractGolem implements IRemainsEnti
 
         @Override
         public void start() {
-            this.attackTime = 20;
+            this.attackTime = 40;
         }
 
         @Override
@@ -235,7 +246,6 @@ public class RemainsDefenderEntity extends AbstractGolem implements IRemainsEnti
                         if (this.attackTime <= 0) {
                             this.attackTime = 20 + RemainsDefenderEntity.this.random.nextInt(10) * 20 / 2;
                             Vec3 position = RemainsDefenderEntity.this.position();
-//                            Vec3 direction = position.add(0, livingentity.getBbHeight() * 0.6f, 0).subtract(RemainsDefenderEntity.this.getEyePosition(1f)).normalize();
                             Vec3 direction = RemainsDefenderEntity.this.getViewVector(1.0f);
                             var projectile = new DarkBloodProjectileEntity(RemainsDefenderEntity.this.level(), position.x(), position.y(), position.z(), direction.x(), direction.y(), direction.z());
                             projectile.setOwner(RemainsDefenderEntity.this);

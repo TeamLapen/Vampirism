@@ -6,6 +6,8 @@ import de.teamlapen.vampirism.core.ModTiles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -47,5 +49,22 @@ public class ActiveVulnerableRemainsBlock extends RemainsBlock implements Entity
     @Override
     public void freeze(Level level, BlockPos pos, BlockState state) {
         level.setBlock(pos, ModBlocks.VULNERABLE_REMAINS.get().defaultBlockState(), 3);
+    }
+
+    @Override
+    public void onNeighborChange(BlockState state, LevelReader level, BlockPos pos, BlockPos neighbor) {
+        super.onNeighborChange(state, level, pos, neighbor);
+    }
+
+    @Override
+    public void neighborChanged(@NotNull BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull Block pNeighborBlock, @NotNull BlockPos pNeighborPos, boolean pMovedByPiston) {
+        super.neighborChanged(pState, pLevel, pPos, pNeighborBlock, pNeighborPos, pMovedByPiston);
+        getBlockEntity(pLevel, pPos).ifPresent(x -> x.checkNeighbor(pNeighborPos));
+    }
+
+    @Override
+    public void onPlace(@NotNull BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull BlockState pOldState, boolean pMovedByPiston) {
+        super.onPlace(pState, pLevel, pPos, pOldState, pMovedByPiston);
+        getBlockEntity(pLevel, pPos).ifPresent(VulnerableRemainsBlockEntity::onPlaced);
     }
 }

@@ -8,6 +8,7 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
 import java.util.function.Predicate;
 
@@ -15,7 +16,9 @@ import java.util.function.Predicate;
 public class NearestAttackableTargetGoalMixin implements NearestTargetGoalModifier {
 
     @Shadow protected TargetingConditions targetConditions;
+    @Unique
     private static final Predicate<LivingEntity> nonVampireCheck = entity -> !Helper.isVampire(entity);
+    @Unique
     private static final Predicate<LivingEntity> noFactionEntityCheck = entity -> !(entity instanceof IFactionEntity);
 
     @Override
@@ -34,5 +37,10 @@ public class NearestAttackableTargetGoalMixin implements NearestTargetGoalModifi
             predicate = predicate.and(((TargetConditionAccessor) this.targetConditions).getSelector());
         }
         this.targetConditions.selector(predicate);
+    }
+
+    @Override
+    public void ignoreLineOfSight() {
+        this.targetConditions.ignoreLineOfSight();
     }
 }

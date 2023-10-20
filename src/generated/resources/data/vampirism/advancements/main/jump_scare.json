@@ -1,0 +1,40 @@
+{
+  "parent": "vampirism:main/vampire_forest",
+  "criteria": {
+    "main": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "vampirism:ghost"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:entity_killed_player"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancement.vampirism.jump_scare.desc"
+    },
+    "frame": "task",
+    "hidden": true,
+    "icon": {
+      "item": "minecraft:skeleton_skull"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.vampirism.jump_scare"
+    }
+  },
+  "requirements": [
+    [
+      "main"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

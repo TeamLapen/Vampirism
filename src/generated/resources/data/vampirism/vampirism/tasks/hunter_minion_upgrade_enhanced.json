@@ -2,6 +2,15 @@
   "requirements": {
     "requirements": [
       {
+        "type": "vampirism:entity",
+        "amount": 10,
+        "description": {
+          "translate": "entity.vampirism.vampire_baron"
+        },
+        "entityType": "vampirism:vampire_baron",
+        "id": "vampirism:vampire_baron"
+      },
+      {
         "type": "vampirism:item",
         "description": {
           "translate": "item.vampirism.vampire_book"
@@ -33,15 +42,6 @@
           "Count": 3,
           "id": "minecraft:diamond_block"
         }
-      },
-      {
-        "type": "vampirism:entity",
-        "amount": 10,
-        "description": {
-          "translate": "entity.vampirism.vampire_baron"
-        },
-        "entityType": "vampirism:vampire_baron",
-        "id": "vampirism:vampire_baron"
       }
     ]
   },

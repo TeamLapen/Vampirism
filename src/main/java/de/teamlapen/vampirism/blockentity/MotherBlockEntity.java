@@ -1,21 +1,25 @@
 package de.teamlapen.vampirism.blockentity;
 
+import de.teamlapen.lib.lib.util.SpawnHelper;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.mother.IRemainsBlock;
 import de.teamlapen.vampirism.blocks.mother.MotherTreeStructure;
-import de.teamlapen.vampirism.core.ModParticles;
-import de.teamlapen.vampirism.core.ModSounds;
-import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.core.*;
+import de.teamlapen.vampirism.entity.GhostEntity;
 import de.teamlapen.vampirism.network.ClientboundPlayEventPacket;
 import de.teamlapen.vampirism.particle.FlyingBloodParticleOptions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerBossEvent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.BossEvent;
@@ -27,23 +31,25 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class MotherBlockEntity extends BlockEntity {
-
-    private final ServerBossEvent bossEvent = new ServerBossEvent(Component.translatable("block.vampirism.mother"), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.NOTCHED_10);
-
-    private boolean isFrozen = false;
-    private int freezeTimer = 0;
+    /**
+     * Indicate whether a mother block is loaded in the world.
+     * Should be acceptably accurate as there is only every one mother nearby.
+     * But don't use it for anything important for gameplay
+     */
+    public static boolean IS_A_MOTHER_LOADED_UNRELIABLE = false;
 
     public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, MotherBlockEntity e) {
 
@@ -55,21 +61,28 @@ public class MotherBlockEntity extends BlockEntity {
         if (!e.isFrozen && e.level != null && e.isIntact()) {
             if (e.level.getRandom().nextInt(50) == 0) {
                 e.updateFightStatus();
-                if (!e.bossEvent.getPlayers().isEmpty()) {
-
+                if (!e.activePlayers.isEmpty()) {
                     List<Triple<BlockPos, BlockState, IRemainsBlock>> vuls = e.getTreeStructure(false).getVerifiedVulnerabilities(level).filter(t -> t.getRight().isVulnerable(t.getMiddle())).toList();
                     if (!vuls.isEmpty()) {
-                        for (ServerPlayer player : e.bossEvent.getPlayers()) {
+                        for (ServerPlayer player : e.activePlayers) {
                             if (player.getAbilities().invulnerable) {
                                 continue;
                             }
                             BlockPos p = vuls.get(e.level.getRandom().nextInt(vuls.size())).getLeft();
                             player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 5 * 20, 2));
-                            ModParticles.spawnParticlesServer(player.level(), new FlyingBloodParticleOptions(100, false, p.getX() + 0.5, p.getY() + 0.5, p.getZ() + 0.5), player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(), 10, 0.1f, 0.1f, 0.1f, 0);
+                            ModParticles.spawnParticlesServer(player.level(), new FlyingBloodParticleOptions(100, false, p.getX() + 0.5, p.getY() + 0.5, p.getZ() + 0.5, 0.5f), player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(), 10, 0.1f, 0.1f, 0.1f, 0);
                         }
                     }
-                }
 
+                    // todo only when not finished
+                    if (e.level.getRandom().nextInt(3) == 0) {
+                        if (e.level.getEntitiesOfClass(GhostEntity.class, e.getArea()).size() < Math.min(e.activePlayers.size(), 5)) {
+                            BlockPos left = vuls.get(e.level.getRandom().nextInt(vuls.size())).getLeft();
+                            e.spawnGhost(level, left);
+                        }
+                    }
+
+                }
             }
         }
         //Handle destruction --------------------------------
@@ -91,34 +104,47 @@ public class MotherBlockEntity extends BlockEntity {
                     if (e.level != null) {
                         e.level.playSound(null, blockPos, ModSounds.MOTHER_DEATH.get(), SoundSource.BLOCKS, 2f, 0.8f);
                     }
+                    e.concludeFight();
                 }
             }
+        }
+        if (level.getGameTime() % 64 == 0) {
+            AABB inflate = e.getArea();
+            Stream.concat(e.activePlayers.stream(), e.bossEvent.getPlayers().stream()).distinct().filter(player -> inflate.distanceToSqr(player.position()) > 1600).toList().forEach(player -> {
+                e.bossEvent.removePlayer(player);
+                e.activePlayers.remove(player);
+            });
+            AABB inflate2 = inflate.inflate(5, 10, 5);
+            if (e.isIntact()) {
+                level.getEntitiesOfClass(ServerPlayer.class, inflate2).forEach(e::addPlayer);
+            }
+            level.getEntitiesOfClass(ServerPlayer.class, inflate2.inflate(20,10,20)).forEach(e.bossEvent::addPlayer);
         }
     }
 
 
-    //Destruction
-    /**
-     * Caches structure. Should be mostly valid because blocks cannot be destroyed by survival player. Is (unreliably) invalidated when a block is destroyed nonetheless.
-     */
-    private MotherTreeStructure cachedStructure;
+
+    private final ServerBossEvent bossEvent = new ServerBossEvent(Component.translatable("block.vampirism.mother"), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.NOTCHED_10);
+    private final Set<ServerPlayer> activePlayers = new HashSet<>();
 
     /**
-     * Indicate whether a mother block is loaded in the world.
-     * Should be acceptably accurate as there is only every one mother nearby. But don't use for anything important for gameplay
+     * Cache structure. Should be mostly valid because blocks cannot be destroyed by survival player. Is (unreliably) invalidated when a block is destroyed nonetheless.
      */
-    public static boolean IS_A_MOTHER_LOADED_UNRELIABLE = false;
+    private MotherTreeStructure cachedStructure;
+    private boolean isFrozen = false;
+    private int freezeTimer = 0;
 
     public MotherBlockEntity(BlockPos pos, BlockState state) {
         super(ModTiles.MOTHER.get(), pos, state);
-        bossEvent.setProgress(1);
-        bossEvent.setPlayBossMusic(true);
+        this.bossEvent.setProgress(1);
+        this.bossEvent.setPlayBossMusic(true);
     }
+
     /**
-     * Describes destruction process
-     * == 0: Intact
-     * > 0: Increasing, destruction in progress
-     * == -1: Structure, destroyed, mother is vulnerable
+     * Describes the destruction process
+     * <p>== 0: Intact</p>
+     * <p>> 0: Increasing, destruction in progress</p>
+     * <p>== -1: Structure, destroyed, mother is vulnerable</p>
      */
     private int destructionTimer = 0;
 
@@ -127,7 +153,7 @@ public class MotherBlockEntity extends BlockEntity {
     }
 
     public boolean isIntact() {
-        return destructionTimer == 0;
+        return this.destructionTimer == 0;
     }
 
     @Override
@@ -152,6 +178,7 @@ public class MotherBlockEntity extends BlockEntity {
     public void setRemoved() {
         super.setRemoved();
         this.bossEvent.removeAllPlayers();
+        this.activePlayers.clear();
         IS_A_MOTHER_LOADED_UNRELIABLE = false;
     }
 
@@ -162,9 +189,10 @@ public class MotherBlockEntity extends BlockEntity {
     }
 
     private void addPlayer(Player player) {
-        updateFightStatus();
-        if (player instanceof ServerPlayer serverPlayer) {
+        if (player instanceof ServerPlayer serverPlayer && !this.activePlayers.contains(serverPlayer)) {
+            updateFightStatus();
             this.bossEvent.addPlayer(serverPlayer);
+            this.activePlayers.add(serverPlayer);
         }
     }
 
@@ -180,8 +208,8 @@ public class MotherBlockEntity extends BlockEntity {
     }
 
     public void onVulnerabilityHit(LivingEntity entity, boolean destroyed) {
-        if (entity instanceof Player player){
-            addPlayer(player);
+        if (entity instanceof ServerPlayer player){
+            informAboutAttacker(player);
         }
         updateFightStatus();
         if (destroyed && isIntact()) {
@@ -205,7 +233,6 @@ public class MotherBlockEntity extends BlockEntity {
             this.bossEvent.setProgress(0);
             this.endFight();
         }
-        this.bossEvent.getPlayers().stream().filter(player -> player.hasDisconnected() || player.distanceToSqr(this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ()) > 100 * 100).toList().forEach(this.bossEvent::removePlayer);
     }
 
     @Override
@@ -217,12 +244,15 @@ public class MotherBlockEntity extends BlockEntity {
     }
 
     private void endFight() {
-        this.bossEvent.getPlayers().forEach(p -> VampirismMod.dispatcher.sendTo(new ClientboundPlayEventPacket(2, getBlockPos(), 0), p));
+        this.activePlayers.forEach(p -> VampirismMod.dispatcher.sendTo(new ClientboundPlayEventPacket(2, getBlockPos(), 0), p));
         this.bossEvent.removeAllPlayers();
+        this.bossEvent.setVisible(false);
+        this.activePlayers.clear();
         this.initiateDestruction();
     }
 
     private void freezeFight() {
+        spawnGhosts();
         this.isFrozen = true;
         this.freezeTimer = 20 * 20;
         getTreeStructure(false).getVerifiedVulnerabilities(this.level).forEach(vul -> vul.getRight().freeze(level, vul.getLeft(), vul.getMiddle()));
@@ -253,6 +283,25 @@ public class MotherBlockEntity extends BlockEntity {
     }
 
     public Collection<ServerPlayer> involvedPlayers() {
-        return this.bossEvent.getPlayers();
+        return this.activePlayers;
+    }
+
+    private void spawnGhost(Level level, BlockPos pos) {
+        SpawnHelper.spawn(ModEntities.GHOST, level, ghost -> {
+            ghost.setPos(Vec3.atCenterOf(pos));
+            ghost.setHome(getArea());
+        });
+    }
+
+    private AABB getArea() {
+        return new AABB(this.worldPosition).inflate(20, 0,20).expandTowards(0, -20, 0);
+    }
+
+    private void spawnGhosts() {
+        Set<BlockPos> vuls = this.getTreeStructure(false).getCachedBlocks();
+        int size = this.level.getEntitiesOfClass(GhostEntity.class, this.getArea()).size();
+        for(int i = size; i < 3; i++) {
+            vuls.stream().skip(level.getRandom().nextInt(vuls.size())).findFirst().ifPresent(pos -> this.spawnGhost(level, pos));
+        }
     }
 }

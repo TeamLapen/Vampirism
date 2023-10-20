@@ -345,6 +345,7 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
             this.tag(DamageTypeTags.WITCH_RESISTANT_TO).add(ModDamageTypes.SUN_DAMAGE, ModDamageTypes.VAMPIRE_ON_FIRE, ModDamageTypes.VAMPIRE_IN_FIRE, ModDamageTypes.NO_BLOOD, ModDamageTypes.HOLY_WATER);
             this.tag(DamageTypeTags.BYPASSES_ENCHANTMENTS).add(ModDamageTypes.DBNO);
             this.tag(ModTags.DamageTypes.ENTITY_PHYSICAL).add(DamageTypes.PLAYER_ATTACK, DamageTypes.MOB_ATTACK, DamageTypes.MOB_ATTACK_NO_AGGRO, DamageTypes.MOB_PROJECTILE, DamageTypes.ARROW, DamageTypes.STING, DamageTypes.THORNS);
+            this.tag(ModTags.DamageTypes.REMAINS_INVULNERABLE).add(DamageTypes.IN_WALL, DamageTypes.DROWN);
         }
     }
 

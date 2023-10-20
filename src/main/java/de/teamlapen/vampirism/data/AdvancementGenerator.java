@@ -119,6 +119,11 @@ public class AdvancementGenerator extends AdvancementProvider { //TODO 1.20 move
                     .parent(vampire_forest)
                     .addCriterion("main", KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().of(ModEntities.VAMPIRE_BARON.get())))
                     .save(consumer, REFERENCE.MODID + ":main/regicide");
+            Advancement jumpScare = Advancement.Builder.advancement()
+                    .display(Items.SKELETON_SKULL, Component.translatable("advancement.vampirism.jump_scare"), Component.translatable("advancement.vampirism.jump_scare.desc"), null, FrameType.TASK, true, true, true)
+                    .parent(vampire_forest)
+                    .addCriterion("main", KilledTrigger.TriggerInstance.entityKilledPlayer(EntityPredicate.Builder.entity().of(ModEntities.GHOST.get())))
+                    .save(consumer, REFERENCE.MODID + ":main/jump_scare");
         }
     }
 

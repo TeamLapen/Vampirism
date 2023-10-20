@@ -6,20 +6,15 @@ import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.model.RemainsDefenderModel;
 import de.teamlapen.vampirism.entity.RemainsDefenderEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-public class RemainsDefenderRenderer extends LivingEntityRenderer<RemainsDefenderEntity, RemainsDefenderModel> {
+public class RemainsDefenderRenderer extends MobRenderer<RemainsDefenderEntity, RemainsDefenderModel> {
     private final ResourceLocation TEX = new ResourceLocation(REFERENCE.MODID, "textures/entity/remains_defender.png");
 
     public RemainsDefenderRenderer(EntityRendererProvider.Context pContext) {
         super(pContext, new RemainsDefenderModel(pContext.bakeLayer(ModEntitiesRender.REMAINS_DEFENDER)), 0f);
-    }
-
-    @Override
-    protected boolean shouldShowName(RemainsDefenderEntity pEntity) {
-        return false;
     }
 
     @Override

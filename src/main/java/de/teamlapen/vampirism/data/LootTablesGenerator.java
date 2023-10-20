@@ -149,6 +149,7 @@ public class LootTablesGenerator {//TODO 1.20 move to de.teamlapen.vampirism.dat
             this.add(ModEntities.TASK_MASTER_HUNTER.get(), LootTable.lootTable());
             this.add(ModEntities.VAMPIRE_MINION.get(), LootTable.lootTable());
             this.add(ModEntities.HUNTER_MINION.get(), LootTable.lootTable());
+            this.add(ModEntities.GHOST.get(), LootTable.lootTable());
         }
     }
 
