@@ -42,6 +42,8 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static de.teamlapen.lib.lib.util.RegisterHelper.compostable;
+
 /**
  * Handles all item registrations and reference.
  */
@@ -151,7 +153,7 @@ public class ModItems {
     public static final RegistryObject<InjectionItem> INJECTION_SANGUINARE = register("injection_sanguinare", () -> new InjectionItem(InjectionItem.TYPE.SANGUINARE));
 
     public static final RegistryObject<BucketItem> IMPURE_BLOOD_BUCKET = register("impure_blood_bucket", CreativeModeTabs.TOOLS_AND_UTILITIES, () -> new BucketItem(ModFluids.IMPURE_BLOOD, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
-    public static final RegistryObject<GarlicItem> ITEM_GARLIC = register("item_garlic", GarlicItem::new);
+    public static final RegistryObject<GarlicItem> ITEM_GARLIC = register("item_garlic", () -> compostable(new GarlicItem(), 0.65F));
     public static final RegistryObject<GarlicBreadItem> GARLIC_BREAD = register("garlic_bread", GarlicBreadItem::new);
     public static final RegistryObject<AlchemicalFireItem> ITEM_ALCHEMICAL_FIRE = register("item_alchemical_fire", AlchemicalFireItem::new);
 
