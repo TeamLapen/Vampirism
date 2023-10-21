@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.entity.convertible.ICurableConvertedCreature;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.core.ModAdvancements;
+import de.teamlapen.vampirism.core.ModAi;
 import de.teamlapen.vampirism.core.ModVillage;
 import de.teamlapen.vampirism.entity.VampirismVillagerEntity;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
@@ -64,7 +65,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     static {
         SENSOR_TYPES = Lists.newArrayList(Villager.SENSOR_TYPES);
         SENSOR_TYPES.remove(SensorType.VILLAGER_HOSTILES);
-        SENSOR_TYPES.add(ModVillage.VAMPIRE_VILLAGER_HOSTILES.get());
+        SENSOR_TYPES.add(ModAi.VAMPIRE_VILLAGER_HOSTILES.get());
     }
 
     private @NotNull EnumStrength garlicCache = EnumStrength.NONE;
