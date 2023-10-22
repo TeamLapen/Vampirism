@@ -57,7 +57,7 @@ public class BloodFluid extends Fluid {
 
     @Override
     public boolean isSource(@NotNull FluidState state) {
-        return false;
+        return true;
     }
 
     @Override
