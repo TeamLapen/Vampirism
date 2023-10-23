@@ -11,32 +11,34 @@ import org.jetbrains.annotations.NotNull;
 
 public class RemainsDefenderModel extends EntityModel<RemainsDefenderEntity> {
 
-    private static final String MAIN = "main";
+    private static final String PART1 = "part1";
+    private static final String PART2 = "part2";
 
-    protected final @NotNull ModelPart main;
+    protected final @NotNull ModelPart part1;
+    protected final @NotNull ModelPart part2;
 
     public static LayerDefinition createBodyLayer() {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition partdefinition = meshdefinition.getRoot();
 
-        PartDefinition main = partdefinition.addOrReplaceChild(MAIN, CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -4.0F, -4.0F, 8.0F, 4.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+        PartDefinition cube = partdefinition.addOrReplaceChild(PART1, CubeListBuilder.create().texOffs(0, 0).addBox(-6.0F, -12.0F, 0.0F, 12.0F, 12.0F, 0.01F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 24.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
+        PartDefinition cube2 = partdefinition.addOrReplaceChild(PART2, CubeListBuilder.create().texOffs(0, 0).addBox(-6.0F, -12.0F, 0.0F, 12.0F, 12.0F, 0.01F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 24.0F, 0.0F, 0.0F, 0.7854F, 0.0F));
 
-        return LayerDefinition.create(meshdefinition, 32, 32);
+        return LayerDefinition.create(meshdefinition, 24, 24);
     }
 
     public RemainsDefenderModel(ModelPart part) {
-        this.main = part.getChild(MAIN);
+        this.part1 = part.getChild(PART1);
+        this.part2 = part.getChild(PART2);
     }
 
     @Override
     public void setupAnim(RemainsDefenderEntity pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
-        main.yRot = 0;
-        main.zRot = 0;
-        main.xRot = 0;
     }
 
     @Override
     public void renderToBuffer(PoseStack pPoseStack, VertexConsumer pBuffer, int pPackedLight, int pPackedOverlay, float pRed, float pGreen, float pBlue, float pAlpha) {
-        this.main.render(pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
+        this.part1.render(pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
+        this.part2.render(pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
     }
 }

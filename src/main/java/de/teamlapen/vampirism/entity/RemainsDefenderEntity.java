@@ -38,6 +38,8 @@ import java.util.Optional;
 public class RemainsDefenderEntity extends AbstractGolem implements IRemainsEntity {
 
     protected static final EntityDataAccessor<Direction> DATA_ATTACH_FACE_ID = SynchedEntityData.defineId(RemainsDefenderEntity.class, EntityDataSerializers.DIRECTION);
+    private static final EntityDataAccessor<Integer> DATA_LIGHT_TICKS_REMAINING = SynchedEntityData.defineId(RemainsDefenderEntity.class, EntityDataSerializers.INT);
+
 
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 20.0D).add(Attributes.ARMOR, 15).add(Attributes.ATTACK_DAMAGE, 5).add(Attributes.ARMOR_TOUGHNESS, 6);
@@ -76,6 +78,15 @@ public class RemainsDefenderEntity extends AbstractGolem implements IRemainsEnti
     }
 
     @Override
+    public void aiStep() {
+        super.aiStep();
+        int i = this.getLightTicksRemaining();
+        if (i > 0) {
+            this.setLightTicksRemaining(i - 1);
+        }
+    }
+
+    @Override
     public boolean isInvulnerableTo(@NotNull DamageSource pSource) {
         return pSource.is(ModTags.DamageTypes.MOTHER_RESISTANT_TO) || pSource.is(DamageTypes.IN_WALL) || pSource.is(DamageTypes.DROWN) || super.isInvulnerableTo(pSource);
     }
@@ -94,18 +105,21 @@ public class RemainsDefenderEntity extends AbstractGolem implements IRemainsEnti
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DATA_ATTACH_FACE_ID, Direction.DOWN);
+        this.entityData.define(DATA_LIGHT_TICKS_REMAINING, 0);
     }
 
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         this.setAttachFace(Direction.from3DDataValue(pCompound.getByte("AttachFace")));
+        this.setLightTicksRemaining(pCompound.getInt("LightTicks"));
     }
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.putByte("AttachFace", (byte) this.getAttachFace().get3DDataValue());
+        pCompound.putInt("LightTicks", this.getLightTicksRemaining());
     }
 
     @Override
@@ -204,6 +218,14 @@ public class RemainsDefenderEntity extends AbstractGolem implements IRemainsEnti
         return Optional.ofNullable(this.getVehicle()).filter(VulnerableRemainsDummyEntity.class::isInstance).map(VulnerableRemainsDummyEntity.class::cast);
     }
 
+    private void setLightTicksRemaining(int ticks) {
+        this.entityData.set(DATA_LIGHT_TICKS_REMAINING, ticks);
+    }
+
+    public int getLightTicksRemaining() {
+        return this.entityData.get(DATA_LIGHT_TICKS_REMAINING);
+    }
+
     class RemainsDefenderAttackGoal extends Goal {
         private int attackTime;
 
@@ -253,6 +275,7 @@ public class RemainsDefenderEntity extends AbstractGolem implements IRemainsEnti
                             projectile.setDamage((float) RemainsDefenderEntity.this.getAttributeValue(Attributes.ATTACK_DAMAGE), 0);
                             projectile.excludeShooter();
                             RemainsDefenderEntity.this.level().addFreshEntity(projectile);
+                            RemainsDefenderEntity.this.setLightTicksRemaining(40);
                         }
                     } else {
                         RemainsDefenderEntity.this.setTarget(null);
