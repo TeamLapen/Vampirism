@@ -65,8 +65,7 @@
       "state": {
         "Name": "vampirism:dark_spruce_log",
         "Properties": {
-          "axis": "y",
-          "invulnerable": "false"
+          "axis": "y"
         }
       }
     }

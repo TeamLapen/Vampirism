@@ -8,6 +8,14 @@
         "level": 5
       },
       "trigger": "vampirism:faction"
+    },
+    "main": {
+      "conditions": {
+        "type": "LEVEL",
+        "faction": "vampirism:hunter",
+        "level": 1
+      },
+      "trigger": "vampirism:faction"
     }
   },
   "display": {
@@ -28,6 +36,9 @@
   "requirements": [
     [
       "level"
+    ],
+    [
+      "main"
     ]
   ],
   "sends_telemetry_event": true
