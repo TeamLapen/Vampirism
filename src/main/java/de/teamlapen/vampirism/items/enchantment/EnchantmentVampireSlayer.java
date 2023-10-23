@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.items.enchantment;
 
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.items.PitchforkItem;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -36,7 +37,7 @@ public class EnchantmentVampireSlayer extends Enchantment {
 
     @Override
     public float getDamageBonus(int level, @NotNull MobType creatureType) {
-        return creatureType == VReference.VAMPIRE_CREATURE_ATTRIBUTE ? 2f + Math.min(0, level - 1) * 1F : 0;
+        return creatureType == (VampirismConfig.SERVER.vampiresAreUndeadType.get() ? MobType.UNDEAD : VReference.VAMPIRE_CREATURE_ATTRIBUTE) ? 2f + Math.min(0, level - 1) * 1F : 0;
     }
 
     @Override

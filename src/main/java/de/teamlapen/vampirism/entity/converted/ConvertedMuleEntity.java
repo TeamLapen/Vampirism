@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.converted;
 
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.config.BalanceMobProps;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAttributes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -93,7 +94,7 @@ public class ConvertedMuleEntity extends Mule implements CurableConvertedCreatur
     @NotNull
     @Override
     public MobType getMobType() {
-        return VReference.VAMPIRE_CREATURE_ATTRIBUTE;
+        return VampirismConfig.SERVER.vampiresAreUndeadType.get() ? MobType.UNDEAD : VReference.VAMPIRE_CREATURE_ATTRIBUTE;
     }
 
     @NotNull
