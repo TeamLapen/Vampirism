@@ -32,7 +32,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.api.Event;
 import org.apache.logging.log4j.LogManager;
@@ -383,6 +385,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         if (player instanceof ServerPlayer serverPlayer) {
             if (old != faction) {
                 ModAdvancements.TRIGGER_FACTION.revokeAll(serverPlayer);
+                ModAdvancements.revoke(ModAdvancements.TRIGGER_MOTHER_WIN, serverPlayer);
             } else if (oldLevel > level) {
                 ModAdvancements.TRIGGER_FACTION.revokeLevel(serverPlayer, faction, FactionCriterionTrigger.Type.LEVEL, level);
             }

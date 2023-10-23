@@ -95,6 +95,12 @@ public class AdvancementGenerator extends AdvancementProvider { //TODO 1.20 move
                     .parent(become_hunter)
                     .addCriterion("cure", CuredVampireVillagerCriterionTrigger.Instance.any())
                     .save(consumer, REFERENCE.MODID + ":hunter/cure_vampire_villager");
+            Advancement kill_mother = Advancement.Builder.advancement()
+                    .display(ModItems.MOTHER_CORE.get(), Component.translatable("advancement.vampirism.hunter_kill_mother"), Component.translatable("advancement.vampirism.hunter_kill_mother.desc"), null, FrameType.CHALLENGE, true, true, true)
+                    .parent(become_hunter)
+                    .addCriterion("killed", new PlayerTrigger.TriggerInstance(ModAdvancements.TRIGGER_MOTHER_WIN.getId(), ContextAwarePredicate.ANY))
+                    .addCriterion("main", FactionCriterionTrigger.level(VReference.HUNTER_FACTION, 1))
+                    .save(consumer, REFERENCE.MODID + ":hunter/kill_mother");
         }
     }
 
@@ -185,7 +191,12 @@ public class AdvancementGenerator extends AdvancementProvider { //TODO 1.20 move
                     .parent(max_level)
                     .addCriterion("level", FactionCriterionTrigger.lord(VReference.VAMPIRE_FACTION, 5))
                     .save(consumer, REFERENCE.MODID + ":vampire/max_lord");
-
+            Advancement kill_mother = Advancement.Builder.advancement()
+                    .display(ModItems.MOTHER_CORE.get(), Component.translatable("advancement.vampirism.vampire_kill_mother"), Component.translatable("advancement.vampirism.vampire_kill_mother.desc"), null, FrameType.CHALLENGE, true, true, true)
+                    .parent(become_vampire)
+                    .addCriterion("killed", new PlayerTrigger.TriggerInstance(ModAdvancements.TRIGGER_MOTHER_WIN.getId(), ContextAwarePredicate.ANY))
+                    .addCriterion("main", FactionCriterionTrigger.level(VReference.VAMPIRE_FACTION, 1))
+                    .save(consumer, REFERENCE.MODID + ":vampire/kill_mother");
         }
     }
 

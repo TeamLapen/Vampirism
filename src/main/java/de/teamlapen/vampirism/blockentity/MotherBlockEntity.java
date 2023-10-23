@@ -126,7 +126,7 @@ public class MotherBlockEntity extends BlockEntity {
 
     private final ServerBossEvent bossEvent = new ServerBossEvent(Component.translatable("block.vampirism.mother"), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.NOTCHED_10);
     private final Set<ServerPlayer> activePlayers = new HashSet<>();
-
+    private final Set<UUID> involvedPlayers = new HashSet<>();
     /**
      * Cache structure. Should be mostly valid because blocks cannot be destroyed by survival player. Is (unreliably) invalidated when a block is destroyed nonetheless.
      */
@@ -164,6 +164,13 @@ public class MotherBlockEntity extends BlockEntity {
         this.freezeTimer = tag.getInt("freeze_timer");
         if (this.isFrozen) {
             this.bossEvent.setColor(BossEvent.BossBarColor.WHITE);
+        }
+        this.involvedPlayers.clear();
+        if (tag.contains("involved_players", Tag.TAG_LIST)) {
+            ListTag involvedPlayers = tag.getList("involved_players", 11);
+            for (Tag involvedPlayer : involvedPlayers) {
+                this.involvedPlayers.add(NbtUtils.loadUUID(involvedPlayer));
+            }
         }
     }
 
@@ -241,6 +248,11 @@ public class MotherBlockEntity extends BlockEntity {
         tag.putInt("destruction_timer", this.destructionTimer);
         tag.putBoolean("is_frozen", this.isFrozen);
         tag.putInt("freeze_timer", this.freezeTimer);
+        ListTag involvedPlayers = new ListTag();
+        for (UUID involvedPlayer : this.involvedPlayers) {
+            involvedPlayers.add(NbtUtils.createUUID(involvedPlayer));
+        }
+        tag.put("involved_players", involvedPlayers);
     }
 
     private void endFight() {
@@ -280,6 +292,7 @@ public class MotherBlockEntity extends BlockEntity {
 
     public void informAboutAttacker(ServerPlayer serverPlayer) {
         addPlayer(serverPlayer);
+        this.involvedPlayers.add(serverPlayer.getUUID());
     }
 
     public Collection<ServerPlayer> involvedPlayers() {
@@ -302,6 +315,17 @@ public class MotherBlockEntity extends BlockEntity {
         int size = this.level.getEntitiesOfClass(GhostEntity.class, this.getArea()).size();
         for(int i = size; i < 3; i++) {
             vuls.stream().skip(level.getRandom().nextInt(vuls.size())).findFirst().ifPresent(pos -> this.spawnGhost(level, pos));
+        }
+    }
+
+    public void concludeFight() {
+        //noinspection DataFlowIssue
+        Set<LivingEntity> involvedEntities = this.involvedPlayers.stream().map(((ServerLevel) this.level)::getEntity).filter(LivingEntity.class::isInstance).filter(s -> !s.isSpectator()).map(LivingEntity.class::cast).collect(Collectors.toSet());
+        for (LivingEntity livingentity : involvedEntities) {
+            if (livingentity instanceof ServerPlayer serverplayer) {
+                ModAdvancements.TRIGGER_MOTHER_WIN.trigger(serverplayer);
+                serverplayer.awardStat(ModStats.mother_defeated, 1);
+            }
         }
     }
 }
