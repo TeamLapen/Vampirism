@@ -1,0 +1,10 @@
+{
+  "values": [
+    "minecraft:on_fire",
+    "minecraft:in_fire",
+    "vampirism:holy_water",
+    "minecraft:freeze",
+    "minecraft:magic",
+    "minecraft:indirect_magic"
+  ]
+}

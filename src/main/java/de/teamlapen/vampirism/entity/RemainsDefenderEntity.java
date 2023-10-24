@@ -16,6 +16,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -75,8 +76,8 @@ public class RemainsDefenderEntity extends AbstractGolem implements IRemainsEnti
     }
 
     @Override
-    public boolean isInvulnerableTo(DamageSource pSource) {
-        return pSource.is(ModTags.DamageTypes.REMAINS_INVULNERABLE) || super.isInvulnerableTo(pSource);
+    public boolean isInvulnerableTo(@NotNull DamageSource pSource) {
+        return pSource.is(ModTags.DamageTypes.MOTHER_RESISTANT_TO) || pSource.is(DamageTypes.IN_WALL) || pSource.is(DamageTypes.DROWN) || super.isInvulnerableTo(pSource);
     }
 
     @Nullable

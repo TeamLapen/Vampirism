@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IEntityLeader;
+import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.ai.goals.DefendLeaderGoal;
 import de.teamlapen.vampirism.entity.ai.goals.FindLeaderGoal;
 import de.teamlapen.vampirism.entity.ai.goals.NearestTargetGoalModifier;
@@ -53,7 +54,7 @@ public class GhostEntity extends VampirismEntity implements IRemainsEntity, IEnt
 
     @Override
     public boolean isInvulnerableTo(DamageSource pSource) {
-        return pSource.is(DamageTypeTags.IS_PROJECTILE) && super.isInvulnerableTo(pSource);
+        return pSource.is(DamageTypeTags.IS_PROJECTILE) || pSource.is(ModTags.DamageTypes.MOTHER_RESISTANT_TO) && super.isInvulnerableTo(pSource);
     }
 
     @Override

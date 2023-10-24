@@ -105,6 +105,7 @@ public class ModTags {
          * Vanilla zombies
          */
         public static final TagKey<EntityType<?>> ZOMBIES = tag("zombies");
+        public static final TagKey<EntityType<?>> IGNORE_VAMPIRE_SWORD_FINISHER = tag("ignore_vampire_sword_finisher");
 
         private static @NotNull TagKey<EntityType<?>> tag(@NotNull ResourceLocation resourceLocation) {
             return TagKey.create(Registries.ENTITY_TYPE, resourceLocation);
@@ -186,6 +187,7 @@ public class ModTags {
 
         public static final TagKey<DamageType> ENTITY_PHYSICAL = tag("entity_physical");
         public static final TagKey<DamageType> REMAINS_INVULNERABLE = tag("remains_invulnerable");
+        public static final TagKey<DamageType> MOTHER_RESISTANT_TO = tag("mother_resistant_to");
 
         private static @NotNull TagKey<DamageType> tag(@NotNull String name) {
             return TagKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(REFERENCE.MODID, name));

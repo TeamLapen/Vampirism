@@ -1,0 +1,6 @@
+{
+  "effects": "thorns",
+  "exhaustion": 0.0,
+  "message_id": "vampirism.mother",
+  "scaling": "never"
+}

@@ -3,15 +3,14 @@ package de.teamlapen.vampirism.entity;
 import de.teamlapen.vampirism.api.entity.IEntityLeader;
 import de.teamlapen.vampirism.blockentity.VulnerableRemainsBlockEntity;
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModDamageTypes;
 import de.teamlapen.vampirism.core.ModEntities;
+import de.teamlapen.vampirism.core.ModTags;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.item.ItemStack;
@@ -63,6 +62,9 @@ public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntit
         getTile().ifPresent(vr -> {
             vr.onDamageDealt(pDamageSource, pDamageAmount);
         });
+        if(pDamageSource.getEntity() instanceof LivingEntity attacker) {
+            attacker.hurt(damageSources().thorns(this), 3);
+        }
     }
 
     public void childrenIsHurt(DamageSource damageSource, boolean killed, Direction direction) {
@@ -76,7 +78,7 @@ public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntit
 
     @Override
     public boolean isInvulnerableTo(@NotNull DamageSource pSource) {
-        return this.isRemoved() || pSource.is(DamageTypes.ON_FIRE)|| pSource.is(DamageTypes.IN_FIRE) || pSource.is(ModDamageTypes.HOLY_WATER) || pSource.is(DamageTypes.FREEZE);
+        return this.isRemoved() || pSource.is(ModTags.DamageTypes.MOTHER_RESISTANT_TO);
     }
 
     @Override

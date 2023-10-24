@@ -333,6 +333,7 @@
   "death.minion.on_behalf": "on behalf of %1$s",
   "death.attack.vampirism_dbno": "After %1$s, they gave up",
   "death.attack.vampirism_dbno.missing": "After nearly dying, they gave up",
+  "death.attack.vampirism.mother": "%1 died because they were too close to the Ancient Remains",
   "__comment": "task_entity_tags",
   "entity_tag.vampirism.hunter": "Hunter entities",
   "entity_tag.vampirism.advanced_hunter": "Advanced hunters",

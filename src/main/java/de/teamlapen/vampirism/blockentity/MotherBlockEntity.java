@@ -72,16 +72,14 @@ public class MotherBlockEntity extends BlockEntity {
                             player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 5 * 20, 2));
                             ModParticles.spawnParticlesServer(player.level(), new FlyingBloodParticleOptions(100, false, p.getX() + 0.5, p.getY() + 0.5, p.getZ() + 0.5, 0.5f), player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(), 10, 0.1f, 0.1f, 0.1f, 0);
                         }
-                    }
 
-                    // todo only when not finished
-                    if (e.level.getRandom().nextInt(3) == 0) {
-                        if (e.level.getEntitiesOfClass(GhostEntity.class, e.getArea()).size() < Math.min(e.activePlayers.size(), 5)) {
-                            BlockPos left = vuls.get(e.level.getRandom().nextInt(vuls.size())).getLeft();
-                            e.spawnGhost(level, left);
+                        if (e.level.getRandom().nextInt(3) == 0) {
+                            if (e.level.getEntitiesOfClass(GhostEntity.class, e.getArea()).size() < Math.min(e.activePlayers.size(), 5)) {
+                                BlockPos left = vuls.get(e.level.getRandom().nextInt(vuls.size())).getLeft();
+                                e.spawnGhost(level, left);
+                            }
                         }
                     }
-
                 }
             }
         }

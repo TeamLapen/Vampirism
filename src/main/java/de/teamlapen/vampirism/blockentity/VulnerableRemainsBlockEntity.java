@@ -39,9 +39,11 @@ public class VulnerableRemainsBlockEntity extends BlockEntity {
             });
         } else if (level.getGameTime() % 128 == 3) {
             e.checkDummyEntity(level, blockPos);
-            e.health = Math.min(e.health + 1, MAX_HEALTH);
-            if (e.health == MAX_HEALTH) {
-                e.spawnedBackup = false;
+            if (e.lastDamage - level.getGameTime() > 3 * 60 * 20L) {
+                e.health = Math.min(e.health + 10, MAX_HEALTH);
+                if (e.health == MAX_HEALTH) {
+                    e.spawnedBackup = false;
+                }
             }
         }
     }

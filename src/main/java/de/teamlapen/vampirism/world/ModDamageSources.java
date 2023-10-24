@@ -25,6 +25,7 @@ public class ModDamageSources {
     private final DamageSource vampireInFire;
     private final DamageSource holyWater;
     private final DamageSource noBlood;
+    private final DamageSource mother;
 
     public ModDamageSources(RegistryAccess access) {
         this.damageTypes = access.registryOrThrow(Registries.DAMAGE_TYPE);
@@ -33,6 +34,7 @@ public class ModDamageSources {
         this.vampireInFire = init(ModDamageTypes.VAMPIRE_IN_FIRE);
         this.holyWater = init(ModDamageTypes.HOLY_WATER);
         this.noBlood = init(ModDamageTypes.NO_BLOOD);
+        this.mother = init(ModDamageTypes.MOTHER);
     }
 
     private DamageSource init(ResourceKey<DamageType> key) {
@@ -57,6 +59,10 @@ public class ModDamageSources {
 
     public DamageSource noBlood() {
         return this.noBlood;
+    }
+
+    public DamageSource mother() {
+        return this.mother;
     }
 
     public MinionDamageSource minion(@NotNull MinionEntity<?> entity) {

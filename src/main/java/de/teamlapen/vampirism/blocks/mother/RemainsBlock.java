@@ -4,6 +4,8 @@ import de.teamlapen.vampirism.blockentity.MotherBlockEntity;
 import de.teamlapen.vampirism.blocks.VampirismBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.util.DamageHandler;
+import de.teamlapen.vampirism.world.ModDamageSources;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -68,6 +70,7 @@ public class RemainsBlock extends VampirismBlock implements BonemealableBlock, I
         if (player instanceof ServerPlayer serverPlayer) {
             getMotherEntity(level, pos).ifPresent(a -> a.informAboutAttacker(serverPlayer));
         }
+        DamageHandler.hurtModded(player, ModDamageSources::mother, 1);
     }
 
     @Override
