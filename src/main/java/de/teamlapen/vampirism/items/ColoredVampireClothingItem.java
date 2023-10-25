@@ -34,12 +34,8 @@ public class ColoredVampireClothingItem extends VampireClothingItem {
     @Override
     public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
         consumer.accept(new IClientItemExtensions() {
-            @SuppressWarnings({"UnnecessaryDefault", "DuplicateBranchesInSwitch", "SwitchStatementWithTooFewBranches"})
                             public @NotNull Model getGenericArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<?> original) {
-                                return switch (model) {
-                                    case CLOAK -> CloakModel.getAdjustedCloak(original);
-                                    default -> CloakModel.getAdjustedCloak(original);
-                                };
+                                return CloakModel.getAdjustedCloak(original, livingEntity);
                             }
                         }
         );

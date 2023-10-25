@@ -43,6 +43,7 @@
   "client": [
     "client.AgeableModelAccessor",
     "client.BossOverlayGuiAccessor",
+    "client.HumanoidArmorLayerMixin",
     "client.LevelRendererMixin",
     "client.LivingEntityRendererAccessor",
     "client.ResourceLoadStateTrackerMixin",
