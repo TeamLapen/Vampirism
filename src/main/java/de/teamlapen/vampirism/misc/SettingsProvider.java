@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 public class SettingsProvider implements ISettingsProvider {
 
     private static final Logger LOGGER = LogManager.getLogger();
-    private static final Gson GSON = new GsonBuilder().registerTypeHierarchyAdapter(ResourceLocation.class, new ResourceLocationTypeAdapter()).create();
+    private static final Gson GSON = new GsonBuilder().registerTypeHierarchyAdapter(ResourceLocation.class, new ResourceLocationTypeAdapter()).registerTypeHierarchyAdapter(Supporter.class, new SupporterDeserializer()).create();
 
     private final HttpClient client;
     private final String baseUrl;
@@ -118,7 +118,8 @@ public class SettingsProvider implements ISettingsProvider {
                 InputStream inputStream = VampirismMod.class.getResourceAsStream("/supporters.json");
                 if (inputStream != null) {
                     try {
-                        return Optional.of(GSON.<Supporter.OldList>fromJson(new JsonReader(new InputStreamReader(inputStream)), TypeToken.get(Supporter.OldList.class).getType()).toNew());
+                        List<Supporter> list = GSON.fromJson(new JsonReader(new InputStreamReader(inputStream)), TypeToken.getParameterized(List.class, Supporter.class).getType());
+                        return Optional.of(list);
                     } catch (JsonSyntaxException ex) {
                         LOGGER.error("Failed to retrieve supporter from file", ex);
                     }

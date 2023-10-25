@@ -53,6 +53,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -320,12 +321,21 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
         Supporter supporter = SupporterManager.getRandomHunter(random);
-        this.getEntityData().set(TYPE, supporter.typeId());
-        this.getEntityData().set(TYPE, supporter.typeId());
+        this.getEntityData().set(TYPE, createCustomisationFlag(supporter));
         this.getEntityData().set(NAME, supporter.name());
         this.getEntityData().set(TEXTURE, supporter.texture());
         this.lootBookId = supporter.bookId();
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
+    }
+
+    private static int createCustomisationFlag(Supporter supporter) {
+        Map<String, String> appearance = supporter.appearance();
+        int type = 0;
+        type |= (Integer.parseInt(appearance.getOrDefault("hat", "1")) & 0b11);
+        type |= (Integer.parseInt(appearance.getOrDefault("equipment", "1"))  & 0b11) << 2;
+        type |= (Boolean.parseBoolean(appearance.getOrDefault("hasCloak", "true")) ? 1 : 0) << 4;
+        type |= (Integer.parseInt(appearance.getOrDefault("body", "13")) & 0b11111111) << 5;
+        return type;
     }
 
     @Override

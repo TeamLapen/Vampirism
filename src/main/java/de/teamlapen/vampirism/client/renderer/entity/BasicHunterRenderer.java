@@ -39,8 +39,6 @@ public class BasicHunterRenderer extends DualBipedRenderer<BasicHunterEntity, Ba
 
     @Override
     protected Pair<ResourceLocation, Boolean> determineTextureAndModel(@NotNull BasicHunterEntity entity) {
-        int level = entity.getEntityLevel();
-        if (level > 0) return textureDefault;
         return textures[entity.getEntityTextureType() % textures.length];
     }
 }

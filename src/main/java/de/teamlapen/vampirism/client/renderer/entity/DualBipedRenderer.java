@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.renderer.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.util.TextureComparator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -15,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.function.IntFunction;
 import java.util.stream.Stream;
 
@@ -61,7 +63,7 @@ public abstract class DualBipedRenderer<T extends Mob, M extends HumanoidModel<T
         return set.map(r -> {
             boolean b = r.getPath().endsWith("slim.png");
             return Pair.of(r, b);
-        }).toArray((IntFunction<Pair<ResourceLocation, Boolean>[]>) Pair[]::new);
+        }).sorted(alphaNumericComparator()).toArray((IntFunction<Pair<ResourceLocation, Boolean>[]>) Pair[]::new);
     }
 
     /**
@@ -78,5 +80,9 @@ public abstract class DualBipedRenderer<T extends Mob, M extends HumanoidModel<T
             throw new IllegalStateException("Must have at least one hunter texture: " + REFERENCE.MODID + ":" + dirPath + "/texture.png");
         }
         return textures;
+    }
+
+    protected Comparator<Pair<ResourceLocation, Boolean>> alphaNumericComparator() {
+        return (o1, o2) -> TextureComparator.alphaNumericComparator().compare(o1.getLeft(), o2.getLeft());
     }
 }
