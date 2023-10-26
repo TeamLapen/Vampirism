@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.blockentity.MotherBlockEntity;
 import de.teamlapen.vampirism.blockentity.VulnerableRemainsBlockEntity;
+import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
@@ -12,7 +13,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
@@ -24,7 +24,6 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.animal.AbstractGolem;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -35,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.EnumSet;
 import java.util.Optional;
 
-public class RemainsDefenderEntity extends AbstractGolem implements IRemainsEntity {
+public class RemainsDefenderEntity extends Mob implements IRemainsEntity {
 
     protected static final EntityDataAccessor<Direction> DATA_ATTACH_FACE_ID = SynchedEntityData.defineId(RemainsDefenderEntity.class, EntityDataSerializers.DIRECTION);
     private static final EntityDataAccessor<Integer> DATA_LIGHT_TICKS_REMAINING = SynchedEntityData.defineId(RemainsDefenderEntity.class, EntityDataSerializers.INT);
@@ -94,11 +93,18 @@ public class RemainsDefenderEntity extends AbstractGolem implements IRemainsEnti
     @Nullable
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.BLAZE_AMBIENT;
+        return ModSounds.REMAINS_DEFENDER_AMBIENT.get();
     }
 
+    @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.SHULKER_DEATH;
+        return ModSounds.REMAINS_DEFENDER_DEATH.get();
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getHurtSound(@NotNull DamageSource pDamageSource) {
+        return ModSounds.REMAINS_DEFENDER_HURT.get();
     }
 
     @Override

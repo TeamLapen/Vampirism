@@ -1054,7 +1054,7 @@
   "entity.vampirism.converted_donkey": "Vampire Donkey",
   "entity.vampirism.converted_mule": "Vampire Mule",
   "entity.vampirism.converted_horse": "Vampire Horse",
-  "entity.vampirism.remains_defender": "Remains Defender",
+  "entity.vampirism.remains_defender": "Ancient Cristal",
   "entity.vampirism.ghost": "Ghost",
   "__comment": "minion tasks",
   "minion_task.vampirism.protect_lord": "Defend Lord",
@@ -1347,6 +1347,14 @@
   "subtitles.vampirism.teleport_away": "Teleport away",
   "subtitles.vampirism.teleport_here": "Teleport here",
   "subtitles.vampirism.freeze": "Freeze",
+  "subtitles.vampirism.ghost.ambient": "Ghost swooshes",
+  "subtitles.vampirism.ghost.death": "Ghost dies",
+  "subtitles.vampirism.ghost.hurt": "Ghost hurts",
+  "subtitles.vampirism.remains_defender.ambient": "Ancient Cristal shines",
+  "subtitles.vampirism.remains_defender.death": "Ancient Cristal breaks",
+  "subtitles.vampirism.remains_defender.hit": "Ancient Cristal crumbles",
+  "subtitles.vampirism.remains.death": "Remains dies",
+  "subtitles.vampirism.remains.hurt": "Remains hurts",
   "__comment": "entity tags",
   "entity_tag.vampirism.vampire": "Vampires"
 }

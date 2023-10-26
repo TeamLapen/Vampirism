@@ -3,10 +3,13 @@ package de.teamlapen.vampirism.entity;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IEntityLeader;
+import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.ai.goals.DefendLeaderGoal;
 import de.teamlapen.vampirism.entity.ai.goals.FindLeaderGoal;
 import de.teamlapen.vampirism.entity.ai.goals.NearestTargetGoalModifier;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
@@ -29,6 +32,7 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class GhostEntity extends VampirismEntity implements IRemainsEntity, IEntityFollower {
 
@@ -115,6 +119,27 @@ public class GhostEntity extends VampirismEntity implements IRemainsEntity, IEnt
     @Override
     public float getPathfindingMalus(@NotNull BlockPathTypes pNodeType) {
         return 0;
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return ModSounds.GHOST_AMBIENT.get();
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return ModSounds.GHOST_DEATH.get();
+    }
+
+    @Override
+    protected @Nullable SoundEvent getHurtSound(DamageSource source) {
+        return ModSounds.GHOST_HURT.get();
+    }
+
+    @Override
+    public @NotNull SoundSource getSoundSource() {
+        return SoundSource.HOSTILE;
     }
 
     class GhostMeleeAttackGoal extends MeleeAttackGoal {

@@ -42,11 +42,12 @@
   ],
   "client": [
     "client.AgeableModelAccessor",
+    "client.BossHealthOverlayAccessor",
     "client.BossOverlayGuiAccessor",
     "client.LevelRendererMixin",
     "client.LivingEntityRendererAccessor",
-    "client.ResourceLoadStateTrackerMixin",
     "client.MinecraftMixin",
+    "client.ResourceLoadStateTrackerMixin",
     "client.SheetsMixin",
     "client.VillagerModelAccessor"
   ],

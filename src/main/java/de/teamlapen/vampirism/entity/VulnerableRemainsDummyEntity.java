@@ -4,12 +4,15 @@ import de.teamlapen.vampirism.api.entity.IEntityLeader;
 import de.teamlapen.vampirism.blockentity.VulnerableRemainsBlockEntity;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
+import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModTags;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -19,6 +22,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -227,5 +231,22 @@ public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntit
     public boolean increaseFollowerCount() {
         followerCount++;
         return true;
+    }
+
+    @Nullable
+    @Override
+    public SoundEvent getDeathSound() {
+        return ModSounds.REMAINS_DEATH.get();
+    }
+
+    @Override
+    public @NotNull SoundSource getSoundSource() {
+        return SoundSource.HOSTILE;
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getHurtSound(@NotNull DamageSource pDamageSource) {
+        return ModSounds.REMAINS_HURT.get();
     }
 }

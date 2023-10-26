@@ -5,7 +5,6 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.blocks.mother.MotherTreeStructure;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.entity.VulnerableRemainsDummyEntity;
 import net.minecraft.core.BlockPos;
@@ -13,7 +12,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -80,7 +78,6 @@ public class VulnerableRemainsBlockEntity extends BlockEntity {
         this.health -= (int) damage;
         if (this.level != null) {
             this.lastDamage = this.level.getGameTime();
-            this.level.playSound(null, worldPosition, health > 0 ? ModSounds.REMAINS_HIT.get() : ModSounds.REMAINS_DESTROYED.get(), SoundSource.BLOCKS, 1f, 1f);
         }
         if (this.health <= 0) {
             destroyVulnerability();
@@ -148,7 +145,10 @@ public class VulnerableRemainsBlockEntity extends BlockEntity {
     public void setRemoved() {
         super.setRemoved();
         if (this.dummy_entity_id != null && this.level instanceof ServerLevel serverLevel) {
-            Optional.ofNullable(serverLevel.getEntity(dummy_entity_id)).ifPresent(entity -> entity.remove(Entity.RemovalReason.DISCARDED));
+            Optional.ofNullable(serverLevel.getEntity(dummy_entity_id)).ifPresent(entity -> {
+                entity.playSound(((VulnerableRemainsDummyEntity)entity).getDeathSound());
+                entity.remove(Entity.RemovalReason.DISCARDED);
+            });
         }
     }
 

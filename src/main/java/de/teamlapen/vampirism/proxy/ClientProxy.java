@@ -26,8 +26,10 @@ import net.minecraft.client.particle.TerrainParticle;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -51,9 +53,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static de.teamlapen.vampirism.blocks.TentBlock.FACING;
 import static de.teamlapen.vampirism.blocks.TentBlock.POSITION;
@@ -68,6 +68,7 @@ public class ClientProxy extends CommonProxy {
     private VampirismHUDOverlay overlay;
     private CustomBossEventOverlay bossInfoOverlay;
     private RenderHandler renderHandler;
+    private Map<UUID, ResourceKey<SoundEvent>> bossEventSounds = new HashMap<>();
 
     public ClientProxy() {
         //Minecraft.instance is null during runData.
@@ -288,4 +289,12 @@ public class ClientProxy extends CommonProxy {
         runOnRenderThread(() -> Minecraft.getInstance().setScreen(screen));
     }
 
+    @Override
+    public void addBossEventSound(UUID bossEventUuid, ResourceKey<SoundEvent> sound) {
+        this.bossEventSounds.put(bossEventUuid, sound);
+    }
+
+    public ResourceKey<SoundEvent> getBossEventSound(UUID bossEventUuid) {
+        return this.bossEventSounds.get(bossEventUuid);
+    }
 }

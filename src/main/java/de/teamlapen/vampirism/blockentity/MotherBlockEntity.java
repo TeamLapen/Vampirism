@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.blocks.mother.IRemainsBlock;
 import de.teamlapen.vampirism.blocks.mother.MotherTreeStructure;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.GhostEntity;
+import de.teamlapen.vampirism.network.ClientboundBossEventSoundPacket;
 import de.teamlapen.vampirism.network.ClientboundPlayEventPacket;
 import de.teamlapen.vampirism.particle.FlyingBloodParticleOptions;
 import net.minecraft.core.BlockPos;
@@ -44,16 +45,9 @@ import java.util.stream.Stream;
 
 
 public class MotherBlockEntity extends BlockEntity {
-    /**
-     * Indicate whether a mother block is loaded in the world.
-     * Should be acceptably accurate as there is only every one mother nearby.
-     * But don't use it for anything important for gameplay
-     */
-    public static boolean IS_A_MOTHER_LOADED_UNRELIABLE = false;
 
     public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, MotherBlockEntity e) {
 
-        IS_A_MOTHER_LOADED_UNRELIABLE = true;
         //Handle fight ---------------------------------
         if (e.isFrozen && e.freezeTimer-- <= 0) {
             e.unFreezeFight(level, blockPos, blockState);
@@ -93,7 +87,7 @@ public class MotherBlockEntity extends BlockEntity {
                         if (level.getBlockState(p).getBlock() instanceof IRemainsBlock) {
                             level.setBlock(p, Blocks.AIR.defaultBlockState(), 3);
                             ModParticles.spawnParticlesServer(level, new DustParticleOptions(new Vector3f(0.7f, 0.7f, 0.7f), 1), p.getX() + 0.5, p.getY() + 0.5, p.getZ() + 0.5f, 20, 0.3, 0.3, 0.3, 0.01);
-                            e.level.playSound(null, p, ModSounds.REMAINS_DESTROYED.get(), SoundSource.BLOCKS, 0.2f, 1f);
+                            e.level.playSound(null, p, ModSounds.REMAINS_DEATH.get(), SoundSource.BLOCKS, 0.2f, 1f);
                         }
                     }
                 } else {
@@ -116,7 +110,7 @@ public class MotherBlockEntity extends BlockEntity {
             if (e.isIntact()) {
                 level.getEntitiesOfClass(ServerPlayer.class, inflate2).forEach(e::addPlayer);
             }
-            level.getEntitiesOfClass(ServerPlayer.class, inflate2.inflate(20,10,20)).forEach(e.bossEvent::addPlayer);
+            level.getEntitiesOfClass(ServerPlayer.class, inflate2.inflate(20,10,20)).forEach(e::addPlayerToBossEvent);
         }
     }
 
@@ -184,21 +178,24 @@ public class MotherBlockEntity extends BlockEntity {
         super.setRemoved();
         this.bossEvent.removeAllPlayers();
         this.activePlayers.clear();
-        IS_A_MOTHER_LOADED_UNRELIABLE = false;
     }
 
     @Override
     public void onChunkUnloaded() {
         super.onChunkUnloaded();
-        IS_A_MOTHER_LOADED_UNRELIABLE = false;
     }
 
     private void addPlayer(Player player) {
         if (player instanceof ServerPlayer serverPlayer && !this.activePlayers.contains(serverPlayer)) {
             updateFightStatus();
-            this.bossEvent.addPlayer(serverPlayer);
+            addPlayerToBossEvent(serverPlayer);
             this.activePlayers.add(serverPlayer);
         }
+    }
+
+    private void addPlayerToBossEvent(ServerPlayer player) {
+        this.bossEvent.addPlayer(player);
+        VampirismMod.dispatcher.sendTo(new ClientboundBossEventSoundPacket(this.bossEvent.getId(), ModSounds.MOTHER_AMBIENT.getKey()), player);
     }
 
     @Override
