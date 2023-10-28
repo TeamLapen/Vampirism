@@ -64,11 +64,11 @@ public class MotherBlockEntity extends BlockEntity {
                             }
                             BlockPos p = vuls.get(e.level.getRandom().nextInt(vuls.size())).getLeft();
                             player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 5 * 20, 2));
-                            ModParticles.spawnParticlesServer(player.level(), new FlyingBloodParticleOptions(100, false, p.getX() + 0.5, p.getY() + 0.5, p.getZ() + 0.5, 0.5f), player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(), 10, 0.1f, 0.1f, 0.1f, 0);
+                            ModParticles.spawnParticlesServer(player.level(), new FlyingBloodParticleOptions(100, false, p.getX() + 0.5, p.getY() + 0.5, p.getZ() + 0.5, 0.5f), player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(), 5, 0.1f, 0.1f, 0.1f, 0);
                         }
 
                         if (e.level.getRandom().nextInt(3) == 0) {
-                            if (e.level.getEntitiesOfClass(GhostEntity.class, e.getArea()).size() < Math.min(e.activePlayers.size(), 5)) {
+                            if (e.level.getEntitiesOfClass(GhostEntity.class, e.getArea().inflate(10)).size() < Math.min(e.activePlayers.size(), 5)) {
                                 BlockPos left = vuls.get(e.level.getRandom().nextInt(vuls.size())).getLeft();
                                 e.spawnGhost(level, left);
                             }
@@ -101,16 +101,21 @@ public class MotherBlockEntity extends BlockEntity {
             }
         }
         if (level.getGameTime() % 64 == 0) {
-            AABB inflate = e.getArea();
-            Stream.concat(e.activePlayers.stream(), e.bossEvent.getPlayers().stream()).distinct().filter(player -> inflate.distanceToSqr(player.position()) > 1600).toList().forEach(player -> {
+            AABB area = e.getArea();
+            Stream.concat(e.activePlayers.stream(), e.bossEvent.getPlayers().stream()).distinct().filter(player -> area.distanceToSqr(player.position()) > 1600).toList().forEach(player -> {
                 e.bossEvent.removePlayer(player);
                 e.activePlayers.remove(player);
             });
-            AABB inflate2 = inflate.inflate(5, 10, 5);
-            if (e.isIntact()) {
-                level.getEntitiesOfClass(ServerPlayer.class, inflate2).forEach(e::addPlayer);
+            AABB inflate = area.inflate(5, 5, 5);
+            AABB inflate2 = inflate.inflate(10, 10, 10);
+            if (!e.activePlayers.isEmpty()) {
+                inflate = inflate.inflate(10, 10, 10);
+                inflate2 = inflate2.inflate(20, 10, 20);
             }
-            level.getEntitiesOfClass(ServerPlayer.class, inflate2.inflate(20,10,20)).forEach(e::addPlayerToBossEvent);
+            if (e.isIntact()) {
+                level.getEntitiesOfClass(ServerPlayer.class, inflate).forEach(e::addPlayer);
+            }
+            level.getEntitiesOfClass(ServerPlayer.class, inflate2).forEach(e::addPlayerToBossEvent);
         }
     }
 
@@ -125,6 +130,8 @@ public class MotherBlockEntity extends BlockEntity {
     private MotherTreeStructure cachedStructure;
     private boolean isFrozen = false;
     private int freezeTimer = 0;
+    @Nullable
+    private AABB area;
 
     public MotherBlockEntity(BlockPos pos, BlockState state) {
         super(ModTiles.MOTHER.get(), pos, state);
@@ -178,11 +185,6 @@ public class MotherBlockEntity extends BlockEntity {
         super.setRemoved();
         this.bossEvent.removeAllPlayers();
         this.activePlayers.clear();
-    }
-
-    @Override
-    public void onChunkUnloaded() {
-        super.onChunkUnloaded();
     }
 
     private void addPlayer(Player player) {
@@ -297,12 +299,15 @@ public class MotherBlockEntity extends BlockEntity {
     private void spawnGhost(Level level, BlockPos pos) {
         SpawnHelper.spawn(ModEntities.GHOST, level, ghost -> {
             ghost.setPos(Vec3.atCenterOf(pos));
-            ghost.setHome(getArea());
+            ghost.setHome(getArea().inflate(15));
         });
     }
 
     private AABB getArea() {
-        return new AABB(this.worldPosition).inflate(20, 0,20).expandTowards(0, -20, 0);
+        if (this.area == null) {
+            this.area = new AABB(this.worldPosition).inflate(9, 0,9).expandTowards(0, -10, 0).expandTowards(0, 4, 0);
+        }
+        return this.area;
     }
 
     private void spawnGhosts() {
