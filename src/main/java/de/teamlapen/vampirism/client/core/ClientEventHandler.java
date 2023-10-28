@@ -38,7 +38,7 @@ import net.minecraftforge.event.AddPackFindersEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.loading.FMLLoader;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.resource.PathPackResources;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -206,9 +206,12 @@ public class ClientEventHandler {
     }
 
     public static void registerPackRepository(AddPackFindersEvent event) {
-        event.addRepositorySource(s -> {
-            var resources = new PathPackResources(VAMPIRISM_2D_PACK_ID, false, FMLLoader.getLoadingModList().getModFileById(REFERENCE.MODID).getFile().getFilePath().resolve("packs/" + VAMPIRISM_2D_PACK_ID));
-            s.accept(Pack.readMetaAndCreate(VAMPIRISM_2D_PACK_ID, Component.literal("Vanilla Style Vampirism"), false, id -> resources, PackType.CLIENT_RESOURCES, Pack.Position.TOP, PackSource.BUILT_IN));
-        });
+        if (event.getPackType() == PackType.CLIENT_RESOURCES) {
+            event.addRepositorySource(s -> {
+                s.accept(Pack.readMetaAndCreate(VAMPIRISM_2D_PACK_ID, Component.literal("Vanilla Style Vampirism"), false, id -> {
+                    return new PathPackResources(id, false, ModList.get().getModFileById(REFERENCE.MODID).getFile().findResource("packs/" + VAMPIRISM_2D_PACK_ID));
+                }, PackType.CLIENT_RESOURCES, Pack.Position.TOP, PackSource.BUILT_IN));
+            });
+        }
     }
 }
