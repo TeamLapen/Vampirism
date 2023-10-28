@@ -29,8 +29,9 @@ The following labeling scheme is used:
 - *discussion*: Looking for feedback
 - *enhancement*: Any minor tweak that can be introduced in minor releases
 - *feature*: Any change that takes more time to implement and test
+- *accepted*: Any feature/enhancement that is planned to be implemented eventually
 - *1.12-1.***: Affecting only a specific MC version
-- *v1.8-v1.**: Bug affecting or enhancement targeting a specific Vamprism release branch
+- *v1.8-v1.**: Bug affecting or enhancement targeting a specific Vampirism release branch
 - *latest*: Bug affecting or enhancement targeting the latest (potentially unreleased) Vampirism branch
 
 

@@ -974,7 +974,7 @@
   "command.vampirism.test.garlicprofiler.tick": "Tick",
   "command.vampirism.test.garlicprofiler.garlic": "Garlic",
   "command.vampirism.test.garlicprofiler.print": "%s: %s|%s",
-  "command.vampirism.test.garliccheck.strength": "garlic strength: %s",
+  "command.vampirism.test.garliccheck.strength": "Garlic Strength: %s",
   "command.vampirism.test.entity.notbiteable": "Not biteable %s",
   "command.vampirism.test.village.no_village": "No village nearby",
   "command.vampirism.test.village.success": "Successfully converted village to faction %s",

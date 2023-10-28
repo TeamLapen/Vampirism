@@ -6,9 +6,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import de.teamlapen.lib.lib.util.ResourceLocationTypeAdapter;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.settings.ISettingsProvider;
 import de.teamlapen.vampirism.api.settings.Supporter;
 import net.minecraft.resources.ResourceLocation;
@@ -24,13 +22,9 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
-import java.util.concurrent.Flow;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class SettingsProvider implements ISettingsProvider {
 
@@ -103,7 +97,7 @@ public class SettingsProvider implements ISettingsProvider {
         if (error != null) {
             LOGGER.error("Failed to retrieve settings from server", error);
         }
-        if (false) {
+        if (VampirismMod.inDev || settings != null) {
             InputStream inputStream = VampirismMod.class.getResourceAsStream("/default_remote_config.json");
             if (inputStream != null) {
                 try {
@@ -120,7 +114,7 @@ public class SettingsProvider implements ISettingsProvider {
         if (error != null) {
             LOGGER.error("Failed to retrieve supporter from server", error);
         }
-        if (false) {
+        if (VampirismMod.inDev || file != null) {
                 InputStream inputStream = VampirismMod.class.getResourceAsStream("/supporters.json");
                 if (inputStream != null) {
                     try {

@@ -56,6 +56,7 @@ public class RegistryManager implements IInitListener {
         ModSounds.register(modbus);
         ModTasks.register(modbus);
         ModTiles.register(modbus);
+        ModAi.register(modbus);
         ModVillage.register(modbus);
         VampireActions.register(modbus);
         HunterActions.register(modbus);

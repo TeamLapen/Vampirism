@@ -44,6 +44,7 @@
     "client.AgeableModelAccessor",
     "client.BossHealthOverlayAccessor",
     "client.BossOverlayGuiAccessor",
+    "client.HumanoidArmorLayerMixin",
     "client.LevelRendererMixin",
     "client.LivingEntityRendererAccessor",
     "client.MinecraftMixin",

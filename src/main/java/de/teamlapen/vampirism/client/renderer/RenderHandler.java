@@ -244,9 +244,10 @@ public class RenderHandler implements ResourceManagerReloadListener {
     @SubscribeEvent
     public void onRenderFirstPersonHand(@NotNull RenderHandEvent event) {
         LocalPlayer player = Minecraft.getInstance().player;
-        if (player != null && event.getHand() == InteractionHand.MAIN_HAND && player.isUsingItem() && player.getUseItemRemainingTicks() > 0) {
-            if (player.getMainHandItem().getItem() instanceof CrucifixItem) {
-                int i = player.getMainArm() == HumanoidArm.RIGHT ? 1 : -1;
+        if (player != null && player.isUsingItem() && player.getUseItemRemainingTicks() > 0 && event.getHand() == player.getUsedItemHand()) {
+            if (event.getItemStack().getItem() instanceof CrucifixItem) {
+                HumanoidArm humanoidarm = event.getHand() == InteractionHand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite();
+                int i = humanoidarm == HumanoidArm.RIGHT ? 1 : -1;
                 event.getPoseStack().translate(((float) -i * 0.56F), -0.0, -0.2F);
             }
         }

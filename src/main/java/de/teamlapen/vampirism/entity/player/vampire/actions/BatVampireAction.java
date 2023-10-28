@@ -20,7 +20,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -59,7 +58,6 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
                 && vampire.isGettingGarlicDamage(vampire.getRepresentingEntity().level()) == EnumStrength.NONE
                 && !vampire.getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE.get())
                 && !vampire.getRepresentingPlayer().isInWater()
-                && !(vampire.getRepresentingPlayer().getCommandSenderWorld().dimension() == Level.END)
                 && !VampirismConfig.SERVER.batDimensionBlacklist.get().contains(vampire.getRepresentingPlayer().getCommandSenderWorld().dimension().location().toString())
                 && (vampire.getRepresentingEntity().getVehicle() == null);
     }
@@ -116,7 +114,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         } else if (vampire.isGettingGarlicDamage(vampire.getRepresentingEntity().level()) != EnumStrength.NONE && !vampire.isRemote()) {
             vampire.getRepresentingEntity().sendSystemMessage(Component.translatable("text.vampirism.cant_fly_garlic"));
             return true;
-        } else if (VampirismConfig.SERVER.batDimensionBlacklist.get().contains(vampire.getRepresentingPlayer().getCommandSenderWorld().dimension().location().toString()) && vampire.getRepresentingPlayer().getCommandSenderWorld().dimension() == Level.END) {
+        } else if (VampirismConfig.SERVER.batDimensionBlacklist.get().contains(vampire.getRepresentingPlayer().getCommandSenderWorld().dimension().location().toString())) {
             vampire.getRepresentingPlayer().sendSystemMessage(Component.translatable("text.vampirism.cant_fly_dimension"));
             return true;
         } else {
