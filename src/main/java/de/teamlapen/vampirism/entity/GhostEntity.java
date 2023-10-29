@@ -16,6 +16,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
@@ -28,14 +30,18 @@ import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.UUID;
+
 public class GhostEntity extends VampirismEntity implements IRemainsEntity, IEntityFollower {
 
+    private static final UUID SPEED_MODIFIER = UUID.fromString("e8c3b0b0-3d6c-11eb-b378-0242ac130002");
     private IEntityLeader leader;
 
     public GhostEntity(@NotNull EntityType<? extends VampirismEntity> type, @NotNull Level world) {
@@ -60,15 +66,6 @@ public class GhostEntity extends VampirismEntity implements IRemainsEntity, IEnt
     public boolean isInvulnerableTo(DamageSource pSource) {
         return pSource.is(DamageTypeTags.IS_PROJECTILE) || pSource.is(ModTags.DamageTypes.MOTHER_RESISTANT_TO) && super.isInvulnerableTo(pSource);
     }
-
-    @Override
-    public void playerTouch(Player pPlayer) {
-        if (pPlayer.canFreeze()) {
-            pPlayer.setTicksFrozen(Math.min(pPlayer.getTicksFrozen() + 2, pPlayer.getTicksRequiredToFreeze() + 10));
-        }
-    }
-
-
 
     @Override
     protected void registerGoals() {
@@ -96,9 +93,25 @@ public class GhostEntity extends VampirismEntity implements IRemainsEntity, IEnt
     public void tick() {
         this.setNoGravity(true);
         this.noPhysics = true;
+        checkInsideBlocks();
         super.tick();
         this.noPhysics = false;
         this.setNoGravity(true);
+    }
+
+    @Override
+    protected void onInsideBlock(BlockState pState) {
+        if (pState.isAir()) {
+            AttributeInstance attribute = getAttribute(Attributes.FLYING_SPEED);
+            if (attribute != null && attribute.getModifier(SPEED_MODIFIER) == null) {
+                attribute.addTransientModifier(new AttributeModifier(SPEED_MODIFIER, "free movement", 0.2, AttributeModifier.Operation.ADDITION));
+            }
+        } else {
+            AttributeInstance attribute = getAttribute(Attributes.FLYING_SPEED);
+            if (attribute != null) {
+                attribute.removeModifier(SPEED_MODIFIER);
+            }
+        }
     }
 
     @Override

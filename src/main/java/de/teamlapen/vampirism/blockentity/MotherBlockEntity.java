@@ -66,14 +66,13 @@ public class MotherBlockEntity extends BlockEntity {
                             player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 5 * 20, 2));
                             ModParticles.spawnParticlesServer(player.level(), new FlyingBloodParticleOptions(100, false, p.getX() + 0.5, p.getY() + 0.5, p.getZ() + 0.5, 0.5f), player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(), 5, 0.1f, 0.1f, 0.1f, 0);
                         }
-
-                        if (e.level.getRandom().nextInt(3) == 0) {
-                            if (e.level.getEntitiesOfClass(GhostEntity.class, e.getArea().inflate(10)).size() < Math.min(e.activePlayers.size(), 5)) {
-                                BlockPos left = vuls.get(e.level.getRandom().nextInt(vuls.size())).getLeft();
-                                e.spawnGhost(level, left);
-                            }
-                        }
                     }
+                }
+            }
+            if (e.level.getRandom().nextFloat() < Math.max(0.02f, Math.min(0.1f, e.activePlayers.size() * 0.002f))) {
+                var blocks = e.getTreeStructure(false).getCachedBlocks();
+                if (e.level.getEntitiesOfClass(GhostEntity.class, e.getArea().inflate(10)).size() < Math.min(e.activePlayers.size() * 1.6, 10)) {
+                    blocks.stream().skip(e.level.getRandom().nextInt(blocks.size())).findFirst().ifPresent(pos -> e.spawnGhost(level, pos));
                 }
             }
         }
@@ -313,7 +312,7 @@ public class MotherBlockEntity extends BlockEntity {
     private void spawnGhosts() {
         Set<BlockPos> vuls = this.getTreeStructure(false).getCachedBlocks();
         int size = this.level.getEntitiesOfClass(GhostEntity.class, this.getArea()).size();
-        for(int i = size; i < 3; i++) {
+        for(int i = size; i < Math.max(3, Math.min(this.activePlayers.size() * 1.6, 10)); i++) {
             vuls.stream().skip(level.getRandom().nextInt(vuls.size())).findFirst().ifPresent(pos -> this.spawnGhost(level, pos));
         }
     }

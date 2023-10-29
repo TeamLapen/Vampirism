@@ -41,7 +41,7 @@ public class RemainsDefenderEntity extends Mob implements IRemainsEntity {
 
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 20.0D).add(Attributes.ARMOR, 15).add(Attributes.ATTACK_DAMAGE, 5).add(Attributes.ARMOR_TOUGHNESS, 6);
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 20.0D).add(Attributes.ARMOR, 15).add(Attributes.ATTACK_DAMAGE, 10).add(Attributes.ARMOR_TOUGHNESS, 6);
     }
 
     public RemainsDefenderEntity(EntityType<RemainsDefenderEntity> type, Level pLevel) {
