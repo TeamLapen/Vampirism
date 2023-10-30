@@ -173,7 +173,7 @@ public class ModItems {
     public static final RegistryObject<Item> SOUL_ORB_VAMPIRE = register("soul_orb_vampire", () -> new Item(props()));
 
     public static final RegistryObject<StakeItem> STAKE = register("stake", StakeItem::new);
-    public static final RegistryObject<Item> ARROW_CLIP = register("tech_crossbow_ammo_package", () -> new ArrowContainer(props(), 12, (stack) -> stack.is(CROSSBOW_ARROW_NORMAL.get())) {
+    public static final RegistryObject<Item> ARROW_CLIP = register("tech_crossbow_ammo_package", () -> new ArrowContainer(props().stacksTo(1), 12, (stack) -> stack.is(CROSSBOW_ARROW_NORMAL.get())) {
         @Override
         public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> texts, @NotNull TooltipFlag flag) {
             texts.add(Component.translatable("item.vampirism.tech_crossbow_ammo_package.tooltip", Component.translatable(BASIC_TECH_CROSSBOW.get().getDescriptionId())).withStyle(ChatFormatting.GRAY));
