@@ -82,12 +82,14 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -739,7 +741,11 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     @Override
     public void onLevelChanged(int newLevel, int oldLevel) {
         super.onLevelChanged(newLevel, oldLevel);
-        this.applyEntityAttributes();
+        if (newLevel > 0) {
+            this.applyEntityAttributes();
+        } else {
+            this.removeEntityAttributes();
+        }
         if (!isRemote()) {
             ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.VAMPIRE_LEVEL_CRITERIA, newLevel);
             applyLevelModifiersA(newLevel);
@@ -1212,6 +1218,11 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     private void applyEntityAttributes() {
         player.getAttribute(ModAttributes.SUNDAMAGE.get()).setBaseValue(VampirismConfig.BALANCE.vpSundamage.get());
         player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get()).setBaseValue(VampirismConfig.BALANCE.vpBloodExhaustionFactor.get());
+    }
+
+    private void removeEntityAttributes() {
+        player.getAttribute(ModAttributes.SUNDAMAGE.get()).setBaseValue(0);
+        player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get()).setBaseValue(0);
     }
 
     /**

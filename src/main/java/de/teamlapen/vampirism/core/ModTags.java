@@ -49,11 +49,12 @@ public class ModTags {
         public static final TagKey<Block> DARK_STONE_TILES = tag("dark_brick_tiles");
         public static final TagKey<Block> NO_SPAWN = tag("no_spawn");
         public static final TagKey<Block> VAMPIRE_SPAWN = tag("vampire_spawn");
-
         public static final TagKey<Block> REMAINS = tag("remains");
         public static final TagKey<Block> ACTIVE_REMAINS = tag("active_remains");
         public static final TagKey<Block> VULNERABLE_REMAINS = tag("vulnerable_remains");
         public static final TagKey<Block> MOTHER_GROWS_ON = tag("mother_grows_on");
+        public static final TagKey<Block> VAMPIRE_BEACON_BASE_BLOCKS = tag("vampire_beacon_base_blocks");
+        public static final TagKey<Block> VAMPIRE_BEACON_BASE_ENHANCED_BLOCKS = tag("vampire_beacon_base_enhanced_blocks");
 
         private static @NotNull TagKey<Block> tag(@NotNull ResourceLocation resourceLocation) {
             return BlockTags.create(resourceLocation);
@@ -90,6 +91,7 @@ public class ModTags {
         public static final TagKey<Item> DARK_STONE_TILES = tag("dark_brick_tiles");
         public static final TagKey<Item> NO_SPAWN = tag("no_spawn");
         public static final TagKey<Item> VAMPIRE_SPAWN = tag("vampire_spawn");
+        public static final TagKey<Item> VAMPIRE_BEACON_PAYMENT_ITEM = tag("vampire_beacon_payment_item");
 
         private static @NotNull TagKey<Item> tag(@NotNull ResourceLocation resourceLocation) {
             return ItemTags.create(resourceLocation);

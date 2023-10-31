@@ -141,6 +141,7 @@ public class VampirismCreativeTab {
             addBlock(FOG_DIFFUSER);
             addBlock(HUNTER_TABLE);
             addBlock(SUNSCREEN_BEACON);
+            addBlock(VAMPIRE_BEACON);
             addBlock(TOTEM_BASE);
             addBlock(TOTEM_TOP);
             addBlock(TOTEM_TOP_CRAFTED);
@@ -148,6 +149,7 @@ public class VampirismCreativeTab {
             addBlock(POTION_TABLE);
             addBlock(MED_CHAIR);
             addBlock(ALCHEMY_TABLE);
+            addBlock(VAMPIRE_BEACON);
 
             addBuildingBlocks();
             addPlantBlocks();
@@ -232,6 +234,8 @@ public class VampirismCreativeTab {
             addBlock(CASTLE_STAIRS_PURPLE_BRICK);
             addBlock(CASTLE_SLAB_PURPLE_BRICK);
             addBlock(CASTLE_BLOCK_PURPLE_BRICK_WALL);
+            addBlock(BLOOD_INFUSED_IRON_BLOCK);
+            addBlock(BLOOD_INFUSED_ENHANCED_IRON_BLOCK);
         }
 
         private void addDecorativeBlocks() {

@@ -41,5 +41,6 @@ public class ModPacketDispatcher extends AbstractPacketDispatcher {
         registerServerBound(ServerboundSelectAmmoTypePacket.class, ServerboundSelectAmmoTypePacket::encode, ServerboundSelectAmmoTypePacket::decode, ServerboundSelectAmmoTypePacket::handle);
         registerClientBound(ClientboundSundamagePacket.class, ClientboundSundamagePacket::encode, ClientboundSundamagePacket::decode, ClientboundSundamagePacket::handle);
         registerClientBound(ClientboundBossEventSoundPacket.class, ClientboundBossEventSoundPacket::encode, ClientboundBossEventSoundPacket::decode, ClientboundBossEventSoundPacket::handle);
+        registerServerBound(ServerboundSetVampireBeaconPacket.class, ServerboundSetVampireBeaconPacket::encode, ServerboundSetVampireBeaconPacket::decode, ServerboundSetVampireBeaconPacket::handle);
     }
 }

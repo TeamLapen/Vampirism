@@ -431,6 +431,9 @@ public class LootTablesGenerator {//TODO 1.20 move to de.teamlapen.vampirism.dat
             this.dropSelf(ModBlocks.FOG_DIFFUSER.get());
             this.dropPottedContents(ModBlocks.POTTED_DARK_SPRUCE_SAPLING.get());
             this.dropPottedContents(ModBlocks.POTTED_CURSED_SPRUCE_SAPLING.get());
+            this.dropSelf(ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get());
+            this.dropSelf(ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK.get());
+            this.add(ModBlocks.VAMPIRE_BEACON.get(), this::createNameableBlockEntityTable);
         }
 
         @NotNull

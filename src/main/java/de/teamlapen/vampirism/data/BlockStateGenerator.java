@@ -285,6 +285,9 @@ public class BlockStateGenerator extends BlockStateProvider {//TODO 1.20 move to
         simpleBlock(ModBlocks.FOG_DIFFUSER.get(), models().withExistingParent("fog_diffuser_normal", modLoc("block/fog_diffuser")).renderType(cutout));
         simpleBlock(ModBlocks.POTTED_DARK_SPRUCE_SAPLING.get(), models().withExistingParent("vampirism:block/potted_dark_spruce_sapling", "minecraft:block/flower_pot_cross").texture("plant", "vampirism:block/dark_spruce_sapling").renderType(cutout));
         simpleBlock(ModBlocks.POTTED_CURSED_SPRUCE_SAPLING.get(), models().withExistingParent("vampirism:block/potted_cursed_spruce_sapling", "minecraft:block/flower_pot_cross").texture("plant", "vampirism:block/cursed_spruce_sapling").renderType(cutout));
+        simpleBlock(ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get());
+        simpleBlock(ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK.get());
+        simpleBlock(ModBlocks.VAMPIRE_BEACON.get(), models().withExistingParent("vampire_beacon", mcLoc("block/beacon")).texture("beacon", modLoc("block/vampire_beacon")).renderType(cutout));
     }
 
     private void createWoodStates() {
