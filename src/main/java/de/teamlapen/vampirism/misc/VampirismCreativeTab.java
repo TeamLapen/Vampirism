@@ -96,6 +96,7 @@ public class VampirismCreativeTab {
             addItem(PURE_SALT);
 
             addItem(SOUL_ORB_VAMPIRE);
+            addItem(MOTHER_CORE);
             addItem(VAMPIRE_BLOOD_BOTTLE);
             addGen(VAMPIRE_BOOK);
             addItem(VAMPIRE_FANG);
@@ -156,6 +157,7 @@ public class VampirismCreativeTab {
             addBlock(DARK_SPRUCE_SAPLING);
             addBlock(CURSED_SPRUCE_SAPLING);
             addBlock(CURSED_ROOTS);
+            addBlock(CURSED_HANGING_ROOTS);
             addBlock(VAMPIRE_ORCHID);
             addBlock(DARK_SPRUCE_LEAVES);
             addBlock(DIRECT_CURSED_BARK);

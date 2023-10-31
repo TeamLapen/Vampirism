@@ -159,16 +159,16 @@ public class ModBlocks {
     public static final RegistryObject<Block> CASTLE_BLOCK_DARK_BRICK_CRACKED = registerWithItem("castle_block_dark_brick_cracked", () -> new CastleBricksBlock(CastleBricksBlock.EnumVariant.CRACKED_DARK_BRICK));
     public static final RegistryObject<WallBlock> CASTLE_BLOCK_DARK_BRICK_WALL = registerWithItem("castle_block_dark_brick_wall", () -> new WallBlock(BlockBehaviour.Properties.copy(ModBlocks.CASTLE_BLOCK_DARK_BRICK.get()).forceSolidOn()));
     public static final RegistryObject<WallBlock> CASTLE_BLOCK_PURPLE_BRICK_WALL = registerWithItem("castle_block_purple_brick_wall", () -> new WallBlock(BlockBehaviour.Properties.copy(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK.get()).forceSolidOn()));
-    public static final RegistryObject<RemainsBlock> REMAINS = registerWithItem("remains", () -> new RemainsBlock(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_BROWN).strength(-1, 3600000.0F).sound(SoundType.ROOTED_DIRT).randomTicks().noLootTable(), false, false));
-    public static final RegistryObject<RemainsBlock> VULNERABLE_REMAINS = registerWithItem("vulnerable_remains", () -> new RemainsBlock(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_BROWN).strength(-1, 3600000.0F).sound(SoundType.ROOTED_DIRT).randomTicks().noLootTable(), true, true));
-    public static final RegistryObject<RemainsBlock> INCAPACITATED_VULNERABLE_REMAINS = registerWithItem("incapacitated_vulnerable_remains", () -> new RemainsBlock(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_BROWN).strength(-1.0F, 3600000.0F).sound(SoundType.ROOTED_DIRT).randomTicks().noLootTable(), false, true));
+    public static final RegistryObject<RemainsBlock> REMAINS = BLOCKS.register("remains", () -> new RemainsBlock(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_BROWN).strength(-1, 3600000.0F).sound(SoundType.ROOTED_DIRT).randomTicks().noLootTable(), false, false));
+    public static final RegistryObject<RemainsBlock> VULNERABLE_REMAINS = BLOCKS.register("vulnerable_remains", () -> new RemainsBlock(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_BROWN).strength(-1, 3600000.0F).sound(SoundType.ROOTED_DIRT).randomTicks().noLootTable(), true, true));
+    public static final RegistryObject<RemainsBlock> INCAPACITATED_VULNERABLE_REMAINS = BLOCKS.register("incapacitated_vulnerable_remains", () -> new RemainsBlock(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_BROWN).strength(-1.0F, 3600000.0F).sound(SoundType.ROOTED_DIRT).randomTicks().noLootTable(), false, true));
     public static final RegistryObject<ActiveVulnerableRemainsBlock> ACTIVE_VULNERABLE_REMAINS = BLOCKS.register("active_vulnerable_remains", () -> new ActiveVulnerableRemainsBlock(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_BROWN).strength(-1, 3600000.0F).randomTicks().sound(SoundType.ROOTED_DIRT).noLootTable()));
     public static final RegistryObject<HangingRootsBlock> CURSED_HANGING_ROOTS = registerWithItem("cursed_hanging_roots", () -> {
         var block = new HangingRootsBlock(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_BROWN).noCollission().instabreak().sound(SoundType.GRASS).offsetType(BlockBehaviour.OffsetType.XZ).ignitedByLava().pushReaction(PushReaction.DESTROY));
         ((FireBlock) Blocks.FIRE).setFlammable(block, 30, 60);
         return block;
     });
-    public static final RegistryObject<MotherBlock> MOTHER = registerWithItem("mother", MotherBlock::new); //TODO remove item, add models/textures
+    public static final RegistryObject<MotherBlock> MOTHER = BLOCKS.register("mother", MotherBlock::new); //TODO remove item, add models/textures
 
 
     /**
