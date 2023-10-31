@@ -191,6 +191,9 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
             tag(BlockTags.STAIRS).add(ModBlocks.DARK_STONE_BRICK_STAIRS.get(), ModBlocks.POLISHED_DARK_STONE_STAIRS.get(), ModBlocks.COBBLED_DARK_STONE_STAIRS.get(), ModBlocks.DARK_STONE_STAIRS.get(), ModBlocks.DARK_STONE_TILES_STAIRS.get(), ModBlocks.CASTLE_STAIRS_PURPLE_BRICK.get());
             tag(BlockTags.SLABS).add(ModBlocks.DARK_STONE_BRICK_SLAB.get(), ModBlocks.POLISHED_DARK_STONE_SLAB.get(), ModBlocks.COBBLED_DARK_STONE_SLAB.get(), ModBlocks.DARK_STONE_SLAB.get(), ModBlocks.DARK_STONE_TILES_SLAB.get(), ModBlocks.CASTLE_SLAB_PURPLE_BRICK.get());
             tag(ModTags.Blocks.MOTHER_GROWS_ON).addTag(BlockTags.DIRT);
+            tag(Tags.Blocks.STORAGE_BLOCKS).add(ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get(), ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK.get());
+            tag(ModTags.Blocks.VAMPIRE_BEACON_BASE_BLOCKS).add(ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get(), ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK.get());
+            tag(ModTags.Blocks.VAMPIRE_BEACON_BASE_ENHANCED_BLOCKS).add(ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK.get());
         }
     }
 
@@ -205,6 +208,7 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
             return REFERENCE.MODID + " " + super.getName();
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         protected void addTags(HolderLookup.@NotNull Provider holderProvider) {
             copy(ModTags.Blocks.CASTLE_BLOCK, ModTags.Items.CASTLE_BLOCK);
@@ -256,6 +260,7 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
             tag(ItemTags.HANGING_SIGNS).add(ModItems.DARK_SPRUCE_HANGING_SIGN.get(), ModItems.CURSED_SPRUCE_HANGING_SIGN.get());
             tag(ModTags.Items.HUNTER_COAT).add(ModItems.HUNTER_COAT_HEAD_NORMAL.get(),ModItems.HUNTER_COAT_HEAD_ENHANCED.get(),ModItems.HUNTER_COAT_HEAD_ULTIMATE.get(), ModItems.HUNTER_COAT_CHEST_NORMAL.get(),ModItems.HUNTER_COAT_CHEST_ENHANCED.get(),ModItems.HUNTER_COAT_CHEST_ULTIMATE.get(), ModItems.HUNTER_COAT_LEGS_NORMAL.get(),ModItems.HUNTER_COAT_LEGS_ENHANCED.get(),ModItems.HUNTER_COAT_LEGS_ULTIMATE.get(), ModItems.HUNTER_COAT_FEET_NORMAL.get(),ModItems.HUNTER_COAT_FEET_ENHANCED.get(),ModItems.HUNTER_COAT_FEET_ULTIMATE.get());
             tag(ItemTags.FREEZE_IMMUNE_WEARABLES).addTag(ModTags.Items.HUNTER_COAT);
+            tag(ModTags.Items.VAMPIRE_BEACON_PAYMENT_ITEM).addTags(ModTags.Items.PURE_BLOOD, ModTags.Items.HEART).add(ModItems.SOUL_ORB_VAMPIRE.get());
         }
     }
 

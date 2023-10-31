@@ -101,6 +101,9 @@ public class ItemModelGenerator extends BaseItemModelGenerator {//TODO 1.20 move
             add(ModBlocks.INCAPACITATED_VULNERABLE_REMAINS.get());
             add(ModBlocks.CURSED_HANGING_ROOTS.get());
             add(ModBlocks.MOTHER.get());
+            add(ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK.get());
+            add(ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get());
+            add(ModBlocks.VAMPIRE_BEACON.get());
         }};
         Set<Item> items = new HashSet<>() {{
             add(ModItems.HUNTER_COAT_CHEST_NORMAL.get());
@@ -331,6 +334,7 @@ public class ItemModelGenerator extends BaseItemModelGenerator {//TODO 1.20 move
         withExistingParent(ModBlocks.POLISHED_DARK_STONE_WALL.get(), mcLoc("block/wall_inventory")).texture("wall", modLoc("block/polished_dark_stone"));
         withExistingParent(ModBlocks.INFESTED_DARK_STONE.get(), modLoc("block/dark_stone"));
         block(ModBlocks.FOG_DIFFUSER.get(), "fog_diffuser");
+        withExistingParent(ModBlocks.CURSED_HANGING_ROOTS.get().asItem(), mcLoc("item/generated")).texture("layer0", REFERENCE.MODID + ":block/cursed_hanging_roots");
     }
 
 }

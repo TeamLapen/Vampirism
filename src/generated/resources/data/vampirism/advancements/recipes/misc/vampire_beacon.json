@@ -1,0 +1,59 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_glass": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:glass"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_mother_core": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "vampirism:mother_core"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_obsidian": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:obsidian"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "vampirism:vampire_beacon"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_mother_core",
+      "has_obsidian",
+      "has_glass",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "vampirism:vampire_beacon"
+    ]
+  },
+  "sends_telemetry_event": false
+}

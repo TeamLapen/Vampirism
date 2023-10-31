@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.recipes.*;
 import de.teamlapen.vampirism.util.NBTIngredient;
-import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -66,6 +65,11 @@ public class ModRecipes {
         registerLiquidColor(ModItems.HOLY_WATER_BOTTLE_NORMAL.get(), 0x6666FF);
         registerLiquidColor(ModItems.HOLY_WATER_BOTTLE_ENHANCED.get(), 0x6666FF);
         registerLiquidColor(ModItems.HOLY_WATER_BOTTLE_ULTIMATE.get(), 0x6666FF);
+        registerLiquidColor(ModItems.PURE_BLOOD_0.get(), 0x7c0805);
+        registerLiquidColor(ModItems.PURE_BLOOD_1.get(), 0x7d0503);
+        registerLiquidColor(ModItems.PURE_BLOOD_2.get(), 0x830000);
+        registerLiquidColor(ModItems.PURE_BLOOD_3.get(), 0x7e0e0e);
+        registerLiquidColor(ModItems.PURE_BLOOD_4.get(), 0x8e0000);
 
         registerLiquidColor(ModTags.Items.GARLIC, 0xBBBBBB);
 

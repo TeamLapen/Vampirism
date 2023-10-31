@@ -19,6 +19,7 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -191,6 +192,9 @@ public class ModBlocks {
     public static final RegistryObject<FogDiffuserBlock> FOG_DIFFUSER = registerWithItem("fog_diffuser", () -> new FogDiffuserBlock(BlockBehaviour.Properties.of().noOcclusion().mapColor(MapColor.STONE).strength(40.0F, 1200.0F).sound(SoundType.STONE)));
     public static final RegistryObject<FlowerPotBlock> POTTED_DARK_SPRUCE_SAPLING = BLOCKS.register("potted_dark_spruce_sapling", () -> potted(new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, DARK_SPRUCE_SAPLING, Block.Properties.of().noCollission().isViewBlocking(UtilLib::never).pushReaction(PushReaction.DESTROY).instabreak()), DARK_SPRUCE_SAPLING.getId()));
     public static final RegistryObject<FlowerPotBlock> POTTED_CURSED_SPRUCE_SAPLING = BLOCKS.register("potted_cursed_spruce_sapling", () -> potted(new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, CURSED_SPRUCE_SAPLING, Block.Properties.of().noCollission().isViewBlocking(UtilLib::never).pushReaction(PushReaction.DESTROY).instabreak()), CURSED_SPRUCE_SAPLING.getId()));
+    public static final RegistryObject<Block> BLOOD_INFUSED_IRON_BLOCK = registerWithItem("blood_infused_iron_block", () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.METAL)));
+    public static final RegistryObject<Block> BLOOD_INFUSED_ENHANCED_IRON_BLOCK = registerWithItem("blood_infused_enhanced_iron_block", () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.METAL)));
+    public static final RegistryObject<VampireBeaconBlock> VAMPIRE_BEACON = registerWithItem("vampire_beacon", () -> new VampireBeaconBlock(BlockBehaviour.Properties.of().mapColor(MapColor.DIAMOND).instrument(NoteBlockInstrument.HAT).strength(3.0F).lightLevel((p_50828_) -> 15).noOcclusion().isRedstoneConductor(UtilLib::never)), new Item.Properties().rarity(Rarity.RARE));
 
 
     /**
