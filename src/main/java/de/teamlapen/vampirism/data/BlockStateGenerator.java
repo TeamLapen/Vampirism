@@ -30,6 +30,10 @@ public class BlockStateGenerator extends BlockStateProvider {//TODO 1.20 move to
 
     @Override
     protected void registerStatesAndModels() {
+        createDarkStone();
+        createWoodStates();
+        createCursedBark();
+
         ResourceLocation cutout = new ResourceLocation("cutout");
         ResourceLocation cutout_mipped = new ResourceLocation("cutout_mipped");
         ResourceLocation translucent = new ResourceLocation("translucent");
@@ -44,11 +48,6 @@ public class BlockStateGenerator extends BlockStateProvider {//TODO 1.20 move to
         horizontalBlock(ModBlocks.ALTAR_CLEANSING.get(), models().getExistingFile(modLoc("block/altar_cleansing")));
         horizontalBlock(ModBlocks.BLOOD_GRINDER.get(), models().getExistingFile(modLoc("block/blood_grinder")));
 
-        simpleBlock(ModBlocks.CASTLE_BLOCK_DARK_BRICK.get());
-        simpleBlock(ModBlocks.CASTLE_BLOCK_DARK_BRICK_BLOODY.get());
-        simpleBlock(ModBlocks.CASTLE_BLOCK_DARK_STONE.get());
-        simpleBlock(ModBlocks.CASTLE_BLOCK_NORMAL_BRICK.get());
-        simpleBlock(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK.get());
         simpleBlock(ModBlocks.CURSED_EARTH.get());
         simpleBlock(ModBlocks.SUNSCREEN_BEACON.get(), models().withExistingParent("vampirism:block/sunscreen_beacon", "minecraft:block/beacon").texture("beacon", "vampirism:block/cursed_earth").renderType(cutout));
         BlockModelBuilder builder1 = models().getBuilder("vampirism:block/empty").texture("particle", "minecraft:block/spruce_planks");
@@ -72,15 +71,6 @@ public class BlockStateGenerator extends BlockStateProvider {//TODO 1.20 move to
         simpleBlock(ModBlocks.DARK_SPRUCE_LEAVES.get(), models().getExistingFile(mcLoc("block/oak_leaves")));
         simpleBlock(ModBlocks.DARK_SPRUCE_SAPLING.get(), dark_spruce_sapling);
         simpleBlock(ModBlocks.CURSED_SPRUCE_SAPLING.get(), cursed_spruce_sapling);
-
-
-        stairsBlock(ModBlocks.CASTLE_STAIRS_DARK_STONE.get(), modLoc("block/castle_block_dark_stone"));
-        stairsBlock(ModBlocks.CASTLE_STAIRS_DARK_BRICK.get(), modLoc("block/castle_block_dark_brick"));
-        stairsBlock(ModBlocks.CASTLE_STAIRS_PURPLE_BRICK.get(), modLoc("block/castle_block_purple_brick"));
-
-        slabBlock(ModBlocks.CASTLE_SLAB_DARK_BRICK.get(), modLoc("block/castle_block_dark_brick"), modLoc("block/castle_block_dark_brick"));
-        slabBlock(ModBlocks.CASTLE_SLAB_DARK_STONE.get(), modLoc("block/castle_block_dark_stone"), modLoc("block/castle_block_dark_stone"));
-        slabBlock(ModBlocks.CASTLE_SLAB_PURPLE_BRICK.get(), modLoc("block/castle_block_purple_brick"), modLoc("block/castle_block_purple_brick"));
 
 
         //variants
@@ -249,9 +239,6 @@ public class BlockStateGenerator extends BlockStateProvider {//TODO 1.20 move to
         doorBlock(ModBlocks.DARK_SPRUCE_DOOR.get(), new ResourceLocation(REFERENCE.MODID, "block/dark_spruce_door_bottom"), new ResourceLocation(REFERENCE.MODID, "block/dark_spruce_door_top"));
         doorBlock(ModBlocks.CURSED_SPRUCE_DOOR.get(), new ResourceLocation(REFERENCE.MODID, "block/cursed_spruce_door_bottom"), new ResourceLocation(REFERENCE.MODID, "block/cursed_spruce_door_top"));
 
-        createWoodStates();
-        createCursedBark();
-
         horizontalBlock(ModBlocks.VAMPIRE_RACK.get(), models().getExistingFile(modLoc("block/vampire_rack")));
         horizontalBlock(ModBlocks.THRONE.get(), models().getExistingFile(modLoc("block/throne")));
 
@@ -286,10 +273,6 @@ public class BlockStateGenerator extends BlockStateProvider {//TODO 1.20 move to
                 .end()
                 .renderType(cutout);
         simpleBlock(ModBlocks.CURSED_EARTH_PATH.get(), cursedEarthPath);
-        simpleBlock(ModBlocks.CASTLE_BLOCK_DARK_BRICK_CRACKED.get());
-
-        wallBlock(ModBlocks.CASTLE_BLOCK_DARK_BRICK_WALL.get(), blockTexture(ModBlocks.CASTLE_BLOCK_DARK_BRICK.get()));
-        wallBlock(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK_WALL.get(), blockTexture(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK.get()));
     }
 
     private void createWoodStates() {
@@ -355,6 +338,39 @@ public class BlockStateGenerator extends BlockStateProvider {//TODO 1.20 move to
                 .part().modelFile(side2).rotationX(90).rotationY(180).addModel().condition(DirectCursedBarkBlock.DOWN_TYPE, DirectCursedBarkBlock.Type.HORIZONTAL).end()
                 ;
         simpleBlock(ModBlocks.DIAGONAL_CURSED_BARK.get(), models().getBuilder("vampirism:cursed_bark_empty"));
+    }
+
+    private void createDarkStone() {
+        simpleBlock(ModBlocks.DARK_STONE_BRICKS.get());
+        stairsBlock(ModBlocks.DARK_STONE_BRICK_STAIRS.get(), modLoc("block/dark_stone_bricks"));
+        slabBlock(ModBlocks.DARK_STONE_BRICK_SLAB.get(), modLoc("block/dark_stone_bricks"), modLoc("block/dark_stone_bricks"));
+        wallBlock(ModBlocks.DARK_STONE_BRICK_WALL.get(), modLoc("block/dark_stone_bricks"));
+        simpleBlock(ModBlocks.DARK_STONE.get());
+        simpleBlock(ModBlocks.INFESTED_DARK_STONE.get(), models().getExistingFile(modLoc("block/dark_stone")));
+        stairsBlock(ModBlocks.DARK_STONE_STAIRS.get(), modLoc("block/dark_stone"));
+        slabBlock(ModBlocks.DARK_STONE_SLAB.get(), modLoc("block/dark_stone"), modLoc("block/dark_stone"));
+        wallBlock(ModBlocks.DARK_STONE_WALL.get(), modLoc("block/dark_stone"));
+        simpleBlock(ModBlocks.COBBLED_DARK_STONE.get());
+        stairsBlock(ModBlocks.COBBLED_DARK_STONE_STAIRS.get(), modLoc("block/cobbled_dark_stone"));
+        slabBlock(ModBlocks.COBBLED_DARK_STONE_SLAB.get(), modLoc("block/cobbled_dark_stone"), modLoc("block/cobbled_dark_stone"));
+        wallBlock(ModBlocks.COBBLED_DARK_STONE_WALL.get(), modLoc("block/cobbled_dark_stone"));
+        simpleBlock(ModBlocks.POLISHED_DARK_STONE.get());
+        stairsBlock(ModBlocks.POLISHED_DARK_STONE_STAIRS.get(), modLoc("block/polished_dark_stone"));
+        slabBlock(ModBlocks.POLISHED_DARK_STONE_SLAB.get(), modLoc("block/polished_dark_stone"), modLoc("block/polished_dark_stone"));
+        wallBlock(ModBlocks.POLISHED_DARK_STONE_WALL.get(), modLoc("block/polished_dark_stone"));
+        simpleBlock(ModBlocks.DARK_STONE_TILES.get());
+        simpleBlock(ModBlocks.CRACKED_DARK_STONE_TILES.get());
+        stairsBlock(ModBlocks.DARK_STONE_TILES_STAIRS.get(), modLoc("block/dark_stone_tiles"));
+        slabBlock(ModBlocks.DARK_STONE_TILES_SLAB.get(), modLoc("block/dark_stone_tiles"), modLoc("block/dark_stone_tiles"));
+        wallBlock(ModBlocks.DARK_STONE_TILES_WALL.get(), modLoc("block/dark_stone_tiles"));
+        simpleBlock(ModBlocks.CHISELED_DARK_STONE_BRICKS.get());
+
+        simpleBlock(ModBlocks.BLOODY_DARK_STONE_BRICKS.get());
+        simpleBlock(ModBlocks.CRACKED_DARK_STONE_BRICKS.get());
+        simpleBlock(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK.get());
+        stairsBlock(ModBlocks.CASTLE_STAIRS_PURPLE_BRICK.get(), modLoc("block/castle_block_purple_brick"));
+        wallBlock(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK_WALL.get(), blockTexture(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK.get()));
+        slabBlock(ModBlocks.CASTLE_SLAB_PURPLE_BRICK.get(), modLoc("block/castle_block_purple_brick"), modLoc("block/castle_block_purple_brick"));
     }
 
     private void button(Block block, @NotNull ResourceLocation texture) {

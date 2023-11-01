@@ -67,8 +67,7 @@
     [
       "minecraft:ore_gravel",
       "vampirism:ore_cursed_dirt",
-      "vampirism:ore_dark_stone_lower",
-      "vampirism:ore_dark_stone_upper"
+      "vampirism:ore_dark_stone_lower"
     ],
     [
       "minecraft:spring_water"
@@ -107,13 +106,13 @@
         "type": "vampirism:vampire",
         "maxCount": 3,
         "minCount": 1,
-        "weight": 35
+        "weight": 80
       },
       {
         "type": "vampirism:vampire_baron",
         "maxCount": 1,
         "minCount": 1,
-        "weight": 10
+        "weight": 27
       }
     ],
     "underground_water_creature": [],

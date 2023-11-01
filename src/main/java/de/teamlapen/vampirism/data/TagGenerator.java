@@ -58,11 +58,9 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
         protected void addTags(HolderLookup.Provider holderLookup) {
             tag(BlockTags.DIRT).add(ModBlocks.CURSED_EARTH.get(), ModBlocks.CURSED_GRASS.get());
             tag(ModTags.Blocks.CURSED_EARTH).add(ModBlocks.CURSED_EARTH.get(), ModBlocks.CURSED_GRASS.get());
-            tag(ModTags.Blocks.CASTLE_BLOCK).add(ModBlocks.CASTLE_BLOCK_DARK_BRICK.get(), ModBlocks.CASTLE_BLOCK_DARK_BRICK_BLOODY.get(), ModBlocks.CASTLE_BLOCK_DARK_STONE.get(), ModBlocks.CASTLE_BLOCK_NORMAL_BRICK.get(), ModBlocks.CASTLE_BLOCK_PURPLE_BRICK.get(), ModBlocks.CASTLE_BLOCK_DARK_BRICK_CRACKED.get());
-            tag(ModTags.Blocks.CASTLE_SLAPS).add(ModBlocks.CASTLE_SLAB_DARK_BRICK.get(), ModBlocks.CASTLE_SLAB_DARK_STONE.get(), ModBlocks.CASTLE_SLAB_PURPLE_BRICK.get());
-            tag(ModTags.Blocks.CASTLE_STAIRS).add(ModBlocks.CASTLE_STAIRS_DARK_STONE.get(), ModBlocks.CASTLE_STAIRS_DARK_BRICK.get(), ModBlocks.CASTLE_STAIRS_PURPLE_BRICK.get());
-            tag(BlockTags.STAIRS).addTag(ModTags.Blocks.CASTLE_STAIRS);
-            tag(BlockTags.SLABS).addTag(ModTags.Blocks.CASTLE_SLAPS);
+            tag(ModTags.Blocks.CASTLE_BLOCK).add(ModBlocks.DARK_STONE_BRICKS.get(), ModBlocks.BLOODY_DARK_STONE_BRICKS.get(), ModBlocks.DARK_STONE.get(), ModBlocks.CASTLE_BLOCK_PURPLE_BRICK.get(), ModBlocks.CRACKED_DARK_STONE_BRICKS.get());
+            tag(ModTags.Blocks.CASTLE_SLAPS).add(ModBlocks.DARK_STONE_BRICK_SLAB.get(), ModBlocks.DARK_STONE_SLAB.get(), ModBlocks.CASTLE_SLAB_PURPLE_BRICK.get());
+            tag(ModTags.Blocks.CASTLE_STAIRS).add(ModBlocks.DARK_STONE_STAIRS.get(), ModBlocks.DARK_STONE_BRICK_STAIRS.get(), ModBlocks.CASTLE_STAIRS_PURPLE_BRICK.get());
             tag(BlockTags.FLOWER_POTS).add(ModBlocks.POTTED_VAMPIRE_ORCHID.get());
 
             // Tool Types
@@ -98,6 +96,11 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
                     .addTag(ModTags.Blocks.CASTLE_SLAPS)
                     .addTag(ModTags.Blocks.CASTLE_STAIRS)
                     .addTag(ModTags.Blocks.TOTEM_TOP)
+                    .addTag(ModTags.Blocks.DARK_STONE)
+                    .addTag(ModTags.Blocks.DARK_STONE_BRICKS)
+                    .addTag(ModTags.Blocks.DARK_STONE_TILES)
+                    .addTag(ModTags.Blocks.POLISHED_DARK_STONE)
+                    .addTag(ModTags.Blocks.COBBLED_DARK_STONE)
             ;
             tag(BlockTags.MINEABLE_WITH_AXE)
                     .add(ModBlocks.ALTAR_INSPIRATION.get())
@@ -171,7 +174,17 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
             tag(ModTags.Blocks.COFFIN).add(ModBlocks.COFFIN_RED.get()).add(ModBlocks.COFFIN_BLUE.get()).add(ModBlocks.COFFIN_GREEN.get()).add(ModBlocks.COFFIN_BROWN.get()).add(ModBlocks.COFFIN_BLACK.get()).add(ModBlocks.COFFIN_GRAY.get()).add(ModBlocks.COFFIN_LIGHT_BLUE.get()).add(ModBlocks.COFFIN_WHITE.get()).add(ModBlocks.COFFIN_LIGHT_GRAY.get()).add(ModBlocks.COFFIN_CYAN.get()).add(ModBlocks.COFFIN_PURPLE.get()).add(ModBlocks.COFFIN_PINK.get()).add(ModBlocks.COFFIN_LIME.get()).add(ModBlocks.COFFIN_YELLOW.get()).add(ModBlocks.COFFIN_ORANGE.get()).add(ModBlocks.COFFIN_MAGENTA.get());
             tag(BlockTags.CEILING_HANGING_SIGNS).add(ModBlocks.DARK_SPRUCE_HANGING_SIGN.get(), ModBlocks.CURSED_SPRUCE_HANGING_SIGN.get());
             tag(BlockTags.WALL_HANGING_SIGNS).add(ModBlocks.DARK_SPRUCE_WALL_HANGING_SIGN.get(), ModBlocks.CURSED_SPRUCE_WALL_HANGING_SIGN.get());
-            tag(BlockTags.WALLS).add(ModBlocks.CASTLE_BLOCK_DARK_BRICK_WALL.get(), ModBlocks.CASTLE_BLOCK_PURPLE_BRICK_WALL.get());
+            tag(ModTags.Blocks.DARK_STONE).add(ModBlocks.DARK_STONE.get(), ModBlocks.DARK_STONE_STAIRS.get(), ModBlocks.DARK_STONE_WALL.get(), ModBlocks.DARK_STONE_SLAB.get(), ModBlocks.DARK_STONE_TILES.get(), ModBlocks.INFESTED_DARK_STONE.get());
+            tag(ModTags.Blocks.DARK_STONE_BRICKS).add(ModBlocks.DARK_STONE_BRICKS.get(), ModBlocks.DARK_STONE_BRICK_WALL.get(), ModBlocks.DARK_STONE_BRICK_SLAB.get(), ModBlocks.DARK_STONE_STAIRS.get(), ModBlocks.CHISELED_DARK_STONE_BRICKS.get(), ModBlocks.BLOODY_DARK_STONE_BRICKS.get(), ModBlocks.CRACKED_DARK_STONE_BRICKS.get());
+            tag(ModTags.Blocks.POLISHED_DARK_STONE).add(ModBlocks.POLISHED_DARK_STONE.get(), ModBlocks.POLISHED_DARK_STONE_STAIRS.get(), ModBlocks.POLISHED_DARK_STONE_SLAB.get(), ModBlocks.POLISHED_DARK_STONE_WALL.get());
+            tag(ModTags.Blocks.COBBLED_DARK_STONE).add(ModBlocks.COBBLED_DARK_STONE.get(), ModBlocks.COBBLED_DARK_STONE_STAIRS.get(), ModBlocks.COBBLED_DARK_STONE_SLAB.get(), ModBlocks.POLISHED_DARK_STONE_WALL.get());
+            tag(ModTags.Blocks.DARK_STONE_TILES).add(ModBlocks.DARK_STONE_TILES.get(), ModBlocks.DARK_STONE_TILES_STAIRS.get(), ModBlocks.DARK_STONE_TILES_SLAB.get(), ModBlocks.DARK_STONE_TILES_WALL.get(), ModBlocks.CRACKED_DARK_STONE_TILES.get());
+            tag(ModTags.Blocks.NO_SPAWN).addTag(ModTags.Blocks.DARK_STONE);
+            tag(ModTags.Blocks.VAMPIRE_SPAWN).addTags(ModTags.Blocks.DARK_STONE_BRICKS, ModTags.Blocks.COBBLED_DARK_STONE, ModTags.Blocks.POLISHED_DARK_STONE, ModTags.Blocks.DARK_STONE_TILES);
+            tag(Tags.Blocks.STONE).add(ModBlocks.DARK_STONE.get(), ModBlocks.INFESTED_DARK_STONE.get(), ModBlocks.POLISHED_DARK_STONE.get());
+            tag(BlockTags.WALLS).add(ModBlocks.DARK_STONE_BRICK_WALL.get(), ModBlocks.POLISHED_DARK_STONE_WALL.get(), ModBlocks.COBBLED_DARK_STONE_WALL.get(), ModBlocks.DARK_STONE_WALL.get(), ModBlocks.DARK_STONE_TILES_WALL.get(), ModBlocks.CASTLE_BLOCK_PURPLE_BRICK_WALL.get());
+            tag(BlockTags.STAIRS).add(ModBlocks.DARK_STONE_BRICK_STAIRS.get(), ModBlocks.POLISHED_DARK_STONE_STAIRS.get(), ModBlocks.COBBLED_DARK_STONE_STAIRS.get(), ModBlocks.DARK_STONE_STAIRS.get(), ModBlocks.DARK_STONE_TILES_STAIRS.get(), ModBlocks.CASTLE_STAIRS_PURPLE_BRICK.get());
+            tag(BlockTags.SLABS).add(ModBlocks.DARK_STONE_BRICK_SLAB.get(), ModBlocks.POLISHED_DARK_STONE_SLAB.get(), ModBlocks.COBBLED_DARK_STONE_SLAB.get(), ModBlocks.DARK_STONE_SLAB.get(), ModBlocks.DARK_STONE_TILES_SLAB.get(), ModBlocks.CASTLE_SLAB_PURPLE_BRICK.get());
         }
     }
 
@@ -194,6 +207,13 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
             copy(ModTags.Blocks.CURSED_EARTH, ModTags.Items.CURSEDEARTH);
             copy(ModTags.Blocks.DARK_SPRUCE_LOG, ModTags.Items.DARK_SPRUCE_LOG);
             copy(ModTags.Blocks.CURSED_SPRUCE_LOG, ModTags.Items.CURSED_SPRUCE_LOG);
+            copy(ModTags.Blocks.DARK_STONE, ModTags.Items.DARK_STONE);
+            copy(ModTags.Blocks.DARK_STONE_BRICKS, ModTags.Items.DARK_STONE_BRICKS);
+            copy(ModTags.Blocks.POLISHED_DARK_STONE, ModTags.Items.POLISHED_DARK_STONE);
+            copy(ModTags.Blocks.COBBLED_DARK_STONE, ModTags.Items.COBBLED_DARK_STONE);
+            copy(ModTags.Blocks.DARK_STONE_TILES, ModTags.Items.DARK_STONE_TILES);
+            copy(ModTags.Blocks.NO_SPAWN, ModTags.Items.NO_SPAWN);
+            copy(ModTags.Blocks.VAMPIRE_SPAWN, ModTags.Items.VAMPIRE_SPAWN);
             copy(BlockTags.LOGS_THAT_BURN, ItemTags.LOGS_THAT_BURN);
             copy(BlockTags.LOGS, ItemTags.LOGS);
             copy(BlockTags.WOODEN_TRAPDOORS, ItemTags.WOODEN_TRAPDOORS);
@@ -206,6 +226,9 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
             copy(BlockTags.PLANKS, ItemTags.PLANKS);
             copy(BlockTags.SAPLINGS, ItemTags.SAPLINGS);
             copy(BlockTags.LEAVES, ItemTags.LEAVES);
+            copy(BlockTags.STAIRS, ItemTags.STAIRS);
+            copy(BlockTags.SLABS, ItemTags.SLABS);
+            copy(BlockTags.WALLS, ItemTags.WALLS);
 
             tag(ModTags.Items.CROSSBOW_ARROW).add(ModItems.CROSSBOW_ARROW_NORMAL.get(), ModItems.CROSSBOW_ARROW_SPITFIRE.get(), ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get());
             tag(ModTags.Items.HUNTER_INTEL).add(ModItems.HUNTER_INTEL_0.get(), ModItems.HUNTER_INTEL_1.get(), ModItems.HUNTER_INTEL_2.get(), ModItems.HUNTER_INTEL_3.get(), ModItems.HUNTER_INTEL_4.get(), ModItems.HUNTER_INTEL_5.get(), ModItems.HUNTER_INTEL_6.get(), ModItems.HUNTER_INTEL_7.get(), ModItems.HUNTER_INTEL_8.get(), ModItems.HUNTER_INTEL_9.get());

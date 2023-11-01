@@ -55,7 +55,7 @@ public class VampireAltarPieces {
         protected void handleDataMarker(@NotNull String pName, @NotNull BlockPos pPos, @NotNull ServerLevelAccessor pLevel, @NotNull RandomSource pRandom, @NotNull BoundingBox pBox) {
             switch (pName) {
                 case "chest" -> {
-                    pLevel.setBlock(pPos, ModBlocks.CASTLE_BLOCK_DARK_BRICK.get().defaultBlockState(), 3);
+                    pLevel.setBlock(pPos, ModBlocks.DARK_STONE_BRICKS.get().defaultBlockState(), 3);
                     BlockEntity blockEntity = pLevel.getBlockEntity(pPos.below());
                     if (blockEntity instanceof ChestBlockEntity chest) {
                         chest.setLootTable(ModLootTables.CHEST_VAMPIRE_ALTAR, pRandom.nextLong());

@@ -200,20 +200,35 @@ public class VampirismCreativeTab {
             addItem(ModItems.CURSED_SPRUCE_SIGN);
             addItem(ModItems.CURSED_SPRUCE_HANGING_SIGN);
 
-            addBlock(CASTLE_BLOCK_DARK_STONE);
-            addBlock(CASTLE_STAIRS_DARK_STONE);
-            addBlock(CASTLE_SLAB_DARK_STONE);
-            addBlock(CASTLE_BLOCK_DARK_BRICK);
-            addBlock(CASTLE_STAIRS_DARK_BRICK);
-            addBlock(CASTLE_SLAB_DARK_BRICK);
-            addBlock(CASTLE_BLOCK_DARK_BRICK_WALL);
-            addBlock(CASTLE_BLOCK_DARK_BRICK_CRACKED);
-            addBlock(CASTLE_BLOCK_DARK_BRICK_BLOODY);
+            addBlock(DARK_STONE);
+            addBlock(DARK_STONE_STAIRS);
+            addBlock(DARK_STONE_SLAB);
+            addBlock(DARK_STONE_WALL);
+            addBlock(INFESTED_DARK_STONE);
+            addBlock(DARK_STONE_BRICKS);
+            addBlock(DARK_STONE_BRICK_STAIRS);
+            addBlock(DARK_STONE_BRICK_SLAB);
+            addBlock(DARK_STONE_BRICK_WALL);
+            addBlock(CRACKED_DARK_STONE_BRICKS);
+            addBlock(CHISELED_DARK_STONE_BRICKS);
+            addBlock(BLOODY_DARK_STONE_BRICKS);
+            addBlock(COBBLED_DARK_STONE);
+            addBlock(COBBLED_DARK_STONE_STAIRS);
+            addBlock(COBBLED_DARK_STONE_SLAB);
+            addBlock(COBBLED_DARK_STONE_WALL);
+            addBlock(POLISHED_DARK_STONE);
+            addBlock(POLISHED_DARK_STONE_STAIRS);
+            addBlock(POLISHED_DARK_STONE_SLAB);
+            addBlock(POLISHED_DARK_STONE_WALL);
+            addBlock(DARK_STONE_TILES);
+            addBlock(DARK_STONE_TILES_STAIRS);
+            addBlock(DARK_STONE_TILES_SLAB);
+            addBlock(DARK_STONE_TILES_WALL);
+            addBlock(CRACKED_DARK_STONE_TILES);
             addBlock(CASTLE_BLOCK_PURPLE_BRICK);
             addBlock(CASTLE_STAIRS_PURPLE_BRICK);
             addBlock(CASTLE_SLAB_PURPLE_BRICK);
             addBlock(CASTLE_BLOCK_PURPLE_BRICK_WALL);
-            addBlock(CASTLE_BLOCK_NORMAL_BRICK);
         }
 
         private void addDecorativeBlocks() {

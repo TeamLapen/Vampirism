@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 2,
+  "ingredient": {
+    "item": "vampirism:dark_stone_tiles"
+  },
+  "result": "vampirism:dark_stone_tiles_slab"
+}

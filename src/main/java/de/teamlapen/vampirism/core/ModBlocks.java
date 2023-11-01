@@ -47,17 +47,9 @@ public class ModBlocks {
     public static final RegistryObject<GrinderBlock> BLOOD_GRINDER = registerWithItem("blood_grinder", GrinderBlock::new);
     public static final RegistryObject<PedestalBlock> BLOOD_PEDESTAL = registerWithItem("blood_pedestal", PedestalBlock::new);
     public static final RegistryObject<SieveBlock> BLOOD_SIEVE = registerWithItem("blood_sieve", SieveBlock::new);
-    public static final RegistryObject<CastleBricksBlock> CASTLE_BLOCK_DARK_BRICK = registerWithItem("castle_block_dark_brick", () -> new CastleBricksBlock(CastleBricksBlock.EnumVariant.DARK_BRICK));
-    public static final RegistryObject<CastleBricksBlock> CASTLE_BLOCK_DARK_BRICK_BLOODY = registerWithItem("castle_block_dark_brick_bloody", () -> new CastleBricksBlock(CastleBricksBlock.EnumVariant.DARK_BRICK_BLOODY));
-    public static final RegistryObject<CastleBricksBlock> CASTLE_BLOCK_DARK_STONE = registerWithItem("castle_block_dark_stone", () -> new CastleBricksBlock(CastleBricksBlock.EnumVariant.DARK_STONE));
-    public static final RegistryObject<CastleBricksBlock> CASTLE_BLOCK_NORMAL_BRICK = registerWithItem("castle_block_normal_brick", () -> new CastleBricksBlock(CastleBricksBlock.EnumVariant.NORMAL_BRICK));
-    public static final RegistryObject<CastleBricksBlock> CASTLE_BLOCK_PURPLE_BRICK = registerWithItem("castle_block_purple_brick", () -> new CastleBricksBlock(CastleBricksBlock.EnumVariant.PURPLE_BRICK));
-    public static final RegistryObject<CastleSlabBlock> CASTLE_SLAB_DARK_BRICK = registerWithItem("castle_slab_dark_brick", () -> new CastleSlabBlock(CastleBricksBlock.EnumVariant.DARK_BRICK));
-    public static final RegistryObject<CastleSlabBlock> CASTLE_SLAB_DARK_STONE = registerWithItem("castle_slab_dark_stone", () -> new CastleSlabBlock(CastleBricksBlock.EnumVariant.DARK_STONE));
-    public static final RegistryObject<CastleSlabBlock> CASTLE_SLAB_PURPLE_BRICK = registerWithItem("castle_slab_purple_brick", () -> new CastleSlabBlock(CastleBricksBlock.EnumVariant.PURPLE_BRICK));
-    public static final RegistryObject<CastleStairsBlock> CASTLE_STAIRS_DARK_BRICK = registerWithItem("castle_stairs_dark_brick", () -> new CastleStairsBlock(() -> CASTLE_BLOCK_DARK_BRICK.get().defaultBlockState(), CastleBricksBlock.EnumVariant.DARK_BRICK));
-    public static final RegistryObject<CastleStairsBlock> CASTLE_STAIRS_DARK_STONE = registerWithItem("castle_stairs_dark_stone", () -> new CastleStairsBlock(() -> CASTLE_BLOCK_DARK_STONE.get().defaultBlockState(), CastleBricksBlock.EnumVariant.DARK_STONE));
-    public static final RegistryObject<CastleStairsBlock> CASTLE_STAIRS_PURPLE_BRICK = registerWithItem("castle_stairs_purple_brick", () -> new CastleStairsBlock(() -> CASTLE_BLOCK_PURPLE_BRICK.get().defaultBlockState(), CastleBricksBlock.EnumVariant.PURPLE_BRICK));
+    public static final RegistryObject<DarkStoneBlock> CASTLE_BLOCK_PURPLE_BRICK = registerWithItem("castle_block_purple_brick", () -> new DarkStoneBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).requiresCorrectToolForDrops().strength(2f, 10f).sound(SoundType.STONE)));
+    public static final RegistryObject<DarkStoneSlabBlock> CASTLE_SLAB_PURPLE_BRICK = registerWithItem("castle_slab_purple_brick", () -> new DarkStoneSlabBlock(BlockBehaviour.Properties.copy(CASTLE_BLOCK_PURPLE_BRICK.get())));
+    public static final RegistryObject<DarkStoneStairsBlock> CASTLE_STAIRS_PURPLE_BRICK = registerWithItem("castle_stairs_purple_brick", () -> new DarkStoneStairsBlock(CASTLE_BLOCK_PURPLE_BRICK.map(Block::defaultBlockState)::get, BlockBehaviour.Properties.copy(CASTLE_BLOCK_PURPLE_BRICK.get())));
     public static final RegistryObject<AltarCleansingBlock> ALTAR_CLEANSING = registerWithItem("altar_cleansing", AltarCleansingBlock::new);
     public static final RegistryObject<CursedEarthBlock> CURSED_EARTH = registerWithItem("cursed_earth", CursedEarthBlock::new);
     public static final RegistryObject<FirePlaceBlock> FIRE_PLACE = registerWithItem("fire_place", FirePlaceBlock::new);
@@ -153,9 +145,32 @@ public class ModBlocks {
     public static final RegistryObject<WallHangingSignBlock> DARK_SPRUCE_WALL_HANGING_SIGN = BLOCKS.register("dark_spruce_wall_hanging_sign", () -> new WallHangingSignBlock(BlockBehaviour.Properties.of().mapColor(DARK_SPRUCE_LOG.get().defaultMapColor()).ignitedByLava().noCollission().strength(1.0F).sound(SoundType.WOOD).lootFrom(DARK_SPRUCE_HANGING_SIGN), LogBlock.DARK_SPRUCE));
     public static final RegistryObject<WallHangingSignBlock> CURSED_SPRUCE_WALL_HANGING_SIGN = BLOCKS.register("cursed_spruce_wall_hanging_sign", () -> new WallHangingSignBlock(BlockBehaviour.Properties.of().mapColor(CURSED_SPRUCE_LOG.get().defaultMapColor()).ignitedByLava().noCollission().strength(1.0F).sound(SoundType.WOOD).lootFrom(CURSED_SPRUCE_HANGING_SIGN), LogBlock.CURSED_SPRUCE));
     public static final RegistryObject<CursedEarthPathBlock> CURSED_EARTH_PATH = registerWithItem("cursed_earth_path", () -> new CursedEarthPathBlock(BlockBehaviour.Properties.of().mapColor(MapColor.DIRT).strength(0.65F).sound(SoundType.GRASS).isViewBlocking(UtilLib::always).isSuffocating(UtilLib::always)));
-    public static final RegistryObject<Block> CASTLE_BLOCK_DARK_BRICK_CRACKED = registerWithItem("castle_block_dark_brick_cracked", () -> new CastleBricksBlock(CastleBricksBlock.EnumVariant.CRACKED_DARK_BRICK));
-    public static final RegistryObject<WallBlock> CASTLE_BLOCK_DARK_BRICK_WALL = registerWithItem("castle_block_dark_brick_wall", () -> new WallBlock(BlockBehaviour.Properties.copy(ModBlocks.CASTLE_BLOCK_DARK_BRICK.get()).forceSolidOn()));
     public static final RegistryObject<WallBlock> CASTLE_BLOCK_PURPLE_BRICK_WALL = registerWithItem("castle_block_purple_brick_wall", () -> new WallBlock(BlockBehaviour.Properties.copy(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK.get()).forceSolidOn()));
+    public static final RegistryObject<DarkStoneBlock> DARK_STONE = registerWithItem("dark_stone", () -> new DarkStoneBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).requiresCorrectToolForDrops().strength(2f, 10f).sound(SoundType.STONE)));
+    public static final RegistryObject<DarkStoneStairsBlock> DARK_STONE_STAIRS = registerWithItem("dark_stone_stairs", () -> new DarkStoneStairsBlock(DARK_STONE.map(Block::defaultBlockState)::get, BlockBehaviour.Properties.copy(DARK_STONE.get())));
+    public static final RegistryObject<DarkStoneSlabBlock> DARK_STONE_SLAB = registerWithItem("dark_stone_slab", () -> new DarkStoneSlabBlock(BlockBehaviour.Properties.copy(DARK_STONE.get())));
+    public static final RegistryObject<WallBlock> DARK_STONE_WALL = registerWithItem("dark_stone_wall", () -> new WallBlock(BlockBehaviour.Properties.copy(DARK_STONE.get()).forceSolidOn()));
+    public static final RegistryObject<DarkStoneBlock> DARK_STONE_BRICKS = registerWithItem("dark_stone_bricks", () -> new DarkStoneBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).requiresCorrectToolForDrops().strength(2f, 10f).sound(SoundType.STONE)));
+    public static final RegistryObject<DarkStoneStairsBlock> DARK_STONE_BRICK_STAIRS = registerWithItem("dark_stone_brick_stairs", () -> new DarkStoneStairsBlock(DARK_STONE_BRICKS.map(Block::defaultBlockState)::get, BlockBehaviour.Properties.copy(DARK_STONE_BRICKS.get())));
+    public static final RegistryObject<DarkStoneSlabBlock> DARK_STONE_BRICK_SLAB = registerWithItem("dark_stone_brick_slab", () -> new DarkStoneSlabBlock(BlockBehaviour.Properties.copy(DARK_STONE_BRICKS.get())));
+    public static final RegistryObject<WallBlock> DARK_STONE_BRICK_WALL = registerWithItem("dark_stone_brick_wall", () -> new WallBlock(BlockBehaviour.Properties.copy(DARK_STONE_BRICKS.get()).forceSolidOn()));
+    public static final RegistryObject<Block> CRACKED_DARK_STONE_BRICKS = registerWithItem("cracked_dark_stone_bricks", () -> new DarkStoneBlock(BlockBehaviour.Properties.copy(DARK_STONE_BRICKS.get())));
+    public static final RegistryObject<DarkStoneBlock> COBBLED_DARK_STONE = registerWithItem("cobbled_dark_stone", () -> new DarkStoneBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(2.5f, 10f).requiresCorrectToolForDrops().sound(SoundType.STONE)));
+    public static final RegistryObject<DarkStoneStairsBlock> COBBLED_DARK_STONE_STAIRS = registerWithItem("cobbled_dark_stone_stairs", () -> new DarkStoneStairsBlock(ModBlocks.COBBLED_DARK_STONE.map(Block::defaultBlockState)::get, BlockBehaviour.Properties.copy(COBBLED_DARK_STONE.get())));
+    public static final RegistryObject<DarkStoneSlabBlock> COBBLED_DARK_STONE_SLAB = registerWithItem("cobbled_dark_stone_slab", () -> new DarkStoneSlabBlock(BlockBehaviour.Properties.copy(COBBLED_DARK_STONE.get())));
+    public static final RegistryObject<WallBlock> COBBLED_DARK_STONE_WALL = registerWithItem("cobbled_dark_stone_wall", () -> new WallBlock(BlockBehaviour.Properties.copy(COBBLED_DARK_STONE.get()).forceSolidOn()));
+    public static final RegistryObject<DarkStoneBlock> POLISHED_DARK_STONE = registerWithItem("polished_dark_stone", () -> new DarkStoneBlock(BlockBehaviour.Properties.copy(COBBLED_DARK_STONE.get())));
+    public static final RegistryObject<DarkStoneStairsBlock> POLISHED_DARK_STONE_STAIRS = registerWithItem("polished_dark_stone_stairs", () -> new DarkStoneStairsBlock(POLISHED_DARK_STONE.map(Block::defaultBlockState)::get, BlockBehaviour.Properties.copy(POLISHED_DARK_STONE.get())));
+    public static final RegistryObject<DarkStoneSlabBlock> POLISHED_DARK_STONE_SLAB = registerWithItem("polished_dark_stone_slab", () -> new DarkStoneSlabBlock(BlockBehaviour.Properties.copy(POLISHED_DARK_STONE.get())));
+    public static final RegistryObject<WallBlock> POLISHED_DARK_STONE_WALL = registerWithItem("polished_dark_stone_wall", () -> new WallBlock(BlockBehaviour.Properties.copy(POLISHED_DARK_STONE.get()).forceSolidOn()));
+    public static final RegistryObject<DarkStoneBlock> DARK_STONE_TILES = registerWithItem("dark_stone_tiles", () -> new DarkStoneBlock(BlockBehaviour.Properties.copy(COBBLED_DARK_STONE.get())));
+    public static final RegistryObject<DarkStoneBlock> CRACKED_DARK_STONE_TILES = registerWithItem("cracked_dark_stone_tiles", () -> new DarkStoneBlock(BlockBehaviour.Properties.copy(DARK_STONE_TILES.get())));
+    public static final RegistryObject<DarkStoneStairsBlock> DARK_STONE_TILES_STAIRS = registerWithItem("dark_stone_tiles_stairs", () -> new DarkStoneStairsBlock(ModBlocks.DARK_STONE_TILES.map(Block::defaultBlockState)::get, BlockBehaviour.Properties.copy(DARK_STONE_TILES.get())));
+    public static final RegistryObject<DarkStoneSlabBlock> DARK_STONE_TILES_SLAB = registerWithItem("dark_stone_tiles_slab", () -> new DarkStoneSlabBlock(BlockBehaviour.Properties.copy(DARK_STONE_TILES.get())));
+    public static final RegistryObject<WallBlock> DARK_STONE_TILES_WALL = registerWithItem("dark_stone_tiles_wall", () -> new WallBlock(BlockBehaviour.Properties.copy(DARK_STONE_TILES.get()).forceSolidOn()));
+    public static final RegistryObject<DarkStoneBlock> CHISELED_DARK_STONE_BRICKS = registerWithItem("chiseled_dark_stone_bricks", () -> new DarkStoneBlock(BlockBehaviour.Properties.copy(DARK_STONE_BRICKS.get())));
+    public static final RegistryObject<DarkStoneBlock> INFESTED_DARK_STONE = registerWithItem("infested_dark_stone", () -> new DarkStoneBlock(BlockBehaviour.Properties.copy(DARK_STONE.get())));
+    public static final RegistryObject<DarkStoneBlock> BLOODY_DARK_STONE_BRICKS = registerWithItem("bloody_dark_stone_bricks", () -> new DarkStoneBlock(BlockBehaviour.Properties.copy(DARK_STONE_BRICKS.get())));
 
     /**
      * TUTORIAL:
@@ -198,6 +213,16 @@ public class ModBlocks {
                 case "vampirism:bloody_spruce_log" -> missingMapping.remap(ModBlocks.CURSED_SPRUCE_LOG.get());
                 case "vampirism:cursed_grass_block" -> missingMapping.remap(ModBlocks.CURSED_GRASS.get());
                 case "cursed_bark" -> missingMapping.ignore();
+                case "castle_block_dark_brick" -> missingMapping.remap(ModBlocks.DARK_STONE_BRICKS.get());
+                case "castle_block_dark_brick_bloody" -> missingMapping.remap(ModBlocks.BLOODY_DARK_STONE_BRICKS.get());
+                case "castle_block_dark_stone" -> missingMapping.remap(ModBlocks.DARK_STONE.get());
+                case "castle_block_normal_brick" -> missingMapping.remap(Blocks.STONE_BRICKS);
+                case "castle_slab_dark_brick" -> missingMapping.remap(ModBlocks.DARK_STONE_BRICK_SLAB.get());
+                case "castle_slab_dark_stone" -> missingMapping.remap(ModBlocks.DARK_STONE_SLAB.get());
+                case "castle_stairs_dark_brick" -> missingMapping.remap(ModBlocks.DARK_STONE_BRICK_STAIRS.get());
+                case "castle_stairs_dark_stone" -> missingMapping.remap(ModBlocks.DARK_STONE_STAIRS.get());
+                case "castle_block_dark_brick_cracked" -> missingMapping.remap(ModBlocks.CRACKED_DARK_STONE_BRICKS.get());
+                case "castle_block_dark_brick_wall" -> missingMapping.remap(ModBlocks.DARK_STONE_BRICK_WALL.get());
             }
         });
     }
