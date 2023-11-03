@@ -220,7 +220,7 @@ public class ModItems {
     public static final RegistryObject<RefinementItem> OBI_BELT = register("obi_belt", () -> new VampireRefinementItem(props(), IRefinementItem.AccessorySlotType.OBI_BELT));
 
     public static final RegistryObject<VampireClothingItem> VAMPIRE_CLOTHING_CROWN = register("vampire_clothing_crown", () -> new VampireClothingItem(ArmorItem.Type.HELMET));
-    public static final RegistryObject<VampireClothingItem> VAMPIRE_CLOTHING_LEGS = register("vampire_clothing_legs", () -> new VampireClothingItem(ArmorItem.Type.CHESTPLATE));
+    public static final RegistryObject<VampireClothingItem> VAMPIRE_CLOTHING_LEGS = register("vampire_clothing_legs", () -> new VampireClothingItem(ArmorItem.Type.LEGGINGS));
     public static final RegistryObject<VampireClothingItem> VAMPIRE_CLOTHING_BOOTS = register("vampire_clothing_boots", () -> new VampireClothingItem(ArmorItem.Type.BOOTS));
     public static final RegistryObject<VampireClothingItem> VAMPIRE_CLOTHING_HAT = register("vampire_clothing_hat", () -> new VampireClothingItem(ArmorItem.Type.HELMET));
 
