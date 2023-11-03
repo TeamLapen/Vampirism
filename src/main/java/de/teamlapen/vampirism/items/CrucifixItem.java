@@ -103,7 +103,7 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
 
     @Override
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean held) {
-        if (held && entity instanceof LivingEntity && entity.tickCount % 16 == 8) {
+        if (entity instanceof LivingEntity living && entity.tickCount % 16 == 8 && (living.getOffhandItem() == stack || living.getMainHandItem() == stack)) {
             if (Helper.isVampire(entity)) {
                 ((LivingEntity) entity).addEffect(new MobEffectInstance(ModEffects.POISON.get(), 20, 1));
                 if (entity instanceof Player player) {
