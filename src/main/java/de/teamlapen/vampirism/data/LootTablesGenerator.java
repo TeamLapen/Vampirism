@@ -417,6 +417,7 @@ public class LootTablesGenerator {//TODO 1.20 move to de.teamlapen.vampirism.dat
             this.dropSelf(ModBlocks.CRACKED_DARK_STONE_TILES.get());
             this.dropSelf(ModBlocks.CHISELED_DARK_STONE_BRICKS.get());
             this.otherWhenSilkTouch(ModBlocks.INFESTED_DARK_STONE.get(), ModBlocks.DARK_STONE.get());
+            this.dropSelf(ModBlocks.BAT_CAGE.get());
         }
 
         @NotNull

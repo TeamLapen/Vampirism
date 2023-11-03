@@ -171,6 +171,7 @@ public class ModBlocks {
     public static final RegistryObject<DarkStoneBlock> CHISELED_DARK_STONE_BRICKS = registerWithItem("chiseled_dark_stone_bricks", () -> new DarkStoneBlock(BlockBehaviour.Properties.copy(DARK_STONE_BRICKS.get())));
     public static final RegistryObject<DarkStoneBlock> INFESTED_DARK_STONE = registerWithItem("infested_dark_stone", () -> new DarkStoneBlock(BlockBehaviour.Properties.copy(DARK_STONE.get())));
     public static final RegistryObject<DarkStoneBlock> BLOODY_DARK_STONE_BRICKS = registerWithItem("bloody_dark_stone_bricks", () -> new DarkStoneBlock(BlockBehaviour.Properties.copy(DARK_STONE_BRICKS.get())));
+    public static final RegistryObject<Block> BAT_CAGE = registerWithItem("bat_cage", () -> new BatCageBlock(BlockBehaviour.Properties.of().strength(5.0F, 6.0F).sound(SoundType.METAL).noOcclusion()));
 
     /**
      * TUTORIAL:

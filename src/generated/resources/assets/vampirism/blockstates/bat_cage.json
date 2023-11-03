@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "contains_bat=false,facing=east": {
+      "model": "vampirism:block/bat_cage/block",
+      "y": 90
+    },
+    "contains_bat=false,facing=north": {
+      "model": "vampirism:block/bat_cage/block"
+    },
+    "contains_bat=false,facing=south": {
+      "model": "vampirism:block/bat_cage/block",
+      "y": 180
+    },
+    "contains_bat=false,facing=west": {
+      "model": "vampirism:block/bat_cage/block",
+      "y": 270
+    },
+    "contains_bat=true,facing=east": {
+      "model": "vampirism:block/bat_cage/block",
+      "y": 90
+    },
+    "contains_bat=true,facing=north": {
+      "model": "vampirism:block/bat_cage/block"
+    },
+    "contains_bat=true,facing=south": {
+      "model": "vampirism:block/bat_cage/block",
+      "y": 180
+    },
+    "contains_bat=true,facing=west": {
+      "model": "vampirism:block/bat_cage/block",
+      "y": 270
+    }
+  }
+}

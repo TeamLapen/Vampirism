@@ -273,6 +273,7 @@ public class BlockStateGenerator extends BlockStateProvider {//TODO 1.20 move to
                 .end()
                 .renderType(cutout);
         simpleBlock(ModBlocks.CURSED_EARTH_PATH.get(), cursedEarthPath);
+        horizontalBlock(ModBlocks.BAT_CAGE.get(), models().getExistingFile(modLoc("block/bat_cage/block")));
     }
 
     private void createWoodStates() {

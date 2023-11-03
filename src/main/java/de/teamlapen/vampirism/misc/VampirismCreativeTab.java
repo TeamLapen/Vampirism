@@ -242,6 +242,7 @@ public class VampirismCreativeTab {
             addBlock(VAMPIRE_RACK);
             addBlock(THRONE);
             addItem(ITEM_CANDELABRA);
+            addBlock(BAT_CAGE);
 
             addBlock(COFFIN_WHITE);
             addBlock(COFFIN_LIGHT_GRAY);

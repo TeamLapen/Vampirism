@@ -1,0 +1,17 @@
+# Blender 3.6.4 MTL File: 'untitled.blend'
+# www.blender.org
+
+newmtl concrete
+map_Kd #concrete
+
+newmtl dark_oak
+map_Kd #dark_oak
+
+newmtl gold
+map_Kd #gold
+
+newmtl oak
+map_Kd #oak
+
+newmtl spruce
+map_Kd #spruce
