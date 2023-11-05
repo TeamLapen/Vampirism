@@ -398,12 +398,12 @@ public class LootTablesGenerator {//TODO 1.20 move to de.teamlapen.vampirism.dat
             this.dropSelf(ModBlocks.CASTLE_BLOCK_DARK_BRICK_WALL.get());
             this.dropSelf(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK_WALL.get());
             this.add(ModBlocks.CURSED_HANGING_ROOTS.get(), ModBlockLootTables::createShearsOnlyDrop);
-            this.add(ModBlocks.MOTHER.get(), createSingleItemTable(ModItems.MOTHER_CORE.get())
-                    .withPool(LootPool.lootPool().name("bonus").setRolls(UniformGenerator.between(1,4))
-                            .add(LootItem.lootTableItem(ModItems.PURE_BLOOD_4.get()))
-                            .add(LootItem.lootTableItem(ModItems.HUMAN_HEART.get()).setQuality(10))
-                            .add(LootItem.lootTableItem(Items.DIAMOND_BLOCK))
-                            .add(LootItem.lootTableItem(ModItems.VAMPIRE_BLOOD_BOTTLE.get()).setQuality(10))));
+            this.add(ModBlocks.MOTHER.get(),
+                    createSingleItemTable(ModItems.MOTHER_CORE.get())
+                            .withPool(LootPool.lootPool().name("souls").setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(ModItems.SOUL_ORB_VAMPIRE.get()).setQuality(10)))
+                            .withPool(LootPool.lootPool().name("bonus").setRolls(UniformGenerator.between(1, 4))
+                                    .add(LootItem.lootTableItem(ModItems.PURE_BLOOD_4.get()).setQuality(2))
+                                    .add(LootItem.lootTableItem(ModItems.VAMPIRE_BLOOD_BOTTLE.get()).setQuality(10))));
         }
 
         @NotNull
