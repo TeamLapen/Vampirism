@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class GhostRenderer extends MobRenderer<GhostEntity, GhostModel> {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(REFERENCE.MODID, "textures/entity/ghost.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(REFERENCE.MODID, "textures/entity/ghost.png");
 
     public GhostRenderer(EntityRendererProvider.Context pContext) {
         super(pContext, new GhostModel(pContext.bakeLayer(ModEntitiesRender.GHOST)), 0.1f);

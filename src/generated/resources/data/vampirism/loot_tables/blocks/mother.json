@@ -18,22 +18,56 @@
     },
     {
       "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "vampirism:pure_blood_4"
-        },
+          "name": "vampirism:mother_trophy"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
         {
           "type": "minecraft:item",
-          "name": "vampirism:human_heart",
+          "name": "vampirism:soul_orb_vampire",
           "quality": 10
+        }
+      ],
+      "name": "souls",
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "condition": "minecraft:survives_explosion"
+            }
+          ],
+          "name": "vampirism:pure_blood_4",
+          "quality": 2
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:diamond_block"
-        },
-        {
-          "type": "minecraft:item",
+          "conditions": [
+            {
+              "condition": "minecraft:survives_explosion"
+            }
+          ],
           "name": "vampirism:vampire_blood_bottle",
           "quality": 10
         }

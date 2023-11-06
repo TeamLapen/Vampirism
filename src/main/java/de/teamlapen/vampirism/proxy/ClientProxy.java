@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.proxy;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.client.VIngameOverlays;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
@@ -12,6 +13,7 @@ import de.teamlapen.vampirism.client.gui.ScreenEventHandler;
 import de.teamlapen.vampirism.client.gui.overlay.*;
 import de.teamlapen.vampirism.client.gui.screens.*;
 import de.teamlapen.vampirism.client.renderer.RenderHandler;
+import de.teamlapen.vampirism.client.renderer.blockentity.ModBlockEntityItemRenderer;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.entity.player.skills.ClientSkillTreeManager;
 import de.teamlapen.vampirism.entity.player.skills.SkillTree;
@@ -69,14 +71,16 @@ public class ClientProxy extends CommonProxy {
     private CustomBossEventOverlay bossInfoOverlay;
     private RenderHandler renderHandler;
     private Map<UUID, ResourceKey<SoundEvent>> bossEventSounds = new HashMap<>();
+    private ModBlockEntityItemRenderer blockEntityItemRenderer;
 
     public ClientProxy() {
         //Minecraft.instance is null during runData.
         //noinspection ConstantConditions
-        if (Minecraft.getInstance() != null) {
-            this.renderHandler = new RenderHandler(Minecraft.getInstance());
+        Minecraft instance = Minecraft.getInstance();
+        if (instance != null) {
+            this.renderHandler = new RenderHandler(instance);
             MinecraftForge.EVENT_BUS.register(this.renderHandler);
-            ((ReloadableResourceManager) Minecraft.getInstance().getResourceManager()).registerReloadListener(this.renderHandler); // Must be added before initial resource manager load
+            ((ReloadableResourceManager) instance.getResourceManager()).registerReloadListener(this.renderHandler); // Must be added before initial resource manager load
         }
     }
 
@@ -197,7 +201,8 @@ public class ClientProxy extends CommonProxy {
         super.onInitStep(step, event);
         switch (step) {
             case CLIENT_SETUP -> {
-                this.overlay = new VampirismHUDOverlay(Minecraft.getInstance());
+                Minecraft instance = Minecraft.getInstance();
+                this.overlay = new VampirismHUDOverlay(instance);
                 registerSubscriptions();
                 //noinspection deprecation
                 ActionSelectScreen.loadActionOrder();
@@ -289,6 +294,14 @@ public class ClientProxy extends CommonProxy {
         runOnRenderThread(() -> Minecraft.getInstance().setScreen(screen));
     }
 
+    public static ClientProxy get() {
+        return (ClientProxy) VampirismMod.proxy;
+    }
+
+    public ModBlockEntityItemRenderer getBlockEntityItemRenderer() {
+        return blockEntityItemRenderer;
+    }
+
     @Override
     public void addBossEventSound(UUID bossEventUuid, ResourceKey<SoundEvent> sound) {
         this.bossEventSounds.put(bossEventUuid, sound);
@@ -296,5 +309,9 @@ public class ClientProxy extends CommonProxy {
 
     public ResourceKey<SoundEvent> getBossEventSound(UUID bossEventUuid) {
         return this.bossEventSounds.get(bossEventUuid);
+    }
+
+    public void registerBlockEntityItemRenderer() {
+        this.blockEntityItemRenderer = new ModBlockEntityItemRenderer(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
     }
 }

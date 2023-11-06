@@ -34,6 +34,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ComputeFovModifierEvent;
 import net.minecraftforge.client.event.ModelEvent;
+import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.event.AddPackFindersEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.level.LevelEvent;
@@ -195,6 +197,14 @@ public class ClientEventHandler {
             factionToolTips.add(Component.literal(" ").append(VReference.HUNTER_FACTION.getName()).append(Component.translatable("text.vampirism.faction_only")).withStyle(Minecraft.getInstance().player != null ? Helper.isHunter(Minecraft.getInstance().player) ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED : ChatFormatting.GRAY));
             toolTips.addAll(Math.min(event.getToolTip().size(), position), factionToolTips);
         });
+    }
+
+    public static void registerReloadListener(RegisterClientReloadListenersEvent event) {
+        event.registerReloadListener(ClientProxy.get().getBlockEntityItemRenderer());
+    }
+
+    public static void registerStageEvent(RenderLevelStageEvent.RegisterStageEvent event) {
+        ClientProxy.get().registerBlockEntityItemRenderer();
     }
 
     private static boolean shouldShowInTooltip(int p_242394_0_, @NotNull ItemStack.TooltipPart p_242394_1_) {

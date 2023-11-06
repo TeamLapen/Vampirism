@@ -68,6 +68,13 @@ public class GhostModel extends EntityModel<GhostEntity> {
         this.body.y += (float)Math.cos((double)f3) * 0.25F * f5;
     }
 
+    public void setupAnim2(float pAgeInTicks) {
+        this.body.getAllParts().forEach(ModelPart::resetPose);
+        float f3 = pAgeInTicks * 5.0F * ((float) Math.PI / 180F);
+
+        this.body.y += (float) Math.cos((double) f3) * 0.25F;
+    }
+
     @Override
     public void renderToBuffer(@NotNull PoseStack pPoseStack, @NotNull VertexConsumer pBuffer, int pPackedLight, int pPackedOverlay, float pRed, float pGreen, float pBlue, float pAlpha) {
         if (!this.isAggressive) {

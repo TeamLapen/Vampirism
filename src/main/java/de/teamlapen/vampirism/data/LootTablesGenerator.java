@@ -400,10 +400,12 @@ public class LootTablesGenerator {//TODO 1.20 move to de.teamlapen.vampirism.dat
             this.add(ModBlocks.CURSED_HANGING_ROOTS.get(), ModBlockLootTables::createShearsOnlyDrop);
             this.add(ModBlocks.MOTHER.get(),
                     createSingleItemTable(ModItems.MOTHER_CORE.get())
-                            .withPool(LootPool.lootPool().name("souls").setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(ModItems.SOUL_ORB_VAMPIRE.get()).setQuality(10)))
+                            .withPool(applyExplosionCondition(ModBlocks.MOTHER_TROPHY.get(), LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).add(LootItem.lootTableItem(ModBlocks.MOTHER_TROPHY.get()))))
+                            .withPool(applyExplosionCondition(ModItems.SOUL_ORB_VAMPIRE.get(), LootPool.lootPool().name("souls").setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(ModItems.SOUL_ORB_VAMPIRE.get()).setQuality(10))))
                             .withPool(LootPool.lootPool().name("bonus").setRolls(UniformGenerator.between(1, 4))
-                                    .add(LootItem.lootTableItem(ModItems.PURE_BLOOD_4.get()).setQuality(2))
-                                    .add(LootItem.lootTableItem(ModItems.VAMPIRE_BLOOD_BOTTLE.get()).setQuality(10))));
+                                    .add(applyExplosionCondition(ModItems.PURE_BLOOD_4.get(), LootItem.lootTableItem(ModItems.PURE_BLOOD_4.get()).setQuality(2)))
+                                    .add(applyExplosionCondition(ModItems.VAMPIRE_BLOOD_BOTTLE.get(), LootItem.lootTableItem(ModItems.VAMPIRE_BLOOD_BOTTLE.get()).setQuality(10)))));
+            this.dropSelf(ModBlocks.MOTHER_TROPHY.get());
         }
 
         @NotNull

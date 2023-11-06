@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.blocks.mother.ActiveVulnerableRemainsBlock;
 import de.teamlapen.vampirism.blocks.mother.MotherBlock;
 import de.teamlapen.vampirism.blocks.mother.RemainsBlock;
+import de.teamlapen.vampirism.items.MotherTrophyItem;
 import de.teamlapen.vampirism.util.BlockVoxelshapes;
 import de.teamlapen.vampirism.world.gen.CursedSpruceTree;
 import de.teamlapen.vampirism.world.gen.DarkSpruceTreeGrower;
@@ -14,6 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
@@ -168,7 +170,8 @@ public class ModBlocks {
         ((FireBlock) Blocks.FIRE).setFlammable(block, 30, 60);
         return block;
     });
-    public static final RegistryObject<MotherBlock> MOTHER = BLOCKS.register("mother", MotherBlock::new); //TODO remove item, add models/textures
+    public static final RegistryObject<MotherBlock> MOTHER = BLOCKS.register("mother", MotherBlock::new);
+    public static final RegistryObject<Block> MOTHER_TROPHY = registerWithItem("mother_trophy", () -> new MotherTrophyBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3, 9).lightLevel(s -> 1).noOcclusion()), block -> new MotherTrophyItem(block, new Item.Properties().rarity(Rarity.EPIC).stacksTo(1)));
 
 
     /**
