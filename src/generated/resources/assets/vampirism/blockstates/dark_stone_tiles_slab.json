@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "vampirism:block/dark_stone_tiles_slab"
+    },
+    "type=double": {
+      "model": "vampirism:block/dark_stone_tiles"
+    },
+    "type=top": {
+      "model": "vampirism:block/dark_stone_tiles_slab_top"
+    }
+  }
+}

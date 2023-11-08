@@ -2,15 +2,6 @@
   "requirements": {
     "requirements": [
       {
-        "type": "vampirism:entity_type",
-        "amount": 50,
-        "description": {
-          "translate": "entity_tag.vampirism.vampire"
-        },
-        "entityType": "vampirism:vampire",
-        "id": "vampirism:vampire"
-      },
-      {
         "type": "vampirism:stat",
         "amount": 3,
         "description": {
@@ -29,6 +20,15 @@
           "Count": 32,
           "id": "minecraft:gold_ingot"
         }
+      },
+      {
+        "type": "vampirism:entity_type",
+        "amount": 50,
+        "description": {
+          "translate": "entity_tag.vampirism.vampire"
+        },
+        "entityType": "vampirism:vampire",
+        "id": "vampirism:vampire"
       }
     ]
   },

@@ -29,9 +29,12 @@ public class ModTags {
     }
 
     public static class Blocks {
+        @Deprecated
         public static final TagKey<Block> CASTLE_BLOCK = tag("castle_block");
         public static final TagKey<Block> CURSED_EARTH = tag("cursed_earth");
+        @Deprecated
         public static final TagKey<Block> CASTLE_STAIRS = tag("castle_stairs");
+        @Deprecated
         public static final TagKey<Block> CASTLE_SLAPS = tag("castle_slaps");
         public static final TagKey<Block> DARK_SPRUCE_LOG = tag("dark_spruce_log");
         public static final TagKey<Block> CURSED_SPRUCE_LOG = tag("cursed_spruce_log");
@@ -39,6 +42,13 @@ public class ModTags {
         public static final TagKey<Block> TOTEM_TOP_FRAGILE = tag("totem_top_fragile");
         public static final TagKey<Block> TOTEM_TOP = tag("totem_top");
         public static final TagKey<Block> COFFIN = tag("coffin");
+        public static final TagKey<Block> DARK_STONE = tag("dark_stone");
+        public static final TagKey<Block> DARK_STONE_BRICKS = tag("dark_stone_bricks");
+        public static final TagKey<Block> POLISHED_DARK_STONE = tag("polished_dark_brick");
+        public static final TagKey<Block> COBBLED_DARK_STONE = tag("cobbled_dark_brick");
+        public static final TagKey<Block> DARK_STONE_TILES = tag("dark_brick_tiles");
+        public static final TagKey<Block> NO_SPAWN = tag("no_spawn");
+        public static final TagKey<Block> VAMPIRE_SPAWN = tag("vampire_spawn");
 
         public static final TagKey<Block> REMAINS = tag("remains");
         public static final TagKey<Block> ACTIVE_REMAINS = tag("active_remains");
@@ -73,6 +83,13 @@ public class ModTags {
         public static final TagKey<Item> APPLICABLE_OIL_PICKAXE = tag("applicable_oil/pickaxe");
         public static final TagKey<Item> APPLICABLE_OIL_ARMOR = tag("applicable_oil/armor");
         public static final TagKey<Item> HUNTER_COAT = tag("armo/hunter_coat");
+        public static final TagKey<Item> DARK_STONE = tag("dark_stone");
+        public static final TagKey<Item> DARK_STONE_BRICKS = tag("dark_stone_bricks");
+        public static final TagKey<Item> POLISHED_DARK_STONE = tag("polished_dark_brick");
+        public static final TagKey<Item> COBBLED_DARK_STONE = tag("cobbled_dark_brick");
+        public static final TagKey<Item> DARK_STONE_TILES = tag("dark_brick_tiles");
+        public static final TagKey<Item> NO_SPAWN = tag("no_spawn");
+        public static final TagKey<Item> VAMPIRE_SPAWN = tag("vampire_spawn");
 
         private static @NotNull TagKey<Item> tag(@NotNull ResourceLocation resourceLocation) {
             return ItemTags.create(resourceLocation);

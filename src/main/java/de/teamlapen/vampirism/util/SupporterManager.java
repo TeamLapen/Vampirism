@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.HashMap;
 
 /**
  * Handles the download, parsing and access of supporter information.
@@ -29,7 +30,7 @@ public class SupporterManager {
         if (supporters[1].length > 0) {
             return supporters[1][rnd.nextInt(supporters[1].length)];
         }
-        return new Supporter(REFERENCE.HUNTER_PLAYER_KEY, "none", "none", 0, null);
+        return new Supporter(REFERENCE.HUNTER_PLAYER_KEY, "none", "none", null, new HashMap<>());
     }
 
     /**
@@ -39,7 +40,7 @@ public class SupporterManager {
         if (supporters[0].length > 0) {
             return supporters[0][rnd.nextInt(supporters[0].length)];
         }
-        return new Supporter(REFERENCE.VAMPIRE_PLAYER_KEY, "none", "none", 0, null);
+        return new Supporter(REFERENCE.VAMPIRE_PLAYER_KEY, "none", "none",  null, new HashMap<>());
     }
 
 

@@ -17,7 +17,7 @@ jobs:
         uses: wei/curl@v1
         with:
           args: |
-            -X 'POST' 'https://api.vampirism.dev/api/v0/supporter/set' -H 'x-api-key: ${{ secrets.VAMPIRISM_API }}' -H 'Content-Type: application/json' --upload-file src/main/resources/supporters.json
+            -X 'POST' 'https://api.vampirism.dev/api/v1/supporter/set' -H 'x-api-key: ${{ secrets.VAMPIRISM_API }}' -H 'Content-Type: application/json' --upload-file src/main/resources/supporters.json
       - name: Upload settings
         uses: wei/curl@v1
         with:

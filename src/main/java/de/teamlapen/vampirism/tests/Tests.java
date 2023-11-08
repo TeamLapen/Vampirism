@@ -150,7 +150,7 @@ public class Tests {
         for (int x = -21; x < 22; x++) {
             for (int y = 1; y < 22; y++) {
                 for (int z = -21; z < 22; z++) {
-                    BlockState s = (y == 1 || x == -21 || x == 21 || z == -21 || z == 21 || y == 21) ? ModBlocks.CASTLE_BLOCK_DARK_STONE.get().defaultBlockState() : Blocks.AIR.defaultBlockState();
+                    BlockState s = (y == 1 || x == -21 || x == 21 || z == -21 || z == 21 || y == 21) ? ModBlocks.DARK_STONE.get().defaultBlockState() : Blocks.AIR.defaultBlockState();
                     world.setBlockAndUpdate(new BlockPos(x, y, z), s);
                 }
             }

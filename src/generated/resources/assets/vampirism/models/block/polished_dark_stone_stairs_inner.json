@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "vampirism:block/polished_dark_stone",
+    "side": "vampirism:block/polished_dark_stone",
+    "top": "vampirism:block/polished_dark_stone"
+  }
+}

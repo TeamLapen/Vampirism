@@ -271,8 +271,9 @@ public class RenderHandler implements ResourceManagerReloadListener {
         } else if (player.getSleepingPos().map(pos -> player.level().getBlockState(pos)).map(state -> state.getBlock() instanceof CoffinBlock).orElse(false)) {
             //Shrink player, so they fit into the coffin model
             event.getPoseStack().scale(0.8f, 0.95f, 0.8f);
-        } else if (event.getEntity().isUsingItem() && event.getEntity().getUseItemRemainingTicks() > 0 && event.getEntity().getMainHandItem().getItem() instanceof CrucifixItem) {
-            if (event.getEntity().getMainArm() == HumanoidArm.RIGHT) {
+        } else if (player.isUsingItem() && player.getUseItemRemainingTicks() > 0 && player.getUseItem().getItem() instanceof CrucifixItem) {
+            boolean main = player.getUsedItemHand() == InteractionHand.MAIN_HAND;
+            if ((main ? player.getMainArm() : player.getMainArm().getOpposite()) == HumanoidArm.RIGHT) {
                 event.getRenderer().getModel().rightArmPose = HumanoidModel.ArmPose.BLOCK;
             } else {
                 event.getRenderer().getModel().leftArmPose = HumanoidModel.ArmPose.BLOCK;

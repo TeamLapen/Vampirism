@@ -29,16 +29,9 @@ public class ItemModelGenerator extends BaseItemModelGenerator {//TODO 1.20 move
     protected void registerModels() {
         Set<Block> blocks = new HashSet<>() {{
             add(ModBlocks.ALTAR_TIP.get());
-            add(ModBlocks.CASTLE_BLOCK_DARK_BRICK.get());
-            add(ModBlocks.CASTLE_BLOCK_DARK_BRICK_BLOODY.get());
-            add(ModBlocks.CASTLE_BLOCK_DARK_STONE.get());
-            add(ModBlocks.CASTLE_BLOCK_NORMAL_BRICK.get());
+            add(ModBlocks.BLOODY_DARK_STONE_BRICKS.get());
             add(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK.get());
-            add(ModBlocks.CASTLE_SLAB_DARK_BRICK.get());
-            add(ModBlocks.CASTLE_SLAB_DARK_STONE.get());
             add(ModBlocks.CASTLE_SLAB_PURPLE_BRICK.get());
-            add(ModBlocks.CASTLE_STAIRS_DARK_BRICK.get());
-            add(ModBlocks.CASTLE_STAIRS_DARK_STONE.get());
             add(ModBlocks.CASTLE_STAIRS_PURPLE_BRICK.get());
             add(ModBlocks.BLOOD_GRINDER.get());
             add(ModBlocks.BLOOD_PEDESTAL.get());
@@ -80,7 +73,29 @@ public class ItemModelGenerator extends BaseItemModelGenerator {//TODO 1.20 move
             add(ModBlocks.VAMPIRE_RACK.get());
             add(ModBlocks.THRONE.get());
             add(ModBlocks.CURSED_EARTH_PATH.get());
-            add(ModBlocks.CASTLE_BLOCK_DARK_BRICK_CRACKED.get());
+            add(ModBlocks.CRACKED_DARK_STONE_BRICKS.get());
+            add(ModBlocks.DARK_STONE_BRICKS.get());
+            add(ModBlocks.DARK_STONE_BRICK_WALL.get());
+            add(ModBlocks.DARK_STONE_BRICK_SLAB.get());
+            add(ModBlocks.DARK_STONE_BRICK_STAIRS.get());
+            add(ModBlocks.CHISELED_DARK_STONE_BRICKS.get());
+            add(ModBlocks.DARK_STONE.get());
+            add(ModBlocks.DARK_STONE_STAIRS.get());
+            add(ModBlocks.DARK_STONE_SLAB.get());
+            add(ModBlocks.DARK_STONE_WALL.get());
+            add(ModBlocks.DARK_STONE_TILES.get());
+            add(ModBlocks.DARK_STONE_TILES_STAIRS.get());
+            add(ModBlocks.DARK_STONE_TILES_SLAB.get());
+            add(ModBlocks.DARK_STONE_TILES_WALL.get());
+            add(ModBlocks.POLISHED_DARK_STONE.get());
+            add(ModBlocks.POLISHED_DARK_STONE_STAIRS.get());
+            add(ModBlocks.POLISHED_DARK_STONE_SLAB.get());
+            add(ModBlocks.POLISHED_DARK_STONE_WALL.get());
+            add(ModBlocks.COBBLED_DARK_STONE.get());
+            add(ModBlocks.COBBLED_DARK_STONE_SLAB.get());
+            add(ModBlocks.COBBLED_DARK_STONE_STAIRS.get());
+            add(ModBlocks.COBBLED_DARK_STONE_WALL.get());
+            add(ModBlocks.CRACKED_DARK_STONE_TILES.get());
             add(ModBlocks.REMAINS.get());
             add(ModBlocks.VULNERABLE_REMAINS.get());
             add(ModBlocks.INCAPACITATED_VULNERABLE_REMAINS.get());
@@ -309,7 +324,12 @@ public class ItemModelGenerator extends BaseItemModelGenerator {//TODO 1.20 move
         this.item(ModItems.OIL_BOTTLE.get(), modLoc("item/oil_bottle"), modLoc("item/oil_bottle_overlay"));
         withExistingParent(ModBlocks.ALCHEMY_TABLE.get(), modLoc("block/alchemy_table/alchemy_table"));
         withExistingParent(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK_WALL.get(), mcLoc("block/wall_inventory")).texture("wall", modLoc("block/castle_block_purple_brick"));
-        withExistingParent(ModBlocks.CASTLE_BLOCK_DARK_BRICK_WALL.get(), mcLoc("block/wall_inventory")).texture("wall", modLoc("block/castle_block_dark_brick"));
+        withExistingParent(ModBlocks.DARK_STONE_BRICK_WALL.get(), mcLoc("block/wall_inventory")).texture("wall", modLoc("block/dark_stone_bricks"));
+        withExistingParent(ModBlocks.DARK_STONE_WALL.get(), mcLoc("block/wall_inventory")).texture("wall", modLoc("block/dark_stone"));
+        withExistingParent(ModBlocks.DARK_STONE_TILES_WALL.get(), mcLoc("block/wall_inventory")).texture("wall", modLoc("block/dark_stone_tiles"));
+        withExistingParent(ModBlocks.COBBLED_DARK_STONE_WALL.get(), mcLoc("block/wall_inventory")).texture("wall", modLoc("block/cobbled_dark_stone"));
+        withExistingParent(ModBlocks.POLISHED_DARK_STONE_WALL.get(), mcLoc("block/wall_inventory")).texture("wall", modLoc("block/polished_dark_stone"));
+        withExistingParent(ModBlocks.INFESTED_DARK_STONE.get(), modLoc("block/dark_stone"));
     }
 
 }

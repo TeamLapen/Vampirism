@@ -1,25 +1,20 @@
 package de.teamlapen.vampirism.api.settings;
 
-import de.teamlapen.vampirism.api.VReference;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Map;
 
-public record Supporter(@NotNull ResourceLocation faction, @NotNull String name, @NotNull String texture, int typeId, @Nullable String bookId) {
+/**
+ * Supporter information for advanced hunters / vampires
+ *
+ * @param faction faction for this supporter
+ * @param name display name that will be shown in game
+ * @param texture minecraft username to download the skin
+ * @param bookId if set it will be used to drop a specific book on loot drops
+ * @param appearance appearance options for the renderer
+ */
+public record Supporter(@NotNull ResourceLocation faction, @NotNull String name, @NotNull String texture, @Nullable String bookId, @NotNull Map<String, String> appearance) {
 
-    public record Old(@NotNull String name, String texture, int type, int status) {
-        public Supporter toNew(ResourceLocation faction) {
-            return new Supporter(faction, name, texture, type, null);
-        }
-    }
-    public record OldList(@NotNull String comment, @NotNull List<Old> vampires, @NotNull List<Old> hunters) {
-        public Collection<Supporter> toNew() {
-            return Stream.concat(vampires.stream().map(s -> s.toNew(VReference.VAMPIRE_FACTION.getID())), hunters.stream().map(s -> s.toNew(VReference.HUNTER_FACTION.getID()))).collect(Collectors.toList());
-        }
-    }
 }

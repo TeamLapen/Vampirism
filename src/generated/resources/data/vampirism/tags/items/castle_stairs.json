@@ -1,7 +1,7 @@
 {
   "values": [
-    "vampirism:castle_stairs_dark_stone",
-    "vampirism:castle_stairs_dark_brick",
+    "vampirism:dark_stone_stairs",
+    "vampirism:dark_stone_brick_stairs",
     "vampirism:castle_stairs_purple_brick"
   ]
 }

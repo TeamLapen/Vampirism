@@ -75,6 +75,7 @@ public class ModBlocksRender {
         event.registerBlockEntityRenderer(ModTiles.BLOOD_PEDESTAL.get(), PedestalBESR::new);
         event.registerBlockEntityRenderer(ModTiles.TOTEM.get(), TotemBESR::new);
         event.registerBlockEntityRenderer(ModTiles.GARLIC_DIFFUSER.get(), GarlicDiffuserBESR::new);
+        event.registerBlockEntityRenderer(ModTiles.BAT_CAGE.get(), BatCageBESR::new);
         event.registerBlockEntityRenderer(ModTiles.MOTHER_TROPHY.get(), MotherTrophyBESR::new);
     }
 

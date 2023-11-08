@@ -114,7 +114,16 @@ public class HunterEquipmentModel<T extends Mob> extends HumanoidModel<T> {
 
 
     public enum StakeType {
-        NONE, ONLY, FULL, AXE_ONLY
+        NONE, ONLY, FULL, AXE_ONLY;
+
+        public static @NotNull StakeType from(int id) {
+            return switch (id) {
+                case 0 -> ONLY;
+                case 1 -> FULL;
+                case 2 -> AXE_ONLY;
+                default -> NONE;
+            };
+        }
     }
 
     public enum HatType {

@@ -1,10 +1,9 @@
 {
   "values": [
-    "vampirism:castle_block_dark_brick",
-    "vampirism:castle_block_dark_brick_bloody",
-    "vampirism:castle_block_dark_stone",
-    "vampirism:castle_block_normal_brick",
+    "vampirism:dark_stone_bricks",
+    "vampirism:bloody_dark_stone_bricks",
+    "vampirism:dark_stone",
     "vampirism:castle_block_purple_brick",
-    "vampirism:castle_block_dark_brick_cracked"
+    "vampirism:cracked_dark_stone_bricks"
   ]
 }

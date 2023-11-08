@@ -74,8 +74,7 @@ public class VampirismBiomes {
     public static void addUndergroundVariety(BiomeGenerationSettings.@NotNull Builder builder) {
         builder.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, OrePlacements.ORE_GRAVEL);
         builder.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, VampirismFeatures.ORE_CURSED_DIRT_PLACED);
-        builder.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, VampirismFeatures.ORE_DARK_STONE_LOWER_PLACED);
-        builder.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, VampirismFeatures.ORE_DARK_STONE_UPPER_PLACED);
+        builder.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, VampirismFeatures.ORE_DARK_STONE_PLACED);
     }
 
     public static void addBushPatch(BiomeGenerationSettings.@NotNull Builder builder) {

@@ -5,13 +5,9 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
-import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.api.items.oil.IWeaponOil;
 import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
-import de.teamlapen.vampirism.blocks.CastleBricksBlock;
-import de.teamlapen.vampirism.blocks.CastleSlabBlock;
-import de.teamlapen.vampirism.blocks.CastleStairsBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.ai.goals.GolemTargetNonVillageFactionGoal;
@@ -48,7 +44,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PotionItem;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityEvent;
@@ -115,21 +110,8 @@ public class ModEntityEventHandler {
         BlockPos pos = new BlockPos((int) (event.getX() - 0.4F), (int) event.getY(), (int) (event.getZ() - 0.4F)).below();
         if (!event.getLevel().hasChunkAt(pos)) return;
         BlockState blockState = event.getLevel().getBlockState(pos);
-        Block b = blockState.getBlock();
-        boolean deny = false;
-        CastleBricksBlock.EnumVariant v = null;
 
-        if (b instanceof CastleBricksBlock) {
-            deny = true;
-            v = ((CastleBricksBlock) b).getVariant();
-        } else if (b instanceof CastleSlabBlock) {
-            deny = true;
-            v = ((CastleSlabBlock) b).getVariant();
-        } else if (b instanceof CastleStairsBlock) {
-            deny = true;
-            v = ((CastleStairsBlock) b).getVariant();
-        }
-        if (deny && (v == CastleBricksBlock.EnumVariant.DARK_STONE || !(event.getEntity().getClassification(false) == VReference.VAMPIRE_CREATURE_TYPE))) {
+        if (blockState.is(ModTags.Blocks.NO_SPAWN) || (blockState.is(ModTags.Blocks.VAMPIRE_SPAWN) || event.getEntity().getClassification(false) == VReference.VAMPIRE_CREATURE_TYPE)) {
             event.setSpawnCancelled(true);
         }
     }

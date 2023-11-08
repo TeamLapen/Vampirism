@@ -1,136 +1,233 @@
-{
-  "comment": "List of player of supporters of Vampirism. Status: 0-Dev,1-Contributor,2-Temporary",
-  "vampires": [
-    {
-      "name": "The powerful Bill",
-      "texture": "wildbill",
-      "type": 15,
-      "status": 0
-    },
-    {
-      "name": "Mazdallier",
-      "texture": "mazdallier",
-      "type": 0,
-      "status": 1
-    },
-    {
-      "name": "Adrian DraxWind",
-      "texture": "bronzeshadow",
-      "type": 15,
-      "status": 1
-    },
-    {
-      "name": "Zin",
-      "texture": "1LiterZinalco",
-      "type": 15,
-      "status": 1
-    },
-    {
-      "name": "Marchioness Spade",
-      "texture": "F_Spade",
-      "type": 15,
-      "status": 2
-    },
-    {
-      "name": "The nightmarish Krab",
-      "texture": "God_Seth_Big",
-      "type": 13,
-      "status": 2
-    },
-    {
-      "name": "Cultist Courn",
-      "texture": "CournBread",
-      "type": 15,
-      "status": 2
-    },
-    {
-      "name": "Crimson Cat",
-      "texture": "Pizzacat4",
-      "type": 3,
-      "status": 2
-    },
-    {
-      "name": "Sinister Solace",
-      "texture": "S_olace",
-      "type": 15,
-      "status": 2,
-      "bookId": "s_olace"
-    },
-    {
-      "name": "Valorous Vol",
-      "texture": "Volqonah",
-      "type": 15,
-      "status": 2,
-      "bookId": "volqonah"
-    },
-    {
-      "name": "Merciless Mike",
-      "texture": "supermike1999",
-      "type": 13,
-      "status": 1
+[
+  {
+    "faction": "vampirism:hunter",
+    "name": "Commander Sam",
+    "texture": "LilCatGod",
+    "type": 1,
+    "status": "Temporary",
+    "bookId": null,
+    "appearance": {
+      "hat": "1"
     }
-  ],
-  "hunters": [
-    {
-      "name": "Dreaded Mistadon",
-      "texture": "mistadon",
-      "type": 0,
-      "status": 0
-    },
-    {
-      "name": "Perilous Paul",
-      "texture": "cheaterpaul",
-      "type": 1,
-      "status": 0
-    },
-    {
-      "name": "Pyromaniac Pik",
-      "texture": "piklach",
-      "type": 0,
-      "status": 1,
-      "bookId": "pyropik"
-    },
-    {
-      "name": "Pendragon Helsing",
-      "texture": "xXvPendragonvXx",
-      "type": 1,
-      "status": 2
-    },
-    {
-      "name": "Marcus Walker",
-      "texture": "TheR3belT",
-      "type": 2,
-      "status": 1
-    },
-    {
-      "name": "Terrible Twig",
-      "texture": "Twig_Sunshine",
-      "type": 0,
-      "status": 2
-    },
-    {
-      "name": "Vampire Evader",
-      "texture": "ElectricEvader",
-      "type": 1,
-      "status": 2
-    },
-    {
-      "name": "Imperial Teri",
-      "texture": "teri_berry",
-      "type": 1,
-      "status": 2
-    },
-    {
-      "name": "Luminous Luna",
-      "texture": "Lunarifish",
-      "type": 1,
-      "status": 2
-    },
-    {
-      "name": "Commander Sam",
-      "texture": "LilCatGod",
-      "type": 1,
-      "status": 2
+  },
+  {
+    "faction": "vampirism:hunter",
+    "name": "Dreaded Mistadon",
+    "texture": "mistadon",
+    "type": 0,
+    "status": "Dev",
+    "bookId": null,
+    "appearance": {
+      "hat": "0"
     }
-  ]
-}
+  },
+  {
+    "faction": "vampirism:hunter",
+    "name": "Imperial Teri",
+    "texture": "teri_berry",
+    "type": 1,
+    "status": "Temporary",
+    "bookId": null,
+    "appearance": {
+      "hat": "1"
+    }
+  },
+  {
+    "faction": "vampirism:hunter",
+    "name": "Luminous Luna",
+    "texture": "Lunarifish",
+    "type": 1,
+    "status": "Temporary",
+    "bookId": null,
+    "appearance": {
+      "hat": "1"
+    }
+  },
+  {
+    "faction": "vampirism:hunter",
+    "name": "Marcus Walker",
+    "texture": "TheR3belT",
+    "type": 2,
+    "status": "Contributor",
+    "bookId": null,
+    "appearance": {
+      "hat": "2"
+    }
+  },
+  {
+    "faction": "vampirism:hunter",
+    "name": "Pendragon Helsing",
+    "texture": "xXvPendragonvXx",
+    "type": 1,
+    "status": "Temporary",
+    "bookId": null,
+    "appearance": {
+      "hat": "1"
+    }
+  },
+  {
+    "faction": "vampirism:hunter",
+    "name": "Perilous Paul",
+    "texture": "cheaterpaul",
+    "type": 1,
+    "status": "Dev",
+    "bookId": null,
+    "appearance": {
+      "hat": "1"
+    }
+  },
+  {
+    "faction": "vampirism:hunter",
+    "name": "Pyromaniac Pik",
+    "texture": "piklach",
+    "type": 0,
+    "status": "Contributor",
+    "bookId": "pyropik",
+    "appearance": {
+      "hat": "0"
+    }
+  },
+  {
+    "faction": "vampirism:hunter",
+    "name": "Terrible Twig",
+    "texture": "Twig_Sunshine",
+    "type": 0,
+    "status": "Temporary",
+    "bookId": null,
+    "appearance": {
+      "hat": "0"
+    }
+  },
+  {
+    "faction": "vampirism:hunter",
+    "name": "Vampire Evader",
+    "texture": "ElectricEvader",
+    "type": 1,
+    "status": "Temporary",
+    "bookId": null,
+    "appearance": {
+      "hat": "1"
+    }
+  },
+  {
+    "faction": "vampirism:vampire",
+    "name": "Adrian DraxWind",
+    "texture": "bronzeshadow",
+    "type": 15,
+    "status": "Contributor",
+    "bookId": null,
+    "appearance": {
+      "eye": "15"
+    }
+  },
+  {
+    "faction": "vampirism:vampire",
+    "name": "Crimson Cat",
+    "texture": "Pizzacat4",
+    "type": 3,
+    "status": "Temporary",
+    "bookId": null,
+    "appearance": {
+      "eye": "3"
+    }
+  },
+  {
+    "faction": "vampirism:vampire",
+    "name": "Cultist Courn",
+    "texture": "CournBread",
+    "type": 15,
+    "status": "Temporary",
+    "bookId": null,
+    "appearance": {
+      "eye": "15"
+    }
+  },
+  {
+    "faction": "vampirism:vampire",
+    "name": "Marchioness Spade",
+    "texture": "F_Spade",
+    "type": 15,
+    "status": "Temporary",
+    "bookId": null,
+    "appearance": {
+      "eye": "15"
+    }
+  },
+  {
+    "faction": "vampirism:vampire",
+    "name": "Mazdallier",
+    "texture": "mazdallier",
+    "type": 0,
+    "status": "Contributor",
+    "bookId": null,
+    "appearance": {
+      "eye": "0"
+    }
+  },
+  {
+    "faction": "vampirism:vampire",
+    "name": "Merciless Mike",
+    "texture": "supermike1999",
+    "type": 13,
+    "status": "Contributor",
+    "bookId": null,
+    "appearance": {
+      "eye": "13"
+    }
+  },
+  {
+    "faction": "vampirism:vampire",
+    "name": "Sinister Solace",
+    "texture": "S_olace",
+    "type": 15,
+    "status": "Temporary",
+    "bookId": "s_olace",
+    "appearance": {
+      "eye": "15"
+    }
+  },
+  {
+    "faction": "vampirism:vampire",
+    "name": "The nightmarish Krab",
+    "texture": "God_Seth_Big",
+    "type": 13,
+    "status": "Temporary",
+    "bookId": null,
+    "appearance": {
+      "eye": "13"
+    }
+  },
+  {
+    "faction": "vampirism:vampire",
+    "name": "The powerful Bill",
+    "texture": "wildbill",
+    "type": 15,
+    "status": "Dev",
+    "bookId": null,
+    "appearance": {
+      "eye": "15"
+    }
+  },
+  {
+    "faction": "vampirism:vampire",
+    "name": "Valorous Vol",
+    "texture": "Volqonah",
+    "type": 15,
+    "status": "Temporary",
+    "bookId": "volqonah",
+    "appearance": {
+      "eye": "15"
+    }
+  },
+  {
+    "faction": "vampirism:vampire",
+    "name": "Zin",
+    "texture": "1LiterZinalco",
+    "type": 15,
+    "status": "Contributor",
+    "bookId": null,
+    "appearance": {
+      "eye": "15"
+    }
+  }
+]
