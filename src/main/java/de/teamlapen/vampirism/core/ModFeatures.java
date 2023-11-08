@@ -9,10 +9,9 @@ import de.teamlapen.vampirism.world.gen.feature.VampireDungeonFeature;
 import de.teamlapen.vampirism.world.gen.feature.treedecorators.TrunkCursedVineDecorator;
 import de.teamlapen.vampirism.world.gen.structure.huntercamp.HunterCampStructure;
 import de.teamlapen.vampirism.world.gen.structure.hunteroutpost.HunterOutpostStructure;
+import de.teamlapen.vampirism.world.gen.structure.mother.MotherStructure;
 import de.teamlapen.vampirism.world.gen.structure.vampirealtar.VampireAltarStructure;
 import de.teamlapen.vampirism.world.gen.structure.vampirehut.VampireHutStructure;
-import net.minecraft.core.HolderGetter;
-import de.teamlapen.vampirism.world.gen.structure.mother.MotherStructure;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
@@ -49,18 +48,18 @@ public class ModFeatures {
     public static final ResourceKey<Structure> VAMPIRE_HUT = ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(REFERENCE.MODID, "vampire_hut"));
     public static final ResourceKey<Structure> HUNTER_OUTPOST = ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(REFERENCE.MODID, "hunter_outpost"));
     public static final ResourceKey<Structure> VAMPIRE_ALTAR = ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(REFERENCE.MODID, "vampire_altar"));
+    public static final ResourceKey<Structure> MOTHER = ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(REFERENCE.MODID, "mother"));
 
     public static final RegistryObject<StructureType<HunterCampStructure>> HUNTER_CAMP_TYPE = STRUCTURE_TYPES.register("hunter_camp", () -> () -> HunterCampStructure.CODEC);
     public static final RegistryObject<StructureType<VampireHutStructure>> VAMPIRE_HUT_TYPE = STRUCTURE_TYPES.register("vampire_hut", () -> () -> VampireHutStructure.CODEC);
     public static final RegistryObject<StructureType<HunterOutpostStructure>> HUNTER_OUTPOST_TYPE = STRUCTURE_TYPES.register("outpost", () -> () -> HunterOutpostStructure.CODEC);
     public static final RegistryObject<StructureType<VampireAltarStructure>> VAMPIRE_ALTAR_TYPE = STRUCTURE_TYPES.register("vampire_altar", () -> () -> VampireAltarStructure.CODEC);
+    public static final RegistryObject<StructureType<MotherStructure>> MOTHER_TYPE = STRUCTURE_TYPES.register("mother", () -> () -> MotherStructure.CODEC);
 
     public static final RegistryObject<VampireDungeonFeature> VAMPIRE_DUNGEON = FEATURES.register("vampire_dungeon", () -> new VampireDungeonFeature(NoneFeatureConfiguration.CODEC));
 
-    public static final RegistryObject<TreeDecoratorType<TrunkCursedVineDecorator>> trunk_cursed_vine = TREE_DECORATOR.register("trunk_cursed_vine", () -> new TreeDecoratorType<>(TrunkCursedVineDecorator.CODEC));
+    public static final RegistryObject<TreeDecoratorType<TrunkCursedVineDecorator>> TRUNK_CURSED_VINE = TREE_DECORATOR.register("trunk_cursed_vine", () -> new TreeDecoratorType<>(TrunkCursedVineDecorator.CODEC));
 
-    public static final ResourceKey<Structure> MOTHER_KEY = ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(REFERENCE.MODID, "mother"));
-    public static final RegistryObject<StructureType<MotherStructure>> MOTHER = STRUCTURE_TYPES.register("mother", () -> () -> MotherStructure.CODEC);
 
     static void register(IEventBus bus) {
         FEATURES.register(bus);
@@ -77,6 +76,6 @@ public class ModFeatures {
         context.register(ModFeatures.VAMPIRE_HUT, new VampireHutStructure(StructuresAccessor.structure(lookup.getOrThrow(ModTags.Biomes.HasStructure.VAMPIRE_HUT), TerrainAdjustment.NONE)));
         context.register(ModFeatures.HUNTER_OUTPOST, new HunterOutpostStructure(new Structure.StructureSettings(lookup.getOrThrow(ModTags.Biomes.HasStructure.HUNTER_OUTPOST), Map.of(MobCategory.MONSTER, new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.STRUCTURE, WeightedRandomList.create(new MobSpawnSettings.SpawnerData(ModEntities.HUNTER.get(), 60, 1, 2), new MobSpawnSettings.SpawnerData(ModEntities.ADVANCED_HUNTER.get(), 20, 1, 1)))) , GenerationStep.Decoration.SURFACE_STRUCTURES,TerrainAdjustment.BEARD_BOX)));
         context.register(ModFeatures.VAMPIRE_ALTAR, new VampireAltarStructure(StructuresAccessor.structure(lookup.getOrThrow(ModTags.Biomes.HasStructure.VAMPIRE_ALTAR), TerrainAdjustment.BEARD_BOX)));
-        context.register(ModFeatures.MOTHER_KEY, new MotherStructure(StructuresAccessor.structure(lookup.getOrThrow(ModTags.Biomes.HasStructure.MOTHER), TerrainAdjustment.NONE)));
+        context.register(ModFeatures.MOTHER, new MotherStructure(StructuresAccessor.structure(lookup.getOrThrow(ModTags.Biomes.HasStructure.MOTHER), TerrainAdjustment.NONE)));
     }
 }

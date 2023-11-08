@@ -16,6 +16,6 @@ public class MotherStructure extends SinglePieceStructure {
 
     @Override
     public @NotNull StructureType<?> type() {
-        return ModFeatures.MOTHER.get();
+        return ModFeatures.MOTHER_TYPE.get();
     }
 }

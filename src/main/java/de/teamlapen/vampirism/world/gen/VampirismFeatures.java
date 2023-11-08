@@ -176,9 +176,9 @@ public class VampirismFeatures {
         // hunter camp holder is not available in data generation see ModFeatures#createStructures
         // context.register(HUNTER_CAMP, new StructureSet(structureLookup.getOrThrow(ModFeatures.HUNTER_CAMP), new RandomSpreadStructurePlacement(Vec3i.ZERO, StructurePlacement.FrequencyReductionMethod.DEFAULT, 1.0F, 1724616580, Optional.of(new StructurePlacement.ExclusionZone(villageSet,2)),9, 4, RandomSpreadType.LINEAR)));
         context.register(VAMPIRE_HUT, new StructureSet(structureLookup.getOrThrow(ModFeatures.VAMPIRE_HUT), new RandomSpreadStructurePlacement(32, 10, RandomSpreadType.LINEAR, 1937195837)));
-        context.register(VAMPIRE_ALTAR, new StructureSet(structureLookup.getOrThrow(ModFeatures.VAMPIRE_ALTAR), new RandomSpreadStructurePlacement(48, 15, RandomSpreadType.LINEAR, 823476514)));
-        context.register(OUTPOST, new StructureSet(structureLookup.getOrThrow(ModFeatures.HUNTER_OUTPOST), new RandomSpreadStructurePlacement(32, 8, RandomSpreadType.LINEAR, 897234698)));
-        context.register(MOTHER_SET, new StructureSet(structureLookup.getOrThrow(ModFeatures.MOTHER_KEY), new RandomSpreadStructurePlacement(9, 4, RandomSpreadType.LINEAR, 1724616580)));
+        context.register(VAMPIRE_ALTAR, new StructureSet(structureLookup.getOrThrow(ModFeatures.VAMPIRE_ALTAR), new RandomSpreadStructurePlacement(32, 15, RandomSpreadType.LINEAR, 573190874)));
+        context.register(OUTPOST, new StructureSet(structureLookup.getOrThrow(ModFeatures.HUNTER_OUTPOST), new RandomSpreadStructurePlacement(24, 8, RandomSpreadType.LINEAR, 364135095)));
+        context.register(MOTHER_SET, new StructureSet(structureLookup.getOrThrow(ModFeatures.MOTHER), new RandomSpreadStructurePlacement(48, 6, RandomSpreadType.TRIANGULAR, 1897236459)));
     }
 
 }
