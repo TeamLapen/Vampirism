@@ -90,7 +90,7 @@ public class WeaponTableCraftingSlot extends Slot {
                 world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), ModSounds.WEAPON_TABLE_CRAFTING.get(), SoundSource.PLAYERS, 1f, 1f);
             }
         }));
-        playerIn.awardStat(ModStats.weapon_table);
+        playerIn.awardStat(ModStats.WEAPON_TABLE);
     }
 
     @NotNull

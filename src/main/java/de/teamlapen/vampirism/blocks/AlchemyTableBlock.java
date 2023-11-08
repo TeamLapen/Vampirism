@@ -69,7 +69,7 @@ public class AlchemyTableBlock extends HorizontalContainerBlock {
                 BlockEntity tileentity = level.getBlockEntity(pos);
                 if (tileentity instanceof AlchemyTableBlockEntity) {
                     player.openMenu((AlchemyTableBlockEntity) tileentity);
-                    player.awardStat(ModStats.interact_with_alchemy_table);
+                    player.awardStat(ModStats.INTERACT_WITH_ALCHEMY_TABLE);
                 }
             } else {
                 player.displayClientMessage(Component.translatable("text.vampirism.unfamiliar"), true);
