@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "vampirism:block/cursed_hanging_roots"
+  }
+}

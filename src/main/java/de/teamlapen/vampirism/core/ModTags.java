@@ -50,6 +50,11 @@ public class ModTags {
         public static final TagKey<Block> NO_SPAWN = tag("no_spawn");
         public static final TagKey<Block> VAMPIRE_SPAWN = tag("vampire_spawn");
 
+        public static final TagKey<Block> REMAINS = tag("remains");
+        public static final TagKey<Block> ACTIVE_REMAINS = tag("active_remains");
+        public static final TagKey<Block> VULNERABLE_REMAINS = tag("vulnerable_remains");
+        public static final TagKey<Block> MOTHER_GROWS_ON = tag("mother_grows_on");
+
         private static @NotNull TagKey<Block> tag(@NotNull ResourceLocation resourceLocation) {
             return BlockTags.create(resourceLocation);
         }
@@ -117,6 +122,7 @@ public class ModTags {
          * Vanilla zombies
          */
         public static final TagKey<EntityType<?>> ZOMBIES = tag("zombies");
+        public static final TagKey<EntityType<?>> IGNORE_VAMPIRE_SWORD_FINISHER = tag("ignore_vampire_sword_finisher");
 
         private static @NotNull TagKey<EntityType<?>> tag(@NotNull ResourceLocation resourceLocation) {
             return TagKey.create(Registries.ENTITY_TYPE, resourceLocation);
@@ -152,6 +158,7 @@ public class ModTags {
             public static final TagKey<Biome> VAMPIRE_HUT = tag("has_structure/vampire_hut");
             public static final TagKey<Biome> HUNTER_OUTPOST = tag("has_structure/outpost");
             public static final TagKey<Biome> VAMPIRE_ALTAR = tag("has_structure/vampire_altar");
+            public static final TagKey<Biome> MOTHER = tag("has_structure/mother");
         }
 
         public static class HasSpawn {
@@ -196,6 +203,8 @@ public class ModTags {
     public static class DamageTypes {
 
         public static final TagKey<DamageType> ENTITY_PHYSICAL = tag("entity_physical");
+        public static final TagKey<DamageType> REMAINS_INVULNERABLE = tag("remains_invulnerable");
+        public static final TagKey<DamageType> MOTHER_RESISTANT_TO = tag("mother_resistant_to");
 
         private static @NotNull TagKey<DamageType> tag(@NotNull String name) {
             return TagKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(REFERENCE.MODID, name));

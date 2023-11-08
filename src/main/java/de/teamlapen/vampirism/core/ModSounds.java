@@ -1,13 +1,19 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.Music;
+import net.minecraft.sounds.Musics;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Handle all sound related stuff
@@ -32,6 +38,18 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> TELEPORT_HERE = create("fx.teleport_here");
     public static final RegistryObject<SoundEvent> FREEZE = create("fx.freeze");
     public static final RegistryObject<SoundEvent> POTION_TABLE_CRAFTING = create("block.potion_table_crafting");
+    public static final RegistryObject<SoundEvent> MOTHER_DEATH = create("fx.mother_death");
+    public static final RegistryObject<SoundEvent> MOTHER_AMBIENT = create("ambient.mother");
+    public static final RegistryObject<SoundEvent> VAMPIRE_FOREST_AMBIENT = create("ambient.forest");
+    public static final RegistryObject<SoundEvent> GHOST_AMBIENT = create("entity.ghost.ambient");
+    public static final RegistryObject<SoundEvent> GHOST_DEATH = create("entity.ghost.death");
+    public static final RegistryObject<SoundEvent> GHOST_HURT = create("entity.ghost.hurt");
+    public static final RegistryObject<SoundEvent> REMAINS_DEFENDER_AMBIENT = create("entity.remains_defender.ambient");
+    public static final RegistryObject<SoundEvent> REMAINS_DEFENDER_DEATH = create("entity.remains_defender.death");
+    public static final RegistryObject<SoundEvent> REMAINS_DEFENDER_HURT = create("entity.remains_defender.hit");
+    public static final RegistryObject<SoundEvent> REMAINS_DEATH = create("entity.remains.death");
+    public static final RegistryObject<SoundEvent> REMAINS_HURT = create("entity.remains.hurt");
+
 
     static void register(IEventBus bus) {
         SOUND_EVENTS.register(bus);
@@ -41,4 +59,11 @@ public class ModSounds {
         ResourceLocation resourcelocation = new ResourceLocation(REFERENCE.MODID, soundNameIn);
         return SOUND_EVENTS.register(soundNameIn, () -> SoundEvent.createVariableRangeEvent(resourcelocation));
     }
+
+    private static final Map<ResourceKey<SoundEvent>, Music> music  = new HashMap<>();
+
+    public static Music getMusic(ResourceKey<SoundEvent> soundEvent) {
+        return music.computeIfAbsent(soundEvent, sound -> ForgeRegistries.SOUND_EVENTS.getHolder(sound).map(event -> new Music(event, 0,0, true)).orElse(Musics.GAME));
+    }
+
 }

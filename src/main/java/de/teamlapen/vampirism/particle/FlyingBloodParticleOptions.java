@@ -14,7 +14,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
-public record FlyingBloodParticleOptions(int maxAge, boolean direct, double targetX, double targetY, double targetZ, ResourceLocation texture ) implements ParticleOptions {
+public record FlyingBloodParticleOptions(int maxAge, boolean direct, double targetX, double targetY, double targetZ, ResourceLocation texture, float scale) implements ParticleOptions {
 
     /**
      * CODEC appears to be an alternative to De/Serializer. Not sure why both exist
@@ -26,23 +26,32 @@ public record FlyingBloodParticleOptions(int maxAge, boolean direct, double targ
                     Codec.DOUBLE.fieldOf("x").forGetter((p_239805_0_) -> p_239805_0_.targetX),
                     Codec.DOUBLE.fieldOf("y").forGetter((p_239804_0_) -> p_239804_0_.targetY),
                     Codec.DOUBLE.fieldOf("z").forGetter((p_239804_0_) -> p_239804_0_.targetZ),
-                    Codec.STRING.fieldOf("t").forGetter((p_239804_0_) -> p_239804_0_.texture.toString()))
-            .apply(p_239803_0_, (a, d, x, y, z, t) -> new FlyingBloodParticleOptions(a, d, x, y, z, new ResourceLocation(t))));
+                    Codec.STRING.fieldOf("t").forGetter((p_239804_0_) -> p_239804_0_.texture.toString()),
+                    Codec.FLOAT.fieldOf("s").forGetter((p_239804_0_) -> p_239804_0_.scale)
+            ).apply(p_239803_0_, (a, d, x, y, z, t, s) -> new FlyingBloodParticleOptions(a, d, x, y, z, new ResourceLocation(t), s)));
 
     public static final ParticleOptions.Deserializer<FlyingBloodParticleOptions> DESERIALIZER = new ParticleOptions.Deserializer<>() {
         @NotNull
         public FlyingBloodParticleOptions fromCommand(@NotNull ParticleType<FlyingBloodParticleOptions> particleTypeIn, @NotNull StringReader reader) throws CommandSyntaxException {
-            return new FlyingBloodParticleOptions(reader.readInt(), reader.readBoolean(), reader.readDouble(), reader.readDouble(), reader.readDouble(), ResourceLocation.read(reader));
+            return new FlyingBloodParticleOptions(reader.readInt(), reader.readBoolean(), reader.readDouble(), reader.readDouble(), reader.readDouble(), ResourceLocation.read(reader), reader.readFloat());
         }
 
         @NotNull
         public FlyingBloodParticleOptions fromNetwork(@NotNull ParticleType<FlyingBloodParticleOptions> particleTypeIn, @NotNull FriendlyByteBuf buffer) {
-            return new FlyingBloodParticleOptions(buffer.readVarInt(), buffer.readBoolean(), buffer.readDouble(), buffer.readDouble(), buffer.readDouble(), buffer.readResourceLocation());
+            return new FlyingBloodParticleOptions(buffer.readVarInt(), buffer.readBoolean(), buffer.readDouble(), buffer.readDouble(), buffer.readDouble(), buffer.readResourceLocation(), buffer.readFloat());
         }
     };
 
     public FlyingBloodParticleOptions(int maxAgeIn, boolean direct, double targetX, double targetY, double targetZ) {
-        this(maxAgeIn, direct, targetX, targetY, targetZ, new ResourceLocation("minecraft", "critical_hit"));
+        this(maxAgeIn, direct, targetX, targetY, targetZ, 1f);
+    }
+
+    public FlyingBloodParticleOptions(int maxAgeIn, boolean direct, double targetX, double targetY, double targetZ, float scale) {
+        this(maxAgeIn, direct, targetX, targetY, targetZ, new ResourceLocation("minecraft", "critical_hit"), scale);
+    }
+
+    public FlyingBloodParticleOptions(int maxAge, boolean direct, double targetX, double targetY, double targetZ, ResourceLocation texture) {
+        this(maxAge, direct, targetX, targetY, targetZ, texture, 1f);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -58,6 +67,7 @@ public record FlyingBloodParticleOptions(int maxAge, boolean direct, double targ
         buffer.writeDouble(targetY);
         buffer.writeDouble(targetZ);
         buffer.writeResourceLocation(texture);
+        buffer.writeFloat(scale);
     }
 
     @NotNull

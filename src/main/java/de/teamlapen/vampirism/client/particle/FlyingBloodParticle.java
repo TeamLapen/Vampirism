@@ -25,7 +25,7 @@ public class FlyingBloodParticle extends TextureSheetParticle {
     private final boolean direct;
 
 
-    public FlyingBloodParticle(@NotNull ClientLevel world, double posX, double posY, double posZ, double destX, double destY, double destZ, int maxage, boolean direct, @NotNull ResourceLocation particleId) {
+    public FlyingBloodParticle(@NotNull ClientLevel world, double posX, double posY, double posZ, double destX, double destY, double destZ, int maxage, boolean direct, @NotNull ResourceLocation particleId, float scale) {
         super(world, posX, posY, posZ);
         this.lifetime = maxage;
         this.destX = destX;
@@ -48,6 +48,8 @@ public class FlyingBloodParticle extends TextureSheetParticle {
         }
 
         this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(particleId));
+        this.scale(scale);
+        this.hasPhysics = false;
     }
 
     @NotNull
@@ -88,7 +90,7 @@ public class FlyingBloodParticle extends TextureSheetParticle {
         @Nullable
         @Override
         public Particle createParticle(@NotNull FlyingBloodParticleOptions typeIn, @NotNull ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-            return new FlyingBloodParticle(worldIn, x, y, z, typeIn.targetX(), typeIn.targetY(), typeIn.targetZ(), typeIn.getMaxAge(), typeIn.direct(), typeIn.texture());
+            return new FlyingBloodParticle(worldIn, x, y, z, typeIn.targetX(), typeIn.targetY(), typeIn.targetZ(), typeIn.getMaxAge(), typeIn.direct(), typeIn.texture(), typeIn.scale());
         }
     }
 }

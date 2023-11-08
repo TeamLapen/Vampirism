@@ -128,7 +128,151 @@
   },
   "block.potion_table_crafting": {
     "sounds":  [
-      "vampirism:reserved/block.potion_table_crafting"
+      "vampirism:reserved/block/potion_table_crafting"
     ]
+  },
+  "fx.mother_death": {
+    "sounds": [
+      "vampirism:reserved/fx/mother_death"
+    ]
+  },
+  "ambient.mother": {
+    "sounds": [
+      {
+        "name": "vampirism:reserved/ambient/mother",
+        "stream": true
+      }
+    ]
+  },
+  "ambient.forest": {
+    "sounds": [
+      {
+        "name": "vampirism:reserved/ambient/vampire_forest",
+        "stream": true
+      }
+    ]
+  },
+  "entity.ghost.ambient": {
+    "sounds": [
+        "minecraft:mob/vex/idle1",
+        "minecraft:mob/vex/idle2",
+        "minecraft:mob/vex/idle3",
+        "minecraft:mob/vex/idle4"
+    ],
+    "subtitle": "subtitles.vampirism.ghost.ambient"
+  },
+  "entity.ghost.death": {
+    "sounds": [
+      "mob/vex/death1",
+      "mob/vex/death2"
+    ],
+    "subtitle": "subtitles.vampirism.ghost.death"
+  },
+  "entity.ghost.hurt": {
+    "sounds": [
+      {
+        "name": "mob/allay/item_given1",
+        "volume": 0.1
+      },
+      {
+        "name": "mob/allay/item_given2",
+        "volume": 0.1
+      },
+      {
+        "name": "mob/allay/item_given3",
+        "volume": 0.1
+      },
+      {
+        "name": "mob/allay/item_given4",
+        "volume": 0.1
+      }
+    ],
+    "subtitle": "subtitles.vampirism.ghost.hurt"
+  },
+  "entity.remains_defender.ambient": {
+    "sounds": [
+      {
+        "name": "block/amethyst/shimmer",
+        "volume": 0.2
+      }
+    ],
+    "subtitle": "subtitles.vampirism.remains_defender.ambient"
+  },
+  "entity.remains_defender.death": {
+    "sounds": [
+      {
+        "name": "block/amethyst_cluster/break1",
+        "pitch": 0.8,
+        "volume": 0.8
+      },
+      {
+        "name": "block/amethyst_cluster/break2",
+        "pitch": 0.8,
+        "volume": 0.8
+      },
+      {
+        "name": "block/amethyst_cluster/break3",
+        "pitch": 0.8,
+        "volume": 0.8
+      },
+      {
+        "name": "block/amethyst_cluster/break4",
+        "pitch": 0.8,
+        "volume": 0.8
+      }
+    ],
+    "subtitle": "subtitles.vampirism.remains_defender.death"
+  },
+  "entity.remains_defender.hit": {
+    "sounds": [
+      "block/amethyst/step1",
+      "block/amethyst/step2",
+      "block/amethyst/step3",
+      "block/amethyst/step4",
+      "block/amethyst/step5",
+      "block/amethyst/step6",
+      "block/amethyst/step7",
+      "block/amethyst/step8",
+      "block/amethyst/step9",
+      "block/amethyst/step10",
+      "block/amethyst/step11",
+      "block/amethyst/step12"
+    ],
+    "subtitle": "subtitles.vampirism.remains_defender.hit"
+  },
+  "entity.remains.death": {
+    "sounds": [
+      "vampirism:reserved/block/remains_destroyed"
+    ],
+    "subtitle": "subtitles.vampirism.remains.death"
+  },
+  "entity.remains.hurt": {
+    "sounds": [
+      {
+        "name": "block/rooted_dirt/step1",
+        "volume": 0.8
+      },
+      {
+        "name": "block/rooted_dirt/step2",
+        "volume": 0.8
+      },
+      {
+        "name": "block/rooted_dirt/step3",
+        "volume": 0.8
+      },
+      {
+        "name": "block/rooted_dirt/step4",
+        "volume": 0.8
+      },
+      {
+        "name": "block/rooted_dirt/step5",
+        "volume": 0.8
+      },
+      {
+        "name": "block/rooted_dirt/step6",
+        "volume": 0.8
+      }
+    ],
+    "subtitle": "subtitles.vampirism.remains.hurt"
   }
 }

@@ -823,4 +823,26 @@ public class UtilLib {
     public static boolean always(BlockState state, BlockGetter block, BlockPos pos) {
         return true;
     }
+
+    @Nullable
+    public static Direction getDirection(BlockPos origin, BlockPos offset) {
+        if(origin.getX() > offset.getX()) {
+            return Direction.EAST;
+        } else if (origin.getX() < offset.getX()) {
+            return Direction.WEST;
+        }
+
+        if(origin.getZ() > offset.getZ()) {
+            return Direction.SOUTH;
+        } else if (origin.getZ() < offset.getZ()) {
+            return Direction.NORTH;
+        }
+
+        if(origin.getY() > offset.getY()) {
+            return Direction.UP;
+        } else if (origin.getY() < offset.getY()) {
+            return Direction.DOWN;
+        }
+        return null;
+    }
 }

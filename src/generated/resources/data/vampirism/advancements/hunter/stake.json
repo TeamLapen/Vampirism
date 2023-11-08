@@ -6,6 +6,14 @@
         "action": "STAKE"
       },
       "trigger": "vampirism:hunter_action"
+    },
+    "main": {
+      "conditions": {
+        "type": "LEVEL",
+        "faction": "vampirism:hunter",
+        "level": 1
+      },
+      "trigger": "vampirism:faction"
     }
   },
   "display": {
@@ -27,6 +35,9 @@
   "requirements": [
     [
       "flower"
+    ],
+    [
+      "main"
     ]
   ],
   "rewards": {

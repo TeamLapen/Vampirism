@@ -5,4 +5,6 @@ public interface NearestTargetGoalModifier {
     void ignoreVampires();
 
     void ignoreFactionEntities();
+
+    void ignoreLineOfSight();
 }

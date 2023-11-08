@@ -55,6 +55,8 @@ public class ModEntitiesRender {
     public static final ModelLayerLocation GENERIC_BIPED_ARMOR_OUTER = new ModelLayerLocation(new ResourceLocation("vampirism:generic_biped"), "outer_armor");
     public static final ModelLayerLocation GENERIC_BIPED_ARMOR_INNER = new ModelLayerLocation(new ResourceLocation("vampirism:generic_biped"), "inner_armor");
     public static final ModelLayerLocation TASK_MASTER = new ModelLayerLocation(new ResourceLocation("vampirism:task_master"), "main");
+    public static final ModelLayerLocation REMAINS_DEFENDER = new ModelLayerLocation(new ResourceLocation("vampirism:remains_defender"), "main");
+    public static final ModelLayerLocation GHOST = new ModelLayerLocation(new ResourceLocation("vampirism:ghost"), "main");
 
 
     static void onRegisterRenderers(EntityRenderersEvent.@NotNull RegisterRenderers event) {
@@ -94,6 +96,9 @@ public class ModEntitiesRender {
         event.registerEntityRenderer(ModEntities.CHEST_BOAT.get(), context -> new VampirismBoatRenderer(context, true));
         event.registerEntityRenderer(ModEntities.CONVERTED_FOX.get(), convertedRenderer(FoxRenderer::new));
         event.registerEntityRenderer(ModEntities.CONVERTED_GOAT.get(), convertedRenderer(GoatRenderer::new));
+        event.registerEntityRenderer(ModEntities.VULNERABLE_REMAINS_DUMMY.get(), DummyRenderer::new);
+        event.registerEntityRenderer(ModEntities.REMAINS_DEFENDER.get(), RemainsDefenderRenderer::new);
+        event.registerEntityRenderer(ModEntities.GHOST.get(), GhostRenderer::new);
     }
 
     static void onRegisterLayers(EntityRenderersEvent.@NotNull RegisterLayerDefinitions event) {
@@ -119,6 +124,8 @@ public class ModEntitiesRender {
         event.registerLayerDefinition(GENERIC_BIPED_ARMOR_INNER, () -> LayerDefinition.create(HumanoidModel.createMesh(LayerDefinitions.INNER_ARMOR_DEFORMATION, 0.0F), 64, 32));
         event.registerLayerDefinition(GENERIC_BIPED_ARMOR_OUTER, () -> LayerDefinition.create(HumanoidModel.createMesh(LayerDefinitions.OUTER_ARMOR_DEFORMATION, 0.0F), 64, 32));
         event.registerLayerDefinition(TASK_MASTER, () -> LayerDefinition.create(VillagerModel.createBodyModel(), 64, 64));
+        event.registerLayerDefinition(REMAINS_DEFENDER, RemainsDefenderModel::createBodyLayer);
+        event.registerLayerDefinition(GHOST, GhostModel::createMesh);
 
         LayerDefinition boatDefinition = BoatModel.createBodyModel();
         LayerDefinition chestBoatDefinition = ChestBoatModel.createBodyModel();

@@ -64,6 +64,7 @@ public class AdvancementGenerator extends AdvancementProvider { //TODO 1.20 move
                     .display(ModItems.STAKE.get(), Component.translatable("advancement.vampirism.stake"), Component.translatable("advancement.vampirism.stake.desc"), null, FrameType.CHALLENGE, true, true, true)
                     .parent(become_hunter)
                     .addCriterion("flower", HunterActionCriterionTrigger.builder(HunterActionCriterionTrigger.Action.STAKE))
+                    .addCriterion("main", FactionCriterionTrigger.level(VReference.HUNTER_FACTION, 1))
                     .rewards(AdvancementRewards.Builder.experience(100))
                     .save(consumer, REFERENCE.MODID + ":hunter/stake");
             Advancement betrayal = Advancement.Builder.advancement()
@@ -83,18 +84,27 @@ public class AdvancementGenerator extends AdvancementProvider { //TODO 1.20 move
                     .parent(become_hunter)
                     .addCriterion("basic", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.BASIC_TECH_CROSSBOW.get()))
                     .addCriterion("advanced", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.ENHANCED_TECH_CROSSBOW.get()))
+                    .addCriterion("main", FactionCriterionTrigger.level(VReference.HUNTER_FACTION, 1))
                     .requirements(RequirementsStrategy.AND)
                     .save(consumer, REFERENCE.MODID + ":hunter/technology");
             Advancement max_lord = Advancement.Builder.advancement()
                     .display(ModItems.HUNTER_MINION_UPGRADE_SPECIAL.get(), Component.translatable("advancement.vampirism.max_lord_hunter"), Component.translatable("advancement.vampirism.max_lord_hunter.desc"), null, FrameType.CHALLENGE, true, true, true)
                     .parent(max_level)
                     .addCriterion("level", FactionCriterionTrigger.lord(VReference.HUNTER_FACTION, 5))
+                    .addCriterion("main", FactionCriterionTrigger.level(VReference.HUNTER_FACTION, 1))
                     .save(consumer, REFERENCE.MODID + ":hunter/max_lord");
             Advancement cure_vampire = Advancement.Builder.advancement()
                     .display(Items.GOLDEN_APPLE, Component.translatable("advancement.vampirism.cure_vampire_villager"), Component.translatable("advancement.vampirism.cure_vampire_villager.desc"), null, FrameType.TASK, true, true, true)
                     .parent(become_hunter)
                     .addCriterion("cure", CuredVampireVillagerCriterionTrigger.Instance.any())
+                    .addCriterion("main", FactionCriterionTrigger.level(VReference.HUNTER_FACTION, 1))
                     .save(consumer, REFERENCE.MODID + ":hunter/cure_vampire_villager");
+            Advancement kill_mother = Advancement.Builder.advancement()
+                    .display(ModItems.MOTHER_CORE.get(), Component.translatable("advancement.vampirism.hunter_kill_mother"), Component.translatable("advancement.vampirism.hunter_kill_mother.desc"), null, FrameType.CHALLENGE, true, true, true)
+                    .parent(become_hunter)
+                    .addCriterion("killed", new PlayerTrigger.TriggerInstance(ModAdvancements.TRIGGER_MOTHER_WIN.getId(), ContextAwarePredicate.ANY))
+                    .addCriterion("main", FactionCriterionTrigger.level(VReference.HUNTER_FACTION, 1))
+                    .save(consumer, REFERENCE.MODID + ":hunter/kill_mother");
         }
     }
 
@@ -119,6 +129,11 @@ public class AdvancementGenerator extends AdvancementProvider { //TODO 1.20 move
                     .parent(vampire_forest)
                     .addCriterion("main", KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().of(ModEntities.VAMPIRE_BARON.get())))
                     .save(consumer, REFERENCE.MODID + ":main/regicide");
+            Advancement jumpScare = Advancement.Builder.advancement()
+                    .display(Items.SKELETON_SKULL, Component.translatable("advancement.vampirism.jump_scare"), Component.translatable("advancement.vampirism.jump_scare.desc"), null, FrameType.TASK, true, true, true)
+                    .parent(vampire_forest)
+                    .addCriterion("main", KilledTrigger.TriggerInstance.entityKilledPlayer(EntityPredicate.Builder.entity().of(ModEntities.GHOST.get())))
+                    .save(consumer, REFERENCE.MODID + ":main/jump_scare");
         }
     }
 
@@ -136,21 +151,25 @@ public class AdvancementGenerator extends AdvancementProvider { //TODO 1.20 move
                     .display(Items.FEATHER, Component.translatable("advancement.vampirism.bat"), Component.translatable("advancement.vampirism.bat.desc"), null, FrameType.TASK, true, true, true)
                     .parent(become_vampire)
                     .addCriterion("action", VampireActionCriterionTrigger.builder(VampireActionCriterionTrigger.Action.BAT))
+                    .addCriterion("main", FactionCriterionTrigger.level(VReference.VAMPIRE_FACTION, 1))
                     .save(consumer, REFERENCE.MODID + ":vampire/bat");
             Advancement first_blood = Advancement.Builder.advancement()
                     .display(ModItems.BLOOD_BOTTLE.get(), Component.translatable("advancement.vampirism.sucking_blood"), Component.translatable("advancement.vampirism.sucking_blood.desc"), null, FrameType.TASK, true, true, true)
                     .parent(become_vampire)
                     .addCriterion("flower", VampireActionCriterionTrigger.builder(VampireActionCriterionTrigger.Action.SUCK_BLOOD))
+                    .addCriterion("main", FactionCriterionTrigger.level(VReference.VAMPIRE_FACTION, 1))
                     .save(consumer, REFERENCE.MODID + ":vampire/first_blood");
             Advancement blood_cult = Advancement.Builder.advancement()
                     .display(ModBlocks.ALTAR_INFUSION.get(), Component.translatable("advancement.vampirism.blood_cult"), Component.translatable("advancement.vampirism.blood_cult.desc"), null, FrameType.TASK, true, true, true)
                     .parent(become_vampire)
                     .addCriterion("flower", VampireActionCriterionTrigger.builder(VampireActionCriterionTrigger.Action.PERFORM_RITUAL_INFUSION))
+                    .addCriterion("main", FactionCriterionTrigger.level(VReference.VAMPIRE_FACTION, 1))
                     .save(consumer, REFERENCE.MODID + ":vampire/blood_cult");
             Advancement extra_storage = Advancement.Builder.advancement()
                     .display(ModBlocks.BLOOD_CONTAINER.get(), Component.translatable("advancement.vampirism.extra_storage"), Component.translatable("advancement.vampirism.extra_storage.desc"), null, FrameType.TASK, true, true, true)
                     .parent(first_blood)
                     .addCriterion("blood_container", InventoryChangeTrigger.TriggerInstance.hasItems(ModBlocks.BLOOD_CONTAINER.get()))
+                    .addCriterion("main", FactionCriterionTrigger.level(VReference.VAMPIRE_FACTION, 1))
                     .save(consumer, REFERENCE.MODID + ":vampire/extra_storage");
             Advancement max_level = Advancement.Builder.advancement()
                     .display(ModItems.VAMPIRE_FANG.get(), Component.translatable("advancement.vampirism.max_level_vampire"), Component.translatable("advancement.vampirism.max_level_vampire.desc"), null, FrameType.GOAL, true, true, true)
@@ -162,6 +181,7 @@ public class AdvancementGenerator extends AdvancementProvider { //TODO 1.20 move
                     .display(Items.ARROW, Component.translatable("advancement.vampirism.sniped"), Component.translatable("advancement.vampirism.sniped.desc"), null, FrameType.TASK, true, true, true)
                     .parent(bat)
                     .addCriterion("flower", VampireActionCriterionTrigger.builder(VampireActionCriterionTrigger.Action.SNIPED_IN_BAT))
+                    .addCriterion("main", FactionCriterionTrigger.level(VReference.VAMPIRE_FACTION, 1))
                     .save(consumer, REFERENCE.MODID + ":vampire/sniped");
             CompoundTag potion = new ItemStack(Items.POTION).serializeNBT();
             potion.putString("Potion", "minecraft:poison");
@@ -169,18 +189,25 @@ public class AdvancementGenerator extends AdvancementProvider { //TODO 1.20 move
                     .display(new DisplayInfo(ItemStack.of(potion), Component.translatable("advancement.vampirism.yuck"), Component.translatable("advancement.vampirism.yuck.desc"), null, FrameType.TASK, true, true, true))
                     .parent(first_blood)
                     .addCriterion("flower", VampireActionCriterionTrigger.builder(VampireActionCriterionTrigger.Action.POISONOUS_BITE))
+                    .addCriterion("main", FactionCriterionTrigger.level(VReference.VAMPIRE_FACTION, 1))
                     .save(consumer, REFERENCE.MODID + ":vampire/yuck");
             Advancement freeze_kill = Advancement.Builder.advancement()
                     .display(new DisplayInfo(new ItemStack(Items.CLOCK), Component.translatable("advancement.vampirism.freeze_kill"), Component.translatable("advancement.vampirism.freeze_kill.desc"), null, FrameType.TASK, true, true, true))
                     .parent(blood_cult)
                     .addCriterion("kill", VampireActionCriterionTrigger.builder(VampireActionCriterionTrigger.Action.KILL_FROZEN_HUNTER))
+                    .addCriterion("main", FactionCriterionTrigger.level(VReference.VAMPIRE_FACTION, 1))
                     .save(consumer, REFERENCE.MODID + ":vampire/freeze_kill");
             Advancement max_lord = Advancement.Builder.advancement()
                     .display(ModItems.VAMPIRE_MINION_UPGRADE_SPECIAL.get(), Component.translatable("advancement.vampirism.max_lord_vampire"), Component.translatable("advancement.vampirism.max_lord_vampire.desc"), null, FrameType.CHALLENGE, true, true, true)
                     .parent(max_level)
                     .addCriterion("level", FactionCriterionTrigger.lord(VReference.VAMPIRE_FACTION, 5))
                     .save(consumer, REFERENCE.MODID + ":vampire/max_lord");
-
+            Advancement kill_mother = Advancement.Builder.advancement()
+                    .display(ModItems.MOTHER_CORE.get(), Component.translatable("advancement.vampirism.vampire_kill_mother"), Component.translatable("advancement.vampirism.vampire_kill_mother.desc"), null, FrameType.CHALLENGE, true, true, true)
+                    .parent(become_vampire)
+                    .addCriterion("killed", new PlayerTrigger.TriggerInstance(ModAdvancements.TRIGGER_MOTHER_WIN.getId(), ContextAwarePredicate.ANY))
+                    .addCriterion("main", FactionCriterionTrigger.level(VReference.VAMPIRE_FACTION, 1))
+                    .save(consumer, REFERENCE.MODID + ":vampire/kill_mother");
         }
     }
 

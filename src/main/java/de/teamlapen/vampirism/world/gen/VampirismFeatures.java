@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.world.gen.feature.treedecorators.TrunkCursedVineDe
 import de.teamlapen.vampirism.world.gen.modifier.ExtendedAddSpawnsBiomeModifier;
 import de.teamlapen.vampirism.world.gen.structure.huntercamp.HunterCampPieces;
 import de.teamlapen.vampirism.world.gen.structure.hunteroutpost.HunterOutpostPieces;
+import de.teamlapen.vampirism.world.gen.structure.mother.MotherPiece;
 import de.teamlapen.vampirism.world.gen.structure.templatesystem.BiomeTopBlockProcessor;
 import de.teamlapen.vampirism.world.gen.structure.templatesystem.RandomStructureProcessor;
 import de.teamlapen.vampirism.world.gen.structure.vampirealtar.VampireAltarPieces;
@@ -73,6 +74,7 @@ public class VampirismFeatures {
     public static final RegistryObject<StructurePieceType> VAMPIRE_HUT_PIECE = STRUCTURE_PIECES.register("vampire_hut", () -> (StructurePieceType.StructureTemplateType) VampireHutPieces.VampireHutPiece::new);
     public static final RegistryObject<StructurePieceType> HUNTER_OUTPOST_PIECE = STRUCTURE_PIECES.register("outpost", () -> (StructurePieceType.StructureTemplateType) HunterOutpostPieces.OutpostPiece::new);
     public static final RegistryObject<StructurePieceType> VAMPIRE_ALTAR_PIECE = STRUCTURE_PIECES.register("vampire_altar", () -> (StructurePieceType.StructureTemplateType) VampireAltarPieces.VampireAltarPiece::new);
+    public static final RegistryObject<StructurePieceType> MOTHER = STRUCTURE_PIECES.register("mother", () -> (StructurePieceType.ContextlessType) MotherPiece::new);
 
     public static final RegistryObject<StructureProcessorType<RandomStructureProcessor>> RANDOM_SELECTOR = STRUCTURE_PROCESSOR_TYPES.register("random_selector", () -> () -> RandomStructureProcessor.CODEC);
     public static final RegistryObject<StructureProcessorType<BiomeTopBlockProcessor>> BIOME_BASED = STRUCTURE_PROCESSOR_TYPES.register("biome_based", () -> () -> BiomeTopBlockProcessor.CODEC);
@@ -103,12 +105,12 @@ public class VampirismFeatures {
     public static final ResourceKey<BiomeModifier> ADVANCED_VAMPIRE_SPAWN = createModifierKey("spawn/advanced_vampire_spawns");
     public static final ResourceKey<BiomeModifier> ADVANCED_HUNTER_SPAWN = createModifierKey("spawn/advanced_hunter_spawns");
     public static final ResourceKey<BiomeModifier> VAMPIRE_DUNGEON_MODIFIER = createModifierKey("feature/vampire_dungeon");
-
     public static final ResourceKey<StructureSet> HUNTER_CAMP = createStructureSetKey("hunter_camp");
     public static final ResourceKey<StructureSet> VAMPIRE_HUT = createStructureSetKey("vampire_hut");
     public static final ResourceKey<StructureSet> VAMPIRE_ALTAR = createStructureSetKey("vampire_altar");
     public static final ResourceKey<StructureSet> OUTPOST = createStructureSetKey("outpost");
     public static final ResourceKey<StructureSet> HUNTER_OUTPOST = createStructureSetKey("hunter_outpost");
+    public static final ResourceKey<StructureSet> MOTHER_SET = createStructureSetKey("mother");
 
 
     public static void register(IEventBus ctx) {
@@ -176,6 +178,7 @@ public class VampirismFeatures {
         context.register(VAMPIRE_HUT, new StructureSet(structureLookup.getOrThrow(ModFeatures.VAMPIRE_HUT), new RandomSpreadStructurePlacement(32, 10, RandomSpreadType.LINEAR, 1937195837)));
         context.register(VAMPIRE_ALTAR, new StructureSet(structureLookup.getOrThrow(ModFeatures.VAMPIRE_ALTAR), new RandomSpreadStructurePlacement(48, 15, RandomSpreadType.LINEAR, 823476514)));
         context.register(OUTPOST, new StructureSet(structureLookup.getOrThrow(ModFeatures.HUNTER_OUTPOST), new RandomSpreadStructurePlacement(32, 8, RandomSpreadType.LINEAR, 897234698)));
+        context.register(MOTHER_SET, new StructureSet(structureLookup.getOrThrow(ModFeatures.MOTHER_KEY), new RandomSpreadStructurePlacement(9, 4, RandomSpreadType.LINEAR, 1724616580)));
     }
 
 }

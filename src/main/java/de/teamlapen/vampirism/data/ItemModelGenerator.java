@@ -96,6 +96,11 @@ public class ItemModelGenerator extends BaseItemModelGenerator {//TODO 1.20 move
             add(ModBlocks.COBBLED_DARK_STONE_STAIRS.get());
             add(ModBlocks.COBBLED_DARK_STONE_WALL.get());
             add(ModBlocks.CRACKED_DARK_STONE_TILES.get());
+            add(ModBlocks.REMAINS.get());
+            add(ModBlocks.VULNERABLE_REMAINS.get());
+            add(ModBlocks.INCAPACITATED_VULNERABLE_REMAINS.get());
+            add(ModBlocks.CURSED_HANGING_ROOTS.get());
+            add(ModBlocks.MOTHER.get());
         }};
         Set<Item> items = new HashSet<>() {{
             add(ModItems.HUNTER_COAT_CHEST_NORMAL.get());
@@ -177,6 +182,7 @@ public class ItemModelGenerator extends BaseItemModelGenerator {//TODO 1.20 move
             put(ModItems.CURSED_SPRUCE_SIGN.get(), modLoc("item/cursed_spruce_sign"));
             put(ModItems.DARK_SPRUCE_HANGING_SIGN.get(), modLoc("item/dark_spruce_hanging_sign"));
             put(ModItems.CURSED_SPRUCE_HANGING_SIGN.get(), modLoc("item/cursed_spruce_hanging_sign"));
+            put(ModItems.MOTHER_CORE.get(), modLoc("item/mother_core"));
         }};
 
         blocks.forEach(this::block);

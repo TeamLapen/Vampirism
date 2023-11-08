@@ -1,0 +1,6 @@
+{
+  "type": "vampirism:mother",
+  "biomes": "#vampirism:has_structure/mother",
+  "spawn_overrides": {},
+  "step": "surface_structures"
+}

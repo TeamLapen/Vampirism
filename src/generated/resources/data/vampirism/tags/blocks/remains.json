@@ -1,0 +1,8 @@
+{
+  "values": [
+    "vampirism:active_vulnerable_remains",
+    "vampirism:vulnerable_remains",
+    "vampirism:remains",
+    "vampirism:incapacitated_vulnerable_remains"
+  ]
+}

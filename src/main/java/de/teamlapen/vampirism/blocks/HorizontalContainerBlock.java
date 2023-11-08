@@ -36,7 +36,7 @@ public abstract class HorizontalContainerBlock extends VampirismHorizontalBlock 
     }
 
     @Nullable
-    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> typeA, BlockEntityType<E> typeB, BlockEntityTicker<? super E> ticker) {
+    public static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> typeA, BlockEntityType<E> typeB, BlockEntityTicker<? super E> ticker) {
         //noinspection unchecked
         return typeB == typeA ? (BlockEntityTicker<A>) ticker : null;
     }

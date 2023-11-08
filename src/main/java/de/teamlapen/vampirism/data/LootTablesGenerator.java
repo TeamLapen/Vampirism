@@ -149,6 +149,7 @@ public class LootTablesGenerator {//TODO 1.20 move to de.teamlapen.vampirism.dat
             this.add(ModEntities.TASK_MASTER_HUNTER.get(), LootTable.lootTable());
             this.add(ModEntities.VAMPIRE_MINION.get(), LootTable.lootTable());
             this.add(ModEntities.HUNTER_MINION.get(), LootTable.lootTable());
+            this.add(ModEntities.GHOST.get(), LootTable.lootTable());
         }
     }
 
@@ -418,6 +419,15 @@ public class LootTablesGenerator {//TODO 1.20 move to de.teamlapen.vampirism.dat
             this.dropSelf(ModBlocks.CHISELED_DARK_STONE_BRICKS.get());
             this.otherWhenSilkTouch(ModBlocks.INFESTED_DARK_STONE.get(), ModBlocks.DARK_STONE.get());
             this.dropSelf(ModBlocks.BAT_CAGE.get());
+            this.add(ModBlocks.CURSED_HANGING_ROOTS.get(), ModBlockLootTables::createShearsOnlyDrop);
+            this.add(ModBlocks.MOTHER.get(),
+                    createSingleItemTable(ModItems.MOTHER_CORE.get())
+                            .withPool(applyExplosionCondition(ModBlocks.MOTHER_TROPHY.get(), LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).add(LootItem.lootTableItem(ModBlocks.MOTHER_TROPHY.get()))))
+                            .withPool(applyExplosionCondition(ModItems.SOUL_ORB_VAMPIRE.get(), LootPool.lootPool().name("souls").setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(ModItems.SOUL_ORB_VAMPIRE.get()).setQuality(10))))
+                            .withPool(LootPool.lootPool().name("bonus").setRolls(UniformGenerator.between(1, 4))
+                                    .add(applyExplosionCondition(ModItems.PURE_BLOOD_4.get(), LootItem.lootTableItem(ModItems.PURE_BLOOD_4.get()).setQuality(2)))
+                                    .add(applyExplosionCondition(ModItems.VAMPIRE_BLOOD_BOTTLE.get(), LootItem.lootTableItem(ModItems.VAMPIRE_BLOOD_BOTTLE.get()).setQuality(10)))));
+            this.dropSelf(ModBlocks.MOTHER_TROPHY.get());
         }
 
         @NotNull

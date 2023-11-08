@@ -274,6 +274,14 @@ public class BlockStateGenerator extends BlockStateProvider {//TODO 1.20 move to
                 .renderType(cutout);
         simpleBlock(ModBlocks.CURSED_EARTH_PATH.get(), cursedEarthPath);
         horizontalBlock(ModBlocks.BAT_CAGE.get(), models().getExistingFile(modLoc("block/bat_cage/block")));
+        var remainsModel = models().cubeAll("remains", modLoc("block/remains"));
+        simpleBlock(ModBlocks.REMAINS.get(), remainsModel);
+        simpleBlock(ModBlocks.INCAPACITATED_VULNERABLE_REMAINS.get(), models().cubeAll("incapacitated_vulnerable_remains", modLoc("block/incapacitated_vulnerable_remains")));
+        simpleBlock(ModBlocks.VULNERABLE_REMAINS.get(), models().cubeAll("vulnerable_remains", modLoc("block/vulnerable_remains")));
+        simpleBlock(ModBlocks.ACTIVE_VULNERABLE_REMAINS.get(), models().cubeAll("active_vulnerable_remains", modLoc("block/active_vulnerable_remains")));
+        simpleBlock(ModBlocks.CURSED_HANGING_ROOTS.get(), models().cross("cursed_hanging_roots", modLoc("block/cursed_hanging_roots")));
+        simpleBlock(ModBlocks.MOTHER.get(), models().cubeAll("mother", modLoc("block/mother")));
+        simpleBlock(ModBlocks.MOTHER_TROPHY.get(), models().getExistingFile(modLoc("block/mother_trophy")));
     }
 
     private void createWoodStates() {
