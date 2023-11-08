@@ -229,5 +229,16 @@
     "appearance": {
       "eye": "15"
     }
+  },
+  {
+    "faction": "vampirism:hunter",
+    "name": "Dual-Wielding Grid",
+    "texture": "GridExpert",
+    "type": 1,
+    "status": "Contributor",
+    "bookId": null,
+    "appearance": {
+      "hat": "1"
+    }
   }
 ]
