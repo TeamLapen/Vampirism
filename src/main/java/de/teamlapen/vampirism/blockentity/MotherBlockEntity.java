@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.blocks.mother.IRemainsBlock;
 import de.teamlapen.vampirism.blocks.mother.MotherTreeStructure;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.GhostEntity;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.ClientboundBossEventSoundPacket;
 import de.teamlapen.vampirism.network.ClientboundPlayEventPacket;
 import de.teamlapen.vampirism.particle.FlyingBloodParticleOptions;
@@ -324,6 +325,9 @@ public class MotherBlockEntity extends BlockEntity {
             if (livingentity instanceof ServerPlayer serverplayer) {
                 ModAdvancements.TRIGGER_MOTHER_WIN.trigger(serverplayer);
                 serverplayer.awardStat(ModStats.mother_defeated, 1);
+                FactionPlayerHandler.getOpt(serverplayer).filter(s -> s.getCurrentFaction() != null && s.getCurrentLevel() < s.getCurrentFaction().getHighestReachableLevel()).ifPresent(handler -> {
+                    handler.setFactionLevel(handler.getCurrentFaction(), handler.getCurrentLevel() + 1);
+                });
             }
         }
     }
