@@ -13,6 +13,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -63,6 +64,10 @@ public class ModDamageSources {
 
     public DamageSource mother() {
         return this.mother;
+    }
+
+    public DamageSource stake(LivingEntity attacker) {
+        return new DamageSource(this.damageTypes.getHolderOrThrow(ModDamageTypes.STAKE), attacker);
     }
 
     public MinionDamageSource minion(@NotNull MinionEntity<?> entity) {

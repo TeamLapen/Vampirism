@@ -340,6 +340,8 @@
   "death.attack.vampirism_dbno.missing": "After nearly dying, they gave up",
   "death.attack.vampirism.mother": "%1$s died because they were too close to the Ancient Remains",
   "death.attack.vampirism.mother.player": "%1$s came to close to the Ancient Remains whilst fighting %2$s",
+  "death.attack.vampirism.stake": "%1$s was pierced through the heart by %2$s",
+  "death.attack.vampirism.stake.item": "%1$s was pierced through the heart by %2$s using %3$s",
   "__comment": "task_entity_tags",
   "entity_tag.vampirism.hunter": "Hunter entities",
   "entity_tag.vampirism.advanced_hunter": "Advanced hunters",
