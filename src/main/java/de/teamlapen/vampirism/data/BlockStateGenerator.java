@@ -231,7 +231,7 @@ public class BlockStateGenerator extends BlockStateProvider {//TODO 1.20 move to
                 .part().modelFile(models().cubeBottomTop("vampirism:cursed_grass_snowy", modLoc("block/cursed_grass_side_snowy"), modLoc("block/cursed_earth"), modLoc("block/cursed_grass_top"))).addModel().condition(BlockStateProperties.SNOWY, true).end();
 
         simpleBlock(ModBlocks.CURSED_ROOTS.get(), models().cross("cursed_roots", modLoc("block/cursed_roots")).renderType(cutout));
-        simpleBlock(ModBlocks.POTTED_CURSED_ROOTS.get(), models().withExistingParent("vampirism:block/potted_cursed_roots", "minecraft:block/flower_pot_cross").texture("plant", "vampirism:block/cursed_roots"));
+        simpleBlock(ModBlocks.POTTED_CURSED_ROOTS.get(), models().withExistingParent("vampirism:block/potted_cursed_roots", "minecraft:block/flower_pot_cross").texture("plant", "vampirism:block/cursed_roots").renderType(cutout));
 
         trapdoorBlock(ModBlocks.DARK_SPRUCE_TRAPDOOR.get(), new ResourceLocation(REFERENCE.MODID, "block/dark_spruce_trapdoor"), true);
         trapdoorBlock(ModBlocks.CURSED_SPRUCE_TRAPDOOR.get(), new ResourceLocation(REFERENCE.MODID, "block/cursed_spruce_trapdoor"), true);
@@ -283,6 +283,8 @@ public class BlockStateGenerator extends BlockStateProvider {//TODO 1.20 move to
         simpleBlock(ModBlocks.MOTHER.get(), models().cubeAll("mother", modLoc("block/mother")));
         simpleBlock(ModBlocks.MOTHER_TROPHY.get(), models().getExistingFile(modLoc("block/mother_trophy")));
         simpleBlock(ModBlocks.FOG_DIFFUSER.get(), models().withExistingParent("fog_diffuser_normal", modLoc("block/fog_diffuser")).renderType(cutout));
+        simpleBlock(ModBlocks.POTTED_DARK_SPRUCE_SAPLING.get(), models().withExistingParent("vampirism:block/potted_dark_spruce_sapling", "minecraft:block/flower_pot_cross").texture("plant", "vampirism:block/dark_spruce_sapling").renderType(cutout));
+        simpleBlock(ModBlocks.POTTED_CURSED_SPRUCE_SAPLING.get(), models().withExistingParent("vampirism:block/potted_cursed_spruce_sapling", "minecraft:block/flower_pot_cross").texture("plant", "vampirism:block/cursed_spruce_sapling").renderType(cutout));
     }
 
     private void createWoodStates() {
