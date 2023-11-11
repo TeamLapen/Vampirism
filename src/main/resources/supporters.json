@@ -7,7 +7,7 @@
     "status": "Temporary",
     "bookId": null,
     "appearance": {
-      "hat": "1"
+      "hat": "hat_1"
     }
   },
   {
@@ -18,7 +18,7 @@
     "status": "Dev",
     "bookId": null,
     "appearance": {
-      "hat": "0"
+      "hat": "hat_0"
     }
   },
   {
@@ -29,7 +29,7 @@
     "status": "Temporary",
     "bookId": null,
     "appearance": {
-      "hat": "1"
+      "hat": "hat_1"
     }
   },
   {
@@ -40,7 +40,7 @@
     "status": "Temporary",
     "bookId": null,
     "appearance": {
-      "hat": "1"
+      "hat": "hat_1"
     }
   },
   {
@@ -51,7 +51,7 @@
     "status": "Contributor",
     "bookId": null,
     "appearance": {
-      "hat": "2"
+      "hat": "none"
     }
   },
   {
@@ -62,7 +62,7 @@
     "status": "Temporary",
     "bookId": null,
     "appearance": {
-      "hat": "1"
+      "hat": "hat_1"
     }
   },
   {
@@ -73,7 +73,8 @@
     "status": "Dev",
     "bookId": null,
     "appearance": {
-      "hat": "1"
+      "hat": "hat_0",
+      "equipment": "axe_stake"
     }
   },
   {
@@ -84,7 +85,7 @@
     "status": "Contributor",
     "bookId": "pyropik",
     "appearance": {
-      "hat": "0"
+      "hat": "hat_0"
     }
   },
   {
@@ -95,7 +96,7 @@
     "status": "Temporary",
     "bookId": null,
     "appearance": {
-      "hat": "0"
+      "hat": "hat_0"
     }
   },
   {
@@ -106,7 +107,7 @@
     "status": "Temporary",
     "bookId": null,
     "appearance": {
-      "hat": "1"
+      "hat": "hat_1"
     }
   },
   {
@@ -238,7 +239,10 @@
     "status": "Contributor",
     "bookId": null,
     "appearance": {
-      "hat": "1"
+      "hat": "hat_1",
+      "hasCloak": "true",
+      "body": "12",
+      "equipment": "double_axe"
     }
   }
 ]

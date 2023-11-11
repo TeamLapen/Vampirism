@@ -9,12 +9,16 @@ import de.teamlapen.vampirism.api.entity.VampireBookLootProvider;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.hunter.IAdvancedHunter;
+import de.teamlapen.vampirism.api.entity.hunter.IVampirismCrossbowUser;
+import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
 import de.teamlapen.vampirism.api.settings.Supporter;
 import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEntities;
+import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.VampirismEntity;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
+import de.teamlapen.vampirism.entity.ai.goals.AttackRangedCrossbowGoal;
 import de.teamlapen.vampirism.entity.ai.goals.AttackVillageGoal;
 import de.teamlapen.vampirism.entity.ai.goals.DefendVillageGoal;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
@@ -43,6 +47,8 @@ import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.monster.PatrollingMonster;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
@@ -53,17 +59,20 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.Optional;
 
 /**
  * Advanced hunter. Is strong. Represents supporters
  */
-public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedHunter, IPlayerOverlay, IEntityActionUser, VampireBookLootProvider {
+public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedHunter, IPlayerOverlay, IEntityActionUser, VampireBookLootProvider, IVampirismCrossbowUser {
     private static final EntityDataAccessor<Integer> LEVEL = SynchedEntityData.defineId(AdvancedHunterEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(AdvancedHunterEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<String> NAME = SynchedEntityData.defineId(AdvancedHunterEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<String> TEXTURE = SynchedEntityData.defineId(AdvancedHunterEntity.class, EntityDataSerializers.STRING);
+    private static final EntityDataAccessor<Boolean> IS_CHARGING_CROSSBOW = SynchedEntityData.defineId(AdvancedHunterEntity.class, EntityDataSerializers.BOOLEAN);
+
     private static final int MAX_LEVEL = 1;
     private static final int MOVE_TO_RESTRICT_PRIO = 3;
 
@@ -315,6 +324,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         this.getEntityData().define(TYPE, 0);
         this.getEntityData().define(NAME, "none");
         this.getEntityData().define(TEXTURE, "none");
+        this.getEntityData().define(IS_CHARGING_CROSSBOW, false);
     }
 
     @Nullable
@@ -325,16 +335,33 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         this.getEntityData().set(NAME, supporter.name());
         this.getEntityData().set(TEXTURE, supporter.texture());
         this.lootBookId = supporter.bookId();
+        applyCustomisationItems(supporter);
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
+    }
+
+    private void applyCustomisationItems(Supporter supporter) {
+        Map<String, String> appearance = supporter.appearance();
+        EquipmentType equipment = Optional.ofNullable(appearance.get("equipment")).map(EquipmentType::get).orElseGet(() -> {
+            EquipmentType[] types = EquipmentType.values();
+            return types[random.nextInt(types.length)];
+        });
+        this.setLeftHanded(false);
+        this.setItemSlot(EquipmentSlot.MAINHAND, equipment.getMainHand());
+        this.setItemSlot(EquipmentSlot.OFFHAND, equipment.getOffHand());
+
+        HatType hat = Optional.ofNullable(appearance.get("hat")).map(HatType::get).orElseGet(() -> {
+            HatType[] types = HatType.values();
+            return types[random.nextInt(types.length)];
+        });
+        this.setItemSlot(EquipmentSlot.HEAD, hat.getHeadItem());
+        this.setDontDropEquipment();
     }
 
     private static int createCustomisationFlag(Supporter supporter) {
         Map<String, String> appearance = supporter.appearance();
         int type = 0;
-        type |= (Integer.parseInt(appearance.getOrDefault("hat", "1")) & 0b11);
-        type |= (Integer.parseInt(appearance.getOrDefault("equipment", "1"))  & 0b11) << 2;
-        type |= (Boolean.parseBoolean(appearance.getOrDefault("hasCloak", "true")) ? 1 : 0) << 4;
-        type |= (Integer.parseInt(appearance.getOrDefault("body", "13")) & 0b11111111) << 5;
+        type |= (Boolean.parseBoolean(appearance.getOrDefault("hasCloak", "true")) ? 1 : 0) & 0b1;
+        type |= (Integer.parseInt(appearance.getOrDefault("body", "13")) & 0b11111111) << 1;
         return type;
     }
 
@@ -355,12 +382,22 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         return super.mobInteract(player, hand);
     }
 
+    @Nonnull
+    @Override
+    public ItemStack getProjectile(ItemStack stack) {
+        if (stack.getItem() instanceof IVampirismCrossbow) {
+            return net.minecraftforge.common.ForgeHooks.getProjectile(this, stack, ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance());
+        }
+        return super.getProjectile(stack);
+    }
+
     @Override
     protected void registerGoals() {
         super.registerGoals();
 
         this.goalSelector.addGoal(1, new OpenDoorGoal(this, true));
-        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0, false));
+        this.goalSelector.addGoal(2, new AttackRangedCrossbowGoal<>(this, 0.8, 100));
+        this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0, false));
 
         this.goalSelector.addGoal(6, new RandomStrollGoal(this, 0.7, 50));
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 13F));
@@ -380,6 +417,36 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         int l = Math.max(getEntityLevel(), 0);
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.ADVANCED_HUNTER_MAX_HEALTH + BalanceMobProps.mobProps.ADVANCED_HUNTER_MAX_HEALTH_PL * l);
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.ADVANCED_HUNTER_ATTACK_DAMAGE + BalanceMobProps.mobProps.ADVANCED_HUNTER_ATTACK_DAMAGE_PL * l);
+    }
+
+    @Override
+    public boolean isHoldingCrossbow() {
+        return this.isHolding(stack -> stack.getItem() instanceof IVampirismCrossbow);
+    }
+
+    @Override
+    public boolean isChargingCrossbow() {
+        return this.getEntityData().get(IS_CHARGING_CROSSBOW);
+    }
+
+    @Override
+    public void setChargingCrossbow(boolean pChargingCrossbow) {
+        this.getEntityData().set(IS_CHARGING_CROSSBOW, pChargingCrossbow);
+    }
+
+    @Override
+    public void shootCrossbowProjectile(@NotNull LivingEntity pTarget, @NotNull ItemStack pCrossbowStack, @NotNull Projectile pProjectile, float pProjectileAngle) {
+        this.shootCrossbowProjectile(this, pTarget, pProjectile, pProjectileAngle, 1.6f);
+    }
+
+    @Override
+    public void onCrossbowAttackPerformed() {
+        this.noActionTime = 0;
+    }
+
+    @Override
+    public void performRangedAttack(@NotNull LivingEntity pTarget, float pVelocity) {
+        this.performCrossbowAttack(this, 1.6f);
     }
 
     public static class IMob extends AdvancedHunterEntity implements net.minecraft.world.entity.monster.Enemy {

@@ -171,8 +171,6 @@ public class ItemModelGenerator extends BaseItemModelGenerator {//TODO 1.20 move
             put(ModItems.HOLY_WATER_SPLASH_BOTTLE_ENHANCED.get(), modLoc("item/holy_water_splash_enhanced"));
             put(ModItems.HOLY_WATER_SPLASH_BOTTLE_ULTIMATE.get(), modLoc("item/holy_water_splash_ultimate"));
             put(ModItems.GARLIC_BREAD.get(), modLoc("item/garlic_bread"));
-            put(ModItems.HUNTER_HAT_HEAD_0.get(), modLoc("item/hunter_hat_0"));
-            put(ModItems.HUNTER_HAT_HEAD_1.get(), modLoc("item/hunter_hat_1"));
             put(ModItems.ITEM_ALCHEMICAL_FIRE.get(), modLoc("item/alchemical_fire"));
             put(ModItems.ITEM_GARLIC.get(), modLoc("item/garlic"));
             put(ModBlocks.MED_CHAIR.get().asItem(), modLoc("item/med_chair"));

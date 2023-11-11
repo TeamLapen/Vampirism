@@ -57,7 +57,6 @@ import net.minecraft.world.entity.monster.PatrollingMonster;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -257,19 +256,25 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             this.setItemSlot(EquipmentSlot.HEAD, HunterVillage.createBanner());
         }
         getEntityData().set(TYPE, this.getRandom().nextInt(TYPES));
+        randomEquipments();
 
-        SpawnGroupData livingData = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+        return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+    }
 
-        if (this.getRandom().nextInt(4) == 0) {
-            this.setLeftHanded(true);
-            Item crossBow = getEntityLevel() > 1 ? ModItems.ENHANCED_CROSSBOW.get() : ModItems.BASIC_CROSSBOW.get();
-            this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(crossBow));
+    protected void randomEquipments() {
+        HatType[] hatTypes = HatType.values();
+        HatType hat = hatTypes[this.getRandom().nextInt(hatTypes.length)];
+        this.setItemSlot(EquipmentSlot.HEAD, hat.getHeadItem());
 
-        } else {
-            this.setLeftHanded(false);
-        }
-
-        return livingData;
+        EquipmentType equipment = switch (random.nextInt(4)) {
+            case 1 -> EquipmentType.STAKE;
+            case 2 -> EquipmentType.AXE;
+            case 3 -> EquipmentType.CROSSBOW;
+            default -> EquipmentType.NONE;
+        };
+        this.setItemSlot(EquipmentSlot.MAINHAND, equipment.getMainHand());
+        this.setItemSlot(EquipmentSlot.OFFHAND, equipment.getOffHand());
+        this.setDontDropEquipment();
     }
 
     @Override
@@ -489,9 +494,9 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     @Override
     public ItemStack getProjectile(ItemStack stack) {
         if (stack.getItem() instanceof IVampirismCrossbow) {
-            return ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance();
+            return net.minecraftforge.common.ForgeHooks.getProjectile(this, stack, ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance());
         }
-        return ItemStack.EMPTY;
+        return super.getProjectile(stack);
     }
 
     @Override

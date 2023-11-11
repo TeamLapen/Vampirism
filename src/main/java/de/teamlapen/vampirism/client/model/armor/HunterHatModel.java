@@ -19,25 +19,27 @@ import org.jetbrains.annotations.NotNull;
 public class HunterHatModel extends VampirismArmorModel {
 
     private static final String HAT_TOP = "hat_top";
-    private static final String HAT_RIM = "hat_rim";
+    private static final String HAT_BASE = "hat_top";
 
-    public static @NotNull LayerDefinition createLayer(float p_170683_, int type) {
+    public static @NotNull LayerDefinition createHat0Layer() {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition part = mesh.getRoot();
-        if (type == 1) {
-            part.addOrReplaceChild(HAT_TOP, CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -14.0F, -4.0F, 8.0F, 5.0F, 8.0F), PartPose.offset(0, p_170683_, 0));
-            part.addOrReplaceChild(HAT_RIM, CubeListBuilder.create().texOffs(0, 13).addBox(-6.0F, -9.0F, -6.0F, 12.0F, 1.0F, 12.0F), PartPose.offset(0, p_170683_, 0));
-        } else {
-            part.addOrReplaceChild(HAT_TOP, CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -12.0F, -4.0F, 8.0F, 3.0F, 8.0F), PartPose.offset(0.0F, p_170683_, 0.0F));
-            part.addOrReplaceChild(HAT_RIM, CubeListBuilder.create().texOffs(0, 17).addBox(-8.0F, -9.0F, -8.0F, 16.0F, 1.0F, 16.0F), PartPose.offset(0.0F, p_170683_, 0.0F));
-        }
+        PartDefinition base = part.addOrReplaceChild(HAT_BASE, CubeListBuilder.create().texOffs(0, 0).addBox(-6.0F, -9.0F, -6.0F, 12.0F, 1.0F, 12.0F), PartPose.ZERO);
+        PartDefinition top = base.addOrReplaceChild(HAT_TOP, CubeListBuilder.create().texOffs(0, 13).addBox(-4.0F, -14.0F, -4.0F, 8.0F, 5.0F, 8.0F), PartPose.ZERO);
+        return LayerDefinition.create(mesh, 64, 64);
+    }
+
+    public static @NotNull LayerDefinition createHat1Layer() {
+        MeshDefinition mesh = new MeshDefinition();
+        PartDefinition part = mesh.getRoot();
+        PartDefinition base = part.addOrReplaceChild(HAT_BASE, CubeListBuilder.create().texOffs(0, 0).addBox(-8.0F, -9.0F, -8.0F, 16.0F, 1.0F, 16.0F), PartPose.ZERO);
+        PartDefinition top = base.addOrReplaceChild(HAT_TOP, CubeListBuilder.create().texOffs(0, 17).addBox(-4.0F, -12.0F, -4.0F, 8.0F, 3.0F, 8.0F), PartPose.ZERO);
         return LayerDefinition.create(mesh, 64, 64);
     }
 
     private static HunterHatModel hat0;
     private static HunterHatModel hat1;
-    private final @NotNull ModelPart hatTop;
-    private final @NotNull ModelPart hatRim;
+    private final @NotNull ModelPart hatBase;
 
     public static HunterHatModel getAdjustedInstance0(HumanoidModel<?> wearerModel) {
         if (hat0 == null) {
@@ -58,13 +60,12 @@ public class HunterHatModel extends VampirismArmorModel {
 
     public HunterHatModel(@NotNull ModelPart part) {
         super();
-        this.hatTop = part.getChild(HAT_TOP);
-        this.hatRim = part.getChild(HAT_RIM);
+        this.hatBase = part.getChild(HAT_BASE);
     }
 
 
     @Override
     protected @NotNull Iterable<ModelPart> getHeadModels() {
-        return ImmutableList.of(hatTop, hatRim);
+        return ImmutableList.of(hatBase);
     }
 }

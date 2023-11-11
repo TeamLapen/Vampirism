@@ -115,9 +115,8 @@ public class ModEntitiesRender {
         event.registerLayerDefinition(CLOTHING_CROWN, ClothingCrownModel::createLayer);
         event.registerLayerDefinition(CLOTHING_PANTS, ClothingPantsModel::createLayer);
         event.registerLayerDefinition(CLOTHING_HAT, VampireHatModel::createLayer);
-        event.registerLayerDefinition(HUNTER_HAT0, () -> HunterHatModel.createLayer(0, 0));
-        event.registerLayerDefinition(HUNTER_HAT1, () -> HunterHatModel.createLayer(0, 1));
-        event.registerLayerDefinition(HUNTER_EQUIPMENT, HunterEquipmentModel::createLayer);
+        event.registerLayerDefinition(HUNTER_HAT0, HunterHatModel::createHat0Layer);
+        event.registerLayerDefinition(HUNTER_HAT1, HunterHatModel::createHat1Layer);
         event.registerLayerDefinition(VILLAGER_WITH_ARMS, () -> VillagerWithArmsModel.createLayer(0));
         event.registerLayerDefinition(GENERIC_BIPED, () -> LayerDefinition.create(PlayerModel.createMesh(CubeDeformation.NONE, false), 64, 64));
         event.registerLayerDefinition(GENERIC_BIPED_SLIM, () -> LayerDefinition.create(PlayerModel.createMesh(CubeDeformation.NONE, true), 64, 64));
