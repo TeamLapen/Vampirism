@@ -3,13 +3,13 @@ sidebar_position: 4
 title: Customization
 ---
 
-You can configure the appearance of your vampire player model in the Vampire Appearance Screen or by [commands](../../commands#appearance-commands).
+You can configure the appearance of your vampire player model in the Vampire Appearance Screen or by commands
 
 You can configure the following:
-- Eye overlay
-- Fang overlay
-- Glowing eye overlay
-- Lord title gender (only by command)
+- [Eye overlay](../../commands/eye)
+- [Fang overlay](../../commands/fang)
+- [Glowing eye overlay](../../commands/glowing_eyes)
+- [Lord title gender](../../commands/title_gender)
 
 ## Appearance Screen
 
