@@ -25,8 +25,12 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends Defaul
     private Consumer<T> deactivate = (T player) -> {
     };
 
+    public VampirismSkill() {
+        super(2);
+    }
+
     public VampirismSkill(boolean hasDescription) {
-        this(1, hasDescription);
+        this(2, hasDescription);
     }
 
     public VampirismSkill(int skillPointCost, boolean hasDescription) {

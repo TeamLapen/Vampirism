@@ -200,12 +200,12 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
             this.startConverting(compound.hasUUID("ConversionPlayer") ? compound.getUUID("ConversionPlayer") : null, compound.getInt("ConversionTime"), ((PathfinderMob) this));
         }
         if (compound.contains("source_entity", Tag.TAG_STRING)) {
-            this.getRepresentingEntity().getEntityData().set(this.getSourceEntityDataParam(), compound.getString("source_entity"));
+            getSourceEntityDataParamOpt().ifPresent(s -> this.getRepresentingEntity().getEntityData().set(s, compound.getString("source_entity")));
         } else {
             var convertibles = ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).getConvertibles();
             for (var entry : convertibles.entrySet()) {
                 if (entry.getValue() instanceof SpecialConvertingHandler<?,?> special && Objects.equals(special.getConvertedType(), this.getRepresentingEntity().getType())) {
-                    this.getRepresentingEntity().getEntityData().set(this.getSourceEntityDataParam(), ForgeRegistries.ENTITY_TYPES.getKey(entry.getKey()).toString());
+                    getSourceEntityDataParamOpt().ifPresent(s -> this.getRepresentingEntity().getEntityData().set(s, ForgeRegistries.ENTITY_TYPES.getKey(entry.getKey()).toString()));
                 }
             }
         }

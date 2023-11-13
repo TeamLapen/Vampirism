@@ -41,7 +41,7 @@ public class SpecialConvertingHandler<T extends PathfinderMob, Z extends Pathfin
             copyImportantStuff(convertedCreature, entity);
             convertedCreature.setUUID(Mth.createInsecureUUID(convertedCreature.getRandom()));
             convertedCreature.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 2));
-            convertedCreature.getRepresentingEntity().getEntityData().set(convertedCreature.getSourceEntityDataParam(), ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()).toString());
+            convertedCreature.getSourceEntityDataParamOpt().ifPresent(s -> convertedCreature.getRepresentingEntity().getEntityData().set(s, ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()).toString()));
             return convertedCreature;
         }).orElse(null);
     }

@@ -21,7 +21,8 @@ public interface IConvertingHandler<T extends PathfinderMob> {
     @Nullable
     IConvertedCreature<T> createFrom(T entity);
 
-    void updateEntityAttributes(PathfinderMob creature);
+    default void updateEntityAttributes(PathfinderMob creature) {
+    }
 
     /**
      * If Vampirism's default converted creature is used, this can be used to specify some properties of the converted creature

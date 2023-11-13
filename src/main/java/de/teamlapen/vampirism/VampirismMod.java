@@ -9,7 +9,6 @@ import de.teamlapen.lib.util.Color;
 import de.teamlapen.lib.util.OptifineHandler;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.VampirismCapabilities;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
@@ -33,6 +32,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.FactionRegistry;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
+import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.entity.player.ModPlayerEventHandler;
 import de.teamlapen.vampirism.entity.player.actions.ActionManager;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
@@ -80,8 +80,6 @@ import net.minecraftforge.registries.RegisterEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Optional;
 
 /**
  * Main class for Vampirism
@@ -264,6 +262,7 @@ public class VampirismMod {
         VReference.vision_bloodVision = VampirismAPI.vampireVisionRegistry().registerVision(new ResourceLocation(REFERENCE.MODID, "blood_vision"), new BloodVision());
 
         VampirismAPI.onSetupComplete();
+        MinionData.registerDataTypes();
     }
 
     private void processIMC(final @NotNull InterModProcessEvent event) {

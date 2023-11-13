@@ -202,7 +202,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
     @Override
-    public @NotNull EntityDataAccessor<String> getSourceEntityDataParam() {
+    public EntityDataAccessor<String> getSourceEntityDataParam() {
         return OVERLAY_TEXTURE;
     }
 
@@ -239,7 +239,9 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
             this.startConverting(nbt.hasUUID("ConversionPlayer") ? nbt.getUUID("ConversionPlayer") : null, nbt.getInt("ConversionTime"), this);
         }
         if (!nbt.contains("source_entity")) {
-            this.getRepresentingEntity().getEntityData().set(this.getSourceEntityDataParam(), ForgeRegistries.ENTITY_TYPES.getKey(getOldCreature().getType()).toString());
+            getSourceEntityDataParamOpt().ifPresent(p -> {
+                this.getRepresentingEntity().getEntityData().set(p, ForgeRegistries.ENTITY_TYPES.getKey(getOldCreature().getType()).toString());
+            });
         }
     }
 

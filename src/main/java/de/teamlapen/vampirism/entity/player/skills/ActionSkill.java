@@ -22,7 +22,7 @@ public class ActionSkill<T extends IFactionPlayer<T>> extends VampirismSkill<T> 
     private final ISkillType type;
 
     public ActionSkill(Supplier<? extends IAction<T>> action) {
-        this(action, 1);
+        this(action, 2);
     }
 
     public ActionSkill(Supplier<? extends IAction<T>> action, int skillPointCost) {
@@ -30,7 +30,7 @@ public class ActionSkill<T extends IFactionPlayer<T>> extends VampirismSkill<T> 
     }
 
     public ActionSkill(Supplier<? extends IAction<T>> action, boolean customDescription) {
-        this(action, 1, customDescription);
+        this(action, 2, customDescription);
     }
 
     public ActionSkill(Supplier<? extends IAction<T>> action, int skillPointCost, boolean customDescription) {

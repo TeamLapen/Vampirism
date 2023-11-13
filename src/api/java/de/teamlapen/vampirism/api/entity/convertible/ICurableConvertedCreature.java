@@ -17,6 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -81,16 +82,20 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
     @NotNull
     EntityDataAccessor<Boolean> getConvertingDataParam();
 
+    @Nullable
+    default EntityDataAccessor<String> getSourceEntityDataParam() {
+        return null;
+    }
+
     @NotNull
-    EntityDataAccessor<String> getSourceEntityDataParam();
+    @Deprecated
+    default Optional<EntityDataAccessor<String>> getSourceEntityDataParamOpt() {
+        return Optional.ofNullable(getSourceEntityDataParam());
+    }
 
     @Override
     default @Nullable String getSourceEntityId() {
-        String overlay = this.getRepresentingEntity().getEntityData().get(getSourceEntityDataParam());
-        if (overlay.isEmpty()) {
-            return null;
-        }
-        return overlay;
+        return getSourceEntityDataParamOpt().map(s -> this.getRepresentingEntity().getEntityData().get(s)).orElse(null);
     }
 
     /**
@@ -145,7 +150,7 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
      */
     default void registerConvertingData(@NotNull PathfinderMob entity) {
         entity.getEntityData().define(this.getConvertingDataParam(), false);
-        entity.getEntityData().define(this.getSourceEntityDataParam(), "");
+        getSourceEntityDataParamOpt().ifPresent(s -> entity.getEntityData().define(s, ""));
     }
 
     /**

@@ -11,7 +11,7 @@ plugins {
 
 group = mod_group_id
 base {
-    archivesName = mod_id
+    archivesName = mod_name
     mod_version = "1.0.0"
 }
 

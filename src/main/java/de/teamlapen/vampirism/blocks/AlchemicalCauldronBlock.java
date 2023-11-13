@@ -99,7 +99,7 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
         BlockEntity tile = world.getBlockEntity(blockPos);
         if (tile instanceof AlchemicalCauldronBlockEntity) {
             playerEntity.openMenu((MenuProvider) tile);
-            playerEntity.awardStat(ModStats.INTERACT_ALCHEMICAL_CAULDRON);
+            playerEntity.awardStat(ModStats.interact_alchemical_cauldron);
         }
     }
 }

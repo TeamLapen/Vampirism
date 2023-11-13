@@ -36,7 +36,14 @@ public class MinionData implements INBTSerializable<CompoundTag>, IMinionData {
      */
     @Deprecated(forRemoval = true)
     public static void registerDataType(ResourceLocation id, Supplier<? extends MinionData> supplier) {
-        ((FactionRegistry) VampirismAPI.factionRegistry()).addMinionData(id, supplier);
+        constructors.put(id, supplier);
+    }
+
+    @Deprecated(forRemoval = true)
+    public static void registerDataTypes() {
+        constructors.forEach((id, supplier) -> {
+            ((FactionRegistry) VampirismAPI.factionRegistry()).addMinionData(id, supplier);
+        });
     }
 
     @NotNull
