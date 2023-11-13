@@ -70,9 +70,9 @@ public class DoubleCrossbowItem extends VampirismCrossbowItem {
 
         for(int i = 0; i < list.size() && i < 2; ++i) { // only shoot a maximum of 2 arrows
             ItemStack itemstack = list.get(i);
-            boolean flag = shooter instanceof Player && ((Player) shooter).getAbilities().instabuild;
+            boolean flag = !(shooter instanceof Player player) || player.getAbilities().instabuild;
             if (!itemstack.isEmpty()) {
-                shootProjectileMod(level, shooter, hand, stack, itemstack, afloat[i], flag, speed, angle, 0.0F); // only one arrow per projectile
+                shootProjectileMod(level, shooter, hand, stack, itemstack, afloat[i], flag, speed, angle); // only one arrow per projectile
             }
         }
 

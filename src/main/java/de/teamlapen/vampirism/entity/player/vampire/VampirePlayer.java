@@ -764,6 +764,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                 bloodStats.setMaxBlood(20);
             } else {
                 this.vision.deactivate();
+                this.sync(true);
             }
         } else {
             if (oldLevel == 0) {

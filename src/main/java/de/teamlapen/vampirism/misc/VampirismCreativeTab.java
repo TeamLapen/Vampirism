@@ -18,6 +18,7 @@ import java.util.Set;
 
 import static de.teamlapen.vampirism.core.ModBlocks.*;
 import static de.teamlapen.vampirism.core.ModItems.*;
+import static net.minecraft.world.item.CreativeModeTabs.BUILDING_BLOCKS;
 
 @Mod.EventBusSubscriber(modid = REFERENCE.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class VampirismCreativeTab {

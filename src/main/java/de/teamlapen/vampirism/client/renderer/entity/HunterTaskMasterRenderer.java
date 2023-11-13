@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.renderer.entity.layers.TaskMasterTypeLayer;
 import de.teamlapen.vampirism.entity.hunter.HunterTaskMasterEntity;
+import de.teamlapen.vampirism.mixin.client.VillagerModelAccessor;
 import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

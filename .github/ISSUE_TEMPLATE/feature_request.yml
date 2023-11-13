@@ -1,7 +1,7 @@
 name: Feature request
 description: Suggest an idea for this mod
 title: "[Feature]: "
-labels: [ "discussion", "enhancement", "feature", "unconfirmed" ]
+labels: [ "discussion", "enhancement", "feature" ]
 body:
   - type: markdown
     attributes:

@@ -82,9 +82,9 @@ public class TechCrossbowItem extends VampirismCrossbowItem {
         float[] afloat = CrossbowItemMixin.getShotPitches(p_220014_1_.getRandom());
 
         ItemStack itemstack = getProjectile(p_220014_1_, p_220014_3_, list); //delegate for easy usage and frugality
-        boolean flag = p_220014_1_ instanceof Player && ((Player) p_220014_1_).getAbilities().instabuild;
+        boolean flag = !(p_220014_1_ instanceof Player player) || player.getAbilities().instabuild;
         if (!itemstack.isEmpty()) {
-            shootProjectileMod(p_220014_0_, p_220014_1_, p_220014_2_, p_220014_3_, itemstack, afloat[0], flag, p_220014_4_, p_220014_5_, 0.0F); // do not shoot more than one projectile
+            shootProjectileMod(p_220014_0_, p_220014_1_, p_220014_2_, p_220014_3_, itemstack, afloat[0], flag, p_220014_4_, p_220014_5_); // do not shoot more than one projectile
         }
 
         CrossbowItemMixin.onCrossbowShot(p_220014_0_, p_220014_1_, p_220014_3_);

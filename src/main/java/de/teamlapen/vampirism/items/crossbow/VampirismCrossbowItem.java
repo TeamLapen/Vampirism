@@ -141,9 +141,9 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
 
         for(int i = 0; i < list.size(); ++i) {
             ItemStack itemstack = list.get(i);
-            boolean flag = shooter instanceof Player && ((Player) shooter).getAbilities().instabuild;
+            boolean flag = !(shooter instanceof Player player) || player.getAbilities().instabuild;
             if (!itemstack.isEmpty()) {
-                shootProjectileMod(level, shooter, hand, stack, itemstack, afloat[i], flag, speed, angle, 0.0F);
+                shootProjectileMod(level, shooter, hand, stack, itemstack, afloat[i], flag, speed, angle);
                 break; // only shoot one projectile
             }
         }
@@ -157,19 +157,19 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
      * <br>
      * see comments for changes
      */
-    protected void shootProjectileMod(Level p_220016_0_, LivingEntity p_220016_1_, InteractionHand p_220016_2_, ItemStack p_220016_3_, ItemStack p_220016_4_, float p_220016_5_, boolean p_220016_6_, float p_220016_7_, float p_220016_8_, float p_220016_9_) {
+    protected void shootProjectileMod(Level p_220016_0_, LivingEntity p_220016_1_, InteractionHand p_220016_2_, ItemStack p_220016_3_, ItemStack p_220016_4_, float p_220016_5_, boolean p_220016_6_, float p_220016_7_, float p_220016_8_) {
         if (!p_220016_0_.isClientSide) {
             AbstractArrow projectileentity;
             projectileentity = modifyArrow(p_220016_3_, CrossbowItemMixin.getArrow(p_220016_0_, p_220016_1_, p_220016_3_, p_220016_4_)); // modify arrow
-            if (p_220016_6_ || p_220016_9_ != 0.0F) {
+            if (p_220016_6_) {
                 projectileentity.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
             }
 
             if (p_220016_1_ instanceof CrossbowAttackMob crossbowUser) {
-                crossbowUser.shootCrossbowProjectile(crossbowUser.getTarget(), p_220016_3_, projectileentity, p_220016_9_);
+                crossbowUser.shootCrossbowProjectile(crossbowUser.getTarget(), p_220016_3_, projectileentity, (float) 0.0);
             } else {
                 Vec3 vec31 = p_220016_1_.getUpVector(1.0F);
-                Quaternionf quaternionf = (new Quaternionf()).setAngleAxis(p_220016_9_ * ((float)Math.PI / 180F), vec31.x, vec31.y, vec31.z);
+                Quaternionf quaternionf = (new Quaternionf()).setAngleAxis((float) 0.0 * ((float)Math.PI / 180F), vec31.x, vec31.y, vec31.z);
                 Vec3 vec3 = p_220016_1_.getViewVector(1.0F);
                 Vector3f vector3f = vec3.toVector3f().rotate(quaternionf);
                 projectileentity.shoot(vector3f.x(), vector3f.y(), vector3f.z(), p_220016_7_, p_220016_8_);

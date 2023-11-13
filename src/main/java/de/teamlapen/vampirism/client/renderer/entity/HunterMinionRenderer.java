@@ -17,6 +17,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 /**
  * There are differently looking level 0 hunters.
  * Hunter as of level 1 look all the same, but have different weapons

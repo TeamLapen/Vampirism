@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity.player.tasks.req;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.lib.lib.util.ItemStackUtil;
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.core.ModTasks;

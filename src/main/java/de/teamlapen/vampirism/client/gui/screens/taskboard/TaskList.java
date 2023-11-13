@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.gui.screens.taskboard;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.client.gui.components.ContainerObjectSelectionListWithDummy;
 import de.teamlapen.lib.lib.util.MultilineTooltip;
 import de.teamlapen.vampirism.REFERENCE;

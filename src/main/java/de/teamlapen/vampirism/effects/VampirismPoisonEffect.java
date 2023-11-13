@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.effects;
 
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.util.DamageHandler;
+import de.teamlapen.vampirism.util.DamageHandler;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
