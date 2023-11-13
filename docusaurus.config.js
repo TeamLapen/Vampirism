@@ -38,7 +38,7 @@ const config = {
           versions: {
             current: {
               /** this value must be changed if a new version is released */
-              label: '1.9',
+              label: '1.10',
             }
           }
         },

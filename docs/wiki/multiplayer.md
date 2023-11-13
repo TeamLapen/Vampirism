@@ -16,7 +16,7 @@ Most hostile creatures appear in different levels.
 The strength of a spawned creature is affected by the level of nearby players. Around strong vampire players, strong hunters will spawn, but around normal humans (not hunter/not vampire) only weak vampires will appear.
 
 ### Commands
-When using command blocks or similar for things you can use the included [entity selectors](commands.md#entity-selectors) to filter between hunters/vampire, levels etc. in most commands.  
+When using command blocks or similar for things you can use the included [entity selectors](commands/entity_selector/faction) to filter between hunters/vampire, levels etc. in most commands.  
 There is also a scoreboard entry that can be used to find out the vampire/hunter/faction level of a player (`vampirism:vampire`, `vampirism:hunter` and `vampirism:faction`)
 
 ### Utility

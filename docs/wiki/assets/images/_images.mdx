@@ -39,7 +39,7 @@ import crucifixNormal from './crucifix_normal.png'
 import crucifixEnhanced from './crucifix_enhanced.png'
 import crucifixUltimate from './crucifix_ultimate.png'
 
-export const baseUrl = "https://raw.githubusercontent.com/TeamLapen/Vampirism/0a0cc4b5017ec2ec217740f0408633a6d28774cc/src/main/resources/assets/vampirism/textures/item/"
+export const baseUrl = "https://raw.githubusercontent.com/TeamLapen/Vampirism/c3accd4f5a45ee590a5e3f7539666493d56d4ba7/src/main/resources/assets/vampirism/textures/item/"
 
 export function image(imageName) {
     return baseUrl + imageName;
@@ -259,7 +259,18 @@ export const crossbowArrowImages = [
         alt: "crossbow arrow teleport",
     }
 ]
-export const crossbowClipImage = image("tech_crossbow_ammo_package.png")
+export const crossbowClipImage0 = image("arrow_clip0.png")
+export const crossbowClipImage3 = image("arrow_clip3.png")
+export const crossbowClipImages = [
+    {
+        src: crossbowClipImage0,
+        alt: "crossbow clip empty",
+    },
+    {
+        src: crossbowClipImage3,
+        alt: "crossbow clip full",
+    }
+]
 export const feedingAdapterImage = image("feeding_adapter.png")
 export const garlicImage = image("garlic.png")
 export const garlicBreadImage = image("garlic_bread.png")

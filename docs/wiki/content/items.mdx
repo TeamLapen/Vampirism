@@ -3,7 +3,7 @@ sidebar_position: 1
 title: Items
 ---
 
-import {Item, Items, TieredItem} from '@site/src/components/Items.mdx'
+import {Item, Items, TieredItem} from '@site/src/components/Items.tsx'
 import {
     accessoryImages,
     alchemicalFireImage,
@@ -14,7 +14,7 @@ import {
     bloodBottleImages,
     bloodInfusedIronIngotImages,
     crossbowArrowImages,
-    crossbowClipImage,
+    crossbowClipImages,
     crossbowImages, crucifixEnhancedImage, crucifixNormalImage, crucifixUltimateImage,
     feedingAdapterImage,
     garlicBreadImage,
@@ -156,10 +156,10 @@ Kills low level vampires NPC instantly.
 ### Teleport
 Teleports player on impact
 </Items>
-<Item title="Crossbow Clip" img={crossbowClipImage} source={crossbowArrowClipRecipes}>
+<Items title="Crossbow Clip" img={crossbowClipImages} source={crossbowArrowClipRecipes}>
 
-Used as ammunition for [Semi-Auto Crossbows](#crossbow).
-</Item>
+Can be loaded with arrows to use with a [Semi-Auto Crossbows](#crossbow).
+</Items>
 <Item title="Feeding Adapter" img={feedingAdapterImage} source={feedingAdapterRecipes} >
     Instead of refilling your blood bottles everything you can carry a blood container and directly drinking from it with the Feeding Adapter in your hand.
 </Item>
@@ -195,7 +195,7 @@ Vampirism's guide book if [GuideAPI](https://www.curseforge.com/minecraft/mc-mod
         img: [{ src: heartSeekerUltimateImage}],
         source: heartSeekerUltimateRecipes
     }
-]}>
+]} imageHeight={200}>
 
 Heart Seeker are Vampire swords that can be trained to become better, but require blood to work.
 <details><summary>Charge & Train</summary>
@@ -258,7 +258,7 @@ Simply kill mobs
         title: "Ultimate",
         img: [{src: hunterAxeUltimateImage}]
     }
-]}/>
+]} imageHeight={200}/>
 <TieredItem title="Hunter Coat" tiers={ [
     {
         title: "Normal",
@@ -295,7 +295,7 @@ Increase minion level by 1. While you need better Minion Upgrades to reach highe
 Increase minion level by 1. While you need better Minion Upgrades to reach higher minion levels, each Minion Upgrade is eligible for two level.
 </Items>
 
-<Item title="Pitchfork" img={pitchforkImage} source={pitchforkRecipes}></Item>
+<Item title="Pitchfork" img={pitchforkImage} source={pitchforkRecipes} imageHeight={200}></Item>
 <Item title="Potion of Oblivion" img={potionOfOblivionImage} source={potionOfOblivionRecipes}>
 
 On consumption reset all learned skills over time.
